@@ -1,84 +1,50 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_SF_CONSTANTS Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Stream format (SF) constants for the rich edit control."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Stream format (SF) constants for the rich edit control."</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_sf_constants.html">WEL_SF_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+	<A NAME="f_sf_rtf"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_sf_constants.html#f_sf_rtf">Sf_rtf</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Rich-text format (RTF).</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_sf_rtfnoobjs"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_sf_constants.html#f_sf_rtfnoobjs">Sf_rtfnoobjs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> RTF with spaces in place of OLE object.</SPAN>
 
-<BR>
+	<A NAME="f_sf_text"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_sf_constants.html#f_sf_text">Sf_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Text with spaces in place of OLE objects.</SPAN>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_sf_textized"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_sf_constants.html#f_sf_textized">Sf_textized</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Text with a text representation of OLE objects.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_sf_constants.html">WEL_SF_CONSTANTS</A><BR>
+	<A NAME="f_sff_selection"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_sf_constants.html#f_sff_selection">Sff_selection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Selection only.</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
-<BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_SF_CONSTANTS</PRE>
 
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_sf_rtf"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_sf_constants.html#f_sf_rtf">Sf_rtf</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Rich-text format (RTF).</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_sf_rtfnoobjs"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_sf_constants.html#f_sf_rtfnoobjs">Sf_rtfnoobjs</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> RTF with spaces in place of OLE object.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_sf_text"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_sf_constants.html#f_sf_text">Sf_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Text with spaces in place of OLE objects.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_sf_textized"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_sf_constants.html#f_sf_textized">Sf_textized</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Text with a text representation of OLE objects.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_sff_selection"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_sf_constants.html#f_sff_selection">Sff_selection</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Selection only.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_SF_CONSTANTS<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

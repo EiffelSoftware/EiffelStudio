@@ -1,1072 +1,544 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_LOG_FONT Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Defines the attributes of a font."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_log_font.html">WEL_LOG_FONT</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a font with </SPAN><SPAN CLASS="equoted">a_height</SPAN><SPAN CLASS="ecomment"> as </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="ecomment"> and</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">a_face_name</SPAN><SPAN CLASS="ecomment"> as </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_face_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_max_face_name_length">max_face_name_length</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">height_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_height</SPAN>
+			<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">escapement_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">weight_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_weight">weight</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">not_italic</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_italic">italic</A>
+			<SPAN CLASS="etag">not_underlined</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A>
+			<SPAN CLASS="etag">not_strike_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A>
+			<SPAN CLASS="etag">has_default_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A>
+			<SPAN CLASS="etag">has_default_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A>
+			<SPAN CLASS="etag">has_default_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A>
+			<SPAN CLASS="etag">has_default_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A>
+			<SPAN CLASS="etag">is_dont_care_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A>
+			<SPAN CLASS="etag">face_name_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_make_with_pointer"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_make_with_pointer">make_with_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy structure pointed by </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment"> in</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_make_by_font"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_make_by_font">make_by_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_font.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a log font using the information of </SPAN><SPAN CLASS="equoted">font</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">font_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">font_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_char_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Character set of current font</SPAN>
+</A>
+	<A NAME="f_clip_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clipping precision.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Define how to clip characters that are</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> partially outside clipping region.</SPAN>
+</A>
+	<A NAME="f_escapement"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Escapement of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The angle, in tenths of degrees, of each line of</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> text written in the font (relative to the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> bottom of the page).</SPAN>
+</A>
+	<A NAME="f_face_name"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Face name of current font</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Family of current font</SPAN>
+</A>
+	<A NAME="f_height"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Height of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the height, in logical units, of the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> font. The font height can be specified in one of</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> three ways. If </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="ecomment"> is greater than zero, it</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is transformed into device units and matched</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> against the cell height of the available fonts. If</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> it is zero, a reasonable default size is used. If</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> it is less than zero, it is transformed into</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device units and the absolute value is matched</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> against the character height of the available</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> fonts.</SPAN>
+</A>
+	<A NAME="f_height_in_points"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height_in_points">height_in_points</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size of font in points (1 point = 1/72 of an inch)</SPAN>
+</A>
+	<A NAME="f_italic"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_italic">italic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font italic?</SPAN>
+</A>
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic Windows handle or structure pointer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can be a HWND, HICON, RECT *, WNDCLASS *, etc...</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_orientation"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Orientation of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The angle, in tenths of degrees, of each</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> character's base line (relative to the bottom</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of the page).</SPAN>
+</A>
+	<A NAME="f_out_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output precision of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The output precision defines how closely the output</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> must match the requested font's height, width,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> character orientation, escapement, and pitch.</SPAN>
+</A>
+	<A NAME="f_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pitch of current font</SPAN>
+</A>
+	<A NAME="f_pitch_and_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pitch and family of current font</SPAN>
+</A>
+	<A NAME="f_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Quality of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the output quality. The output quality</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> defines how carefully the graphics device interface</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (GDI) must attempt to match the logical-font</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> attributes to those of an actual physical font.</SPAN>
+</A>
+	<A NAME="f_strike_out"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font striked out?</SPAN>
+</A>
+	<A NAME="f_underlined"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font underlined?</SPAN>
+</A>
+	<A NAME="f_weight"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_weight">weight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Weight of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> In the range 0 through 1000, for example,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 400 is normal and 700 is bold).</SPAN>
+</A>
+	<A NAME="f_width"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Width of current font.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the average width, in logical units, of</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> characters in the font. If </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="ecomment"> is zero, the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> aspect ratio of the device is matched against the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> digitization aspect ratio of the available fonts to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> find the closest match, determined by the absolute</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value of the difference.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_structure_size"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size to allocate (in bytes)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">positive_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> exist?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_has_ansi_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_ansi_character_set">has_ansi_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the ansi character set?</SPAN>
+</A>
+	<A NAME="f_has_character_clipping_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_character_clipping_precision">has_character_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the character clipping precision?</SPAN>
+</A>
+	<A NAME="f_has_character_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_character_output_precision">has_character_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the character output precision?</SPAN>
+</A>
+	<A NAME="f_has_default_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default character set?</SPAN>
+</A>
+	<A NAME="f_has_default_clipping_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default clipping precision?</SPAN>
+</A>
+	<A NAME="f_has_default_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_output_precision">has_default_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default output precision?</SPAN>
+</A>
+	<A NAME="f_has_default_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default pitch?</SPAN>
+</A>
+	<A NAME="f_has_default_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default quality?</SPAN>
+</A>
+	<A NAME="f_has_draft_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_draft_quality">has_draft_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the draft quality?</SPAN>
+</A>
+	<A NAME="f_has_fixed_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_fixed_pitch">has_fixed_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the fixed pitch?</SPAN>
+</A>
+	<A NAME="f_has_oem_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_oem_character_set">has_oem_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the OEM character set?</SPAN>
+</A>
+	<A NAME="f_has_proof_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_proof_quality">has_proof_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the proof quality?</SPAN>
+</A>
+	<A NAME="f_has_string_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_string_output_precision">has_string_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the string output precision?</SPAN>
+</A>
+	<A NAME="f_has_stroke_clipping_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_stroke_clipping_precision">has_stroke_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the stroke clipping precision?</SPAN>
+</A>
+	<A NAME="f_has_stroke_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_stroke_output_precision">has_stroke_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the stroke output precision?</SPAN>
+</A>
+	<A NAME="f_has_symbol_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_symbol_character_set">has_symbol_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the symbol character set?</SPAN>
+</A>
+	<A NAME="f_has_unicode_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_unicode_character_set">has_unicode_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the unicode character set?</SPAN>
+</A>
+	<A NAME="f_has_variable_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_variable_pitch">has_variable_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the variable pitch?</SPAN>
+</A>
+	<A NAME="f_is_decorative_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_decorative_family">is_decorative_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the decorative family?</SPAN>
+</A>
+	<A NAME="f_is_dont_care_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the don t care family?</SPAN>
+</A>
+	<A NAME="f_is_modern_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_modern_family">is_modern_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the modern family?</SPAN>
+</A>
+	<A NAME="f_is_roman_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_roman_family">is_roman_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the roman family?</SPAN>
+</A>
+	<A NAME="f_is_script_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_script_family">is_script_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the script family?</SPAN>
+</A>
+	<A NAME="f_is_swiss_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_swiss_family">is_swiss_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the swiss family?</SPAN>
+</A>
+	<A NAME="f_shared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_max_face_name_length"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_max_face_name_length">max_face_name_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum face name length</SPAN>
+</A>
+	<A NAME="f_set_ansi_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_ansi_character_set">set_ansi_character_set</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to ansi.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_ansi_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_ansi_character_set">has_ansi_character_set</A>
+</A>
+	<A NAME="f_set_char_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_char_set">set_char_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_char_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_char_set</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">char_set_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_char_set</SPAN>
+</A>
+	<A NAME="f_set_character_clipping_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_character_clipping_precision">set_character_clipping_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to character clipping precision.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_character_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_character_clipping_precision">has_character_clipping_precision</A>
+</A>
+	<A NAME="f_set_character_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_character_output_precision">set_character_output_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to character precision.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_character_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_character_output_precision">has_character_output_precision</A>
+</A>
+	<A NAME="f_set_clip_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_clip_precision">set_clip_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_precision</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">clip_precision_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_precision</SPAN>
+</A>
+	<A NAME="f_set_decorative_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_decorative_family">set_decorative_family</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to decorative family.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_decorative_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_decorative_family">is_decorative_family</A>
+</A>
+	<A NAME="f_set_default_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_character_set">set_default_character_set</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to the default value.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_default_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A>
+</A>
+	<A NAME="f_set_default_clipping_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_clipping_precision">set_default_clipping_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to the default value.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_default_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A>
+</A>
+	<A NAME="f_set_default_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_output_precision">set_default_output_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to default output precision.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_default_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_output_precision">has_default_output_precision</A>
+</A>
+	<A NAME="f_set_default_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_pitch">set_default_pitch</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to the default value.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_default_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A>
+</A>
+	<A NAME="f_set_default_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_quality">set_default_quality</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to the default value.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_default_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A>
+</A>
+	<A NAME="f_set_dont_care_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_dont_care_family">set_dont_care_family</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to dont care family.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_dont_care_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A>
+</A>
+	<A NAME="f_set_draft_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_draft_quality">set_draft_quality</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to the draft quality.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_draft_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_draft_quality">has_draft_quality</A>
+</A>
+	<A NAME="f_set_escapement"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_escapement">set_escapement</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_escapement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_escapement</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">escapement_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_escapement</SPAN>
+</A>
+	<A NAME="f_set_face_name"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_face_name">set_face_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_face_name</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_face_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_max_face_name_length">max_face_name_length</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">face_name_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_family">set_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_family</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">family_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_family</SPAN>
+</A>
+	<A NAME="f_set_fixed_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_fixed_pitch">set_fixed_pitch</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to fixed pitch.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_fixed_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_fixed_pitch">has_fixed_pitch</A>
+</A>
+	<A NAME="f_set_height"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_height</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">height_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_height</SPAN>
+</A>
+	<A NAME="f_set_italic"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_italic">set_italic</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font italic.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">italic</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_italic">italic</A>
+</A>
+	<A NAME="f_set_modern_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_modern_family">set_modern_family</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to modern family.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_modern_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_modern_family">is_modern_family</A>
+</A>
+	<A NAME="f_set_not_italic"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_not_italic">set_not_italic</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font not italic.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_italic</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_italic">italic</A>
+</A>
+	<A NAME="f_set_not_strike_out"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_not_strike_out">set_not_strike_out</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font not striked out.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_strike_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A>
+</A>
+	<A NAME="f_set_not_underlined"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_not_underlined">set_not_underlined</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font not underlined.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_underlined</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A>
+</A>
+	<A NAME="f_set_oem_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_oem_character_set">set_oem_character_set</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to OEM.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_oem_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_oem_character_set">has_oem_character_set</A>
+</A>
+	<A NAME="f_set_orientation"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_orientation">set_orientation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_orientation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_orientation</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">orientation_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_orientation</SPAN>
+</A>
+	<A NAME="f_set_out_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_out_precision">set_out_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_out_precision</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">out_precision_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_precision</SPAN>
+</A>
+	<A NAME="f_set_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_pitch">set_pitch</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_pitch</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">pitch_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pitch</SPAN>
+</A>
+	<A NAME="f_set_pitch_and_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_pitch_and_family">set_pitch_and_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch_and_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_pitch_and_family</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">pitch_and_family_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pitch_and_family</SPAN>
+</A>
+	<A NAME="f_set_proof_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_proof_quality">set_proof_quality</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to the proof quality.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_proof_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_proof_quality">has_proof_quality</A>
+</A>
+	<A NAME="f_set_quality"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_quality">set_quality</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_quality</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">quality_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_quality</SPAN>
+</A>
+	<A NAME="f_set_roman_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_roman_family">set_roman_family</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to roman family.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_roman_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_roman_family">is_roman_family</A>
+</A>
+	<A NAME="f_set_script_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_script_family">set_script_family</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to script family.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_script_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_script_family">is_script_family</A>
+</A>
+	<A NAME="f_set_shared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to True.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A>
+</A>
+	<A NAME="f_set_strike_out"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_strike_out">set_strike_out</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font striked out.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">strike_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A>
+</A>
+	<A NAME="f_set_string_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_string_output_precision">set_string_output_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to string output precision.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_string_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_string_output_precision">has_string_output_precision</A>
+</A>
+	<A NAME="f_set_stroke_clipping_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_stroke_clipping_precision">set_stroke_clipping_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to the storke clipping precision.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_stroke_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_stroke_clipping_precision">has_stroke_clipping_precision</A>
+</A>
+	<A NAME="f_set_stroke_output_precision"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_stroke_output_precision">set_stroke_output_precision</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to stroke output precision.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_stroke_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_stroke_output_precision">has_stroke_output_precision</A>
+</A>
+	<A NAME="f_set_swiss_family"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_swiss_family">set_swiss_family</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to swiss family.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_swiss_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_swiss_family">is_swiss_family</A>
+</A>
+	<A NAME="f_set_symbol_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_symbol_character_set">set_symbol_character_set</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to symbol.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_symbol_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_symbol_character_set">has_symbol_character_set</A>
+</A>
+	<A NAME="f_set_underlined"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_underlined">set_underlined</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font underlined.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">underlined</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A>
+</A>
+	<A NAME="f_set_unicode_character_set"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_unicode_character_set">set_unicode_character_set</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to unicode.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_unicode_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_unicode_character_set">has_unicode_character_set</A>
+</A>
+	<A NAME="f_set_unshared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to False.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">unshared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A>
+</A>
+	<A NAME="f_set_variable_pitch"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_variable_pitch">set_variable_pitch</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to variable pitch.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">has_variable_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_variable_pitch">has_variable_pitch</A>
+</A>
+	<A NAME="f_set_weight"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_weight">set_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_weight">weight</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_weight</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">weight_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_weight">weight</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_weight</SPAN>
+</A>
+	<A NAME="f_set_width"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_width</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_width</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_set_item"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_dispose"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Destroy the inner structure of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This function should be called by the GC when the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object is collected or by the user if </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> no more usefull.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
+
+	<A NAME="f_to_integer"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Converts </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> to an integer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_cwel_pointer_to_integer">cwel_pointer_to_integer</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_initialize"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill Current with zeros.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>
+	<A NAME="f_initialize_with_character"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill current with </SPAN><SPAN CLASS="equoted">a_character</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>
+	<A NAME="f_memory_copy"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">length</SPAN><SPAN CLASS="ecomment"> bytes from </SPAN><SPAN CLASS="equoted">source_pointer</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">length_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_structure_size">structure_size</A>
+			<SPAN CLASS="etag">length_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Re-initialisation</SPAN>
+
+	<A NAME="f_update_by_font"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_update_by_font">update_by_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_font.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update object attributes using the information of </SPAN><SPAN CLASS="equoted">font</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">font_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">font_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_LOG_FONT</PRE>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Defines the attributes of a font."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_log_font.html">WEL_LOG_FONT</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">create</SPAN> <BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a font with </SPAN><SPAN CLASS="equoted">a_height</SPAN><SPAN CLASS="ecomment"> as </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="ecomment"> and</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">a_face_name</SPAN><SPAN CLASS="ecomment"> as </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">a_face_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_max_face_name_length">max_face_name_length</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">height_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_height</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">escapement_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">weight_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_weight">weight</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_italic</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_italic">italic</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_underlined</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_strike_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_dont_care_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">face_name_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_with_pointer"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_make_with_pointer">make_with_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy structure pointed by </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment"> in</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_font"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_make_by_font">make_by_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_font.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make a log font using the information of </SPAN><SPAN CLASS="equoted">font</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">font_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">font_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><BR>
-
-</A><BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_char_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Character set of current font</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_clip_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clipping precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Define how to clip characters that are</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> partially outside clipping region.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_escapement"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Escapement of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The angle, in tenths of degrees, of each line of</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> text written in the font (relative to the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> bottom of the page).</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_face_name"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Face name of current font</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Family of current font</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_height"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Height of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the height, in logical units, of the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> font. The font height can be specified in one of</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> three ways. If </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="ecomment"> is greater than zero, it</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is transformed into device units and matched</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> against the cell height of the available fonts. If</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> it is zero, a reasonable default size is used. If</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> it is less than zero, it is transformed into</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device units and the absolute value is matched</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> against the character height of the available</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> fonts.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_height_in_points"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height_in_points">height_in_points</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size of font in points (1 point = 1/72 of an inch)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_italic"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_italic">italic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font italic?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic Windows handle or structure pointer.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can be a HWND, HICON, RECT *, WNDCLASS *, etc...</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_orientation"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Orientation of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The angle, in tenths of degrees, of each</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> character's base line (relative to the bottom</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> of the page).</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_out_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output precision of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The output precision defines how closely the output</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> must match the requested font's height, width,</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> character orientation, escapement, and pitch.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pitch of current font</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_pitch_and_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pitch and family of current font</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Quality of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the output quality. The output quality</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> defines how carefully the graphics device interface</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (GDI) must attempt to match the logical-font</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> attributes to those of an actual physical font.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_strike_out"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font striked out?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_underlined"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font underlined?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_weight"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_weight">weight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Weight of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> In the range 0 through 1000, for example,</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 400 is normal and 700 is bold).</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_width"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Width of current font.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specifies the average width, in logical units, of</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> characters in the font. If </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="ecomment"> is zero, the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> aspect ratio of the device is matched against the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> digitization aspect ratio of the available fonts to</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> find the closest match, determined by the absolute</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value of the difference.</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_structure_size"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size to allocate (in bytes)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">positive_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_exists"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> exist?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_ansi_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_ansi_character_set">has_ansi_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the ansi character set?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_character_clipping_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_character_clipping_precision">has_character_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the character clipping precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_character_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_character_output_precision">has_character_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the character output precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_default_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default character set?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_default_clipping_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default clipping precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_default_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_output_precision">has_default_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default output precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_default_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default pitch?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_default_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the default quality?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_draft_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_draft_quality">has_draft_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the draft quality?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_fixed_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_fixed_pitch">has_fixed_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the fixed pitch?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_oem_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_oem_character_set">has_oem_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the OEM character set?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_proof_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_proof_quality">has_proof_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the proof quality?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_string_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_string_output_precision">has_string_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the string output precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_stroke_clipping_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_stroke_clipping_precision">has_stroke_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the stroke clipping precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_stroke_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_stroke_output_precision">has_stroke_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the stroke output precision?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_symbol_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_symbol_character_set">has_symbol_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the symbol character set?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_unicode_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_unicode_character_set">has_unicode_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the unicode character set?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_has_variable_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_variable_pitch">has_variable_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current font the variable pitch?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_decorative_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_decorative_family">is_decorative_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the decorative family?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_dont_care_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the don t care family?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_modern_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_modern_family">is_modern_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the modern family?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_roman_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_roman_family">is_roman_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the roman family?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_script_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_script_family">is_script_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the script family?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_swiss_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_swiss_family">is_swiss_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current font in the swiss family?</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_shared"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_max_face_name_length"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_max_face_name_length">max_face_name_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum face name length</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_ansi_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_ansi_character_set">set_ansi_character_set</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to ansi.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_ansi_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_ansi_character_set">has_ansi_character_set</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_char_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_char_set">set_char_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_char_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_char_set</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">char_set_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_char_set</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_character_clipping_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_character_clipping_precision">set_character_clipping_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to character clipping precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_character_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_character_clipping_precision">has_character_clipping_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_character_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_character_output_precision">set_character_output_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to character precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_character_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_character_output_precision">has_character_output_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_clip_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_clip_precision">set_clip_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_precision</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">clip_precision_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_precision</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_decorative_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_decorative_family">set_decorative_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to decorative family.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_decorative_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_decorative_family">is_decorative_family</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_default_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_character_set">set_default_character_set</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to the default value.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_default_clipping_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_clipping_precision">set_default_clipping_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to the default value.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_default_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_output_precision">set_default_output_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to default output precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_output_precision">has_default_output_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_default_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_pitch">set_default_pitch</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to the default value.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_default_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_quality">set_default_quality</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to the default value.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_default_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_dont_care_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_dont_care_family">set_dont_care_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to dont care family.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_dont_care_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_draft_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_draft_quality">set_draft_quality</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to the draft quality.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_draft_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_draft_quality">has_draft_quality</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_escapement"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_escapement">set_escapement</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_escapement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_escapement</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">escapement_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_escapement</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_face_name"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_face_name">set_face_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_face_name</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">a_face_name_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_max_face_name_length">max_face_name_length</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">face_name_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/base/reference/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_family">set_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_family</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">family_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_family</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_fixed_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_fixed_pitch">set_fixed_pitch</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to fixed pitch.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_fixed_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_fixed_pitch">has_fixed_pitch</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_height"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_height</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">height_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_height</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_italic"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_italic">set_italic</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font italic.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">italic</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_italic">italic</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_modern_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_modern_family">set_modern_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to modern family.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_modern_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_modern_family">is_modern_family</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_not_italic"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_not_italic">set_not_italic</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font not italic.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_italic</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_italic">italic</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_not_strike_out"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_not_strike_out">set_not_strike_out</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font not striked out.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_strike_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_not_underlined"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_not_underlined">set_not_underlined</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font not underlined.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_underlined</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_oem_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_oem_character_set">set_oem_character_set</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to OEM.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_oem_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_oem_character_set">has_oem_character_set</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_orientation"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_orientation">set_orientation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_orientation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_orientation</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">orientation_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_orientation</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_out_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_out_precision">set_out_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_out_precision</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">out_precision_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_precision</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_pitch">set_pitch</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_pitch</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">pitch_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pitch</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_pitch_and_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_pitch_and_family">set_pitch_and_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch_and_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_pitch_and_family</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">pitch_and_family_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pitch_and_family</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_proof_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_proof_quality">set_proof_quality</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to the proof quality.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_proof_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_proof_quality">has_proof_quality</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_quality"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_quality">set_quality</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_quality</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">quality_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_quality</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_roman_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_roman_family">set_roman_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to roman family.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_roman_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_roman_family">is_roman_family</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_script_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_script_family">set_script_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to script family.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_script_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_script_family">is_script_family</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_shared"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_shared">set_shared</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to True.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_strike_out"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_strike_out">set_strike_out</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font striked out.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">strike_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_string_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_string_output_precision">set_string_output_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to string output precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_string_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_string_output_precision">has_string_output_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_stroke_clipping_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_stroke_clipping_precision">set_stroke_clipping_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="ecomment"> to the storke clipping precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_stroke_clipping_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_stroke_clipping_precision">has_stroke_clipping_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_stroke_output_precision"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_stroke_output_precision">set_stroke_output_precision</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="ecomment"> to stroke output precision.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_stroke_output_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_stroke_output_precision">has_stroke_output_precision</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_swiss_family"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_swiss_family">set_swiss_family</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="ecomment"> to swiss family.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">is_swiss_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_swiss_family">is_swiss_family</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_symbol_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_symbol_character_set">set_symbol_character_set</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to symbol.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_symbol_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_symbol_character_set">has_symbol_character_set</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_underlined"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_underlined">set_underlined</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current font underlined.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">underlined</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_unicode_character_set"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_unicode_character_set">set_unicode_character_set</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="ecomment"> to unicode.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_unicode_character_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_unicode_character_set">has_unicode_character_set</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_unshared"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to False.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">unshared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="/libraries/base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_variable_pitch"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_variable_pitch">set_variable_pitch</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="ecomment"> to variable pitch.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">has_variable_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_variable_pitch">has_variable_pitch</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_weight"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_weight">set_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_weight">weight</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_weight</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">weight_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_weight">weight</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_weight</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_width"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_width</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_width</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_item"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_dispose"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_dispose">dispose</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Destroy the inner structure of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This function should be called by the GC when the</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object is collected or by the user if </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> is</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> no more usefull.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_to_integer"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Converts </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> to an integer.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_any.html">WEL_ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_cwel_pointer_to_integer">cwel_pointer_to_integer</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_initialize"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize">initialize</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill Current with zeros.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_initialize_with_character"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill current with </SPAN><SPAN CLASS="equoted">a_character</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_memory_copy"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">length</SPAN><SPAN CLASS="ecomment"> bytes from </SPAN><SPAN CLASS="equoted">source_pointer</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">length_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_structure_size">structure_size</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">length_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="/libraries/base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Re-initialisation</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_update_by_font"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_update_by_font">update_by_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_font.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update object attributes using the information of </SPAN><SPAN CLASS="equoted">font</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">font_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">font_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">font</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_LOG_FONT<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

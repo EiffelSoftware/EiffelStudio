@@ -1,103 +1,59 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>GC_INFO Chart</TITLE>
-
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/gc_info_chart.html">GC_INFO</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/gc_info_chart.html">GC_INFO</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Garbage collector statistics.</SPAN>
+		<SPAN CLASS="estring">This class may be used as ancestor by classes needing its facilities.</SPAN>
+		<SPAN CLASS="estring">Time accounting is relevant only if `</SPAN><SPAN CLASS="equoted">enable_time_accounting</SPAN><SPAN CLASS="estring">' </SPAN>
+		<SPAN CLASS="estring">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/memory_chart.html">MEMORY</A><SPAN CLASS="estring">) has been called."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/mem_const_chart.html">MEM_CONST</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`c_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_c_memory">C_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`collected' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_collected">collected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`collected_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_collected_average">collected_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`cpu_interval_time' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_cpu_interval_time">cpu_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`cpu_interval_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_cpu_interval_time_average">cpu_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`cpu_time' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_cpu_time">cpu_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`cpu_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_cpu_time_average">cpu_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`cycle_count' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_cycle_count">cycle_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`eiffel_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_eiffel_memory">Eiffel_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`full_collector' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_full_collector">Full_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`incremental_collector' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_incremental_collector">Incremental_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`memory_used' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_memory_used">memory_used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`real_interval_time' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_real_interval_time">real_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`real_interval_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_real_interval_time_average">real_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`real_time' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_real_time">real_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`real_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_real_time_average">real_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`sys_interval_time' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_sys_interval_time">sys_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`sys_interval_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_sys_interval_time_average">sys_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`sys_time' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_sys_time">sys_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`sys_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_sys_time_average">sys_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`total_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_total_memory">Total_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`type' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`update' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/gc_info.html#f_update">update</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">"Garbage collector statistics.%</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">&nbsp;&nbsp;&nbsp;his class may be used as ancestor by classes needing its facilities.%</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">&nbsp;&nbsp;&nbsp;ime accounting is relevant only if `</SPAN><A CLASS="efeature" HREF="../../reference/kernel/memory.html#f_enable_time_accounting">enable_time_accounting</A><SPAN CLASS="estring">' %</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">%(from </SPAN><A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A><SPAN CLASS="estring">) has been called."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/mem_const_chart.html">MEM_CONST</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`c_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_c_memory">C_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collected' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_collected">collected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`collected_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_collected_average">collected_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cpu_interval_time' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_cpu_interval_time">cpu_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cpu_interval_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_cpu_interval_time_average">cpu_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cpu_time' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_cpu_time">cpu_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cpu_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_cpu_time_average">cpu_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cycle_count' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_cycle_count">cycle_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`eiffel_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_eiffel_memory">Eiffel_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`full_collector' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_full_collector">Full_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`incremental_collector' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_incremental_collector">Incremental_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_used' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_memory_used">memory_used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`real_interval_time' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_real_interval_time">real_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`real_interval_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_real_interval_time_average">real_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`real_time' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_real_time">real_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`real_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_real_time_average">real_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sys_interval_time' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_sys_interval_time">sys_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sys_interval_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_sys_interval_time_average">sys_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sys_time' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_sys_time">sys_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sys_time_average' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_sys_time_average">sys_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`total_memory' was declared in MEM_CONST"><A CLASS="efeature" HREF="../../reference/kernel/mem_const.html#f_total_memory">Total_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`type' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`update' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/gc_info.html#f_update">update</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
+</PRE>
 
 </BODY>
 

@@ -1,84 +1,50 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_LOG_PALETTE Chart</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_log_palette_chart.html">WEL_LOG_PALETTE</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_log_palette_chart.html">WEL_LOG_PALETTE</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/gdi/index.html">wel.gdi</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Defines the attributes of a palette."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`num_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_num_entries">num_entries</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pal_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_pal_entry">pal_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_palette_entry_chart.html">WEL_PALETTE_ENTRY</A></SPAN>
+	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`version' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_version">version</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/wel/reference/gdi/index.html">wel.gdi</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
+	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_num_entries' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_set_num_entries">set_num_entries</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_num_entries</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_pal_entry' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_set_pal_entry">set_pal_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_pal_entry</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_palette_entry_chart.html">WEL_PALETTE_ENTRY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
+	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
+	<SPAN TITLE="`set_version' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_palette.html#f_set_version">set_version</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_version</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Defines the attributes of a palette."</SPAN><BR>
+</PRE>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`num_entries' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_num_entries">num_entries</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pal_entry' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_pal_entry">pal_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_palette_entry_chart.html">WEL_PALETTE_ENTRY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_structure_size">structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`version' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_version">version</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_num_entries' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_set_num_entries">set_num_entries</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_num_entries</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_pal_entry' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_set_pal_entry">set_pal_entry</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_pal_entry</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_palette_entry_chart.html">WEL_PALETTE_ENTRY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_version' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_palette.html#f_set_version">set_version</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_version</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>

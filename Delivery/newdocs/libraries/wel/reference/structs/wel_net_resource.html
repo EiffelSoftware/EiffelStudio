@@ -1,0 +1,517 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
+<TITLE>WEL_NET_RESOURCE Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Information about a network resource.		</SPAN>
+<SPAN CLASS="estring">		The structure is returned during enumeration of network resources. </SPAN>
+<SPAN CLASS="estring">		It is also specified when making or querying a network connection</SPAN>
+<SPAN CLASS="estring">		with calls to various Windows Networking functions.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_net_resource.html">WEL_NET_RESOURCE</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_make">make</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">scope_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_globalnet">resource_globalnet</A>
+			<SPAN CLASS="etag">type_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_disk">resource_type_disk</A>
+			<SPAN CLASS="etag">display_type_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_display_type">display_type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_generic">resource_display_type_generic</A>
+			<SPAN CLASS="etag">usage_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_usage">usage</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_connectable">resource_usage_connectable</A>
+			<SPAN CLASS="etag">local_name_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_local_name">local_name</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">remote_name_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_remote_name">remote_name</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">comment_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_comment">comment</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">provider_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_provider">provider</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_make_by_pointer"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Since </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> is shared, it does not need</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to be freed.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Caution: </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment"> must be a pointer</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> coming from Windows.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN>
+			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_comment"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_comment">comment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comment supplied by the network provider.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> It can be Void if there is no supplied comment.</SPAN>
+</A>
+	<A NAME="f_display_type"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_display_type">display_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value that indicates how the network object should be</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> displayed in a network browsing user interface.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_domain">resource_display_type_domain</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_server">resource_display_type_server</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_share">resource_display_type_share</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_generic">resource_display_type_generic</A>
+</A>
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic Windows handle or structure pointer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can be a HWND, HICON, RECT *, WNDCLASS *, etc...</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_local_name"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_local_name">local_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A><SPAN CLASS="ecomment"> is equal to </SPAN><SPAN CLASS="equoted">Resource_connected</SPAN><SPAN CLASS="ecomment"> or</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Resource_remembered</SPAN><SPAN CLASS="ecomment">, it specifies the name of a local</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device. It is Void if the connection does not use a device.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_connected">resource_connected</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_remembered">resource_remembered</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_provider"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_provider">provider</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of the provider that owns the resource.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> It can be Void if the provider name is unknown.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> To retrieve the provider name, you can call</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">WNetGetProviderName</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_remote_name"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_remote_name">remote_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the entry is a network resource, it specifies the remote</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> network name.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the entry is a current or persistent connection, it points</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to the network name associated with the name pointed to by</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_local_name">local_name</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The string can be MAX_PATH characters in length, and it must</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> follow the network provider's naming conventions.</SPAN>
+</A>
+	<A NAME="f_scope"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value that contains the scope of the enumeration.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_connected">resource_connected</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_globalnet">resource_globalnet</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_remembered">resource_remembered</A>
+</A>
+	<A NAME="f_type"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value that contains a set of bit flags identifying the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> type of resource.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_any">resource_type_any</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_disk">resource_type_disk</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_print">resource_type_print</A>
+</A>
+	<A NAME="f_usage"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_usage">usage</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value that contains a set of bit flags describing how</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the resource can be used.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">valid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_connectable">resource_usage_connectable</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_container">resource_usage_container</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> exist?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_shared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_set_shared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to True.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A>
+</A>
+	<A NAME="f_set_unshared"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="ecomment"> to False.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">unshared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_set_comment"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_comment">set_comment</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_comment">comment</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_comment">comment</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_display_type"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_display_type">set_display_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_display_type">display_type</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_domain">resource_display_type_domain</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_server">resource_display_type_server</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_share">resource_display_type_share</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_generic">resource_display_type_generic</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_display_type">display_type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_value</SPAN>
+</A>
+	<A NAME="f_set_item"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">an_item</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">an_item</SPAN>
+</A>
+	<A NAME="f_set_local_name"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_local_name">set_local_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_local_name">local_name</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Can only be set if </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A><SPAN CLASS="ecomment"> is equal to </SPAN><SPAN CLASS="equoted">Resource_connected</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> or </SPAN><SPAN CLASS="equoted">Resource_remembered</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">connection_use_device</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_connected">resource_connected</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_remembered">resource_remembered</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_local_name">local_name</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_provider"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_provider">set_provider</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_provider">provider</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_provider">provider</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_remote_name"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_remote_name">set_remote_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_remote_name">remote_name</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The string can be MAX_PATH characters in length, and it must</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> follow the network provider's naming conventions.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_max_path">max_path</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_remote_name">remote_name</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_set_scope"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_scope">set_scope</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_connected">resource_connected</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_globalnet">resource_globalnet</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_remembered">resource_remembered</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_value</SPAN>
+</A>
+	<A NAME="f_set_type"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_type">set_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_type">type</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_any">resource_type_any</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_disk">resource_type_disk</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_print">resource_type_print</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_value</SPAN>
+</A>
+	<A NAME="f_set_usage"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_set_usage">set_usage</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_usage">usage</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_value</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Note that this member can be specified only if </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is equal to </SPAN><SPAN CLASS="equoted">Resource_globalnet</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">global_scope</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_scope">scope</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_globalnet">resource_globalnet</A>
+			<SPAN CLASS="etag">valid_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_connectable">resource_usage_connectable</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">a_value</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_container">resource_usage_container</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_usage">usage</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_value</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_dispose"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Destroy the inner structure of </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This function should be called by the GC when the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> object is collected or by the user if </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"> is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> no more usefull.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
+
+	<A NAME="f_to_integer"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Converts </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment"> to an integer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_any.html">WEL_ANY</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_cwel_pointer_to_integer">cwel_pointer_to_integer</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_initialize"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill Current with zeros.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>
+	<A NAME="f_initialize_with_character"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill current with </SPAN><SPAN CLASS="equoted">a_character</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>
+	<A NAME="f_memory_copy"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">length</SPAN><SPAN CLASS="ecomment"> bytes from </SPAN><SPAN CLASS="equoted">source_pointer</SPAN><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure.html">WEL_STRUCTURE</A>
+			<SPAN CLASS="etag">length_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_net_resource.html#f_structure_size">structure_size</A>
+			<SPAN CLASS="etag">length_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">length</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Connect constants</SPAN>
+
+	<A NAME="f_connect_interactive"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_connect_interactive">Connect_interactive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If this flag is set, the operating system may interact with</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the user for authentication purposes.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CONNECT_INTERACTIVE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_connect_localdrive"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_connect_localdrive">Connect_localdrive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If this flag is set, the connection was made using a local</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device redirection. If the lpAccessName parameter points to a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buffer, the local device name is copied to the buffer.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CONNECT_LOCALDRIVE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_connect_prompt"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_connect_prompt">Connect_prompt</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This flag instructs the system not to use any default settings</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for user names or passwords without offering the user the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> opportunity to supply an alternative. This flag is ignored</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> unless CONNECT_INTERACTIVE is also set.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CONNECT_PROMPT</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_connect_redirect"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_connect_redirect">Connect_redirect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This flag forces the redirection of a local device when making</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the connection.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the lpLocalName member of NETRESOURCE specifies a local</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device to redirect, this flag has no effect, because the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> operating system still attempts to redirect the specified</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device. When the operating system automatically chooses a local</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> device, the lpAccessName parameter must point to a return</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buffer and the dwType member must not be equal to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> RESOURCETYPE_ANY.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If this flag is not set, a local device is automatically chosen</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for redirection only if the network requires a local device to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be redirected.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CONNECT_REDIRECT</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_connect_update_profile"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_connect_update_profile">Connect_update_profile</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This flag instructs the operating system to store the network</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> resource connection.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If this bit flag is set, the operating system automatically</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> attempts to restore the connection when the user logs on. The</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> system remembers only successful connections that redirect</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> local devices. It does not remember connections that are</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> unsuccessful or deviceless connections. (A deviceless</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> connection occurs when lpLocalName is NULL or when it points</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to an empty string.)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If this bit flag is clear, the operating system does not</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> automatically restore the connection at logon.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as CONNECT_UPDATE_PROFILE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Generic constants</SPAN>
+
+	<A NAME="f_max_path"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_max_path">Max_path</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">260</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum number of characters in full path</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as MAX_PATH</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Net Errors</SPAN>
+
+	<A NAME="f_error_access_denied"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_access_denied">Error_access_denied</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access to the network resource was denied.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_ACCESS_DENIED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_already_assigned"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_already_assigned">Error_already_assigned</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">85</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The local device specified by the lpLocalName member is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> already connected to a network resource.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_ALREADY_ASSIGNED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_bad_device"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_bad_device">Error_bad_device</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1200</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value specified by lpLocalName is invalid.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_BAD_DEVICE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_bad_net_name"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_bad_net_name">Error_bad_net_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">67</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value specified by the lpRemoteName member is not</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> acceptable to any network resource provider because the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> resource name is invalid, or because the named resource</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> cannot be located.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_BAD_NET_NAME</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_bad_provider"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_bad_provider">Error_bad_provider</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1204</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value specified by the lpProvider member does not match</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> any provider.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_BAD_PROVIDER</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_cancelled"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_cancelled">Error_cancelled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1223</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The attempt to make the connection was canceled by the user</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> through a dialog box from one of the network resource</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> providers, or by a called resource.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_CANCELLED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_extended_error"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_extended_error">Error_extended_error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1208</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> A network-specific error occurred. To obtain a description of</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the error, call the WNetGetLastError function.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_EXTENDED_ERROR</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_invalid_address"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_invalid_address">Error_invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">487</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The caller passed in a pointer to a buffer that could not be</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> accessed.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_INVALID_ADDRESS</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_invalid_parameter"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_invalid_parameter">Error_invalid_parameter</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">87</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This error is a result of one of the following conditions:</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 1. The lpRemoteName member is NULL. In addition, lpAccessName</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;&nbsp;is not NULL, but lpBufferSize is either NULL or points to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;&nbsp;zero.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 2. The dwType member is neither RESOURCETYPE_DISK nor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;&nbsp;RESOURCETYPE_PRINT. In addition, either CONNECT_REDIRECT</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;&nbsp;is set in dwFlags and lpLocalName is NULL, or the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;&nbsp;connection is to a network that requires the redirecting</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;&nbsp;of a local device.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_INVALID_PARAMETER</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_invalid_password"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_invalid_password">Error_invalid_password</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">86</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The specified password is invalid and the CONNECT_INTERACTIVE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> flag is not set.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_INVALID_PASSWORD</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_more_data"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_more_data">Error_more_data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">234</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The lpAccessName buffer is too small.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If a local device is redirected, the buffer needs to be large</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> enough to contain the local device name. Otherwise, the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> buffer needs to be large enough to contain either the string</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pointed to by lpRemoteName, or the name of the connectable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> resource whose alias is pointed to by lpRemoteName. If this</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> error is returned, then no connection has been made.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_MORE_DATA</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_no_more_items"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_no_more_items">Error_no_more_items</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">259</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The operating system cannot automatically choose a local</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> redirection because all the valid local devices are in use.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_NO_MORE_ITEMS</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_no_net_or_bad_path"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_no_net_or_bad_path">Error_no_net_or_bad_path</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1203</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The operation could not be completed, either because a</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> network component is not started, or because the specified</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> resource name is not recognized.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_NO_NET_OR_BAD_PATH</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_error_no_network"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_error_no_network">Error_no_network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1222</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The network is unavailable.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as ERROR_NO_NETWORK</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Net Resource constants</SPAN>
+
+	<A NAME="f_resource_connected"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_connected">Resource_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enumerate currently connected resources.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCE_CONNECTED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_display_type_domain"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_domain">Resource_display_type_domain</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The object should be displayed as a domain.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCEDISPLAYTYPE_DOMAIN</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_display_type_generic"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_generic">Resource_display_type_generic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The method used to display the object does not matter.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCEDISPLAYTYPE_GENERIC</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_display_type_server"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_server">Resource_display_type_server</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The object should be displayed as a server.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCEDISPLAYTYPE_SERVER</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_display_type_share"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_display_type_share">Resource_display_type_share</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The object should be displayed as a share.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCEDISPLAYTYPE_SHARE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_globalnet"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_globalnet">Resource_globalnet</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enumerate all resources on the network.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCE_GLOBALNET</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_remembered"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_remembered">Resource_remembered</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enumerate remembered (persistent) connections.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCE_REMEMBERED</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_type_any"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_any">Resource_type_any</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> All resources</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCETYPE_ANY</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_type_disk"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_disk">Resource_type_disk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Disk resources</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCETYPE_DISK</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_type_print"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_type_print">Resource_type_print</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Print resources</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCETYPE_PRINT</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_usage_connectable"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_connectable">Resource_usage_connectable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The resource is a connectable resource</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCEUSAGE_CONNECTABLE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_resource_usage_container"><A CLASS="efeature" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html#f_resource_usage_container">Resource_usage_container</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The resource is a container resource</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as RESOURCEUSAGE_CONTAINER</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_networking_constants.html">WEL_NETWORKING_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_NET_RESOURCE</PRE>
+
+</BODY>
+
+</HTML>
+

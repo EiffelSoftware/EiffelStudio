@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>UNIX_CLIENT Flat contracts</TITLE>
 		
@@ -10,314 +10,161 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A client with Unix socket."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/local/client_server/unix_client.html">UNIX_CLIENT</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../../net/reference/local/client_server/unix_client.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an unix socket client.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">a_valid_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">a</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_in_out"><A CLASS="efeature" HREF="../../../../net/reference/local/client_server/unix_client.html#f_in_out">in_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/local/socket/unix_stream_socket.html">UNIX_STREAM_SOCKET</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Receive and send sockets.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_receive"><A CLASS="efeature" HREF="../../../../net/reference/abstract/client_server/client.html#f_receive">receive</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Receive message.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/client_server/client.html">CLIENT</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_received"><A CLASS="efeature" HREF="../../../../net/reference/abstract/client_server/client.html#f_received">received</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> message received on </SPAN><SPAN CLASS="equoted">in</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/client_server/client.html">CLIENT</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_send"><A CLASS="efeature" HREF="../../../../net/reference/abstract/client_server/client.html#f_send">send</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Send </SPAN><SPAN CLASS="equoted">msg</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/client_server/client.html">CLIENT</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_address_in_use"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_in_use">address_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Address is in use by another socket.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_address_not_readable"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_not_readable">address_not_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unreadable address</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_already_bound"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_already_bound">already_bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket has already been bound.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_bad_socket_handle"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_bad_socket_handle">bad_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket descriptor is bad.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_connect_in_progress"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connect_in_progress">connect_in_progress</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call to connect returned on a non-blocking socket.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_connection_refused"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connection_refused">connection_refused</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Connection is refused (possibly due to security).</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_dtable_full"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_dtable_full">dtable_full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Descriptor table is full</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_error"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output a related error message.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_error_number"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error_number">error_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Returned error number</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_expired_socket"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_expired_socket">expired_socket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket connection has expired.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_invalid_address"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_address">invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Address is not valid.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_invalid_socket_handle"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_socket_handle">invalid_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket descriptor is not valid.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_network"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_network">network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket failed due to network problems.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_no_buffers"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_buffers">no_buffers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No more buffers available</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_no_permission"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_permission">no_permission</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No permission is given to user for this socket.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_not_connected"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_not_connected">not_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket is not connect.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_protected_address"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protected_address">protected_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No access to this address is allowed.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_protocol_not_supported"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protocol_not_supported">protocol_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Protocol is not supported on this platform.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_socket_family_not_supported"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_family_not_supported">socket_family_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Requested family is not supported.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_socket_in_use"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_in_use">socket_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket is already in use.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_socket_ok"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_ok">socket_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No error</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_socket_would_block"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_would_block">socket_would_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call to read, write, etc would have blocked.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_zero_option"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_zero_option">zero_option</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No options provided</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_cleanup"><A CLASS="efeature" HREF="../../../../net/reference/local/client_server/unix_client.html#f_cleanup">cleanup</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clean close</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Externals: flags for send, sendto recv and recvfrom socket calls</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_c_msgdontroute"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_msgdontroute">c_msgdontroute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not route message</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_c_oobmsg"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_oobmsg">c_oobmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Out of bound message</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_c_peekmsg"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_peekmsg">c_peekmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Peek message</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>UNIX_CLIENT<BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A client with Unix socket."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/local/client_server/unix_client.html">UNIX_CLIENT</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../../net/reference/local/client_server/unix_client.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an unix socket client.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">a_valid_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">a</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_in_out"><A CLASS="efeature" HREF="../../../../net/reference/local/client_server/unix_client.html#f_in_out">in_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/local/socket/unix_stream_socket.html">UNIX_STREAM_SOCKET</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Receive and send sockets.</SPAN>
+
+	<A NAME="f_receive"><A CLASS="efeature" HREF="../../../../net/reference/abstract/client_server/client.html#f_receive">receive</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Receive message.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/client_server/client.html">CLIENT</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_received"><A CLASS="efeature" HREF="../../../../net/reference/abstract/client_server/client.html#f_received">received</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> message received on </SPAN><SPAN CLASS="equoted">in</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/client_server/client.html">CLIENT</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_send"><A CLASS="efeature" HREF="../../../../net/reference/abstract/client_server/client.html#f_send">send</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Send </SPAN><SPAN CLASS="equoted">msg</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/client_server/client.html">CLIENT</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_address_in_use"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_in_use">address_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Address is in use by another socket.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_address_not_readable"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_address_not_readable">address_not_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unreadable address</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_already_bound"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_already_bound">already_bound</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket has already been bound.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_bad_socket_handle"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_bad_socket_handle">bad_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket descriptor is bad.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_connect_in_progress"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connect_in_progress">connect_in_progress</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call to connect returned on a non-blocking socket.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_connection_refused"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_connection_refused">connection_refused</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Connection is refused (possibly due to security).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_dtable_full"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_dtable_full">dtable_full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Descriptor table is full</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_error"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error">error</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output a related error message.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_error_number"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_error_number">error_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Returned error number</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_expired_socket"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_expired_socket">expired_socket</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket connection has expired.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_invalid_address"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_address">invalid_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Address is not valid.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_invalid_socket_handle"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_invalid_socket_handle">invalid_socket_handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket descriptor is not valid.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_network"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_network">network</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket failed due to network problems.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_no_buffers"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_buffers">no_buffers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No more buffers available</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_no_permission"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_no_permission">no_permission</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No permission is given to user for this socket.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_not_connected"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_not_connected">not_connected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket is not connect.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_protected_address"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protected_address">protected_address</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No access to this address is allowed.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_protocol_not_supported"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_protocol_not_supported">protocol_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Protocol is not supported on this platform.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_socket_family_not_supported"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_family_not_supported">socket_family_not_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Requested family is not supported.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_socket_in_use"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_in_use">socket_in_use</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Socket is already in use.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_socket_ok"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_ok">socket_ok</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No error</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_socket_would_block"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_socket_would_block">socket_would_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call to read, write, etc would have blocked.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_zero_option"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_zero_option">zero_option</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No options provided</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_cleanup"><A CLASS="efeature" HREF="../../../../net/reference/local/client_server/unix_client.html#f_cleanup">cleanup</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Clean close</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Externals: flags for send, sendto recv and recvfrom socket calls</SPAN>
+
+	<A NAME="f_c_msgdontroute"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_msgdontroute">c_msgdontroute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not route message</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_c_oobmsg"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_oobmsg">c_oobmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Out of bound message</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_c_peekmsg"><A CLASS="efeature" HREF="../../../../net/reference/abstract/socket/socket_resources.html#f_c_peekmsg">c_peekmsg</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Peek message</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../net/reference/abstract/socket/socket_resources.html">SOCKET_RESOURCES</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>UNIX_CLIENT</PRE>
 
 </BODY>
 
 </HTML>
-<BR>
 

@@ -1,96 +1,62 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_TA_CONSTANTS Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Text Alignment (TA) constants."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Text Alignment (TA) constants."</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ta_constants.html">WEL_TA_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+	<A NAME="f_ta_baseline"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_baseline">ta_baseline</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_bottom"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_bottom">ta_bottom</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_center"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_center">ta_center</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_left"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_left">ta_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_noupdatecp"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_noupdatecp">ta_noupdatecp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_right"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_right">ta_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_top"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_top">ta_top</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>
+	<A NAME="f_ta_updatecp"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_ta_updatecp">ta_updatecp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_valid_htext_alignment_constant"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_valid_htext_alignment_constant">valid_htext_alignment_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> a valid text alignment constant for horizontal positioning?</SPAN>
+</A>
+	<A NAME="f_valid_text_alignment_constant"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_valid_text_alignment_constant">valid_text_alignment_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> a valid text alignment constant?</SPAN>
+</A>
+	<A NAME="f_valid_vtext_alignment_constant"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_ta_constants.html#f_valid_vtext_alignment_constant">valid_vtext_alignment_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> a valid text alignment constant for vertical positioning?</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
-<BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_TA_CONSTANTS</PRE>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_ta_constants.html">WEL_TA_CONSTANTS</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_baseline"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_baseline">ta_baseline</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_bottom"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_bottom">ta_bottom</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_center"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_center">ta_center</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_left"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_left">ta_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_noupdatecp"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_noupdatecp">ta_noupdatecp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_right"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_right">ta_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_top"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_top">ta_top</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_ta_updatecp"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_ta_updatecp">ta_updatecp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_valid_text_alignement_constant"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_ta_constants.html#f_valid_text_alignement_constant">valid_text_alignement_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> a valid text alignment constant?</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_TA_CONSTANTS<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

@@ -1,0 +1,73 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
+<TITLE>WEL_PROCESS_LAUNCHER Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">					Launch processes and redirect output:</SPAN>
+<SPAN CLASS="estring">					 &nbsp;- Use `</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_spawn">spawn</A><SPAN CLASS="estring">' to launch a process asynchronously.</SPAN>
+<SPAN CLASS="estring">					 &nbsp;		Note: you cannot retrieve the ouput from a</SPAN>
+<SPAN CLASS="estring">					 &nbsp;		process that was spawned</SPAN>
+<SPAN CLASS="estring">					 &nbsp;- Use `</SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_launch">launch</A><SPAN CLASS="estring">' to launch a process synchronously</SPAN>
+<SPAN CLASS="estring">					 &nbsp;		and process its output if needed.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_process_launcher.html">WEL_PROCESS_LAUNCHER</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_last_launch_successful"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_last_launch_successful">last_launch_successful</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was last call to </SPAN><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_launch">launch</A><SPAN CLASS="ecomment"> successful (i.e. was process started)?</SPAN>
+
+	<A NAME="f_last_process_result"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_last_process_result">last_process_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Last launched process return value</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
+
+	<A NAME="f_launch"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_launch">launch</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_working_directory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_output_handler</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Launch process described in </SPAN><SPAN CLASS="equoted">a_command_line</SPAN><SPAN CLASS="ecomment"> from </SPAN><SPAN CLASS="equoted">a_working_directory</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Wait for end of process and send output to </SPAN><SPAN CLASS="equoted">a_output_handler</SPAN><SPAN CLASS="ecomment"> if not void.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">non_void_command_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_command_line</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_command_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">a_command_line</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A>
+			<SPAN CLASS="etag">non_void_working_directory</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_working_directory</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_launch_and_refresh"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_launch_and_refresh">launch_and_refresh</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_working_directory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_refresh_handler</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/tuple.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Launch process described in </SPAN><SPAN CLASS="equoted">a_command_line</SPAN><SPAN CLASS="ecomment"> from </SPAN><SPAN CLASS="equoted">a_working_directory</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Calls </SPAN><SPAN CLASS="equoted">a_refresh_handler</SPAN><SPAN CLASS="ecomment"> regularly while waiting for end of process.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">non_void_command_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_command_line</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_command_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">a_command_line</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A>
+			<SPAN CLASS="etag">non_void_working_directory</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_working_directory</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_spawn"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_process_launcher.html#f_spawn">spawn</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command_line</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_working_directory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Spawn asynchronously process described in </SPAN><SPAN CLASS="equoted">a_command_line</SPAN><SPAN CLASS="ecomment"> from </SPAN><SPAN CLASS="equoted">a_working_directory</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">non_void_command_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_command_line</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">valid_command_line</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">a_command_line</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/structures/storage/finite.html#f_is_empty">is_empty</A>
+			<SPAN CLASS="etag">non_void_working_directory</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_working_directory</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_PROCESS_LAUNCHER</PRE>
+
+</BODY>
+
+</HTML>
+

@@ -1,105 +1,60 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>ANY Chart</TITLE>
-
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Project-wide universal properties.</SPAN>
+		<SPAN CLASS="estring">This class is an ancestor to all developer-written classes.</SPAN>
+		<SPAN CLASS="estring"></SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="estring"> may be customized for individual projects or teams."</SPAN>
 
-<BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`clone' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`conforms_to' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`deep_clone' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_deep_clone">deep_clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`deep_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_deep_equal">deep_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`default' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default">default</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`default_pointer' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`equal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`generating_type' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_generating_type">generating_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`generator' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_generator">generator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`io' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_io">Io</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/std_files_chart.html">STD_FILES</A></SPAN>
+	<SPAN TITLE="`is_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`operating_environment' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_operating_environment">Operating_environment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/support/operating_environment_chart.html">OPERATING_ENVIRONMENT</A></SPAN>
+	<SPAN TITLE="`out' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`same_type' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_same_type">same_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`standard_clone' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_clone">standard_clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`standard_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_equal">standard_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`standard_is_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`tagged_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_tagged_out">tagged_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`void' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">:</SPAN> NONE</SPAN>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`copy' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`deep_copy' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_deep_copy">deep_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`default_create' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_create">default_create</A></SPAN>
+	<SPAN TITLE="`default_rescue' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_rescue">default_rescue</A></SPAN>
+	<SPAN TITLE="`do_nothing' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_do_nothing">do_nothing</A></SPAN>
+	<SPAN TITLE="`print' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_print">print</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`standard_copy' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_copy">standard_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">reflexive equality</SPAN>
+	<SPAN CLASS="etag">reflexive conformance</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">"Project-wide universal properties. %</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">&nbsp;&nbsp;&nbsp;his class is an ancestor to all developer-written classes. %</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">%ANY may be customized for individual projects or teams."</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`clone' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`conforms_to' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`deep_clone' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_deep_clone">deep_clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`deep_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_deep_equal">deep_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_default">default</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_pointer' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`equal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`generating_type' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_generating_type">generating_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`generator' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_generator">generator</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`io' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_io">Io</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`operating_environment' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_operating_environment">Operating_environment</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/support/operating_environment_chart.html">OPERATING_ENVIRONMENT</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`out' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`same_type' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_same_type">same_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`standard_clone' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_clone">standard_clone</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`standard_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_equal">standard_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`standard_is_equal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tagged_out' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_tagged_out">tagged_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`void' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">:</SPAN> NONE</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`copy' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`deep_copy' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_deep_copy">deep_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_create' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_default_create">default_create</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_rescue' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_default_rescue">default_rescue</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`do_nothing' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_do_nothing">do_nothing</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`print' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_print">print</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`standard_copy' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/any.html#f_standard_copy">standard_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Constraints</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive equality</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive conformance</SPAN><BR>
-
-<BR>
-
-<BR>
-
+</PRE>
 
 </BODY>
 

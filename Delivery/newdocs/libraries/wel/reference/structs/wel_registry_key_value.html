@@ -1,312 +1,150 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_REGISTRY_KEY_VALUE Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Structure describing a registry key value"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_registry_key_value.html">WEL_REGISTRY_KEY_VALUE</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">v_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">v</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">type_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">t</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">v_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">v</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">type_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">t</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_dword_value"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_dword_value">dword_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Data converted as integer.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword">reg_dword</A>
+</A>
+	<A NAME="f_reg_binary"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_binary">Reg_binary</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> General binary value</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_BINARY</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_dword"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword">Reg_dword</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double word value</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_DWORD</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_dword_big_endian"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_big_endian">Reg_dword_big_endian</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double word value in big-endian format</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_DWORD_BIG_ENDIAN</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_dword_little_endian"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_little_endian">Reg_dword_little_endian</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">4</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Synonym of </SPAN><SPAN CLASS="equoted">Reg_dword</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_DWORD_LITTLE_ENDIAN</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_expand_sz"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_expand_sz">Reg_expand_sz</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> C-String that contains unexpanded references to environment</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> variables</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_EXPAND_SZ</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_link"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_link">Reg_link</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unicode symbolic link</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_LINK</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_multi_sz"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_multi_sz">Reg_multi_sz</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array of C-strings, terminated by two null characters</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_MULTI_SZ</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_none"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_none">Reg_none</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No defined value type</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_NONE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_resource_list"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_resource_list">Reg_resource_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Device-driver resource list</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_RESOURCE_LIST</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_reg_sz"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_sz">Reg_sz</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> C-String</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as REG_SZ</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_string_value"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_string_value">string_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 	Data converted as string.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html#f_reg_sz">reg_sz</A>
+</A>
+	<A NAME="f_type"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Type of value</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment"> for possible</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> values.</SPAN>
+
+	<A NAME="f_value"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Data.</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN>
+
+	<A NAME="f_set_type"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_set_type">set_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set type of value with </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment"> for possible</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> values for </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">type_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">t</SPAN>
+</A>
+	<A NAME="f_set_value"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_set_value">set_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">v_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">v</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">value_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_registry_key_value.html#f_value">value</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_REGISTRY_KEY_VALUE</PRE>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Structure describing a registry key value"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html">WEL_REGISTRY_KEY_VALUE</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">create</SPAN> <BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_make">make</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an empty structure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_initialized</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN><BR>
-
-</A><BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_make">make</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create an empty structure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_initialized</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">a_pointer</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">item_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_pointer</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_dword_value"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_dword_value">dword_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Data of double word value</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword">reg_dword</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_little_endian">reg_dword_little_endian</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_item"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pointer to C structure.</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_binary"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_binary">reg_binary</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> General binary value</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_dword"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword">reg_dword</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double word value</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_dword_big_endian"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_big_endian">reg_dword_big_endian</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Double word value in big-endian format</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_dword_little_endian"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_little_endian">reg_dword_little_endian</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Synonym of </SPAN><SPAN CLASS="equoted">Reg_dword</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_expand_sz"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_expand_sz">reg_expand_sz</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> C-String that contains unexpanded references to environment variables</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_link"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_link">reg_link</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unicode symbolic link</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_multi_sz"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_multi_sz">reg_multi_sz</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array of C-strings, terminated by two null characters</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_none"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_none">reg_none</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> No defined value type</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_resource_list"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_resource_list">reg_resource_list</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Device-driver resource list</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_reg_sz"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_sz">reg_sz</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> C-String</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_string_value"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_string_value">string_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Data of string value</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_sz">reg_sz</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_expand_sz">reg_expand_sz</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_type"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Type of value</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment"> for possible</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> values.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_value"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_value">value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pointer on datas of any type</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_destroy"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_destroy">destroy</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Free C structure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_dword_value"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_set_dword_value">set_dword_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set data of key value with </SPAN><SPAN CLASS="equoted">data</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value type must be set first.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword">reg_dword</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_little_endian">reg_dword_little_endian</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_string_value"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_set_string_value">set_string_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set data of key value with </SPAN><SPAN CLASS="equoted">data</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value type must be set first.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_sz">reg_sz</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_expand_sz">reg_expand_sz</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_type"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_set_type">set_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set type of value with </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> See class </SPAN><A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html">WEL_REGISTRY_KEY_VALUE_TYPE</A><SPAN CLASS="ecomment"> for possible</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> values for </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_binary">reg_binary</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword">reg_dword</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_dword_little_endian">reg_dword_little_endian</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_expand_sz">reg_expand_sz</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_registry_key_value_type.html#f_reg_sz">reg_sz</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_value"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_set_value">set_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pointer_to_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set data of key value to datas pointed by </SPAN><SPAN CLASS="equoted">pointer_to_data</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> with </SPAN><SPAN CLASS="equoted">length</SPAN><SPAN CLASS="ecomment"> bytes.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">allocated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_registry_key_value.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_default_pointer">default_pointer</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_REGISTRY_KEY_VALUE<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

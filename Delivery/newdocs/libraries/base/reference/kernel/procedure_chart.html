@@ -1,83 +1,48 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>PROCEDURE Chart</TITLE>
-
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Objects representing delayed calls to a procedure.</SPAN>
+		<SPAN CLASS="estring">with some operands possibly still open."</SPAN>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/routine_chart.html">ROUTINE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`callable' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`hash_code' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_equal' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_hashable' was declared in HASHABLE"><A CLASS="efeature" HREF="../../../base/reference/kernel/hashable.html#f_is_hashable">is_hashable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`open_count' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_open_count">open_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`open_operand_type' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_open_operand_type">open_operand_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`operands' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN></SPAN>
+	<SPAN TITLE="`postcondition' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_postcondition">postcondition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`precondition' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_precondition">precondition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`target' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`valid_operands' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`adapt' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_adapt">adapt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/routine_chart.html">ROUTINE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`apply' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/procedure.html#f_apply">apply</A></SPAN>
+	<SPAN TITLE="`call' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_call">call</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`copy' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_operands' was declared in ROUTINE"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_set_operands">set_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">"Objects representing delayed calls to a procedure.%</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">%%</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">%with some operands possibly still open."</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/routine_chart.html">ROUTINE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/tuple_chart.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`callable' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_callable">callable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hash_code' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_equal' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_hashable' was declared in HASHABLE"><A CLASS="efeature" HREF="../../reference/kernel/hashable.html#f_is_hashable">is_hashable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`open_count' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_open_count">open_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`open_operand_type' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_open_operand_type">open_operand_type</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`operands' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`postcondition' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_postcondition">postcondition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`precondition' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_precondition">precondition</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`target' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_operands' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`adapt' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_adapt">adapt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/routine_chart.html">ROUTINE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`apply' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/procedure.html#f_apply">apply</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`call' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_call">call</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`copy' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/procedure_chart.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">BASE_TYPE</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_operands' was declared in ROUTINE"><A CLASS="efeature" HREF="../../reference/kernel/routine.html#f_set_operands">set_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
+</PRE>
 
 </BODY>
 

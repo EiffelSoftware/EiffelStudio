@@ -1,972 +1,662 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_WM_CONSTANTS Flat contracts</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Window message (WM) constants."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Window message (WM) constants."</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_wm_constants.html">WEL_WM_CONSTANTS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+	<A NAME="f_wm_activate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_activate">Wm_activate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ACTIVATE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_wm_activateapp"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_activateapp">Wm_activateapp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">28</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ACTIVATEAPP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">author</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Arnaud PICHERY [ </SPAN><A CLASS="estring" HREF="mailto:aranud@mail.dotcom.fr">aranud@mail.dotcom.fr</A><SPAN CLASS="estring"> ]"</SPAN><BR>
+	<A NAME="f_wm_afxfirst"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_afxfirst">Wm_afxfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">864</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_AFXFIRST</SPAN>
 
-<BR>
+	<A NAME="f_wm_afxlast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_afxlast">Wm_afxlast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">895</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_AFXLAST</SPAN>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_wm_app"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_app">Wm_app</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_APP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_wm_constants.html">WEL_WM_CONSTANTS</A><BR>
+	<A NAME="f_wm_appcommand"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_appcommand">Wm_appcommand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">793</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_APPCOMMAND</SPAN>
 
-<BR>
+	<A NAME="f_wm_askcbformatname"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_askcbformatname">Wm_askcbformatname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">780</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ASKCBFORMATNAME</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+	<A NAME="f_wm_canceljournal"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_canceljournal">Wm_canceljournal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">75</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CANCELJOURNAL</SPAN>
 
-<BR>
+	<A NAME="f_wm_cancelmode"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_cancelmode">Wm_cancelmode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">31</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CANCELMODE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_activate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_activate">Wm_activate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">6</SPAN></A><BR>
+	<A NAME="f_wm_capturechanged"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_capturechanged">Wm_capturechanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">533</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CAPTURECHANGED</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ACTIVATE</SPAN><BR>
+	<A NAME="f_wm_changecbchain"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_changecbchain">Wm_changecbchain</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">781</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHANGECBCHAIN</SPAN>
 
-<BR>
+	<A NAME="f_wm_changeuistate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_changeuistate">Wm_changeuistate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">295</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHANGEUISTATE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_activateapp"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_activateapp">Wm_activateapp</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">28</SPAN></A><BR>
+	<A NAME="f_wm_char"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_char">Wm_char</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">258</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHAR</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ACTIVATEAPP</SPAN><BR>
+	<A NAME="f_wm_chartoitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_chartoitem">Wm_chartoitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">47</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHARTOITEM</SPAN>
 
-<BR>
+	<A NAME="f_wm_childactivate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_childactivate">Wm_childactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">34</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHILDACTIVATE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_askcbformatname"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_askcbformatname">Wm_askcbformatname</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">780</SPAN></A><BR>
+	<A NAME="f_wm_clear"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_clear">Wm_clear</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">771</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CLEAR</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ASKCBFORMATNAME</SPAN><BR>
+	<A NAME="f_wm_close"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_close">Wm_close</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CLOSE</SPAN>
 
-<BR>
+	<A NAME="f_wm_command"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_command">Wm_command</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">273</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMMAND</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_cancelmode"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_cancelmode">Wm_cancelmode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">31</SPAN></A><BR>
+	<A NAME="f_wm_commnotify"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_commnotify">Wm_commnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">68</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMMNOTIFY</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CANCELMODE</SPAN><BR>
+	<A NAME="f_wm_compacting"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_compacting">Wm_compacting</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMPACTING</SPAN>
 
-<BR>
+	<A NAME="f_wm_compareitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_compareitem">Wm_compareitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">57</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMPAREITEM</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_changecbchain"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_changecbchain">Wm_changecbchain</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">781</SPAN></A><BR>
+	<A NAME="f_wm_contextmenu"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_contextmenu">Wm_contextmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">123</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CONTEXTMENU</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHANGECBCHAIN</SPAN><BR>
+	<A NAME="f_wm_copy"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_copy">Wm_copy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">769</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COPY</SPAN>
 
-<BR>
+	<A NAME="f_wm_copydata"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_copydata">Wm_copydata</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">74</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COPYDATA</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_char"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_char">Wm_char</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">258</SPAN></A><BR>
+	<A NAME="f_wm_create"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_create">Wm_create</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CREATE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHAR</SPAN><BR>
+	<A NAME="f_wm_cut"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_cut">Wm_cut</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">768</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CUT</SPAN>
 
-<BR>
+	<A NAME="f_wm_deadchar"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_deadchar">Wm_deadchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">259</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DEADCHAR</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_chartoitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_chartoitem">Wm_chartoitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">47</SPAN></A><BR>
+	<A NAME="f_wm_deleteitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_deleteitem">Wm_deleteitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">45</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DELETEITEM</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHARTOITEM</SPAN><BR>
+	<A NAME="f_wm_destroy"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_destroy">Wm_destroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DESTROY</SPAN>
 
-<BR>
+	<A NAME="f_wm_destroyclipboard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_destroyclipboard">Wm_destroyclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">775</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DESTROYCLIPBOARD</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_childactivate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_childactivate">Wm_childactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">34</SPAN></A><BR>
+	<A NAME="f_wm_devicechange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_devicechange">Wm_devicechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">537</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DEVICECHANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CHILDACTIVATE</SPAN><BR>
+	<A NAME="f_wm_devmodechange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_devmodechange">Wm_devmodechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">27</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DEVMODECHANGE</SPAN>
 
-<BR>
+	<A NAME="f_wm_displaychange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_displaychange">Wm_displaychange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">126</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DISPLAYCHANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_clear"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_clear">Wm_clear</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">771</SPAN></A><BR>
+	<A NAME="f_wm_drawclipboard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_drawclipboard">Wm_drawclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">776</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DRAWCLIPBOARD</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CLEAR</SPAN><BR>
+	<A NAME="f_wm_drawitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_drawitem">Wm_drawitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">43</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DRAWITEM</SPAN>
 
-<BR>
+	<A NAME="f_wm_dropfiles"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_dropfiles">Wm_dropfiles</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">563</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DROPFILES</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_close"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_close">Wm_close</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">16</SPAN></A><BR>
+	<A NAME="f_wm_enable"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_enable">Wm_enable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENABLE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CLOSE</SPAN><BR>
+	<A NAME="f_wm_endsession"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_endsession">Wm_endsession</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">22</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENDSESSION</SPAN>
 
-<BR>
+	<A NAME="f_wm_enteridle"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_enteridle">Wm_enteridle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">289</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENTERIDLE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_command"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_command">Wm_command</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">273</SPAN></A><BR>
+	<A NAME="f_wm_entermenuloop"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_entermenuloop">Wm_entermenuloop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">529</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENTERMENULOOP</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMMAND</SPAN><BR>
+	<A NAME="f_wm_entersizemove"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_entersizemove">Wm_entersizemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">561</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENTERSIZEMOVE</SPAN>
 
-<BR>
+	<A NAME="f_wm_erasebkgnd"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_erasebkgnd">Wm_erasebkgnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">20</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ERASEBKGND</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_commnotify"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_commnotify">Wm_commnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">68</SPAN></A><BR>
+	<A NAME="f_wm_exitmenuloop"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_exitmenuloop">Wm_exitmenuloop</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">530</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_EXITMENULOOP</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMMNOTIFY</SPAN><BR>
+	<A NAME="f_wm_exitsizemove"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_exitsizemove">Wm_exitsizemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">562</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_EXITSIZEMOVE</SPAN>
 
-<BR>
+	<A NAME="f_wm_fontchange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_fontchange">Wm_fontchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">29</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_FONTCHANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_compacting"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_compacting">Wm_compacting</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">65</SPAN></A><BR>
+	<A NAME="f_wm_getdlgcode"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_getdlgcode">Wm_getdlgcode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">135</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETDLGCODE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMPACTING</SPAN><BR>
+	<A NAME="f_wm_getfont"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_getfont">Wm_getfont</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">49</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETFONT</SPAN>
 
-<BR>
+	<A NAME="f_wm_gethotkey"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_gethotkey">Wm_gethotkey</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">51</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETHOTKEY</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_compareitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_compareitem">Wm_compareitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">57</SPAN></A><BR>
+	<A NAME="f_wm_geticon"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_geticon">Wm_geticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">127</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETICON</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COMPAREITEM</SPAN><BR>
+	<A NAME="f_wm_getminmaxinfo"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_getminmaxinfo">Wm_getminmaxinfo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">36</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETMINMAXINFO</SPAN>
 
-<BR>
+	<A NAME="f_wm_getobject"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_getobject">Wm_getobject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">61</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETOBJECT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_copy"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_copy">Wm_copy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">769</SPAN></A><BR>
+	<A NAME="f_wm_gettext"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_gettext">Wm_gettext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETTEXT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_COPY</SPAN><BR>
+	<A NAME="f_wm_gettextlength"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_gettextlength">Wm_gettextlength</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">14</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETTEXTLENGTH</SPAN>
 
-<BR>
+	<A NAME="f_wm_handheldfirst"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_handheldfirst">Wm_handheldfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">856</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HANDHELDFIRST</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_create"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_create">Wm_create</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A><BR>
+	<A NAME="f_wm_handheldlast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_handheldlast">Wm_handheldlast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">863</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HANDHELDLAST</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CREATE</SPAN><BR>
+	<A NAME="f_wm_help"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_help">Wm_help</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">83</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HELP</SPAN>
 
-<BR>
+	<A NAME="f_wm_hotkey"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_hotkey">Wm_hotkey</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">786</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HOTKEY</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_cut"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_cut">Wm_cut</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">768</SPAN></A><BR>
+	<A NAME="f_wm_hscroll"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_hscroll">Wm_hscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">276</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HSCROLL</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_CUT</SPAN><BR>
+	<A NAME="f_wm_hscrollclipboard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_hscrollclipboard">Wm_hscrollclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">782</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HSCROLLCLIPBOARD</SPAN>
 
-<BR>
+	<A NAME="f_wm_iconerasebkgnd"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_iconerasebkgnd">Wm_iconerasebkgnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">39</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ICONERASEBKGND</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_deadchar"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_deadchar">Wm_deadchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">259</SPAN></A><BR>
+	<A NAME="f_wm_ime_char"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_char">Wm_ime_char</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">646</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_CHAR</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DEADCHAR</SPAN><BR>
+	<A NAME="f_wm_ime_composition"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_composition">Wm_ime_composition</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">271</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_COMPOSITION</SPAN>
 
-<BR>
+	<A NAME="f_wm_ime_compositionfull"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_compositionfull">Wm_ime_compositionfull</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">644</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_COMPOSITIONFULL</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_deleteitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_deleteitem">Wm_deleteitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">45</SPAN></A><BR>
+	<A NAME="f_wm_ime_control"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_control">Wm_ime_control</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">643</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_CONTROL</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DELETEITEM</SPAN><BR>
+	<A NAME="f_wm_ime_endcomposition"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_endcomposition">Wm_ime_endcomposition</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">270</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_ENDCOMPOSITION</SPAN>
 
-<BR>
+	<A NAME="f_wm_ime_keydown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_keydown">Wm_ime_keydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">656</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_KEYDOWN</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_destroy"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_destroy">Wm_destroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A><BR>
+	<A NAME="f_wm_ime_keylast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_keylast">wm_ime_keylast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_KEYLAST</SPAN>
+</A>
+	<A NAME="f_wm_ime_keyup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_keyup">Wm_ime_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">657</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_KEYUP</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DESTROY</SPAN><BR>
+	<A NAME="f_wm_ime_notify"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_notify">Wm_ime_notify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">642</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_NOTIFY</SPAN>
 
-<BR>
+	<A NAME="f_wm_ime_request"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_request">Wm_ime_request</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">648</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_REQUEST</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_destroyclipboard"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_destroyclipboard">Wm_destroyclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">775</SPAN></A><BR>
+	<A NAME="f_wm_ime_select"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_select">Wm_ime_select</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">645</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_SELECT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DESTROYCLIPBOARD</SPAN><BR>
+	<A NAME="f_wm_ime_setcontext"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_setcontext">Wm_ime_setcontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">641</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_SETCONTEXT</SPAN>
 
-<BR>
+	<A NAME="f_wm_ime_startcomposition"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ime_startcomposition">Wm_ime_startcomposition</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">269</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_STARTCOMPOSITION</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_devmodechange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_devmodechange">Wm_devmodechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">27</SPAN></A><BR>
+	<A NAME="f_wm_initdialog"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_initdialog">Wm_initdialog</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">272</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INITDIALOG</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DEVMODECHANGE</SPAN><BR>
+	<A NAME="f_wm_initmenu"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_initmenu">Wm_initmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">278</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INITMENU</SPAN>
 
-<BR>
+	<A NAME="f_wm_initmenupopup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_initmenupopup">Wm_initmenupopup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">279</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INITMENUPOPUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_displaychange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_displaychange">Wm_displaychange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">126</SPAN></A><BR>
+	<A NAME="f_wm_inputlangchange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_inputlangchange">Wm_inputlangchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">81</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INPUTLANGCHANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DISPLAYCHANGE</SPAN><BR>
+	<A NAME="f_wm_inputlangchangerequest"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_inputlangchangerequest">Wm_inputlangchangerequest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">80</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INPUTLANGCHANGEREQUEST</SPAN>
 
-<BR>
+	<A NAME="f_wm_keydown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_keydown">Wm_keydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYDOWN</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_drawclipboard"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_drawclipboard">Wm_drawclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">776</SPAN></A><BR>
+	<A NAME="f_wm_keyfirst"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_keyfirst">Wm_keyfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYFIRST</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DRAWCLIPBOARD</SPAN><BR>
+	<A NAME="f_wm_keylast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_keylast">wm_keylast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYLAST</SPAN>
+</A>
+	<A NAME="f_wm_keyup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_keyup">Wm_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">257</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYUP</SPAN>
 
-<BR>
+	<A NAME="f_wm_killfocus"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_killfocus">Wm_killfocus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KILLFOCUS</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_drawitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_drawitem">Wm_drawitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">43</SPAN></A><BR>
+	<A NAME="f_wm_lbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_lbuttondblclk">Wm_lbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">515</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_LBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DRAWITEM</SPAN><BR>
+	<A NAME="f_wm_lbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_lbuttondown">Wm_lbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">513</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_LBUTTONDOWN</SPAN>
 
-<BR>
+	<A NAME="f_wm_lbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_lbuttonup">Wm_lbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">514</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_LBUTTONUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_dropfiles"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_dropfiles">Wm_dropfiles</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">563</SPAN></A><BR>
+	<A NAME="f_wm_mbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mbuttondblclk">Wm_mbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">521</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_DROPFILES</SPAN><BR>
+	<A NAME="f_wm_mbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mbuttondown">Wm_mbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">519</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MBUTTONDOWN</SPAN>
 
-<BR>
+	<A NAME="f_wm_mbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mbuttonup">Wm_mbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">520</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MBUTTONUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_enable"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_enable">Wm_enable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">10</SPAN></A><BR>
+	<A NAME="f_wm_mdiactivate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdiactivate">Wm_mdiactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">546</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIACTIVATE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENABLE</SPAN><BR>
+	<A NAME="f_wm_mdicascade"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdicascade">Wm_mdicascade</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">551</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDICASCADE</SPAN>
 
-<BR>
+	<A NAME="f_wm_mdicreate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdicreate">Wm_mdicreate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">544</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDICREATE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_endsession"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_endsession">Wm_endsession</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">22</SPAN></A><BR>
+	<A NAME="f_wm_mdidestroy"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdidestroy">Wm_mdidestroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">545</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIDESTROY</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENDSESSION</SPAN><BR>
+	<A NAME="f_wm_mdigetactive"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdigetactive">Wm_mdigetactive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">553</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIGETACTIVE</SPAN>
 
-<BR>
+	<A NAME="f_wm_mdiiconarrange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdiiconarrange">Wm_mdiiconarrange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">552</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIICONARRANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_enteridle"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_enteridle">Wm_enteridle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">289</SPAN></A><BR>
+	<A NAME="f_wm_mdimaximize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdimaximize">Wm_mdimaximize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">549</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIMAXIMIZE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENTERIDLE</SPAN><BR>
+	<A NAME="f_wm_mdinext"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdinext">Wm_mdinext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">548</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDINEXT</SPAN>
 
-<BR>
+	<A NAME="f_wm_mdirefreshmenu"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdirefreshmenu">Wm_mdirefreshmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">564</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIREFRESHMENU</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_entersizemove"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_entersizemove">Wm_entersizemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">561</SPAN></A><BR>
+	<A NAME="f_wm_mdirestore"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdirestore">Wm_mdirestore</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">547</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIRESTORE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ENTERSIZEMOVE</SPAN><BR>
+	<A NAME="f_wm_mdisetmenu"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mdisetmenu">Wm_mdisetmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">560</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDISETMENU</SPAN>
 
-<BR>
+	<A NAME="f_wm_mditile"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mditile">Wm_mditile</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">550</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDITILE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_erasebkgnd"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_erasebkgnd">Wm_erasebkgnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">20</SPAN></A><BR>
+	<A NAME="f_wm_measureitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_measureitem">Wm_measureitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">44</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MEASUREITEM</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ERASEBKGND</SPAN><BR>
+	<A NAME="f_wm_menuchar"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_menuchar">Wm_menuchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">288</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUCHAR</SPAN>
 
-<BR>
+	<A NAME="f_wm_menucommand"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_menucommand">Wm_menucommand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">294</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUCOMMAND</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_exitsizemove"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_exitsizemove">Wm_exitsizemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">562</SPAN></A><BR>
+	<A NAME="f_wm_menudrag"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_menudrag">Wm_menudrag</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">291</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUDRAG</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_EXITSIZEMOVE</SPAN><BR>
+	<A NAME="f_wm_menugetobject"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_menugetobject">Wm_menugetobject</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">292</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUGETOBJECT</SPAN>
 
-<BR>
+	<A NAME="f_wm_menurbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_menurbuttonup">Wm_menurbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">290</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENURBUTTONUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_fontchange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_fontchange">Wm_fontchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">29</SPAN></A><BR>
+	<A NAME="f_wm_menuselect"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_menuselect">Wm_menuselect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">287</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUSELECT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_FONTCHANGE</SPAN><BR>
+	<A NAME="f_wm_mouseactivate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mouseactivate">Wm_mouseactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">33</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEACTIVATE</SPAN>
 
-<BR>
+	<A NAME="f_wm_mousefirst"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousefirst">Wm_mousefirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEFIRST</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_getdlgcode"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_getdlgcode">Wm_getdlgcode</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">135</SPAN></A><BR>
+	<A NAME="f_wm_mousehover"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousehover">Wm_mousehover</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">673</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Require Windows98, Windows NT 4.0 or later</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEHOVER</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETDLGCODE</SPAN><BR>
+	<A NAME="f_wm_mouselast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mouselast">wm_mouselast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSELAST</SPAN>
+</A>
+	<A NAME="f_wm_mouseleave"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mouseleave">Wm_mouseleave</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">675</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Require Windows98, Windows NT 4.0 or later</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSELEAVE</SPAN>
 
-<BR>
+	<A NAME="f_wm_mousemove"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousemove">Wm_mousemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEMOVE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_getfont"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_getfont">Wm_getfont</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">49</SPAN></A><BR>
+	<A NAME="f_wm_mousewheel"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_mousewheel">Wm_mousewheel</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">522</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEWHEEL</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETFONT</SPAN><BR>
+	<A NAME="f_wm_move"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_move">Wm_move</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOVE</SPAN>
 
-<BR>
+	<A NAME="f_wm_moving"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_moving">Wm_moving</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">534</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOVING</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_geticon"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_geticon">Wm_geticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">127</SPAN></A><BR>
+	<A NAME="f_wm_ncactivate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncactivate">Wm_ncactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">134</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCACTIVATE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETICON</SPAN><BR>
+	<A NAME="f_wm_nccalcsize"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nccalcsize">Wm_nccalcsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCCALCSIZE</SPAN>
 
-<BR>
+	<A NAME="f_wm_nccreate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nccreate">Wm_nccreate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">129</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCCREATE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_getminmaxinfo"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_getminmaxinfo">Wm_getminmaxinfo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">36</SPAN></A><BR>
+	<A NAME="f_wm_ncdestroy"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncdestroy">Wm_ncdestroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">130</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCDESTROY</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETMINMAXINFO</SPAN><BR>
+	<A NAME="f_wm_nchittest"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nchittest">Wm_nchittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">132</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCHITTEST</SPAN>
 
-<BR>
+	<A NAME="f_wm_nclbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttondblclk">Wm_nclbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">163</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCLBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_gettext"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_gettext">Wm_gettext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">13</SPAN></A><BR>
+	<A NAME="f_wm_nclbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttondown">Wm_nclbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">161</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCLBUTTONDOWN</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETTEXT</SPAN><BR>
+	<A NAME="f_wm_nclbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttonup">Wm_nclbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">162</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCLBUTTONUP</SPAN>
 
-<BR>
+	<A NAME="f_wm_ncmbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttondblclk">Wm_ncmbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">169</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_gettextlength"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_gettextlength">Wm_gettextlength</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">14</SPAN></A><BR>
+	<A NAME="f_wm_ncmbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttondown">Wm_ncmbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">167</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMBUTTONDOWN</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_GETTEXTLENGTH</SPAN><BR>
+	<A NAME="f_wm_ncmbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttonup">Wm_ncmbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">168</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMBUTTONUP</SPAN>
 
-<BR>
+	<A NAME="f_wm_ncmousehover"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmousehover">Wm_ncmousehover</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">672</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Require Windows98, Windows NT 5.0 or later</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMOUSEHOVER</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_hscroll"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_hscroll">Wm_hscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">276</SPAN></A><BR>
+	<A NAME="f_wm_ncmouseleave"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmouseleave">Wm_ncmouseleave</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">674</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Require Windows98, Windows NT 5.0 or later</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMOUSELEAVE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HSCROLL</SPAN><BR>
+	<A NAME="f_wm_ncmousemove"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncmousemove">Wm_ncmousemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">160</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMOUSEMOVE</SPAN>
 
-<BR>
+	<A NAME="f_wm_ncpaint"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncpaint">Wm_ncpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">133</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCPAINT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_hscrollclipboard"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_hscrollclipboard">Wm_hscrollclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">782</SPAN></A><BR>
+	<A NAME="f_wm_ncrbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttondblclk">Wm_ncrbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">166</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCRBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_HSCROLLCLIPBOARD</SPAN><BR>
+	<A NAME="f_wm_ncrbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttondown">Wm_ncrbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">164</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCRBUTTONDOWN</SPAN>
 
-<BR>
+	<A NAME="f_wm_ncrbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttonup">Wm_ncrbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">165</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCRBUTTONUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_iconerasebkgnd"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_iconerasebkgnd">Wm_iconerasebkgnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">39</SPAN></A><BR>
+	<A NAME="f_wm_ncxbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncxbuttondblclk">Wm_ncxbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">173</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCXBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_ICONERASEBKGND</SPAN><BR>
+	<A NAME="f_wm_ncxbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncxbuttondown">Wm_ncxbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">171</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCXBUTTONDOWN</SPAN>
 
-<BR>
+	<A NAME="f_wm_ncxbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_ncxbuttonup">Wm_ncxbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">172</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCXBUTTONUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_char"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_char">Wm_ime_char</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">646</SPAN></A><BR>
+	<A NAME="f_wm_nextdlgctl"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nextdlgctl">Wm_nextdlgctl</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">40</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NEXTDLGCTL</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_CHAR</SPAN><BR>
+	<A NAME="f_wm_nextmenu"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_nextmenu">Wm_nextmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">531</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NEXTMENU</SPAN>
 
-<BR>
+	<A NAME="f_wm_notify"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_notify">Wm_notify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">78</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NOTIFY</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_compositionfull"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_compositionfull">Wm_ime_compositionfull</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">644</SPAN></A><BR>
+	<A NAME="f_wm_notifyformat"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_notifyformat">Wm_notifyformat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">85</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NOTIFYFORMAT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_COMPOSITIONFULL</SPAN><BR>
+	<A NAME="f_wm_null"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_null">Wm_null</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NULL</SPAN>
 
-<BR>
+	<A NAME="f_wm_paint"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_paint">Wm_paint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PAINT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_control"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_control">Wm_ime_control</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">643</SPAN></A><BR>
+	<A NAME="f_wm_paintclipboard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_paintclipboard">Wm_paintclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">777</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PAINTCLIPBOARD</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_CONTROL</SPAN><BR>
+	<A NAME="f_wm_painticon"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_painticon">Wm_painticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">38</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PAINTICON</SPAN>
 
-<BR>
+	<A NAME="f_wm_palettechanged"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_palettechanged">Wm_palettechanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">785</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PALETTECHANGED</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_keydown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_keydown">Wm_ime_keydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">656</SPAN></A><BR>
+	<A NAME="f_wm_paletteischanging"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_paletteischanging">Wm_paletteischanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">784</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PALETTEISCHANGING</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_KEYDOWN</SPAN><BR>
+	<A NAME="f_wm_parentnotify"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_parentnotify">Wm_parentnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">528</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PARENTNOTIFY</SPAN>
 
-<BR>
+	<A NAME="f_wm_paste"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_paste">Wm_paste</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">770</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PASTE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_keyup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_keyup">Wm_ime_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">657</SPAN></A><BR>
+	<A NAME="f_wm_penwinfirst"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_penwinfirst">Wm_penwinfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">896</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PENWINFIRST</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_KEYUP</SPAN><BR>
+	<A NAME="f_wm_penwinlast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_penwinlast">Wm_penwinlast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">911</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PENWINLAST</SPAN>
 
-<BR>
+	<A NAME="f_wm_power"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_power">Wm_power</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">72</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_POWER</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_notify"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_notify">Wm_ime_notify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">642</SPAN></A><BR>
+	<A NAME="f_wm_powerbroadcast"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_powerbroadcast">Wm_powerbroadcast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">536</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_POWERBROADCAST</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_NOTIFY</SPAN><BR>
+	<A NAME="f_wm_print"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_print">Wm_print</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">791</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PRINT</SPAN>
 
-<BR>
+	<A NAME="f_wm_printclient"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_printclient">Wm_printclient</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">792</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PRINTCLIENT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_select"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_select">Wm_ime_select</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">645</SPAN></A><BR>
+	<A NAME="f_wm_querydragicon"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_querydragicon">Wm_querydragicon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">55</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYDRAGICON</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_SELECT</SPAN><BR>
+	<A NAME="f_wm_queryendsession"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_queryendsession">Wm_queryendsession</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">17</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYENDSESSION</SPAN>
 
-<BR>
+	<A NAME="f_wm_querynewpalette"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_querynewpalette">Wm_querynewpalette</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">783</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYNEWPALETTE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ime_setcontext"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ime_setcontext">Wm_ime_setcontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">641</SPAN></A><BR>
+	<A NAME="f_wm_queryopen"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_queryopen">Wm_queryopen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYOPEN</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_IME_SETCONTEXT</SPAN><BR>
+	<A NAME="f_wm_queryuistate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_queryuistate">Wm_queryuistate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">297</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYUISTATE</SPAN>
 
-<BR>
+	<A NAME="f_wm_queuesync"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_queuesync">Wm_queuesync</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">35</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUEUESYNC</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_initdialog"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_initdialog">Wm_initdialog</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">272</SPAN></A><BR>
+	<A NAME="f_wm_quit"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_quit">Wm_quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">18</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUIT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INITDIALOG</SPAN><BR>
+	<A NAME="f_wm_rbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_rbuttondblclk">Wm_rbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">518</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RBUTTONDBLCLK</SPAN>
 
-<BR>
+	<A NAME="f_wm_rbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_rbuttondown">Wm_rbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">516</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RBUTTONDOWN</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_initmenu"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_initmenu">Wm_initmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">278</SPAN></A><BR>
+	<A NAME="f_wm_rbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_rbuttonup">Wm_rbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">517</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RBUTTONUP</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INITMENU</SPAN><BR>
+	<A NAME="f_wm_renderallformats"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_renderallformats">Wm_renderallformats</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">774</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RENDERALLFORMATS</SPAN>
 
-<BR>
+	<A NAME="f_wm_renderformat"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_renderformat">Wm_renderformat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">773</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RENDERFORMAT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_initmenupopup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_initmenupopup">Wm_initmenupopup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">279</SPAN></A><BR>
+	<A NAME="f_wm_setcursor"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_setcursor">Wm_setcursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETCURSOR</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_INITMENUPOPUP</SPAN><BR>
+	<A NAME="f_wm_setfocus"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_setfocus">Wm_setfocus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETFOCUS</SPAN>
 
-<BR>
+	<A NAME="f_wm_setfont"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_setfont">Wm_setfont</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">48</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETFONT</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_keydown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_keydown">Wm_keydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A><BR>
+	<A NAME="f_wm_sethotkey"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_sethotkey">Wm_sethotkey</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">50</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETHOTKEY</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYDOWN</SPAN><BR>
+	<A NAME="f_wm_seticon"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_seticon">Wm_seticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETICON</SPAN>
 
-<BR>
+	<A NAME="f_wm_setredraw"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_setredraw">Wm_setredraw</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETREDRAW</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_keyfirst"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_keyfirst">Wm_keyfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">256</SPAN></A><BR>
+	<A NAME="f_wm_settext"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_settext">Wm_settext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETTEXT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYFIRST</SPAN><BR>
+	<A NAME="f_wm_settingchange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_settingchange">Wm_settingchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">26</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WININICHANGE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_wm_constants.html">WEL_WM_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_wininichange">wm_wininichange</A><SPAN CLASS="ecomment">.</SPAN>
 
-<BR>
+	<A NAME="f_wm_showwindow"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_showwindow">Wm_showwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">24</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SHOWWINDOW</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_keylast"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_keylast">Wm_keylast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">264</SPAN></A><BR>
+	<A NAME="f_wm_size"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_size">Wm_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SIZE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYLAST</SPAN><BR>
+	<A NAME="f_wm_sizeclipboard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_sizeclipboard">Wm_sizeclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">779</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SIZECLIPBOARD</SPAN>
 
-<BR>
+	<A NAME="f_wm_sizing"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_sizing">Wm_sizing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">532</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SIZING</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_keyup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_keyup">Wm_keyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">257</SPAN></A><BR>
+	<A NAME="f_wm_spoolerstatus"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_spoolerstatus">Wm_spoolerstatus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">42</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SPOOLERSTATUS</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KEYUP</SPAN><BR>
+	<A NAME="f_wm_stylechanged"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_stylechanged">Wm_stylechanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">125</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_STYLECHANGED</SPAN>
 
-<BR>
+	<A NAME="f_wm_stylechanging"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_stylechanging">Wm_stylechanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">124</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_STYLECHANGING</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_killfocus"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_killfocus">Wm_killfocus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">8</SPAN></A><BR>
+	<A NAME="f_wm_syncpaint"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_syncpaint">Wm_syncpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">136</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYNCPAINT</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_KILLFOCUS</SPAN><BR>
+	<A NAME="f_wm_syschar"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_syschar">Wm_syschar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">262</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSCHAR</SPAN>
 
-<BR>
+	<A NAME="f_wm_syscolorchange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_syscolorchange">Wm_syscolorchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">21</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSCOLORCHANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_lbuttondblclk"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_lbuttondblclk">Wm_lbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">515</SPAN></A><BR>
+	<A NAME="f_wm_syscommand"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_syscommand">Wm_syscommand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">274</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSCOMMAND</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_LBUTTONDBLCLK</SPAN><BR>
+	<A NAME="f_wm_sysdeadchar"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_sysdeadchar">Wm_sysdeadchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">263</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSDEADCHAR</SPAN>
 
-<BR>
+	<A NAME="f_wm_syskeydown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_syskeydown">Wm_syskeydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">260</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSKEYDOWN</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_lbuttondown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_lbuttondown">Wm_lbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">513</SPAN></A><BR>
+	<A NAME="f_wm_syskeyup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_syskeyup">Wm_syskeyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">261</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSKEYUP</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_LBUTTONDOWN</SPAN><BR>
+	<A NAME="f_wm_tcard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_tcard">Wm_tcard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">82</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_TCARD</SPAN>
 
-<BR>
+	<A NAME="f_wm_timechange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_timechange">Wm_timechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">30</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_TIMECHANGE</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_lbuttonup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_lbuttonup">Wm_lbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">514</SPAN></A><BR>
+	<A NAME="f_wm_timer"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_timer">Wm_timer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">275</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_TIMER</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_LBUTTONUP</SPAN><BR>
+	<A NAME="f_wm_undo"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_undo">Wm_undo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">772</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_UNDO</SPAN>
 
-<BR>
+	<A NAME="f_wm_uninitmenupopup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_uninitmenupopup">Wm_uninitmenupopup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">293</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_UNINITMENUPOPUP</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mbuttondblclk"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mbuttondblclk">Wm_mbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">521</SPAN></A><BR>
+	<A NAME="f_wm_updateuistate"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_updateuistate">Wm_updateuistate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">296</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_UPDATEUISTATE</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MBUTTONDBLCLK</SPAN><BR>
+	<A NAME="f_wm_user"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_user">Wm_user</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_USER</SPAN>
 
-<BR>
+	<A NAME="f_wm_userchanged"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_userchanged">Wm_userchanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">84</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_USERCHANGED</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mbuttondown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mbuttondown">Wm_mbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">519</SPAN></A><BR>
+	<A NAME="f_wm_vkeytoitem"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_vkeytoitem">Wm_vkeytoitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">46</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_VKEYTOITEM</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MBUTTONDOWN</SPAN><BR>
+	<A NAME="f_wm_vscroll"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_vscroll">Wm_vscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">277</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_VSCROLL</SPAN>
 
-<BR>
+	<A NAME="f_wm_vscrollclipboard"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_vscrollclipboard">Wm_vscrollclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">778</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_VSCROLLCLIPBOARD</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mbuttonup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mbuttonup">Wm_mbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">520</SPAN></A><BR>
+	<A NAME="f_wm_windowposchanged"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_windowposchanged">Wm_windowposchanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">71</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WINDOWPOSCHANGED</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MBUTTONUP</SPAN><BR>
+	<A NAME="f_wm_windowposchanging"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_windowposchanging">Wm_windowposchanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">70</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WINDOWPOSCHANGING</SPAN>
 
-<BR>
+	<A NAME="f_wm_wininichange"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_wininichange">Wm_wininichange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">26</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WININICHANGE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../wel/reference/consts/wel_wm_constants.html">WEL_WM_CONSTANTS</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_settingchange">wm_settingchange</A><SPAN CLASS="ecomment">.</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdiactivate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdiactivate">Wm_mdiactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">546</SPAN></A><BR>
+	<A NAME="f_wm_xbuttondblclk"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_xbuttondblclk">Wm_xbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">525</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_XBUTTONDBLCLK</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIACTIVATE</SPAN><BR>
+	<A NAME="f_wm_xbuttondown"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_xbuttondown">Wm_xbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">523</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_XBUTTONDOWN</SPAN>
 
-<BR>
+	<A NAME="f_wm_xbuttonup"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_wm_constants.html#f_wm_xbuttonup">Wm_xbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">524</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_XBUTTONUP</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdicascade"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdicascade">Wm_mdicascade</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">551</SPAN></A><BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDICASCADE</SPAN><BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_WM_CONSTANTS</PRE>
 
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdicreate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdicreate">Wm_mdicreate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">544</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDICREATE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdidestroy"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdidestroy">Wm_mdidestroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">545</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIDESTROY</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdigetactive"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdigetactive">Wm_mdigetactive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">553</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIGETACTIVE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdiiconarrange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdiiconarrange">Wm_mdiiconarrange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">552</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIICONARRANGE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdimaximize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdimaximize">Wm_mdimaximize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">549</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIMAXIMIZE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdinext"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdinext">Wm_mdinext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">548</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDINEXT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdirefreshmenu"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdirefreshmenu">Wm_mdirefreshmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">564</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIREFRESHMENU</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdirestore"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdirestore">Wm_mdirestore</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">547</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDIRESTORE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mdisetmenu"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mdisetmenu">Wm_mdisetmenu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">560</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDISETMENU</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mditile"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mditile">Wm_mditile</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">550</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MDITILE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_measureitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_measureitem">Wm_measureitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">44</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MEASUREITEM</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_menuchar"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_menuchar">Wm_menuchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">288</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUCHAR</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_menuselect"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_menuselect">Wm_menuselect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">287</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MENUSELECT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mouseactivate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mouseactivate">Wm_mouseactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">33</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEACTIVATE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mousefirst"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mousefirst">Wm_mousefirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEFIRST</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mousehover"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mousehover">Wm_mousehover</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">673</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Require Windows98, Windows NT 4.0 or later</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEHOVER</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mouselast"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mouselast">Wm_mouselast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">521</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSELAST</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mouseleave"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mouseleave">Wm_mouseleave</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">675</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Require Windows98, Windows NT 4.0 or later</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSELEAVE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_mousemove"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_mousemove">Wm_mousemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">512</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOUSEMOVE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_move"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_move">Wm_move</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_MOVE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncactivate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncactivate">Wm_ncactivate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">134</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCACTIVATE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nccalcsize"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nccalcsize">Wm_nccalcsize</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">131</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCCALCSIZE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nccreate"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nccreate">Wm_nccreate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">129</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCCREATE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncdestroy"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncdestroy">Wm_ncdestroy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">130</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCDESTROY</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nchittest"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nchittest">Wm_nchittest</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">132</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCHITTEST</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nclbuttondblclk"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttondblclk">Wm_nclbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">163</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCLBUTTONDBLCLK</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nclbuttondown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttondown">Wm_nclbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">161</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCLBUTTONDOWN</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nclbuttonup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nclbuttonup">Wm_nclbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">162</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCLBUTTONUP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncmbuttondblclk"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttondblclk">Wm_ncmbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">169</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMBUTTONDBLCLK</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncmbuttondown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttondown">Wm_ncmbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">167</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMBUTTONDOWN</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncmbuttonup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncmbuttonup">Wm_ncmbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">168</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMBUTTONUP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncmousemove"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncmousemove">Wm_ncmousemove</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">160</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCMOUSEMOVE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncpaint"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncpaint">Wm_ncpaint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">133</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCPAINT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncrbuttondblclk"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttondblclk">Wm_ncrbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">166</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCRBUTTONDBLCLK</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncrbuttondown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttondown">Wm_ncrbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">164</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCRBUTTONDOWN</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_ncrbuttonup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_ncrbuttonup">Wm_ncrbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">165</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NCRBUTTONUP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_nextdlgctl"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_nextdlgctl">Wm_nextdlgctl</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">40</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NEXTDLGCTL</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_notify"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_notify">Wm_notify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">78</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NOTIFY</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_null"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_null">Wm_null</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_NULL</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_paint"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_paint">Wm_paint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">15</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PAINT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_paintclipboard"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_paintclipboard">Wm_paintclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">777</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PAINTCLIPBOARD</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_palettechanged"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_palettechanged">Wm_palettechanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">785</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PALETTECHANGED</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_paletteischanging"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_paletteischanging">Wm_paletteischanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">784</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PALETTEISCHANGING</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_parentnotify"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_parentnotify">Wm_parentnotify</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">528</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PARENTNOTIFY</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_paste"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_paste">Wm_paste</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">770</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PASTE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_penwinfirst"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_penwinfirst">Wm_penwinfirst</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">896</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PENWINFIRST</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_penwinlast"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_penwinlast">Wm_penwinlast</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">911</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_PENWINLAST</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_power"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_power">Wm_power</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">72</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_POWER</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_querydragicon"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_querydragicon">Wm_querydragicon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">55</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYDRAGICON</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_queryendsession"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_queryendsession">Wm_queryendsession</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">17</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYENDSESSION</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_querynewpalette"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_querynewpalette">Wm_querynewpalette</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">783</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYNEWPALETTE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_queryopen"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_queryopen">Wm_queryopen</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">19</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUERYOPEN</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_queuesync"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_queuesync">Wm_queuesync</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">35</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUEUESYNC</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_quit"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_quit">Wm_quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">18</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_QUIT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_rbuttondblclk"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_rbuttondblclk">Wm_rbuttondblclk</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">518</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RBUTTONDBLCLK</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_rbuttondown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_rbuttondown">Wm_rbuttondown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">516</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RBUTTONDOWN</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_rbuttonup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_rbuttonup">Wm_rbuttonup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">517</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RBUTTONUP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_renderallformats"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_renderallformats">Wm_renderallformats</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">774</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RENDERALLFORMATS</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_renderformat"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_renderformat">Wm_renderformat</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">773</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_RENDERFORMAT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_setcursor"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_setcursor">Wm_setcursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETCURSOR</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_setfocus"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_setfocus">Wm_setfocus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">7</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETFOCUS</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_setfont"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_setfont">Wm_setfont</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">48</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETFONT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_seticon"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_seticon">Wm_seticon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETICON</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_setredraw"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_setredraw">Wm_setredraw</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">11</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETREDRAW</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_settext"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_settext">Wm_settext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">12</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SETTEXT</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_showwindow"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_showwindow">Wm_showwindow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">24</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SHOWWINDOW</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_size"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_size">Wm_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">5</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SIZE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_sizeclipboard"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_sizeclipboard">Wm_sizeclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">779</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SIZECLIPBOARD</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_sizing"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_sizing">Wm_sizing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">532</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SIZING</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_spoolerstatus"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_spoolerstatus">Wm_spoolerstatus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">42</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SPOOLERSTATUS</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_syschar"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_syschar">Wm_syschar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">262</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSCHAR</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_syscolorchange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_syscolorchange">Wm_syscolorchange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">21</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSCOLORCHANGE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_syscommand"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_syscommand">Wm_syscommand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">274</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSCOMMAND</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_sysdeadchar"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_sysdeadchar">Wm_sysdeadchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">263</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSDEADCHAR</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_syskeydown"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_syskeydown">Wm_syskeydown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">260</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSKEYDOWN</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_syskeyup"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_syskeyup">Wm_syskeyup</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">261</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_SYSKEYUP</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_timechange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_timechange">Wm_timechange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">30</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_TIMECHANGE</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_timer"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_timer">Wm_timer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">275</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_TIMER</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_undo"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_undo">Wm_undo</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">772</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_UNDO</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_user"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_user">Wm_user</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1024</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_USER</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_vkeytoitem"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_vkeytoitem">Wm_vkeytoitem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">46</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_VKEYTOITEM</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_vscroll"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_vscroll">Wm_vscroll</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">277</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_VSCROLL</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_vscrollclipboard"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_vscrollclipboard">Wm_vscrollclipboard</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">778</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_VSCROLLCLIPBOARD</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_windowposchanged"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_windowposchanged">Wm_windowposchanged</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">71</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WINDOWPOSCHANGED</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_windowposchanging"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_windowposchanging">Wm_windowposchanging</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">70</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WINDOWPOSCHANGING</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_wm_wininichange"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_wm_constants.html#f_wm_wininichange">Wm_wininichange</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">26</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Declared in Windows as WM_WININICHANGE</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="/libraries/base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_WM_CONSTANTS<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>
-<BR>
 

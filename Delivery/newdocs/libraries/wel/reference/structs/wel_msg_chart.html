@@ -1,116 +1,66 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_MSG Chart</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_msg_chart.html">WEL_MSG</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_msg_chart.html">WEL_MSG</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/structs/index.html">wel.structs</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Contains message information about thread's message queue."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_make">make</A>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_pm_constants_chart.html">WEL_PM_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_wm_constants_chart.html">WEL_WM_CONSTANTS</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`dispatch_result' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_dispatch_result">dispatch_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`hwnd' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_hwnd">hwnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`last_boolean_result' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_last_boolean_result">last_boolean_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`lparam' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_lparam">lparam</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`message' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_message">message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`quit' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_quit">quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`wparam' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_wparam">wparam</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/wel/reference/structs/index.html">wel.structs</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`dispatch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_dispatch">dispatch</A></SPAN>
+	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`get_all' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_get_all">get_all</A></SPAN>
+	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
+	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`is_dialog_message' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_is_dialog_message">is_dialog_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dialog</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_modeless_dialog_chart.html">WEL_MODELESS_DIALOG</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`peek_all' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_peek_all">peek_all</A></SPAN>
+	<SPAN TITLE="`process_dialog_message' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_process_dialog_message">process_dialog_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dialog</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_hwnd' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_set_hwnd">set_hwnd</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_hwnd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_lparam' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_set_lparam">set_lparam</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_lparam</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_message' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_set_message">set_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
+	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
+	<SPAN TITLE="`set_wparam' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_set_wparam">set_wparam</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_wparam</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`translate' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_translate">translate</A></SPAN>
+	<SPAN TITLE="`translate_accelerator' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_translate_accelerator">translate_accelerator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">accelerators</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_accelerators_chart.html">WEL_ACCELERATORS</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`translate_mdi_accelarator' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_translate_mdi_accelarator">translate_mdi_accelarator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`wait' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_msg.html#f_wait">wait</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Contains message information about thread's message queue."</SPAN><BR>
+</PRE>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_pm_constants_chart.html">WEL_PM_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_wm_constants_chart.html">WEL_WM_CONSTANTS</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispatch_result' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_dispatch_result">dispatch_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hwnd' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_hwnd">hwnd</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_boolean_result' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_last_boolean_result">last_boolean_result</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lparam' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_lparam">lparam</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`message' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_message">message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`quit' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_quit">quit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wparam' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_wparam">wparam</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispatch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_dispatch">dispatch</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`get_all' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_get_all">get_all</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_dialog_message' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_is_dialog_message">is_dialog_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dialog</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modeless_dialog_chart.html">WEL_MODELESS_DIALOG</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`peek_all' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_peek_all">peek_all</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`process_dialog_message' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_process_dialog_message">process_dialog_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">dialog</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_hwnd' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_set_hwnd">set_hwnd</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_hwnd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_lparam' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_set_lparam">set_lparam</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_lparam</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_message' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_set_message">set_message</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_wparam' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_set_wparam">set_wparam</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_wparam</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`translate' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_translate">translate</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`translate_accelerator' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_translate_accelerator">translate_accelerator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">accelerators</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_accelerators_chart.html">WEL_ACCELERATORS</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`translate_mdi_accelarator' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_translate_mdi_accelarator">translate_mdi_accelarator</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`wait' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_msg.html#f_wait">wait</A></SPAN><BR>
-
-<BR>
-
-<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>

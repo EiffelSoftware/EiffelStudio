@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>URL Chart</TITLE>
 		
@@ -10,73 +10,45 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../../net/reference/transfer/addresses/url_chart.html">URL</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../net/reference/transfer/addresses/url_chart.html">URL</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/transfer/addresses/index.html">net.transfer.addresses</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Unified resource locators"</SPAN>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../../base/reference/kernel/hashable_chart.html">HASHABLE</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`default_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_default_port">default_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`has_username' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_has_username">has_username</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`hash_code' was declared in HASHABLE"><A CLASS="efeature" HREF="../../../../base/reference/kernel/hashable.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_correct">is_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_hashable' was declared in HASHABLE"><A CLASS="efeature" HREF="../../../../base/reference/kernel/hashable.html#f_is_hashable">is_hashable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_password_accepted' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_password_accepted">is_password_accepted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_proxy_supported' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_proxy_supported">is_proxy_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_proxy_used' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_proxy_used">is_proxy_used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`location' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_location">location</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_port">port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`proxy_host' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_proxy_host">proxy_host</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`proxy_host_ok' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_proxy_host_ok">proxy_host_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`proxy_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_proxy_port">proxy_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`service' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_service">service</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../net/reference/transfer/addresses/index.html">net.transfer.addresses</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`reset_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_reset_proxy">reset_proxy</A></SPAN>
+	<SPAN TITLE="`set_password' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_password">set_password</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pw</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_port">set_port</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">port_no</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_proxy">set_proxy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">port_no</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_proxy_information' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_proxy_information">set_proxy_information</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../net/reference/transfer/addresses/proxy_information_chart.html">PROXY_INFORMATION</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_username' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_username">set_username</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">un</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Unified resource locators"</SPAN><BR>
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">proxy used definition</SPAN>
+	<SPAN CLASS="etag">proxy usage constraint</SPAN>
 
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../base/reference/kernel/hashable_chart.html">HASHABLE</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_default_port">default_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_username' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_has_username">has_username</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hash_code' was declared in HASHABLE"><A CLASS="efeature" HREF="../../../../base/reference/kernel/hashable.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_correct' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_correct">is_correct</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_hashable' was declared in HASHABLE"><A CLASS="efeature" HREF="../../../../base/reference/kernel/hashable.html#f_is_hashable">is_hashable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_password_accepted' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_password_accepted">is_password_accepted</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_proxy_supported' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_proxy_supported">is_proxy_supported</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_proxy_used' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_is_proxy_used">is_proxy_used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`location' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_location">location</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_port">port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`proxy_host' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_proxy_host">proxy_host</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`proxy_host_ok' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_proxy_host_ok">proxy_host_ok</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`proxy_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_proxy_port">proxy_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`service' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_service">service</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`reset_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_reset_proxy">reset_proxy</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_password' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_password">set_password</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pw</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_port' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_port">set_port</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">port_no</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_proxy' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_proxy">set_proxy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">host</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">port_no</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_username' is declared in `Current'"><A CLASS="efeature" HREF="../../../../net/reference/transfer/addresses/url.html#f_set_username">set_username</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">un</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
+</PRE>
 
 </BODY>
 

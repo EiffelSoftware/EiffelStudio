@@ -1,436 +1,198 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_BITMAP_BUTTON Chart</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/controls/wel_bitmap_button_chart.html">WEL_BITMAP_BUTTON</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/controls/index.html">wel.controls</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A button with a pixmap OR a text on it."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_make_by_id">make_by_id</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_bm_constants_chart.html">WEL_BM_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_bs_constants_chart.html">WEL_BS_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/controls/wel_button_chart.html">WEL_BUTTON</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_image_constants_chart.html">WEL_IMAGE_CONSTANTS</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`absolute_x' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_absolute_x">absolute_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`absolute_y' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_absolute_y">absolute_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`background_brush' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_background_brush">background_brush</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_brush_chart.html">WEL_BRUSH</A></SPAN>
+	<SPAN TITLE="`background_color' was declared in WEL_BUTTON"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_button.html#f_background_color">background_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN>
+	<SPAN TITLE="`bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_bitmap">bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A></SPAN>
+	<SPAN TITLE="`captured_window' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_captured_window">captured_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN>
+	<SPAN TITLE="`client_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_client_rect">client_rect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_rect_chart.html">WEL_RECT</A></SPAN>
+	<SPAN TITLE="`color_activeborder' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_activeborder">Color_activeborder</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_activecaption' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_activecaption">Color_activecaption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_appworkspace' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_appworkspace">Color_appworkspace</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_background' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_background">Color_background</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_btnface' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_btnface">Color_btnface</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_btnhighlight' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_btnhighlight">Color_btnhighlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_btnshadow' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_btnshadow">Color_btnshadow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_btntext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_btntext">Color_btntext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_captiontext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_captiontext">Color_captiontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_graytext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_graytext">Color_graytext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_highlight' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_highlight">Color_highlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_highlighttext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_highlighttext">Color_highlighttext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_inactiveborder' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_inactiveborder">Color_inactiveborder</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_inactivecaption' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_inactivecaption">Color_inactivecaption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_inactivecaptiontext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_inactivecaptiontext">Color_inactivecaptiontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_menu' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_menu">Color_menu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_menutext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_menutext">Color_menutext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_scrollbar' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_scrollbar">Color_scrollbar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_window' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_window">Color_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_windowframe' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_windowframe">Color_windowframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`color_windowtext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_color_windowtext">Color_windowtext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`command' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_command">command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_command_chart.html">WEL_COMMAND</A></SPAN>
+	<SPAN TITLE="`command_argument' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_command_argument">command_argument</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`command_exists' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_command_exists">command_exists</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`commands' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_commands">commands</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_command_manager_chart.html">WEL_COMMAND_MANAGER</A></SPAN>
+	<SPAN TITLE="`commands_enabled' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_commands_enabled">commands_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`current_pixmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_current_pixmap">current_pixmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`default_processing' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_return_value.html#f_default_processing">default_processing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`enabled' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_enabled">enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`ex_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_ex_style">ex_style</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`focused_window' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_focused_window">focused_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN>
+	<SPAN TITLE="`font' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_font">font</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_font_chart.html">WEL_FONT</A></SPAN>
+	<SPAN TITLE="`foreground_color' was declared in WEL_BUTTON"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_button.html#f_foreground_color">foreground_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN>
+	<SPAN TITLE="`has_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_has_capture">has_capture</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_focus' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_has_focus">has_focus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_heavy_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_has_heavy_capture">has_heavy_capture</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_has_horizontal_scroll_bar">has_horizontal_scroll_bar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_return_value' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_return_value.html#f_has_return_value">has_return_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_system_font' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_has_system_font">has_system_font</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_system_window_locked' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_has_system_window_locked">has_system_window_locked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_has_vertical_scroll_bar">has_vertical_scroll_bar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`heavy_capture_activated' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_heavy_capture_activated">heavy_capture_activated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_icon">icon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_icon_chart.html">WEL_ICON</A></SPAN>
+	<SPAN TITLE="`id' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_id">id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`image_bitmap' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_image_constants.html#f_image_bitmap">Image_bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`image_cursor' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_image_constants.html#f_image_cursor">Image_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`image_enhmetafile' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_image_constants.html#f_image_enhmetafile">Image_enhmetafile</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`image_icon' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_image_constants.html#f_image_icon">Image_icon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_inside' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_is_inside">is_inside</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`maximal_height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_maximal_height">maximal_height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`maximal_width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_maximal_width">maximal_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`maximized' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_maximized">maximized</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`message_return_value' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_return_value.html#f_message_return_value">message_return_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`minimal_height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_minimal_height">minimal_height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`minimal_width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_minimal_width">minimal_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`minimized' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_minimized">minimized</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`parent' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_parent">parent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN>
+	<SPAN TITLE="`placement' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_placement">placement</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_window_placement_chart.html">WEL_WINDOW_PLACEMENT</A></SPAN>
+	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`shown' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_shown">shown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_style">style</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`text' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_text">text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`text_length' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_text_length">text_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`valid_color_constant' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_color_constants.html#f_valid_color_constant">valid_color_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`valid_hwnd_constant' was declared in WEL_HWND_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_hwnd_constants.html#f_valid_hwnd_constant">valid_hwnd_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`window_captured' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_window_captured">window_captured</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`window_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_window_rect">window_rect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_rect_chart.html">WEL_RECT</A></SPAN>
+	<SPAN TITLE="`x' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_x">x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`y' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_y">y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`bring_to_top' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_bring_to_top">bring_to_top</A></SPAN>
+	<SPAN TITLE="`default_process_notification' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_default_process_notification">default_process_notification</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">notification_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`destroy' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_destroy">destroy</A></SPAN>
+	<SPAN TITLE="`disable' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_disable">disable</A></SPAN>
+	<SPAN TITLE="`disable_commands' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_disable_commands">disable_commands</A></SPAN>
+	<SPAN TITLE="`disable_default_processing' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_disable_default_processing">disable_default_processing</A></SPAN>
+	<SPAN TITLE="`disable_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_disable_horizontal_scroll_bar">disable_horizontal_scroll_bar</A></SPAN>
+	<SPAN TITLE="`disable_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_disable_vertical_scroll_bar">disable_vertical_scroll_bar</A></SPAN>
+	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`enable' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_enable">enable</A></SPAN>
+	<SPAN TITLE="`enable_commands' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_enable_commands">enable_commands</A></SPAN>
+	<SPAN TITLE="`enable_default_processing' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_enable_default_processing">enable_default_processing</A></SPAN>
+	<SPAN TITLE="`enable_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_enable_horizontal_scroll_bar">enable_horizontal_scroll_bar</A></SPAN>
+	<SPAN TITLE="`enable_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_enable_vertical_scroll_bar">enable_vertical_scroll_bar</A></SPAN>
+	<SPAN TITLE="`go_to_next_group_item' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_go_to_next_group_item">go_to_next_group_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">after</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`go_to_next_tab_item' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_go_to_next_tab_item">go_to_next_tab_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">after</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`hide' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_hide">hide</A></SPAN>
+	<SPAN TITLE="`hide_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_hide_horizontal_scroll_bar">hide_horizontal_scroll_bar</A></SPAN>
+	<SPAN TITLE="`hide_scroll_bars' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_hide_scroll_bars">hide_scroll_bars</A></SPAN>
+	<SPAN TITLE="`hide_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_hide_vertical_scroll_bar">hide_vertical_scroll_bar</A></SPAN>
+	<SPAN TITLE="`insert_after' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_insert_after">insert_after</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`invalidate' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_invalidate">invalidate</A></SPAN>
+	<SPAN TITLE="`invalidate_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_invalidate_rect">invalidate_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">erase_background</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`invalidate_region' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_invalidate_region">invalidate_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">erase_background</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`invalidate_without_background' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_invalidate_without_background">invalidate_without_background</A></SPAN>
+	<SPAN TITLE="`kill_timer' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_kill_timer">kill_timer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">timer_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`lock_window_update' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_lock_window_update">lock_window_update</A></SPAN>
+	<SPAN TITLE="`maximize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_maximize">maximize</A></SPAN>
+	<SPAN TITLE="`minimize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_minimize">minimize</A></SPAN>
+	<SPAN TITLE="`move' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`move_and_resize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_move_and_resize">move_and_resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">repaint</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`on_bn_clicked' was declared in WEL_BUTTON"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_button.html#f_on_bn_clicked">on_bn_clicked</A></SPAN>
+	<SPAN TITLE="`put_command' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_put_command">put_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_command_chart.html">WEL_COMMAND</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`register_current_window' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_register_current_window">register_current_window</A></SPAN>
+	<SPAN TITLE="`release_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_release_capture">release_capture</A></SPAN>
+	<SPAN TITLE="`release_heavy_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_release_heavy_capture">release_heavy_capture</A></SPAN>
+	<SPAN TITLE="`remove_command' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_remove_command">remove_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`resize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_resize">resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`restore' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_restore">restore</A></SPAN>
+	<SPAN TITLE="`scroll' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_scroll">scroll</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_set_bitmap">set_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_capture">set_capture</A></SPAN>
+	<SPAN TITLE="`set_class_icon' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_class_icon">set_class_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_class_small_icon' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_class_small_icon">set_class_small_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_default_processing' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_return_value.html#f_set_default_processing">set_default_processing</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_ex_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_ex_style">set_ex_style</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_ex_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_focus' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_focus">set_focus</A></SPAN>
+	<SPAN TITLE="`set_font' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_control.html#f_set_font">set_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_font_chart.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_heavy_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_heavy_capture">set_heavy_capture</A></SPAN>
+	<SPAN TITLE="`set_height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_set_icon">set_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_message_return_value' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_return_value.html#f_set_message_return_value">set_message_return_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_parent' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_parent">set_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_placement' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_placement">set_placement</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_placement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_window_placement_chart.html">WEL_WINDOW_PLACEMENT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
+	<SPAN TITLE="`set_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_style">set_style</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_text' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_text">set_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_timer' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_timer">set_timer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">timer_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">time_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
+	<SPAN TITLE="`set_width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_x' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_x">set_x</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_y' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_y">set_y</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_z_order' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_set_z_order">set_z_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">z_order</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`show' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_show">show</A></SPAN>
+	<SPAN TITLE="`show_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_show_bitmap">show_bitmap</A></SPAN>
+	<SPAN TITLE="`show_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_show_horizontal_scroll_bar">show_horizontal_scroll_bar</A></SPAN>
+	<SPAN TITLE="`show_icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_show_icon">show_icon</A></SPAN>
+	<SPAN TITLE="`show_scroll_bars' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_show_scroll_bars">show_scroll_bars</A></SPAN>
+	<SPAN TITLE="`show_text' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_show_text">show_text</A></SPAN>
+	<SPAN TITLE="`show_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_show_vertical_scroll_bar">show_vertical_scroll_bar</A></SPAN>
+	<SPAN TITLE="`show_with_option' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_show_with_option">show_with_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cmd_show</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`unlock_window_update' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_unlock_window_update">unlock_window_update</A></SPAN>
+	<SPAN TITLE="`unset_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_unset_bitmap">unset_bitmap</A></SPAN>
+	<SPAN TITLE="`unset_icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/controls/wel_bitmap_button.html#f_unset_icon">unset_icon</A></SPAN>
+	<SPAN TITLE="`update' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_update">update</A></SPAN>
+	<SPAN TITLE="`update_cached_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_update_cached_style">update_cached_style</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_ex_style</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_ex_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`validate' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_validate">validate</A></SPAN>
+	<SPAN TITLE="`validate_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_validate_rect">validate_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`validate_region' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_validate_region">validate_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`win_help' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/windows/wel_window.html#f_win_help">win_help</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">help_file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+</PRE>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_bitmap_button_chart.html">WEL_BITMAP_BUTTON</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">General</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/wel/reference/controls/index.html">wel.controls</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A button with a pixmap OR a text on it."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_make_by_id">make_by_id</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_bm_constants_chart.html">WEL_BM_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_bs_constants_chart.html">WEL_BS_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/controls/wel_button_chart.html">WEL_BUTTON</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_image_constants_chart.html">WEL_IMAGE_CONSTANTS</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`absolute_x' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_absolute_x">absolute_x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`absolute_y' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_absolute_y">absolute_y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`background_brush' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_background_brush">background_brush</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_brush_chart.html">WEL_BRUSH</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`background_color' was declared in WEL_BUTTON"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_button.html#f_background_color">background_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bitmap' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_bitmap">bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`captured_window' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_captured_window">captured_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`client_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_client_rect">client_rect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_rect_chart.html">WEL_RECT</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_activeborder' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_activeborder">Color_activeborder</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_activecaption' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_activecaption">Color_activecaption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_appworkspace' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_appworkspace">Color_appworkspace</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_background' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_background">Color_background</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_btnface' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_btnface">Color_btnface</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_btnhighlight' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_btnhighlight">Color_btnhighlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_btnshadow' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_btnshadow">Color_btnshadow</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_btntext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_btntext">Color_btntext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_captiontext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_captiontext">Color_captiontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_graytext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_graytext">Color_graytext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_highlight' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_highlight">Color_highlight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_highlighttext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_highlighttext">Color_highlighttext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_inactiveborder' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_inactiveborder">Color_inactiveborder</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_inactivecaption' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_inactivecaption">Color_inactivecaption</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_inactivecaptiontext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_inactivecaptiontext">Color_inactivecaptiontext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_menu' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_menu">Color_menu</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_menutext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_menutext">Color_menutext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_scrollbar' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_scrollbar">Color_scrollbar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_window' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_window">Color_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_windowframe' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_windowframe">Color_windowframe</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`color_windowtext' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_color_windowtext">Color_windowtext</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`command' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_command">command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_command_chart.html">WEL_COMMAND</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`command_argument' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_command_argument">command_argument</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`command_exists' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_command_exists">command_exists</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`commands' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_commands">commands</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_command_manager_chart.html">WEL_COMMAND_MANAGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`commands_enabled' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_commands_enabled">commands_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`current_pixmap' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_current_pixmap">current_pixmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_processing' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_return_value.html#f_default_processing">default_processing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enabled' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_enabled">enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ex_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_ex_style">ex_style</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`focused_window' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_focused_window">focused_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`font' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_font">font</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_font_chart.html">WEL_FONT</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`foreground_color' was declared in WEL_BUTTON"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_button.html#f_foreground_color">foreground_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_has_capture">has_capture</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_focus' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_has_focus">has_focus</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_heavy_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_has_heavy_capture">has_heavy_capture</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_has_horizontal_scroll_bar">has_horizontal_scroll_bar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_return_value' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_return_value.html#f_has_return_value">has_return_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_system_font' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_has_system_font">has_system_font</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_system_window_locked' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_has_system_window_locked">has_system_window_locked</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_has_vertical_scroll_bar">has_vertical_scroll_bar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`heavy_capture_activated' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_heavy_capture_activated">heavy_capture_activated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`icon' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_icon">icon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_icon_chart.html">WEL_ICON</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`id' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_id">id</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`image_bitmap' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_image_constants.html#f_image_bitmap">Image_bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`image_cursor' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_image_constants.html#f_image_cursor">Image_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`image_enhmetafile' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_image_constants.html#f_image_enhmetafile">Image_enhmetafile</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`image_icon' was declared in WEL_IMAGE_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_image_constants.html#f_image_icon">Image_icon</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_inside' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_is_inside">is_inside</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximal_height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_maximal_height">maximal_height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximal_width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_maximal_width">maximal_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximized' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_maximized">maximized</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`message_return_value' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_return_value.html#f_message_return_value">message_return_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`minimal_height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_minimal_height">minimal_height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`minimal_width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_minimal_width">minimal_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`minimized' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_minimized">minimized</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`parent' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_parent">parent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`placement' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_placement">placement</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_window_placement_chart.html">WEL_WINDOW_PLACEMENT</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shown' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_shown">shown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_style">style</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_text">text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text_length' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_text_length">text_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_color_constant' was declared in WEL_COLOR_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_color_constants.html#f_valid_color_constant">valid_color_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`valid_hwnd_constant' was declared in WEL_HWND_CONSTANTS"><A CLASS="efeature" HREF="/libraries/wel/reference/consts/wel_hwnd_constants.html#f_valid_hwnd_constant">valid_hwnd_constant</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`window_captured' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_window_captured">window_captured</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`window_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_window_rect">window_rect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_rect_chart.html">WEL_RECT</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`x' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_x">x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`y' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_y">y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`bring_to_top' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_bring_to_top">bring_to_top</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_process_notification' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_default_process_notification">default_process_notification</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">notification_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`destroy' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_destroy">destroy</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_disable">disable</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_commands' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_disable_commands">disable_commands</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_default_processing' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_disable_default_processing">disable_default_processing</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_disable_horizontal_scroll_bar">disable_horizontal_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`disable_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_disable_vertical_scroll_bar">disable_vertical_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_enable">enable</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_commands' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_enable_commands">enable_commands</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_default_processing' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_enable_default_processing">enable_default_processing</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_enable_horizontal_scroll_bar">enable_horizontal_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`enable_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_enable_vertical_scroll_bar">enable_vertical_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`go_to_next_group_item' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_go_to_next_group_item">go_to_next_group_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">after</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`go_to_next_tab_item' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_go_to_next_tab_item">go_to_next_tab_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">after</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hide' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_hide">hide</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hide_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_hide_horizontal_scroll_bar">hide_horizontal_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hide_scroll_bars' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_hide_scroll_bars">hide_scroll_bars</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`hide_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_hide_vertical_scroll_bar">hide_vertical_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`insert_after' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_insert_after">insert_after</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalidate' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_invalidate">invalidate</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalidate_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_invalidate_rect">invalidate_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">erase_background</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalidate_region' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_invalidate_region">invalidate_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">erase_background</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`invalidate_without_background' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_invalidate_without_background">invalidate_without_background</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`kill_timer' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_kill_timer">kill_timer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">timer_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lock_window_update' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_lock_window_update">lock_window_update</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`maximize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_maximize">maximize</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`minimize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_minimize">minimize</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`move' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_move">move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`move_and_resize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_move_and_resize">move_and_resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">repaint</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_activate' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_activate">on_activate</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_bn_clicked' was declared in WEL_BUTTON"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_button.html#f_on_bn_clicked">on_bn_clicked</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_char' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_char">on_char</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">character_code</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_desactivate' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_desactivate">on_desactivate</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_destroy' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_destroy">on_destroy</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_erase_background' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_erase_background">on_erase_background</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">paint_dc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_paint_dc_chart.html">WEL_PAINT_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">invalid_rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_hide' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_hide">on_hide</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_key_down' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_key_down">on_key_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_key_up' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_key_up">on_key_up</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_kill_focus' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_kill_focus">on_kill_focus</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_left_button_double_click' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_left_button_double_click">on_left_button_double_click</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_left_button_down' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_left_button_down">on_left_button_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_left_button_up' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_left_button_up">on_left_button_up</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_middle_button_double_click' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_middle_button_double_click">on_middle_button_double_click</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_middle_button_down' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_middle_button_down">on_middle_button_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_middle_button_up' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_middle_button_up">on_middle_button_up</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_mouse_move' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_mouse_move">on_mouse_move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_move' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_move">on_move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_notify' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_notify">on_notify</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">control_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_nmhdr_chart.html">WEL_NMHDR</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_right_button_double_click' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_right_button_double_click">on_right_button_double_click</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_right_button_down' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_right_button_down">on_right_button_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_right_button_up' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_right_button_up">on_right_button_up</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">keys</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x_pos</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y_pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_set_cursor' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_set_cursor">on_set_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hit_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_set_focus' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_set_focus">on_set_focus</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_show' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_show">on_show</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_size' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_size">on_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size_type</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_sys_char' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_sys_char">on_sys_char</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">character_code</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_sys_key_down' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_sys_key_down">on_sys_key_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_sys_key_up' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_sys_key_up">on_sys_key_up</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">key_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`on_timer' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_timer">on_timer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">timer_id</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_command' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_put_command">put_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_command_chart.html">WEL_COMMAND</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">argument</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`register_current_window' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_register_current_window">register_current_window</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`release_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_release_capture">release_capture</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`release_heavy_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_release_heavy_capture">release_heavy_capture</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_command' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_remove_command">remove_command</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">message</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`resize' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_resize">resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`restore' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_restore">restore</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`scroll' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_scroll">scroll</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_set_bitmap">set_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_capture">set_capture</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_class_icon' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_class_icon">set_class_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_class_small_icon' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_class_small_icon">set_class_small_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_processing' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_return_value.html#f_set_default_processing">set_default_processing</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_ex_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_ex_style">set_ex_style</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_ex_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_focus' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_focus">set_focus</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_font' was declared in WEL_CONTROL"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_control.html#f_set_font">set_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_font_chart.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_heavy_capture' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_heavy_capture">set_heavy_capture</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_height' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_icon' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_set_icon">set_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_icon</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_icon_chart.html">WEL_ICON</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_message_return_value' was declared in WEL_RETURN_VALUE"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_return_value.html#f_set_message_return_value">set_message_return_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_parent' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_parent">set_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_placement' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_placement">set_placement</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_placement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_window_placement_chart.html">WEL_WINDOW_PLACEMENT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_style">set_style</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_text' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_text">set_text</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_text</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_timer' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_timer">set_timer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">timer_id</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">time_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_width' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_x' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_x">set_x</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_y' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_y">set_y</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_z_order' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_z_order">set_z_order</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">z_order</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_show">show</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_show_bitmap">show_bitmap</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_horizontal_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_show_horizontal_scroll_bar">show_horizontal_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_icon' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_show_icon">show_icon</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_scroll_bars' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_show_scroll_bars">show_scroll_bars</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_text' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_show_text">show_text</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_vertical_scroll_bar' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_show_vertical_scroll_bar">show_vertical_scroll_bar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`show_with_option' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_show_with_option">show_with_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">cmd_show</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unlock_window_update' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_unlock_window_update">unlock_window_update</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unset_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_unset_bitmap">unset_bitmap</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`unset_icon' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/controls/wel_bitmap_button.html#f_unset_icon">unset_icon</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`update' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_update">update</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`update_cached_style' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_update_cached_style">update_cached_style</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_ex_style</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">old_ex_style</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`validate_rect' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_validate_rect">validate_rect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">rect</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_rect_chart.html">WEL_RECT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`validate_region' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_validate_region">validate_region</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">region</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_region_chart.html">WEL_REGION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`win_help' was declared in WEL_WINDOW"><A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_win_help">win_help</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">help_file</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">a_command</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">data</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>

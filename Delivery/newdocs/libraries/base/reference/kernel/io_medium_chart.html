@@ -1,159 +1,87 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>IO_MEDIUM Chart</TITLE>
-
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/io_medium_chart.html">IO_MEDIUM</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">General</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Any medium that can perform input and/or output"</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/memory_chart.html">MEMORY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/string_handler_chart.html">STRING_HANDLER</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`extendible' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`handle' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_handle">handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`handle_available' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_handle_available">handle_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_closed' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_closed">is_closed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_executable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_executable">is_executable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_open_read' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_open_read">is_open_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_open_write' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_open_write">is_open_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_plain_text' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_plain_text">is_plain_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_readable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_readable">is_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_writable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_is_writable">is_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_character' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_double' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_last_double">last_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_real' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_string' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastchar' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_lastdouble">lastdouble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastint' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_lastint">lastint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lastreal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_lastreal">lastreal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`laststring' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`name' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`retrieved' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_retrieved">retrieved</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`support_storable' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_support_storable">support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`basic_store' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`close' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_close">close</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_dispose">dispose</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`general_store' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_general_store">general_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`independent_store' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_independent_store">independent_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`new_line' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_new_line">new_line</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_boolean' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_character' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_double' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_double">put_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_new_line' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_new_line">put_new_line</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_real' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_real">put_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_string' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putbool' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_putbool">putbool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putchar' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_putchar">putchar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_putdouble">putdouble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putint' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_putint">putint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putreal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_putreal">putreal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`putstring' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_putstring">putstring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_character' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_read_character">read_character</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_double' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_read_double">read_double</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_read_integer">read_integer</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_line' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_read_line">read_line</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_real' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_read_real">read_real</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`read_stream' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_read_stream">read_stream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readchar' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readchar">readchar</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readdouble">readdouble</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readint' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readint">readint</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readline' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readline">readline</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readreal' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readreal">readreal</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`readstream' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/io_medium.html#f_readstream">readstream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
+<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/io_medium_chart.html">IO_MEDIUM</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Any medium that can perform input and/or output"</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/memory_chart.html">MEMORY</A>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/string_handler_chart.html">STRING_HANDLER</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`exists' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`extendible' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`handle' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_handle">handle</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`handle_available' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_handle_available">handle_available</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_closed' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_closed">is_closed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_executable' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_executable">is_executable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_open_read' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_open_read">is_open_read</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_open_write' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_open_write">is_open_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_plain_text' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_plain_text">is_plain_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_readable' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_readable">is_readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_writable' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_is_writable">is_writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`last_character' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_last_character">last_character</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`last_double' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_last_double">last_double</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`last_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_last_integer">last_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`last_real' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_last_real">last_real</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real_chart.html">REAL</A></SPAN>
+	<SPAN TITLE="`last_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_last_string">last_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`lastchar' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_lastchar">lastchar</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A></SPAN>
+	<SPAN TITLE="`lastdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_lastdouble">lastdouble</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN>
+	<SPAN TITLE="`lastint' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_lastint">lastint</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`lastreal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_lastreal">lastreal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real_chart.html">REAL</A></SPAN>
+	<SPAN TITLE="`laststring' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_laststring">laststring</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`name' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`readable' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`retrieved' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_retrieved">retrieved</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A></SPAN>
+	<SPAN TITLE="`support_storable' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_support_storable">support_storable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`basic_store' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_basic_store">basic_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`close' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_close">close</A></SPAN>
+	<SPAN TITLE="`dispose' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`general_store' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_general_store">general_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`independent_store' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_independent_store">independent_store</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`new_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_new_line">new_line</A></SPAN>
+	<SPAN TITLE="`put_boolean' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_boolean">put_boolean</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_character' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_character">put_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_double' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_double">put_double</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_integer">put_integer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_new_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_new_line">put_new_line</A></SPAN>
+	<SPAN TITLE="`put_real' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_real">put_real</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put_string' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putbool' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_putbool">putbool</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putchar' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_putchar">putchar</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_putdouble">putdouble</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putint' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_putint">putint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putreal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_putreal">putreal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">r</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/real_chart.html">REAL</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`putstring' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_putstring">putstring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`read_character' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_read_character">read_character</A></SPAN>
+	<SPAN TITLE="`read_double' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_read_double">read_double</A></SPAN>
+	<SPAN TITLE="`read_integer' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_read_integer">read_integer</A></SPAN>
+	<SPAN TITLE="`read_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_read_line">read_line</A></SPAN>
+	<SPAN TITLE="`read_real' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_read_real">read_real</A></SPAN>
+	<SPAN TITLE="`read_stream' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_read_stream">read_stream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`readchar' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readchar">readchar</A></SPAN>
+	<SPAN TITLE="`readdouble' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readdouble">readdouble</A></SPAN>
+	<SPAN TITLE="`readint' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readint">readint</A></SPAN>
+	<SPAN TITLE="`readline' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readline">readline</A></SPAN>
+	<SPAN TITLE="`readreal' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readreal">readreal</A></SPAN>
+	<SPAN TITLE="`readstream' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/io_medium.html#f_readstream">readstream</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">nb_char</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+</PRE>
 
 </BODY>
 

@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>TIME Flat contracts</TITLE>
 		
@@ -10,942 +10,455 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"absolute time"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> date<SPAN CLASS="esymbol">,</SPAN> time<BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../time/reference/time.html">TIME</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">create</SPAN> <BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_fine"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_fine">make_fine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment"> and truncated to</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> integer part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> to the fractional part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">fine_second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_now"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_now">make_now</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current time according to timezone.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_seconds">make_by_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment"> from midnight.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">seconds_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_seconds">seconds</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">sec</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_fine_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_fine_seconds">make_by_fine_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">code</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_from_string_default"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string_default">make_from_string_default</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_compact_time"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_compact_time">make_by_compact_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_t_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">c_t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_t_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_compact_time_valid">compact_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">compact_time_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">c_t</SPAN><BR>
-
-</A><BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_compact_time"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_compact_time">make_by_compact_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_t_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">c_t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_t_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_compact_time_valid">compact_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">compact_time_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">c_t</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_fine_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_fine_seconds">make_by_fine_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_by_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_seconds">make_by_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment"> from midnight.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">seconds_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_seconds">seconds</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">sec</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_fine"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_fine">make_fine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment"> and truncated to</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> integer part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> to the fractional part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">fine_second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">code</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_from_string_default"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string_default">make_from_string_default</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_make_now"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_now">make_now</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current time according to timezone.</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_compact_time"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Hour, minute, second coded.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_date_time_tools"><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_date_time_tools">date_time_tools</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/format/english/date_time_tools.html">DATE_TIME_TOOLS</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_utility.html">TIME_UTILITY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_default_format_string"><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_utility.html">TIME_UTILITY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_fine_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation of second with decimals</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_fractional_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fractional part of </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_hour"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Hour of the current time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_hours_in_day"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_hours_in_day">Hours_in_day</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">24</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of hours in a day</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_micro_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_micro_second">micro_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Microsecond of the current time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_milli_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_milli_second">milli_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Millisecond of the current time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_minute"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Minute of the current time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_minutes_in_hour"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_minutes_in_hour">Minutes_in_hour</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">60</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of minutes in an hour</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_nano_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_nano_second">nano_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Nanosecond of the current time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_origin"><A CLASS="efeature" HREF="../../time/reference/time.html#f_origin">origin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time.html">TIME</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Origin time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Second of the current time</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_seconds_in_day"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">Seconds_in_day</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">86400</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds in an hour</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_seconds_in_hour"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_hour">Seconds_in_hour</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3600</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds in an hour</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_seconds_in_minute"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">Seconds_in_minute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">60</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds in a minute</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_time_default_format_string"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_time_default_format_string">time_default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_duration"><A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time_duration.html">TIME_DURATION</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duration elapsed from midnight</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">seconds_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/time_duration.html#f_seconds_count">seconds_count</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">seconds_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/time_duration.html#f_seconds_count">seconds_count</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_fine_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_fine_seconds">fine_seconds</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds and fractions of seconds elapsed from midnight</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_seconds">seconds</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds elapsed from midnight</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/time_duration.html#f_seconds_count">seconds_count</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> attached to an object of the same type</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as current object and identical to it?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">symmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">trichotomy</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_max"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_max">max</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The greater of current object and </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">current_if_not_smaller</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_if_smaller</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_min"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_min">min</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The smaller of current object and </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">current_if_not_greater</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_if_greater</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_three_way_comparison"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_three_way_comparison">three_way_comparison</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If current object equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">, 0;</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if smaller, -1; if greater, 1</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">equal_zero</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">smaller_negative</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">greater_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_lt"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the current time before </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">asymmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_le"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current object less than or equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_gt"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current object greater than </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_ge"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current object greater than or equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_fine_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_fine_second">set_fine_second</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">seconds_in_minute</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">fine_second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_fractionals"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_fractionals">set_fractionals</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">f_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">f</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">f_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">f</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="enumber">1</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">second_same</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_hour"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_hour">set_hour</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">h_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">h_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_hours_in_day">hours_in_day</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_minute"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_minute">set_minute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">m_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">m</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">m_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">m</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_minutes_in_hour">minutes_in_hour</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_set_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_second">set_second</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">seconds_in_minute</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_div"><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_div">div</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (i \\ j) if </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> positive</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (i \\ j + 1) if </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> negative</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_utility.html">TIME_UTILITY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_utility.html">TIME_UTILITY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">j</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_star">*</A> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_mod">mod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_fine_second_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_fine_second_add">fine_second_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment"> seconds to the current time.</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment"> has decimals, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> is modified.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_hour_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_hour_add">hour_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment"> hours to the current object.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_hour_back"><A CLASS="efeature" HREF="../../time/reference/time.html#f_hour_back">hour_back</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to evious hour.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_hour_forth"><A CLASS="efeature" HREF="../../time/reference/time.html#f_hour_forth">hour_forth</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to next hour.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_minute_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_minute_add">minute_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment"> minutes to the current object.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_minute_back"><A CLASS="efeature" HREF="../../time/reference/time.html#f_minute_back">minute_back</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to evious minute.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_minute_forth"><A CLASS="efeature" HREF="../../time/reference/time.html#f_minute_forth">minute_forth</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to next minute.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_mod"><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_mod">mod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (i \\ j) if </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> positive</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (i \\ j + j) if </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> negative</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_utility.html">TIME_UTILITY</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_utility.html">TIME_UTILITY</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">positive_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">j</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_star">*</A> <A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_div">div</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">j</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="ereserved">Result</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_relative_duration"><A CLASS="efeature" HREF="../../time/reference/time.html#f_relative_duration">relative_duration</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time_duration.html">TIME_DURATION</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duration elapsed from </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_second_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_second_add">second_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> seconds to the current time.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_second_back"><A CLASS="efeature" HREF="../../time/reference/time.html#f_second_back">second_back</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to previous second.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_second_forth"><A CLASS="efeature" HREF="../../time/reference/time.html#f_second_forth">second_forth</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to next second.</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_plus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_plus">+</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time_duration.html">TIME_DURATION</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time.html">TIME</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sum of the current time and duration </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">t_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f__infix_minus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../time/reference/absolute.html#f__infix_minus">-</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/interval.html">INTERVAL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Interval between current object and </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">other_smaller_than_current</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="ereserved">Current</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/interval.html#f_start_bound">start_bound</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_and_then">and then</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/interval.html#f_end_bound">end_bound</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_formatted_out"><A CLASS="efeature" HREF="../../time/reference/time.html#f_formatted_out">formatted_out</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Printable representation of time with "standard"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Form: </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_out"><A CLASS="efeature" HREF="../../time/reference/time.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Printable representation of time with "standard"</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Form: </SPAN><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_time_default_format_string">time_default_format_string</A><SPAN CLASS="ecomment"></SPAN><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Preconditions</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_compact_time_valid"><A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_compact_time_valid">compact_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is compact time </SPAN><SPAN CLASS="equoted">c_t</SPAN><SPAN CLASS="ecomment"> valid?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_t_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">c_t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_is_correct_time"><A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">twelve_hour_scale</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is time represented by </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">, and </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> correct?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">twelve_hour_scale</SPAN><SPAN CLASS="ecomment"> specifies if the hour range is 1 - 12</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (if True) or 0 - 23 (if False).</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_time_valid"><A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">code_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the code_string enough precise</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to create an instance of type TIME?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> And does the string </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> correspond to </SPAN><SPAN CLASS="equoted">code_string</SPAN><SPAN CLASS="ecomment">?</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><SPAN CLASS="ecomment">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">code_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">code_string</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A><BR>
-
-</A> &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">second_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">second_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">seconds_in_minute</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">fractionals_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">fractionals_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="enumber">1</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">minute_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_minutes_in_hour">minutes_in_hour</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">hour_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_hours_in_day">hours_in_day</A><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">irreflexive_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>TIME<BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Absolute times"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+	<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> time
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../time/reference/time.html">TIME</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN>
+			<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN>
+			<SPAN CLASS="etag">second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
+</A>
+	<A NAME="f_make_fine"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_fine">make_fine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment"> and truncated to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> integer part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> to the fractional part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN>
+			<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN>
+			<SPAN CLASS="etag">fine_second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
+</A>
+	<A NAME="f_make_now"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_now">make_now</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current time according to timezone.</SPAN>
+</A>
+	<A NAME="f_make_by_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_seconds">make_by_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment"> from midnight.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">seconds_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_seconds">seconds</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">sec</SPAN>
+</A>
+	<A NAME="f_make_by_fine_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_fine_seconds">make_by_fine_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A>
+</A>
+	<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">c_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">code</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_make_from_string_default"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string_default">make_from_string_default</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_make_by_compact_time"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_compact_time">make_by_compact_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">c_t_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">c_t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">c_t_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_compact_time_valid">compact_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">compact_time_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">c_t</SPAN>
+</A>
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN>
+			<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN>
+			<SPAN CLASS="etag">second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
+</A>
+	<A NAME="f_make_by_compact_time"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_compact_time">make_by_compact_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">c_t_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">c_t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">c_t_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_compact_time_valid">compact_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">compact_time_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">c_t</SPAN>
+</A>
+	<A NAME="f_make_by_fine_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_fine_seconds">make_by_fine_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A>
+</A>
+	<A NAME="f_make_by_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_by_seconds">make_by_seconds</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">sec</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the object by the number of seconds </SPAN><SPAN CLASS="equoted">sec</SPAN><SPAN CLASS="ecomment"> from midnight.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">sec</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">seconds_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_seconds">seconds</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">sec</SPAN>
+</A>
+	<A NAME="f_make_fine"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_fine">make_fine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set `hour, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment"> and truncated to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> integer part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> to the fractional part of </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">correct_time</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="ekeyword">False</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN>
+			<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN>
+			<SPAN CLASS="etag">fine_second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
+</A>
+	<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">c_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">code</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">code</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_make_from_string_default"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_from_string_default">make_from_string_default</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize from a "standard" string of form</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">time_valid</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_utility.html#f_default_format_string">default_format_string</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_make_now"><A CLASS="efeature" HREF="../../time/reference/time.html#f_make_now">make_now</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set current time according to timezone.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_compact_time"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_compact_time">compact_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Hour, minute, second coded.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_fine_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation of second with decimals</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_fractional_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fractional part of </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_hour"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Hour of the current time</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_hours_in_day"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_hours_in_day">Hours_in_day</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">24</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of hours in a day</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_micro_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_micro_second">micro_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Microsecond of the current time</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_milli_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_milli_second">milli_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Millisecond of the current time</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_minute"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Minute of the current time</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_minutes_in_hour"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_minutes_in_hour">Minutes_in_hour</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">60</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of minutes in an hour</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_nano_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_nano_second">nano_second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Nanosecond of the current time</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_origin"><A CLASS="efeature" HREF="../../time/reference/time.html#f_origin">origin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time.html">TIME</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Origin time</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A>
+			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Second of the current time</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_seconds_in_day"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">Seconds_in_day</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">86400</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds in an hour</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_seconds_in_hour"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_hour">Seconds_in_hour</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3600</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds in an hour</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_seconds_in_minute"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">Seconds_in_minute</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">60</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds in a minute</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_time_default_format_string"><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_time_default_format_string">time_default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default output format for times</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_constants.html">TIME_CONSTANTS</A><SPAN CLASS="ecomment">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_duration"><A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time_duration.html">TIME_DURATION</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duration elapsed from midnight</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+			<SPAN CLASS="etag">seconds_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/time_duration.html#f_seconds_count">seconds_count</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">seconds_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/time_duration.html#f_seconds_count">seconds_count</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_day">seconds_in_day</A>
+</A>
+	<A NAME="f_fine_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_fine_seconds">fine_seconds</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds and fractions of seconds elapsed from midnight</SPAN>
+</A>
+	<A NAME="f_seconds"><A CLASS="efeature" HREF="../../time/reference/time.html#f_seconds">seconds</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of seconds elapsed from midnight</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../time/reference/time.html#f_duration">duration</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/time_duration.html#f_seconds_count">seconds_count</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN>
+
+	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> attached to an object of the same type</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as current object and identical to it?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">other_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A>
+			<SPAN CLASS="etag">symmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">trichotomy</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_max"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_max">max</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The greater of current object and </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">current_if_not_smaller</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+			<SPAN CLASS="etag">other_if_smaller</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other</SPAN>
+</A>
+	<A NAME="f_min"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_min">min</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The smaller of current object and </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">current_if_not_greater</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+			<SPAN CLASS="etag">other_if_greater</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">other</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other</SPAN>
+</A>
+	<A NAME="f_three_way_comparison"><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_three_way_comparison">three_way_comparison</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If current object equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">, 0;</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if smaller, -1; if greater, 1</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">equal_zero</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">smaller_negative</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">-</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="etag">greater_positive</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f__infix_lt"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the current time before </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">asymmetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f__infix_le"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current object less than or equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f__infix_gt"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current object greater than </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f__infix_ge"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is current object greater than or equal to </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/part_comparable.html">PART_COMPARABLE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+			<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_set_fine_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_fine_second">set_fine_second</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">seconds_in_minute</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">fine_second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fine_second">fine_second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
+</A>
+	<A NAME="f_set_fractionals"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_fractionals">set_fractionals</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">f_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">f</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">f_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">f</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">second_same</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A>
+</A>
+	<A NAME="f_set_hour"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_hour">set_hour</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">h_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">h_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">h</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_hours_in_day">hours_in_day</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">hour_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">h</SPAN>
+</A>
+	<A NAME="f_set_minute"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_minute">set_minute</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">m_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">m</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">m_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">m</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_minutes_in_hour">minutes_in_hour</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">minute_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">m</SPAN>
+</A>
+	<A NAME="f_set_second"><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_set_second">set_second</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_value.html">TIME_VALUE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">s_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">s_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">seconds_in_minute</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_measurement.html">TIME_MEASUREMENT</A>
+			<SPAN CLASS="etag">second_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_fine_second_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_fine_second_add">fine_second_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment"> seconds to the current time.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> if </SPAN><SPAN CLASS="equoted">f</SPAN><SPAN CLASS="ecomment"> has decimals, </SPAN><A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A><SPAN CLASS="ecomment"> is modified.</SPAN>
+</A>
+	<A NAME="f_hour_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_hour_add">hour_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment"> hours to the current object.</SPAN>
+</A>
+	<A NAME="f_hour_back"><A CLASS="efeature" HREF="../../time/reference/time.html#f_hour_back">hour_back</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to evious hour.</SPAN>
+</A>
+	<A NAME="f_hour_forth"><A CLASS="efeature" HREF="../../time/reference/time.html#f_hour_forth">hour_forth</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to next hour.</SPAN>
+</A>
+	<A NAME="f_minute_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_minute_add">minute_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment"> minutes to the current object.</SPAN>
+</A>
+	<A NAME="f_minute_back"><A CLASS="efeature" HREF="../../time/reference/time.html#f_minute_back">minute_back</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to evious minute.</SPAN>
+</A>
+	<A NAME="f_minute_forth"><A CLASS="efeature" HREF="../../time/reference/time.html#f_minute_forth">minute_forth</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to next minute.</SPAN>
+</A>
+	<A NAME="f_relative_duration"><A CLASS="efeature" HREF="../../time/reference/time.html#f_relative_duration">relative_duration</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time_duration.html">TIME_DURATION</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duration elapsed from </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">Current</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A>
+			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_second_add"><A CLASS="efeature" HREF="../../time/reference/time.html#f_second_add">second_add</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> seconds to the current time.</SPAN>
+</A>
+	<A NAME="f_second_back"><A CLASS="efeature" HREF="../../time/reference/time.html#f_second_back">second_back</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to previous second.</SPAN>
+</A>
+	<A NAME="f_second_forth"><A CLASS="efeature" HREF="../../time/reference/time.html#f_second_forth">second_forth</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to next second.</SPAN>
+</A>
+	<A NAME="f__infix_plus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_plus">+</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time_duration.html">TIME_DURATION</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/time.html">TIME</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Sum of the current time and duration </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">t_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f__infix_minus"><SPAN CLASS="ekeyword">infix</SPAN> <SPAN CLASS="esymbol">"</SPAN><A CLASS="esymbol" HREF="../../time/reference/absolute.html#f__infix_minus">-</A><SPAN CLASS="esymbol">"</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../time/reference/interval.html">INTERVAL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Interval between current object and </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A>
+			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">other_smaller_than_current</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="ereserved">Current</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/absolute.html">ABSOLUTE</A>
+			<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">result_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/interval.html#f_start_bound">start_bound</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__infix_and_then">and then</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../time/reference/interval.html#f_end_bound">end_bound</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/reference/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
+
+	<A NAME="f_formatted_out"><A CLASS="efeature" HREF="../../time/reference/time.html#f_formatted_out">formatted_out</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Printable representation of time with "standard"</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Form: </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_out"><A CLASS="efeature" HREF="../../time/reference/time.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Printable representation of time with "standard"</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Form: </SPAN><A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_time_default_format_string">time_default_format_string</A><SPAN CLASS="ecomment"></SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Preconditions</SPAN>
+
+	<A NAME="f_compact_time_valid"><A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_compact_time_valid">compact_time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is compact time </SPAN><SPAN CLASS="equoted">c_t</SPAN><SPAN CLASS="ecomment"> valid?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A>
+			<SPAN CLASS="etag">c_t_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">c_t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_is_correct_time"><A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_is_correct_time">is_correct_time</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">h</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">m</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">twelve_hour_scale</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is time represented by </SPAN><SPAN CLASS="equoted">h</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">m</SPAN><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">code</SPAN><SPAN CLASS="ecomment">, and </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> correct?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">twelve_hour_scale</SPAN><SPAN CLASS="ecomment"> specifies if the hour range is 1 - 12</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (if True) or 0 - 23 (if False).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><SPAN CLASS="ecomment">)</SPAN>
+</A>
+	<A NAME="f_time_valid"><A CLASS="efeature" HREF="../../time/reference/time_validity_checker.html#f_time_valid">time_valid</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">code_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the code_string enough precise</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to create an instance of type TIME?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> And does the string </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> correspond to </SPAN><SPAN CLASS="equoted">code_string</SPAN><SPAN CLASS="ecomment">?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A><SPAN CLASS="ecomment">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../time/reference/time_validity_checker.html">TIME_VALIDITY_CHECKER</A>
+			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">code_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">code_string</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_void">void</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">second_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+	<SPAN CLASS="etag">second_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_second">second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_seconds_in_minute">seconds_in_minute</A>
+	<SPAN CLASS="etag">fractionals_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+	<SPAN CLASS="etag">fractionals_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_fractional_second">fractional_second</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/double_ref.html#f__infix_lt">&lt;</A> <SPAN CLASS="enumber">1</SPAN>
+	<SPAN CLASS="etag">minute_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+	<SPAN CLASS="etag">minute_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_minute">minute</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_minutes_in_hour">minutes_in_hour</A>
+	<SPAN CLASS="etag">hour_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+	<SPAN CLASS="etag">hour_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../time/reference/time_value.html#f_hour">hour</A> <A CLASS="esymbol" HREF="../../base/reference/kernel/integer_ref.html#f__infix_lt">&lt;</A> <A CLASS="efeature" HREF="../../time/reference/time_constants.html#f_hours_in_day">hours_in_day</A>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/reference/kernel/comparable.html">COMPARABLE</A>
+	<SPAN CLASS="etag">irreflexive_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN> <A CLASS="esymbol" HREF="../../time/reference/time.html#f__infix_lt">&lt;</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>TIME</PRE>
 
 </BODY>
 
 </HTML>
-<BR>
 

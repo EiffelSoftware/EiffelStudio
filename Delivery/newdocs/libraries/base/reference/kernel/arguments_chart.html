@@ -1,77 +1,46 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.017">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>ARGUMENTS Chart</TITLE>
-
-<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/arguments_chart.html">ARGUMENTS</A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/arguments_chart.html">ARGUMENTS</A><BR>
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/reference/kernel/index.html">base.kernel</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
+		<SPAN CLASS="estring">"Access to command-line arguments. This class </SPAN>
+		<SPAN CLASS="estring">may be used as ancestor by classes needing its facilities."</SPAN>
 
-<BR>
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A>
 
-<SPAN CLASS="ekeyword">General</SPAN><BR>
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`argument' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_argument">argument</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`argument_array' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_argument_array">Argument_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`argument_count' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_argument_count">Argument_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`coalesced_character_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_coalesced_character_option_value">coalesced_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`coalesced_word_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_coalesced_word_option_value">coalesced_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`command_line' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_command_line">Command_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`command_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_command_name">Command_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`index_of_beginning_with_word_option' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_index_of_beginning_with_word_option">index_of_beginning_with_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`index_of_character_option' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_index_of_character_option">index_of_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`index_of_word_option' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_index_of_word_option">index_of_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`option_sign' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_option_sign">Option_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_ref_chart.html">CHARACTER_REF</A></SPAN>
+	<SPAN TITLE="`separate_character_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_separate_character_option_value">separate_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`separate_word_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_separate_word_option_value">separate_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../reference/kernel/index.html">base.kernel</A><BR>
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`set_option_sign' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/reference/kernel/arguments.html#f_set_option_sign">set_option_sign</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">"Access to command-line arguments. This class %</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="estring">%may be used as ancestor by classes needing its facilities."</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../reference/kernel/any_chart.html">ANY</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`argument' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_argument">argument</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`argument_array' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_argument_array">Argument_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`argument_count' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_argument_count">Argument_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`coalesced_character_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_coalesced_character_option_value">coalesced_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`coalesced_word_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_coalesced_word_option_value">coalesced_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`command_line' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_command_line">Command_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`command_name' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_command_name">Command_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_of_beginning_with_word_option' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_index_of_beginning_with_word_option">index_of_beginning_with_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_of_character_option' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_index_of_character_option">index_of_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`index_of_word_option' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_index_of_word_option">index_of_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`option_sign' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_option_sign">Option_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_ref_chart.html">CHARACTER_REF</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`separate_character_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_separate_character_option_value">separate_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`separate_word_option_value' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_separate_word_option_value">separate_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_option_sign' is declared in `Current'"><A CLASS="efeature" HREF="../../reference/kernel/arguments.html#f_set_option_sign">set_option_sign</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
+</PRE>
 
 </BODY>
 

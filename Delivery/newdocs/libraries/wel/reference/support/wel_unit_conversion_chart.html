@@ -1,0 +1,41 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
+<TITLE>WEL_UNIT_CONVERSION Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_unit_conversion_chart.html">WEL_UNIT_CONVERSION</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Unit conversion."</SPAN>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_capabilities_constants_chart.html">WEL_CAPABILITIES_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_dt_constants_chart.html">WEL_DT_CONSTANTS</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`himetric_per_inch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_himetric_per_inch">Himetric_per_inch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`himetric_to_pixel' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_himetric_to_pixel">himetric_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_size_in_himetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size_chart.html">WEL_SIZE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size_chart.html">WEL_SIZE</A></SPAN>
+	<SPAN TITLE="`logical_to_pixel' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_logical_to_pixel">logical_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lo</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`logical_to_point' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_logical_to_point">logical_to_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lo</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`map_loghim_to_pixel' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_map_loghim_to_pixel">map_loghim_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">ppli</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`map_pixel_to_loghim' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_map_pixel_to_loghim">map_pixel_to_loghim</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">ppli</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pixel_to_himetric' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_pixel_to_himetric">pixel_to_himetric</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_size_in_pixel</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size_chart.html">WEL_SIZE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size_chart.html">WEL_SIZE</A></SPAN>
+	<SPAN TITLE="`pixel_to_logical' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_pixel_to_logical">pixel_to_logical</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pixel_to_point' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_pixel_to_point">pixel_to_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`point_to_logical' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_point_to_logical">point_to_logical</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pt</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">divisor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`point_to_pixel' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_point_to_pixel">point_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc_chart.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pt</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">divisor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+
+</PRE>
+
+</BODY>
+
+</HTML>

@@ -1,0 +1,78 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
+<TITLE>WEL_UNIT_CONVERSION Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Unit conversion."</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_unit_conversion.html">WEL_UNIT_CONVERSION</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_himetric_per_inch"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_himetric_per_inch">Himetric_per_inch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2540</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Defined as HIMETRIC_PER_INCH in AtlWin.h</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
+
+	<A NAME="f_himetric_to_pixel"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_himetric_to_pixel">himetric_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_size_in_himetric</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size.html">WEL_SIZE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size.html">WEL_SIZE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert himetric into pixels.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">non_void_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_size_in_himetric</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">non_void_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_logical_to_pixel"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_logical_to_pixel">logical_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lo</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert </SPAN><SPAN CLASS="equoted">lo</SPAN><SPAN CLASS="ecomment"> expressed in logical unit into pixel unit.</SPAN>
+</A>
+	<A NAME="f_logical_to_point"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_logical_to_point">logical_to_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">lo</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert a size </SPAN><SPAN CLASS="equoted">lo</SPAN><SPAN CLASS="ecomment"> expressed in logical unit into point.</SPAN>
+</A>
+	<A NAME="f_map_loghim_to_pixel"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_map_loghim_to_pixel">map_loghim_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">ppli</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Defined as MAP_LOGHIM_TO_PIX in AtlWin.h</SPAN>
+</A>
+	<A NAME="f_map_pixel_to_loghim"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_map_pixel_to_loghim">map_pixel_to_loghim</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">ppli</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Defined as MAP_PIX_TO_LOGHIM in AtlWin.h</SPAN>
+</A>
+	<A NAME="f_pixel_to_himetric"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_pixel_to_himetric">pixel_to_himetric</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_size_in_pixel</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size.html">WEL_SIZE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_size.html">WEL_SIZE</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert pixels into himetric.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">non_void_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_size_in_pixel</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">non_void_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
+</A>
+	<A NAME="f_pixel_to_logical"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_pixel_to_logical">pixel_to_logical</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert </SPAN><SPAN CLASS="equoted">pi</SPAN><SPAN CLASS="ecomment"> expressed in pixel unit into logical unit.</SPAN>
+</A>
+	<A NAME="f_pixel_to_point"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_pixel_to_point">pixel_to_point</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pi</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert a size </SPAN><SPAN CLASS="equoted">pi</SPAN><SPAN CLASS="ecomment"> expressed in pixel into point.</SPAN>
+</A>
+	<A NAME="f_point_to_logical"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_point_to_logical">point_to_logical</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pt</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">divisor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert a size </SPAN><SPAN CLASS="equoted">pt/divisor</SPAN><SPAN CLASS="ecomment"> expressed in point into logical units.</SPAN>
+</A>
+	<A NAME="f_point_to_pixel"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_unit_conversion.html#f_point_to_pixel">point_to_pixel</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hdc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_dc.html">WEL_DC</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pt</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">divisor</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert a size </SPAN><SPAN CLASS="equoted">pt/divisor</SPAN><SPAN CLASS="ecomment"> expressed in point into pixel.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>WEL_UNIT_CONVERSION</PRE>
+
+</BODY>
+
+</HTML>
+

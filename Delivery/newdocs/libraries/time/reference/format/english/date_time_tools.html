@@ -1,7 +1,7 @@
 <HTML>
 	<HEAD>
 		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
 		
 <TITLE>DATE_TIME_TOOLS Flat contracts</TITLE>
 		
@@ -10,74 +10,41 @@
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"English settings"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"English settings"</SPAN><BR>
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../../../time/reference/format/english/date_time_tools.html">DATE_TIME_TOOLS</A>
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+<SPAN CLASS="ekeyword">feature</SPAN> 
 
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+	<A NAME="f_date_default_format_string"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_date_default_format_string">Date_default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"[0]mm/[0]dd/yyyy"</SPAN></A>
 
-<BR>
+	<A NAME="f_days_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_days_text">days_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>
+</A>
+	<A NAME="f_default_format_string"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_default_format_string">Default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"[0]mm/[0]dd/yyyy hh12:[0]mi:[0]ss.ff3"</SPAN></A>
 
-<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+	<A NAME="f_long_days_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_long_days_text">long_days_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>
+</A>
+	<A NAME="f_long_months_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_long_months_text">long_months_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>
+</A>
+	<A NAME="f_months_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_months_text">months_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>
+</A>
+	<A NAME="f_name"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_name">Name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"English"</SPAN></A>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../../time/reference/format/english/date_time_tools.html">DATE_TIME_TOOLS</A><BR>
+	<A NAME="f_time_default_format_string"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_time_default_format_string">Time_default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"hh12:[0]mi:[0]ss.ff3"</SPAN></A>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
 
-<BR>
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 
-<SPAN CLASS="ekeyword">feature</SPAN> <BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_date_default_format_string"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_date_default_format_string">Date_default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"[0]mm/[0]dd/yyyy"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_days_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_days_text">days_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_default_format_string"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_default_format_string">Default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"[0]mm/[0]dd/yyyy hh12:[0]mi:[0]ss.ff3"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_long_days_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_long_days_text">long_days_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_long_months_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_long_months_text">long_months_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_months_text"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_months_text">months_text</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN><BR>
-
-</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_name"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_name">Name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"English"</SPAN></A><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp;<A NAME="f_time_default_format_string"><A CLASS="efeature" HREF="../../../../time/reference/format/english/date_time_tools.html#f_time_default_format_string">Time_default_format_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="estring">"hh12:[0]mi:[0]ss.ff3"</SPAN></A><BR>
-
- &nbsp; &nbsp; &nbsp;<BR>
-
-<SPAN CLASS="ekeyword">invariant</SPAN><BR>
-
-<BR>
-
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DATE_TIME_TOOLS<BR>
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>DATE_TIME_TOOLS</PRE>
 
 </BODY>
 
 </HTML>
-<BR>
 

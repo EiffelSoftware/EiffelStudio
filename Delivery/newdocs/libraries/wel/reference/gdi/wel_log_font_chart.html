@@ -1,260 +1,138 @@
 <HTML>
 	<HEAD>
-
-<META NAME="generator" CONTENT="ISE EiffelBench version 5.0.010">
-
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
+		
 <TITLE>WEL_LOG_FONT Chart</TITLE>
-
+		
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
 
 	<BODY>
-<SPAN CLASS="ekeyword">class</SPAN><BR>
+<PRE><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_log_font_chart.html">WEL_LOG_FONT</A>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/gdi/index.html">wel.gdi</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Defines the attributes of a font."</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_make_with_pointer">make_with_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_make_by_font">make_by_font</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_capabilities_constants_chart.html">WEL_CAPABILITIES_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_character_set_constants_chart.html">WEL_CHARACTER_SET_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_clip_precision_constants_chart.html">WEL_CLIP_PRECISION_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_font_family_constants_chart.html">WEL_FONT_FAMILY_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_font_pitch_constants_chart.html">WEL_FONT_PITCH_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_font_quality_constants_chart.html">WEL_FONT_QUALITY_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_out_precision_constants_chart.html">WEL_OUT_PRECISION_CONSTANTS</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
+	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_word_operations_chart.html">WEL_WORD_OPERATIONS</A>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`char_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`clip_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`escapement' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`face_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
+	<SPAN TITLE="`family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`has_ansi_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_ansi_character_set">has_ansi_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_character_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_character_clipping_precision">has_character_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_character_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_character_output_precision">has_character_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_default_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_default_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_default_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_output_precision">has_default_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_default_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_default_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_draft_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_draft_quality">has_draft_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_fixed_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_fixed_pitch">has_fixed_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_oem_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_oem_character_set">has_oem_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_proof_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_proof_quality">has_proof_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_string_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_string_output_precision">has_string_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_stroke_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_stroke_clipping_precision">has_stroke_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_stroke_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_stroke_output_precision">has_stroke_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_symbol_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_symbol_character_set">has_symbol_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_unicode_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_unicode_character_set">has_unicode_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has_variable_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_has_variable_pitch">has_variable_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`height' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`height_in_points' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_height_in_points">height_in_points</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`is_decorative_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_decorative_family">is_decorative_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_dont_care_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_modern_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_modern_family">is_modern_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_roman_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_roman_family">is_roman_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_script_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_script_family">is_script_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_swiss_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_is_swiss_family">is_swiss_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`italic' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_italic">italic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
+	<SPAN TITLE="`max_face_name_length' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_max_face_name_length">Max_face_name_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`orientation' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`out_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`pitch_and_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`strike_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`underlined' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`weight' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_weight">weight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`width' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
+	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
+	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_ansi_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_ansi_character_set">set_ansi_character_set</A></SPAN>
+	<SPAN TITLE="`set_char_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_char_set">set_char_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_char_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_character_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_character_clipping_precision">set_character_clipping_precision</A></SPAN>
+	<SPAN TITLE="`set_character_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_character_output_precision">set_character_output_precision</A></SPAN>
+	<SPAN TITLE="`set_clip_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_clip_precision">set_clip_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_decorative_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_decorative_family">set_decorative_family</A></SPAN>
+	<SPAN TITLE="`set_default_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_character_set">set_default_character_set</A></SPAN>
+	<SPAN TITLE="`set_default_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_clipping_precision">set_default_clipping_precision</A></SPAN>
+	<SPAN TITLE="`set_default_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_output_precision">set_default_output_precision</A></SPAN>
+	<SPAN TITLE="`set_default_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_pitch">set_default_pitch</A></SPAN>
+	<SPAN TITLE="`set_default_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_default_quality">set_default_quality</A></SPAN>
+	<SPAN TITLE="`set_dont_care_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_dont_care_family">set_dont_care_family</A></SPAN>
+	<SPAN TITLE="`set_draft_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_draft_quality">set_draft_quality</A></SPAN>
+	<SPAN TITLE="`set_escapement' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_escapement">set_escapement</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_escapement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_face_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_face_name">set_face_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_family">set_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_fixed_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_fixed_pitch">set_fixed_pitch</A></SPAN>
+	<SPAN TITLE="`set_height' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_italic' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_italic">set_italic</A></SPAN>
+	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_modern_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_modern_family">set_modern_family</A></SPAN>
+	<SPAN TITLE="`set_not_italic' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_not_italic">set_not_italic</A></SPAN>
+	<SPAN TITLE="`set_not_strike_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_not_strike_out">set_not_strike_out</A></SPAN>
+	<SPAN TITLE="`set_not_underlined' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_not_underlined">set_not_underlined</A></SPAN>
+	<SPAN TITLE="`set_oem_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_oem_character_set">set_oem_character_set</A></SPAN>
+	<SPAN TITLE="`set_orientation' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_orientation">set_orientation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_orientation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_out_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_out_precision">set_out_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_pitch">set_pitch</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_pitch_and_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_pitch_and_family">set_pitch_and_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch_and_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_proof_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_proof_quality">set_proof_quality</A></SPAN>
+	<SPAN TITLE="`set_quality' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_quality">set_quality</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_roman_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_roman_family">set_roman_family</A></SPAN>
+	<SPAN TITLE="`set_script_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_script_family">set_script_family</A></SPAN>
+	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
+	<SPAN TITLE="`set_strike_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_strike_out">set_strike_out</A></SPAN>
+	<SPAN TITLE="`set_string_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_string_output_precision">set_string_output_precision</A></SPAN>
+	<SPAN TITLE="`set_stroke_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_stroke_clipping_precision">set_stroke_clipping_precision</A></SPAN>
+	<SPAN TITLE="`set_stroke_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_stroke_output_precision">set_stroke_output_precision</A></SPAN>
+	<SPAN TITLE="`set_swiss_family' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_swiss_family">set_swiss_family</A></SPAN>
+	<SPAN TITLE="`set_symbol_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_symbol_character_set">set_symbol_character_set</A></SPAN>
+	<SPAN TITLE="`set_underlined' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_underlined">set_underlined</A></SPAN>
+	<SPAN TITLE="`set_unicode_character_set' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_unicode_character_set">set_unicode_character_set</A></SPAN>
+	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
+	<SPAN TITLE="`set_variable_pitch' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_variable_pitch">set_variable_pitch</A></SPAN>
+	<SPAN TITLE="`set_weight' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_weight">set_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`set_width' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`update_by_font' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/gdi/wel_log_font.html#f_update_by_font">update_by_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_font_chart.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+
+</PRE>
 
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_log_font_chart.html">WEL_LOG_FONT</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">General</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="/libraries/wel/reference/gdi/index.html">wel.gdi</A><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Defines the attributes of a font."</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_make_with_pointer">make_with_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_make_by_font">make_by_font</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_make">make</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_capabilities_constants_chart.html">WEL_CAPABILITIES_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_character_set_constants_chart.html">WEL_CHARACTER_SET_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_clip_precision_constants_chart.html">WEL_CLIP_PRECISION_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_font_family_constants_chart.html">WEL_FONT_FAMILY_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_font_pitch_constants_chart.html">WEL_FONT_PITCH_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_font_quality_constants_chart.html">WEL_FONT_QUALITY_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/consts/wel_out_precision_constants_chart.html">WEL_OUT_PRECISION_CONSTANTS</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A><BR>
-
- &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_word_operations_chart.html">WEL_WORD_OPERATIONS</A><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Queries</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`char_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_char_set">char_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`clip_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_clip_precision">clip_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`escapement' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_escapement">escapement</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`face_name' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_face_name">face_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_family">family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_ansi_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_ansi_character_set">has_ansi_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_character_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_character_clipping_precision">has_character_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_character_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_character_output_precision">has_character_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_default_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_character_set">has_default_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_default_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_clipping_precision">has_default_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_default_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_output_precision">has_default_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_default_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_pitch">has_default_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_default_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_default_quality">has_default_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_draft_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_draft_quality">has_draft_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_fixed_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_fixed_pitch">has_fixed_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_oem_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_oem_character_set">has_oem_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_proof_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_proof_quality">has_proof_quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_string_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_string_output_precision">has_string_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_stroke_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_stroke_clipping_precision">has_stroke_clipping_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_stroke_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_stroke_output_precision">has_stroke_output_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_symbol_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_symbol_character_set">has_symbol_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_unicode_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_unicode_character_set">has_unicode_character_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`has_variable_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_has_variable_pitch">has_variable_pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`height' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height">height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`height_in_points' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_height_in_points">height_in_points</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_decorative_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_decorative_family">is_decorative_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_dont_care_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_dont_care_family">is_dont_care_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_modern_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_modern_family">is_modern_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_roman_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_roman_family">is_roman_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_script_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_script_family">is_script_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`is_swiss_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_is_swiss_family">is_swiss_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`italic' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_italic">italic</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`max_face_name_length' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_max_face_name_length">Max_face_name_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`orientation' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_orientation">orientation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`out_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_out_precision">out_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch">pitch</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`pitch_and_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_pitch_and_family">pitch_and_family</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_quality">quality</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`strike_out' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_strike_out">strike_out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`underlined' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_underlined">underlined</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`weight' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_weight">weight</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`width' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_width">width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
-
-<BR>
-
-<SPAN CLASS="ekeyword">Commands</SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="/libraries/wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_ansi_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_ansi_character_set">set_ansi_character_set</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_char_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_char_set">set_char_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_char_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_character_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_character_clipping_precision">set_character_clipping_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_character_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_character_output_precision">set_character_output_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_clip_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_clip_precision">set_clip_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_decorative_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_decorative_family">set_decorative_family</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_character_set">set_default_character_set</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_clipping_precision">set_default_clipping_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_output_precision">set_default_output_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_pitch">set_default_pitch</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_default_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_default_quality">set_default_quality</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_dont_care_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_dont_care_family">set_dont_care_family</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_draft_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_draft_quality">set_draft_quality</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_escapement' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_escapement">set_escapement</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_escapement</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_face_name' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_face_name">set_face_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_face_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_family">set_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_fixed_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_fixed_pitch">set_fixed_pitch</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_height' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_height">set_height</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_italic' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_italic">set_italic</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_modern_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_modern_family">set_modern_family</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_not_italic' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_not_italic">set_not_italic</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_not_strike_out' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_not_strike_out">set_not_strike_out</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_not_underlined' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_not_underlined">set_not_underlined</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_oem_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_oem_character_set">set_oem_character_set</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_orientation' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_orientation">set_orientation</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_orientation</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_out_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_out_precision">set_out_precision</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_precision</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_pitch">set_pitch</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_pitch_and_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_pitch_and_family">set_pitch_and_family</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_pitch_and_family</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_proof_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_proof_quality">set_proof_quality</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_quality' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_quality">set_quality</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_quality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_roman_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_roman_family">set_roman_family</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_script_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_script_family">set_script_family</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_strike_out' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_strike_out">set_strike_out</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_string_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_string_output_precision">set_string_output_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_stroke_clipping_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_stroke_clipping_precision">set_stroke_clipping_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_stroke_output_precision' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_stroke_output_precision">set_stroke_output_precision</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_swiss_family' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_swiss_family">set_swiss_family</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_symbol_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_symbol_character_set">set_symbol_character_set</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_underlined' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_underlined">set_underlined</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_unicode_character_set' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_unicode_character_set">set_unicode_character_set</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="/libraries/wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_variable_pitch' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_variable_pitch">set_variable_pitch</A></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_weight' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_weight">set_weight</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_weight</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_width' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_set_width">set_width</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
- &nbsp; &nbsp; &nbsp;<SPAN TITLE="`update_by_font' is declared in `Current'"><A CLASS="efeature" HREF="/libraries/wel/reference/gdi/wel_log_font.html#f_update_by_font">update_by_font</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">font</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="/libraries/wel/reference/gdi/wel_font_chart.html">WEL_FONT</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
-
-<BR>
-
-<BR>
-
-<P ALIGN="CENTER"><FONT SIZE="-2">-- Generated by <A HREF="http://www.eiffel.com">ISE</A> Eiffel --</FONT><P>
 </BODY>
 
 </HTML>

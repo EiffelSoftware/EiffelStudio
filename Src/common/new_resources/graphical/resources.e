@@ -39,19 +39,41 @@ feature -- Access
 			end
 		end
 
-	get_integer(s: STRING; di: INTEGER): INTEGER is
+	get_array (s: STRING; da: ARRAY [STRING]): ARRAY [STRING] is
+		do
+			Result := resource_structure.table.get_array (s, da)
+		end
+
+	get_integer (s: STRING; di: INTEGER): INTEGER is
 		do
 			Result := resource_structure.table.get_integer (s, di)
 		end
 
-	get_boolean(s: STRING; db: BOOLEAN): BOOLEAN is
+	get_boolean (s: STRING; db: BOOLEAN): BOOLEAN is
 		do
 			Result := resource_structure.table.get_boolean (s, db)
 		end
 
-	get_string(s: STRING; ds: STRING): STRING is
+	get_string (s: STRING; ds: STRING): STRING is
 		do
 			Result := resource_structure.table.get_string (s, ds)
+		end
+
+feature -- Setting
+
+	set_integer(s: STRING; ni: INTEGER) is
+		do
+			resource_structure.table.set_integer (s, ni)
+		end
+
+	set_boolean(s: STRING; nb: BOOLEAN) is
+		do
+			resource_structure.table.set_boolean (s, nb)
+		end
+
+	set_string(s: STRING; ns: STRING) is
+		do
+			resource_structure.table.set_string (s, ns)
 		end
 
 

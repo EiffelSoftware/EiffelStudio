@@ -33,6 +33,20 @@ feature -- Status report
 		deferred
 		end
 
+	row_spacing: INTEGER is
+			-- Spacing between two rows
+		require
+			exists: not destroyed
+		deferred
+		end
+	
+	column_spacing: INTEGER is
+			-- Spacing between two columns
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Status settings
 
 	set_homogeneous (flag: BOOLEAN) is

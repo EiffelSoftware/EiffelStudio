@@ -28,6 +28,11 @@ feature -- Status report
 		deferred
 		end
 
+	tab_position: STRING is
+			-- Position of the tabs
+		deferred
+		end
+
 feature -- Status setting
 	
 	set_tab_position (pos: INTEGER) is

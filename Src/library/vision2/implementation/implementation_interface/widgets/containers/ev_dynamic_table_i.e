@@ -16,6 +16,11 @@ feature -- Status report
 	is_row_layout: BOOLEAN
 			-- Are children laid out in rows?
 
+	finite_dimension: INTEGER
+		-- The number of columns if is_row_layout,
+		-- the number of rows if not is_row_layout.
+		-- 1 by default, can be set by the user.
+	
 feature -- Status setting
 
 	set_finite_dimension (a_number: INTEGER) is
@@ -51,11 +56,7 @@ feature {NONE} -- Implementation
 		-- zero-based coordinate of the cell that will receive the next
 		-- child
 
-	finite_dimension: INTEGER
-		-- The number of columns if is_row_layout,
-		-- the number of rows if not is_row_layout.
-		-- 1 by default, can be set by the user.
-
+	
 end -- class EV_DYNAMIC_TABLE_I
 
 --|----------------------------------------------------------------

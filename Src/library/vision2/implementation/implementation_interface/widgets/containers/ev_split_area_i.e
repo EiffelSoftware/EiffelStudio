@@ -14,6 +14,13 @@ inherit
 
 feature -- Status setting
 
+	position: INTEGER is
+			-- The position of the split in pixels.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
 			-- `value' is given in pixel.

@@ -33,6 +33,18 @@ feature {NONE} -- Initialization
 			item := cwin_create_compatible_dc (a_dc.item)
 		end
 
+feature -- Basic operations
+
+	get is
+			-- Get the device context
+		do
+		end
+
+	release is
+			-- Release the device context
+		do
+		end
+
 feature {NONE} -- Removal
 
 	destroy_item is

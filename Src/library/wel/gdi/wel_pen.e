@@ -31,12 +31,18 @@ feature {NONE} -- Initialization
 			valid_pen_style_constant: valid_pen_style_constant (a_style)
 			positive_width: a_width >= 0
 			color_not_void: a_color /= Void
+		local
+			error_code: INTEGER
 		do
 			item := cwin_create_pen (a_style, a_width, a_color.item)
+			if item = default_pointer then
+				error_code := cwin_get_last_error
+				debug("WEL")
+					io.putstring("Error while creating a pen in class WEL_PEN. error_code = "+error_code.out+"%N")
+				end
+			end
 		ensure
-			style_set: exists implies style = a_style
-			width_set: exists implies width = a_width
-			color_set: exists implies color.item = a_color.item
+			pen_created: item /= default_pointer
 		end
 
 	make_solid (a_width: INTEGER; a_color: WEL_COLOR_REF) is
@@ -118,6 +124,13 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (LOGPEN *): EIF_POINTER"
 		alias
 			"CreatePenIndirect"
+		end
+	
+	cwin_get_last_error: INTEGER is
+		external
+			"C [macro <windows.h>]: DWORD"
+		alias
+			"GetLastError"
 		end
 
 end -- class WEL_PEN

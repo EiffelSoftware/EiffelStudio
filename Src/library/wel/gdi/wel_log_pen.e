@@ -75,7 +75,7 @@ feature -- Access
 	color: WEL_COLOR_REF is
 			-- Pen color
 		do
-			!! Result.make_by_color (cwel_logpen_get_color (item))
+			create Result.make_by_color (cwel_logpen_get_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			l_arg: ARGUMENT_BL
 		do
 			has_hector_variables := False
-			if arguments /= Void then
+			if not System.il_generation and then arguments /= Void then
 				from
 					i := arguments.lower
 					nb := arguments.upper

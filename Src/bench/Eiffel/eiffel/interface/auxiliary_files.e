@@ -751,6 +751,29 @@ feature -- Plug and Makefile file
 			buffer.putstring (";%N%Tegc_point_ref_dtype = ")
 			buffer.putint (system.pointer_ref_dtype - 1)
 			buffer.putstring (";%N");	
+
+			buffer.putstring ("%N%Tegc_int8_dtype = ")
+			buffer.putint (system.integer_8_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_int16_dtype = ")
+			buffer.putint (system.integer_16_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_int32_dtype = ")
+			buffer.putint (system.integer_32_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_int64_dtype = ")
+			buffer.putint (system.integer_64_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_bool_dtype = ")
+			buffer.putint (system.boolean_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_real_dtype = ")
+			buffer.putint (system.real_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_char_dtype = ")
+			buffer.putint (system.character_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_wchar_dtype = ")
+			buffer.putint (system.wide_char_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_doub_dtype = ")
+			buffer.putint (system.double_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N%Tegc_point_dtype = ")
+			buffer.putint (system.pointer_class.compiled_class.types.first.type_id - 1)
+			buffer.putstring (";%N");	
+
 		end
 
 	generate_make_file is

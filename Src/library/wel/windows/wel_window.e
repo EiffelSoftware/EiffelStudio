@@ -1645,6 +1645,20 @@ feature {WEL_WINDOW_MANAGER, WEL_DISPATCHER} -- Registration
 			cwin_set_window_long (item, Gwl_userdata, v)
 		end
 
+feature {WEL_BLOCKING_DISPATCHER, WEL_WINDOW} -- Properties
+
+	is_located_inside (window: WEL_WINDOW): BOOLEAN is
+			-- Is `Current' directly or indirectly located inside `window'?
+		do
+			if window = Current then
+				Result := True
+			elseif parent = Void then
+				Result := False
+			else
+				Result := parent.is_located_inside (window)
+			end
+		end
+
 feature {NONE} -- Removal
 
 	destroy_item is

@@ -534,45 +534,50 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			tmp_string := clone (Get_clause)
-			tmp_string.append (Get_class_object_function_name)
-
-			Result.set_name (tmp_string)
+			Result.set_name (ccom_dll_get_class_object)
 			Result.set_comment ("DLL get class object funcion")
-			Result.set_result_type (Std_api)
-			Result.set_signature ("EIF_TYPE_ID tid, REFCLSID rclsid, REFIID riid, void **ppv")
+			Result.set_result_type (Eif_integer)
+			Result.set_signature ("CLSID * rclsid, IID * riid, void **ppv")
 
 			tmp_string := clone (Tab)
-			-- 'type_id_variable_name'.set_type_id (tid);
 
-			tmp_string.append (Class_object_variable_name)
-			tmp_string.append (Dot)
-			tmp_string.append (Set_type_id_function_name)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Type_id_variable_name)
-			tmp_string.append (Close_parenthesis)
+			from
+				system_descriptor.coclasses.start
+			until
+				system_descriptor.coclasses.after
+			loop
+				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
 
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (If_keyword)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append ("rclsid == CLSID_")
-			tmp_string.append (coclass_descriptor.c_type_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (New_line_tab_tab)
-			tmp_string.append (Return)
-			tmp_string.append (Space)
-			tmp_string.append (Class_object_variable_name)
-			tmp_string.append (Dot)
-			tmp_string.append (Query_interface)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Riid)
-			tmp_string.append (Comma_space)
-			tmp_string.append ("ppv")
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (Else_keyword)
+					tmp_string.append (If_keyword)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append ("IsEqualGUID (* rclsid, CLSID_")
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (New_line_tab_tab)
+					tmp_string.append (Return)
+					tmp_string.append (Space)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Underscore)
+					tmp_string.append (Class_object_variable_name)
+					tmp_string.append (Dot)
+					tmp_string.append (Query_interface)
+					tmp_string.append (Space_open_parenthesis)
+					tmp_string.append (Asterisk)
+					tmp_string.append (Space)
+					tmp_string.append (Riid)
+					tmp_string.append (Comma_space)
+					tmp_string.append ("ppv")
+					tmp_string.append (Close_parenthesis)
+					tmp_string.append (Semicolon)
+					tmp_string.append (New_line_tab)
+					tmp_string.append (Else_keyword)
+					tmp_string.append (Space)
+				end
+				
+				system_descriptor.coclasses.forth
+			end
+
 			tmp_string.append (New_line_tab_tab)
 			tmp_string.append (Return)
 			tmp_string.append (Space_open_parenthesis)
@@ -645,9 +650,9 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_register_dll_server_function_name)
+			Result.set_name (Ccom_dll_register_server)
 			Result.set_comment ("Register DLL server.")
-			Result.set_result_type (Std_api)
+			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
 
 			-- Set up module file name
@@ -675,9 +680,9 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_unregister_dll_server_function_name)
+			Result.set_name (Ccom_dll_unregister_server)
 			Result.set_comment ("Unregister Server.")
-			Result.set_result_type (Std_api)
+			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
 
 			tmp_body := clone (Tab)
@@ -700,9 +705,9 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_can_unload_dll_now_function_name)
+			Result.set_name (Ccom_dll_can_unload_now)
 			Result.set_comment ("Whether component can be unloaded?")
-			Result.set_result_type (Std_api)
+			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
 
 			tmp_body := clone (Tab)

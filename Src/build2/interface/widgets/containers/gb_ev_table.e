@@ -686,14 +686,12 @@ feature {NONE} -- Implementation
 						end_position := (original_column + original_column_span)
 						current_x_position := (((x + half_grid_size) // grid_size + 1).max (1)).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
-							--move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
 							set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
 						else
 							current_x_position := first_filled_horizontal_space (selected_item, end_position - 1, first.item_row_position (selected_item), first.item_row_span (selected_item))-- + 1
 								-- We need to change the order depending on the movement that we are performing. This
 								-- ensures that we stay within valid bounds.
-						 	--move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_position (selected_item))
-						 	set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_position (selected_item))
+						 	set_item_position_and_span (selected_item, current_x_position, first.item_row_position (selected_item) , end_position - current_x_position, first.item_row_span (selected_item))
 						end
 					else
 						new_column := (new_x // grid_size).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
@@ -708,12 +706,10 @@ feature {NONE} -- Implementation
 						end_position := (original_row + original_row_span)
 						current_y_position := ((y + half_grid_size) // grid_size + 1).max (1).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
-							--move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
 							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
 						else
 							current_y_position := first_filled_vertical_space (selected_item, end_position - 1, first.item_column_position (selected_item), first.item_column_span (selected_item))-- + 1
-							--move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_position (selected_item), end_position - current_x_position)
-							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_position (selected_item), end_position - current_x_position)
+							set_item_position_and_span (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
 						end
 					else
 						new_row := (new_y // grid_size).min (first.rows - first.item_row_position (selected_item) + 1).max (1)
@@ -1041,40 +1037,6 @@ feature {NONE} -- Attributes
 --	last_x, last_y: INTEGER
 --		-- Last known cooridnates of mouse pointer.
 --		
---	x_right, x_center: INTEGER is unique
---		-- Constants used with `scrolling_x_start'.
---		
---	y_bottom, y_center: INTEGER is unique
---		-- Constants used with `scrolling_y_start'.
---		
---	scrolling_x_start: INTEGER
---		-- Where did the scrolling operation start?
---			-- `x_right' if started when reached edge of `drawing_area'.
---			-- `x_center' if started when reached visible edge of `drawing_area'.
---			
---	scrolling_y_start: INTEGER
---		-- Where did the scrolling operation start?
---			-- `y_bottom' if started when reached the bottom of `drawing_area'.
---			-- `y_center' if started when reached visible edge of `drawing_area'.
---		
---	timeout: EV_TIMEOUT
---		-- Used to execute the timing of scrolling.
---		
---	scrolling_x: BOOLEAN
---		-- Are we currently scrolling onx axis??
---		
---	scrolling_y: BOOLEAN
---			-- Are we currently scrolling on y axis?
---		
---
---	scrolled_x_once: BOOLEAN
---		-- Have we scrolled in the x direction since the last
---		-- button 1 release?
---		
---	scrolled_y_once:BOOLEAN 
---		-- Have we scrolled in the y direction since the last
---		-- button 1 release?
---
 --feature {NONE} -- Attributes
 --
 --	snap_button: EV_CHECK_BUTTON

@@ -121,7 +121,8 @@ feature
 			if line_number /= 0 then
 				build_explain;
 				display_line (previous_line);
-				display_error_line (current_line, start_position - start_line_pos);
+				display_error_line (current_line, start_position - start_line_pos, 
+														end_position - start_line_pos);
 				display_line (next_line);
 			end
 		end;
@@ -150,43 +151,52 @@ feature
 			end;
 		end;
 
-	display_error_line (a_line: STRING; pos: INTEGER) is
+	display_error_line (a_line: STRING; start_pos, end_pos: INTEGER) is
 		local
 			i, nb: INTEGER;
 			c: CHARACTER;
-			position, nb_tab: INTEGER;
+			position: INTEGER;
 		do
 			from
 				nb := a_line.count;
 			until
-				i = nb
+				i = start_pos
 			loop
 				i := i + 1;
 				c := a_line.item (i);
 				if c = '%T' then
 					put_string ("    ");
-					if i <= pos then
-						nb_tab := nb_tab + 1;
-					end;
 				else
 					put_char (c)
 				end;
 			end;
-			new_line;
-			position := pos + 3*nb_tab;
-			if position = 0 then
-				put_string ("^---------------------------");
-			else
-				from
-					i := 1;
-				until
-					i > position
-				loop
-					put_char ('-');
-					i := i + 1;
-				end;
-				put_string ("^");
+			put_string ("=>");
+			from
+			until
+				i = end_pos
+			loop
+				i := i + 1
+				c := a_line.item (i);
+				if c = '%T' then
+					put_string ("    ");
+				else
+					put_char (c)
+				end
+			end
+			put_string ("<=")
+			from
+			until
+				i = nb
+			loop
+				i := i + 1;
+				c := a_line.item (i)
+				if c = '%T' then
+					put_string ("    ");
+				else
+					put_char (c)
+				end
 			end;
+			new_line
 		end;
 
 feature {NONE} -- Externals

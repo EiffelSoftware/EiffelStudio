@@ -1,63 +1,41 @@
 <EIFFEL_DOCUMENT>
 <TOPIC TOPIC_ID="Bench_preferences" ICON="icon_preferences_root">
 	<HEAD>EiffelBench Resources, version 4.8</HEAD>
-	<TOPIC TOPIC_ID="General" ICON="icon_preferences_folder">
-		<HEAD>General</HEAD>
-		<TOPIC TOPIC_ID="Applications_and_directories" ICON="icon_preferences_folder">
-			<HEAD>Applications and Directories</HEAD>
-			<TEXT>acrobat_reader<STRING>acrobat</STRING></TEXT>
-			<TEXT>text_mode<STRING>UNIX</STRING></TEXT>
-			<TEXT>editor<STRING>vi</STRING></TEXT>
-			<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
-			<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>vi +$line $target</STRING></TEXT>
-			<TEXT>filter_name<STRING>PostScript</STRING></TEXT>
-			<TEXT>filter_command<STRING>none</STRING></TEXT>
-			<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>lpr $target</STRING></TEXT>
-			<TEXT>web_browser<STRING>netscape</STRING></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="tools" ICON="icon_preferences_folder">
-			<HEAD>Tool</HEAD>
-			<TEXT DESCRIPTION="maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
-		</TOPIC>
+	<TOPIC TOPIC_ID="Applications_and_directories" ICON="icon_preferences_folder">
+		<HEAD>Applications and Directories</HEAD>
+		<TEXT>text_mode<STRING>UNIX</STRING></TEXT>
+		<TEXT>editor<STRING>vi</STRING></TEXT>
+		<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
+		<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>vi +$line $target</STRING></TEXT>
+		<TEXT>filter_name<STRING>PostScript</STRING></TEXT>
+		<TEXT>filter_command<STRING>none</STRING></TEXT>
+		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>lpr $target</STRING></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>
-		<TOPIC TOPIC_ID="Project_tool" ICON="icon_preferences_folder">
-			<HEAD>Project tool</HEAD>
-			<TEXT>project_tool_x<INTEGER>0</INTEGER></TEXT>
-			<TEXT>project_tool_y<INTEGER>0</INTEGER></TEXT>
-			<TEXT>project_tool_width<INTEGER>900</INTEGER></TEXT>
-			<TEXT>project_tool_height<INTEGER>600</INTEGER></TEXT>
-			<TEXT>project_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>raise_on_error<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>graphical_output_disabled<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT>starting_layout<LIST_STRING>horizontal;select;vertical;horizontal;debug;object;feature</LIST_STRING></TEXT>
+		<TOPIC TOPIC_ID="Browsing_tools" ICON="icon_preferences_folder">
+			<HEAD>Browsing tools</HEAD>
+			<TEXT DESCRIPTION="maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
+			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Automatically expand the feature tree">expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
-		<TOPIC TOPIC_ID="Debugger" ICON="icon_preferences_folder">
-			<HEAD>Debugger</HEAD>
-			<TEXT>debug_tool_width<INTEGER>214</INTEGER></TEXT>
-			<TEXT>debug_tool_height<INTEGER>214</INTEGER></TEXT>
-			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden</LIST_STRING></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Explain_tool" ICON="icon_preferences_folder">
-			<HEAD>Explain tool</HEAD>
-			<TEXT>explain_tool_width<INTEGER>440</INTEGER></TEXT>
-			<TEXT>explain_tool_height<INTEGER>500</INTEGER></TEXT>
-			<TEXT>explain_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="System_tool" ICON="icon_preferences_folder">
-			<HEAD>System tool</HEAD>
-			<TEXT>system_tool_width<INTEGER>440</INTEGER></TEXT>
-			<TEXT>system_tool_height<INTEGER>500</INTEGER></TEXT>
-			<TEXT>system_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
+		<TOPIC TOPIC_ID="Context_tool" ICON="icon_preferences_folder">
+			<HEAD>Context tools</HEAD>
+			<TEXT DESCRIPTION="Share addresses between the editor and the context tool?">unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Ignore the following classes in the diagram?">ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Names of classes that should not appear in generated diagrams">excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Order used to sort feature clauses in formatted texts">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form">show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Show syntactical suppliers (as opposed to actual suppliers) in `suppliers' form">show_syntactical_suppliers<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Indexing items that need not be included in formatted texts">excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Class format that is selected by default">default_class_formatter_index<INTEGER>5</INTEGER></TEXT>
+			<TEXT DESCRIPTION="Feature format that is selected by default">default_feature_formatter_index<INTEGER>2</INTEGER></TEXT>			
+			<TEXT>formatters_history_size<INTEGER>60</INTEGER></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Editor" ICON="icon_preferences_folder">
 			<HEAD>Editor</HEAD>
-			<TEXT DESCRIPTION="Edition mode : True = Normal, False = Special">normal_editor_mode<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Underscore '_' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Quadruple click selects all">quadruple_click<BOOLEAN>True</BOOLEAN></TEXT>
 			<TOPIC TOPIC_ID="Keyboard_shortcuts" ICON="icon_preferences_folder">
 				<HEAD>Keyboard Shortcuts</HEAD>
@@ -469,60 +447,17 @@
 				</TOPIC>
 			</TOPIC>
 		</TOPIC>
-		<TOPIC TOPIC_ID="Development_window" ICON="icon_preferences_folder">
-			<HEAD>Development window</HEAD>
-			<TEXT>class_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>class_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Share addresses between the editor and the context tool?">unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>development_window__show_address_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Order used to sort feature clauses in formatted texts">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Feature_tool" ICON="icon_preferences_folder">
-			<HEAD>Feature tool</HEAD>
-			<TEXT>feature_tool_width<INTEGER>600</INTEGER></TEXT>
-			<TEXT>feature_tool_height<INTEGER>450</INTEGER></TEXT>
-			<TEXT>feature_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>feature_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Automatically expand the feature tree">expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>do_flat_in_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Object_tool" ICON="icon_preferences_folder">
-			<HEAD>Object tool</HEAD>
-			<TEXT>object_tool_width<INTEGER>440</INTEGER></TEXT>
-			<TEXT>object_tool_height<INTEGER>500</INTEGER></TEXT>
-			<TEXT>object_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Dynamic_Lib_tool" ICON="icon_preferences_folder">
-			<HEAD>Dynamic Library tool</HEAD>
-			<TEXT>dynamic_lib_tool_width<INTEGER>440</INTEGER></TEXT>
-			<TEXT>dynamic_lib_tool_height<INTEGER>500</INTEGER></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Diagram" ICON="icon_preferences_folder">
-			<HEAD>Diagram</HEAD>
-			<TEXT DESCRIPTION="Names of classes that should not appear in generated diagrams">excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
-			<TEXT DESCRIPTION="Should the named classes be ignored?">ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Dialogs" ICON="icon_preferences_folder">
-			<HEAD>Dialogs</HEAD>
-			<TEXT DESCRIPTION="Display New/Open project dialog at startup">show_starting_dialog<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog on exit">confirm_on_exit<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog for C compilation on freeze operation">confirm_freeze<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog for C compilation on finalize operation">confirm_finalize<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog for assertions on finalize operation">confirm_finalize_assertions<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved">confirm_save_before_compile<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog on clearing breakpoints">confirm_clear_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints">confirm_ignore_all_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
+		<TOPIC TOPIC_ID="Internal_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
+			<HEAD>Internal Data</HEAD>
+			<TEXT>graphical_output_disabled<BOOLEAN>False</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">
 		<HEAD>Graphical Elements</HEAD>
-		<TOPIC TOPIC_ID="Editor" ICON="icon_preferences_folder">
-			<HEAD>Editor</HEAD>
+		<TEXT DESCRIPTION="All-purpose editor font">editor_font<FONT>Courier New-r-regular-11-screen</FONT></TEXT>
+		<TEXT DESCRIPTION="Tabulation size">tab_step<INTEGER>4</INTEGER></TEXT>
+		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
+			<HEAD>Colors</HEAD>
 			<TEXT DESCRIPTION="Color used to display normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display normal text">normal_background_color<COLOR>255;255;255</COLOR></TEXT>
 			<TEXT DESCRIPTION="Color used to display selected text">selection_text_color<COLOR>255;255;128</COLOR></TEXT>
@@ -547,64 +482,31 @@
 			<TEXT DESCRIPTION="Background color used to display reserved">reserved_background_color<COLOR>auto</COLOR></TEXT>
 			<TEXT DESCRIPTION="Color used to display local">local_text_color<COLOR>64;0;0</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display local">local_background_color<COLOR>auto</COLOR></TEXT>
-			<TEXT DESCRIPTION="Color used to display generic">generic_text_color<COLOR>0;255;255</COLOR></TEXT>
-			<TEXT DESCRIPTION="Background color used to display generic">generic_background_color<COLOR>auto</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display breakable marks and breakpoints">breakpoint_background_color<COLOR>212;208;200</COLOR></TEXT>
-			<TEXT DESCRIPTION="All-purpose editor font">editor_font<FONT>Courier New-r-regular-11-screen</FONT></TEXT>
-			<TEXT DESCRIPTION="Tabulation size">tab_step<INTEGER>4</INTEGER></TEXT>
-		</TOPIC>
-		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
-			<HEAD>Colors</HEAD>
-			<TEXT>foreground_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT>text_background_color<COLOR>255;255;255</COLOR></TEXT>
-			<TEXT>text_foreground_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT>breakable_color<COLOR>255;0;0</COLOR></TEXT>
 			<TEXT>class_color<COLOR>0;0;255</COLOR></TEXT>
 			<TEXT>cluster_color<COLOR>128;0;0</COLOR></TEXT>
-			<TEXT>comment_color<COLOR>255;0;0</COLOR></TEXT>
-			<TEXT>default_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT>error_color<COLOR>255;0;0</COLOR></TEXT>
 			<TEXT>feature_color<COLOR>0;128;0</COLOR></TEXT>
-			<TEXT>keyword_color<COLOR>0;0;128</COLOR></TEXT>
 			<TEXT>object_color<COLOR>0;0;255</COLOR></TEXT>
-			<TEXT>stop_color<COLOR>255;0;0</COLOR></TEXT>
-			<TEXT>string_text_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT>symbol_color<COLOR>0;0;0</COLOR></TEXT>
-			<TEXT>html_color<COLOR>0;0;255</COLOR></TEXT>
-			<TEXT>explanation_label<COLOR>255;255;0</COLOR></TEXT>
-			<TEXT>highlight_background_line_color<COLOR>255;0;0</COLOR></TEXT>
-			<TEXT>highlight_foreground_line_color<COLOR>255;255;255</COLOR></TEXT>
 			<TEXT>progress_bar_color<COLOR>0;0;255</COLOR></TEXT>
 		</TOPIC>
-		<TOPIC TOPIC_ID="Formats" ICON="icon_preferences_folder">
-			<TEXT DESCRIPTION="Show all callers (as opposed to local callers)">show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Show syntactical suppliers (as opposed to actual suppliers)">show_syntactical_suppliers<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="Indexing items that need not be included in formatted texts">excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
-			<TEXT DESCRIPTION="Order used to sort feature clauses">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation</LIST_STRING></TEXT>
-			<TEXT>history_size<INTEGER>60</INTEGER></TEXT>
-			<TEXT DESCRIPTION="Class format that is selected by default">default_class_formatter_index<INTEGER>5</INTEGER></TEXT>
-			<TEXT DESCRIPTION="Feature format that is selected by default">default_feature_formatter_index<INTEGER>2</INTEGER></TEXT>			
-		</TOPIC>
-		<TOPIC TOPIC_ID="Default_fonts" ICON="icon_preferences_folder">
-			<HEAD>Fonts</HEAD>
-			<TEXT>window_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>text_font<FONT>arial,helvetica-r-regular-10-screen</FONT></TEXT>
-			<TEXT>breakable_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>class_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>cluster_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>comment_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>default_text_font<FONT>arial,helvetica-r-regular-20-screen</FONT></TEXT>
-			<TEXT>error_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>feature_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>keyword_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>object_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>string_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>symbol_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
-			<TEXT>html_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+		<TOPIC TOPIC_ID="Dialogs" ICON="icon_preferences_folder">
+			<HEAD>Dialogs</HEAD>
+			<TEXT DESCRIPTION="Display New/Open project dialog at startup">show_starting_dialog<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog on exit">confirm_on_exit<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog for C compilation on freeze operation">confirm_freeze<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog for C compilation on finalize operation">confirm_finalize<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog for assertions on finalize operation">confirm_finalize_assertions<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog on compilation when some files have not been saved">confirm_save_before_compile<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog on clearing breakpoints">confirm_clear_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints">confirm_ignore_all_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
 			<HEAD>Dynamic data</HEAD>
+			<TEXT>development_window__show_address_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__width<INTEGER>490</INTEGER></TEXT>
 			<TEXT>development_window__height<INTEGER>490</INTEGER></TEXT>
 			<TEXT>development_window__is_maximized<BOOLEAN>False</BOOLEAN></TEXT>
@@ -612,6 +514,7 @@
 			<TEXT>development_window__left_panel_layout<LIST_STRING>visible;visible;closed;closed;closed;closed;190;250</LIST_STRING></TEXT>
 			<TEXT>development_window__right_panel_layout<LIST_STRING>visible;visible;190;0</LIST_STRING></TEXT>
 			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;Open_file__visible;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;System_info__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden</LIST_STRING></TEXT>
+			<TEXT>debugger__project_toolbar_layout<LIST_STRING>System_tool__visible;Melt_project__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden</LIST_STRING></TEXT>
 	</TOPIC>
 </TOPIC>
 </EIFFEL_DOCUMENT>

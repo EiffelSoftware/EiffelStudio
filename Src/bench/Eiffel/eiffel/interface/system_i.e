@@ -1568,20 +1568,25 @@ feature -- IL code generation
 		local
 			il_generator: IL_GENERATOR
 		do
-			create il_generator.make (Degree_output)
-			il_generator.generate
-			if il_c_externals.count > 0 then
-				if in_final_mode then
-					create {FINAL_MAKER} makefile_generator.make
-				else
-					create {WBENCH_MAKER} makefile_generator.make
+			if
+				(create {EV_ENVIRONMENT}).application = Void or else
+				not (create {EV_ENVIRONMENT}).application.ctrl_pressed
+			then
+				create il_generator.make (Degree_output)
+				il_generator.generate
+				if il_c_externals.count > 0 then
+					if in_final_mode then
+						create {FINAL_MAKER} makefile_generator.make
+					else
+						create {WBENCH_MAKER} makefile_generator.make
+					end
+					open_log_files
+					freezing_occurred := True
+					il_c_externals.generate_il
+					close_log_files
+	
+					makefile_generator.generate_il
 				end
-				open_log_files
-				freezing_occurred := True
-				il_c_externals.generate_il
-				close_log_files
-
-				makefile_generator.generate_il
 			end
 		end
 

@@ -45,7 +45,7 @@ feature -- Access
 	help_text: LINKED_LIST [STRING] is
 		do
 			!! Result.make;
-			Result.put_front (l_No_help_available)
+			Result.put_front (Interface_names.h_No_help_available)
 		end;
 
 	start_position: INTEGER is do Result := syntax_error_i.start_position end;

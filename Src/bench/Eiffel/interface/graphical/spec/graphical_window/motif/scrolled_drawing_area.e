@@ -20,6 +20,7 @@ inherit
 			parent, show, hide, shown, set_size,
 			drawing
 		end;
+	EB_CONSTANTS;
 	COMMAND
 		redefine
 			context_data_useful
@@ -43,12 +44,12 @@ feature -- Initialization
 			mel_vb: MEL_SCROLL_BAR;
 			mel_frame: MEL_FRAME
 		do
-			!! parent.make ("", a_parent);
-			!! frame.make ("", parent);
-			drawing_area_make ("", frame);
-			!! vertical_scrollbar.make ("", parent);
+			!! parent.make (Interface_names.t_Empty, a_parent);
+			!! frame.make (Interface_names.t_Empty, parent);
+			drawing_area_make (Interface_names.t_Empty, frame);
+			!! vertical_scrollbar.make (Interface_names.t_Empty, parent);
 			vertical_scrollbar.set_horizontal (False);
-			!! horizontal_scrollbar.make ("", parent);
+			!! horizontal_scrollbar.make (Interface_names.t_Empty, parent);
 			horizontal_scrollbar.set_horizontal (True);
 			size := vertical_scrollbar.width;
 			parent.attach_left (horizontal_scrollbar, 0);

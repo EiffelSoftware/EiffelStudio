@@ -39,7 +39,6 @@ inherit
 			close_windows, make_shell, reset
 		end;
 	SHARED_APPLICATION_EXECUTION;
-	WARNING_MESSAGES;
 	EB_CONSTANTS
 
 creation
@@ -124,7 +123,7 @@ feature -- Window Properties
 
 	tool_name: STRING is
 		do
-			Result := l_Empty_object
+			Result := Interface_names.t_Empty_object
 		end;
 
 	stone: OBJECT_STONE
@@ -225,11 +224,11 @@ feature -- Update
 		do
 			status := Application.status;
 			if status = Void then
-				warner (eb_shell).gotcha_call (w_System_not_running)
+				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (eb_shell).gotcha_call (w_System_not_stopped)
+				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_stopped)
 			elseif not a_stone.is_valid then
-				warner (eb_shell).gotcha_call (w_Object_not_inspectable)
+				warner (eb_shell).gotcha_call (Warning_messages.w_Object_not_inspectable)
 			else
 				last_format.execute (a_stone);
 				history.extend (a_stone)
@@ -244,9 +243,9 @@ feature -- Update
 		do
 			status := Application.status;
 			if status = Void then
-				warner (eb_shell).gotcha_call (w_System_not_running)
+				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (eb_shell).gotcha_call (w_System_not_stopped)
+				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
 				cur := text_window.cursor;
 				synchronise_stone;
@@ -406,10 +405,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			if create_menus then
 				build_menus
 			end
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
-			!! sep.make ("", toolbar_parent);
+			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (l_Format_bar_name, toolbar_parent);
+			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if create_menus then

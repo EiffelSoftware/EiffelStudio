@@ -194,13 +194,13 @@ feature {NONE} -- Implementation
 		do
 			!!filter_dir.make (filter_path);
 			if not filter_dir.exists then
-				warning_message := w_Directory_not_exist (filter_path);
+				warning_message := Warning_messages.w_Directory_not_exist (filter_path);
 				list.wipe_out;
 				!! str_element.make (0);
 				str_element.append ("");
 				list.put_right (str_element)
 			elseif not filter_dir.is_readable then
-				warning_message := w_Cannot_read_directory (filter_path);
+				warning_message := Warning_messages.w_Cannot_read_directory (filter_path);
 				list.wipe_out;
 				!! str_element.make (0);
 				str_element.append ("");

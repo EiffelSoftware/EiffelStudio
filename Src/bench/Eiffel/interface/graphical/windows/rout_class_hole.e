@@ -14,12 +14,14 @@ inherit
 			work as default_work
 		redefine
 			symbol, full_symbol, name, tool, stone_type,
-			transported_stone, process_feature
+			transported_stone, process_feature,
+			menu_name, accelerator
 		end
 	DEFAULT_HOLE_COMMAND
 		redefine
 			symbol, full_symbol, name, work, tool, stone_type,
-			transported_stone, process_feature
+			transported_stone, process_feature,
+			menu_name, accelerator
 		select
 			work
 		end
@@ -36,18 +38,29 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Class
+			Result := Pixmaps.bm_Class
 		end;
 
 	full_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Class_dot
+			Result := Pixmaps.bm_Class_dot
 		end;
 	
 	name: STRING is
 		do
-			Result := l_New_class
+			Result := Interface_names.f_New_class
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_New_class
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	stone_type: INTEGER is

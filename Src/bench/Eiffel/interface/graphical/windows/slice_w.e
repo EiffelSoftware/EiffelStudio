@@ -36,8 +36,8 @@ feature -- Initialization
 			ok_button, apply_button, cancel_button: PUSH_B;
 			from_label, to_label: LABEL
 		do
-			form_dialog_create (l_Slice_w, a_composite);
-			set_title (l_Slice_w);
+			form_dialog_create (Interface_names.n_X_resource_name, a_composite);
+			set_title (Interface_names.t_Slice_w);
 
 			!!bounds_form.make (new_name, Current);
 			bounds_form.set_fraction_base (4);
@@ -79,9 +79,9 @@ feature -- Initialization
 			attach_right (button_form, 10);
 			attach_bottom_widget (button_form, bounds_form, 10);
 
-			!!ok_button.make (l_Ok, button_form);
-			!!apply_button.make (l_Apply, button_form);
-			!!cancel_button.make (l_Cancel, button_form);
+			!!ok_button.make (Interface_names.b_Ok, button_form);
+			!!apply_button.make (Interface_names.b_Apply, button_form);
+			!!cancel_button.make (Interface_names.b_Cancel, button_form);
 			button_form.attach_left (ok_button, 0);
 			button_form.attach_top (ok_button, 0);
 			button_form.attach_bottom (ok_button, 0);

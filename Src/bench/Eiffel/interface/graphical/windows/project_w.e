@@ -25,6 +25,7 @@ inherit
 			{GRAPHICAL_DEGREE_OUTPUT} implementation
 		end;
 	WINDOW_ATTRIBUTES;
+	SYSTEM_CONSTANTS;
 	INTERFACE_W;
 	EB_CONSTANTS;
 	SHARED_APPLICATION_EXECUTION;
@@ -46,10 +47,10 @@ feature -- Initialization
 			register;
 			forbid_resize;
 			build_widgets;
-			set_title (l_project);
+			set_title (Interface_names.t_Project);
 			set_icon_name (tool_name);
-			if bm_Project_icon.is_valid then
-				set_icon_pixmap (bm_Project_icon)
+			if Pixmaps.bm_Project_icon.is_valid then
+				set_icon_pixmap (Pixmaps.bm_Project_icon)
 			end;
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
@@ -208,12 +209,12 @@ feature -- Window Properties
 
 	eiffel_symbol: PIXMAP is
 		do
-			Result := bm_Project
+			Result := Pixmaps.bm_Project
 		end;
 
 	tool_name: STRING is
 		do
-			Result := l_Project
+			Result := Interface_names.t_Project
 		end;
 
 feature -- Window Holders
@@ -579,7 +580,7 @@ feature -- Graphical Interface
 			build_text_windows;
 			build_top;
 			build_compile_menu;
-			!! sep.make ("", toolbar_parent);
+			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_format_bar;
 			build_toolbar_menu;
 			exec_stop_frmt_holder.execute (Void);
@@ -602,36 +603,36 @@ feature -- Graphical Interface
 			case_storage_menu_entry: EB_MENU_ENTRY;
 		do
 			!! menu_bar.make (new_name, std_form);
-			!! file_menu.make ("File", menu_bar);
-			!! edit_menu.make ("Edit", menu_bar);
-			!! compile_menu.make ("Compile", menu_bar);
-			!! debug_menu.make ("Debug", menu_bar);
-			!! format_menu.make ("Formats", menu_bar);
-			!! special_menu.make ("Special", menu_bar);
-			!! window_menu.make ("Windows", menu_bar);
-			!! help_menu.make ("Help", menu_bar);
+			!! file_menu.make (Interface_names.m_File, menu_bar);
+			!! edit_menu.make (Interface_names.m_Edit, menu_bar);
+			!! compile_menu.make (Interface_names.m_Compile, menu_bar);
+			!! debug_menu.make (Interface_names.m_Debug, menu_bar);
+			!! format_menu.make (Interface_names.m_Formats, menu_bar);
+			!! special_menu.make (Interface_names.m_Special, menu_bar);
+			!! window_menu.make (Interface_names.m_Windows, menu_bar);
+			!! help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 
-			!! sep.make ("", edit_menu);
+			!! sep.make (Interface_names.t_Empty, edit_menu);
 				--| Creation of empty menus that are disabled goes here,
 				--| for we want to create the object and / or feature portion
 				--| on demand and not on purpose.
-			!! edit_feature_menu.make ("Feature", edit_menu);
+			!! edit_feature_menu.make (Interface_names.m_Feature, edit_menu);
 			edit_feature_menu.button.set_insensitive;
-			!! edit_object_menu.make ("Object", edit_menu);
+			!! edit_object_menu.make (Interface_names.m_Object, edit_menu);
 			edit_object_menu.button.set_insensitive;
 
-			!! format_feature_menu.make ("Feature", format_menu);
+			!! format_feature_menu.make (Interface_names.m_Feature, format_menu);
 			format_feature_menu.button.set_insensitive;
-			!! format_object_menu.make ("Object", format_menu);
+			!! format_object_menu.make (Interface_names.m_Object, format_menu);
 			format_object_menu.button.set_insensitive;
 
-			!! special_feature_menu.make ("Feature", special_menu);
+			!! special_feature_menu.make (Interface_names.m_Feature, special_menu);
 			special_feature_menu.button.set_insensitive;
-			!! special_object_menu.make ("Object", special_menu);
+			!! special_object_menu.make (Interface_names.m_Object, special_menu);
 			special_object_menu.button.set_insensitive;
 
-			!! sep.make ("", special_menu);
+			!! sep.make (Interface_names.t_Empty, special_menu);
 			!! case_storage_cmd.make (Current);
 			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
 			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
@@ -644,7 +645,7 @@ feature -- Graphical Interface
 			sep: SEPARATOR;
 			toolbar_t: TOGGLE_B
 		do
-			!! sep.make ("", special_menu);
+			!! sep.make (Interface_names.t_Empty, special_menu);
 			!! toolbar_t.make (classic_bar.identifier, special_menu);
 			classic_bar.init_toggle (toolbar_t);
 			!! toolbar_t.make (format_bar.identifier, special_menu);
@@ -698,7 +699,7 @@ feature -- Graphical Interface
 			update_menu_entry: EB_MENU_ENTRY;
 			version_button: PUSH_B;
 		do
-			!! open_command.make (Current);
+			!! open_command;
 			!! classic_bar.make (l_Command_bar_name, toolbar_parent);
 			!! quit_cmd.make (Current);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -710,13 +711,13 @@ feature -- Graphical Interface
 				-- Close all command
 			!! close_all.make (Current);
 			!! close_all_menu_entry.make (close_all, window_menu);
-			!! sep.make ("", window_menu);
+			!! sep.make (Interface_names.t_Empty, window_menu);
 
 				-- Sub menus for open tools.
-			!! open_explain_menu.make ("Explain tools", window_menu);
-			!! open_classes_menu.make ("Class tools", window_menu);
-			!! open_routines_menu.make ("Feature tools", window_menu);
-			!! open_objects_menu.make ("Objects tools", window_menu);
+			!! open_explain_menu.make (Interface_names.m_Explain_tools, window_menu);
+			!! open_classes_menu.make (Interface_names.m_Class_tools, window_menu);
+			!! open_routines_menu.make (Interface_names.m_Feature_tools, window_menu);
+			!! open_objects_menu.make (Interface_names.m_Object_tools, window_menu);
 
 				-- Regular menu entries.
 			!! explain_cmd.make (Current);
@@ -757,11 +758,9 @@ feature -- Graphical Interface
 			!! show_profile_cmd_holder.make_plain (show_prof_cmd);
 			show_profile_cmd_holder.set_menu_entry (show_prof_menu_entry);
 
-			!! sep.make ("", window_menu);
+			!! sep.make (Interface_names.t_Empty, window_menu);
 			!! show_pref_cmd.make (Current);
 			!! show_pref_menu_entry.make (show_pref_cmd, window_menu);
-			!! show_preference_cmd_holder.make_plain (show_pref_cmd);
-			show_preference_cmd_holder.set_menu_entry (show_pref_menu_entry);
 
 			!! display_feature_cmd.make (Current);
 			!! display_feature_button.make (display_feature_cmd, classic_bar);
@@ -851,7 +850,7 @@ feature -- Graphical Interface
 			down_exception_stack_button: EB_BUTTON;
 			display_exception_menu_entry: EB_MENU_ENTRY;
 		do
-			!! format_bar.make (l_Format_bar_name, toolbar_parent);
+			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
 
 			!! debug_run_cmd.make (Current);
 			!! debug_run_button.make (debug_run_cmd, format_bar);
@@ -1061,8 +1060,6 @@ feature -- Commands
 
 	display_object_cmd_holder: COMMAND_HOLDER;
 
-	show_preference_cmd_holder: COMMAND_HOLDER;
-
 	show_profile_cmd_holder: COMMAND_HOLDER;
 
 	up_exception_stack_holder: COMMAND_HOLDER;
@@ -1203,7 +1200,7 @@ feature {NONE} -- Implementation
 			a_color: COLOR
 		do
 			if a_menu.children_count = 1 then
-				!! sep.make ("", a_menu);
+				!! sep.make (Interface_names.t_Empty, a_menu);
 			end
 			!! cmd.make (a_tool)
 			!! entry.make_tools_menu (cmd, a_menu)

@@ -42,8 +42,8 @@ feature -- Initialization
 	make (a_parent: COMPOSITE) is
 			-- Create a warning window.
 		do
-			warning_create (l_Warning, a_parent);
-			set_title (l_Warning);
+			warning_create (Interface_names.n_X_resource_name, a_parent);
+			set_title (Interface_names.t_Warning);
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			add_help_action (Current, help_it);
@@ -107,8 +107,8 @@ feature -- Access
 			hide_help_button;
 			show_cancel_button;
 			show_ok_button;
-			set_ok_label (l_Ok);
-			set_cancel_label (l_Cancel);
+			set_ok_label (Interface_names.b_Ok);
+			set_cancel_label (Interface_names.b_Cancel);
 			last_caller := a_command;
 			set_message (a_message);
 			set_exclusive_grab;

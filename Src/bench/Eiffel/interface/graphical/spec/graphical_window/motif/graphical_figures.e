@@ -57,7 +57,7 @@ inherit
 		undefine
 			copy, setup
 		end
-	SHARED_PIXMAPS
+	EB_CONSTANTS
 		undefine
 			copy, setup
 		end
@@ -628,18 +628,18 @@ feature {NONE} -- Implementation
 				highlighted_line.set_is_in_highlighted_line (True);
 					-- Execution stopped at that point.
 				if Application.is_breakpoint_set (stone.routine, stone.index) then
-					fig.set_pixmap (bm_graphical_Stoppoint);
+					fig.set_pixmap (Pixmaps.bm_graphical_Stoppoint);
 					fig.set_foreground_color (stop_color);
 				else
 					fig.set_foreground_color (breakable_color);
-					fig.set_pixmap (bm_graphical_Breakablepoint)
+					fig.set_pixmap (Pixmaps.bm_graphical_Breakablepoint)
 				end;
 			elseif Application.is_breakpoint_set (stone.routine, stone.index) then
-				fig.set_pixmap (bm_graphical_Stoppoint);
+				fig.set_pixmap (Pixmaps.bm_graphical_Stoppoint);
 				fig.set_foreground_color (stop_color);
 			else
 				fig.set_foreground_color (breakable_color);
-				fig.set_pixmap (bm_graphical_Breakablepoint)
+				fig.set_pixmap (Pixmaps.bm_graphical_Breakablepoint)
 			end
 		end;
 

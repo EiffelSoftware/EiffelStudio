@@ -58,9 +58,9 @@ feature {NONE} -- Interface initialization
 			attach_left (buttons, 0);
 			attach_right (buttons, 0);
 			attach_bottom (buttons, 0);
-			!! save_b.make (l_Save, buttons);
-			!! cancel_b.make (l_Cancel, buttons);
-			!! apply_b.make (l_Apply, buttons);
+			!! save_b.make (Interface_names.b_Save, buttons);
+			!! cancel_b.make (Interface_names.b_Cancel, buttons);
+			!! apply_b.make (Interface_names.b_Apply, buttons);
 			save_b.set_center_alignment;
 			cancel_b.set_center_alignment;
 			apply_b.set_center_alignment;

@@ -30,7 +30,6 @@ inherit
 			invalid_stone_message, history_name, same_as
 		end;
 	INTERFACE_W;
-	WARNING_MESSAGES;
 	WINDOWS
 
 creation
@@ -152,19 +151,19 @@ feature -- dragging
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := cur_Feature
+			Result := Cursors.cur_Feature
 		end;
  
 	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := cur_X_feature
+			Result := Cursors.cur_X_feature
 		end;
  
 	stone_name: STRING is
 		do
-			Result := l_Routine_stone
+			Result := Interface_names.s_Routine_stone
 		end;
  
 	clickable: BOOLEAN is
@@ -175,7 +174,7 @@ feature -- dragging
 	invalid_stone_message: STRING is
 			-- Message displayed for an invalid_stone
 		do
-			Result := w_Feature_not_compiled
+			Result := Warning_messages.w_Feature_not_compiled
 		end;
 
 	line_number: INTEGER is

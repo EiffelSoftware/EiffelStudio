@@ -25,15 +25,15 @@ feature -- Initialization
 	make (a_composite: COMPOSITE; cmd: COMMAND_W) is
 			-- Create a file selection dialog
 		do
-			prompt_dialog_create (l_Argument_w, a_composite);
-			set_title (l_Argument_w);
-			set_selection_label ("Specify arguments");
+			prompt_dialog_create (Interface_names.n_X_resource_name, a_composite);
+			set_title (Interface_names.t_Argument_w);
+			set_selection_label (Interface_names.l_Specify_arguments);
 			hide_help_button;
 			show_apply_button;
 			!!apply_it;
 			!!cancel_it;
-			set_ok_label ("Run");
-			set_apply_label (l_Ok);
+			set_ok_label (Interface_names.b_Run);
+			set_apply_label (Interface_names.b_Ok);
 			add_ok_action (Current, Void);
 			add_apply_action (Current, apply_it);
 			add_cancel_action (Current, cancel_it);
@@ -52,15 +52,15 @@ feature -- Initialization
 			--| Use this in conjunction with `make_plain' to
 			--| create a shared argument window.
 		do
-			prompt_dialog_create (l_Argument_w, a_composite);
-			set_title (l_Argument_w);
-			set_selection_label ("Specify arguments");
+			prompt_dialog_create (Interface_names.n_X_resource_name, a_composite);
+			set_title (Interface_names.t_Argument_w);
+			set_selection_label (Interface_names.l_Specify_arguments);
 			hide_help_button;
 			show_apply_button;
 			!! apply_it;
 			!! cancel_it;
-			set_ok_label ("Run");
-			set_apply_label (l_Ok);
+			set_ok_label (Interface_names.b_Run);
+			set_apply_label (Interface_names.b_Ok);
 			add_ok_action (Current, Void);
 			add_apply_action (Current, apply_it);
 			add_cancel_action (Current, cancel_it);

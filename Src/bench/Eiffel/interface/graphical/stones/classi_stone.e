@@ -23,7 +23,6 @@ inherit
 		end;
 	SHARED_EIFFEL_PROJECT;
 	INTERFACE_W;
-	WARNING_MESSAGES;
 	WINDOWS
 
 creation
@@ -54,14 +53,14 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := cur_Class
+			Result := Cursors.cur_Class
 		end;
 
 	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := cur_X_Class
+			Result := Cursors.cur_X_Class
 		end;
 
 	signature: STRING is
@@ -93,7 +92,7 @@ feature -- Access
  
 	stone_name: STRING is
 		do
-			Result := l_Class_stone
+			Result := Interface_names.s_Class_stone
 		end;
  
 --	feature_named (n: STRING): FEATURE_STONE is
@@ -120,7 +119,7 @@ feature -- Access
 	invalid_stone_message: STRING is
 			-- Message displayed for an invalid_stone
 		do
-			Result := w_Class_not_in_universe
+			Result := Warning_messages.w_Class_not_in_universe
 		end;
 
 	synchronized_stone: STONE is

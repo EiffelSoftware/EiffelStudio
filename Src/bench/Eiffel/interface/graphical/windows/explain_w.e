@@ -129,11 +129,11 @@ feature -- Graphical Interface
 			-- Create the menus.
 		do
 			!! menu_bar.make (new_name, global_form);
-			!! file_menu.make ("File", menu_bar);
-			!! edit_menu.make ("Edit", menu_bar);
-			!! special_menu.make ("Special", menu_bar);
-			!! window_menu.make ("Windows", menu_bar);
-			!! help_menu.make ("Help", menu_bar);
+			!! file_menu.make (Interface_names.m_File, menu_bar);
+			!! edit_menu.make (Interface_names.m_Edit, menu_bar);
+			!! special_menu.make (Interface_names.m_Special, menu_bar);
+			!! window_menu.make (Interface_names.m_Windows, menu_bar);
+			!! help_menu.make (Interface_names.m_Help, menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
 			fill_menus
 		end;
@@ -192,7 +192,7 @@ feature -- Window Properties
 	tool_name: STRING is
 			-- Name of the tool represented by Current.
 		do
-			Result := l_Empty_explain
+			Result := Interface_names.t_Empty_explain
 		end;
 
 feature {NONE} -- Attributes; Forms And Holes

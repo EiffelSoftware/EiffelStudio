@@ -3,7 +3,8 @@ class EXPLAIN_HOLE
 inherit
 	DEFAULT_HOLE_COMMAND
 		redefine
-			full_symbol, icon_symbol, symbol, name, stone_type
+			full_symbol, icon_symbol, symbol, name, stone_type,
+			menu_name, accelerator
 		end
 
 creation
@@ -14,24 +15,35 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Standard symbol representing Current.
 		once
-			Result := bm_Explain
+			Result := Pixmaps.bm_Explain
 		end;
 
 	full_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Explain_dot
+			Result := Pixmaps.bm_Explain_dot
 		end;
 
 	icon_symbol: PIXMAP is
 			-- Icon for the explain tool
 		once
-			Result := bm_Explain_icon
+			Result := Pixmaps.bm_Explain_icon
 		end;
 
 	name: STRING is
 		do
-			Result := l_New_explain
+			Result := Interface_names.f_New_explain
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_New_explain
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
     stone_type: INTEGER is

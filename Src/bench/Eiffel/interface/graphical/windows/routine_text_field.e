@@ -9,10 +9,9 @@ class ROUTINE_TEXT_FIELD
 
 inherit
 
-	TOOL_COMMAND
-		redefine
-			execute, tool
-		end;
+	COMMAND;
+	WINDOWS;
+	EB_CONSTANTS;
 	TEXT_FIELD
 		rename
 			make as text_field_make
@@ -28,9 +27,9 @@ feature -- Initialization
 	make (a_parent: COMPOSITE; a_tool: like tool) is
 			-- Initialize the window.
 		do
-			text_field_make (name, a_parent);
+			text_field_make ("", a_parent);
 			add_activate_action (Current, Void);
-			init (a_tool)
+			tool := a_tool
 		end;
 
 feature -- Properties
@@ -40,8 +39,6 @@ feature -- Properties
 
 	tool: ROUTINE_W;
 			-- Routine tool window
-
-	name: STRING is "Class name"
 
 feature -- Update
 
@@ -140,7 +137,8 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 								e_feature := f_table.item (rname);		
 								if e_feature = Void then
 									mp.restore;
-									warner (popup_parent).gotcha_call (w_Cannot_find_feature (rname, e_class.name))
+									warner (tool.popup_parent).gotcha_call 
+										(Warning_messages.w_Cannot_find_feature (rname, e_class.name))
 								else
 									!! feature_stone.make (e_feature);
 									tool.process_feature (feature_stone);
@@ -151,11 +149,13 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 						else
 							cname := clone (tool.class_text_field.text);
 							mp.restore;
-							warner (popup_parent).gotcha_call (w_Cannot_find_class (cname))
+							warner (tool.popup_parent).gotcha_call 
+								(Warning_messages.w_Cannot_find_class (cname))
 						end
 					else
 						mp.restore;
-						warner (popup_parent).gotcha_call (w_Specify_a_feature)
+						warner (tool.popup_parent).gotcha_call 
+								(Warning_messages.w_Specify_a_feature)
 					end
 				end
 			end
@@ -165,9 +165,5 @@ feature {NONE} -- Implementation
 
 	classc_stone: CLASSC_STONE;
 			-- Class stone saved while choosing a feature name
-
-	work (arg: ANY) is
-		do
-		end;
 
 end -- class ROUTINE_TEXT_FIELD

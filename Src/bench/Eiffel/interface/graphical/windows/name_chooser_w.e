@@ -35,11 +35,11 @@ feature -- Initialization
 	make (a_composite: COMPOSITE) is
 			-- Create a file selection dialog
 		do
-			file_sel_d_create (l_file_selection, a_composite);
+			file_sel_d_create (Interface_names.n_X_resource_name, a_composite);
 			hide_help_button;
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
-			set_title (l_Select_a_file);
+			set_title (Interface_names.t_Select_a_file);
 			set_exclusive_grab;
 			set_default_position (false);
 			set_composite_attributes (Current);

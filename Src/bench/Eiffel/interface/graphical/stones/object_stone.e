@@ -54,19 +54,19 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := cur_Object
+			Result := Cursors.cur_Object
 		end;
  
 	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := cur_X_object
+			Result := Cursors.cur_X_object
 		end;
  
 	stone_name: STRING is
 		do
-			Result := l_Object_stone
+			Result := Interface_names.s_Object_stone
 		end;
 
 	signature: STRING is

@@ -26,8 +26,8 @@ feature {NONE} -- Initialization
 			rbox: RADIO_BOX;
 		do
 			create_interface (a_parent);
-			set_title (l_Routine_custom_tool);
-			!! rbox.make ("", Current);
+			set_title (Interface_names.t_Routine_custom_tool);
+			!! rbox.make (Interface_names.t_Empty, Current);
 			rbox.set_always_one (True);
 			attach_top (rbox, 0);
 			attach_left (rbox, 0);

@@ -26,14 +26,14 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := cur_System
+			Result := Cursors.cur_System
 		end;
 
 	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := cur_X_system
+			Result := Cursors.cur_X_system
 		end;
 
 	stone_type: INTEGER is 
@@ -43,7 +43,7 @@ feature -- Access
 
 	stone_name: STRING is 
 		do 
-			Result := l_System 
+			Result := Interface_names.s_System 
 		end;
 
 feature -- Update

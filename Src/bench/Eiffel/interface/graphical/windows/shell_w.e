@@ -26,8 +26,8 @@ feature -- Initialization
 	make (a_composite: COMPOSITE; cmd: SHELL_COMMAND) is
 			-- Create a file selection dialog
 		do
-			prompt_dialog_create (l_Shell_w, a_composite);
-			set_title (l_Shell_w);
+			prompt_dialog_create (Interface_names.n_X_resource_name, a_composite);
+			set_title (Interface_names.t_Shell_w);
 			set_selection_label ("Specify shell command");
 			hide_apply_button;
 			hide_help_button;

@@ -5,7 +5,7 @@ indexing
 		inheritance. Instances of TYPE_FEATURE_I are used in CLASS_C.
 		
 		In the case of a formal generic parameter:
-		A class that has a formal generic parameter or that inherits one
+		Class A that has a formal generic parameter or that inherits one
 		(i.e. class B which inherits from class A [STRING], in B it inherits
 		the formal generic parameter from A even though B is not generic) will
 		have or more instances of a TYPE_FEATURE_I.
@@ -36,7 +36,7 @@ inherit
 				set_is_origin, set_feature_name, set_written_in,
 				set_origin_feature_id, set_feature_name_id,
 				instantiate, duplicate, new_rout_id
-			redefine
+		redefine
 			new_entry, is_type_feature
 		end
 	

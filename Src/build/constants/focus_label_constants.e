@@ -11,6 +11,7 @@ feature
 	bg_pixmap_att_label: STRING is "Background pixmap attribute";
 	button_label: STRING is "Button";
 	cancel_label: STRING is "Cancel";
+	catalog_label: STRING is "Catalog";
 	close_label: STRING is "Close";
 	colors_att_label: STRING is "Colors attribute";
 	command_label: STRING is "Command";
@@ -21,12 +22,12 @@ feature
 	create_instance_label: STRING is "Create instance";
 	create_edit_label: STRING is "Create/Edit";
 	create_project_label: STRING is "Create project";
-	drawing_label: STRING is "Drawing";
+	drawing_label: STRING is "Drawing commands";
 	fg_color_att_label: STRING is "Foreground color attribute";
 	load_project_label: STRING is "Retrieve project";
 	exit_label: STRING is "Exit label";
 	expand_parent_label: STRING is "Expand/Abstract parent";
-	file_label: STRING is "File";
+	file_label: STRING is "File commands";
 	font_label: STRING is "Font";
 	font_att_label: STRING is "Font attribute";
 	general_label: STRING is "General"
@@ -67,9 +68,9 @@ feature
 	text_field_label: STRING is "Text field";
 	translation_label: STRING is "Translation";
 	transition_line_label: STRING is "Transition line";
-	user_label: STRING is "User ";
+	user_label: STRING is "User defined commands";
 	wastebasket_label: STRING is "Wastebasket"
 	windows_label: STRING is "Windows";
-	window_label: STRING is "Window";
+	window_label: STRING is "Window commands";
 
 end

@@ -475,7 +475,7 @@ EIF_REFERENCE cr_exp(uint32 type)
 		int32 static_id;               	/* Creation procedure static id */
 
 		feature_id = exp_desc->cn_creation_id;
-		static_id = exp_desc->static_id;	
+		static_id = exp_desc->cn_static_id;	
 		if (feature_id) {					/* Call creation routine */
 			EIF_GET_CONTEXT
 			RT_GC_PROTECT(result);	/* Protect address in case it moves */
@@ -487,7 +487,7 @@ EIF_REFERENCE cr_exp(uint32 type)
 		int32 offset;					/* Offset in origin class */
 
 		origin = exp_desc->cn_creation_id;
-		offset = exp_desc->static_id;
+		offset = exp_desc->cn_static_id;
 		if (origin) {						/* Call creation routine */
 			EIF_GET_CONTEXT
 			RT_GC_PROTECT(result);	/* Protect address in case it moves */
@@ -536,7 +536,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	desc = &System(dtype);
 	cn_attr = desc->cn_attr;
 	nb_attr = desc->cn_nbattr;
-	nb_ref = desc->nb_ref;				/* Reference number */
+	nb_ref = desc->cn_nbref;				/* Reference number */
 	cn_types = desc->cn_types;
 	cn_gtypes = desc->cn_gtypes;
 
@@ -571,15 +571,16 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			zone->ov_size = exp_offset + (obj - parent);
 
 			/* If expanded object is composite also, initialize it. */
-			if (System(orig_exp_dtype).cn_composite)
+			if (EIF_IS_COMPOSITE_TYPE(System(orig_exp_dtype))) {
 				wstdinit(obj + exp_offset, parent);
+			}
 
 			if (exp_desc->cn_routids) {
 				int32 feature_id;			/* Creation procedure feature id */
 				int32 static_id;			/* Creation procedure static id */
 
 				feature_id = exp_desc->cn_creation_id;
-				static_id = exp_desc->static_id;	
+				static_id = exp_desc->cn_static_id;	
 				if (feature_id)				/* Call creation routine */
 					wexp(static_id, feature_id, orig_exp_dtype, obj + exp_offset);
 			} else {						/* precompiled creation routine */
@@ -587,7 +588,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				int32 offset;				/* Offset in origin class */
 		
 				origin = exp_desc->cn_creation_id;
-				offset = exp_desc->static_id;
+				offset = exp_desc->cn_static_id;
 				if (origin)					/* Call creation routine */
 					wpexp(origin, offset, orig_exp_dtype, obj + exp_offset);
 			}

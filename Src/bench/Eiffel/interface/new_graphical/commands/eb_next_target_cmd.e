@@ -83,8 +83,7 @@ feature {NONE} -- Implementation
 		local
 			history: STONE_HISTORY
 			s: STONE
-			c: CLASSC_STONE
-			ci: CLASSI_STONE
+			c: CLASS_STONE
 			t: EB_CLASS_TOOL
 		do
 			history := tool.history
@@ -97,11 +96,8 @@ feature {NONE} -- Implementation
 				t ?= tool
 				if t /= Void then
 					c ?= s
-					ci ?= s
 					if c /= Void then
-						t.process_class (c)	
-					else
-						t.process_classi (ci)	
+						t.set_stone (c)
 					end
 				end
 -- end of receive remplacement

@@ -43,6 +43,26 @@ inherit
 			{NONE} all
 		end
 
+feature -- Access
+
+	output_window: WIZARD_OUTPUT_WINDOW is
+			-- Output window
+		do
+			Result := output_window_cell.item
+		end
+
+feature -- Element setting
+
+	set_output_window (a_output_window: WIZARD_OUTPUT_WINDOW) is
+			-- Set `output_window' to `a_output_window.
+		require
+			non_void_output_window: a_output_window /= Void
+		do
+			output_window_cell.replace (a_output_window)
+		ensure
+			output_window_set: output_window = a_output_window
+		end
+
 feature -- Basic operations
 
 	add_message (origin: ANY; reason: STRING) is
@@ -70,6 +90,14 @@ feature -- Basic operations
 		do
 			output_window.add_error (reason)
 			add_log (origin, reason)
+		end
+
+feature {NONE} -- Implementation
+
+	output_window_cell: CELL [WIZARD_OUTPUT_WINDOW] is
+			-- Output window holder
+		once
+			create Result.put (Void)
 		end
 
 end -- class WIZARD_MESSAGE_OUTPUT

@@ -218,7 +218,7 @@ feature -- File names for Project
 
 	Project_ace_file: FILE_NAME is
 		once
-			!! Result.make_from_string (Classes_directory);
+			!! Result.make_from_string (Project_directory);
 			Result.set_file_name (Ace_name);
 		end;
 
@@ -242,7 +242,7 @@ feature -- Directory creation
 			if is_directory (Restore_directory) then
 				remove_directory (Restore_directory)
 			end;
-			!! ace_f.make (Ace_file);
+			!! ace_f.make (Project_ace_file);
 			if ace_f.exists then
 				ace_f.delete
 			end;
@@ -255,8 +255,8 @@ feature -- Directory creation
 		require
 			Project_dir_defined: Project_directory.count > 0
 		local
-			ace_f: PLAIN_TEXT_FILE;
-			proj_ace_f: PLAIN_TEXT_FILE;
+			ace_f: RAW_FILE;
+			proj_ace_f: RAW_FILE;
 			file_name: FILE_NAME;
 			dir_name: DIRECTORY_NAME;
 		do
@@ -351,7 +351,7 @@ feature -- {NONE}
 			file: PLAIN_TEXT_FILE
 		do
 			!! file.make (p);
-			Result := file.is_directory
+			Result := file.exists and then file.is_directory
 		end;
 
 end	

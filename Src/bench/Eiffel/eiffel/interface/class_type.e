@@ -269,7 +269,6 @@ feature -- Generation
 
 				if generate_c_code then
 
-					buffer.open_write_c
 	
 					if not final_mode then
 						header_buffer := buffer
@@ -293,6 +292,8 @@ feature -- Generation
 						Static_type_id_counter.generate_extern_offsets (buffer)
 						Real_body_id_counter.generate_extern_offsets (buffer)
 					end
+
+					buffer.open_write_c
 
 					byte_context.set_buffer (buffer)
 					byte_context.set_header_buffer (header_buffer)
@@ -351,10 +352,11 @@ feature -- Generation
 						extern_decl_file.put_string (header_buffer)
 						extern_decl_file.close
 					end
+					buffer.close_c
 
 					file := open_generation_file
 					file.put_string (buffer)
-					file.close_c
+					file.close
 
 				else
 						-- The file hasn't been generated

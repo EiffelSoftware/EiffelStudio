@@ -345,6 +345,17 @@ feature -- Status setting
 			stream.release_stream
 		end
 
+	insert_text (a_text: STRING) is
+			-- Insert `a_text' at the position of the cursor.
+			-- Replace the current selection if there is one
+		local
+			stream: WEL_RICH_EDIT_BUFFER_LOADER
+		do
+			!! stream.make (a_text)
+			insert_text_stream_in (stream)
+			stream.release_stream
+		end
+
 	set_background_color (color: WEL_COLOR_REF) is
 			-- Set the background color with `color'.
 		require
@@ -489,6 +500,24 @@ feature -- Basic operations
 			stream_not_void: stream /= Void
 		do
 			send_stream_out_message (Sf_rtf, stream)
+		end
+
+	insert_text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a text stream in operation with `stream'.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			send_stream_in_message (Sf_text + Sff_selection, stream)
+		end
+
+	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+			-- Start a rtf stream in operation with `stream'.
+		require
+			exists: exists
+			stream_not_void: stream /= Void
+		do
+			send_stream_in_message (Sf_rtf + Sff_selection, stream)
 		end
 
 	send_stream_in_message (format: INTEGER;

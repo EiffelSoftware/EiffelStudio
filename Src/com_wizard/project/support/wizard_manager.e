@@ -284,10 +284,30 @@ feature {NONE} -- Implementation
 			create Result.make (message_output)
 		end
 
+	initialize_clib_component_include_directory_structure (a_path: STRING) is
+			-- Initialize directory structore for Cilent and Server folders.
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.empty
+		local
+			a_path2: STRING
+		do
+			initialize_directory (a_path)
+			a_path.append_character (Directory_separator)
+			a_path2 := clone (a_path)
+			a_path2.append (Clib)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Include)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Component)
+			initialize_directory (a_path2)
+		end
+
 	intialize_file_directories is
 			-- Create generated files directories.
 		local
-			a_file: RAW_FILE
 			a_path, a_path2: STRING
 		do
 			-- Initialize Common subdirectory
@@ -309,38 +329,16 @@ feature {NONE} -- Implementation
 			initialize_directory (a_path2)
 
 			-- Initialize Client subdirectory
-			if Shared_wizard_environment.client then
-				a_path := clone (Shared_wizard_environment.destination_folder)
-				a_path.append (Client)
-				initialize_directory (a_path)
-				a_path.append_character (Directory_separator)
-				a_path2 := clone (a_path)
-				a_path2.append (Clib)
-				initialize_directory (a_path2)
-				a_path2 := clone (a_path)
-				a_path2.append (Include)
-				initialize_directory (a_path2)
-				a_path2 := clone (a_path)
-				a_path2.append (Component)
-				initialize_directory (a_path2)
-			end
+			a_path := clone (Shared_wizard_environment.destination_folder)
+			a_path.append (Client)
+			initialize_clib_component_include_directory_structure (a_path)
 	
 			-- Initialize Server subdirectory
-			if Shared_wizard_environment.server then
-				a_path := clone (Shared_wizard_environment.destination_folder)
-				a_path.append (Server)
-				initialize_directory (a_path)
-				a_path.append_character (Directory_separator)
-				a_path2 := clone (a_path)
-				a_path2.append (Clib)
-				initialize_directory (a_path2)
-				a_path2 := clone (a_path)
-				a_path2.append (Include)
-				initialize_directory (a_path2)
-				a_path2 := clone (a_path)
-				a_path2.append (Component)
-				initialize_directory (a_path2)
-			end
+			a_path := clone (Shared_wizard_environment.destination_folder)
+			a_path.append (Server)
+			initialize_clib_component_include_directory_structure (a_path)
+
+			directories_initialized := True
 		end
 
 	initialize_directory (a_path: STRING) is
@@ -353,7 +351,6 @@ feature {NONE} -- Implementation
 			a_string: STRING
 			a_directory: DIRECTORY
 		do
-			directories_initialized := True
 			create a_file.make (a_path)
 			if a_file.exists then
 				if not a_file.is_directory then

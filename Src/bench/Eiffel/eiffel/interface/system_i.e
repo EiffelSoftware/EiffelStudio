@@ -23,24 +23,17 @@ inherit
 	SHARED_ENCODER;
 	SHARED_GENERATOR;
 	SHARED_USED_TABLE;
-	SHARED_INHERITED
-		rename
-			Inherit_table as analyzer
-		end;
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
 		end;
 	SHARED_ARRAY_BYTE;
 	SHARED_DECLARATIONS;
+	SHARED_PASS;
 	EXCEPTIONS;
 
 feature 
 
-	changed_classes: SORTED_TWO_WAY_LIST [CLASS_C];
-			-- List of classes to recompile
-
-	
 	sorter: CLASS_SORTER;
 			-- Topological sorter on classes
 
@@ -159,6 +152,19 @@ feature
 	object_directory: STRING;
 			-- Directory for the object files
 
+	first_compilation: BOOLEAN;
+			-- Is it the first compilation of the system
+			-- Used by the time check
+
+	new_class: BOOLEAN;
+			-- Has a new class been inserted in the universe ?
+			-- It is different from moved because new_class is set
+			-- even if the class is not used
+
+	new_classes: LINKED_LIST [CLASS_I];
+			-- New classes in the system
+			-- Used during the time check
+
 	moved: BOOLEAN;
 			-- Has the system potentially moved in terms of classes ?
 			-- [Each time a new class is inserted/removed in/from the system
@@ -219,16 +225,19 @@ feature
 	remover: REMOVER;
 			-- Dead code removal control
 
+	current_pass: PASS;
+			-- Current compiler pass
+			-- Useful for `current_class'
+
 	make is
 			-- Create the system.
 		do
 			!!server_controler;
 			server_controler.make;
-				-- Creation of the list of changed classes
-			!!changed_classes.make;
 				-- Creation of the system hash table
 			!!id_array.make (1, System_chunk);
 			!!class_types.make (1, System_chunk);
+			!!new_classes.make;
 				-- Creation of a topological sorter
 			!!sorter.make;
 				-- Creation of servers
@@ -282,6 +291,8 @@ feature
 			local_universe: UNIVERSE_I;
 			local_root_cluster: CLUSTER_I;
 		do
+			first_compilation := True;
+
 			local_workbench := Workbench;
 			local_universe := Universe;
 			local_root_cluster := root_cluster;
@@ -315,37 +326,6 @@ feature
 	protected_classes: INTEGER is 11;
 		-- Usefull for remove_useless_classes
 		-- The 11 first classes are protected (see `init')
-
-	insert_changed_class (cl: CLASS_C) is
-			-- Insert a changed class in `changed_classes'. Do not insert
-			-- it if already present.
-		require
-			good_argument: cl /= Void;
-			good_id: cl.id > 0;
-		local
-			old_pos: INTEGER;
-		do
-debug ("ACTIVITY")
-io.error.putstring ("%TChanged class ");
-io.error.putstring (cl.class_name);
-io.error.new_line;
-end;
-				-- An insertion in `changed_classes' could happen during
-				-- an iteration on it, so the position must be saved.
-			old_pos := changed_classes.position;
-
-				-- Insertion at the end of the list of a compiled class
-				-- (i.e an instance of CLASS_C)
-			if not changed_classes.empty then
-				changed_classes.search_after (cl);
-			end;
-			if changed_classes.off or else changed_classes.item /= cl then
-				changed_classes.add_left (cl);
-			end;
-
-				-- Retrieve the saved position
-			changed_classes.go (old_pos);
-		end;
 
 	insert_new_class (c: CLASS_C) is
 			-- Add new class `c' to the system.
@@ -390,13 +370,13 @@ end;
 			c.id > 0;
 		end;
 
-	remove_old_class (a_class: CLASS_C) is
-			-- Remove class `a_class' from the system
-		require
-			good_argument: a_class /= Void;
-			no_clients: a_class.syntactical_clients.empty;
-		do
-			remove_class (a_class);
+	record_new_class_i (a_class: CLASS_I) is
+			-- Record a new CLASS_I
+			-- Used during the time check and the genericity check after pass1
+		do	
+			new_class := True;
+			new_classes.start;
+			new_classes.add_left (a_class);
 		end;
 
 	remove_class (a_class: CLASS_C) is
@@ -414,7 +394,6 @@ end;
 			types: TYPE_LIST;
 			Void_class_type: CLASS_TYPE;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
-			c: CURSOR;
 		do
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving class ");
@@ -429,14 +408,11 @@ end;
 				a_class.remove_relations;
 			end;
 
-				-- Remove class `a_class' from the list of changed classes
-			c := changed_classes.cursor;
-			changed_classes.start;
-			changed_classes.search_same (a_class);
-			if not changed_classes.offright then
-				changed_classes.remove;
-			end;
-			changed_classes.go_to (c);
+				-- Remove class `a_class' from the lists of changed classes
+			pass1_controler.remove_class (a_class);
+			pass2_controler.remove_class (a_class);
+			pass3_controler.remove_class (a_class);
+			pass4_controler.remove_class (a_class);
 
 				-- Mark the class to remove uncompiled
 			a_class.lace_class.set_compiled_class (void_class);
@@ -454,12 +430,21 @@ end;
 
 				-- Remove if from the servers
 			id := a_class.id;
-			ast_server.remove (id);
-			feat_tbl_server.remove (id);
-			class_info_server.remove (id);
-			inv_ast_server.remove (id);
-			depend_server.remove (id);
-			m_rout_id_server.remove (id);
+
+-- FIXME
+
+-- Problem if ctrl C after a class has been removed
+-- Sometimes the E... file can be removed from disk
+
+-- Solution: Put the id in a tmp structure and remove the objects
+-- during the synchronization tmp_servers <==> servers
+
+--			ast_server.remove (id);
+--			feat_tbl_server.remove (id);
+--			class_info_server.remove (id);
+--			inv_ast_server.remove (id);
+--			depend_server.remove (id);
+--			m_rout_id_server.remove (id);
 
 			Tmp_ast_server.remove (id);
 			Tmp_feat_tbl_server.remove (id);
@@ -490,12 +475,16 @@ end;
 				supplier_clients.remove;
 				if
 					supplier_clients.empty and then
-					supplier /= root_class.compiled_class
 						-- The root class is not removed
 						-- true only if the root class has changed and
 						-- was a client for a removed class
+					supplier /= root_class.compiled_class and then
+						-- Cannot propagate for a protected class
+					supplier.id > protected_classes and then
+						-- A recursion may occur when removing a cluster
+					id_array.item (supplier.id) /= Void
 				then
-					remove_old_class (supplier);
+					remove_class (supplier);
 				end;
 				local_cursor := local_cursor.right
 			end;
@@ -535,14 +524,6 @@ end;
 	init_recompilation is
 			-- Initialization before a recompilation.
 		do
-				-- Initialization of control flags of the topological
-				-- sort.
-			moved := False;
-			update_sort := False;
-
-				-- Recompilation of changed classes
-			changed_classes.start;
-
 				-- If first initialization, special initialization
 			if not general_class.compiled then
 				init;
@@ -591,9 +572,30 @@ feature -- Recompilation
 				-- First time stamp and removal of useless classes
 			Time_checker.time_check;
 
+				-- The `new_classes' list is not used after the time
+				-- check. If it was successful, the list can be wiped out.
+			new_classes.wipe_out;
+
 				-- Syntax analysis: This maybe add new classes to
 				-- the system
-			pass1;
+			process_pass (pass1_controler);
+
+				-- Check generic validity on old classes
+				-- generic parameters cannot be new classes
+debug ("ACTIVITY")
+	io.error.putstring ("%Tnew_class = ");
+	io.error.putbool (new_class);
+	io.error.new_line;
+end;
+			if not first_compilation and then new_class then
+				check_generics;
+					-- The association name <==> supplier has been done in pass1 so
+					-- even if the compilation fails after this point, the
+					-- check must not be done again if no classes are introduced
+					-- before the recompilation
+				new_class := False
+			end;
+
 				-- The root class is not generic
 			root_class_c := root_class.compiled_class;
 			root_class_c.check_non_genericity_of_root_class;
@@ -616,14 +618,11 @@ end;
 				sorter.sort;
 					-- Check sum error
 				Error_handler.checksum;
-					-- Re-sort the list `changed_classes', because the
-					-- topological sort modified the class ids, and the
-					-- second pass needs it.
-				if not changed_classes.empty then
-					changed_classes.sort;
-				end;
-
-					-- Build conformance tables
+					-- Re-sort the list `changed_classes' of `pass2',
+					-- because the topological sort modified the class ids, and the
+					-- second pass needs it and rebuild the conformance tables
+				pass2_controler.sort;
+				pass4_controler.sort;
 				build_conformance_table;
 
 					-- Clear the topo sorter
@@ -638,12 +637,12 @@ end;
 				-- Inheritance analysis: list `changed_classes' is
 				-- sorted by class ids so the parent come first the
 				-- heirs after
-			pass2;
+			process_pass (pass2_controler);
 
 			root_class_c.check_root_class_creators;
 
 				-- Byte code production and type checking
-			pass3;
+			process_pass (pass3_controler);
 
 				-- Externals incrementality
 			freeze := freeze or else not externals.equiv;
@@ -677,36 +676,37 @@ end;
 
 		end;
 
-	pass1 is
-			-- Syntax anlysis on list `changed_classes'. During this process
-			-- list `changed_classes' may be increase because on new
-			-- supplier classses discovered durin parsing.
+	check_generics is
+			-- Check generic validity on old classes
+			-- generic parameters cannot be new classes
 		local
-			cur_class: CLASS_C;
+			i, nb: INTEGER;
+			a_class: CLASS_C
 		do
+debug ("ACTIVITY")
+	io.error.putstring ("Check generics%N");
+end;
 			from
-					-- Iteration on the changed classes
-				changed_classes.start
+				i := 1;
+				nb := id_array.count
 			until
-				changed_classes.offright
+				i > nb
 			loop
-				cur_class := changed_classes.item;
-
-				if cur_class.make_pass1 then
-						-- Parse class
-					cur_class.pass1;
-
-						-- No syntax error happened: set the compilation status
-						-- of the current changed class.
-					check
-						No_error: not Error_handler.has_error;
-					end;
-					cur_class.set_pass1_done;
+				a_class := id_array.item (i);
+				if
+					a_class /= Void
+				and then
+					a_class.generics /= Void
+				and then
+						-- If the class is changed then `pass1' has been
+						-- done successfully on the class
+					not a_class.changed
+				then
+					a_class.check_generic_parameters
 				end;
-				
-					-- Take next changed class from `changed_classes'.
-				changed_classes.forth;
+				i := i + 1
 			end;
+			Error_handler.checksum
 		end;
 
 	remove_useless_classes is
@@ -715,29 +715,53 @@ end;
 			i, nb: INTEGER;
 			a_class: CLASS_C;
 			root_class_c: CLASS_C;
+			marked_classes: ARRAY [BOOLEAN];
+			vd31: VD31;
 		do
+
+				-- First mark all the classes that can be reached from the root class
+			nb := id_array.count;
+			!!marked_classes.make (1, nb);
+
+			root_class_c := root_class.compiled_class;
+			root_class_c.mark_class (marked_classes);
+			general_class.compiled_class.mark_class (marked_classes);
+			any_class.compiled_class.mark_class (marked_classes);
+			double_class.compiled_class.mark_class (marked_classes);
+			real_class.compiled_class.mark_class (marked_classes);
+			integer_class.compiled_class.mark_class (marked_classes);
+			boolean_class.compiled_class.mark_class (marked_classes);
+			character_class.compiled_class.mark_class (marked_classes);
+			array_class.compiled_class.mark_class (marked_classes);
+			bit_class.compiled_class.mark_class (marked_classes);
+			pointer_class.compiled_class.mark_class (marked_classes);
+
+				-- Remove all the classes that cannot be reached if they are
+				-- not protected
 			from
-				root_class_c := root_class.compiled_class;
-				i := 1;
-				nb := id_array.count;
+					-- Class of id less than protected_classes is protected
+					-- See feature `init'
+				i := protected_classes+1;
 			until
 				i > nb
 			loop
 				a_class := id_array.item (i);
 				if	a_class /= Void -- Classes could be removed
 					and then
-					a_class.syntactical_clients.empty
-					and then
-					a_class.id > protected_classes
-							-- Class of id less than protected_classes is protected
-							-- See feature `init'
-					and then
-					a_class /= root_class_c
+					marked_classes.item (i) = False
 				then
-					remove_old_class (a_class)
+					if a_class.has_visible then
+						!!vd31;
+						vd31.set_class_name (a_class.class_name);
+						vd31.set_cluster (a_class.cluster);
+						Error_handler.insert_error (vd31);
+					else
+						remove_class (a_class)
+					end;
 				end;
 				i := i + 1
-			end
+			end;
+			Error_handler.checksum
 		end;
 
 	build_conformance_table is
@@ -764,93 +788,11 @@ end;
 			end;
 		end;
 
-	pass2 is
-			-- Inheritance anlysis on the changed classes. Since the
-			-- classes contained in `changed_classes' are sorted by class
-			-- id's, it ensures that a class will be treated here once
-			-- the treatment of its parents is completed. That's why
-			-- we re-sort the list `changed_class' after the topological
-			-- sort in order to take advantage of it.
-		local
-			a_class: CLASS_C;
-			id: INTEGER;
+	update_freeze_list (a_class_id: INTEGER) is
+			-- Update the freeze list for changed hash tables (after pass2)
 		do
-			from
-					-- Iteration on the changed classes
-				changed_classes.start
-			until
-				changed_classes.offright
-			loop
-				a_class := changed_classes.item;
-
-				if	(a_class.changed or else a_class.changed2)
-					and then
-					a_class.make_pass2
-				then
-						-- Analysis of inheritance for a class
-					analyzer.set_a_class (a_class);
-					analyzer.pass2;
-
-						-- No error happened: set the compilation status
-						-- of `a_class'
-					check
-						No_error: not Error_handler.has_error;
-					end;
-					a_class.set_pass2_done;
-						
-						-- Update the freeze list for changed hash tables.
-					if a_class.changed2 then
-						id := a_class.id;
-						freeze_set2.put (id);
-						melted_set.put (id);
-					end;
-
-					history_control.check_overload;
-				end;
-
-					-- Take next changed class from `changed_classes'.
-				changed_classes.forth;
-			end;
-
-				-- Transfer history controler data on disk
-			history_control.transfer;
-		end;
-
-	pass3 is
-			-- Byte code production and type checking: list `changed_classes'
-			-- contains classes marked `changed' and/or changed3. For
-			-- the classes marked `changed', produce byte code and type
-			-- check the features marked `melted'; if the class is also
-			-- marked `changed3' type check also the other features. For
-			-- classes marked `changed3' only, type check all the
-			-- features.
-		local
-			cur_class: CLASS_C;
-		do
-			from
-				changed_classes.start
-			until
-				changed_classes.offright
-			loop
-				cur_class := changed_classes.item;
-
-				if cur_class.make_pass3 then
-						-- Type checking and maybe byte code production
-						-- for a class
-					cur_class.pass3;
-					
-						-- No error happened: set the compilation status
-						-- of class `cur_class'
-					check
-						No_error: not Error_handler.has_error;
-					end;
-					cur_class.set_pass3_done;
-				end;
-
-					-- Take the next class
-				changed_classes.forth;
-
-			end;
+			freeze_set2.put (a_class_id);
+			melted_set.put (a_class_id);
 		end;
 
 	process_type_system is
@@ -858,15 +800,15 @@ end;
 		local
 			a_class: CLASS_C;
 			old_value: INTEGER;
-			local_cursor: BI_LINKABLE [CLASS_C];
+			local_cursor: LINKABLE [PASS4_C];
 		do
 			old_value := type_id_counter.value;
 			from
-				local_cursor := changed_classes.first_element
+				local_cursor := pass4_controler.changed_classes.first_element
 			until
 				local_cursor = Void
 			loop
-				a_class := local_cursor.item;
+				a_class := local_cursor.item.associated_class;
 				if a_class.changed and then a_class.generics = Void then
 					if a_class.types.empty then
 							-- For non generic classes, standard initialization
@@ -893,17 +835,25 @@ end;
 			-- of CLASS_TYPE) looking for a new one (marked `is_changed also).
 		local
 			a_class: CLASS_C;
-			local_cursor: BI_LINKABLE [CLASS_C];
+			local_cursor: LINKABLE [PASS4_C];
 			changed_skeletons: LINKED_LIST [CLASS_C];
 			skeleton: SKELETON;
 		do
+debug ("ACTIVITY")
+io.error.putstring ("Process_skeleton%N");
+end;
 			from
 				!!changed_skeletons.make;
-				local_cursor := changed_classes.first_element
+				local_cursor := pass4_controler.changed_classes.first_element
 			until
 				local_cursor = Void
 			loop
-				a_class := local_cursor.item;
+				a_class := local_cursor.item.associated_class;
+debug ("ACTIVITY")
+io.error.putstring ("%T");
+io.error.putstring (a_class.class_name);
+io.error.putstring ("%N");
+end;
 					-- Process skeleton(s) for `a_class'.
 				a_class.process_skeleton;
 
@@ -974,15 +924,15 @@ end;
 			class_type: CLASS_TYPE;
 			types: TYPE_LIST;
 			a_class: CLASS_C;
-			local_cursor: BI_LINKABLE [CLASS_C];
+			local_cursor: LINKABLE [PASS_C];
 			type_cursor: LINKABLE [CLASS_TYPE];
 		do
 			from
-				local_cursor := changed_classes.first_element
+				local_cursor := pass4_controler.changed_classes.first_element
 			until
 				local_cursor = Void
 			loop
-				a_class := local_cursor.item;
+				a_class := local_cursor.item.associated_class;
 				from
 					types := a_class.types;
 					type_cursor := types.first_element;
@@ -1011,28 +961,18 @@ end;
 			id_list: LINKED_LIST [INTEGER];
 			local_cursor: BI_LINKABLE [CLASS_C];
 			id_cursor: LINKABLE [INTEGER];
+			i: INTEGER;
 		do
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
-			from
-				local_cursor := changed_classes.first_element
-			until
-				local_cursor = Void
-			loop
-				a_class := local_cursor.item;
-				if a_class.has_features_to_melt then
-						-- Verbose
-					io.error.putstring ("Pass 4 on class ");
-					io.error.putstring (a_class.class_name);
-					io.error.new_line;
-					a_class.melt;
-				end;
-				local_cursor := local_cursor.right
-			end;
+			process_pass (pass4_controler);
 
 				-- The dispatch and execution tables are know updated.
 
 			if not freeze then
+debug ("COUNT")
+	i := melted_set.count;
+end;
 					-- Melt the feature tables
 					-- Open first the file for writing on disk melted feature
 					-- tables
@@ -1044,6 +984,12 @@ end;
 				loop
 					a_class := class_of_id (id_cursor.item);
 						-- Verbose
+debug ("COUNT")
+	io.error.putstring ("(");
+	io.error.putint (i);
+	io.error.putstring (") ");
+	i := i - 1;
+end;
 					io.error.putstring ("Pass 5 on class ");
 					io.error.putstring (a_class.class_name);
 					io.error.new_line;
@@ -1106,6 +1052,9 @@ end;
 				-- Write first the number of class types now available
 			write_int (file_pointer, type_id_counter.value);
 
+debug ("ACTIVITY")
+	io.error.putstring ("%Tfeature tables%N");
+end;
 				-- Count of feature tables to update
 			from
 				id_list := freeze_set2;
@@ -1114,11 +1063,19 @@ end;
 				id_cursor = Void
 			loop
 				a_class := class_of_id (id_cursor.item);
+debug ("ACTIVITY")
+	io.error.putstring ("%T%T");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 				nb_tables := nb_tables + a_class.types.count;
 				id_cursor := id_cursor.right
 			end;
 				-- Write the number of feature tables to update
 			write_int (file_pointer, nb_tables);
+debug ("ACTIVITY")
+	io.error.putstring ("%Tbyte code%N");
+end;
 
 				-- Write then the byte code for feature tables to update.
 				-- First, open the reading file associated to the melted
@@ -1129,6 +1086,11 @@ end;
 				id_cursor = Void
 			loop
 				a_class := class_of_id (id_cursor.item);
+debug ("ACTIVITY")
+	io.error.putstring ("%T%T");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 				from
 					types := a_class.types;
 					type_cursor := types.first_element
@@ -1148,6 +1110,9 @@ end;
 				id_cursor := id_cursor.right
 			end;
 
+debug ("ACTIVITY")
+	io.error.putstring ("%TMelted routine id array%N");
+end;
 				-- Melted routine id array
 			from
 				m_rout_id_server.start
@@ -1283,22 +1248,30 @@ end;
 			-- compilation files.
 		local
 			a_class: CLASS_C;
-			local_cursor: BI_LINKABLE [CLASS_C];
+			i, nb: INTEGER;
 		do
+				-- Reinitialization of control flags of the topological
+				-- sort.
+			update_sort := False;
+			moved := False;
+			first_compilation := False;
+
 				-- Reset the classes as unchanged
 			from
-				local_cursor := changed_classes.first_element
+				i := 1;
+				nb := id_array.count
 			until
-				local_cursor = Void
+				i > nb
 			loop
-				a_class := local_cursor.item;
-				a_class.set_changed (False);
-				a_class.set_changed2 (False);
-				-- FIXME: changed4, changed5, changed6
-				a_class.changed_features.clear_all;
-				a_class.propagators.wipe_out;
-
-				local_cursor := local_cursor.right
+				a_class := id_array.item (i);
+				if a_class /= Void then
+					a_class.set_changed (False);
+					a_class.set_changed2 (False);
+					-- FIXME: changed4, changed5, changed6
+					a_class.changed_features.clear_all;
+					a_class.propagators.wipe_out;
+				end;
+				i := i + 1
 			end;
 
 				-- Update servers
@@ -1313,11 +1286,14 @@ end;
 			Poly_server.take_control (Tmp_poly_server);
 			M_rout_id_server.take_control (Tmp_m_rout_id_server);
 
-				-- Changed classes are empty now.
-			changed_classes.wipe_out;
-
 				-- Clear the instantiator
 			Instantiator.wipe_out;
+
+				-- Clear the pass controlers
+			pass1_controler.wipe_out;
+			pass2_controler.wipe_out;
+			pass3_controler.wipe_out;
+			pass4_controler.wipe_out;
 		end;
 
 feature  -- Freeezing
@@ -1330,6 +1306,7 @@ feature  -- Freeezing
 			a_class: CLASS_C;
 			id_list: LINKED_LIST [INTEGER];
 			id_cursor: LINKABLE [INTEGER];
+			i: INTEGER;
 		do
 				-- Re-process dynamic types
 			process_dynamic_types;
@@ -1352,11 +1329,20 @@ feature  -- Freeezing
 
 			from
 				id_list := freeze_set1;
+debug ("COUNT")
+	i := id_list.count;
+end;
 				id_cursor := id_list.first_element;
 			until
 				id_cursor = Void
 			loop
 				a_class := id_array.item (id_cursor.item);
+debug ("COUNT")
+	io.error.putstring ("(");
+	io.error.putint (i);
+	io.error.putstring (") ");
+	i := i - 1;
+end;
 					-- Verbose
 				io.error.putstring ("Pass 4 on class ");
 				io.error.putstring (a_class.class_name);
@@ -1369,11 +1355,20 @@ feature  -- Freeezing
 
 			from
 				id_list := freeze_set2;
+debug ("COUNT")
+	i := id_list.count;
+end;
 				id_cursor := id_list.first_element
 			until
 				id_cursor = Void
 			loop
 				a_class := id_array.item (id_cursor.item);
+debug ("COUNT")
+	io.error.putstring ("(");
+	io.error.putint (i);
+	io.error.putstring (") ");
+	i := i - 1;
+end;
 					-- Verbose
 				io.error.putstring ("Pass 5 on class ");
 				io.error.putstring (a_class.class_name);
@@ -1476,9 +1471,9 @@ end;
 		end;
 
 	
-feature -- Fianl mode generation
+feature -- Final mode generation
 
-	pass4 is
+	finalized_generation is
 			-- Finalizer generation
 		require
 			root_class.compiled;
@@ -1903,17 +1898,17 @@ end;
 			if final_mode then
 				Skeleton_file.putstring ("#include %"Eskelet.h%"%N%N");
 				from
-                    i := 1
-                until
-                    i > nb
-                loop
-                    class_types.item (i).skeleton.make_extern_declarations;
-                   i := i + 1;
-                end;
-                f_name := generation_path.twin;
-                f_name.append ("/Eskelet.h");
-                Extern_declarations.generate (f_name);
-                Extern_declarations.wipe_out;
+					i := 1
+				until
+					i > nb
+				loop
+					class_types.item (i).skeleton.make_extern_declarations;
+				   i := i + 1;
+				end;
+				f_name := generation_path.twin;
+				f_name.append ("/Eskelet.h");
+				Extern_declarations.generate (f_name);
+				Extern_declarations.wipe_out;
 			else
 					-- Hash table extern declaration in workbench mode
 				Skeleton_file.putstring ("#include %"macros.h%"%N");
@@ -2017,21 +2012,21 @@ end;
 					-- dynamic types and new dynamic types
 				Skeleton_file.putstring ("int16 fdtypes[] = {%N");
 				from
-                    i := 1
-                until
-                    i > nb
-                loop
-                    cl_type := cltype_array.item (i);
+					i := 1
+				until
+					i > nb
+				loop
+					cl_type := cltype_array.item (i);
 					Skeleton_file.putstring ("(int16) ");
-                    if cl_type /= Void then
+					if cl_type /= Void then
 						Skeleton_file.putint (cl_type.type_id - 1);
-                    else
+					else
 						Skeleton_file.putint (0);
-                    end;
+					end;
 					Skeleton_file.putchar (',');
 					Skeleton_file.new_line;
-                    i := i + 1
-                end;
+					i := i + 1
+				end;
 				Skeleton_file.putstring ("};%N");
 			end;
 				-- Close skeleton file
@@ -2071,10 +2066,10 @@ end;
 
 			if byte_context.final_mode then
 					-- Extern declarations for previous file
-                f_name := generation_path.twin;
-                f_name.append ("/Ececil.h");
-                Extern_declarations.generate (f_name);
-                Extern_declarations.wipe_out;
+				f_name := generation_path.twin;
+				f_name.append ("/Ececil.h");
+				Extern_declarations.generate (f_name);
+				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");
 				from
 					i := 1;
@@ -2434,13 +2429,13 @@ feature -- Main file generation
 				%#include <struct.h>%N%N");
 		
 			if not final_mode then
-				Main_file.putstring ("int root_class_static_type = ");
+				Main_file.putstring ("int rcst = ");
 				Main_file.putint (static_type);
-				Main_file.putstring (";%Nint root_class_dtype = ");
+				Main_file.putstring (";%Nint rcdt = ");
 				Main_file.putint (dtype);
-				Main_file.putstring (";%Nint32 root_class_feature_id = ");
+				Main_file.putstring (";%Nint32 rcfid = ");
 				Main_file.putint (feature_id);
-				Main_file.putstring (";%Nint root_class_has_argument = ");
+				Main_file.putstring (";%Nint rcarg = ");
 				if has_argument then
 					Main_file.putstring ("1");
 				else
@@ -2467,18 +2462,18 @@ feature -- Main file generation
 
 			-- Set C variable `scount'.
 			if final_mode then
-            	Main_file.putstring ("%Tscount = ");
-            	Main_file.putint (type_id_counter.value);
+				Main_file.putstring ("%Tscount = ");
+				Main_file.putint (type_id_counter.value);
 				Main_file.putstring (";%N");
 			end;
 
 			Main_file.putstring ("%Troot_obj = RTLN(");
 			if final_mode then
-	            Main_file.putint (dtype);
+				Main_file.putint (dtype);
 			else
-				Main_file.putstring ("root_class_dtype");
+				Main_file.putstring ("rcdt");
 			end;
-            Main_file.putstring (");%N");
+			Main_file.putstring (");%N");
 	
 			if final_mode then
 				if creation_name /= Void then
@@ -2491,14 +2486,11 @@ feature -- Main file generation
 					Main_file.putstring (");%N");
 				end;
 			else
-				Main_file.putstring ("%Tif (root_class_feature_id) {%N%
-					%%T%Tif (root_class_has_argument) {%N%
-					%%T%T%T((void (*)()) RTWF(root_class_static_type, root_class_feature_id,%N%
-							%%T%T%T%Troot_class_dtype))(root_obj, args);%N%
-					%%T%T} else {%N%
-					%%T%T%T((void (*)()) RTWF(root_class_static_type, root_class_feature_id,%N%
-							%%T%T%T%Troot_class_dtype))(root_obj);%N%
-					%%T}}%N");
+				Main_file.putstring ("%Tif (rcfid)%N%
+					%%T%Tif (rcarg)%N%
+					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj, args);%N%
+					%%T%Telse%N%
+					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj);%N");
 			end;
 
 			Main_file.putstring ("}%N");
@@ -2592,12 +2584,21 @@ feature --Workbench option file generation
 
 feature 
 
+	process_pass (a_pass: PASS) is
+			-- Process `a_pass'
+		do
+			current_pass := a_pass;
+			a_pass.execute;
+			a_pass.wipe_out
+		end;
+
 	current_class: CLASS_C is
 			-- Current compiled class
 		require
-			not_off: not changed_classes.off;
+			not_void: current_pass /= Void;
+			not_off: not current_pass.changed_classes.off;
 		do
-			Result := changed_classes.item;
+			Result := current_pass.changed_classes.item.associated_class;
 		end;
 
 	clear is
@@ -2759,20 +2760,16 @@ feature -- Debug purpose
 			-- Trace the list `changed_classes'.
 		local
 			a_class: CLASS_C;
+			changed_classes: LINKED_LIST [PASS_C];
 		do
 			from
+				changed_classes := current_pass.changed_classes;
 				changed_classes.start
 			until
 				changed_classes.offright
 			loop
-				a_class := changed_classes.item;
+				a_class := changed_classes.item.associated_class;
 				io.error.putstring (a_class.class_name);
-				io.error.putstring ("%N%Tpass1 = ");
-				io.error.putbool (a_class.make_pass1);
-				io.error.putstring ("%N%Tpass2 = ");
-				io.error.putbool (a_class.make_pass2);
-				io.error.putstring ("%N%Tpass3 = ");
-				io.error.putbool (a_class.make_pass3);
 				io.error.putstring ("%N%Tchanged = ");
 				io.error.putbool (a_class.changed);
 				io.error.putstring ("%N%Tchanged2 = ");

@@ -54,6 +54,7 @@ feature -- Lace compilation
 			vd15: VD15;
 			error: BOOLEAN;
 			debug_tag: DEBUG_TAG_I;
+			tag_value: STRING;
 		do
 			if option.is_debug then
 				if value /= Void then
@@ -64,8 +65,10 @@ feature -- Lace compilation
 					elseif value.is_all then
 						update_debug (Yes_debug);
 					elseif value.is_name then
+						tag_value := value.value.duplicate;
+						tag_value.to_lower;
 						!!debug_tag.make;
-						debug_tag.tags.put (value.value);
+						debug_tag.tags.put (tag_value);
 						update_debug (debug_tag);
 					else
 						error := True;

@@ -5,6 +5,7 @@ class WORKBENCH_I
 inherit
 
 	SHARED_ERROR_HANDLER;
+	SHARED_PASS;
 	EXCEPTIONS;
 	STORABLE;
 
@@ -117,10 +118,29 @@ feature -- Commands
 		require
 			good_argument: cl /= Void;
 		local
-			class_name: STRING;
 			class_to_recompile: CLASS_C;
 		do
-			class_name := cl.class_name;
+			add_class_to_recompile (cl);
+
+				-- Mark the class syntactically changed
+			cl.set_changed (True);
+
+			class_to_recompile := cl.compiled_class;
+
+				-- Syntax analysis must be done
+			pass1_controler.insert_new_class (class_to_recompile);
+
+				-- Update attribute `date' of `cl'.
+			class_to_recompile.set_date;
+		end;
+		
+	add_class_to_recompile (cl: CLASS_I) is
+			-- Recompile the class but do not do the parsing
+		require
+			good_argument: cl /= Void;
+		local
+			class_to_recompile: CLASS_C;
+		do
 			class_to_recompile := cl.compiled_class;
 			if class_to_recompile = Void then
 					-- Creation of a new instance of a class to recompile:
@@ -132,18 +152,11 @@ feature -- Commands
 				system.insert_new_class (class_to_recompile);
 			end;
 
-				-- Mark the class syntactically changed
-			cl.set_changed (True);
-				-- Initialization of the compilation status of the class
-				-- to recompile
-			class_to_recompile.init_status;
-
-				-- Insertion of it in the list `changed_classes' of
-				-- `system'.
-			system.insert_changed_class (class_to_recompile);
-
-				-- Update attribute `date' of `cl'.
-			class_to_recompile.set_date;
+				-- Insertion in the pass controlers
+			pass1_controler.insert_changed_class (class_to_recompile);
+			pass2_controler.insert_new_class (class_to_recompile);
+			pass3_controler.insert_new_class (class_to_recompile);
+			pass4_controler.insert_new_class (class_to_recompile);
 		end;
 
 feature {NONE} -- Externals

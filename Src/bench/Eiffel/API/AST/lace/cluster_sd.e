@@ -100,11 +100,6 @@ feature -- Lace recompilation
 				end;
 					-- Verbose
 				io.error.putstring ("Pass 0 on cluster ");
---				if cluster_name = Void then
---					io.error.putstring (path);
---				else
---					io.error.putstring (cluster_name);
---				end;
 				io.error.putstring (cluster_name);
 				io.error.new_line;
 	

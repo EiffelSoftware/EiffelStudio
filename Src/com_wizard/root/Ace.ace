@@ -2,145 +2,144 @@ system
 	"com_wizard"
 
 root
-	application: make
+	WIZARD_APPLICATION: make
 
 default
+	assertion (check)
 	assertion (require)
+	assertion (ensure)
 	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("refactor_fixme")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
 	debug (no)
 	line_generation (no)
 	profile (no)
 	trace (no)
 	check_vape (yes)
-	console_application (no)
+	console_application (yes)
 	syntax_warning (no)
 	address_expression (no)
 	array_optimization (no)
 	dead_code_removal (yes)
 	dynamic_runtime (no)
-	exception_trace (no)
+	exception_trace (yes)
 	inlining (no)
-	multithreaded (no)
+	multithreaded (yes)
+	working_directory ("E:\com_wizard\project\new_gui")
 
 
--- This Ace file requires the following environment variables:
--- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL_SRC\library)
+-------------------------------------------------
+-- This ace file has been generated for you by --
+-- EiffelBuild.                                --
+-------------------------------------------------
+-- The application
 -- EiffelBase
 -- WEL
--- EiffelCOM
--- EiffelTime
+-- EiffelVision2
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
-
-
-	all e2_idl:		"$EIFFEL_SRC\com_wizard\eiffeltoidl"
-
-
-	descriptors:		"$EIFFEL_SRC\com_wizard\project\descriptors"
-		default
-			assertion (no)
-			assertion (check)
-			assertion (require)
-			assertion (ensure)
-			assertion (loop)
-			assertion (invariant)
-		end
-
-	visitors:		"$EIFFEL_SRC\com_wizard\project\visitors"
-		default
-			assertion (no)
-			assertion (check)
-			assertion (require)
-			assertion (ensure)
-			assertion (loop)
-			assertion (invariant)
-		end
-
-	gui:		"$EIFFEL_SRC\com_wizard\project\gui"
-
-
-	support:		"$EIFFEL_SRC\com_wizard\project\support"
-		default
-			assertion (no)
-			assertion (check)
-			assertion (require)
-			assertion (ensure)
-			assertion (loop)
-			assertion (invariant)
-		end
-
-	wizard_library_constants:		"$EIFFEL_SRC\com_wizard\project\library\constants"
-
-
-	wizard_library_interfaces:		"$EIFFEL_SRC\com_wizard\project\library\interfaces"
-		visible
-			ecom_type_info
-				end
-		end
-
-	wizard_library_structures:		"$EIFFEL_SRC\com_wizard\project\library\structures"
-		option
-			assertion (require): ecom_safe_array_bound
-		visible
-			ecom_type_lib_find_name_result
-				end
-			ecom_safe_array_bound
-				export
-					"make_by_pointer"
-				end
-			ecom_cust_data_item
-				end
-			ecom_dll_entry
-				end
-			ecom_documentation
-				end
+	root_cluster:			"$EIFFEL_SRC\com_wizard\root"
+	
+	all new_gui:		"$EIFFEL_SRC\com_wizard\project\new_gui"
+		exclude
+			"EIFGEN"; "resources"; "Diagrams"; "CVS"; 
 		end
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "CVS"; 
 		visible
-			array
+			ARRAY
 				end
-			string
+			STRING
 				end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
-
-
-	ecom_constants:		"$EIFFEL_SRC\library\com\Constants"
-
-
-	ecom_interfaces:		"$EIFFEL_SRC\library\com\Interfaces"
-
-
-	ecom_support:		"$EIFFEL_SRC\library\com\Support"
-
-
-	ecom_structures:		"$EIFFEL_SRC\library\com\Structures"
-		visible
-			ecom_currency
-				end
-			ecom_decimal
-				end
-		end
-
-	all time:		"$EIFFEL_SRC\library\time"
 		exclude
-			"french"; "german"; 
+			"CVS"; 
+		default
+			assertion (no)
+			assertion (require)
 		end
+
+	all vision2:		"$EIFFEL_SRC\library\vision2"
+		exclude
+			"gtk"; "gtk2"; "CVS"; 
+		default
+			assertion (no)
+		end
+
+	all wizard:		"E:\com_wizard\project"
+		exclude
+			"new_gui"; "CVS"; 
+		visible
+			ECOM_TYPE_LIB_FIND_NAME_RESULT
+				end
+			ECOM_SAFE_ARRAY_BOUND
+				export
+					"make_by_pointer"
+				end
+			ECOM_CUST_DATA_ITEM
+				end
+			ECOM_DLL_ENTRY
+				end
+			ECOM_DOCUMENTATION
+				end
+		end
+
+	all eiffel_to_idl:		"E:\com_wizard\eiffeltoidl"
+		exclude
+			"CVS"; 
+		end
+
+	all com:		"$EIFFEL_SRC\library\com"
+		exclude
+			"CVS"; 
+		visible
+			ECOM_CURRENCY
+				end
+			ECOM_DECIMAL
+				end
+		end
+
+	library date_time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"german"; "french"; "CVS"; 
+		end
+
+	library thread:		"$EIFFEL_SRC\library\thread"
+
+	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension"
+		default
+			assertion (no)
+			assertion (require)
+		end
+
+	vs_setup:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\main"
+
+	library eclop:		"$ECLOP\eclop"
 
 external
 
 	include_path:
-		"$EIFFEL_SRC\library\wel\spec\windows\include",
-		"$EIFFEL_SRC\library\com\spec\windows\include"
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include"
 
 	object:
-		"$EIFFEL_SRC\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
-		"$EIFFEL_SRC\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib"
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\mtcom_runtime.lib",
+		"uxtheme.lib"
 
 end

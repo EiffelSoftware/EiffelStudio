@@ -1508,6 +1508,11 @@ feature -- Externals
 			"C (GtkEntry*, gint) | <gtk/gtk.h>"
 		end
 
+	frozen gtk_entry_set_width_chars (a_entry: POINTER; a_width: INTEGER) is
+		external
+			"C (GtkEntry*, gint) | <gtk/gtk.h>"
+		end
+
 	frozen gtk_fixed_get_type: INTEGER is
 		external
 			"C (): GtkType | <gtk/gtk.h>"

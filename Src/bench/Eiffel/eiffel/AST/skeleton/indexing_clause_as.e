@@ -72,33 +72,20 @@ feature -- Access
 
 	custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
 			-- Expression representing a custom attribute
-		local
-			i: INDEX_AS
-			ca: CUSTOM_ATTRIBUTE_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := find_index_as (Attribute_header)
-			
-			if i /= Void then
-					-- Do not care if more than one element has been added
-					-- to current INDEX_AS list, we take the first one and
-					-- forget about the remaining ones.
-				list := i.index_list
-				if not list.is_empty then
-					from
-						list.start
-						create Result.make (list.count)
-					until
-						list.after
-					loop
-						ca ?= list.item
-						if ca /= Void then
-							Result.extend (ca.creation_expr)
-						end
-						list.forth
-					end
-				end
-			end			
+			Result := internal_custom_attribute (Attribute_header)
+		end
+
+	class_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Expression representing a custom attribute
+		do
+			Result := internal_custom_attribute (Class_attribute_header)
+		end
+
+	interface_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Expression representing a custom attribute
+		do
+			Result := internal_custom_attribute (Interface_attribute_header)
 		end
 
 	has_global_once: BOOLEAN is
@@ -175,26 +162,65 @@ feature -- Element change
 feature -- Constants
 
 	External_header: STRING is "external_name"
-			-- Index name of entity holding current indexing clause.
+			-- Index name which holds name as seen by other languages.
 
 	Attribute_header: STRING is "attribute"
-			-- Index name of entity holding current indexing clause.
+			-- Index name which holds custom attributes applied to both implementation
+			-- and interface of current class.
+
+	Class_attribute_header: STRING is "class_attribute"
+			-- Index name which holds custom attributes applied to associated class only.
+
+	Interface_attribute_header: STRING is "interface_attribute"
+			-- Index name which holds custom attributes applied to associated interface only.
 			
 	Description_header: STRING is "description"
-			-- Index name of entity holding current indexing clause.
+			-- Index name which holds class/feature desciption.
 
 	Assembly_header: STRING is "assembly"
-			-- Index name of entity holding current indexing clause.
+			-- Index name which holds name of assembly.
 
 	Once_status_header: STRING is "once_status"
-			-- Index name of entity holding current indexing clause.
+			-- Index name under which globalness of a once is specified.
 
 	Enum_type_header: STRING is "enum_type"
+			-- Type of enum elements.
 	
 	global_value: STRING is "global"
 			-- Value name of `Once_status_header'.
 
 feature {NONE} -- Implementation
+
+	internal_custom_attribute (tag: STRING): EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Expression representing a custom attribute
+		local
+			i: INDEX_AS
+			ca: CUSTOM_ATTRIBUTE_AS
+			list: EIFFEL_LIST [ATOMIC_AS]
+		do
+			i := find_index_as (tag)
+			
+			if i /= Void then
+					-- Do not care if more than one element has been added
+					-- to current INDEX_AS list, we take the first one and
+					-- forget about the remaining ones.
+				list := i.index_list
+				if not list.is_empty then
+					from
+						list.start
+						create Result.make (list.count)
+					until
+						list.after
+					loop
+						ca ?= list.item
+						if ca /= Void then
+							Result.extend (ca.creation_expr)
+						end
+						list.forth
+					end
+				end
+			end			
+		end
 
 	lookup_table: HASH_TABLE [INDEX_AS, STRING]
 			-- Fast lookup table for indexing clauses

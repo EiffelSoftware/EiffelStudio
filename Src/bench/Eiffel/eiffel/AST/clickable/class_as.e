@@ -308,6 +308,22 @@ feature -- Access
 			end
 		end
 
+	class_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Custom attribute of current class if any.
+		do
+			if top_indexes /= Void then
+				Result := top_indexes.class_custom_attribute
+			end
+		end
+
+	interface_custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Custom attribute of current class if any.
+		do
+			if top_indexes /= Void then
+				Result := top_indexes.interface_custom_attribute
+			end
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

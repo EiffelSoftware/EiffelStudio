@@ -42,6 +42,13 @@ feature -- Access
 			-- Evaluation of once function
 		do
 		end
+		
+	dotnet_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
+			-- 
+		do
+			
+		end
+		
 
 	dotnet_evaluate_function (addr: STRING; dvalue: DUMP_VALUE; f: FEATURE_I; ctype: CLASS_TYPE; a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 		require

@@ -37,9 +37,9 @@ feature {NONE} -- Initialization
 			
 			set_font_attributes
 				(
-					app_implementation.default_font_name_internal,
+					app_implementation.default_font_name,
 					feature {EV_FONT_CONSTANTS}.family_sans,
-					app_implementation.default_font_size_internal,
+					app_implementation.default_font_point_height_internal,
 					app_implementation.default_font_weight_internal,
 					feature {EV_FONT_CONSTANTS}.shape_regular,
 					0
@@ -54,7 +54,7 @@ feature -- Access
 		do
 			create Result
 			Result.set_family (family)
-			Result.set_height (height)
+			Result.set_height_in_points (height_in_points)
 			Result.set_weight (weight)
 			Result.set_shape (shape)
 			Result.preferred_families.extend (name)
@@ -106,20 +106,19 @@ feature -- Status setting
 				(
 					a_font.name,
 					a_font.family,
-					a_font.height,
+					a_font.height_in_points,
 					a_font.weight,
 					a_font.shape,
 					0
 				)
 		end
 
-	set_font_attributes (a_name: STRING; a_family, a_height, a_weight, a_shape, a_charset: INTEGER) is
+	set_font_attributes (a_name: STRING; a_family, a_point_height, a_weight, a_shape, a_charset: INTEGER) is
 			-- Set internal font attributes
 		do
 			name := a_name
 			family := a_family
-			height := a_height
-			height_in_points := app_implementation.point_value_from_pixel_value (height)
+			height_in_points := a_point_height
 			weight := a_weight
 			shape := a_shape
 			char_set := a_charset
@@ -149,6 +148,7 @@ feature -- Status setting
 			bcolor := bcolor + a_green
 			bcolor := bcolor |<< 8
 			bcolor := bcolor + a_red
+			bcolor_set := True
 		end
 
 	set_background_color (a_color: EV_COLOR) is
@@ -211,11 +211,11 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			end
 
 			if applicable_attributes.font_height then
-				a_text_tag_name := "fh" + height.out
+				a_text_tag_name := "fh" + height_in_points.out
 				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
 					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, size_string.item, height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_text_tag, size_string.item, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
 				end
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, a_text_tag, a_start_iter, a_end_iter)
@@ -363,7 +363,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (Result, family_string.item, propvalue.item)					
 				end
 				if applicable_attributes.font_height then
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, size_string.item, height_in_points * feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)	
 				end
 				if applicable_attributes.font_shape then
 					if shape = feature {EV_FONT_CONSTANTS}.shape_italic then
@@ -519,8 +519,11 @@ feature {NONE} -- Implementation
 	family: INTEGER
 			-- Family used by `Current'.
 		
-	height: INTEGER
+	height: INTEGER is
 			--  Height of `Current' in screen pixels.
+		do
+			Result := app_implementation.pixel_value_from_point_value (height_in_points)
+		end
 
 	height_in_points: INTEGER
 			-- Height of `Current' in points.

@@ -48,8 +48,6 @@ feature -- Initialization
 
 			create left_list
 			v1.extend (left_list)
---			left_list.select_actions.extend (~left_select)
-			left_list.select_actions.extend (~fill_right_list (?))
 
 			create right_list
 			right_list.set_column_titles (<<"Short Name","Litteral Value">>)
@@ -302,8 +300,9 @@ feature -- Fill Lists
 		do
 			create it
 			it.set_text (folder.name)
---			it.set_tooltip (folder.description)
+			it.set_tooltip (folder.description)
 			it.set_data (folder)
+			it.select_actions.extend (~fill_right_list (it))
 			l := folder.child_list
 			from
 				l.start

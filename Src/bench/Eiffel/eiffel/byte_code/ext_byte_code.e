@@ -8,16 +8,16 @@ inherit
 		rename
 			generate as old_generate
 		redefine
-			generate_return_exp,generate_arguments, generate_compound,
-			generate_arg_declarations, is_external, pre_inlined_code,
+			generate_return_exp, generate_compound,
+			generate_current, is_external, pre_inlined_code,
 			inlined_byte_code
 		end;
 
 	STD_BYTE_CODE
 		redefine
 			generate,
-			generate_return_exp,generate_arguments, generate_compound,
-			generate_arg_declarations, is_external, pre_inlined_code,
+			generate_return_exp,generate_compound,
+			generate_current, is_external, pre_inlined_code,
 			inlined_byte_code
 		select
 			generate
@@ -88,51 +88,7 @@ feature -- Byte code generation
 			end;
 		end;
 
-	generate_arguments is
-			-- Generate C arguments, if any, in the definition.
-		local
-			i, count: INTEGER;
-		do
-			if arguments /= Void then
-				from
-					i := arguments.lower;
-					count := arguments.count;
-				until
-					i > count
-				loop
-					generated_file.putstring ("arg");
-					generated_file.putint (i);
-					i := i + 1;
-					if i <= count then
-						generated_file.putstring (", ");
-					end;
-				end;
-			end;
-		end;
-
-	generate_arg_declarations is
-			-- Declare C parameters, if any, as part of the definition.
-		local
-			arg: TYPE_I;
-			i, count: INTEGER;
-		do
-			if arguments /= Void then
-				from
-					i := arguments.lower;
-					count := arguments.count;
-				until
-					i > count
-				loop
-					arg := real_type (arguments.item (i));
-					arg.c_type.generate (generated_file);
-					generated_file.putstring ("arg");
-					generated_file.putint (i);
-					generated_file.putchar (';');
-					generated_file.new_line;
-					i := i + 1;
-				end;
-			end;
-		end;
+	generate_current: BOOLEAN is False
 
 feature -- Inlining
 

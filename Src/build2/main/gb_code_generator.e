@@ -86,9 +86,7 @@ feature {NONE} -- Implementation
 			-- Note that For Visual Studio, we need to
 			-- generate a debug and a release ace file.
 		local
-			platform_ace_file_name: FILE_NAME
 			debug_ace_file, release_ace_file: FILE_NAME
-			project_location: FILE_NAME
 		do
 			set_progress (0.1)
 			if system_status.is_wizard_system then
@@ -641,7 +639,6 @@ feature {NONE} -- Implementation
 			-- Using `document_info' which was generated in `prepass_xml',
 			-- generate source code corresponding to selected events.
 		local
-			gb_ev_any: GB_EV_ANY
 			generated_info: GB_GENERATED_INFO
 			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO

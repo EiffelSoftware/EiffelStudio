@@ -38,9 +38,6 @@ feature {NONE} -- Initialization
 
 	make_default is
 			-- Create current in default state.
-		local
-			horizontal_box: EV_HORIZONTAL_BOX
-			padding_cell: EV_CELL
 		do
 			default_create
 			
@@ -79,9 +76,6 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 		
 	show_completion is
 			-- Display to user that completion has finished.
-		local
-			temp_label: EV_LABEL
-			temp_file_name: FILE_NAME
 		do
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			generation_progress.set_proportion (1)

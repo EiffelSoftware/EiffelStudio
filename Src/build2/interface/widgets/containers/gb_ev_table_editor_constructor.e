@@ -135,7 +135,6 @@ feature {NONE} -- Implementation
 			table_content: LINEAR [EV_WIDGET]
 			list_item: EV_LIST_ITEM
 			layout_rows_entry, layout_columns_entry: GB_INTEGER_INPUT_FIELD
-			object: GB_OBJECT
 		do
 				-- Reset the selected item.
 			selected_item := Void

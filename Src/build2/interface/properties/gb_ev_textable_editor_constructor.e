@@ -61,9 +61,6 @@ feature {NONE} -- Implementation
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
-		local
-			text_field: EV_TEXT_FIELD
-			text: EV_TEXT
 		do
 			if text_entry /= Void then
 				text_entry.change_actions.block

@@ -141,7 +141,6 @@ feature -- Basic operations
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
-				temp_file_name, retrieved_file_name: FILE_NAME
 			do
 					-- Reset this value.
 				location_update_cancelled := False

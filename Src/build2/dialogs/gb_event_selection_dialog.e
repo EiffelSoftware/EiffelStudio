@@ -663,7 +663,6 @@ feature {NONE} -- Implementation
 		local
 			a_box: EV_VERTICAL_BOX
 			temp_widget: EV_WIDGET
-			cell: EV_CELL
 		do
 			a_box := main_vertical_box
 			create_main_box

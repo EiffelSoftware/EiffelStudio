@@ -155,7 +155,6 @@ feature {NONE} -- Implementation
 			-- actions for GB_OBJECT.
 		local
 			object: GB_OBJECT
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			shared_tools: GB_SHARED_TOOLS
 			shared_handler: GB_SHARED_OBJECT_HANDLER
 		do

@@ -10,7 +10,7 @@
 	External C routine Eiffel-Yacc interface
 */
 
-#include "err_msg.h"
+#include "eif_err_msg.h"
 #include "yacc.h"
 
 /*

@@ -27,8 +27,8 @@ Ftp server: ftp.eiffel.com
 
 #include <ctype.h>
 
-#include "rtlimits.h" 	
-#include "macros.h"
+#include "eif_rtlimits.h" 	
+#include "eif_macros.h"
 #include "parser.h"
 
 #define MAX_CHAR	256			/* Ascii limit */

@@ -10,11 +10,11 @@
 	Hash table source file.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "tools.h"
-#include "malloc.h"
-#include "hash.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_tools.h"
+#include "eif_malloc.h"
+#include "eif_hash.h"
 
 /* 
  * Declarations

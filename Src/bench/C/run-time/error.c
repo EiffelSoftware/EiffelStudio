@@ -10,7 +10,7 @@
 	System error handling.
 */
 
-#include "config.h"
+#include "eif_config.h"
 
 #ifdef I_STRING
 #include <string.h>			/* Try to find strerror() there */
@@ -18,9 +18,9 @@
 #include <strings.h>
 #endif
 
-#include "portable.h"
-#include "except.h"
-#include "error.h"
+#include "eif_portable.h"
+#include "eif_except.h"
+#include "eif_error.h"
 
 
 rt_public char *error_tag(int code)

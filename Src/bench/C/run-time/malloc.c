@@ -16,7 +16,7 @@
 /*#define MEMCHK /**/
 /*#define MEM_STAT /**/
 
-#include "config.h"
+#include "eif_config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
 
@@ -27,17 +27,17 @@
 #include <stdio.h>			/* For eif_trace_types() */
 #include <signal.h>
 
-#include "eiffel.h"			/* For bcopy/memcpy */
-#include "timer.h"			/* For getcputime */
-#include "malloc.h"
-#include "garcol.h"			/* For Eiffel flags and function declarations */
-#include "except.h"			/* For exception raising */
-#include "plug.h"
-#include "macros.h"			/* For macro LNGPAD */
-#include "local.h"			/* For epop() */
-#include "sig.h"
+#include "eif_eiffel.h"			/* For bcopy/memcpy */
+#include "eif_timer.h"			/* For getcputime */
+#include "eif_malloc.h"
+#include "eif_garcol.h"			/* For Eiffel flags and function declarations */
+#include "eif_except.h"			/* For exception raising */
+#include "eif_plug.h"
+#include "eif_macros.h"			/* For macro LNGPAD */
+#include "eif_local.h"			/* For epop() */
+#include "eif_sig.h"
 #ifndef TEST
-#include "main.h"
+#include "eif_main.h"
 #endif
 
 
@@ -3893,7 +3893,7 @@ rt_public struct stack hec_stack = {			/* Indirection table "hector" */
 	(char **) 0,			/* st_end */
 };
 
-#include "sig.h"
+#include "eif_sig.h"
 struct s_stack sig_stk;		/* Initialized by initsig() */
 int esigblk = 0;			/* By default, signals are not blocked */
 

@@ -61,7 +61,7 @@ SED = $sed
 
 SOURCES =  compress.c console.c option.c \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
 OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o option.o update.o wbench.o main.o
-LSCRIPTS =  size.h
+LSCRIPTS =  eif_size.h
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -337,13 +337,13 @@ EOBJ = \
 	update.o \
 	wbench.o 
 
-all:: size.h
+all:: eif_size.h
 
 local_realclean::
-	$(RM) size.h
+	$(RM) eif_size.h
 
-size.h: size_h.SH
-	/bin/sh size_h.SH
+eif_size.h: eif_size_h.SH
+	/bin/sh eif_size_h.SH
 
 install:: $(SCRIPTS) $(LSCRIPTS)
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \
@@ -358,10 +358,10 @@ deinstall::
 	done
 
 install.man:: size_h.man
-	$(INSTALL) -c -m 444 size_h.man $(MANSRC)/size.h.$(L)
+	$(INSTALL) -c -m 444 size_h.man $(MANSRC)/eif_size.h.$(L)
 
 deinstall.man::
-	$(RM) $(MANSRC)/size.h.$(L)
+	$(RM) $(MANSRC)/eif_size.h.$(L)
 
 all:: libruntime.a
 
@@ -403,22 +403,22 @@ x2c: x2c.o
 	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
 	$(CC) -o $@ x2c.o $(JLDFLAGS) $(LIBS)
 
-all:: config.h portable.h confmagic.h
+all:: eif_config.h eif_portable.h eif_confmagic.h
 
 local_realclean::
-	$(RM) config.h portable.h confmagic.h
+	$(RM) eif_config.h eif_portable.h eif_confmagic.h
 
-config.h: $(TOP)/config.h
+eif_config.h: $(TOP)/eif_config.h
 	$(RM) $@
-	$(LN) $(TOP)/config.h .
+	$(LN) $(TOP)/eif_config.h .
 
-confmagic.h: $(TOP)/confmagic.h
+eif_confmagic.h: $(TOP)/eif_confmagic.h
 	$(RM) $@
-	$(LN) $(TOP)/confmagic.h .
+	$(LN) $(TOP)/eif_confmagic.h .
 
-portable.h: $(TOP)/portable.h
+eif_portable.h: $(TOP)/eif_portable.h
 	$(RM) $@
-	$(LN) $(TOP)/portable.h .
+	$(LN) $(TOP)/eif_portable.h .
 
 depend:: ../mkdep
 
@@ -948,7 +948,7 @@ local_realclean:: local_clean
 	$(RM) -r UU
 
 local_clobber:: local_realclean
-	$(RM) config.sh config.h
+	$(RM) config.sh eif_config.h
 	$(RM) -r .config
 	$(RM) Makefile
 

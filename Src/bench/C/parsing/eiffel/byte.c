@@ -1,6 +1,6 @@
-#include "macros.h"
-#include "except.h"
-#include "bits.h"
+#include "eif_macros.h"
+#include "eif_except.h"
+#include "eif_bits.h"
 #include <stdio.h>
 
 long ca_ssiz(void);			/* Short integer size */

@@ -14,11 +14,11 @@ echo        win31   - build a Windows 3.1 run-time
 goto end
 :win31
 echo Not fully implemented yet
-copy config.win config.h
+copy config.win eif_config.h
 copy confmagi.h confmagc.h
-del run-time\config.h
+del run-time\eif_config.h
 rem We may be run on a 32 bit machine
-copy confmagic.h confmagc.h
+copy eif_confmagic.h confmagc.h
 cd run-time
 copy makefile.win makefile
 wmake
@@ -26,22 +26,22 @@ goto end
 :win32
 if .%2. == .. goto usage
 if NOT .%2. == .b. goto msoft
-copy config.w32b config.h
+copy config.w32b eif_config.h
 copy config.bsh config.sh
 goto process
 :msoft
 if NOT .%2. == .m. goto symantec
-copy config.w32m config.h
+copy config.w32m eif_config.h
 copy config.msh config.sh
 goto process
 :symantec
 if NOT .%2. == .s. goto watcom
-copy config.w32s config.h
+copy config.w32s eif_config.h
 copy config.ssh config.sh
 goto process
 :watcom
 if NOT .%2. == .w. goto usage
-copy config.w32w config.h
+copy config.w32w eif_config.h
 copy config.wsh config.sh
 :process
 type config.sh
@@ -57,12 +57,12 @@ pause
 echo @echo off > make.w32
 echo $make>> make.w32
 rt-converter.exe make.w32 make.w32
-del run-time\config.h
+del run-time\eif_config.h
 rem
 rem Copy the config 
 rem
-copy config.h run-time
-copy portable.h run-time
+copy eif_config.h run-time
+copy eif_portable.h run-time
 copy config.sh console
 copy make.w32 console\make.bat
 copy config.sh desc
@@ -87,8 +87,8 @@ copy config.sh idrs
 copy make.w32 idrs\make.bat
 copy config.sh run-time
 copy make.w32 run-time\make.bat
-copy run-time\size.win run-time\size.h
-copy run-time\size.win size.h
+copy run-time\size.win run-time\eif_size.h
+copy run-time\size.win eif_size.h
 rem
 rem Call the converter tranforming the makefile-win.sh to makefile
 rem
@@ -181,15 +181,15 @@ del parsing\lace\lace_y.h
 del parsing\eiffel\y_tab.*
 del parsing\eiffel\parser.c
 del parsing\eiffel\parser.h
-del run-time\config.h
-del run-time\size.h
+del run-time\eif_config.h
+del run-time\eif_size.h
 del run-time\makefile
-del run-time\portable.h
+del run-time\eif_portable.h
 del confmagc.h
-del config.h
+del eif_config.h
 del make.w32
 del make.bat
-del size.h
+del eif_size.h
 del *.$$$
 :end
 echo Make completed

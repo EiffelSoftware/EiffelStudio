@@ -1,6 +1,6 @@
 #include "eif_io.h"
 #include "ewb.h"
-#include "macros.h"
+#include "eif_macros.h"
 
 #ifdef EIF_WIN32
 #include "stream.h"

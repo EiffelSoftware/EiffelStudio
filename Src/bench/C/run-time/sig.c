@@ -14,15 +14,15 @@
 */
 
 #include <signal.h>
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-#include "portable.h"
-#include "except.h"
-#include "sig.h"
+#include "eif_portable.h"
+#include "eif_except.h"
+#include "eif_sig.h"
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
 

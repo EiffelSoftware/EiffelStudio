@@ -10,7 +10,7 @@
 	Externals for class BOOL_STRING.
 */
 
-#include "config.h"
+#include "eif_config.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -18,8 +18,8 @@
 #include <strings.h>
 #endif
 
-#include "portable.h"
-#include "boolstr.h"
+#include "eif_portable.h"
+#include "eif_boolstr.h"
 
 rt_public char *bl_str_set(char *a1, int s, int n)
          

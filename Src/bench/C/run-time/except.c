@@ -14,30 +14,30 @@
 */
 
 #include <signal.h>
-#include "config.h"
+#include "eif_config.h"
 #include <stdio.h>
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-#include "except.h"
-#include "local.h"
-#include "urgent.h"
-#include "sig.h"				/* For signal description */
-#include "macros.h"
-#include "debug.h"
-#include "err_msg.h"
-#include "main.h"
-#include "garcol.h"
-#include "error.h"
+#include "eif_except.h"
+#include "eif_local.h"
+#include "eif_urgent.h"
+#include "eif_sig.h"				/* For signal description */
+#include "eif_macros.h"
+#include "eif_debug.h"
+#include "eif_err_msg.h"
+#include "eif_main.h"
+#include "eif_garcol.h"
+#include "eif_error.h"
 
 #ifdef EIF_WIN32
-#include "econsole.h"
+#include "eif_econsole.h"
 #endif
 
 #ifdef CONCURRENT_EIFFEL
-#include "curextern.h"
+#include "eif_curextern.h"
 #endif
 
 #ifdef WORKBENCH
@@ -2764,7 +2764,7 @@ rt_private char eedefined(long ex)
 rt_private struct stack hec_stack;
 rt_private char *(**ecreate)();
 
-#include "macros.h"
+#include "eif_macros.h"
 
 rt_private int cc_for_speed = 1;	/* Optimized for speed */
 

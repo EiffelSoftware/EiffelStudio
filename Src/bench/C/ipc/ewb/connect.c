@@ -10,9 +10,9 @@
 	Enables the workbench to connect/disconnect with ISE daemon.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "err_msg.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_err_msg.h"
 #include "shared.h"
 #include <sys/types.h>
 

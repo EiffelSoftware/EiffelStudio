@@ -5,8 +5,8 @@
 
 */
 #define implement
-#include "config.h"
-#include "path_name.h"
+#include "eif_config.h"
+#include "eif_path_name.h"
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -24,15 +24,24 @@
 #include <strings.h>
 #endif
 
-#include "macros.h"
-#include "plug.h"
-#include "eiffel.h"			/* For Windows and OS2 */
+#include "eif_macros.h"
+#include "eif_plug.h"
+#include "eif_eiffel.h"			/* For Windows and OS2 */
 
 #if defined EIF_WINDOWS || defined EIF_OS2
 rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER);
 rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_POINTER);
 rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER);
 #endif
+
+/* FIXME: Manu: 09/17/97 There is a need to review all the *_valid function both for UNIX and
+ * Windows since there are not working at all
+ * For example C:\Dir\\Toto is not a valid directory name but the DOS console does not complain
+ * So I don't have the time to do it now, but someone need to do the job soon
+ * 
+ * Solution: all the *_valid function are returning the UNIX meaning
+ *
+ */
 
 /* Validity */
 
@@ -44,6 +53,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 	int i, len, last_bslash;
 	EIF_BOOLEAN result;
 
+	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 	len = strlen (p);
 	s = (char *) malloc (len + 1);
 	strcpy (s, p);
@@ -106,18 +116,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 
 rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER p)
 {
-#ifdef __WINDOWS_386__
-	int drive;
-		/* Test to see if `p' is a valid volume name */
-	if (p)
-		if ((strlen (p) == 2) && (*(p+1) == ':'))
-			{
-			drive = toupper(* (char *) p) - 'A';
-			if ((drive >= 0) && (drive <= 26))
-				return (EIF_BOOLEAN) (GetDriveType (drive) != 0);
-			}			
-	return EIF_FALSE;
-#elif defined (EIF_WIN32)
+#ifdef EIF_WIN32
 	char rootpath[4];
 		/* Test to see if `p' is a valid volume name */
 	if (p)
@@ -142,50 +141,21 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER p)
 rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
-#ifdef EIF_WIN_31
-#define MAX_FILE_LEN 12
-#else
 #define MAX_FILE_LEN 256
-#endif
 
 		/* Test to see if `p' is a valid file name (no directory part) */
 	int len;
-	char * s, valid [] = "_^$~!#%&-{}@'`()";
+	char *s, valid [] = "_^$~!#%&-{}@'`()";
+
+	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 
 	if ((p == NULL) || ((len = strlen (p)) == 0) || (len > MAX_FILE_LEN) )
 		return EIF_FALSE;
 
-#ifdef EIF_WIN_31
-	{
-		int dot, i;
-		dot = 0;
-		for (i = 0, s = p; i < len; i++, s++)
-			if (*s == '.') {
-				if ((i > 0) && (len - i) <= 4)
-					if (dot == 0)
-						dot = i;
-					else
-						return EIF_FALSE;
-				else
-					return EIF_FALSE;
-			} else
-				if (!isprint (*s))
-					return EIF_FALSE;
-				else
-					if ( (!isalnum (*s)) && (strchr (valid, *s) == 0) )
-						return EIF_FALSE;
-
-		if ((dot == 0) && (len > 8))
-			return EIF_FALSE;
-#else
 	for (s = p; *s; s++)
-		if ((*s == '\\') ||
-			(*s == '*') ||
-			(*s == '?') ||
-			(*s == ':')) 
+		if ((*s == '\\') || (*s == '*') || (*s == '?') || (*s == ':')) 
 				return EIF_FALSE;
-#endif
-				
+
 	return EIF_TRUE;
 #elif defined (__VMS)
 	implement
@@ -197,15 +167,11 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 
 rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_POINTER p)
 {
+	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 		/* Test to see if `p' is a valid extension */
 #if defined EIF_WINDOWS || defined EIF_OS2
-#ifdef EIF_WIN_31
-	if ((p == NULL) || (strlen(p) > 3) || (strchr (p, '.') != 0) )
-		return EIF_FALSE;
-#else
 	if ((p == NULL) || (strlen (p) > 254))
 		return EIF_FALSE;
-#endif
 
 	return eif_is_file_name_valid (p);
 #elif defined (__VMS)
@@ -222,6 +188,8 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER p)
 #if defined EIF_WINDOWS || defined EIF_OS2
 	char *s, *c;
 	int i, len;
+
+	return EIF_TRUE;	/* FIXME: Manu: 09/17/97 Look at the beginning */
 
 	len = strlen (p);
 	s = (char *) malloc (len + 1);

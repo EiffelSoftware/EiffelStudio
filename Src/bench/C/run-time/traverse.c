@@ -12,28 +12,28 @@
 */
 
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>				/* For bzero() */
 #else
 #include <strings.h>
 #endif
 
-#include "garcol.h"
-#include "malloc.h"
-#include "macros.h"
-#include "except.h"
+#include "eif_garcol.h"
+#include "eif_malloc.h"
+#include "eif_macros.h"
+#include "eif_except.h"
 
 #if !defined CUSTOM || defined NEED_STORE_H
-#include "store.h"
+#include "eif_store.h"
 #endif
 #if !defined CUSTOM || defined NEED_HASH_H
-#include "hashin.h"
+#include "eif_hashin.h"
 #endif
 
-#include "hector.h"
-#include "traverse.h"
-#include "memory.h"
+#include "eif_hector.h"
+#include "eif_traverse.h"
+#include "eif_memory.h"
 
 /*
  * Declarations

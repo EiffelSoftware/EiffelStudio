@@ -1,19 +1,19 @@
-#include "config.h"
-#include "macros.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "struct.h"
-#include "hashin.h"
-#include "except.h"
-#include "wbench.h"
-#include "interp.h"
-#include "plug.h"
-#include "project.h"			/* for tabinit() */
+#include "eif_config.h"
+#include "eif_macros.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_struct.h"
+#include "eif_hashin.h"
+#include "eif_except.h"
+#include "eif_wbench.h"
+#include "eif_interp.h"
+#include "eif_plug.h"
+#include "eif_project.h"			/* for tabinit() */
 
-#include "cecil.h"
-#include "hector.h"
-#include "tools.h"
-#include "eiffel.h"			  
+#include "eif_cecil.h"
+#include "eif_hector.h"
+#include "eif_tools.h"
+#include "eif_eiffel.h"			  
 
 /* this is just a sample case_procerss procedure which is used for current 
  * testing. Concurrent Eiffel Compiler should generate codes for the 

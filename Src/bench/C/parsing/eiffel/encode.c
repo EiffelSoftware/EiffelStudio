@@ -10,7 +10,7 @@
 	Encoding of C generated functions.
 */
 
-#include "macros.h" 				/* Access to Eiffel objects. */
+#include "eif_macros.h" 				/* Access to Eiffel objects. */
 
 #define BASE sizeof(encode_tbl)
 #define ENCODE_LENGTH 7

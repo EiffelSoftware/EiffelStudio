@@ -13,7 +13,7 @@
 #ifndef _timehdr_h_
 #define _timehdr_h_
 
-#include "config.h"
+#include "eif_config.h"
 
 #ifdef I_TIME
 # include <time.h>

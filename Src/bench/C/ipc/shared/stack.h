@@ -13,8 +13,8 @@
 #ifndef _stack_h_
 #define _stack_h_
 
-#include "except.h"
-#include "interp.h"
+#include "eif_except.h"
+#include "eif_interp.h"
 
 #ifdef EIF_WIN32
 #include "stream.h"

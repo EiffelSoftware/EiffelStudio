@@ -16,10 +16,10 @@
 	allocated even if the package is optimized for memory.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "urgent.h"
-#include "malloc.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_urgent.h"
+#include "eif_malloc.h"
 
 /* Urgent memory chunks are held in an array. The urgent_index variable gives
  * the index in urgent_mem[] which holds the address of a free chunk of memory.

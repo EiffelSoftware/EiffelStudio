@@ -13,8 +13,8 @@
 	it is not the signal's fault.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <stdio.h>
 #include <errno.h>
 #include <signal.h>
@@ -30,19 +30,16 @@
 extern unsigned TIMEOUT;		/* Time out on reads */
 
 #ifndef EIF_WIN32
-
 #ifdef ETIMEDOUT
 #define NET_TIMEOUT ETIMEDOUT	/* Try to return a meaningful error code */
 #else
 #define NET_TIMEOUT EPIPE		/* That will do if ETIMEDOUT does not exist */
 #endif
-
 #ifdef ECONNRESET
 #define NET_BROKEN ECONNRESET	/* Connection reset by peer */
 #else
 #define NET_BROKEN EPIPE		/* Default error if no ECONNRESET */
 #endif
-
 #endif
 
 #ifndef lint
@@ -85,8 +82,8 @@ rt_public int net_recv(int cs, char *buf, int size)
 		add_log(2, "in net_recv");
 #endif
 	if (0 != setjmp(env)) {
-		KillTimer (NULL, timer);	/* Stop alarm clock */
-		errno = EPIPE;				/* Signal timeout on read */
+		KillTimer (NULL, timer);        /* Stop alarm clock */
+		errno = EPIPE;                          /* Signal timeout on read */
 		return -1;
 	}
 
@@ -96,7 +93,7 @@ rt_public int net_recv(int cs, char *buf, int size)
 		KillTimer (NULL, timer);
 
 		if (fSuccess)
-			if (length == 0)		/* connection closed */
+			if (length == 0)        /* connection closed */
 				goto closed;
 			else
 				;
@@ -127,7 +124,6 @@ rt_public int net_recv(int cs, char *buf, int size)
 #else
 				;
 #endif
-
 	return 0;
 
 closed:

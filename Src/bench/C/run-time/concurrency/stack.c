@@ -1,5 +1,5 @@
-#include "net.h"
-#include "curextern.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
 
 void extend_string(MY_STRING *my_s, char *str) {
 /* the extended `str' must be a STRING terminated with '\0'. */

@@ -13,8 +13,8 @@
 		A #ifdef removed as the nature of the select statement is predetermined.
  */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 #include "proto.h"
 #include "select.h"

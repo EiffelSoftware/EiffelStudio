@@ -10,21 +10,21 @@
 	Debugging control.
 */
 
-#include "confmagic.h"		/* %%ss added for bcopy, bzero */
-#include "config.h"
-#include "portable.h"
-#include "macros.h"
-#include "debug.h"
-#include "hashin.h"
-#include "malloc.h"
-#include "sig.h"
-#include "struct.h"
-#include "local.h"			/* For epop() */
-#include "out.h"			/* For build_out() */
-#include "hector.h"
-#include "interp.h"
-#include "update.h"
-#include "main.h"
+#include "eif_confmagic.h"		/* %%ss added for bcopy, bzero */
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
+#include "eif_debug.h"
+#include "eif_hashin.h"
+#include "eif_malloc.h"
+#include "eif_sig.h"
+#include "eif_struct.h"
+#include "eif_local.h"			/* For epop() */
+#include "eif_out.h"			/* For build_out() */
+#include "eif_hector.h"
+#include "eif_interp.h"
+#include "eif_update.h"
+#include "eif_main.h"
 
 #undef STACK_CHUNK
 #define STACK_CHUNK		200			/* Number of items in a stack chunk */

@@ -17,11 +17,11 @@
 
 #ifndef EIF_THREADS
 
-#include "config.h"
-#include "portable.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "lmalloc.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_lmalloc.h"
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */

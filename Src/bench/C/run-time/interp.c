@@ -1,37 +1,37 @@
 /*
 
-    #    #    #   #####  ######  #####   #####            ####
-    #    ##   #     #    #       #    #  #    #          #    #
-    #    # #  #     #    #####   #    #  #    #          #
-    #    #  # #     #    #       #####   #####    ###    #
-    #    #   ##     #    #       #   #   #        ###    #    #
-    #    #    #     #    ######  #    #  #        ###     ####
+	#    #    #   #####  ######  #####   #####            ####
+	#    ##   #     #    #       #    #  #    #          #    #
+	#    # #  #     #    #####   #    #  #    #          #
+	#    #  # #     #    #       #####   #####    ###    #
+	#    #   ##     #    #       #   #   #        ###    #    #
+	#    #    #     #    ######  #    #  #        ###     ####
 
 	The Interpreter.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "interp.h"
-#include "malloc.h"
-#include "plug.h"
-#include "eiffel.h"
-#include "macros.h"
-#include "hashin.h"
-#include "cecil.h"
-#include "hector.h"
-#include "except.h"
-#include "local.h"
-#include "copy.h"
-#include "debug.h"
-#include "sig.h"
-#include "bits.h"
-#include "equal.h"	/* for xequal() */
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_interp.h"
+#include "eif_malloc.h"
+#include "eif_plug.h"
+#include "eif_eiffel.h"
+#include "eif_macros.h"
+#include "eif_hashin.h"
+#include "eif_cecil.h"
+#include "eif_hector.h"
+#include "eif_except.h"
+#include "eif_local.h"
+#include "eif_copy.h"
+#include "eif_debug.h"
+#include "eif_sig.h"
+#include "eif_bits.h"
+#include "eif_equal.h"	/* for xequal() */
 #include <math.h>
-#include "main.h"
+#include "eif_main.h"
 
 #ifdef CONCURRENT_EIFFEL
-#include "curextern.h"
+#include "eif_curextern.h"
 #endif
 
 /*#define SEP_DEBUG  /**/
@@ -151,8 +151,8 @@ rt_public void xinitint(void);			/* Initialization of the interpreter */
 rt_private void interpret(EIF_CONTEXT int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern);					/* Interpreter dispatcher (in water) */
-rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern);					/* Interpreter precomp dispatcher */
+rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype);					/* Interpreter dispatcher (in water) */
+rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
 rt_private void address(int32 fid, int stype);					/* Address of a routine */
@@ -282,8 +282,8 @@ rt_public void xinterp(EIF_CONTEXT char *icval)
 }
 
 rt_public void xiinv(EIF_CONTEXT char *icval, int where)
-            
-          		/* Invariant checked after or before ? */
+			
+		  		/* Invariant checked after or before ? */
 {
 	/* Starts interpretation of invariant at IC = icval. */
 	EIF_GET_CONTEXT
@@ -327,8 +327,8 @@ rt_public void xinitint(EIF_CONTEXT_NOARG)
 }
 
 rt_private void interpret(EIF_CONTEXT int flag, int where)
-         			/* Flag set to INTERP_INVA or INTERP_CMPD */
-          			/* Are we checking invariant before or after compound? */
+		 			/* Flag set to INTERP_INVA or INTERP_CMPD */
+		  			/* Are we checking invariant before or after compound? */
 {
 	/* Interprets the byte-code starting at IC. For effeciency reasons, some
 	 * "globals" are used by the main interpreting loop, to save some precious
@@ -1615,7 +1615,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 0;						/* Invariant check turned off */
-		if (icall(MTC (int)offset, code, is_extern))
+		if (icall(MTC (int)offset, code, is_extern, get_short()))
 			sync_registers(MTC scur, stop);
 		is_extern = 0;
 		break;
@@ -1644,7 +1644,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 0;					/* Invariant check turned off */
-			if (ipcall(MTC origin, offset, is_extern))
+			if (ipcall(MTC origin, offset, is_extern, get_short()))
 				sync_registers(MTC scur, stop);
 			is_extern = 0;
 			break;
@@ -1675,7 +1675,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 1;					/* Invariant check turned on */
-		if (icall(MTC (int)offset, code, is_extern))
+		if (icall(MTC (int)offset, code, is_extern, get_short()))
 			sync_registers(MTC scur, stop);
 		is_extern = 0;						/* No side effect */
 		break;
@@ -1709,7 +1709,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 1;					/* Invariant check turned on */
-			if (ipcall(MTC origin, offset, is_extern))
+			if (ipcall(MTC origin, offset, is_extern, get_short()))
 				sync_registers(MTC scur, stop);
 			is_extern = 0;						/* No side effect */
 			break;
@@ -2797,10 +2797,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-					if (icall(MTC (int)offset, code, is_extern))
+					if (icall(MTC (int)offset, code, is_extern, get_short()))
 						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-					if (ipcall(origin, offset, is_extern))
+					if (ipcall(origin, offset, is_extern, get_short()))
 						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
@@ -2962,10 +2962,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-					if (icall(MTC (int)offset, code, is_extern))
+					if (icall(MTC (int)offset, code, is_extern, get_short()))
 						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
-					if (ipcall(origin, offset, is_extern))
+					if (ipcall(origin, offset, is_extern, get_short()))
 						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
@@ -4050,10 +4050,11 @@ rt_private void diadic_op(int code)
  * Function calling routines
  */
 
-rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
+rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype)
 						/* Feature ID */
-		  				/* Static type (entity where feature is applied) */
-			  			/* Is it an external or an Eiffel feature */
+						/* Static type (entity where feature is applied) */
+						/* Is it an external or an Eiffel feature */
+						/* Type of precursor class, if any */
 {
 	/* This is the interpreter dispatcher for routine calls. Depending on the
 	 * routine's temperature, the snow version (i.e. C code) is called and the
@@ -4074,7 +4075,15 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
 	
 
 	rout_id = Routids(stype)[fid];
-	CBodyIdx(body_index,rout_id,Dtype(otop()->it_ref));
+
+	if (ptype == -1)
+	{
+		CBodyIdx(body_index,rout_id,Dtype(otop()->it_ref));
+	}
+	else
+	{
+		CBodyIdx(body_index,rout_id,RTUD(ptype));
+	}
 	body = dispatch[body_index];	/* Body id of the eiffel routine */
 	old_IC = IC;				/* IC back up */
 	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
@@ -4122,10 +4131,11 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
-			 			/* Origin class ID of the feature.*/
-			 			/* offset of the feature in the origin class */
-			  			/* Is it an external or an Eiffel feature */
+rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int ptype)
+						/* Origin class ID of the feature.*/
+						/* offset of the feature in the origin class */
+						/* Is it an external or an Eiffel feature */
+						/* Type of precursor, if any */
 {
 	/* This is the interpreter dispatcher for precompiled routine calls.
 	 * Depending on the routine's temperature, the snow version (i.e. C code)
@@ -4143,7 +4153,15 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int16 body_index;
 
-	body_index = desc_tab[origin][Dtype(otop()->it_ref)][offset].info;
+	if (ptype == -1)
+	{
+		body_index = desc_tab[origin][Dtype(otop()->it_ref)][offset].info;
+	}
+	else
+	{
+		body_index = desc_tab[origin][RTUD(ptype)][offset].info;
+	}
+
 	body = dispatch[body_index];	/* Body id of the eiffel routine */
 	old_IC = IC;				/* IC back up */
 	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */

@@ -2,14 +2,14 @@
 	Object id externals
 */
 
-#include "config.h"
-#include "portable.h"
-#include "macros.h"
-#include "garcol.h"
-#include "except.h"
-#include "hector.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_hector.h"
 
-#include "object_id.h"
+#include "eif_object_id.h"
 
 
 /*#define DEBUG 2		/* Debug level */

@@ -24,11 +24,11 @@
 extern "C" {
 #endif
 
-#include "portable.h"
+#include "eif_portable.h"
 #include "eif_constants.h"
 #include "eif_types.h"
 #include "eif_threads.h"
-#include "main.h"
+#include "eif_main.h"
 
 #define GTCX		EIF_GET_CONTEXT
 #define EDCX		EIF_END_GET_CONTEXT
@@ -231,9 +231,11 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	char r_fstoretype;				/* File storage type used for retrieve */
 #endif
 
+	/* Thread management variables */
 	int n_children;					/* Number or child threads */
 	EIF_THR_TYPE *last_child;		/* Task id of the last created thread */
 	EIF_MUTEX_TYPE *children_mutex;	/* Mutex for join, join_all */
+	thr_list_t *unfreeze_list;		/* List of threads to unfreeze */
 #ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *children_cond;	/* Condition variable for join, join_all */
 #endif
@@ -402,7 +404,7 @@ extern struct dbinfo d_data;	/* Global debugger information */
 extern struct pgcontext d_cxt;	/* Program context */
 
 
-	/* err_msg.h */
+	/* eif_err_msg.h */
 #ifdef EIF_WIN32
 extern char *exception_trace_string;
 #endif

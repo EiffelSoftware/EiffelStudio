@@ -8,9 +8,9 @@
     #    #    #   ####    ####  #######  ######  #    #  #    #   ###     ####
 
 */
-#include "cecil.h" 	/* %%ss added for cast in efreeze */
+#include "eif_cecil.h" 	/* %%ss added for cast in efreeze */
 #include "yacc.h"
-#include "hector.h"
+#include "eif_hector.h"
 
 char *Error_handler;			/* Compiler error handler */
 

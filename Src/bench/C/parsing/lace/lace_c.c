@@ -10,11 +10,11 @@
 		Routine for Lace syntax analysis
 */
 
-#include "config.h"
-#include "err_msg.h"
+#include "eif_config.h"
+#include "eif_err_msg.h"
 #include "lace_c.h"
-#include "hector.h"
-#include "plug.h"
+#include "eif_hector.h"
+#include "eif_plug.h"
 
 /*
  * Declarations 

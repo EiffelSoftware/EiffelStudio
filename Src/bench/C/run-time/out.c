@@ -11,17 +11,17 @@
 */
 
 #include <stdio.h>
-#include "config.h"
-#include "eiffel.h"
-#include "out.h"
-#include "plug.h"
-#include "struct.h"
-#include "macros.h"		/* For macro LNGPAD */
-#include "hashin.h"
-#include "except.h"		/* For `eraise' */
-#include "sig.h"
-#include "hector.h"
-#include "bits.h"
+#include "eif_config.h"
+#include "eif_eiffel.h"
+#include "eif_out.h"
+#include "eif_plug.h"
+#include "eif_struct.h"
+#include "eif_macros.h"		/* For macro LNGPAD */
+#include "eif_hashin.h"
+#include "eif_except.h"		/* For `eraise' */
+#include "eif_sig.h"
+#include "eif_hector.h"
+#include "eif_bits.h"
 #include "eif_globals.h"
 
 /*
@@ -504,7 +504,7 @@ rt_public char *c_outp(EIF_CONTEXT EIF_POINTER p)
 
 #ifdef WORKBENCH
 
-#include "interp.h"
+#include "eif_interp.h"
 
 /* The following routine builds a tagged out string out of simple types.
  * The reason for this is that the debugger can request the value of, say,

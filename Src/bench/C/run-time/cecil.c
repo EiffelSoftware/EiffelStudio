@@ -11,7 +11,7 @@
 	C-Eiffel Call-In Library.
 */
 
-#include "config.h"
+#include "eif_config.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -19,14 +19,14 @@
 #include <strings.h>
 #endif
 
-#include "malloc.h"
-#include "garcol.h"
-#include "cecil.h"
-#include "hector.h"
-#include "struct.h"
-#include "tools.h"
-#include "eiffel.h"				/* Need string header */
-#include "macros.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_cecil.h"
+#include "eif_hector.h"
+#include "eif_struct.h"
+#include "eif_tools.h"
+#include "eif_eiffel.h"				/* Need string header */
+#include "eif_macros.h"
 
 #ifdef I_STDARG
 #include <stdarg.h>

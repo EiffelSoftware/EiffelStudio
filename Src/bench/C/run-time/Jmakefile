@@ -91,28 +91,28 @@ EOBJ = \
 
 #include "U/workbench.H"
 
-ShellScriptLongTarget(size_h,size.h)
+ShellScriptLongTarget(eif_size_h,eif_size.h)
 NormalLibraryTarget(runtime,$(LSRC),$(LOBJ))
 SpecialLibraryTarget(wkbench,$(WOBJ),/**/)
 SpecialLibraryTarget(ebench,$(EOBJ),/**/)
 
 SimpleProgramTarget(x2c)
 
-AllTarget(config.h portable.h confmagic.h)
+AllTarget(eif_config.h eif_portable.h eif_confmagic.h)
 
 >RM
 >LN
-config.h: $(TOP)/config.h
+eif_config.h: $(TOP)/eif_config.h
 	$(RM) $@
-	$(LN) $(TOP)/config.h .
+	$(LN) $(TOP)/eif_config.h .
 
-confmagic.h: $(TOP)/confmagic.h
+eif_confmagic.h: $(TOP)/eif_confmagic.h
 	$(RM) $@
-	$(LN) $(TOP)/confmagic.h .
+	$(LN) $(TOP)/eif_confmagic.h .
 
-portable.h: $(TOP)/portable.h
+eif_portable.h: $(TOP)/eif_portable.h
 	$(RM) $@
-	$(LN) $(TOP)/portable.h .
+	$(LN) $(TOP)/eif_portable.h .
 
 /*
  * Workbench files added to SOURCES

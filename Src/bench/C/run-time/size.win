@@ -13,7 +13,7 @@
 #ifndef _size_h_
 #define _size_h_
 
-#include "config.h"
+#include "eif_config.h"
 
 /* Basic sizes */
 #define ALIGN	4		/* Alignment restrictions */

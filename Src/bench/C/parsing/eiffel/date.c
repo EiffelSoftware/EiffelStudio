@@ -11,7 +11,7 @@
 
 */
 
-#include "macros.h"
+#include "eif_macros.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 

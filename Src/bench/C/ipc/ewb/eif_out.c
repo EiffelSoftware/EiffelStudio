@@ -11,7 +11,7 @@
 */
 
 #include "eif_io.h"
-#include "eiffel.h"
+#include "eif_eiffel.h"
 #include "stack.h"
 
 #ifdef EIF_WIN32

@@ -10,23 +10,23 @@
 	Eiffel storing mechanism.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "macros.h"
-#include "malloc.h"
-#include "except.h"
-#include "store.h"
-#include "traverse.h"
-#include "except.h"
-#include "cecil.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
+#include "eif_malloc.h"
+#include "eif_except.h"
+#include "eif_store.h"
+#include "eif_traverse.h"
+#include "eif_except.h"
+#include "eif_cecil.h"
 #include <stdio.h>
-#include "struct.h"
-#include "bits.h"
-#include "plug.h"
-#include "run_idr.h"
-#include "error.h"
-#include "main.h"
-#include "compress.h"
+#include "eif_struct.h"
+#include "eif_bits.h"
+#include "eif_plug.h"
+#include "eif_run_idr.h"
+#include "eif_error.h"
+#include "eif_main.h"
+#include "eif_compress.h"
 
 #ifdef EIF_OS2
 #include <io.h>

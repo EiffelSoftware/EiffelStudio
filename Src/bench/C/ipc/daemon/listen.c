@@ -10,8 +10,8 @@
 	Wide listening on all opened file descriptors (read).
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 #include "proto.h"
 #include "select.h"

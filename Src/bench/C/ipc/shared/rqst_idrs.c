@@ -10,8 +10,8 @@
 	Routine for Request Internal Data Representation.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "request.h"
 #include "idrs.h"
 #include "rqst_idrs.h"

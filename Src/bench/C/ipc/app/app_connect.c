@@ -10,9 +10,9 @@
 	Connection with daemon (via named socket).
 */
 
-#include "config.h"
-#include "portable.h"
-#include "err_msg.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_err_msg.h"
 #include <sys/types.h>
 #include "logfile.h"
 #include <errno.h>

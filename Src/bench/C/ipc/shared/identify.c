@@ -22,8 +22,8 @@
 		need looking at for non windowed apps.
  */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "logfile.h"

@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#include "portable.h"
+#include "eif_portable.h"
 #include "eif_constants.h"
 
 /* Organized on a per-file basis - the following

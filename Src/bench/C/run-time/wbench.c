@@ -9,17 +9,17 @@
 		Workbench primitives
 */
 
-#include "config.h"
-#include "macros.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "struct.h"
-#include "hashin.h"
-#include "except.h"
-#include "wbench.h"
-#include "interp.h"
-#include "plug.h"
-#include "project.h"			/* for tabinit() */
+#include "eif_config.h"
+#include "eif_macros.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_struct.h"
+#include "eif_hashin.h"
+#include "eif_except.h"
+#include "eif_wbench.h"
+#include "eif_interp.h"
+#include "eif_plug.h"
+#include "eif_project.h"			/* for tabinit() */
 
 /* The following functions implement the access to object features and 
  * attributes in workbench mode, they are:

@@ -12,8 +12,8 @@
 */
 
 #include <stdio.h>
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 
 #ifdef __VMS
  /* define these routines in upr case, cause that's how they are in the lib */
@@ -43,10 +43,10 @@
 #include <unistd.h>
 #endif
 
-#include "dir.h"
-#include "file.h" /* %%ss moved from 2 lines above */
-#include "plug.h"
-#include "error.h"
+#include "eif_dir.h"
+#include "eif_file.h" /* %%ss moved from 2 lines above */
+#include "eif_plug.h"
+#include "eif_error.h"
 
 #ifdef I_STRING
 #include <string.h>

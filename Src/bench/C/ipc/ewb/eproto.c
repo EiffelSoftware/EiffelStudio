@@ -14,8 +14,8 @@
 	routines.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <stdio.h>		/* For error reports -- FIXME */
 #include <sys/types.h>
 #include "request.h"

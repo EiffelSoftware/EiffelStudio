@@ -10,8 +10,8 @@
 	Routines to implement class INTERNAL
 */
 
-#include "config.h"
-#include "internal.h"
+#include "eif_config.h"
+#include "eif_internal.h"
 
 rt_private char *ei_oref(long, char *);		/* Offset in object */
 

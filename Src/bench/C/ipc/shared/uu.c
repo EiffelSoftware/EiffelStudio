@@ -8,7 +8,7 @@
 	uudecode is the reverse.
 */
 
-#include "eiffel.h"
+#include "eif_eiffel.h"
 #include "windows.h"
 #include "uu.h"
 

@@ -15,17 +15,17 @@
 	because of an implicit exception or not.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "debug.h"
-#include "interp.h"
-#include "except.h"
-#include "garcol.h"
-#include "malloc.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_debug.h"
+#include "eif_interp.h"
+#include "eif_except.h"
+#include "eif_garcol.h"
+#include "eif_malloc.h"
 #include "stack.h"
 #include "com.h"
 #include "request.h"
-#include "macros.h"
+#include "eif_macros.h"
 #include "eif_globals.h"
 
 #ifdef EIF_WIN32

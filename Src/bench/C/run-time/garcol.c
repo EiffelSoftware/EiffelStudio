@@ -17,38 +17,38 @@
 extern "C" {
 #endif
 
-#include "config.h"
-#include "eiffel.h"		/* For bcopy/memcpy */
+#include "eif_config.h"
+#include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_globals.h"
-#include "misc.h"	/* %%ss added for eif_free_dlls */
-#include "size.h"
-#include "malloc.h"
-#include "garcol.h"
+#include "eif_misc.h"	/* %%ss added for eif_free_dlls */
+#include "eif_size.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
 #if ! defined CUSTOM || defined NEED_TIMER_H
-#include "timer.h"
+#include "eif_timer.h"
 #endif
-#include "macros.h"
-#include "sig.h"
-#include "urgent.h"
-#include "search.h"
+#include "eif_macros.h"
+#include "eif_sig.h"
+#include "eif_urgent.h"
+#include "eif_search.h"
 #include <stdio.h>		/* For stream flushing */
 
 #if ! defined CUSTOM || defined NEED_DLE_H
-#include "dle.h"		/* For dle_reclaim */
+#include "eif_dle.h"		/* For dle_reclaim */
 #endif
 #if ! defined CUSTOM || defined NEED_OPTION_H
-#include "option.h"		/* For exitprf */
+#include "eif_option.h"		/* For exitprf */
 #endif
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-#include "object_id.h"	/* For the object id and separate stacks */
+#include "eif_object_id.h"	/* For the object id and separate stacks */
 #endif
-#include "hector.h"
+#include "eif_hector.h"
 #ifndef TEST
-#include "main.h"
+#include "eif_main.h"
 #endif
 
 #ifdef WORKBENCH
-#include "interp.h"
+#include "eif_interp.h"
 #endif
 
 #ifdef EIF_WIN32
@@ -335,7 +335,7 @@ rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int 
  * moving objects (i.e. set to False if no assertion and exception_trace(yes)
  * is not used in the Ace file
  */
-#include "project.h"			/* for exception_stack_managed */
+#include "eif_project.h"			/* for exception_stack_managed */
 
 #define DISP(x,y) (Dispose(x))(y)
 

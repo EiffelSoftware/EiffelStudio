@@ -8,7 +8,7 @@
 #include "shword.h"
 
 	/* Clean up function */
-typedef void (* EIF_CLEANUP)(void);
+typedef void (* EIF_CLEANUP)();
 
 	/* Register `f' as a clean up function */
 extern void eif_register_cleanup(EIF_CLEANUP f);

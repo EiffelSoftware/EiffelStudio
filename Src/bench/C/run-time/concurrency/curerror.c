@@ -1,5 +1,5 @@
-#include "net.h"
-#include "curextern.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
 
 char *error_info() {
 	char *tmp_ptr;

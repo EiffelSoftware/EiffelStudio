@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 /* Original skeleton (flex 2.4.7) modified for OS2 port */
-#include "config.h"
+#include "eif_config.h"
  
 #ifdef EIF_OS2
 #include <io.h>
@@ -870,8 +870,8 @@ Ftp server: ftp.eiffel.com
 
 #include <ctype.h>
 
-#include "rtlimits.h" 	
-#include "macros.h"
+#include "eif_rtlimits.h" 	
+#include "eif_macros.h"
 #include "parser.h"
 
 #define MAX_CHAR	256			/* Ascii limit */

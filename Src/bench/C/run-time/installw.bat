@@ -1,6 +1,6 @@
-copy size.win size.h
+copy size.win eif_size.h
 copy makefile.win makefile
-copy ..\config.win ..\config.h
+copy ..\config.win ..\eif_config.h
 copy ..\confmagi.h ..\confmagc.h
 copy ..\idrs\makefile.win ..\idrs\makefile
 copy ..\platform\makefile.win ..\platform\makefile

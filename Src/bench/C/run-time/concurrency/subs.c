@@ -6,11 +6,11 @@ direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
 
-#include "cecil.h"
-#include "hector.h"
+#include "eif_cecil.h"
+#include "eif_hector.h"
 
-#include "net.h"
-#include "curextern.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
 
 
 void my_bzero (addr, len) 

@@ -10,13 +10,13 @@
 	The main entry point.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 
 #ifdef EIF_WIN32
 #define print_err_msg fprintf
 #else
-#include "err_msg.h"
+#include "eif_err_msg.h"
 #endif
 
 #include <sys/types.h>
@@ -330,8 +330,8 @@ HANDLE hInst;				/* Application main instance			 */
 HWND hwnd;				/* Handle of temporary ebench window 	*/
 
 char slogan1 [] = "Inquire about our hands-on Eiffel sessions in Santa Barbara\nthe ideal way to learn from the experts.\n<info@eiffel.com>, 805-685-1006.";
-char slogan2 [] = "\"Object-Oriented Software Construction\": the definitive\nreference on object technology. Order from your\nbookstore or directly from ISE for immediate delivery";
-char slogan3 [] = "SPECIAL MAINTENANCE DEAL covering all releases for one year.\nGet the new, exciting Eiffel developments as\nthey come out. <info@eiffel.com>, 805-685-1006.";
+char slogan2 [] = "\"Object-Oriented Software Construction\": the definitive\nreference on object technology\nOrder from your bookstore or directly from ISE for immediate delivery";
+char slogan3 [] = "SPECIAL MAINTENANCE DEAL covering all releases for one year.\nGet the new, exciting Eiffel developments as they come out.\n<info@eiffel.com>, 805-685-1006.";
 char slogan4 [] = "For the latest on ISE Eiffel, Eiffel projects, on-line\ndocumentation, new products: come back often to\nhttp://www.eiffel.com - 4-star McKinley award-winning site.";
 char slogan5 [] = "Windows Tech Journal about ISE Eiffel, December 1996:\n\"Eiffel may be the most thoroughly object-oriented\nlanguage that's commercially available\".";
 char slogan6 [] = "Object Magazine, Editor's Choice, December 96: ISE Eiffel.\n\"My favorite testing tool is the Eiffel language. Eiffel\nprevents bugs by facilitation good software engineering.\"";
@@ -339,14 +339,14 @@ char slogan7 [] = "Windows Tech Journal on ISE Eiffel, December 96:\"Tired of\nd
 char slogan8 [] = "GUI building: are you aware of the Eiffel Resource Bench?\nFREE for a limited time only with purchase of\nISE Eiffel 4. <info@eiffel.com>, 805-685-1006.";
 char slogan9 [] = "Tell us about your project! Let us study with you how\nISE Eiffel 4 can help you gain the competitive edge.\nWrite to <info@eiffel.com>.";
 char slogan10 [] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, VMS, and more.";
-char slogan11 [] = "How to build quality reusable component libraries?\nRead the definitive reference:\"Reusable Software\",\nPrentice Hall. See http://www.eiffel.com/doc/books/reusable.html";
-char slogan12 [] = "Does your manager understand objects? Be kind: get him\nor her a copy of \"Object Success: A Manager's Guide to Object Technologie\"\nSee http://www.eiffel.com/doc/books/success.html";
-char slogan13 [] = "Addison-Wesley has a whole book series devoted to\nEiffel:\"Eiffel in Practice\".\n See http://www.awl.com/cp/eiffel.html";
+char slogan11 [] = "How to build quality reusable component libraries? Read the definitive reference:\n\"Reusable Software\", Prentice Hall. See http://www.eiffel.com/doc/books/reusable.html";
+char slogan12 [] = "Does your manager understand objects? Be kind: get him or her a copy of\n\"Object Success: A Mantger's Guide to Object Technolol.com/doc/books/success.html";
+char slogan13 [] = "Addison-Wesley has a whole book series devoted to Eiffel:\"Eiffel in Practice\".\n See http://www.awl.com/cp/eiffel.html";
 char slogan14 [] = "Interested in the CORBA-Eiffel interface?\n Contact ISE <info@eiffel.com> for pricing.";
 char slogan15 [] = "Lots of Eiffel books are available.\n See http://www.eiffel.com/doc/documentation.html.";
-char slogan16 [] = "Eiffel spells reuse!\nThe Eiffel Shelf wants your libraries.";
-char slogan17 [] = "High-level consulting: have\nISE's world-class experts review your architecture.";
-char slogan18 [] = "Get published! Many magazines are eager to publish Eiffel\nexperience reports. Contact ISE and we'll help you\nsubmit your article to the right publication";
+char slogan16 [] = "Eiffel spells reuse! The Eiffel Shelf wants your libraries.";
+char slogan17 [] = "High-level consulting: have ISE's world-class experts review your architecture.";
+char slogan18 [] = "Get published! Many magazines are eager to publish Eiffel experience reports.\nContact ISE and we'll help you submit your article to the right publication";
 
 /*----------------------------------------------------------------*/
 /* Display a splash window while loading ise4.exe */

@@ -18,7 +18,7 @@
 	properly, but the root object is not created yet.
 */
 
-#include "umain.h"
+#include "eif_umain.h"
 
 void umain(int argc, char **argv, char **envp)
 {

@@ -16,7 +16,7 @@
 #include <stdio.h>
 */
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <direct.h>		/* %%ss added for chdir, getcwd */
@@ -27,21 +27,21 @@
 #include <direct.h>
 #endif
 
-#include "macros.h"
-#include "struct.h"
-#include "hashin.h"
-#include "except.h"
-#include "update.h"
-#include "cecil.h"
-#include "misc.h"
-#include "file.h"
-#include "err_msg.h"
-#include "dle.h"
-#include "project.h"				/* For rcdt, rcorigin, rcoffset, ... */
-#include "main.h"
+#include "eif_macros.h"
+#include "eif_struct.h"
+#include "eif_hashin.h"
+#include "eif_except.h"
+#include "eif_update.h"
+#include "eif_cecil.h"
+#include "eif_misc.h"
+#include "eif_file.h"
+#include "eif_err_msg.h"
+#include "eif_dle.h"
+#include "eif_project.h"				/* For rcdt, rcorigin, rcoffset, ... */
+#include "eif_main.h"
 
 #ifdef DEBUG
-#include "interp.h"					/* For idump() */
+#include "eif_interp.h"					/* For idump() */
 #endif
 
 rt_private void cecil_updt(void);			/* Cecil update */

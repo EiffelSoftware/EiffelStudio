@@ -6,7 +6,7 @@
 #	include <windows.h>
 #endif
 
-#include <portable.h>
+#include <eif_portable.h>
 
 /* From class SHARED_LIBRARY_CONSTANTS */
 

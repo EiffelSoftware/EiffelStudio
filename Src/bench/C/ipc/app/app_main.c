@@ -10,8 +10,8 @@
 	The main entry point.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 #include <stdio.h>
 #include "logfile.h"

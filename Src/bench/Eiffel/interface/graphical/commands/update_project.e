@@ -10,11 +10,7 @@ inherit
 	ICONED_COMMAND;
 	SHARED_DEBUG;
 	SHARED_RESCUE_STATUS;
-	SHARED_FORMAT_TABLES;
-	EXCEPTIONS
-		rename
-			raise as excep_raise
-		end
+	SHARED_FORMAT_TABLES
 
 creation
 
@@ -182,7 +178,7 @@ feature {NONE}
 						"Some files have not been saved.%N%
 						%Start compilation anyway?", "Compile");
 					end_run_confirmed := false
-				else
+				elseif compilation_allowed then
 					if Lace.file_name /= Void then
 						confirm_and_compile (argument);
 						project_tool.raise
@@ -209,6 +205,9 @@ feature {NONE}
 						warner (text_window).custom_call (Current, 
 							l_Specify_ace, "Choose", "Template", "Cancel");
 					end;
+				else
+					warner (text_window).custom_call (Void,
+						w_Melt_only, " OK ", Void, Void);
 				end
 			end;
 		end;
@@ -267,6 +266,11 @@ feature {NONE}
 		end;
 
 feature {NONE}
+
+	compilation_allowed: BOOLEAN is
+		do
+			Result := True
+		end
 
 	request: ASYNC_SHELL;
 

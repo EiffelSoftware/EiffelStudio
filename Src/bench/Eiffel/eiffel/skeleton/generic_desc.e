@@ -83,6 +83,9 @@ feature -- Instantiation
 			l_exp: EXPANDED_DESC
 		do
 			gen_type ?= class_type.type
+			check
+				is_generic: gen_type /= Void
+			end
 			l_type := type_i.instantiation_in (gen_type)
 			Result := l_type.description
 			l_ref ?= Result

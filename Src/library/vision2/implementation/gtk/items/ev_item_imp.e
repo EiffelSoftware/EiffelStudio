@@ -22,8 +22,12 @@ inherit
 			-- Inheriting from widget,
 			-- because items are widget in gtk
 		rename
-			make as old_make
+			make as old_make,
+			interface as widget_interface,
+			set_interface as set_widget_interface
 		end
+
+	EV_GTK_ITEMS_EXTERNALS
 
 feature {NONE} -- Implementation
 	

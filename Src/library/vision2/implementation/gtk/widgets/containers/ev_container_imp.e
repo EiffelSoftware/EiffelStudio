@@ -246,9 +246,7 @@ feature -- Status setting
 	remove_background_pixmap is
 			-- Make background pixmap Void.
 		local
-			a_style: POINTER
-			pix_imp: EV_PIXMAP_IMP
-			mem_ptr, pix_ptr: POINTER
+			a_style, mem_ptr: POINTER
 			i: INTEGER
 		do
 			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))

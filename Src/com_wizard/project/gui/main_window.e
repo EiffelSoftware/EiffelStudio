@@ -15,11 +15,6 @@ inherit
 
 	WIZARD_OUTPUT_WINDOW
 	
-	STORABLE
-		rename
-			class_name as storable_class_name
-		end
-
 	WIZARD_SHARED_DATA
 		export
 			{NONE} all
@@ -357,8 +352,7 @@ feature {NONE} -- State management
 			-- Start state machine.
 		do
 			clear
-			set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
-			set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
+			set_message_output_and_progress_report
 
 			from
 				previous_states.extend (Abort_state)
@@ -457,9 +451,15 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			an_environment: WIZARD_ENVIRONMENT
+			f: RAW_FILE
 		do
 			if not retried then
-				an_environment ?= retrieve_by_name (a_project)
+				create f.make (a_project)
+				if f.exists then
+					f.open_read
+					an_environment ?= f.retrieved
+					f.close
+				end
 				if an_environment /= Void then
 					set_shared_wizard_environment (an_environment)
 					add_message (Open_message)
@@ -483,12 +483,15 @@ feature {NONE} -- Implementation
 			-- Save project in `a_project'.
 		local
 			retried: BOOLEAN
+			f: RAW_FILE
 		do
 			if not a_project.substring (a_project.count  - Wizard_extension.count + 1, a_project.count).is_equal (Wizard_extension) then
 				a_project.append (Wizard_extension)
 			end
 			if not retried then
-				shared_wizard_environment.store_by_name (a_project)
+				create f.make_open_write (a_project)
+				f.independent_store (shared_wizard_environment)
+				f.close
 				add_message (Save_message)
 			else
 				add_message (Save_error_message)
@@ -513,6 +516,14 @@ feature {NONE} -- Implementation
 	project_retrieved: BOOLEAN	
 			-- Was project correctly retrieved?
 
+	set_message_output_and_progress_report is
+			-- Set message output and progress report.
+		do
+			set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
+			set_progress_report (create {WIZARD_PROGRESS_REPORT_GUI}.make (Current))
+	--		set_progress_report (create {WIZARD_PROGRESS_REPORT_CMD})
+		end
+
 feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 
 	on_menu_command (menu_id: INTEGER) is
@@ -525,8 +536,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			when Generate_string_constant then
 				clear
 				shared_wizard_environment.set_no_abort
-				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
-				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
+				set_message_output_and_progress_report
 				run_wizard_manager
 			when Exit_string_constant then
 				destroy			
@@ -614,7 +624,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			rebar.reposition
 		end
 
-
+		
 feature {NONE} -- Externals
 
 	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;

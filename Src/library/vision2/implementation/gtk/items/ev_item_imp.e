@@ -66,6 +66,9 @@ feature -- Access
 			c_parent: POINTER
 			Result_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 		do
+			if combo_parent_imp /= Void then
+				Result := combo_parent_imp
+			else
 			from
 				c_parent := c_object
 			until
@@ -79,31 +82,7 @@ feature -- Access
 					end
 				end
 			end
-		end
-
-feature -- Element Change
-
-	set_parent_with_index (par: like parent; pos: INTEGER) is
-			-- Make `par' the new parent of the widget and set
-			-- the current button at `pos'.
-		obsolete "dont use it"
-		do
-			check dont_use: False end
-		end
-
-
-	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void.
-			-- Before to remove the widget from the
-			-- container, we increment the number of
-			-- reference on the object otherwise gtk
-			-- destroyed the object. And after having
-			-- added the object to another container,
-			-- we remove this supplementary reference.
-		obsolete "dont use it"
-		do
-			check dont_use: False end
+			end
 		end
 
 feature -- Assertion features
@@ -111,10 +90,20 @@ feature -- Assertion features
 	has_parent: BOOLEAN is
 			-- True if the widget has a parent, False otherwise
 		do
-			Result := interface.parent /= void
+			Result := parent_imp /= void
 		end
 
 feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
+
+	combo_parent_imp: EV_COMBO_BOX_IMP
+		-- Used to store parent imp of combo box due to the fact that
+		-- items are stored in list widget instead of c_object.
+
+	set_combo_parent_imp (a_parent: EV_COMBO_BOX_IMP) is
+			-- Set the `combo_parent_imp' to `a_parent'.
+		do
+			combo_parent_imp := a_parent
+		end
 
 	interface: EV_ITEM
 
@@ -141,6 +130,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/08 21:34:34  king
+--| Removed obsolete parenting functions, add combo box parent hack
+--|
 --| Revision 1.19  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

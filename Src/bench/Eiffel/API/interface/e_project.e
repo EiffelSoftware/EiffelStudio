@@ -11,17 +11,11 @@ inherit
 
 	EIFFEL_ENV;
 	BENCH_COMMAND_EXECUTOR;
-	SHARED_MELT_ONLY;
 	PROJECT_CONTEXT;
 	SHARED_WORKBENCH
 		rename
 			system as comp_system
 		end;
-	C_COMPILE_ACTIONS
-		rename
-			system as comp_system
-		end;
-	SHARED_MELT_ONLY;
 	SHARED_RESCUE_STATUS;
 	SHARED_ERROR_HANDLER;
 	SHARED_APPLICATION_EXECUTION
@@ -183,11 +177,11 @@ feature -- Access
 	successful: BOOLEAN is
 			-- Was the last compilation successful?
 		do
-			Result := Workbench.successfull and then
+			Result := Workbench.successful and then
 				error_status /= Dle_error_status
 		ensure
 			not_successful_means_dle_or_wb: Result implies
-				(Workbench.successfull or else
+				(Workbench.successful or else
 				(error_status /= Dle_error_status)) 
 		end;
 
@@ -516,9 +510,7 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			if not melt_only then
-				Compilation_modes.set_is_freezing (True)
-			end;
+			Compilation_modes.set_is_freezing (True)
 			melt;
 		ensure
 			was_saved: successful and then not
@@ -533,7 +525,7 @@ feature -- Update
 			-- optimize C code for workbench mode).
 		require
 			able_to_compile: able_to_compile
-		local
+		local 
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -541,12 +533,11 @@ feature -- Update
 				melt;
 				if
 					successful and then
-					not melt_only and then
 					not comp_system.lace.compile_all_classes
 				then
 					set_error_status (Ok_status);
 					is_compiling_ref.set_item (True);
-					finalize_system (keep_assertions);
+					comp_system.finalize_system (keep_assertions);
 					if Comp_system.extendible then
 						save_project
 					end;
@@ -849,8 +840,6 @@ feature {NONE} -- Implementation
 			file_name: FILE_NAME;
 		do
 			if
--- Melt only compiler does the copy anyway. FIXME???
-				--not melt_only and then
 				Comp_system.uses_precompiled and then
 				not Comp_system.is_dynamic
 			then

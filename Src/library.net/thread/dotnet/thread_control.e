@@ -85,10 +85,14 @@ feature {THREAD_CONTROL} -- Threads id
 
 feature -- Sleep
 
-	sleep (a_delay: INTEGER) is
-			-- 
+	sleep (nanoseconds: INTEGER_64) is
+			-- Suspend thread execution for interval specified in
+			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			non_negative_nanoseconds: nanoseconds >= 0
 		do
-			thread_imp.sleep (a_delay)
+			feature {SYSTEM_THREAD}.sleep_time_span
+				(feature {TIME_SPAN}.from_ticks (nanoseconds // 100))
 		end
 		
 

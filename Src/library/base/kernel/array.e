@@ -401,7 +401,7 @@ feature {NONE} -- Inapplicable
 
 feature {ARRAY} -- Implementation
 
-	arycpy (old_area: like area; newsize, s, n: INTEGER): like area is
+	arycpy (old_area: POINTER; newsize, s, n: INTEGER): like area is
 			-- New area of size `newsize' containing `n' items
 			-- from `oldarea'.
 			-- Old items are at position `s' in new area.

@@ -56,13 +56,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	sp_count (sp_obj: SPECIAL [T]): INTEGER is
+	sp_count (sp_obj: POINTER): INTEGER is
 			-- Count of the special object
 		external
 			"C"
 		end;
 
-	c_standard_is_equal (source, target: SPECIAL [T]): BOOLEAN is
+	c_standard_is_equal (source, target: POINTER): BOOLEAN is
 			-- Is `source' equal to `target' ?
 			-- Returns True if `source' and `target' have the same count
 			-- and the same entries.
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			"spequal"
 		end;
 
-	c_standard_copy (source, target: SPECIAL [T]) is
+	c_standard_copy (source, target: POINTER) is
 			-- Copy entries of `target' into `source'.
 		external
 			"C"
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			"spcopy"
 		end;
 
-	c_standard_clone (other: SPECIAL [T]): SPECIAL [T] is
+	c_standard_clone (other: POINTER): SPECIAL [T] is
 			-- New special object of size `count'
 		external
 			"C"

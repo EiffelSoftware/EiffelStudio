@@ -1345,19 +1345,19 @@ feature {NONE} -- Implementation
 			buffered_file_info.update (name);
 		end;
 
-	file_link (from_name, to_name: ANY) is
+	file_link (from_name, to_name: POINTER) is
 			-- Link `to_name' to `from_name'
 		external
 			"C"
 		end;
 
-	file_unlink (fname: ANY) is
+	file_unlink (fname: POINTER) is
 			-- Delete file `fname'.
 		external
 			"C"
 		end;
 
-	file_open (f_name: ANY; how: INTEGER): POINTER is
+	file_open (f_name: POINTER; how: INTEGER): POINTER is
 			-- File pointer for file `f_name', in mode `how'.
 		external
 			"C"
@@ -1370,7 +1370,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_reopen (f_name: ANY; how: INTEGER; file: POINTER): POINTER is
+	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
 			-- File pointer to `file', reopened to have new name `f_name'
 			-- in a mode specified by `how'.
 		external
@@ -1401,7 +1401,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_gs (file: POINTER; a_string: ANY; length, begin: INTEGER): INTEGER is
+	file_gs (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- `a_string' updated with characters read from `file'
 			-- until new line, with `begin' characters already read.
 			-- If it does not fit, result is `length' - `begin' + 1.
@@ -1410,7 +1410,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_gss (file: POINTER; a_string: ANY; length: INTEGER): INTEGER is
+	file_gss (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
 			-- Read min (`length', remaining bytes in file) characters
 			-- into `a_string'. If it does not fit, result is `length' + 1.
 			-- Otherwise, result is the number of characters read.
@@ -1418,7 +1418,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_gw (file: POINTER; a_string: ANY; length, begin: INTEGER): INTEGER is
+	file_gw (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a string excluding white space and stripping
 			-- leading white space from `file' into `a_string'.
 			-- White space characters are: blank, new_line,
@@ -1454,19 +1454,19 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_touch (f_name: ANY) is
+	file_touch (f_name: POINTER) is
 			-- Touch file `f_name'.
 		external
 			"C"
 		end;
 
-	file_rename (old_name, new_name: ANY) is
+	file_rename (old_name, new_name: POINTER) is
 			-- Change file name from `old_name' to `new_name'.
 		external
 			"C"
 		end;
 
-	file_perm (f_name, who, what: ANY; flag: INTEGER) is
+	file_perm (f_name, who, what: POINTER; flag: INTEGER) is
 			-- Change permissions for `f_name' to `who' and `what'.
 			-- `flag' = 1 -> add permissions,
 			-- `flag' = 0 -> remove permissions.
@@ -1474,25 +1474,25 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_chmod (f_name: ANY; mask: INTEGER) is
+	file_chmod (f_name: POINTER; mask: INTEGER) is
 			-- Change mode of `f_name' to `mask'.
 		external
 			"C"
 		end;
 
-	file_chown (f_name: ANY; new_owner: INTEGER) is
+	file_chown (f_name: POINTER; new_owner: INTEGER) is
 			-- Change owner of `f_name' to `new_owner'
 		external
 			"C"
 		end;
 
-	file_chgrp (f_name: ANY; new_group: INTEGER) is
+	file_chgrp (f_name: POINTER; new_group: INTEGER) is
 			-- Change group of `f_name' to `new_group'
 		external
 			"C"
 		end;
 
-	file_utime (f_name: ANY; time, how: INTEGER) is
+	file_utime (f_name: POINTER; time, how: INTEGER) is
 			-- Set access, modification time or both (`how' = 0,1,2) on
 			-- `f_name', using `time' as time stamp.
 		external
@@ -1511,7 +1511,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_ps (file: POINTER; a_string: ANY; length: INTEGER) is
+	file_ps (file: POINTER; a_string: POINTER; length: INTEGER) is
 			-- Print `a_string' to `file'.
 		external
 			"C"
@@ -1547,19 +1547,19 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_exists (f_name: ANY): BOOLEAN is
+	file_exists (f_name: POINTER): BOOLEAN is
 			-- Does `f_name' exist.
 		external
 			"C"
 		end;
 
-	file_access (f_name: ANY; which: INTEGER): BOOLEAN is
+	file_access (f_name: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access test `which' on `f_name' using real UID.
 		external
 			"C"
 		end;
 
-	file_creatable (f_name: ANY): BOOLEAN is
+	file_creatable (f_name: POINTER): BOOLEAN is
 			-- Is `f_name' creatable.
 		external
 			"C"

@@ -270,7 +270,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of real value
 		do
-			Result := c_outr ($item)
+			Result := c_outr (item)
 		end;
 
 feature {NONE} -- Implementation

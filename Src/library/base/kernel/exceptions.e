@@ -203,7 +203,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	eraise (str: ANY; code: INTEGER) is
+	eraise (str: POINTER; code: INTEGER) is
 			-- Raise an exception
 		external
 			"C"

@@ -48,7 +48,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of pointer value
 		do
-			Result := c_outp ($item)
+			Result := c_outp (item)
 		end;
 
 feature {NONE} -- Implementation

@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	console_ps (file: POINTER; s_name: ANY; length: INTEGER) is
+	console_ps (file: POINTER; s_name: POINTER; length: INTEGER) is
 			-- Write string `s' at end of `file'
 		external
 			"C"
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 	
-	console_readword (file: POINTER; a_string: ANY; length, begin: INTEGER):
+	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER):
 INTEGER is
 			-- Read a string excluding white space and stripping
 			-- leading white space from `file' into `a_string'.
@@ -354,7 +354,7 @@ INTEGER is
 			"C"
 		end;
 
-	console_readline (file: POINTER; a_string: ANY; length, begin: INTEGER): INTEGER is
+	console_readline (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
 			"C"
@@ -366,7 +366,7 @@ INTEGER is
 			"C"
 		end;
 
-	console_readstream (file: POINTER; a_string: ANY; length: INTEGER): INTEGER is
+	console_readstream (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
 			"C"

@@ -208,7 +208,7 @@ feature {DIRECTORY} -- Implementation
 	directory_pointer: POINTER;
 			-- Directory pointer as required in C
 
-	dir_search (dir_ptr: POINTER; entry: ANY): ANY is
+	dir_search (dir_ptr: POINTER; entry: POINTER): POINTER is
 			-- Return the `DIRENTRY' structure corresponding
 			-- to the name `entry' of directory `dir_ptr'.
 		external
@@ -225,13 +225,13 @@ feature {NONE} -- Implementation
 
 	Read_directory: INTEGER is unique;
 
-	file_mkdir (dir_name: ANY) is
+	file_mkdir (dir_name: POINTER) is
 			-- Make directory `dir_name'.
 		external
 			"C"
 		end;
 
-	dir_open (dir_name: ANY): POINTER is
+	dir_open (dir_name: POINTER): POINTER is
 			-- Open the directory `dir_name'.
 		external
 			"C"
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	file_exists (dir_name: ANY): BOOLEAN is
+	file_exists (dir_name: POINTER): BOOLEAN is
 			-- Does `dir_name' exist ?
 		external
 			"C"

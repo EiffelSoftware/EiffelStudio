@@ -424,7 +424,6 @@ feature {NONE} -- Implementation
 			if not s.has (r.location) then
 				f.call ([])
 				Result := f.last_result
-				Io.put_string ("is_readable: " + Result.out + "%N")
 				if Result then s.extend (r.location) end
 			else
 				Result := True

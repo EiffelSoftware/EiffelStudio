@@ -46,8 +46,8 @@ feature {EV_WIDGET} -- Initialization
 			set_expand (True)
 			set_vertical_resize (True)
 			set_horizontal_resize (True)
-			--set_background_color (parent_imp.background_color)
-			--set_foreground_color (parent_imp.foreground_color)
+			set_background_color (parent_imp.background_color)
+			set_foreground_color (parent_imp.foreground_color)
 		end
 
 feature -- Access
@@ -398,11 +398,7 @@ feature -- Post-conditions
 		-- Check if the dimensions of the widget are set to 
 		-- the values given or the minimum values possible 
 		-- for that widget.
-		-- On gtk, when the widget is not shown, the result is 1
-		do
-			Result := (width = new_width or else width = minimum_width or else (not shown and width = 1)) and then
-				  (height = new_height or else height = minimum_height or else (not shown and height = 1))
-			Result := True
+		deferred
 		end		
 
 	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is

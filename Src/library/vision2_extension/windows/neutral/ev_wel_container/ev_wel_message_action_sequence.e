@@ -12,6 +12,9 @@ inherit
 	
 create
 	default_create
+
+create {EV_WEL_MESSAGE_ACTION_SEQUENCE}
+	make_filled
 	
 feature
 	
@@ -27,6 +30,15 @@ feature
 		do
 			action.call ([hwnd, msg, wparam, lparam])
 		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 end -- class EV_WEL_MESSAGE_ACTION_SEQUENCE
 
 --|----------------------------------------------------------------

@@ -340,7 +340,6 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			Application.clear_debugging_information;
 			Workbench.recompile
 			if successful then
 				save_project;
@@ -349,6 +348,10 @@ feature -- Update
 				end;
 				if not freezing_occurred then
 					link_driver
+				end;
+				if Application.has_debugging_information then
+					Application.resynchronize_breakpoints;
+					Degree_output.put_resynchronizing_breakpoints_message;
 				end;
 			end
 		ensure

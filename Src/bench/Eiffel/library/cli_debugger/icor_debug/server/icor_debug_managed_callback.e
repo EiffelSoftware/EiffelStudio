@@ -175,17 +175,22 @@ feature {NONE} -- debugger behavior
 			create l_copy.make_copy (l_previous_stack_info)
 			
 			l_il_debug_info := Eifnet_debugger_info.controller.Il_debug_info_recorder
-			l_feat := l_il_debug_info.feature_i_by_module_feature_token (
-						l_copy.current_module_name, 
-						l_copy.current_feature_token
-					)
-			l_class_type := l_il_debug_info.class_type_for_module_class_token (
-						l_copy.current_module_name,				
-						l_copy.current_class_token
-					)
-					
-			l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (l_class_type, l_feat, l_copy.current_il_offset)
-				--| current il offset if corresponding to a bp slot, or approximate offset.
+			if l_il_debug_info.has_info_about_module (l_copy.current_module_name) then
+				l_feat := l_il_debug_info.feature_i_by_module_feature_token (
+							l_copy.current_module_name,
+							l_copy.current_feature_token
+						)
+				l_class_type := l_il_debug_info.class_type_for_module_class_token (
+							l_copy.current_module_name,				
+							l_copy.current_class_token
+						)
+				l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (
+												l_class_type, 
+												l_feat, 
+												l_copy.current_il_offset
+												)
+					--| current il offset if corresponding to a bp slot, or approximate offset.
+			end	
 				
 			l_copy.set_current_il_offset (l_potential_il_offset)
 			if l_copy.is_equal (l_current_stack_info) then
@@ -220,7 +225,7 @@ feature {NONE} -- debugger behavior
 				--| If we were stepping ...
 			debug ("DEBUGGER_TRACE_STEPPING")
 				print ("%N>=> StepComplete <=< %N")
-				print ("%T - last_control_mode        = " + Eifnet_debugger_info.last_control_mode_as_string + "%N")
+				print ("%T - last_control_mode         = "   + Eifnet_debugger_info.last_control_mode_as_string + "%N")
 				print ("%T - last_step_complete_reason = 0x" + Eifnet_debugger_info.last_step_complete_reason.to_hex_string)
 				print ("  ==> " + step_id_to_string (Eifnet_debugger_info.last_step_complete_reason) + "%N")
 				print ("%N")
@@ -244,7 +249,7 @@ feature {NONE} -- debugger behavior
 				then
 					unknown_class_for_call_stack_stop := not Il_debug_info_recorder.has_class_info_about_module_class_token (l_module_name, l_class_token)
 --				else
---					unknown_class_for_call_stack_stop := False					
+--					unknown_class_for_call_stack_stop := False
 				end
 				if unknown_class_for_call_stack_stop then
 					debug ("debugger_trace_stepping")

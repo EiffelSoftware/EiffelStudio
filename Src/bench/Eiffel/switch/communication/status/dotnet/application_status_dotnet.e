@@ -44,29 +44,31 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 				l_curr_mod_name := l_current_stack_info.current_module_name
 				l_curr_class_tok := l_current_stack_info.current_class_token
 				l_curr_feature_tok := l_current_stack_info.current_feature_token
-				l_dyn_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_curr_mod_name, l_curr_class_tok)
-				l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_curr_mod_name, l_curr_feature_tok)	
-
-				if l_feature_i = Void then
-					if l_curr_feature_tok = Il_debug_info_recorder.entry_point_token then
-						l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+				if Il_debug_info_recorder.has_info_about_module (l_module_name) then
+					l_dyn_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_curr_mod_name, l_curr_class_tok)
+					l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_curr_mod_name, l_curr_feature_tok)
+					if l_feature_i = Void then
+						if l_curr_feature_tok = Il_debug_info_recorder.entry_point_token then
+							l_feature_i := Il_debug_info_recorder.entry_point_feature_i
+						end
 					end
-				end
-
-				object_address := l_current_stack_info.current_stack_address					
-
-				if l_dyn_class_type /= Void then
-					dynamic_class := l_dyn_class_type.associated_class				
+					if l_dyn_class_type /= Void then
+						dynamic_class := l_dyn_class_type.associated_class				
+				
+						if l_feature_i /= Void then
+							e_feature := l_feature_i.e_feature
+							body_index := e_feature.body_index
+							origin_class := l_feature_i.written_class
 			
-					if l_feature_i /= Void then
-						e_feature := l_feature_i.e_feature
-						body_index := e_feature.body_index
-						origin_class := l_feature_i.written_class
-		
-						l_curr_il_offset := l_current_stack_info.current_il_offset			
-						break_index := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_dyn_class_type, l_feature_i, l_curr_il_offset)
-					end
-				end			
+							l_curr_il_offset := l_current_stack_info.current_il_offset			
+							break_index := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_dyn_class_type, l_feature_i, l_curr_il_offset)
+						end
+					end						
+				else
+					l_dyn_class_type := Void
+					l_feature_i := Void					
+				end
+				object_address := l_current_stack_info.current_stack_address					
 			end
 		end
 	

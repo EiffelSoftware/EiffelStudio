@@ -203,7 +203,7 @@ extern void expop();			/* Pops an execution vector off */
 extern void eraise();			/* Raise an Eiffel exception */
 extern void xraise();			/* Raise an exception with no tag */
 extern void eviol();			/* Eiffel violation of last assertion */
-extern void enomem();			/* Raises an "Out of memory" excpetion */
+extern void enomem();			/* Raises an "Out of memory" exception */
 extern struct ex_vect *exret();	/* Retries execution of routine */
 extern void exhdlr();			/* Call signal handler */
 extern void exinv();			/* Invariant record */

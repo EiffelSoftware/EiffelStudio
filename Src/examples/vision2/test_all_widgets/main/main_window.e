@@ -43,7 +43,7 @@ feature -- Initialization
 			c5: TEXT_FIELD_DEMO_WINDOW
 			c6: TEXT_AREA_DEMO_WINDOW
 			c7: MENU_DEMO_WINDOW
-			c8: SPLIT_AREA_DEMO_WINDOW
+			c8: SPLIT_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)

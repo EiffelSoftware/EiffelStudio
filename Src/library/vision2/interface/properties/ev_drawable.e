@@ -478,25 +478,6 @@ feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_DRAWABLE_I
 
-feature -- Obsolete
-
-	set_logical_mode (a_mode: INTEGER) is
-			-- Set drawing mode to `a_logical_mode'.
-		obsolete
-			"Use: set_drawing_mode"
-		do
-			set_drawing_mode (a_mode)
-		end
-
-	clear_rect (x1, y1, x2, y2: INTEGER) is
-			-- Erase rectangle (`x1, `y1') - (`x2', `y2') with
-			-- `background_color'.
-		obsolete
-			"Use: clear_rectangle"
-		do
-			implementation.clear_rectangle (x1, y1, x2, y2)
-		end
-
 invariant
 	line_width_positive_or_zero: is_usable implies line_width >= 0
 	drawing_mode_valid: is_usable implies valid_drawing_mode (drawing_mode)

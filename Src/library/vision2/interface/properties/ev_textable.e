@@ -136,32 +136,6 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_TEXTABLE_I
 			-- Responsible for interaction with the native graphics toolkit.
 			
-feature -- Obsolete
-
-	set_center_alignment is
-			-- Display `text' centered.
-		obsolete
-			"Use: align_text_center."
-		do
-			align_text_center
-		end
-
-	set_right_alignment is
-			-- Display `text' right aligned.
-		obsolete
-			"Use: align_text_right."
-		do
-			align_text_right
-		end
-        
-	set_left_alignment is
-			-- Display `text' left aligned.
-		obsolete
-			"Use: align_text_left."
-		do
-			align_text_left
-		end
-
 invariant
 	text_not_void_implies_text_not_empty:
 		is_usable and text /= Void implies text.count > 0

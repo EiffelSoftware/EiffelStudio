@@ -8,6 +8,12 @@ inherit
 
 	FONT_LIST_I;
 
+	MEMORY
+		undefine
+			is_equal, copy, consistent, setup
+		redefine
+			dispose
+		end;
 
 	FIXED_LIST [FONT]
 		rename
@@ -43,6 +49,12 @@ feature
 				list_create (get_font_count)
 			end
 		end; 
+
+	dispose is
+			-- Free the font list pointer.
+		do
+			x_free_font_names (fonts_ptr);
+		end;
 
 	destroy is
 			-- Free memory allocated for current font list

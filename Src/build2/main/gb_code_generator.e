@@ -35,6 +35,16 @@ feature -- Basic operation
 		local	
 			directory: DIRECTORY
 			directory_file_name: FILE_NAME
+			root_element: XML_ELEMENT
+			current_element: XML_ELEMENT
+			current_name: STRING
+			current_type: STRING
+			window_element: XML_ELEMENT
+			name_counter: INTEGER
+			window_file_name: FILE_NAME
+			current_directory: STRING
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
 		do
 				-- Note that the generation of the XML file used internally,
 				-- is not performed until `build_main_window_implementation' is called.
@@ -56,14 +66,95 @@ feature -- Basic operation
 				build_application_file
 			end
 			
-				-- Generate the window implementation for the project.
-			build_main_window_implementation
+				-- We must build an XML file representing the project, and
+				-- then for every window found in that file, generate a new window.
+			generate_xml_for_project
+			
+			root_element := current_document.root_element
+			from
+				root_element.start
+			until
+				root_element.off
+			loop
+				current_element ?= root_element.item_for_iteration
+				if current_element /= Void then
+				
+				current_name := current_element.name.to_utf8
+					if current_name.is_equal (Item_string) then
+						current_type := current_element.attribute_by_name (type_string).value.to_utf8
+						if current_type.is_equal (directory_string) then
+							from
+								current_element.start
+							until
+								current_element.off
+							loop
+								window_element ?= current_element.item_for_iteration
+								if window_element /= Void then
+									current_name := window_element.name.to_utf8
+									if current_name.is_equal (Internal_properties_string)  then
+										full_information := get_unique_full_info (window_element)
+										element_info := full_information @ (name_string)
+										window_file_name := clone (generated_path)
+										window_file_name.extend (element_info.data)
+										create directory.make (window_file_name)
+										if not directory.exists then
+											directory.create_dir
+										end
+										current_directory := element_info.data
+									else
+										prepass_xml (window_element, document_info, 1)
+											-- Generate the window implementation for the project.
+										name_counter := name_counter + 1
+										window_file_name := clone (generated_path)
+										window_file_name.extend (current_directory)
+										window_file_name.extend ("main_window" + name_counter.out + ".e")
+										build_main_window_implementation (window_file_name)
+									end
+								end
+								current_element.forth
+							end
+						else
+							prepass_xml (current_element, document_info, 1)
+							window_file_name := clone (generated_path)
+							window_file_name.extend ("main_window" + name_counter.out + ".e")
+							build_main_window_implementation (window_file_name)							
+						end
+					end
+				
+				end
+				
+				root_element.forth
+			end
 			
 				-- Generate the window for the project.
 			build_main_window
-
 		end
 		
+	generate_xml_for_project is
+			-- Generate XML for the current project into `current_document'.
+			-- This XML document will be used to generate the source code.
+		local
+			store: GB_XML_STORE
+			generation_settings: GB_GENERATION_SETTINGS
+		do
+				set_progress (0.3)
+				create store
+					-- Generate an XML representation of the current project.
+					-- We will build our class text directly from this XML.
+				create generation_settings
+				generation_settings.enable_generate_names
+				store.generate_document (generation_settings)
+				current_document := store.document
+				check
+					current_document_not_void: current_document/= Void
+				end
+				
+					-- We must now parse the generated file, and build a representation
+					-- that is contained within. This is then used by the generator,
+					-- to find paticular information regarding the structure.
+				create document_info.make_root
+				create all_ids.make (50)
+		end
 	
 	set_progress_bar (bar: EV_PROGRESS_BAR) is
 			-- Assign `bar' to `progress_bar'
@@ -105,61 +196,59 @@ feature {NONE} -- Implementation
 			end	
 		end
 		
-		generate_ace_file (template_file_name, file_name: STRING) is
-				-- Generate a new ace file from template `template_file_name', and save it
-				-- as `file_name'. `template_file_name' is full path, but `file_name' is
-				-- just name of ace file.
-			local
-				project_location, temp_string: STRING
-				ace_file_name: FILE_NAME
-				ace_template_file, ace_output_file: PLAIN_TEXT_FILE
-				i, j: INTEGER
-			do
-				create project_location.make_from_string (system_status.current_project_settings.project_location)
+	generate_ace_file (template_file_name, file_name: STRING) is
+			-- Generate a new ace file from template `template_file_name', and save it
+			-- as `file_name'. `template_file_name' is full path, but `file_name' is
+			-- just name of ace file.
+		local
+			project_location, temp_string: STRING
+			ace_file_name: FILE_NAME
+			ace_template_file, ace_output_file: PLAIN_TEXT_FILE
+			i, j: INTEGER
+		do
+			create project_location.make_from_string (system_status.current_project_settings.project_location)
+		
+			create ace_template_file.make_open_read (template_file_name)
+			create ace_text.make (ace_template_file.count)
+			ace_template_file.start
+			ace_template_file.read_stream (ace_template_file.count)
+			ace_text := ace_template_file.last_string
+			ace_template_file.close
 			
-				create ace_template_file.make_open_read (template_file_name)
-				create ace_text.make (ace_template_file.count)
-				ace_template_file.start
-				ace_template_file.read_stream (ace_template_file.count)
-				ace_text := ace_template_file.last_string
-				ace_template_file.close
-				
-					-- | FIXME
-					-- This code only supports two project location tags per ace file.
-					-- This should be made more general.
-				i := ace_text.substring_index (project_location_tag, 1)
-				j := ace_text.substring_index (project_location_tag, i + 1)
-				
-				ace_text.replace_substring_all (project_location_tag, "")			
-				ace_text.insert_string (project_location, i)
-				temp_string := project_location
-				if j >0 then
-					ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
-				end
-				
-					-- Now add the project_name. Note that we add double quotes around the name.
-					-- This allows use to use project names that clash with ace file settings,
-					-- for example, library is an invalid project name without double quotes
-					
-				add_generated_string (ace_text, "%"" + project_settings.project_name + "%"", project_name_tag)				
-				
-					-- Now add the application class name.
-				add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
-				
-				ace_file_name := clone (generated_path)
-				ace_file_name.extend (file_name)
-						-- Store `ace_text'.
-				create ace_output_file.make (ace_file_name)
-				if not ace_output_file.exists or project_settings.rebuild_ace_file then
-					ace_output_file.open_write
-					ace_output_file.start
-					ace_output_file.putstring (ace_text)
-					ace_output_file.close
-				end
+				-- | FIXME
+				-- This code only supports two project location tags per ace file.
+				-- This should be made more general.
+			i := ace_text.substring_index (project_location_tag, 1)
+			j := ace_text.substring_index (project_location_tag, i + 1)
+			
+			ace_text.replace_substring_all (project_location_tag, "")			
+			ace_text.insert_string (project_location, i)
+			temp_string := project_location
+			if j >0 then
+				ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
 			end
 			
-		
-		
+				-- Now add the project_name. Note that we add double quotes around the name.
+				-- This allows use to use project names that clash with ace file settings,
+				-- for example, library is an invalid project name without double quotes
+				
+			add_generated_string (ace_text, "%"" + project_settings.project_name + "%"", project_name_tag)				
+			
+				-- Now add the application class name.
+			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
+			
+			ace_file_name := clone (generated_path)
+			ace_file_name.extend (file_name)
+					-- Store `ace_text'.
+			create ace_output_file.make (ace_file_name)
+			if not ace_output_file.exists or project_settings.rebuild_ace_file then
+				ace_output_file.open_write
+				ace_output_file.start
+				ace_output_file.putstring (ace_text)
+				ace_output_file.close
+			end
+		end
+
 		build_application_file is
 				-- Generate an application class for the project.
 			local
@@ -205,7 +294,7 @@ feature {NONE} -- Implementation
 			end
 			
 		
-		build_main_window_implementation is
+		build_main_window_implementation (file_name: FILE_NAME) is
 				-- Generate a main window for the project.
 			local
 				window_template_file, window_output_file: PLAIN_TEXT_FILE
@@ -213,26 +302,6 @@ feature {NONE} -- Implementation
 				store: GB_XML_STORE
 				generation_settings: GB_GENERATION_SETTINGS
 			do
-				set_progress (0.3)
-				create store
-					-- Generate an XML representation of the current project.
-					-- We will build our class text directly from this XML.
-				create generation_settings
-				generation_settings.enable_generate_names
-				store.generate_document (generation_settings)
-				current_document := store.document
-				check
-					current_document_not_void: current_document/= Void
-				end
-				
-					-- We must now parse the generated file, and build a representation
-					-- that is contained within. This is then used by the generator,
-					-- to find paticular information regarding the structure.
-				create document_info.make_root
-				create all_ids.make (50)
-				prepass_xml (current_document.root_element, document_info, 1)				
-				
-				
 				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
 				if system_status.is_wizard_system then
@@ -352,7 +421,7 @@ feature {NONE} -- Implementation
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
 				window_file_name.extend (system_status.current_project_settings.main_window_class_name.as_lower + class_implementation_extension.as_lower + eiffel_class_extension)
-				create window_output_file.make_open_write (window_file_name)
+				create window_output_file.make_open_write (file_name)
 				window_output_file.start
 				window_output_file.putstring (class_text)
 				window_output_file.close

@@ -351,13 +351,16 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			an_action_sequence.prune_all (target)
 			an_action_sequence.prune_all (kamikaze_cell.item)
 		end
+		
+	is_destroyed: BOOLEAN
 
 feature {EV_APPLICATION_IMP} -- Destruction
 
 	destroy is
 			-- Disconnect the 
 		do
-			c_ev_gtk_callback_marshal_destroy
+			--c_ev_gtk_callback_marshal_destroy
+			is_destroyed := True
 		end
 
 feature {NONE} -- Implementation

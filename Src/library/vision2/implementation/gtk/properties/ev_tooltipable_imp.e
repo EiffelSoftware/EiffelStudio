@@ -45,7 +45,7 @@ feature -- Element change
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
 	    do
-			tooltip := Void
+			tooltip := ""
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				c_object,

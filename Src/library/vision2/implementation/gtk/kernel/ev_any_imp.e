@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			debug ("EV_GTK_DISPOSE")
 				safe_print (generator + ".dispose")
 			end
-			if c_object /= NULL then
+			if c_object /= NULL then-- and then not gtk_marshal.is_destroyed then
 				-- Destroy has been explicitly called.
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c

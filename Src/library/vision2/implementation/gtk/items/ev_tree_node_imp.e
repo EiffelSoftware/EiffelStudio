@@ -128,7 +128,10 @@ feature -- Tooltipable
 
 	tooltip: STRING
 
-	set_tooltip (a_string: STRING) is do end
+	set_tooltip (a_string: STRING) is
+		do
+			tooltip := clone (a_string)
+		end
 
 	remove_tooltip is do end
 

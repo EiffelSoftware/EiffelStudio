@@ -40,7 +40,6 @@ feature -- Element change
 			-- Assign `a_pixmap' to `pixmap'.
 		local
 			imp: EV_PIXMAP_IMP
-			new_pixmap: EV_PIXMAP
 		do
 			remove_pixmap
 			create pixmap

@@ -184,7 +184,7 @@ feature -- Element change
 			-- 
 		do
 			if gc /= NULL then
-				C.gdk_gc_unref (gc)
+				gdk_gc_unref (gc)
 			end
 			Precursor
 		end

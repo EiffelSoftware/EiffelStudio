@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_entry_new)
 			entry_widget := c_object
+			set_text ("")
 		end
 
 feature -- Access
@@ -52,12 +53,7 @@ feature -- Status setting
 			tf_text: STRING
 			temp_text: ANY
 		do
-			if a_text /= Void then
-				tf_text := a_text
-			else
-				tf_text := ""
-			end
-			temp_text := tf_text.to_c
+			temp_text := a_text.to_c
 			C.gtk_entry_set_text (entry_widget, $temp_text)
 		end
 
@@ -126,6 +122,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 
 invariant
 	entry_widget_set: entry_widget /= NULL
+	
 end -- class EV_TEXT_FIELD_IMP
 
 --|----------------------------------------------------------------

@@ -189,9 +189,7 @@ feature -- Status setting
 	set_text (txt: STRING) is
 		do
 			C.gtk_editable_delete_text (c_object, 0, -1)
-			if txt /= Void then
-				insert_text (txt)
-			end
+			insert_text (txt)
 		end
 	
 	append_text (txt: STRING) is
@@ -252,9 +250,7 @@ feature -- Basic operation
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
 		do
-			if text /= Void then
-				Result := text.substring_index (str, start)
-			end	
+			Result := text.substring_index (str, start)
 		end
 
 	scroll_to_line (i: INTEGER) is
@@ -266,9 +262,7 @@ feature -- Assertions
 	last_line_not_empty: BOOLEAN is
 			-- Has the line at least one character?
 		do
-			if text /= Void then
 				Result := not ((text @ text.count) = '%N')
-			end
 		end
 		
 feature {NONE} -- Implementation

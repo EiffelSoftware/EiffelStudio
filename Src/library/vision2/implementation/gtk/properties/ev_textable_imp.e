@@ -39,7 +39,6 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := text_label
 			C.gtk_label_get (text_label, $p)
 			check
 				p_not_null: p /= NULL
@@ -119,7 +118,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TEXTABLE
 
 invariant
-	text_label_not_void: is_usable implies text_label /= Void
+	text_label_not_void: is_usable implies text_label /= NULL
 
 end -- class EV_TEXTABLE_IMP
 

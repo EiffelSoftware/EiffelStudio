@@ -229,6 +229,13 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
  */
 #$d_sbrk HAS_SBRK	/* NC */
 
+/* HAS_SIGALTSTACK:
+ *	This symbol, if defined, indicates that the sigaltstack() routine is
+ *	available to set an alternative call stack. Otherwise it means that
+ *  a stack overflow will not be correctly handled.
+ */
+#$d_sigaltstack HAS_SIGALTSTACK		/* NC */
+
 /* HAS_SYS_SIGLIST:
  *	This symbol, if defined, indicates that the sys_siglist array is
  *	available to translate signal numbers to strings.

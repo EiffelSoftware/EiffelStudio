@@ -33,6 +33,14 @@ feature {AST_FACTORY} -- Initialization
 			right_set: right = r
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_free_as (Current)
+		end
+
 feature -- Attributes
 
 	op_name: ID_AS

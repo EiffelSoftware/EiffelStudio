@@ -61,6 +61,14 @@ feature {AST_FACTORY} -- Initialization
 			location_not_void: location /= Void
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_feature_as (Current)
+		end
+
 feature {NONE} -- Initialization
  
 	set_start_position is

@@ -8,6 +8,14 @@ class UN_MINUS_AS
 inherit
 	UNARY_AS
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_minus_as (Current)
+		end
+
 feature -- Properties
 
 	operator_name: STRING is "-"

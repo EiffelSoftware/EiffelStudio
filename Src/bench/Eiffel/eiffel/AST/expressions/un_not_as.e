@@ -11,6 +11,14 @@ inherit
 			operator_is_keyword
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_not_as (Current)
+		end
+
 feature -- Properties
 
 	operator_name: STRING is "not"

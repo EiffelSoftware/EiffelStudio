@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			right_set: right = r
 		end
 
+--feature -- Visitor
+--
+--	process (v: AST_VISITOR) is
+--			-- process current element.
+--		do
+--			v.process_binary_as (Current)
+--		end
+
 feature -- Attributes
 
 	left: EXPR_AS

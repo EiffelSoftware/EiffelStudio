@@ -25,6 +25,14 @@ feature {AST_FACTORY} -- Initialization
 			call_set: call = c
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_expr_call_as (Current)
+		end
+
 feature -- Attributes
 
 	call: CALL_AS

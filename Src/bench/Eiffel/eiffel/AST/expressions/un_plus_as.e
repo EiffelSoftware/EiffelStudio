@@ -8,8 +8,15 @@ class UN_PLUS_AS
 inherit
 	UNARY_AS
 
-feature -- Properties
+feature -- Visitor
 
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_un_plus_as (Current)
+		end
+
+feature -- Properties
 
 	operator_name: STRING is "+"
 

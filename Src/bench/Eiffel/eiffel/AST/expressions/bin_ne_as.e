@@ -9,10 +9,19 @@ class
 inherit
 	BIN_EQ_AS
 		redefine
+			process,
 			op_name, byte_anchor
 		end
 
 	PREFIX_INFIX_NAMES
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_ne_as (Current)
+		end
 
 feature -- Properties
 

@@ -14,6 +14,14 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_and_as (Current)
+		end
+
 feature -- Properties
 
 	bit_balanced: BOOLEAN is True

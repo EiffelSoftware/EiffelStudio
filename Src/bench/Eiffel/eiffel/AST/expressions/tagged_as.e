@@ -31,6 +31,14 @@ feature {AST_FACTORY} -- Initialization
 			location_set: location.is_equal (l)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_tagged_as (Current)
+		end
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is 1

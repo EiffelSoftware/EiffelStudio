@@ -31,6 +31,14 @@ feature {AST_FACTORY} -- Initialization
 			expr_set: expr = e
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_expr_addresse_as (Current)
+		end
+
 feature -- Properties
 
 	expr: EXPR_AS

@@ -110,6 +110,14 @@ feature {AST_FACTORY, EXTERNAL_CLASS_C} -- Initialization
 			click_list_set: click_list = cl
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_class_as (Current)
+		end
+
 feature -- Attributes
 
 	class_name: ID_AS

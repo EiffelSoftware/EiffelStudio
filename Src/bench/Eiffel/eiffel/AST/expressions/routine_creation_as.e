@@ -59,6 +59,14 @@ feature {AST_FACTORY} -- Initialization
 			operands_set: operands = o
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_routine_creation_as (Current)
+		end
+
 feature -- Attributes
 
 	target: OPERAND_AS

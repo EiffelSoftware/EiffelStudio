@@ -16,6 +16,14 @@ inherit
 
 	PREFIX_INFIX_NAMES
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bin_eq_as (Current)
+		end
+
 feature -- Type check, byte code and dead code removal
 
 	infix_function_name: STRING is

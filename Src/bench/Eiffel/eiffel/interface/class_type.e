@@ -78,7 +78,8 @@ feature {NONE} -- Initialization
 			if System.il_generation then
 				if
 					associated_class.is_external or 
-					associated_class.is_frozen
+					associated_class.is_frozen or
+					associated_class.is_single
 				then
 					implementation_id := static_type_id
 				else

@@ -10,16 +10,16 @@ class
 inherit
 	EV_WINDOW
 		redefine 
-			make
+			make_top_level
 		end
 	SHARED_RESOURCES
 
 creation
-	make,make_then_direct_to
+	make_top_level, make_then_direct_to
 
 feature -- Initialization
 
-	make(par: EV_WINDOW) is
+	make_top_level is
 			-- Initialize
 		local
 			h1,edit_box: EV_HORIZONTAL_BOX
@@ -27,7 +27,7 @@ feature -- Initialization
 			com: EV_ROUTINE_COMMAND
 			fix: EV_FIXED
 		do
-			precursor(par)
+			precursor
 			set_title("Preference tool")
 			set_size(400,300)
 
@@ -66,16 +66,15 @@ feature -- Initialization
 			show
 		end
 
-	make_then_direct_to(par: EV_WINDOW; category_name: STRING) is
+	make_then_direct_to (category_name: STRING) is
 			-- Popup the Preference Window with category corresponding to 'category_name'.
 		require
-			parent_exists: par /= Void
 			name_possible: category_name /= Void and then resources.resource_structure.has_category(category_name)
 		local
 			category: RESOURCE_CATEGORY
 			it : EV_TREE_ITEM
 		do
-			make(par)
+			make_top_level
 			category := resources.resource_structure.find_category_with_name(category_name,
 							resources.resource_structure.categories)
 			if category /= Void then

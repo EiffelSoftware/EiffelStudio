@@ -131,7 +131,7 @@ WOBJECTS = \
 	$(INDIR)\wgen_conf.$obj \
 	$(INDIR)\weif_type_id.$obj \
 	$(INDIR)\wrout_obj.$obj \
-	$(TOP)\idrs\idr.$lib \
+	$(TOP)\idrs\idrs.$obj \
 	$(TOP)\console\wwinconsole.$lib \
 
 EOBJECTS = \
@@ -299,7 +299,7 @@ MT_WOBJECTS = \
 	$(INDIR)\MTwgen_conf.$obj \
 	$(INDIR)\MTweif_type_id.$obj \
 	$(INDIR)\MTwrout_obj.$obj \
-	$(TOP)\idrs\mtidr.$lib \
+	$(TOP)\idrs\mtidrs.$obj \
 	$(TOP)\console\mtwwinconsole.$lib \
 
 all:: eif_size.h
@@ -395,12 +395,12 @@ $(FREEOUTDIR)\mtfinalized.dll : $(FREEOUTDIR) $(MT_FREE_OBJECTS)
 	$(MAKE)
 	cd ..\run-time
 
-..\idrs\idr.$lib:
+..\idrs\idrs.$obj:
 	cd ..\idrs
 	$(MAKE)
 	cd ..\run-time
 
-..\idrs\mtidr.$lib:
+..\idrs\mtidrs.$obj:
 	cd ..\idrs
 	$(MAKE)
 	cd ..\run-time

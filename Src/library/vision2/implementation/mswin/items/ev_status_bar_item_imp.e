@@ -19,7 +19,6 @@ inherit
 		undefine
 			parent
 		redefine
-			set_text,
 			set_pixmap,
 			remove_pixmap,
 			parent_imp,
@@ -44,6 +43,8 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	text: STRING
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -94,7 +95,7 @@ feature -- Status setting
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
+			text := clone (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
 			end
@@ -142,6 +143,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/23 02:18:26  brendel
+--| Removed redefine of `set_text'. Added feature `text'.
+--|
 --| Revision 1.14  2000/02/19 05:44:59  oconnor
 --| released
 --|

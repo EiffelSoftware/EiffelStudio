@@ -22,7 +22,6 @@ inherit
 		undefine
 			parent
 		redefine
-			set_text,
 			set_pixmap,
 			parent_imp,
 			interface
@@ -57,6 +56,8 @@ feature {NONE} -- Initialization
 		-- The parent of `Current'.
 
 feature -- Access
+
+	text: STRING
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -112,7 +113,7 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
+			text := clone (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 				parent_imp.auto_size
@@ -261,6 +262,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/23 02:18:53  brendel
+--| Removed redefine of `set_text'. Added feature `text'.
+--|
 --| Revision 1.12  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

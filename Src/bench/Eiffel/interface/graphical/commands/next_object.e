@@ -18,7 +18,7 @@ inherit
 			work
 		end;
 
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -28,10 +28,13 @@ feature
 
 	work (argument: ANY) is
 			-- Retarget the object tool with the next object in history.
+		local
+			status: APPLICATION_STATUS
 		do
-			if not Run_info.is_running then
+			status := Application.status;
+			if status = Void then
 				warner (text_window).gotcha_call (w_System_not_running)
-			elseif not Run_info.is_stopped then
+			elseif not status.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
 				nt_work (argument)

@@ -29,7 +29,7 @@ feature {NONE}
 				warner (text_window).custom_call (Current, w_Freeze_warning,
 							"Freeze now", Void, "Cancel");
 			elseif (argument /= Void and then argument = last_warner) then
-				if Run_info.is_running then
+				if Application.is_running then
 					end_run_confirmed := true;
 					confirmer (text_window).call (Current,
 							"Recompiling project will end current run.%N%

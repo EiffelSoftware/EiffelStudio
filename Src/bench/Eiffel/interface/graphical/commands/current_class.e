@@ -5,7 +5,7 @@ class CURRENT_CLASS
 inherit
 
 	ICONED_COMMAND;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -23,19 +23,23 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Retarget the class tool with the current class if any.
 		local
-			e_class: E_CLASS
+			e_class: E_CLASS;
+			status: APPLICATION_STATUS;
+			st: FEATURE_STONE
 		do
-			if not Run_info.is_running then
+			status := Application.status;
+			if status = Void then
 				warner (text_window).gotcha_call (w_System_not_running)
-			elseif not Run_info.is_stopped then
+			elseif not status.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
-			elseif Run_info.e_feature = Void or Run_info.class_type = Void then
+			elseif status.e_feature = Void or status.dynamic_class = Void then
 					-- Should never happen.
 				warner (text_window).gotcha_call (w_Unknown_class)
 			else
 					-- Show the current routine in that class.
-				e_class := Run_info.class_type.associated_eclass;
-				text_window.receive (Run_info.e_feature.stone (e_class))
+				e_class := status.origin_class;
+				!! st.make (status.e_feature, e_class);
+				text_window.receive (st)
 			end
 		end;
 

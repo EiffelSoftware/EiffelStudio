@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			e_x := wp.x
 			e_y := wp.y
 			left_button_down_implementation.set_item (false);
-			left_button_down_widget_implementation.replace (void);
+			left_button_down_widget_implementation.replace (Void);
 			!! k.make_from_mouse_state (keys)
 			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
 			left_button_release_actions.execute (Current, cd)
@@ -250,6 +250,10 @@ feature {NONE} -- Implementation
 				else
 					a_dc.draw_bitmap (bitmap, 3, 3, internal_width, internal_height)
 				end
+				bitmap := Void
+					--| Free all generated C objects during the display by calling
+					--| the GC.
+				collect
 			end
 		end
 
@@ -274,6 +278,10 @@ feature {NONE} -- Implementation
 				else
 					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
 				end
+				bitmap := Void
+					--| Free all generated C objects during the display by calling
+					--| the GC.
+				collect
 			end
 		end
 

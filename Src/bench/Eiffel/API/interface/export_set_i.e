@@ -6,7 +6,10 @@ inherit
 		redefine
 			is_set
 		end;
-	LINKED_SET [CLIENT_I];
+	LINKED_SET [CLIENT_I]
+		rename
+			is_subset as ll_is_subset
+		end;
 	SHARED_WORKBENCH;
 
 creation
@@ -95,6 +98,51 @@ feature
 			end;
 		end;
 
+	is_subset (other: EXPORT_I): BOOLEAN is
+			-- Is Current clients a subset or equal with  
+			-- `other' clients?
+		local
+			other_set: EXPORT_SET_I;
+			cur: CURSOR;
+		do
+			if other.is_none then
+				Result := False
+			elseif other.is_all then
+				Result := True;
+			else
+				other_set ?= other;
+				Result := True;
+				cur := CURSOR;
+				from
+					start
+				until
+					after or else not Result
+				loop
+					Result := other_set.has_client (item);
+					forth;
+				end;
+				go_to (cur);
+			end;
+		end;
+
+	has_client (client: CLIENT_I): BOOLEAN is
+			-- Does Current have other `client' ?
+			--| Compare written_in.
+		local
+			cur: CURSOR;
+		do
+			cur := cursor;
+			from
+				 start;
+			until
+				 offright or else Result 
+			loop
+				 Result := item.written_in = client.written_in;
+				 forth;
+			end;
+			go_to (cur);
+		end;
+ 
 	same_as (other: EXPORT_I): BOOLEAN is
 			-- is `other' the same as Current ?
 		local

@@ -16,6 +16,7 @@ inherit
 	SHARED_EXEC_TABLE;
 	SHARED_DECLARATIONS;
 	SHARED_TABLE;
+	SHARED_DIALOG;
 
 creation
 
@@ -263,6 +264,13 @@ feature -- Generation
 					-- The file hasn't been generated
 				System.makefile_generator.record_empty_class_type (id)
 			end;
+        rescue
+            Dialog_window.display ("Cannot generate C code ");
+            -- FIXME remember to put back retry
+			--if not file.is_closed then
+			--	file.close;
+            -- retry;
+			--end
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is
@@ -486,6 +494,31 @@ feature -- Generation
 		end;
 
 feature -- Byte code generation
+
+	update_dispatch_table is
+			-- Update the dispatch table using melted features 
+		require
+			good_context: associated_class.has_features_to_melt;
+			Not_precompiled: not is_precompiled
+		local
+			melted_list: SORTED_TWO_WAY_LIST [MELTED_INFO];
+			feat_tbl: FEATURE_TABLE;
+		do
+			from
+					-- Iteration on the melted list of the associated class
+					-- processed during third pass of the compilation.
+				melted_list := associated_class.melted_set;
+				melted_list.start;
+
+				feat_tbl := associated_class.feature_table;
+			until
+				melted_list.offright
+			loop
+					-- Generation of byte code
+				melted_list.item.update_dispatch_unit (Current, feat_tbl);
+				melted_list.forth;
+			end;
+		end;
 
 	melt is
 			-- Generate byte code for changed features of Current class

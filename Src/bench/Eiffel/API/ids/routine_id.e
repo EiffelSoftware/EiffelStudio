@@ -38,9 +38,9 @@ feature {COMPILER_EXPORTER} -- Access
 			buff: STRING
 		do
 			Result := clone (prefix_name);
-			buff := Buffer;
+			buff := E_buffer;
 			eif011 ($buff, internal_id);
-			Result.append (Buffer)
+			Result.append (buff)
 		end;
 
 	type_table_name: STRING is
@@ -50,9 +50,9 @@ feature {COMPILER_EXPORTER} -- Access
 			buff: STRING
 		do
 			Result := clone (prefix_name);
-			buff := Buffer;
+			buff := E_buffer;
 			eif101 ($buff, internal_id);
-			Result.append (Buffer)
+			Result.append (buff)
 		end;
 
 feature {NONE} -- Implementation

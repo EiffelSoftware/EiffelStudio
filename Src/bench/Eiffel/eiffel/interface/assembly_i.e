@@ -80,10 +80,9 @@ feature {NONE} -- Initialization
 			update_path
 
 				-- Necessary initialization to preserve inherited invariants.
-			create renamings.make
-			create ignore.make
 			create sub_clusters.make (0)
 			create classes.make (0)
+			create overriden_classes.make (0)
 		ensure
 			cluster_name_set: cluster_name = a.cluster_name
 			assembly_name_set: not is_local implies (assembly_name = a.assembly_name)
@@ -137,10 +136,9 @@ feature {NONE} -- Initialization
 			update_path
 
 				-- Necessary initialization to preserve inherited invariants.
-			create renamings.make
-			create ignore.make
 			create sub_clusters.make (0)
 			create classes.make (0)
+			create overriden_classes.make (0)
 		ensure
 			cluster_name_set: cluster_name /= Void
 			assembly_name_set: not is_local implies (assembly_name = l_ass.name)

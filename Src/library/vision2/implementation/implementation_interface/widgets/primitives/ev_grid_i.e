@@ -412,7 +412,7 @@ feature -- Measurements
 	row_count: INTEGER
 			-- Number of rows in Current
 
-feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	index_of_column (a_column: EV_GRID_COLUMN): INTEGER is
 			-- index of column `a_column'.

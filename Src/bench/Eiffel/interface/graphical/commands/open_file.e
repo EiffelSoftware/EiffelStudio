@@ -22,7 +22,7 @@ feature {NONE}
 			-- Open a file.
 		local
 			fn: STRING;
-			f: PLAIN_TEXT_FILE;
+			f: RAW_FILE;
 			temp: STRING
 		do
 			if last_warner /= Void and argument = last_warner then

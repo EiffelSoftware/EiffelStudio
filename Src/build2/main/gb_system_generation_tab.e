@@ -83,11 +83,11 @@ feature -- Status setting
 --			else
 --				class_radio_button.enable_select
 --			end
---			if project_settings.grouped_locals then
---				local_check_button.enable_select
---			else
---				local_check_button.disable_select
---			end
+			if project_settings.grouped_locals then
+				local_check_button.enable_select
+			else
+				local_check_button.disable_select
+			end
 		end
 		
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
@@ -100,11 +100,11 @@ feature -- Status setting
 --			else
 --				project_settings.disable_complete_project
 --			end
---			if local_check_button.is_selected then
---				project_settings.enable_grouped_locals
---			else
---				project_settings.disable_grouped_locals
---			end
+			if local_check_button.is_selected then
+				project_settings.enable_grouped_locals
+			else
+				project_settings.disable_grouped_locals
+			end
 		end	
 
 feature {GB_SYSTEM_WINDOW} -- Implementation

@@ -289,9 +289,13 @@ feature {NONE} -- Processing
 			l_parent,
 			l_script_tag: XM_ELEMENT
 		do
-			l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
+			if shared_constants.help_constants.is_tree_web_help then				
+				l_script_text := "//empty"
+			else				
+				l_script_text := "doc = window.location.href;if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
 				%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);%
 				%setCookie ('redirecturl', doc, expdate);window.location.replace ('/index.html');}"
+			end
 			l_parent := internal_xml.element_by_name ("document")
 			if l_parent /= Void then
 					-- Insert script in header

@@ -466,23 +466,24 @@ feature {NONE} -- Generation
 						-- Routine is always implemented unless found otherwise (Deferred routine 
 						-- with no implementation).
 					l_is_implemented := True
+					if is_function then
+						buffer.putstring ("return ")
+					end
 
 					entry :=  Eiffel_table.poly_table (rout_id)
+
+					buffer.putchar ('(')
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-						buffer.putstring ("RTNR(");
+						c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
+						buffer.putstring ("RTNR) (");
 						buffer.putstring (l_current_name)
 						buffer.putstring( ");")
 					else
-						if is_function then
-							buffer.putstring ("return ")
-						end
-
-						buffer.putchar ('(')
-						c_return_type.generate_function_cast (buffer, a_types)
 						l_type_id := a_type.type_id
 						if entry.is_polymorphic (l_type_id) then
+							c_return_type.generate_function_cast (buffer, a_types)
 							table_name := Encoder.table_name (rout_id)
 							buffer.putstring (table_name)
 							buffer.putstring ("[Dtype(")
@@ -500,6 +501,7 @@ feature {NONE} -- Generation
 							rout_table ?= entry
 							rout_table.goto_implemented (l_type_id)
 							if rout_table.is_implemented then
+								c_return_type.generate_function_cast (buffer, a_types)
 								function_name := rout_table.feature_name
 								buffer.putstring (function_name)
 								buffer.putstring (")(")
@@ -512,6 +514,7 @@ feature {NONE} -- Generation
 									-- to False to not generate the argument list since
 									-- RTNR takes only one argument.
 								l_is_implemented := False
+								c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>)
 								buffer.putstring ("RTNR) (")
 								buffer.putstring (l_current_name)
 							end

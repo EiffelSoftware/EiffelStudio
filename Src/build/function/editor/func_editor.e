@@ -280,8 +280,8 @@ feature {NONE}
 			form.attach_top_widget (menu_bar, output_form, 3);
 			form.attach_left (input_form, 1);
 			form.attach_right (output_form, 1);
-			form.attach_right_position (input_form, 1);
 			form.attach_left_position (output_form, 1);
+			form.attach_right_widget (output_form, input_form, 1);
 			form.attach_left (button_form, 1);
 			form.attach_right (button_form, 1);
 			form.attach_bottom (button_form, 1);

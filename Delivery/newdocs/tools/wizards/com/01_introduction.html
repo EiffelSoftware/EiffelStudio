@@ -7,8 +7,75 @@
 	</HEAD>
 
 	<BODY>
-		<H1>Description</H1>
-		<P>Version: 5.0</P>
-		<P>Availability: Basic Package.</P>
+		<H1>Introduction</H1>
+		<p>
+		<A NAME="pgfId=371663"></A>
+		 The COM standard allows software components written in different languages to
+		 communicate with each other. Unfortunately, building COM compliant applications
+		 requires the development of large amount of code only dedicated to support the
+		 technology. The EiffelCOM wizard was designed to free programmers from writing
+		 the plumbing code.
+		  <p>
+		<A NAME="pgfId=375227">
+		 </A>
+		 The EiffelCOM wizard is a powerful tool that enables the fast development of
+		COM components in Eiffel and access COM components from Eiffel systems. It
+		consists of a series of dialogs, which ask about the component’s
+		characteristics. The wizard needs the data to produce an Eiffel system skeleton,
+		the code to access or create a component, and the component-specific runtime
+		libraries.
+		  <p>
+		<A NAME="pgfId=374028">
+		 </A>
+		The wizard allows Eiffel developers with little COM
+		knowledge to develop and reuse COM components. The design of the generated code
+		follows the Eiffel standards and is familiar experienced Eiffel users. The only
+		prerequisite to use the EiffelCOM wizard is an understanding of the <i>Interface
+		Definition Language</i>. <i>IDL</i> describes a component. Standard compilers
+		can generate <i>Type Libraries</i> from <i>IDL</i> files. Tools that need
+		information on a given component, such as the EiffelCOM wizard, Visual Basic,
+		etc. analyze Type Libraries. The <i>IDL</i> syntax is very close to C and easy
+		to learn.
+		  <p>
+		<A NAME="pgfId=369655"></A>
+		 The wizard generates code from a Type Library and additional information given
+		 by the user. The generated code consists of Eiffel classes, C/C++ files, and
+		 library files. The wizard automatically produces library files from generated C
+		 and C++ code. You do not need to modify generated C/C++ code to build your
+		 EiffelCOM system.
+
+		</p>
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=370383">
+		 </A>
+		Code Generation Process</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=370381">
+		 </A>
+		<MAP NAME="wizard-1">
+		</MAP>
+		<IMG SRC="images/wizard-1.gif" USEMAP="#wizard-1" ALIGN="LEFT" width="408" height="230">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		<p>
+		<A NAME="pgfId=370497"></A>
+		 The wizard automatically compiles the generated C
+		 and Eiffel code. To produce a Type Library corresponding to a given IDL file
+		 the wizard uses <i>MIDL</i>, the MICROSOFT IDL compiler. You may also provide
+		 the wizard with a Type Library directly. For the rest of the manual a<i> COM
+		 Definition File</i> will refer to the input file given to the wizard (either an
+		 IDL file or a Type Library). If you want to start from an existing Eiffel
+		 system, the wizard accepts an Eiffel class and generates an IDL file from it
+		 and then proceeds as above.
+		</p>
 	</BODY>
 </HTML>

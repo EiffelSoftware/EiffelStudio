@@ -85,12 +85,12 @@ feature {COMPILER_EXPORTER}
 			-- [Semantic: old_status.equiv (new_status) ]
 		local
 			other_set: EXPORT_SET_I;
-			pos: INTEGER;
+			old_cursor: CURSOR;
 			export_client, other_export_client: CLIENT_I;
 		do
 			other_set ?= other;
 			if other_set /= Void then
-				pos := index;
+				old_cursor := cursor;
 				from
 					Result := True;
 					start;
@@ -105,7 +105,7 @@ feature {COMPILER_EXPORTER}
 								export_client.equiv (other_export_client);
 					forth;
 				end;
-				go_i_th (pos);
+				go_to (old_cursor);
 			else
 				Result := other.is_all;
 			end;
@@ -129,18 +129,18 @@ feature {COMPILER_EXPORTER}
 			-- Concatenation of Current and `other'
 		local
 			other_set, new: EXPORT_SET_I;
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 			if other.is_set then
 					-- Duplication
-				pos := index;
+				old_cursor := cursor;
 				start;
 				Result := duplicate (count);
 					-- Merge
 				other_set ?= other;
 				new ?= Result;
 				new.merge (other_set);
-				go_i_th (pos);
+				go_to (old_cursor);
 			elseif other.is_none then
 				Result := Current;
 			else
@@ -183,9 +183,9 @@ feature {COMPILER_EXPORTER}
 	clause (written_in: CLASS_ID): CLIENT_I is
 			-- Clause of attribute `written_in' 
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
-			pos := index;
+			old_cursor := cursor;
 			from
 				start;
 			until
@@ -196,7 +196,7 @@ feature {COMPILER_EXPORTER}
 				end;
 				forth;
 			end;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 
 	trace is

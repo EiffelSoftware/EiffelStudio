@@ -52,6 +52,7 @@ feature
 				end;
 
 			end;
+
 			deg_output.put_end_degree;
 			System.set_current_class (Void);
 		end;
@@ -65,9 +66,10 @@ feature
 			found: BOOLEAN;
 			pass_c: PASS_C;
 			position: INTEGER;
+			old_cursor: CURSOR
 		do
 			from
-				position := changed_classes.index;
+				old_cursor := changed_classes.cursor;
 				changed_classes.start
 			until
 				changed_classes.after or else found
@@ -86,7 +88,7 @@ feature
 				end;
 				changed_classes.put_left (Result);
 			end;
-			changed_classes.go_i_th (position);
+			changed_classes.go_to (old_cursor);
 		end;
 
 	new_controler (a_class: CLASS_C): PASS_C is

@@ -143,10 +143,10 @@ end;
 			instantiator, written_actual_type, written_type, to_compair: TYPE_A;
 			written_class: CLASS_C;
 			written_id: CLASS_ID;
-			pos: INTEGER;
+			old_cursor: CURSOR;
 			info: INHERIT_INFO;
 		do
-			pos := index;
+			old_cursor := cursor;
 			from
 				info := first;
 				Result := True;
@@ -177,7 +177,7 @@ end;
 				Result := written_type.is_deep_equal (to_compair);
 				forth;
 			end;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 	
 	unselect (new_t, old_t: FEATURE_TABLE; select_table: SELECT_TABLE) is

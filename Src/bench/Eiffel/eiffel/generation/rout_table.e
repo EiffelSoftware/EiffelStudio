@@ -28,7 +28,7 @@ feature
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 			first_body_id: BODY_ID;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
@@ -37,7 +37,7 @@ feature
 			found: BOOLEAN;
 			is_deferred: BOOLEAN;
 		do
-			pos := index;
+			old_cursor := cursor;
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
 			if not System.poofter_finalization then
@@ -75,7 +75,7 @@ feature
 			if not Result then
 				Result := is_deferred and then found
 			end;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 
 	generate (file: INDENT_FILE) is
@@ -153,7 +153,7 @@ feature -- DLE
 			-- Was the table in the extendible system polymorphic from
 			-- entry indexed by `type_id' to the maximum entry id?
 		local
-			pos: INTEGER;
+			old_cursor: CURSOR;
 			first_body_id: BODY_ID;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
@@ -162,7 +162,7 @@ feature -- DLE
 			found: BOOLEAN;
 			is_deferred: BOOLEAN
 		do
-			pos := index;
+			old_cursor := cursor;
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
 			if not System.poofter_finalization then
@@ -201,7 +201,7 @@ feature -- DLE
 			if not Result then
 				Result := is_deferred and then found
 			end;
-			go_i_th (pos);
+			go_to (old_cursor);
 		end;
 
 end

@@ -65,7 +65,7 @@ feature {NONE}
 			finished: BOOLEAN;
 			attr_desc: ATTR_DESC;
 			stop_recursion: BOOLEAN;
-			pos: INTEGER;
+			old_cursor: CURSOR;
 		do
 			current_id := class_type.associated_class.id;
 			stop_recursion := id_set.has (current_id);
@@ -85,7 +85,7 @@ end;
 				if attr_desc.is_expanded = False then
 					finished := True
 				else
-					pos := current_skeleton.index;
+					old_cursor := current_skeleton.cursor;
 					expanded_desc ?= attr_desc;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
@@ -109,7 +109,7 @@ end;
 							recursive_check (client_type);
 						end;
 					end;
-					current_skeleton.go_i_th (pos);
+					current_skeleton.go_to (old_cursor);
 				end;
 
 				current_skeleton.forth;

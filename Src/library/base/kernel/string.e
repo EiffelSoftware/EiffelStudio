@@ -59,7 +59,7 @@ feature -- Initialization
 			area_allocated: capacity >= n;
 		end;
 
-	adapt (s: like Current): like Current is
+	adapt (s: STRING): like Current is
 			-- Object of a type conforming to the type of `s',
 			-- initialized with attributes from `s'
 		do

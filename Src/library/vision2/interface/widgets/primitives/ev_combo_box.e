@@ -30,6 +30,7 @@ inherit
 		export
 			{NONE} set_multiple_selection, is_multiple_selection
 			{NONE} selected_items
+			{NONE} add_double_click_selection_command, remove_double_click_selection_commands
 		redefine
 			implementation,
 			make

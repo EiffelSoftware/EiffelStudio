@@ -13,7 +13,6 @@ inherit
 
 	MESSAGE_D_I
 
-feature
 
 end -- class WORKING_D_I
 

@@ -546,6 +546,7 @@ feature {NONE} -- Implementation Graphical Interface
 	create_edit_buttons is
 		local
 			quit_cmd: QUIT_DYNAMIC_LIB
+			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_DYNAMIC_LIB
@@ -568,7 +569,10 @@ feature {NONE} -- Implementation Graphical Interface
 			build_print_menu_entry
 			!! quit_cmd.make (Current)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
+			if General_resources.close_button.actual_value then
+				!! quit_button.make (quit_cmd, dynamic_lib_toolbar)
+			end
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -659,6 +663,11 @@ feature {NONE} -- Implementation Graphical Interface
 
 			dynamic_lib_toolbar.attach_top (click_button,0)
 			dynamic_lib_toolbar.attach_left_widget (tex_button,click_button,0)
+
+			if quit_cmd_holder.associated_button /= Void then
+				dynamic_lib_toolbar.attach_top (quit_cmd_holder.associated_button, 0)
+				dynamic_lib_toolbar.attach_right (quit_cmd_holder.associated_button, 5)
+			end
 		end
 
 end -- class DYNAMIC_LIB_W

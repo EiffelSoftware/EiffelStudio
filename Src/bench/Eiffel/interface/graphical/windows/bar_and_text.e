@@ -168,6 +168,7 @@ feature -- Standard Interface
 		local
 			quit_cmd: QUIT_FILE
 			quit_button: EB_BUTTON
+			has_close_button: BOOLEAN
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 		do
@@ -181,7 +182,13 @@ feature -- Standard Interface
 			build_print_menu_entry
 			!! quit_cmd.make (Current)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
+
+			has_close_button := General_resources.close_button.actual_value
+			if has_close_button then
+				!! quit_button.make (quit_cmd, edit_bar)
+			end
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -192,6 +199,11 @@ feature -- Standard Interface
 			edit_bar.attach_top (hole_button, 0)
 			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
 			edit_bar.attach_left_widget (hole_button, search_cmd_holder.associated_button, 5)
+
+			if has_close_button then
+				edit_bar.attach_right (quit_button, 5)
+				edit_bar.attach_top (quit_button, 0)
+			end
 		end
 
 	build_format_bar is

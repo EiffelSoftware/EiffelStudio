@@ -597,6 +597,7 @@ feature {NONE} -- Implementation Graphical Interface
 	create_edit_buttons is
 		local
 			quit_cmd: QUIT_FILE
+			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_FILE
@@ -621,7 +622,10 @@ feature {NONE} -- Implementation Graphical Interface
 			build_print_menu_entry
 			!! quit_cmd.make (Current)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
+			if General_resources.close_button.actual_value then
+				!! quit_button.make (quit_cmd, edit_bar)
+			end
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -730,8 +734,15 @@ feature {NONE} -- Implementation Graphical Interface
 			edit_bar.attach_left_widget (previous_target_button, next_target_button, 2)
 
 			edit_bar.attach_top (class_text_field, 0)
-			edit_bar.attach_right (class_text_field, 0)
 			edit_bar.attach_left_widget (next_target_button, class_text_field, 3)
+
+			if quit_cmd_holder.associated_button /= Void then
+				edit_bar.attach_right_widget (quit_cmd_holder.associated_button, class_text_field, 0)
+				edit_bar.attach_top (quit_cmd_holder.associated_button, 0)
+				edit_bar.attach_right (quit_cmd_holder.associated_button, 0)
+			else
+				edit_bar.attach_right (class_text_field, 5)
+			end
 		end
 
 	build_format_bar is

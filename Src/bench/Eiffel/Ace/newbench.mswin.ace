@@ -212,6 +212,10 @@ cluster
 			"CVS";
 		end
 
+	all preferences:		"$EIFFEL_SRC\library\preferences"
+		exclude
+			"CVS"; "xml_implementation"
+
 	encryption:		"$EIFFEL_SRC\library\encryption"
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
@@ -234,7 +238,7 @@ cluster
 
 	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
-			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "new_tty"; "xml_implementation"; 
+			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "new_tty"; "xml_implementation"; "preferences"
 		end
 
 	tty:		"$EIFFEL_SRC\Eiffel\interface\tty"

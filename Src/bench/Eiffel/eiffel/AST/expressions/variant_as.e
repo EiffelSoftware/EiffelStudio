@@ -39,6 +39,10 @@ feature -- Type check and byte node
 			create Result
 			Result.set_tag (tag)
 			Result.set_expr (expr.byte_node)
+				-- FIXME: Manu 01/21/2003: we remove 1 since `line_number' refers to the next
+				-- construct coming after a VARIANT_AS, and most usually it is on the next line,
+				-- but not always.
+			Result.set_line_number (line_number - 1)
 		end
 
 end -- class VARIANT_AS

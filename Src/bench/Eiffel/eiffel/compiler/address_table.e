@@ -504,7 +504,7 @@ feature {NONE} -- Generation
 					gen_file.putstring (");%N")
 				end
 
-				gen_file.putstring ("%N}%N%N")
+				gen_file.putstring ("%N%TEDCX%N}%N%N") -- ss MT
 
 				types.go_to (cursor)
 				types.forth

@@ -323,7 +323,7 @@ feature -- Pattern generation
 				file.putstring (result_type.separate_send_macro);
 				file.putstring ("(result);%N");
 			end;
-			file.putstring ("}%N%N");
+			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
 		end;
 
 	generate_toc_compound (id: INTEGER; file: INDENT_FILE) is
@@ -358,7 +358,7 @@ feature -- Pattern generation
 				result_type.generate_union (file);
 				file.putstring (" = result;%N");
 			end;
-			file.putstring ("}%N%N");
+			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
 		end;
 
 	generate_toi_compound (id: INTEGER; file: INDENT_FILE) is
@@ -389,7 +389,7 @@ feature -- Pattern generation
 				result_type.generate_union (file);
 				file.putstring (";%N");
 			end;
-			file.putstring ("}%N%N");
+			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
 		end;
 
 	generate_toi_push (file: INDENT_FILE) is

@@ -160,7 +160,7 @@ feature
 				file.new_line;
 			end;
 
-			file.putstring ("}%N%N");
+			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
 
 		end;
 
@@ -278,7 +278,7 @@ feature
 				file.new_line;
 			end;
 
-			file.putstring ("}%N%N");
+			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
 
 		end;
 

@@ -108,6 +108,7 @@ feature
 				generated_file.new_line;
 			end;
 				-- End of C routine
+			generated_file.putstring ("EDCX%N"); -- ss MT
 			generated_file.exdent;
 			generated_file.putchar ('}');
 			generated_file.new_line;

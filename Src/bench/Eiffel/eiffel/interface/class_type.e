@@ -624,6 +624,7 @@ feature -- Generation
 			end;
 			file.putstring ("RTLE;");
 			file.new_line;
+			file.putstring ("EDCX%N"); -- ss MT
 			file.exdent;
 			file.putchar ('}');
 			file.new_line;

@@ -292,6 +292,7 @@ feature
 				-- If there is a rescue clause, generate it now...
 			generate_rescue;
 				-- End of C function
+			generated_file.putstring ("EDCX%N"); -- ss MT
 			generated_file.exdent;
 			generated_file.putchar ('}');
 			generated_file.new_line;

@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 			-- Create `Current' with interface `an_interface'.
 		do
 			internal_class_name := new_class_name + "_AS_DIALOG"
+			internal_icon_name := ""
 			base_make (an_interface)
 			make_top ("EV_DIALOG_WINDOW")
 			create accel_list.make (10)

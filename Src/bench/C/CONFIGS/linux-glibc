@@ -14,12 +14,14 @@ mt_prefix='mt'
 
 mtccflags='-D_REENTRANT -DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-lbsd -lm -lpthread'
+mtsharedlibs='-lbsd -lm -lpthread'
 
 # flags libs and mtlibs for graphical application (needs motif)
 #libs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lbsd -lm'
 #mtlibs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lbsd -lm -lpthread'
 
 libs='-lbsd -lm'
+sharedlibs='-lbsd -lm'
 ccflags=''
 sharedccflags='-fPIC'
 
@@ -128,6 +130,7 @@ gccversion='2.7.2.1'
 cppflags=$ccflags
 mtcppflags=$mtccflags
 ldsharedflags='-shared'
+sharedlink='ld'
 ldflags=''
 lkflags=''
 optimize='-O'

@@ -235,6 +235,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 						if l_locals.item.variable.name.is_equal (l_name) then
 							l_variable := l_locals.item.variable
 						end
+						l_locals.forth
 					end
 					if l_variable = Void then
 						l_arguments := l_routine.arguments
@@ -246,6 +247,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 							if l_arguments.item.variable.name.is_equal (l_name) then
 								l_variable := l_arguments.item.variable
 							end
+							l_arguments.forth
 						end
 					end
 					if l_variable /= Void then

@@ -9,6 +9,14 @@
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry7" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\build" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" Type="string" />
       </Component>
+      <Directory Id="ProgramMenuFolder" Name=".">
+        <Directory Id="EiffelStudio" Name="EIFFEL~4" LongName="EiffelStudio 5.6">
+          <Component Id="EiffelStudio" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6" KeyPath="yes">
+            <CreateFolder />
+            <RemoveFolder Id="EiffelStudio" On="uninstall"/>
+          </Component>
+        </Directory>
+      </Directory>
       <Directory Id="Application" Name=".">
         <Directory Id="build" Name="build">
           <Directory Id="pixmaps" Name="pixmaps">
@@ -149,8 +157,10 @@
           <Directory Id="spec" Name="spec">
             <Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">
               <Directory Id="bin" Name="bin">
-				  <Component Id="build.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
-					<File Id="build.exe" Name="build.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\build.exe" />
+                <Component Id="build.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
+                  <File Id="build.exe" Name="build.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\build.exe">
+                    <Shortcut Id="build.exe" Directory="EiffelStudio" Name="build.exe" LongName="ISE EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
+                  </File>
                 </Component>
                 <Component Id="wel_hook.dll" Guid="6E65E2A3-1D01-451D-B106-2DABD40F4286">
                   <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
@@ -163,13 +173,6 @@
               <File Id="default.xml" Name="default.xml" KeyPath="yes" />
             </Component>
           </Directory>
-        </Directory>
-      </Directory>
-      <Directory Id="ProgramMenuFolder" Name="Redist">
-        <Directory Id="EiffelStudio_5.6" Name="EIFFEL~4" LongName="EiffelStudio 5.6">
-          <Component Id="EiffelStudio_5.6" Guid="06E072A5-E6FE-4742-9A1D-69E6FA8295A6" KeyPath="yes">
-            <Shortcut Id="build.exe" Directory="EiffelStudio_5.6" Name="ISEEIF~1" LongName="ISE EiffelBuild" Target="[#build.exe]" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
-          </Component>
         </Directory>
       </Directory>
     </Directory>

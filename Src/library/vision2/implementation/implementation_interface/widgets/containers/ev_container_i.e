@@ -172,7 +172,7 @@ feature -- Basic operations
 				l.start
 				fg := foreground_color
 			until
-				l.after
+				l.off
 			loop
 				l.item.set_foreground_color (fg)
 				c ?= l.item

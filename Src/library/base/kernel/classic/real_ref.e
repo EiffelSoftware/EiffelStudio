@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 	c_ceiling (r: REAL): REAL is
 			-- Smallest integral value no smaller than `r'
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C macro signature (double): EIF_REAL use <math.h>"
 		alias
 			"ceil"
 		end
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 	c_floor (r: REAL): REAL is
 			-- Greatest integral value no greater than `r'
 		external
-			"C (double): EIF_REAL | <math.h>"
+			"C macro signature (double): EIF_REAL use <math.h>"
 		alias
 			"floor"
 		end

@@ -74,7 +74,6 @@ feature -- Status report
 		require
 			not_empty: not empty
 		local
-			i: INTEGER
 			c: COMPARATOR
 		do
 			create {PASSED_COMPARATOR} c.make (Current)
@@ -86,7 +85,6 @@ feature -- Status report
 		require
 			not_empty: not empty
 		local
-			i: INTEGER
 			c: COMPARATOR
 		do
 			create {EXCEPTION_COMPARATOR} c.make (Current)

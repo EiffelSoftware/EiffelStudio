@@ -24,7 +24,7 @@ feature -- Initialization
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
 				-- Commands used by the tab.
-			
+			h1: EV_HORIZONTAL_SEPARATOR
 		do
 		{ANY_TAB} Precursor (Void)
 
@@ -40,22 +40,28 @@ feature -- Initialization
 		create f5.make (Current, 4, 0, "Select Item", cmd1, cmd1)
 		create cmd1.make (~deselect_item)
 		create f6.make (Current, 5, 0, "Deselect Item", cmd1, cmd1)
+		create h1.make (Current)
+		set_child_position (h1, 6, 0, 7, 3)
 		create cmd1.make (~clear_selection)
 		create b1.make_with_text (Current, "Clear Selection")
 		b1.set_vertical_resize (False)
 		b1.add_click_command (cmd1, Void)
+		set_child_position (b1, 7, 0, 8, 1)
 		create cmd1.make (~toggle_selection_type)
-		create b2.make_with_text (Current, "Currently Multiple Selection. Click To Change.")
+		create b2.make_with_text (Current, "Single Selection")
 		b2.set_vertical_resize (False)
 		b2.add_click_command (cmd1, Void)
+		set_child_position (b2, 7, 1, 8, 2)
 		create cmd1.make (~clear_items)
 		create b3.make_with_text (Current, "Clear Items")
 		b3.set_vertical_resize (False)
 		b3.add_click_command (cmd1, Void)
+		set_child_position (b3, 7, 2, 8, 3)
 		create cmd1.make (~add_item)
 		create b4.make_with_text (Current, "Add Item")
 		b4.set_vertical_resize (False)
 		b4.add_click_command (cmd1, Void)
+		set_child_position (b4, 8, 1, 9, 2)
 		set_parent (par)
 		end
 
@@ -155,10 +161,10 @@ feature -- Execution Feature
 		do
 			if current_widget.is_multiple_selection then
 				current_widget.set_single_selection
-				b2.set_text ("Currently Single Selection. Click To Change.")
+				b2.set_text ("Multiple Selection")
 			else
 				current_widget.set_multiple_selection
-				b2.set_text ("Currently Multiple Selection. Click To Change.")
+				b2.set_text ("Single Selection")
 			end
 		end
 

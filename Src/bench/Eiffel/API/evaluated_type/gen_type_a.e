@@ -724,14 +724,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- there is one which can be checked ,i.e. when `to_check' conforms
 						-- to `constraint_type'.
 					formal_dec_as := associated_class.generics.i_th (i)
-					if formal_dec_as.is_reference and then not to_check.is_reference then
+					if formal_dec_as.is_reference and then not gen_param.is_reference then
 							-- FIXME: Put a better error here, i.e. one that says it is not
 							-- valid because we expect a reference actual generic parameter.
-						generate_constraint_error (Current, to_check, constraint_type, i)
-					elseif formal_dec_as.is_expanded and then not to_check.is_expanded then
+						generate_constraint_error (Current, gen_param, constraint_type, i)
+					elseif formal_dec_as.is_expanded and then not gen_param.is_expanded then
 							-- FIXME: Put a better error here, i.e. one that says it is not
 							-- valid because we expect an expanded actual generic parameter.
-						generate_constraint_error (Current, to_check, constraint_type, i)
+						generate_constraint_error (Current, gen_param, constraint_type, i)
 					elseif formal_dec_as.has_creation_constraint and system.check_generic_creation_constraint then
 							-- If we are not in degree 3 (i.e. 4), we cannot have a
 							-- complete check since if we are currently checking an attribute

@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_toggle_button_new)
-			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (c_object, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
 			avoid_reselection := True
 				-- Needed to prevent calling of action sequence.
 			enable_select
@@ -67,7 +66,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			connect_signals
-			align_text_left
+				-- Make the label text left aligned
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
 feature -- Status setting

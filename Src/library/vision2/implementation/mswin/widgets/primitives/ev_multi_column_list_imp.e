@@ -502,52 +502,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when a row has been selected.
---|FIXME		do
---|FIXME			add_command (Cmd_select, cmd, arg)
---|FIXME		end
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when a row has been unselected.
---|FIXME		do
---|FIXME			add_command (Cmd_unselect, cmd, arg)
---|FIXME		end
-
---|FIXME	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when a column is clicked.
---|FIXME		do
---|FIXME			add_command (Cmd_column_click, cmd, arg)
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_select_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when a row has been selected.
---|FIXME		do
---|FIXME			remove_command (Cmd_select)
---|FIXME		end
-
---|FIXME	remove_unselect_commands is	
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when a row has been unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_unselect)
---|FIXME		end
-
---|FIXME	remove_column_click_commands is
---|FIXME			-- Empty the list of commands to be executed
---|FIXME			-- when a column is clicked.
---|FIXME		do
---|FIXME			remove_command (Cmd_column_click)
---|FIXME		end
-
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 
@@ -904,8 +858,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.44  2000/03/06 22:30:59  rogers
---| Redefined put_right and put_front so if this is the first addition, we can set the columns before adding the new row.
+--| Revision 1.45  2000/03/06 22:34:46  rogers
+--| Removed old command association.
 --|
 --| Revision 1.43  2000/03/06 17:13:33  rogers
 --| Added calls to row select and deselect actions. Added call to column_click_actions.

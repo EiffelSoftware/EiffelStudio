@@ -16,6 +16,8 @@ inherit
 				item, lock_update, unlock_update
 		redefine
 			initialize
+		select
+			dispose
 		end
 		
 	GB_CONSTANTS
@@ -86,6 +88,20 @@ inherit
 			copy, default_create
 		end
 		
+	MEMORY
+		rename
+			dispose as memory_dispose
+		export
+			{NONE} all	
+		undefine
+			copy, default_create
+		end
+		
+	INTERNAL
+		undefine
+			copy, default_create
+		end
+		
 create
 	default_create
 	
@@ -96,6 +112,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_icon_pixmap (icon_build_window @ 1)
+			add_debug_shortcuts
 		end
 
 feature -- Basic operation
@@ -1077,6 +1094,71 @@ feature {NONE} -- Implementation
 	vertical_split_area: GB_VERTICAL_SPLIT_AREA_TOOL_HOLDER
 		-- Vertical split area holding main tools.
 		
+feature {NONE} -- Debugging Implementation
+
+	add_debug_shortcuts is
+			-- Add shortcuts to `Current' for debugging.
+		local
+			accelerator: EV_ACCELERATOR
+		do
+			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_1), True, False, False)
+			accelerator.actions.extend (agent full_garbage_collect)
+			accelerators.extend (accelerator)
+			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_2), True, False, False)
+			accelerator.actions.extend (agent mem_info)
+			accelerators.extend (accelerator)
+		end
+		
+	full_garbage_collect is
+			-- Perform a full garbage collection
+		do
+			if system_status.is_in_debug_mode then
+				collect
+				full_collect
+			end
+		end
+		
+	mem_info is
+			-- Display memory info to files on disk, named sequentially.
+		local
+			objects: ARRAYED_LIST [ANY]
+			all_objects: HASH_TABLE [ARRAYED_LIST [ANY], INTEGER]
+			output: STRING
+			file: PLAIN_TEXT_FILE
+			directory: DIRECTORY
+		do
+			if system_status.is_in_debug_mode then
+				file_count.set_item (file_count.item + 1)
+				collect
+				full_collect
+				output := "All objects in system : %N"
+				all_objects := memory_map
+				from
+					all_objects.start
+				until
+					all_objects.off
+				loop
+					objects := all_objects.item_for_iteration
+					output.append (objects.count.out + " objects of type " + type_name_of_type (all_objects.key_for_iteration) + " : %N")
+					all_objects.forth
+				end
+				create directory.make ("C:\Documents and Settings\rogers\Desktop\")
+				if directory.exists then
+					create file.make_create_read_write ("C:\Documents and Settings\rogers\Desktop\Build_Objects" + file_count.item.out + ".txt")
+				else
+					create file.make_create_read_write ("C:\Build_Objects" + file_count.item.out + ".txt")
+				end
+				file.put_string (output)
+				file.close
+			end
+		end
+		
+	file_count: INTEGER_REF is
+			-- Count used to append to end of file name for `mem_info' output.
+		once
+			create Result
+		end
+
 invariant
 	
 	menus_initalized_so_top_level_menu_items_not_void: menus_initialized implies file_menu /= Void

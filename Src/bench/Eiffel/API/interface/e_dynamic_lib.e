@@ -121,7 +121,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
    add_export_feature_from_file (t_class, t_creation, t_routine, t_index, t_alias, t_call_type: STRING) is
 		local
-			class_list: LINKED_LIST [CLASS_I]
+			class_list: LIST [CLASS_I]
 			class_i:CLASS_I
 			dl_class:CLASS_C
 			dl_creation:E_FEATURE

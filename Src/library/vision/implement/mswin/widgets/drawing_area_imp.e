@@ -12,7 +12,6 @@ inherit
 
 	PRIMITIVE_IMP
 		undefine
-			on_size,
 			on_move
 		redefine
 			background_brush,
@@ -47,6 +46,7 @@ inherit
 		undefine
 			class_background,
 			background_brush,
+			on_size,
 			on_right_button_up, on_left_button_down,
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,

@@ -77,6 +77,9 @@ feature -- Access
 			end
 		end
 
+	ace_file_generated: BOOLEAN
+			-- Was generated project ace file generated?
+
 feature -- Basic Operations
 
 	compile_idl is
@@ -146,6 +149,7 @@ feature -- Basic Operations
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
+			ace_file_generated: ace_file_generated
 		local
 			displayed: BOOLEAN
 			a_directory: DIRECTORY
@@ -159,7 +163,6 @@ feature -- Basic Operations
 			if a_directory.exists then
 				a_directory.recursive_delete
 			end
-			generate_ace_file (a_folder)
 			displayed := displayed_while_running
 			set_displayed_while_running (True)
 			if a_folder.is_equal (Client) then
@@ -231,38 +234,9 @@ feature -- Basic Operations
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	proxy_stub_file_name: STRING is
-			-- Proxy/Stub fil name
-		once
-			Result := clone (shared_wizard_environment.destination_folder)
-			Result.append_character (Directory_separator)
-			Result.append (shared_wizard_environment.project_name)
-			Result.append ("_ps.dll")
-		end
-
-	generate_def_file is
-			-- Generate standard COM def file in current folder.
-		local
-			a_file: RAW_FILE
-		do
-			change_working_directory (shared_wizard_environment.destination_folder)
-			create a_file.make (Def_file_name)
-			if not a_file.exists then
-				a_file.make_create_read_write (Def_file_name)
-				a_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
-				a_file.put_string ("EXPORTS%N")
-				a_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%N")
-				a_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%N")
-				a_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%N")
-				a_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
-				a_file.close
-			end
-		end
-
 	generate_ace_file (a_folder: STRING) is
 			-- Generate server ace file in `a_folder'.
+			-- Delete EIFGEN is already existing.
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
@@ -296,14 +270,47 @@ feature {NONE} -- Implementation
 			a_file.put_string (New_line)
 			a_file.put_string (End_keyword)
 			a_file.close
+			ace_file_generated := True
+		end
+
+feature {NONE} -- Implementation
+
+	proxy_stub_file_name: STRING is
+			-- Proxy/Stub fil name
+		once
+			Result := clone (shared_wizard_environment.destination_folder)
+			Result.append_character (Directory_separator)
+			Result.append (shared_wizard_environment.project_name)
+			Result.append ("_ps.dll")
+		end
+
+	generate_def_file is
+			-- Generate standard COM def file in current folder.
+		local
+			a_file: RAW_FILE
+		do
+			change_working_directory (shared_wizard_environment.destination_folder)
+			create a_file.make (Def_file_name)
+			if not a_file.exists then
+				a_file.make_create_read_write (Def_file_name)
+				a_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
+				a_file.put_string ("EXPORTS%N")
+				a_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%N")
+				a_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%N")
+				a_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%N")
+				a_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
+				a_file.close
+			end
 		end
 
 	server_generated_ace_file: STRING is
 			-- Beginning of server generated Ace file
 		do
 			Result := client_generated_ace_file
-			Result.replace_substring_all (Any_type, name_for_class (Shared_wizard_environment.project_name, Tkind_coclass, False))
-			Result.replace_substring_all (Default_keyword, Shared_library_option)
+			Result.replace_substring_all (Any_type, Registration_class_name)
+			if Shared_wizard_environment.in_process_server then
+				Result.replace_substring_all (Default_keyword, Shared_library_option)
+			end
 			Result.replace_substring_all (Client, Server)
 		end
 
@@ -324,6 +331,18 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Registration_class_name)
 				Result.append (Semicolon)
+				from
+					system_descriptor.coclasses.start
+				until
+					system_descriptor.coclasses.after
+				loop
+					if system_descriptor.is_generated_coclass (system_descriptor.coclasses.item) then
+						Result.append (New_line_tab_tab_tab)
+						Result.append (implemented_coclass_name (system_descriptor.coclasses.item.eiffel_class_name))
+						Result.append (Semicolon)
+					end
+					system_descriptor.coclasses.forth
+				end
 				Result.append (New_line_tab_tab)
 				Result.append (End_keyword)
 				Result.append (Semicolon)

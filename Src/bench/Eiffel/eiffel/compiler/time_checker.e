@@ -32,7 +32,7 @@ feature
 			class_c: CLASS_C
 			class_i: CLASS_I
 			checked_classes: HASH_TABLE [BOOLEAN, INTEGER]
-			clients: LINKED_LIST [CLASS_C]
+			clients: ARRAYED_LIST [CLASS_C]
 			check_clients: BOOLEAN
 			class_id: INTEGER
 		do

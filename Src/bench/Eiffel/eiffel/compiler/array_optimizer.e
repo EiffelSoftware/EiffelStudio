@@ -65,7 +65,7 @@ feature
 			lower_rout_id := ftable.item_id (l_names_heap.lower_name_id).rout_id_set.first
 			area_rout_id := ftable.item_id (l_names_heap.area_name_id).rout_id_set.first
 			
-			!!array_descendants.make
+			!!array_descendants.make (10)
 
 			!! special_features.make
 			special_features.compare_objects
@@ -98,7 +98,7 @@ feature {NONE} -- Array optimization
 	make_area_rout_id, set_area_rout_id, lower_rout_id, area_rout_id: INTEGER
 			-- rout_ids of the special/unsafe features
 
-	array_descendants: LINKED_LIST [CLASS_C]
+	array_descendants: ARRAYED_LIST [CLASS_C]
 			-- Descendants of ARRAY
 
 	lower_and_area_features: TWO_WAY_SORTED_SET [DEPEND_UNIT]
@@ -213,7 +213,7 @@ end
 	record_descendants (a_class: CLASS_C) is
 			-- Recursively records `a_class' and its descendants in `descendants'
 		local
-			d: LINKED_LIST [CLASS_C]
+			d: ARRAYED_LIST [CLASS_C]
 			an_id: INTEGER
 			ftable: FEATURE_TABLE
 			select_table: SELECT_TABLE

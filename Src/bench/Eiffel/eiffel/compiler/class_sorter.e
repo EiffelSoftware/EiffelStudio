@@ -20,7 +20,6 @@ feature -- Initialization
 			!! precursor_count.make (1,0)
 			!! successors.make (1,0)
 			!! original.make (1,0)
-			!! outsides1.make
 			!! outsides2.make
 		end
 
@@ -50,7 +49,7 @@ feature -- Sort
 			precursor_count.resize (1, n)
 			successors.resize (1, n)
 			original.resize (1, n)
-			outsides1.wipe_out
+			create outsides1.make (n)
 			outsides2.wipe_out
 			count := n
 			clear
@@ -71,11 +70,11 @@ feature -- Access
 	precursor_count: ARRAY [INTEGER]
 			-- Count of precursors
 
-	outsides1: LINKED_LIST [CLASS_C]
+	outsides1: ARRAYED_LIST [CLASS_C]
 	outsides2: PART_SORTED_TWO_WAY_LIST [CLASS_C]
 			-- Items with precursor count equal to 0
 
-	successors: ARRAY [LINKED_LIST [CLASS_C]]
+	successors: ARRAY [ARRAYED_LIST [CLASS_C]]
 			-- Succesors of items
 
 feature -- Filling
@@ -116,7 +115,7 @@ feature -- Filling
 			good_context: count > 0
 		local
 			i, k, succ_id: INTEGER
-			succ: LINKED_LIST [CLASS_C]
+			succ: ARRAYED_LIST [CLASS_C]
 		do
 			from
 					-- Initialization of `precursor_count'
@@ -163,7 +162,7 @@ feature -- Filling
 		local
 			next, k, succ_id: INTEGER
 			item, succ_item: CLASS_C
-			succ: LINKED_LIST [CLASS_C]
+			succ: ARRAYED_LIST [CLASS_C]
 		do
 			if Configure_resources.get_boolean ("topo", True) then
 				insert_succ (successors.item (outsides1.first.topological_id))
@@ -209,7 +208,7 @@ feature -- Filling
 			end
 		end
 
-	insert_succ (succ_list: LINKED_LIST [CLASS_C]) is
+	insert_succ (succ_list: ARRAYED_LIST [CLASS_C]) is
 			-- Insert all the successors in `outsides' if they don't have any
 			-- precursor which still remains for a later sutdy.
 		local
@@ -242,7 +241,7 @@ feature -- Filling
 			end
 		end
 
-	sort_succ (succ: LINKED_LIST [CLASS_C]): ARRAY [CLASS_C] is
+	sort_succ (succ: ARRAYED_LIST [CLASS_C]): ARRAY [CLASS_C] is
 			-- Create a sorted array of CLASS_C where the criteria is
 			-- less precursor and less successors.
 		local

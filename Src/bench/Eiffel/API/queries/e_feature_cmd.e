@@ -68,7 +68,7 @@ feature {NONE} -- Convenience
 			valid_classes: classes /= Void;
 			valid_e_class: e_class /= Void
 		local
-			descendants: LINKED_LIST [CLASS_C];
+			descendants: ARRAYED_LIST [CLASS_C];
 			desc_c: CLASS_C
 		do
 			descendants := e_class.descendants;

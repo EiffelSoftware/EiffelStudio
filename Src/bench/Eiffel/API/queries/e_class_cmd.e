@@ -70,7 +70,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	sorted_list (list: LINKED_LIST [CLASS_C]): SORTED_TWO_WAY_LIST [CLASS_I] is
+	sorted_list (list: ARRAYED_LIST [CLASS_C]): SORTED_TWO_WAY_LIST [CLASS_I] is
 			-- Sorted `list' based on `class_name' from `CLASS_I'
 		require
 			valid_list: list /= Void

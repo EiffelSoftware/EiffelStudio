@@ -1955,7 +1955,7 @@ feature {NONE} -- Implementation
 		local
 			compiled_root_class: CLASS_C
 			supplier: CLASS_C
-			supplier_clients: LINKED_LIST [CLASS_C]
+			supplier_clients: ARRAYED_LIST [CLASS_C]
 			related_classes: LINKED_SET [CLASS_C]
 			finished: BOOLEAN
 			ftable: FEATURE_TABLE
@@ -3176,7 +3176,7 @@ feature -- Dispose routine
 	formulate_mem_descendants (c: CLASS_C; desc: SEARCH_TABLE [CLASS_C]) is
 			-- Formulate descendants of class MEMORY. 
 		local
-			descendants: LINKED_LIST [CLASS_C]
+			descendants: ARRAYED_LIST [CLASS_C]
 			d: CLASS_C
 		do
 			from

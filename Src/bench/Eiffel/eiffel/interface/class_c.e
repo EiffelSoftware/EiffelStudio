@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 				-- Creation of the syntactical supplier list
 			create syntactical_suppliers.make
 				-- Creation of the syntactical client list
-			create syntactical_clients.make
+			create syntactical_clients.make (10)
 				-- Filter list creation
 			create filters.make
 				-- Feature id counter creation
@@ -110,7 +110,7 @@ feature -- Access
 			-- Syntactical suppliers of the class
 			--| Useful for time-stamp
 
-	syntactical_clients: LINKED_LIST [CLASS_C]
+	syntactical_clients: ARRAYED_LIST [CLASS_C]
 			-- Syntactical clients of the class
 			--| Useful for class removal
 
@@ -1344,7 +1344,7 @@ end
 			good_argument: new_suppliers /= Void
 		local
 			local_suppliers: like suppliers
-			supplier_clients: LINKED_LIST [CLASS_C]
+			supplier_clients: ARRAYED_LIST [CLASS_C]
 		do
 			from
 				local_suppliers := suppliers
@@ -1364,7 +1364,7 @@ end
 			until
 				new_suppliers.after
 			loop
-				new_suppliers.item.supplier.clients.put_front (Current)
+				new_suppliers.item.supplier.clients.extend (Current)
 				new_suppliers.forth
 			end
 			set_suppliers (new_suppliers)
@@ -2210,7 +2210,7 @@ feature
 				a_class := syntactical_suppliers.item.supplier
 				if a_class /= Current then
 					supplier_clients := a_class.syntactical_clients
-					supplier_clients.put_front (Current)
+					supplier_clients.extend (Current)
 				end
 				syntactical_suppliers.forth
 			end
@@ -2223,7 +2223,7 @@ feature
 			parents_exists: parents /= Void
 		local
 			local_suppliers: SUPPLIER_LIST
-			clients_list: LINKED_LIST [CLASS_C]
+			clients_list: ARRAYED_LIST [CLASS_C]
 		do
 			remove_parent_relations
 			from
@@ -2248,7 +2248,7 @@ feature
 		require
 			parents_exists: parents /= Void
 		local
-			des: LINKED_LIST [CLASS_C]
+			des: ARRAYED_LIST [CLASS_C]
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
 			c: CLASS_C
@@ -2927,11 +2927,11 @@ feature -- Convenience features
 		require
 			good_argument: c /= Void
 		local
-			desc: LINKED_LIST [CLASS_C]
+			desc: like descendants
 		do
 			desc := descendants
 			if not desc.has (c) then
-				desc.put_front (c)
+				desc.extend (c)
 			end
 		end
 
@@ -3424,7 +3424,7 @@ feature -- Merging
 			other_not_void: other /= Void
 			same_class: class_id = other.class_id
 		local
-			classes, desc: LINKED_LIST [CLASS_C]
+			classes, desc: like descendants
 			class_c: CLASS_C
 		do
 			is_used_as_expanded := is_used_as_expanded or other.is_used_as_expanded
@@ -3512,11 +3512,11 @@ feature -- Initialization
 			is_class_any := name_in_upper.is_equal ("ANY")
 			is_class_none := name_in_upper.is_equal ("NONE")
 				-- Creation of the descendant list
-			!! descendants.make
+			create descendants.make (10)
 				-- Creation of the supplier list
 			!! suppliers.make
 				-- Creation of the client list
-			!! clients.make
+			create clients.make (10)
 				-- Types list creation
 			!! types.make
 		end
@@ -3529,10 +3529,10 @@ feature -- Properties
 	parents: FIXED_LIST [CL_TYPE_A]
 			-- Parent classes
 
-	descendants: LINKED_LIST [CLASS_C]
+	descendants: ARRAYED_LIST [CLASS_C]
 			-- Direct descendants of the current class
 
-	clients: LINKED_LIST [CLASS_C]
+	clients: ARRAYED_LIST [CLASS_C]
 			-- Clients of the class
 
 	suppliers: SUPPLIER_LIST

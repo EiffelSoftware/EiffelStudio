@@ -104,11 +104,11 @@ end;
 			end
 		end;
 
-	classes: LINKED_LIST [CLASS_C] is
+	classes: ARRAYED_LIST [CLASS_C] is
 			-- List of `CLASS_C'es
 		do
 			from
-				!! Result.make
+				create Result.make (count)
 				start
 			until
 				after

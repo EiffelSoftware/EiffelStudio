@@ -21,10 +21,10 @@ feature -- Access
 		do
 			text_f_c ?= ctxt
 			if text_f_c /= Void then
-				if rows = 1 then
+				if count = 1 then
 					extend (return_ev)
 				end
-			elseif rows > 1 then
+			elseif count > 1 then
 				get_item (2).destroy
 			end
 		end

@@ -21,10 +21,10 @@ feature -- Access
 		do
 			mc_list_c ?= ctxt
 			if mc_list_c /= Void then
-				if rows = 1 then
+				if count = 1 then
 					extend (column_click_ev)
 				end
-			elseif rows > 1 then
+			elseif count > 1 then
 				get_item (2).destroy
 			end
 		end

@@ -21,10 +21,10 @@ feature -- Access
 		do
 			toggle_b_c ?= ctxt
 			if toggle_b_c /= Void then
-				if rows = 1 then
+				if count = 1 then
 					extend (toggle_ev)
 				end
-			elseif rows > 1 then
+			elseif count > 1 then
 				get_item (2).destroy
 			end
 		end

@@ -32,7 +32,7 @@ feature -- Properties
 	modified_pixmap: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := Pixmaps.bm_Dark_save
+			Result := Pixmaps.bm_Modified
 		end;
 
 feature {NONE} -- Implementation
@@ -96,12 +96,6 @@ feature {NONE} -- Attributes
 
 	license_checked: BOOLEAN is True;
 			-- Is the license checked?
-
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'.
-		once
-			Result := Pixmaps.bm_Dark_save
-		end;
 
 	name: STRING is
 			-- Name of the command.

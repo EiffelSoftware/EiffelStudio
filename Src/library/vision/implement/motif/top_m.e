@@ -80,21 +80,11 @@ feature
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y'
-		local
-			ext_name_My, ext_name_Mx: ANY
 		do
 			if  not realized then
 				xt_set_geometry (screen_object, new_x, new_y)
 			else
-				if shown then
-					ext_name_My := My.to_c;
-					ext_name_Mx := Mx.to_c;
-					set_posit (screen_object, new_x, $ext_name_Mx);
-					set_posit (screen_object, new_y, $ext_name_My);
-					xt_move_widget (screen_object, new_x, new_y)
-				else
-					xt_move_widget (screen_object, new_x, new_y)
-				end
+				xt_move_widget (screen_object, new_x, new_y)
 			end;
 		end;
 

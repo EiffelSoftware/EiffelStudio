@@ -57,8 +57,8 @@ cluster
 external
 
 	include_path:
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
-		"$(ISE_EIFFEL)\library\vision2\spec\include"
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",

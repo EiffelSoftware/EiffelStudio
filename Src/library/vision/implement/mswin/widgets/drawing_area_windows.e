@@ -209,6 +209,7 @@ feature -- Basic operations
 			!! printer_dc.make
 			if printer_dc.exists then
 				printer_dc.start_document (a_name)
+				printer_dc.start_page
 				printer_dc.set_map_mode (mm_anisotropic)
 				printer_dc.set_window_extent (width, height)
 				printer_dc.set_viewport_extent (printer_dc.device_caps (horizontal_resolution), printer_dc.device_caps (vertical_resolution))
@@ -247,6 +248,7 @@ feature -- Basic operations
 			clip: CLIP
 		do
 			a_printer_dc.start_document (a_name)
+			a_printer_dc.start_page
 			a_printer_dc.set_map_mode (mm_isotropic)
 			a_printer_dc.set_window_extent (width, height)
 			a_printer_dc.set_viewport_extent (a_printer_dc.device_caps (horizontal_resolution), a_printer_dc.device_caps (vertical_resolution))

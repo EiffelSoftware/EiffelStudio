@@ -370,7 +370,6 @@ feature {NONE} -- Implementation
 			-- display a GENERATION_DIALOG.
 		local
 			generation_dialog: GENERATION_DIALOG
-			error_dialog: EV_ERROR_DIALOG
 		do
 			create generation_dialog
 			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name +

@@ -45,7 +45,8 @@ feature {NONE} -- Interface initialization
 			-- Create interface with ok, cancel and apply button
 			-- at bottom with `a_parent'
 		local
-			ok_b, apply_b, cancel_b: PUSH_B
+			ok_b, apply_b, cancel_b: PUSH_B;
+			sep: THREE_D_SEPARATOR
 		do
 			form_d_make ("", a_parent);
 			set_exclusive_grab;
@@ -53,21 +54,25 @@ feature {NONE} -- Interface initialization
 			!! ok_b.make (Interface_names.b_Ok, buttons);
 			!! apply_b.make (Interface_names.b_Apply, buttons);
 			!! cancel_b.make (Interface_names.b_Cancel, buttons);
-			buttons.set_fraction_base (3);
+			!! sep.make (Interface_names.t_Empty, buttons);
+			buttons.set_fraction_base (17);
 			attach_left (buttons, 5);
 			attach_right (buttons, 5);
 			attach_bottom (buttons, 5);
-			buttons.attach_top (ok_b, 0);
-			buttons.attach_top (apply_b, 0);
-			buttons.attach_top (cancel_b, 0);
+			buttons.attach_left (sep, 0);
+			buttons.attach_right (sep, 0);
+			buttons.attach_top (sep, 2);
+			buttons.attach_top_widget (sep, ok_b, 2);
+			buttons.attach_top_widget (sep, apply_b, 2);
+			buttons.attach_top_widget (sep, cancel_b, 2);
 			buttons.attach_bottom (ok_b, 0);
 			buttons.attach_bottom (apply_b, 0);
 			buttons.attach_bottom (cancel_b, 0);
 			buttons.attach_left (ok_b, 0);
-			buttons.attach_right_position (ok_b, 1);
-			buttons.attach_left_position (apply_b, 1);
-			buttons.attach_right_position (apply_b, 2);
-			buttons.attach_left_position (cancel_b, 2);
+			buttons.attach_right_position (ok_b, 5);
+			buttons.attach_left_position (apply_b, 6);
+			buttons.attach_right_position (apply_b, 11);
+			buttons.attach_left_position (cancel_b, 12);
 			buttons.attach_right (cancel_b, 0);
 			ok_b.add_activate_action (Current, ok_action);
 			cancel_b.add_activate_action (Current, Void);

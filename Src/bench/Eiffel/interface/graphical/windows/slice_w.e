@@ -34,7 +34,8 @@ feature -- Initialization
 		local
 			button_form, bounds_form: FORM;
 			ok_button, apply_button, cancel_button: PUSH_B;
-			from_label, to_label: LABEL
+			from_label, to_label: LABEL;
+			sep: THREE_D_SEPARATOR
 		do
 			form_dialog_create (Interface_names.n_X_resource_name, a_composite);
 			set_title (Interface_names.t_Slice_w);
@@ -45,6 +46,7 @@ feature -- Initialization
 			attach_left (bounds_form, 10);
 			attach_right (bounds_form, 10);
 
+			!!sep.make (Interface_names.t_Empty, Current);
 			!!from_label.make (new_name, bounds_form);
 			from_label.set_text ("From: ");
 			from_label.set_right_alignment;
@@ -73,11 +75,14 @@ feature -- Initialization
 			bounds_form.attach_right (to_field, 0);
 
 			!!button_form.make (new_name, Current);
-			button_form.set_fraction_base (3);
+			button_form.set_fraction_base (17);
 			attach_left (button_form, 10);
 			attach_bottom (button_form, 10);
+			attach_left (sep, 0);
+			attach_right (sep, 0);
 			attach_right (button_form, 10);
-			attach_bottom_widget (button_form, bounds_form, 10);
+			attach_top_widget (bounds_form, sep, 5);
+			attach_bottom_widget (button_form, sep, 5);
 
 			!!ok_button.make (Interface_names.b_Ok, button_form);
 			!!apply_button.make (Interface_names.b_Apply, button_form);
@@ -85,12 +90,12 @@ feature -- Initialization
 			button_form.attach_left (ok_button, 0);
 			button_form.attach_top (ok_button, 0);
 			button_form.attach_bottom (ok_button, 0);
-			button_form.attach_right_position (ok_button, 1);
-			button_form.attach_left_position (apply_button, 1);
+			button_form.attach_right_position (ok_button, 5);
+			button_form.attach_left_position (apply_button, 6);
 			button_form.attach_top (apply_button, 0);
 			button_form.attach_bottom (apply_button, 0);
-			button_form.attach_right_position (apply_button, 2);
-			button_form.attach_left_position (cancel_button, 2);
+			button_form.attach_right_position (apply_button, 11);
+			button_form.attach_left_position (cancel_button, 12);
 			button_form.attach_right (cancel_button, 0);
 			button_form.attach_top (cancel_button, 0);
 			button_form.attach_bottom (cancel_button, 0);

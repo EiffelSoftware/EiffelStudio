@@ -11,6 +11,8 @@ inherit
 
 	TOOLTIP_INITIALIZER;
 	TOOL_W
+		rename
+			edit_bar as classic_bar
 		redefine
 			tool_name, process_system, process_error,
 			process_object, process_breakable, process_class,
@@ -403,12 +405,6 @@ feature -- Window Forms
 	object_form: SPLIT_WINDOW_CHILD;
 			-- Form on which the object tool during debug will be shown
 
-	classic_bar: TOOLBAR;
-			-- Main menu bar
-
-	format_bar: TOOLBAR;
-			-- Format menu bar
-
 feature -- Execution Implementation
 
 	execute (arg: ANY) is
@@ -712,13 +708,11 @@ feature -- Graphical Interface
 			!! feature_form.make_unmanaged (new_name, split_window);
 			!! object_form.make_unmanaged (new_name, split_window);
 
-			create_toolbar_parent (std_form);
-
+			create_toolbar (global_form);
 			build_menu;
 			build_text_windows;
 			build_top;
 			build_compile_menu;
-			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_format_bar;
 			build_toolbar_menu;
 			exec_stop_frmt_holder.execute (Void);
@@ -837,11 +831,13 @@ feature -- Graphical Interface
 			stop_points_cmd: DEBUG_STOPIN_HOLE;
 			stop_points_button: EB_BUTTON_HOLE;
 			stop_points_menu_entry: EB_MENU_ENTRY;
+			stop_points_status_cmd: STOPPOINTS_STATUS;
+			stop_points_status_menu_entry: EB_MENU_ENTRY;
 			show_pref_cmd: SHOW_PREFERENCE_TOOL;
 			show_pref_menu_entry: EB_MENU_ENTRY;
 			show_prof_cmd: SHOW_PROFILE_TOOL;
 			show_prof_menu_entry: EB_MENU_ENTRY;
-			sep: SEPARATOR
+			sep: SEPARATOR;
 			display_feature_cmd: DISPLAY_ROUTINE_PORTION;
 			display_feature_button: EB_BUTTON;
 			display_feature_menu_entry: EB_MENU_ENTRY;
@@ -857,7 +853,6 @@ feature -- Graphical Interface
 			version_button: PUSH_B;
 		do
 			!! open_command;
-			!! classic_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			build_print_menu_entry;
 			!! quit_cmd.make (Current);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -914,6 +909,11 @@ feature -- Graphical Interface
 						clear_bp_cmd, clear_bp_cmd.clear_it_action);
 			!! clear_bp_menu_entry.make (clear_bp_cmd, debug_menu);
 			!! clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry);
+			!! stop_points_status_cmd.make_enabled;
+			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, debug_menu);
+			!! stop_points_status_cmd.make_disabled;
+			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, debug_menu);
+			!! sep.make (Interface_names.t_Empty, debug_menu);
 
 			!! show_prof_cmd;
 			!! show_prof_menu_entry.make_default (show_prof_cmd, window_menu);
@@ -1009,8 +1009,6 @@ feature -- Graphical Interface
 			down_exception_stack_button: EB_BUTTON;
 			display_exception_menu_entry: EB_MENU_ENTRY;
 		do
-			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
-
 			!! debug_run_cmd.make (Current);
 			!! debug_run_button.make (debug_run_cmd, format_bar);
 			debug_run_button.add_third_button_action;
@@ -1480,10 +1478,6 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			forbid_resize;
 			feature_part.close_windows;
 
-			if shown_portions /= 2 then
-				edit_menu.button.set_insensitive;
-			end;
-
 			file_feature_menu.button.set_insensitive;
 			edit_feature_menu.button.set_insensitive;
 			special_feature_menu.button.set_insensitive;
@@ -1519,9 +1513,6 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			edit_feature_menu.button.set_sensitive;
 			special_feature_menu.button.set_sensitive;
 			format_feature_menu.button.set_sensitive;
-			if shown_portions = 2 then
-				edit_menu.button.set_sensitive
-			end;
 
 			allow_resize;
 			new_height := height + feature_height;
@@ -1568,10 +1559,6 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			forbid_resize;
 			object_part.close_windows;
 
-			if shown_portions /= 2 then
-				edit_menu.button.set_insensitive;
-			end;
-
 			file_object_menu.button.set_insensitive;
 			edit_object_menu.button.set_insensitive;
 			special_object_menu.button.set_insensitive;
@@ -1610,9 +1597,6 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			edit_object_menu.button.set_sensitive;
 			special_object_menu.button.set_sensitive;
 			format_object_menu.button.set_sensitive;
-			if shown_portions = 2 then
-				edit_menu.button.set_sensitive
-			end;
 
 			new_height := height + object_height;
 			real_height := real_project_height (implementation) + object_height;

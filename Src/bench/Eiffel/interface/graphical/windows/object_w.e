@@ -18,10 +18,8 @@ inherit
 		redefine
 			build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
-			process_object, build_bar,
-			close, set_default_size,
-			update_boolean_resource,
-			update_integer_resource,
+			process_object, close, set_default_size,
+			update_boolean_resource, update_integer_resource,
 			set_title, resources, history_window_title
 		end;
 	BAR_AND_TEXT
@@ -31,9 +29,8 @@ inherit
 			build_format_bar, hole, close_windows,
 			tool_name, build_widgets, attach_all, set_default_format,
 			stone, stone_type, synchronize, process_object,
-			build_bar, close, make_shell, reset,
-			update_boolean_resource, set_default_size,
-			update_integer_resource,
+			close, make_shell, reset, update_boolean_resource, 
+			set_default_size, update_integer_resource,
 			set_title, resources, history_window_title
 		select
 			close_windows, make_shell, reset
@@ -336,7 +333,7 @@ feature {NONE} -- Properties; Forms And Holes
 
 feature {NONE} -- Implementation; Graphical Interface
 
-	build_bar is
+	build_edit_bar is
 			-- Build top bar.
 		local
 			quit_cmd: QUIT_FILE;
@@ -406,16 +403,13 @@ feature {NONE} -- Implementation; Graphical Interface
 		local
 			sep: SEPARATOR
 		do
-			create_toolbar_parent (global_form);
+			create_toolbar (global_form);
 
 			build_text_windows;
 			if not is_in_project_tool then
 				build_menus
-			end
-			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
-			!! sep.make (Interface_names.t_Empty, toolbar_parent);
-			build_bar;
-			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
+			end;
+			build_edit_bar;
 			build_format_bar;
 			build_command_bar;
 			if not is_in_project_tool then

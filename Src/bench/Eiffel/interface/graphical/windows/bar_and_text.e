@@ -78,14 +78,10 @@ feature -- Standard Interface
 		local
 			sep: SEPARATOR
 		do
-			create_toolbar_parent (global_form);
+			create_toolbar (global_form);
 			
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
-			!! sep.make (Interface_names.t_Empty, toolbar_parent);
-			build_bar;
-			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_toolbar_menu;
 			set_last_format (default_format);
@@ -400,9 +396,6 @@ feature -- Window Properties
 
 	filter_command: FILTER_COMMAND;
 			-- Filter command to display filter window
-
-	edit_bar, format_bar: TOOLBAR;
-			-- Main and format button bars.
 
 	global_form: FORM;
 			-- Form created by the client of Current

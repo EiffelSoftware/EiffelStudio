@@ -69,7 +69,7 @@ feature -- Initialization
 				attach_left (shell_label, 10);
 				attach_bottom_widget (shell_label, list, 10);
 			
-				button_form.set_fraction_base (3);
+				button_form.set_fraction_base (17);
 				attach_right (text_field, 10);
 				attach_left (text_field, 10);
 				attach_bottom_widget (text_field, shell_label, 0);
@@ -78,20 +78,20 @@ feature -- Initialization
 				button_form.attach_left (display_button, 0);
 				button_form.attach_top (display_button, 0);
 				button_form.attach_bottom (display_button, 0);
-				button_form.attach_right_position (display_button, 1);
-				button_form.attach_left_position (execute_button, 1);
-				button_form.attach_right_position (execute_button, 2);
-				button_form.attach_left_position (cancel_button, 2);
+				button_form.attach_right_position (display_button, 5);
+				button_form.attach_left_position (execute_button, 6);
+				button_form.attach_right_position (execute_button, 11);
+				button_form.attach_left_position (cancel_button, 12);
 				display_button.add_activate_action (Current, display_it);
 			else
 				!!execute_button.make (Interface_names.b_Ok, button_form);
 				!!cancel_button.make (Interface_names.b_Cancel, button_form);
 
 				attach_bottom_widget (button_form, list, 10);
-				button_form.set_fraction_base (2);
+				button_form.set_fraction_base (20);
 				button_form.attach_left (execute_button, 0);
-				button_form.attach_right_position (execute_button, 1);
-				button_form.attach_left_position (cancel_button, 1);
+				button_form.attach_right_position (execute_button, 9);
+				button_form.attach_left_position (cancel_button, 11);
 			end
 			
 			button_form.attach_top (cancel_button, 0);

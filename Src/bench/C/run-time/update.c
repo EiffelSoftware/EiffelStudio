@@ -46,7 +46,8 @@ FILE *fil;
 extern void idump();
 #endif
 
-public void update()
+public void update(ignore_updt)
+char ignore_updt;
 {
 	/* Update internal structures before execution */
 
@@ -61,6 +62,11 @@ public void update()
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
 
+
+	if (ignore_updt != (char) 0) {
+		init_desc();
+		return;
+	}
 
 /* TEMPORARY */
 meltpath = getenv ("MELT_PATH");

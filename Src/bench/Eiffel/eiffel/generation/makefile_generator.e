@@ -211,10 +211,10 @@ feature -- Cecil
 			generate_other_objects
 			make_file.putstring ("%T%TE1/emain.o")
 			make_file.new_line
-			make_file.putstring ("SHAREDFLAGS = $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("SHAREDFLAGS = $(LDSHAREDFLAGS) $(SHARED_CECIL) %N");
 			make_file.putstring ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
 			make_file.putstring ("%T$(RM) $(SHARED_CECIL) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
 			make_file.new_line
@@ -273,10 +273,10 @@ feature -- Generate Dynamic Library
 			make_file.new_line
 			generate_other_objects
 			make_file.putstring ("%T%T$(OBJECTS) $(EXTERNALS) E1/edynlib.o E1/egc_dynlib.o ")
-			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) %N");
 			make_file.putstring ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.putstring ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
-			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(DYNLIBSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB_OBJ) $(SHAREDLIBS) %N")
 			
 			make_file.new_line
 			make_file.new_line

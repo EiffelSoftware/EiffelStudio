@@ -57,7 +57,8 @@ interface,,,,,,,
 ,4,Enable user to define their own command. Where the command should contain the name of the command to launch and where with some place holders filled by EiffelStudio (such as $target and others…),Paul Crismer,INT0054,Xavier,2,Done
 ,2,Gray out minimize buttons on tools when only one tool is displayed,Julian,INT0056,,,
 ,3,"Add a way to refactor a feature. It can simply be rename the feature and rename it everywhere it is used, or it can be a change in feature signature.",Julian,INT057,,,
-
+,3,Use a different icon color for each EiffelStudio session currently up,Julian,INT058,,,
+,3,Display name of project in title bar,Julian,INT059,,,
 
 
 Project settings,,,,,,,
@@ -157,7 +158,7 @@ editor,,,,,,,
 compiler,,,,,,,
 ,2,Change number of classes per big_file_Cxx.c and make it user-definable,Arnaud,CMP0001,,,
 ,3,Track effective object creation => remove classes that are never instanciated (problem comes from reverse assignments),Arnaud,CMP0002,,,
-,4,Propose to discard debug clauses when finalizing,Arnaud,CMP0003,,,
+,4,Propose to discard debug clauses when finalizing,Arnaud,CMP0003
 ,2,Make the EIFGEN directory name user-defined in the Ace or <project_name>_gen,E. Bezaut,CMP0004
 ,3,Ability to create .rc files (Windows),Xavier,CMP0005
 ,3,Send an event at the end of finish_freezing/during C compilation,Xavier,CMP0006
@@ -189,7 +190,7 @@ compiler,,,,,,,
 ,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
 ,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,CMP0033
 ,3,Reorder features to put together the ones that are called at the same time in order to optimize page faults at run-time. This can be applied to feature tables and maybe to the actual order of the pieces of code in the executable,Arnaud,CMP0034
-,3,Classes that do not define the code of a polymorphic feature should not appear in polymorphic tables,Xavier,CMP0033
+,3,Classes that do not define the code of a polymorphic feature should not appear in polymorphic tables,Xavier,CMP0033,,,
 ,5,Make it possible to only compile classes that have been modified in EiffelStudio (no degree 6),Xavier,CMP0034,Xavier,1,Done
 ,3,Auto-initialize as many onces as possible when the execution starts and remove the tests of initialization from them (start with constant strings),Xavier,CMP0035,,,
 ,3,Allow the feature {CLASS} syntax for string constants (maybe not in inspect clauses though?),Xavier,CMP0036,,,
@@ -221,7 +222,7 @@ Diagram,,,,
 
 
 
-Wizards,,,,
+Wizards,,,,,,,
 ,3,Refactoring tool,Arnaud,WIZ0001,,,
 ,3,Add a test wizard,Xavier,WIZ0002,,,
 ,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003,,,
@@ -237,6 +238,6 @@ libraries,,,,,,,
 ,4,Really test libraries,Xavier,LIB0003,,,
 ,4,Keep the documentation up-to-date,Xavier,LIB0004,,,
 ,4,Use consistent naming (isfirst/islast),Ian,LIB0005,,,
-,3,Add a calendar control in Vision2,Arnaud,LIB0006,,,
+,3,Add a calendar control in Vision2,Arnaud,LIB0006
 ,3,Add a support for ActiveX in Vision2,Arnaud,LIB0007
 ,2,Introduce agents in EiffelBase,Arnaud,LIB0008

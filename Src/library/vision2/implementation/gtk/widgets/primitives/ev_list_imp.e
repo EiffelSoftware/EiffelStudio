@@ -18,7 +18,7 @@ inherit
 		undefine
 			set_default_colors
 		redefine
-			pebble_over_widget,
+			pointer_over_widget,
 			initialize,
 			interface,
 			make
@@ -181,7 +181,8 @@ feature -- Status setting
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+			-- Is mouse pointer over widget.
 		do
 			Result := a_gdkwin = C.gtk_widget_struct_window (list_widget)
 		end
@@ -242,6 +243,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/31 19:11:25  king
+--| Accounted for rename of pebble_over_widget
+--|
 --| Revision 1.35  2000/03/23 19:19:01  king
 --| Updated for signature change of pebble_over_widget
 --|

@@ -112,7 +112,6 @@ interface IEiffelProject: IUnknown
 
   [helpstring ("Project Properties.")]
   HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
-
 };
 //---------------------------------------------------------------------
 [
@@ -145,6 +144,9 @@ interface IEiffelCompiler: IUnknown
 
   [helpstring ("Eiffel Freeze command arguments")]
   HRESULT freeze_command_arguments ([out, retval] BSTR * return_value);
+
+  [helpstring ("Is the compiler a trial version.")]
+  HRESULT has_signable_generation ([out, retval] VARIANT_BOOL * return_value);
 
   [helpstring ("Remove file locks")]
   HRESULT remove_file_locks ();
@@ -735,19 +737,61 @@ interface IEiffelProjectProperties: IDispatch
   [id (119), propget, helpstring ("Assemblies.")]
   HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
 
-  [id (120), propget, helpstring ("Project working directory.")]
-  HRESULT working_directory ([out, retval] BSTR * return_value);
+  [id (133), propget, helpstring ("Project title.")]
+  HRESULT title ([out, retval] BSTR * return_value);
 
-  [id (120), propput, helpstring ("Project working directory.")]
-  HRESULT working_directory ([in] BSTR return_value);
+  [id (133), propput, helpstring ("Project title.")]
+  HRESULT title ([in] BSTR new_value);
 
-  [id (131), helpstring ("Update the project Ace file according to the current settings.")]
-  HRESULT update_project_ace_file ([in] BSTR project_ace_file_name);
+  [id (134), propget, helpstring ("Project description.")]
+  HRESULT description ([out, retval] BSTR * return_value);
 
-  [id (132), helpstring ("Synchronize the current settings with the project Ace file.")]
-  HRESULT synchronize_with_project_ace_file ([in] BSTR project_ace_file_name);
+  [id (134), propput, helpstring ("Project description.")]
+  HRESULT description ([in] BSTR new_value);
 
-  [id (133), helpstring ("Apply changes")]
+  [id (135), propget, helpstring ("Project company.")]
+  HRESULT company ([out, retval] BSTR * return_value);
+
+  [id (135), propput, helpstring ("Project company.")]
+  HRESULT company ([in] BSTR new_value);
+
+  [id (136), propget, helpstring ("Product.")]
+  HRESULT product ([out, retval] BSTR * return_value);
+
+  [id (136), propput, helpstring ("Product.")]
+  HRESULT product ([in] BSTR new_value);
+
+  [id (137), propget, helpstring ("Project version.")]
+  HRESULT version ([out, retval] BSTR * return_value);
+
+  [id (137), propput, helpstring ("Project version.")]
+  HRESULT version ([in] BSTR new_value);
+
+  [id (138), propget, helpstring ("Project trademark.")]
+  HRESULT trademark ([out, retval] BSTR * return_value);
+
+  [id (138), propput, helpstring ("Project trademark.")]
+  HRESULT trademark ([in] BSTR new_value);
+
+  [id (139), propget, helpstring ("Project copyright.")]
+  HRESULT copyright ([out, retval] BSTR * return_value);
+
+  [id (139), propput, helpstring ("Project copyright.")]
+  HRESULT copyright ([in] BSTR new_value);
+
+  [id (140), propget, helpstring ("Asembly signing key file name.")]
+  HRESULT key_file_name ([out, retval] BSTR * return_value);
+
+  [id (140), propput, helpstring ("Assembly signing key file name.")]
+  HRESULT key_file_name ([in] BSTR new_value);
+
+  [id (141), propget, helpstring ("Asembly culture.")]
+  HRESULT culture ([out, retval] BSTR * return_value);
+
+  [id (141), propput, helpstring ("Asssembly culture.")]
+  HRESULT culture ([in] BSTR new_value);
+
+  [id (142), helpstring ("Apply changes")]
   HRESULT Apply ();
 
 };

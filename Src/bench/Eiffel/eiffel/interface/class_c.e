@@ -233,7 +233,7 @@ feature -- Action
 			cl_type: CLASS_TYPE
 			object_name: STRING
 			generation_dir: DIRECTORY_NAME
-			c_file_name: FILE_NAME
+			c_file_name, cpp_file_name: FILE_NAME
 			packet_nb: INTEGER
 			file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
@@ -287,18 +287,25 @@ feature -- Action
 						object_name.append_integer (packet_nb)
 						c_file_name.extend (object_name)
 						finished_file_name := clone (c_file_name)
+						cpp_file_name := clone (c_file_name)
 						create object_name.make (12)
 						object_name.append (base_file_name)
-						if cl_type.has_cpp_externals then
-							object_name.append (Dot_cpp)
-						else
-							object_name.append (Dot_c)
-						end
+						object_name.append (Dot_c)
 						c_file_name.set_file_name (object_name)
 						!! file.make (c_file_name)
 						file_exists := file.exists
 						if file_exists and then file.is_writable then
 							file.delete
+						else
+							create object_name.make (12)
+							object_name.append (base_file_name)
+							object_name.append (Dot_cpp)
+							cpp_file_name.set_file_name (object_name)
+							create file.make (cpp_file_name)
+							file_exists := file.exists
+							if file_exists and then file.is_writable then
+								file.delete
+							end
 						end
 						if file_exists then
 								-- We delete `finished' only if there was a file to delete

@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EIFNET_DEBUGGER_CALLBACK_INFO
 
 inherit
@@ -15,14 +15,24 @@ inherit
 	EIFNET_DEBUGGER_MANAGED_CALLBACK_CONSTANTS
 	EIFNET_DEBUGGER_UNMANAGED_CALLBACK_CONSTANTS
 
+create {EIFNET_DEBUGGER_INFO_ACCESSOR}
+	make
+	
 feature {NONE}-- initialisation
+
+	make is
+		do
+			init
+		end
 
 	init is
 		do
 		end
+		
+feature {EIFNET_EXPORTER} -- Reset data
 	
 	reset is
-			-- 
+			-- Reset attribute
 		do		
 		end
 		
@@ -68,52 +78,66 @@ feature -- Callback ids
 	last_managed_callback_name: STRING is
 			-- 	
 		do
-			Result := value_of_cst_managed_cb (last_managed_callback)
+			Result := managed_callback_name (last_managed_callback)
 		end
 
 feature {APPLICATION_EXECUTION_DOTNET, EIFNET_EXPORTER} -- Callback nature
 
-	last_managed_callback_is_breakpoint: BOOLEAN is
+	managed_callback_name (cb_id: INTEGER): STRING is
+			-- 	
 		do
-			Result := last_managed_callback = Cst_managed_cb_breakpoint
+			Result := value_of_cst_managed_cb (cb_id)
 		end
 
-	last_managed_callback_is_step_complete: BOOLEAN is
+	managed_callback_is_breakpoint (cb_id: INTEGER): BOOLEAN is
 		do
-			Result := last_managed_callback = Cst_managed_cb_step_complete
+			Result := cb_id = Cst_managed_cb_breakpoint
 		end
 
-	last_managed_callback_is_eval_complete: BOOLEAN is
+	managed_callback_is_step_complete (cb_id: INTEGER): BOOLEAN is
 		do
-			Result := last_managed_callback = Cst_managed_cb_eval_complete
+			Result := cb_id = Cst_managed_cb_step_complete
 		end
 
-	last_managed_callback_is_eval_exception: BOOLEAN is
+	managed_callback_is_eval_complete (cb_id: INTEGER): BOOLEAN is
 		do
-			Result := last_managed_callback = Cst_managed_cb_eval_exception
+			Result := cb_id = Cst_managed_cb_eval_complete
 		end
 
-	last_managed_callback_is_exception: BOOLEAN is
+	managed_callback_is_eval_exception (cb_id: INTEGER): BOOLEAN is
 		do
-			Result := last_managed_callback = Cst_managed_cb_exception
+			Result := cb_id = Cst_managed_cb_eval_exception
 		end
 
-	last_managed_callback_is_exit_process: BOOLEAN is
+	managed_callback_is_exception (cb_id: INTEGER): BOOLEAN is
 		do
-			Result := last_managed_callback = Cst_managed_cb_exit_process
+			Result := cb_id = Cst_managed_cb_exception
+		end
+
+	managed_callback_is_exit_process (cb_id: INTEGER): BOOLEAN is
+		do
+			Result := cb_id = Cst_managed_cb_exit_process
+		end
+
+	managed_callback_is_an_end_of_eval (cb_id: INTEGER): BOOLEAN is
+		do
+			inspect
+				cb_id
+			when 
+				cst_managed_cb_eval_complete,
+				cst_managed_cb_eval_exception,
+				cst_managed_cb_exit_process,
+--				cst_managed_cb_exception, -- Check if it is valid ...
+				cst_managed_cb_break,
+				cst_managed_cb_debugger_error
+			then
+				Result := True
+			else
+				Result := False
+			end
 		end
 		
-	last_managed_callback_is_an_end_of_eval: BOOLEAN is
-		do
-			Result := (last_managed_callback = cst_managed_cb_eval_complete)
-				or (last_managed_callback = cst_managed_cb_eval_exception)
-				or (last_managed_callback = cst_managed_cb_exit_process)
-				or (last_managed_callback = cst_managed_cb_exception)
-				or (last_managed_callback = cst_managed_cb_break)
-				or (last_managed_callback = cst_managed_cb_debugger_error)
-		end
-		
-feature {ICOR_DEBUG_MANAGED_CALLBACK, ICOR_DEBUG_UNMANAGED_CALLBACK} -- Change Callbacks
+feature {EIFNET_EXPORTER} -- Change Callbacks
 
 	set_last_managed_callback (cst: INTEGER) is
 			-- Set `last_managed_callback' value to `cst'.
@@ -127,7 +151,7 @@ feature {ICOR_DEBUG_MANAGED_CALLBACK, ICOR_DEBUG_UNMANAGED_CALLBACK} -- Change C
 			last_unmanaged_callback := cst
 		end
 	
-feature {ICOR_DEBUG_MANAGED_CALLBACK} -- Callback status
+feature {EIFNET_EXPORTER} -- Callback status
 
 	callback_enabled (cb_id: INTEGER): BOOLEAN is
 			-- Do we process callback `cb_id' ?

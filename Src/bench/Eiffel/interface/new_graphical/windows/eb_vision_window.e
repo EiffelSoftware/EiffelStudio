@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_TITLED_WINDOW
+		export
+			{EIFNET_DEBUGGER_SYNCHRO} implementation
+		end
 
 create
 	default_create,

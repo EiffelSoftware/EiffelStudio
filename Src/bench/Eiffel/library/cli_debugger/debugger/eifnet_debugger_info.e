@@ -11,13 +11,6 @@ inherit
 	
 	IL_PREDEFINED_STRINGS
 
-	EIFNET_DEBUGGER_CALLBACK_INFO
-		export
-			{EIFNET_DEBUGGER_INFO_ACCESSOR} all
-		redefine
-			reset, init
-		end
-		
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
 		rename
 			notify_new_module as notify_new_module_for_breakpoints
@@ -36,8 +29,10 @@ inherit
 	SHARED_IL_DEBUG_INFO_RECORDER
 
 	EIFNET_DEBUGGER_CONTROL_CONSTANTS
+	
+	EIFNET_STEP_REASON_CONSTANTS 
 
-create
+create {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Creation
 	make
 
 feature {NONE} -- Initialization
@@ -52,28 +47,7 @@ feature {NONE} -- Initialization
 	init is
 			-- Initialize
 		do
-			Precursor {EIFNET_DEBUGGER_CALLBACK_INFO}
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}
-		end
-
-feature -- Debugger
-
-	optimized_jit_debugging_enabled: BOOLEAN
-			-- JIT debugging Optimized ?
-			
-	set_jit_debugging_mode (v: BOOLEAN) is
-			-- Set JIT Debugging mode value
-		do
-			optimized_jit_debugging_enabled := v
-		end		
-
-	debugger: EIFNET_DEBUGGER
-			-- Bridge to dotnet debugger
-
-	set_debugger (val: like debugger) is
-			-- Set `debugger' value to `val'.
-		do
-			debugger := val
 		end
 
 feature -- Reset
@@ -81,14 +55,14 @@ feature -- Reset
 	reset is
 			-- Reset data contained in Current.
 		do
-			data_changed := False
-
 				--| Breakpoint |--
 			reset_last_icd_breakpoint
 				--| Controller |--
 			reset_last_icd_controller
 				--| ICorDebugProcess |--
 			reset_last_icd_process
+				--| Exception |--			
+			reset_last_icd_exception
 
 				--| StepComplete |--
 			last_step_complete_reason   := 0
@@ -150,7 +124,7 @@ feature -- Current CallStack
 			current_stack_info := Void
 			current_callstack_initialized := False
 		end
-		
+
 	init_current_callstack is
 			-- Initialize current callback information
 		local
@@ -235,9 +209,6 @@ feature {EIFNET_EXPORTER} -- Current Breakpoint access
 		local
 			l_eifnet_breakpoint: EIFNET_BREAKPOINT
 		do
-			check
-				last_managed_callback_is_breakpoint
-			end
 			l_eifnet_breakpoint := eifnet_breakpoint (
 										current_stack_info.current_module_name,
 										current_stack_info.current_class_token,
@@ -251,12 +222,13 @@ feature {EIFNET_EXPORTER} -- Current Breakpoint access
 
 feature -- Evaluation
 
-	is_inside_function_evaluation: BOOLEAN is
-			-- Is the current context correspond to a function evaluation ?
+	set_is_evaluating (b: BOOLEAN) is
 		do
-			Result := Application.imp_dotnet.status.is_evaluating
-		end		
+			is_evaluating := b
+		end
 
+	is_evaluating: BOOLEAN
+	
 feature -- Progression
 
 	save_current_stack_as_previous is
@@ -282,18 +254,7 @@ feature -- Progression
 			end
 		end	
 
-feature -- Debugger updatable
-
-	data_changed: BOOLEAN
-			-- Data changed during last operation ?
-
-	set_data_changed (val: BOOLEAN) is
-			-- Set `data_changed' to `val'.
-		do
-			data_changed := val
-		end
-
-feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
+feature {EIFNET_EXPORTER} -- Access
 
 	icd_controller: ICOR_DEBUG_CONTROLLER is
 			-- Last ICOR_DEBUG_CONTROLLER object
@@ -319,6 +280,13 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 	last_step_complete_reason: INTEGER
 			-- Last `reason' from a `step_complete' callback
 			
+	icd_exception: ICOR_DEBUG_VALUE is
+			-- Last ICOR_DEBUG_VALUE's exception object
+		do
+			update_icd_exception
+			Result := last_icd_exception
+		end
+
 	last_exception_is_handled: BOOLEAN
 			-- Is last exception handled ?
 			-- the value is pertinent only in the Exception callback context.
@@ -336,7 +304,7 @@ feature -- Debugger error
 
 	debugger_error_hr: INTEGER
 
-	notify_debugger_error (a_error_hr, a_error_code: INTEGER) is
+	notify_debugger_error (a_error_hr: INTEGER; a_error_code: INTEGER) is
 		do
 			debugger_error_occurred := True
 			debugger_error_hr := a_error_hr
@@ -416,7 +384,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_p_icd_process := Default_pointer
 			end
 			last_icd_process_updated := True
-		end		
+		end
 
 	set_last_icd_breakpoint (p: POINTER) is 
 			-- Set `last_icd_breakpoint' to `p'
@@ -455,6 +423,58 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			-- Set `last_step_complete_reason' to `val'
 		do
 			last_step_complete_reason := val
+				--| STEP_NORMAL means that stepping completed normally, in the same
+				--|		function.
+				--|
+				--| STEP_RETURN means that stepping continued normally, after the function
+				--|		returned.
+				--|
+				--| STEP_CALL means that stepping continued normally, at the start of 
+				--|		a newly called function.
+				--|
+				--| STEP_EXCEPTION_FILTER means that control passed to an exception filter
+				--|		after an exception was thrown.
+				--| 
+				--| STEP_EXCEPTION_HANDLER means that control passed to an exception handler
+				--|		after an exception was thrown.
+				--|
+				--| STEP_INTERCEPT means that control passed to an interceptor.
+				--| 
+				--| STEP_EXIT means that the thread exited before the step completed.
+				--|		No more stepping can be performed with the stepper.			
+		end
+
+	set_last_icd_exception (p: POINTER) is 
+			-- Set `last_icd_exception' to `p'
+		local
+			n: INTEGER
+		do
+			if not p.is_equal (last_p_icd_exception) then
+				reset_last_icd_exception
+				last_p_icd_exception := p
+				last_icd_exception_updated := False
+				if last_p_icd_exception /= Default_pointer then
+					n := feature {CLI_COM}.add_ref (last_p_icd_exception)
+				end
+				debug ("DEBUGGER_EIFNET_DATA")
+					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Exception changed%N")
+				end
+			end
+		end
+
+	reset_last_icd_exception is
+		local
+			n: INTEGER
+		do
+			if last_icd_exception /= Void then
+				last_icd_exception.clean_on_dispose
+				last_icd_exception := Void
+			end
+			if last_p_icd_exception /= Default_pointer then
+				n := feature {CLI_COM}.release (last_p_icd_exception)
+				last_p_icd_exception := Default_pointer
+			end
+			last_icd_exception_updated := True
 		end
 
 	set_last_exception_handled (val: BOOLEAN) is
@@ -474,6 +494,9 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 	last_p_icd_breakpoint: POINTER --|ICOR_DEBUG_BREAKPOINT
 			-- Last Breakpoint object
 
+	last_p_icd_exception: POINTER --|ICOR_DEBUG_VALUE
+			-- Last Exception object
+
 feature {NONE} -- Pointers to COM Objects
 
 	last_icd_controller_updated: BOOLEAN
@@ -487,6 +510,10 @@ feature {NONE} -- Pointers to COM Objects
 	last_icd_breakpoint_updated: BOOLEAN
 	last_icd_breakpoint: ICOR_DEBUG_BREAKPOINT
 			-- Last Breakpoint object
+
+	last_icd_exception_updated: BOOLEAN
+	last_icd_exception: ICOR_DEBUG_VALUE
+			-- Last Exception object
 
 feature {NONE} -- COM Object
 
@@ -550,6 +577,27 @@ feature {NONE} -- COM Object
 					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)					
 				end
 				last_icd_breakpoint_updated := True
+			end
+		end
+
+	update_icd_exception is
+			-- Last Exception object
+		local
+			n: INTEGER
+		do
+			if not last_icd_exception_updated then
+				if 
+					last_p_icd_exception = Default_pointer 
+				then
+					if last_icd_exception /= Void then
+						last_icd_exception.clean_on_dispose
+						last_icd_exception := Void
+					end
+				else
+					create last_icd_exception.make_by_pointer (last_p_icd_exception)
+					n := feature {CLI_COM}.add_ref (last_p_icd_exception)					
+				end
+				last_icd_exception_updated := True
 			end
 		end
 
@@ -701,6 +749,8 @@ feature -- JIT Thread
 		do
 			loaded_managed_threads.start
 			Result := loaded_managed_threads.item_for_iteration
+		ensure
+			Result_not_void_unless_empty_list: Result = Void implies loaded_managed_threads.is_empty
 		end
 		
 	add_managed_thread_by_pointer (p: POINTER) is 
@@ -773,7 +823,9 @@ feature -- JIT Thread
 					--| If current selected thread is not existing any more ...
 				edti := default_managed_thread
 			end
-			Result := edti.icd_thread
+			if edti /= Void then
+				Result := edti.icd_thread
+			end
 		end
 		
 	last_icd_thread_id: INTEGER
@@ -791,11 +843,6 @@ feature -- JIT Module
 		do
 			debug ("debugger_trace_callback_data")
 				io.error.put_string ("Registering new module : %N  [" + a_module.get_name + "]%N")
-			end
-			if optimized_jit_debugging_enabled then
-				a_module.enable_jit_debugging (True, True)
-			else
-				a_module.enable_jit_debugging (True, False)
 			end
 			
 			l_module_key_name := resolved_module_key (a_module.get_name)
@@ -848,7 +895,7 @@ feature -- JIT Module
 			end			
 		end
 
-feature {EIFNET_EXPORTER} -- JIT info implementation
+feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- JIT info implementation
 
 	resolved_module_key (a_module_name: STRING): STRING is
 			-- module name formatted to be a key
@@ -967,33 +1014,5 @@ feature -- Stepping
 			or else last_control_mode_is_step_next
 		end
 	
---| NOTA JFIAT: those feature are useless for now
---|				so we comment them to reduce the executable size, and compilation time
---|				and more important, to clean the interface
---|				but we keep them as commented lines if we need to implemente them
---	last_control_mode_is_continue: BOOLEAN is
---			-- Last control was `continue'
---		do
---			Result := last_control_mode = Cst_control_continue
---		end
---
---	last_control_mode_is_stop: BOOLEAN is
---			-- Last control was `stop'
---		do
---			Result := last_control_mode = Cst_control_stop
---		end
---
---	last_control_mode_is_kill: BOOLEAN is
---			-- Last control was `kill'
---		do
---			Result := last_control_mode = Cst_control_kill
---		end
---
---	last_control_mode_is_nothing: BOOLEAN is
---			-- Last control was not affected
---		do
---			Result := last_control_mode = Cst_control_nothing
---		end		
-
 end -- class EIFNET_DEBUGGER_INFO
 

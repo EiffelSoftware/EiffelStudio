@@ -152,7 +152,7 @@ feature -- Access
 			l_ctype := adapted_class_type (ctype, f)
 			l_icdv_args := prepared_parameters (a_params, False)
 
-			l_icdm := eifnet_debugger.eifnet_debugger_info.runtime_module
+			l_icdm := Eifnet_debugger.runtime_module
 				--| FIXME jfiat: here we are only dealing with EiffelSoftware runtime ... classes
 			
 			l_cl_tok := l_icdm.md_class_token_by_type_name (l_ctype.full_il_type_name)

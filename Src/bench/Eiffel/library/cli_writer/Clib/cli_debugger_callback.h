@@ -158,69 +158,10 @@ public:
 	//
 	// initialize_callback called from Eiffel
 	// 
-    HRESULT initialize_callback( 
-			EIF_OBJECT callback_object,
-			EIF_POINTER a_cb_breakpoint ,             
-			EIF_POINTER a_cb_step_complete ,          
-			EIF_POINTER a_cb_break ,                  
-			EIF_POINTER a_cb_exception ,             
-			EIF_POINTER a_cb_eval_complete ,          
-			EIF_POINTER a_cb_eval_exception ,         
-			EIF_POINTER a_cb_create_process ,         
-			EIF_POINTER a_cb_exit_process ,           
-			EIF_POINTER a_cb_create_thread ,          
-			EIF_POINTER a_cb_exit_thread ,            
-			EIF_POINTER a_cb_load_module ,            
-			EIF_POINTER a_cb_unload_module ,          
-			EIF_POINTER a_cb_load_class ,             
-			EIF_POINTER a_cb_unload_class ,           
-			EIF_POINTER a_cb_debugger_error ,         
-			EIF_POINTER a_cb_log_message ,            
-            EIF_POINTER a_cb_log_switch ,
-			EIF_POINTER a_cb_create_app_domain ,      
-			EIF_POINTER a_cb_exit_app_domain ,        
-			EIF_POINTER a_cb_load_assembly ,          
-			EIF_POINTER a_cb_unload_assembly ,        
-			EIF_POINTER a_cb_control_ctrap ,          
-			EIF_POINTER a_cb_name_change ,            
-			EIF_POINTER a_cb_update_module_symbols ,  
-			EIF_POINTER a_cb_edit_and_continue_remap ,
-			EIF_POINTER a_cb_breakpoint_set_error
-			);
-
-	HRESULT terminate_callback() ;
 
 protected:
     long        m_refCount;
 
-	EIF_OBJECT  m_callback_adopted_object;
-
-	EIF_POINTER m_cb_breakpoint ;             
-	EIF_POINTER m_cb_step_complete ;          
-	EIF_POINTER m_cb_break ;                  
-	EIF_POINTER m_cb_exception ;             
-	EIF_POINTER m_cb_eval_complete ;          
-	EIF_POINTER m_cb_eval_exception ;         
-	EIF_POINTER m_cb_create_process ;         
-	EIF_POINTER m_cb_exit_process ;           
-	EIF_POINTER m_cb_create_thread ;          
-	EIF_POINTER m_cb_exit_thread ;            
-	EIF_POINTER m_cb_load_module ;            
-	EIF_POINTER m_cb_unload_module ;          
-	EIF_POINTER m_cb_load_class ;             
-	EIF_POINTER m_cb_unload_class ;           
-	EIF_POINTER m_cb_debugger_error ;         
-	EIF_POINTER m_cb_log_message ;            
-	EIF_POINTER m_cb_log_switch ;
-	EIF_POINTER m_cb_create_app_domain ;      
-	EIF_POINTER m_cb_exit_app_domain ;        
-	EIF_POINTER m_cb_load_assembly ;          
-	EIF_POINTER m_cb_unload_assembly ;        
-	EIF_POINTER m_cb_control_ctrap ;          
-	EIF_POINTER m_cb_name_change ;            
-	EIF_POINTER m_cb_update_module_symbols ;  
-	EIF_POINTER m_cb_edit_and_continue_remap ;
-	EIF_POINTER m_cb_breakpoint_set_error;
 };
 
 
@@ -238,12 +179,6 @@ public:
 	//
 	// initialize_callback called from Eiffel
 	// 
-    HRESULT initialize_callback( 
-			EIF_OBJECT callback_object,
-			EIF_POINTER a_ucb_debug_event
-			);
-
-	HRESULT terminate_callback() ;
 
     // IUnknown
     ULONG STDMETHODCALLTYPE AddRef() 
@@ -278,9 +213,6 @@ public:
 protected:
     long        m_refCount;
 
-	EIF_OBJECT  m_callback_adopted_object;
-
-	EIF_POINTER m_ucb_debug_event ;             
 };
 
 #endif /* __cplusplus */

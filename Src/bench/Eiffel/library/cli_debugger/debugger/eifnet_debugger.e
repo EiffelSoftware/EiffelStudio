@@ -12,6 +12,9 @@ inherit
 	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
+		export 
+			{NONE} Eifnet_debugger_info
+		end
 	
 	SHARED_ICOR_OBJECTS_MANAGER
 
@@ -46,6 +49,8 @@ inherit
 					restore_callback_notification_state,
 					notify_debugger
 			{ICOR_DEBUG_MANAGED_CALLBACK} disable_next_estudio_notification
+		redefine
+			estudio_callback_event
 		end
 
 	SHARED_DEBUG
@@ -78,6 +83,14 @@ inherit
 create
 	make
 
+feature {EIFNET_EXPORTER} -- refact
+
+	info: EIFNET_DEBUGGER_INFO is
+			-- Restricted access to Eifnet_debugger_info
+		do
+			Result := Eifnet_debugger_info
+		end
+
 feature -- Initialization
 
 	make is
@@ -103,13 +116,16 @@ feature -- Initialization
 			icor_debug_unmanaged_callback_obj: ICOR_DEBUG_UNMANAGED_CALLBACK
 			l_icor_debug: ICOR_DEBUG
 			last_icor_debug_pointer: POINTER -- Last ICorDebug created
+			icor_debug_factory: ICOR_DEBUG_FACTORY
 		do
 			if icor_debug = Void then
 					-- And now for the dotnet world			
 				initialize_clr_host
+
+				create icor_debug_factory
 	
 				eif_debug_display ("[EIFDBG] initialize debugger session")
-				last_icor_debug_pointer := (create {ICOR_DEBUG_FACTORY}).new_cordebug_pointer_for (eiffel_system.system.clr_runtime_version)
+				last_icor_debug_pointer := icor_debug_factory.new_cordebug_pointer_for (eiffel_system.system.clr_runtime_version)
 
 				if last_icor_debug_pointer /= Default_pointer then
 					create icor_debug.make_by_pointer (last_icor_debug_pointer)
@@ -121,12 +137,12 @@ feature -- Initialization
 							--| We keep the callback server objects alive in the C/Cpp glue
 							--| then let's add a ref, but we'll leave `dispose' the responsibility 
 							--| to Release the object
-						icor_debug_managed_callback_obj := (create {ICOR_DEBUG_MANAGED_CALLBACK_FACTORY}).new_cordebug_managed_callback
+						icor_debug_managed_callback_obj := icor_debug_factory.new_cordebug_managed_callback
 						icor_debug_managed_callback_obj.add_ref
 						icor_debug_managed_callback_obj.initialize_callback
 						l_icor_debug.set_managed_handler (icor_debug_managed_callback_obj)
 						
-						icor_debug_unmanaged_callback_obj := (create {ICOR_DEBUG_UNMANAGED_CALLBACK_FACTORY}).new_cordebug_unmanaged_callback
+						icor_debug_unmanaged_callback_obj := icor_debug_factory.new_cordebug_unmanaged_callback
 						icor_debug_unmanaged_callback_obj.add_ref
 						icor_debug_unmanaged_callback_obj.initialize_callback
 						l_icor_debug.set_unmanaged_handler (icor_debug_unmanaged_callback_obj)
@@ -160,14 +176,15 @@ feature -- Initialization
 			if eifnet_dbg_evaluator = Void then
 				create eifnet_dbg_evaluator.make (Current)				
 			end
-			Eifnet_debugger_info.set_debugger (Current)
+--			Eifnet_debugger_info.set_debugger (Current)
 		end
 		
 	reset_debugging_data is
 				-- Reset objects who has session related data
 		do
+		
 			reset_dbg_evaluator
-			eifnet_debugger_info.reset
+			reset_info
 			exit_process_occurred := False
 			
 			il_debug_info_recorder.reset_debugging_live_data
@@ -175,15 +192,18 @@ feature -- Initialization
 				-- not required
 			last_dbg_call_success := 0
 			last_string_value_length := 0
+			context_output_tool := Void
 		end
 		
-	initialize_debugger_session is
+	initialize_debugger_session (dbgw: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize a debugger session
 		require
 			not is_debugging
 		local
 			l_icor_debug: ICOR_DEBUG
 		do
+			context_output_tool := dbgw.context_tool.output_view
+			
 				-- Reset objects who has session related data
 			init_debugging_data
 
@@ -191,7 +211,7 @@ feature -- Initialization
 			l_icor_debug := icor_debug
 			if l_icor_debug /= Void then
 					--| Initialize the dbg synchronization
-				init_dbg_synchronisation
+				init_dbg_synchronisation (dbgw.window)
 					--| start the timer which will trigger the callbacks
 				start_dbg_timer
 					--| Create a timer which will check for the end of the process
@@ -251,17 +271,6 @@ feature -- Termination monitoring ...
 			end
 		end
 
-feature -- Terminate ICorDebug
-		
-	terminate_debugger is
-			-- Terminate ICorDebug and clean what need to be cleaned
-			-- Called inside Dispose, so don't pollute this with unsafe code
-		do
-			if icor_debug /= Void then
-				icor_debug.terminate
-			end
-		end
-
 feature -- Debugging session Termination ...
 
 	terminate_debugger_session is
@@ -271,7 +280,7 @@ feature -- Debugging session Termination ...
 			stop_dbg_timer
 			terminate_dbg_synchronisation
 			eifnet_dbg_evaluator.reset
-			eifnet_debugger_info.reset
+			reset_info
 			Icor_objects_manager.clean
 			icor_debug.clean_data
 		end
@@ -291,6 +300,7 @@ feature -- Debugging session Termination ...
 				eif_debug_display ("[EIFDBG] pProcess->Terminate (..)")
 				l_controller.stop (infinite_time) --| to get the hand on and to be synchronized
 				l_controller.terminate (0)
+fixme ("[jfiat] : check if we shoudln't Continue .. to get the ExitProcess ...")
 				if not l_controller.last_call_succeed then
 					--| the end of the killing process will be done on callback ExitProcess
 					--| Maybe try with no Stop (..)
@@ -304,6 +314,7 @@ feature -- Debugging session Termination ...
 				end
 					-- FIXME jfiat [2004/07/30] : check if this is not too violent ?
 					-- maybe we could find a smarter way to terminate debugging synchronisation
+fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
 				terminate_debugger_session
 				notify_exit_process_occurred
 			else
@@ -328,21 +339,678 @@ feature -- Debugging session Termination ...
 			exit_process_occurred := True
 		end
 		
+feature {NONE} -- Logging
+		
+	context_output_tool: EB_OUTPUT_TOOL
+			-- Context's output tool.
+		
+	context_output_message (m: STRING) is
+			-- Put message on context tool's output
+		local
+			st: STRUCTURED_TEXT
+		do
+			if context_output_tool /= Void then
+				create st.make
+				st.add_string (m)
+				st.add_new_line
+				context_output_tool.process_text (st)
+				context_output_tool.scroll_to_end
+			end
+		end
+		
 feature -- Status
 
 	last_dbg_call_success: INTEGER
+			-- Last return call success code.
 	
 	last_dbg_call_succeed: BOOLEAN is
+			-- Last call succeed ?
 		do
 			Result := (last_dbg_call_success = 0)
 		end
 
-feature -- Callback notification about synchro
+feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 
-	estudio_callback_event is
+	dbgsync_cb_without_stopping : BOOLEAN
+			-- Do we continue the execution without stopping ?
+	
+	estudio_callback_event (cb_id: INTEGER) is
 			-- Callback trigger for processing at end of dotnet callback
+		local
+			may_stop_on_callback: BOOLEAN
+			s: APPLICATION_STATUS
+			execution_stopped: BOOLEAN
 		do
-			Application.imp_dotnet.estudio_callback_notify
+			debug ("debugger_trace_callback")
+				print ("<" + generator + ".estudio_callback_event>%N")
+				print ("  ::Callback [" + managed_callback_name (cb_id) + "]. %N")
+			end
+
+			set_last_managed_callback (cb_id)
+			if not is_inside_function_evaluation then
+				reset_current_callstack
+				eifnet_debugger_info.set_last_icd_breakpoint (Default_pointer)
+				eifnet_debugger_info.set_last_icd_exception (Default_pointer)
+			end
+				--| Consume Callback data (stored on the C side in struct)
+			consume_managed_callback_info (cb_id)
+
+			if dbgsync_cb_without_stopping then
+				execution_stopped := continue_on_cb (cb_id) -- False
+			elseif is_inside_function_evaluation then
+				debug ("debugger_trace_callback")
+					print (" - " + generator + ".estudio_callback_event from Evaluation %N")
+				end
+				if not callback_info.managed_callback_is_an_end_of_eval (cb_id) then
+					execution_stopped := continue_on_cb (cb_id) -- False
+				end
+				--FIXME jfiat [2005/02/22] : What if ExitProcess or anything else occurs inside function eval ?
+				-- it should be handle by the evaluation caller
+			else
+				may_stop_on_callback := callback_info.callback_enabled (cb_id)
+				if may_stop_on_callback then
+					execution_stopped := stop_on_cb (cb_id)
+				else
+					execution_stopped := continue_on_cb (cb_id)
+				end
+
+				if execution_stopped then
+					s := Application.status
+					s.set_is_stopped (execution_stopped)
+					if managed_callback_is_exit_process (cb_id) then
+						debug ("debugger_trace_callback")
+							print (" - Info : ExitProcess occurred %N")
+						end
+					else
+						s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
+						s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
+					end
+					debug ("debugger_trace_callback")
+						print (" - Info : Debuggee is STOPPED %N")
+					end
+				else
+					debug ("debugger_trace_callback")
+						print (" - Info : Debuggee is RUNNING %N")
+					end
+				end
+				if not next_estudio_notification_disabled then
+					Application.imp_dotnet.estudio_callback_notify
+				end
+			end
+
+				-- Reset dbgsync data
+			dbgsync_cb_without_stopping := False
+			next_estudio_notification_disabled := False
+			
+			debug ("debugger_trace_callback")
+				print ("</" + generator + ".estudio_callback_event>%N")
+			end
+		end
+		
+	ask_if_break_on_first_chance_exception: BOOLEAN is
+		require
+			exception_occurred
+		local
+			dlg: EV_MESSAGE_DIALOG
+			t: STRING
+		do
+			t := "First chance exception occurred : %N"
+			t.append_string (exception_message)
+			create dlg.make_with_text (t)
+			dlg.set_title ("Exception occurred : First chance")
+			dlg.set_buttons (<<"Break", "Continue">>)
+			dlg.show_modal_to_window (application.debugger_manager.debugging_window.window)
+			Result := dlg.selected_button.is_equal ("Break")
+		end
+
+	consume_managed_callback_info (cb_id: INTEGER) is
+		local
+			p: POINTER
+			i: INTEGER
+			r: INTEGER
+			l_module: ICOR_DEBUG_MODULE
+		do
+--			context_output_message ("Callback :: " + managed_callback_name (cb_id))
+			check dbg_cb_info_get_callback_id = cb_id end				
+			
+			inspect cb_id
+			when Cst_managed_cb_break then
+					--| p_app_domain, p_thread
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				
+			when Cst_managed_cb_breakpoint then
+					--| p_app_domain, p_thread, p_breakpoint
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				p := dbg_cb_info_pointer_item (3) -- p_breakpoint
+				set_last_breakpoint_by_pointer (p)
+			when Cst_managed_cb_breakpoint_set_error then
+					--| p_app_domain, p_thread, p_breakpoint, dw_error
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				p := dbg_cb_info_pointer_item (3) -- p_breakpoint
+				debug ("debugger_trace_callstack")
+					r := dbg_cb_info_integer_item (4) -- dw_error
+					io.put_string ("DBG callback : breakpoint_set_error %N")
+					io.put_string ("  error = " + (r & 0x0FFFF).to_hex_string + "%N")
+				end
+				r := dbg_cb_info_integer_item (4) -- dw_error
+				context_output_message ("BreakpointSetError occurred : error = " + (r & 0x0FFFF).to_hex_string )
+				dbgsync_cb_without_stopping := True
+			when Cst_managed_cb_control_ctrap then
+					--| p_process
+				p := dbg_cb_info_pointer_item (1) -- p_process				
+				set_last_controller_by_pointer (p)
+				
+			when Cst_managed_cb_create_app_domain then
+					--| p_process, p_app_domain
+				p := dbg_cb_info_pointer_item (1) -- p_process
+				set_last_controller_by_pointer (p)
+				set_last_process_by_pointer (p)
+				p := dbg_cb_info_pointer_item (2) -- p_app_domain
+				debug ("debugger_trace_callback_data")
+					io.error.put_string ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p)).get_name + "%N")
+				end
+				r := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p)
+				check r = 0 end
+				dbgsync_cb_without_stopping := True
+			when Cst_managed_cb_create_process then
+					--| p_process
+				p := dbg_cb_info_pointer_item (1) -- p_process
+				set_last_controller_by_pointer (p)
+				set_last_process_by_pointer (p)
+				dbgsync_cb_without_stopping := True
+				
+			when Cst_managed_cb_create_thread then
+					--| p_app_domain, p_thread
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				add_managed_thread_by_pointer (p)
+				dbgsync_cb_without_stopping := True
+				
+			when Cst_managed_cb_debugger_error then
+					--| p_process, error_hr, error_code
+				p := dbg_cb_info_pointer_item (1) -- p_process
+				set_last_controller_by_pointer (p)
+				set_last_process_by_pointer (p)
+ 				r := dbg_cb_info_integer_item (2) -- error_hr
+ 				i := dbg_cb_info_integer_item (3) -- error_code
+				Eifnet_debugger_info.notify_debugger_error (r, i)
+				
+			when Cst_managed_cb_edit_and_continue_remap then
+					--| p_app_domain, p_thread, p_function, f_accurate
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				
+			when Cst_managed_cb_eval_complete then
+					--| p_app_domain, p_thread, p_eval
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				
+			when Cst_managed_cb_eval_exception then
+					--| p_app_domain, p_thread, p_eval
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread				
+				set_last_thread_by_pointer (p)
+				
+			when Cst_managed_cb_exception then
+					--| p_app_domain, p_thread, unhandled, + pExceptionValue
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				i := dbg_cb_info_integer_item (3) -- unhandled
+				set_last_exception_handled (i /= 1)
+					--| unhandled == 1 --> TRUE
+					--| unhandled /= 1 --> FALSE
+				p := dbg_cb_info_pointer_item (4) -- pExceptionValue
+				set_last_exception_by_pointer (p)
+				if eifnet_debugger_info.last_exception_is_handled then
+					dbgsync_cb_without_stopping := not ask_if_break_on_first_chance_exception
+				end
+			when Cst_managed_cb_exit_app_domain then
+					--| p_process, p_app_domain
+				p := dbg_cb_info_pointer_item (1) -- p_process
+				set_last_process_by_pointer (p)
+				p := dbg_cb_info_pointer_item (2) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				fixme ("jfiat: Maybe we should use p_process to set the controller ...")
+				
+			when Cst_managed_cb_exit_process then
+					--|	p_process
+				p := dbg_cb_info_pointer_item (1) -- p_process
+				reset_last_controller_by_pointer (p)
+				reset_last_process_by_pointer (p)
+				r := feature  {CLI_COM}.release (p)
+				debug ("com_object")
+					io.error.put_string ("ExitProcess Release ref pProcess <" + p.out + 
+							"> -> nb= " + r.out + " %N")
+				end
+				
+			when Cst_managed_cb_exit_thread then
+					--| p_app_domain, p_thread
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				remove_managed_thread_by_pointer (p)
+				
+			when Cst_managed_cb_load_assembly then
+					--| p_app_domain, p_assembly
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				
+			when Cst_managed_cb_load_class then
+					--| p_app_domain, p_class
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				
+			when Cst_managed_cb_load_module then
+					--| p_app_domain, p_module
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_module
+				if p /= Default_pointer then
+					l_module := Icor_objects_manager.icd_module (p)
+					debug ("debugger_trace_callback_data")
+						io.error.put_string ("Loading module : " + l_module.get_name + "%N")
+					end
+					Eifnet_debugger_info.register_new_module (l_module)
+					context_output_message ("Loading module : " + l_module.module_name)
+				end
+				
+			when Cst_managed_cb_log_message then
+					--| p_app_domain, p_thread, l_level, p_log_switch_name, p_message
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				
+			when Cst_managed_cb_log_switch then
+					--| p_app_domain, p_thread, l_level, ul_reason, p_log_switch_name, p_parent_name
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread				
+				set_last_thread_by_pointer (p)
+				
+			when Cst_managed_cb_name_change then
+					--| p_app_domain, p_thread
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				if p /= Default_pointer then
+					set_last_thread_by_pointer (p)					
+				end
+				
+			when Cst_managed_cb_step_complete then
+					--|	p_app_domain, p_thread, p_stepper, a_reason				
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				p := dbg_cb_info_pointer_item (2) -- p_thread
+				set_last_thread_by_pointer (p)
+				i := dbg_cb_info_integer_item (4) -- a_reason
+				set_last_step_complete_reason (i)
+				
+			when Cst_managed_cb_unload_assembly then
+					--| p_app_domain, p_assembly
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				
+			when Cst_managed_cb_unload_class then
+					--| p_app_domain, p_class
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				
+			when Cst_managed_cb_unload_module then
+					--| p_app_domain, p_module
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				
+			when Cst_managed_cb_update_module_symbols then
+					--|	p_app_domain, p_module, p_symbol_stream
+				p := dbg_cb_info_pointer_item (1) -- p_app_domain
+				set_last_controller_by_pointer (icor_debug_controller_interface (p))
+				
+			else
+				check False end
+			end
+		end
+
+feature {EIFNET_EXPORTER} -- Callback access
+
+	is_inside_function_evaluation: BOOLEAN is
+			-- Is the current context correspond to a function evaluation ?
+		do
+			Result := Eifnet_debugger_info.is_evaluating
+		end
+
+feature {NONE} -- Callback actions
+
+	icor_debug_controller_interface (p_controller: POINTER): POINTER is
+			-- Computed ICorDebugController interface from a Process or AppDomain pointer.
+		local
+			p_process: POINTER
+			p_app_domain: POINTER
+			l_hr: INTEGER
+			n: INTEGER
+		do
+			if p_controller /= Default_pointer then
+				l_hr := feature {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $Result)
+			end		
+			if l_hr /= 0 then
+				l_hr := feature {ICOR_DEBUG_CONTROLLER}.cpp_query_interface_ICorDebugController (p_controller, $p_app_domain)
+				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_get_process (p_app_domain, $p_process)
+				Result := p_process
+				n := feature {CLI_COM}.release (p_app_domain)
+			end
+			n := feature {CLI_COM}.release (p_controller)			
+		end
+
+	continue_on_cb (cb_id: INTEGER): BOOLEAN is
+			-- Continue witout stopping the system
+		do
+				--| Let's continue, we don't stop on this callback
+			call_do_continue_on_cb
+			Result := False
+		end
+
+	stop_on_cb (cb_id: INTEGER): BOOLEAN is
+			-- Stop the system (on step complete or breakpoint for instance)
+		local
+			execution_stopped: BOOLEAN
+		do
+				--| Refresh CallStack info
+			if managed_callback_is_exit_process (cb_id) then
+				reset_current_callstack
+			else
+				init_current_callstack
+			end
+			if managed_callback_is_breakpoint (cb_id) then
+				execution_stopped := execution_stopped_on_end_of_breakpoint_callback
+			elseif managed_callback_is_step_complete (cb_id) then
+				if is_inside_function_evaluation then
+					execution_stopped := False
+				else
+					execution_stopped := execution_stopped_on_end_of_step_complete_callback
+				end
+			elseif 
+				managed_callback_is_exception (cb_id) and then
+				is_inside_function_evaluation
+			then
+				if icor_debug_controller /= Void then
+					call_do_continue_on_cb
+				end					
+				execution_stopped := False
+			else
+					--| Then we stop the execution ;)
+					--| do nothing for now
+				execution_stopped := True
+			end
+			Result := execution_stopped
+		end
+
+	execution_stopped_on_end_of_breakpoint_callback: BOOLEAN is
+			-- Process end_of_breakpoint_callback and then return if is stopped.
+		require
+			top_callstack_data_initialised: Eifnet_debugger_info.current_callstack_initialized
+		do
+			if last_control_mode_is_stepping then
+				Result := execution_stopped_on_end_of_breakpoint_callback_while_stepping
+			else 
+					--| not stepping, so real breakpoint stopping
+				Result := True				
+			end
+		end
+		
+	execution_stopped_on_end_of_breakpoint_callback_while_stepping: BOOLEAN is
+			-- Do we stop on this bp slot, if we are in stepping action ?
+		local
+			l_previous_stack_info, l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
+			l_copy: EIFNET_DEBUGGER_STACK_INFO
+			l_potential_il_offset: INTEGER
+			l_il_debug_info: IL_DEBUG_INFO_RECORDER
+			l_feat: FEATURE_I
+			l_class_type: CLASS_TYPE
+			dbg_info: EIFNET_DEBUGGER_INFO
+		do
+			dbg_info := Eifnet_debugger_info
+			l_previous_stack_info := dbg_info.previous_stack_info
+			l_current_stack_info := dbg_info.current_stack_info
+							
+			l_il_debug_info := Il_debug_info_recorder
+			if l_il_debug_info.has_info_about_module (l_previous_stack_info.current_module_name) then
+				l_feat := l_il_debug_info.feature_i_by_module_feature_token (
+							l_previous_stack_info.current_module_name,
+							l_previous_stack_info.current_feature_token
+						)
+				l_class_type := l_il_debug_info.class_type_for_module_class_token (
+							l_previous_stack_info.current_module_name,				
+							l_previous_stack_info.current_class_token
+						)
+				l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (
+												l_class_type, 
+												l_feat, 
+												l_previous_stack_info.current_il_offset
+												)
+					--| current il offset if corresponding to a bp slot, or approximate offset.
+			end	
+				
+
+			create l_copy.make_copy (l_previous_stack_info)
+			l_copy.set_current_il_offset (l_potential_il_offset)
+			if l_copy.is_equal (l_current_stack_info) then
+				call_do_continue_on_cb
+				Result := False
+			else			
+				Result := True
+			end		
+		end
+
+	execution_stopped_on_end_of_step_complete_callback: BOOLEAN is
+			-- Process end_of_step_complete_callback and then return if is stopped.
+		require
+			top_callstack_data_initialised: Eifnet_debugger_info.current_callstack_initialized
+		local
+			unknown_class_for_call_stack_stop: BOOLEAN
+			inside_valid_feature_call_stack_stepping: BOOLEAN
+			is_valid_callstack_offset: BOOLEAN
+			execution_stopped: like execution_stopped_on_end_of_step_complete_callback
+
+			l_class_token: INTEGER
+			l_feat_token: INTEGER
+			
+			l_module_name: STRING
+			l_current_il_offset: INTEGER
+			l_feat: FEATURE_I
+			l_class_type: CLASS_TYPE
+			l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
+			l_il_debug_info: IL_DEBUG_INFO_RECORDER
+			dbg_info: EIFNET_DEBUGGER_INFO
+		do
+			dbg_info := Eifnet_debugger_info
+			l_current_stack_info := dbg_info.current_stack_info
+			debug ("debugger_trace_callstack")
+				dbg_info.debug_display_current_callstack_info			
+			end
+			
+				--| If we were stepping ...
+			debug ("DEBUGGER_TRACE_STEPPING")
+				print ("%N>=> StepComplete <=< %N")
+				print ("%T - last_control_mode         = "   + dbg_info.last_control_mode_as_string + "%N")
+				print ("%T - last_step_complete_reason = 0x" + dbg_info.last_step_complete_reason.to_hex_string)
+				print ("  ==> " + step_id_to_string (dbg_info.last_step_complete_reason) + "%N")
+				print ("%N")
+			end
+			
+			if 
+				dbg_info.last_control_mode_is_step_into
+				and then dbg_info.is_current_state_same_as_previous
+			then
+				call_do_step_into_on_cb
+			elseif
+				dbg_info.last_control_mode_is_stop
+			then
+				-- FIXME jfiat: special case for Stop now ...
+				Result := True
+			else
+				l_il_debug_info := Il_debug_info_recorder
+				l_class_token := l_current_stack_info.current_class_token
+				l_module_name := l_current_stack_info.current_module_name
+				check
+					module_name_valid: l_module_name /= Void and then not l_module_name.is_empty
+				end
+				if 
+					l_module_name /= Void 
+					and then not l_module_name.is_empty 
+					and l_class_token > 0
+				then
+					unknown_class_for_call_stack_stop := not l_il_debug_info.has_class_info_about_module_class_token (l_module_name, l_class_token)
+				end
+				if unknown_class_for_call_stack_stop then
+					debug ("debugger_trace_stepping")
+						print ("[!] Unknown Class [0x" + l_class_token.to_hex_string + "] .. we'd better go out to breath %N")
+						print ("[!] module = " + l_module_name + "%N")
+					end
+					call_do_step_out_on_cb
+				else
+					l_class_type := l_il_debug_info.class_type_for_module_class_token (l_module_name, l_class_token)
+					l_feat_token := l_current_stack_info.current_feature_token
+					if l_feat_token > 0 then
+						inside_valid_feature_call_stack_stepping := l_il_debug_info.has_feature_info_about_module_class_token (l_module_name, l_class_token, l_feat_token)
+					end
+					if inside_valid_feature_call_stack_stepping then
+						l_current_il_offset := l_current_stack_info.current_il_offset
+						
+						l_feat := l_il_debug_info.feature_i_by_module_feature_token (l_module_name, l_feat_token)				
+						debug ("debugger_trace_stepping")
+							print ("[!] Valid and known feature [0x" + l_class_token.to_hex_string 
+									+ "::" + l_feat.feature_name 
+									+ "] => IP=0x"+l_current_il_offset.to_hex_string
+									+" %N")
+							print ("[!] module = " + l_module_name + "%N")
+						end
+						
+						if l_current_il_offset = 0 then
+								--| Let's skip the first `nop' , non sense for the eStudio debugger					
+							call_do_step_into_on_cb
+						else
+							is_valid_callstack_offset := l_il_debug_info.is_il_offset_related_to_eiffel_line (l_class_type, l_feat, l_current_il_offset)					
+							if 
+								(not dbg_info.last_control_mode_is_step_out)
+								and then (not is_valid_callstack_offset) 
+							then
+								debug ("debugger_trace_stepping")
+									print ("[!] InValid or Unknown offset [0x" + l_current_il_offset.to_hex_string + "].%N")
+								end					
+									--| if the offset is not related to an know stoppable point, let adjust it					
+									--| In case we are not on a potential stop point
+									--| this means we are at the beginning of a feature : offset = 0
+									--| or we are in a step_into concerning a `foo( a(), b())'
+									--| so in either case, a step_into is the correct behavior.
+								
+								call_do_step_into_on_cb
+							else
+									--| we can stop, this is a valid stoppable point for
+									--| the eStudio debugger
+								execution_stopped := True
+							end						
+						end
+					else
+						debug ("debugger_trace_stepping")
+							print ("[!] InValid or Unknown feature [0x" + l_class_token.to_hex_string + "::0x" + l_feat_token.to_hex_string + "].%N")
+							print ("[!] class = " + l_il_debug_info.class_name_for_class_token_and_module ( l_class_token, l_module_name) + "%N")
+							print ("[!] module = " + l_module_name + "%N")
+						end
+							--| We'll continue the stepping in the same mode
+						
+							--| ranges ...
+						if dbg_info.last_control_mode_is_step_out then
+							call_do_step_out_on_cb
+						elseif dbg_info.last_control_mode_is_step_into then
+							call_do_step_range_on_cb (True, <<[0, l_current_stack_info.current_il_code_size]>>)
+						elseif dbg_info.last_control_mode_is_step_next then
+							call_do_step_range_on_cb (False, <<[0, l_current_stack_info.current_il_code_size]>>)
+						else 
+								--| FIXME JFIAT : is this default stepping case needed ???
+							call_do_step_range_on_cb (False, <<[0, l_current_stack_info.current_il_code_size]>>)
+						end
+					end
+				end	
+				Result := execution_stopped
+			end			
+		end
+
+feature -- Various continuing mode from callback
+
+	call_disable_next_estudio_notification is
+			-- In call_back processing, if we continue/step.. right away
+			-- we don't need to process estudio_notification
+		do
+			if not is_inside_function_evaluation then
+				disable_next_estudio_notification
+			end
+		end
+		
+	call_terminate_debugging is
+			-- If there is no CorDebugController, then we can not continue
+			-- thus let's terminate debugging
+		do
+			debug ("debugger_trace_callstack")
+				io.error.put_string ("No ICorDebugController ... going to terminate_debugger ...%N")
+			end
+			terminate_debugging
+		end
+
+	call_do_continue_on_cb is
+		do
+			if icor_debug_controller /= Void then
+				do_continue
+				call_disable_next_estudio_notification			
+			else
+				call_terminate_debugging
+			end
+		end
+		
+	call_do_step_range_on_cb (a_bstep_in: BOOLEAN; a_il_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]) is
+		do
+			if icor_debug_controller /= Void then
+				do_step_range (a_bstep_in, a_il_ranges)
+				call_disable_next_estudio_notification				
+			else
+				call_terminate_debugging
+			end
+		end
+
+	call_do_step_out_on_cb is
+		do
+			if icor_debug_controller /= Void then
+				do_step_out
+				call_disable_next_estudio_notification				
+			else
+				call_terminate_debugging
+			end
+		end
+
+	call_do_step_into_on_cb is
+		do
+			if icor_debug_controller /= Void then
+				do_step_into
+				call_disable_next_estudio_notification				
+			else
+				call_terminate_debugging
+			end
 		end
 		
 feature -- Interaction with .Net Debugger
@@ -430,17 +1098,6 @@ feature -- Interaction with .Net Debugger
 				end
 			end
 		end
-		
-	do_clear_exception is
-			-- Clear current exception
-		local
-			l_thread: ICOR_DEBUG_THREAD
-		do
-			l_thread := Eifnet_debugger_info.icd_thread
-			if l_thread /= Void then
-				l_thread.clear_current_exception
-			end
-		end	
 	
 feature {NONE} -- Stepping Implementation
 
@@ -637,50 +1294,8 @@ feature -- Tracer
 		do
 		end
 
-feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
-
-	set_last_managed_callback (a_cb: like last_managed_callback) is
-		do
-			eifnet_debugger_info.set_last_managed_callback (a_cb)
-		end
-		
-	last_managed_callback: INTEGER is
-		do
-			Result := Eifnet_debugger_info.last_managed_callback
-		end	
 		
 feature -- Bridge to EIFNET_DEBUGGER_INFO
-
-	last_managed_callback_is_exit_process: BOOLEAN is
-		do
-			Result := Eifnet_debugger_info.last_managed_callback_is_exit_process
-		end	
-		
-	last_managed_callback_is_exception: BOOLEAN is
-		do
-			Result := Eifnet_debugger_info.last_managed_callback_is_exception
-		end	
-		
-	last_exception_is_handled: BOOLEAN is
-		do
-			Result := Eifnet_debugger_info.last_exception_is_handled
-		end			
-		
-	last_managed_callback_is_eval_exception: BOOLEAN is
-		do
-			Result := Eifnet_debugger_info.last_managed_callback_is_eval_exception
-		end	
-
-	new_active_exception_value: ICOR_DEBUG_VALUE is
-			-- Active Exception value retrieved each call from .Net debugger
-		local
-			l_last_thread: ICOR_DEBUG_THREAD
-		do
-			l_last_thread := icor_debug_thread
-			if l_last_thread /= Void then
-				Result := l_last_thread.get_current_exception
-			end
-		end
 
 	new_active_frame: ICOR_DEBUG_FRAME is
 			-- Active Thread value retrieved each call from .Net debugger
@@ -705,6 +1320,157 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 				Result := l_cse.icd_frame
 			end
 		end
+
+feature -- Exception
+
+	exception_occurred: BOOLEAN is
+			-- Last callback is about exception ?
+		do
+			Result := last_managed_callback_is_exception
+		end
+
+	active_exception_value: ICOR_DEBUG_VALUE is
+			-- Active Exception value retrieved each call from .Net debugger
+		do
+			Result := eifnet_debugger_info.icd_exception
+		end
+	
+	new_active_exception_value_from_thread: ICOR_DEBUG_VALUE is
+		local
+			l_last_thread: ICOR_DEBUG_THREAD
+		do
+			Result := active_exception_value.twin
+			if Result = Void or else Result.item = Default_pointer then
+				l_last_thread := icor_debug_thread
+				if l_last_thread /= Void then
+					Result := l_last_thread.get_current_exception
+				end
+			end
+		end
+		
+	display_last_exception is
+			-- Display information related to Last Exception
+			-- debug purpose only
+		require
+			exception_occurred: exception_occurred
+		local
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_exception: ICOR_DEBUG_VALUE
+		do
+			l_exception := new_active_exception_value_from_thread
+			if l_exception /= Void then
+				create l_exception_info.make (l_exception)
+
+				io.error.put_string ("%N%NException ....%N")
+				io.error.put_string ("%T Class   => " + l_exception_info.value_class_name + "%N")
+				io.error.put_string ("%T Module  => " + l_exception_info.value_module_file_name + "%N")
+				l_exception_info.icd_prepared_value.clean_on_dispose
+				l_exception_info.clean
+				l_exception.clean_on_dispose
+			end
+		end		
+
+	exception_details: TUPLE [STRING, STRING] is
+			-- class details , module details
+		require
+			exception_occurred: exception_occurred
+		local
+			l_class_details: STRING
+			l_module_details: STRING
+			retried: BOOLEAN
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icd_exception: ICOR_DEBUG_VALUE
+		do
+			if not retried then
+				l_icd_exception := new_active_exception_value_from_thread
+				if 
+					l_icd_exception /= Void 
+					and then l_icd_exception.item /= Default_pointer
+				then
+					l_icd_exception.add_ref
+					create l_exception_info.make (l_icd_exception)
+					l_class_details := l_exception_info.value_class_name
+					l_module_details := l_exception_info.value_module_file_name
+					Result := [l_class_details, l_module_details]
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	exception_to_string: STRING is
+			-- Exception "ToString" output
+		require
+			exception_occurred: exception_occurred
+		local
+			retried: BOOLEAN
+			l_icd_exception: ICOR_DEBUG_VALUE
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
+		do
+			if not retried then
+				l_icd_exception := new_active_exception_value_from_thread
+				l_icd_exception.add_ref
+				create l_exception_info.make (l_icd_exception)
+				l_icdov := l_exception_info.interface_debug_object_value
+				if l_icdov /= Void then
+					Result := to_string_value_from_exception_object_value (Void, 
+						l_icd_exception,
+						l_icdov
+					)
+					l_icdov.clean_on_dispose
+				end
+				l_exception_info.icd_prepared_value.clean_on_dispose
+				l_exception_info.clean
+				l_icd_exception.clean_on_dispose
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
+	exception_message: STRING is
+			-- Exception "GetMessage" output
+		require
+			exception_occurred: exception_occurred
+		local
+			retried: BOOLEAN
+			l_icd_exception: ICOR_DEBUG_VALUE
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
+		do
+			if not retried then
+				l_icd_exception := new_active_exception_value_from_thread
+				if l_icd_exception /= Void then
+					l_icd_exception.add_ref
+					create l_exception_info.make (l_icd_exception)
+					l_icdov := l_exception_info.interface_debug_object_value
+					if l_icdov /= Void then
+						l_icdov.add_ref
+						Result := get_message_value_from_exception_object_value (Void, 
+							l_icd_exception, 
+							l_icdov						
+						)
+						l_icdov.clean_on_dispose
+					end
+					if Result = Void then
+						--| This could means the prog did exit_process
+						--| or .. anything else
+						Result := l_exception_info.value_class_name
+					end
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end		
 
 feature -- Easy access
 
@@ -1250,7 +2016,6 @@ feature -- Specific function evaluation
 --| NOTA jfiat [2004/03/19] : not yet ready, to be continued
 --
 --feature -- GC related
---
 --
 --	keep_alive (addr: STRING) is
 --		local

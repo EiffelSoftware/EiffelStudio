@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that represent a new delete object command."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -83,7 +82,7 @@ feature -- Basic operations
 			do
 			end
 	
-feature {GB_WINDOW_SELECTOR} -- Basic operation		
+feature {GB_WINDOW_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation		
 			
 	delete_object (an_object: GB_OBJECT) is
 			-- Remove `an_object' from the system.

@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			a := a_string.to_c
 			memory_copy ($a, capacity)
 		ensure
-			--string_set: string.is_equal (a_string)
 			capacity_set: capacity = a_string.count + 1
 		end
 
@@ -81,7 +80,7 @@ feature -- Element change
 			string_set: a_string.is_equal (a_string)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- String length

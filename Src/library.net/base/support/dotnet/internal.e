@@ -881,25 +881,33 @@ feature {NONE} -- Implementation
 			l_name: EIFFEL_NAME_ATTRIBUTE
 			l_cas: NATIVE_ARRAY [SYSTEM_OBJECT]
 			i, nb: INTEGER
+			retried: BOOLEAN
 		do
-			l_types := an_assembly.get_types
-			from
-				i := 0
-				nb := l_types.count - 1
-			until
-				i > nb
-			loop
-				l_cas := l_types.item (i).get_custom_attributes_type (eiffel_name_attribute_type, False)
-				if l_cas /= Void and then l_cas.count > 0 then
-					l_name ?= l_cas.item (0)
-					check
-						l_name_not_void: l_name /= Void
+			if not retried then
+				l_types := an_assembly.get_types
+				from
+					i := 0
+					nb := l_types.count - 1
+				until
+					i > nb
+				loop
+					l_cas := l_types.item (i).get_custom_attributes_type (eiffel_name_attribute_type, False)
+					if l_cas /= Void and then l_cas.count > 0 then
+						l_name ?= l_cas.item (0)
+						check
+							l_name_not_void: l_name /= Void
+						end
+						eiffel_type_mapping.force (create {CLI_CELL [TYPE]}.put (l_types.item (i)),
+							l_name.name)
 					end
-					eiffel_type_mapping.force (create {CLI_CELL [TYPE]}.put (l_types.item (i)),
-						l_name.name)
+					i := i + 1
 				end
-				i := i + 1
 			end
+		rescue
+				-- It could fail in `an_assembly.get_types' and we don't want to
+				-- prevent the assembly to load by failing here.
+			retried := True
+			retry
 		end
 
 	eiffel_type_mapping: HASH_TABLE [CLI_CELL [TYPE], STRING] is

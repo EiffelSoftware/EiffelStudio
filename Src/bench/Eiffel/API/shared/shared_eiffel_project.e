@@ -29,6 +29,7 @@ feature -- Access
 			-- Eiffel system
 		require
 			initialized: project_initialized
+			defined: system_defined
 		once
 			Result := Eiffel_project.system
 		ensure
@@ -54,5 +55,11 @@ feature -- Access
 		ensure
 			initialized_means: Result implies Eiffel_project.initialized
 		end
+
+	system_defined: BOOLEAN is
+			-- Is the Ace file parsed?
+		do
+			Result := Eiffel_project.system_defined
+		end;
 
 end -- class SHARED_EIFFEL_PROJECT

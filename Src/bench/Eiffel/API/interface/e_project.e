@@ -53,7 +53,6 @@ feature -- Initialization
 			!! init_work.make (workb);
 			workb.make;
 			Workbench.init;
-			!! system.make;
 			set_is_initialized;
 		ensure
 			initialized: initialized
@@ -181,7 +180,7 @@ feature -- Properties
 			Result := Error_handler.error_displayer
 		end
 
-feature -- Status
+feature -- Access
 
 	is_read_only: BOOLEAN is
 			-- Is the project open in read only permission?
@@ -203,8 +202,15 @@ feature -- Status
 	initialized: BOOLEAN is
 			-- Is the Eiffel project initialized?
 		do
-			Result := initialized_mode.item and then
-				system /= Void
+			Result := initialized_mode.item
+		end;
+
+	system_defined: BOOLEAN is
+			-- Has the Eiffel system been defined.
+		do
+			Result := system /= Void
+		ensure
+			Result = Workbench.system_defined
 		end;
 
 	able_to_compile: BOOLEAN is
@@ -480,6 +486,14 @@ feature {DEBUG_INFO} -- Clearing
 			if Workbench.system_defined then
 				Comp_system.reset_debug_counter
 			end
+		end;
+
+feature {LACE_I} -- Initialization
+
+	init_system is
+			-- Initializes the system.
+		do
+			!! system.make
 		end;
 
 feature {APPLICATION_EXECUTION}

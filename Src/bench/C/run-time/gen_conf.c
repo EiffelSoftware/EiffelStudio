@@ -2267,8 +2267,7 @@ finish_simple:
 /* All ids are full type ids; RTUD(yes)                             */
 /*------------------------------------------------------------------*/
 
-rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 min_high, int16 max_high)
-{
+rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 min_high, int16 max_high) {
 	EIF_CONF_TAB *result;
 	int16 size;
 	unsigned char *tab;
@@ -2287,67 +2286,57 @@ rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 mi
 	result->low_comp = result->slow_comp;
 	result->high_comp = result->shigh_comp;
 
-	if (min_low <= max_low)
-	{
+	if (min_low <= max_low) {
 		size = (max_low - min_low + 8)/8;
 
-		if (size > 8)
-		{
-			tab = (unsigned char *) eif_malloc (size);
-
-			if (tab == (unsigned char *) 0)
+		if (size > 8) {
+			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
+			if (!tab)
 				enomem ();
-
 			result->low_tab = tab;
 
-			tab = (unsigned char *) eif_malloc (size);
-
-			if (tab == (unsigned char *) 0)
+			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
+			if (!tab)
 				enomem ();
-
 			result->low_comp = tab;
+		} else {
+			memset (result->low_tab, '\0', size);
+			memset (result->low_comp, '\0', size);
 		}
-	}
-	else
-	{
+	} else {
 		size = 8;
+		memset (result->low_tab, '\0', size);
+		memset (result->low_comp, '\0', size);
 	}
 
-	memset (result->low_tab, '\0', size);
-	memset (result->low_comp, '\0', size);
 
-	if (min_high <= max_high)
-	{
+	if (min_high <= max_high) {
 		size = (max_high - min_high + 8)/8;
 
-		if (size > 8)
-		{
-			tab = (unsigned char *) eif_malloc (size);
-
-			if (tab == (unsigned char *) 0)
+		if (size > 8) {
+			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
+			if (!tab)
 				enomem ();
-
 			result->high_tab = tab;
 
-			tab = (unsigned char *) eif_malloc (size);
-
-			if (tab == (unsigned char *) 0)
+			tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
+			if (!tab)
 				enomem ();
-
 			result->high_comp = tab;
+		} else {
+			memset (result->high_tab, '\0', size);
+			memset (result->high_comp, '\0', size);
 		}
-
-	}
-	else
-	{
+	} else {
 		size = 8;
+		memset (result->high_tab, '\0', size);
+		memset (result->high_comp, '\0', size);
 	}
 
-	memset (result->high_tab, '\0', size);
-	memset (result->high_comp, '\0', size);
 	
 	return result;
 }
+
 /*------------------------------------------------------------------*/
 /* Enlarge conformance table to include `new_id'                    */
 /*                                                                  */
@@ -2445,24 +2434,20 @@ rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
 
 	size = (max_new - min_new + 8)/8;
 
-	if (size > 8)
-	{
-		tab = (unsigned char *) eif_malloc (size);
-
-		if (tab == (unsigned char *) 0)
+	if (size > 8) {
+		tab = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
+		if (!tab)
 			enomem ();
 
-		comp = (unsigned char *) eif_malloc (size);
-
-		if (comp == (unsigned char *) 0)
+		comp = (unsigned char *) eif_calloc (size, sizeof (unsigned char));
+		if (!comp)
 			enomem ();
+	} else {
+		memset (tab, '\0', size);
+		memset (comp, '\0', size);
 	}
 
-	/* Initialize new tables from old tables */
-
-	memset (tab, '\0', size);
-	memset (comp, '\0', size);
-
+		/* Initialize new tables from old tables */
 	if (min_old <= max_old)
 	{
 		offset = (min_old - min_new) / 8;

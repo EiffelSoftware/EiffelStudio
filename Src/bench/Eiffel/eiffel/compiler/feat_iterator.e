@@ -5,7 +5,8 @@ deferred class FEAT_ITERATOR
 
 inherit
 
-	SHARED_SERVER
+	SHARED_SERVER;
+	COMPILER_EXPORTER
 
 feature
 

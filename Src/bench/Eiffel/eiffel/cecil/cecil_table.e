@@ -22,6 +22,10 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
+	COMPILER_EXPORTER
+        undefine
+            copy, setup, consistent, is_equal
+        end;
 
 creation
 

@@ -24,6 +24,10 @@ inherit
 		undefine
 			is_equal, copy
 		end
+	COMPILER_EXPORTER
+		undefine
+			is_equal, copy
+		end
 
 creation {SYSTEM_I}
 	make

@@ -61,7 +61,13 @@ inherit
 			same_type as general_same_type
 		undefine
 			copy, is_equal
-		end
+		end;
+	COMPILER_EXPORTER
+        rename
+            same_type as general_same_type
+		undefine
+			copy, is_equal
+		end	
 
 creation
 

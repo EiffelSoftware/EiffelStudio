@@ -21,7 +21,8 @@ inherit
 		export
 			{NONE} all
 		end;
-	SHARED_GENERATION_CONSTANTS
+	SHARED_GENERATION_CONSTANTS;
+	COMPILER_EXPORTER
 
 feature 
 

@@ -104,24 +104,6 @@ feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 
 feature -- Status setting
 
-	gslist_to_eiffel (gslist: POINTER): LINKED_LIST [POINTER] is
-			-- List of all radio items in the group `Current' is in.
-		local
-			cur: POINTER
-		do
-			create Result.make
-			from
-				cur := gslist
-			until
-				cur = Default_pointer
-			loop
-				Result.extend (C.gslist_struct_data (cur))
-				cur := C.gslist_struct_next (cur)
-			end
-		ensure
-			same_size: Result.count = C.g_slist_length (gslist)
-		end
-
 	connect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Join radio grouping of `a_container' to `Current'.
 		local
@@ -247,6 +229,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/06 01:55:00  brendel
+--| Removed gs_list_to_eiffel.
+--|
 --| Revision 1.30  2000/03/15 01:19:40  brendel
 --| Fixed bug in removal of radio button.
 --|

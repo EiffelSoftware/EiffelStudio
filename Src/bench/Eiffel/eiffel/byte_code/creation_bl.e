@@ -96,7 +96,7 @@ feature
 				register := target;
 			end;
 			if call /= Void then
-				!!access_reg;
+				!! access_reg;
 				access_reg.set_register (register);
 				access_reg.set_type (target.type);
 				call.set_target (access_reg);

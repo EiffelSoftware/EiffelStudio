@@ -115,6 +115,10 @@ feature -- Status Report
 						is_cls_compliant (f)
 						
 			if Result then
+				Result := f.is_literal implies is_valid_literal_field (f)
+			end
+						
+			if Result then
 					-- check that field is fully cls compliant
 				Result := is_consumed_field_cls_compliant (f)
 				debug ("log_illegal_non_cls_compliancy") 
@@ -131,6 +135,15 @@ feature -- Status Report
 					end
 				end
 			end
+		end
+		
+	is_valid_literal_field (f: FIELD_INFO): BOOLEAN is
+			-- Is `f' a valid literal field?
+		require
+			f_not_void: f /= Void
+			f_is_literal: f.is_literal
+		do
+			Result := not f.declaring_type.is_enum implies f.get_value (Void) /= Void
 		end
 		
 	is_consumed_field_cls_compliant (f: FIELD_INFO): BOOLEAN is

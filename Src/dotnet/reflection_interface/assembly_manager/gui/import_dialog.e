@@ -66,6 +66,12 @@ feature -- Access
 			description: "Non imported dependancies; Result of `dependancies_imported'"
 			external_name: "NonImportedDependancies"
 		end
+
+	eiffel_names_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
+		indexing
+			description: "Check box enabling user to launch Eiffel code generation with Eiffel-friendly names"
+			external_name: "EiffelNamesCheckBox"
+		end
 		
 feature -- Status Report
 
@@ -133,6 +139,20 @@ feature -- Basic Operations
 			set_size (a_size)
 			set_icon (dictionary.Import_icon)
 			destination_path_text_box.set_text (dictionary.Default_generation_path)
+
+				-- Eiffel names check box
+			create eiffel_names_check_box.make_checkbox
+			eiffel_names_check_box.set_text (dictionary.Eiffel_names_check_box_text)
+			eiffel_names_check_box.set_font (a_font)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
+			eiffel_names_check_box.set_location (a_point)
+			a_size.set_height (dictionary.Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			eiffel_names_check_box.set_size (a_size)
+			eiffel_names_check_box.set_checked (True)
+			eiffel_names_check_box.set_autocheck (True)
+			controls.add (eiffel_names_check_box)
 			
 				-- Dependancies check box (checked by default)
 			if dependancies.count > 0 then
@@ -140,7 +160,7 @@ feature -- Basic Operations
 				dependancies_check_box.set_text (dictionary.Dependancies_check_box_text)
 				dependancies_check_box.set_font (a_font)
 				a_point.set_X (dictionary.Margin)
-				a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
+				a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
 				dependancies_check_box.set_location (a_point)
 				a_size.set_height (dictionary.Label_height)
 				a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
@@ -154,9 +174,9 @@ feature -- Basic Operations
 			create ok_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
 			if dependancies.count > 0 then
-				a_point.set_Y (5 * dictionary.Margin + 10 * dictionary.Label_height)
+				a_point.set_Y (5 * dictionary.Margin + 11 * dictionary.Label_height)
 			else
-				a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
+				a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
 			end
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
@@ -169,9 +189,9 @@ feature -- Basic Operations
 			create cancel_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin // 2))
 			if dependancies.count > 0 then
-				a_point.set_Y (5 * dictionary.Margin + 10 * dictionary.Label_height)
+				a_point.set_Y (5 * dictionary.Margin + 11 * dictionary.Label_height)
 			else
-				a_point.set_Y (4 * dictionary.Margin + 9 * dictionary.Label_height)
+				a_point.set_Y (4 * dictionary.Margin + 10 * dictionary.Label_height)
 			end
 			cancel_button.set_location (a_point)
 			cancel_button.set_height (dictionary.Button_height)
@@ -253,7 +273,8 @@ feature {NONE} -- Implementation
 					close
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						emitter.importassemblywithdependancies (assembly, destination_path_text_box.text)
+						emitter.importassemblywithdependancies (assembly, destination_path_text_box.text, eiffel_names_check_box.checked)
+						--emitter.importassemblywithdependancies (assembly, destination_path_text_box.text)
 						message_box.close
 					else
 						message_box.close
@@ -310,7 +331,8 @@ feature {NONE} -- Implementation
 					close
 					create emitter.make_neweiffelclassgenerator
 					if destination_path_text_box.text /= Void and then destination_path_text_box.text.length > 0 then
-						emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text)
+						emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text, eiffel_names_check_box.checked)
+						--emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text)
 						message_box.close
 					else
 						message_box.close

@@ -63,7 +63,8 @@ feature -- Initialization
 				until
 					i > assert_id_set.count
 				loop
-						-- Retrieve the inherited assertion info, the body_index and the feature table
+						-- Retrieve the inherited assertion info, the body_index and
+						-- the feature table
 					inh_f := assert_id_set.item (i)
 					body_index := inh_f.body_index
 					f_table := Feat_tbl_server.item (inh_f.written_in)
@@ -72,7 +73,10 @@ feature -- Initialization
 						feat := f_table.feature_of_body_index (body_index)
 						if feat /= Void then
 							other_feat_as := feat.body
-							if other_feat_as /= Void and then (not processed_features.has(feat.body_index)) then
+							if
+								other_feat_as /= Void and then
+								not processed_features.has (feat.body_index)
+							then
 								create assertion.make_for_feature (feat, other_feat_as)
 								chained_assert.extend (assertion)
 								processed_features.extend (feat.body_index)
@@ -82,7 +86,7 @@ feature -- Initialization
 							-- Prepare next iteration
 					i := i + 1
 				end
-				if f.has_assertion and then (not processed_features.has(f.body_index)) then
+				if f.has_assertion and then (not processed_features.has (f.body_index)) then
 					create assertion.make_for_feature (f, ast)
 					chained_assert.extend (assertion)
 				end
@@ -150,7 +154,10 @@ feature -- Element change
 						if inh_feat_adapter /= Void then
 							feat := inh_feat_adapter.source_feature
 							other_feat_as := inh_feat_adapter.ast
-							if other_feat_as /= Void and then (not processed_features.has(feat.body_index)) then
+							if
+								other_feat_as /= Void and then
+								not processed_features.has (feat.body_index)
+							then
 								create assertion.make_for_feature (feat, other_feat_as)
 								chained_assert.extend (assertion)
 								processed_features.extend (feat.body_index)
@@ -161,7 +168,10 @@ feature -- Element change
 					end
 				end
 				source_feature := feat_adapter.source_feature
-				if source_feature.has_assertion and then (not processed_features.has(source_feature.body_index)) then
+				if
+					source_feature.has_assertion and then
+					not processed_features.has (source_feature.body_index)
+				then
 					create assertion.make_for_feature (source_feature, feat_adapter.ast)
 					chained_assert.extend (assertion)
 				end

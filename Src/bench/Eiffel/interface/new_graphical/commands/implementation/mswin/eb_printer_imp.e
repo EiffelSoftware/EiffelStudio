@@ -43,30 +43,6 @@ feature {NONE} -- Initialization
 			set_interface: interface = interf
 		end
 
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
 feature {EB_PRINTER} -- Basic operations
 
 	send_print_request is

@@ -73,7 +73,7 @@ feature
 			-- Set saved_application to True.
 		do
 			set_saved;
-			if list.selected_item /= Void then
+			if list.realized and then list.selected_item /= Void then
 				last_command_saved := history_list.last;
 			else
 				last_command_saved := Void

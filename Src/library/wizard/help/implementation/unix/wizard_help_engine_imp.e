@@ -30,10 +30,10 @@ feature -- Status Report
 			
 feature -- Basic Operations
 
-	show (a_help_context: EB_HELP_CONTEXT) is
+	show (a_help_context: WIZARD_HELP_CONTEXT) is
 			-- Show help with context `a_help_context'.
 		do
-			(create {EXECUTION_ENVIRONMENT}.make).launch ("netscape " + a_help_context.url)
+			(create {EXECUTION_ENVIRONMENT}).launch ("netscape " + a_help_context.url)
 		end
 
 end -- class WIZARD_HELP_ENGINE_IMP

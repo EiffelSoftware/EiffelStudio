@@ -3,7 +3,6 @@
 class CLUSTER_I
 
 inherit
-
 	SHARED_ERROR_HANDLER;
 	SHARED_WORKBENCH;
 	SHARED_EIFFEL_PROJECT;
@@ -16,6 +15,7 @@ inherit
 		end
 	COMPILER_EXPORTER;
 	SHARED_TEXT_ITEMS
+	SHARED_CONFIGURE_RESOURCES
 
 creation
 
@@ -986,7 +986,7 @@ end;
 			ptr := path.to_c;
 			Result := eif_directory_has_changed ($ptr, date);
 			
-			if not Result and then Platform_constants.is_windows then
+			if not Result and then not Has_smart_file_system and then Platform_constants.is_windows then
 					-- We need to check on Windows FAT file systems the content of a non-changed
 					-- directory since it can have been changed anyway (FAT is not a good file
 					-- system).
@@ -1000,16 +1000,16 @@ end;
 
 				Result := True
 
-			elseif not Result then
-
-				from
-					classes.start
-				until
-					Result or else classes.after
-				loop
-					Result := classes.item_for_iteration.date_has_changed
-					classes.forth
-				end
+--			elseif not Result then
+--
+--				from
+--					classes.start
+--				until
+--					Result or else classes.after
+--				loop
+--					Result := classes.item_for_iteration.date_has_changed
+--					classes.forth
+--				end
 
 --				if not Result then
 --					if inc_l = Void then

@@ -59,7 +59,11 @@ feature -- Status settings
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			if a_text /= Void then
+				create a_wel_string.make (a_text)
+			else
+				create a_wel_string.make_empty (0)
+			end
 			cwin_set_window_text (edit_item, a_wel_string.item)
 		end
 

@@ -31,23 +31,39 @@ feature -- Initialization
 			set_selection_label ("Specify shell command");
 			hide_apply_button;
 			hide_help_button;
-			!!ok_it;
-			!!cancel_it;
+			set_exclusive_grab;
 			add_ok_action (Current, ok_it);
 			add_cancel_action (Current, cancel_it);
 			set_width (350);
 			associcated_command := cmd;
+			set_default_position (False);
+			realize;
 			set_composite_attributes (Current)
 		end;
 
 feature -- Access
 
 	call is
+		local
+			new_x, new_y: INTEGER;
+			p: like parent
 		do
-			set_exclusive_grab;
+			p := parent;
+			new_x := p.real_x + (p.width - width) // 2;
+			new_y := p.real_y - (height // 2);
+			if new_x + width > screen.width then
+				new_x := screen.width - width
+			elseif new_x < 0 then
+				new_x := 0
+			end;
+			if new_y + height > screen.height then
+				new_y := screen.height - height
+			elseif new_y < 0 then
+				new_y := 0
+			end;
+			set_x_y (new_x, new_y);
 			set_selection_text (associcated_command.command_shell_name);
 			popup;
-			raise
 		end;
 
 feature {NONE} -- Implementation
@@ -63,10 +79,8 @@ feature {NONE} -- Implementation
 				cmd_name := associcated_command.command_shell_name;
 				cmd_name.wipe_out;
 				cmd_name.append (clone (selection_text));
-				unrealize;
 				popdown
 			elseif argument = cancel_it then
-				unrealize;
 				popdown
 			end
 		end;
@@ -75,7 +89,10 @@ feature {NONE} -- Properties
 
 	associcated_command: SHELL_COMMAND;
 
-	ok_it, cancel_it: ANY;
+	ok_it, cancel_it: ANY is
 			-- Arguments for the command
+		once
+			!! Result
+		end
 
 end -- class SHELL_W

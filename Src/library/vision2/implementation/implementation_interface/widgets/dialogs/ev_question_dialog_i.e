@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+deferred class 
 	EV_QUESTION_DIALOG_I
 
 inherit
@@ -12,7 +12,6 @@ inherit
 		redefine
 			set_default
 		end
-
 
 feature -- status settings
 

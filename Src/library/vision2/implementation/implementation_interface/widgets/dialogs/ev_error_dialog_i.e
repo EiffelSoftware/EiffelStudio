@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+deferred class 
 	EV_ERROR_DIALOG_I
 
 inherit

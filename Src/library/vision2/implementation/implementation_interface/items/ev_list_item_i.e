@@ -10,35 +10,22 @@ deferred class
 	
 inherit
 	EV_SIMPLE_ITEM_I
-
-feature {NONE} -- Initialization
-
-	make_with_index (par: EV_LIST; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0) and (value <= par.count + 1)
-		deferred
-		end
-
-	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `value' as index.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0) and (value <= par.count + 1)
-		deferred
+		redefine
+			parent_imp,
+			top_parent_imp
 		end
 
 feature -- Access
 
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
+	parent_imp: EV_LIST_ITEM_HOLDER_IMP is
+			-- Parent implementation of the current item.
 		deferred
+		end
+
+	top_parent_imp: EV_LIST_ITEM_HOLDER_IMP is
+			-- Top item holder containing the current item.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
 
 feature -- Status report
@@ -75,6 +62,8 @@ feature -- Status setting
 			exists: not destroyed
 			has_parent: parent_imp /= Void
 		deferred
+		ensure
+			state_set: is_selected = flag
 		end
 
 	toggle is
@@ -83,24 +72,6 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			has_parent: parent_imp /= Void
-		deferred
-		end
-
-feature -- Element change
-
-	set_parent (par: EV_LIST) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		deferred
-		end
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item in the
-			-- list.
-		require
-			exists: not destroyed
-			has_parent: parent_imp /= Void
---			valid_index: (value > 0) and (value <= parent.count + 1)
 		deferred
 		end
 

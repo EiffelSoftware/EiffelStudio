@@ -16,9 +16,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create the widget with `par' as parent.
+	make_with_text (txt: STRING) is
+			-- Create a row with text in it.
+		require
+			valid_text: txt /= Void
 		deferred
+		ensure
+			text_set: text.is_equal (txt)
 		end
 
 feature -- Access
@@ -28,6 +32,8 @@ feature -- Access
 		require
 			exists: not destroyed
 		deferred
+		ensure
+			valid_result: Result /= Void
 		end
 
 feature -- Element change

@@ -30,6 +30,8 @@ feature -- Status setting
 			exists: not destroyed
 			has_parent: parent_imp /= Void
 		deferred
+		ensure
+			state_set: is_selected = flag
 		end
 
 feature -- Event : command association

@@ -13,6 +13,8 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
+			parent_imp,
+			top_parent_imp,
 			pixmap_size_ok
 		end
 
@@ -20,48 +22,23 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP is
 			-- Parent implementation
+		deferred
+		end
+
+	top_parent_imp: EV_MENU_IMP is
+			-- Top item holder containing the current item.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+		end
 
 feature -- Status report
 
-	insensitive: BOOLEAN is
+	is_insensitive: BOOLEAN is
 			-- Is current widget insensitive?
 		require
 			exists: not destroyed
-		deferred
-		end
-
-feature -- Status setting
-
-	set_insensitive (flag: BOOLEAN) is
-   			-- Set current item in insensitive mode if
-   			-- `flag'. 
-   		deferred
-   		end
-
-	set_selected (flag: BOOLEAN) is
-   			-- Set current item as the selected one.
-			-- We use it only when the grand parent is an option button.
-		require
-			exists: not destroyed
-  --			valid_grand_parent: grand_parent_is_option_button
- 		deferred
-   		end
-
-feature -- Element change
-
-	set_parent (par: EV_MENU_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		deferred
-		end
-
-feature -- Assertion
-
-	grand_parent_is_option_button: BOOLEAN is
-			-- Is true if the grand parent is an option button.
-			-- False otherwise.
 		deferred
 		end
 
@@ -71,7 +48,38 @@ feature -- Assertion
 			-- We use it only when the grand parent is an option button.
    		require
 			exists: not destroyed
---			valid_grand_parent: grand_parent_is_option_button
+			valid_grand_parent: grand_parent_is_option_button
+		deferred
+		end
+
+feature -- Status setting
+
+	set_insensitive (flag: BOOLEAN) is
+   			-- Set current item in insensitive mode if
+   			-- `flag'. 
+		require
+			exists: not destroyed
+   		deferred
+   		ensure
+   			state_set: is_insensitive = flag
+ 		end
+
+	set_selected (flag: BOOLEAN) is
+   			-- Set current item as the selected one.
+			-- We use it only when the grand parent is an option button.
+		require
+			exists: not destroyed
+			valid_grand_parent: grand_parent_is_option_button
+ 		deferred
+ 		ensure
+   			state_set: is_selected = flag
+   		end
+
+feature -- Assertion
+
+	grand_parent_is_option_button: BOOLEAN is
+			-- Is true if the grand parent is an option button.
+			-- False otherwise.
 		deferred
 		end
 

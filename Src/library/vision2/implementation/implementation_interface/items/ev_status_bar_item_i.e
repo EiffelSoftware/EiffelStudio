@@ -9,11 +9,23 @@ deferred class
 
 inherit
 	EV_SIMPLE_ITEM_I
+		redefine
+			parent_imp,
+			top_parent_imp
+		end
 
 feature -- Access
 
-	parent_imp: EV_STATUS_BAR_IMP
+	parent_imp: EV_STATUS_BAR_IMP is
 			-- Parent of the current item.
+		deferred
+		end
+
+	top_parent_imp: EV_STATUS_BAR_IMP is
+			-- Top item holder containing the current item.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+		end
 
 feature -- Measurement
 
@@ -40,11 +52,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_STATUS_BAR) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		deferred
-		end
+--	set_parent (par: EV_STATUS_BAR) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--		deferred
+--		end
 
 end -- class EV_STATUS_BAR_ITEM_I
 

@@ -128,6 +128,9 @@ feature -- New feature description
 					proc.init_arg (arguments);
 				end;
 				proc.init_assertion_flags (routine);
+				if routine.obsolete_message /= Void then
+					proc.set_obsolete_message (routine.obsolete_message.value);
+				end;
 				Result := proc;
 			else
 				routine ?= content;
@@ -168,6 +171,9 @@ feature -- New feature description
 					func.init_arg (arguments);
                 end;
 				func.init_assertion_flags (routine);
+				if routine.obsolete_message /= Void then
+					func.set_obsolete_message (routine.obsolete_message.value);
+				end;
                 Result := func;
 			end;
 		end;

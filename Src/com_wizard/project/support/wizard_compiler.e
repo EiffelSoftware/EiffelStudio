@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FILE_SYSTEM_MANAGEMENT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -46,11 +51,13 @@ feature -- Access
 			a_local_folder: STRING
 			a_file_list: LIST [STRING]
 		do
-			a_local_folder := clone (a_folder)
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append (Eifgen)
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append (W_code)
+			a_local_folder := clone (Shared_wizard_environment.destination_folder)
+			a_local_folder.append (a_folder)
+			-- The ".epr" file is in the Eifgen folder for a precompiled system
+			if a_folder.is_equal (Client) then
+				a_local_folder.append_character (Directory_separator)
+				a_local_folder.append (Eifgen)
+			end
 			create a_directory.make (a_local_folder)
 			if a_directory.exists then
 				from
@@ -141,6 +148,7 @@ feature -- Basic Operations
 			displayed: BOOLEAN
 			a_directory: DIRECTORY
 			a_local_folder: STRING
+			a_project_file, a_dest_file: STRING
 		do
 			a_local_folder := clone (a_folder)
 			a_local_folder.append_character (Directory_separator)
@@ -158,8 +166,26 @@ feature -- Basic Operations
 				launch (eiffel_compile_command, a_folder)
 			end
 			if eiffel_compilation_successful (a_folder) then
-				launch (finish_freezing_command, a_folder)
+				a_local_folder := clone (a_folder)
+				a_local_folder.append_character (Directory_separator)
+				a_local_folder.append (Eifgen)
+				a_local_folder.append_character (Directory_separator)
+				a_local_folder.append (W_code)
+				launch (finish_freezing_command, a_local_folder)
 				check_finish_freezing_status (a_folder)
+				if not Shared_wizard_environment.abort then
+					if a_folder.is_equal (Client) then
+						a_dest_file := clone (a_folder)
+						a_dest_file.append_character (Directory_separator)
+						a_project_file := clone (a_dest_file)
+						a_dest_file.append (Precompile_name)
+						a_project_file.append (Eifgen)
+						a_project_file.append_character (Directory_separator)
+						a_project_file.append (Precompile_name)
+						file_copy (a_project_file, a_dest_file)
+					end
+					spawn (eiffel_bench_command (a_folder), a_local_folder)
+				end
 			else
 				shared_wizard_environment.set_abort (Eiffel_compilation_error)
 			end		
@@ -174,17 +200,32 @@ feature -- Basic Operations
 		local
 			a_directory: DIRECTORY
 			a_local_folder: STRING
+			a_file_list: LIST [STRING]
+			found: BOOLEAN
 		do
 			a_local_folder := clone (a_folder)
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append (Eifgen)
 			a_local_folder.append_character (Directory_separator)
 			a_local_folder.append (W_code)
-			a_local_folder.append_character (Directory_separator)
-			a_local_folder.append (Msc)
-			a_directory.make (a_local_folder)
-			if a_directory.exists and then a_directory.has_entry (Driver_executable) and then Shared_wizard_environment.stop_on_error then
-				shared_wizard_environment.set_abort (Eiffel_compilation_error)
+			if a_folder.is_equal (Client) then
+				a_local_folder.append_character (Directory_separator)
+				a_local_folder.append (Msc)
+			end
+			create a_directory.make (a_local_folder)
+			if a_directory.exists then
+				from
+					a_file_list := a_directory.linear_representation
+					a_file_list.start
+				until
+					a_file_list.after or found
+				loop
+					found := (a_file_list.item.substring (a_file_list.item.count + 1 - Executable_extension.count, a_file_list.item.count)).is_equal (Executable_extension)
+					a_file_list.forth
+				end
+			end
+			if not found then
+				Shared_wizard_environment.set_abort (Eiffel_compilation_error)
 			end
 		end
 
@@ -450,6 +491,38 @@ feature {NONE} -- Implementation
 			Result.append (Ace_file_name)
 		end
 
+	eiffel_bench_command (a_folder: STRING): STRING is
+			-- Launch EiffelBench with first project in `a_folder'
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: not a_folder.empty
+			--contains_eiffel_project: a_folder has one and only one '.epr' file.
+		local
+			a_directory: DIRECTORY
+			a_file_list: LIST [STRING]
+			found: BOOLEAN
+		do
+			Result := "ebench "
+			Result.append (Shared_wizard_environment.destination_folder)
+			Result.append (a_folder)
+			Result.append_character (Directory_separator)
+			create a_directory.make (a_folder)
+			if a_directory.exists then
+				from
+					a_file_list := a_directory.linear_representation
+					a_file_list.start
+				until
+					a_file_list.after or found
+				loop
+					found := a_file_list.item.substring (a_file_list.item.count + 1 - Eiffel_project_extension.count, a_file_list.item.count).is_equal (Eiffel_project_extension)
+					if found then
+						Result.append (a_file_list.item)
+					end
+					a_file_list.forth
+				end
+			end
+		end
+			
 	user_def_file_name: STRING is
 			-- ".def" file name used for DLL compilation
 		do
@@ -460,11 +533,17 @@ feature {NONE} -- Implementation
 	Def_file_extension: STRING is ".def"
 			-- DLL definition file extension
 
+	Executable_extension: STRING is ".exe"
+			-- Executable file extension
+
 	Ace_file_name: STRING is "Ace.ace"
 			-- Ace file name
 
 	Eiffel_project_extension: STRING is ".epr"
 			-- Eiffel project extension
+
+	Precompile_name: STRING is "precomp.epr"
+			-- Precompilation project name
 
 	Finish_freezing_command: STRING is "finish_freezing -silent"
 			-- Finish freezing command line
@@ -492,7 +571,6 @@ feature {NONE} -- Implementation
 		%	all base:						%"$EIFFEL4\library\base%"%N%
 		%		exclude%N%
 		%			%"table_eiffel3%"%N%
-		%		end%N%N%
 		%		visible%N%
 		%			INTEGER_REF;%N%
 		%			CHARACTER_REF;%N%
@@ -501,7 +579,7 @@ feature {NONE} -- Implementation
 		%			DOUBLE_REF;%N%
 		%			CELL;%N%
 		%			STRING;%N%
-		%		end%N%N%
+		%		end;%N%N%
 		%	-- WEL%N%T%
 		%	all wel:						%"$EIFFEL4\library\wel%"%N%N%
 		%	all time: 						%"$EIFFEL4\library\time%"%N%
@@ -511,6 +589,10 @@ feature {NONE} -- Implementation
 		%		end;%N%N%
 		%	-- EiffelCOM%N%
 		%	all ecom:						%"$EIFFEL4\library\com%"%N%
+		%		visible%N%
+		%			ECOM_CURRENCY;%N%
+		%			ECOM_DECIMAL;%N%
+		%		end;%N%
 		%	all common:						%"..\common%"%N%N%
 		%external%N%
 		%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%

@@ -152,7 +152,7 @@ extern "C" {
 #define EIF_THR_ATTR_TYPE       unsigned char
 #define EIF_TSD_VAL_TYPE        LPVOID
 #define EIF_SEM_TYPE            HANDLE
-#define EIF_THR_TYPE            HANDLE
+#define EIF_THR_TYPE            unsigned long
 #define EIF_MUTEX_TYPE          HANDLE
 #define EIF_TSD_TYPE            DWORD
 

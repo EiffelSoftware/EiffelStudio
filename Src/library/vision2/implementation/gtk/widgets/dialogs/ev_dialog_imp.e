@@ -35,10 +35,7 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
 			C.gtk_object_ref (c_object)
 			C.gtk_widget_realize (c_object)
-			C.gtk_window_set_position (
-				c_object,
-				C.Gtk_win_pos_center_enum
-			)
+			C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
 			C.gtk_window_set_policy (c_object, 0, 0, 1) -- False, False, True
 			enable_closeable
 		end
@@ -58,23 +55,15 @@ feature -- Status Setting
 	enable_closeable is
 			-- Set the window to be closeable by the user
 		do
-			C.gdk_window_set_functions (
-				C.gtk_widget_struct_window (c_object),
-				C.GDK_FUNC_CLOSE_ENUM + C.GDK_FUNC_MOVE_ENUM
-			)
-			is_dialog_closeable := True
+			set_closeable (True)
 		end
 
 	disable_closeable is
 			-- Set the window not to be closeable by the user
 		do
-			C.gdk_window_set_functions (
-				C.gtk_widget_struct_window (c_object),
-				C.GDK_FUNC_MOVE_ENUM
-			)
-			is_dialog_closeable := False
+			set_closeable (False)
 		end
-
+		
 feature -- Basic operations
 
 	show_modal_to_window (a_window: EV_WINDOW) is
@@ -134,6 +123,21 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	set_closeable (new_status: BOOLEAN) is
+			-- Set `is_closeable' to `new_status'
+		local
+			close_fct: INTEGER
+		do
+			if new_status then
+				close_fct := C.GDK_FUNC_MOVE_ENUM
+			end
+			C.gdk_window_set_functions (
+				C.gtk_widget_struct_window (c_object),
+				C.GDK_FUNC_MOVE_ENUM + close_fct
+			)
+			is_dialog_closeable := new_status
+		end
+
 	call_close_request_actions is
 			-- Call the cancel actions if dialog is closeable.
 		do
@@ -147,7 +151,6 @@ feature {NONE} -- Implementation
 	interface: EV_DIALOG
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
-
 
 	is_dialog_closeable: BOOLEAN
 			-- Temporary flag whose only use is to enable functions

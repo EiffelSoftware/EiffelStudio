@@ -235,9 +235,8 @@ feature -- IL code generation
 			class_type := cl_type.associated_class_type
 			class_c := class_type.associated_class
 
-			invariant_checked := class_c.assertion_level.check_invariant
-					and then class_c.has_invariant
-					and then (not is_first or invariant_checked)
+			invariant_checked := (context.workbench_mode or class_c.assertion_level.check_invariant)
+				and then (not is_first or inv_checked)
 			
 			if cl_type.is_expanded then
 					-- Current type is expanded. We need to find out if

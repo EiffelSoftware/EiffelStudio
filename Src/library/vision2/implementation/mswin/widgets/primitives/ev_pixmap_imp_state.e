@@ -17,7 +17,10 @@ feature -- Access
 			-- Void otherwise (see Invariant at the end of class).
 		deferred
 		end
-	
+
+	icon: WEL_ICON
+		-- Current icon used. Void if none.
+
 	has_mask: BOOLEAN is
 			-- Has the current pixmap a mask?
 		deferred
@@ -75,6 +78,9 @@ end -- class EV_PIXMAP_IMP_STATE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/25 01:25:12  pichery
+--| Added `icon' attribute for polymorphism
+--|
 --| Revision 1.2  2000/04/13 18:33:12  pichery
 --| Added access to width & height
 --|

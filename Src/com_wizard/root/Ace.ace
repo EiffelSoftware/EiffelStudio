@@ -1,7 +1,6 @@
 -- This Ace file requires the following environment variables:
 
 -- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL4\library)
--- * "DEVSTUDIO" should be set to the Microsoft Devstudio folder
 
 system
 	wizard
@@ -102,7 +101,5 @@ external
 	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
 					"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib",
 					"$(LIBRARY)\com\Library\lib\com.lib",
-					"$(LIBRARY)\com\Runtime\lib\com_runtime.lib",
-					"$(DEVSTUDIO)\vc\lib\shell32.lib",
-					"$(DEVSTUDIO)\vc\lib\comctl32.lib";
+					"$(LIBRARY)\com\Runtime\lib\com_runtime.lib";
 end

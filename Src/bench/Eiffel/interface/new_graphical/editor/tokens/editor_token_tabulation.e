@@ -35,16 +35,22 @@ feature -- Initialisation
 
 feature -- Miscellaneous
 
+	Initialised: BOOLEAN
+		-- debug purpose
+
 	display(d_x: INTEGER; d_y: INTEGER; dc: WEL_DC): INTEGER is
 		local
 			tabulation_width: INTEGER
 		do
+			Initialised := True				-- debug purpose
+
 				-- Compute the number of pixel represented by a tabulation based on
 				-- user preferences.
 			tabulation_width := editor_preferences.tabulation_spaces * dc.string_width(" ")
 
 				-- Handle first tabulation.
 			Result := ((d_x // Tabulation_width) + 1 ) * Tabulation_width
+			width_first_tab := Result - d_x
 
 				-- Handle next tabulations.
 			Result := Result + Tabulation_width * (number_of_tabs - 1)
@@ -56,15 +62,26 @@ feature -- Miscellaneous
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
+		require
+			Initialised
 		do
-			Result := 0
+			if n = 1 then
+				Result := width_first_tab
+			else
+				Result := width_first_tab + Tabulation_width * (number_of_tabs - 1)
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
+		require
+			Initialised
 		do
-			Result := 1
+			if a_width < width_first_tab then
+				Result := 1
+			else
+				Result := 2 + (a_width - width_first_tab) // Tabulation_width
+			end
 		end
 
 feature {NONE} -- Implementation

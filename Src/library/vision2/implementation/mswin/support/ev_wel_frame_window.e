@@ -15,7 +15,8 @@ inherit
 			on_show,
 			on_size,
 			on_destroy,
-			on_get_min_max_info
+			on_get_min_max_info,
+			on_menu_command
 		end
 
 
@@ -26,7 +27,7 @@ creation
 
 feature
 	
-	initialize (the_container: EV_CONTAINER_IMP) is
+	initialize (the_container: EV_WINDOW_IMP) is
 		do
 			container := the_container
 		end
@@ -34,8 +35,7 @@ feature
 
 feature {NONE} -- Access
 
-	container: EV_CONTAINER_IMP
-
+	container: EV_WINDOW_IMP
 
 feature {NONE} -- Implementation 
 
@@ -47,23 +47,17 @@ feature {NONE} -- Implementation
 
 	on_show is
 		do
-			if container.the_child /= Void then
-				container.parent_ask_resize (container.the_child.minimum_width, container.the_child.minimum_height)
-			end
+			container.on_show
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 		do
-			if container.the_child /= Void then
-					container.the_child.parent_ask_resize (a_width, a_height)
-			end
+			container.on_size (a_width, a_height)
 		end
 
 	on_destroy is
 		do
-			if container.parent_imp /= Void then
-				container.parent_imp.set_insensitive (False)
-			end
+			container.on_destroy
 		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
@@ -73,6 +67,12 @@ feature {NONE} -- Implementation
 			!! min_track.make (container.the_child.minimum_width + 2*window_frame_width, container.the_child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height)
 			min_max_info.set_min_track_size (min_track)
 		end
+
+	on_menu_command (menu_id: INTEGER) is
+		do
+			container.on_menu_command (menu_id)
+		end
+
 	
 end -- class EV_WEL_FRAME_WINDOW
 

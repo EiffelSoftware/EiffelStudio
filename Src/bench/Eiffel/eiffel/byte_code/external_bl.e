@@ -3,17 +3,6 @@
 class EXTERNAL_BL
 
 inherit
-
-	EXTERNAL_B
-		rename
-			free_register as access_free_register
-		redefine
-			generate_parameters_list, generate_access_on_type,
-			release_hector_protection, basic_register, has_hector_variables,
-			has_call, current_needed_for_access, set_parent, parent,
-			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end, allocates_memory
-		end;
 	EXTERNAL_B
 		redefine
 			free_register,
@@ -21,12 +10,14 @@ inherit
 			release_hector_protection, basic_register, has_hector_variables,
 			has_call, current_needed_for_access, set_parent, parent,
 			set_register, register, generate_access, generate_on,
-			analyze_on, analyze, generate_end, allocates_memory
-		select
-			free_register
+			analyze_on, analyze, generate_end, allocates_memory,
+			generate_metamorphose_end
 		end;
+
 	SHARED_TABLE;
+
 	SHARED_DECLARATIONS;
+
 	EXTERNAL_CONSTANTS;
 
 feature
@@ -58,7 +49,7 @@ feature
 	free_register is
 			-- Free registers
 		do
-			access_free_register;
+			{EXTERNAL_B} Precursor;
 			if basic_register /= Void then
 				basic_register.free_register;
 			end;
@@ -136,7 +127,7 @@ feature
 	generate_access is
 			-- Generate the external C call
 		do
-			generate_on (Current_register);
+			do_generate (Current_register);
 		end;
 
 	generate_on (reg: REGISTRABLE) is
@@ -153,6 +144,7 @@ feature
 			i: INTEGER;
 			is_boolean: BOOLEAN;
 			type_c: TYPE_C
+			f: INDENT_FILE
 		do
 			check
 				final_mode: context.final_mode
@@ -161,6 +153,7 @@ feature
 			entry := Eiffel_table.poly_table (rout_id);
 
 			type_c := real_type (type).c_type;
+			f := generated_file
 
 			if entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
@@ -169,26 +162,26 @@ feature
 				table_name := rout_id.table_name;
 
 				if is_boolean then
-					generated_file.putstring ("EIF_TEST((");
+					f.putstring ("EIF_TEST((");
 				else
-					generated_file.putchar ('(');
+					f.putchar ('(');
 				end;
-				type_c.generate_function_cast (generated_file, argument_types);
-				generated_file.putchar ('(');
-				generated_file.putstring (table_name);
-				generated_file.putchar ('-');
-				generated_file.putint (entry.min_used - 1);
-				generated_file.putchar (')');
-				generated_file.putchar ('[');
+				type_c.generate_function_cast (f, argument_types);
+				f.putchar ('(');
+				f.putstring (table_name);
+				f.putchar ('-');
+				f.putint (entry.min_used - 1);
+				f.putchar (')');
+				f.putchar ('[');
 				if reg.is_current then
 					context.generate_current_dtype;
 				else
-					generated_file.putstring (gc_upper_dtype_lparan);
+					f.putstring (gc_upper_dtype_lparan);
 					reg.print_register;
-					generated_file.putchar (')');
+					f.putchar (')');
 				end;
-				generated_file.putchar (']');
-				generated_file.putchar (')');
+				f.putchar (']');
+				f.putchar (')');
 					-- Mark routine table used.
 				Eiffel_table.mark_used (rout_id);
 					-- Remember external routine table declaration
@@ -198,42 +191,42 @@ feature
 					-- so the name can be hardwired.
 				if encapsulated then
 					if is_boolean then
-						generated_file.putstring ("EIF_TEST(");
+						f.putstring ("EIF_TEST(");
 					else
-						type_c.generate_cast (generated_file);
+						type_c.generate_cast (f);
 					end;
 					extension.generate_header_files
 
 						-- Now generate the right name to call the external
 						-- In the case of a signature or a macro, the call will be direct
 						-- In the case of a dll, the encapsulation will be called (encoded name)
-					extension.generate_external_name (generated_file, external_name,
+					extension.generate_external_name (f, external_name,
 						entry, typ, type_c);
 				else
 					if is_boolean then
-						generated_file.putstring ("EIF_TEST((");
+						f.putstring ("EIF_TEST((");
 					else
-						generated_file.putchar ('(');
+						f.putchar ('(');
 					end;
 					if
 						extension /= Void and then
 						extension.has_include_list
 					then
 						extension.generate_header_files
-						generated_file.putstring (external_name);
+						f.putstring (external_name);
 					else
 						type_c.generate_function_cast
-							(generated_file, argument_types);
-						generated_file.putstring (external_name);
+							(f, argument_types);
+						f.putstring (external_name);
 							-- Remember external routine declaration
 						Extern_declarations.add_routine (type_c, external_name);
 					end;
-					generated_file.putchar (')');
+					f.putchar (')');
 				end;
 			end;
 		end;
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 			-- Generate final portion of C code.
 		local
 			is_macro_extension: BOOLEAN
@@ -241,6 +234,7 @@ feature
 			final_mode: BOOLEAN
 			polymorphic: BOOLEAN
 			cpp_ext: CPP_EXTENSION_I
+			f: INDENT_FILE
 		do
 			if encapsulated then
 				is_macro_extension := extension.is_macro
@@ -250,51 +244,69 @@ feature
 
 			generate_access_on_type (gen_reg, class_type);
 				-- Now generate the parameters of the call, if needed.
-
+			f := generated_file
 			if final_mode then
 				polymorphic := Eiffel_table.poly_table (rout_id).is_polymorphic (class_type.type_id)
 
 				if is_macro_extension then
 					if parameters /= Void then
-						generated_file.putchar ('(')
+						f.putchar ('(')
 						extension.generate_parameter_list (parameters)
-						generated_file.putchar (')')
+						f.putchar (')')
 					end
 					if not polymorphic then
 							--| See comments in `generate_access_on_type'
-						generated_file.putchar (')');
+						f.putchar (')');
 					end
 				elseif is_cpp_extension and not polymorphic then
 					cpp_ext ?= extension
 					cpp_ext.generate (external_name, parameters)
 				else
-					generated_file.putchar ('(')
+					f.putchar ('(')
 					generate_parameters_list;
-					generated_file.putchar (')')
+					f.putchar (')')
 				end
 			else
-				generated_file.putchar ('(')
+				f.putchar ('(')
 				generate_parameters_list;
-				generated_file.putchar (')')
+				f.putchar (')')
 					
 			end
 
-			if meta then
-					-- Close parenthesis opened by metamorphosis code
-				generated_file.putchar (')');
-			end;
 			if type.is_boolean then
 					-- macro EIF_TEST was generated
-				generated_file.putchar (')');
+				f.putchar (')');
 			end
-			release_hector_protection;
 		end;
+
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
+		basic_type: BASIC_I; file: INDENT_FILE) is
+			-- Generate final portion of C code.
+		local
+			is_class_separate: BOOLEAN
+		do
+			is_class_separate := class_type.is_separate
+
+			generate_end (gen_reg, class_type, is_class_separate)
+
+				-- Now generate the parameters of the call, if needed.
+			if not is_class_separate then
+				file.putchar (')');
+				basic_type.end_of_metamorphose (basic_register, meta_reg, file)
+			end
+
+			if type.is_boolean then
+					-- macro EIF_TEST was generated
+				file.putchar (')');
+			end
+		end
 
 	generate_parameters_list is
 			-- Generate the parameters list for C function call
 		local
 			expr: EXPR_B;
 			ext: like extension
+			f: INDENT_FILE
 		do
 			ext := extension
 
@@ -302,6 +314,7 @@ feature
 				ext.generate_parameter_list (parameters)
 			elseif parameters /= Void then
 				from
+					f := generated_file
 					parameters.start;
 				until
 					parameters.after
@@ -309,7 +322,7 @@ feature
 					expr := parameters.item;	-- Cannot fail
 					expr.print_register;
 					if not parameters.islast then
-						generated_file.putstring (gc_comma);
+						f.putstring (gc_comma);
 					end;
 					parameters.forth;
 				end;
@@ -321,6 +334,7 @@ feature
 		local
 			protect_b: PROTECT_B;
 			nb_hector: INTEGER;
+			f: INDENT_FILE
 		do
 			if parameters /= Void then
 				from
@@ -341,11 +355,12 @@ feature
 					-- which make it possible to generate a ';' at the end
 					-- followed by the hector removal instructions--RAM.
 				if nb_hector > 0 then
-					generated_file.putchar (';');
-					generated_file.new_line;
-					generated_file.putstring ("RTHF(");
-					generated_file.putint (nb_hector);
-					generated_file.putchar (')');
+					f := generated_file
+					f.putchar (';');
+					f.new_line;
+					f.putstring ("RTHF(");
+					f.putint (nb_hector);
+					f.putchar (')');
 				end;
 			end;
 		end;

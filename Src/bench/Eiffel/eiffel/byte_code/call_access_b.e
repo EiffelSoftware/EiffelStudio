@@ -299,23 +299,6 @@ end
 		do
 		end
 
-	generate_metamorphose (reg: REGISTRABLE) is
-			-- Generate the metamorphosis of simple type as a statement if
-			-- needed.
-		local
-			basic_type: BASIC_I
-			type_i: TYPE_I
-		do
-			type_i := context_type
-			if type_i.is_basic then
-				basic_type ?= type_i
-				basic_type.metamorphose
-					(basic_register, reg, generated_file, context.workbench_mode)
-				generated_file.putchar (';')
-				generated_file.new_line
-			end
-		end
-
 	release_hector_protection is
 			-- Only for externals
 		do
@@ -351,6 +334,7 @@ end
 			type_i: TYPE_I
 			class_type: CL_TYPE_I
 			basic_type: BASIC_I
+			f: INDENT_FILE
 		do
 			type_i := context_type
 				-- Special provision is made for calls on basic types
@@ -359,39 +343,45 @@ end
 				if is_feature_special and not type_i.is_bit then
 					generate_special_feature (reg)
 				else
-					-- Generation of metamorphosis is enclosed between (), and
-					-- the expressions are separated with ',' which means the C
-					-- keeps only the last expression, i.e. the function call.
-					-- That way, statements like "s := i.out" are correctly
-					-- generated with a minimum of temporaries.
+					f := generated_file
+						-- Generation of metamorphosis is enclosed between (), and
+						-- the expressions are separated with ',' which means the C
+						-- keeps only the last expression, i.e. the function call.
+						-- That way, statements like "s := i.out" are correctly
+						-- generated with a minimum of temporaries.
 					basic_type ?= type_i
 					class_type := basic_type.associated_reference.type
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant
 						-- checking routine.
-					generated_file.putchar ('(')
-					basic_type.metamorphose
-						(basic_register, reg, generated_file, context.workbench_mode)
-					generated_file.putchar (',')
-					generated_file.new_line
-					generated_file.putchar ('%T')
-					generate_end (basic_register, class_type, True)
+					f.putchar ('(')
+					basic_type.metamorphose (basic_register, reg,
+									f, context.workbench_mode)
+					f.putchar (',')
+					f.new_line
+					f.putchar ('%T')
+					generate_metamorphose_end (basic_register, reg,
+									class_type, basic_type, f)
+					release_hector_protection
 				end
 			else
 				class_type ?= type_i;	-- Cannot fail
-				generate_end (reg, class_type, False)
+				generate_end (reg, class_type, class_type.is_separate)
+				release_hector_protection
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 			-- Generate final portion of C code.
+		local
+			f: INDENT_FILE
 		do
 			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
-			if class_type.is_separate then
-			else
+			if not is_class_separate then
 				if not is_attribute then
-					generated_file.putchar ('(')
+					f := generated_file
+					f.putchar ('(')
 				end
 				if is_feature_call then
 					gen_reg.print_register
@@ -400,14 +390,27 @@ end
 					generate_parameters_list
 				end
 				if not is_attribute then
-					generated_file.putchar (')')
-				end
-				if meta then
-						-- Close parenthesis opened by metamorphosis code
-					generated_file.putchar (')')
+					f.putchar (')')
 				end
 			end
-			release_hector_protection
+		end
+
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
+		basic_type: BASIC_I; file: INDENT_FILE) is
+			-- Generate final portion of C code.
+		local
+			is_class_separate: BOOLEAN
+		do
+			is_class_separate := class_type.is_separate
+
+			generate_end (gen_reg, class_type, is_class_separate)
+
+				-- Now generate the parameters of the call, if needed.
+			if not is_class_separate then
+				file.putstring (");")
+				file.new_line
+				basic_type.end_of_metamorphose (basic_register, meta_reg, file)
+			end
 		end
 
 end

@@ -185,6 +185,7 @@ feature
 			assignment: ASSIGN_B
 			type_i: TYPE_I
 			internal_name: STRING
+			f: INDENT_FILE
 		do
 				-- Generate the header "int foo(Current, args)"
 			type_i := real_type (result_type)
@@ -197,12 +198,13 @@ feature
 			add_in_log (internal_name)
 
 				-- Generate function signature
-			generated_file.generate_function_signature
+			f := generated_file
+			f.generate_function_signature
 				(type_i.c_type.c_string, internal_name, True,
 				 Context.extern_declaration_file, argument_names, argument_types)
 
 				-- Starting body of C routine
-			generated_file.indent
+			f.indent
 
 			process_expanded
 
@@ -213,8 +215,8 @@ feature
 			if system.has_separate then
 				search_for_separate_call_in_precondition
 				if has_separate_call_in_precondition then
-					generated_file.putstring ("CURDSFC;")
-					generated_file.new_line
+					f.putstring ("CURDSFC;")
+					f.new_line
 				end
 			end
 
@@ -262,15 +264,15 @@ feature
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
 				if trace_enabled then
-					generated_file.putstring ("RTTI;")
-					generated_file.new_line
+					f.putstring ("RTTI;")
+					f.new_line
 				end
 				if profile_enabled then
-					generated_file.putstring ("RTPI;")
-					generated_file.new_line
+					f.putstring ("RTPI;")
+					f.new_line
 				end
-				generated_file.putstring ("RTEJ;")
-				generated_file.new_line
+				f.putstring ("RTEJ;")
+				f.new_line
 			end
 
 				-- Generate local expanded variable creations
@@ -297,8 +299,8 @@ feature
 					-- GC hooks we've been generated.
 				finish_compound
 				if rescue_clause /= Void then
-					generated_file.putstring ("return;")
-					generated_file.new_line
+					f.putstring ("return;")
+					f.new_line
 				end
 			end
 
@@ -307,13 +309,13 @@ feature
 
 				-- End of C function
 			if is_once and then context.result_used then
-				generated_file.putstring ("%N#undef Result%N")
+				f.putstring ("%N#undef Result%N")
 			end
 
-			generated_file.exdent
+			f.exdent
 
 				-- Leave a blank line after function definition
-			generated_file.putstring ("}%N%N")
+			f.putstring ("}%N%N")
 			Context.inherited_assertion.wipe_out
 		end
 
@@ -330,6 +332,7 @@ feature
 		local
 			assignment: ASSIGN_B
 			a_creation: CREATION_B
+			f: INDENT_FILE
 		do
 			if compound /= Void then
 				compound.finish
@@ -344,8 +347,9 @@ feature
 						assignment = Void and a_creation = Void and
 						not context.has_rescue
 					then
-						generated_file.putstring ("/* NOTREACHED */")
-						generated_file.new_line
+						f := generated_file
+						f.putstring ("/* NOTREACHED */")
+						f.new_line
 					end
 				else
 					generate_return_exp
@@ -359,6 +363,7 @@ feature
 			-- Generate the return expression
 		local
 			type_i: TYPE_I
+			f: INDENT_FILE
 		do
 				-- Do not forget to remove the GC hooks before returning
 				-- if they have already been generated. For instance, when
@@ -367,21 +372,22 @@ feature
 			type_i := real_type (result_type)
 			finish_compound
 			if not result_type.is_void then
-				generated_file.putstring ("return ")
+				f := generated_file
+				f.putstring ("return ")
 					-- If Result was used, generate it. Otherwise, its value
 					-- is simply the initial one (i.e. generic 0).
 				if context.result_used then
 					if real_type (result_type).c_type.is_pointer then
 						context.Result_register.print_register_by_name
 					else
-						generated_file.putstring ("Result")
+						f.putstring ("Result")
 					end
-					generated_file.putchar (';')
+					f.putchar (';')
 				else
-					type_i.c_type.generate_cast (generated_file)
-					generated_file.putstring ("0;")
+					type_i.c_type.generate_cast (f)
+					f.putstring ("0;")
 				end
-				generated_file.new_line
+				f.new_line
 			end
 		end; -- generate_return_exp
 
@@ -403,7 +409,9 @@ feature
 			written_class: CLASS_C
 			written_type: CLASS_TYPE
 			c_name: STRING
+			f: INDENT_FILE
 		do
+			f := generated_file
 			if locals /= Void then
 				count := locals.count
 				from
@@ -422,12 +430,12 @@ feature
 							if context.workbench_mode then
 									-- RTLX is a macro used to create
 									-- expanded types
-								generated_file.putstring (" = RTLX(RTUD(")
-								generated_file.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
-								generated_file.putchar (')')
+								f.putstring (" = RTLX(RTUD(")
+								f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
+								f.putchar (')')
 							else
-								generated_file.putstring (" = RTLN(")
-								generated_file.putint (exp_type_id)
+								f.putstring (" = RTLN(")
+								f.putint (exp_type_id)
 								class_type := cl_type_i.associated_class_type
 								creation_feature := class_type.associated_class.creation_feature
 								if creation_feature /= Void then
@@ -438,22 +446,22 @@ feature
 										written_type := written_class.meta_type (class_type.type).associated_class_type
 									end
 									c_name := creation_feature.body_id.feature_name (written_type.id)
-									generated_file.putstring (");%N%T")
-									generated_file.putstring (clone (c_name))
-									generated_file.putchar ('(')
+									f.putstring (");%N%T")
+									f.putstring (clone (c_name))
+									f.putchar ('(')
 									context.local_var.print_register_by_name
 								end
 							end
-							generated_file.putstring (gc_rparan_comma)
-							generated_file.new_line
+							f.putstring (gc_rparan_comma)
+							f.new_line
 						elseif type_i.is_bit then
 							bit_i ?= type_i; -- Cannot fail
 							context.local_var.set_position (i)
 							context.local_var.print_register_by_name
-							generated_file.putstring (" = RTLB(")
-							generated_file.putint (bit_i.size)
-							generated_file.putstring (gc_rparan_comma)
-							generated_file.new_line
+							f.putstring (" = RTLB(")
+							f.putint (bit_i.size)
+							f.putstring (gc_rparan_comma)
+							f.new_line
 						end
 					end
 					i := i + 1
@@ -468,12 +476,12 @@ feature
 					if context.workbench_mode then
 							-- RTLX is a macro used to create
 							-- expanded types
-						generated_file.putstring (" = RTLX(RTUD(")
-						generated_file.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
-						generated_file.putchar (')')
+						f.putstring (" = RTLX(RTUD(")
+						f.putstring (cl_type_i.associated_expanded_class_type.id.generated_id)
+						f.putchar (')')
 					else
-						generated_file.putstring (" = RTLN(")
-						generated_file.putint (exp_type_id)
+						f.putstring (" = RTLN(")
+						f.putint (exp_type_id)
 						class_type := cl_type_i.associated_class_type
 						creation_feature := class_type.associated_class.creation_feature
 						if creation_feature /= Void then
@@ -484,21 +492,21 @@ feature
 								written_type := written_class.meta_type (class_type.type).associated_class_type
 							end
 							c_name := creation_feature.body_id.feature_name (written_type.id)
-							generated_file.putstring (");%N%T")
-							generated_file.putstring (clone (c_name))
-							generated_file.putchar ('(')
+							f.putstring (");%N%T")
+							f.putstring (clone (c_name))
+							f.putchar ('(')
 							context.local_var.print_register_by_name
 						end
 					end
-					generated_file.putstring (gc_rparan_comma)
-					generated_file.new_line
+					f.putstring (gc_rparan_comma)
+					f.new_line
 				elseif type_i.is_bit then
 					bit_i ?= type_i; -- Cannot fail
 					context.result_var.print_register_by_name
-					generated_file.putstring (" = RTLB(")
-					generated_file.putint (bit_i.size)
-					generated_file.putstring (gc_rparan_comma)
-					generated_file.new_line
+					f.putstring (" = RTLB(")
+					f.putint (bit_i.size)
+					f.putstring (gc_rparan_comma)
+					f.new_line
 				end
 			end
 		end
@@ -508,41 +516,43 @@ feature
 		local
 			arg: TYPE_I
 			i, count, nb_exp: INTEGER
+			f: INDENT_FILE
 		do
 			if arguments /= Void then
 				from
 					i := arguments.lower
 					count := arguments.count
+					f := generated_file
 				until
 					i > count
 				loop
 					arg := real_type (arguments.item (i))
 					if arg.is_expanded then
 						context.arg_var.set_position (i)
-						generated_file.putstring ("if ((char *) 0 == ")
+						f.putstring ("if ((char *) 0 == ")
 						context.arg_var.print_register_by_name
-						generated_file.putchar (')')
-						generated_file.new_line
-						generated_file.indent
-						generated_file.putstring ("RTET(%"")
-						generated_file.putstring (feature_name)
-						generated_file.putstring ("%", EN_VEXP);")
-						generated_file.new_line
-						generated_file.exdent
+						f.putchar (')')
+						f.new_line
+						f.indent
+						f.putstring ("RTET(%"")
+						f.putstring (feature_name)
+						f.putstring ("%", EN_VEXP);")
+						f.new_line
+						f.exdent
 							-- Expanded cloning protocol
 						if context.exp_args > 1 then
-							generated_file.putstring ("if (idx[")
-							generated_file.putint (nb_exp)
-							generated_file.putstring ("] == -1L)")
-							generated_file.new_line
-							generated_file.indent
+							f.putstring ("if (idx[")
+							f.putint (nb_exp)
+							f.putstring ("] == -1L)")
+							f.new_line
+							f.indent
 							generate_arg_var_cloning (-1)
-							generated_file.exdent
-							generated_file.putstring ("else")
-							generated_file.new_line
-							generated_file.indent
+							f.exdent
+							f.putstring ("else")
+							f.new_line
+							f.indent
 							generate_arg_var_cloning (nb_exp)
-							generated_file.exdent
+							f.exdent
 							nb_exp := nb_exp + 1
 						else
 							generate_arg_var_cloning (-1)
@@ -555,21 +565,23 @@ feature
 
 	generate_arg_var_cloning (idx: INTEGER) is
 			-- Generate cloning operation on Arg_var parameter from context
+		local
+			f: INDENT_FILE
 		do
 			context.arg_var.print_register_by_name
-			generated_file.putstring (" = RTCL(")
+			f := generated_file
+			f.putstring (" = RTCL(")
 			context.arg_var.print_register_by_name
 				-- If `idx' is not -1, then the reference was the one for the
 				-- enclosing object and it needs adjusting by the expanded
 				-- object's offset whithin that bigger object.
 			if idx /= -1 then
-				generated_file.putstring (" + idx[")
-				generated_file.putint (idx)
-				generated_file.putchar (']')
+				f.putstring (" + idx[")
+				f.putint (idx)
+				f.putchar (']')
 			end
-			generated_file.putchar (')')
-			generated_file.putchar (';')
-			generated_file.new_line
+			f.putstring (");")
+			f.new_line
 		end
 
 	generate_locals is
@@ -577,8 +589,10 @@ feature
 		local
 			i, count: INTEGER
 			type_i: TYPE_I
+			f: INDENT_FILE
 		do
 				-- Eiffel local variables.
+			f := generated_file
 			if locals /= Void then
 				from
 					count := locals.count
@@ -593,13 +607,13 @@ feature
 							-- the local variable array "l[]".
 						if not context.need_gc_hooks or else
 							not type_i.c_type.is_pointer then
-							type_i.c_type.generate (generated_file)
-							generated_file.putstring ("loc")
-							generated_file.putint (i)
-							generated_file.putstring (" = ")
-							type_i.c_type.generate_cast (generated_file)
-							generated_file.putstring ("0;")
-							generated_file.new_line
+							type_i.c_type.generate (f)
+							f.putstring ("loc")
+							f.putint (i)
+							f.putstring (" = ")
+							type_i.c_type.generate_cast (f)
+							f.putstring ("0;")
+							f.new_line
 						end
 					end
 					i := i + 1
@@ -609,10 +623,10 @@ feature
 				-- Generate index table if we have more than one expanded
 				-- argument (cloning protocol).
 			if context.exp_args > 1 then
-				generated_file.putstring ("long idx[")
-				generated_file.putint (context.exp_args)
-				generated_file.putstring ("];")
-				generated_file.new_line
+				f.putstring ("long idx[")
+				f.putint (context.exp_args)
+				f.putstring ("];")
+				f.new_line
 			end
 
 				-- Generate temporary locals under the control of the GC
@@ -631,28 +645,28 @@ feature
 					-- There has to be more than one usage of the dynamic type
 					-- of current in order to have this variable generated.
 				if is_once then
-					generated_file.putstring ("int dtype;")
+					f.putstring ("int dtype;")
 				else
-					generated_file.putstring ("int dtype = Dtype(Current);")
+					f.putstring ("int dtype = Dtype(Current);")
 				end
-				generated_file.new_line
+				f.new_line
 			end
 				-- Generate the int local variable saving the global `nstcall'.
 			if context.workbench_mode
 				or else
 				context.assertion_level.check_invariant
 			then
-				generated_file.putstring ("RTSN;")
-				generated_file.new_line
+				f.putstring ("RTSN;")
+				f.new_line
 			end
 			if context.workbench_mode then
 					-- Generate local variable for saving the workbench
 					-- mode assertion level of the current object.
-				generated_file.putstring ("RTDA;")
-				generated_file.new_line
+				f.putstring ("RTDA;")
+				f.new_line
 				if rescue_clause /= void then
-					generated_file.putstring ("RTDT;")
-					generated_file.new_line
+					f.putstring ("RTDT;")
+					f.new_line
 				end
 			end
 				-- The local variable array is then declared, based on the
@@ -661,11 +675,11 @@ feature
 			i := context.ref_var_used
 			if i > 0 then
 				if rescue_clause /= Void then
-					generated_file.putstring ("RTXD;")
-					generated_file.new_line
+					f.putstring ("RTXD;")
+					f.new_line
 				else
-					generated_file.putstring ("RTLD;")
-					generated_file.new_line
+					f.putstring ("RTLD;")
+					f.new_line
 				end
 			end
 
@@ -677,44 +691,49 @@ feature
 				-- we have to go through the key: we cannot simply return 0
 				-- in case some treatment with side effect were done.
 			if is_once then
-				real_type (result_type).c_type.generate (generated_file)
-				generated_file.putstring ("*PResult = (")
-				real_type (result_type).c_type.generate (generated_file)
-				generated_file.putstring ("*) 0;%N")
+				real_type (result_type).c_type.generate (f)
+				f.putstring ("*PResult = (")
+				real_type (result_type).c_type.generate (f)
+				f.putstring ("*) 0;%N")
 			end
 
 				-- Generate temporary non-reference locals declarations
 			context.generate_temporary_nonref_variables
 
 				-- Separate declarations and body with a blank line
-			generated_file.new_line
+			f.new_line
 		end
 
 	generate_result_declaration is
 			-- Generate the declaration of the Result entity
 		local
 			ctype: TYPE_C
+			f: INDENT_FILE
 		do
 			ctype := real_type (result_type).c_type
 			if ctype.is_pointer then
 					-- The generation is included in the declaration of local
 					-- variable array, hehe.
 			else
-				ctype.generate (generated_file)
-				generated_file.putstring ("Result = ")
-				ctype.generate_cast (generated_file)
-				generated_file.putstring ("0;")
-				generated_file.new_line
+				f := generated_file
+				ctype.generate (f)
+				f.putstring ("Result = ")
+				ctype.generate_cast (f)
+				f.putstring ("0;")
+				f.new_line
 			end
 		end
 
 	init_dtype is
 			-- Initializes the value of 'dtype' in once routines. For regular
 			-- ones, the variable is initialized directly in the declaration.
+		local
+			f: INDENT_FILE
 		do
 			if context.dt_current > 1 then
-				generated_file.putstring ("dtype = Dtype(Current);")
-				generated_file.new_line
+				f := generated_file
+				f.putstring ("dtype = Dtype(Current);")
+				f.new_line
 			end
 		end
 
@@ -726,6 +745,7 @@ feature
 			have_assert: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
 			count, i: INTEGER
+			f: INDENT_FILE
 		do
 			context.set_assertion_type (In_precondition)
 			workbench_mode := context.workbench_mode
@@ -736,43 +756,44 @@ feature
 					(workbench_mode or else context.assertion_level.check_precond)
 			end
 			if have_assert then
+				f := generated_file
 				if workbench_mode then
-					generated_file.putstring ("if (RTAL & CK_REQUIRE) {")
-					generated_file.new_line
-					generated_file.indent
+					f.putstring ("if (RTAL & CK_REQUIRE) {")
+					f.new_line
+					f.indent
 				else
-					generated_file.putstring ("if (~in_assertion) {")
-					generated_file.new_line
-					generated_file.indent
+					f.putstring ("if (~in_assertion) {")
+					f.new_line
+					f.indent
 				end
 				generate_invariant_before
 				if has_separate_call_in_precondition then
-					generated_file.exdent
-					generated_file.putstring ("check_sep_pre:")
-					generated_file.indent
-					generated_file.new_line
-					generated_file.putstring ("CURCSFC;")
-					generated_file.new_line
+					f.exdent
+					f.putstring ("check_sep_pre:")
+					f.indent
+					f.new_line
+					f.putstring ("CURCSFC;")
+					f.new_line
 				end
 				if precondition /= Void then
 					context.set_is_prec_first_block (True)
 					Context.inc_label
 					precondition.generate
-					generated_file.putstring ("RTJB;")
-					generated_file.new_line
-					generated_file.exdent
+					f.putstring ("RTJB;")
+					f.new_line
+					f.exdent
 					if has_separate_call_in_precondition then
 						context.print_concurrent_label
-						generated_file.putchar (':')
-						generated_file.indent
-						generated_file.putstring (" CURSSFC;")
-						generated_file.new_line
-						generated_file.exdent
+						f.putchar (':')
+						f.indent
+						f.putstring (" CURSSFC;")
+						f.new_line
+						f.exdent
 					end
 					context.print_current_label
-					generated_file.putchar (':')
-					generated_file.new_line
-					generated_file.indent
+					f.putchar (':')
+					f.new_line
+					f.indent
 				end
 				
 				if inh_assert.has_precondition then
@@ -783,40 +804,34 @@ feature
 				end
 
 				if has_separate_call_in_precondition then
-					generated_file.putstring ("if (!CURSFC) {")
-					generated_file.new_line
-					generated_file.indent
-					generated_file.putstring ("RTCF;")
-					generated_file.new_line
-					generated_file.exdent
-					generated_file.putstring ("} else {")
-					generated_file.new_line
-					generated_file.indent
-					generated_file.putstring ("RTCK;")
-					generated_file.new_line
+					f.putstring ("if (!CURSFC) {")
+					f.new_line
+					f.indent
+					f.putstring ("RTCF;")
+					f.new_line
+					f.exdent
+					f.putstring ("} else {")
+					f.new_line
+					f.indent
+					f.putstring ("RTCK;")
+					f.new_line
 						-- free separate parameters
 					free_separate_parameters
 						-- Reserve separate parameters
-					generated_file.putstring ("CURCSPFW;")
-					generated_file.new_line
+					f.putstring ("CURCSPFW;")
+					f.new_line
 					reserve_separate_parameters
-					generated_file.putstring ("CURCSPF;")
-					generated_file.new_line
-					generated_file.exdent
-					generated_file.putstring ("}")
+					f.putstring ("CURCSPF;")
+					f.new_line
+					f.exdent
+					f.putstring ("}")
 				else
-					generated_file.putstring ("RTCF;")
+					f.putstring ("RTCF;")
 				end
-				generated_file.new_line
-				if workbench_mode then
-					generated_file.exdent
-					generated_file.putchar ('}')
-					generated_file.new_line
-				else
-					generated_file.exdent
-					generated_file.putchar ('}')
-					generated_file.new_line
-				end
+				f.new_line
+				f.exdent
+				f.putchar ('}')
+				f.new_line
 			else
 				generate_invariant_before
 			end
@@ -828,21 +843,23 @@ feature
 			workbench_mode: BOOLEAN
 			have_assert: BOOLEAN
 			inh_assert: INHERITED_ASSERTION
+			f: INDENT_FILE
 		do
 			workbench_mode := context.workbench_mode
 			inh_assert := Context.inherited_assertion
 			have_assert := (postcondition /= Void or else inh_assert.has_postcondition) and then
 					(workbench_mode or else context.assertion_level.check_postcond)
 			if have_assert then
+				f := generated_file
 				context.set_assertion_type (In_postcondition)
 				if workbench_mode then
-					generated_file.putstring ("if (RTAL & CK_ENSURE) {")
-					generated_file.new_line
-					generated_file.indent
+					f.putstring ("if (RTAL & CK_ENSURE) {")
+					f.new_line
+					f.indent
 				else
-					generated_file.putstring ("if (~in_assertion) {")
-					generated_file.new_line
-					generated_file.indent
+					f.putstring ("if (~in_assertion) {")
+					f.new_line
+					f.indent
 				end
 				if postcondition /= Void then
 					postcondition.generate
@@ -852,13 +869,13 @@ feature
 				end
 				generate_invariant_after
 				if workbench_mode then
-					generated_file.exdent
-					generated_file.putchar ('}')
-					generated_file.new_line
+					f.exdent
+					f.putchar ('}')
+					f.new_line
 				else
-					generated_file.exdent
-					generated_file.putchar ('}')
-					generated_file.new_line
+					f.exdent
+					f.putchar ('}')
+					f.new_line
 				end
 			else
 				generate_invariant_after
@@ -870,11 +887,14 @@ feature
 			-- assertion level of the current object.
 		require
 			workbench_mode: context.workbench_mode
+		local
+			f: INDENT_FILE
 		do
-			generated_file.putstring ("RTSA(")
+			f := generated_file
+			f.putstring ("RTSA(")
 			context.generate_current_dtype
-			generated_file.putstring (gc_rparan_comma)
-			generated_file.new_line
+			f.putstring (gc_rparan_comma)
+			f.new_line
 		end
 
 	generate_invariant_before is
@@ -891,19 +911,22 @@ feature
 
 	generate_invariant (tag: STRING) is
 			-- Generate invariant check with tag `tag'.
+		local
+			f: INDENT_FILE
 		do
+			f := generated_file
 			if context.workbench_mode then
-				generated_file.putstring (tag)
-				generated_file.putchar ('(')
+				f.putstring (tag)
+				f.putchar ('(')
 				context.current_register.print_register_by_name
-				generated_file.putstring (", RTAL);")
-				generated_file.new_line
+				f.putstring (", RTAL);")
+				f.new_line
 			elseif context.assertion_level.check_invariant then
-				generated_file.putstring (tag)
-				generated_file.putchar ('(')
+				f.putstring (tag)
+				f.putchar ('(')
 				context.current_register.print_register_by_name
-				generated_file.putstring (gc_rparan_comma)
-				generated_file.new_line
+				f.putstring (gc_rparan_comma)
+				f.new_line
 			end
 		end
 
@@ -911,29 +934,31 @@ feature
 			-- Generate the rescue clause
 		local
 			nb_refs: INTEGER
+			f: INDENT_FILE
 		do
 			if rescue_clause /= Void then
-				generated_file.new_line
-				generated_file.exdent
-				generated_file.putstring ("rescue:")
-				generated_file.new_line
-				generated_file.indent
-				generated_file.putstring ("RTEU;")
-				generated_file.new_line
+				f := generated_file
+				f.new_line
+				f.exdent
+				f.putstring ("rescue:")
+				f.new_line
+				f.indent
+				f.putstring ("RTEU;")
+				f.new_line
 					-- Resynchronize local variables stack
 				nb_refs := context.ref_var_used
 				if nb_refs > 0 then
-					generated_file.putstring ("RTXS(")
-					generated_file.putint (nb_refs)
-					generated_file.putstring (gc_rparan_comma)
-					generated_file.new_line
+					f.putstring ("RTXS(")
+					f.putint (nb_refs)
+					f.putstring (gc_rparan_comma)
+					f.new_line
 				end
 				rescue_clause.generate
 				generate_profile_stop
-				generated_file.putstring ("/* NOTREACHED */")
-				generated_file.new_line
-				generated_file.putstring ("RTEF;")
-				generated_file.new_line
+				f.putstring ("/* NOTREACHED */")
+				f.new_line
+				f.putstring ("RTEF;")
+				f.new_line
 			end
 		end
 
@@ -946,20 +971,23 @@ feature
 
 	generate_execution_declarations is
 			-- Generate the declarations needed for exception trace handling
+		local
+			f: INDENT_FILE
 		do
+			f := generated_file
 			if exception_stack_managed or rescue_clause /= Void then
-				generated_file.putstring ("RTEX;")
-				generated_file.new_line
+				f.putstring ("RTEX;")
+				f.new_line
 			end
 			if rescue_clause /= Void then
-				generated_file.putstring ("RTED;")
-				generated_file.new_line
+				f.putstring ("RTED;")
+				f.new_line
 					-- We only need this for finalized mode...
 				if trace_enabled then
-					generated_file.putstring ("RTLT;%N")
+					f.putstring ("RTLT;%N")
 				end
 				if profile_enabled then
-					generated_file.putstring ("RTLP;%N")
+					f.putstring ("RTLP;%N")
 				end
 			end
 		end
@@ -977,10 +1005,13 @@ feature
 	generate_pop_execution_trace is
 			-- Generate the execution trace stack handling at the end of the
 			-- routine
+		local
+			f: INDENT_FILE
 		do
 			if exception_stack_managed or else rescue_clause /= Void then
-				generated_file.putstring ("RTEE;")
-				generated_file.new_line
+				f := generated_file
+				f.putstring ("RTEE;")
+				f.new_line
 			end
 		end
 
@@ -1010,10 +1041,13 @@ feature
 
 	generate_profile_stop is
 			-- Generate the "stop of progile" macro
+		local
+			f: INDENT_FILE
 		do
 			if profile_enabled then
-				generated_file.putstring ("RTXP;")
-				generated_file.new_line
+				f := generated_file
+				f.putstring ("RTXP;")
+				f.new_line
 			end
 		end
 
@@ -1038,31 +1072,37 @@ feature
 			-- and the "dynamic type" of `Current' as arguments
 		require
 			dtype_added: context.dt_current > 1
+		local
+			f: INDENT_FILE
 		do
-			generated_file.putstring (macro_name)
-			generated_file.putstring ("(%"")
-			generated_file.putstring (feature_name)
-			generated_file.putstring ("%", ")
-			generated_file.putstring (feature_origin)
-			generated_file.putstring (gc_comma)
-			generated_file.putstring (" dtype")
-			generated_file.putstring (gc_rparan_comma)
-			generated_file.new_line
+			f := generated_file
+			f.putstring (macro_name)
+			f.putstring ("(%"")
+			f.putstring (feature_name)
+			f.putstring ("%", ")
+			f.putstring (feature_origin)
+			f.putstring (gc_comma)
+			f.putstring (" dtype")
+			f.putstring (gc_rparan_comma)
+			f.new_line
 		end
 
 	generate_stack_macro (macro_name: STRING) is
 			-- Generate a macro call will the feature name, the feature origin
 			-- and `Current' as arguments
+		local
+			f: INDENT_FILE
 		do
-			generated_file.putstring (macro_name)
-			generated_file.putstring ("(%"")
-			generated_file.putstring (feature_name)
-			generated_file.putstring ("%", ")
-			generated_file.putstring (feature_origin)
-			generated_file.putstring (gc_comma)
+			f := generated_file
+			f.putstring (macro_name)
+			f.putstring ("(%"")
+			f.putstring (feature_name)
+			f.putstring ("%", ")
+			f.putstring (feature_origin)
+			f.putstring (gc_comma)
 			context.Current_register.print_register_by_name
-			generated_file.putstring (gc_rparan_comma)
-			generated_file.new_line
+			f.putstring (gc_rparan_comma)
+			f.new_line
 		end
 
 	finish_compound is
@@ -1401,15 +1441,17 @@ feature -- Concurrent Eiffel
 			i, count: INTEGER
 			var_name: STRING
 			reg: REGISTRABLE
+			f: INDENT_FILE
 		do
 				-- Reserve separate parameters
 			if arguments /= Void and then has_separate_call_in_the_feature then
-				generated_file.exdent
+				f := generated_file
+				f.exdent
 				Context.inc_reservation_label
 				Context.print_reservation_label
-				generated_file.putstring (":")
-				generated_file.indent
-				generated_file.new_line
+				f.putstring (":")
+				f.indent
+				f.new_line
 				!!var_name.make(10)
 				from 
 					!!var_name.make(10)
@@ -1424,25 +1466,25 @@ feature -- Concurrent Eiffel
 						var_name.append("arg")
 						var_name.append(i.out);							
 						reg := context.associated_register_table.item(var_name)
-						generated_file.putstring ("if (CURRSO(")
+						f.putstring ("if (CURRSO(")
 						if reg /= Void then
 							reg.print_register_by_name
 						else
-							generated_file.putstring (var_name)
+							f.putstring (var_name)
 						end
-						generated_file.putstring (")) {")
-						generated_file.indent
-						generated_file.new_line
+						f.putstring (")) {")
+						f.indent
+						f.new_line
 						free_partial_sep_paras (i)
-						generated_file.putstring ("CURRSFW;")
-						generated_file.new_line
-						generated_file.putstring ("goto ")
+						f.putstring ("CURRSFW;")
+						f.new_line
+						f.putstring ("goto ")
 						Context.print_reservation_label
-						generated_file.putstring (";")
-						generated_file.new_line
-						generated_file.exdent
-						generated_file.putstring ("}")
-						generated_file.new_line
+						f.putstring (";")
+						f.new_line
+						f.exdent
+						f.putstring ("}")
+						f.new_line
 					end
 					i := i + 1
 				end
@@ -1455,30 +1497,34 @@ feature -- Concurrent Eiffel
 			i, count: INTEGER
 			var_name: STRING
 			reg: REGISTRABLE
+			f: INDENT_FILE
 		do
             	-- Free separate parameters
-			!!var_name.make(10)
             if arguments /= Void then
                 from 
+					!!var_name.make(10)
                     i := arguments.lower
                     count := arguments.count + i - 1
+					f := generated_file
                 until
                     i > count
                 loop
-                    if real_type(arguments.item(i)).is_separate 
-						and then separate_call_on_argument (i) then
+                    if
+						real_type(arguments.item(i)).is_separate 
+						and then separate_call_on_argument (i)
+					then
                         var_name.wipe_out
                         var_name.append("arg")
                         var_name.append(i.out);                            
                         reg := context.associated_register_table.item(var_name)
-	                    generated_file.putstring ("CURFSO(")
+	                    f.putstring ("CURFSO(")
                         if reg /= Void then
                             reg.print_register_by_name
 						else
-                        	generated_file.putstring (var_name)
+                        	f.putstring (var_name)
 						end
-                        generated_file.putstring (");")
-                        generated_file.new_line
+                        f.putstring (");")
+                        f.new_line
                     end
                     i := i + 1
                 end
@@ -1492,30 +1538,34 @@ feature -- Concurrent Eiffel
 			i, count: INTEGER
 			var_name: STRING
 			reg: REGISTRABLE
+			f: INDENT_FILE
 		do
             	-- Free separate parameters
-			!!var_name.make(10)
             if arguments /= Void then
                 from 
+					!!var_name.make(10)
                     i := arguments.lower
                     count := arguments.count + i - 1
+					f := generated_file
                 until
                     i >= idx or i > count
                 loop
-                    if real_type(arguments.item(i)).is_separate 
-						and then separate_call_on_argument (i) then
+                    if
+						real_type(arguments.item(i)).is_separate 
+						and then separate_call_on_argument (i)
+					then
                         var_name.wipe_out
                         var_name.append("arg")
                         var_name.append(i.out);                            
                         reg := context.associated_register_table.item(var_name)
-	                    generated_file.putstring ("CURFSO(")
+	                    f.putstring ("CURFSO(")
                         if reg /= Void then
                             reg.print_register_by_name
 						else
-                        	generated_file.putstring (var_name)
+                        	f.putstring (var_name)
                         end
-                      	generated_file.putstring (");")
-                       	generated_file.new_line
+                      	f.putstring (");")
+                       	f.new_line
                     end
                     i := i + 1
                 end

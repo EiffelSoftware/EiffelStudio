@@ -8,13 +8,13 @@ inherit
 			unanalyze as feat_bl_unanalyze,
 			free_register as feat_bl_free_register
 		redefine
-			enlarged, perused,
+			enlarged, perused, generate_metamorphose_end, 
 			generate_end, fill_from
 		end
 
 	FEATURE_BL
 		redefine
-			enlarged, analyze_on,
+			enlarged, analyze_on, generate_metamorphose_end, 
 			generate_end, fill_from,
 			generate_parameters,
 			unanalyze, perused,
@@ -186,20 +186,22 @@ feature -- Generation
 			i, count: INTEGER
 			expr: EXPR_B;
 			current_t: CL_TYPE_I
+			f: INDENT_FILE
 		do
 			feat_bl_generate_parameters (gen_reg)
 
 			inliner.set_inlined_feature (Current);
 
-			generated_file.putchar ('{');
-			generated_file.new_line;
+			f := generated_file
+			f.putchar ('{');
+			f.new_line;
 
-			generated_file.putstring ("/* INLINED CODE (");
-			generated_file.putstring (feature_name);
-			generated_file.putstring (") */");
-			generated_file.new_line;
+			f.putstring ("/* INLINED CODE (");
+			f.putstring (feature_name);
+			f.putstring (") */");
+			f.new_line;
 
-			if parameters /= void then
+			if parameters /= Void then
 					-- Assign the parameter values to the registers
 				from
 					parameters.start
@@ -210,10 +212,10 @@ feature -- Generation
 					if (not temporary_parameters.item (i)) then
 						expr := parameters.item;
 						argument_regs.item (i).print_register;
-						generated_file.putstring (" = ");
+						f.putstring (" = ");
 						expr.print_register;
-						generated_file.putchar (';');
-						generated_file.new_line
+						f.putchar (';');
+						f.new_line
 					end;
 					parameters.forth;
 					i := i + 1
@@ -246,7 +248,7 @@ feature -- Generation
 			if not is_current_temporary then
 
 				current_register.print_register;
-				generated_file.putstring (" = ");
+				f.putstring (" = ");
 
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
@@ -255,10 +257,10 @@ feature -- Generation
 				Context.set_inlined_current_register (Void);
 				
 				gen_reg.print_register;
-				generated_file.putchar (';');
-				generated_file.new_line
+				f.putchar (';');
+				f.new_line
 				
-				generated_file.new_line
+				f.new_line
 				
 				Context.set_current_type (current_t);
 				Context.set_inlined_current_register (current_reg);
@@ -267,13 +269,13 @@ feature -- Generation
 
 			if inlined_dt_current > 1 then
 				context.set_inlined_dt_current (inlined_dt_current);
-				generated_file.putchar ('{');
-				generated_file.new_line;
-				generated_file.putstring ("int inlined_dtype = ");
-				generated_file.putstring (gc_upper_dtype_lparan);
+				f.putchar ('{');
+				f.new_line;
+				f.putstring ("int inlined_dtype = ");
+				f.putstring (gc_upper_dtype_lparan);
 				current_reg.print_register_by_name;
-				generated_file.putstring (");");
-				generated_file.new_line
+				f.putstring (");");
+				f.new_line
 			end;
 
 			if compound /= Void then
@@ -281,18 +283,18 @@ feature -- Generation
 			end
 
 			if inlined_dt_current > 1 then
-				generated_file.putchar ('}');
-				generated_file.new_line
+				f.putchar ('}');
+				f.new_line
 				context.set_inlined_dt_current (0);
 			end
 
 			Context.set_inlined_current_register (Void);
 
-			generated_file.putstring ("/* END INLINED CODE */");
-			generated_file.new_line;
+			f.putstring ("/* END INLINED CODE */");
+			f.new_line;
 
-			generated_file.putchar ('}');
-			generated_file.new_line;
+			f.putchar ('}');
+			f.new_line;
 
 			Context.set_current_type (caller_type);
 			caller_type := Void;
@@ -300,7 +302,7 @@ feature -- Generation
 			inliner.set_inlined_feature (Void);
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 		do
 			Context.set_inlined_current_register (current_reg);
 			if result_reg /= Void then
@@ -308,8 +310,13 @@ feature -- Generation
 				result_reg.print_register
 			end;
 			Context.set_inlined_current_register (Void)
+		end
 
-			release_hector_protection
+	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
+		basic_type: BASIC_I; file: INDENT_FILE) is
+			-- Generate final portion of C code.
+		do
+			generate_end (gen_reg, class_type, class_type.is_separate)
 		end
 
 feature -- Registers
@@ -488,12 +495,15 @@ feature {NONE} -- Registers
 		end
 
 	reset_register_value (reg: REGISTER) is
+		local
+			f: INDENT_FILE
 		do
 			reg.print_register;
-			generated_file.putstring (" = ");
-			reg.c_type.generate_cast (generated_file);
-			generated_file.putstring (" 0;");
-			generated_file.new_line;
+			f := generated_file
+			f.putstring (" = ");
+			reg.c_type.generate_cast (f);
+			f.putstring (" 0;");
+			f.new_line;
 		end
 
 	inlined_dt_current: INTEGER;

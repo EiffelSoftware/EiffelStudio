@@ -41,24 +41,26 @@ feature
 			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C
+			f: INDENT_FILE
 		do
+			f := generated_file
 			is_nested := not is_first;
 			type_i := real_type (type);
 			type_c := type_i.c_type;
 			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
-				generated_file.putchar ('*');
+				f.putchar ('*');
 					-- ...followed by the appropriate access cast
-				type_c.generate_access_cast (generated_file);
+				type_c.generate_access_cast (f);
 			end;
-			generated_file.putchar ('(');
+			f.putchar ('(');
 			reg.print_register;
 			if reg.is_predefined or reg.register /= No_register then
-				generated_file.putstring (gc_plus);
+				f.putstring (gc_plus);
 			else
-				generated_file.putstring (" +");
-				generated_file.new_line;
-				generated_file.indent;
+				f.putstring (" +");
+				f.new_line;
+				f.indent;
 			end;
 			base_class := typ.base_class;
 			if
@@ -66,38 +68,38 @@ feature
 				base_class.is_precompiled
 			then
 				if is_nested then
-					generated_file.putstring ("RTVPA(");
+					f.putstring ("RTVPA(");
 				else
-					generated_file.putstring ("RTWPA(");
+					f.putstring ("RTWPA(");
 				end;
 				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putstring (rout_info.origin.generated_id);
-				generated_file.putstring (gc_comma);
-				generated_file.putint (rout_info.offset)
+				f.putstring (rout_info.origin.generated_id);
+				f.putstring (gc_comma);
+				f.putint (rout_info.offset)
 			else
 				if is_nested then
-					generated_file.putstring ("RTVA(");
+					f.putstring ("RTVA(");
 				else
-					generated_file.putstring ("RTWA(");
+					f.putstring ("RTWA(");
 				end;
-				generated_file.putint (typ.associated_class_type.id.id - 1);
-				generated_file.putstring (gc_comma);
-				generated_file.putint (real_feature_id);
+				f.putint (typ.associated_class_type.id.id - 1);
+				f.putstring (gc_comma);
+				f.putint (real_feature_id);
 			end;
-			generated_file.putstring (gc_comma);
+			f.putstring (gc_comma);
 			if is_nested then
-				generated_file.putchar ('"');
-				generated_file.putstring (attribute_name);
-				generated_file.putstring ("%", ");
+				f.putchar ('"');
+				f.putstring (attribute_name);
+				f.putstring ("%", ");
 				reg.print_register;
 			else
 				context.generate_current_dtype;
 			end;
-			generated_file.putstring ("))");
+			f.putstring ("))");
 			if not (reg.is_predefined or reg.register /= No_register) then
-			  generated_file.exdent;
+			  f.exdent;
 			end;
 		end;
 	

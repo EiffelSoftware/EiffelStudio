@@ -52,13 +52,16 @@ feature
 
 	generate is
 			-- Generate the string
+		local
+			f: INDENT_FILE
 		do
 			if register /= No_register then
+				f := generated_file
 				register.print_register
-				generated_file.putstring (" = ")
+				f.putstring (" = ")
 				generate_string
-				generated_file.putchar (';')
-				generated_file.new_line
+				f.putchar (';')
+				f.new_line
 			end
 		end
 
@@ -74,13 +77,16 @@ feature
 
 	generate_string is
 			-- Generate the string (created Eiffel object)
+		local
+			f: INDENT_FILE
 		do
 				-- RTMS is the macro used to create Eiffel strings from C ones
-			generated_file.putstring ("RTMS(")
-			generated_file.putchar('"')
-			generated_file.escape_string (value)
-			generated_file.putchar('"')
-			generated_file.putchar(')')
+			f := generated_file
+			f.putstring ("RTMS(")
+			f.putchar('"')
+			f.escape_string (value)
+			f.putchar('"')
+			f.putchar(')')
 		end
 
 	is_simple_expr: BOOLEAN is True

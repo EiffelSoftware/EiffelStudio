@@ -302,26 +302,31 @@ feature
 
 	generate is
 			-- Generate C code for the access.
+		local
+			f: INDENT_FILE
 		do
 			generate_parameters (current_register)
 			if register /= No_register then
+				f := generated_file
 						-- Procedures have a void return type
 				if register /= Void then
 					register.print_register
-					generated_file.putstring (" = ")
+					f.putstring (" = ")
 					if register.is_separate and then
 						not context.real_type(type).is_separate then
-						generated_file.putstring ("CURLTS(")
+						f.putstring ("CURLTS(")
 					end
 				end
 				generate_access
 				if  register /= Void and then register.is_separate and then
 					not context.real_type(type).is_separate then
-					generated_file.putstring (")")
+					f.putstring (")")
 				end
-				generated_file.putchar (';')
-				generated_file.new_line
-				if System.has_separate then reset_added_gc_hooks end
+				f.putchar (';')
+				f.new_line
+				if System.has_separate then
+					reset_added_gc_hooks
+				end
 			end
 		end
 

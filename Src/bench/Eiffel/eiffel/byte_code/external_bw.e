@@ -67,55 +67,57 @@ feature
 			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			is_boolean: BOOLEAN
+			f: INDENT_FILE
 		do
 			is_nested := not is_first;
+			f := generated_file
 
 			is_boolean :=  type.is_boolean;
 			if is_boolean then
-				generated_file.putstring ("EIF_TEST((");
+				f.putstring ("EIF_TEST((");
 			else
-				generated_file.putchar ('(');
+				f.putchar ('(');
 			end;
-			real_type (type).c_type.generate_function_cast (generated_file, argument_types);
+			real_type (type).c_type.generate_function_cast (f, argument_types);
 			if	
 				Compilation_modes.is_precompiling or else
 				typ.base_class.is_precompiled
 			then
 				if is_nested and need_invariant then
-					generated_file.putstring ("RTVPF(");
+					f.putstring ("RTVPF(");
 				else
-					generated_file.putstring ("RTWPF(");
+					f.putstring ("RTWPF(");
 				end;
 				r_id := typ.base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putstring (rout_info.origin.generated_id);
-				generated_file.putstring (gc_comma);
-				generated_file.putint (rout_info.offset);
+				f.putstring (rout_info.origin.generated_id);
+				f.putstring (gc_comma);
+				f.putint (rout_info.offset);
 			else
 				if is_nested and need_invariant then
-					generated_file.putstring ("RTVF(");
+					f.putstring ("RTVF(");
 				else
-					generated_file.putstring ("RTWF(");
+					f.putstring ("RTWF(");
 				end;
-				generated_file.putint (typ.associated_class_type.id.id - 1);
-				generated_file.putstring (gc_comma);
-				generated_file.putint (real_feature_id);
+				f.putint (typ.associated_class_type.id.id - 1);
+				f.putstring (gc_comma);
+				f.putint (real_feature_id);
 			end;
-			generated_file.putstring (gc_comma);
+			f.putstring (gc_comma);
 			if not is_nested then
 				context.generate_current_dtype;
 			elseif need_invariant then
-				generated_file.putchar ('"');
-				generated_file.putstring (feature_name);
-				generated_file.putstring ("%", ");
+				f.putchar ('"');
+				f.putstring (feature_name);
+				f.putstring ("%", ");
 				reg.print_register;
 			else
-				generated_file.putstring (gc_upper_dtype_lparan);
+				f.putstring (gc_upper_dtype_lparan);
 				reg.print_register;
-				generated_file.putchar (')');
+				f.putchar (')');
 			end;
-			generated_file.putstring ("))");
+			f.putstring ("))");
 		end;
 
 end

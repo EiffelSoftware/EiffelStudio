@@ -73,10 +73,12 @@ feature
 			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C;
+			f: INDENT_FILE
 		do
 			is_nested := not is_first;
-			generated_file.putchar ('(');
-			real_type (type).c_type.generate_function_cast (generated_file, argument_types);
+			f := generated_file
+			f.putchar ('(');
+			real_type (type).c_type.generate_function_cast (f, argument_types);
 			base_class := typ.base_class;
 
 			if 
@@ -84,54 +86,54 @@ feature
 				base_class.is_precompiled
 			then
 				if is_nested and need_invariant then
-					generated_file.putstring ("RTVPF(");
+					f.putstring ("RTVPF(");
 				else
-					generated_file.putstring ("RTWPF(");
+					f.putstring ("RTWPF(");
 				end;
 				r_id := base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putstring (rout_info.origin.generated_id);
-				generated_file.putstring (gc_comma);
-				generated_file.putint (rout_info.offset);
+				f.putstring (rout_info.origin.generated_id);
+				f.putstring (gc_comma);
+				f.putint (rout_info.offset);
 			else
 				if is_nested and need_invariant then
-					generated_file.putstring ("RTVF(");
+					f.putstring ("RTVF(");
 				else
-					generated_file.putstring ("RTWF(");
+					f.putstring ("RTWF(");
 				end;
-				generated_file.putint (typ.associated_class_type.id.id - 1);
-				generated_file.putstring (gc_comma);
-				generated_file.putint (real_feature_id);
+				f.putint (typ.associated_class_type.id.id - 1);
+				f.putstring (gc_comma);
+				f.putint (real_feature_id);
 			end;
-			generated_file.putstring (gc_comma);
+			f.putstring (gc_comma);
 			if not is_nested then
 				if precursor_type /= Void then
 					-- Use dynamic type of parent instead 
 					-- of dynamic type of Current.
 					if context.workbench_mode then
-						generated_file.putstring ("RTUD(");
-						generated_file.putstring (
+						f.putstring ("RTUD(");
+						f.putstring (
 						 precursor_type.associated_class_type.id.generated_id
 												 );
-						generated_file.putchar (')');
+						f.putchar (')');
 					else
-						generated_file.putint (precursor_type.type_id - 1);
+						f.putint (precursor_type.type_id - 1);
 					end;
 				else
 					context.generate_current_dtype;
 				end
 			elseif need_invariant then
-				generated_file.putchar ('"');
-				generated_file.putstring (feature_name);
-				generated_file.putstring ("%", ");
+				f.putchar ('"');
+				f.putstring (feature_name);
+				f.putstring ("%", ");
 				reg.print_register;
 			else
-				generated_file.putstring (gc_upper_dtype_lparan);
+				f.putstring (gc_upper_dtype_lparan);
 				reg.print_register;
-				generated_file.putchar (')');
+				f.putchar (')');
 			end;
-			generated_file.putstring ("))");
+			f.putstring ("))");
 		end;
 
 end

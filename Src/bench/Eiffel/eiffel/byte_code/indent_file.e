@@ -3,7 +3,6 @@
 class INDENT_FILE
 
 inherit
-
 	PLAIN_TEXT_FILE
 		rename
 			putchar as file_putchar,
@@ -35,9 +34,6 @@ feature
 
 	emitted: BOOLEAN;
 			-- Have leading tabs already been emitted ?
-
-	nl: INTEGER;
-			-- Number of consecutive new line generated
 
 feature -- Open, close features for C files
 
@@ -112,11 +108,8 @@ feature
 			-- Write a '\n'.
 			-- Do not allow two ore more consecutive blank lines.
 		do
-			if nl < 2 then
-				file_new_line;
-				emitted := false;
-				nl := nl + 1;
-			end;
+			file_new_line;
+			emitted := false;
 			debug ("FLUSH_FILE")
 				flush
 			end
@@ -126,7 +119,6 @@ feature
 			-- Write char `c'.
 		do
 			emit_tabs;
-			nl := 0;
 			file_putchar (c);
 			debug ("FLUSH_FILE")
 				flush
@@ -137,7 +129,6 @@ feature
 			-- Write int `i'.
 		do
 			emit_tabs;
-			nl := 0;
 			file_putint (i);
 			debug ("FLUSH_FILE")
 				flush
@@ -148,7 +139,6 @@ feature
 			-- Writes float `r'.
 		do
 			emit_tabs;
-			nl := 0;
 			file_putreal (r);
 			debug ("FLUSH_FILE")
 				flush
@@ -159,7 +149,6 @@ feature
 			-- Write double `d'.
 		do
 			emit_tabs;
-			nl := 0;
 			file_putdouble (d);
 			debug ("FLUSH_FILE")
 				flush
@@ -170,7 +159,6 @@ feature
 			-- Write string `s'.
 		do
 			emit_tabs;
-			nl := 0;
 			file_putstring (s);
 			debug ("FLUSH_FILE")
 				flush

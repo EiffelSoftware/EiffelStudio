@@ -17,9 +17,11 @@ feature
 			para_type: TYPE_I
 			i: INTEGER
 			loc_idx: INTEGER
+			f: INDENT_FILE
 		do
 			if parameters /= Void then
 				from
+					f := generated_file
 					parameters.start
 					i := 0
 				until
@@ -28,56 +30,56 @@ feature
 					expr ?= parameters.item;	-- Cannot fail
 					para_type := real_type(expr.attachment_type)
 					if para_type.is_boolean then
-						generated_file.putstring ("CURPB(")
+						f.putstring ("CURPB(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_long then
-						generated_file.putstring ("CURPI(")
+						f.putstring ("CURPI(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_feature_pointer then
-						generated_file.putstring ("CURPP(")
+						f.putstring ("CURPP(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_char then
-						generated_file.putstring ("CURPC(")
+						f.putstring ("CURPC(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_double then
-						generated_file.putstring ("CURPD(")
+						f.putstring ("CURPD(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_float then
-						generated_file.putstring ("CURPR(")
+						f.putstring ("CURPR(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_reference and not para_type.is_separate then
-						generated_file.putstring ("CURPO(")
+						f.putstring ("CURPO(")
 						expr.print_register
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					elseif para_type.is_separate then
-						generated_file.putstring ("CURPSO(")
+						f.putstring ("CURPSO(")
 --					  expr.print_register
 						if expr.stored_register.register_name /= Void then
 							loc_idx := context.local_index (expr.stored_register.register_name)
@@ -85,17 +87,17 @@ feature
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							generated_file.putstring ("l[")
-							generated_file.putint (context.ref_var_used + loc_idx)
-							generated_file.putstring ("]")
+							f.putstring ("l[")
+							f.putint (context.ref_var_used + loc_idx)
+							f.putstring ("]")
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register
 						end
-						generated_file.putstring (", ")
-						generated_file.putint (i)
-						generated_file.putstring (");")
-						generated_file.new_line
+						f.putstring (", ")
+						f.putint (i)
+						f.putstring (");")
+						f.new_line
 					end
 					i := i + 1
 					parameters.forth
@@ -108,13 +110,15 @@ feature
 		local
 			evaluated_type: TYPE_I
 			cl_type: CL_TYPE_I
+			f: INDENT_FILE
 		do
+			f := generated_file
 				-- Feature call on a separate object
-			generated_file.putstring ("if (on_local_processor(")
+			f.putstring ("if (on_local_processor(")
 			reg.print_register
-			generated_file.putstring (")) {")
-			generated_file.new_line
-			generated_file.indent
+			f.putstring (")) {")
+			f.new_line
+			f.indent
  
 			evaluated_type := Context.real_type (type)
  
@@ -123,91 +127,91 @@ feature
 			else
 				cl_type ?= evaluated_type
 				if cl_type.is_boolean then
-					generated_file.putstring("CURPB(")
+					f.putstring("CURPB(")
 				elseif cl_type.is_char then
-					generated_file.putstring("CURPC(")
+					f.putstring("CURPC(")
 				elseif cl_type.is_double then
-					generated_file.putstring("CURPD(")
+					f.putstring("CURPD(")
 				elseif cl_type.is_float then
-					generated_file.putstring("CURPR(")
+					f.putstring("CURPR(")
 				elseif cl_type.is_long then
-					generated_file.putstring("CURPI(")
+					f.putstring("CURPI(")
 				elseif cl_type.is_feature_pointer then
-					generated_file.putstring("CURPP(")
+					f.putstring("CURPP(")
 				elseif cl_type.is_expanded then
-					generated_file.putstring("CURPO(")
+					f.putstring("CURPO(")
 					-- FIXCONCURRENCY: We should make a clone here.
 				elseif cl_type.is_separate then
-					generated_file.putstring("CURPSO(")
+					f.putstring("CURPSO(")
 				else
 				--if cl_type.is_reference and not cl_type.is_separate then
-					generated_file.putstring("CURPSO(CURLTS(")
+					f.putstring("CURPSO(CURLTS(")
 				end
 			end
  
 			{FEATURE_BL} Precursor (reg, typ)
  
-			generated_file.putchar ('(')
-			generated_file.putstring ("CURPROXY_OBJ(")
+			f.putchar ('(')
+			f.putstring ("CURPROXY_OBJ(")
 			reg.print_register
-			generated_file.putstring (")")
+			f.putstring (")")
  
 			if parameters /= Void then
 				generate_parameters_list
 			end
  
-			generated_file.putstring (")")
+			f.putstring (")")
 			if cl_type /= Void  then
 				if not(cl_type.is_separate or cl_type.is_long or cl_type.is_feature_pointer or cl_type.is_boolean or cl_type.is_char or cl_type.is_double or cl_type.is_float or cl_type.is_expanded) then
-					generated_file.putstring(")")
+					f.putstring(")")
 				end
-				generated_file.putstring (", 0);")
+				f.putstring (", 0);")
 			else
-				generated_file.putstring (";")
+				f.putstring (";")
 			end
  
-			generated_file.new_line
-			generated_file.exdent
-			generated_file.putstring ("}")
-			generated_file.new_line
-			generated_file.putstring ("else {")
-			generated_file.new_line
-			generated_file.indent
+			f.new_line
+			f.exdent
+			f.putstring ("}")
+			f.new_line
+			f.putstring ("else {")
+			f.new_line
+			f.indent
 			if evaluated_type.is_void then
-				generated_file.putstring ("CURSARI(constant_execute_procedure, oid_of_sep_obj(")
+				f.putstring ("CURSARI(constant_execute_procedure, oid_of_sep_obj(")
 			else
-				generated_file.putstring ("CURSARI(constant_execute_query, oid_of_sep_obj(")
+				f.putstring ("CURSARI(constant_execute_query, oid_of_sep_obj(")
 			end
 			reg.print_register
 			if evaluated_type.is_void then
 				if attach_loc_to_sep then
-					generated_file.putstring ("), constant_procedure_with_ack, %"")
+					f.putstring ("), constant_procedure_with_ack, %"")
 				else
-					generated_file.putstring ("), constant_procedure_without_ack, %"")
+					f.putstring ("), constant_procedure_without_ack, %"")
 				end
 			else
-				generated_file.putstring ("), constant_query, %"")
+				f.putstring ("), constant_query, %"")
 			end
 
-			generated_file.putstring(typ.base_class.name_in_upper)
-			generated_file.putstring("%", %"")
-			generated_file.putstring(feature_name)
-			generated_file.putstring ("%", ")
+			f.putstring(typ.base_class.name_in_upper)
+			f.putstring("%", %"")
+			f.putstring(feature_name)
+			f.putstring ("%", ")
 			if parameters /= Void then
-				generated_file.putint (parameters.count)
+				f.putint (parameters.count)
 			else
-				generated_file.putint (0)
+				f.putint (0)
 			end
-			generated_file.putstring (");")
-			generated_file.new_line
+			f.putstring (");")
+			f.new_line
 			put_parameters_into_array
-			generated_file.putstring ("CURSG(")
+			f.putstring ("CURSG(")
 			reg.print_register
-			generated_file.putstring (");")
-			generated_file.new_line
-			generated_file.exdent
-			generated_file.putstring ("}")
-			generated_file.new_line
+			f.putstring (");")
+			f.new_line
+			f.exdent
+			f.putstring ("}")
+			f.new_line
 		end
 
 end

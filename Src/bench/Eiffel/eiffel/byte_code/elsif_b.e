@@ -94,23 +94,26 @@ feature
 
 	generate is
 			-- Generate C code in `generated_file'.
+		local
+			f: INDENT_FILE
 		do
+			f := generated_file
 			generate_line_info;
-			generated_file.putstring (" else {");
-			generated_file.new_line;
-			generated_file.indent;
+			f.putstring (" else {");
+			f.new_line;
+			f.indent;
 			expr.generate;
-			generated_file.exdent;
-			generated_file.putstring (gc_if_l_paran);
+			f.exdent;
+			f.putstring (gc_if_l_paran);
 			expr.print_register;
-			generated_file.putstring (") {");
-			generated_file.new_line;
+			f.putstring (") {");
+			f.new_line;
 			if compound /= Void then
-				generated_file.indent;
+				f.indent;
 				compound.generate;
-				generated_file.exdent;
+				f.exdent;
 			end;
-			generated_file.putchar ('}');
+			f.putchar ('}');
 		end;
 
 feature -- Array optimization

@@ -27,10 +27,13 @@ feature
 
 	print_register is
 			-- Print the character constant
+		local
+			f: INDENT_FILE
 		do
-			generated_file.putstring ("(EIF_CHARACTER) %'");
-			generated_file.escape_char (value);
-			generated_file.putchar ('%'');
+			f := generated_file
+			f.putstring ("(EIF_CHARACTER) %'");
+			f.escape_char (value);
+			f.putchar ('%'');
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

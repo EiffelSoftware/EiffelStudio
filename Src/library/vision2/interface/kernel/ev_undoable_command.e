@@ -39,7 +39,7 @@ feature -- Basic operation
 		deferred
 		end
 
-feature {NONE} -- Basic operation
+feature -- Basic operation
 
 	update_history is
 			-- Update history.

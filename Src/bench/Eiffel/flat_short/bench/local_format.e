@@ -22,6 +22,9 @@ feature -- Properties
 		--| false for an assertion: keep printing the following items even
 		--| if one must be ommited 
 
+	indent_depth: INTEGER
+			-- Number of tabs after new line
+
 feature {FORMAT_CONTEXT, EIFFEL_LIST, STRUCTURED_TEXT}
 
 	new_line_between_tokens: BOOLEAN
@@ -32,9 +35,6 @@ feature {FORMAT_CONTEXT, STRUCTURED_TEXT} -- Implementation
 
 	dot_needed: BOOLEAN
 			-- Will a dot be needed before next call?
-
-	indent_depth: INTEGER
-			-- Number of tabs after new line
 
 	separator: TEXT_ITEM
 			-- Separator between tokens of the processed EIFFEL_LIST

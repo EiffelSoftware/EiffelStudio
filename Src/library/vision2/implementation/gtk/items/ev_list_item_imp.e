@@ -62,8 +62,9 @@ feature {NONE} -- Initialization
 
 			C.gtk_widget_hide (pixmap_box)
 			
-			connect_signal_to_actions ("select", interface.select_actions)
-			connect_signal_to_actions ("deselect", interface.deselect_actions)
+			--| FIXME Events called by parent widget, is this OK?
+			-- connect_signal_to_actions ("select", interface.select_actions)
+			-- connect_signal_to_actions ("deselect", interface.deselect_actions)
 			is_initialized := True
 		end
 
@@ -187,6 +188,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/07 01:26:27  king
+--| Removed signal connection, now done in parent
+--|
 --| Revision 1.28  2000/02/29 18:43:40  king
 --| Tidied up code
 --|

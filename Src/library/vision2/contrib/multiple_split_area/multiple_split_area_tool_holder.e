@@ -117,13 +117,14 @@ feature {NONE} -- Initialization
 			if dialog /= Void then
 				dialog.close_request_actions.wipe_out
 				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
+				position_docked_from := parent_area.linear_representation.index_of (tool, 1)
 				parent_area.linear_representation.prune_all (tool)
 				if not parent_area.is_item_external (tool) then
 					parent_area.external_representation.extend (tool)
 				end
 				dialog.set_width (original_width)
 				dialog.set_height (original_height)
-				parent_area.rebuild
+			--	parent_area.rebuild
 			end
 			if parent /= Void then
 				parent.prune (Current)
@@ -150,8 +151,10 @@ feature {NONE} -- Initialization
 			parent_window (parent_area).unlock_update
 		end
 		
-	original_parent_position: INTEGER
-		-- Original position of `Current' in `parent_area' at creation time.
+	position_docked_from: INTEGER
+		-- Position of `Current' at time it was docked from `parent_area'.
+		-- Used as the index within `parent_area' to restore `Current' when a dockable
+		-- dialog containing `Current' is closed.
 
 feature -- Basic operation
 
@@ -278,19 +281,6 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 			minimum_size_cell.set_minimum_height (0)
 		end
 		
-		
-	update_position_in_parent is
-			-- Assign position of `Current' in `parent_area' to `original_parent_position'.
-			-- This is used when restoring after a dockable dialog containing `Current' is
-			-- closed.
-		require
-			parent_area_not_void: parent_area /= Void
-		do
-			original_parent_position := parent_area.all_holders.index_of (Current, 1)
-		ensure
-			result_valid: original_parent_position >= 1 and original_parent_position <= parent_area.all_holders.count
-		end
-		
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		
 	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG) is
@@ -298,13 +288,23 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		require
 			dialog_not_void: dialog /= Void
 			parented_in_dialog: parent_dockable_dialog (tool) = dialog
+		local
+			tool_height: INTEGER
 		do
+			tool_height := tool.height
 			tool.parent.prune_all (tool)
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
 			parent_window (parent_area).lock_update
 			parent_area.external_representation.prune_all (tool)
-			parent_area.insert_widget (tool, display_name, (original_parent_position.min (parent_area.count + 1)).max (1))
+			parent_area.insert_widget (tool, display_name, (position_docked_from.min (parent_area.count + 1)).max (1))
+			
+				-- Now restore the height of `tool' within `parent_area'.
+				-- FIXME we should traverse through the items in `parent' area, resizing them
+				-- accordingly, so that they keey their current size, and the only item that
+				-- changes size is the item that may be resized.
+			parent_area.resize_widget_to (tool, tool_height)
+
 			parent_window (parent_area).unlock_update
 		ensure
 			put_back_in_split_area: parent_area.linear_representation.has (tool)

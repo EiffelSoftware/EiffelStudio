@@ -85,6 +85,7 @@ feature -- Initialization
 					Void,	-- generics
 					Void,	-- parents
 					Void,	-- creators
+					Void,	-- convertors
 					Void,	-- features
 					Void,	-- invariant_part
 					create {SUPPLIERS_AS}.make,	-- suppliers

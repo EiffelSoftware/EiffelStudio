@@ -571,6 +571,7 @@ feature {NONE} -- Implementation
 			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
 			signature: STRING
 			e_feature: E_FEATURE
+			cur_y: INTEGER
 		do
 			if not is_label_expanded then
 				label_group.wipe_out
@@ -595,7 +596,6 @@ feature {NONE} -- Implementation
 				end
 			else
 				label_group.wipe_out
-				label_group.extend (name_label)
 				name_label.hide
 				name_label.disable_sensitive
 				name_label.set_text (a_text)
@@ -642,13 +642,15 @@ feature {NONE} -- Implementation
 					is_sorted: sorted_names.sorted
 				end
 				from
+					cur_y := label_group.point_y
 					sorted_names.start
 				until
 					sorted_names.after
 				loop
 					txt := sorted_names.item
-					txt.set_point_position (label_group.point_x, label_group.bounding_box.bottom)
+					txt.set_point_position (label_group.point_x, cur_y)
 					label_group.extend (txt)
+					cur_y := cur_y + txt.height
 					sorted_names.forth
 				end
 			end

@@ -332,7 +332,10 @@ feature -- Properties
 
 	names: NAMES_HEAP
 			-- Fast lookup for stored name, to avoid name duplication in memory.
-
+			
+	is_precompile_finalized: BOOLEAN
+			-- has precompiled library compilation been finalized?
+		
 	init is
 			-- System initialization
 		require
@@ -1975,6 +1978,7 @@ feature -- Final mode generation
 					-- Set the generation mode in final mode
 				byte_context.set_final_mode
 				keep_assertions := keep_assert and then lace.has_assertions
+				set_is_precompile_finalized (True)
 		
 				if il_generation then
 					generate_il
@@ -3883,6 +3887,14 @@ feature -- Conveniences
 			-- Assign `i' to `max_class_id'.
 		do
 			max_class_id := i
+		end
+		
+	set_is_precompile_finalized (b: like is_precompile_finalized) is
+			-- Assign `b' to `is_finalized'
+		do
+			is_precompile_finalized := b
+		ensure
+			is_precompile_finalized_set: is_precompile_finalized = b
 		end
 
 	root_class: CLASS_I is

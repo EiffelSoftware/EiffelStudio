@@ -1,8 +1,10 @@
 indexing  
-	
 	description: "JNI external declarations"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_EXTERNALS
+class
+	JAVA_EXTERNALS
 
 feature {NONE} -- object creation
 

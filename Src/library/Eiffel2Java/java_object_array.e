@@ -1,15 +1,15 @@
 indexing
-
 	description: "Access to array of Java objects"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_OBJECT_ARRAY
+class
+	JAVA_OBJECT_ARRAY
 
 inherit
-
 	JAVA_ARRAY
 
-creation
-	
+create
 	make
 	
 feature

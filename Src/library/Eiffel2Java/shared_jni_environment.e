@@ -1,12 +1,14 @@
 indexing
-
 	description: "Shared JNI environment. Since one JNI is needed per %
                  %thread we limit Eiffel to having one thread that %
                  %deals with Java."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class SHARED_JNI_ENVIRONMENT
+class
+	SHARED_JNI_ENVIRONMENT
 
-feature
+feature -- Access
 
 	jni: JNI_ENVIRONMENT is
 			-- returns the standard JNI enviroment. It uses the value of
@@ -21,7 +23,7 @@ feature
 				-- First obtain the value of the CLASSPATH environment 
 				-- variable
 			class_path := exec.get ("CLASSPATH")
-			if class_path = void or else class_path.count = 0 then
+			if class_path = Void or else class_path.count = 0 then
 				!!ex
 				ex.raise ("Can't get CLASSPATH")
 			end

@@ -1,15 +1,11 @@
---
--- This class represents arguments that can be passed to a
--- Java method
---
 indexing
-
 	description: "Argument list for calls to Java methods"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class JAVA_ARGS
 
 inherit
-
 	SHARED_JNI_ENVIRONMENT
 
 	MEMORY
@@ -17,8 +13,7 @@ inherit
 			dispose
 		end
 
-creation
-
+create
 	make
 
 feature

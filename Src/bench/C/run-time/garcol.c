@@ -823,7 +823,9 @@ rt_public void reclaim(void)
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
 #ifdef EIF_THREADS 
-	if (eif_thr_is_root ())
+	if (!(eif_thr_is_root ()))
+		free ((char **) EIF_once_values); /* have been allocated with malloc */
+	else
 #endif
 	{
 #ifdef EIF_WIN32

@@ -18,7 +18,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Perform initialization of `Current'.
 		do
-			enable_left_alignment 
+			enable_left_alignment
+			is_initialized := True
 		end
 		
 feature -- Status report

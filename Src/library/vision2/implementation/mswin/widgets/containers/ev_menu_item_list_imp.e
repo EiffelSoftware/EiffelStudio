@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 		
-	WEL_MNC_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -132,11 +127,11 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 							if Result = 0 then
 									-- item with the right letter found,
 									-- execute it.
-								Result := (Mnc_execute |<< 16) | child_index
+								Result := ((feature {WEL_MNC_CONSTANTS}.Mnc_execute) |<< 16) | child_index
 							else
 									-- There is a second item with the right letter,
 									-- just select the first one.
-								Result := (Mnc_select |<< 16) | (Result & 0x0000FFFF)
+								Result := ((feature {WEL_MNC_CONSTANTS}.Mnc_select) |<< 16) | (Result & 0x0000FFFF)
 							end
 						end
 					end
@@ -150,7 +145,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 			end
 		end
 		
-feature {EV_WINDOW_IMP} -- Operations
+feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 
 	rebuild_control is
 			-- Rebuild the control by removing all items

@@ -171,7 +171,8 @@ feature -- Removal
 
 	prune (v: like item) is
 			-- Remove `v' if present.
-			--| NOTE Behaviour is not the one from DYNAMIC_LIST, but from SET
+			-- Do not move cursor except if the cursor was on `v',
+			-- move the cursor to right neighbor or after.
 		do
 			implementation.prune (v)
 		end
@@ -311,6 +312,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/02 17:09:52  brendel
+--| Improved comment on `prune'.
+--|
 --| Revision 1.5  2000/03/02 01:32:43  brendel
 --| Removed conditional `has (v)' from feature `prune', to let the
 --| implementation take care of this.

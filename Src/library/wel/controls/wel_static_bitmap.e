@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
-				Ws_tabstop + Ss_bitmap + Ss_center_image
+				Ws_tabstop + Ss_bitmap + Ss_centerimage
 		end
 
 end -- class WEL_STATIC_BITMAP

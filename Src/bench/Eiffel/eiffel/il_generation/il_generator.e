@@ -242,7 +242,7 @@ feature {NONE} -- Type description
 				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
 				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
 				il_generator.generate_type_class_mappings
-				il_generator.set_any_type_id (System.any_class.compiled_class.types.first.type_id)
+				il_generator.set_any_type_id (System.any_class.compiled_class.types.first.static_type_id)
 			variant
 				nb - i + 1
 			until

@@ -7,51 +7,52 @@ indexing
 class
 	ECOM_AUTOMATION_INTERFACE
 
+inherit
+	ECOM_QUERIABLE
+
+creation
+	make_from_pointer,
+	make_from_other
+
 feature -- Initialization
 
-	make is
-			-- Initialize
+	make_from_pointer (other_pointer: POINTER) is
+			-- Create interface from other interface pointer
 		do
-			-- Your instructions here
-		ensure
-			postcondition_clause: -- Your postcondition here
+			initializer := create_wrapper (other_pointer)
+			item := ccom_item (initializer)
 		end
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-invariant
-	invariant_clause: -- Your invariant here
+	create_wrapper (a_pointer: POINTER): POINTER is
+			-- Create C++ wrapper
+		do
+			Result := ccom_create_wrapper (a_pointer)
+		end
 
+	delete_wrapper is 
+			-- Delete C++ wrapper
+		do
+			ccom_delete_wrapper (initializer)
+		end
+
+feature {NONE} -- External
+
+	ccom_create_wrapper (a_interface_ptr: POINTER): POINTER is
+		external
+			"C++ [new E_automation_interface %"E_automation_interface.h%"](IDispatch *)"
+		end
+
+	ccom_delete_wrapper (cpp_obj: POINTER) is
+		external
+			"C++  [delete E_automation_interface %"E_automation_interface.h%"]()"
+		end
+
+	ccom_item (cpp_obj: POINTER): POINTER is
+		external
+			"C++ [E_automation_interface %"E_automation_interface.h%"]():EIF_POINTER"
+		end
 end -- class ECOM_AUTOMATION_INTERFACE
 
 --|----------------------------------------------------------------

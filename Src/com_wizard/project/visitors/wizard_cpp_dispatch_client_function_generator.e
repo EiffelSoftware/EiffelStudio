@@ -284,14 +284,13 @@ feature {NONE} -- Implementation
 					create visitor
 					visitor.visit (arguments.item.type)
 
-					if is_paramflag_fin (arguments.item.flags) and is_paramflag_fout (arguments.item.flags) then
-						Result.append (inout_parameter_set_up (arguments.item.name, counter, visitor))
-
-					elseif is_paramflag_fout (arguments.item.flags) then
-				
+					if is_paramflag_fout (arguments.item.flags) then
 						out_variable := True  
-						Result.append (out_parameter_set_up (arguments.item.name, counter, visitor))
-
+						if is_paramflag_fin (arguments.item.flags) then
+							Result.append (inout_parameter_set_up (arguments.item.name, counter, visitor))
+						else
+							Result.append (out_parameter_set_up (arguments.item.name, counter, visitor))
+						end
 						if not visitor.is_array_basic_type and not visitor.is_structure_pointer and not
 						 		visitor.is_interface_pointer and not visitor.is_coclass_pointer then
 							return_value.append (out_return_value_set_up (arguments.item.name, counter,  visitor))

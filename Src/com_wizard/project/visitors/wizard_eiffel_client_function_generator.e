@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 						end
 						Result.append (Comma)
 
-					elseif is_paramflag_fin (arguments.item.flags) then
+					else --if is_paramflag_fin (arguments.item.flags) then
 						if visitor.is_basic_type then
 							Result.append (visitor.cecil_type)
 

@@ -65,39 +65,43 @@ feature -- Basic operations
 			tmp_type_attr := a_type_info.type_attr
 			create guid.make_from_guid (tmp_type_attr.guid)
 
---			if not guid.is_equal (Iunknown_guid) then
-				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
-				if name = Void or else name.empty then
-					create name.make (0)
-					name.append ("interface_")
-					name.append (tmp_lib_descriptor.name)
-					name.append ("_")
-					name.append_integer (a_type_info.index_in_type_lib + 1)
-				end
 
-				eiffel_class_name := name_for_class (name, type_kind, False)
+			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			if name = Void or else name.empty then
+				create name.make (0)
+				name.append ("interface_")
+				name.append (tmp_lib_descriptor.name)
+				name.append ("_")
+				name.append_integer (a_type_info.index_in_type_lib + 1)
+			end
 
-				c_type_name := clone (name)
-			
-				create c_header_file_name.make (0)
-				if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
-					c_header_file_name.append ("ecom_")
-					c_header_file_name.append (name)
-					c_header_file_name.append (".h")
-				end
+			if prefixed_libraries.has (tmp_guid) then
+				name.prepend (Underscore)
+				name.prepend (tmp_lib_descriptor.name)
+			end
 
-				lcid := tmp_type_attr.lcid
-				vtbl_size := tmp_type_attr.vtbl_size
+			eiffel_class_name := name_for_class (name, type_kind, False)
 
-				if a_type_info.type_attr.count_implemented_types > 0 then
-					create_inherited_interface (a_type_info)
-				end
+			c_type_name := clone (name)
 
-				create feature_names.make
-				create_function_descriptors (a_type_info)
-				create_property_descriptors (a_type_info)
-				create Result.make (Current)
---			end
+			create c_header_file_name.make (0)
+			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
+				c_header_file_name.append ("ecom_")
+				c_header_file_name.append (name)
+				c_header_file_name.append (".h")
+			end
+
+			lcid := tmp_type_attr.lcid
+			vtbl_size := tmp_type_attr.vtbl_size
+
+			if a_type_info.type_attr.count_implemented_types > 0 then
+				create_inherited_interface (a_type_info)
+			end
+
+			create feature_names.make
+			create_function_descriptors (a_type_info)
+			create_property_descriptors (a_type_info)
+			create Result.make (Current)
 		ensure then
 			valid_guid: guid /= Void
 			valid_functions: a_type_info.type_attr.count_func > 0 implies

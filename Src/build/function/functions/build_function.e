@@ -1,17 +1,13 @@
-
---===================================================================
---
--- Last revision: 07/30/92
---
--- General notion of function.
--- Represented graphically by two adjacent columns
--- indicating associations between input and output
--- elements.
--- The main consistency requirement for a function
--- is that a given element may appear at most once 
--- as input.
---
---===================================================================
+indexing
+	description: "General notion of function. %
+				% Represented graphically by two adjacent columns %
+				% indicating associations between input and output elements. %
+				% The main consistency requirement for a function %
+				% is that a given element may appear at most once as input. %
+				% Widget representing the context catalog."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 deferred class FUNCTION  
 
@@ -43,8 +39,6 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			-- Append input_data and output_data
 			-- to corresponding lists input_list
 			-- and output_list.
-		require
---			valid_editor: func_editor /= Void
 		local
 			drop_command: FUNC_DROP
 		do
@@ -86,8 +80,6 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			-- Save lists. (This is required
 			-- since the dynamic type is of
 			-- type EB_BOX).
-		require
-			valid_editor: func_editor /= Void
 		local
 			il, ol: like input_list
 		do

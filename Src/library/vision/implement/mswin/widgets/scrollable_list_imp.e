@@ -78,13 +78,15 @@ inherit
 			on_mouse_move,
 			on_destroy,
 			on_set_cursor,
-			on_key_up
+			on_key_up,
+			background_brush
 		redefine
 			on_lbn_selchange,
 			on_lbn_errspace,
 			on_lbn_dblclk,
 			on_key_down,
-			default_ex_style	
+			default_ex_style,
+			on_erase_background	
 		end
 
 	WEL_LBS_CONSTANTS
@@ -949,6 +951,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		do
+		end
 
 	has_width: BOOLEAN
 			-- Is the default width overruled?

@@ -10,18 +10,6 @@ class
 inherit
 	PRIMITIVE_IMP
 		rename
-			on_right_button_down as widget_on_right_button_down,
-			on_right_button_up as widget_on_right_button_up,
-			set_cursor_position as wel_set_cursor_position
-		redefine
-			set_foreground_color,
-			set_background_color,
-			realize,
-			unrealize
-		end
-
-	PRIMITIVE_IMP
-		rename
 			set_cursor_position as wel_set_cursor_position
 		redefine
 			set_foreground_color,
@@ -30,9 +18,6 @@ inherit
 			on_right_button_up,
 			realize,
 			unrealize
-		select
-			on_right_button_down,
-			on_right_button_up
 		end
 
 	TEXT_I
@@ -86,7 +71,8 @@ inherit
 			on_destroy,
 			on_set_cursor,
 			on_key_up,
-			on_key_down
+			on_key_down,
+			background_brush
 		redefine
 			default_style,
 			on_en_change,
@@ -797,7 +783,7 @@ feature {NONE} -- Notifications
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
-			widget_on_right_button_down (keys, a_x, a_y)
+			Precursor {PRIMITIVE_IMP} (keys, a_x, a_y)
 			disable_default_processing
 		end
 
@@ -805,7 +791,7 @@ feature {NONE} -- Notifications
 			-- Wm_rbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
-			widget_on_right_button_up (keys, a_x, a_y)
+			Precursor {PRIMITIVE_IMP} (keys, a_x, a_y)
 			disable_default_processing
 		end
 

@@ -12,18 +12,6 @@ inherit
 	ACCELERABLE_WINDOWS
 
 	BUTTON_IMP
-		rename
-			set_managed as widget_set_managed
-		redefine
-			realize,
-			realized,
-			unrealize,
-			set_insensitive,
-			insensitive,
-			destroy
-		end;
-
-	BUTTON_IMP
 		redefine
 			realize,
 			realized,
@@ -32,8 +20,6 @@ inherit
 			set_insensitive,
 			insensitive,
 			destroy
-		select
-			set_managed
 		end
 
 	PUSH_B_I
@@ -63,7 +49,9 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			foreground_color as wel_foreground_color,
+			background_color as wel_background_color
 		undefine
 			on_hide,
 			on_show,
@@ -73,7 +61,8 @@ inherit
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
 			on_bn_clicked, on_key_up,
-			on_key_down
+			on_key_down,
+			background_brush
 		end
 
 creation
@@ -175,7 +164,7 @@ feature -- Access
 				end
 				managed := flag
 			else
-				widget_set_managed (flag)
+				Precursor {BUTTON_IMP} (flag)
 			end
 		end
 

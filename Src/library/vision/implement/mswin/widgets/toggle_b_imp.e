@@ -50,7 +50,9 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			foreground_color as wel_foreground_color,
+			background_color as wel_background_color
 		undefine
 			on_right_button_up,
 			on_left_button_down,
@@ -64,7 +66,8 @@ inherit
 			on_hide,
 			on_show,
 			on_key_up,
-			on_key_down
+			on_key_down,
+			background_brush
 		redefine
 			default_style,
 			on_bn_clicked

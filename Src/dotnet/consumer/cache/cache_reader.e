@@ -27,6 +27,28 @@ feature -- Access
 			end
 		end
 
+	consumed_assembly (an_assembly_name: STRING): CONSUMED_ASSEMBLY is
+			-- Consumed assembly associated to `an_assembly_name'.
+		require
+			non_void_assembly_name: an_assembly_name /= Void
+			not_empty_assembly_name: not an_assembly_name.is_empty
+		local
+			i: INTEGER
+			l_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+		do
+			l_consumed_assemblies := consumed_assemblies
+			from
+				i := 1
+			until
+				i > l_consumed_assemblies.count or Result /= Void
+			loop
+				if l_consumed_assemblies.item (i).name.is_equal (an_assembly_name) then
+					Result := l_consumed_assemblies.item (i)
+				end
+				i := i + 1
+			end
+		end
+
 	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is
 			-- Assembly information from EAC
 		require

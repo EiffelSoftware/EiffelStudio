@@ -508,21 +508,19 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		local
 			expr: EB_EXPRESSION
 			l_final_result_value: DUMP_VALUE
-			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			create expr.make_with_object (
 					create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, debuggable_class),
 					debuggable_feature_name
 				)
 			expr.evaluate
-			evaluator := expr.evaluator
 
-			l_final_result_value := evaluator.final_result_value
-			if evaluator.error_message = Void and then not l_final_result_value.is_void then
+			l_final_result_value := expr.final_result_value
+			if expr.error_message = Void and then not l_final_result_value.is_void then
 				Result := l_final_result_value.classic_string_representation (min, max)
 				last_string_representation_length := l_final_result_value.last_string_representation_length
 			else
-				Result := evaluator.error_message
+				Result := expr.error_message
 			end
 		end
 
@@ -530,7 +528,6 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			-- Full generic type using evaluation of generating_type on the related object
 		local
 			expr: EB_EXPRESSION
-			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if generating_type_evaluation_enabled then
 				if application.is_dotnet then
@@ -548,9 +545,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							"generating_type"
 						)
 					expr.evaluate			
-					evaluator := expr.evaluator
-					if evaluator.error_message = Void and then not evaluator.final_result_value.is_void then
-						Result := evaluator.final_result_value.classic_string_representation (0, -1)
+					if expr.error_message = Void and then not expr.final_result_value.is_void then
+						Result := expr.final_result_value.classic_string_representation (0, -1)
 	--				else
 	--					Result := expr.error_message
 					end				
@@ -713,7 +709,7 @@ feature -- Access
 			Result := type /= Type_object and type /= Type_string and type /= Type_string_dotnet
 		end
 
-feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER, DBG_EXPRESSION_EVALUATOR} -- Internal data
+feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, EIFNET_EXPORTER} -- Internal data
 
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER

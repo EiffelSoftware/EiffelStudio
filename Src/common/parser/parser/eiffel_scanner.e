@@ -45,15 +45,16 @@ feature {NONE} -- Implementation
 		do
 			inspect yy_act
 when 1 then
---|#line 40
+--|#line 39
 current_position.go_to (text_count)
 when 2 then
---|#line 45
+--|#line 44
 current_position.go_to (text_count)
 when 3 then
---|#line 46
+--|#line 45
 
 				line_number := line_number + text_count
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 			
@@ -1129,12 +1130,13 @@ when 165 then
 --|#line 828
 
 				line_number := line_number + 1
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				set_start_condition (VERBATIM_STR1)
 			
 when 166 then
---|#line 834
+--|#line 835
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1143,7 +1145,7 @@ when 166 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 167 then
---|#line 850
+--|#line 851
 
 				if is_verbatim_string_closer then
 					current_position.go_to (text_count)
@@ -1175,22 +1177,23 @@ when 167 then
 				end
 			
 when 168 then
---|#line 880
+--|#line 881
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR2)
 			
 when 169 then
---|#line 885
+--|#line 886
 
 				line_number := line_number + 1
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				append_text_to_string (token_buffer)
 			
 when 170 then
---|#line 891
+--|#line 893
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1199,16 +1202,17 @@ when 170 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 171 then
---|#line 907
+--|#line 909
 
 				line_number := line_number + 1
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				append_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR1)
 			
 when 172 then
---|#line 914
+--|#line 917
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1217,7 +1221,7 @@ when 172 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 173 then
---|#line 927
+--|#line 930
 
 					-- String with special characters.
 				token_buffer.clear_all
@@ -1228,154 +1232,155 @@ when 173 then
 				set_start_condition (SPECIAL_STR)
 			
 when 174 then
---|#line 937
+--|#line 940
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 			
 when 175 then
---|#line 941
+--|#line 944
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%A')
 			
 when 176 then
---|#line 945
+--|#line 948
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%B')
 			
 when 177 then
---|#line 949
+--|#line 952
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%C')
 			
 when 178 then
---|#line 953
+--|#line 956
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%D')
 			
 when 179 then
---|#line 957
+--|#line 960
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%F')
 			
 when 180 then
---|#line 961
+--|#line 964
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%H')
 			
 when 181 then
---|#line 965
+--|#line 968
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%L')
 			
 when 182 then
---|#line 969
+--|#line 972
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%N')
 			
 when 183 then
---|#line 973
+--|#line 976
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%Q')
 			
 when 184 then
---|#line 977
+--|#line 980
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%R')
 			
 when 185 then
---|#line 981
+--|#line 984
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%S')
 			
 when 186 then
---|#line 985
+--|#line 988
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%T')
 			
 when 187 then
---|#line 989
+--|#line 992
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%U')
 			
 when 188 then
---|#line 993
+--|#line 996
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%V')
 			
 when 189 then
---|#line 997
+--|#line 1000
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%%')
 			
 when 190 then
---|#line 1001
+--|#line 1004
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%'')
 			
 when 191 then
---|#line 1005
+--|#line 1008
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%"')
 			
 when 192 then
---|#line 1009
+--|#line 1012
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%(')
 			
 when 193 then
---|#line 1013
+--|#line 1016
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%)')
 			
 when 194 then
---|#line 1017
+--|#line 1020
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%<')
 			
 when 195 then
---|#line 1021
+--|#line 1024
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%>')
 			
 when 196 then
---|#line 1025
+--|#line 1028
 
 				current_position.go_to (text_count)
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
 			
 when 197 then
---|#line 1029
+--|#line 1032
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
 				line_number := line_number + text.occurrences ('%N')
+				current_position.reset_column_positions	
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 			
 when 198 then
---|#line 1036
+--|#line 1040
 
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -1390,7 +1395,7 @@ when 198 then
 				end
 			
 when 199 then
---|#line 1049
+--|#line 1053
 
 					-- Bad special character.
 				current_position.go_to (1)
@@ -1398,17 +1403,18 @@ when 199 then
 				report_string_bad_special_character_error
 			
 when 200 then
---|#line 1055
+--|#line 1059
 
 					-- No final double-quote.
 				line_number := line_number + 1
+				current_position.reset_column_positions	
 				current_position.go_to (1)
 				current_position.set_line_number (line_number)
 				set_start_condition (INITIAL)
 				report_string_missing_quote_error (token_buffer)
 			
 when 201 then
---|#line 1081
+--|#line 1086
 
 				current_position.go_to (1)
 				report_unknown_token_error (text_item (1))

@@ -28,7 +28,6 @@ O		[0-7]
 E		(((e|E)[+-]?{D}+)?)
 A		([a-z]|[A-Z])
 X		([a-z]|[A-Z]|[0-9]|_)
-W		[ \t\n\r]
 T		[0-9][0-9][0-9]
 U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
@@ -45,6 +44,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [ \t\r]+		current_position.go_to (text_count)
 \n+			{
 				line_number := line_number + text_count
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 			}
@@ -827,6 +827,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 		-- end of Verbatim_string_opener.
 	[ \t\r]*\n {
 				line_number := line_number + 1
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				set_start_condition (VERBATIM_STR1)
@@ -884,6 +885,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 	[^"\n]*\n {
 				line_number := line_number + 1
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				append_text_to_string (token_buffer)
@@ -906,6 +908,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 		-- in verbatim string body.
 	.*\n	{
 				line_number := line_number + 1
+				current_position.reset_column_positions
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 				append_text_to_string (token_buffer)
@@ -1030,6 +1033,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
 				line_number := line_number + text.occurrences ('%N')
+				current_position.reset_column_positions	
 				current_position.go_to (text_count)
 				current_position.set_line_number (line_number)
 			}
@@ -1055,6 +1059,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 	\n		{
 					-- No final double-quote.
 				line_number := line_number + 1
+				current_position.reset_column_positions	
 				current_position.go_to (1)
 				current_position.set_line_number (line_number)
 				set_start_condition (INITIAL)

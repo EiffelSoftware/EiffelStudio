@@ -176,8 +176,8 @@ feature {NONE} -- Initialization
 			cancel_actions.extend (agent clear_status_after_transport)
 			
 				-- Ensure that digit checking timer is destroyed after a transport.
-			cancel_actions.force_extend (agent digit_checker.end_processing)
-			drop_actions.force_extend (agent digit_checker.end_processing)
+			cancel_actions.extend (agent end_digit_processing)
+			drop_actions.extend (agent end_digit_processing)
 		end
 		
 feature {NONE} -- Implementation
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			-- Use the open project command to open
 			-- file `f'.
 		do
-			command_handler.Open_project_command.execute_with_name (f)			
+			command_handler.Open_project_command.execute_with_name (f)
 		end
 		
 	build_non_once_windows is
@@ -206,6 +206,13 @@ feature {NONE} -- Implementation
 		do
 			set_display_window (create {GB_DISPLAY_WINDOW})
 			set_builder_window (create {GB_BUILDER_WINDOW})
+		end
+		
+	end_digit_processing (pebble: ANY) is
+			-- End processing on `digit_checker'. `pebble' is not
+			-- used.
+		do
+			digit_checker.end_processing	
 		end
 
 end

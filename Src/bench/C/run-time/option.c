@@ -25,7 +25,12 @@
 #else
 #include <strings.h>
 #endif
-
+#ifndef HAS_GETRUSAGE
+#ifdef HAS_TIMES
+#include <sys/param.h>      /* For value of HZ */
+#endif
+#endif
+ 
 public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
 					 */

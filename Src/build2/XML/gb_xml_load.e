@@ -32,13 +32,24 @@ feature -- Basic operation
 
 	load is
 			-- Load the system.
+		local
+			display_window_shown: BOOLEAN
+			builder_window_shown: BOOLEAN
 		do
 				-- Do initialization necessary
 			parser := create_tree_parser
 			create type_string.make_from_string ("type")
-			
-			display_window.hide
-			builder_window.hide
+		
+				-- Hide `display_window' and `builder_window' if
+				-- shown. We store whether they are shown or not.
+			display_window_shown := display_window.is_show_requested
+			if display_window_shown then
+				display_window.hide	
+			end
+			builder_window_shown := builder_window.is_show_requested
+			if builder_window_shown then
+				builder_window.hide
+			end
 			
 				-- Load and parse file `filename'.
 			load_and_parse_xml_file (filename)
@@ -46,8 +57,15 @@ feature -- Basic operation
 				-- Build deferred parts.
 			deferred_builder.build
 			
-			display_window.show
-			builder_window.show
+			
+				-- Show `display_window' and `builder_window' if
+				-- they were shown before executing the load.
+			if builder_window_shown then
+				builder_window.show	
+			end
+			if display_window_shown then
+				display_window.show
+			end
 			
 				-- As we have just loaded the project, the
 				-- system should know that it has not been modifified

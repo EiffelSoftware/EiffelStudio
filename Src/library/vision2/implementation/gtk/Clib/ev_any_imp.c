@@ -64,10 +64,10 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
                 c_ev_any_imp_c_object_dispose,
                 (gpointer*) eif_oid
             );
-            if (GTK_IS_WINDOW (c_object)) {
+            /*if (GTK_IS_WINDOW (c_object)) {
 			// As Windows are toplevel widgets they need to stay alive unless explicitly destroyed.
 		gtk_object_ref (GTK_OBJECT (c_object));
-            }
+            }*/
 }
 
 /* To store previous value of `debug_mode' */
@@ -108,6 +108,9 @@ void set_debug_mode (int a_debug_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.16  2004/03/19 23:08:58  king
+// Now no longer add reffing windows
+//
 // Revision 1.15  2003/11/12 17:48:34  manus
 // Fixed bug in which when a vision2 application using capture was launched
 // outside the EiffelStudio debugger as soon as you had something that would

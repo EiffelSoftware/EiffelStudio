@@ -16,24 +16,16 @@
 #define ENCODE_LENGTH 7
 
 #define FEAT_NAME_FLAG		0
-#define PRECOND_FLAG		((1<<29))
-#define POSTCOND_FLAG		((1<<30))
 #define ROUT_TABLE_FLAG		((1<<30)+ (1<<29))
-#define ROUT_ACCESS_FLAG	((1<<31))
 #define TYPE_TABLE_FLAG		((1<<31) + (1<<29))
-#define TYPE_ACCESS_FLAG	((1<<31) + (1<<30))
 
 /*
  * Function declarations.
  */
 
 void 	eif000(),
-		eif001(),
-		eif010(),
 		eif011(),
-		eif100(),
-		eif101(),
-		eif110();
+		eif101();
 /*
  * Static declarations.
  */
@@ -73,48 +65,6 @@ long i, j;
 	encode(s, ((uint32) i) + ((uint32) j << 15) + FEAT_NAME_FLAG);
 }
 
-void eif001(eiffel_string, i, j)
-char *eiffel_string;
-long i, j;
-{
-	/*
-	 * Intialize the Eiffel string `eiffel_string' wirh an internal name
-	 * for Eiffel preconditions functions: the Eiffel string is supposed to
-	 * be created with a size of ENCODE_LENGTH.
-	 */
-
-	char *s;
-
-
-    /*
-     * 's' is a reference on the special object of the Eiffel string
-     */
-    s = *(char **) eiffel_string;
-
-    encode(s, ((uint32) i) + ((uint32) j << 15) + PRECOND_FLAG);
-}
-
-void eif010(eiffel_string, i, j)
-char *eiffel_string;
-long i, j;
-{
-    /*
-     * Intialize the Eiffel string `eiffel_string' wirh an internal name
-     * for Eiffel postconditions functions: the Eiffel string is supposed to
-     * be created with a size of ENCODE_LENGTH.
-     */
-
-    char *s;
-
-
-    /*
-     * 's' is a reference on the special object of the Eiffel string
-     */
-    s = *(char **) eiffel_string;
-
-    encode(s, ((uint32) i) + ((uint32) j << 15) + POSTCOND_FLAG);
-}
-
 void eif011(eiffel_string, i)
 char *eiffel_string;
 long i;
@@ -134,26 +84,6 @@ long i;
 	encode(s, ((uint32) i) + ROUT_TABLE_FLAG);
 }
 
-void eif100(eiffel_string, i)
-char *eiffel_string;
-long i;
-{
-	char *s;
-
-	/*
-	 * 's' is a reference on the special object of the Eiffel string
-	 */
-
-	s = *(char **) eiffel_string;
-
-	/*
-	 * ROUT_ACCESS_FLAG is the characteristic of a routine or attribute offset
-	 * table access name
-	 */
-
-	encode(s, ((uint32) i) + ROUT_ACCESS_FLAG);
-}
-
 void eif101(eiffel_string, i)
 char *eiffel_string;
 long i;
@@ -167,21 +97,6 @@ long i;
 	 */
 
 	encode(s, ((uint32) i) + TYPE_TABLE_FLAG);
-}
-
-void eif110(eiffel_string, i)
-char *eiffel_string;
-long i;
-{
-    char *s;
-
-    s = *(char **) eiffel_string;
-
-    /*
-     *  TYPE_ACCESS_FLAG is the characteristic of the type table name
-     */
-
-    encode(s, ((uint32) i) + TYPE_ACCESS_FLAG);
 }
 
 /*

@@ -150,33 +150,6 @@ feature -- Event : command association
 			implementation.add_unselect_command (cmd, arg)		
 		end
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is activated.
-		obsolete
-			"Will be removed in next week release, %
-			 %use add_select_command instead."
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_select_command (cmd, arg)
-		end	
-
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unactivated.
-		obsolete
-			"Will be removed in next week release, %
-			 %use add_unselect_command instead."
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		do
-			implementation.add_unselect_command (cmd, arg)		
-		end
-
-
 feature -- Event -- removing command association
 
 	remove_select_commands is
@@ -191,30 +164,6 @@ feature -- Event -- removing command association
 	remove_unselect_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is unselected.
-		require
-			exists: not destroyed
-		do
-			implementation.remove_unselect_commands	
-		end
-
-	remove_activate_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is activated.
-		obsolete
-			"Will be removed in next week release, %
-			 %use remove_select_commands instead."
-		require
-			exists: not destroyed
-		do
-			implementation.remove_select_commands			
-		end	
-
-	remove_deactivate_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is deactivated.
-		obsolete
-			"Will be removed in next week release, %
-			 %use remove_unselect_commands instead."
 		require
 			exists: not destroyed
 		do

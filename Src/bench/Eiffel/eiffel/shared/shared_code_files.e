@@ -24,7 +24,7 @@ feature {NONE}
 				dir_name.extend (subdir_name);
 				!!subdir.make (dir_name);
 				if not subdir.exists then
-					subdir.create
+					subdir.create_dir
 				end;
 				temp := clone (Esize);
 				temp.append (Dot_x);
@@ -33,7 +33,7 @@ feature {NONE}
 				dir_name.extend (subdir_name);
 				!!subdir.make (dir_name);
 				if not subdir.exists then
-					subdir.create
+					subdir.create_dir
 				end;
 				temp := clone (Esize);
 				temp.append (Dot_c);
@@ -162,7 +162,7 @@ feature {NONE}
 			dir_name.extend (subdir_name);
 			!! subdir.make (dir_name);
 			if not subdir.exists then
-				subdir.create
+				subdir.create_dir
 			end;
 			!!file_name.make_from_string (dir_name);
 			temp := clone (base_name);
@@ -186,7 +186,7 @@ feature {NONE}
 			dir_name.extend (subdir_name);
 			!! subdir.make (dir_name);
 			if not subdir.exists then
-				subdir.create
+				subdir.create_dir
 			end;
 			!!file_name.make_from_string (dir_name);
 			temp := clone (base_name);

@@ -1,9 +1,7 @@
 indexing 
 	description:
-		"Eiffel Vision widget interface. %N%
-		%Nearly everything in Eiffel Vision is a widget. Widgets are user %N%
-		%interface components. eg: button, scrollbar, label. See EV_ANY for %N%
-		%notes on the bridge pattern used by Vision."
+		"Base class for all widgets.%N%
+		%Facilities for geometry management and user input."
 	status: "See notice at end of class"
 	keywords: "widget, component, control"
 	date: "$Date$"
@@ -23,8 +21,7 @@ inherit
 feature -- Access
 
 	parent: EV_CONTAINER is
-			-- Container widget that contains `Current'.
-			-- (Void if `Current' is not in a container)
+			-- Contains `Current'.
 		do
 			Result := implementation.parent
 		ensure
@@ -128,6 +125,7 @@ feature -- Status setting
 
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
+			-- Make `is_show_requested' `False'.
 		do
 			implementation.hide
 		ensure
@@ -137,6 +135,7 @@ feature -- Status setting
 	show is
 			-- Request that `Current' be displayed when its parent is.
 			-- `True' by default.
+			-- Make `is_show_requested' `True'.
 		do
 			implementation.show
 		ensure
@@ -155,6 +154,7 @@ feature -- Status setting
 
 	enable_capture is
 			-- Grab all user input events (mouse and keyboard).
+			-- `disable_capture' must be called to resume normal input handling.
 		require
 			is_displayed: is_displayed
 		do
@@ -173,7 +173,7 @@ feature -- Status setting
 		end
 
 	enable_sensitive is
-			-- Enable sensitivity to user input events.
+			-- Set `is_sensitive' `True'.
 		do
 			implementation.enable_sensitive
 		ensure
@@ -181,7 +181,7 @@ feature -- Status setting
 		end
 
 	disable_sensitive is
-			-- Disable sensitivity to user input events.
+			-- Set `is_sensitive' `False'.
 		do
 			implementation.disable_sensitive
 		ensure
@@ -297,8 +297,7 @@ feature -- Element change
 feature -- Measurement 
 	
 	x_position: INTEGER is
-			-- Horizontal offset relative to parent `x_position',
-			-- measured in pixels.
+			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 			Result := implementation.x_position
 		ensure
@@ -306,8 +305,7 @@ feature -- Measurement
 		end
 
 	y_position: INTEGER is
-			-- Vertical offset relative to parent `y_position',
-			-- measurement in pixels.
+			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 			Result := implementation.y_position
 		ensure
@@ -315,7 +313,7 @@ feature -- Measurement
 		end
 
 	screen_x: INTEGER is
-			-- Horizontal offset relative to screen.
+			-- Horizontal offset relative to left of screen in pixels.
 		do
 			Result := implementation.screen_x
 		ensure
@@ -323,7 +321,7 @@ feature -- Measurement
 		end
 
 	screen_y: INTEGER is
-			-- Vertical offset relative to screen.
+			-- Vertical offset relative to top of screen in pixels.
 		do
 			Result := implementation.screen_y
 		ensure
@@ -423,10 +421,16 @@ feature -- User input events
 	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when size changes.
 
+feature {EV_WIDGET, EV_ANY_I} -- Implementation
+
+	implementation: EV_WIDGET_I
+			-- Responsible for interaction with the native graphics toolkit.
+			-- See `{EV_ANY}.implementation'.
+
 feature {EV_WIDGET, EV_WIDGET_I} -- Implementation
 
 	create_action_sequences is
-			-- Create empty action sequences, not yet connected to events.
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PICK_AND_DROPABLE} Precursor
 			create pointer_motion_actions
@@ -444,13 +448,6 @@ feature {EV_WIDGET, EV_WIDGET_I} -- Implementation
 			create key_release_actions
 			create resize_actions
 		end
-
-feature {EV_WIDGET, EV_ANY_I}--EV_WIDGET, EV_PICK_AND_DROPABLE_I} -- Implementation
-
-	implementation: EV_WIDGET_I
-			-- Responsible for interaction with the underlying
-			-- native graphics toolkit.
-			-- (See bridge pattern notes in EV_ANY)
 
 feature {EV_ANY} -- Contract support
 
@@ -775,6 +772,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2000/03/24 17:03:44  oconnor
+--| comments and formatting
+--|
 --| Revision 1.73  2000/03/20 19:38:13  king
 --| Altered pointer_style to always return a valid cursor
 --|

@@ -20,7 +20,7 @@ feature -- Access
 		do
 			count := 2
 			from
-				Result := format_feature_name (name)
+				Result := formatted_feature_name (name)
 			until
 				not reserved_names.has (Result)
 			loop

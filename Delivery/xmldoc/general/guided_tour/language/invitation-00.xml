@@ -1,7 +1,5 @@
 <document title="----Invitation to Eiffel----" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Invitation to Eiffel
@@ -23,7 +21,7 @@
 					<url>../index.xml</url>
 					<label>list of introductory documents</label>
 				</link>. This is 
-				<bold>not</bold> an introduction to the EiffelStudio development environment. Followthe preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
+				<bold>not</bold> an introduction to the EiffelStudio development environment. Follow the preceding link for a Guided Tour of EiffelStudio.  You will also find there a detailed Eiffel Tutorial.
 			</output>
 		</note>
 		<heading>

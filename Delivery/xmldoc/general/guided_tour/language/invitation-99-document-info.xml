@@ -1,17 +1,8 @@
 <document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_location></envision_location>
-				<envision_title></envision_title>
-				<studio_location></studio_location>
-				<studio_title></studio_title>
-			</toc>
-		</help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>2</size>
+			<size>1</size>
 			<content>Manual Identification and Copyright</content>
 		</heading>
 		<paragraph>Title: 

@@ -85,7 +85,7 @@
 		</image>
 		<paragraph>An important group of expanded types, based on library classes, includes the basic types 
 			<code>
-				<string>CHARACTER DOUBLE, REAL, INTEGER, </string>
+				<string>CHARACTER, DOUBLE, REAL, INTEGER, </string>
 			</code> and 
 			<code>
 				<string>BOOLEAN</string>

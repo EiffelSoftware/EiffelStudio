@@ -18,15 +18,23 @@ inherit
 feature -- Access
 
 	file_name: STRING
-			-- Name of the file being displayed
+			-- Name of the file being displayed.
+			-- This attribute is useful when `stone'
+			-- is Void (this case occurs after loading
+			-- a file with the "open" command, or after
+			-- saving a file with the "save as" command).
 
 	stone: FILED_STONE
-			-- Stone in tool
+			-- Stone in tool.
 
 feature -- Status Report
 
 	last_saving_date: INTEGER
 			-- Date of last save
+--| FIXME
+--| Christophe, 3 nov 1999
+--| This feature is irrevelant if `file_name' is Void.
+--| We should have a way to say so.
 
 feature -- Status Settings
 
@@ -44,6 +52,10 @@ feature -- Status Settings
 		ensure
 			file_name_set: equal (file_name, f)
 		end
+--| FIXME
+--| Christophe, 3 nov 1999
+--| This feature should not be exported.
+--| So calls from other classes should be replaced.
 
 	set_stone (s: like stone) is
 			-- Make `s' the new value of stone.

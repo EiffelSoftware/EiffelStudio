@@ -81,6 +81,7 @@ inherit
 		export
 			{NONE} all
 		end
+
 create
 	make
 
@@ -371,8 +372,7 @@ feature {NONE} -- State management
 			if state = Open_state then
 				on_menu_command (Open_string_constant)
 			elseif state = Finished_state then
-				create wizard_manager
-				wizard_manager.run
+				run_wizard_manager
 			end
 			tool_bar.enable_button (Save_string_constant)
 			tool_bar.enable_button (Generate_string_constant)
@@ -436,8 +436,18 @@ feature {NONE} -- State management
 
 feature {NONE} -- Implementation
 
-	wizard_manager: WIZARD_MANAGER
-			-- Code generation manager
+	run_wizard_manager is
+			-- Run Code generation manager.
+		local
+			wizard_manager: WIZARD_MANAGER
+			mem_info: MEM_INFO
+		do
+			create wizard_manager
+			wizard_manager.run
+			wizard_manager := Void
+			full_collect
+			mem_info := memory_statistics (0)
+		end
 
 	open_project (a_project: STRING) is
 			-- Open previous project saved in `a_project'.
@@ -514,8 +524,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				shared_wizard_environment.set_no_abort
 				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
 				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
-				create wizard_manager
-				wizard_manager.run
+				run_wizard_manager
 			when Exit_string_constant then
 				destroy			
 			when Open_string_constant then

@@ -104,9 +104,12 @@ feature -- Update
 --		end
 
 --	process_feature (st: FEATURE_STONE) is
+--		local
+--			wd: EV_WARNING_DIALOG
 --		do
 --			if not st.is_valid then
----				warner (Project_tool).gotcha_call (Warning_messages.w_Feature_not_compiled)
+--				create wd.make_default (tool.parent_window, Interface_names.t_Warning,
+--					Warning_messages.w_Feature_not_compiled)
 --			else
 --				create_class_tool (st)
 --			end

@@ -452,10 +452,12 @@ feature -- prototype code generation
 			new_line
 			current_buffer.append_character ('{')
 			new_line
-			indent
-			putstring ("GTCX")
-			exdent
-			new_line
+			if not is_il_generation then
+				indent
+				putstring ("GTCX")
+				exdent
+				new_line
+			end
 		end
 
 feature {GENERATION_BUFFER} -- prototype code generation

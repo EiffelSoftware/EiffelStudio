@@ -41,17 +41,17 @@ feature {NONE}
 			
 feature {NONE}
 
-	edit_list: CMD_ED_CHOICE_WND;
+	edit_list: CMD_POPUP_CONTEXT_WND
 
 	execute (arg: ANY) is
 		local
 			list: LINKED_LIST [CONTEXT];
 		do
---			if command_editor.current_command /= Void then
---				list := command_editor.current_command.contexts_with_instances;
---				!! edit_list.make (command_editor);	
---				edit_list.popup_with_list (list);
---			end
+			if command_editor.current_command /= Void then
+				list := command_editor.current_command.contexts_with_instances
+				!! edit_list.make (command_editor)
+				edit_list.popup_with_list (list)
+			end
 		end;
 
 feature

@@ -17,10 +17,10 @@ inherit
 
 feature
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Anchor name: Result%N");
-			old_build_explain;
+			ow.put_string ("Anchor name: Result%N");
+			old_build_explain (ow);
 		end;
 
 end

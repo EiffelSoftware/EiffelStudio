@@ -10,20 +10,33 @@ inherit
 
 	DB_STATUS_USE
 		export
-			{DB_STATUS} error_message, warning_message, is_ok_mat
+			{DB_STATUS} error_message, error_code, warning_message, is_ok_mat, reset
 		redefine
-					error_message,warning_message, is_ok_mat
+			error_message, error_code, warning_message, is_ok_mat, reset
 		end
 
 	HANDLE_SPEC [G]
 
 feature -- Status report
 
+	is_error_updated: BOOLEAN is
+			-- Has an Oracle/ODBC function been called since last update which may have
+			-- updated error code, error message or warning message?
+		do
+			Result := db_spec.is_error_updated
+		end	
+
 	error_message: STRING is
 			-- Error message from database server
 		do
 			!! Result.make (10)
 			Result.from_c (db_spec.get_error_message)
+		end
+
+	error_code: INTEGER is
+			-- Error code from database server
+		do
+			Result := db_spec.get_error_code
 		end
 
 	warning_message: STRING is
@@ -40,6 +53,18 @@ feature -- Status report
 			Result := db_spec.is_ok_mat
 		end
 
+	found: BOOLEAN is
+			-- Is there any record matching the last
+			-- selection condition used ?
+		do
+			Result := db_spec.found
+		end
+
+	reset is
+			--Reset database error status.
+		do
+			db_spec.clear_error
+		end
 
 end -- class DATABASE_STATUS 
 

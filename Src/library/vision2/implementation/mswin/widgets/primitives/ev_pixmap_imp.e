@@ -65,18 +65,40 @@ feature -- Loading/Saving
 		local
 			icon_id: POINTER
 		do
-			if pixmap_name.is_equal ("Information") then
-				icon_id := Idi_constants.Idi_information
-			elseif pixmap_name.is_equal ("Warning") then
-				icon_id := Idi_constants.Idi_warning
-			elseif pixmap_name.is_equal ("Error") then
-				icon_id := Idi_constants.Idi_error
-			elseif pixmap_name.is_equal ("Question") then
-				icon_id := Idi_constants.Idi_question
-			end
+			is_initialized := False -- Turn contracts off
 
-			create icon.make_by_predefined_id (icon_id)
-			retrieve_icon_information
+			if pixmap_name.is_equal ("Information") then
+					-- Read the predefined Icon.
+				create icon.make_by_predefined_id (
+					Idi_constants.Idi_information
+					)
+				retrieve_icon_information
+
+			elseif pixmap_name.is_equal ("Warning") then
+					-- Read the predefined Icon.
+				create icon.make_by_predefined_id (
+					Idi_constants.Idi_warning
+					)
+				retrieve_icon_information
+
+			elseif pixmap_name.is_equal ("Error") then
+				create icon.make_by_predefined_id (
+					Idi_constants.Idi_error
+					)
+				retrieve_icon_information
+
+			elseif pixmap_name.is_equal ("Question") then
+				create icon.make_by_predefined_id (
+					Idi_constants.Idi_question
+					)
+				retrieve_icon_information
+			end
+				
+				-- Update width & height attributes.
+			width := bitmap.width
+			height := bitmap.height
+
+			is_initialized := True -- Turn constract back on
 		end
 
 	read_from_file (a_file: IO_MEDIUM) is
@@ -1232,6 +1254,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/28 21:43:01  pichery
+--| Fixed contract violation.
+--|
 --| Revision 1.33  2000/04/28 16:32:43  pichery
 --| Added feature `set_with_default' To load a default
 --| pixmap.

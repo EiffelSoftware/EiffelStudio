@@ -188,7 +188,27 @@ feature -- Byte code generation
 			end
 
 			standard_make_code (ba, flag);
-	
+
+			if System.java_generation then
+				-- Add info about name of external
+
+				ba.append (Bc_java_external)
+
+				if feature_name /= Void then
+					ba.append_raw_string (feature_name)
+				else
+					ba.append_raw_string ("-no name-")
+				end
+
+				if external_name /= Void then
+					ba.append_raw_string (external_name)
+				else
+					ba.append_raw_string ("-no name-")
+				end
+			end
+
+			make_java_typecode (ba)
+
 				-- Generation hector realease if any
 			if nb_protections > 0 then
 				ba.append (Bc_release);

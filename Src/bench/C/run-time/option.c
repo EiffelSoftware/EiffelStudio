@@ -145,7 +145,7 @@ struct prof_info {
 						}
 #define zero_time(x)	x = 0.
 #define subtract_gc_time(x,y)	{\
-									x -= y;
+									x -= y;\
 								}
 #define subtract_time(x,y,z)	{\
 									x = y - z;\
@@ -309,7 +309,7 @@ void initprf()
 	 * allocates that table if `prof_enabled'.
 	 */
 
-	if(prof_endabled) {
+	if(prof_enabled) {
 			/* Allocate table */
 		class_table = (struct htable *) cmalloc(sizeof(struct htable));
 		if (class_table == (struct htable *) 0)

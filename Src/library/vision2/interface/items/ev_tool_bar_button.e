@@ -36,6 +36,12 @@ inherit
 		redefine
 			implementation
 		end
+		
+	EV_DOCKABLE_SOURCE
+		redefine
+			is_in_default_state,
+			implementation
+		end
 
 	EV_SENSITIVE
 		redefine

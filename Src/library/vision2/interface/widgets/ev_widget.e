@@ -17,6 +17,12 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_DOCKABLE_SOURCE
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_SENSITIVE
 		undefine
@@ -286,6 +292,7 @@ feature -- Element change
 			minimum_width_assigned: minimum_width = a_minimum_width
 			minimum_height_assigned: minimum_height = a_minimum_height
 		end
+
 
 feature -- Measurement 
 	

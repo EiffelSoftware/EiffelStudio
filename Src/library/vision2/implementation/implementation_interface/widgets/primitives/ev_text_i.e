@@ -105,7 +105,8 @@ feature -- Basic operation
 			-- 0 if none.
 		require
 			valid_string: str /= Void
-		deferred
+		do
+			Result := text.substring_index (str, start)	
 		end
 
 	scroll_to_line (i: INTEGER) is

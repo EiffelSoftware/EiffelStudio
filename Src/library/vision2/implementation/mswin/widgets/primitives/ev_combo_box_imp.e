@@ -415,9 +415,9 @@ feature {NONE} -- Implementation
 			-- item event.
 		do
 			--|FIXME Implement
-			check
-				To_be_implemented: False
-			end
+			--check
+			--	To_be_implemented: False
+			--end
 		end
 
 	recreate_combo_box (creation_flag: INTEGER) is
@@ -735,6 +735,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.75  2000/04/21 01:20:17  pichery
+--| Commented check.
+--|
 --| Revision 1.74  2000/04/20 01:12:38  pichery
 --| Complete Refactoring.
 --|

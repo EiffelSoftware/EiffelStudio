@@ -1784,6 +1784,8 @@ feature -- Features info
 			if not a_type.has_formal then
 				if not a_type.is_none then
 					Result := a_type
+				else
+					Result := System.any_class.compiled_class.types.first.type
 				end
 			else
 				Result := byte_context.real_type (a_type)

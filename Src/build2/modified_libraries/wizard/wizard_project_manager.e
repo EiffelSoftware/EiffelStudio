@@ -83,6 +83,7 @@ feature {NONE} -- Initialization
 			if is_modify_wizard then
 				post_launch_actions.extend (agent first_window.load_first_state)
 				post_launch_actions.extend (agent first_window.show)
+				post_launch_actions.extend (agent first_window.enable_maximize)
 				post_launch_actions.extend (agent type_selector.ensure_top_item_visible)
 			end
 			launch

@@ -10,10 +10,11 @@ inherit
 	HELP_PROJECT
 	
 	UTILITY_FUNCTIONS
+	
+	TABLE_OF_CONTENTS_CONSTANTS
 
 create
-	make_from_directory,
-	make_from_toc
+	make
 
 feature -- File
 
@@ -25,6 +26,21 @@ feature -- File
 			create_collection_file
 		end		
 
+feature {NONE}  -- File
+
+	create_toc_file is
+			-- Create table of contents file
+		local
+			template: PLAIN_TEXT_TEMPLATE_FILE
+			template_file: FILE_NAME
+		do
+			create template_file.make_from_string (Shared_constants.Application_constants.Templates_path)
+			template_file.extend ("HelpTOCTemplate.HxT")
+			create template.make (template_file)
+			template.add_symbol ("toc", full_toc_text)
+			template.save_file (toc_file_name)
+		end	
+
 	create_project_file is
 			-- Create the actual project file for Visual Studio
 		local
@@ -35,8 +51,8 @@ feature -- File
 			template_file.extend ("HelpProjectTemplate.hwproj")
 			create template.make (template_file)
 			template.add_symbol ("project_name", name)
-			template.add_symbol ("files", retrieve_files (False, True, table_of_contents.root_node))
-			template.add_symbol ("directories", retrieve_files (True, True, table_of_contents.root_node))
+			template.add_symbol ("files", retrieve_files (False, True, toc))
+			template.add_symbol ("directories", retrieve_files (True, True, toc))
 			template.save_file (project_file_name)
 			create project_file.make (template.template_filename)
 		end
@@ -50,7 +66,7 @@ feature -- File
 			create template_file.make_from_string (Shared_constants.Application_constants.templates_path)
 			template_file.extend ("HelpFilesTemplate.HxF")
 			create template.make (template_file)
-			template.add_symbol ("files", retrieve_files (False, False, table_of_contents.root_node))
+			template.add_symbol ("files", retrieve_files (False, False, toc))
 			template.save_file (Help_directory.out + "\" + name + ".HxF")
 			create files_file.make (template.template_filename)
 		end
@@ -83,67 +99,65 @@ feature -- Commands
 	build_table_of_contents is
 			-- Build table of contents
 		do
-			if is_widget then
-				create {MSHELP_TABLE_OF_CONTENTS} table_of_contents.make_from_widget (Current, toc_widget)
-			else		
-				create {MSHELP_TABLE_OF_CONTENTS} table_of_contents.make_from_directory (Current, toc_location)
-			end
-			table_of_contents.write_contents_file
+			create_toc_file
 		end
 
 	generate is
 			-- Generate help project
-		local
-			l_generator: HELP_GENERATOR
 		do
-			table_of_contents.write_contents_file
 			generate_files
 		end		
 
 feature {NONE} -- Project
 
-	retrieve_files (get_dirs, tags: BOOLEAN; a_dir: HELP_TOPIC_FOLDER): STRING is
-			-- Retrieve the project files string or directories string
-			-- if `get_dirs'
+	retrieve_files (get_dirs, tags: BOOLEAN; a_toc: like toc): STRING is
+			-- Retrieve the project files string or directories string if `get_dirs'
 		local
-			l_project_file: HELP_TOPIC_FILE
-			l_project_folder: HELP_TOPIC_FOLDER
-			l_file_path: STRING
-			l_dir: DIRECTORY
-		do
+			l_help_topic: XML_TABLE_OF_CONTENTS_NODE
+			l_help_topics: HASH_TABLE [XML_TABLE_OF_CONTENTS_NODE, INTEGER]
+			l_title, l_url: STRING
+			l_util: UTILITY_FUNCTIONS
+		do		
+			create l_util
+			create Result.make_empty
 			from
-				a_dir.start
-				create Result.make_empty				
+				l_help_topics := toc.nodes
+				l_help_topics.start
 			until
-				a_dir.after
+				l_help_topics.after
 			loop
-				l_project_folder ?= a_dir.item
-				l_project_file ?= a_dir.item
-				if l_project_folder /= Void then
-					Result.append (retrieve_files (get_dirs, tags, l_project_folder))
-				end				
+				l_help_topics.forth
+				l_help_topic :=  l_help_topics.item_for_iteration
+				l_url := l_help_topic.attribute_by_name (Url_string).value
+				l_title := l_help_topic.attribute_by_name (Title_string).value
 				if get_dirs then
-					if l_project_folder /= Void then
-						if l_project_folder.directory = Void then
-							Result.append ("<Dir Url=%"" + l_project_folder.relative_url + "%"")
-						else
-							Result.append ("<Dir Url=%"" + l_project_folder.directory.name + "%"")
-						end						
-						if tags and then l_project_folder.entry_title /= Void then
-							Result.append (" Title=%"" + l_project_folder.entry_title + "%"")
+					if l_help_topic.is_directory then
+						Result.append ("<Dir ")
+						if l_url /= Void then
+							l_url := l_util.toc_friendly_url (l_url)
+							l_url := l_util.directory_no_file_name (l_url)
+							Result.append ("Url=%"" + l_url + "%"")
+						end					
+						if tags and then l_title /= Void then
+							Result.append (" Title=%"" + l_title + "%"")
 						end
 						Result.append ("/>%N")
 					end
-				else				
-					if l_project_file /= Void and then l_project_file.url /= Void then
-						Result.append ("%T<File Url=%"" + l_project_file.relative_url + "%"")
-						if tags and then l_project_file.entry_title /= Void then
-							Result.append (" Title=%"" + l_project_file.entry_title + "%"")
-						end
-						Result.append ("/>%N")
+				else
+					Result.append ("%T<File ")
+					if l_url /= Void then
+						l_url := l_util.toc_friendly_url (l_url)
+						l_url := l_util.file_no_extension (l_url)
+						l_url.append (".html")
+						Result.append ("Url=%"" + l_url + "%"")
 					end
+					
+					if tags and then l_title /= Void then
+						Result.append (" Title=%"" + l_title + "%"")
+					end
+					Result.append ("/>%N")					
 				end
-				a_dir.forth
+				l_help_topics.forth
 			end
 			if not get_dirs then
 						-- Retrieve images
@@ -163,8 +177,11 @@ feature {NONE} -- Project
 			l_file: RAW_FILE
 			l_dir, l_folder: DIRECTORY
 			l_name: DIRECTORY_NAME
+			l_url: STRING
+			l_util: UTILITY_FUNCTIONS
 		do
 			create l_dir.make (a_path)
+			create l_util
 			from
 				l_cnt := 0
 				l_dir.open_read
@@ -181,8 +198,9 @@ feature {NONE} -- Project
 					Result.append (retrieve_images (l_name))
 				else
 					l_file ?= create {RAW_FILE}.make (l_name.string)
-					if l_file /= Void and then image_file_types.has (file_type (l_file.name)) then
-						Result.append ("%T<File Url=%"" + l_file.name + "%"")
+					if l_file /= Void and then image_file_types.has (file_type (l_file.name)) then				
+						l_url := l_util.toc_friendly_url (l_file.name)
+						Result.append ("%T<File Url=%"" + l_url + "%"")
 						Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
 						Result.append ("/>%N")
 					end
@@ -210,5 +228,15 @@ feature {NONE} -- Implementation
 		do
 			Result := "HxT"
 		end
+
+	full_toc_text: STRING is
+			-- Full TOC text
+		local
+			l_formatter: TABLE_OF_CONTENTS_MSHELP_FORMATTER
+		do
+			create l_formatter.make
+			toc.process (l_formatter)
+			Result := l_formatter.mshelp_text
+		end		
 
 end -- class MSHELP_PROJECT

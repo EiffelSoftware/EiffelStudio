@@ -13,24 +13,9 @@ inherit
 
 feature -- Initialization
 
-	make_from_directory (a_loc, a_toc: DIRECTORY; a_name: STRING) is
+	make (a_loc: DIRECTORY; a_name: STRING; a_toc: XML_TABLE_OF_CONTENTS) is
 			-- Create new help project in location `a_loc' with name `a_name'.
-			-- Initialize `table_of_contents' from contents of `a_toc'.
-		require
-			name_not_void: a_name /= Void
-			location_valid: a_loc /= Void and a_loc.exists
-			toc_valid: a_toc /= Void and a_toc.exists
-		do
-			name := a_name
-			location := a_loc
-			toc_location := a_toc
-			is_widget := False
-			initialize
-		end
-
-	make_from_toc (a_loc: DIRECTORY; a_name: STRING; a_toc: DOCUMENT_TOC) is
-			-- Create new help project in location `a_loc' with name `a_name'.
-			-- Initialize `table_of_contents' from contents of `a_toc'.
+			-- Build `table_of_contents' from contents of `a_toc'.
 		require
 			name_not_void: a_name /= Void
 			directory_valid: a_loc /= Void and a_loc.exists
@@ -38,8 +23,7 @@ feature -- Initialization
 		do
 			name := a_name
 			location := a_loc
-			toc_widget := a_toc
-			is_widget := True
+			toc := a_toc
 			initialize
 		end
 		
@@ -67,11 +51,7 @@ feature -- Access
 	location: DIRECTORY
 			-- Help Project location once compiled
 	
-	toc_location: DIRECTORY
-			-- Help Table of Contents location
-	
-	toc_widget: DOCUMENT_TOC
-			-- Table of Contents widget
+	toc: XML_TABLE_OF_CONTENTS
 	
 	title: STRING
 			-- Help Project Title
@@ -83,9 +63,6 @@ feature -- Access
 			-- Saved project file
 		deferred
 		end
-
-	table_of_contents: HELP_TABLE_OF_CONTENTS
-			-- Table of contents
 
 	default_topic: HELP_TOPIC
 			-- Default topic to display on opening
@@ -119,20 +96,19 @@ feature {HELP_GENERATOR} -- File
 			-- Help directory
 		once
 			Result := Shared_constants.Application_constants.Temporary_help_directory
+		end
+		
+	full_toc_text: STRING is
+			-- Full text of TOC
+		deferred
 		end		
-
-feature {NONE} -- Implementation
-
-	is_widget: BOOLEAN
-			-- Is Current built from widget.  False implies Current built from
-			-- directory.
 
 feature -- Commands
 
 	build_table_of_contents is
 			-- Build new `table_of contents' from `a_dir'
 		require
-			valid_toc: toc_location /= Void or toc_widget /= Void
+			valid_toc: toc /= Void
 		deferred
 		end
 

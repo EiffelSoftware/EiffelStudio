@@ -10,20 +10,14 @@ inherit
 	HELP_PROJECT
 
 create
-	make_from_directory,
-	make_from_toc
+	make
 		
 feature -- Commands
 
 	build_table_of_contents is
 			-- Build table of contents and write to file
 		do
-			if is_widget then
-				create {HTML_HELP_TABLE_OF_CONTENTS} table_of_contents.make_from_widget (Current, toc_widget)
-			else
-				create {HTML_HELP_TABLE_OF_CONTENTS} table_of_contents.make_from_directory (Current, toc_location)
-			end
-			table_of_contents.write_contents_file
+			create_toc_file
 		end
 
 	generate is
@@ -90,6 +84,27 @@ feature {NONE} -- Implementation
 					file.put_string (option)
 				end
 			end
+		end
+
+	create_toc_file is
+			-- Create TOC file
+		local
+			contents_file: PLAIN_TEXT_FILE
+			l_filename: FILE_NAME
+		do			
+			create contents_file.make_create_read_write (toc_file_name)
+			contents_file.putstring (full_toc_text)
+			contents_file.close
+		end		
+
+	full_toc_text: STRING is
+			-- Full TOC text
+		local
+			l_formatter: TABLE_OF_CONTENTS_HTML_HELP_FORMATTER
+		do
+			create l_formatter.make
+			toc.process (l_formatter)
+			Result := l_formatter.html_help_text
 		end
 
 end -- class HTML_HELP_PROJECT

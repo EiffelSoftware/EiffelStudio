@@ -339,40 +339,40 @@ feature -- Drawing operations
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+		do
+			draw_text_internal (x, y, a_text, True)
+		end
+		
+	draw_text_internal (x, y: INTEGER; a_text: STRING; draw_from_baseline: BOOLEAN) is
+			-- Draw `a_text' at (`x', `y') using `font'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
+			pango_layout, pango_iter: POINTER
+			a_baseline: INTEGER
+			a_y: INTEGER
 		do
 			if drawable /= default_pointer then
 				create a_cs.make (a_text)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
-					drawable,
-					internal_font_imp.c_object,
-					gc,
-					x,
-					y,
-					a_cs.item
-				)
-				flush
+				pango_layout := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (app_implementation.default_gtk_window, a_cs.item)
+				pango_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
+				if draw_from_baseline then
+					a_baseline := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (pango_iter) // feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+					a_y := y - a_baseline
+				else
+					a_y := y
+				end
+				if internal_font_imp /= Void then
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (pango_layout, internal_font_imp.font_description_from_values)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_layout (drawable, gc, x, a_y, pango_layout)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (pango_layout)
 			end
 		end
 
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
-		local
-			a_cs: C_STRING
 		do
-			if drawable /= default_pointer then
-				create a_cs.make (a_text)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
-					drawable,
-					internal_font_imp.c_object,
-					gc,
-					x,
-					y + internal_font_ascent,
-					a_cs.item
-				)
-				flush
-			end
+			draw_text_internal (x, y, a_text, False)
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
@@ -668,6 +668,11 @@ feature {NONE} -- Implemention
 		end
 
 feature {NONE} -- Implementation
+
+	app_implementation: EV_APPLICATION_IMP is
+			-- Return the instance of EV_APPLICATION_IMP.
+		deferred
+		end	
 
 	internal_foreground_color: EV_COLOR
 			-- Color used to draw primitives.

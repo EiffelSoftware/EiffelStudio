@@ -14,10 +14,21 @@ inherit
 	EV_WINDOW_IMP
 		undefine
 			build
+		redefine
+			default_style
 		end
 
 creation
 	make
+
+feature {NONE} -- Implementation
+
+	default_style: INTEGER is
+		do
+			Result := Ws_border + Ws_dlgframe + Ws_sysmenu 
+					+ Ws_overlapped + Ws_clipchildren
+					+ Ws_clipsiblings
+		end
 
 end -- class EV_DIALOG_IMP
 

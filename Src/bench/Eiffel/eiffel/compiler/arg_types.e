@@ -1,49 +1,55 @@
--- Controler of argument types: useful for conformance involving
--- like-argument types
+indexing
+	description: "[
+		Controler of argument types: useful for conformance involving
+		like-argument types
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ARG_TYPES 
 
 inherit
-
 	SHARED_AST_CONTEXT
 		export
 			{ANY} context
 		end
 	
-feature
+feature -- Access
 
-	offset: INTEGER;
+	offset: INTEGER
 			-- Offset for accessing to `container'
 
-	container: ARRAY [TYPE];
+	container: ARRAY [TYPE]
 			-- Argument types 
 
 	i_th (i: INTEGER): TYPE_A is
 			-- I_th argument type
 		require
-			good_context: container /= Void;
-			consistency: container.count >= offset + i;
+			good_context: container /= Void
+			consistency: container.count >= offset + i
 		do
-			Result := container.item (i + offset).actual_type;
-		end; -- i_th
+			Result := container.item (i + offset).actual_type
+		end
+
+feature -- Initialization
 
 	init1 (f: FEATURE_I) is
 			-- Initialization for redeclaration conformance
 		require
-			good_argument: f /= Void;
+			good_argument: f /= Void
 		do
 			offset := 0;
-			container := f.arguments;
-		end;
+			container := f.arguments
+		end
 
 	init2 (f: FEATURE_I) is
 			-- Initialization for validity call conformance
 		require
-			good_argument: f /= Void;
-			consistency: Context.count >= f.argument_count;
+			good_argument: f /= Void
+			consistency: Context.count >= f.argument_count
 		do
-			container := Context;
-			offset := Context.count - f.argument_count;
-		end;
+			container := Context
+			offset := Context.count - f.argument_count
+		end
 
 end

@@ -165,8 +165,10 @@ feature -- Access
 								l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
 								error_occured := (eifnet_evaluator.last_call_success /= 0)
 							end
-							print ("param ... %N")
-							display_info_on_object (l_icdv_param)
+							debug ("debugger_trace_eval")
+								print ("param ... %N")
+								display_info_on_object (l_icdv_param)								
+							end
 							l_icdv_args.put (l_icdv_param, l_param_i + 1)
 								-- we'll set the first arg later
 							l_param_i := l_param_i + 1
@@ -175,8 +177,10 @@ feature -- Access
 						create l_icdv_args.make (1, 1)
 					end
 					if not error_occured then
-						print ("target ... %N")
-						display_info_on_object (l_icdv_obj)				
+						debug ("debugger_trace_eval")
+							print ("target ... %N")
+							display_info_on_object (l_icdv_obj)							
+						end
 						
 						l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
 

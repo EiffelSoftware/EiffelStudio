@@ -312,19 +312,19 @@ private void root_class_updt ()
 {
 	/* Update the root class info */
 
-	extern int rcst;
+	extern int32 rcorigin;
 	extern int rcdt;
-	extern int32 rcfid;
+	extern int32 rcoffset;
 	extern int rcarg;
 
-	rcst = wlong();
+	rcorigin = wlong();
 	rcdt = wlong();
-	rcfid = wlong();
+	rcoffset = wlong();
 	rcarg = wlong();
 
 #ifdef DEBUG
-	dprintf(1)("Root class info:\n\trcst = %ld, rcdt = %ld\n", rcst, rcdt);
-	dprintf(1)("\trcfid = %ld, rcarg = %ld\n", rcfid, rcarg);
+	dprintf(1)("Root class info:\n\trcorigin = %ld, rcdt = %ld\n", rcorigin, rcdt);
+	dprintf(1)("\trcoffset = %ld, rcarg = %ld\n", rcoffset, rcarg);
 #endif
 }
 

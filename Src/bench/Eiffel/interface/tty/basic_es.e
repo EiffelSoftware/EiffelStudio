@@ -24,7 +24,7 @@ inherit
 
 creation
 
-	make, make_licensed
+	make
 
 feature -- Initialization
 
@@ -33,6 +33,7 @@ feature -- Initialization
 			-- execute the appropriate command.
 		local
 			temp: STRING
+			new_resources: RESOURCES
 		do
 			if not retried then
 					-- Check that environment variables
@@ -50,32 +51,38 @@ feature -- Initialization
 					new_die (-1)
 				end;
 
-				analyze_options;
-				if option_error then
-					print_option_error
-				elseif help_only then
-					print_help
-				elseif not file_error then
-					if output_window = Void then
-						command.set_output_window (error_window)
-					else
-						command.set_output_window (output_window)
-						output_window.close;
-					end;
-					init_project; 
-					if not error_occurred then
-						if project_is_new then
-							make_new_project (
-								equal (command.name,
-								loop_cmd_name));
+				if init_licence then
+						-- Read the resource files
+					if resources /= Void then end;
+					!! new_resources.initialize;
+
+					analyze_options;
+					if option_error then
+						print_option_error
+					elseif help_only then
+						print_help
+					elseif not file_error then
+						if output_window = Void then
+							command.set_output_window (error_window)
 						else
-							retrieve_project;
-						end
-					end;
-					if not error_occurred then
-						command.execute
-					end;
-					discard_licence
+							command.set_output_window (output_window)
+							output_window.close;
+						end;
+						init_project; 
+						if not error_occurred then
+							if project_is_new then
+								make_new_project (
+									equal (command.name,
+									loop_cmd_name));
+							else
+								retrieve_project;
+							end
+						end;
+						if not error_occurred then
+							command.execute
+						end;
+						discard_licence
+					end
 				end;
 			else
 				new_die (-1)
@@ -92,17 +99,6 @@ feature -- Initialization
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				retried := True;
 				retry
-			end;
-		end;
-
-	make_licensed is
-			-- Analyze the command line options and
-			-- execute the appropriate command.
-			-- Get a license before the call
-		do
-			if init_licence then
-				make;
-				discard_licence;
 			end;
 		end;
 

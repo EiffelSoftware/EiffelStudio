@@ -184,7 +184,6 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color
 				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out
 				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined
-				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_double_underlined
 				| feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset
 			)
 		end
@@ -250,7 +249,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_pointer (Result, background_gdk_string, color_struct, default_pointer)			
 			end	
 
-			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset or else applicable_attributes.effects_double_underlined) then
+			if (applicable_attributes.effects_striked_out or else applicable_attributes.effects_underlined or else applicable_attributes.effects_vertical_offset) then
 				if applicable_attributes.effects_striked_out then
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_boolean (Result, strikethrough_string, is_striked_out)
 				end

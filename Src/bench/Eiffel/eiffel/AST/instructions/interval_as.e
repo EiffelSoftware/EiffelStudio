@@ -76,11 +76,7 @@ feature -- Type check and byte code
 				then
 					create vomb2
 					context.init_error (vomb2)
-					if Inspect_control.integer_type then
-						vomb2.set_type (integer_type)
-					else
-						vomb2.set_type (character_type)
-					end
+					vomb2.set_type (Inspect_control.type)
 					Error_handler.insert_error (vomb2)
 				elseif not context.current_class.feature_table.has (id_as) then
 					create veen
@@ -115,38 +111,22 @@ feature -- Type check and byte code
 			-- Type check interval
 		local
 			vomb2: VOMB2
-			error_found: BOOLEAN
-			error_type: TYPE_A
 		do
-			check_for_veen (lower);	
+			check_for_veen (lower)
 			check_for_veen (upper)
 			Error_handler.checksum
 			Inspect_control.set_interval (Current)
-			if Inspect_control.integer_type then
-				if not good_integer_interval then
-					error_found := True
-					error_type := Integer_type
-				else
-					Intervals.insert (Inspect_control.integer_interval)
-				end
-			else
-				if not good_character_interval then
-					error_found := True
-					error_type := Character_type
-				else
-					Intervals.insert (Inspect_control.character_interval)
-				end
-			end;	
-			if error_found then
-				create vomb2
-				context.init_error (vomb2)
-				vomb2.set_type (error_type)
-				Error_handler.insert_error (vomb2)
-			else
+			if is_good_interval then
+				Intervals.insert (Inspect_control.interval_byte_node)
 				lower.record_dependances
 				if upper /= Void then
 					upper.record_dependances
 				end
+			else
+				create vomb2
+				context.init_error (vomb2)
+				vomb2.set_type (Inspect_control.type)
+				Error_handler.insert_error (vomb2)
 			end
 		end
 
@@ -166,18 +146,16 @@ feature -- Type check and byte code
 
 feature -- Access
 
-	good_integer_interval: BOOLEAN is
-			-- Is the current interval a good integer interval ?
+	is_good_interval: BOOLEAN is
+			-- Is the current interval a good one?
+			-- (Are its bounds constant and of the same type
+			-- as inspect expression?)
+		local
+			type: TYPE_A
 		do
-			Result := lower.good_integer
-						and then (upper = Void or else upper.good_integer)
-		end
-
-	good_character_interval: BOOLEAN is
-			-- Is the current interval a good character interval ?
-		do
-			Result := lower.good_character
-						and then (upper = Void or else upper.good_character)
+			type := inspect_control.type
+			Result := lower.is_inspect_value (type)
+						and then (upper = Void or else upper.is_inspect_value (type))
 		end
 
 feature {AST_EIFFEL} -- Output

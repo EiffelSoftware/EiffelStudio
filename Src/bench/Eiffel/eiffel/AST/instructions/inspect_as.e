@@ -90,7 +90,6 @@ feature -- Type check, byte code and dead code removal
 			current_item: TYPE_A
 			vomb1: VOMB1
 			controler: INSPECT_CONTROL
-			integer_type: INTEGER_A
 		do
 			switch.type_check
 
@@ -103,11 +102,8 @@ feature -- Type check, byte code and dead code removal
 				-- Type check if it is an expression conform either to
 				-- and integer or to a character
 			current_item := context.item
-			if current_item.is_integer then
-				integer_type ?= current_item
-				controler.set_integer_type (integer_type.size)
-			elseif	current_item.is_character then
-				controler.set_character_type
+			if current_item.is_integer or else current_item.is_character then
+				controler.set_type (current_item)
 			else
 					-- Error
 				create vomb1

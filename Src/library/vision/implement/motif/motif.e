@@ -28,7 +28,7 @@ creation
 
 	make
 
-feature {NONE}
+feature
 
 	app_class: STRING;
 			-- Application class name of the application

@@ -192,7 +192,7 @@ char *inspect_else(void)
 	return result;
 }
 
-char *create_generic(char *gen_name, char *constrained)
+char *create_generic(char *gen_name, char *constrained, char *creation_routines)
 {
 	/* Return a formal generic parameter. */
 
@@ -220,6 +220,7 @@ char *create_generic(char *gen_name, char *constrained)
 	result = create_node(FORMAL_DEC_AS);
 	object_arg[0] = create_id(gen_name);
 	object_arg[1] = constrained;
+	object_arg[2] = creation_routines;
 	int_arg[0] = generic_count;
 	(*init_array[FORMAL_DEC_AS])(result);
 

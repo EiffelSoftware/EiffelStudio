@@ -22,18 +22,6 @@ inherit
 			{NONE} all
 		end
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			eiffel_writer := Void
-			no_need_create_class := False 
-		ensure
-			void_writer: eiffel_writer = Void
-			need_create_class: no_need_create_class = False
-		end
-
 feature -- Basic Operations
 
 	generate (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is

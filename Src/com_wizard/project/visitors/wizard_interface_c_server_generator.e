@@ -10,15 +10,7 @@ class
 inherit
 	WIZARD_INTERFACE_C_GENERATOR
 
-feature -- Initialization
 
-	initialize is
-			-- Initialize generator.
-		do
-			cpp_class_writer := Void
-		ensure
-			void_writer: cpp_class_writer = Void
-		end
 
 feature -- Basic operation
 

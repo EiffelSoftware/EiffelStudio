@@ -13,15 +13,6 @@ inherit
 			generate
 		end
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			c_writer := Void
-		ensure
-			void_writer: c_writer = Void
-		end
 
 feature -- Access
 
@@ -33,6 +24,7 @@ feature -- Access
 				Shared_file_name_factory.create_file_name (Current, c_writer)
 				c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 			end
+			c_writer := Void
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

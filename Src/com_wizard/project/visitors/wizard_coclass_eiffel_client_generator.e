@@ -15,23 +15,6 @@ inherit
 
 	WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			eiffel_writer := Void
-			dispatch_interface := False
-			ccom_create_feature_name := Void
-			ccom_create_from_pointer_feature_name := Void
-			ccom_delete_feature_name := Void
-		ensure
-			void_writer: eiffel_writer = Void
-					dispatch_interface = False and
-					ccom_create_feature_name = Void and
-					ccom_create_from_pointer_feature_name = Void and
-					ccom_delete_feature_name = Void
-		end
 
 feature -- Access
 
@@ -60,6 +43,8 @@ feature -- Access
 
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+
+			eiffel_writer := Void
 		end
 
 feature --  Basic operation

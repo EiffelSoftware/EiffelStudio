@@ -18,6 +18,7 @@ inherit
 			parent
 		redefine
 			set_text,
+			set_pixmap,
 			parent_imp
 		end
 
@@ -107,6 +108,14 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
 			end
+		end
+
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Assign `pixmap' to `Current'.
+			-- Notify parent to set owner draw for `Current'
+		do
+			{EV_SIMPLE_ITEM_IMP} Precursor (pix)
+			parent_imp.set_child_owner_draw (Current)
 		end
 
 end -- class EV_STATUS_BAR_ITEM_IMP

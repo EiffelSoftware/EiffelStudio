@@ -48,12 +48,14 @@ feature -- Initialization
 	set_tree is
 			-- Initialize the tree with a root
 		do
-			create tree_items.make
-			create t1.make_with_text (current_widget, "Root")
-			f1.combo.set_editable (True)
-			create e1.make_with_text (f1.combo, "Root")
-			e1.set_data(t1)
-			tree_items.extend(e1)
+			if tree_items = Void then
+				create tree_items.make
+				create t1.make_with_text (current_widget, "Root")
+				f1.combo.set_editable (True)
+				create e1.make_with_text (f1.combo, "Root")
+				e1.set_data(t1)
+				tree_items.extend(e1)
+			end
 		end
 
 feature -- Access

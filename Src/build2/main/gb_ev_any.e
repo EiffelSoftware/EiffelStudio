@@ -180,6 +180,8 @@ feature {GB_CODE_GENERATOR} -- Status setting
 			element_not_void: element /= Void
 			info_not_void: info /= Void
 			info_contains_element: info.supported_type_elements.has (element)
+			info_name_not_empty_if_not_window: not info.type.is_equal (Ev_titled_window_string) implies not info.name.is_empty
+			info_name_empty_if_window: info.type.is_equal (Ev_titled_window_string) implies System_status.current_project_settings.client_of_window = not info.name.is_empty
 		deferred
 		end
 		
@@ -245,7 +247,6 @@ feature {NONE} -- Implementation
 				Result := s
 			end
 		end
-		
 		
 	enable_project_modified is
 			-- Call enable_project_modified on `system_status' and

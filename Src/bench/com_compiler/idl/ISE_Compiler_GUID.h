@@ -239,6 +239,7 @@ enum
     DISPID_EiffelComCompiler_RelativePath,
     DISPID_EiffelComCompiler_IsOverrideCluster,
     DISPID_EiffelComCompiler_IsLibrary,
+    DISPID_EiffelComCompiler_Parent,
 
     // IEnumEiffelClass dispatch ID's
 
@@ -279,6 +280,7 @@ enum
     DISPID_EiffelComCompiler_IsTrueExternal,
     DISPID_EiffelComCompiler_IsGeneric,
     // DISPID_EiffelComCompiler_IsLibrary,
+    DISPID_EiffelComCompiler_MemberOf,
 
     // IEnumFeature dispatch ID's
 

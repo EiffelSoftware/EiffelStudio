@@ -17,6 +17,7 @@ interface IEnumFeature;
 interface IEnumEiffelClass;
 interface IEnumCluster;
 interface IEnumClusterProp;
+interface IEiffelClusterDescriptor;
 interface IEiffelClassDescriptor;
 interface IEiffelFeatureDescriptor;
 
@@ -622,6 +623,9 @@ interface IEiffelFeatureDescriptor: IDispatch
 
 	[id (DISPID_EiffelComCompiler_HasPostcondition), helpstring ("Does feature have postcondition?"), propget]
 	HRESULT HasPostcondition([out, retval] VARIANT_BOOL* pvbPostcondition);
+	
+	[id (DISPID_EiffelComCompiler_MemberOf), helpstring ("Retrieve class feature is member of"), propget]
+	HRESULT MemberOf([out, retval] IEiffelClassDescriptor** ppMember);
 };
 
 //---------------------------------------------------------------------
@@ -748,6 +752,9 @@ interface IEiffelClassDescriptor: IDispatch
 
 	[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Is class part of a library?"), propget]
 	HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
+	
+	[id (DISPID_EiffelComCompiler_MemberOf), helpstring ("Retrieve cluster feature is member of"), propget]
+	HRESULT MemberOf([out, retval] IEiffelClusterDescriptor** ppMember);
 };
 
 //---------------------------------------------------------------------
@@ -823,6 +830,9 @@ interface IEiffelClusterDescriptor: IDispatch
 
 	[id (DISPID_EiffelComCompiler_IsLibrary), helpstring ("Should this cluster be treated as library?"), propget]
 	HRESULT IsLibrary ([out, retval] VARIANT_BOOL* pvbLibrary);
+	
+	[id (DISPID_EiffelComCompiler_MemberOf), helpstring ("Retrieve parent cluster"), propget]
+	HRESULT Parent([out, retval] IEiffelClusterDescriptor** ppParent);
 };
 
 //---------------------------------------------------------------------

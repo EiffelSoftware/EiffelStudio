@@ -530,6 +530,7 @@ feature {NONE} -- Initialization
 		local
 			show_cmd: EB_SHOW_TOOL_COMMAND
 		do
+			lock_update
 				-- Build the features tool
 			create features_tool.make (Current, left_panel)
 			left_tools.extend (features_tool.explorer_bar_item)
@@ -610,6 +611,7 @@ feature {NONE} -- Initialization
 			redo_accelerator.actions.extend (agent redo_cmd.accelerator_execute)
 			window.accelerators.extend (undo_accelerator)
 			window.accelerators.extend (redo_accelerator)
+			unlock_update
 		end
 
 feature -- Access
@@ -1878,6 +1880,7 @@ feature -- Resource Update
 	update is
 			-- Update Current with the registered resources.
 		do
+			lock_update
 				-- Show/hide general toolbar
 			if show_general_toolbar then
 				show_general_toolbar_command.enable_visible
@@ -1903,6 +1906,7 @@ feature -- Resource Update
 			right_panel.load_from_resource (right_panel_layout)
 			splitter_position := left_panel_width
 			update_splitters
+			unlock_update
 		end
 
 	update_splitters is

@@ -33,11 +33,20 @@ feature -- Access
 	ec_function_name: STRING
 			-- Name of Eiffel to C conversion function.
 
+	free_memory_function_name: STRING
+			-- Name of function to free memory.
+
 	need_generate_ce: BOOLEAN
 			-- Do we need to generate body of CE function?
 
 	need_generate_ec: BOOLEAN
 			-- Do we need to generate body of EC function?
+
+	need_generate_free_memory: BOOLEAN
+			-- Do we need to generate function to free memory?
+
+	need_free_memory: BOOLEAN
+			-- Do we need to free memory?
 
 	ce_function_body: STRING
 			-- Body of C to Eiffel conversion function.
@@ -45,11 +54,17 @@ feature -- Access
 	ec_function_body: STRING
 			-- Body of Eiffel to C conversion function.
 
+	free_memory_function_body: STRING
+			-- Body of function to free memory.
+
 	ce_function_signature: STRING
 			-- Signature of C to Eiffel conversion function.
 
 	ec_function_signature: STRING
 			-- Signature of Eiffel to C conversion function.
+
+	free_memory_function_signature: STRING
+			-- Signature of function to free memory.
 
 	ce_function_return_type: STRING
 			-- Return type of C to Eiffel conversion function.
@@ -62,7 +77,7 @@ feature -- Access
 
 	c_post_type: STRING
 			-- Only used for C arrays to specify array dimensions
-			-- Otherwise empty
+			-- Otherwise is_empty
 
 	eiffel_type: STRING 
 			-- Eiffel class name.
@@ -133,7 +148,7 @@ feature -- Basic operations
 		require
 			valid_visitor: a_visitor /= Void
 		do
-			if c_header_file /= Void and then not c_header_file.empty then
+			if c_header_file /= Void and then not c_header_file.is_empty then
 				a_visitor.set_c_header_file (c_header_file)
 			end
 			a_visitor.set_c_post_type (c_post_type)
@@ -145,7 +160,12 @@ feature -- Basic operations
 			a_visitor.set_eiffel_type (eiffel_type)
 			a_visitor.set_need_generate_ce (need_generate_ce)
 			a_visitor.set_need_generate_ec (need_generate_ec)
-
+			a_visitor.set_need_generate_free_memory (need_generate_free_memory)
+			a_visitor.set_need_free_memory (need_free_memory)
+			
+			if need_free_memory then
+				a_visitor.set_free_memory_function_name (free_memory_function_name)
+			end
 			if not is_basic_type and not is_enumeration then
 				ce_function_name.to_lower
 				a_visitor.set_ce_function_name (ce_function_name)
@@ -163,6 +183,11 @@ feature -- Basic operations
 				a_visitor.set_ec_function_body (ec_function_body)
 				a_visitor.set_ec_function_return_type (ec_function_return_type)
 				a_visitor.set_ec_function_signature (ec_function_signature)
+			end
+
+			if need_generate_free_memory then
+				a_visitor.set_free_memory_function_body (free_memory_function_body)
+				a_visitor.set_free_memory_function_signature (free_memory_function_signature)
 			end
 
 			a_visitor.set_array_basic_type (is_array_basic_type)

@@ -2322,6 +2322,12 @@ feature -- Dead code removal
 			root_feat: FEATURE_I
 			ct: CLASS_TYPE
 		do
+				-- Note: To have dead code removal working when assertions are enabled
+				-- we need to perform two things:
+				-- 1 - record all invariants
+				-- 2 - record all inherited assertions of a routine.
+				-- We currently can do `1' but not `2'.
+
 			create remover.make
 
 			if array_optimization_on then
@@ -3719,6 +3725,9 @@ feature -- Precompilation
 			if not any_class.is_compiled then
 				init
 			else
+				if root_class.compiled_class = Void then
+					workbench.change_class (root_class)
+				end
 				add_visible_classes
 			end
 			if root_class = any_class then

@@ -24,7 +24,8 @@ inherit
 			clean_up as primitive_clean_up
 		redefine
 			action_target, set_foreground_color, update_foreground_color,
-			set_background_color, update_background_color, set_managed
+			set_background_color, update_background_color, 
+			set_managed, managed, set_height, set_width, set_size
 		end;
 	PRIMITIVE_M
 		rename
@@ -34,7 +35,8 @@ inherit
 		redefine
 			action_target, set_foreground_color, update_foreground_color,
 			set_background_color, update_background_color,
-			clean_up, set_managed
+			clean_up, set_managed, managed, set_height, set_width,
+			set_size
 		select
 			clean_up
 		end;
@@ -72,6 +74,9 @@ feature {NONE} -- Creation
 					parent_screen_object (a_list, widget_index),
 					man, is_fixed);
 			screen_object := xt_parent (list_screen_object);
+			if not man then
+				xt_unmanage_child (screen_object)
+			end;
 			a_list.set_list_imp (Current);
 			a_list.set_font_imp (Current);
 		end;
@@ -83,19 +88,121 @@ feature {NONE}
 			Result := list_screen_object
 		end;
 
-    set_managed (flag: BOOLEAN) is
-            -- Enable geometry managment on screen widget implementation,
-            -- by window manager of parent widget if `flag', disable it
-            -- otherwise.
-        do
-            if flag then
-                xt_manage_child (action_target)
-                xt_manage_child (screen_object)
-            else
-                xt_unmanage_child (action_target)
-                xt_unmanage_child (screen_object)
-            end
-        end;
+	set_managed (flag: BOOLEAN) is
+			-- Enable geometry managment on screen widget implementation,
+			-- by window manager of parent widget if `flag', disable it
+			-- otherwise.
+		do
+			if flag then
+				xt_manage_child (screen_object);
+				xt_manage_child (action_target)
+			else
+				xt_unmanage_child (screen_object);
+				xt_unmanage_child (action_target)
+			end
+		end;
+
+	managed: BOOLEAN is
+			-- Is there geometry managment on X widget implementation
+			-- perform by window manager of parent widget?
+		do
+			Result := xt_is_managed (action_target)
+		end;
+
+feature -- Setting size
+
+	set_size (new_width:INTEGER; new_height: INTEGER) is
+			-- Set both width and height to `new_width'
+			-- and `new_height'.
+		local
+			ext_name_Mw, ext_name_Mh: ANY
+			was_shown, was_unmanaged: BOOLEAN
+			parent: WIDGET
+		do
+			ext_name_Mw := Mwidth.to_c;
+			ext_name_Mh := Mheight.to_c;
+			if not managed then
+				parent := widget_oui.parent;
+				if x + new_width <= parent.width and then
+					y + new_height <= parent.height
+				then
+					was_unmanaged := True;
+					if realized and shown then
+						was_shown := True;
+						hide;
+					end;
+					set_managed (True)
+				end;
+			end;
+			set_dimension (screen_object, new_width, $ext_name_Mw);
+			set_dimension (screen_object, new_height, $ext_name_Mh)
+			if was_unmanaged then
+				set_managed (False)
+				if was_shown then
+					show;
+				end;
+			end
+		end;
+
+	set_width (new_width :INTEGER) is
+			-- Set width to `new_width'.
+		local
+			ext_name_Mw: ANY;
+			was_shown, was_unmanaged: BOOLEAN
+			parent: WIDGET
+		do
+			ext_name_Mw := Mwidth.to_c;
+			if not managed then
+				parent := widget_oui.parent;
+				if x + new_width <= parent.width and then
+					y + height <= parent.height
+				then
+					was_unmanaged := True;
+					if realized and shown then
+						was_shown := True;
+						hide;
+					end;
+					set_managed (True)
+				end;
+			end;
+			set_dimension (screen_object, new_width, $ext_name_Mw)
+			if was_unmanaged then
+				set_managed (False)
+				if was_shown then
+					show;
+				end;
+			end
+		end;
+
+	set_height (new_height: INTEGER) is
+			-- Set height to `new_height'.
+		local
+			ext_name: ANY;
+			was_shown, was_unmanaged: BOOLEAN;
+			parent: WIDGET
+		do
+			if not managed then
+				parent := widget_oui.parent;
+				if y + new_height <= parent.height and then
+					x + width <= parent.width
+				then
+					was_unmanaged := True;
+					if realized and shown then
+						was_shown := True;
+						hide;
+					end;
+					set_managed (True)
+				end;
+			end;
+			ext_name := Mheight.to_c;
+			set_dimension (screen_object, new_height, $ext_name)
+			if was_unmanaged then
+				set_managed (False)
+				if was_shown then
+					show;
+				end;
+			end
+		end;
 
 feature 
 

@@ -412,6 +412,7 @@ feature {NONE} -- Implementation
 					create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
 					constants_file_name.extend ("templates")
 					constants_file_name.extend ("constants_imp.e")
+					constants_file := open_text_file_for_read (constants_file_name)	
 				else
 					constants_file := open_text_file_for_read (constants_template_imp_file_name)	
 				end
@@ -492,6 +493,7 @@ feature {NONE} -- Implementation
 						create constants_file_name.make_from_string (visual_studio_information.wizard_installation_path)
 						constants_file_name.extend ("templates")
 						constants_file_name.extend ("constants.e")
+						constants_file := open_text_file_for_read (constants_file_name)
 					else
 						constants_file := open_text_file_for_read (constants_template_file_name)
 					end

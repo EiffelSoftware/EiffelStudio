@@ -8,7 +8,7 @@ class
 
 feature -- Initialization
 
-	Interface_names: BENCH_WIZARD_INTERFACE_NAMES is
+	Bench_interface_names: BENCH_WIZARD_INTERFACE_NAMES is
 			-- All string constants used in Bench wizard constants
 		once
 			create Result

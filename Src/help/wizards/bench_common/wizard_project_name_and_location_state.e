@@ -34,18 +34,18 @@ feature -- Basic Operation
 			-- Build entries.
 		do 
 			create project_name.make (Current)
-			project_name.set_label_string_and_size (Interface_names.l_Project_name, 10)
+			project_name.set_label_string_and_size (Bench_interface_names.l_Project_name, 10)
 			project_name.set_textfield_string (wizard_information.project_name)
 			project_name.generate
 			project_name.change_actions.extend (agent on_change_name)
 
 			create project_location.make (Current)
-			project_location.set_label_string_and_size (Interface_names.l_Project_location, 10)
+			project_location.set_label_string_and_size (Bench_interface_names.l_Project_location, 10)
 			project_location.set_textfield_string (wizard_information.project_location)
 			project_location.enable_directory_browse_button
 			project_location.generate
 
-			create to_compile_b.make_with_text (Interface_names.l_Compile_project)
+			create to_compile_b.make_with_text (Bench_interface_names.l_Compile_project)
 			if wizard_information.compile_project then
 				to_compile_b.enable_select
 			else
@@ -189,9 +189,9 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Display message text relative to current state.
 		do
-			title.set_text (Interface_names.t_Project_name_and_location_state)
-			subtitle.set_text (Interface_names.st_Project_name_and_location_state)
-			message.set_text (Interface_names.m_Project_name_and_location_state)
+			title.set_text (Bench_interface_names.t_Project_name_and_location_state)
+			subtitle.set_text (Bench_interface_names.st_Project_name_and_location_state)
+			message.set_text (Bench_interface_names.m_Project_name_and_location_state)
 		end
 
 	project_location: WIZARD_SMART_TEXT_FIELD

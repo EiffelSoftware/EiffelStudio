@@ -32,9 +32,8 @@ feature -- Initialization
 			path_not_void: fi_n /= Void
 		local
 			fi: PLAIN_TEXT_FILE
-			s: STRING
 		do
-			Create fi.make_open_read (fi_n)
+			create fi.make_open_read (fi_n)
 			fi.read_stream (fi.count)
 			image := clone (fi.last_string)
 			fi.close
@@ -60,7 +59,7 @@ feature -- Basic Operations
 			code_exists: s/=Void
 		local
 			i: INTEGER
-			s1, s2: STRING
+			s1: STRING
 		do
 			i := image.substring_index ("</HTML",1)
 			if i=0 then

@@ -19,20 +19,11 @@ lib='lib'
 ccflags='-W3 $debug -nologo'
 mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS'
 dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
-#-- MT
-#-----
-#ccflags='-W3 -nologo $debug -MT -DEIF_THREADS'
-#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
-#
-#-- DLL: MT
-#--------
-#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS'
-#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
-#
 #-- DLL:
 #--------
 #ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug'
-#dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
+#mtccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS'
+#dllflags='-nologo -MT -subsystem:WINDOWS -dll -incremental:no'
 #
 #
 #Link Lines in non debug mode:

@@ -128,8 +128,8 @@ feature {COMPILER_EXPORTER}
 			local_copy: like Current
 		do
 			gen_type ?= other
-			if	gen_type /= Void
-				and then
+			if
+				gen_type /= Void and then
 				equal (gen_type.base_class_id, System.array_id)
 			then
 				generic_param := gen_type.generics.item (1)

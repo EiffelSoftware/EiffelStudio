@@ -13,7 +13,8 @@ inherit
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, same_class_type, format, is_equivalent,
-			storage_info, storage_info_with_name, deep_actual_type
+			storage_info, storage_info_with_name, deep_actual_type,
+			conformance_type, update_dependance
 		end
 
 feature -- Property
@@ -135,6 +136,22 @@ feature -- Output
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
+
+	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
+			-- Update dependency for Dead Code Removal
+		local
+			i, count: INTEGER
+		do
+			from
+				i := 1
+				count := generics.count
+			until
+				i > count
+			loop
+				generics.item (i).update_dependance (feat_depend)
+				i := i + 1
+			end
+		end
 
 	set_generics (g: like generics) is
 			-- Assign `g' to `generics'.
@@ -282,6 +299,32 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i > count
 				loop
 					new_generics.put (generics.item (i).deep_actual_type, i)
+					i := i + 1
+				end
+				!!Result
+				Result.set_base_class_id (base_class_id)
+				Result.set_generics (new_generics)
+				Result.set_is_expanded (is_expanded)
+			end
+		end
+
+	conformance_type: GEN_TYPE_A is
+
+		local
+			i, count: INTEGER
+			new_generics: like generics
+		do
+			if not has_like then
+				Result := Current
+			else
+				from
+					i := 1
+					count := generics.count
+					!!new_generics.make (1, count)
+				until
+					i > count
+				loop
+					new_generics.put (generics.item (i).conformance_type, i)
 					i := i + 1
 				end
 				!!Result

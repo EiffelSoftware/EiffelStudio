@@ -270,13 +270,6 @@ feature -- Commands
 			
 					-- Help generation
 			if help_generation then
---				create l_help_directory.make (l_constants.Temporary_help_directory)	
---				report ("Creating directory for storage of temporary Help Project Files...")
---				if l_help_directory.exists then
---					l_help_directory.recursive_delete
---				end
---				l_help_directory.create_dir
---				report ("success%N")
 				
 						-- Generate Help project from TOC						
 				report ("Creating help project...")

@@ -10,6 +10,10 @@
 	Externals for class MEMORY.
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 #include "eif_config.h"
 #ifdef I_STRING
@@ -380,3 +384,8 @@ rt_public EIF_INTEGER eif_get_chunk_size (void)
 	return (EIF_INTEGER) eif_chunk_size;
 	EIF_END_GET_CONTEXT
 }
+
+#ifdef __cplusplus
+}
+#endif
+

@@ -25,7 +25,7 @@ default
 
 cluster 
 		-- The application
-	root_cluster: "<PROJECT_LOCATION>"
+	all root_cluster: "<PROJECT_LOCATION>"
 
 		-- EiffelBase
 	all base: "$ISE_EIFFEL/library/base"

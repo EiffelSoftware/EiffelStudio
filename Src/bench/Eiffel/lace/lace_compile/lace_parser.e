@@ -436,7 +436,7 @@ ast := yytype3 (yyvs.item (yyvsp))
 			yyval1: ACE_SD
 		do
 
-create yyval1.initialize (yytype8 (yyvs.item (yyvsp - 7)), yytype14 (yyvs.item (yyvsp - 6)), yytype21 (yyvs.item (yyvsp - 5)), yytype19 (yyvs.item (yyvsp - 4)), yytype25 (yyvs.item (yyvsp - 2)), click_list) 
+create yyval1.initialize (yytype8 (yyvs.item (yyvsp - 7)), yytype14 (yyvs.item (yyvsp - 6)), yytype21 (yyvs.item (yyvsp - 5)), yytype19 (yyvs.item (yyvsp - 4)), yytype20 (yyvs.item (yyvsp - 3)), yytype25 (yyvs.item (yyvsp - 2)), click_list) 
 			yyval := yyval1
 		end
 
@@ -1356,8 +1356,8 @@ yyval20 := yytype20 (yyvs.item (yyvsp))
 			yyval6: ASSEMBLY_SD
 		do
 
-					-- name: "assembly_name", "version", "culture"
-				create yyval6.initialize (yytype8 (yyvs.item (yyvsp - 6)), yytype8 (yyvs.item (yyvsp - 4)), yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)), Void)
+					-- name: "assembly_name"
+				create yyval6.initialize (yytype8 (yyvs.item (yyvsp - 2)), yytype8 (yyvs.item (yyvsp)), Void, Void, Void)
 			
 			yyval := yyval6
 		end
@@ -1786,7 +1786,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    2,    3,    3,    0,    2,    1,
 			    3,    0,    3,    1,    1,    1,    1,    1,    1,    1,
 
-			    1,    1,    1,    1,    0,    2,    2,    2,    3,    7,
+			    1,    1,    1,    1,    0,    2,    2,    2,    3,    3,
 			    9,    0,    2,    2,    2,    3,    3,    1,    0,    2,
 			    2,    2,    3,    4,    0,    3,    1,    1,    0,    1,
 			    2,    2,    2,    3,    1,    2,    3,    4,    5,    6,
@@ -1826,10 +1826,10 @@ feature {NONE} -- Table templates
 			  159,    0,  105,  106,  159,  118,   25,   68,  139,   90,
 			   63,   62,   24,    0,    0,    0,    0,   14,  107,    0,
 			  159,  117,  159,    0,  112,  113,  159,    0,  128,    0,
-			    0,   22,   15,    0,  108,  114,    0,  159,  124,  120,
+			    0,   22,   15,  109,  108,  114,    0,  159,  124,  120,
 			  119,  159,    3,   23,   17,   16,    0,    0,  116,  115,
 			    0,    0,  159,  121,    0,    0,   18,    0,  126,  127,
-			    0,    0,  122,   20,   19,    0,  125,  123,  109,    0,
+			    0,    0,  122,   20,   19,    0,  125,  123,    0,    0,
 			  110,    0,    0,    0>>)
 		end
 

@@ -386,12 +386,15 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 #elif defined EIF_VMS_V6_ONLY
 		/* vms: append unix separator iff no delimiter present */
 		if (strchr (vms_valid_filename_chars, p[strlen(p) -1]))
+			strcat ((char *)p, "/");
 
 #elif defined EIF_VMS
 		/* vms: append unix separator iff no vms-specific delimiter at end of path */
 		if (!strchr (vms_filespec_delimiters, p[strlen(p) -1]))
-#endif
+			strcat ((char *)p, "/");
+#else /* Not Windows or VMS: append unix delimiter */
 		strcat ((char *)p, "/");
+#endif
 		strcat ((char *)p, (char *)v);
 	}
 

@@ -187,7 +187,7 @@ cluster
 		abstract_socket:        "$EIFFEL4/library/net/abstract/socket";
 		net_socket:             "$EIFFEL4/library/net/network/socket";
 		local_socket:           "$EIFFEL4/library/net/local/socket";
-		polling:                "$EIFFEL4/library/net/polling";
+		polling:                "$EIFFEL4/library/net/polling/abstract";
 		abstract_client_server: "$EIFFEL4/library/net/abstract/client_server";
 		net_client_server:      "$EIFFEL4/library/net/network/client_server";
 		local_client_server:    "$EIFFEL4/library/net/local/client_server";

@@ -45,7 +45,7 @@ feature
 	creation_access (t: TYPE_I): RESULT_CR_B is
 			-- Creation access
 		do
-			!!Result.make (t);
+			!! Result.make (t);
 		end;
 
 	enlarged: RESULT_B is
@@ -57,9 +57,7 @@ feature
 	register_name: STRING is
 			-- The "Result" string
 		do
-			Result := Buffer;
-			Result.wipe_out;
-			Result.append ("Result");
+			Result := "Result";
 		end;
 
 feature -- Byte code generation

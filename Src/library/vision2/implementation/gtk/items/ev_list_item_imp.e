@@ -48,6 +48,8 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is False
+
 	make (an_interface: like interface) is
 			-- Create a list item with an empty name.
 		do

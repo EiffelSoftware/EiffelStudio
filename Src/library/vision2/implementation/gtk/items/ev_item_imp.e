@@ -35,7 +35,8 @@ inherit
 		undefine
 			pointer_motion_actions,
 			pointer_button_press_actions,
-			pointer_double_press_actions
+			pointer_double_press_actions,
+			needs_event_box
 		redefine
 			button_press_switch,
 			create_pointer_button_press_actions,

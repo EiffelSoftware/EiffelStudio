@@ -90,8 +90,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_ITEM_IMP}
 				-- We want tool bar buttons to be flat in appearance and not focusable.
-			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (c_object, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
-			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_none_enum)
+			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (visual_widget, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			box: POINTER
 		do
 			box := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, box)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (box)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)

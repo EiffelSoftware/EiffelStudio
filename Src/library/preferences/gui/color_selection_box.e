@@ -33,6 +33,7 @@ feature -- Display
 			end
 			if not resource.color_is_void then
 				val := resource.actual_value
+				color_label.set_background_color (val)
 				color_label.parent.set_background_color (val)
 				color_label.set_foreground_color (val)
 			else

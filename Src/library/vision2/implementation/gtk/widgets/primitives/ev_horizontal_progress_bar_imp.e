@@ -13,6 +13,8 @@ inherit
 	EV_PROGRESS_BAR_IMP
 		undefine
 			set_default_options
+		redefine
+			make
 		end
 
 creation
@@ -24,9 +26,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create the vertical progress bar.
 		do
-			widget := gtk_progress_bar_new
+			{EV_PROGRESS_BAR_IMP} Precursor
 			gtk_progress_bar_set_orientation (widget, GTK_PROGRESS_LEFT_TO_RIGHT)
-			gtk_object_ref (widget)
 		end
 
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP

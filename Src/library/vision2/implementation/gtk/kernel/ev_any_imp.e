@@ -80,17 +80,8 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 			-- Render `Current' unusable.
 		do
 			is_destroyed := True
-			if c_object /= NULL then
-				-- Some objects do not set `c_object'
-				if internal_id /= 0 then
-						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
-				end	
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
-				c_object := NULL
-			end
-		ensure then
-			c_object_detached: c_object = NULL
+				-- Gtk representation of `Current' may only be cleaned up on dispose to prevent crashes where `Current' is
+				-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
 		end
 
 feature {EV_ANY_I} -- Event handling
@@ -194,9 +185,7 @@ feature {NONE} -- Implementation
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		do
-			if not is_destroyed and then not is_in_final_collect then
-					-- Destroy has not been explicitly called.
-					-- This is incase events are fired from the calls to gtk upon disposal
+			if not is_in_final_collect then
 				if c_object /= NULL then
 					if internal_id /= 0 then
 						feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)

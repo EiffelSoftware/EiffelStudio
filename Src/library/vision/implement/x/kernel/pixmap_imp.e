@@ -32,7 +32,7 @@ inherit
 			display, dispose
 		end;
 
-	MEL_XMP_CONSTANTS
+	MEL_XPM_CONSTANTS
 		undefine
 			is_equal
 		end;

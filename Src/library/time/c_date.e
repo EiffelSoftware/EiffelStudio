@@ -6,16 +6,30 @@ indexing
 class
 	C_DATE
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
 create
 	default_create,
 	make_utc
 
 feature {NONE} -- Initialization
 
+	default_create is
+			-- Create an instance of C_DATA using current local time.
+		do
+			is_utc := False
+			update
+		end
+		
 	make_utc is
 			-- Create an instance of C_DATE holding UTC values.
 		do
 			is_utc := True
+			update
 		ensure
 			is_utc: is_utc
 		end
@@ -25,52 +39,70 @@ feature -- Access
 	is_utc: BOOLEAN
 			-- Is Current holding value in UTC format?
 
+feature -- Update
+
+	update is
+			-- Pointer to `struct tm' area.
+		local
+			p: POINTER
+			l_time: INTEGER
+		do
+			l_time := time (p)
+			if is_utc then
+				p := gmtime ($l_time)
+			else
+				p := localtime ($l_time)
+			end
+			create internal_item.make_from_pointer (p, tm_structure_size)
+			update_millisecond
+		end
+		
 feature -- Status
 
 	year_now: INTEGER is
-			-- Current year.
+			-- Current year at creation time or after last call to `update'.
 		do
-			Result := 1900 + get_tm_year (tm_item)
+			Result := 1900 + get_tm_year (internal_item.item)
 		ensure
 			year_valid: Result >= 1900
 		end
 
 	month_now: INTEGER is
-			-- Current month.
+			-- Current month at creation time or after last call to `update'.
 		do
-			Result := get_tm_mon (tm_item) + 1
+			Result := get_tm_mon (internal_item.item) + 1
 		ensure
 			month_valid: Result >= 1 and Result <= 12
 		end
 		
 	day_now: INTEGER is
-			-- Current day.
+			-- Current day at creation time or after last call to `update'.
 		do
-			Result := get_tm_mday (tm_item)
+			Result := get_tm_mday (internal_item.item)
 		ensure
 			day_valid: Result >= 1 and Result <= 31
 		end
 		
 	hour_now: INTEGER is
-			-- Current hour.
+			-- Current hour at creation time or after last call to `update'.
 		do
-			Result := get_tm_hour (tm_item)
+			Result := get_tm_hour (internal_item.item)
 		ensure
 			hour_valid: Result >= 0 and Result <= 23
 		end
 		
 	minute_now: INTEGER is
-			-- Current hour.
+			-- Current minute at creation time or after last call to `update'.
 		do
-			Result := get_tm_min (tm_item)
+			Result := get_tm_min (internal_item.item)
 		ensure
 			minute_valid: Result >= 0 and Result <= 59
 		end
 		
 	second_now: INTEGER is
-			-- Current hour.
+			-- Current second at creation time or after last call to `update'.
 		do
-			Result := get_tm_sec (tm_item)
+			Result := get_tm_sec (internal_item.item)
 			if Result > 59 then
 					-- Some platform returns up to 61 for leap seconds.
 				Result := 59
@@ -79,23 +111,31 @@ feature -- Status
 			second_valid: Result >= 0 and Result <= 59
 		end
 		
-	millisecond_now: INTEGER is
-			-- Current millisecond.
+	millisecond_now: INTEGER
+			-- Current millisecond at creation time or after last call to `update'.
+
+feature {NONE} -- Implementation
+
+	update_millisecond is
+			-- Update millisecond_now.
 		local
 			p: POINTER
+			l_val: INTEGER
 		do
 			p := p.memory_alloc (timeb_structure_size)
 			ftime (p)
-			Result := get_millitm (p)
+			l_val := get_millitm (p)
 			p.memory_free
 			
-			if Result < 0 or Result > 999 then
-				Result := 0
+			if l_val < 0 or l_val > 999 then
+				millisecond_now := 0
+			else
+				millisecond_now := l_val
 			end
 		ensure
-			millisecond_valid: Result >= 0 and Result <= 999
+			millisecond_valid: millisecond_now >= 0 and millisecond_now <= 999
 		end
-		
+
 feature {NONE} -- Externals
 
 	time (p: POINTER): INTEGER is
@@ -122,6 +162,14 @@ feature {NONE} -- `struct timeb' encapsulation
 			"sizeof(struct timeb)"
 		end
 		
+	tm_structure_size: INTEGER is
+			-- Size of `struct tm'.
+		external
+			"C macro use <time.h>"
+		alias
+			"sizeof(struct tm)"
+		end
+		
 	get_millitm (p: POINTER): INTEGER is
 			-- Get `p->millitm'.
 		external
@@ -130,19 +178,8 @@ feature {NONE} -- `struct timeb' encapsulation
 		
 feature {NONE} -- `struct tm' encapsulation
 
-	tm_item: POINTER is
+	internal_item: MANAGED_POINTER
 			-- Pointer to `struct tm' area.
-		local
-			p: POINTER
-			l_time: INTEGER
-		do
-			l_time := time (p)
-			if is_utc then
-				Result := gmtime ($l_time)
-			else
-				Result := localtime ($l_time)
-			end
-		end
 	
 	localtime (i: POINTER): POINTER is
 			-- Pointer to `struct tm' area.

@@ -57,27 +57,48 @@ feature
 				execute_licenced (formatted);
 				restore_cursors;
 			else
+				warner.set_window (text_window);
 				warner.call (Current, l_File_changed)
 			end
 		end;
 
 feature 
 
+	do_format: BOOLEAN;
+			-- Will we call `format' without checking if this is really
+			-- necessary (i.e. the format and the stone haven't changed
+			-- since last call)?
+
+	set_do_format (b: BOOLEAN) is
+			-- Assign `b' to `do_format'.
+		do
+			do_format := b
+		end;
+
 	format (stone: STONE) is
 			-- Show special format of `stone' in class text `text_window',
 			-- if it's clickable; do nothing otherwise.
 		do
-			if stone /= Void and then stone.clickable then
-				set_global_cursor (watch_cursor);
-				text_window.clean;
-				display_header (stone);
-				display_info (0, stone);
-				text_window.set_editable;
-				text_window.show_image;
-				text_window.set_read_only;
-				text_window.set_root_stone (stone);
-				text_window.set_last_format (Current);
-				restore_cursors
+			if 
+				do_format or else
+				(text_window.last_format /= Current or
+				not equal (stone, text_window.root_stone))
+			then
+				if 
+					stone /= Void and then
+					(stone.is_valid and stone.clickable)
+				then
+					set_global_cursor (watch_cursor);
+					text_window.clean;
+					display_header (stone);
+					display_info (0, stone);
+					text_window.set_editable;
+					text_window.show_image;
+					text_window.set_read_only;
+					text_window.set_root_stone (stone);
+					text_window.set_last_format (Current);
+					restore_cursors
+				end
 			end
 		end;
 

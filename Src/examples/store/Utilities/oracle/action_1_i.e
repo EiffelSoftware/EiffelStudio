@@ -45,7 +45,7 @@ feature
 	select_string: STRING is
 		once
 			Result :=
-			"select COLUMN_NAME from ACCESSIBLE_COLUMNS %
+			"select COLUMN_NAME from USER_TAB_COLUMNS %
 			%where TABLE_NAME = :table_name"
 		end
 

@@ -4,6 +4,9 @@ DATE:	[YYYYMMDD]
 WHO:	[LOGINNAME]
 [NOTES HERE]
 ==========================================================================
-CLASS:	
-DATE:	
-WHO:	
+CLASS:	ev_composite_command
+DATE:	19990827
+WHO:	king
+history
+failed
+

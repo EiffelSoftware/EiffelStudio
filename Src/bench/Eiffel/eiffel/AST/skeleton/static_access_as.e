@@ -236,6 +236,9 @@ feature {AST_EIFFEL} -- Output
 		
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
+		local
+			dummy_call: ACCESS_INV_AS
+			dummy_name: ID_AS
 		do
 			ctxt.begin
 
@@ -244,8 +247,10 @@ feature {AST_EIFFEL} -- Output
 			
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.format_ast (class_type)
-			ctxt.put_text_item (ti_R_curly)
-
+			create dummy_call
+			create dummy_name.initialize (ti_r_curly.image)
+			dummy_call.set_feature_name (dummy_name)
+			ctxt.format_ast (dummy_call)
 			ctxt.set_type_creation (class_type)
 			ctxt.need_dot
 			ctxt.prepare_for_feature (feature_name, parameters)

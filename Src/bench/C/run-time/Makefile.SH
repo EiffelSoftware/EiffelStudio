@@ -726,7 +726,6 @@ wstring.o: string.c
 wmisc.o: misc.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
-
 wpattern.o: pattern.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -775,18 +774,17 @@ wmain.o: main.c
 wexcept.o: except.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
-
 debug.o: debug.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $<
 
 interp.o: interp.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $<
 
 update.o: update.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $<
 
 wbench.o: wbench.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $<
 
 #MT L
 
@@ -931,7 +929,6 @@ MTmain.o: main.c
 MTexcept.o: except.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
-
 MTweif_project.o: eif_project.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
@@ -1069,7 +1066,6 @@ MTwmain.o: main.c
 
 MTwexcept.o: except.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
-
 
 MTdebug.o: debug.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@

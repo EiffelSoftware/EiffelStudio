@@ -86,13 +86,13 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
 			
-			create b.make_with_text ("OK")
+			create b.make_with_text (interface_names.b_ok)
 			vbox.extend (b)
 			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			vbox.disable_item_expand (b)
 			b.select_actions.extend (agent on_ok)
 			
-			create b.make_with_text ("Cancel")
+			create b.make_with_text (interface_names.b_cancel)
 			vbox.extend (b)
 			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			vbox.disable_item_expand (b)

@@ -1,16 +1,24 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- #####   ####  #####  #####   ##   #####  #      ######       #    #
- #    # #    # #    #   #    #  #  #    # #      #            #    #
- #    # #    # #    #   #   #    # #####  #      #####        ######
- #####  #    # #####    #   ###### #    # #      #       ###  #    #
- #      #    # #   #    #   #    # #    # #      #       ###  #    #
- #       ####  #    #   #   #    # #####  ###### ######  ###  #    #
-
+/*
 	Some portable declarations.
-
-    $Id$
-
 */
 
 #ifndef _portable_h_
@@ -63,6 +71,7 @@
 #include <limits.h>			/* To avoid redefinition of constants limits. */
 #include "eif_confmagic.h"
 #include <stdlib.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -133,6 +142,34 @@ typedef int int32;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
 #endif
+
+/* Portable integer pointers */
+#ifdef EIF_WIN32
+
+#ifndef _INTPTR_T_DEFINED
+#define _INTPTR_T_DEFINED
+#ifdef _WIN64
+typedef __int64	intptr_t;
+#else
+typedef int		intptr_t;
+#endif
+#endif
+
+#ifndef _UINTPTR_T_DEFINED
+#define _UINTPTR_T_DEFINED
+#ifdef _WIN64
+typedef unsigned __int64	uintptr_t;
+#else
+typedef unsigned int		uintptr_t;
+#endif
+#endif
+
+#else
+#include <stdint.h>
+#endif
+
+typedef intptr_t	rt_int_ptr;
+typedef uintptr_t	rt_uint_ptr;
 
 /*
  * Integer 32 bit constants

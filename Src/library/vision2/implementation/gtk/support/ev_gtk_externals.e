@@ -301,6 +301,28 @@ feature {NONE} -- GTK C functions for menu item
 		external "C | <gtk/gtk.h>"
 		end	
 
+feature {NONE} -- GTK C functions for status bar
+
+	gtk_statusbar_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_statusbar_get_context_id (statusbar: POINTER; context_string: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_statusbar_push (statusbar: POINTER; context_id: INTEGER; message: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_statusbar_pop (statusbar: POINTER; context_id: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_statusbar_remove (statusbar: POINTER; context_id: INTEGER; mess_id: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for option buttons
 
 	gtk_option_menu_new: POINTER is
@@ -457,6 +479,10 @@ feature {NONE} -- GTK C functions for multi-column list
 		external "C | %"gtk_eiffel.h%""
 		end
 
+	gtk_clist_unselect_all (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for tree
 
 	gtk_tree_new: POINTER is
@@ -521,6 +547,17 @@ feature {NONE} -- GtkWindow function
 			"C | %"gtk_eiffel.h%""
 		end
 
+feature {NONE} -- Key Event function
+
+	c_gtk_event_keys_state (p: POINTER): INTEGER is
+		external 
+			"C [macro %"gtk_eiffel.h%"]"
+		end	
+	gtk_widget_set_all_events (p: POINTER) is
+		external 
+			"C [macro %"gtk_eiffel.h%"]"
+		end	
+	
 feature {NONE} -- Implementation
 	
 	routine_address (routine: POINTER): POINTER is

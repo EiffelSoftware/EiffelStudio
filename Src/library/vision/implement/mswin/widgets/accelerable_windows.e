@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Abstraction of accelerable widget."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,6 @@ class
 	ACCELERABLE_WINDOWS
 
 inherit
-
 	ACCELERATOR_MANAGER_WINDOWS
 
 	WEL_ACCELERATOR_FLAG_CONSTANTS
@@ -36,9 +35,10 @@ feature -- Status setting
 		end
 
 	set_accelerator_action (translation: STRING) is
-			-- Set the accerlator action (modifiers and key to use as a shortcut
-			-- in selecting a button) to `a_translation'.
-			-- `a_translation' must be specified with the X toolkit conventions.
+			-- Set the accelerator action (modifiers and key to use
+			-- as a shortcut in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit
+			-- conventions.
 		require
 			translation_not_void: translation /= Void
 			translatiom_not_empty: not translation.empty
@@ -107,6 +107,8 @@ feature -- Removal
 				accelerators.remove (accelerator)
 				accelerator := Void
 			end
+		ensure
+			accelerator_void: accelerator = Void
 		end
 
 feature -- Status Report
@@ -123,3 +125,16 @@ feature -- Status Report
 			-- if the widget is in a menu.
 
 end -- class ACCELERABLE_WINDOWS
+
+--|---------------------------------------------------------------- 
+--| EiffelVision: library of reusable components for ISE Eiffel 3. 
+--| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software 
+--|   Engineering Inc. 
+--| All rights reserved. Duplication and distribution prohibited. 
+--| 
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA 
+--| Telephone 805-685-1006 
+--| Fax 805-685-6869 
+--| Electronic mail <info@eiffel.com> 
+--| Customer support e-mail <support@eiffel.com> 
+--|----------------------------------------------------------------

@@ -28,12 +28,54 @@ feature -- Execution
 
 	work (arg: ANY) is
 			-- Generate one object tool.
+		do
+			application_class := object_tool_generator.edited_class
+			generate_interface
+			generate_command
+		end
+
+	undo is
+		do
+		end
+
+	redo is
+		do
+		end
+
+	failed: BOOLEAN
+
+	name: STRING is
+		do
+			!! Result.make (0)
+			Result.append (Command_names.Generate_tool_cmd_name)
+			Result.append (" ")
+			if application_class /= Void then
+				Result.append (application_class.class_name)
+			end
+		end
+
+	visual_command_name: STRING is
+			-- Visual name of the generated command.
+		local
+			cl_name: STRING
+		do
+			!! Result.make (0)
+			Result.append ("set_")
+			cl_name := clone (application_class.class_name)
+			cl_name.to_lower
+			Result.append (cl_name)
+			Result.append ("_object_cmd")	
+		end
+
+feature -- Tool generation
+
+	generate_interface is
+			-- Generate the interface elements.
 		local
 			height, width: INTEGER
 			a_query_editor_form: QUERY_EDITOR_FORM
 			a_push_b_c: PUSH_B_C
 		do
-			application_class := object_tool_generator.edited_class
 			generate_permanent_window
 			form_list := object_tool_generator.form_table.linear_representation
 			from
@@ -60,26 +102,6 @@ feature -- Execution
 			perm_wind.set_x_y (0, 0)
 		end
 
-	undo is
-		do
-		end
-
-	redo is
-		do
-		end
-
-	failed: BOOLEAN
-
-	name: STRING is
-		do
-			!! Result.make (0)
-			Result.append (Command_names.Generate_tool_cmd_name)
-			Result.append (" ")
-			if application_class /= Void then
-				Result.append (application_class.class_name)
-			end
-		end
-
 	generate_permanent_window is
 			-- Generate the permanent window.
 		require
@@ -96,6 +118,55 @@ feature -- Execution
 			visual_name.append (application_class.class_name)
 			visual_name.append (" object editor")
 			perm_wind.set_visual_name (visual_name)
+		end
+
+	generate_command is
+			-- Generate the associated command.
+		local
+			cmd: USER_CMD
+			temp_string: STRING
+		do
+			!! cmd.make
+			cmd.set_internal_name ("")
+			temp_string := clone (cmd.template)
+			cmd.set_eiffel_text (generated_eiffel_text (temp_string))
+			cmd.set_visual_name (visual_command_name)
+			cmd.overwrite_text
+			command_catalog.add_to_page (cmd, command_catalog.generated_commands)
+		end
+
+	generated_eiffel_text (a_template: STRING): STRING is
+			-- Generated eiffel text for associated command.
+		local
+			i: INTEGER
+		do
+			!! Result.make (0)
+			Result.append ("indexing%N")
+			Result.append ("%Tdescription: %" Generated command used to change %%%N%T%T%T%T%% the queries of a ")
+			Result.append (application_class.class_name)
+			Result.append (" object.%"%N")
+			Result.append ("%Tvisual_name: %"")
+			Result.append (visual_command_name)
+			Result.append ("%"%N%N")
+			i := a_template.substring_index ("execute", 1)
+			i := a_template.substring_index ("%T%Tdo%N", i)
+			Result.append (a_template.substring (1, i + 4))
+			from
+				form_list.start
+			until
+				form_list.after
+			loop
+				Result.append (form_list.item.generate_eiffel_text (perm_wind.entity_name))
+				form_list.forth
+			end
+			Result.append ("%T%Tend%N%N")
+			Result.append ("%Ttarget_object: ")
+			Result.append (application_class.class_name)
+			Result.append ("%N%N%Tset_target_object (new_target: ")
+			Result.append (application_class.class_name)
+			Result.append (") is%N%T%Tdo%N%T%T%Ttarget_object := new_target%N")
+
+			Result.append (a_template.substring (i + 5, a_template.count))
 		end
 
 feature -- Attributes

@@ -149,9 +149,6 @@ feature {NONE} -- GUI attributes
 	menu_text_field: TEXT_FIELD
 			-- Text field used to add a new menu
 
-	procedure_opt_pull: OPT_PULL
-			-- Option pull used to select the select procedure
-
 	select_radio_box: RADIO_BOX
 			-- Radio box used to select the kind of widget used
 			-- to edit the query
@@ -173,6 +170,12 @@ feature {NONE} -- GUI attributes
 
 	delete_button: PUSH_B
 			-- Delete button
+
+feature -- GUI attributes
+
+	procedure_opt_pull: OPT_PULL
+			-- Option pull used to select the procedure used
+			-- to set `query'.
 
 feature {NONE} -- Heuristic
 
@@ -326,6 +329,7 @@ feature -- Interface generation
 				new_text_field_c.set_x_y (base_x + 100, base_y)
 				new_text_field_c.set_size (100, new_text_field_c.height)
 				display_new_context (new_text_field_c)
+				text_field_name := new_text_field_c.entity_name
 			elseif menu_toggle_b.state then
 				!! new_opt_pull_c
 				new_opt_pull_c := new_opt_pull_c.create_context (a_perm_wind_c)
@@ -333,6 +337,7 @@ feature -- Interface generation
 				new_opt_pull_c.set_size (100, new_opt_pull_c.height)
 				fill_menu (new_opt_pull_c)
 				display_new_context (new_opt_pull_c)
+				opt_pull_name := new_opt_pull_c.entity_name
 			elseif field_and_menu_toggle_b.state then
 				!! new_text_field_c
 				!! new_opt_pull_c
@@ -345,6 +350,9 @@ feature -- Interface generation
 				fill_menu (new_opt_pull_c)
 				display_new_context (new_text_field_c)
 				display_new_context (new_opt_pull_c)
+				is_both := True
+				text_field_name := new_text_field_c.entity_name
+				opt_pull_name := new_opt_pull_c.entity_name
 			end
 		end
 
@@ -374,5 +382,71 @@ feature -- Interface generation
 	minimum_width: INTEGER is 150
 			-- Width for needed to fit the generated elements
 			-- on the permanent window.
+
+feature -- Command generation
+
+	generate_eiffel_text (parent_perm_wind: STRING): STRING is
+			-- Generate Eiffel text corresponding to the setting
+			-- of the query correpsonding to `query'.
+		do
+			!! Result.make (0)
+			Result.append ("%T%T%T")
+			if is_both then
+				Result.append ("if not ")
+				Result.append (text_field_name)
+				Result.append (".text.empty then%N%T%T%T")
+				Result.append (eiffel_setting (parent_perm_wind, text_field_name))
+				Result.append (".text")
+				Result.append (extension_to_add)
+				Result.append (")%N")
+				Result.append ("%T%T%Telse%N%T%T%T%T")
+				Result.append (eiffel_setting (parent_perm_wind, opt_pull_name))
+				Result.append (".selected_button.text")
+				Result.append (extension_to_add)
+				Result.append (")%N%T%T%Tend%N")
+			elseif text_field_name /= Void then
+				Result.append (eiffel_setting (parent_perm_wind, text_field_name))
+				Result.append (".text")
+				Result.append (extension_to_add)
+				Result.append (")%N")
+			else
+				Result.append (eiffel_setting (parent_perm_wind, opt_pull_name))
+				Result.append (".selected_button.text")
+				Result.append (extension_to_add)
+				Result.append (")%N")
+			end
+		end
+
+	eiffel_setting (perm_wind, argument: STRING): STRING is
+			-- Generate the setting of the query using `argument'.
+		do
+			!! Result.make (0)
+			Result.append ("target_object.")
+			Result.append (procedure_name)
+			Result.append (" (")
+			Result.append (perm_wind)
+			Result.append (".")
+			Result.append (argument)
+		end
+
+	procedure_name: STRING is
+			-- Name of the procedure chosen to set `query'.
+		require
+			item_selected: procedure_opt_pull.selected_button /= Void
+		do
+			Result := procedure_opt_pull.selected_button.text
+		end
+
+	text_field_name: STRING 
+			-- Internal name of the text field holding the value
+			-- used to set `query'.
+
+	opt_pull_name: STRING 
+			-- Internal name of the option pull holding the value
+			-- used to set `query'.
+
+	is_both: BOOLEAN 
+			-- Does the interface use both a text field and 
+			-- an option pull.
 
 end -- class ANY_QUERY_EDITOR_FORM

@@ -28,9 +28,11 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate eiffel client for record.
 		do
-			Precursor (a_descriptor)
-			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
-			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+			if not standard_structures.has (a_descriptor.c_type_name) then
+				Precursor (a_descriptor)
+				Shared_file_name_factory.create_file_name (Current, eiffel_writer)
+				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+			end
 		end
 	
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

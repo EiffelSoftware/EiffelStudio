@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_VERTICAL_PROGRESS_BAR."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -34,6 +33,8 @@ feature {NONE} -- Implementation
 			
 			widget := horizontal_box
 		end
+
+feature {NONE} -- Implementation
 		
 	adjust_progress (x, y: INTEGER) is
 			-- Set `value' of `progress_bar' based on `y'.
@@ -41,9 +42,8 @@ feature {NONE} -- Implementation
 		do
 			progress_bar.set_value ((((progress_bar.height - y) / progress_bar.height) * 100).truncated_to_integer)
 		end
-		
-feature {NONE} -- Implementation
 
 	progress_bar: EV_VERTICAL_PROGRESS_BAR
+		-- Widget that test is to be performed on.
 
 end -- class VERTICAL_PROGRESS_BAR_ADJUSTING_TEST

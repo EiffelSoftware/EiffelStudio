@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate usage of `select_actions'%
 		%of EV_CHECK_BUTTON."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -23,6 +22,8 @@ feature {NONE} -- Implementation
 			check_button.select_actions.extend (agent update_text)
 			widget := check_button
 		end
+
+feature {NONE} -- Implementation
 	
 	update_text is
 			-- Update `text' of `check_button' to display checked
@@ -35,8 +36,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 				
-feature {NONE} -- Implementation
-
 	check_button: EV_CHECK_BUTTON
+		-- Widget that test is to be performed on.
 	
 end -- class CHECK_BUTTON_SELECT_ACTIONS_TEST

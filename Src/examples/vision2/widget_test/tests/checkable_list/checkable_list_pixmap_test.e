@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -41,6 +41,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	checkable_list: EV_CHECKABLE_LIST
+		-- Widget that test is to be performed on.
 	
 	respond_to_check (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected, so update its

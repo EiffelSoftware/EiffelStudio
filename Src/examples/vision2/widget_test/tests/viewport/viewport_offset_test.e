@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that test an EV_VIEWPORT by allowing%
 		% you to adjust the offset."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -37,6 +36,8 @@ feature {NONE} -- Implementation
 			
 			widget := vertical_box
 		end
+
+feature {NONE} -- Implementation
 		
 	modify_offset is
 			-- Move `viewport' up and left 10 pixels in
@@ -45,11 +46,10 @@ feature {NONE} -- Implementation
 			viewport.set_offset (viewport.x_offset - 10, viewport.y_offset - 10)
 		end
 		
-		
-feature {NONE} -- Implementation
-
 	viewport: EV_VIEWPORT
+		-- Widget that test is to be performed on.
 	
 	test_button, reset_button: EV_BUTTON
+		-- Buttons used to test and reset state of `viewport'.
 
 end -- class VIEWPORT_OFFSET_TEST

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that demonstrate EV_DRAWING_AREA."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -37,11 +36,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA
+		-- Widget that test is to be performed on.
 	
 	draw_rectangle (an_x, a_y, a_button: INTEGER) is
-			-- Draw a rectangle on `drawing_area' at position `an_x', `a_y' if
-			-- left button pressed, otherwise if right button pressed,
-			-- clear.
+			-- Draw a rectangle on `drawing_area' at position 
+			-- (`an_x', `a_y') if left button pressed,
+			-- otherwise if right button pressed then clear.
 		do
 			if a_button = 1 then
 					-- The image of a drawing area is only temporary and

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that demonstrate EV_DRAWING_AREA."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,13 +12,10 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
-		local
-			vertical_box: EV_VERTICAL_BOX
-			label: EV_LABEL
 		do
 			create drawing_area
 			drawing_area.set_minimum_size (300, 300)
@@ -30,11 +26,13 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA
+		-- Widget that test is to be performed on.
 	
 	redraw_figures is
 			-- Clear `drawing_area' and draw set of figures.
-			-- A drawing area doe sno tkeep its current image internally, and therefore
-			-- must be re-drawn every time it requests this, via the `expose_actions'.
+			-- A drawing area does not keep its current image 
+			-- internally, and therefore must be redrawn each time
+			-- it requests this, via the `expose_actions'.
 		local
 			counter: INTEGER
 			temp_int: INTEGER

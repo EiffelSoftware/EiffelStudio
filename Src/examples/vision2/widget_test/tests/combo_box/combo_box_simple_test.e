@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate simple creation%
 		%of EV_CHECK_BUTTON"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -40,5 +39,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	combo_box: EV_COMBO_BOX
+		-- Widget that test is to be performed on.
 	
 end -- class COMBO_BOX_SIMPLE_TEST

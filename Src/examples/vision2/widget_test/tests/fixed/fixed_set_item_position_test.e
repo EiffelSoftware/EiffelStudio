@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate `set_item_position'%
 		%and `set_item_size' of EV_FIXED."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -49,5 +48,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	fixed: EV_FIXED
+		-- Widget that test is to be performed on.
+	
 
 end -- class FIXED_SET_ITEM_POSITION_TEST

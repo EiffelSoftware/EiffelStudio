@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate simple use of%
 		%`border_width' for EV_HORIZONTAL_BOX"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +33,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	horizontal_box: EV_HORIZONTAL_BOX
-	padding_output_label: EV_LABEL
-	increase_padding_button, decrease_padding_button: EV_BUTTON
+		-- Widget that test is to be performed on.
 
 end -- class HORIZONTAL_BOX_BORDER_WIDTH_TEST

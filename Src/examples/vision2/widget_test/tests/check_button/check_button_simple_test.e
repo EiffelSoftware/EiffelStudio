@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate simple creation%
 		%of EV_CHECK_BUTTON"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -26,5 +25,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	check_button: EV_CHECK_BUTTON
+		-- Widget that test is to be performed on.
 	
 end -- class CHECK_BUTTON_SIMPLE_TEST

@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate multiple instances of%
 		%EV_RADIO_BUTTON in the same EV_CONTAINER."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -39,5 +38,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	vertical_box: EV_VERTICAL_BOX
+		-- Widget used to hold test radio buttons.
 
 end -- class RADIO_BUTTON_MULTIPLE_TEST

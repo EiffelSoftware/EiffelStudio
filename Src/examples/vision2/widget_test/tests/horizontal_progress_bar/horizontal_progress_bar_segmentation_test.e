@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_HORIZONTAL_PROGRESS_BAR."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,9 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
-
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -38,10 +35,11 @@ feature {NONE} -- Implementation
 			
 			widget := vertical_box
 		end
-		
-feature {NONE} -- Implementation
 
+feature {NONE} -- Implementation
+		
 	progress_bar: EV_HORIZONTAL_PROGRESS_BAR
+		-- Widget that test is to be performed on.
 	
 	adjust_segmentation is
 			-- Toggle segmentation of `progress_bar'.

@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that test an EV_SCROLLABLE_AREA with an `item'%
 		%contained that is larger than its current size."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,12 +13,10 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
-		local
-			button: EV_BUTTON
 		do
 			create scrollable_area
 			scrollable_area.set_minimum_size (300, 300)
@@ -37,9 +34,11 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	scrollable_area: EV_SCROLLABLE_AREA
+		-- Widget that test is to be performed on.
 	
 	drawing_area: EV_DRAWING_AREA
-		-- A drawing area to be inserted inside `scrollable_area' for this test.
+		-- A drawing area to be inserted inside `scrollable_area'
+		-- for this test.
 		
 	update_drawing (x, y, width, height: INTEGER) is
 			-- Draw rectangles filling `drawing_area'

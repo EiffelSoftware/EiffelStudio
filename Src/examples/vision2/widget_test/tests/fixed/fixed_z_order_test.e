@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_FIXED."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -61,7 +60,9 @@ feature {NONE} -- Implementation
 		
 
 	fixed: EV_FIXED
+		-- Widget that test is to be performed on.
 	
 	button1, button2, button3: EV_BUTTON
+		-- Widgets used to show the operation of `fixed'.
 
 end -- class FIXED_Z_ORDER_TEST

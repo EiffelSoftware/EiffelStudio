@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate `select_actions'%
 		%of EV_RADIO_BUTTON."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -36,6 +35,8 @@ feature {NONE} -- Implementation
 	
 			widget := vertical_box
 		end
+
+feature {NONE} -- Implementation
 		
 	update_button_text (radio_button: EV_RADIO_BUTTON) is
 			-- Update `text' of radio_buttons to reflect `radio_button'
@@ -57,12 +58,13 @@ feature {NONE} -- Implementation
 			radio_button.set_text (selected_text)
 		end
 
-feature {NONE} -- Implementation
-
 	vertical_box: EV_VERTICAL_BOX
+		-- Box used to hold radio buttons for test.
 	
 	selected_text: STRING is "Selected radio button"
+		-- Manifest string constant displayed in selected radio buttons.
 	
 	non_selected_text: STRING is "Radio button"
+		-- String constant displayed in unselected radio buttons.
 
 end -- class RADIO_BUTTON_SELECTED_TEST

@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -27,5 +27,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	label: EV_LABEL
+		-- Widget that test is to be performed on.
 
 end -- class LABEL_BASIC_TEST

@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate adding items%
 		%to EV_HORIZONTAL_SPLIT_AREA."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -30,5 +29,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	split_area: EV_HORIZONTAL_SPLIT_AREA
+		-- Widget that test is to be performed on.
 
 end -- class HORIZONTAL_SPLIT_AREA_EXTEND_TEST

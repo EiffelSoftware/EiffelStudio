@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -47,5 +47,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	multi_column_list: EV_MULTI_COLUMN_LIST
+		-- Widget that test is to performed on.
 
 end -- class MULTI_COLUMN_LIST_PIXMAP_TEST

@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate `select_actions'%
 		%of EV_BUTTON."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -24,6 +23,8 @@ feature {NONE} -- Implementation
 	
 			widget := toggle_button
 		end
+
+feature {NONE} -- Implementation
 		
 	set_button_text is
 			-- Update `text' of `toggle_button'.
@@ -34,9 +35,8 @@ feature {NONE} -- Implementation
 				toggle_button.set_text ("Not Selected")
 			end
 		end
-		
-feature {NONE} -- Implementation
 
 	toggle_button: EV_TOGGLE_BUTTON
+		-- Widget that test is to be performed on.
 
 end -- class TOGGLE_BUTTON_IS_SELECTED_TEST

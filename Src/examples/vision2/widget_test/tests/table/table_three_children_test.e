@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_TABLE."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -37,5 +36,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	table: EV_TABLE
+		-- Widget that test is to be performed on.
 
 end -- class TABLE_THREE_CHILDREN_TEST

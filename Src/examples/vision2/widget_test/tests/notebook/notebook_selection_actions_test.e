@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that display how many times a tab has been selected%
 		%in an EV_NOTEBOOK"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -40,6 +39,8 @@ feature {NONE} -- Implementation
 
 			widget := notebook
 		end
+
+feature {NONE} -- Implementation
 		
 	display_selection_count is
 			-- Display the number of times an item has been selected
@@ -59,8 +60,7 @@ feature {NONE} -- Implementation
 			notebook.set_item_text (notebook.selected_item, (current_value + 1).out)
 		end
 	
-feature {NONE} -- Implementation
-
 	notebook: EV_NOTEBOOK
+		-- Widget that test is to be performed on.
 
 end -- class NOTEBOOK_SELECTION_ACTIONS_TEST

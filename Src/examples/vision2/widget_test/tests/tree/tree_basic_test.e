@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_TREE."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -36,5 +35,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	tree: EV_TREE
+		-- Widget that test is to be performed on.
 
 end -- class TREE_BASIC_TEST

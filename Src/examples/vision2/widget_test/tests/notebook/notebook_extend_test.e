@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate adding items%
 		%to EV_NTOEBOOK."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -31,5 +30,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	notebook: EV_NOTEBOOK
+		-- Widget that test is to be performed on.
 
 end -- class NOTEBOOK_EXTEND_TEST

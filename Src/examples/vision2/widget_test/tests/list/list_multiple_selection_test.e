@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -50,12 +49,16 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	list: EV_LIST
+		-- Widget that test is to be performed on.
 	
 	multiple_selection_button: EV_CHECK_BUTTON
+		-- Check button used to signify if multiple selection is
+		-- enabled or not
 	
 	adjust_selection is
-			-- Toggle selection of `list' between single
-			-- and multiple based on state of `multiple_selection_button'.
+			-- Toggle selection of `list' between single and
+			-- multiple based on state of
+			-- `multiple_selection_button'.
 		do
 			if multiple_selection_button.is_selected then
 				list.enable_multiple_selection
@@ -65,7 +68,8 @@ feature {NONE} -- Implementation
 		end
 		
 	update_selection_on_item (item: EV_LIST_ITEM) is
-			-- Update `text' of `item' to reflects its selection state.
+			-- Update `text' of `item' to reflects its selection
+			-- state.
 		require
 			item_not_void: item /= Void
 		do

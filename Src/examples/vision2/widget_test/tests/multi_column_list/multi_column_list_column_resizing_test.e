@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -34,9 +33,11 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	multi_column_list: EV_MULTI_COLUMN_LIST
+		-- Widget that test is to be performed on.
 	
 	update_width_information (column_number: INTEGER) is
-			--
+			-- Update the text of the first row in `column_number' to
+			-- the width of the column `column_number'.
 		local
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_TABLE."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,12 +12,11 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
 		local
-			button: EV_BUTTON
 			x, y: INTEGER
 		do
 				-- Create `label' using `make_with_text'.
@@ -46,5 +44,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	table: EV_TABLE
+		-- Widget that test is to be performed on.
 
 end -- class TABLE_MANY_CHILDREN_TEST

@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate EV_CELL used for padding%
 		%in an EV_VERTICAL_BOX."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization 
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.

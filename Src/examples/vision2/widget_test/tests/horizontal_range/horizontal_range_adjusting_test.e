@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_HORIZONTAL_RANGE."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -34,6 +33,8 @@ feature {NONE} -- Implementation
 			
 			widget := vertical_box
 		end
+
+feature {NONE} -- Implementation
 		
 	adjust_progress (x, y: INTEGER) is
 			-- Set `value' of `range' based on `x'.
@@ -42,9 +43,7 @@ feature {NONE} -- Implementation
 			range.set_value (((x / range.width) * 100).truncated_to_integer)
 		end
 		
-		
-feature {NONE} -- Implementation
-
 	range: EV_HORIZONTAL_RANGE
+		-- Widget that test is to be performed on.
 
 end -- class HORIZONTAL_RANGE_ADJUSTING_TEST

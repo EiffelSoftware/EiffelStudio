@@ -187,7 +187,15 @@ feature {EV_ANY_I} -- Implementation
 			application_imp.clear_transport_just_ended
 			if mode_is_pick_and_drop and a_button /= 3 then
 			else	
-				call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
+					-- We used to call `call_pebble_function' here, but this causes
+					-- the pebble function to be executed twice. The first execution
+					-- occurrs in EV_WINDOW_IMP source_at_pointer_position. This should
+					-- have always been called in order for us to be here in `start_transport'.
+					-- If it is not, then there must be a fix for that, but I do not know of any
+					-- case in which it would not be called first. Julian 09/27/2001
+				if pebble_function /= Void then
+					pebble := pebble_function.last_result
+				end
 				if pebble /= Void then
 					if mode_is_pick_and_drop and a_button = 3 then
 						real_start_transport (a_x, a_y, a_button, a_x_tilt,
@@ -378,7 +386,7 @@ feature {EV_ANY_I} -- Implementation
 			is_dnd_in_transport := False
 			is_pnd_in_transport := False
 			last_pointed_target := Void
-				-- Assign `Void' to `last_pointer_target'.
+				-- Assign `Void' to `last_pointed_target'.
 			press_action := Ev_pnd_start_transport
 			if pebble_function /= Void then
 				pebble := Void
@@ -455,15 +463,6 @@ feature {EV_ANY_I} -- Implementation
 					-- Otherwise the target will be void.
 					Result ?= interface.id_object (global_pnd_targets.item)
 				end
-			end
-		end
-
-	query_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER): ANY is
-			-- `Result' is result of `pebble_function'.
-		do
-			if pebble_function /= Void then
-				pebble_function.call ([a_x, a_y])
-				Result := pebble_function.last_result
 			end
 		end
 

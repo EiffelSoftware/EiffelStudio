@@ -54,13 +54,6 @@ feature -- Status setting
 		do
 		end
 
-	set_pointer_style (c: EV_CURSOR) is
-		do
-			check
-				to_be_implemented: FALSE	
-			end
-		end
-
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
 		do
 			check
@@ -98,6 +91,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/21 01:22:59  rogers
+--| Removed set_pointer_style.
+--|
 --| Revision 1.14  2000/03/17 23:31:22  rogers
 --| Added set_pointer_style and cursor_on_widget, both with to_be_implemented_checks.
 --|

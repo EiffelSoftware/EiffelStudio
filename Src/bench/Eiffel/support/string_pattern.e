@@ -78,12 +78,10 @@ feature -- Comparison
 			-- (possibly with a different capacity)?
 		local
 			o_area: like area;
-			i: INTEGER
 		do
 			if count = other.count then
 				o_area := other.area;
-				i := str_cmp ($area, $o_area, count);
-				Result := (i = 0);
+				Result := str_strict_cmp ($area, $o_area, count) = 0;
 			end;
 		end;
 

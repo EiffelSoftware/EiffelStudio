@@ -1371,6 +1371,7 @@ end
 	check_expanded (class_c: CLASS_C) is
 			-- Check expanded validity rules
 		require
+			class_c_not_void: class_c /= Void
 			type /= Void
 		local
 			solved_type: TYPE_A

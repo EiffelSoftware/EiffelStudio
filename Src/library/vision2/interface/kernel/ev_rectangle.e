@@ -47,21 +47,25 @@ feature -- Access
 			-- Height of the clip area.
 
 	left: INTEGER is
+			-- Horizontal position of left side.
 		do
 			Result := x
 		end
 
 	top: INTEGER is
+			-- Vertical position of top.
 		do
 			Result := y
 		end
 
 	right: INTEGER is
+			--  Horizontal position of right side.
 		do
 			Result := x + width
 		end
 
 	bottom: INTEGER is
+			-- Vertical position of bottom.
 		do
 			Result := y + height
 		end

@@ -224,6 +224,12 @@ feature -- XML saving
 	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>"
 		-- XML format type, included at start of `document'.
 		
+	type_string: UCSTRING is
+			-- String used to match type within XML.
+		once
+			create Result.make_from_string ("type")
+		end
+		
 feature -- XML constants
 
 

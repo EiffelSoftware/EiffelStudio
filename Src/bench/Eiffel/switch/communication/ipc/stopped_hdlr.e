@@ -142,9 +142,10 @@ feature
 						end
 					else
 							-- Relaunch the application.
+						keep_objects (debugger_manager.kept_objects)
 						Cont_request.send_breakpoints
 						l_status.set_is_stopped (False)
-						cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
+						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 					end
 				else
 						-- If the reason is Pg_new_breakpoint, the application sends the

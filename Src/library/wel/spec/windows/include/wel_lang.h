@@ -2,13 +2,12 @@
  * WEL_LANG.H
  */
  
-
-#ifndef LANG_BELARUSIAN	/* MVC++ 4.1, BC++ 4.5 or BC++ 5.0 */
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+#ifndef LANG_BELARUSIAN	/* MVC++ 4.1, BC++ 4.5 or BC++ 5.0 */
 
 #define LANG_BELARUSIAN                  0x23
 #define LANG_SERBIAN                     0x1a

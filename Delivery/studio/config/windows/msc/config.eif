@@ -22,10 +22,10 @@ wkoptimize: "-Od -Zi"
 optimize: "-Ox"
 
 -- compiler flags
-ccflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtccflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
-cppflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtcppflags: "-YX -Fp..\ebench.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+ccflags: "-YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtccflags: "-YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtcppflags: "-YX -Fp..\estudio.pch -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
 
 large: ""
@@ -77,12 +77,12 @@ dpflags: ""
 continuation: "\"
 
 appl_make: "$appl.exe: $appl.lnk $appl.res%N%
-%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%T$(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
 %%T$(COMMAND_MAKEFILE)%N%
 %%Tlink @$appl.lnk%N%
 %%N%
 %..\..\$appl.rc:%N%
-%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
+%%Tif not exist ..\..\$appl.rc $(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc ..\..\$appl.rc%N%
 %%N%
 %$appl.res: ..\..\$appl.rc Makefile%N%
 %%Trc -r -fo$appl.res ..\..\$appl.rc%N%
@@ -102,15 +102,15 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%T$(RM) driver.exe%N%
 %%Tlink @driver.lnk%N%
-%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
+%%T$(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\version.eif .%N%
 %%Tif not exist $(ISE_C_COMPILER) mkdir $(ISE_C_COMPILER)%N%
 %%T$(MV) driver.exe $(ISE_C_COMPILER)\driver.exe%N%
 %%T$(MV) precomp.lib $(ISE_C_COMPILER)\precomp.lib%N%
 %%T$(RM) driver.exe%N%
 %%T$(RM) precomp.lib%N%
 %%N%
-%driver.rc: $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc%N%
-%%T$(MV) $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
+%driver.rc: $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc%N%
+%%T$(MV) $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\config\$(ISE_C_COMPILER)\eiffel.rc driver.rc%N%
 %%N%
 %driver.res: driver.rc%N%
 %%Trc -r driver.rc%N%
@@ -140,7 +140,7 @@ cecil_def: "%
 %%T$(RM) $@%N%
 %%Techo LIBRARY c_$appl.dll > $@%N%
 %%Techo DESCRIPTION %'c_$appl.dll%' >> $@%N%
-%%Ttype $(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\templates\cecil.def  >> $@"
+%%Ttype $(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\templates\cecil.def  >> $@"
 
 cecil_dynlib: "%T/def:$(DEF_FILE) \%N%
 	%%T/OUT:$(SHARED_CECIL) /IMPLIB:c_dll_$appl.lib%N"

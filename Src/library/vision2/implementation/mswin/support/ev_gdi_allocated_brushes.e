@@ -59,7 +59,7 @@ feature -- Access
 
 					-- ..and we add it in our table.
 				fake_object.set_item(Result)
-				allocated_objects.extend(fake_object, fake_object)
+				allocated_objects.put(fake_object, fake_object)
 				debug("GDIObjectsCreation")
 					io.putstring("created %
 						%("+successful_cache.out+"/"+total_cache.out+")%N")

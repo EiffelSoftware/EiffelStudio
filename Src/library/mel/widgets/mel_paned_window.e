@@ -19,28 +19,31 @@ inherit
 	MEL_MANAGER
 
 creation 
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif paned window widget.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_paned_window (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Status report
@@ -130,6 +133,68 @@ feature -- Status report
 			Result := get_xt_dimension (screen_object, XmNspacing)
 		ensure
 			spacing_large_enough: Result >= 0
+		end;
+
+	is_automatic_adjustment (a_widget: MEL_RECT_OBJ): BOOLEAN is
+			-- Is `a_widget' automatically resized ?
+		require
+			exists: not is_destroyed;
+			a_widget_is_a_child: a_widget /= Void and then
+								 not a_widget.is_destroyed and then
+								 a_widget.parent = Current
+		do
+			Result := not get_xt_boolean (a_widget.screen_object, XmNskipAdjust)
+		end;
+
+	is_widget_allowed_to_resize (a_widget: MEL_RECT_OBJ): BOOLEAN is
+			-- Is `a_widget' allowed to resize ?
+		require
+			exists: not is_destroyed;
+			a_widget_is_a_child: a_widget /= Void and then
+								 not a_widget.is_destroyed and then
+								 a_widget.parent = Current
+		do
+			Result := get_xt_boolean (a_widget.screen_object, XmNallowResize)
+		end;
+
+	widget_pane_minimum (a_widget: MEL_RECT_OBJ): INTEGER is
+			-- Minimal dimensions for resizing of `a_widget'
+		require
+			exists: not is_destroyed;
+			a_widget_is_a_child: a_widget /= Void and then
+								 not a_widget.is_destroyed and then
+								 a_widget.parent = Current
+		do
+			Result := get_xt_dimension (a_widget.screen_object, XmNpaneMinimum)
+		ensure
+			pane_minimum_large_enough: Result >= 0
+		end;
+
+	widget_pane_maximum (a_widget: MEL_RECT_OBJ): INTEGER is
+			-- Maximal dimensions for resizing of `a_widget'
+		require
+			exists: not is_destroyed;
+			a_widget_is_a_child: a_widget /= Void and then
+								 not a_widget.is_destroyed and then
+								 a_widget.parent = Current
+		do
+			Result := get_xt_dimension (a_widget.screen_object, XmNpaneMAximum)
+		ensure
+			pane_maximum_large_enough: Result >= 0
+		end;
+
+	widget_position (a_widget: MEL_RECT_OBJ): INTEGER is
+			-- Position of `a_widget' in the RowColumn's list of children
+		require
+			exists: not is_destroyed;
+			a_widget_is_a_child: a_widget /= Void and then
+								 not a_widget.is_destroyed and then
+								 a_widget.parent = Current;
+		do
+			Result := get_xt_short (a_widget.screen_object, XmNpositionIndex)
+		ensure
+			position_large_enough: Result >=0;
+			position_small_enough: Result < children_count
 		end;
 
 feature -- Status setting
@@ -230,19 +295,6 @@ feature -- Status setting
 			spacing_set: spacing = a_distance
 		end;
 
-feature -- Miscellaneous
-
-	is_widget_allowed_to_resize (a_widget: MEL_RECT_OBJ): BOOLEAN is
-			-- Is `a_widget' allowed to resize ?
-		require
-			exists: not is_destroyed;
-			a_widget_is_a_child: a_widget /= Void and then
-								 not a_widget.is_destroyed and then
-								 a_widget.parent = Current
-		do
-			Result := get_xt_boolean (a_widget.screen_object, XmNallowResize)
-		end;
-
 	set_widget_allowed_to_resize (a_widget: MEL_RECT_OBJ; b: BOOLEAN) is
 			-- Set `is_widget_allowed_to_resize' to `b'.
 		require
@@ -254,19 +306,6 @@ feature -- Miscellaneous
 			set_xt_boolean (a_widget.screen_object, XmNallowResize, b)
 		ensure
 			widget_allowed_to_resize: is_widget_allowed_to_resize (a_widget)
-		end;
-
-	widget_pane_minimum (a_widget: MEL_RECT_OBJ): INTEGER is
-			-- Minimal dimensions for resizing of `a_widget'
-		require
-			exists: not is_destroyed;
-			a_widget_is_a_child: a_widget /= Void and then
-								 not a_widget.is_destroyed and then
-								 a_widget.parent = Current
-		do
-			Result := get_xt_dimension (a_widget.screen_object, XmNpaneMinimum)
-		ensure
-			pane_minimum_large_enough: Result >= 0
 		end;
 
 	set_widget_pane_minimum (a_widget: MEL_RECT_OBJ; a_dimension: INTEGER) is
@@ -284,18 +323,6 @@ feature -- Miscellaneous
 			pane_minimum_set: widget_pane_minimum (a_widget) = a_dimension
 		end;
 
-	widget_pane_maximum (a_widget: MEL_RECT_OBJ): INTEGER is
-			-- Maximal dimensions for resizing of `a_widget'
-		require
-			exists: not is_destroyed;
-			a_widget_is_a_child: a_widget /= Void and then
-								 not a_widget.is_destroyed and then
-								 a_widget.parent = Current
-		do
-			Result := get_xt_dimension (a_widget.screen_object, XmNpaneMAximum)
-		ensure
-			pane_maximum_large_enough: Result >= 0
-		end;
 
 	set_widget_pane_maximum (a_widget: MEL_RECT_OBJ; a_dimension: INTEGER) is
 			-- Set `widget_pane_maximum' of `a_widget' to `a_dimension'.
@@ -312,19 +339,6 @@ feature -- Miscellaneous
 			pane_maximum_set: widget_pane_maximum (a_widget) = a_dimension
 		end;
 
-	widget_position (a_widget: MEL_RECT_OBJ): INTEGER is
-			-- Position of `a_widget' in the RowColumn's list of children
-		require
-			exists: not is_destroyed;
-			a_widget_is_a_child: a_widget /= Void and then
-								 not a_widget.is_destroyed and then
-								 a_widget.parent = Current;
-		do
-			Result := get_xt_short (a_widget.screen_object, XmNpositionIndex)
-		ensure
-			position_large_enough: Result >=0;
-			position_small_enough: Result < children_count
-		end;
 
 	set_widget_position (a_widget: MEL_RECT_OBJ; a_position: INTEGER) is
 			-- Set `widget_position' of `a_widget' to `a_position'.
@@ -353,17 +367,6 @@ feature -- Miscellaneous
 			set_xt_short (a_widget.screen_object, XmNpositionIndex, XmLAST_POSITION)
 		ensure
 			is_at_the_end: widget_position (a_widget) = children_count
-		end;
-
-	is_automatic_adjustment (a_widget: MEL_RECT_OBJ): BOOLEAN is
-			-- Is `a_widget' automatically resized ?
-		require
-			exists: not is_destroyed;
-			a_widget_is_a_child: a_widget /= Void and then
-								 not a_widget.is_destroyed and then
-								 a_widget.parent = Current
-		do
-			Result := not get_xt_boolean (a_widget.screen_object, XmNskipAdjust)
 		end;
 
 	set_automatic_adjustment (a_widget: MEL_RECT_OBJ; b: BOOLEAN) is

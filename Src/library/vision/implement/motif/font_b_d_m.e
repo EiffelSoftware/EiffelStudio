@@ -17,58 +17,61 @@ inherit
 
 	FONT_BOX_M
 		rename
-			make as font_box_make
+			make as fb_m_make
 		undefine
-			lower, raise, 
-			show, hide, destroy,
-			define_cursor_if_shell, undefine_cursor_if_shell,
-			is_stackable
+			lower, raise, hide, show, destroy,
+			define_cursor_if_shell,
+			undefine_cursor_if_shell,
+			is_stackable, created_dialog_automatically,
+			create_widget, set_background, set_foreground,
+			mel_set_background_color, mel_set_foreground_color
 		redefine
-			mel_destroy, parent
+			parent
+		select
+			fb_make_no_auto_unmanage, fb_make
+		end;
+
+	MEL_FONT_DIALOG
+		rename
+			make as mel_fb_d_make,
+			make_no_auto_unmanage as mel_fb_d_no_auto,
+			foreground_color as mel_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_foreground_color as mel_set_foreground_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			set_button_font as mel_set_button_font,
+			is_shown as shown
+		undefine
+			raise, lower, show, hide
+		redefine
+			parent
 		end
 
 creation
-
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_font_box_dialog: FONT_BOX_D; oui_parent: COMPOSITE) is
-			-- Create a motif font box.
+			-- Create a motif dialog message box.
 		local
-			ext_name: ANY;
-			so: POINTER;
-			mel_comp: MEL_COMPOSITE;
-			form_button: MEL_FORM
+			mc: MEL_COMPOSITE
 		do
-			so := oui_parent.implementation.screen_object;
-			mel_comp ?= oui_parent.implementation;
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			ext_name := a_font_box_dialog.identifier.to_c;
-			data := font_box_create ($ext_name, so, True, True);
-			screen_object := font_box_form (data);
 			a_font_box_dialog.set_dialog_imp (Current);
-			!! parent.make_from_existing (xt_parent (screen_object), mel_comp);
-			Mel_widgets.add (Current);
-			!! form_button.make_from_existing (xt_parent (font_box_ok_button (data)), Current);
-            !! ok_b.make_from_existing (font_box_ok_button (data), form_button);
-            !! cancel_b.make_from_existing (font_box_cancel_button (data), form_button);
-            !! apply_b.make_from_existing (font_box_apply_button (data), form_button);
+			mel_fb_d_make (a_font_box_dialog.identifier, mc);
 			initialize (parent)
 		end;
 
 feature -- Access
 
-	parent: MEL_DIALOG_SHELL;
-			-- Dialog shell where font box is in
-
-feature -- Removal
-
-	mel_destroy is
-			-- Destroy the dialog shell of the font box.
-		do
-			parent.destroy
-		end;
+	parent: MEL_DIALOG_SHELL
+			-- Dialog shell of the working dialog
 
 end -- class FONT_B_D_M
 

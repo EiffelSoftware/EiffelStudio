@@ -335,9 +335,6 @@ feature -- IL code generation
 			good_generic_count: type.true_generics.count = 1
 		local
 			l_native_array: ATTRIBUTE_I
-			l_native_array_type: CL_TYPE_I
-			l_class_type: CLASS_TYPE
-			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 		do
 				-- Get `native_array' field info.
 			l_native_array ?= associated_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Native_array_name_id)

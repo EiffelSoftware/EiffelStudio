@@ -87,20 +87,26 @@ feature -- Output
 			i, count: INTEGER
 		do
 			Result := {CL_TYPE_A} Precursor
-			Result.append (" [")
-			from
-				i := 1
-				count := generics.count
-			until
-				i > count
-			loop
-				Result.append (generics.item (i).dump)
-				if i /= count then
-					Result.append (", ")
+
+			count := generics.count
+
+			-- TUPLE may have zero generic parameters
+
+			if count > 0 then
+				Result.append (" [")
+				from
+					i := 1
+				until
+					i > count
+				loop
+					Result.append (generics.item (i).dump)
+					if i /= count then
+						Result.append (", ")
+					end
+					i := i + 1
 				end
-				i := i + 1
+				Result.append ("]")
 			end
-			Result.append ("]")
 		end
 
 	append_to (st: STRUCTURED_TEXT) is
@@ -108,20 +114,25 @@ feature -- Output
 			i, count: INTEGER
 		do
 			{CL_TYPE_A} Precursor (st)
-			st.add_string (" [")
-			from
-				i := 1
-				count := generics.count
-			until
-				i > count
-			loop
-				generics.item (i).append_to (st)
-				if i /= count then
-					st.add_string (", ")
+
+			-- TUPLE may have zero generic parameters
+
+			if count > 0 then
+				st.add_string (" [")
+				from
+					i := 1
+					count := generics.count
+				until
+					i > count
+				loop
+					generics.item (i).append_to (st)
+					if i /= count then
+						st.add_string (", ")
+					end
+					i := i + 1
 				end
-				i := i + 1
+				st.add_string ("]")
 			end
-			st.add_string ("]")
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
@@ -631,22 +642,27 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			ctxt.put_classi (associated_class.lace_class)
-			ctxt.put_space
-			ctxt.put_text_item (ti_L_bracket)
-			from
-				i := 1
-				count := generics.count
-			until
-				i > count
-			loop
-				generics.item (i).format (ctxt)
-				if i /= count then
-					ctxt.put_text_item (ti_Comma)
-					ctxt.put_space
+			count := generics.count
+
+			-- TUPLE may have zero generic parameters
+
+			if count > 0 then
+				ctxt.put_space
+				ctxt.put_text_item (ti_L_bracket)
+				from
+					i := 1
+				until
+					i > count
+				loop
+					generics.item (i).format (ctxt)
+					if i /= count then
+						ctxt.put_text_item (ti_Comma)
+						ctxt.put_space
+					end
+					i := i + 1
 				end
-				i := i + 1
+				ctxt.put_text_item (ti_R_bracket)
 			end
-			ctxt.put_text_item (ti_R_bracket)
 		end
 
 feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
@@ -729,3 +745,4 @@ invariant
 	generics_not_void: generics /= Void
 
 end -- class GEN_TYPE_A
+

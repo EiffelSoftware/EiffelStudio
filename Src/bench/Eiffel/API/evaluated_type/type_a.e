@@ -137,6 +137,12 @@ feature -- Properties
 			-- Do nothing
 		end
 
+	is_tuple: BOOLEAN is
+			-- Is it a TUPLE type
+		do
+			-- Do nothing
+		end
+
 feature -- Access
 
 	same_as (other: TYPE_A): BOOLEAN is

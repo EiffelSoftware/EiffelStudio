@@ -113,6 +113,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -362,6 +369,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					-- that the root window will be moved out of the directory, as you may not delete the
 					-- root window.
 				create warning_dialog.make_initialized (2, preferences.Show_deleting_final_directory_warning, "The directory contains the root window which will be moved from the directory.%NOther windows will be deleted. Are you sure that you wish to remove this directory?", "Do not show again, and always move root window from directory.")
+				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.set_ok_action (agent actual_delete_directory (a_directory))
 				warning_dialog.show_modal_to_window (parent_window (Current))
 
@@ -370,6 +378,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					-- as if we are here, we know that there are other window objects not contained in the directory,
 					-- so just before the deletion, we can set one of these to be the root window.
 				create warning_dialog.make_initialized (2, preferences.Show_deleting_directories_warning, "The directory %"" + a_directory.text + "%" contains one or more windows.%NAre you sure that you wish these windows to be deleted with the dialog?", "do not show again, and always delete windows contained.")
+				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.set_ok_action (agent actual_delete_directory (a_directory))
 				warning_dialog.show_modal_to_window (parent_window (Current))
 			else
@@ -859,6 +868,7 @@ feature {NONE} -- Implementation
 				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
 			else
 				create dialog.make_with_values (unique_name_from_array (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name)
+				dialog.set_icon_pixmap (Icon_build_window @ 1)
 			end
 			
 			dialog.show_modal_to_window (parent_window (current))
@@ -894,6 +904,7 @@ feature {NONE} -- Implementation
 				actual_warning := "The directory name '" + last_dialog_name + "' is not valid."
 			end
 			create warning_dialog.make_with_text (actual_warning + "%N%NPlease enter a valid directory name.")
+			warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 			warning_dialog.show_modal_to_window (a_dialog)
 		end
 		
@@ -984,6 +995,7 @@ feature {NONE} -- Implementation
 						-- window object was selected.
 					if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
 						create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "window object" + delete_warning2, delete_do_not_show_again)
+						warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 						warning_dialog.set_ok_action (agent delete_window_object (selected_window.object))
 						warning_dialog.show_modal_to_window (parent_window (Current))
 					else
@@ -997,6 +1009,7 @@ feature {NONE} -- Implementation
 					if selected_directory.count = 0 then
 						if Preferences.boolean_resource_value (preferences.Show_deleting_keyboard_warning, True) then
 							create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "directory object" + delete_warning2, delete_do_not_show_again)
+							warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 							warning_dialog.set_ok_action (agent remove_directory (selected_directory))
 							warning_dialog.show_modal_to_window (parent_window (Current))
 						else

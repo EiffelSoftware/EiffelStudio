@@ -53,13 +53,13 @@ feature -- Access
 	Idl_compilation_title: STRING is "IDL Compilation"
 			-- IDL compilation title
 	
-	Iid_compilation_title: STRING is "C Compilation progress_report.step 1"
+	Iid_compilation_title: STRING is "C Compilation step 1"
 			-- Iid generated C file compilation title
 	
-	Data_compilation_title: STRING is "C Compilation progress_report.step 2"
+	Data_compilation_title: STRING is "C Compilation step 2"
 			-- Inprocess dll generated C file compilation title
 	
-	Ps_compilation_title: STRING is "C Compilation progress_report.step 3"
+	Ps_compilation_title: STRING is "C Compilation step 3"
 			-- Proxy/stub generated C file compilation title
 	
 	Link_title: STRING is "Creating Proxy Stub Dll"

@@ -37,44 +37,26 @@ feature -- Access
 			create Result.make (parent)
 		end
 
-	title: STRING is
+	title: STRING
 			-- Progress dialog title
-		do
-			Result := title_cell.item
-		end
 
-	running: BOOLEAN is
+	running: BOOLEAN
 			-- Is progress report started?
-		do
-			Result := running_cell.item
-		end
 
 	parent: WEL_COMPOSITE_WINDOW
 			-- Progress dialog parent window
 
-	range: INTEGER is
+	range: INTEGER
 			-- Initial progress range
-		do
-			Result :=range_cell.item
-		end
 
-	progress: INTEGER is
+	progress: INTEGER
 			-- Current progress
-		do
-			Result := progress_cell.item
-		end
 
-	last_x: INTEGER is
+	last_x: INTEGER
 			-- Last progress dialog x coordinate
-		do
-			Result := last_x_cell.item
-		end
 
-	last_y: INTEGER is
+	last_y: INTEGER
 			-- Last progress dialog y coordinate
-		do
-			Result := last_y_cell.item
-		end
 
 	Initial_range: INTEGER is 100
 			-- Actual progress bar range
@@ -90,7 +72,7 @@ feature -- Element Change
 			if running and then progress_dialog.progress_static.exists then
 				progress_dialog.progress_static.set_text (a_title)
 			end
-			title_cell.replace (a_title)
+			title := clone (a_title)
 		ensure
 			title_set: title.is_equal (a_title)
 		end
@@ -100,7 +82,7 @@ feature -- Element Change
 		require
 			valid_range: a_range >= 0
 		do
-			range_cell.set_item (a_range)
+			range := a_range
 		ensure
 			range_set: range = a_range
 		end
@@ -110,7 +92,7 @@ feature -- Element Change
 		require
 			valid_progress: an_integer >= 0 and an_integer <= range
 		do
-			progress_cell.set_item (an_integer)
+			progress := an_integer
 			update_progress_bar
 		ensure
 			progress_set: progress = an_integer
@@ -154,7 +136,7 @@ feature -- Basic Operations
 				if last_y /= 0 then
 					progress_dialog.set_y (last_y)
 				end
-				running_cell.put (True)
+				running := True
 			end
 			progress_dialog.progress_static.set_text (title)
 			set_progress (0)
@@ -170,11 +152,11 @@ feature -- Basic Operations
 			valid_parent: parent.exists
 		do
 			if progress_dialog.exists then
-				last_x_cell.set_item (progress_dialog.x)
-				last_y_cell.set_item (progress_dialog.y)
+				last_x := progress_dialog.x
+				last_y := progress_dialog.y
 				progress_dialog.terminate (0)
 			end
-			running_cell.put (False)
+			running := False
 			parent.enable
 		ensure
 			not_running: not running
@@ -188,50 +170,6 @@ feature -- Basic Operations
 			end
 		end
 			
-feature {NONE} -- Implementation
-
-	range_cell: INTEGER_REF is
-			-- `range' cell
-		once
-			create Result
-		end
-
-	progress_dialog_cell: CELL [WIZARD_PROGRESS_DIALOG] is
-			-- Progress dialog shell
-		once
-			create Result.put (Void)
-		end
-
-	title_cell: CELL [STRING] is
-			-- Progress dialog title shell
-		once
-			create Result.put (Void)
-		end
-
-	running_cell: CELL [BOOLEAN] is
-			-- Shell for `running'
-		once
-			create Result.put (False)
-		end
-
-	last_x_cell: INTEGER_REF is
-			-- Progress dialog last x
-		once
-			create Result
-		end
-
-	last_y_cell: INTEGER_REF is
-			-- Progress dialog last y
-		once
-			create Result
-		end
-	
-	progress_cell: INTEGER_REF is
-			-- Progress cell
-		once
-			create Result
-		end
-
 invariant
 
 	non_void_parent: parent /= Void

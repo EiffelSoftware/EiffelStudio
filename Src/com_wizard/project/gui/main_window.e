@@ -430,6 +430,8 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 			when Generate_string_constant then
 				clear
 				shared_wizard_environment.set_no_abort
+				set_message_output (create {WIZARD_MESSAGE_OUTPUT}.set_output (Current))
+				set_progress_report (create {WIZARD_PROGRESS_REPORT}.make (Current))
 				create wizard_manager
 				wizard_manager.run
 			when Exit_string_constant then

@@ -279,8 +279,8 @@ feature -- Element Change
 			-- set `date' and `time' with the `other' attributes.
 		do
 			Precursor {ABSOLUTE} (other)
-			date := clone (other.date)
-			time := clone (other.time)
+			date := other.date.twin
+			time := other.time.twin
 		end
 
 feature -- Basic operations
@@ -288,7 +288,7 @@ feature -- Basic operations
 	infix "+" (d: DATE_TIME_DURATION): like Current is
 			-- Sum the current object with `d'
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.add (d)
 		ensure
 			result_exists: Result /= Void
@@ -314,7 +314,7 @@ feature -- Basic operations
 				hour - other.hour, minute - other.minute, 
 				fine_second - other.fine_second)
 			Result := Result.to_canonical (other)
-			Result.set_origin_date_time (clone (other))
+			Result.set_origin_date_time (other.twin)
 		ensure then
 			origin_set: equal (other, Result.origin_date_time)
 		end

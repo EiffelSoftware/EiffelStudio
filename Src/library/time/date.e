@@ -356,7 +356,7 @@ feature -- Basic operations
 			-- Sum to current date the duration `d'
 			-- if duration not define, add years and then months and then days.
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.add (d)
 		ensure
 			result_exists: Result /= Void
@@ -381,7 +381,7 @@ feature -- Basic operations
 		do
 			create Result.make_by_days (days - other.days)
 			Result := Result.to_canonical (other)
-			Result.set_origin_date (clone (other))
+			Result.set_origin_date (other.twin)
 		ensure then
 			exact_duration: (other + Result).is_equal (Current)
 			canonical_duration: Result.canonical (other)

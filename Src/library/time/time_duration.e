@@ -258,7 +258,7 @@ feature -- Conversion
 			-- A new duration 
 		do
 			if canonical then
-				Result:= clone (Current)
+				Result := twin
 			else
 				if fine_seconds_count >= 0 then
 					create Result.make_by_fine_seconds (fine_seconds_count)

@@ -33,7 +33,7 @@ feature -- Change
 			v_exists: v /= Void
 			v_is_code: is_code (v)
 		do
-			value := clone (v)
+			value := v.twin
 			if is_day (value) then
 				count_max := 2
 				count_min := 1

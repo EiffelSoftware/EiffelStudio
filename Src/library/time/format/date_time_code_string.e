@@ -26,8 +26,8 @@ feature -- Creation
 			pos1 := 1
 			pos2 := 1
 			create date_constants
-			days := clone (date_constants.days_text)
-			months := clone (date_constants.months_text)
+			days := date_constants.days_text.twin
+			months := date_constants.months_text.twin
 			from
 				i := 1
 			until
@@ -404,7 +404,7 @@ feature -- Interface
 			tmp_ht: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			i: INTEGER
 		do
-			tmp_ht := clone (value)
+			tmp_ht := value.twin
 			i := value.count + 1
 			if has_separators (s) then
 				create tmp_code.make (" ")
@@ -423,8 +423,6 @@ feature -- Interface
 				Result := create_date_time (s).date
 				s.replace_substring_all (" 0:0:0", "")
 			else
-				tmp_ht := clone (value)
-				i := value.count + 1
 				create tmp_code.make ("[0]hh")
 				value.put (tmp_code, i)
 				create tmp_code.make ("[0]mi")
@@ -435,7 +433,7 @@ feature -- Interface
 				Result := create_date_time (s).date
 				s.remove_tail (6)
 			end
-				value := tmp_ht
+			value := tmp_ht
 		ensure
 			date_exists: Result /= Void
 			day_text_equal_day: right_day_text
@@ -452,7 +450,7 @@ feature -- Interface
 			tmp_ht: HASH_TABLE [DATE_TIME_CODE, INTEGER]
 			i: INTEGER
 		do
-			tmp_ht := clone (value)
+			tmp_ht := value.twin
 			i := value.count + 1
 			if has_separators (s) then
 				create tmp_code.make (" ")
@@ -512,7 +510,7 @@ feature -- Interface
 			until 
 				value.item (i) = Void
 			loop
-				code := clone (value.item (i))
+				code := value.item (i).twin
 				type := code.type
 				if separators_used then
 					inspect
@@ -559,7 +557,7 @@ feature -- Interface
 			until 
 				value.item (i) = Void
 			loop
-				code := clone (value.item (i))
+				code := value.item (i).twin
 				type := code.type
 				if separators_used then
 					inspect

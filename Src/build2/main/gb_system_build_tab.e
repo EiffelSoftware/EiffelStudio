@@ -49,6 +49,10 @@ feature {NONE} -- Initialization
 			extend (label)
 			create main_window_file_name_field
 			extend (main_window_file_name_field)
+			create frame.make_with_text ("Code Generation")
+			create local_check_button.make_with_text ("Local declarations grouped?")
+			frame.extend (local_check_button)
+			extend (frame)
 
 			is_initialized := True
 			disable_all_items (Current)
@@ -73,6 +77,11 @@ feature -- Status setting
 			else
 				class_radio_button.enable_select
 			end
+			if project_settings.grouped_locals then
+				local_check_button.enable_select
+			else
+				local_check_button.disable_select
+			end
 		end
 		
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
@@ -84,6 +93,11 @@ feature -- Status setting
 				project_settings.enable_complete_project
 			else
 				project_settings.disable_complete_project
+			end
+			if local_check_button.is_selected then
+				project_settings.enable_grouped_locals
+			else
+				project_settings.disable_grouped_locals
 			end
 		end	
 
@@ -141,5 +155,8 @@ feature {NONE} -- Implementation
 	
 	main_window_file_name_field: EV_TEXT_FIELD
 		-- Holds the name used for gnerated window file name.
+		
+	local_check_button: EV_CHECK_BUTTON
+		-- Holds whether the locals should be grouped or on a single line.
 		
 end -- class GB_SYSTEM_BUILD_TAB

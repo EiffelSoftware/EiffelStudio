@@ -1,0 +1,43 @@
+indexing
+	description	: "Error: selected root class name is not a valid Eiffel identifier."
+
+class
+	WIZARD_ERROR_VALID_ROOT_CLASS_NAME
+
+inherit
+	BENCH_WIZARD_ERROR_STATE_WINDOW
+
+creation
+	make
+
+feature -- basic Operations
+
+	display_state_text is
+		do
+			title.set_text ("Root Class Name Error")
+			message.set_text (
+				"The root class name that you have specified does not conform%N%
+				%the lace specification.%N%
+				%%N%
+				%A valid root class name is not empty and only contains letters,%N%
+				%figures, and underscores. Moreover the first character must%N%
+				%be a letter.%N%
+				%%N%
+				%Click Back and choose a valid root class name.")
+		end
+
+	final_message: STRING is
+		do
+		end
+
+feature {WIZARD_STATE_WINDOW}
+
+	pixmap_icon_location: FILE_NAME is
+			-- Icon for the Eiffel Wizard
+		once
+			create Result.make_from_string ("eiffel_wizard_icon")
+			Result.add_extension (pixmap_extension)
+		end
+	
+end -- class WIZARD_ERROR_VALID_ROOT_CLASS_NAME
+

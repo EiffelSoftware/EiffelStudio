@@ -11,6 +11,9 @@ Before installing the Eiffel53.tgz package you need to install the following com
 	You also need the X11 SDK in order to develop graphical application
 	with EiffelVision2 at:
 	http://www.apple.com/macosx/x11/download/
+
+	Once you have installed it, launch the X11 server so that you can later launch
+	EiffelStudio.
 	
 
 2 - Install GTK 1.2.10:
@@ -43,7 +46,7 @@ Before installing the Eiffel53.tgz package you need to install the following com
 	Then you can type the following commands as a root user:
 
 	tar xvfz tar-1.13.tar.gz
-	cd tar-1.13.tar.gz
+	cd tar-1.13
 	cp /usr/share/automake-1.6/config.* .
 	./configure
 	make

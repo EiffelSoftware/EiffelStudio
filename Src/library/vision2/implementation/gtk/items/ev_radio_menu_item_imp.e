@@ -13,7 +13,7 @@ inherit
 			interface
 		end
 
-	EV_CHECK_MENU_ITEM_IMP
+	EV_SELECT_MENU_ITEM_IMP
 		redefine
 			interface,
 			make
@@ -36,6 +36,12 @@ feature -- Access
 
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
+		do
+			check to_be_implemented: False end
+		end
+
+	selected_peer: like interface is
+			-- Radio item that is currently selected.
 		do
 			check to_be_implemented: False end
 		end
@@ -67,6 +73,9 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/24 20:48:54  brendel
+--| Changed in compliance with interface.
+--|
 --| Revision 1.15  2000/02/24 01:41:41  king
 --| Added peers to make compile, needs implementing
 --|

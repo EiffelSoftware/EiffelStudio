@@ -17,7 +17,7 @@ inherit
 			interface
 		end
 	
-	EV_CHECK_BUTTON_IMP
+	EV_SELECT_BUTTON_IMP
 		redefine
 			interface,
 			make
@@ -88,6 +88,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/24 20:48:54  brendel
+--| Changed in compliance with interface.
+--|
 --| Revision 1.15  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

@@ -60,8 +60,10 @@ feature -- Basic Operations
 				end			
 				if not environment.abort then
 					message_output.add_title ("Processing  %"" + environment.project_name + "%"")
-	
-					create l_tasks.make (7)
+					create l_tasks.make (8)
+					if environment.cleanup then
+						l_tasks.extend (create {WIZARD_CLEANUP_TASK})
+					end
 					if environment.is_eiffel_interface then
 						l_tasks.extend (create {WIZARD_IDL_GENERATION_TASK})
 					end

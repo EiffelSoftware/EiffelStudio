@@ -72,8 +72,8 @@ feature {NONE} -- Initialization
 			Profile_manager.active_profile_save_actions.extend (agent component_type_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent compile_target_profile_item)
 			Profile_manager.active_profile_save_actions.extend (agent backup_profile_item)
+			Profile_manager.active_profile_save_actions.extend (agent overwrite_profile_item)
 			Profile_manager.active_profile_change_actions.extend (agent update_buttons)
-			
 			update_buttons
 			initialize_generate_button
 		end
@@ -271,10 +271,29 @@ feature {NONE} -- Implementation
 		end
 
 	on_select_backup is
-			-- Called by `select_actions' of `backup_check_button'.
+			-- Called by `select_actions' of `backup_radio_button'.
 			-- Update environment
 		do
-			environment.set_backup (backup_check_button.is_selected)
+			environment.set_backup (True)
+			environment.set_cleanup (False)
+			Profile_manager.save_active_profile
+		end
+	
+	on_select_cleanup is
+			-- Called by `select_actions' of `cleanup_radio_button'.
+			-- Update environment
+		do
+			environment.set_backup (False)
+			environment.set_cleanup (True)
+			Profile_manager.save_active_profile
+		end
+	
+	on_select_overwrite is
+			-- Called by `select_actions' of `overwrite_radio_button'.
+			-- Update environment
+		do
+			environment.set_backup (False)
+			environment.set_cleanup (False)
 			Profile_manager.save_active_profile
 		end
 	
@@ -434,7 +453,7 @@ feature {NONE} -- Implementation
 					l_target := Eiffel_compile_code
 				end
 			else
-				l_target := None_compile_code
+				l_target := None_code
 			end
 			create Result.make (Compile_target_key, l_target)
 		end
@@ -444,12 +463,25 @@ feature {NONE} -- Implementation
 		local
 			l_backup: STRING
 		do
-			if backup_check_button.is_selected then
+			if backup_radio_button.is_selected then
 				l_backup := True_code
 			else
-				l_backup := None_compile_code
+				l_backup := None_code
 			end
 			create Result.make (Backup_key, l_backup)
+		end
+		
+	overwrite_profile_item: WIZARD_PROFILE_ITEM is
+			-- Profile item for compilation target
+		local
+			l_overwrite: STRING
+		do
+			if overwrite_radio_button.is_selected then
+				l_overwrite := True_code
+			else
+				l_overwrite := None_code
+			end
+			create Result.make (Overwrite_key, l_overwrite)
 		end
 		
 	update_buttons is
@@ -498,16 +530,20 @@ feature {NONE} -- Implementation
 				compile_eiffel_check_button.disable_select
 				compile_c_code_check_button.disable_select
 			end
+			cleanup_radio_button.enable_select
 			Profile_manager.search_active_profile (Backup_key)
 			if Profile_manager.found then
 				l_value := Profile_manager.found_item.value
 				if l_value.is_equal (True_code) then
-					backup_check_button.enable_select
-				else
-					backup_check_button.disable_select
+					backup_radio_button.enable_select
 				end
-			else
-				backup_check_button.enable_select
+			end
+			Profile_manager.search_active_profile (Overwrite_key)
+			if Profile_manager.found then
+				l_value := Profile_manager.found_item.value
+				if l_value.is_equal (True_code) then
+					overwrite_radio_button.enable_select
+				end
 			end
 			Profile_manager.set_save_blocked (False)
 		end
@@ -541,7 +577,7 @@ feature {NONE} -- Private Access
 	Eiffel_compile_code: STRING is "Eiffel"
 			-- String encoding for not compiling Eiffel code
 
-	None_compile_code: STRING is "None"
+	None_code: STRING is "None"
 			-- String encoding for compiling C and Eiffel code
 
 	True_code: STRING is "True"
@@ -582,6 +618,9 @@ feature {NONE} -- Private Access
 	
 	Backup_key: STRING is "Backup_key"
 			-- Key to store whether EiffelCOM wizard should backup overwritten files
+
+	Overwrite_key: STRING is "Overwrite_key"
+			-- Key to store whether EiffelCOM wizard should overwrite generated files
 
 end -- class WIZARD_MAIN_WINDOW
 

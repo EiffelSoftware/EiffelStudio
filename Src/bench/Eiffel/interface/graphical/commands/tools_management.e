@@ -18,9 +18,24 @@ creation
 
 feature -- Properties
 
-	name: STRING is "Close all tools"
+	name: STRING is 
 			-- Current's name
 			-- FIXME: Should be in INTERFACE_W
+		do
+			Result := Interface_names.f_close_all_tools
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_close_all_tools
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_close_all_tools
+		end;
 
 feature {NONE} -- Execution
 

@@ -30,13 +30,24 @@ feature {NONE} -- Attributes
 	symbol: PIXMAP is 
 			-- Symbol on the button.
 		once 
-			Result := bm_Case_storage 
+			Result := Pixmaps.bm_Case_storage 
 		end;
  
 	name: STRING is
 			-- Internal command name.
 		do
-			Result := l_Case_storage
+			Result := Interface_names.f_Case_storage
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Case_storage
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 feature {NONE} -- Implementation

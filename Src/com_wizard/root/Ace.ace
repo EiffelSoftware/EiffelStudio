@@ -1,28 +1,50 @@
 -- This Ace file requires the following environment variables:
--- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL4\library)
+-- * "LIBRARY" should be set to the Eiffel library directory (e.g. $EIFFEL5\library)
 
 system
-	wizard
+	com_wizard
 
 root
-	APPLICATION (root_cluster): "make"
+	APPLICATION(root_cluster): "make"
 
 default
-	assertion (no)
---	assertion (all)
-	dead_code_removal (yes)
+--	assertion (no)
+	assertion (all)
 
 cluster
 	
-	root_cluster: "c:\com_wizard\root";
+	root_cluster: "d:\com_wizard\root"
 
-	all e2_idl: "c:\com_wizard\eiffeltoidl";
+	all e2_idl: "d:\com_wizard\eiffeltoidl";
 
-	all wizard: "c:\com_wizard\project"
+	descriptors: "d:\com_wizard\project\descriptors"
+		default
+			assertion (all)
+		end;
+	
+	visitors: "d:\com_wizard\project\visitors"
+		default
+			assertion (all)
+		end;
+
+	gui: "d:\com_wizard\project\gui"
+
+	support: "d:\com_wizard\project\support"
+		default
+			assertion (all)
+		end;
+
+	wizard_library_constants: "D:\com_wizard\project\library\constants"
+
+	wizard_library_interfaces: "D:\com_wizard\project\library\interfaces"
+		visible
+			ECOM_TYPE_INFO;
+		end;
+
+	wizard_library_structures: "D:\com_wizard\project\library\structures"
 		option
 			assertion (require):ECOM_SAFE_ARRAY_BOUND;
 		visible
-			ECOM_TYPE_INFO;
 			ECOM_TYPE_LIB_FIND_NAME_RESULT;
 			ECOM_SAFE_ARRAY_BOUND
 				export
@@ -34,38 +56,54 @@ cluster
 		end;
 
 	-- EiffelBase
-	all base:						"$EIFFEL4\library\base"
-		exclude
-			"table_eiffel3";
-			"desc"
+	base_kernel:						"$EIFFEL5\library\base\kernel"
 		visible
 			ARRAY;
 			STRING;
 		end;
 
+	all base_desc:					"$EIFFEL5\library\base\desc"
+
+	all base_structures:				"$EIFFEL5\library\base\structures"
+		exclude
+			"table_eiffel3";
+			"desc"
+		end
+
+	all base_support:					"$EIFFEL5\library\base\support"
+
 	-- WEL
-	all wel:						"$EIFFEL4\library\wel"
+	all wel:						"$EIFFEL5\library\wel"
+		default
+			assertion (no)
+		end;
 
 	-- EiffelCOM
-	all ecom:						"$EIFFEL4\library\com"
+	ecom_constants:					"$EIFFEL5\library\com\Constants"
+
+	ecom_Interfaces:					"$EIFFEL5\library\com\Interfaces"
+
+	ecom_Support:					"$EIFFEL5\library\com\Support"
+
+	ecom_Structures:					"$EIFFEL5\library\com\Structures"
 		visible
 			ECOM_CURRENCY;
 			ECOM_DECIMAL;
 		end;
 
 	-- EiffelTime
-	all time:						"$EIFFEL4\library\time"
+	all time:						"$EIFFEL5\library\time"
 		exclude
 			"french";
 			"german"
 		end;
 
 external
-	include_path:	"$EIFFEL4\library\wel\spec\windows\include",
-					"$EIFFEL4\library\com\spec\windows\include"
+	include_path:	"$EIFFEL5\library\wel\spec\windows\include",
+					"$EIFFEL5\library\com\spec\windows\include"
 
-	object: 		"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib",
-					"$EIFFEL4\library\time\spec\msc\lib\datetime.lib",
-					"$EIFFEL4\library\com\spec\msc\lib\com.lib",
-					"$EIFFEL4\library\com\spec\msc\lib\com_runtime.lib";
+	object: 		"$EIFFEL5\library\wel\spec\$(COMPILER)\lib\wel.lib",
+					"$EIFFEL5\library\time\spec\msc\lib\datetime.lib",
+					"$EIFFEL5\library\com\spec\msc\lib\com.lib",
+					"$EIFFEL5\library\com\spec\msc\lib\com_runtime.lib";
 end

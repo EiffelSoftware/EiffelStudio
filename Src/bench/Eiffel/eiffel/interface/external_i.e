@@ -11,7 +11,7 @@ inherit
 			transfer_to, equiv, update_api,
 			generate, duplicate, extension,
 			access_for_feature, is_external,
-			set_renamed_name, set_renamed_name_id, external_name_id, undefinable,
+			set_renamed_name, set_renamed_name_id, external_name_id,
 			init_arg
 		end;
 
@@ -54,12 +54,6 @@ feature -- Attributes for externals
 			-- Encapsulation of the external extension
 
 feature -- Routines for externals
-
-	undefinable: BOOLEAN is
-			-- Is an external undefinable?
-		do
-			Result := System.il_generation and then Precursor {PROCEDURE_I}
-		end
 
 	make, set_extension (e: like extension) is
 			-- Assign `e' to `extension'.

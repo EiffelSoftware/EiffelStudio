@@ -23,21 +23,32 @@ feature -- Access
 			-- The box that will receive the pixmaps
 		deferred
 		end
+
+	pixmap: EV_PIXMAP is
+			-- Implementation of the pixmap contained 
+		do
+		end
+
 	
 feature {EV_CONTAINER} -- Element change
 
-	add_pixmap (pixmap: EV_PIXMAP) is
+	set_pixmap (pix: EV_PIXMAP) is
 			-- Add a pixmap in the container
 		local
 			pixmap_imp: EV_PIXMAP_IMP
 		do
-			pixmap_imp ?= pixmap.implementation
+			pixmap_imp ?= pix.implementation
 			check
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
 			add_child (pixmap_imp)
 		 	gtk_widget_show (pixmap_imp.widget)
 			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 2)
+		end
+
+	unset_pixmap is
+			-- Remove the pixmap from the container
+		do
 		end
 
 feature {NONE} -- Implementation

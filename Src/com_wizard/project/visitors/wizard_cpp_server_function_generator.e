@@ -359,9 +359,9 @@ feature {NONE} -- Implementation
 			Result := clone (Asterisk)
 			Result.append (arg_name)
 			Result.append (Space_equal_space)
-			Result.append (Open_parenthesis)
 
 			if visitor.is_basic_type then
+				Result.append (Open_parenthesis)
 				Result.append (visitor.c_type)
 				Result.append (Close_parenthesis)
 				Result.append (Tmp_variable_name)
@@ -425,8 +425,8 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- eif_procedure (eif_access (eiffel_object),
-			Result.append (Eif_procedure_name)
+			-- eiffel_procedure (eif_access (eiffel_object),
+			Result.append (Eiffel_procedure_variable_name)
 		end
 
 	cecil_function_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -511,14 +511,15 @@ feature {NONE} -- Implementation
 	empty_argument_body: STRING is
 			-- Eiffel procedure call body
 		do
-			Result := clone (Eif_procedure)
+			Result := clone (Tab)
+			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			Result.append (Eiffel_procedure_variable_name)
 			Result.append (Space_equal_space)
-			Result.append (Eif_procedure)
+			Result.append (Eif_procedure_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
 			Result.append (func_desc.name)

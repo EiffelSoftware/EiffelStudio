@@ -8,9 +8,6 @@ deferred class
 
 inherit
 	CODE_NAMED_ENTITY
-		redefine
-			ready
-		end
 
 feature {NONE} -- Initialization
 
@@ -67,20 +64,13 @@ feature -- Access
 	is_redefined: BOOLEAN
 			-- Is routine overwritten?
 
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is feature ready to be generated?
-		do
-			Result := Precursor {CODE_NAMED_ENTITY} and eiffel_name /= Void
-		end
-
 feature -- Element Settings
 
 	set_eiffel_name (a_name: like eiffel_name) is
 			-- Set `eiffel_name' with `a_name'
 		require
 			non_void_name: a_name /= Void
+			in_code_analysis: current_state = Code_analysis
 		do
 			eiffel_name := a_name
 		ensure
@@ -91,6 +81,7 @@ feature -- Element Settings
 			-- Set `result_type' with `a_type'
 		require
 			non_void_type: a_type /= Void
+			in_code_analysis: current_state = Code_analysis
 		do
 			result_type := a_type
 		ensure
@@ -101,6 +92,7 @@ feature -- Element Settings
 			-- Set `feature_kind' with `a_kind'.
 		require
 			non_void_kind: a_kind /= Void
+			in_code_analysis: current_state = Code_analysis
 		do
 			feature_kind := a_kind
 		ensure
@@ -109,6 +101,8 @@ feature -- Element Settings
 
 	set_frozen (a_value: like is_frozen) is
 			-- Set `is_frozen' with `a_value'.
+		require
+			in_code_analysis: current_state = Code_analysis
 		do
 			is_frozen := a_value
 		ensure
@@ -117,6 +111,8 @@ feature -- Element Settings
 
 	set_constant (a_value: like is_constant) is
 			-- Set `is_constant' with `a_value'.
+		require
+			in_code_analysis: current_state = Code_analysis
 		do
 			is_constant := a_value
 		ensure
@@ -125,6 +121,8 @@ feature -- Element Settings
 		
 	set_overloaded (a_value: like is_overloaded) is
 			-- Set `is_overloaded' with `a_value'.
+		require
+			in_code_analysis: current_state = Code_analysis
 		do
 			is_overloaded := a_value
 		ensure
@@ -133,6 +131,8 @@ feature -- Element Settings
 
 	set_once_routine (a_value: like is_once_routine) is
 			-- Set `is_once_routine' with `a_value'.
+		require
+			in_code_analysis: current_state = Code_analysis
 		do
 			is_once_routine := a_value
 		ensure
@@ -143,6 +143,7 @@ feature -- Element Settings
 			-- Add `a_clause' to `feature_clauses'.
 		require
 			non_void_clause: a_clause /= Void
+			in_code_analysis: current_state = Code_analysis
 		do
 			feature_clauses.extend (a_clause)
 		ensure
@@ -153,6 +154,7 @@ feature -- Element Settings
 			-- Add `a_comment' to `comments'.
 		require
 			non_void_comment: a_comment /= Void
+			in_code_analysis: current_state = Code_analysis
 		do
 			if not comments.has (a_comment) then
 				comments.extend (a_comment)
@@ -165,6 +167,7 @@ feature -- Element Settings
 			-- Add `a_custom_attribute' to `custom_attributes.
 		require
 			non_void_a_custom_attribute: a_custom_attribute /= Void
+			in_code_analysis: current_state = Code_analysis
 		do
 			custom_attributes.extend (a_custom_attribute)
 		ensure
@@ -178,6 +181,8 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 			-- | Result := "feature [{features_clause, ...}] -- `type_feature'"
 
 			-- Corresponding feature clause 
+		require
+			in_code_generation: current_state = Code_generation
 		do
 			create Result.make (80)
 			Result.append ("feature")
@@ -210,6 +215,8 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 
 	indexing_clause: STRING is
 			-- generate indexing, custom attributes.
+		require
+			in_code_generation: current_state = Code_generation
 		do
 			if custom_attributes.count > 0 then
 				create Result.make (200)
@@ -240,6 +247,8 @@ feature {CODE_GENERATED_TYPE} -- Code Generation
 
 	comments_code: STRING is
 			-- Feature comments
+		require
+			in_code_generation: current_state = Code_generation
 		do
 			if not comments.is_empty then
 				increase_tabulation

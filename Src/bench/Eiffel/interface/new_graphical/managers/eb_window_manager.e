@@ -117,6 +117,8 @@ feature -- Basic operations
 		local
 			a_window: EB_DEVELOPMENT_WINDOW
 		do
+			store_last_focused_window
+			
 			create a_window.make
 			managed_windows.extend (a_window)
 			last_created_window := a_window
@@ -137,6 +139,8 @@ feature -- Basic operations
 		local
 			a_window: EB_DEVELOPMENT_WINDOW
 		do
+			store_last_focused_window
+			
 			create a_window.make_as_editor
 			managed_windows.extend (a_window)
 			last_created_window := a_window
@@ -157,6 +161,8 @@ feature -- Basic operations
 		local
 			a_window: EB_DEVELOPMENT_WINDOW
 		do
+			store_last_focused_window
+			
 			create a_window.make_as_context_tool
 			managed_windows.extend (a_window)
 			last_created_window := a_window
@@ -1160,6 +1166,18 @@ feature {NONE} -- Implementation
 			no_more_development_windows: development_windows_count = 0
 		do
 			ev_application.destroy
+		end
+		
+	store_last_focused_window is
+			-- Store layout of last focused window so new windows may be initialized
+			-- to match.
+		local
+			a_window: EB_DEVELOPMENT_WINDOW
+		do		
+			a_window := last_focused_development_window
+			if a_window /= Void then
+				a_window.save_layout
+			end
 		end
 
 feature {EB_WINDOW} -- Implementation / Private Constants

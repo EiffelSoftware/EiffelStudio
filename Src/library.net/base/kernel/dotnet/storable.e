@@ -64,19 +64,19 @@ feature -- Setting
 	set_discard_pointers (v: BOOLEAN) is
 			-- If `v' it will discard POINTER values and replace them by
 			-- the `default_pointer' pointer. Otherwise it keeps the original value.
-		external
-			"C macro signature (EIF_BOOLEAN) use %"eif_retrieve.h%""
-		alias
-			"eif_set_discard_pointer_values"
+		do
+			check
+				not_supported: False
+			end
 		end
 
 	set_new_independent_format (v: BOOLEAN) is
 			-- If `v' it will use ISE Eiffel 5.0 storable format for
 			-- storing.
-		external
-			"C macro signature (EIF_BOOLEAN) use %"eif_store.h%""
-		alias
-			"eif_set_new_independent_format"
+		do
+			check
+				not_supported: False
+			end
 		end
 
 feature -- Element change

@@ -197,7 +197,7 @@
 			<TEXT>development_window__left_panel_width<INTEGER>100</INTEGER></TEXT>
 			<TEXT>development_window__left_panel_layout<LIST_STRING>visible;visible;visible;closed;closed;closed</LIST_STRING></TEXT>
 			<TEXT>development_window__right_panel_layout<LIST_STRING>visible;visible</LIST_STRING></TEXT>
-			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;Open_file__visible;System_tool__visible;New_feature__hidden;New_class__visible;New_cluster__hidden;Save_file__visible;Open_shell__visible;System_info__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Favorites__visible;Clusters__visible;Features__visible;Search__visible;Windows__hidden;Separator;Melt_project__visible;Exec_debug__visible;Run_final__hidden;Remove_class_cluster__hidden;Raise_all__hidden;Raise_all_unsaved__hidden;Minimize_all__hidden</LIST_STRING></TEXT>
+			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;Open_file__visible;System_tool__visible;New_feature__hidden;New_class__visible;New_cluster__hidden;Save_file__visible;Open_shell__visible;System_info__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Favorites__visible;Clusters__visible;Features__visible;Search__visible;Windows__hidden;Separator;Melt_project__visible;Exec_debug__visible;Run_final__hidden;Remove_class_cluster__hidden;Raise_all__hidden;Raise_all_unsaved__hidden;Minimize_all__hidden;Toggle_stone__hidden</LIST_STRING></TEXT>
 	</TOPIC>
 </TOPIC>
 </EIFFEL_DOCUMENT>

@@ -375,8 +375,6 @@ feature -- Stone management
 
 	set_stone (a_stone: STONE) is
 			-- Assign `a_stone' as new stone.
-		local
-			fw: EV_WIDGET
 		do
 			history_manager.extend (a_stone)
 			debugger_manager.set_stone (a_stone)

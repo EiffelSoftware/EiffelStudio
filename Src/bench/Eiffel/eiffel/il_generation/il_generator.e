@@ -108,9 +108,6 @@ feature -- Generation
 				il_generator.set_verifiability (System.il_verifiable)
 				il_generator.set_cls_compliant (System.cls_compliant)
 
-					-- Generate reference to assemblies on which Current system depends on.
-				generate_reference_to_assemblies
-
 					-- We currently have one module per assembly, in the future we might
 					-- generate our code using as many modules as C directories if we
 					-- were in our C code generation.
@@ -154,26 +151,6 @@ feature -- Generation
 				end
 				retried := True
 				retry
-			end
-		end
-
-feature {NONE} -- Assembly imports
-
-	generate_reference_to_assemblies is
-			-- Generate inclusion of assemblies specified in Ace file
-		local
-			assemblies: LIST [STRING]
-		do
-			assemblies := System.assembly_names
-			if assemblies /= Void then
-				from
-					assemblies.start
-				until
-					assemblies.after
-				loop
-					il_generator.add_assembly_reference (assemblies.item)
-					assemblies.forth
-				end
 			end
 		end
 

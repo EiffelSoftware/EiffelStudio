@@ -15,28 +15,54 @@ inherit
 		rename
 			make as form_make,
 			make_no_auto_unmanage as form_make_no_auto_unmanage
-		export
-			{NONE} form_make, form_make_no_auto_unmanage
+		export 
+			{NONE} form_make, form_make_no_auto_unmanage   
 		redefine
-			clean_up, create_widget
+			create_widget, parent, created_dialog_automatically
 		end
 
 creation
 	make
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif form dialog.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+		local
+			widget_name: ANY
 		do
-			form_make (a_name, a_parent, False);
+			widget_name := a_name.to_c;
+			create_widget (a_parent.screen_object, widget_name, True);
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif form dialog and set `auto_unmanage' to False.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+		local
+			widget_name: ANY
 		do
-			form_make_no_auto_unmanage (a_name, a_parent, False);
+			widget_name := a_name.to_c;
+			create_widget (a_parent.screen_object, widget_name, False);
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
+
+feature {NONE} -- Initialization
 
 	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
 			-- Create bulletin with `auto_manage_flag'.
@@ -46,22 +72,19 @@ feature {NONE} -- Initialization
 			else
 				screen_object := xm_create_form_dialog (p_so, $w_name, auto_unmanage_arg, 1)
 			end;
-			Mel_widgets.put (Current, screen_object);
-			!! dialog_shell.make_from_existing (xt_parent (screen_object))
 		end;
 
 feature -- Access
 
-	dialog_shell: MEL_DIALOG_SHELL;
+	parent: MEL_DIALOG_SHELL;
 			-- Dialog shell
 
-feature -- Removal
+feature {NONE} -- Implementation
 
-	clean_up is
-			-- Destroy the widget.
+	created_dialog_automatically: BOOLEAN is
+			-- Was the dialog shell created automatically?
 		do
-			object_clean_up;
-			dialog_shell.object_clean_up
+			Result := True
 		end;
 
 feature {NONE} -- Implementation

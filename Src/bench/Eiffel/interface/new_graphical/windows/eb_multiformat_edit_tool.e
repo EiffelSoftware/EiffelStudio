@@ -25,7 +25,13 @@ feature {NONE} -- Initialization
 		do
 			init_formatters
 			Precursor
---			build_format_bar
+--			if format_bar_is_used then
+				build_format_bar (format_bar)
+--			else
+--				build_format_bar (edit_bar)
+--			end
+-- we assume that format_bar is always created,
+-- in `create toolbar' or in `build_edit_bar'
 		end
 
 	init_formatters is
@@ -44,7 +50,15 @@ feature -- Window Properties
 			-- to build the associated toolbar
 
 	format_bar: EV_HORIZONTAL_BOX
-			-- Format button bar
+			-- Format toolbar
+			-- it always exists, even if the tool never uses it,
+			-- for the `create_toolbars' creation instruction not
+			-- to be rejected by the compiler.
+
+	format_bar_is_used: BOOLEAN is
+			-- Do the tool need an effective format_bar?
+		deferred
+		end
 
 feature -- Window settings
 
@@ -116,21 +130,45 @@ feature -- Pick and Throw Implementation
 
 feature {NONE} -- Implementation
 
-	create_toolbars (par: EV_CONTAINER) is
+	create_toolbars (par: EV_BOX) is
 			-- Create all toolbars with parent `a_parent'.
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
 		do
 			precursor (par)
-			create sep.make (par)
-			create format_bar.make (par)
-			format_bar.set_expand (False)
---			format_bar.set_minimum_height (22)
+			if format_bar_is_used then
+				create sep.make (par)
+				par.set_child_expandable (sep, False)
+				create format_bar.make (par)
+				par.set_child_expandable (format_bar, False)
+--				format_bar.set_minimum_height (22)
+			end
 		end
 
---	build_format_bar is
---		deferred
---		end
+	build_format_bar (a_toolbar: EV_BOX) is
+		local
+--			ri, peer: EV_RADIO_MENU_ITEM
+			eb: EV_BUTTON
+			cfl: EB_FORMATTER_LIST
+		do
+			cfl := format_list
+			from
+				cfl.start
+			until
+				cfl.after
+			loop
+--				if cfl.isfirst then
+--					create ri.make_with_text (a_menu, cfl.item.menu_name)
+--					peer := ri
+--				else
+--					create ri.make_peer_with_text (a_menu, cfl.item.menu_name, peer)
+--				end
+				create eb.make (a_toolbar)
+				eb.set_pixmap (cfl.item.symbol)
+				cfl.item.launch_cmd.set_button (eb)
+				cfl.forth
+			end
+		end
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 

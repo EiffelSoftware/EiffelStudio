@@ -21,7 +21,7 @@ feature -- Execution
 	work is
 			-- Show universe: clusters in class lists.
 		local
-			clusters: LINKED_LIST [CLUSTER_I];
+			clusters: ARRAYED_LIST [CLUSTER_I];
 			cursor: CURSOR;
 		do
 			structured_text.add_string ("Classes modified since last compilation");

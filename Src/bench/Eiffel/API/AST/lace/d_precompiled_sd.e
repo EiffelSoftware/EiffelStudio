@@ -91,7 +91,7 @@ feature {COMPILER_EXPORTER} -- Renaming
 		local
 			cluster, other_cluster: CLUSTER_I;
 			old_name, new_name: STRING;
-			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster_list: ARRAYED_LIST [CLUSTER_I];
 			renamed_clusters: HASH_TABLE [CLUSTER_I, STRING];
 			vdcn: VDCN;
 			vd48: VD48;

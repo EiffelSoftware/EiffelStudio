@@ -40,21 +40,21 @@ feature {NONE} -- Initialization
 	make is
 			-- Create the hash table.
 		do
-			!! clusters.make
+			!! clusters.make (25)
 		end
 
 feature -- Properties
 
-	clusters: LINKED_LIST [CLUSTER_I]
+	clusters: ARRAYED_LIST [CLUSTER_I]
 			-- Clusters of the universe
 
-	clusters_sorted_by_tag: LINKED_LIST [CLUSTER_I] is
+	clusters_sorted_by_tag: ARRAYED_LIST [CLUSTER_I] is
 			-- Clusters sorted by their tags
 		local
 			loc_clusters: like clusters
 		do
 			loc_clusters := clusters
-			!! Result.make
+			!! Result.make (loc_clusters.count)
 			if not loc_clusters.is_empty then
 				Result.force (loc_clusters.first)
 				from
@@ -711,7 +711,7 @@ feature {COMPILER_EXPORTER} -- Merging
 		require
 			other_not_void: other /= Void
 		local
-			other_clusters: LINKED_LIST [CLUSTER_I]
+			other_clusters: like clusters
 			c_of_name, c_of_path: CLUSTER_I
 			c: CLUSTER_I
 			vd28: VD28

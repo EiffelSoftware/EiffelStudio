@@ -153,7 +153,7 @@ feature {COMPILER_EXPORTER}
 			a_class: CLASS_I;
 			vd19: VD19;
 			vd20: VD20;
-			clusters: LINKED_LIST [CLUSTER_I];
+			clusters: ARRAYED_LIST [CLUSTER_I];
 			found: BOOLEAN;
 			vd29: VD29;
 			vd30: VD30;

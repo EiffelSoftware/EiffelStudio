@@ -420,7 +420,7 @@ feature -- Properties
 		local
 			local_workbench: WORKBENCH_I
 			local_universe: UNIVERSE_I
-			a_cluster_list: LINKED_LIST [CLUSTER_I]
+			a_cluster_list: ARRAYED_LIST [CLUSTER_I]
 			a_cluster: CLUSTER_I
 			a_class_table: HASH_TABLE [CLASS_I, STRING]
 			a_class_i: CLASS_I

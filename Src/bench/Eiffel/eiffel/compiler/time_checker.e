@@ -27,7 +27,7 @@ feature
 		local
 			new_classes: LINKED_LIST [CLASS_I]
 			old_classes: HASH_TABLE [BOOLEAN, INTEGER]
-			clusters: LINKED_LIST [CLUSTER_I]
+			clusters: ARRAYED_LIST [CLUSTER_I]
 			class_name: STRING
 			class_c: CLASS_C
 			class_i: CLASS_I

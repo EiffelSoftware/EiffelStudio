@@ -59,6 +59,7 @@ feature {NONE}
 			old_selection_start: INTEGER
 			old_selection_end: INTEGER
 		do
+
 			if
 				syntax_highlighting_enabled
 			then		

@@ -143,7 +143,7 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Free `item'.
 		do
-			c_free (item)
+--			c_free (item)
 			item := default_pointer
 		end
 

@@ -230,6 +230,8 @@ cluster
 
   common_parser (common):   "$\parser"
 
+  ast_visitor (common_parser):		"$\AST\visitor"
+
   common_eiffel_parser (common_parser):   "$\parser"
 
   old_resources (common):   "$\resources"
@@ -242,8 +244,6 @@ cluster
   flat_short_b:   "$EIFFEL_SRC\Eiffel\flat_short\bench"
 
   yacc:   "$EIFFEL_SRC\Eiffel\yacc"
-
-  const:    "$EIFFEL_SRC\Eiffel\const"
 
   xml:    "$EIFFEL_SRC\library\exml"
 

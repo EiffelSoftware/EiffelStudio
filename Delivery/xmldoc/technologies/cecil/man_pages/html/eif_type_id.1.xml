@@ -1,15 +1,14 @@
 <document title="Reference for `eif_type_id'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
-		<heading/>
+		<heading></heading>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_gen_conf.h"
+<bold>#include "eif_gen_conf.h"
 
-	EIF_TYPE_ID eif_type_id (char *</bold> <italic>type</italic><bold>);</bold>
-		</code_block>
+EIF_TYPE_ID eif_type_id (char *</bold> <italic>type</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 
@@ -22,7 +21,7 @@
 		<heading>
 			<size>2</size>NOTES
 		</heading>An error cannot be caught by a visible exception.
-		<line_break/>The type is not necessary visible.
+		<line_break></line_break>The type is not necessary visible.
 		<heading>
 			<size>2</size>CONFORMANCE
 		</heading> ISE Eiffel 4.3 and later.

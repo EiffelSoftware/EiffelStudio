@@ -1,15 +1,14 @@
 <document title="Reference for `eif_wean'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
-		<heading/>
+		<heading></heading>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_hector.h"
+<bold>#include "eif_hector.h"
 
-	EIF_REFERENCE eif_wean (EIF_OBJECT</bold> <italic>obj</italic><bold>);</bold>
-		</code_block>
+EIF_REFERENCE eif_wean (EIF_OBJECT</bold> <italic>obj</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

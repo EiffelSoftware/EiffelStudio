@@ -1,14 +1,13 @@
 <document title="Reference for `eif_type'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_cecil.h"
+<bold>#include "eif_cecil.h"
 
-	EIF_TYPE_ID eif_type (EIF_OBJECT </bold><italic>object</italic><bold>);</bold>
-		</code_block>
+EIF_TYPE_ID eif_type (EIF_OBJECT </bold><italic>object</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

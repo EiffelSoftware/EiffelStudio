@@ -1,14 +1,13 @@
 <document title="Reference for `eif_procedure'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_cecil.h"
+<bold>#include "eif_cecil.h"
 
-	EIF_PROCEDURE eif_procedure (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold>
-		</code_block>
+EIF_PROCEDURE eif_procedure (char *</bold> <italic>name</italic><bold>, int *</bold> <italic>tid</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 
@@ -22,8 +21,8 @@
 		<heading>
 			<size>2</size>NOTES
 		</heading>The Eiffel procedure cannot be a C external. In this case, you must directly call the C routine.
-		<line_break/>The return value is an address: to use it as a routine, you must call it with arguments or at least with ().
-		<line_break/>No argument type checking is done. You may cast the address of an Eiffel routine obtained with 
+		<line_break></line_break>The return value is an address: to use it as a routine, you must call it with arguments or at least with ().
+		<line_break></line_break>No argument type checking is done. You may cast the address of an Eiffel routine obtained with 
 		<bold>eif_procedure()</bold> when calling it with real arguments.
 		<heading>
 			<size>2</size>CONFORMANCE

@@ -1,17 +1,14 @@
 <document title="Reference for `eif_create'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
-		<heading/>
+		<heading></heading>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
-		<code>
-			<bold>#include "eif_cecil. h"</bold>
-			<bold/>
-			<bold>EIF_OBJECT eif_create (EIF_TYPE_ID</bold> 
-			<italic>tid</italic>
-			<bold>);</bold>
-		</code>
+		<code_block>
+<bold>#include "eif_cecil. h"</bold>
+
+<bold>EIF_OBJECT eif_create (EIF_TYPE_ID</bold> <italic>tid</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 
@@ -24,7 +21,7 @@
 			<size>2</size>NOTES
 		</heading>You cannot pass the return value to Eiffel routines as is: you must call 
 		<bold>eif_access()</bold> to pass it to Eiffel routine. 
-		<line_break/>To release the protection of an Eiffel object created with 
+		<line_break></line_break>To release the protection of an Eiffel object created with 
 		<bold>eif_create()</bold>, call 
 		<bold>eif_wean()</bold>. It will be collected during the next collection.  
 		<heading>

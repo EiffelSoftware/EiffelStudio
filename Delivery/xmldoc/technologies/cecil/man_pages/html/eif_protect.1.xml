@@ -1,14 +1,13 @@
 <document title="Reference for `eif_protect'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_hector.h"
+<bold>#include "eif_hector.h"
 
-	EIF_OBJECT eif_protect (EIF_REFERENCE</bold> <italic>ref</italic><bold>);</bold>
-		</code_block>
+EIF_OBJECT eif_protect (EIF_REFERENCE</bold> <italic>ref</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

@@ -1,10 +1,9 @@
 <document title="CECIL Reference" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>Index of CECIL features
 		<list ordered="false">
 			<item>
 				<link>
-					
 					<url>rtms.1.xml</url>
 					<label>RTMS()</label>
 				</link>

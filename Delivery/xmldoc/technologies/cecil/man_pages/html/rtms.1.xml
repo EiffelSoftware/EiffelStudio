@@ -1,20 +1,18 @@
-<document title="Reference for `eif_string'" output="studio">
-	<meta_data/>
+<document title="Reference for `RTMS'" output="studio">
+	<meta_data></meta_data>
 	<paragraph>
-		<heading/>
+		<heading></heading>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_plug.h"
+<bold>#include "eif_plug.h"
 
-	EIF_REFERENCE eif_string (char *</bold> <italic>string</italic><bold>);</bold>
-		</code_block>
+EIF_REFERENCE RTMS (char *</bold> <italic>string</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 
-		<bold>eif_string()</bold> macro returns the corresponding Eiffel string corresponding to the C string 
-		<italic>string</italic>.
+		<bold>RTMS()</bold> macro returns the corresponding Eiffel string corresponding to the C string <italic>string</italic>. It is deprecated and one should use eif_string instead.
 		<paragraph>The return value does not reference 
 			<italic>string</italic>.
 		</paragraph>
@@ -28,8 +26,8 @@
 		<heading>
 			<size>2</size>COMPATIBILITY
 		</heading>
-		<bold>eif_string()</bold> is equivalent to 
-		<bold>RTMS()</bold>, which is deprecated.
+		<bold>RTMS()</bold> is equivalent to 
+		<bold>eif_string()</bold>.
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>

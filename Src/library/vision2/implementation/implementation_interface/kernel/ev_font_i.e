@@ -41,7 +41,7 @@ feature -- Access
 		deferred
 		end
 
-	preferred_families: ACTIVE_LIST [STRING]
+	preferred_families: EV_ACTIVE_LIST [STRING]
 			-- Preferred user fonts.
 			-- `family' will be ignored when not Void.
 
@@ -59,6 +59,18 @@ feature -- Element change
 			a_preferred_families_not_void: a_preferred_families /= Void
 		do
 			preferred_families := a_preferred_families
+				-- We must now clear the add actions and remove actions, and re-insert
+				-- agents connecting to `update_preferred_faces'. If this is not performed
+				-- then when copying a font, an update to `preferred_faces' still uses the
+				-- agent of the original list which calls back to the old implementation.
+				-- This causes `preferred_families' then to always update based on the old imp.
+				-- Julian.
+			preferred_families.internal_add_actions.wipe_out
+			preferred_families.internal_remove_actions.wipe_out
+			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (agent update_preferred_faces)
+			
+			
 			update_font_face
 			set_family (a_family)
 			set_weight (a_weight)
@@ -202,6 +214,12 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		ensure
 			name_not_void: name /= Void
+		end
+		
+	update_preferred_faces (a_face: STRING) is
+			-- `preferred_faces' has changed, so update `Current' to reflect this,
+			-- possibly selecting a new face name.
+		deferred
 		end
 
 invariant

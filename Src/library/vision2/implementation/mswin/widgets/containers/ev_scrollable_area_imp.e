@@ -180,9 +180,9 @@ feature {NONE} -- Implementation
 			ch, cw: INTEGER
 		do
 			Precursor (a_x, a_y, a_width, a_height, repaint)
-			if child /= Void then
-				cw := child.width - client_width
-				ch := child.height - client_height
+			if item_imp /= Void then
+				cw := item_imp.width - client_width
+				ch := item_imp.height - client_height
 
 				if cw > 0 then
 					enable_horizontal_scroll_bar
@@ -225,6 +225,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/26 21:01:29  brendel
+--| child -> item or item_imp.
+--|
 --| Revision 1.28  2000/04/26 18:35:06  brendel
 --| Replaced obsolete call.
 --|

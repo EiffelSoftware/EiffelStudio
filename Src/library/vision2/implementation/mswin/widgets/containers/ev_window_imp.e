@@ -639,8 +639,8 @@ feature {NONE} -- Implementation
 			-- We calculate the values first
 			mw := 2 * window_frame_width
 
-			if child /= Void then
-				mw := mw + child.minimum_width
+			if item_imp /= Void then
+				mw := mw + item_imp.minimum_width
 			end
 
 			-- Finaly, we set the value
@@ -655,8 +655,8 @@ feature {NONE} -- Implementation
 			-- We calculate the values first
 			mh := 2 * window_frame_height
 
-			if child /= Void then
-				mh := mh + child.minimum_height
+			if item_imp /= Void then
+				mh := mh + item_imp.minimum_height
 			end
 			if has_menu then
 				mh := mh + menu_bar_height
@@ -678,9 +678,9 @@ feature {NONE} -- Implementation
 			mw := 2 * window_frame_width
 			mh := 2 * window_frame_height
 
-			if child /= Void then
-				mw := mw + child.minimum_width
-				mh := mh + child.minimum_height
+			if item_imp /= Void then
+				mw := mw + item_imp.minimum_width
+				mh := mh + item_imp.minimum_height
 			end
 			if has_menu then
 				mh := mh + menu_bar_height
@@ -801,8 +801,8 @@ feature {NONE} -- Implementation
 			sb_imp: EV_STATUS_BAR_IMP
 		do
 			if size_type /= size_minimized then
-				if child /= Void then
-					child.parent_ask_resize (client_width, client_height)
+				if item /= Void then
+					item_imp.parent_ask_resize (client_width, client_height)
 				end
 				if status_bar /= Void then
 					sb_imp ?= status_bar.implementation
@@ -1007,6 +1007,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/26 21:01:29  brendel
+--| child -> item or item_imp.
+--|
 --| Revision 1.39  2000/04/20 18:29:24  brendel
 --| Moved all close/destroy related features to same place.
 --| Does not call wel_destroy anymore, because wel would quit when

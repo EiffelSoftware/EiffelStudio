@@ -55,8 +55,8 @@ feature -- Element change
 			-- of the widget.
 		do
 			top_level_window_imp := a_window
-			if child /= Void then
-				child.set_top_level_window_imp (a_window)
+			if item_imp /= Void then
+				item_imp.set_top_level_window_imp (a_window)
 			end
 		end
 
@@ -70,8 +70,8 @@ feature {EV_ANY_I} -- Implementation
 			-- value.
 		do
 			Precursor (a_x, a_y, a_width, a_height, repaint)
-			if child /= Void then
-				child.set_move_and_size (0, 0, 
+			if item_imp /= Void then
+				item_imp.set_move_and_size (0, 0, 
 					client_width, client_height)
 			end
 		end
@@ -79,16 +79,16 @@ feature {EV_ANY_I} -- Implementation
 	compute_minimum_width is
 			-- Recompute the minimum_width of the object.
 		do
-			if child /= Void then
-				internal_set_minimum_width (child.minimum_width)
+			if item_imp /= Void then
+				internal_set_minimum_width (item_imp.minimum_width)
 			end
 		end
 
 	compute_minimum_height is
 			-- Recompute the minimum_width of the object.
 		do
-			if child /= Void then
-				internal_set_minimum_height (child.minimum_height)
+			if item_imp /= Void then
+				internal_set_minimum_height (item_imp.minimum_height)
 			end
 		end
 
@@ -96,9 +96,9 @@ feature {EV_ANY_I} -- Implementation
 			-- Recompute both the minimum_width and then
 			-- minimum_height of the object.
 		do
-			if child /= Void then
-				internal_set_minimum_size (child.minimum_width, 
-					child.minimum_height)
+			if item_imp /= Void then
+				internal_set_minimum_size (item_imp.minimum_width, 
+					item_imp.minimum_height)
 			end
 		end
 
@@ -129,6 +129,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/26 21:01:29  brendel
+--| child -> item or item_imp.
+--|
 --| Revision 1.11  2000/03/29 21:30:09  brendel
 --| Used redefinition instead of renaming.
 --|

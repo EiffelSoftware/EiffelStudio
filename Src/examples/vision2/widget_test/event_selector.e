@@ -67,7 +67,6 @@ feature -- Status setting
 								create list_item.make_with_text (names.item)
 								list_item.set_accept (agent action_sequences.connect_event_output_agent (widget, names.item, True, string_handler))
 								list_item.set_deny (agent action_sequences.connect_event_output_agent (widget, names.item, False, string_handler))
-								action_sequences.connect_event_output_agent (widget, names.item, True, string_handler)
 								list.extend (list_item)
 								names.forth
 							end

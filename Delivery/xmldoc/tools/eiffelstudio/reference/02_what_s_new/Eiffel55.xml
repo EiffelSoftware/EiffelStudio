@@ -55,5 +55,18 @@
 		<list ordered="false">
 			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
 		</list>
+		<heading><size>3</size>WEL</heading>
+		<list ordered="false">
+			<item>Added various missing constants in <class_name>WEL_*_CONSTANTS</class_name> classes.</item>
+			<item>Added creation procedure <feature_name>make_permanent</feature_name> in <class_name>WEL_DLL</class_name> so that the loaded DLL is loaded until the very end of program's execution. Now <class_name>WEL_RICH_EDIT_DLL</class_name> and <class_name>WEL_COMMON_CONTROLS_DLL</class_name> are using this new creation procedure. It fixes the issue where a program using <class_name>WEL_RICH_EDIT</class_name> would crash when exiting.</item>
+			<item>Fixed a possible C compilation error when using <class_name>WEL_RICH_EDIT</class_name> due to a bug in the Microsoft Platform SDK header file for RichEdit.</item>
+			<item>Fixed <class_name>WEL_SCROLL_BAR</class_name> to return a valid position when position is more than 65535.</item>
+			<item>Added <feature_name>string_size_extended</feature_name> in <class_name>WEL_FONT</class_name> to better know where to draw a string using a specified font on screen,</item>
+			<item>Added <feature_name>height_in_points</feature_name>, <feature_name>height_in_pixels</feature_name>, <feature_name>height_in_twips</feature_name>, and <feature_name>log_font</feature_name> in <class_name>WEL_CHARACTER_FORMAT</class_name>. Made <feature_name>height </feature_name>and <feature_name>set_height</feature_name> obsolete.</item>
+			<item>Changed implementation of <class_name>WEL_REGISTRY_KEY_VALUE</class_name> in order to fix <feature_name>set_dword_value</feature_name> which was writting incorrect data to the registry keys. Enhanced the typing of values, thus making the non-typed routines obsolete.</item>
+			<item>Made <feature_name>default_key_value</feature_name> obsolete in <class_name>WEL_REGISTRY</class_name>.</item>
+			<item>Properly defined <feature_name>is_equal</feature_name> and <feature_name>copy</feature_name> in <class_name>WEL_STRUCTURE</class_name>, possibly causing some compilation errors while analyzing the inheritance structure of your classes.</item>
+			<item>Changed signature of non exported routine <feature_name>cwin_destroy_window</feature_name> from <class_name>WEL_WINDOW</class_name> to now return a value.</item>
+		</list>
 	</paragraph>
 </document>

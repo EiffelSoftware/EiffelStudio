@@ -45,6 +45,7 @@ feature -- Start output features
 				create_window
 			else
 				parent.set_title (Interface_names.d_Compilation_progress);
+				icon_name := Project_tool.icon_name;
 			end;
 			total_number := total_nbr;
 			current_degree := 6;

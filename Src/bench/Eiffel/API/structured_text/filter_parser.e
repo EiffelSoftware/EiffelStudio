@@ -1,9 +1,13 @@
--- Parser of file descriptions which allow generation of specific formats 
--- (troff, mif, TEX, PostScript) for output of clickable, short, flat and 
--- flat-short.
+indexing
+
+	description: 
+		"Parser of file descriptions which allow generation of%
+		%specific formats (troff, mif, TEX, PostScript) for%
+		%output of clickable, short, flat and flat-short.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class FILTER_PARSER
-
 
 feature {NONE} -- Formats
 

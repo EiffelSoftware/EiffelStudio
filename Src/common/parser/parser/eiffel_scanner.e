@@ -269,448 +269,452 @@ when 38 then
 					-- Note: Free operators are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				token_buffer.to_lower
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
 				current_position.go_to (token_buffer.count)
 				last_token := TE_FREE
 			
 when 39 then
---|#line 208
+--|#line 210
 
 				current_position.go_to (5)
 				last_token := TE_AGENT
 			
 when 40 then
---|#line 212
+--|#line 214
 
 				current_position.go_to (5)
 				last_token := TE_ALIAS
 			
 when 41 then
---|#line 216
+--|#line 218
 
 				current_position.go_to (3)
 				last_token := TE_ALL
 			
 when 42 then
---|#line 220
+--|#line 222
 
 				current_position.go_to (3)
 				last_token := TE_AND
 			
 when 43 then
---|#line 224
+--|#line 226
 
 				current_position.go_to (2)
 				last_token := TE_AS
 			
 when 44 then
---|#line 228
+--|#line 230
 
 				current_position.go_to (3)
 				last_token := TE_BIT
 			
 when 45 then
---|#line 232
+--|#line 234
 
 				current_position.go_to (5)
 				last_token := TE_CHECK
 			
 when 46 then
---|#line 236
+--|#line 238
 
 				current_position.go_to (5)
 				last_token := TE_CLASS
 			
 when 47 then
---|#line 240
+--|#line 242
 
 				current_position.go_to (6)
 				last_token := TE_CREATE
 			
 when 48 then
---|#line 244
+--|#line 246
 
 				current_position.go_to (8)
 				last_token := TE_CREATION
 			
 when 49 then
---|#line 248
+--|#line 250
 
 				current_position.go_to (7)
 				last_token := TE_CURRENT
 			
 when 50 then
---|#line 252
+--|#line 254
 
 				current_position.go_to (5)
 				last_token := TE_DEBUG
 			
 when 51 then
---|#line 256
+--|#line 258
 
 				current_position.go_to (8)
 				last_token := TE_DEFERRED
 			
 when 52 then
---|#line 260
+--|#line 262
 
 				current_position.go_to (2)
 				last_token := TE_DO
 			
 when 53 then
---|#line 264
+--|#line 266
 
 				current_position.go_to (4)
 				last_token := TE_ELSE
 			
 when 54 then
---|#line 268
+--|#line 270
 
 				current_position.go_to (6)
 				last_token := TE_ELSEIF
 			
 when 55 then
---|#line 272
+--|#line 274
 
 				current_position.go_to (3)
 				last_token := TE_END
 			
 when 56 then
---|#line 276
+--|#line 278
 
 				current_position.go_to (6)
 				last_token := TE_ENSURE
 			
 when 57 then
---|#line 280
+--|#line 282
 
 				current_position.go_to (8)
 				last_token := TE_EXPANDED
 			
 when 58 then
---|#line 284
+--|#line 286
 
 				current_position.go_to (6)
 				last_token := TE_EXPORT
 			
 when 59 then
---|#line 288
+--|#line 290
 
 				current_position.go_to (8)
 				last_token := TE_EXTERNAL
 			
 when 60 then
---|#line 292
+--|#line 294
 
 				current_position.go_to (5)
 				last_token := TE_FALSE
 			
 when 61 then
---|#line 296
+--|#line 298
 
 				current_position.go_to (7)
 				last_token := TE_FEATURE
 			
 when 62 then
---|#line 300
+--|#line 302
 
 				current_position.go_to (4)
 				last_token := TE_FROM
 			
 when 63 then
---|#line 304
+--|#line 306
 
 				current_position.go_to (6)
 				last_token := TE_FROZEN
 			
 when 64 then
---|#line 308
+--|#line 310
 
 				current_position.go_to (2)
 				last_token := TE_IF
 			
 when 65 then
---|#line 312
+--|#line 314
 
 				current_position.go_to (7)
 				last_token := TE_IMPLIES
 			
 when 66 then
---|#line 316
+--|#line 318
 
 				current_position.go_to (8)
 				last_token := TE_INDEXING
 			
 when 67 then
---|#line 320
+--|#line 322
 
 				current_position.go_to (5)
 				last_token := TE_INFIX
 			
 when 68 then
---|#line 324
+--|#line 326
 
 				current_position.go_to (7)
 				last_token := TE_INHERIT
 			
 when 69 then
---|#line 328
+--|#line 330
 
 				current_position.go_to (7)
 				last_token := TE_INSPECT
 			
 when 70 then
---|#line 332
+--|#line 334
 
 				current_position.go_to (9)
 				last_token := TE_INVARIANT
 			
 when 71 then
---|#line 336
+--|#line 338
 
 				current_position.go_to (2)
 				last_token := TE_IS
 			
 when 72 then
---|#line 340
+--|#line 342
 
 				current_position.go_to (4)
 				last_token := TE_LIKE
 			
 when 73 then
---|#line 344
+--|#line 346
 
 				current_position.go_to (5)
 				last_token := TE_LOCAL
 			
 when 74 then
---|#line 348
+--|#line 350
 
 				current_position.go_to (4)
 				last_token := TE_LOOP
 			
 when 75 then
---|#line 352
+--|#line 354
 
 				current_position.go_to (3)
 				last_token := TE_NOT
 			
 when 76 then
---|#line 356
+--|#line 358
 
 				current_position.go_to (8)
 				last_token := TE_OBSOLETE
 			
 when 77 then
---|#line 360
+--|#line 362
 
 				current_position.go_to (3)
 				last_token := TE_OLD
 			
 when 78 then
---|#line 364
+--|#line 366
 
 				current_position.go_to (4)
 				last_token := TE_ONCE
 			
 when 79 then
---|#line 368
+--|#line 370
 
 				current_position.go_to (2)
 				last_token := TE_OR
 			
 when 80 then
---|#line 372
+--|#line 374
 
 				current_position.go_to (9)
 				last_token := TE_PRECURSOR
 			
 when 81 then
---|#line 376
+--|#line 378
 
 				current_position.go_to (6)
 				last_token := TE_PREFIX
 			
 when 82 then
---|#line 380
+--|#line 382
 
 				current_position.go_to (8)
 				last_token := TE_REDEFINE
 			
 when 83 then
---|#line 384
+--|#line 386
 
 				current_position.go_to (6)
 				last_token := TE_RENAME
 			
 when 84 then
---|#line 388
+--|#line 390
 
 				current_position.go_to (7)
 				last_token := TE_REQUIRE
 			
 when 85 then
---|#line 392
+--|#line 394
 
 				current_position.go_to (6)
 				last_token := TE_RESCUE
 			
 when 86 then
---|#line 396
+--|#line 398
 
 				current_position.go_to (6)
 				last_token := TE_RESULT
 			
 when 87 then
---|#line 400
+--|#line 402
 
 				current_position.go_to (5)
 				last_token := TE_RETRY
 			
 when 88 then
---|#line 404
+--|#line 406
 
 				current_position.go_to (6)
 				last_token := TE_SELECT
 			
 when 89 then
---|#line 408
+--|#line 410
 
 				current_position.go_to (8)
 				last_token := TE_SEPARATE
 			
 when 90 then
---|#line 412
+--|#line 414
 
 				current_position.go_to (5)
 				last_token := TE_STRIP
 			
 when 91 then
---|#line 416
+--|#line 418
 
 				current_position.go_to (4)
 				last_token := TE_THEN
 			
 when 92 then
---|#line 420
+--|#line 422
 
 				current_position.go_to (4)
 				last_token := TE_TRUE
 			
 when 93 then
---|#line 424
+--|#line 426
 
 				current_position.go_to (8)
 				last_token := TE_UNDEFINE
 			
 when 94 then
---|#line 428
+--|#line 430
 
 				current_position.go_to (6)
 				last_token := TE_UNIQUE
 			
 when 95 then
---|#line 432
+--|#line 434
 
 				current_position.go_to (5)
 				last_token := TE_UNTIL
 			
 when 96 then
---|#line 436
+--|#line 438
 
 				current_position.go_to (7)
 				last_token := TE_VARIANT
 			
 when 97 then
---|#line 440
+--|#line 442
 
 				current_position.go_to (4)
 				last_token := TE_WHEN
 			
 when 98 then
---|#line 444
+--|#line 446
 
 				current_position.go_to (3)
 				last_token := TE_XOR
 			
 when 99 then
---|#line 452
+--|#line 454
 
 				current_position.go_to (7)
 				last_token := TE_BOOLEAN_ID
 			
 when 100 then
---|#line 456
+--|#line 458
 
 				current_position.go_to (9)
 				last_token := TE_CHARACTER_ID
 			
 when 101 then
---|#line 460
+--|#line 462
 
 				current_position.go_to (6)
 				last_token := TE_DOUBLE_ID
 			
 when 102 then
---|#line 464
+--|#line 466
 
 				current_position.go_to (9)
 				last_token := TE_INTEGER_8_ID
 			
 when 103 then
---|#line 468
+--|#line 470
 
 				current_position.go_to (10)
 				last_token := TE_INTEGER_16_ID
 			
 when 104 then
---|#line 472
+--|#line 474
 
 				current_position.go_to (7)
 				last_token := TE_INTEGER_ID
 			
 when 105 then
---|#line 476
+--|#line 478
 
 				current_position.go_to (10)
 				last_token := TE_INTEGER_64_ID
 			
 when 106 then
---|#line 480
+--|#line 482
 
 				current_position.go_to (4)
 				last_token := TE_NONE_ID
 			
 when 107 then
---|#line 484
+--|#line 486
 
 				current_position.go_to (7)
 				last_token := TE_POINTER_ID
 			
 when 108 then
---|#line 488
+--|#line 490
 
 				current_position.go_to (4)
 				last_token := TE_REAL_ID
 			
 when 109 then
---|#line 492
+--|#line 494
 
 				current_position.go_to (14)
 				last_token := TE_WIDE_CHAR_ID
 			
 when 110 then
---|#line 496
+--|#line 498
 
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				token_buffer.to_lower
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
 				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
 			
 when 111 then
---|#line 508
+--|#line 512
 
 				token_buffer.clear_all
 				append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -718,7 +722,7 @@ when 111 then
 				last_token := TE_A_BIT
 			
 when 112 then
---|#line 518
+--|#line 522
 		-- This a trick to avoid having:
 					--     when 1..2 then
 					-- to be be erroneously recognized as:
@@ -733,7 +737,7 @@ when 112 then
 			
 when 113 then
 	yy_position := yy_position - 2
---|#line 519
+--|#line 523
 		-- This a trick to avoid having:
 					--     when 1..2 then
 					-- to be be erroneously recognized as:
@@ -747,7 +751,7 @@ when 113 then
 				last_token := TE_INTEGER
 			
 when 114 then
---|#line 532
+--|#line 536
 
 				token_buffer.clear_all
 				append_without_underscores (text, token_buffer)
@@ -755,7 +759,7 @@ when 114 then
 				last_token := TE_INTEGER
 			
 when 115 then
---|#line 539
+--|#line 543
 		-- Recognizes hexadecimal integer numbers.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
@@ -763,16 +767,18 @@ when 115 then
 				last_token := TE_INTEGER
 			
 when 116 then
---|#line 548
+--|#line 552
 
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				token_buffer.to_lower
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
 				current_position.go_to (text_count)
 				last_token := TE_REAL
 			
 when 117 then
---|#line 559
+--|#line 565
 
 				token_buffer.clear_all
 				token_buffer.append_character (text_item (2))
@@ -780,7 +786,7 @@ when 117 then
 				last_token := TE_CHAR
 			
 when 118 then
---|#line 565
+--|#line 571
 
 					-- This is not correct Eiffel!
 				token_buffer.clear_all
@@ -789,7 +795,7 @@ when 118 then
 				last_token := TE_CHAR
 			
 when 119 then
---|#line 572
+--|#line 578
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%A')
@@ -797,7 +803,7 @@ when 119 then
 				last_token := TE_CHAR
 			
 when 120 then
---|#line 578
+--|#line 584
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%B')
@@ -805,7 +811,7 @@ when 120 then
 				last_token := TE_CHAR
 			
 when 121 then
---|#line 584
+--|#line 590
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%C')
@@ -813,7 +819,7 @@ when 121 then
 				last_token := TE_CHAR
 			
 when 122 then
---|#line 590
+--|#line 596
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%D')
@@ -821,7 +827,7 @@ when 122 then
 				last_token := TE_CHAR
 			
 when 123 then
---|#line 596
+--|#line 602
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%F')
@@ -829,7 +835,7 @@ when 123 then
 				last_token := TE_CHAR
 			
 when 124 then
---|#line 602
+--|#line 608
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%H')
@@ -837,7 +843,7 @@ when 124 then
 				last_token := TE_CHAR
 			
 when 125 then
---|#line 608
+--|#line 614
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%L')
@@ -845,7 +851,7 @@ when 125 then
 				last_token := TE_CHAR
 			
 when 126 then
---|#line 614
+--|#line 620
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%N')
@@ -853,7 +859,7 @@ when 126 then
 				last_token := TE_CHAR
 			
 when 127 then
---|#line 620
+--|#line 626
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%Q')
@@ -861,7 +867,7 @@ when 127 then
 				last_token := TE_CHAR
 			
 when 128 then
---|#line 626
+--|#line 632
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%R')
@@ -869,7 +875,7 @@ when 128 then
 				last_token := TE_CHAR
 			
 when 129 then
---|#line 632
+--|#line 638
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%S')
@@ -877,7 +883,7 @@ when 129 then
 				last_token := TE_CHAR
 			
 when 130 then
---|#line 638
+--|#line 644
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%T')
@@ -885,7 +891,7 @@ when 130 then
 				last_token := TE_CHAR
 			
 when 131 then
---|#line 644
+--|#line 650
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%U')
@@ -893,7 +899,7 @@ when 131 then
 				last_token := TE_CHAR
 			
 when 132 then
---|#line 650
+--|#line 656
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%V')
@@ -901,7 +907,7 @@ when 132 then
 				last_token := TE_CHAR
 			
 when 133 then
---|#line 656
+--|#line 662
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%%')
@@ -909,7 +915,7 @@ when 133 then
 				last_token := TE_CHAR
 			
 when 134 then
---|#line 662
+--|#line 668
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%'')
@@ -917,7 +923,7 @@ when 134 then
 				last_token := TE_CHAR
 			
 when 135 then
---|#line 668
+--|#line 674
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%"')
@@ -925,7 +931,7 @@ when 135 then
 				last_token := TE_CHAR
 			
 when 136 then
---|#line 674
+--|#line 680
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%(')
@@ -933,7 +939,7 @@ when 136 then
 				last_token := TE_CHAR
 			
 when 137 then
---|#line 680
+--|#line 686
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%)')
@@ -941,7 +947,7 @@ when 137 then
 				last_token := TE_CHAR
 			
 when 138 then
---|#line 686
+--|#line 692
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%<')
@@ -949,7 +955,7 @@ when 138 then
 				last_token := TE_CHAR
 			
 when 139 then
---|#line 692
+--|#line 698
 
 				token_buffer.clear_all
 				token_buffer.append_character ('%>')
@@ -957,13 +963,13 @@ when 139 then
 				last_token := TE_CHAR
 			
 when 140 then
---|#line 698
+--|#line 704
 
 				current_position.go_to (text_count)
 				process_character_code (text_substring (4, text_count - 2).to_integer)
 			
 when 141, 142 then
---|#line 702
+--|#line 708
 
 					-- Unrecognized character.
 					-- (catch-all rules (no backing up))
@@ -971,73 +977,73 @@ when 141, 142 then
 				report_character_missing_quote_error (text)
 			
 when 143 then
---|#line 713
+--|#line 719
 
 				current_position.go_to (3)
 				last_token := TE_STR_LT
 			
 when 144 then
---|#line 717
+--|#line 723
 
 				current_position.go_to (3)
 				last_token := TE_STR_GT
 			
 when 145 then
---|#line 721
+--|#line 727
 
 				current_position.go_to (4)
 				last_token := TE_STR_LE
 			
 when 146 then
---|#line 725
+--|#line 731
 
 				current_position.go_to (4)
 				last_token := TE_STR_GE
 			
 when 147 then
---|#line 729
+--|#line 735
 
 				current_position.go_to (3)
 				last_token := TE_STR_PLUS
 			
 when 148 then
---|#line 733
+--|#line 739
 
 				current_position.go_to (3)
 				last_token := TE_STR_MINUS
 			
 when 149 then
---|#line 737
+--|#line 743
 
 				current_position.go_to (3)
 				last_token := TE_STR_STAR
 			
 when 150 then
---|#line 741
+--|#line 747
 
 				current_position.go_to (3)
 				last_token := TE_STR_SLASH
 			
 when 151 then
---|#line 745
+--|#line 751
 
 				current_position.go_to (3)
 				last_token := TE_STR_POWER
 			
 when 152 then
---|#line 749
+--|#line 755
 
 				current_position.go_to (4)
 				last_token := TE_STR_DIV
 			
 when 153 then
---|#line 753
+--|#line 759
 
 				current_position.go_to (4)
 				last_token := TE_STR_MOD
 			
 when 154 then
---|#line 757
+--|#line 763
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
@@ -1045,7 +1051,7 @@ when 154 then
 				last_token := TE_STR_AND
 			
 when 155 then
---|#line 763
+--|#line 769
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 9, token_buffer)
@@ -1053,7 +1059,7 @@ when 155 then
 				last_token := TE_STR_AND_THEN
 			
 when 156 then
---|#line 769
+--|#line 775
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 8, token_buffer)
@@ -1061,7 +1067,7 @@ when 156 then
 				last_token := TE_STR_IMPLIES
 			
 when 157 then
---|#line 775
+--|#line 781
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
@@ -1069,7 +1075,7 @@ when 157 then
 				last_token := TE_STR_NOT
 			
 when 158 then
---|#line 781
+--|#line 787
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 3, token_buffer)
@@ -1077,7 +1083,7 @@ when 158 then
 				last_token := TE_STR_OR
 			
 when 159 then
---|#line 787
+--|#line 793
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 8, token_buffer)
@@ -1085,7 +1091,7 @@ when 159 then
 				last_token := TE_STR_OR_ELSE
 			
 when 160 then
---|#line 793
+--|#line 799
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, 4, token_buffer)
@@ -1093,7 +1099,7 @@ when 160 then
 				last_token := TE_STR_XOR
 			
 when 161 then
---|#line 799
+--|#line 805
 
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
@@ -1101,14 +1107,14 @@ when 161 then
 				last_token := TE_STR_FREE
 			
 when 162 then
---|#line 805
+--|#line 811
 
 					-- Empty string.
 				current_position.go_to (2)
 				last_token := TE_EMPTY_STRING
 			
 when 163 then
---|#line 810
+--|#line 816
 
 					-- Regular string.
 				token_buffer.clear_all
@@ -1117,7 +1123,7 @@ when 163 then
 				last_token := TE_STRING
 			
 when 164 then
---|#line 817
+--|#line 823
 
 					-- Verbatim string.
 				token_buffer.clear_all
@@ -1127,7 +1133,7 @@ when 164 then
 				set_start_condition (VERBATIM_STR3)
 			
 when 165 then
---|#line 828
+--|#line 834
 
 				line_number := line_number + 1
 				current_position.reset_column_positions
@@ -1136,7 +1142,7 @@ when 165 then
 				set_start_condition (VERBATIM_STR1)
 			
 when 166 then
---|#line 835
+--|#line 841
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1145,7 +1151,7 @@ when 166 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 167 then
---|#line 851
+--|#line 857
 
 				if is_verbatim_string_closer then
 					current_position.go_to (text_count)
@@ -1177,14 +1183,14 @@ when 167 then
 				end
 			
 when 168 then
---|#line 881
+--|#line 887
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 				set_start_condition (VERBATIM_STR2)
 			
 when 169 then
---|#line 886
+--|#line 892
 
 				line_number := line_number + 1
 				current_position.reset_column_positions
@@ -1193,7 +1199,7 @@ when 169 then
 				append_text_to_string (token_buffer)
 			
 when 170 then
---|#line 893
+--|#line 899
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1202,7 +1208,7 @@ when 170 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 171 then
---|#line 909
+--|#line 915
 
 				line_number := line_number + 1
 				current_position.reset_column_positions
@@ -1212,7 +1218,7 @@ when 171 then
 				set_start_condition (VERBATIM_STR1)
 			
 when 172 then
---|#line 917
+--|#line 923
 
 					-- No final bracket-double-quote.
 				current_position.go_to (text_count)
@@ -1221,7 +1227,7 @@ when 172 then
 				report_missing_end_of_verbatim_string_error (token_buffer)
 			
 when 173 then
---|#line 930
+--|#line 936
 
 					-- String with special characters.
 				token_buffer.clear_all
@@ -1232,145 +1238,145 @@ when 173 then
 				set_start_condition (SPECIAL_STR)
 			
 when 174 then
---|#line 940
+--|#line 946
 
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
 			
 when 175 then
---|#line 944
+--|#line 950
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%A')
 			
 when 176 then
---|#line 948
+--|#line 954
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%B')
 			
 when 177 then
---|#line 952
+--|#line 958
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%C')
 			
 when 178 then
---|#line 956
+--|#line 962
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%D')
 			
 when 179 then
---|#line 960
+--|#line 966
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%F')
 			
 when 180 then
---|#line 964
+--|#line 970
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%H')
 			
 when 181 then
---|#line 968
+--|#line 974
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%L')
 			
 when 182 then
---|#line 972
+--|#line 978
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%N')
 			
 when 183 then
---|#line 976
+--|#line 982
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%Q')
 			
 when 184 then
---|#line 980
+--|#line 986
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%R')
 			
 when 185 then
---|#line 984
+--|#line 990
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%S')
 			
 when 186 then
---|#line 988
+--|#line 994
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%T')
 			
 when 187 then
---|#line 992
+--|#line 998
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%U')
 			
 when 188 then
---|#line 996
+--|#line 1002
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%V')
 			
 when 189 then
---|#line 1000
+--|#line 1006
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%%')
 			
 when 190 then
---|#line 1004
+--|#line 1010
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%'')
 			
 when 191 then
---|#line 1008
+--|#line 1014
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%"')
 			
 when 192 then
---|#line 1012
+--|#line 1018
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%(')
 			
 when 193 then
---|#line 1016
+--|#line 1022
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%)')
 			
 when 194 then
---|#line 1020
+--|#line 1026
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%<')
 			
 when 195 then
---|#line 1024
+--|#line 1030
 
 				current_position.go_to (2)
 				token_buffer.append_character ('%>')
 			
 when 196 then
---|#line 1028
+--|#line 1034
 
 				current_position.go_to (text_count)
 				process_string_character_code (text_substring (3, text_count - 1).to_integer)
 			
 when 197 then
---|#line 1032
+--|#line 1038
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
 					-- Left as-is for compatibility with previous releases.
@@ -1380,7 +1386,7 @@ when 197 then
 				current_position.set_line_number (line_number)
 			
 when 198 then
---|#line 1040
+--|#line 1046
 
 				if text_count > 1 then
 					append_text_substring_to_string (1, text_count - 1, token_buffer)
@@ -1395,7 +1401,7 @@ when 198 then
 				end
 			
 when 199 then
---|#line 1053
+--|#line 1059
 
 					-- Bad special character.
 				current_position.go_to (1)
@@ -1403,7 +1409,7 @@ when 199 then
 				report_string_bad_special_character_error
 			
 when 200 then
---|#line 1059
+--|#line 1065
 
 					-- No final double-quote.
 				line_number := line_number + 1
@@ -1414,7 +1420,7 @@ when 200 then
 				report_string_missing_quote_error (token_buffer)
 			
 when 201 then
---|#line 1086
+--|#line 1092
 
 				current_position.go_to (1)
 				report_unknown_token_error (text_item (1))

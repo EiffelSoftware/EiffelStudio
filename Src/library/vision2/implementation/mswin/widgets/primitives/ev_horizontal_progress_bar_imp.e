@@ -1,7 +1,7 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision horizontal Progress bar, mswindows implementation."
+	description:
+		"Eiffel Vision horizontal progress bar. %N%
+		%Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,20 +21,19 @@ inherit
 			interface
 		end
 
-creation
+create
 	make
 
 feature -- Status settings
 
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
-			-- Redefine by some widgets.
 		do
 			internal_set_minimum_height (20)
 			internal_set_minimum_width (10)
 		end
 
-feature {NONE} -- WEL Implementation
+feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 			-- Default style used to create the control
@@ -69,6 +68,12 @@ end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.4  2000/02/14 11:40:44  oconnor
 --| merged changes from prerelease_20000214
 --|

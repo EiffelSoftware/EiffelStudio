@@ -1,8 +1,7 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
-		" EiffelVision horizontal scroll bar, mswindows implementation."
+		"Eiffel Vision horizontal scrollbar. %N%
+		%Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +18,6 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			set_default_minimum_size,
-			initialize,
 			interface
 		end
 
@@ -29,27 +27,18 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a scroll-bar with 1 as minimum,
-			-- 100 as maximum and `par' as parent.
+			-- Create as horizontal scrollbar.
 		do
 			base_make (an_interface)
 			make_horizontal (default_parent, 0, 0, 0, 0, 0)
 		end
-
-	initialize is
-			-- Initialize scroll bar.
-		do
-			{EV_SCROLL_BAR_IMP} Precursor
-			set_range (1 |..| 100)
-		end
 	
-
 feature -- Status setting
 
    	set_default_minimum_size is
    			-- Platform dependant initializations.
    		do
-			internal_set_minimum_height (15)
+			internal_set_minimum_height (user_scroll_bar_width)
  		end
 
 feature {EV_ANY_I} -- Implementation
@@ -79,6 +68,12 @@ end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.4  2000/02/14 22:30:34  brendel
 --| Changed to comply with signature change of `set_range' in EV_GAUGE.
 --| Now takes INTEGER_INTERVAL instead of 2 integers.

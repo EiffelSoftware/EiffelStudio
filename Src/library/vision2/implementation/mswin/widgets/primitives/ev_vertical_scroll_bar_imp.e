@@ -1,8 +1,7 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
-		" EiffelVision vertical scroll bar, mswindows implementation."
+		"Eiffel Vision vertical scroll bar. %N%
+		%Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +18,7 @@ inherit
 	EV_SCROLL_BAR_IMP
 		redefine
 			interface,
-			set_default_minimum_size,
-			initialize
+			set_default_minimum_size
 		end
 create
 	make
@@ -28,18 +26,10 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a scroll-bar with 0 as minimum,
-			-- 100 as maximum and `par' as parent.
+			-- Create as vertical scrollbar.
 		do
 			base_make (an_interface)
 			make_vertical (default_parent, 0, 0, 0, 0, 0)
-		end
-
-	initialize is
-			-- Initalize scroll bar.
-		do
-			{EV_SCROLL_BAR_IMP} Precursor
-			set_range (1, 100)
 		end
 
 feature -- Status setting
@@ -47,7 +37,7 @@ feature -- Status setting
    	set_default_minimum_size is
    			-- Platform dependant initializations.
    		do
-			internal_set_minimum_width (15)
+			internal_set_minimum_width (user_scroll_bar_width)
  		end
 
 feature {EV_ANY_I} -- Implementation
@@ -77,6 +67,12 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.3  2000/02/14 11:40:45  oconnor
 --| merged changes from prerelease_20000214
 --|

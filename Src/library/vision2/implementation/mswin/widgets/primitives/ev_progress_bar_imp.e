@@ -1,7 +1,6 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision Progress bar."
+	description:
+		"Eiffel Vision progress bar. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,9 +16,7 @@ inherit
 
 	EV_GAUGE_IMP
 		redefine
-			initialize,
-			interface,
-			set_step
+			interface
 		end
 
 	WEL_PROGRESS_BAR
@@ -58,6 +55,8 @@ inherit
 			default_style,
 			show,
 			hide
+		redefine
+			wel_set_step
 		end
 
 	WEL_PBS_CONSTANTS
@@ -68,20 +67,10 @@ inherit
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a progress bar with `par' as parent.
+			-- Create progress bar.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, -1)
-		end
-
-	initialize is
-			-- Initialize the progresss bar.
-		do
-			{EV_GAUGE_IMP} Precursor
-			set_step (10)
-			set_value (1)
-			set_leap (10)
-			set_range (1 |..| 100)
 		end
 
 feature -- Access
@@ -115,6 +104,10 @@ feature -- Status setting
 			new_style: INTEGER
 			tx, ty, tw, th: INTEGER
 		do
+			check
+				to_be_implemented: False
+			end
+
 			new_style := clear_flag (style, Pbs_smooth)
 
 			wel_imp ?= parent_imp
@@ -134,6 +127,10 @@ feature -- Status setting
 			new_style: INTEGER
 			tx, ty, tw, th: INTEGER
 		do
+			check
+				to_be_implemented: False
+			end
+
 			new_style := set_flag (style, Pbs_smooth)
 
 			wel_imp ?= parent_imp
@@ -146,17 +143,11 @@ feature -- Status setting
 			--| FIXME 	new_style, tx, ty, tw, th, -1, default_pointer)
 		end
 
-	set_step (a_step: INTEGER) is
+	wel_set_step (a_step: INTEGER) is
 			-- Set `step ' to `a_step'.
 		do
-			wel_set_step (a_step)
+			Precursor (a_step)
 			step := a_step
-		end
-
-	set_leap (a_leap: INTEGER) is
-			-- Set `leap' to `a_leap'.
-		do
-			leap := a_leap
 		end
 
 	set_proportion (a_proportion: REAL) is
@@ -165,15 +156,12 @@ feature -- Status setting
 			set_value ((minimum + a_proportion * (maximum - minimum)).truncated_to_integer)
 		end
 
-feature {NONE} -- WEL implementation
+feature {NONE} -- Implementation
 
-	on_scroll (scroll_code, pos: INTEGER) is
-			-- Call change action events when `value' changes.
+	wel_set_leap (a_leap: INTEGER) is
 		do
-			interface.change_actions.call ([])
+			leap := a_leap
 		end
-
-feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -247,6 +235,12 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.12  2000/02/14 22:30:34  brendel
 --| Changed to comply with signature change of `set_range' in EV_GAUGE.
 --| Now takes INTEGER_INTERVAL instead of 2 integers.

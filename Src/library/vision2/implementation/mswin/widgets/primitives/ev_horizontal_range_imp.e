@@ -1,8 +1,7 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
-		" EiffelVision vertical range, mswindows implementation."
+		"Eiffel Vision horizontal range. %N%
+		%Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,16 +13,12 @@ inherit
 	EV_HORIZONTAL_RANGE_I
 		redefine
 			interface
-		select
-			interface
 		end
 
 	EV_RANGE_IMP
-		rename
-			interface as range_interface
 		redefine
 			set_default_minimum_size,
-			initialize
+			interface
 		end
 
 create
@@ -32,18 +27,10 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a spin-button with 0 as minimum,
-			-- 100 as maximum and `par' as parent.
+			-- Create as horizontal range.
 		do
 			base_make (an_interface)
 			make_horizontal (default_parent, 0, 0, 0, 0, 0)
-		end
-
-	initialize is
-			-- Initialize range.
-		do
-			{EV_RANGE_IMP} Precursor
-			set_range (1 |..| 100)
 		end
 
 feature -- Status setting
@@ -82,6 +69,12 @@ end -- class EV_HORIZONTAL_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 03:20:32  brendel
+--| Changed order of initialization. All gauges are now initialized in
+--| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
+--| Clean-up.
+--| Released.
+--|
 --| Revision 1.4  2000/02/14 22:30:34  brendel
 --| Changed to comply with signature change of `set_range' in EV_GAUGE.
 --| Now takes INTEGER_INTERVAL instead of 2 integers.

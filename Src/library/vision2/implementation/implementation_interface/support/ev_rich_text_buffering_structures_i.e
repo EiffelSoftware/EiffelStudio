@@ -85,8 +85,6 @@ feature -- Status Setting
 			character: CHARACTER
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			height_in_half_points: INTEGER
-			effects: EV_CHARACTER_FORMAT_EFFECTS
-			font: EV_FONT
 		do
 			hashed_character_format := a_format.interface.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -220,6 +218,79 @@ feature -- Status Setting
 			count_greater_or_equal_to_one: paragraph_start_indexes.count >= 1
 			counts_equal: paragraph_start_indexes.count = paragraph_formats.count
 		end
+		
+	set_with_rtf (rtf_text: STRING) is
+			-- Set contents of `rich_text' from RTF string `rtf_text'.
+		local
+			iterated_char: CHARACTER
+			index: INTEGER
+			current_content: STRING
+			char1, char2: CHARACTER
+			keyword_index: INTEGER
+		do
+			current_content := ""
+			from
+				index := 1
+			until
+				index > rtf_text.count
+			loop
+				iterated_char := rtf_text.item (index)
+				if iterated_char.is_equal (rtf_control_character) or iterated_char.is_equal (rtf_open_brace_character) then
+					if current_content.count >= 2 then
+							-- Restore the first two characters for quick lookups.
+							-- We want to avoid string comparison unless actually necessary.
+						char1 := current_content.item (1)
+						char2 := current_content.item (2)
+						if char1.is_equal ('f') and char2.is_equal ('o') then
+								-- It appears that we have found the font table.
+							process_font_table (rtf_text, keyword_index)					
+						end
+						current_content.wipe_out
+					end
+						-- Store the index of the current keyword.
+					keyword_index := index + 1
+				else
+					current_content.append_character (iterated_char)
+				end
+				index := index + 1
+			end
+		end
+		
+	-- Conversion
+	
+--		\Highlight 	-> \hi
+--		\cf			-> \cf
+--		
+	process_font_table (rtf_text: STRING; start_index: INTEGER) is
+			--
+		local
+			index: INTEGER
+			iterated_char: CHARACTER
+			depth: INTEGER
+			current_font: STRING
+			last_open_brace: INTEGER
+		do
+			if rtf_text.substring (start_index, start_index + rtf_fonttable.count - 1).is_equal (rtf_fonttable) then
+				from
+					index := start_index + rtf_fonttable.count
+					depth := 1
+				until
+					depth = 0
+				loop
+					iterated_char := rtf_text.item (index)
+					if iterated_char.is_equal (rtf_open_brace_character) then
+						depth := depth + 1
+						current_font := ""
+					elseif iterated_char.is_equal (rtf_close_brace_character) then
+						depth := depth - 1
+						
+					end
+					current_font.append_character (iterated_char)
+					index := index + 1
+				end
+			end
+		end
+		
 
 feature -- Access
 
@@ -345,16 +416,21 @@ feature {NONE} -- Implementation
 			l_color: INTEGER
 			hashed_color, hashed_back_color: STRING
 			color_value: INTEGER
+			red, green, blue: INTEGER
 		do
 			l_color := a_format.fcolor
 			hashed_color := rtf_red.twin
-			color_value := l_color |>> 16
-			hashed_color.append (color_value.to_integer_8.out)
-			color_value := l_color |>> 8
+			
+			red := l_color & 0x000000ff
+			l_color := l_color |>> 8
+			green := l_color & 0x000000ff
+			l_color := l_color |>> 8
+			blue := l_color & 0x000000ff
+			hashed_color.append (red.out)
 			hashed_color.append (rtf_green.twin)
-			hashed_color.append (color_value.to_integer_8.out)
+			hashed_color.append (green.out)
 			hashed_color.append (rtf_blue.twin)
-			hashed_color.append (l_color.to_integer_8.out)
+			hashed_color.append (blue.out)
 			hashed_color.append_character (';')
 
 

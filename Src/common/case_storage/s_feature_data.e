@@ -9,9 +9,6 @@ feature
 	name: STRING;
 			-- Feature's name
 
-	class_id: INTEGER;
-			-- Class that contains the feature
-
 	arguments: FIXED_LIST [S_ARGUMENT_DATA];
 			-- Arguments if routine
 
@@ -44,18 +41,14 @@ feature
 
 feature -- Setting values
 
-	make (s: STRING; id: like class_id) is
-			-- Set id to `s' and set
-			-- class_id to `id'.
+	make (s: STRING) is
+			-- Set id to `s' 
 		require
 			valid_s: s /= Void;
-			valid_id: id /= Void
 		do
 			name := s;
-			class_id := id
 		ensure
 			name_set: name = s;
-			class_id_set: class_id = id;
 		end;
 
 	set_booleans (is_d, is_e, is_r, is_att: BOOLEAN) is

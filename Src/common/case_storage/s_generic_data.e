@@ -14,13 +14,14 @@ feature {NONE}
             -- Set name to `s' and set
             -- type to `t'.
 		require
-			valid_s: s /= Void
+			valid_s: s /= Void;
+			valid_t: t /= Void implies t.is_valid
         do
             name := s;
             constraint_type := t
         ensure
             name_set: name = s;
-            type_set: constraint_type = t
+            type_is_set: t = constraint_type
         end;
 
 feature

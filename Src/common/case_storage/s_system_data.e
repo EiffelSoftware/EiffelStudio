@@ -75,8 +75,26 @@ feature -- Setting values
 
 feature -- Storing
 
-	 store_to_disk (path: STRING) is
-			-- Store a project
+	save_information (path: STRING) is
+			-- Save Current.
+            --| (Rename tmp file to normal file name);
+		require
+			valid_path: path /= Void;
+        local
+            system_file: RAW_FILE;
+            old_name, new_name: STRING
+        do
+            new_name := clone (path);
+            new_name.extend (Operating_environment.directory_separator);
+            new_name.append (System_name);
+            old_name := clone (new_name);
+            old_name.append (Tmp_file_name_ext);
+            !! system_file.make (old_name);
+            system_file.change_name (new_name);
+        end;
+	
+	tmp_store_to_disk (path: STRING) is
+			-- Store a project temporarily
 		require
 			valid_path: path /= Void;
 		local
@@ -93,6 +111,7 @@ feature -- Storing
 			file_name := clone (path);
 			file_name.extend (Operating_environment.directory_separator);
 			file_name.append (System_name);
+			file_name.append (Tmp_file_name_ext);
 			!! system_file.make_open_write (file_name);
 			independent_store (system_file);
 			system_file.close;

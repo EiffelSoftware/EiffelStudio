@@ -46,6 +46,18 @@ feature
 			-- Is the current class the root of
 			-- the system ?
 
+feature {CLASS_DATA, CLASS_CONTENT_SERVER}
+
+	disk_content: S_CLASS_CONTENT;
+			-- Information stored to disk
+
+	set_content (cont: like disk_content) is
+		require
+			valid_cont: cont /= Void
+		do
+			disk_content := cont
+		end;
+
 feature
 
 	set_booleans (is_d, is_e, is_i, is_p, is_re, is_ro: BOOLEAN) is
@@ -105,9 +117,6 @@ feature
 
 feature {NONE}
 
-	disk_content: S_CLASS_CONTENT;
-			-- Information stored to disk
-
 	make (a_name: STRING) is
 		do
 			old_make (a_name);
@@ -166,8 +175,28 @@ feature
 
 feature -- Storing
 
-	store_to_disk (storage_path: STRING) is
-			-- Store internal information to disk.
+	save_information (storage_path: STRING) is
+			-- Save information to disk.
+			--| (Rename tmp file to normal file name);
+		require
+			valid_path: storage_path /= Void;
+		local
+			internal_file: RAW_FILE;
+			old_name, new_name: STRING
+		do
+			new_name := clone (storage_path);
+			new_name.extend (Operating_environment.directory_separator);
+			new_name.append_integer (directory_number (view_id));
+			new_name.extend (Operating_environment.directory_separator);
+			new_name.append_integer (view_id);
+			old_name := clone (new_name);
+			old_name.append (Tmp_file_name_ext);
+			!! internal_file.make (old_name);
+			internal_file.change_name (new_name);
+		end;
+
+	tmp_store_to_disk (storage_path: STRING) is
+			-- Store internal information to disk tmp.
 		require
 			valid_path: storage_path /= Void;
 			valid_view_id: view_id > 0
@@ -185,6 +214,7 @@ feature -- Storing
 			end;
 			path.extend (Operating_environment.directory_separator);
 			path.append_integer (view_id);
+            path.append (Tmp_file_name_ext) 
 			!! internal_file.make_open_write (path);
 			independent_store (internal_file);
 			internal_file.close;

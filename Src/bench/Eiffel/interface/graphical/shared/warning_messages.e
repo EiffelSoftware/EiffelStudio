@@ -275,8 +275,7 @@ feature {NONE}
 			Result.append (". Try again?")
 		end;
 
-	w_Not_a_filterable_format: STRING is "Only clickable, flat, short %
-									%and flat-short forms may be filtered";
+	w_Not_a_filterable_format: STRING is "The selected format is not filterable";
 
 	w_Not_a_plain_file (file_name: STRING): STRING is
 		require

@@ -8,8 +8,8 @@ indexing
 class SYSTEM_STONE 
 
 inherit
+	SHARED_EIFFEL_PROJECT
 
-	SHARED_EIFFEL_PROJECT;
 	FILED_STONE
 
 feature -- Access

@@ -83,6 +83,8 @@ feature -- Properties
 	msil_assembly_compatibility,
 	msil_full_name,
 	il_verifiable,
+	cls_compliant,
+	cls_compliant_name,
 	inlining, 
 	inlining_size,
 	ise_gc_runtime,
@@ -156,6 +158,8 @@ feature {NONE} -- Codes and names.
 			Result.force (working_directory, "working_directory");
 			Result.force (force_recompile, "force_recompile");
 			Result.force (generate_eac_metadata, "generate_eac_metadata");
+			Result.force (cls_compliant, "cls_compliant")
+			Result.force (cls_compliant_name, "cls_compliant_name")
 		end
 
 	option_names: ARRAY [STRING] is
@@ -398,6 +402,38 @@ feature {COMPILER_EXPORTER}
 					else
 						error_found := True;
 					end;
+
+				when cls_compliant then
+						-- CLS compliant implies that the generated
+						-- metadata are CLS compliant and that generated
+						-- names are too. However, you might want to
+						-- keep your Eiffel names in which case, after
+						-- having set `cls_compliant (yes)' you
+						-- have to do `cls_compliant_name (no)'. If
+						-- you do it the other way the `cls_compliant_name (no)'
+						-- option will not be taken into account.
+						-- Also you cannot change this option after
+						-- the first successful compilation as it might
+						-- break a lot of stuff.
+					if value.is_no then
+						System.set_cls_compliant (False)
+						System.set_cls_compliant_name (False)
+					elseif value.is_yes then
+						System.set_cls_compliant (True)
+						System.set_cls_compliant_name (True)
+					else
+						error_found := True
+					end
+
+				when cls_compliant_name then
+						-- See `cls_compliant' comment above.
+					if value.is_no then
+						System.set_cls_compliant_name (False)
+					elseif value.is_yes then
+						System.set_cls_compliant_name (True)
+					else
+						error_found := True
+					end
 
 				when dynamic_runtime then
 					if value.is_no then

@@ -281,11 +281,6 @@ feature {NONE} -- Implementation
 				not is_error (visitor.vt_type) and
 				not is_void (visitor.vt_type)
 			then
-				pointed_descriptor ?= func_desc.return_type
-				if pointed_descriptor /= Void then
-					create visitor
-					visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
-				end
 				external_feature_writer.set_result_type (visitor.eiffel_type)
 			end
 		end

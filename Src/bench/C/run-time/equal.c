@@ -383,6 +383,7 @@ rt_private int rdeepiso(char *target, char *source)
 		return rdeepiter(target, source);
 	}
 	/* NOTREACHED */
+	return FALSE;
 }
 
 rt_private int rdeepiter(register char *target, register char *source)

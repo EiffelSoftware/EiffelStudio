@@ -118,9 +118,17 @@ feature {NONE} -- Implementation
 			
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
+		local
+			should_continue: BOOLEAN_REF
 		do
 			interface.event_output_string (percentage_output (to_go) + 
 										deg_nbr + a_name)
+			create should_continue
+			should_continue.set_item (True)
+			interface.event_should_continue (should_continue)
+			if not should_continue.item then
+				Error_handler.insert_interrupt_error (True)
+			end
 		end
 		
 end -- class COM_DEGREE_OUTPUT

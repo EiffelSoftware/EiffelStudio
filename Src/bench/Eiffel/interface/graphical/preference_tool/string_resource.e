@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"A resource value for string resouorces.";
+		"A resource value for string resources.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -18,13 +18,13 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_string: STRING) is
 			-- Initialize Current
 		do
-			value := a_string;
 			name := a_name
+			value := a_string
 		end
 
 feature -- Setting
 
-	set_actual_value, set_value (new_value: STRING) is
+	set_value (new_value: STRING) is
 			-- Set `value' to `new_value'.
 		do
 			value := new_value;
@@ -59,10 +59,7 @@ feature -- Access
 
 feature -- Properties
 
-	default_value: STRING;
-			-- Default value if resource not found in a resource file
-
-	actual_value, value: STRING
+	value: STRING
 			-- Value as a `STRING' as represented by Current
 
 end -- class STRING_RESOURCE

@@ -60,6 +60,12 @@ feature {NONE} -- Implementation
 					txt := choose_file.file_name
 					invalidate
 				end
+			when Cmd_choose_folder then
+				choose_folder.activate (Current)
+				if choose_folder.selected then
+					txt := choose_folder.folder_name
+					invalidate
+				end
 			when Cmd_choose_font then
 				if log_font /= Void then
 					-- To select the previous font (optional)
@@ -149,6 +155,15 @@ feature {NONE} -- Implementation
 			-- Dialog box to choose a text color.
 		once
 			create Result.make
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	choose_folder: WEL_CHOOSE_FOLDER_DIALOG is
+			-- Dialog box to choose a directory.
+		once
+			create Result.make
+			Result.set_flags (feature {WEL_BIF_CONSTANTS}.Bif_usenewui)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -13,6 +13,7 @@ feature -- Access
 	Cmd_choose_font: INTEGER is 102
 	Cmd_choose_color: INTEGER is 103
 	Cmd_print_dialog: INTEGER is 104
+	Cmd_choose_folder: INTEGER is 105
 	Cmd_exit: INTEGER is 1000
 
 end -- class APPLICATION_IDS

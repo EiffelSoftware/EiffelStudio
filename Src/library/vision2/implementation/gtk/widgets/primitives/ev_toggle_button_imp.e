@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 	
-	state: BOOLEAN is
+	is_selected: BOOLEAN is
                         -- Is toggle pressed
                 do
 			Result := C.gtk_toggle_button_get_active (c_object)
@@ -45,11 +45,16 @@ feature -- Status report
 	
 feature -- Status setting
 
-        set_state (button_pressed: BOOLEAN) is
-                        -- Set Current toggle on and set
-                        -- pressed to True.
+        enable_select is
+        		-- Set `is_selected' `True'.
                 do
-			C.gtk_toggle_button_set_active (c_object, button_pressed)
+			C.gtk_toggle_button_set_active (c_object, True)
+                end
+
+        disable_select is
+        		-- Set `is_selected' `False'.
+                do
+			C.gtk_toggle_button_set_active (c_object, False)
                 end
 
         toggle is
@@ -86,6 +91,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/24 18:13:43  oconnor
+--| updated to use enable_select/disable_select instead of set_state (BOOLEAN)
+--|
 --| Revision 1.18  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

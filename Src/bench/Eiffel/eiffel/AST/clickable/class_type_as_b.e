@@ -144,9 +144,6 @@ feature -- Conveniences
 			error: BOOLEAN;
 			nb_errors: INTEGER;
 		do
-io.error.putstring ("check_constraint_type on: ");
-trace;
-io.error.new_line;
 			if has_like then
 				!!vcfg3;
 				vcfg3.set_class (a_class);

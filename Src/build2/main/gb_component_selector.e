@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_LIST}
+			set_minimum_height (tool_minimum_height)
 			drop_actions.extend (agent add_new_component)
 			drop_actions.set_veto_pebble_function (agent is_valid_object)
 		end

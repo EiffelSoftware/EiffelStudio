@@ -646,10 +646,10 @@ feature -- Initialization
 		do
 			a_name := name_field.text
 			a_unit := unit_field.text
-			create l_namespace.make ("", "")
+			create l_namespace.make_default
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "Derived")
 			Xml_routines.add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
-			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
+			create metric_definition.make (Result, "DEFINITION", l_namespace)
 			raw_metric_name := raw_metric_combobox.text
 			metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Raw_metric", raw_metric_name))
 			metric_definition.put_last (Xml_routines.xml_node (metric_definition, "And", and_button.is_selected.out))

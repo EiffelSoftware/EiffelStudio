@@ -36,7 +36,7 @@ feature -- Initialization
 			scope_info: EB_METRIC_SCOPE_INFO
 		do
 			interface := i
-			create formula.make
+			create formula.make (5)
 			displayed_metric := ""
 			default_create
 			set_padding (5)
@@ -228,7 +228,7 @@ feature -- Access
 			displayed_metric := dm
 		end
 
-	formula: LINKED_LIST [STRING]
+	formula: ARRAYED_LIST [STRING]
 		-- Representation of tokens constituting `Current' formula.
 		-- (coefficients, operator + and *, previously defined metric names).
 
@@ -351,15 +351,16 @@ feature -- Metric constituents
 			formula_set: formula /= Void and then not formula.is_empty
 		local
 			a_name, a_unit: STRING
-			xml_elements_def_list : LINKED_LIST [XM_ELEMENT]
+			xml_elements_def_list : ARRAYED_LIST [XM_ELEMENT]
 			l_namespace: XM_NAMESPACE
 		do
 			a_name := name_field.text
 			a_unit := unit_field.text
+			create l_namespace.make_default
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "MRatio")
 			Xml_routines.add_attribute ("Percentage", l_namespace, percentage.out, Result)
 			Result.put_last (Xml_routines.xml_node (Result, "FORMULA", displayed_metric))
-			create metric_definition.make_child (Result, "DEFINITION", l_namespace)
+			create metric_definition.make (Result, "DEFINITION", l_namespace)
 				-- Fill metric_definition with convinient xml element in polish syntax.
 			xml_elements_def_list := translate_formula_to_polish_syntax (formula, metric_definition)
 			from
@@ -424,7 +425,9 @@ feature -- Metric constituents
 			new_metric_successful := Result
 		end
 
-	translate_formula_to_polish_syntax (sub_formula: LINKED_LIST [STRING]; a_metric_definition: XM_ELEMENT): LINKED_LIST [XM_ELEMENT] is
+	translate_formula_to_polish_syntax (sub_formula: ARRAYED_LIST [STRING];
+			a_metric_definition: XM_ELEMENT): ARRAYED_LIST [XM_ELEMENT]
+		is
 			-- Make xml element for each item of `sub_formula' and reorder it into polish syntax.
 		require
 			correct_formula: sub_formula /= Void and then not sub_formula.is_empty
@@ -433,7 +436,7 @@ feature -- Metric constituents
 			operator: STRING
 			metric_object: EB_METRIC
 		do
-			create Result.make
+			create Result.make (sub_formula.count)
 			operator := ""
 			from
 				sub_formula.start

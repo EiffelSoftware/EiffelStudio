@@ -52,7 +52,7 @@ feature -- Access
 	remove_button: EV_BUTTON
 		-- Remove selected metric (if imported from selected file) from current system metrics.
 
-	non_removable_metrics: LINKED_LIST [EB_METRIC]
+	non_removable_metrics: ARRAYED_LIST [EB_METRIC]
 		-- List of available non basic metrics in current system that have not been
 		-- deleted (before exiting management dialog). They cannot be added to importable
 		-- metrics of selected file.
@@ -290,8 +290,8 @@ feature -- Importation
 		local
 			file: PLAIN_TEXT_FILE
 			list_item: EV_LIST_ITEM
-			imported_metrics: LINKED_LIST [EB_METRIC]
-			imported_xml_elements: LINKED_LIST [XM_ELEMENT]
+			imported_metrics: ARRAYED_LIST [EB_METRIC]
+			imported_xml_elements: ARRAYED_LIST [XM_ELEMENT]
 			list_item_data: CELL2 [EB_METRIC, XM_ELEMENT]
 			cell: CELL2 [EB_METRIC, XM_ELEMENT]
 			x_pos, y_pos: INTEGER
@@ -310,8 +310,8 @@ feature -- Importation
 						end
 						importable_metric_list.wipe_out
 						file.open_read
-						create imported_metrics.make
-						create imported_xml_elements.make
+						create imported_metrics.make (5)
+						create imported_xml_elements.make (5)
 						interface.tool.file_handler.retrieve_metric (file, imported_metrics, imported_xml_elements)
 						from
 							imported_metrics.start
@@ -336,7 +336,7 @@ feature -- Importation
 							current_metric_list.select_actions.extend (agent enable_remove)
 						end
 						current_metric_list.wipe_out
-						create non_removable_metrics.make
+						create non_removable_metrics.make (interface.ev_list.count)
 						from
 							interface.ev_list.start
 						until
@@ -470,7 +470,7 @@ feature -- Importation
 					importable_metric_list.prune (list_item)
 					list_item.set_text (new_name)
 					cell.item1.set_name (new_name)
-					create l_namespace.make ("", "")
+					create l_namespace.make_default
 					cell.item2.remove_attribute_by_name ("Name")
 					Xml_routines.add_attribute ("Name", l_namespace, new_name, cell.item2)
 					list_item.pointer_double_press_actions.wipe_out

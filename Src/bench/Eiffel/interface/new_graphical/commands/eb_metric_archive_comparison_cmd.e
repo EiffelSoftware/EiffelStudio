@@ -307,10 +307,10 @@ feature -- Action
 		local
 			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
-			create array.make (1, 2)
+			create array.make (1, 1)
 			array.put (agent on_new_archive (current_directory), 1)
-			array.put (agent do_nothing, 2)
-			create confirm_dialog.make_with_text_and_actions ("Archive creation can take some time.%NContinue?", array)
+			create confirm_dialog.make_with_text_and_actions (
+				"Archive creation can take some time.%NContinue?", array)
 			confirm_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -378,10 +378,10 @@ feature -- Action
 		local
 			array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
-			create array.make (1, 2)
+			create array.make (1, 1)
 			array.put (agent on_update_archive (current_directory), 1)
-			array.put (agent do_nothing, 2)
-			create confirm_dialog.make_with_text_and_actions ("Archive creation can take some time.%NContinue?", array)
+			create confirm_dialog.make_with_text_and_actions (
+				"Archive creation can take some time.%NContinue?", array)
 			confirm_dialog.show_modal_to_window (archive_dialog)
 		end
 
@@ -557,7 +557,6 @@ feature -- Action
 								i := i + 1
 							end
 							tool.multi_column_list.set_column_title ("Comparison to: " + system_name, 6)
-							archived_file.close
 						end
 					end
 				end
@@ -678,7 +677,7 @@ feature -- Action
 		local
 			archive_header: XM_DOCUMENT
 			node, metric_header, measure_header, xml_element: XM_ELEMENT
-			metric_list: LINKED_LIST [EB_METRIC]
+			metric_list: ARRAYED_LIST [EB_METRIC]
 			metric_result: DOUBLE
 			scope: EB_METRIC_SCOPE
 			a_metric: EB_METRIC_COMPOSITE
@@ -686,14 +685,13 @@ feature -- Action
 			l_namespace: XM_NAMESPACE
 		do
 			if not retried then
-				create l_namespace.make ("", "")
-				create node.make_root ("ARCHIVE", l_namespace)
+				create l_namespace.make_default
+				create archive_header.make_with_root_named ("ARCHIVE", l_namespace)
+				node := archive_header.root_element
 				Xml_routines.add_attribute ("System", l_namespace, tool.System.name, node)
-				create archive_header.make
-				archive_header.force_last (node)
 				metric_header := tool.file_manager.metric_header
 				node.put_last (metric_header)
-				create measure_header.make_child (node, "RECORDED_MEASURES", l_namespace)
+				create measure_header.make (node, "RECORDED_MEASURES", l_namespace)
 				scope := tool.scope (interface_names.metric_this_system)
 				scope.set_system_i (tool.System)
 				metric_list := tool.metrics
@@ -704,7 +702,7 @@ feature -- Action
 				loop
 					a_metric ?= metric_list.item
 					if a_metric = Void or else not a_metric.is_scope_ratio then
-						create xml_element.make_child (node, "MEASURE", l_namespace)
+						create xml_element.make (node, "MEASURE", l_namespace)
 						Xml_routines.add_attribute ("Metric", l_namespace, metric_list.item.name, xml_element)
 						metric_result := tool.calculate.calculate_metric (metric_list.item, scope)
 						Xml_routines.add_attribute ("Result", l_namespace, metric_result.out, xml_element)

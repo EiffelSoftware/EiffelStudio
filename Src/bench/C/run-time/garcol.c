@@ -4838,9 +4838,6 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 
 	age = flags & EO_AGE;			/* Fetch object's age */
 	age += AGE_ONE;					/* Make a wish, it's your birthday */
-/*	age &= EO_AGE;					/* Overflow -> age = 0 */
-/*	if (age == 0)					/* Object over reached maximum age */
-/*		age = EO_AGE;				/* Reset to maximum age */
 
 	if (age >= (tenure << AGE_OFFSET)) {	/* Object is to be tenured */
 
@@ -4898,6 +4895,11 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * from swap space--RAM).
 			 */
 
+#ifdef EIF_STRING_OPTIMIZATION
+			assert (!(HEADER (root)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF) ) /* Cannot be a special AND full of refs. */
+#else
+			assert (!(HEADER (root)->ov_flags & EO_SPEC));	/* Cannot be a special. */
+#endif	/* EIF_STRING_OPTIMIZATION */
 			size = zone->ov_size & B_SIZE;		/* Size without header */
 			new = gmalloc(size);				/* Try in Eiffel chunks first */
 			if ((EIF_REFERENCE) 0 == new) {			/* Out of memory */
@@ -5941,7 +5943,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 			
 	}	/* for ... */
 
-	if (ret == -2)							/* No young references found. */
+	if (ret == -2)							/* No young reference found. */
 	{
 #ifdef EIF_EXPENSIVE_ASSERTIONS
 		assert (!(refers_new_object (object)));	
@@ -5950,7 +5952,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 		printf ("EIF_PROMOTE_SPECIAL: no item to be inserted");
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
 
-			/* Remember the object, with new new references, just to unmark
+			/* Remember the object, even with no new reference, only for unmarking
 			 * it in "update_special_table ()". 
 			 */
 

@@ -10,18 +10,12 @@ class PROJECT_W
 inherit
 
 	TOOL_W
-		rename
-			execute as old_execute
 		redefine
-			text_window, tool_name
-		end
-	TOOL_W
-		redefine
-			text_window, tool_name,
-			execute
-		select
-			execute
+			text_window, tool_name, process_system, process_error,
+			process_object, process_breakable, process_class,
+			process_classi, compatible, process_feature
 		end;
+	COMMAND;
 	BASE
 		rename
 			make as base_make
@@ -31,7 +25,9 @@ inherit
 			raise as raise_exception
 		end;
 	SET_WINDOW_ATTRIBUTES;
-	SHARED_APPLICATION_EXECUTION
+	SHARED_APPLICATION_EXECUTION;
+	EXECUTION_ENVIRONMENT;
+	INTERFACE_W
 
 creation
 
@@ -45,15 +41,16 @@ feature -- Initialization
 			a_screen: SCREEN;
 			app_stopped_cmd: APPLICATION_STOPPED_CMD
 		do
-			a_screen := display;
+			a_screen := ebench_display;
 			base_make (tool_name, a_screen);
+			!! history.make;
+			register;
 			forbid_resize;
 			build_widgets;
 			set_title (l_project);
 			set_icon_name (tool_name);
 			set_default_position;
 			realize;
-			transporter_init;
 			if bm_Project_icon.is_valid then
 				set_icon_pixmap (bm_Project_icon);
 			end;
@@ -80,14 +77,14 @@ feature -- Properties
 			!! Result
 		end;
 
-	display: SCREEN is
+	ebench_display: SCREEN is
 		local
 			display_name: STRING;
 		do
 			!! Result.make ("");
 			if not Result.is_valid then
 				io.error.putstring ("Cannot open display %"");
-				display_name := Execution_environment.get ("DISPLAY");
+				display_name := get ("DISPLAY");
 				if display_name /= Void then
 					io.error.putstring (display_name);
 				end;
@@ -97,6 +94,14 @@ feature -- Properties
 				raise_exception ("Invalid display");
 			end;
 		end;
+
+feature -- Access
+
+	kept_objects: LINKED_SET [STRING] is
+			-- Hector addresses of displayed clickable objects
+		do
+			Result := text_window.kept_objects;
+		end
 
 feature -- Window Settings
 
@@ -176,13 +181,13 @@ feature -- Window Properties
 	text_window: PROJECT_TEXT;
 			-- Text window associated with Current.
 
-feature -- WIndow Holes
+feature -- Window Holes
 
 	stop_points_hole: DEBUG_STOPIN;
 
 	system_hole: SYSTEM_HOLE;
 
-	class_hole: PROJ_CLASS_HOLE;
+	class_hole: CLASS_HOLE;
 
 	routine_hole: ROUTINE_HOLE;
 
@@ -262,8 +267,6 @@ feature -- Execution Implementation
 					is_confirmer_hidden := true;
 					last_confirmer.popdown
 				end
-			else
-				old_execute (arg)
 			end
 		end;
 

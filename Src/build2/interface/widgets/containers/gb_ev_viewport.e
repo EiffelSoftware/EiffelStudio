@@ -94,14 +94,6 @@ feature {GB_XML_STORE} -- Output
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (X_offset_string)
-			if element_info /= Void then
-				set_x_offset (element_info.data.to_integer)
-			end
-			element_info := full_information @ (Y_offset_string)
-			if element_info /= Void then
-				set_y_offset (element_info.data.to_integer)
-			end
 			element_info := full_information @ (Item_width_string)
 			if element_info /= Void then
 				if element_info.data.to_integer >= 0 then
@@ -114,7 +106,14 @@ feature {GB_XML_STORE} -- Output
 					set_item_height (element_info.data.to_integer)	
 				end
 			end
-			
+			element_info := full_information @ (X_offset_string)
+			if element_info /= Void then
+				set_x_offset (element_info.data.to_integer)
+			end
+			element_info := full_information @ (Y_offset_string)
+			if element_info /= Void then
+				set_y_offset (element_info.data.to_integer)
+			end			
 		end
 		
 feature {GB_CODE_GENERATOR} -- Output

@@ -15,7 +15,6 @@ inherit
 			set_default_options,
 			minimum_width,
 			minimum_height,
-			notify_change,
 			internal_resize
 		redefine
 			parent_imp,
@@ -33,6 +32,10 @@ inherit
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
+		undefine
+			internal_set_minimum_width,
+			internal_set_minimum_height,
+			internal_set_minimum_size
 		redefine
 			compute_minimum_width,
 			compute_minimum_height,

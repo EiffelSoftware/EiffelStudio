@@ -1,7 +1,11 @@
 <document title="EiffelStudio Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>EiffelStudio is the new Eiffel compiler by Interactive Software Engineering. It includes not only a 
+		<paragraph>EiffelStudio is the Eiffel compiler by 
+			<link>
+				<url>http://www.eiffel.com</url>
+				<label>Eiffel Software</label>
+			</link>. It includes not only a 
 			<link>
 				<url>30_compiler/20_command_line/00_introduction.xml</url>
 				<label>command line compiler</label>
@@ -15,17 +19,22 @@
 				<label>quantitative code analyzer</label>
 			</link>.
 		</paragraph> 
-		<paragraph>To get started, follow the provided guided tour.</paragraph>
-		<paragraph>To see the new features and improvements over previous versions of the ISE Eiffel environment, have a look at the 
+		<paragraph>To get started, follow the provided 
+			<link>
+				<url>../../../general/guided_tour/studio/index.xml</url>
+				<label>guided tour</label>
+			</link>.
+		</paragraph>
+		<paragraph>To see the new features and improvements over previous versions of the EiffelStudio environment, have a look at the 
 			<link>
 				<url>02_what_s_new/</url>
 				<label>What's new section</label>
 			</link>.
 		</paragraph>
-		<paragraph>An quick overview of the new graphical interface is available 
+		<paragraph>A quick overview of the EiffelStudio graphical interface is available 
 			<link>
 				<url>05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
-				<label>here</label>
-			</link>.
+				<label>here.</label>
+			</link>
 		</paragraph>
 	</paragraph></document>

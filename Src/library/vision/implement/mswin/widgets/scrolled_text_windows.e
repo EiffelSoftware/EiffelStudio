@@ -42,6 +42,8 @@ feature -- Initialization
 			is_multi_line_mode := True
 			parent ?= oui_parent.implementation
 			!! private_text.make (0)
+			is_horizontal_scrollbar := True
+			is_vertical_scrollbar := True
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
 		end
@@ -63,6 +65,10 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				enable_standard_notifications
+				if private_background_color /= Void then
+					set_background_color (private_background_color)
+				end
 				if private_font /= Void then
 					set_font (private_font)
 				end
@@ -83,6 +89,9 @@ feature -- Initialization
 				elseif parent.shown then
 					shown := true
 				end
+				if is_multi_line_mode then
+					set_top_character_position (private_top_character_position)
+				end
 			end
 		end
 
@@ -96,10 +105,9 @@ feature -- Status report
 
 	is_horizontal_scrollbar: BOOLEAN
 			-- Is horizontal scrollbar visible ?
-	
+
 	is_vertical_scrollbar: BOOLEAN 
 			-- Is vertical scrollbar visible ?
-		
 
 feature -- Status setting
 
@@ -174,8 +182,8 @@ feature {NONE} -- Implementation
 			-- Default style for creation.
 		do
 			Result := Ws_child + Ws_visible + Ws_border
-				   + Es_nohidesel + Es_left
-				   + Es_multiline + Es_autovscroll
+				   + Es_nohidesel + Es_left + Es_disablenoscroll +
+				   + Es_multiline + Es_autovscroll + Es_savesel
 			if not is_word_wrap_mode then
 				Result := Result + Es_autohscroll
 			end

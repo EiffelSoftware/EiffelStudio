@@ -1,0 +1,60 @@
+--!----------------------------------------------------------------
+--! DRAWING_AREA_TEST Project Ace-file for Windows platforms.
+--!----------------------------------------------------------------
+
+system
+	ev_list_example
+
+root 
+	EV_LIST_EXAMPLE (root_cluster): "make_and_launch"
+
+default
+	assertion			(no)
+	multithreaded		(no)
+	console_application	(no)
+	dynamic_runtime		(no)
+	dead_code_removal	(yes)
+	profile				(yes)
+	line_generation		(no)
+	debug				(no)
+	array_optimization	(no)
+	inlining			(yes)
+	inlining_size		("10")
+
+cluster 
+		-- Root cluster
+	root_cluster:		"$EIFFEL4\examples\vision2\ev_list"
+
+		-- EiffelBase
+	all base: 			"$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3"
+		end
+
+		-- WEL
+	all wel:			"$EIFFEL4\library\wel"
+
+		-- Vision2
+	event:				"$EIFFEL4\library\event"
+
+	all vision2:		"$EIFFEL4\library\vision2"
+		exclude 
+			"gtk"
+			"EIFGEN"
+			"tmp"
+			"temp"
+			"release"
+			"obsolete"
+			"bench_used"
+		end
+
+external
+	include_path:		"$(EIFFEL4)\library\vision2\spec\include",
+						"$(EIFFEL4)\library\wel\spec\windows\include"
+
+	object: 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+			 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+			 			"$(EIFFEL4)\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
+						"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+
+end -- ev_list_example

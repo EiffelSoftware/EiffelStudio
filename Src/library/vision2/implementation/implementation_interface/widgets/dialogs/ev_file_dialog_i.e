@@ -74,6 +74,11 @@ feature {EV_FILE_DIALOG} -- Contract support
 			-- Is `a_name' a valid file_name on the current platform?
 		deferred
 		end
+		
+	valid_file_title (a_title: STRING): BOOLEAN is
+			-- Is `a_title' a valid file title on the current platform?
+		deferred
+		end
 
 end -- class EV_FILE_DIALOG_I
 

@@ -61,7 +61,7 @@ feature -- Basic Exportations
 			create cr.make (a_clr_version)
 			cr.set_internal_eiffel_cache_path (eac_path)
 			if not cr.is_initialized then
-				(create {EIFFEL_XML_SERIALIZER}).serialize (
+				(create {EIFFEL_BINARY_SERIALIZER}).serialize (
 				create {CACHE_INFO}.make (a_clr_version),
 				cr.absolute_info_path)
 			end
@@ -133,7 +133,7 @@ feature -- Basic Exportations
 			l_impl: MARSHAL_CACHE_MANAGER
 		do		
 			l_impl ?= new_marshalled_cache_manager.unwrap
-			Result := l_impl.assembly_info_from_assembly (a_path)
+			Result := l_impl.assembly_info_from_path (a_path)
 
 			update_current (l_impl)
 		end

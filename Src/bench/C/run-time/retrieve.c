@@ -105,8 +105,6 @@ rt_private int readline ();
 rt_private int buffer_read ();
 
 
-#define GEN_MAX	4		/* Maximum number of generic parameters */
-
 /* read function declarations */
 int retrieve_read ();
 int old_retrieve_read ();
@@ -1114,8 +1112,8 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			int32 *t;
 			int matched;
 			int j, index;
-			long gtype[GEN_MAX];
-			int32 itype[GEN_MAX];
+			long gtype[MAX_GENERICS];
+			int32 itype[MAX_GENERICS];
 	
 
 			/* Generic class */
@@ -1247,8 +1245,8 @@ rt_private void iread_header()
 			int32 *t;
 			int matched;
 			int j, index;
-			long gtype[GEN_MAX];
-			int32 itype[GEN_MAX];
+			long gtype[MAX_GENERICS];
+			int32 itype[MAX_GENERICS];
 	
 
 			/* Generic class */

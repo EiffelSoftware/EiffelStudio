@@ -231,8 +231,6 @@ feature -- Initialization
 			i, nb: INTEGER
 			
 			l_class_name, l_external_name: STRING
-
-			vd60: VD60
 		do
 			create l_reader
 			create l_env

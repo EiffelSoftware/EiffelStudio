@@ -363,6 +363,8 @@ feature -- Element change
                 ace.set_il_generation_type (ace.Il_generation_exe)
             elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_class_library then
                 ace.set_console_application (False)
+                ace.set_root_class_name ("NONE")
+                ace.set_creation_routine_name (Void)
                 ace.set_il_generation_type (ace.Il_generation_dll)
             elseif a_project_type = feature {ECOM_EIF_PROJECT_TYPES_ENUM}.eif_project_types_precompiled_library then
                 ace.set_root_class_name ("ANY")

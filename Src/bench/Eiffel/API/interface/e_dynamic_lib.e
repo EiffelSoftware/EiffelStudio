@@ -30,7 +30,7 @@ feature -- Data
 
 feature -- DYNAMIC_LIB Exports processing.
 
-	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER; d_alias: STRING) is
+	add_export_feature (d_class:CLASS_C; d_creation:E_FEATURE; d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING) is
 		require
 			class_exists: d_class /= Void
 			--creation_exists: d_creation /= Void
@@ -47,7 +47,7 @@ feature -- DYNAMIC_LIB Exports processing.
 		do
 			if d_creation = Void then
 					-- Addition of an export feature from the environment.
-				!! list_dl.make(d_class, d_routine,d_index, d_alias)
+				!! list_dl.make(d_class, d_routine,d_index, d_alias, d_call_type)
 				list_dl.choose_creation
 			else
 					-- Addition of an export feature already defined in a ".def" file.
@@ -96,6 +96,10 @@ feature -- DYNAMIC_LIB Exports processing.
 							dl_exp.set_alias_name (d_alias)
 						end
 
+						if d_call_type /= Void then
+							dl_exp.set_call_type (d_call_type)
+						end
+
 						dl_exp_list.extend (dl_exp)
 					else
 						dl_exp_list.go_i_th(i)
@@ -109,7 +113,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			end
 		end
 
-   add_export_feature_from_file (t_class, t_creation, t_routine, t_index, t_alias: STRING) is
+   add_export_feature_from_file (t_class, t_creation, t_routine, t_index, t_alias, t_call_type: STRING) is
 		local
 			class_list: LINKED_LIST [CLASS_I]
 			class_i:CLASS_I
@@ -154,7 +158,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					if dl_class /= Void and then
 						dl_creation /= Void and then
 						dl_routine /= Void then
-						add_export_feature (dl_class,dl_creation,dl_routine,dl_index, t_alias)
+						add_export_feature (dl_class,dl_creation,dl_routine,dl_index, t_alias, t_call_type)
 					end
 				end
 			end
@@ -165,13 +169,14 @@ feature -- DYNAMIC_LIB Exports processing.
 		local
 			lastline: STRING
 			lastchar: CHARACTER
-			pos, mark, index_mark, alias_mark: INTEGER
+			pos, mark, index_mark, alias_mark, call_type_mark: INTEGER
 			state, done: INTEGER
 			t_class: STRING
 			t_creation: STRING
 			t_routine: STRING
 			t_index: STRING
 			t_alias: STRING
+			t_call_type: STRING
 		do
 			dynamic_lib_exports.clear_all
 			Result := True
@@ -258,8 +263,9 @@ feature -- DYNAMIC_LIB Exports processing.
 								end
 								state := 0
 								alias_mark := 0
+								call_type_mark := 0
 							until
-								pos >= lastline.count or else state = 3
+								pos >= lastline.count or else state = 4
 							loop
 								lastchar := lastline.item (pos)
 								if state = 0 and then (lastchar.is_alpha or lastchar.is_digit) then
@@ -272,26 +278,41 @@ feature -- DYNAMIC_LIB Exports processing.
 										-- We find the `alias' keyword.
 									state := 3
 									alias_mark := pos
+								elseif (state = 2 or state = 3) and then has_call_type_keyword (lastline, pos) then
+									state := 4
+									call_type_mark := pos
 								end
 								pos := pos + 1
 							end
 
 							if alias_mark /= 0 then
 									-- We found the `alias' keyword.
-								t_alias := lastline.substring (alias_mark + 6, lastline.count)
+								if call_type_mark /= 0 then
+										-- We found the `call_type' keyword.
+									t_alias := lastline.substring (alias_mark + 6, call_type_mark - 1)
+									t_call_type := lastline.substring (call_type_mark + 10, lastline.count)
+								else
+									t_alias := lastline.substring (alias_mark + 6, lastline.count)
+								end
 							else
 								alias_mark := lastline.count + 1
+								if call_type_mark /= 0 then
+										-- We found the `call_type' keyword.
+									t_call_type := lastline.substring (call_type_mark + 10, lastline.count)
+								else
+									call_type_mark := lastline.count + 1
+								end
 							end
 
 							if done = 0 or else done = 2 then
 								Result := False
 							elseif done = 1  then
 									-- We only found a routine name.
-								t_routine := lastline.substring(mark, alias_mark - 1)
+								t_routine := lastline.substring(mark, alias_mark.min (call_type_mark) - 1)
 							elseif done = 3 then
 									-- We found a routine name and the `@' sign.
 								t_routine := lastline.substring (mark, index_mark - 1)
-								t_index := lastline.substring (index_mark + 1, alias_mark - 1)
+								t_index := lastline.substring (index_mark + 1, alias_mark.min(call_type_mark) - 1)
 							end
 						else
 							Result := False
@@ -327,11 +348,16 @@ feature -- DYNAMIC_LIB Exports processing.
 					t_alias.right_adjust
 				end
 
+				if t_call_type /= Void and then not t_call_type.empty then
+					t_call_type.left_adjust
+					t_call_type.right_adjust
+				end
+
 				if t_creation =Void and then t_routine /= Void then
 					t_creation	:= clone(t_routine)
 				end
 
-				add_export_feature_from_file(t_class,t_creation,t_routine,t_index, t_alias)
+				add_export_feature_from_file(t_class,t_creation,t_routine,t_index, t_alias, t_call_type)
 
 				t_class := Void
 				t_creation := Void
@@ -400,6 +426,21 @@ feature {NONE} -- Implementation
 			if temp.count = 5 then
 				temp.to_lower
 				Result := temp.is_equal ("alias")
+			end
+		end
+
+	has_call_type_keyword (current_line: STRING; pos: INTEGER): BOOLEAN is
+			-- Is there the `alias' keyword in `current_line'?
+		require
+			valid_line: current_line /= Void and then current_line.count > 0
+			valid_position: pos > 0
+		local
+			temp: STRING
+		do
+			temp := current_line.substring (pos, pos + 8)	
+			if temp.count = 9 then
+				temp.to_lower
+				Result := temp.is_equal ("call_type")
 			end
 		end
 

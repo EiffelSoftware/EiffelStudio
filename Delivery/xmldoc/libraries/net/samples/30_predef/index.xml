@@ -1,0 +1,64 @@
+<document output="studio" title="Predef">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>The Predef Sample
+		</heading>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example, you must compile two projects: 
+			<italic>client</italic> and 
+			<italic>server.</italic>
+		</paragraph>
+		<paragraph> To compile the 
+			<italic>client</italic> project: 
+		</paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\net\predef\client\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.mswin.ace</italic> on Windows platforms or 
+				<italic>Ace.unix.ace</italic> on Unix platforms. 
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<paragraph> To compile the 
+			<italic>server</italic> project: 
+		</paragraph>
+		<list ordered="false">
+			<item>Launch EiffelBench. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\net\predef\server\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.mswin.ace</italic> on Windows platforms or 
+				<italic>Ace.unix.ace</italic> on Unix platforms. 
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<paragraph>
+			<heading>
+				<size>2</size>Running
+			</heading>
+			<heading>
+				<size>2</size>Under the Hood
+			</heading>
+		</paragraph>
+	</paragraph></document>

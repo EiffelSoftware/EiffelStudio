@@ -1,0 +1,42 @@
+<document output="studio" title="EiffelNet Samples">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Description
+		</heading>
+		<paragraph>Version: 5.0</paragraph>
+		<paragraph>Availability: Basic Package.</paragraph>
+		<paragraph>Here is a set of five examples written thanks to the EiffelNet        library to show some basic        applications. Two of them rely on specific code to Unix Operating        systems and consequently could not be run under Windows.</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<url>10_advanced/index.html</url>
+					<label>Advanced</label>
+				</link>: for Unix Operating            systems.
+			</item>
+			<item>
+				<link>
+					<url>20_polling/index.html</url>
+					<label>Polling</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_predef/index.html</url>
+					<label>Predef</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>40_same_mach/index.html</url>
+					<label>Same mach</label>
+				</link>: for Unix            Operating systems.
+			</item>
+			<item>
+				<link>
+					<url>50_two_mach/index.html</url>
+					<label>Two mach</label>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

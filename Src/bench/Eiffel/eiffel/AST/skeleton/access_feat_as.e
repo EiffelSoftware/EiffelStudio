@@ -366,8 +366,8 @@ debug
 	io.error.new_line
 end
 					if 
-						not a_feature.feature_name.is_equal (Void_feature_name) and then
-						not context_export.is_subset (feature_export) 
+						a_feature.feature_name_id /= feature {PREDEFINED_NAMES}.void_name_id
+						and then not context_export.is_subset (feature_export) 
 					then
 						create vape
 						context.init_error (vape)
@@ -580,10 +580,6 @@ end
 					parameters.replicate (ctxt.new_ctxt))
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	Void_feature_name: STRING is "void"
 
 feature {AST_EIFFEL} -- Output
 

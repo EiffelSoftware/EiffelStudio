@@ -24,7 +24,7 @@ feature -- Creation feature
 			total := feature_total
 			descendants := feature_descendants
 			percentage := feature_percentage
-			self := total - descendants
+			self := ((total - descendants) * 100.0).rounded / 100.0
 		end;
 
 feature -- Output
@@ -40,24 +40,10 @@ feature -- Output
 			Result.append_string ("%T|%T")
 			Result.append_string (descendants.out)
 			Result.append_string ("%T|%T")
-			Result.append_string (percentage_out)
+			Result.append_string (percentage.out)
 			Result.append_string ("%T|%T")
 			Result.append_string (int_function.name)
 		end
-
-	percentage_out: STRING is
-			-- Display only two decimals
-		local
-			percent_string: STRING
-		do
-			!! Result.make (0)
-			if percentage = 100.0 then
-				Result := "100"
-			else
-				Result := percentage.out
-			end
-		end
-				
 
 feature -- Compare
 
@@ -85,7 +71,6 @@ feature -- Status report
 			-- The function where all is about.
 		deferred
 		end
-
 
 feature -- attributes
 
@@ -115,13 +100,5 @@ feature {PROFILE_SET} -- Spit Information (for debugging)
 			io.error.putstring (out);
 			io.error.new_line
 		end
-
-	compute_percentage (max_total: REAL) is
-		require
-			max_not_null: max_total /= 0
-		do
-			percentage := total * 100 / max_total
-		end
-
 
 end -- class PROFILE_DATA

@@ -19,6 +19,7 @@
 #include "eif_globals.h"
 #include "rt_retrieve.h"
 #include "rt_hashin.h"
+#include "rt_globals.h"
 #include "minilzo.h"
 #include <string.h>
 
@@ -50,6 +51,7 @@ rt_private int file_descriptor;
 
 rt_public void parsing_retrieve_initialize (void)
 {
+	RT_GET_CONTEXT
 	rt_kind = BASIC_STORE;
 	rt_init_retrieve(
 		parsing_retrieve_read_with_compression,
@@ -66,6 +68,7 @@ rt_public EIF_REFERENCE parsing_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos)
 rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 {
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char *result;
 
@@ -88,6 +91,7 @@ rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 
 rt_public char *retrieve_all(EIF_INTEGER f_desc, long position)
 {
+	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	/* Return object graph retrieved in file `file_ptr' read at
 	 * position. */
@@ -140,10 +144,9 @@ rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file
 			eio ();
 }
 
-extern long cmp_buffer_size;
-
 rt_private int parsing_retrieve_read_with_compression (void)
 {
+	RT_GET_CONTEXT
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
 	int dcmps_in_size = 0;

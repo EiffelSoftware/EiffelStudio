@@ -375,6 +375,17 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector);			/* Dump an exe
 rt_private char *rcsid = "$Id$";
 #endif
 
+#ifdef EIF_THREADS
+rt_shared void eif_except_thread_init (void)
+	/* Initialize private data of `run_idr.c' in multithreaded environment. */
+	/* Data is already zeroed, so only variables that needs something different
+	 * than the default value will be initialized. */
+{
+	RT_GET_CONTEXT
+	print_history_table = ~0;
+}
+#endif
+
 /* Throughout the routines which maintain the execution stack, we must be *very*
  * careful about signals, which may occur between any two machine instruction
  * codes. Sections which manipulate the stack cannot be interrupted by signals,

@@ -30,7 +30,7 @@ extern "C" {
 #define RECOVERABLE_STORE '\03'
 
 /* Setting of `eif_discard_pointer_values' */
-#define eif_set_discard_pointer_values(v)	eif_discard_pointer_values = (EIF_BOOLEAN) (v)
+RT_LNK void eif_set_discard_pointer_values(EIF_BOOLEAN);
 
 /*
  * Eiffel calls
@@ -38,13 +38,6 @@ extern "C" {
 RT_LNK char *eretrieve(EIF_INTEGER file_desc);		/* Retrieve object store in file */
 RT_LNK EIF_REFERENCE stream_eretrieve(EIF_POINTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER *);	/* Retrieve object store in stream */
 RT_LNK char *portable_retrieve(int (*char_read_function)(char *, int));
-
-
-/*
- * Utilities
- */
-
-RT_LNK EIF_BOOLEAN eif_discard_pointer_values;	/* Do we need to store pointers or not? */
 
 #ifdef __cplusplus
 }

@@ -37,16 +37,17 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+#ifndef EIF_THREADS
 /*
-doc:	<attribute name="table" return_type="struct s_table *" export="private">
+doc:	<attribute name="eif_equality_table" return_type="struct s_table *" export="private">
 doc:		<summary>Search table for deep equality.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Private per thread data</synchronization>
 doc:		<eiffel_classes>ANY</eiffel_classes>
-doc:		<fixme>table access is not protected. Therefore to do a deep equality in two different threads at the same time will certainly fail. Solution is to put `table' in the `eif_globals' structure, so that two threads can perform parallel deep equality.</fixme>
 doc:	</attribute>
 */
-rt_private struct s_table *table;		/* Search table for deep equal */
+rt_private struct s_table *eif_equality_table;		/* Search table for deep equal */
+#endif
 
 /*
  * Routines declarations
@@ -324,6 +325,7 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 	 * Return a boolean.
 	 */
 
+	RT_GET_CONTEXT
 	EIF_BOOLEAN result;
 #ifdef ISE_GC
 	char g_status;		/* Save GC status */
@@ -333,7 +335,7 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 		gc_stop();						/* Stop GC if enabled*/
 #endif
 
-	table = s_create(100);				/* Create search table */	
+	eif_equality_table = s_create(100);				/* Create search table */	
 	result = rdeepiso(target,source);	/* Recursive isomorphism test */
 
 #ifdef ISE_GC
@@ -341,8 +343,9 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 		gc_run();						/* Enabled GC it was previously enabled */
 #endif
 
-	xfree((EIF_REFERENCE) (table->s_keys));	/* Free search table keys */
-	xfree((EIF_REFERENCE) table);				/* Free search table descriptor */
+	xfree((EIF_REFERENCE) (eif_equality_table->s_keys));	/* Free search table keys */
+	xfree((EIF_REFERENCE) eif_equality_table);				/* Free search table descriptor */
+	eif_equality_table = NULL;
 	return result;
 }
 
@@ -352,6 +355,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 	 * Return a boolean.
 	 */
 
+	RT_GET_CONTEXT
 	union overhead *zone = HEADER(target);	/* Target header */
 	uint32 flags;							/* Target flags */
 	EIF_REFERENCE s_ref, t_ref, t_field, s_field;
@@ -360,7 +364,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 	flags = zone->ov_flags;
 
 	/* Check if the object has already been inspected */
-	if (s_put(table, target) == EIF_SEARCH_CONFLICT)
+	if (s_put(eif_equality_table, target) == EIF_SEARCH_CONFLICT)
 		return EIF_TRUE;
 
 	/* Isomorphism test between `source' and `target'.

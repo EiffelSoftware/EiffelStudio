@@ -31,6 +31,28 @@ extern void map_reset(int emergency);			/* Reset maping table */
 extern long nomark(char *obj);
 #endif
 
+/* The mstack structure has to be an exact copy of the stack structure, but has
+ * an added field st_bot at the end. That way, we may safely use the common
+ * stack handling structures without any code duplication and still have the
+ * added field to make a FIFO stack--RAM.
+ */
+struct mstack {
+	struct stchunk *st_hd;	/* Head of chunk list */
+	struct stchunk *st_tl;	/* Tail of chunk list */
+	struct stchunk *st_cur;	/* Current chunk in use (where top is) */
+	char **st_top;			/* Top in chunk (pointer to next free location) */
+	char **st_end;			/* Pointer to first element beyond current chunk */
+	char **st_bot;			/* ADDED FIELD for FIFO stack implementation */
+};
+
+struct obj_array {
+	EIF_REFERENCE *area;	/* Area where objects are stored */
+	int count;				/* Number of inserted items */
+	int capacity;			/* Capacity of `area' */
+	int index;				/* Cursor position */
+};
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -33,8 +33,7 @@ feature {NONE}
 			!!Result.make (0);
 			Result.append (Case_gen_path);
 			Result.extend (Directory_separator);
-			Result.append ("Storage");
-			-- *** FIXME **** (do not hardcode name)
+			Result.append (Case_storage);
 		end;
 
 	Case_gen_path: STRING is
@@ -42,8 +41,7 @@ feature {NONE}
 			!!Result.make (Project_directory_name.count + 8);
 			Result.append (Project_directory_name);
 			Result.extend (Directory_separator);
-			Result.append ("CASEGEN");
-			-- *** FIXME **** (do not hardcode name)
+			Result.append (Casegen);
 		end;
 
 	Create_case_storage_directory is

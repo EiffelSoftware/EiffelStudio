@@ -51,15 +51,15 @@ feature -- Measurement
 			Result := implementation.extended_height
 		end
 
-feature {NONE}-- Implementation
+--feature {NONE}-- Implementation
 
-	count: INTEGER is
-			-- number of items in the list of the combo-box
-		require
-			exists: not destroyed
-		do
-			Result := implementation.count
-		end
+--	count: INTEGER is
+--			-- number of items in the list of the combo-box
+--		require
+--			exists: not destroyed
+--		do
+--			Result := implementation.count
+--		end
 
 feature -- Implementation
 

@@ -28,7 +28,16 @@ feature -- Element change (box specific)
 		do
 			implementation.set_homogeneous (flag)
 		end
-	
+
+	set_border_width (value: INTEGER) is
+			-- Border width around container			
+		require
+			exist: not destroyed
+			positive_value: value >= 0
+		do
+			implementation.set_border_width (value)
+		end
+
 	set_spacing (value: INTEGER) is
 			-- Spacing between the objects in the box
 		require

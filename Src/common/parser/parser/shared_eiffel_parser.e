@@ -25,6 +25,12 @@ feature -- Access
 			Result := il_parsing_cell.item
 		end
 
+	Type_parser: EIFFEL_PARSER is
+			-- Type parser.
+		once
+			create Result.make_type_parser
+		end
+		
 feature -- Setting
 
 	set_il_parsing (v: BOOLEAN) is

@@ -344,7 +344,7 @@ void eif_console_cleanup ()
 	DWORD buffer_length = (DWORD) 0;
 
 	if (eif_console_allocated) {
-#ifdef EIF_THREAD
+#ifdef EIF_THREADS
 		if (eif_thr_is_root())
 #endif
 		{

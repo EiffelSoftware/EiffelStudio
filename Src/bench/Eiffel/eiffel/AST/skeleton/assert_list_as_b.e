@@ -55,16 +55,14 @@ feature -- Format
 			if assertions /= void then
 				ctxt.begin;
 				put_clause_keywords (ctxt);
-				if not ctxt.troff_format then
-					source_cl := ctxt.global_adapt.source_enclosing_class;
-					target_cl := ctxt.global_adapt.target_enclosing_class;
-					if source_cl /= target_cl then
-						ctxt.put_space;
-						ctxt.put_text_item (ti_Dashdash);
-						ctxt.put_space;
-						ctxt.put_comment_text ("from ");
-						ctxt.put_class_name (source_cl);
-					end;
+				source_cl := ctxt.global_adapt.source_enclosing_class;
+				target_cl := ctxt.global_adapt.target_enclosing_class;
+				if source_cl /= target_cl then
+					ctxt.put_space;
+					ctxt.put_text_item (ti_Dashdash);
+					ctxt.put_space;
+					ctxt.put_comment_text ("from ");
+					ctxt.put_class_name (source_cl);
 				end;
 				ctxt.indent; 
 				ctxt.new_line;

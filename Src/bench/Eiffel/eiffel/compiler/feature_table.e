@@ -18,7 +18,7 @@ inherit
 		rename
 			same_type as general_same_type
 		export {CLASS_C, COMPILED_CLASS_INFO}
-			pos_for_iter
+			iteration_position
 		end
 	SHARED_WORKBENCH
 		rename
@@ -444,7 +444,7 @@ end;
 			until
 				after
 			loop
-				pos := pos_for_iter
+				pos := iteration_position
 				feature_i := item_for_iteration;
 				if feature_i.is_deferred then
 					deferred_found := True;
@@ -515,7 +515,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := pos_for_iter
+			pos := iteration_position
 			from
 				start
 			until
@@ -536,7 +536,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := pos_for_iter
+			pos := iteration_position
 			from
 				start
 			until
@@ -557,7 +557,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := pos_for_iter
+			pos := iteration_position
 			from
 				start
 			until

@@ -15,47 +15,22 @@ inherit
 		end
 
 	EV_BUTTON_IMP
-		undefine
-			default_style
+		redefine
+			select_action,
+			is_down,
+			on_bn_clicked
 		end
 
-	WEL_SELECTABLE_BUTTON
-		rename
-			make as wel_make,
-			parent as wel_parent,
-			font as wel_font,
-			set_font as wel_set_font,
-			set_text as wel_set_text,
-			destroy as wel_destroy
-		undefine
-			-- We undefine the features redefined by EV_WIDGET_IMP,
-			-- and EV_PRIMITIVE_IMP
-			remove_command,
-			set_width,
-			set_height,
---			destroy,
---			set_text,
-			on_bn_clicked,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_char,
-			on_key_up
-		end	
-
 creation
-	make, make_with_text
+	make,
+	make_with_text
 
 feature -- Status report
 	
 	state: BOOLEAN is
 			-- Is toggle pressed
 		do
-			Result := checked
+			Result := is_down
 		end 
 
 feature -- Status setting
@@ -65,10 +40,12 @@ feature -- Status setting
 			-- pressed to True.
 		do
 			if flag then
-				set_checked
+				current_state := 1
 			else
-				set_unchecked
+				current_state := 3
 			end
+			invalidate
+			on_bn_clicked
 		end
 
 	toggle is
@@ -80,11 +57,46 @@ feature -- Status setting
 
 feature -- Event - command association
 	
-	add_toggle_command (a_command: EV_COMMAND; 
-			    arguments: EV_ARGUMENTS) is	
+	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+			-- Add 'cmd' to the list of commands to be executed
+			-- when the button is toggled.
 		do
-			
+			add_command (Cmd_toggle, cmd, arg)
 		end	
+
+feature {NONE} -- Implementation
+
+	select_action is
+			-- Action to be down when `Oda_select'.
+			-- It will draw only if we obtain 0 or 2.
+		do
+			current_state := (current_state + 1) \\ 4
+		end
+
+	is_down: BOOLEAN is
+			-- Say if the button is down or not.
+		do
+			inspect current_state
+			when 0 then
+				Result := False
+			when 1 then
+				Result := False
+			when 2 then
+				Result := True
+			when 3 then
+				Result := True
+			else
+				check
+					not_possible: False
+				end
+			end
+		end
+
+	on_bn_clicked is
+			-- When the button is pressed
+		do
+			execute_command (Cmd_toggle, Void)
+		end
 
 end -- class EV_TOGGLE_BUTTON_IMP
 

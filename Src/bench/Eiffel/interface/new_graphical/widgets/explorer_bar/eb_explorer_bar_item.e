@@ -258,6 +258,18 @@ feature -- Status Setting
 			is_maximizable := True
 		end
 
+feature {EB_TOOL} -- Status setting
+
+	set_parent (new_parent: EB_EXPLORER_BAR) is
+			-- Define a new explorer bar as the parent.
+		require
+			unparented: parent = Void
+		do
+			parent := new_parent
+			new_parent.add (Current)
+			new_parent.repack_widgets
+		end
+
 feature {NONE} -- Controls
 
 	mini_toolbar: EV_TOOL_BAR

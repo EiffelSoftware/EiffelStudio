@@ -19,11 +19,18 @@ inherit
 		end
 		
 	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 creation
 	make
@@ -116,7 +123,7 @@ feature -- Initialization
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 
-feature -- Constant strings
+feature {NONE} -- Constant strings
 
 	t_version_info: STRING is
 		once

@@ -198,6 +198,7 @@ feature -- Basic operations
 			grid_item_exists: BOOLEAN
 			current_item_y_position, current_item_x_position: INTEGER
 			dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
+			internal_client_width, internal_client_height: INTEGER
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			printing_values := False
@@ -212,6 +213,8 @@ feature -- Basic operations
 			
 			internal_client_x := grid.internal_client_x
 			internal_client_y := grid.internal_client_y
+			internal_client_width := grid.internal_client_width
+			internal_client_height := grid.internal_client_height
 			
 			vertical_buffer_offset := grid.viewport.y_offset
 			horizontal_buffer_offset := grid.viewport.x_offset
@@ -397,24 +400,24 @@ feature -- Basic operations
 				-- it is simply drawing a rectangle and dows not flicker.
 				
 			if last_column_index = grid.column_count then				
-				rectangle_width := grid.viewport.width - (column_offsets @ (column_offsets.count) - internal_client_x)
+				rectangle_width := internal_client_width - (column_offsets @ (column_offsets.count) - internal_client_x)
 				if rectangle_width >= 0 then
 						-- Check to see if we must draw the background to the right of the items.
 					grid.drawable.set_foreground_color (grid.background_color)
-					grid.drawable.fill_rectangle (horizontal_buffer_offset + grid.viewport.width - rectangle_width, vertical_buffer_offset, rectangle_width, grid.viewport.height)
+					grid.drawable.fill_rectangle (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, rectangle_width, internal_client_height)
 				end
 			end
 			if last_row_index = grid.row_count then
 				if grid.is_row_height_fixed then
 						-- Special handling for fixed row heights as `row_offsets' does not exist.
-					rectangle_height := grid.viewport.height - ((grid.row_height * grid.row_count) - internal_client_y)
+					rectangle_height := internal_client_height - ((grid.row_height * grid.row_count) - internal_client_y)
 				else
-					rectangle_height := grid.viewport.height - (row_offsets @ (row_offsets.count) - internal_client_y)
+					rectangle_height := internal_client_height - (row_offsets @ (row_offsets.count) - internal_client_y)
 				end
 				if rectangle_height >= 0 then
 						-- Check to see if must draw the background below the items.
 					grid.drawable.set_foreground_color (grid.background_color)
-					grid.drawable.fill_rectangle (horizontal_buffer_offset, vertical_buffer_offset + grid.viewport.height - rectangle_height, grid.viewport.width, rectangle_height)
+					grid.drawable.fill_rectangle (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, internal_client_width, rectangle_height)
 				end
 			end
 			else

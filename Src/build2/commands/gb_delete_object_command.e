@@ -21,6 +21,8 @@ inherit
 	GB_ACCESSIBLE_SYSTEM_STATUS
 	
 	GB_ACCESSIBLE_OBJECT_EDITOR
+	
+	GB_ACCESSIBLE
 
 create
 	make
@@ -53,6 +55,7 @@ feature -- Basic operations
 			do
 				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
 				Result.drop_actions.extend (agent delete_object)
+				Result.drop_actions.extend (agent delete_component)
 				Result.drop_actions.set_veto_pebble_function (agent veto_the_delete)
 			end
 	
@@ -66,7 +69,9 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	delete_object (an_object: GB_OBJECT) is
-			-- Remove `a_constructor_item' from the system.
+			-- Remove `an_object' from the system.
+		require
+			object_not_void: an_object /= Void
 		local
 			old_parent_object: GB_OBJECT
 		do
@@ -80,6 +85,15 @@ feature {NONE} -- Implementation
 			--| FIXME we have not really performed the delete, as the object still exists.
 			--| Need to clean up.
 		end
+		
+	delete_component (a_component: GB_COMPONENT) is
+			-- Remove `a_component' from `Current'.
+		require
+			component_not_void: a_component /= Void
+		do
+			component_selector.delete_component (a_component.name)
+		end
+		
 		
 	veto_the_delete (an_object: GB_OBJECT): BOOLEAN is
 			-- Do not allow the delete if the object was picked

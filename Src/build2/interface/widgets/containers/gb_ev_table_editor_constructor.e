@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 				-- Reset the selected item.
 			selected_item := Void
 			create Result
-			Result.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
+			set_default_icon_pixmap (Result)
 			Result.set_minimum_size (300, 250)
 			Result.show_actions.extend (agent initialize_sizing)
 			Result.set_title ("EV_TABLE child positioner")

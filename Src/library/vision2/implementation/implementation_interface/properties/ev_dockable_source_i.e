@@ -60,7 +60,6 @@ feature -- Status report
 			a_widget_not_void: a_widget /= Void
 		local
 			container: EV_CONTAINER
-			widget: EV_WIDGET
 			target: EV_DOCKABLE_TARGET
 		do
 			from
@@ -205,16 +204,10 @@ feature -- Basic operations
 		require
 			source_being_docked: source_being_docked /= Void
 		local
-			target_container: EV_CONTAINER_IMP
 			target_container_interface: EV_CONTAINER
 			target_widget: EV_WIDGET_IMP
-			dialog: EV_DIALOG
 			
 			dialog_imp: EV_DIALOG_I
-			x_pos, y_pos: INTEGER
-			
-			dialog2: EV_DIALOG
-			original_parent_dialog_imp: EV_DIALOG_I
 			dropping_in_source: BOOLEAN
 			original_widget_window: EV_WINDOW
 			box: EV_BOX
@@ -226,7 +219,7 @@ feature -- Basic operations
 			temp_parent: EV_DOCKABLE_TARGET
 			temp_widget_parent: EV_WIDGET_IMP
 			container: EV_CONTAINER
-			tool_bar_separator, tool_bar_separator_left, tool_bar_separator_right: EV_TOOL_BAR_SEPARATOR
+			tool_bar_separator_left, tool_bar_separator_right: EV_TOOL_BAR_SEPARATOR
 			tool_bar_imp: EV_TOOL_BAR_IMP
 			temp_index: INTEGER
 			original_parent: EV_DOCKABLE_TARGET
@@ -429,7 +422,6 @@ feature -- Basic operations
 			-- in its old parent if possible.
 		local
 			dialog_item: EV_WIDGET
-			container: EV_CONTAINER
 			original_index: INTEGER
 			cell: EV_CELL
 			box: EV_BOX
@@ -597,8 +589,6 @@ feature {NONE} -- Implementation
 			-- Draw a rubber band from pick position to pointer position.
 		local
 			counter: INTEGER
-			real_target: EV_PICK_AND_DROPABLE
-			application: EV_APPLICATION_IMP
 			target: EV_DOCKABLE_TARGET
 			container: EV_CONTAINER
 			vertical_box: EV_BOX_IMP
@@ -609,7 +599,6 @@ feature {NONE} -- Implementation
 			insert_label_pos: INTEGER
 			tool_bar: EV_TOOL_BAR_IMP
 			tool_bar_button: EV_TOOL_BAR_BUTTON
-			dockable_target: EV_DOCKABLE_TARGET
 			veto_result: BOOLEAN
 		do
 			target := closest_dockable_target

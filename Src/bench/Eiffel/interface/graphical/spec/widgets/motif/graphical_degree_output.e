@@ -58,7 +58,6 @@ feature -- Start output features
 			current_entity_l.set_label_as_string (Empty_string);
 			percentage_l.set_label_as_string (Zero_percent);
 
-			cancel_b.set_sensitive;
 			popup_window;
 			progress_bar.reset_percentage;
 			i_name := clone (icon_name);
@@ -198,10 +197,10 @@ feature -- Start output features
 			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
 			current_nbr_to_go_l.set_label_as_string (total_num.out);
 			current_entity_l.set_label_as_string (Empty_string);
-			cancel_b.set_insensitive;
 			if not is_managed then	
 				popup_window;
 			end;
+			cancel_b.set_insensitive;
 			progress_bar.reset_percentage
 		end;
 
@@ -219,7 +218,6 @@ feature -- Start output features
 				current_entity_l.set_label_as_string (Empty_string);
 				percentage_l.set_label_as_string (Zero_percent);
 			end;
-			cancel_b.set_insensitive;
 			if not is_managed then	
 				popup_window
 			end;
@@ -555,6 +553,7 @@ feature {NONE} -- Implementation
 			new_x, new_y: INTEGER;
 			p: MEL_COMPOSITE
 		do
+			cancel_b.set_sensitive;
 			!! mp.do_nothing;
 			realize;
 			p := parent.parent;

@@ -12,7 +12,7 @@ creation
 
 feature
 
-	execute is
+	execute (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 			-- Byte code production and type checking: list `changed_classes'
 			-- contains classes marked `changed' and/or changed3. For
 			-- the classes marked `changed', produce byte code and type
@@ -23,6 +23,7 @@ feature
 		do
 				-- Type checking and maybe byte code production
 				-- for a class
+			degree_output.put_degree_3 (associated_class.e_class, to_go);
 			associated_class.pass3;
 			associated_class.set_reverse_engineered (False)
 

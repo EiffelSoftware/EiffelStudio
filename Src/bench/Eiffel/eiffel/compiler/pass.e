@@ -4,13 +4,21 @@ deferred class PASS
 
 inherit
 
-	SHARED_WORKBENCH
+	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT
 
 feature -- Attributes
 
 	changed_classes: LINKED_LIST [PASS_C];
 			-- The current pass must be done on all the classes
 			-- referenced by the PASS_C objects
+
+feature -- Acces
+
+	Degree_number: INTEGER is
+			-- Degree number for current pass
+		deferred
+		end;
 
 feature
 
@@ -23,8 +31,11 @@ feature
 	execute is
 			-- Execution of the pass `level' for the entire system
 		local
-			pass_c: PASS_C
+			pass_c: PASS_C;
+			deg_output: DEGREE_OUTPUT
 		do
+			deg_output := Degree_output;
+			deg_output.put_start_degree (Degree_number, changed_classes.count);
 			from
 			until
 				changed_classes.empty
@@ -36,13 +47,14 @@ debug ("COUNT")
 end;
 				pass_c := changed_classes.first;
 				System.set_current_class (pass_c.associated_class);
-				pass_c.execute;
+				pass_c.execute (deg_output, changed_classes.count);
 				changed_classes.start;
 				changed_classes.search (pass_c);
 				if not changed_classes.after then
 					changed_classes.remove;
 				end;
 			end;
+			deg_output.put_end_degree;
 			System.set_current_class (Void);
 		end;
 

@@ -16,6 +16,8 @@ feature
 
 	changed_classes: LINKED_LIST [PASS1_C];
 
+	Degree_number: INTEGER is 5;
+
 	new_controler (a_class: CLASS_C): PASS1_C is
 		do
 			!!Result.make (a_class)

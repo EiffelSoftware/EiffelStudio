@@ -35,6 +35,8 @@ feature
 	changed_status: TWO_WAY_SORTED_SET [CLASS_ID];
 			-- Sorted set of all the classes for which the expanded
 			-- or deferred status has changed
+
+	Degree_number: INTEGER is 4;
 		
 	make is
 		do
@@ -60,7 +62,10 @@ feature
 			pass_c: PASS2_C;
 			current_class: CLASS_C;
 			id: CLASS_ID;
-		do
+			deg_output: DEGREE_OUTPUT
+        do
+			deg_output := Degree_output;
+			deg_output.put_start_degree (Degree_number, changed_classes.count)
 			from
 				changed_classes.start
 			until
@@ -93,7 +98,7 @@ end;
 				pass_c := changed_classes.first;
 				current_class := pass_c.associated_class;
 				System.set_current_class (current_class);
-				pass_c.execute;
+				pass_c.execute (deg_output, changed_classes.count);
 				if not extra_check_list.has (current_class) then
 					extra_check_list.extend (current_class)
 				end;
@@ -103,6 +108,7 @@ end;
 					changed_classes.remove;
 				end;
 			end;
+			deg_output.put_end_degree;
 
 			if System.has_expanded and then not extra_check_list.empty then
 				System.check_vtec;

@@ -21,4 +21,6 @@ feature
 			!!Result.make (a_class)
 		end;
 
+	Degree_number: INTEGER is 3;
+
 end

@@ -332,7 +332,7 @@ feature -- Once request
 				end
 
 				l_origin_class_module_name := Il_debug_info_recorder.module_file_name_for_class (l_adapted_class_type)
-				l_icd_module := l_eifnet_debugger.Eifnet_debugger_info.icor_module (l_origin_class_module_name)
+				l_icd_module := l_eifnet_debugger.Eifnet_debugger_info.icor_debug_module (l_origin_class_module_name)
 				if l_icd_module /= Void then
 						--| It may occurs the ICorDebugModule is not yet loaded
 					l_origin_class_token := Il_debug_info_recorder.class_token (l_origin_class_module_name, l_adapted_class_type)

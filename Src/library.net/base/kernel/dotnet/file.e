@@ -1353,7 +1353,7 @@ feature -- Input
 		do
 			l_str := reader.read_line
 			if last_string = Void then
-				create_last_string
+				create_last_string (0)
 			else
 				last_string.clear_all
 			end
@@ -1374,11 +1374,11 @@ feature -- Input
 			str_area: NATIVE_ARRAY [CHARACTER]
 		do
 			if last_string = Void then
-				create_last_string
+				create_last_string (nb_char)
 			else
 				last_string.clear_all
+				last_string.grow (nb_char)
 			end
-			last_string.grow (nb_char)
 			str_area := last_string.area.native_array
 			new_count := reader.read_character_array (str_area, 0, nb_char)
 			last_string.make_from_native_array (str_area)
@@ -1404,7 +1404,7 @@ feature -- Input
 
 				-- Clean previous stored string.
 			if last_string = Void then
-				create_last_string
+				create_last_string (0)
 			else
 				last_string.clear_all
 			end
@@ -1465,11 +1465,19 @@ feature -- Convenience
 			current_is_open_read: is_open_read
 		local
 			l_modulo, l_read, nb: INTEGER
+			l_pos: INTEGER
+			l_old_last_string: STRING
 		do
 			from
 				l_read := 0
 				nb := count
 				l_modulo := 51200
+				l_old_last_string := last_string
+				last_string := Void
+				l_pos := position
+				if l_pos /= 0 then
+					go (0)
+				end
 			until
 				l_read >= nb
 			loop
@@ -1477,7 +1485,11 @@ feature -- Convenience
 				file.put_string (last_string)
 				l_read := l_read + l_modulo
 			end
-			last_string := Void
+				-- Restore previous status of Current file.
+			if l_pos /= 0 then
+				go (l_pos)
+			end
+			last_string := l_old_last_string
 		end
 
 feature {FILE} -- Implementation
@@ -1513,14 +1525,17 @@ feature {FILE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_last_string is
-			-- Create new instance of `last_string'.
+	create_last_string (a_min_size: INTEGER) is
+			-- Create new instance of `last_string' with a least `a_min_size'
+			-- as capacity.
 		require
 			last_string_void: last_string = Void
+			a_min_size_non_negative: a_min_size >= 0
 		do
-			create last_string.make (default_last_string_size)
+			create last_string.make (default_last_string_size.max (a_min_size))
 		ensure
 			last_string_not_void: last_string /= Void
+			capacity_set: last_string.capacity >= a_min_size
 		end
 
 	default_last_string_size: INTEGER is 256

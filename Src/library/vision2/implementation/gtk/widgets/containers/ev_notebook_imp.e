@@ -176,7 +176,6 @@ feature -- Element change
 			C.gtk_notebook_set_page (c_object, i)
 		end
 
-
 	set_item_text (an_item: like item; a_text: STRING) is
 			-- Assign `a_text' to the label for `an_item'.
 		local
@@ -265,6 +264,7 @@ feature {EV_ANY_I} -- Implementation
 	on_new_item (an_item: EV_WIDGET) is
 			-- Set `an_item's text empty.
 		do
+			Precursor (an_item)
 			set_item_text (an_item, "")
 		end
 

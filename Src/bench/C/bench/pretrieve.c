@@ -78,7 +78,9 @@ rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 
 	result = rt_nmake(nb_obj);			/* Retrieve `nb_obj' objects */
 	ht_free(rt_table);                  /* Free hash table descriptor */
+#ifdef ISE_GC
     epop(&hec_stack, nb_recorded);      /* Pop hector records */
+#endif
 
 	return result;
 }
@@ -100,7 +102,9 @@ rt_public char *retrieve_all(EIF_INTEGER f_desc, long position)
 	end_of_buffer = 0;
 	result = rt_make();
 	ht_free(rt_table);					/* Free hash table descriptor */
-	epop(&hec_stack, nb_recorded);		/* Pop hector records */
+#ifdef ISE_GC
+    epop(&hec_stack, nb_recorded);      /* Pop hector records */
+#endif
 
 	return result;
 }

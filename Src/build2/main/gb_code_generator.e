@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 				a_class_text.replace_substring_all (tag, "")
 					-- Prune the "%N" following the tag, as we do not want
 					-- a new line added anymore.
-				a_class_text.remove_substring (temp_index + 1, temp_index + 2)
+				a_class_text.remove_substring (temp_index, temp_index + 1)
 			end
 		end
 		

@@ -47,7 +47,7 @@
 				<link>
 					<url>20_breakpoints/00_introduction.xml</url>
 					<label>breakpoints</label>
-				</link>on-the-fly, while the execution is running
+				</link> on-the-fly, while the execution is running
 			</item>
 		</list>
 		<paragraph>And from 5.2 onwards, the following functionality is also available:</paragraph>

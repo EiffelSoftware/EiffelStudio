@@ -23,7 +23,7 @@
 		<tip>
 			<bold>Tip</bold>: If the expression returns a non-Void object, then the corresponding row in the list is pickable, and can be dropped for example in the object tool to inspect its state.
 		</tip>
-		<paragraph>On top of the list, three buttons can be found.</paragraph>
+		<paragraph>On top of the list, four buttons can be found.</paragraph>
 		<list ordered="false">
 			<item>
 				<image>
@@ -34,7 +34,7 @@
 				<link>
 					<url>20_new_expression_dialog.xml</url>
 					<label>expression definition dialog</label>
-				</link>, and can be used to define new expressions.
+				</link>, and can be used to define new expressions. If you have selected text in the editor, this text will be used to create the expression.
 			</item>
 			<item>
 				<image>
@@ -44,6 +44,14 @@
 				</image> edits a currently selected expression (it is not possible to change the context of an expression, only the expression itself).
 				<line_break/> The associated key shortcut is F2.
 			</item>
+			<item>
+				<image>
+					<height>8</height>
+					<width>8</width>
+					<url>/images/eiffelstudio/icons/icon_on_off_very_small_color.png</url>
+				</image> disable/enable the evalution of the selected expressions from the list.
+				<line_break/>
+			</item>			
 			<item>
 				<image>
 					<height>8</height>

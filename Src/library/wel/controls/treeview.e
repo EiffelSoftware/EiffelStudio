@@ -33,7 +33,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_x, a_y, a_width, a_height,
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height,
 				an_id: INTEGER) is
 			-- Make a tree view control.
 		require

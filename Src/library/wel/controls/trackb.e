@@ -29,7 +29,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_vertical (a_parent: WEL_COMPOSITE_WINDOW; a_x, a_y, a_width,
+	make_vertical (a_parent: WEL_WINDOW; a_x, a_y, a_width,
 			a_height, an_id: INTEGER) is
 			-- Make a vertical track bar.
 		require
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			position_equal_zero: position = 0
 		end
 
-	make_horizontal (a_parent: WEL_COMPOSITE_WINDOW; a_x, a_y, a_width,
+	make_horizontal (a_parent: WEL_WINDOW; a_x, a_y, a_width,
 			a_height, an_id: INTEGER) is
 			-- Make a horizontal track bar.
 		require

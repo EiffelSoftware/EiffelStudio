@@ -12,9 +12,8 @@ inherit
 	PART_COMPARABLE
 
 	SHARED_FORMAT_INFO
-		undefine 
-			is_equal
-		end
+
+	PREFIX_INFIX_NAMES
 
 feature -- Properties
 
@@ -110,7 +109,21 @@ feature -- Element change
 						new_feature_as := feature_as.twin
 						create adapter;
 						f_name := names.first.twin
-						f_name.set_name (source_feature.feature_name);
+						if source_feature.is_infix then
+							create {INFIX_PREFIX_AS} f_name.initialize
+								(create {STRING_AS}.initialize (
+									extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0),
+								source_feature.is_frozen, True)
+						elseif source_feature.is_prefix then
+							create {INFIX_PREFIX_AS} f_name.initialize
+								(create {STRING_AS}.initialize (
+									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0),
+								source_feature.is_frozen, False)
+						else
+							create {FEAT_NAME_ID_AS} f_name.initialize (
+								create {ID_AS}.initialize (source_feature.feature_name),
+								f_name.is_frozen)
+						end
 						create eiffel_list.make (1);
 						eiffel_list.extend (f_name);
 						new_feature_as.set_feature_names (eiffel_list);
@@ -187,7 +200,7 @@ feature -- Output
 				ctxt.init_uncompiled_feature_context (source_class, ast);
 			end;
 			ctxt.set_feature_comments (comments)
-			ast.format (ctxt)
+			ctxt.format_ast (ast)
 		end
 
 feature {FEATURE_ADAPTER} -- Implementation

@@ -38,15 +38,21 @@ feature -- Initialization
 		local
 			clever: PRIMES
 			table_size: INTEGER
+			l_content: ARRAY [G]
+			l_keys: ARRAY [H]
+			l_deleted_marks: ARRAY [BOOLEAN]
 		do
 			create clever
 			table_size := clever.higher_prime ((High_ratio * n) // Low_ratio)
 			if table_size < Minimum_size then
 				table_size := Minimum_size
 			end
-			create content.make (0, table_size - 1)
-			create keys.make (0, table_size - 1)
-			create deleted_marks.make (0, table_size - 1)
+			create l_content.make (0, table_size - 1)
+			content := l_content.area
+			create l_keys.make (0, table_size - 1)
+			keys := l_keys.area
+			create l_deleted_marks.make (0, table_size - 1)
+			deleted_marks := l_deleted_marks.area
 			iteration_position := table_size
 		ensure
 			keys_big_enough: keys.capacity >= n and keys.capacity >= Minimum_size
@@ -95,17 +101,17 @@ feature -- Access
 			-- based on `object_comparison'.)
 		local
 			i, bound: INTEGER
-			local_content: ARRAY [G]
+			l_content: like content
 		do
-			local_content := content
-			bound := local_content.upper
+			l_content := content
+			bound := l_content.count - 1
 			if object_comparison then
 				if v /= Void then
 					from
 					until
 						i > bound or else Result
 					loop
-						Result := local_content.item (i) /= Void and then v.is_equal (local_content.item (i))
+						Result := l_content.item (i) /= Void and then v.is_equal (l_content.item (i))
 						i := i + 1
 					end
 				end
@@ -114,7 +120,7 @@ feature -- Access
 				until
 					i > bound or else Result
 				loop
-					Result := local_content.item (i) = v
+					Result := l_content.item (i) = v
 					i := i + 1
 				end
 			end
@@ -133,16 +139,16 @@ feature -- Access
 		local
 			i, j, table_size: INTEGER
 			scanned_key: H
-			local_keys: ARRAY [H]
+			l_keys: like keys
 		do
 			from
-				local_keys := keys
-				table_size := local_keys.upper
+				l_keys := keys
+				table_size := l_keys.count - 1
 				create Result.make (1, count)
 			until
 				i > table_size
 			loop
-				scanned_key := local_keys.item (i)
+				scanned_key := l_keys.item (i)
 				if valid_key (scanned_key) then
 					j := j + 1
 					Result.put (scanned_key, j)
@@ -271,7 +277,7 @@ feature -- Status report
 	after, off: BOOLEAN is
 			-- Is cursor past last item?
 		do
-			Result := iteration_position > keys.upper
+			Result := iteration_position >= keys.count
 		end
 
 	search (key: H) is
@@ -303,9 +309,9 @@ feature -- Status report
 			ht_cursor ?= c
 			if ht_cursor /= Void then
 				cursor_position := ht_cursor.position
-				if cursor_position > keys.upper then
+				if cursor_position >= keys.count then
 					Result := True
-				elseif cursor_position >= keys.lower then
+				elseif cursor_position >= 0 then
 					Result := valid_key (keys.item (cursor_position))
 				end
 			end
@@ -316,7 +322,7 @@ feature -- Cursor movement
 	start is
 			-- Bring cursor to first position.
 		do
-			iteration_position := keys.lower - 1
+			iteration_position := -1
 			forth
 		end
 
@@ -326,18 +332,18 @@ feature -- Cursor movement
 			not_off: not off
 		local
 			stop: BOOLEAN
-			local_keys: ARRAY [H]
+			l_keys: like keys
 			pos_for_iter, table_size: INTEGER
 		do
 			from
-				local_keys := keys
-				table_size := keys.upper
+				l_keys := keys
+				table_size := l_keys.count - 1
 				pos_for_iter := iteration_position
 			until
 				stop
 			loop
 				pos_for_iter := pos_for_iter + 1
-				stop := pos_for_iter > table_size or else valid_key (local_keys.item (pos_for_iter))
+				stop := pos_for_iter > table_size or else valid_key (l_keys.item (pos_for_iter))
 			end
 			iteration_position := pos_for_iter
 		end
@@ -516,19 +522,19 @@ feature -- Conversion
 			-- (order is same as original order of insertion)
 		local
 			i, table_size: INTEGER
-			local_keys: ARRAY [H]
-			local_content: ARRAY [G]
+			l_keys: like keys
+			l_content: like content
 		do
 			from
-				local_content := content
-				local_keys := keys
+				l_content := content
+				l_keys := keys
 				create Result.make (count)
-				table_size := local_content.upper
+				table_size := l_content.count - 1
 			until
 				i > table_size
 			loop
-				if valid_key (local_keys.item (i)) then
-					Result.extend (local_content.item (i))
+				if valid_key (l_keys.item (i)) then
+					Result.extend (l_content.item (i))
 				end
 				i := i + 1
 			end
@@ -550,13 +556,13 @@ feature -- Duplication
 
 feature {HASH_TABLE} -- Implementation
 
-	content: ARRAY [G]
+	content: SPECIAL [G]
 			-- Array of contents
 
-	keys: ARRAY [H]
+	keys: SPECIAL [H]
 			-- Array of keys
 
-	deleted_marks: ARRAY [BOOLEAN]
+	deleted_marks: SPECIAL [BOOLEAN]
 			-- Array of deleted marks
 
 	Size_threshold: INTEGER is 80
@@ -621,14 +627,14 @@ feature {NONE} -- Implementation
 			first_deleted_position, visited_count: INTEGER
 			old_key, default_key: H
 			stop: BOOLEAN
-			local_keys: ARRAY [H]
-			local_deleted_marks: ARRAY [BOOLEAN]
+			l_keys: like keys
+			l_deleted_marks: like deleted_marks
 		do
 			from
-				local_keys := keys
-				local_deleted_marks := deleted_marks
+				l_keys := keys
+				l_deleted_marks := deleted_marks
 				first_deleted_position := -1
-				table_size := local_keys.count
+				table_size := l_keys.count
 				hash_code := search_key.hash_code
 				-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1)
@@ -638,9 +644,9 @@ feature {NONE} -- Implementation
 			loop
 				pos := (pos + increment) \\ table_size
 				visited_count := visited_count + 1
-				old_key := local_keys.item (pos)
+				old_key := l_keys.item (pos)
 				if old_key = default_key then
-					if not local_deleted_marks.item (pos) then
+					if not l_deleted_marks.item (pos) then
 						control := Not_found_constant
 						stop := True
 						if first_deleted_position >= 0 then
@@ -687,20 +693,20 @@ feature {NONE} -- Implementation
 			i, table_size: INTEGER
 			current_key: H
 			other: HASH_TABLE [G, H]
-			local_keys: ARRAY [H]
-			local_content: ARRAY [G]
+			l_keys: like keys
+			l_content: like content
 		do
 			from
-				local_content := content
-				local_keys := keys
-				table_size := local_keys.count
+				l_content := content
+				l_keys := keys
+				table_size := l_keys.count
 				create other.make ((High_ratio * table_size) // Low_ratio)
 			until
 				i >= table_size
 			loop
-				current_key := local_keys.item (i)
+				current_key := l_keys.item (i)
 				if valid_key (current_key) then
-					other.put (local_content.item (i), current_key)
+					other.put (l_content.item (i), current_key)
 				end
 				i := i + 1
 			end

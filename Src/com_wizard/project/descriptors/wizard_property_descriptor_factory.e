@@ -70,7 +70,7 @@ feature -- Basic operations
 				name.prepend ("a_")
 			end
 			description := clone (a_documentation.doc_string)
-			if description.empty then
+			if description.is_empty then
 				description := clone (No_description_available)
 			end
 			a_type_desc := a_var_desc.elem_desc.type_desc

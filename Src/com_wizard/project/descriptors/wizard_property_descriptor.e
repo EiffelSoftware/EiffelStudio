@@ -37,7 +37,7 @@ feature -- Initialization
 			create coclass_eiffel_names.make (5)
 		ensure
 			non_void_name: name /= Void 
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 			valid_data_type: data_type /= Void
 			non_void_coclass_eiffel_names: coclass_eiffel_names /= Void
 		end
@@ -179,11 +179,11 @@ feature {WIZARD_PROPERTY_DESCRIPTOR_FACTORY}-- Basic operations
 	set_description (a_description: STRING) is
 			-- Set `description' with `a_description'.
 		require
-			valid_description: a_description /= Void and then not a_description.empty
+			valid_description: a_description /= Void and then not a_description.is_empty
 		do
 			description := clone (a_description)
 		ensure
-			valid_description: description /= Void and then not description.empty and description.is_equal (a_description)
+			valid_description: description /= Void and then not description.is_empty and description.is_equal (a_description)
 		end
 
 	set_data_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is

@@ -52,11 +52,11 @@ feature -- Basic Operations
 			-- Set `name' with `a_name'
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			name := clone (a_name)
 		ensure
-			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
+			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
 	set_description (a_description: STRING) is
@@ -64,13 +64,13 @@ feature -- Basic Operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if not a_description.empty then
+			if not a_description.is_empty then
 				description := clone (a_description)
 			else
 				description := clone (No_description_available)
 			end
 		ensure
-			valid_description: description /= Void and then not description.empty
+			valid_description: description /= Void and then not description.is_empty
 		end
 
 	set_data_type (a_data_type: WIZARD_DATA_TYPE_DESCRIPTOR) is

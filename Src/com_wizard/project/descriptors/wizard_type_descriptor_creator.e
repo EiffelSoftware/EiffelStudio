@@ -54,7 +54,7 @@ feature -- Basic Operations
 			if description = Void then
 				create description.make (100)
 			end
-			if not description.empty then
+			if not description.is_empty then
 				description.append (Space)
 			end
 			description.append (a_type_lib.description)
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			valid_descriptor: a_descriptor /= Void
 		do
 			a_descriptor.set_name (name)
-			if description /= Void and then not description.empty then
+			if description /= Void and then not description.is_empty then
 				a_descriptor.set_description (description)
 			else
 				a_descriptor.set_description (clone (No_description_available))

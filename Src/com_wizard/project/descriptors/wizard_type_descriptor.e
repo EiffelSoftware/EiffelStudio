@@ -74,7 +74,7 @@ feature -- Basic Operations
 	set_name (a_name: STRING) is
 			-- Set `name' with `a_name'
 		require
-			valid_name: a_name /= Void and then not a_name.empty
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
 			name := clone (a_name)
 		ensure
@@ -86,24 +86,24 @@ feature -- Basic Operations
 		require
 			non_void_description: a_description /= Void
 		do
-			if not a_description.empty then
+			if not a_description.is_empty then
 				description := clone (a_description)
 			else
 				description := clone (No_description_available)
 			end
 		ensure
 			non_void_description: description /= Void
-			valid_description: not a_description.empty
+			valid_description: not a_description.is_empty
 		end
 
 	set_eiffel_class_name (a_name: STRING) is
 			-- Set `eiffel_class_name' with `a_name'
 		require
-			valid_name: a_name /= Void and then not a_name.empty
+			valid_name: a_name /= Void and then not a_name.is_empty
 		do
 			eiffel_class_name := clone (a_name)
 		ensure
-			valid_eiffel_class_name: eiffel_class_name /= Void and then not eiffel_class_name.empty
+			valid_eiffel_class_name: eiffel_class_name /= Void and then not eiffel_class_name.is_empty
 						and eiffel_class_name.is_equal (a_name)
 		end
 

@@ -50,7 +50,7 @@ feature -- Basic operations
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			add_type_lib_description (type_library_descriptor)
-			if name = Void or else name.empty then
+			if name = Void or else name.is_empty then
 				create name.make (100)
 				name.append ("struct_")
 				name.append (type_library_descriptor.name)
@@ -123,7 +123,7 @@ feature -- Basic operations
 				set_common_fields (a_descriptor)
 				a_descriptor.set_fields (fields)
 				a_descriptor.set_size (size_of_instance)
-				if description /= Void and then not description.empty then
+				if description /= Void and then not description.is_empty then
 					a_descriptor.set_description (description)
 				else
 					a_descriptor.set_description (No_description_available)

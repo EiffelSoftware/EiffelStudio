@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			-- Map header file name into C file name
 		require
 			non_void_file_name: a_filename /= Void
-			valid_file_name: not a_filename.empty
+			valid_file_name: not a_filename.is_empty
 			valid_syntax: a_filename.substring (a_filename.count - 1, a_filename.count).is_equal (Header_file_extension)
 		do
 			Result := clone (a_filename)

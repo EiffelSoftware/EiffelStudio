@@ -999,7 +999,7 @@ feature -- Access
 					loop
 						a_file.read_line
 						a_line := clone (a_file.last_string)
-						if not a_line.empty then
+						if not a_line.is_empty then
 							Result.put (a_line, a_line)
 						end
 					end
@@ -1015,7 +1015,7 @@ feature -- Status report
 			-- Is `a_name' forbidden c word?
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			Result := c_keywords.has (a_name) or 
 					eiffel_runtime_macros.has (a_name) or 

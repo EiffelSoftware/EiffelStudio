@@ -244,7 +244,7 @@ feature -- Basic operations
 				message_output.add_message (Current, Generation_Aborted)
 			elseif 
 				shared_wizard_environment.server and
-				not system_descriptor.coclasses.empty
+				not system_descriptor.coclasses.is_empty
 			then
 				
 				if shared_wizard_environment.out_of_process_server then
@@ -315,7 +315,7 @@ feature -- Basic operations
 					resource_generator.generate (Server)
 					if 
 						shared_wizard_environment.in_process_server and
-						not system_descriptor.coclasses.empty
+						not system_descriptor.coclasses.is_empty
 					then
 						create definition_file_generator
 						definition_file_generator.generate

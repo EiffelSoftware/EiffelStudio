@@ -88,7 +88,7 @@ feature -- Behavior
 			Shared_wizard_environment.set_automation (automation_radio.checked)
 			shared_wizard_environment.set_use_universal_marshaller (virtual_table_universal_radio.checked or automation_radio.checked)
 			if virtual_table_standard_radio.checked then
-				if proxy_stub_input_edit.text /= Void and then not proxy_stub_input_edit.text.empty then
+				if proxy_stub_input_edit.text /= Void and then not proxy_stub_input_edit.text.is_empty then
 					!! a_file.make (proxy_stub_input_edit.text)
 					if a_file.exists then
 						shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_input_edit.text)

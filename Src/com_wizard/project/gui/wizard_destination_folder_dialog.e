@@ -71,7 +71,7 @@ feature -- Behavior
 		do
 			folder_name := destination_folder_edit.text
 
-			if folder_name = Void or folder_name.empty then
+			if folder_name = Void or folder_name.is_empty then
 				msg_box.error_message_box (Current, Empty_destination_folder, Initialization_error)
 			else
 				if folder_name.item (folder_name.count) = Directory_separator then
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 	Invalid_destination_folder: STRING is "Invalid destination folder%NPlease enter a valid destination folder"
 			-- Invalid destination folder message
 
-	Empty_destination_folder: STRING is "Empty destination folder%NPlease enter a valid destination folder"
+	Empty_destination_folder: STRING is "is_empty destination folder%NPlease enter a valid destination folder"
 			-- Invalid destination folder message
 
 	Folder_selection_dialog_title: STRING is "Choose Destination Folder"

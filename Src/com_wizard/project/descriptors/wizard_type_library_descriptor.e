@@ -166,7 +166,7 @@ feature -- Basic operations
 			if doc_string /= Void then
 				description.append (doc_string)
 			end
-			if not description.empty and then not (description.item (description.count) = '.') then
+			if not description.is_empty and then not (description.item (description.count) = '.') then
 				description.append_character ('.')
 			end
 			if help_file /= Void then
@@ -317,7 +317,7 @@ feature -- Basic operations
 						if not (descriptors.item (i).type_kind = Tkind_alias) then
 							if 
 								descriptors.item (i).c_header_file_name /= Void and then 
-								not descriptors.item (i).c_header_file_name.empty 
+								not descriptors.item (i).c_header_file_name.is_empty 
 							then
 								descriptors.item (i).c_header_file_name.insert 
 									(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
@@ -473,7 +473,7 @@ feature -- Basic operations
 							if 
 								(shared_wizard_environment.server or
 								system_descriptor.is_iunknown or 
-								not referees.item (i).empty) and 
+								not referees.item (i).is_empty) and 
 								not Non_generated_type_libraries.has (guid) 
 							then
 								if not (interface_descriptor.inherited_interface = Void) then

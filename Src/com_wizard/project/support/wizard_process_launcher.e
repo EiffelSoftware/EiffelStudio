@@ -81,7 +81,7 @@ feature -- Basic Operations
 		require
 			non_void_command_line: a_command_line /= Void
 			non_void_working_directory: a_working_directory /= Void
-			valid_working_directory: not a_working_directory.empty
+			valid_working_directory: not a_working_directory.is_empty
 		local
 			a_string: STRING
 			a_boolean: BOOLEAN

@@ -137,7 +137,7 @@ feature -- Basic operations
 			-- Generate system descriptors according to `a_type_library_file_name'.
 		require
 			non_void_file_name: a_type_library_file_name /= Void
-			valid_file_name: not a_type_library_file_name.empty
+			valid_file_name: not a_type_library_file_name.is_empty
 		local
 			a_type_library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			a_type_lib: ECOM_TYPE_LIB
@@ -268,7 +268,7 @@ feature -- Basic operations
 			-- Add `a_type' to list of C types.
 		require
 			non_void_type: a_type /= Void
-			valid_type: not a_type.empty
+			valid_type: not a_type.is_empty
 		do
 			c_types.force (clone (a_type), clone (a_type))
 		ensure

@@ -121,7 +121,7 @@ feature -- Element Change
 			-- Set 'ace_file_name' to 'ace_file'.
 		require
 			non_void_file: ace_file /= Void
-			valid_ace_file: not ace_file.empty
+			valid_ace_file: not ace_file.is_empty
 		do
 			ace_file_name := clone (ace_file)
 		end
@@ -180,30 +180,30 @@ feature -- Element Change
 			-- Set 'eiffel_class_name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
-			valid_name: not c_name.empty
+			valid_name: not c_name.is_empty
 		do
 			eiffel_class_name := clone (c_name)
 			eiffel_class_name.to_upper
 		ensure
-			name_set: eiffel_class_name /= Void and then not eiffel_class_name.empty
+			name_set: eiffel_class_name /= Void and then not eiffel_class_name.is_empty
 		end
 
 	set_class_cluster_name (c_name: like class_cluster_name) is
 			-- Set 'class_cluster_name' to 'c_name'.
 		require
 			non_void_name: c_name /= Void
-			valid_name: not c_name.empty
+			valid_name: not c_name.is_empty
 		do
 			class_cluster_name := clone (c_name)
 		ensure
-			name_set: class_cluster_name /= Void and then not class_cluster_name.empty
+			name_set: class_cluster_name /= Void and then not class_cluster_name.is_empty
 		end
 
 	set_eiffel_project_name (p_name: like eiffel_project_name) is
 			-- Set 'eiffel_project_name' to 'p_name'.
 		require
 			non_void_name: p_name /= Void
-			valid_name: not p_name.empty
+			valid_name: not p_name.is_empty
 		do
 			eiffel_project_name := clone (p_name)
 		ensure
@@ -214,7 +214,7 @@ feature -- Element Change
 			-- Set `destination_folder' with `a_folder'.
 		require
 			non_void_folder: a_folder /= Void
-			valid_folder: not a_folder.empty
+			valid_folder: not a_folder.is_empty
 		do
 			destination_folder := clone (a_folder)
 			if not (destination_folder.item (destination_folder.count) = Directory_separator) then
@@ -226,7 +226,7 @@ feature -- Element Change
 			-- Set `project_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			if a_name.index_of ('.', 1) /= 0 then
 				project_name := a_name.substring (1, a_name.index_of ('.', 1) - 1)
@@ -242,7 +242,7 @@ feature -- Element Change
 			-- Set `proxy_stub' with `a_proxy_stub'.
 		require
 			non_void_proxy_stub: a_proxy_stub /= Void
-			valid_proxy_stub: not a_proxy_stub.empty
+			valid_proxy_stub: not a_proxy_stub.is_empty
 		do
 			proxy_stub_file_name := clone (a_proxy_stub)
 		ensure
@@ -253,7 +253,7 @@ feature -- Element Change
 			-- Set `idl_file_name' with `a_idl_file_name'.
 		require
 			non_void_idl_file_name: a_idl_file_name /= Void
-			valid_idl_file_name: not a_idl_file_name.empty
+			valid_idl_file_name: not a_idl_file_name.is_empty
 		do
 			idl_file_name := clone (a_idl_file_name)
 		ensure
@@ -264,7 +264,7 @@ feature -- Element Change
 			-- Set `type_library_file_name' with `a_type_library_file_name'.
 		require
 			non_void_type_library_file_name: a_type_library_file_name /= Void
-			valid_type_library_file_name: not a_type_library_file_name.empty
+			valid_type_library_file_name: not a_type_library_file_name.is_empty
 		do
 			type_library_file_name := clone (a_type_library_file_name)
 		ensure

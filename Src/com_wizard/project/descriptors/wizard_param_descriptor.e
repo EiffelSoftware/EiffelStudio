@@ -72,11 +72,11 @@ feature {WIZARD_PARAMETER_DESCRIPTOR_FACTORY}-- Basic operations
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void 
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			name := clone (a_name)
 		ensure
-			valid_name: name /= Void and then not name.empty and name.is_equal (a_name)
+			valid_name: name /= Void and then not name.is_empty and name.is_equal (a_name)
 		end
 
 	set_type (a_type: WIZARD_DATA_TYPE_DESCRIPTOR) is

@@ -19,7 +19,7 @@ feature -- Initialization
 			-- Initialize
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			valid_export_status: is_valid_export_status (an_export_status)
 		do
 			name := clone (a_name)
@@ -27,7 +27,7 @@ feature -- Initialization
 			export_status := an_export_status
 		ensure
 			non_void_name: name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 			valid_export_status: is_valid_export_status (export_status)
 		end
 
@@ -45,7 +45,7 @@ feature -- Access
 
 invariant
 	non_void_name: name /= Void
-	valid_name: not name.empty
+	valid_name: not name.is_empty
 	valid_export_status: is_valid_export_status (export_status)
 
 end -- class WIZARD_PARENT_CPP_CLASS

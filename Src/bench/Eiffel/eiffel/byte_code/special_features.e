@@ -127,6 +127,16 @@ feature -- C special code generation
 				parameter := parameters.first
 			end
 			inspect function_type
+			when lower_type then
+				check character_type: type_of (basic_type) = character_type end
+				buffer.putstring ("chlower(")
+				target.print_register
+				buffer.putchar (')')
+			when upper_type then
+				check character_type: type_of (basic_type) = character_type end
+				buffer.putstring ("chupper(")
+				target.print_register
+				buffer.putchar (')')
 			when equal_type then
 				generate_equal (buffer, target, parameter)
 			when to_character_type then
@@ -227,6 +237,8 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (memory_alloc, feature {PREDEFINED_NAMES}.memory_alloc_name_id)
 			Result.put (memory_free, feature {PREDEFINED_NAMES}.memory_free_name_id)
 			Result.put (set_bit_with_mask_type, feature {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
+			Result.put (lower_type, feature {PREDEFINED_NAMES}.lower_name_id)
+			Result.put (upper_type, feature {PREDEFINED_NAMES}.upper_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -303,7 +315,9 @@ feature {NONE} -- Fast access to feature name
 	memory_alloc: INTEGER is 28
 	memory_free: INTEGER is 29
 	to_character_type: INTEGER is 30
-	max_type_id: INTEGER is 30
+	upper_type: INTEGER is 31
+	lower_type: INTEGER is 32
+	max_type_id: INTEGER is 32
 
 feature {NONE} -- Byte code generation
 

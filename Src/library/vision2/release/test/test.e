@@ -47,6 +47,7 @@ feature
 			menu_item: EV_MENU_ITEM
 			description_frame: EV_FRAME
 			timer: EV_TIMEOUT
+			p: EV_PIXMAP
 		do
 			first_window.set_title ("Eiffel Vision Widgets")
 			first_window.set_status_bar (create {EV_STATUS_BAR}.make_for_test)
@@ -58,6 +59,14 @@ feature
 			first_window.extend (box)
 			create notebook
 			box.extend (notebook)
+
+			create scroll
+			scroll.set_minimum_size (700, 500)
+			notebook.extend (scroll)
+			notebook.set_item_text (scroll, "Welcome to EiffelVision")
+			create p
+			p.set_with_named_file ("vision.png")
+			scroll.extend (p)
 
 			create scroll
 			scroll.set_minimum_size (700, 500)
@@ -509,6 +518,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/05/02 20:54:42  oconnor
+--| more tests
+--|
 --| Revision 1.43  2000/05/02 15:21:39  brendel
 --| Added EV_FIXED.
 --|

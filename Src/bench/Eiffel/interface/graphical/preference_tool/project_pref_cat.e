@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			!! bottom_offset.make (associated_category.bottom_offset);
 			!! command_bar.make (associated_category.command_bar);
 			!! format_bar.make (associated_category.format_bar);
+  			!! selector_window.make (associated_category.selector_window);
 			!! raise_on_error.make (associated_category.raise_on_error);
 			!! debugger_show_all_callers.make (
 				associated_category.debugger_show_all_callers);
@@ -52,6 +53,7 @@ feature {NONE} -- Initialization
 			resources.extend (tool_height);
 			resources.extend (command_bar);
 			resources.extend (format_bar);
+			resources.extend (selector_window);
 			resources.extend (debugger_feature_height);
 			resources.extend (debugger_object_height);
 			resources.extend (debugger_show_all_callers);
@@ -100,7 +102,7 @@ feature {NONE} -- Resources
 	tool_x, tool_y, tool_width, tool_height,
 	debugger_feature_height, debugger_object_height,
 	bottom_offset, interrupt_every_n_instructions: INTEGER_PREF_RES;
-	command_bar, format_bar,
+	command_bar, format_bar, selector_window,
 	raise_on_error: BOOLEAN_PREF_RES;
 	debugger_show_all_callers: BOOLEAN_PREF_RES;
 	debugger_do_flat_in_breakpoints: BOOLEAN_PREF_RES;

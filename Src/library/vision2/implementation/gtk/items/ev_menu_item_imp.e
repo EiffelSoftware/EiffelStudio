@@ -16,7 +16,10 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			set_text,
+			remove_text,
+			text
 		end
 create
 	make
@@ -57,13 +60,77 @@ feature {NONE} -- Initialization
 			menu_item_box /= default_pointer
 		end
 
+feature -- Access
+
+	text: STRING is
+			-- Displayed on menu item.
+		do
+			Result := clone (real_text)
+		end
+
+feature -- Element change
+
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			real_text := clone (a_text)
+			C.gtk_widget_show (text_label)
+			C.gtk_label_set_text (text_label,
+				eiffel_to_c (filter (a_text)))
+		end
+
+	remove_text is
+			-- Assign `Void' to `text'.
+		do
+			real_text := Void
+			C.gtk_label_set_text (text_label, Default_pointer)
+			C.gtk_widget_hide (text_label)
+		end
+
 feature {EV_ANY_I} -- Implementation
+
+	real_text: STRING
+			-- Internal `text'. (with ampersands)
+
+	filter_ampersand (s: STRING) is
+			-- Remove occurrences of '&' from `s' and
+			-- replace occurrences of "&&" with '&'.
+		require
+			s_not_void: s /= Void
+			s_has_at_least_one_ampersand: s.occurrences ('&') > 0
+		do
+			s.replace_substring_all ("&&", "!AMP!")
+			s.prune_all ('&')
+			s.replace_substring_all ("!AMP!", "&")
+		ensure
+			only_ampersands_removed:
+				(old clone (s)).count + s.occurrences ('&') =
+				s.count + (old clone (s)).occurrences ('&')
+		end
+
+	filter (s: STRING): STRING is
+			-- Copy of `s' with filtered out ampersands.
+			-- (If `s' does not contain ampersands, return `s'.)
+		require
+			s_not_void: s /= Void
+		do
+			if s.has ('&') then
+				Result := clone (s)
+				filter_ampersand (Result)
+			else
+				Result := s
+			end
+		ensure
+			copied_only_if_s_had_ampersand:
+				((old clone (s)).has ('&')) = (s /= Result)
+			s_not_changed: (old clone (s)).is_equal (s) 
+		end
 
 	on_activate is
 		local
 			p_imp: EV_MENU_ITEM_LIST_IMP
 		do
-			interface.press_actions.call ([])
+			interface.select_actions.call ([])
 			p_imp ?= parent_imp
 			if p_imp /= Void then
 				p_imp.interface.item_select_actions.call ([interface])
@@ -101,6 +168,11 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/03/27 18:04:59  brendel
+--| Redefined `text', `set_text' and `remove_text' as specified in the note
+--| in EV_MENU_ITEM.
+--| Replaced press_actions with select_actions.
+--|
 --| Revision 1.42  2000/03/24 00:13:16  brendel
 --| Removed ampersand filtering for the moment. Will be handled by future
 --| class EV_MENU_TEXTABLE (or something).

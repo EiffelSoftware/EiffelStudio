@@ -36,6 +36,7 @@ feature -- Basic Operations
             parsed_feature: RX_PCRE_MATCHER
             cap_str: STRING
         do
+        	parsed_result_feature_location := 0
             is_class := False
             is_feature_call := False
             parse_successful := False
@@ -120,6 +121,7 @@ feature -- Basic Operations
             
                 parse_successful := True
                 parsed_result := retrieve_final_string (parse_res)
+                parsed_result_feature_location := lines.count
                 
                 -- set flags to indicate a class or feature
                 if parsed_result.index_of ('.', 1) > 0 then
@@ -262,6 +264,9 @@ feature -- Access
 
     parsed_result_return_type: STRING
             -- feature return type of `parsed_result'
+            
+    parsed_result_feature_location: INTEGER
+    		-- location of feature of `parsed_result'
     
     call_type: INTEGER
             -- type of parsed call

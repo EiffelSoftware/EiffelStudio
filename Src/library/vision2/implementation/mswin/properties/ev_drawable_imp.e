@@ -312,6 +312,18 @@ feature -- Drawing operations
 			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, false)
 		end
 
+	draw_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+			-- Copy `pix' into the drawable at the point `pt'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+		do
+			pix_imp ?= pix.implementation
+			check
+				valid_cast: pix_imp /= Void
+			end
+			dc.draw_bitmap (pix_imp.dc.bitmap, pt.x, pt.y, pix_imp.width, pix_imp.height)
+		end
+
 feature -- Filling operations
 
 	fill_polygon (pts: ARRAY [EV_POINT]) is

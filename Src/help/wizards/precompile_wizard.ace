@@ -5,9 +5,9 @@ root
 	WIZARD_MANAGER (precompile_wizard): "make_and_launch"
 
 default
---	assertion (no)
-	assertion (require)
-	assertion (ensure)
+	assertion (no)
+--	assertion (require)
+--	assertion (ensure)
 --	assertion (check)
 	multithreaded (no)
 	console_application (no)
@@ -20,7 +20,7 @@ default
 	inlining (no)
 	inlining_size ("4")
 	exception_trace (yes)
-	arguments ("C:\Eiffel50\bench\wizards\precompile -callback c:\test.txt")
+	arguments ("E:\Eiffel50\bench\wizards\precompile")
 
 cluster
 		-- Root cluster

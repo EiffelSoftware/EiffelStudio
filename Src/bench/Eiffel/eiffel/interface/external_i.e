@@ -11,8 +11,33 @@ inherit
 			transfer_to, equiv, update_api,
 			melt, generate, duplicate, extension,
 			access_for_feature, is_external, new_rout_entry, valid_body_id,
-			set_renamed_name, set_renamed_name_id, external_name_id, undefinable
+			set_renamed_name, set_renamed_name_id, external_name_id, undefinable,
+			init_arg
 		end;
+
+create
+	make
+
+feature -- Initialization
+
+	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]) is
+			-- Initialization of arguments.
+		local
+			l_inline_ext: INLINE_EXTENSION_I
+		do
+			Precursor {PROCEDURE_I} (argument_as)
+			if has_arguments and extension.is_inline then
+					-- In order to replace arguments specified in `alias' part of
+					-- inline clause, we need to initialize `extension' with argument
+					-- names.
+				l_inline_ext ?= extension
+				check
+					l_inline_ext_not_void: l_inline_ext /= Void
+				end
+				
+				l_inline_ext.set_argument_names (arguments.argument_names)
+			end
+		end
 
 feature -- Duplication
 
@@ -33,46 +58,43 @@ feature -- Routines for externals
 	is_special: BOOLEAN is
 			-- Does the external declaration include a macro or a Dll --JOCE--
 		do
-			Result := extension /= Void and then
-				(extension.is_macro or extension.is_struct or extension.is_dll)
+			Result := extension.is_macro or extension.is_struct or extension.is_dll or extension.is_inline
 		end;
 
 	has_signature: BOOLEAN is
 			-- Does the external declaration include a signature ?
 		do
-			Result := extension /= Void and then extension.has_signature
+			Result := extension.has_signature
 		end;
 
 	is_cpp: BOOLEAN is
 			-- Is the external declaration a C++ feature ?
 		do
-			Result := extension /= Void and then extension.is_cpp
+			Result := extension.is_cpp
 		end;
 
 	has_arg_list: BOOLEAN is
 			-- Does the signature include arguments ?
 		do
-			Result := extension /= Void and then extension.has_arg_list
+			Result := extension.has_arg_list
 		end;
 
 	has_return_type: BOOLEAN is
 			-- Does the signature include a result type ?
 		do
-			Result := extension /= Void and then extension.has_return_type
+			Result := extension.has_return_type
 		end;
 
 	has_include_list: BOOLEAN is
 			-- Does the external declaration include a list of include files ?
 		do
-			Result := extension /= Void and then extension.has_include_list
+			Result := extension.has_include_list
 		end;
 
 	include_list: ARRAY [INTEGER] is
 			-- Include list
 		do
-			if extension /= Void then
-				Result := extension.header_files
-			end
+			Result := extension.header_files
 		end
 
 	undefinable: BOOLEAN is
@@ -81,10 +103,14 @@ feature -- Routines for externals
 			Result := System.il_generation and then Precursor {PROCEDURE_I}
 		end
 
-	set_extension (e: like extension) is
+	make, set_extension (e: like extension) is
 			-- Assign `e' to `extension'.
+		require
+			e_not_void: e /= Void
 		do
 			extension := e
+		ensure
+			extension_set: extension = e
 		end
 
 feature -- Incrementality
@@ -246,55 +272,58 @@ feature
 	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
 				-- Generate feature written in `class_type' in `buffer'.
 		local
-			byte_code: BYTE_CODE;
+			byte_code: BYTE_CODE
 		do
 			if used then
 					-- if the external declaration has a macro or a signature
 					-- then encapsulated is True; otherwise do nothing
 				if encapsulated then
 					generate_header (buffer);
-					byte_code := Byte_server.disk_item (body_index);
+					byte_code := Byte_server.disk_item (body_index)
+					check
+						byte_code_not_void: byte_code /= Void
+					end
 						-- Generation of C code for an Eiffel feature written in
 						-- the associated class of the current type.
-					byte_context.set_byte_code (byte_code);
+					byte_context.set_byte_code (byte_code)
 						-- Generation of the C routine
 					byte_context.set_current_feature (Current)
-					byte_code.analyze;
-					byte_code.set_real_body_id (real_body_id);
-					byte_code.generate;
-					byte_context.clear_all;
+					byte_code.analyze
+					byte_code.set_real_body_id (real_body_id)
+					byte_code.generate
+					byte_context.clear_all
 				else
 					add_in_log (class_type, external_name)
-				end;
-			end;
-		end;
+				end
+			end
+		end
 
 	generate_c_il (buffer: GENERATION_BUFFER) is
 				-- Generate current feature in `buffer'.
 		require
 			is_c_external: is_c_external
 		local
-			byte_code: EXT_BYTE_CODE;
+			byte_code: EXT_BYTE_CODE
 		do
 			if used then
 					-- if the external declaration has a macro or a signature
 					-- then encapsulated is True; otherwise do nothing
-				generate_header (buffer);
-				byte_code ?= Byte_server.disk_item (body_index);
+				generate_header (buffer)
+				byte_code ?= Byte_server.disk_item (body_index)
 				check
 					byte_code_not_void: byte_code /= Void
 				end
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.
-				byte_context.set_byte_code (byte_code);
+				byte_context.set_byte_code (byte_code)
 					-- Generation of the C routine
 				byte_context.set_current_feature (Current)
-				byte_code.analyze;
-				byte_code.set_real_body_id (real_body_id);
-				byte_code.generate_c_il;
-				byte_context.clear_all;
-			end;
-		end;		
+				byte_code.analyze
+				byte_code.set_real_body_id (real_body_id)
+				byte_code.generate_c_il
+				byte_context.clear_all
+			end
+		end
 		
 	valid_body_id: BOOLEAN is
 			-- if the external is encapsulated then an EXECUTION_UNIT
@@ -307,9 +336,7 @@ feature
 	melt (exec: EXECUTION_UNIT) is
 			-- Generate byte code for the current feature
 		do
-			check
-				False
-			end
+			-- Nothing to be done since it is an external.
 		end
 
 feature {NONE} -- Api
@@ -320,5 +347,8 @@ feature {NONE} -- Api
 			{PROCEDURE_I} Precursor (f)
 			f.set_external (True)
 		end
+
+invariant
+	extension_not_void: extension /= Void
 
 end

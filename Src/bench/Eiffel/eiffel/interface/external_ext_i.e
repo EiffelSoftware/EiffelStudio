@@ -58,6 +58,11 @@ feature -- Status report
 		do
 		end
 
+	is_inline: BOOLEAN is
+			-- Is current external an inlined one?
+		do
+		end
+		
 	has_signature: BOOLEAN is
 		do
 			Result := has_arg_list or has_return_type
@@ -106,18 +111,24 @@ feature -- Settings
 			-- Assign `a' to `argument_types'.
 		do
 			argument_types := a
+		ensure
+			argument_types_set: argument_types = a
 		end
 
 	set_header_files (h: like header_files) is
 			-- Assign `h' to `header_files'.
 		do
 			header_files := h
+		ensure
+			header_files_set: header_files = h
 		end
 
 	set_return_type (r: like return_type) is
 			-- Assign `r' to `return_type'.
 		do
 			return_type := r
+		ensure
+			return_type_set: return_type = r
 		end
 
 	set_alias_name_id (name_id: like alias_name_id) is
@@ -186,9 +197,12 @@ feature -- Code generation
 			end
 		end
 
-	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
-				type: CL_TYPE_I; ret_type: TYPE_C) is
+	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING; ret_type: TYPE_C) is
 			-- Generate the C name associated with the extension
+		require
+			buffer_not_void: buffer /= Void
+			external_name_not_void: external_name /= Void
+			ret_type_not_void: ret_type /= Void
 		do
 			buffer.putstring (external_name)
 			if has_standard_prototype then

@@ -465,6 +465,8 @@ feature {NONE} -- Initialization
 
 				l_member := a_features.item (i)
 
+				create l_ext
+
 				if l_member.is_attribute then
 					if l_member.is_literal then
 						l_literal ?= l_member
@@ -472,7 +474,7 @@ feature {NONE} -- Initialization
 							l_literal_not_void: l_literal /= Void
 						end
 						if external_class.is_enum then
-							create {EXTERNAL_FUNC_I} l_external
+							create {EXTERNAL_FUNC_I} l_external.make (l_ext)
 							l_feat := l_external
 						else
 							create l_constant.make
@@ -500,9 +502,9 @@ feature {NONE} -- Initialization
 						end
 					else
 						if l_member.has_return_value then
-							create {EXTERNAL_FUNC_I} l_external
+							create {EXTERNAL_FUNC_I} l_external.make (l_ext)
 						else
-							create {EXTERNAL_I} l_external
+							create {EXTERNAL_I} l_external.make (l_ext)
 						end
 						l_feat := l_external
 					end
@@ -530,10 +532,7 @@ feature {NONE} -- Initialization
 					end
 				end
 
-				create l_ext
-				if l_external /= Void then
-					l_external.set_extension (l_ext)
-				elseif l_deferred /= Void then
+				if l_deferred /= Void then
 					l_deferred.set_extension (l_ext)
 				elseif l_attribute /= Void then
 					l_attribute.set_extension (l_ext)

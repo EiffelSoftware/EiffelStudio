@@ -110,8 +110,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create ev_children.make (0)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
-			--| FIXME
-			row_height := 16
 		end
 
 	initialize is
@@ -289,7 +287,7 @@ feature {NONE} -- Implementation
 			--|FIXME I think we should now tell the list view that an item has ben updated.
 			--| How do we do this?
 			temp_row ?= i_th (a_row).implementation
-			temp_row.set_image (0)
+			temp_row.set_image (1)
 			replace_item (temp_row)
 		end
 
@@ -551,8 +549,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			--| FIXME We need nice values.
-			internal_set_minimum_size (1, 2 * row_height)
+			--|FIXME Is there better values we could use?
+			internal_set_minimum_size (32, 32)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -750,6 +748,10 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.88  2000/04/21 18:04:56  rogers
+--| Removed row_height as it was only used to set default_minimum_size
+--| and is not actually the correct row height.
+--|
 --| Revision 1.87  2000/04/21 16:58:01  rogers
 --| Removed child_x and wel_window_parent fix.
 --|

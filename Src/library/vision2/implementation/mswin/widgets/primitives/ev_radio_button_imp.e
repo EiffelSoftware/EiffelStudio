@@ -65,6 +65,7 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_set_cursor,
+			on_size,
 			process_notification,
 			set_text,
 			show,
@@ -151,6 +152,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/07 17:40:06  rogers
+--| Undefined on_size from WEL_RADIO_BUTTON as this is now inherited from EV_BUTTON_IMP.
+--|
 --| Revision 1.24  2000/03/04 04:19:22  pichery
 --| Modified the inheritance since WEL_BITMAP_BUTTON now redefine make
 --| and make_by_id

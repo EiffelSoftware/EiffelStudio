@@ -39,8 +39,12 @@ feature -- Properties
 
 	type: CL_TYPE_I is
 			-- String type
-		once
-			create Result.make (System.string_id)
+		do
+			if is_dotnet_string then
+				Result := system_string_type
+			else
+				Result := string_type
+			end
 		end
 
 	enlarged: STRING_BL is
@@ -90,6 +94,26 @@ feature -- Byte code generation
 			ba.append (Bc_string)
 			ba.append_integer (value.count)
 			ba.append_raw_string (value)
+		end
+
+feature {NONE} -- Implementation: types
+
+	string_type: CL_TYPE_I is
+			-- Type of STRING.
+		once
+			create Result.make (System.string_id)
+		ensure
+			string_type_not_void: Result /= Void
+		end
+
+	system_string_type: CL_TYPE_I is
+			-- Type of SYSTEM_STRING.
+		require
+			il_generation: System.il_generation
+		once
+			create Result.make (System.system_string_id)
+		ensure
+			system_string_type_not_void: Result /= Void
 		end
 
 invariant

@@ -14,7 +14,7 @@ inherit
 	EV_TREE
 		export
 			{NONE} all
-			{ANY} start, off, forth, item, extend, wipe_out, is_empty, prune_all, has
+			{ANY} start, off, forth, item, extend, wipe_out, is_empty, prune_all, has, i_th
 		redefine
 			initialize
 		end
@@ -120,6 +120,27 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	EIFFEL_RESERVED_WORDS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
+	BUILD_RESERVED_WORDS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -130,6 +151,7 @@ feature {NONE} -- Implementation
 			drop_actions.set_veto_pebble_function (agent veto_drop)
 			drop_actions.extend (agent add_new_object)			
 			key_press_actions.extend (agent check_for_object_delete)
+			select_actions.extend (agent update_select_root_window_command)
 		end
 
 feature -- Access
@@ -235,7 +257,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	objects: ARRAYED_LIST [GB_TITLED_WINDOW_OBJECT] is
+	objects: ARRAYED_LIST [GB_OBJECT] is
 			-- `Result' is all objects represented in `Current'.
 			-- No paticular order is guaranteed.
 		local
@@ -327,13 +349,35 @@ feature -- Access
 		
 	tool_bar: EV_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
-		do
+		once
 			create Result
 			Result.extend (new_directory_button)
 			Result.extend (expand_all_button)
 			Result.extend (set_root_window_command.new_toolbar_item (True, False))
+				-- If the children in `Result' is modified, must also update
+				-- code for `update_select_root_window_command'.
 		end
 		
+	update_select_root_window_command is
+			-- Update status of root window button based on the currently selected window.
+		local
+			root_window_button: EV_TOOL_BAR_BUTTON
+		do
+			if not system_status.loading_project then
+				root_window_button ?= tool_bar.i_th (3)
+				check
+					root_window_button_not_void: root_window_button /= Void
+				end
+				if selected_directory = Void and (selected_window /= Void and then
+					(selected_window.object.type.is_equal (ev_titled_window_string) or
+					selected_window.object.type.is_equal (ev_dialog_string)) and object_handler.root_window_object /= selected_window.object) then
+					root_window_button.enable_sensitive
+				else
+					root_window_button.disable_sensitive
+				end
+			end
+		end
+
 	name: STRING is "Window Selector"
 			-- Full name used to represent `Current'.
 
@@ -457,7 +501,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 
 feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 
-	add_new_object (an_object: GB_TITLED_WINDOW_OBJECT) is
+	add_new_object (an_object: GB_OBJECT) is
 			-- Add an associated window item for `window_object'.
 			-- Added at root level of `Current', not in a directory.
 		require
@@ -465,26 +509,64 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 		local
 			command_move_window: GB_COMMAND_MOVE_WINDOW
 			command_add_window: GB_COMMAND_ADD_WINDOW
+			window_object: GB_TITLED_WINDOW_OBJECT
+			dialog: GB_NAMING_DIALOG
+			all_top_level_names: HASH_TABLE [STRING, STRING]
+			command_convert_to_top_level: GB_COMMAND_CONVERT_TO_TOP_LEVEL
 		do
-			if an_object.layout_item = Void then
-				object_handler.add_new_window (an_object)
-				create command_add_window.make (an_object, Void)
-				command_add_window.execute
-			else
-				if not (an_object.window_selector_item.parent = Window_selector) then
-						-- Do nothing if attempting to move from `Current' to `Current'.
-					create command_move_window.make (an_object, Void)
-					command_move_window.execute
+			create all_top_level_names.make (50)
+			objects.do_all (agent add_object_name_to_hash_table (?, all_top_level_names))
+			if an_object.window_selector_item = Void then
+				create dialog.make_with_values (unique_name_from_hash_table (all_top_level_names, "my_" + an_object.short_type.as_lower), "New object", "Please specify the object name:", object_invalid_name_warning, agent check_new_object_name (an_object, ?))
+				dialog.show_modal_to_window (parent_window (Current))
+			end
+			if dialog = Void or else not dialog.cancelled then
+				if an_object.window_selector_item /= Void then
+					if not (an_object.window_selector_item.parent = Window_selector) then
+							-- Do nothing if attempting to move from `Current' to `Current'.
+						create command_move_window.make (an_object, Void)
+						command_move_window.execute
+					end
+				else
+					if an_object.layout_item = Void then
+						window_object ?= an_object
+						if window_object /= void then
+							object_handler.add_new_window (window_object)
+						else
+							object_handler.add_new_object (an_object)
+						end
+						create command_add_window.make (an_object, Void)
+						command_add_window.execute
+						an_object.set_name (dialog.name.as_lower)
+					else
+						create command_convert_to_top_level.make (an_object, dialog.name.as_lower)
+						command_convert_to_top_level.execute	
+					end
 				end
 			end
 				-- Update project so it may be saved.
 			system_status.enable_project_modified
 			command_handler.update
 		ensure
-			count_increased: old an_object.layout_item = Void implies count = old count + 1
+--			count_increased: implies old an_object.layout_item = Void implies count = old count + 1
 				-- Only if we were not moving internally as determined by whether the layout item
 				-- is Void, as it will be when picked from the type selector.
+				-- Also must now be implemented without `layout_item' as no longer always corresponds.
 		end
+		
+	check_new_object_name (an_object: GB_OBJECT; a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid name for new otp level object `an_object'?
+		require
+			an_object_not_void: an_object /= Void
+			name_not_void: a_name /= Void
+		do
+			Result := valid_class_name (a_name) and not
+				object_handler.name_in_use (a_name, an_object) and not
+				(reserved_words.has (a_name.as_lower)) and not
+				(build_reserved_words.has (a_name.as_lower) and not
+				(Constants.all_constants.item (a_name) /= Void))
+		end
+		
 		
 feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 
@@ -527,30 +609,32 @@ feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 		local
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 			current_index: INTEGER
-			window_object: GB_TITLED_WINDOW_OBJECT
+			next_object: GB_OBJECT
+			window_object: GB_OBJECT
 		do
 			
 				-- If `a_window_item' is selected, the next item
 				-- in `Current' must be selected.
 			if a_window_item.is_selected then
+				window_object := a_window_item.object
 				all_objects := objects
 				check
-					a_window_item_still_contained: all_objects.has (a_window_item.object)
+					a_window_item_still_contained: all_objects.has (window_object)
 				end
-				current_index := all_objects.index_of (a_window_item.object, 1)
+				current_index := all_objects.index_of (window_object, 1)
 				if all_objects.count > 1 then
 					current_index := current_index + 1
 					if current_index > all_objects.count then
 						current_index := 1
 					end
-					window_object ?= all_objects.i_th (current_index)
-					window_object.window_selector_item.enable_select
+					next_object ?= all_objects.i_th (current_index)
+					next_object.window_selector_item.enable_select
 				end
 					-- Now must check to see if there are any windows.
 					-- If not, the display and builder windows must be hidden.
 				if all_objects.count = 1 then
 					check
-						removal_consistent: all_objects.first = a_window_item.object
+						removal_consistent: all_objects.first = window_object
 					end
 					command_handler.Show_hide_builder_window_command.safe_disable_selected
 					Command_handler.Show_hide_display_window_command.safe_disable_selected
@@ -565,14 +649,14 @@ feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 		require
 			selector_item_not_void: selector_item /= Void
 		local
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			root_window_object: GB_OBJECT
 		do
 			if not System_status.loading_project then
+				root_window_object := selector_item.object
 					-- Only change the selected item, if a project is not loading.
-				titled_window_object := selector_item.object
-				layout_constructor.set_root_window (titled_window_object)
+				layout_constructor.set_root_window (root_window_object)
 				
-				update_display_and_builder_windows (titled_window_object)
+				update_display_and_builder_windows (root_window_object)
 			
 				if parent_window (Layout_constructor) /= Void then
 						-- Protect against a selection being fired before
@@ -593,11 +677,11 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	update_class_files_of_window (window_object: GB_TITLED_WINDOW_OBJECT; old_name, new_name: STRING) is
-			-- Rename generated files representing `window_object' to reflect a name change on `window_object'
+	update_class_files_of_window (object: GB_OBJECT; old_name, new_name: STRING) is
+			-- Rename generated files representing `object' to reflect a name change on `window_object'
 			-- from `old_name' to `new_name'.
 		require
-			window_object_not_void: window_object /= Void
+			object_is_top_level_object: object.is_top_level_object
 		local
 			directory_object: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			file_name, interface_file_name, implementation_file_name: FILE_NAME
@@ -608,7 +692,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 			file_contents: STRING
 			character_difference: INTEGER
 		do
-			directory_object := directory_of_window (window_object.window_selector_item)
+			directory_object := directory_of_window (object.window_selector_item)
 			file_name := generated_path
 			if directory_object /= Void then
 				file_name.extend (directory_object.text)
@@ -697,7 +781,7 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 	select_main_window is
 			-- Select window marked as root of system.
 		local
-			object: GB_TITLED_WINDOW_OBJECT
+			object, found_object: GB_TITLED_WINDOW_OBJECT
 			found: BOOLEAN
 			directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			window: GB_WINDOW_SELECTOR_ITEM
@@ -713,21 +797,29 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 					window ?= item
 					if window.object = object then
 						window.enable_select
+						found_object ?= window.object
+						check
+							main_window_was_window: found_object /= Void
+						end
 							-- This ensures that the root icon is displayed.
-						window.object.set_as_root_window
+						found_object.set_as_root_window
 						found := True
 					end
 				else
 					from
 						directory.start
 					until
-						directory.off
+						directory.off or found
 					loop
 						window ?= directory.item
 						if window.object = object then
 							window.enable_select
+							found_object ?= window.object
+							check
+								main_window_was_window: found_object /= Void
+							end
 								-- This ensures that the root icon is displayed.
-							window.object.set_as_root_window
+							found_object.set_as_root_window
 							found := True
 						end	
 						directory.forth
@@ -772,7 +864,7 @@ feature {NONE} -- Implementation
 		
 feature {GB_OBJECT_HANDLER} -- Implementation
 
-	set_item_for_prebuilt_window (window_object: GB_TITLED_WINDOW_OBJECT) is
+	set_item_for_prebuilt_window (window_object: GB_OBJECT) is
 			-- Add an associated window item for `window_object' in `Current'.
 			-- `window_object' must be a completely built object.
 		require
@@ -817,10 +909,24 @@ feature {GB_XML_LOAD} -- Implementation
 			-- the root window for the project.
 		require
 			objects_not_empty: not objects.is_empty
+		local
+			l_objects: ARRAYED_LIST [GB_OBJECT]
+			found_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			change_root_window_to (objects.first)
+			--| FIXME where are we getting `l_objects' from?
+			from
+				l_objects.start
+			until
+				l_objects.off or found_window_object /= Void
+			loop
+				found_window_object ?= l_objects.item
+				l_objects.forth
+			end
+			if found_window_object /= Void then
+				change_root_window_to (found_window_object)
+			end
 		ensure
-			has_root_window_if_not_empty: Object_handler.root_window_object /= Void
+		--	has_root_window_if_not_empty: Object_handler.root_window_object /= Void
 		end
 		
 feature {GB_SET_ROOT_WINDOW_COMMAND}		
@@ -914,21 +1020,34 @@ feature {NONE} -- Implementation
 			Result := not directory_names.has (a_name)
 		end
 		
-	update_display_and_builder_windows (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
+	update_display_and_builder_windows (an_object: GB_OBJECT) is
 			-- Update windows referenced by `builder_window' and `display_window' to
 			-- reflect `titled_window_object'.
 		require
-			window_not_void: titled_window_object /= Void
+			object_not_void: an_object /= Void
 		local
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
 			builder_shown, display_shown: BOOLEAN
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			widget: EV_WIDGET
+			display_object: GB_DISPLAY_OBJECT
 		do
 				-- There should be no need to check that the window has not already changed,
 				-- but it appears when selecting windows in the window selector, this
 				-- feature is called twice. This check reduces the flicker of hiding and showing
 				-- the same window twice.
-			if titled_window_object.object /= display_window then
+			titled_window_object ?= an_object
+			if titled_window_object /= Void then
+				widget ?= titled_window_object.object
+			else
+				widget ?= an_object.object
+			end
+			check
+				widget_not_void: widget /= Void
+			end
+			
+			if (titled_window_object /= Void and then widget /= display_window) or (widget.parent /= display_window) then
 
 				-- Firstly hide the existing windows if shown
 			if builder_window.is_displayed then
@@ -941,17 +1060,47 @@ feature {NONE} -- Implementation
 			end
 
 				-- Then set the new windows.
-			display_win ?= titled_window_object.object
+			if titled_window_object /= Void then
+				display_win ?= widget
+			else
+				display_win ?= widget.parent
+			end
 			check
 				display_win_not_void: display_win /= Void
 			end
 			set_display_window (display_win)
-			if titled_window_object.display_object /= Void then
-				builder_win ?= titled_window_object.display_object.child
-				check
-					display_object_item_is_window: builder_win /= Void
+			if titled_window_object /= Void then
+				if titled_window_object.display_object /= Void then
+					builder_win ?= titled_window_object.display_object.child
+					check
+						display_object_item_is_window: builder_win /= Void
+					end
+					set_builder_window (builder_win)
 				end
-				set_builder_window (builder_win)
+			else
+				if an_object.display_object /= Void then
+					display_object ?= an_object.display_object
+						-- `display_object' may be Void when the type of widget is a primitive
+						-- as it is simply an instance of EV_WIDGET instead of GB_DISPLAY_OBJECT.
+					if display_object /= Void then
+						builder_win ?= display_object.parent
+						check
+							builder_win_found: builder_win /= Void
+						end
+						set_builder_window (builder_win)
+					else
+						widget ?= an_object.display_object
+						check
+							display_object_was_widget: widget /= Void
+							widget_has_parent: widget.parent /= Void
+						end
+						builder_win ?= widget.parent
+						check
+							parent_was_builder_window: builder_win /= Void
+						end
+						set_builder_window (builder_win)
+					end
+				end
 			end
 
 			if builder_shown then
@@ -960,23 +1109,26 @@ feature {NONE} -- Implementation
 			if display_shown then
 				Command_handler.Show_hide_display_window_command.execute
 			end
-				-- Force the newly displayed window to redraw immediately.
-			((create {EV_ENVIRONMENT}).application).process_events
+					-- Force the newly displayed window to redraw immediately.
+				((create {EV_ENVIRONMENT}).application).process_events
 			end
 		end
 
 	veto_drop (an_object: GB_OBJECT): BOOLEAN is
-			-- Veto drop of `an_object'. We currently only
-			-- allow windows to be inserted, and those must be
-			-- not created, ie picked directly from the type selector.
+			-- Veto drop of `an_object'.
 		local
-			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			type: STRING
 		do
-			titled_window_object ?= an_object
-				-- We are allowed to drop windows and dialogs, so
-				-- this takes case of both cases, as dialogs inherit
-				-- windows.
-			Result :=  titled_window_object /= Void
+			type := an_object.generating_type
+				-- Any object except items may be inserted, as long as it has not already
+				-- been created. `object' is Void until an obejct is fully
+				-- created and in the system. While picking from the type selector,
+				-- `object' is still Void.
+				-- Note that checked for `_ITEM' is a quick method of determining if
+				-- an item is represented.
+			Result := type.substring_index ("_ITEM_", 1) = 0
+				and type.substring_index ("MENU", 1) = 0
+				and an_object.associated_top_level_object = 0
 		end
 		
 	check_for_object_delete (a_key: EV_KEY) is
@@ -993,10 +1145,10 @@ feature {NONE} -- Implementation
 					if Preferences.boolean_resource_value (preferences.show_deleting_keyboard_warning, True) then
 						create warning_dialog.make_initialized (2, preferences.show_deleting_keyboard_warning, delete_warning1 + "window object" + delete_warning2, delete_do_not_show_again)
 						warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
-						warning_dialog.set_ok_action (agent delete_window_object (selected_window.object))
+						warning_dialog.set_ok_action (agent delete_object (selected_window.object))
 						warning_dialog.show_modal_to_window (parent_window (Current))
 					else
-						delete_window_object (selected_window.object)
+						delete_object (selected_window.object)
 					end
 				elseif selected_directory /= Void then
 						-- There is a single case that slips through the net. If you have disabled both the non empty directory and
@@ -1019,15 +1171,27 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	delete_window_object (window_object: GB_TITLED_WINDOW_OBJECT) is
+	delete_object (an_object: GB_OBJECT) is
 			-- Delete selected object.
 		require
-			window_object_not_void: window_object /= Void
+			an_object_not_void: an_object /= Void
+			an_object_is_top_level_object: an_object.is_top_level_object
 		local
 			delete_window_object_command: GB_COMMAND_DELETE_WINDOW_OBJECT
 		do
-			create delete_window_object_command.make (window_object)
+			create delete_window_object_command.make (an_object)
 			delete_window_object_command.execute
+		end
+		
+	add_object_name_to_hash_table (an_object: GB_OBJECT; hash_table: HASH_TABLE [STRING, STRING]) is
+			-- Add `name' of `an_object' to `hash_table' as both key and corresponding item.
+		require
+			an_object_not_void: an_object /= Void
+			hash_table_not_void: hash_table /= Void
+		do
+			hash_table.extend (an_object.name, an_object.name)
+		ensure
+			object_name_contained: hash_table.item (an_object.name) /= Void and then hash_table.item (an_object.name) = an_object.name
 		end
 
 end -- class GB_WINDOW_SELECTOR

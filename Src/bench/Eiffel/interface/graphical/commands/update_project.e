@@ -254,12 +254,11 @@ feature {NONE} -- Implementation
 		require
 			tool.initialized
 		local
-			create_ace: CREATE_ACE;
+			ace_b: ACE_BUILDER;
 			wizard: WIZARD
 		do
-			!! wiz_dlg.make ("Builder", Project_tool);
-			!! create_ace.make (Current);
-			!! wizard.make (Project_tool, wiz_dlg, create_ace);
+			!! ace_b.make (Current);
+			!! wizard.make (Project_tool, wiz_dlg, ace_b);
 			wizard.execute_action;
 		end;
 
@@ -267,7 +266,7 @@ feature {NONE} -- Implementation
 		local
 			file_name: STRING
 		do
-			!!file_name.make (0);
+			!! file_name.make (0);
 			file_name.append ("Ace.ace")
 			Eiffel_ace.set_file_name (file_name);
 			wiz_dlg.popdown;
@@ -276,8 +275,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	wiz_dlg: WIZARD_DIALOG;
+	wiz_dlg: WIZARD_DIALOG is
 			-- Dialog used to display the wizard.
+		once
+			!! Result.make (Interface_names.t_Ace_builder, Project_tool);
+		end;
 
 	not_saved: BOOLEAN is
 			-- Has the text of some tool been edited and not saved?

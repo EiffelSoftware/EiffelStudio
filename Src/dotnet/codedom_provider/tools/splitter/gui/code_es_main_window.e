@@ -23,7 +23,7 @@ inherit
 			default_create
 		end
 	
-	CODE_ES_SEVERITY_CONSTANTS
+	EV_THREAD_SEVERITY_CONSTANTS
 		undefine
 			copy,
 			default_create
@@ -145,7 +145,7 @@ feature {NONE} -- Events Handling
 			-- Generate Eiffel source files.
 		local
 			l_dest, l_folder: STRING
-			l_worker_thread: CODE_ES_WORKER_THREAD
+			l_worker_thread: EV_THREAD_WORKER
 		do
 			check_can_generate
 			if generate_button.is_sensitive then
@@ -217,35 +217,6 @@ feature {NONE} -- Events Handling
 
 feature {NONE} -- Implementation
 
-	process_event (a_event: CODE_ES_EVENT) is
-			-- Display events in output text field.
-		require
-			non_void_event: a_event /= Void
-		do
-			inspect
-				a_event.severity
-			when Information then
-				output_text.buffered_append (a_event.title, Information_format)
-				output_text.buffered_append (": ", Information_format)
-				output_text.buffered_append (a_event.message, Information_format)
-				output_text.buffered_append ("%N", Information_format)
-				output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
-			when Warning then
-				output_text.buffered_append (a_event.title, Warning_format)
-				output_text.buffered_append (": ", Warning_format)
-				output_text.buffered_append (a_event.message, Warning_format)
-				output_text.buffered_append ("%N", Warning_format)
-				output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
-			when Error then
-				output_text.buffered_append ("%NERROR: " + a_event.title + "%N", Error_format)
-				output_text.buffered_append (a_event.message, Error_format)
-				output_text.buffered_append ("%N%N", Error_format)
-				output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
-			else
-				-- Stop event
-			end
-		end
-		
 	check_can_generate is
 			-- Are settings OK for generation?
 		local
@@ -276,6 +247,68 @@ feature {NONE} -- Implementation
 			else
 				generate_button.disable_sensitive
 			end
+		end
+
+	process_event (a_event: EV_THREAD_EVENT) is
+			-- Display events in output text field.
+		require
+			non_void_event: a_event /= Void
+		local
+			l_event: CODE_ES_EVENT
+		do
+			l_event ?= a_event
+			check
+				is_code_event: l_event /= Void
+			end
+			inspect
+				l_event.severity
+			when Information then
+				display_info (l_event.title, l_event.message)
+			when Warning then
+				display_warning (l_event.title, l_event.message)
+			when Error then
+				display_error (l_event.title, l_event.message)
+			else
+				-- Stop event
+			end
+		end
+
+	display_info (a_title, a_message: STRING) is
+			-- Display informational text with title `a_title' and content `a_message'.
+		require
+			non_void_title: a_title /= Void
+			non_void_text: a_message /= Void
+		do
+			output_text.buffered_append (a_title, Information_format)
+			output_text.buffered_append (": ", Information_format)
+			output_text.buffered_append (a_message, Information_format)
+			output_text.buffered_append ("%N", Information_format)
+			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
+		end
+		
+	display_warning (a_title, a_message: STRING) is
+			-- Display warning with title `a_title' and content `a_message'.
+		require
+			non_void_title: a_title /= Void
+			non_void_text: a_message /= Void
+		do
+			output_text.buffered_append (a_title, Warning_format)
+			output_text.buffered_append (": ", Warning_format)
+			output_text.buffered_append (a_message, Warning_format)
+			output_text.buffered_append ("%N", Warning_format)
+			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
+		end
+		
+	display_error (a_title, a_message: STRING) is
+			-- Display error with title `a_title' and content `a_message'.
+		require
+			non_void_title: a_title /= Void
+			non_void_text: a_message /= Void
+		do
+			output_text.buffered_append ("%NERROR: " + a_title + "%N", Error_format)
+			output_text.buffered_append (a_message, Error_format)
+			output_text.buffered_append ("%N%N", Error_format)
+			output_text.flush_buffer_to (output_text.text_length + 1, output_text.text_length + 1)
 		end
 
 feature {NONE} -- Private Access

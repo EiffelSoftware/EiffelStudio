@@ -7,12 +7,12 @@ class
 	CODE_ES_SPLITTER
 
 inherit
+	CODE_ES_SHARED_DIRECTORY_SEPARATOR
+
 	CODE_SHARED_CLASS_SEPARATOR
 		export
 			{NONE} all
 		end
-
-	CODE_ES_SHARED_DIRECTORY_SEPARATOR
 
 create
 	make
@@ -53,7 +53,7 @@ feature -- Access
 	process_subfolders: BOOLEAN
 			-- Should subfolders of `folder' be scanned for Eiffel multi-class files?
 
-	event_handler: ROUTINE [ANY, TUPLE [CODE_ES_EVENT]]
+	event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
 			-- Event handler
 
 	file_count: INTEGER
@@ -79,10 +79,10 @@ feature -- Basic Operation
 				split_files_in_folder (folder)
 				if file_count > 1 then
 					l_message := "%N--%NTotal number of files created: " + file_count.out + "."
-					l_severity := feature {CODE_ES_SEVERITY_CONSTANTS}.Information
+					l_severity := feature {EV_THREAD_SEVERITY_CONSTANTS}.Information
 				elseif file_count > 0 then
 					l_message := "%N--%NCreated one file."
-					l_severity := feature {CODE_ES_SEVERITY_CONSTANTS}.Information
+					l_severity := feature {EV_THREAD_SEVERITY_CONSTANTS}.Information
 				else
 					l_message := "%N--%NCouldn't find a file in '" + folder
 					if process_subfolders then
@@ -91,7 +91,7 @@ feature -- Basic Operation
 						l_message.append ("' ")
 					end
 					l_message.append ("that matched regular expression '" + regexp + "'")
-					l_severity := feature {CODE_ES_SEVERITY_CONSTANTS}.Error
+					l_severity := feature {EV_THREAD_SEVERITY_CONSTANTS}.Error
 				end
 				raise_event (create {CODE_ES_EVENT}.make (l_message,
 															"Scan Finished",
@@ -99,9 +99,9 @@ feature -- Basic Operation
 			else
 				raise_event (create {CODE_ES_EVENT}.make ("Folder '" + folder + "' does not exist!",
 															"Missing Specified Folder",
-															feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+															feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			end
-			raise_event (create {CODE_ES_EVENT}.make ("", "", feature {CODE_ES_SEVERITY_CONSTANTS}.Stop))
+			raise_event (create {CODE_ES_EVENT}.make ("", "", feature {EV_THREAD_SEVERITY_CONSTANTS}.Stop))
 		end
 
 feature {NONE} -- Implementation
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 				if l_regexp.is_compiled then
 					raise_event (create  {CODE_ES_EVENT}.make ("Scanning '" + a_folder + "'...",
 																"Folder Scan",
-																feature {CODE_ES_SEVERITY_CONSTANTS}.Information))
+																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
 					create l_dir.make (a_folder)
 					l_files := l_dir.linear_representation
 					from
@@ -152,14 +152,14 @@ feature {NONE} -- Implementation
 				else
 					raise_event (create  {CODE_ES_EVENT}.make ("Could not compile regular expression '" + regexp + "'",
 																"Invalid Regular Expression",
-																feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+																feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 				end
 			end
 		rescue
 			l_retried := True
 			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + feature {ISE_RUNTIME}.last_exception.to_string,
 														"Exception Raised",
-														feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+														feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
 	
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 					l_file.close
 					raise_event (create {CODE_ES_EVENT}.make ("Parsing file '" + a_file_path + "'",
 																"Parsing File",
-																feature {CODE_ES_SEVERITY_CONSTANTS}.Information))
+																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
 					from
 						l_old_index := 1
 						l_index := l_content.substring_index (Class_separator, l_old_index)
@@ -219,14 +219,14 @@ feature {NONE} -- Implementation
 				else
 					raise_event (create {CODE_ES_EVENT}.make ("File '" + a_file_path + "' does not exist!",
 																"Missing specified folder",
-																feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+																feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 				end
 			end
 		rescue
 			l_retried := True
 			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + feature {ISE_RUNTIME}.last_exception.to_string,
 														"Exception Raised",
-														feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+														feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
 	
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 						l_file.delete
 						raise_event (create {CODE_ES_EVENT}.make ("A file with path '" + l_file.name + "' already existed and has been overwritten.",
 																	"File Overwritten",
-																	feature {CODE_ES_SEVERITY_CONSTANTS}.Warning))
+																	feature {EV_THREAD_SEVERITY_CONSTANTS}.Warning))
 					end
 					l_file.open_write
 					l_file.put_string (a_class_text)
@@ -258,22 +258,22 @@ feature {NONE} -- Implementation
 					file_count := file_count + 1
 					raise_event (create {CODE_ES_EVENT}.make ("Created file '" + l_file.name + "'",
 																"File Created",
-																feature {CODE_ES_SEVERITY_CONSTANTS}.Information))
+																feature {EV_THREAD_SEVERITY_CONSTANTS}.Information))
 				else
 					raise_event (create {CODE_ES_EVENT}.make ("Could not parse class text",
 																"Parse Error",
-																feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+																feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 				end
 			end
 		rescue
 			l_retried := True
 			raise_event (create {CODE_ES_EVENT}.make ("The following exception was raised: " + feature {ISE_RUNTIME}.last_exception.to_string,
 														"Exception Raised",
-														feature {CODE_ES_SEVERITY_CONSTANTS}.Error))
+														feature {EV_THREAD_SEVERITY_CONSTANTS}.Error))
 			retry
 		end
 		
-	raise_event (a_event: CODE_ES_EVENT) is
+	raise_event (a_event: EV_THREAD_EVENT) is
 			-- Call event handler.
 		require
 			non_void_event: a_event /= Void

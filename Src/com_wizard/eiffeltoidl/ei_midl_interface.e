@@ -54,7 +54,7 @@ feature -- Output
 			l_name, guid_str: STRING
 		do
 			-- [object, dual, automation, 
-			Result := "%( object, dual, oleautomation, %R%N%T"
+			Result := "%( object, dual, oleautomation, %N%T"
 
 			-- uuid ('guid')
 			Result.append ("uuid (")
@@ -71,12 +71,12 @@ feature -- Output
 			-- helpstring ("'description'")
 			Result.append ("helpstring (%"")
 			Result.append (description)
-			Result.append ("%"),%R%N%T")
+			Result.append ("%"),%N%T")
 
 			-- version ('version')
 			Result.append ("version (")
 			Result.append_real (version)
-			Result.append (")%R%N%)%R%N")
+			Result.append (")%N%)%N")
 
 			-- interface I'name: IDispatch
 			Result.append ("interface I")
@@ -84,7 +84,7 @@ feature -- Output
 			l_name := name.twin
 			l_name.to_lower
 			Result.append (l_name)
-			Result.append (": IDispatch%R%N{%R%N")
+			Result.append (": IDispatch%N{%N")
 
 			if not features.is_empty then
 				from
@@ -98,7 +98,7 @@ feature -- Output
 				end
 			end
 
-			Result.append ("%R%N};%R%N")
+			Result.append ("%N};%N")
 
 	
 		end

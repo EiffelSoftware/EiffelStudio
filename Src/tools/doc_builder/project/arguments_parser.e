@@ -59,7 +59,7 @@ feature -- Access
 					args_ok := False					
 				end
 				
-				if output_filtered and then not shared_constants.output_constants.Output_list.has (output_filter_type) then
+				if output_filtered and then not shared_constants.output_constants.Output_list.has_item (output_filter_type) then
 					args_ok := False
 				end
 			end

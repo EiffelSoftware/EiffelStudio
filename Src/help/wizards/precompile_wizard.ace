@@ -20,12 +20,12 @@ default
 	arguments("C:\Eiffel50\bench\wizards\precompile")
 	arguments(" ")
 	disabled_debug(yes)
-	disabled_debug("win_dispatcher")
 	disabled_debug("wel")
+	disabled_debug("win_dispatcher")
+	disabled_debug("gdi_count")
 	disabled_debug("vision2_windows_gdi")
 	disabled_debug("vision2_windows")
 	disabled_debug("wel_gdi_count")
-	disabled_debug("gdi_count")
 	disabled_debug("wel_gdi_references")
 	disabled_debug("dlg_dispatcher")
 	debug(no)
@@ -72,7 +72,7 @@ cluster
 
 	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 		exclude
-			"unix"; "CVS"
+			"unix"; "CVS"; 
 		end
 
 	all lex:		"$EIFFEL_SRC\library\lex"
@@ -92,8 +92,8 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\include"
 
 	object:
-		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",
-		"$(EIFFEL_SRC)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
 		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib"
 

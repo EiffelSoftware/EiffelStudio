@@ -91,6 +91,9 @@ feature -- Access
 			Result := ""
 		end
 		
+	generate_as_client: BOOLEAN
+		-- Should `Current' be generated using EiffelVision as a client?
+		
 	is_root_object: BOOLEAN
 		-- Is object root of a generated window?
 		
@@ -209,7 +212,19 @@ feature -- Status setting
 			fonts_set.wipe_out
 			pixmaps_set.wipe_out
 		end
-	
+		
+	enable_generate_as_client is
+			-- Ensure `generate_as_client' is `True'.
+		do
+			generate_as_client := True
+		end
+		
+	disable_generate_as_client is
+			-- Ensure `generate_as_client' is `False'.
+		do
+			generate_as_client := False
+		end
+
 feature -- Element change
 
 	new_child: GB_GENERATED_INFO is

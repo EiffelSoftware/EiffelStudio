@@ -64,24 +64,58 @@ feature  -- Access
 
 	item: EV_WIDGET
 			-- Current item.
-
+			
 	screen_x, x_position: INTEGER is
-			-- Horizontal position relative to parent.
+			-- Horizontal position of the window on screen, 
+		local
+			a_x: INTEGER
+			a_aux_info: POINTER
 		do
 			if positioned_by_user then
 				Result := user_x_position
 			else
-				Result := inner_screen_x
+				if is_displayed then
+					if has_wm_decorations then
+						feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
+							feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+							$a_x, NULL)
+							Result := a_x					
+					else
+							Result := client_screen_x
+					end
+				else
+					a_aux_info := aux_info_struct
+					if a_aux_info /= NULL then
+						Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+					end
+				end
 			end
 		end
-
+		
 	screen_y, y_position: INTEGER is
-			-- Vertical position relative to parent.
+			-- Vertical position of the window on screen, 
+		local
+			a_y: INTEGER
+			a_aux_info: POINTER
 		do
 			if positioned_by_user then
 				Result := user_y_position
 			else
-				Result := inner_screen_y
+				if is_displayed then
+					if has_wm_decorations then
+						feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
+							feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+					    	NULL, $a_y)
+						Result := a_y					
+					else
+						Result := client_screen_y
+					end
+				else
+					a_aux_info := aux_info_struct
+					if a_aux_info /= NULL then
+						Result := feature {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+					end
+				end
 			end
 		end
 		
@@ -424,25 +458,18 @@ feature -- Element change
 		
 feature {EV_WIDGET_IMP} -- Position retrieval
 
-	inner_screen_x: INTEGER is
-			-- Horizontal position of the window on screen, 
+	client_screen_x: INTEGER is
+			-- Horizontal position of the client area on screen, 
 		local
 			a_x: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
 		do
 			if is_displayed then
-				if has_wm_decorations then
-					feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
-						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-						$a_x, NULL)
-						Result := a_x					
-				else
 					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-						$a_x, NULL)
-						Result := a_x
-				end
+				    	$a_x, NULL)
+					Result := a_x
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
@@ -451,25 +478,18 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			end
 		end
 		
-	inner_screen_y: INTEGER is
-			-- Vertical position of the window on screen, 
+	client_screen_y: INTEGER is
+			-- Vertical position of the client area on screen, 
 		local
 			a_y: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
 		do
 			if is_displayed then
-				if has_wm_decorations then
-					feature {EV_GTK_EXTERNALS}.gdk_window_get_root_origin (
-						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-				    	NULL, $a_y)
-					Result := a_y					
-				else
 					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				    	NULL, $a_y)
 					Result := a_y
-				end
 			else
 				a_aux_info := aux_info_struct
 				if a_aux_info /= NULL then
@@ -530,8 +550,8 @@ feature {NONE} -- Implementation
 			if x_position /= previous_x or y_position /= previous_y then
 				previous_x := x_position
 				previous_y := y_position
-				user_x_position := inner_screen_x
-				user_y_position := inner_screen_y			
+				user_x_position := screen_x
+				user_y_position := screen_y			
 				if move_actions_internal /= Void then
 					move_actions_internal.call ([previous_x, previous_y, width, height])
 				end	

@@ -21,12 +21,18 @@ feature -- Initialization
 			resource_exists: res /= Void
 		local
 			s: STRING
+			description: STRING
 		do
-			s := clone (res.name)
+			description := res.description
+			if description /= Void and then not description.is_empty then
+				s := clone (description)
+			else
+				s := clone (res.name)
+				s.replace_substring_all ("_", " ")
+			end
 			s.prune_all ('%N')
 			s.prune_all ('%T')
 			s.prune_all ('%R')	
-			s.replace_substring_all ("_", " ")
 			default_create
 			extend (s)
 			extend (res.value)

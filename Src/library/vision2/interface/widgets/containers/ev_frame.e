@@ -30,6 +30,12 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_FONTABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_FRAME_CONSTANTS
 		export
@@ -74,7 +80,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and Precursor {EV_TEXT_ALIGNABLE} and
-				is_left_aligned
+				is_left_aligned and Precursor {EV_FONTABLE}
 		end
 
 feature {EV_ANY_I} -- Implementation

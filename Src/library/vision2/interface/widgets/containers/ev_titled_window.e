@@ -32,7 +32,8 @@ feature -- Access
 
 	--| FIXME Segmentation violation on both platforms when extending this
 	--| list when calling rout_obj_call_procedure. Run-time bug?
-	--| accelerators: ACTIVE_LIST [EV_ACCELERATOR]
+	--Disabled pending investigation of possible compiler bug.
+	--accelerators: ACTIVE_LIST [EV_ACCELERATOR]
 			-- Key combination shortcuts associated with this window.
 		--| FIXME The same key combination can be added to this list.
 		--| GTK takes only the latest one set. Object-comparison is turned on
@@ -219,6 +220,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/21 22:10:39  oconnor
+--| added comment
+--|
 --| Revision 1.12  2000/03/21 20:11:03  brendel
 --| Commented out accelerators (ACTIVE_LIST [EV_ACCELERATOR]) in favor of
 --| `connect_accelerator' and `disconnect_accelerator', until the bug has been

@@ -33,8 +33,6 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
-	SHARED_CONSTRAINT_ERROR
-
 	SHARED_INST_CONTEXT
 
 	SHARED_CODE_FILES
@@ -333,8 +331,7 @@ feature -- Access
 
 				-- The class has not been removed (modification of the
 				-- number of generics)
-			if System.class_of_id (id) /= Void then
-
+if System.class_of_id (id) /= Void then
 				-- Update syntactical supplier/client relations and take
 				-- care of removed classes
 			update_syntactical_relations (old_syntactical_suppliers)
@@ -378,7 +375,7 @@ feature -- Access
 
 				-- Clean the filters, i.e. remove all the obsolete types
 			filters.clean
-			end
+end
 		ensure
 			No_error: not Error_handler.has_error
 		rescue
@@ -417,22 +414,9 @@ feature -- Conformance dependenies
 			-- Remove `a_class' from `conf_dep_classes'
 		require
 			not_void : a_class /= Void
-			has      : has_dep_class (a_class)
-		local
-			found: BOOLEAN
+			has: has_dep_class (a_class)
 		do
-			from
-				conf_dep_classes.start
-			until
-				found or else conf_dep_classes.after
-			loop
-				if conf_dep_classes.item = a_class then
-					conf_dep_classes.remove
-					found := true
-				else
-					conf_dep_classes.forth
-				end
-			end
+			conf_dep_classes.prune (a_class)
 		ensure
 			removed : not has_dep_class (a_class)
 		end
@@ -442,8 +426,7 @@ feature -- Conformance dependenies
 		require
 			not_void : a_class /= Void
 		do
-			Result := (conf_dep_classes = Void) or else
-					   conf_dep_classes.has (a_class)
+			Result := (conf_dep_classes /= Void) and then conf_dep_classes.has (a_class)
 		end
  
 feature -- Building conformance table
@@ -1212,7 +1195,7 @@ feature -- Generation
 			-- Generation of C files for each type associated to the current
 			-- class
 		local
-			temp_index: INTEGER
+			old_cursor: CURSOR
 		do
 			Inst_context.set_cluster (cluster)
 			from
@@ -1220,9 +1203,9 @@ feature -- Generation
 			until
 				types.after
 			loop
-				temp_index := types.index
+				old_cursor := types.cursor
 				types.item.pass4
-				types.go_i_th (temp_index)
+				types.go_to (old_cursor)
 				types.forth
 			end
 		end
@@ -2059,7 +2042,7 @@ feature
 			from
 				gens.start
 			until
-				gens.after or else error
+				error or else gens.after
 			loop
 				generic_dec := gens.item
 				generic_name := generic_dec.formal_name
@@ -2080,7 +2063,7 @@ feature
 				from
 					gens.start
 				until
-					gens.after or else error
+					error or else gens.after
 				loop
 					next_dec := gens.item
 					if next_dec /= generic_dec then
@@ -2162,6 +2145,7 @@ feature -- Parent checking
 		local
 			vtug: VTUG
 			vtcg4: VTCG4
+			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			parent_actual_type: CL_TYPE_A
 			parent_list: like parents
 		do
@@ -2183,12 +2167,11 @@ feature -- Parent checking
 
 				if parent_actual_type.generics /= Void then
 						-- Check constrained genericity validity rule
-					parent_actual_type.check_constraints (Current)
-					if not Constraint_error_list.empty then
+					constraint_error_list := parent_actual_type.check_constraints (Current)
+					if constraint_error_list /= Void then
 						!!vtcg4
 						vtcg4.set_class (Current)
-						vtcg4.set_error_list
-										(deep_clone (Constraint_error_list))
+						vtcg4.set_error_list (constraint_error_list)
 						vtcg4.set_parent_type (parent_list.item)
 						Error_handler.insert_error (vtcg4)
 					end
@@ -2233,6 +2216,8 @@ feature -- Supplier checking
 		require
 			good_argument: not
 				(supplier_list = Void or else supplier_list.empty)
+		local
+			old_cursor: CURSOR
 		do
 			from
 				supplier_list.start
@@ -2278,9 +2263,7 @@ feature -- Supplier checking
 				--		for the system.
 			Universe.compute_last_class (cl_name, cluster)
 			supplier_class := Universe.last_class
-			if supplier_class /= Void
-				and then not cl_name.is_equal ("none")
-			then
+			if supplier_class /= Void and then not cl_name.is_equal ("none") then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
 				if not supplier_class.compiled then
@@ -2743,14 +2726,14 @@ end
 						-- If class is TO_SPECIAL or else SPECIAL
 						-- then freeze system.
 					if is_special then
-						System.set_freeze (True)
+						System.set_freeze
 					end
 
 						-- If the $ operator is used in the class,
 						-- an encapsulation of the feature must be generated
 
 					if System.address_table.class_has_dollar_operator (id) then
-						System.set_freeze (True)
+						System.set_freeze
 					end
 
 						-- Mark the class `changed4' because there is a new

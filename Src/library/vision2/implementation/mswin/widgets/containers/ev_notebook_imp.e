@@ -21,7 +21,6 @@ inherit
 		redefine
 			build,
 			add_child,
-			parent_ask_resize,
 			child_minheight_changed,
 			child_height_changed
 		end
@@ -53,7 +52,8 @@ inherit
 			on_key_up
 		redefine
 			default_style,
-			default_ex_style
+--			default_ex_style,
+			adjust_items
 		end
 
 	WEL_TCIF_CONSTANTS
@@ -172,23 +172,6 @@ feature -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-  	parent_ask_resize (a_width, a_height: INTEGER) is
-   			-- This implementation is the same than the on in
-			-- EV_WIDGET_IMP, but is different than the one of
-			-- EV_ CONTAINER_IMP because wel resize the children itself.
-		do
- 			child_cell.resize (minimum_width.max (a_width), minimum_height.max (a_height))
- 			if resize_type = 3 then
- 				move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
- 			elseif resize_type = 2 then
- 				move_and_resize ((child_cell.width - width) // 2 + child_cell.x, child_cell.y, width, child_cell.height, True)
- 			elseif resize_type = 1 then
- 				move_and_resize (child_cell.x, (child_cell.height - height) // 2 + child_cell.y, child_cell.width, height, True)
- 			else
- 				move ((child_cell.width - width) // 2 + child_cell.x, (child_cell.height - height) // 2 + child_cell.y)
- 			end
- 		end
-
 	child_height_changed (new_child_height: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the size of the container because of the child.
 		do
@@ -207,6 +190,29 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	adjust_items is
+			-- Adjust the size of the windows of the items
+			-- to the current size.
+		local
+			index: INTEGER
+			child_item: WEL_TAB_CONTROL_ITEM
+			child_imp: EV_WIDGET_IMP
+		do
+			from
+				index := 0
+			until
+				index = count
+			loop
+				child_item := get_item (index)
+				child_imp ?= child_item.window
+				check
+					child_imp_not_void: child_imp /= Void
+				end
+				child_imp.set_move_and_size (sheet_rect.left, sheet_rect.top, sheet_rect.width, sheet_rect.height)
+				index := index + 1
+			end
+		end
+
 	default_style: INTEGER is
 			-- Default style used to create the control
 		do
@@ -221,11 +227,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_ex_style: INTEGER is
-   			-- Default extented style used to create the window
-   		do
- 			Result := Ws_ex_staticedge
- 		end
+--	default_ex_style: INTEGER is
+--  			-- Default extented style used to create the window
+-- 		do
+-- 			Result := Ws_ex_staticedge
+-- 		end
 
 	tab_height: INTEGER is
 			-- The height of the bar with the pages.

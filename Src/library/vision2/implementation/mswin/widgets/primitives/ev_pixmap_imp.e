@@ -11,13 +11,8 @@ inherit
 	EV_PIXMAP_I
 
 	EV_DRAWABLE_IMP
-
-	WEL_MEMORY_DC
-		rename
-			make as wel_make
-		undefine
-			width,
-			height
+		redefine
+			dc
 		end
 
 	WEL_DIB_COLORS_CONSTANTS
@@ -26,34 +21,65 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_with_size
 
 feature {NONE} -- Initialization
 
-	make (par: EV_PIXMAPABLE) is
+	make is
+			-- Create an empty pixmap, its size is 1x1.
+		local
+			bmp: WEL_BITMAP
+			screen: WEL_SCREEN_DC
 		do
-			parent_imp ?= par.implementation
-			check
-				parent_not_void: parent_imp /= Void
-			end
-			!! compatible_dc.make (parent_imp.wel_window)
-			compatible_dc.get
-			make_by_dc (compatible_dc)
-			compatible_dc.release
+			!! screen
+			screen.get
+			!! dc.make_by_dc (screen)
+			dc.set_background_opaque
+			!! bmp.make_compatible (screen, 1, 1)
+			dc.select_bitmap (bmp)
+			screen.release
+		end
+
+	make_with_size (w, h: INTEGER) is
+			-- Create an empty pixmap, its size is `w' and `h' as size.
+		local
+			bmp: WEL_BITMAP
+			screen: WEL_SCREEN_DC
+			color: EV_COLOR
+			default_colors: EV_DEFAULT_COLORS
+		do
+			!! screen
+			screen.get
+			!! dc.make_by_dc (screen)
+			!! bmp.make_compatible (screen, w, h)
+			dc.select_bitmap (bmp)
+			screen.release
+
+			!! default_colors
+			set_background_color (default_colors.Color_dialog)
+			!! color.make_rgb (0, 0, 0)
+			set_foreground_color (color)
+			clear
 		end
 
 feature -- Access
 
-	parent_imp: EV_PIXMAPABLE_IMP
+	bitmap: WEL_BITMAP is
+			-- Bitmap selected in the dc
+		do	
+			Result := dc.bitmap
+		end
 
-	compatible_dc: WEL_PAINT_DC
+	dc: WEL_MEMORY_DC
+		-- A dc to draw on it
 
 feature -- Status report
 
 	destroyed: BOOLEAN is
 			-- Is Current object destroyed?  
 		do
-			Result := not exists
+			Result := not dc.exists
 		end
 
 feature -- Status setting
@@ -61,7 +87,7 @@ feature -- Status setting
 	destroy is
 			-- Destroy actual object.
 		do
-			destroy_item
+			dc.delete
 		end
 
 feature -- Measurement
@@ -84,8 +110,8 @@ feature -- Measurement
 			end
 		end
 
-feature -- Element change
-	
+feature -- Basic operation
+
 	read_from_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
 			-- If the file does not exist or it is in a 
@@ -97,14 +123,9 @@ feature -- Element change
 		do
 			!! file.make_open_read (file_name)
 			!! dib.make_by_file (file)
-			compatible_dc.get
-			compatible_dc.select_palette (dib.palette)
-			compatible_dc.realize_palette
-			!! bmp.make_by_dib (compatible_dc, dib, Dib_rgb_colors)
-			select_palette (compatible_dc.palette)
-			select_bitmap (bmp)
-			compatible_dc.release
-			parent_imp.pixmap_size_changed
+			dc.select_palette (dib.palette)
+			!! bmp.make_by_dib (dc, dib, Dib_rgb_colors)
+			dc.select_bitmap (bmp)
 		end	
 
 end -- class EV_PIXMAP_IMP

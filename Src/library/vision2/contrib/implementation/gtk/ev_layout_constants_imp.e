@@ -12,13 +12,19 @@ feature -- Access (button size constants)
 	Default_button_width: INTEGER is
 			-- Default width for buttons
 		do
-			Result := dialog_unit_to_pixels (74)
+			Result := default_label.width.max (74)
 		end
 
 	Default_button_height: INTEGER is
 			-- Default height for buttons
 		do
-			Result := dialog_unit_to_pixels (23)
+			Result := (default_label.height + small_padding_size).max (23)
+		end
+
+	default_label: EV_LABEL is
+			-- Label used for querying default button dimensions
+		once
+			create Result.make_with_text ("WWWWW")
 		end
 
 feature -- Access (padding constants)
@@ -64,9 +70,9 @@ feature -- Access (border constants)
 feature -- Access
 
 	resolution: INTEGER is
-			-- Screeen resolution.
+			-- Screen resolution.
 		once
-			Result := (create {EV_FONT}).horizontal_resolution
+			Result := (create {EV_SCREEN}).horizontal_resolution
 		end
 
 feature -- Operation

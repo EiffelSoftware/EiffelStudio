@@ -106,6 +106,15 @@ feature -- Access
 
 	background_pixmap_imp: EV_PIXMAP_IMP
 			-- Pixmap used for the background of the widget
+			
+	background_pixmap: EV_PIXMAP is
+			-- `Result' is pixmap used for background.
+		do
+			if background_pixmap_imp /= Void then
+				create Result
+				Result.copy(background_pixmap_imp.interface)
+			end
+		end
 
 feature -- Element change
 
@@ -135,6 +144,15 @@ feature -- Element change
 			if pix /= Void then
 				background_pixmap_imp ?= pix.implementation
 			end
+			if exists then
+				invalidate
+			end
+		end
+		
+	remove_background_pixmap is
+			-- Remove background pixmap.
+		do
+			background_pixmap_imp := Void
 			if exists then
 				invalidate
 			end

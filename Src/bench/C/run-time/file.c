@@ -461,7 +461,7 @@ rt_public void file_append(FILE *f, FILE *other, EIF_INTEGER l)
 	/*	Append a copy of `otherile' to `f' */
 
 	static char buffer[BUFSIZ];
-	int amount;
+	size_t amount;
 
 	errno = 0;
     if (0 != fseek(other, 0, FS_START))

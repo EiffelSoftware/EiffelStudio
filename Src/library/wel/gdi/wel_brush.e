@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 		do
 			item := cwel_integer_to_pointer (sys_color)
 			shared := True
-			references_number := 1
 		ensure
 			shared: shared
 			item_not_void: item /= Default_pointer
@@ -39,10 +38,7 @@ feature {NONE} -- Initialization
 			a_color_not_void: a_color /= Void
 		do
 			item := cwin_create_solid_brush (a_color.item)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		ensure
 			color_set: exists implies color.item = a_color.item
 			item_not_void: item /= Default_pointer
@@ -56,10 +52,7 @@ feature {NONE} -- Initialization
 			a_color_not_void: a_color /= Void
 		do
 			item := cwin_create_hatch_brush (a_hatch, a_color.item)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		ensure
 			hatch_set: exists implies hatch = a_hatch
 			color_set: exists implies color.item = a_color.item
@@ -73,10 +66,7 @@ feature {NONE} -- Initialization
 			bitmap_exists: bitmap.exists
 		do
 			item := cwin_create_pattern_brush (bitmap.item)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		ensure
 			item_not_void: item /= Default_pointer
 		end
@@ -87,10 +77,7 @@ feature {NONE} -- Initialization
 			a_log_brush_not_void: a_log_brush /= Void
 		do
 			item := cwin_create_brush_indirect (a_log_brush.item)
-			references_number := 1
-			debug ("GDI_COUNT")
-				increase_gdi_objects_count
-			end
+			gdi_make
 		ensure
 			item_not_void: item /= Default_pointer
 		end

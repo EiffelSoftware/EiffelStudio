@@ -11,7 +11,7 @@ class
 	EV_TOGGLE_BUTTON
 
 inherit
-	EV_BUTTON
+	EV_SELECT_BUTTON
 		redefine
 			implementation,
 			create_implementation
@@ -22,31 +22,12 @@ create
 	make_with_text,
 	make_with_text_and_action
 	
-feature -- Status report
-	
-	is_selected: BOOLEAN is
-			-- Is button depressed?
-		require
-		do
-			Result := implementation.state
-		ensure
-			bridge_ok: Result = implementation.state
-		end 
-	
 feature -- Status setting
-
-	enable_select is
-			-- Set `is_selected' `True'.
-		do
-			implementation.set_state (True)
-		ensure
-			is_selected: is_selected
-		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
 		do
-			implementation.set_state (False)
+			implementation.disable_select
 		ensure
 			not_is_selected: not is_selected
 		end
@@ -94,6 +75,12 @@ end -- class EV_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/24 18:16:24  oconnor
+--| New inheritance structure for buttons with state.
+--| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.
+--| RADIO_BUTTON inherits this, as does TOGGLE_BUTTON which adds
+--| `disable_select' and `toggle'.
+--|
 --| Revision 1.20  2000/02/23 20:20:41  rogers
 --| Corrected spelling mistake in keywords, removed smiley face from comment on is_selected.
 --|

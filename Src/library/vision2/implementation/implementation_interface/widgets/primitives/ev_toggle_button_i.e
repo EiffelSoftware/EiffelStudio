@@ -11,37 +11,25 @@ deferred class
 
 inherit
 
-	EV_BUTTON_I
+	EV_SELECT_BUTTON_I
 		redefine
 			interface
 		end
 	
-feature -- Status report
-	
-	state: BOOLEAN is
-			-- Is toggle button pressed ?
-		require
-		deferred
-		end 
-	
 feature -- Status setting
 
-	set_state (flag: BOOLEAN) is
-			-- Set Current toggle on and set
-			-- pressed to True.
-		require
+	disable_select is
+			-- Set `is_selected' `False'.
 		deferred
 		ensure
-			correct_state: state = flag
+			not_is_selected: not is_selected
 		end
 
 	toggle is
-			-- Change the state of the toggle button to
-			-- opposite
-		require
+			-- Change `is_selected'.
 		deferred
 		ensure
-			state_is_true: state = not old state
+			is_selected_changed: is_selected /= old is_selected
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -67,12 +55,17 @@ end -- class EV_TOGGLE_BUTTON_I
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 
-
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/24 18:11:44  oconnor
+--| New inheritance structure for buttons with state.
+--| New class EV_SELECT_BUTTON provides `is_selected' and `enable_select'.
+--| RADIO_BUTTON inherits this, as does TOGGLE_BUTTON which adds
+--| `disable_select' and `toggle'.
+--|
 --| Revision 1.12  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|
@@ -96,7 +89,6 @@ end -- class EV_TOGGLE_BUTTON_I
 --|
 --| Revision 1.8.2.2  1999/11/02 17:20:07  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -459,11 +459,10 @@ feature {NONE} -- Generation
 						buffer.putchar ('(')
 						c_return_type.generate_function_cast (buffer, a_types)
 						table_name := Encoder.table_name (rout_id)
-						buffer.putchar ('(')
 						buffer.putstring (table_name)
-						buffer.putchar ('-')
+						buffer.putstring ("[Dtype(Current) - ")
 						buffer.putint (entry.min_used - 1)
-						buffer.putstring (")[Dtype(Current)])(Current")
+						buffer.putstring ("])(Current")
 
 						if has_arguments then
 							generate_arg_list (buffer, args.count)
@@ -643,11 +642,10 @@ feature {NONE} -- Generation
 						buffer.putchar ('(')
 						c_return_type.generate_function_cast (buffer, a_types)
 						table_name := Encoder.table_name (rout_id)
-						buffer.putchar ('(')
 						buffer.putstring (table_name)
-						buffer.putchar ('-')
+						buffer.putstring ("[Dtype(Current) - ")
 						buffer.putint (entry.min_used - 1)
-						buffer.putstring (")[Dtype(Current)])(Current")
+						buffer.putstring ("])(Current")
 
 						if has_arguments then
 							generate_arg_list_for_rout (buffer, args.count,

@@ -128,17 +128,14 @@ feature -- C code generation
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
 						buffer.putchar (',')
-						buffer.putchar ('(')
 						buffer.putstring (table_name)
-						buffer.putchar ('-')
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), (")
-
+						buffer.putstring (", ")
 						buffer.putstring (table_name)
-						buffer.putstring ("_gen_type-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), ")
+						buffer.putstring ("_gen_type")
+						buffer.putstring (", ")
 						context.Current_register.print_register
+						buffer.putstring (", ")
+						buffer.putint (table.min_type_id - 1)
 						buffer.putchar (')')
 
 							-- Side effect. This is not nice but
@@ -289,18 +286,15 @@ feature -- Genericity
 
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putstring (",(")
+						buffer.putchar (',')
 						buffer.putstring (table_name)
-						buffer.putstring ("-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), (")
-
+						buffer.putstring (", ")
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
-						buffer.putstring ("-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), ")
+						buffer.putstring (", ")
 						context.Current_register.print_register
+						buffer.putstring (", ")
+						buffer.putint (table.min_type_id - 1)
 						buffer.putstring ("), ")
 
 							-- Side effect. This is not nice but
@@ -437,18 +431,15 @@ feature -- Genericity
 						buffer.putint (idx_cnt.value)
 						buffer.putstring ("] = RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putstring (",(")
+						buffer.putchar (',')
 						buffer.putstring (table_name)
-						buffer.putstring ("-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), (")
-
+						buffer.putstring (", ")
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
-						buffer.putstring ("-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), ")
+						buffer.putstring (", ")
 						context.Current_register.print_register
+						buffer.putstring (", ")
+						buffer.putint (table.min_type_id - 1)
 						buffer.putstring (");")
 						buffer.new_line
 						dummy := idx_cnt.next
@@ -547,19 +538,16 @@ feature -- Genericity
 
 						buffer.putstring ("RTFCID(")
 						buffer.putint (context.current_type.generated_id (context.final_mode))
-						buffer.putstring (",(")
+						buffer.putchar (',')
 						buffer.putstring (table_name)
-						buffer.putstring ("-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), (")
-
+						buffer.putstring (", ")
 						buffer.putstring (table_name)
 						buffer.putstring ("_gen_type")
-						buffer.putstring ("-")
-						buffer.putint (table.min_type_id - 1)
-						buffer.putstring ("), ")
+						buffer.putstring (", ")
 						context.Current_register.print_register
-						buffer.putstring (")")
+						buffer.putstring (", ")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putchar (')')
 
 							-- Side effect. This is not nice but
 							-- unavoidable.

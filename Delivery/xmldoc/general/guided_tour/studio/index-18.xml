@@ -37,7 +37,7 @@
 				<cell><bold>EFFECT</bold></cell>
 			</row>
 			<row>
-				<cell>--ace</cell>
+				<cell>-ace</cell>
 				<cell>file_name</cell>
 				<cell>Use as Ace the file of name file_name . (Default: file Ace.ace in current directory.) </cell>
 			</row>
@@ -122,7 +122,7 @@
 				<cell>Precompile system, treating it as a library</cell>
 			</row>
 			<row>
-				<cell>-project file</cell>
+				<cell>-project</cell>
 				<cell>your_file.epr</cell>
 				<cell>Use the project of which file . epr is the project file</cell>
 			</row>

@@ -102,8 +102,11 @@ feature -- Element change
 			-- `a_red', `a_green', `a_blue'
 		require
 			valid_red_inf: a_red >= 0
+			valid_red_sup: a_red <= 255
 			valid_green_inf: a_green >= 0
+			valid_green_sup: a_green <= 255
 			valid_blue_inf: a_blue >= 0
+			valid_blue_sup: a_blue <= 255
 		do
 			item := cwin_rgb (a_red, a_green, a_blue)
 		ensure

@@ -38,7 +38,8 @@ feature -- Status setting
    	set_default_minimum_size is
    			-- Platform dependant initializations.
    		do
-			internal_set_minimum_height (user_scroll_bar_width)
+			internal_set_minimum_height (
+				(create {WEL_SYSTEM_METRICS}).vertical_scroll_bar_arrow_width)
  		end
 
 feature {EV_ANY_I} -- Implementation
@@ -68,6 +69,9 @@ end -- class EV_HORIZONTAL_SCROLL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/07 00:10:06  brendel
+--| Implemented minimum size using WEL_SYSTEM_METRICS.
+--|
 --| Revision 1.5  2000/02/15 03:20:32  brendel
 --| Changed order of initialization. All gauges are now initialized in
 --| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.

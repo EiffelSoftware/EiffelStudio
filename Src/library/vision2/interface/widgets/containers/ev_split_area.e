@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 		-- Two client areas.
 
 	split_box: EV_FIXED
-		-- Contains `first_cell', a seperator and `second_cell'.
+		-- Contains `first_cell', `sep' and `second_cell'.
 
 	sep: EV_SEPARATOR
 		-- Separator used to split between the two items.
@@ -557,6 +557,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/05/03 00:09:34  brendel
+--| Cosmetics.
+--|
 --| Revision 1.35  2000/05/02 22:02:52  brendel
 --| Started implementing using EV_FIXED.
 --|

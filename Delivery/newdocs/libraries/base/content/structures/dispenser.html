@@ -16,7 +16,7 @@
 				which you may deposit new items; but you have no control over the order in which
 				successive button press operations will retrieve these items.
 			<P>
-				The deferred class <A HREF="../../reference/structures/dispenser/dispenser.html">
+				The deferred class <A CLASS="eclass" HREF="../../reference/structures/dispenser/dispenser.html">
 				DISPENSER</A> provides the facilities which will be shared by all specialized classes.
 				In fact, the interface of all dispenser classes is nearly identical, with the exception of
 				a few extra possibilities offered by priority queues. Many kinds of dispenser are possible,
@@ -38,65 +38,65 @@
 				Stacks - dispensers with a LIFO retrieval policy - are a ubiquitous structure in software
 				development. Their most famous application is to parsing (syntactic analysis), but many
 				other types of systems use one or more stacks.
-				Class <A HREF="../../reference/structures/dispenser/stack.html">STACK</A> describes
+				Class <A CLASS="eclass" HREF="../../reference/structures/dispenser/stack.html">STACK</A> describes
 				general stacks, without commitment to a representation. This is a deferred class which
 				may not be directly instantiated. The fundamental operations are
-				<A HREF="../../reference/structures/dispenser/stack.html#f_put"> put </A>(add
+				<A CLASS="efeature" HREF="../../reference/structures/dispenser/stack.html#f_put"> put </A>(add
 				an element at end of queue),
-				<A HREF="../../reference/structures/dispenser/stack.html#f_item">item</A> (retrieve
+				<A CLASS="efeature" HREF="../../reference/structures/dispenser/stack.html#f_item">item</A> (retrieve
 				the oldest element, non-destructively),
-				<A HREF="../../reference/structures/dispenser/stack.html#f_remove">remove</A>
+				<A CLASS="efeature" HREF="../../reference/structures/dispenser/stack.html#f_remove">remove</A>
 				(remove the oldest element),
-				<A HREF="../../reference/structures/dispenser/stack.html#f_is_empty">is_empty</A>
+				<A CLASS="efeature" HREF="../../reference/structures/dispenser/stack.html#f_is_empty">is_empty</A>
 				(test for empty queue).<BR>
 				Three effective heirs are provided:
 			<UL>
-				<LI><A HREF="../../reference/structures/dispenser/linked_stack.html">LINKED_STACK</A>
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_stack.html">LINKED_STACK</A>
 				: stacks implemented as linked lists, with no limit on the number of items (
-				<A HREF="../../reference/structures/dispenser/linked_stack.html#f_count">count</A>).
-				<LI><A HREF="../../reference/structures/dispenser/bounded_stack.html">BOUNDED_STACK
+				<A CLASS="efeature" HREF="../../reference/structures/dispenser/linked_stack.html#f_count">count</A>).
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/bounded_stack.html">BOUNDED_STACK
 				</A>: stacks implemented as arrays. For such stacks, the maximum number of items
-				(<A HREF="../../reference/structures/dispenser/bounded_stack.html#f_capacity">capacity
+				(<A CLASS="efeature" HREF="../../reference/structures/dispenser/bounded_stack.html#f_capacity">capacity
 				</A>) is set at creation time.
-				<LI><A HREF="../../reference/structures/dispenser/arrayed_stack.html">ARRAYED_STACK</A>
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/arrayed_stack.html">ARRAYED_STACK</A>
 				: also implemented as arrays, but in this case there is no limit on the number of items; the
 				interface is the same as
-				<A HREF="../../reference/structures/dispenser/linked_stack.html">LINKED_STACK</A>
+				<A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_stack.html">LINKED_STACK</A>
 				except for	the creation procedure. If the number of elements exceeds the initially allocated
 				capacity, the array will simply be resized.
 			</UL>
 			<H2>Queues</H2>
 			<P>
-				Class <A HREF="../../reference/structures/dispenser/queue.html">QUEUE</A> describes
+				Class <A CLASS="eclass" HREF="../../reference/structures/dispenser/queue.html">QUEUE</A> describes
 				general queues, without commitment to a representation. This is a deferred class which
 				may not be directly instantiated. Three non-deferred heirs are also provided, distinguished
 				by the same properties as their stack counterparts:
 			<UL>
-				<LI><A HREF="../../reference/structures/dispenser/linked_queue.html">LINKED_QUEUE</A>.
-				<LI><A HREF="../../reference/structures/dispenser/bounded_queue.html">BOUNDED_QUEUE</A>.
-				<LI><A HREF="../../reference/structures/dispenser/arrayed_queue.html">ARRAYED_QUEUE</A>.
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_queue.html">LINKED_QUEUE</A>.
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/bounded_queue.html">BOUNDED_QUEUE</A>.
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/arrayed_queue.html">ARRAYED_QUEUE</A>.
 			</UL>
 			<H2>Priority Queues</H2>
 			<P>
 				In a priority queue, each item has an associated priority value, and there is an order
 				relation on these values. The item returned by item or removed by remove is the
 				element with the highest priority.	The most general class is
-				<A HREF="../../reference/structures/dispenser/priority_queue.html">PRIORITY_QUEUE</A>
+				<A CLASS="eclass" HREF="../../reference/structures/dispenser/priority_queue.html">PRIORITY_QUEUE</A>
 				, which is deferred. Two effective variants are provided:
 			<UL>
-				<LI><A HREF="../../reference/structures/dispenser/linked_priority_queue.html">
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/linked_priority_queue.html">
 				LINKED_PRIORITY_QUEUE</A>, a linked list implementation.
-				<LI><A HREF="../../reference/structures/dispenser/heap_priority_queue.html">
+				<LI><A CLASS="eclass" HREF="../../reference/structures/dispenser/heap_priority_queue.html">
 				HEAP_PRIORITY_QUEUE</A> which is more efficient and is to be preferred in
 				most cases. A heap is organized like a binary tree, although physically stored in
 				an array; elements with a high priority percolate towards the root.
 			</UL>
 			<P>
 				Because it must be possible to compare priorities, the type of the items must
-				conform to <A HREF="../../reference/structures/kernel/part_comparable.html">
+				conform to <A CLASS="eclass" HREF="../../reference/structures/kernel/part_comparable.html">
 				PART_COMPARABLE</A>. Constrained genericity ensures this; all the priority
 				queue classes have a formal generic parameter constrained by
-				<A HREF="../../reference/structures/kernel/part_comparable.html">
+				<A CLASS="eclass" HREF="../../reference/structures/kernel/part_comparable.html">
 				PART_COMPARABLE</A>.
 	</BODY>
 </HTML>

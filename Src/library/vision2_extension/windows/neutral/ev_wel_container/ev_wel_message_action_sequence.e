@@ -8,7 +8,7 @@ class
 	EV_WEL_MESSAGE_ACTION_SEQUENCE
 
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [POINTER, INTEGER, INTEGER, INTEGER]]
+	EV_ACTION_SEQUENCE [TUPLE [POINTER, INTEGER, POINTER, POINTER]]
 	
 create
 	default_create
@@ -24,7 +24,7 @@ feature
 			extend (agent wrapper (?, ?, ?, ?, action))
 		end
 
-	wrapper (hwnd: POINTER; msg, wparam, lparam: INTEGER; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER; action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do

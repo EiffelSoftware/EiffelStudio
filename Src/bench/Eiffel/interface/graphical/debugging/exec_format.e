@@ -13,7 +13,7 @@ inherit
 
 	FORMATTER
 		rename
-			init_from_tool as make
+			init as make
 		redefine
 			format, execute, tool
 		end;
@@ -24,16 +24,9 @@ feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute the command.
-		local
-			f: FOCUSABLE
 		do
 			if is_sensitive then
-				if holder /= Void then
-					f ?= holder.associated_button
-				end
-				if f /= Void and then not f.destroyed then
-					f.popdown
-				end;
+				focus_label.popdown
 				if last_warner /= Void then
 					last_warner.popdown
 				end;

@@ -6,7 +6,8 @@ inherit
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
 			is_unsafe, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size, inlined_byte_code,
+			pre_inlined_code
 		end;
 	ASSERT_TYPE
 		
@@ -119,6 +120,31 @@ feature -- Array optimization
 			Result := Current
 			if check_list /= Void then
 				check_list := check_list.optimized_byte_node
+			end
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			if check_list /= Void then
+				Result := check_list.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			if check_list /= Void then
+				check_list := check_list.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			if check_list /= Void then
+				check_list := check_list.inlined_byte_code
 			end
 		end
 

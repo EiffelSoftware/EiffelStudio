@@ -128,4 +128,25 @@ feature -- Array optimization
 			Result := Current
 		end
 
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 1
+		end
+
+	pre_inlined_code: like Current is
+			-- Modified byte code: all the accesses to locals, Result,
+			-- arguments, Current are modified to use local variables of
+			-- the client
+		do
+			Result := Current
+		end
+
+	inlined_byte_code: like Current is
+			-- Perform inlining in the current byte node
+		do
+			Result := Current
+		end
+
 end

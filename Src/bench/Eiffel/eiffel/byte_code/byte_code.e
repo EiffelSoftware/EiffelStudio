@@ -657,4 +657,11 @@ feature {NONE} -- Array optimization
 			end;
 		end;
 
+feature -- Inlining
+
+	has_inlined_code: BOOLEAN is
+			-- Does the current byte code inline some of the calls ?
+		do
+		end
+
 end

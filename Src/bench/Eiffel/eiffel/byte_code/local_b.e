@@ -11,7 +11,8 @@ inherit
 			creation_access,
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
-			bit_assign_code, assigns_to, array_descriptor
+			bit_assign_code, assigns_to, array_descriptor,
+			pre_inlined_code
 		end
 	
 feature 
@@ -60,11 +61,14 @@ feature
 			end;
 		end;
 
-	enlarged: LOCAL_BL is
+	enlarged: LOCAL_B is
 			-- Enlarge current node
+		local
+			loc_bl: LOCAL_BL
 		do
-			!!Result;
-			Result.fill_from (Current);
+			!!loc_bl;
+			loc_bl.fill_from (Current);
+			Result := loc_bl
 		end;
 
 	register_name: STRING is
@@ -132,5 +136,13 @@ feature -- Array optimization
 		do
 			Result := -position
 		end;
+
+feature -- Inlining
+
+	pre_inlined_code: INLINED_LOCAL_B is
+		do
+			!!Result;
+			Result.fill_from (Current);
+		end
 
 end

@@ -11,7 +11,8 @@ inherit
 			propagate, enlarged,
 			has_gcable_variable, has_call, make_byte_code,
 			is_unsafe, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size,
+			pre_inlined_code, inlined_byte_code
 		end;
 	
 feature 
@@ -216,6 +217,33 @@ feature -- Array optimization
 				access := access.optimized_byte_node
 			else
 				Result := nested_b.optimized_byte_node
+			end
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := expr.size + 1
+		end
+
+	pre_inlined_code: EXPR_B is
+		do
+			if not is_built_in then
+				Result := nested_b.pre_inlined_code
+			else
+				Result := Current
+				expr := expr.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: EXPR_B is
+		do
+			if not is_built_in then
+				Result := nested_b.inlined_byte_code
+			else
+				Result := Current
+				expr := expr.inlined_byte_code
 			end
 		end
 

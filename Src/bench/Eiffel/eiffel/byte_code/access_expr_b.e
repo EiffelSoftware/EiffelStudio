@@ -12,7 +12,7 @@ inherit
 			has_gcable_variable, has_call,
 			make_byte_code, is_unsafe,
 			calls_special_features,
-			optimized_byte_node
+			optimized_byte_node, size
 		end;
 	
 feature 
@@ -140,6 +140,13 @@ feature -- Array optimization
 		do
 			Result := Current;
 			expr := expr.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 1 + expr.size
 		end
 
 end

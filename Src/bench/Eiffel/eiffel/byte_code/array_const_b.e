@@ -7,7 +7,8 @@ inherit
 	EXPR_B
 		redefine
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
-			optimized_byte_node, calls_special_features
+			optimized_byte_node, calls_special_features, size,
+			pre_inlined_code, inlined_byte_code
 		end
 	
 feature 
@@ -123,6 +124,25 @@ feature -- Array optimization
 		do
 			Result := Current
 			expressions := expressions.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := expressions.size + 1
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			expressions := expressions.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			expressions := expressions.inlined_byte_code
 		end
 
 end

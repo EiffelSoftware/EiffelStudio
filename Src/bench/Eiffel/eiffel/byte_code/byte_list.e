@@ -11,7 +11,8 @@ inherit
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
 			has_loop, assigns_to, is_unsafe, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size, pre_inlined_code,
+			inlined_byte_code
 		end;
 	FIXED_LIST [T]
 
@@ -136,6 +137,45 @@ feature -- Array optimization
 				after
 			loop
 				replace (item.optimized_byte_node)
+				forth
+			end
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			from
+				start
+			until
+				after
+			loop
+				Result := Result + item.size
+				forth
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			from
+				start
+			until
+				after
+			loop
+				replace (item.pre_inlined_code)
+				forth
+			end
+		end
+
+	inlined_byte_code: like Current is
+		do
+			from
+				start
+			until
+				after
+			loop
+				replace (item.inlined_byte_code)
 				forth
 			end
 		end

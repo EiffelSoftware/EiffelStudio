@@ -9,7 +9,8 @@ inherit
 			free_register, enlarged,
 			has_gcable_variable, has_call, make_byte_code,
 			is_unsafe, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size,
+			pre_inlined_code, inlined_byte_code
 		end;
 	
 feature 
@@ -128,6 +129,25 @@ feature -- Array optimization
 		do
 			Result := Current
 			expr := expr.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := expr.size
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current;
+			expr := expr.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			expr := expr.inlined_byte_code
 		end
 
 end

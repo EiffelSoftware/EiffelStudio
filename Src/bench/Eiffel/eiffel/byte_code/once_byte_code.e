@@ -6,7 +6,8 @@ inherit
 
 	STD_BYTE_CODE
 		redefine
-			is_once, generate_once, generate_result_declaration
+			is_once, generate_once, generate_result_declaration,
+			pre_inlined_code
 		end
 
 feature
@@ -76,6 +77,13 @@ feature
 			generated_file.putstring ("0;");
 			generated_file.new_line;
 		end;
+
+feature -- Inlining
+
+	pre_inlined_code: like Current is
+			-- Never called!!! (a once function cannot be inlined)
+		do
+		end
 
 end
 

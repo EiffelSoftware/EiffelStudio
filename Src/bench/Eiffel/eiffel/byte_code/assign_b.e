@@ -7,7 +7,9 @@ inherit
 	INSTR_B
 		redefine
 			need_enlarging, enlarged, make_byte_code,
-			assigns_to, is_unsafe, optimized_byte_node, calls_special_features
+			assigns_to, is_unsafe, optimized_byte_node,
+			calls_special_features, size, inlined_byte_code,
+			pre_inlined_code
 		end;
 	
 feature 
@@ -83,5 +85,27 @@ feature -- Array optimization
 			Result := Current;
 			source := source.optimized_byte_node
 		end;
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 1+ source.size
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current;
+			source := source.pre_inlined_code;
+				-- Cannot fail: target is local,
+				-- Result or attribute
+			target ?= target.pre_inlined_code;
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			source := source.inlined_byte_code
+		end
 
 end

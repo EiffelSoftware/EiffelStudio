@@ -9,14 +9,16 @@ inherit
 			generate as old_generate
 		redefine
 			generate_return_exp,generate_arguments, generate_compound,
-			generate_arg_declarations, is_external
+			generate_arg_declarations, is_external, pre_inlined_code,
+			inlined_byte_code
 		end;
 
 	STD_BYTE_CODE
 		redefine
 			generate,
 			generate_return_exp,generate_arguments, generate_compound,
-			generate_arg_declarations, is_external
+			generate_arg_declarations, is_external, pre_inlined_code,
+			inlined_byte_code
 		select
 			generate
 		end
@@ -445,5 +447,18 @@ feature -- Byte code generation
 				end;
 			end;
 		end;
+
+feature -- Inlining
+
+	pre_inlined_code: like Current is
+			-- An external does not have a body
+			-- Inlining is done differently
+		do
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+		end
 
 end

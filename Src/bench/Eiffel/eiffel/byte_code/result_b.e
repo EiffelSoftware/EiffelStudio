@@ -10,7 +10,7 @@ inherit
 			register_name,
 			make_byte_code, creation_access,
 			assign_code, expanded_assign_code, reverse_code,
-			assigns_to
+			assigns_to, pre_inlined_code
 		end
 
 feature 
@@ -45,10 +45,10 @@ feature
 			!!Result.make (t);
 		end;
 
-	enlarged: RESULT_BL is
+	enlarged: RESULT_B is
 			-- Enlarges the result node
 		do
-			!!Result.make (type);
+			!RESULT_BL!Result.make (type);
 		end;
 
 	register_name: STRING is
@@ -91,5 +91,13 @@ feature -- Array optimization
 		do
 			Result := i = 0
 		end;
+
+feature -- Inlining
+
+	pre_inlined_code: INLINED_RESULT_B is
+		do
+			!!Result
+			Result.set_parent (parent)
+		end
 
 end

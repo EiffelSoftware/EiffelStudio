@@ -8,7 +8,8 @@ inherit
 		redefine
 			same, is_external, set_parameters, parameters, enlarged,
 			is_unsafe, optimized_byte_node,
-			calls_special_features
+			calls_special_features, size,
+			pre_inlined_code, inlined_byte_code
         end;
 	SHARED_INCLUDE
 
@@ -251,6 +252,49 @@ feature -- Array optimization
 		do
 			if parameters /= Void then
 				Result := parameters.calls_special_features (array_desc)
+			end
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			if parameters /= Void then
+				Result := 1 + parameters.size
+			else
+				Result := 1
+			end
+		end
+
+	pre_inlined_code: CALL_B is
+		local
+			nested_b: NESTED_B
+			inlined_current_b: INLINED_CURRENT_B
+		do
+			if parent /= Void then
+				Result := Current
+			else
+				!!nested_b;
+
+				!!inlined_current_b;
+				nested_b.set_target (inlined_current_b);
+				inlined_current_b.set_parent (nested_b);
+
+				nested_b.set_message (Current);
+				parent := nested_b;
+
+				Result := nested_b;
+			end 
+			if parameters /= Void then
+				parameters := parameters.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			if parameters /= Void then
+				parameters := parameters.inlined_byte_code
 			end
 		end
 

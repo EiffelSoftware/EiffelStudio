@@ -1,4 +1,5 @@
-Syntax error: precursor appears in a routine which is not a
-              redefinition.
-What to do  : remove precursor construct.
+Error: Invalid routine for use of Precursor
+What to do: make sure that the Precursor construct appears in the
+  redefinition of a routine and that this redefinition applies to
+  only one effective routine from the set of applicable parents. 
 

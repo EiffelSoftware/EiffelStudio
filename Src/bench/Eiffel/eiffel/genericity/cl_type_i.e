@@ -9,6 +9,7 @@ inherit
 			is_expanded,
 			is_separate,
 			is_valid,
+			is_explicit,
 			same_as,
 			c_type,
 			instantiation_in,
@@ -89,6 +90,12 @@ feature
 		do
 			Result := not is_expanded
 		end; 
+
+	is_explicit: BOOLEAN is
+
+		do
+			Result := (cr_info = Void) or else (is_expanded or is_basic)
+		end
 
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?

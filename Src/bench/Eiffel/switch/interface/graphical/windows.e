@@ -94,6 +94,25 @@ feature {NONE}
 			Result := last_confirmer_cell.item
 		end;
 
+	routine_custom_window (popup_parent: COMPOSITE): ROUTINE_CUSTOM_W is
+			-- Routine custom window associated with `popup_parent'
+		require
+			popup_parent_not_void: popup_parent /= Void
+		do
+			!! Result.make (popup_parent);
+			if last_routine_custom_window /= Void then
+				last_routine_custom_window.popdown;
+				last_routine_custom_window.destroy
+			end;
+			last_routine_custom_window_cell.put (Result)
+		end;
+
+	last_routine_custom_window: ROUTINE_CUSTOM_W is
+			-- Last routine custom window created
+		do
+			Result := last_routine_custom_window_cell.item
+		end;
+
 	error_window: OUTPUT_WINDOW is
 			-- Error window that displays error message
 		once
@@ -163,6 +182,12 @@ feature {NONE} -- Implementation
 
 	last_name_chooser_cell: CELL [NAME_CHOOSER_W] is
 			-- Cell containing the last name chooser window created
+		once
+			!! Result.put (Void)
+		end;
+
+	last_routine_custom_window_cell: CELL [ROUTINE_CUSTOM_W] is
+			-- Cell containing the last name routine custom window created
 		once
 			!! Result.put (Void)
 		end;

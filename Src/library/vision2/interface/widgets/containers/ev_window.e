@@ -307,7 +307,7 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and Precursor {EV_POSITIONABLE} and
-				user_can_resize = True and menu_bar = Void
+				user_can_resize = True and menu_bar = Void and maximum_width = maximum_dimension and maximum_height = maximum_dimension
 		end
 
 feature {NONE} -- Implementation

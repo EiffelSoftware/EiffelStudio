@@ -552,7 +552,10 @@ void c_gtk_pixmap_gdk_unref (GtkWidget *pixmap);
  gtk_progressbar functions
 ==============================================================================*/
 
+EIF_POINTER c_gtk_progress_bar_new_with_adjustment (gfloat val, gfloat min, gfloat max, gfloat step, gfloat page);
+
 EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
+#define c_gtk_progress_bar_adjustment(p)      (GTK_PROGRESS (p)->adjustment)      /*GtkAdjustment*/
 
 
 /*==============================================================================

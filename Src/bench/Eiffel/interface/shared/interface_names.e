@@ -241,6 +241,7 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_change_color: STRING is	"Change color"
 	f_diagram_force_directed_on: STRING is	"Turn on physics"
 	f_diagram_force_directed_off: STRING is	"Turn off physics"
+	f_diagram_force_settings: STRING is	"Show physics settings dialog"
 	f_Disable_stop_points: STRING is	"Disable all breakpoints"
 	m_Disable_stop_points: STRING is	"&Disable all breakpoints"
 	m_Debug_block: STRING is			"E&mbed in %"debug...%"%TCtrl+D"

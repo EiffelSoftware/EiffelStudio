@@ -40,6 +40,10 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			--| Hack to prevent invariant violation
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			
+			-- Set up our page size based on context size resolution.
+			point_width := interface.context.horizontal_resolution - (left_margin*2)
+			point_height := interface.context.vertical_resolution - (bottom_margin*2)
 
 			if interface.context.output_to_file then
 				create filename.make_from_string (interface.context.file_name)

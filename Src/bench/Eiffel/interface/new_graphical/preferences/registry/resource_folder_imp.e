@@ -157,6 +157,8 @@ feature -- Save
 
 	root_save (location: STRING) is
 		local
+			reg_resource: REGISTRY_RESOURCE
+			resource: RESOURCE
 			child: like Current
 		do
 			handle := open_key_with_access (location, Key_write)
@@ -172,6 +174,19 @@ feature -- Save
 				child := child_list.item
 				child.save (handle)
 				child_list.forth
+			end
+			from
+				resource_list.start
+			until
+				resource_list.after
+			loop
+				resource := resource_list.item
+--				if resource.has_changed then
+					create reg_resource.make_from_resource (resource)
+					set_key_value (handle, resource.registry_name, reg_resource.key_value)
+					resource.mark_saved
+--				end
+				resource_list.forth
 			end
 			if not close_key (handle) then
 				check
@@ -205,11 +220,11 @@ feature -- Save
 				resource_list.after
 			loop
 				resource := resource_list.item
-				if resource.has_changed then
+--				if resource.has_changed then
 					create reg_resource.make_from_resource (resource)
 					set_key_value (handle, resource.registry_name, reg_resource.key_value)
 					resource.mark_saved
-				end
+--				end
 				resource_list.forth
 			end
 			if not close_key (handle) then

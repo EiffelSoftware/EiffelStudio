@@ -304,13 +304,10 @@ feature {NONE} -- External
 feature {
 		EV_PIXMAP_IMP, 
 		EV_PIXMAP_IMP_DRAWABLE,
-		EV_PIXMAP_IMP_WIDGET,
-		EV_HEADER_IMP
+		EV_PIXMAP_IMP_WIDGET
 		} -- Implementation
 
 	interface: EV_PIXMAP
-
-
 
 end -- class EV_PIXMAP_IMP_STATE
 

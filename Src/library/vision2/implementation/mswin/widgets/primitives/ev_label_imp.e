@@ -65,7 +65,6 @@ feature -- Basic operation
 			end
 			set_minimum_width (fw.string_width (Current, text) + Extra_width)
 			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
-			set_size (minimum_width, minimum_height)
 		end
 
 	Extra_width: INTEGER is 10

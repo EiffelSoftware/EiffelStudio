@@ -50,6 +50,7 @@ feature {NONE} -- initialization
 			set_accept_cursor (default_accept_cursor)
 			create center
 			is_center_valid := False
+			are_events_sended_to_group := True
 		end
 		
 feature -- Access
@@ -482,10 +483,15 @@ feature -- Status Report
 				Result := internal_is_sensitive
 			end
 		end
-		
-			
+
 	is_center_valid: BOOLEAN
 			-- Is the position of the center valid?
+			
+	are_events_sended_to_group: BOOLEAN
+			-- Are events for `pointer_motion_actions', `pointer_button_press_actions',
+			-- `pointer_double_press_actions',  `pointer_button_release_actions'
+			-- `pointer_enter_actions' and `pointer_leave_actions' send to `Current's
+			-- group (if any) even if `Current' catch the event. (Default True).
 		
 feature -- Status settings
 
@@ -544,7 +550,23 @@ feature -- Status settings
 		ensure
 			insensitive_requested: not internal_is_sensitive
 		end
-			
+		
+	disable_events_sended_to_group is
+			-- Set `are_events_sended_to_group' to False.
+		do
+			are_events_sended_to_group := False
+		ensure
+			events_blocked: not are_events_sended_to_group
+		end
+		
+	enable_events_sended_to_group is
+			-- Set `are_events_sended_to_group' to True.
+		do
+			are_events_sended_to_group := True
+		ensure
+			events_sended_to_group: are_events_sended_to_group
+		end
+
 feature -- Action sequences
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is

@@ -88,11 +88,6 @@ feature -- Element change
 	
 	change_area_position (a_x, a_y: INTEGER) is
 			-- `area' has moved to (`a_x', `a_y') of `drawable'.
---		require
---			valid_position: a_x >= 0 and a_y >= 0
---				BeBa: Have to remove this for my EV_FIGURE_WORLD_CELL. Otherwise
---					  I have to move the world in resize_if_necessary which costs
---					  a lot of performance. Works fine on Windows.
 		local
 			u: EV_RECTANGLE
 		do
@@ -255,13 +250,13 @@ feature {NONE} -- Event implementation
 				loop
 					gritem := group.i_th (i)
 					grp ?= gritem
-					if grp /= Void and then grp.is_sensitive then --and then grp.is_show_requested then
+					if grp /= Void and then grp.is_sensitive then
 						if grp.position_on_figure (x, y) then
 							Result := grp
 						else
 							Result := figure_on_position (grp, x, y)
 						end
-					elseif gritem.position_on_figure (x, y) and then gritem.is_sensitive then --and then gritem.is_show_requested then
+					elseif gritem.position_on_figure (x, y) and then gritem.is_sensitive then
 						Result := gritem
 					end
 					closed_figure ?= Result
@@ -288,6 +283,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
+			action: ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -303,11 +299,17 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig, 
-								event_fig.internal_pointer_button_press_actions,
-								[w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
-					
-				event_fig := event_fig.group
+				action := event_fig.internal_pointer_button_press_actions
+				if action /= Void and then event_fig.is_sensitive then
+					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
+					if event_fig.are_events_sended_to_group then
+						event_fig := event_fig.group
+					else
+						event_fig := Void
+					end
+				else
+					event_fig := event_fig.group
+				end
 				p := True
 			end
 			if p then
@@ -322,6 +324,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
+			action: ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -333,10 +336,17 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig, event_fig.internal_pointer_double_press_actions,
-					[w_x, w_y, button,
-					x_tilt, y_tilt, pressure, screen_x, screen_y])
-				event_fig := event_fig.group
+				action := event_fig.internal_pointer_double_press_actions
+				if action /= Void and then event_fig.is_sensitive then
+					action.call ([w_x, w_y, button,x_tilt, y_tilt, pressure, screen_x, screen_y])
+					if event_fig.are_events_sended_to_group then
+						event_fig := event_fig.group
+					else
+						event_fig := Void
+					end
+				else
+					event_fig := event_fig.group
+				end
 				p := True
 			end
 			if p then
@@ -351,6 +361,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
+			action: ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -363,11 +374,17 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig, 
-					event_fig.internal_pointer_button_release_actions,
-					[w_x, w_y, button,
-					x_tilt, y_tilt, pressure, screen_x, screen_y])
-				event_fig := event_fig.group
+				action := event_fig.internal_pointer_button_release_actions
+				if action /= Void and then event_fig.is_sensitive then
+					action.call ([w_x, w_y, button, x_tilt, y_tilt, pressure, screen_x, screen_y])
+					if event_fig.are_events_sended_to_group then
+						event_fig := event_fig.group
+					else
+						event_fig := Void
+					end
+				else
+					event_fig := event_fig.group
+				end
 				p := True
 			end
 			if p then
@@ -407,6 +424,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			same_fig: EV_MODEL
 			p: BOOLEAN
+			action: ACTION_SEQUENCE [TUPLE]
 		do
 			if current_figure /= new_current_figure then
 				if
@@ -416,7 +434,7 @@ feature {NONE} -- Event implementation
 				then
 					widget.set_pointer_style (new_current_figure.pointer_style)
 				else
-					widget.set_pointer_style (Default_pixmaps.Standard_cursor)
+					widget.set_pointer_style (default_cursor)
 				end
 				old_figure := current_figure
 				current_figure := new_current_figure
@@ -426,10 +444,18 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = Void or else has_focus (event_fig)
 					loop
-						call_actions (event_fig, 
-							event_fig.internal_pointer_leave_actions, Void)
+						action := event_fig.internal_pointer_leave_actions
+						if action /= Void and then event_fig.is_sensitive then
+							action.call (Void)
+							if event_fig.are_events_sended_to_group then
+								event_fig := event_fig.group
+							else
+								event_fig := Void
+							end
+						else
+							event_fig := event_fig.group
+						end
 						p := True
-						event_fig := event_fig.group
 					end
 				end
 				same_fig := event_fig
@@ -439,10 +465,18 @@ feature {NONE} -- Event implementation
 					until
 						event_fig = same_fig
 					loop
-						call_actions (event_fig, 
-							event_fig.internal_pointer_enter_actions, Void)
+						action := event_fig.internal_pointer_enter_actions
+						if action /= Void and then event_fig.is_sensitive then
+							action.call (Void)
+							if event_fig.are_events_sended_to_group then
+								event_fig := event_fig.group
+							else
+								event_fig := Void
+							end
+						else
+							event_fig := event_fig.group
+						end
 						p := True
-						event_fig := event_fig.group
 					end
 				end
 			end
@@ -461,6 +495,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
+			action: ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -476,22 +511,21 @@ feature {NONE} -- Event implementation
 			until
 				event_fig = Void
 			loop
-				call_actions (event_fig, event_fig.internal_pointer_motion_actions,
-					[w_x, w_y, x_tilt, y_tilt,
-					pressure, screen_x, screen_y])
-				event_fig := event_fig.group
+				action := event_fig.internal_pointer_motion_actions
+				if action /= Void and then event_fig.is_sensitive then
+					action.call ([w_x, w_y, x_tilt, y_tilt, pressure, screen_x, screen_y])
+					if event_fig.are_events_sended_to_group then
+						event_fig := event_fig.group
+					else
+						event_fig := Void
+					end
+				else
+					event_fig := event_fig.group
+				end
 				p := True
 			end
 			if p then
 				project
-			end
-		end
-
-	call_actions (f: EV_MODEL; actions: ACTION_SEQUENCE [TUPLE]; arg: TUPLE) is
-			-- Call `actions' on `f' with `arg'.
-		do
-			if actions /= Void and then f.is_sensitive then
-				actions.call (arg)
 			end
 		end
 
@@ -552,6 +586,12 @@ feature {NONE} -- Event implementation
 		end
 
 feature {NONE} -- Implementation
+
+	default_cursor: EV_CURSOR is
+			-- Default cursor on world.
+		do
+			Result := default_pixmaps.standard_cursor
+		end
 
 	axle_length: INTEGER is 15
 			-- Length of x and y axles when points are displayed.

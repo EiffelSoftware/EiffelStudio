@@ -64,6 +64,7 @@ feature -- Initialization
 			vertical_box1: EV_VERTICAL_BOX			
 		do
 			Precursor {EV_VERTICAL_BOX}
+			set_border_width (3)
 			create vertical_box1
 			create tool_bar
 			vertical_box1.extend (tool_bar)

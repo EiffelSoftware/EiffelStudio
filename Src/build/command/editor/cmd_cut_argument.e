@@ -1,3 +1,9 @@
+indexing
+	description: "Undoable command to remove an argument from %
+				%the command tool without updating the history."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CMD_CUT_ARGUMENT 
 
@@ -5,18 +11,17 @@ inherit
 
 	CMD_CUT
 		rename
-			undo as old_undo,
 			command_work as old_command_work
 		redefine
-			element, redo
+			element, undo, redo
 		end
 
 	CMD_CUT
 		redefine
 			element, command_work, undo, redo
 		select
-			command_work, undo, redo, name, is_template,
-			work, failed, execute
+			command_work, undo, redo, name,
+			failed, execute, internal_execute
 		end
 
 	QUEST_POPUPER
@@ -26,18 +31,17 @@ inherit
 
 	CAT_ADD_COMMAND
 		rename
+			execute as catalog_execute,
 			redo as catalog_redo,
 			undo as catalog_undo,
 			name as catalog_name,
-			work as catalog_add_command_work,
 			element as catalog_element,
-			is_template as is_catalog_template,
-			failed as catalog_failed,
-			page as catalog_page,
-			execute as catalog_execute
+			failed as catalog_failed
 		redefine
-			catalog_work,
-			c_name
+			catalog_execute,
+			execute,
+			page,
+			name
 		end
 	
 creation
@@ -54,15 +58,16 @@ feature -- Creation
 
 feature -- Feature from CAT_ADD_COMMAND
 
-	catalog_work is
+	catalog_execute (arg: EV_ARGUMENT2 [like catalog_element, like page]; event_data: EV_EVENT_DATA) is
 			-- Do not call update_history.
 		do
-			catalog_element := page.last
+			{CAT_ADD_COMMAND} Precursor (arg, event_data)
+			catalog_failed := True
 		end
 
 feature -- Implementation
 
-	c_name: STRING is
+	name: STRING is
 		do
 			if create_new_command then
 				Result := Command_names.cmd_cut_arg_and_create_cmd_name
@@ -90,7 +95,6 @@ feature -- Implementation
 					or else not associated_command_tool.shown
 				then
 					associated_command_tool := window_mgr.command_tool
---					window_mgr.display (associated_command_tool)
 					associated_command_tool.display
 				end
 				associated_command_tool.set_instance (previous_instance)
@@ -98,7 +102,7 @@ feature -- Implementation
 				page.remove
 				edited_command.remove_class
 			else
-	           old_undo
+	           {CMD_CUT} Precursor
     	       from
         	       cmd_instance_list.start
             	   cmd_instance_arg_list.start
@@ -125,7 +129,6 @@ feature -- Implementation
 					or else not associated_command_tool.shown
 				then
 					associated_command_tool := window_mgr.command_tool
---					window_mgr.display (associated_command_tool)
 					associated_command_tool.display
 				end
 				associated_command_tool.set_instance (new_instance)
@@ -274,4 +277,5 @@ feature {NONE} -- Attributes
 	create_new_command: BOOLEAN
 			-- Did the user choose to create a new command?
 
-end
+end -- class CMD_CUT_ARGUMENT
+

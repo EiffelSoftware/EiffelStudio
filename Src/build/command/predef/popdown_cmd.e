@@ -29,7 +29,7 @@ feature
 			arg: ARG
 		once
 			!! Result.make
-			!! arg.session_init (context_catalog.temp_wind_type)
+			!! arg.session_init (context_catalog.container_page.temp_wind_type)
 			Result.extend (arg)
 		end
 

@@ -1,4 +1,8 @@
--- Argument which is not instantiated
+indexing
+	description: "Argument which is not instantiated."
+	Id: "$Id$" 
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class ARG 
 
@@ -16,63 +20,58 @@ feature
 			-- Set type to `t' and 
 			-- parent `p'
 		do
-			set_type (t);
+			set_type (t)
 			set_parent (p)
-		end;
+		end
 
-	session_init (other: TYPE_STONE) is
+	session_init (other: CONTEXT_TYPE) is
 		do
-			type := other.data.type
+			set_type (other)
 		ensure
 			Type_set: type /= Void
-		end;
+		end
 
 	storage_init (other: CONTEXT_TYPE) is
 		do
 			set_type (other)
 		ensure
 			Type_set: type /= Void 
-		end;
+		end
 
-feature -- Data
+feature -- Pick and drop data
 
-	type: CONTEXT_TYPE;
+	type: CONTEXT_TYPE
 
 	set_type (other: CONTEXT_TYPE) is
 		do
 			type := other
-		end;
+		end
 
 	identifier: INTEGER is
 		do
 			Result := - type.identifier
-		end;
-
-	data: ARG is
-		do
-			Result := Current
-		end;
+		end
 
 	label: STRING is
 		do
 			Result := type.label
-		end;
+		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := type.symbol
-		end;
+		end
 
 	eiffel_type: STRING is
 		do
 			Result := type.eiffel_type
-		end;
+		end
 
 -- **************
 -- Reuse features
 -- **************
 
-	parent_type: CMD;
+	parent_type: CMD
 		-- Command which defines
 		-- Current argument if
 		-- introduced by inheritance
@@ -80,11 +79,12 @@ feature -- Data
 	set_parent (c: CMD) is
 		do
 			parent_type := c
-		end;
+		end
 
 	inherited: BOOLEAN is
 		do
 			Result := not (parent_type = Void)
 		end
 
-end
+end -- class ARG
+

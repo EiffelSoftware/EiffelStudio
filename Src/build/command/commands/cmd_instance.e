@@ -1,11 +1,18 @@
+indexing
+	description: "Represents an instance of an EiffelBuild command (CMD)."
+	Id: "$Id$" 
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class CMD_INSTANCE 
 
 inherit
+	PND_DATA
 
-	DATA
 	EDITABLE
+
 	WINDOWS
+
 	NAMABLE
 		rename
 			label as command_label
@@ -22,11 +29,14 @@ feature {NONE} -- Creation
 	session_init (c: CMD) is
 		local
 			cmd: CMD_CREATE_INSTANCE
+			arg: EV_ARGUMENT1 [CMD]
 		do
 			inst_identifier := c.instance_count
 			associated_command := c
 			init_arguments
-			!! cmd.make (Current, associated_command)
+			create cmd.make (Current)
+			create arg.make (associated_command)
+			cmd.execute (arg, Void)
 			create_observers 
 			create_observed_commands
 		end
@@ -141,21 +151,21 @@ feature {CMD_CUT_ARGUMENT}
 			a: ARG_INSTANCE
 			al: EB_LINKED_LIST [ARG]
 		do
-			if i = 1 and then arguments.empty then
-				arguments.extend (arg)
-				if command_tool /= Void then
-					command_tool.add_argument_icon (arg)
-				end
-			else
-				arguments.go_i_th (i - 1)
-				arguments.put_right (arg)
-				if command_tool /= Void then
-					command_tool.add_argument_at (arg, i)
-				end
-			end
-		ensure
-			valid_count: associated_command.arguments.count 
-							= arguments.count 
+--			if i = 1 and then arguments.empty then
+--				arguments.extend (arg)
+--				if command_tool /= Void then
+--					command_tool.add_argument_icon (arg)
+--				end
+--			else
+--				arguments.go_i_th (i - 1)
+--				arguments.put_right (arg)
+--				if command_tool /= Void then
+--					command_tool.add_argument_at (arg, i)
+--				end
+--			end
+--		ensure
+--			valid_count: associated_command.arguments.count 
+--							= arguments.count 
 		end
 
 feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
@@ -174,7 +184,7 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
 			!! a.session_init (al.last)
 			arguments.extend (a)
 			if command_tool /= Void then
-				command_tool.add_argument_icon (a)
+--XX				command_tool.add_argument_icon (a)
 			end
 		ensure
 			valid_count: associated_command.arguments.count 
@@ -189,14 +199,14 @@ feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, CMD_UPDATE_PARENT}
 			valid_count: associated_command.arguments.count + 1
 							= arguments.count 
 		do
-			arguments.go_i_th (i)
-			arguments.remove
-			if command_tool /= Void then
-				command_tool.remove_argument_icon (i)
-			end
-		ensure
-			valid_count: associated_command.arguments.count 
-							= arguments.count 
+--			arguments.go_i_th (i)
+--			arguments.remove
+--			if command_tool /= Void then
+--				command_tool.remove_argument_icon (i)
+--			end
+--		ensure
+--			valid_count: associated_command.arguments.count 
+--							= arguments.count 
 		end
 
 feature -- Editable
@@ -278,7 +288,7 @@ feature -- Stone
 
 	inst_identifier: INTEGER
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.command_i_icon_pixmap 
 		end
@@ -413,11 +423,11 @@ feature -- Observers
 		require
 			valid_instance: inst /= Void
 		do
-			observers.extend (inst)
-			inst.add_observed_command (Current)
-			if command_tool /= Void and then command_tool.realized then
-				command_tool.add_observer (inst)
-			end
+--			observers.extend (inst)
+--			inst.add_observed_command (Current)
+--			if command_tool /= Void and then command_tool.realized then
+--				command_tool.add_observer (inst)
+--			end
 		end
 
 	found: BOOLEAN
@@ -429,31 +439,31 @@ feature -- Observers
 			i: INTEGER
 			observer_inst: CMD_INSTANCE
 		do
-			from
-				observers.start
-				found := False
-			until
-				observers.after or found
-			loop
-				if observers.item = inst then
-					found := True
-				else
-					observers.forth
-				end
-			end
-			if found then
-				inst.remove_observed_command (Current)
-				if command_tool /= Void and then command_tool.realized then
-					command_tool.remove_observer (inst)
-				end
-				observers.remove
-			end
+--			from
+--				observers.start
+--				found := False
+--			until
+--				observers.after or found
+--			loop
+--				if observers.item = inst then
+--					found := True
+--				else
+--					observers.forth
+--				end
+--			end
+--			if found then
+--				inst.remove_observed_command (Current)
+--				if command_tool /= Void and then command_tool.realized then
+--					command_tool.remove_observer (inst)
+--				end
+--				observers.remove
+--			end
 		end
 
 	has_observer: BOOLEAN is
 			-- Has this command instance observers?
 		do
-			Result := not observers.empty
+--			Result := not observers.empty
 		end
 
 	set_observers (obs_list: like observers) is

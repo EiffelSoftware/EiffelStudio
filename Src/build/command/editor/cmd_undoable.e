@@ -4,22 +4,25 @@ class CMD_UNDOABLE
 inherit
 
 	CMD_SET_CMD_TYPE
-	
-feature {NONE}
 
-	c_name: STRING is
+feature -- Access
+
+	name: STRING is
 		do
 			Result := Command_names.cmd_undoable_cmd_name
-		end;
+		end
+
+feature {NONE} -- Implementation
 
 	undo is
 		do
-			set_non_doable_command;
-		end; -- undo
+			set_non_doable_command
+		end
 
 	command_work is
 		do
-			set_undoable_command;
-		end;
+			set_undoable_command
+		end
 
-end
+end -- class CMD_UNDOABLE
+

@@ -1,58 +1,33 @@
+indexing
+	description: "Abstract undoable command to add or remove a new %
+				%command in the command catalog."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class CAT_COMMAND 
 
 inherit
 
-	EB_UNDOABLE
-		redefine
-			is_template, execute
-		end;
+	EB_UNDOABLE_COMMAND
 	
-feature {NONE}
+feature -- Access
 
-	page: ICON_BOX [DATA];
-
-	element: DATA;
-
-	work (argument: ANY) is	
+	comment: STRING is
 		do
-		end;
-	
-feature 
-
-	execute (argument: like page) is
-		do
-			page := argument;
-			catalog_work	
-		end;
-
-	name: STRING is
-		do
-			!!Result.make (0);
-			Result.append (c_name);
-			Result.append (" ");
+			create Result.make (0)
 			if element /= Void then
-				Result.append (element.label);
+				Result.append (element.label)
 			end
-		end;
+		end
 
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
-	catalog_work is
-		deferred
-		end;
+	failed: BOOLEAN
 
-	c_name: STRING is
-			-- Name of the command
-		deferred
-		end;
+	element: EV_PND_DATA
 
-	failed: BOOLEAN;
+	page: CATALOG_PAGE
 
-	
-feature 
+end -- class CAT_COMMAND
 
-	is_template: BOOLEAN is True;
-
-end

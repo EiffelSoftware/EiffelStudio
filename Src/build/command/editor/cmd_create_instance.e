@@ -1,3 +1,9 @@
+indexing
+	description: "Create a new instance."
+	Id: "$Id$" 
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class CMD_CREATE_INSTANCE
 
 inherit
@@ -12,20 +18,23 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	make (an_instance: CMD_INSTANCE; an_associated_command: ANY) is
+	make (inst: CMD_INSTANCE) is
 		do
-			cmd_instance := an_instance
-			execute (an_associated_command)
+			cmd_instance := inst
 		end
 
-	cmd_instance: CMD_INSTANCE
+feature -- Access
 
-	c_name: STRING is
+	name: STRING is
 		do
 			Result := Command_names.cmd_create_instance_cmd_name
 		end
+
+feature {NONE} -- Implementation
+
+	cmd_instance: CMD_INSTANCE
 
 	command_work is
 		do
@@ -45,7 +54,7 @@ feature {NONE}
 	undo is
 		do
 			if cmd_instance.edited then
-				cmd_instance.command_tool.close
+				cmd_instance.command_tool.close (Void, Void)
 			end
 		end
 
@@ -54,4 +63,5 @@ feature {NONE}
 			Result := cmd_instance.label
 		end
 
-end
+end -- class CMD_CREATE_INSTANCE
+

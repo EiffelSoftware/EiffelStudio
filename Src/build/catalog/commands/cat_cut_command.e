@@ -1,25 +1,22 @@
+indexing
+	description: "Undoable command to remove a command from %
+				%the command catalog."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CAT_CUT_COMMAND 
 
 inherit
 
 	CAT_CUT_ELEMENT
-		rename 
-			undo as parent_undo,
-			redo as parent_redo,
-			catalog_work as parent_work
 		redefine
+			execute,
 			element,
-			page
-		end;
-	CAT_CUT_ELEMENT
-		redefine
-			undo, redo, catalog_work,
-			element,
-			page
-		select
-			undo, redo, catalog_work
-		end;
+			page,
+			undo, redo
+		end
+
 	WINDOWS
 
 feature {NONE}
@@ -27,42 +24,44 @@ feature {NONE}
 	catalog: COMMAND_CATALOG is
 		do
 			Result := command_catalog
-		end;
+		end
 
-	element: USER_CMD;
+	element: USER_CMD
 
-	page: COMMAND_PAGE;
+	page: COMMAND_PAGE
 
-	parent_type: USER_CMD;
+	parent_type: USER_CMD
 
-	catalog_work is
+	execute (arg: EV_ARGUMENT2 [like element, like page]; event_data: EV_EVENT_DATA) is
+			-- Do not call `update_history'.
 		do
-			parent_work;
-			parent_type ?= element.parent_type;
-			element.remove_class;
+			{CAT_CUT_ELEMENT} Precursor (arg, event_data)
+			parent_type ?= element.parent_type
+			element.remove_class
 			if parent_type /= Void then
 				parent_type.remove_descendent (element)
 			end
-		end;
+		end
 
 feature
 
 	redo is
 		do
-			parent_redo
-			element.remove_class;
+			{CAT_CUT_ELEMENT} Precursor
+			element.remove_class
 			if parent_type /= Void then
 				parent_type.remove_descendent (element)
 			end
-		end;
+		end
 
 	undo is
 		do
 			if parent_type /= Void then
 				parent_type.add_descendent (element)
 			end
-			parent_undo;
-			element.recreate_class;
-		end;
+			{CAT_CUT_ELEMENT} Precursor
+			element.recreate_class
+		end
 			
-end
+end -- class CAT_CUT_COMMAND
+

@@ -1,16 +1,27 @@
--- Message text for error, question and
--- warner popups
+indexing
+	description: "Message text for error, question and warner popups."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
+
 class MESSAGE_CONSTANTS
 
 feature -- Error messages
 
-	Add_label_er: STRING is "Cannot add labels to predefined commands!";
-	Add_parent_er: STRING is "Cannot add parent for predefined command!";
+	Add_label_er: STRING is
+			"Cannot add labels to predefined commands!";
+	Add_parent_er: STRING is
+			"Cannot add parent for predefined command!";
 	Cannot_create_context_in_group_er: STRING is 
-				"Cannot create additional contexts in a group!";
-	Cannot_find_command_file_er: STRING is "Cannot find command class name %%X!";
-	Cannot_ret_dir_er: STRING is "Cannot retrieve from directory %%X!";
-	Cannot_save_er: STRING is "Could not save project to%N%%X!";
+			"Cannot create additional contexts in a group!";
+	Cannot_create_new_child_er: STRING is
+			"Cannot create a new child for this context!";
+	Cannot_find_command_file_er: STRING is
+			"Cannot find command class name %%X!";
+	Cannot_ret_dir_er: STRING is
+			"Cannot retrieve from directory %%X!";
+	Cannot_save_er: STRING is
+			"Could not save project to%N%%X!";
 	Cannot_save_os_er: STRING is 
 			"Could not save project!%NReason: %%X";
 	Cannot_save_dir_er: STRING is 
@@ -31,15 +42,22 @@ feature -- Error messages
 			"File %%X %Nalready exists. Cannot save!";
 	Crash_error: STRING is
 			"An error occured during the last operation.%NYou may have to reopen EiffelBuild."
-	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
-	Dir_not_chosen_er: STRING is "No Directory chosen!";
-	Empty_project_name_er: STRING is "You must specify a project name !";
+	Dir_not_exist_er: STRING is
+			"Import directory %%X%N does not exist!";
+	Dir_not_chosen_er: STRING is
+			"No Directory chosen!";
+	Empty_project_name_er: STRING is
+			"You must specify a project name !";
 	Eb_project_not_exists_er: STRING is 
 			"Project directory :%N %%X does not exist!";
-	Eb_project_not_valid: STRING is "Project directory:%N%%X is not a valid directory!";
-	Generate_er: STRING is "Cannot generate files to directory%N%%X";
-	Group_name_exists_er: STRING is "Group %%X already exists!";
-	Incomp_er: STRING is "Incompatible types!";
+	Eb_project_not_valid: STRING is
+			"Project directory:%N%%X is not a valid directory!";
+	Generate_er: STRING is
+			"Cannot generate files to directory%N%%X";
+	Group_name_exists_er: STRING is
+			"Group %%X already exists!";
+	Incomp_er: STRING is
+			"Incompatible types!";
 	Instance_add_arg_er: STRING is 
 			"Command has descendants. Cannot add argument!";
 	Instance_rem_arg_er: STRING is 
@@ -64,31 +82,44 @@ feature -- Error messages
 			"%%X is not a valid state name (identifier).";
 	Label_name_clash_er: STRING is
 			"There is a label with the same name from inherited class.%N%%X";
-	Remove_init_state_er: STRING is "Cannot remove initial state!";
-	Remove_parent_er: STRING is "Cannot remove parent for predefined command!";
+	Remove_init_state_er: STRING is
+			"Cannot remove initial state!";
+	Remove_parent_er: STRING is
+			"Cannot remove parent for predefined command!";
 	Retrieve_er: STRING is 
 			"Cannot retrieve application from directory %N%%X";
-	State_name_exists_er: STRING is "State with name %%X already exists!";
+	State_name_exists_er: STRING is
+			"State with name %%X already exists!";
 	Update_text_er: STRING is
 			"Could not update file:%N %%X";
-	Write_dir_er: STRING  is "Cannot write to directory%N%%X";
-	Write_file_er: STRING  is "Cannot write to file%N%%X";
+	Write_dir_er: STRING is
+			"Cannot write to directory%N%%X";
+	Write_file_er: STRING is
+			"Cannot write to file%N%%X";
 
 feature -- Question messages
 
-	Exit_qu: STRING is "Exit EiffelBuild?";
-	Overwrite_qu: STRING is "Ok to discard existing project %N%%X%N(including generated Eiffel code)?";
-	Project_exists_qu: STRING is "An EiffelBuild project exists in %N%%X";
+	Exit_qu: STRING is
+			"Exit EiffelBuild?";
+	Project_exists_qu: STRING is
+			"In `%%X', an EiffelBuild project already exists.%N%
+			%Do you wish to overwrite it?";
 	Retrieve_crash_qu: STRING is 
 			"Project saved from system crash. %N%
 			%Do you wish to retrieve backup files?%N";
-	Reset_text_qu: STRING is "Do you wish to reset%Ncommand text";
-	Save_project_qu: STRING is "Project is not saved. Save project?";
-	Open_project_qu: STRING is "Application not saved, open a new application ?"
-	Create_project_qu: STRING is "Application not saved, create a new application ?"
-	Save_as_project_qu: STRING is "Application not saved, save application as ...?"
+	Reset_text_qu: STRING is
+			"Do you wish to reset%Ncommand text";
+	Save_project_qu: STRING is
+			"Project is not saved. Save project?";
+	Open_project_qu: STRING is
+			"Application not saved, open a new application ?"
+	Create_project_qu: STRING is
+			"Application not saved, create a new application ?"
+	Save_as_project_qu: STRING is
+			"Application not saved, save application as ...?"
 	Not_eb_project_qu: STRING is 
-			"Project directory :%N%%X%N does not contain an Eiffel build project!%
+			"Project directory :%N%%X%N does not contain an EiffelBuild project!%
 			%%NDo you wish to create this project?";
 
-end
+end -- class MESSAGE_CONSTANTS
+

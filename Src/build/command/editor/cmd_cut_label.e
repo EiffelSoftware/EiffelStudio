@@ -8,24 +8,25 @@ indexing
 class CMD_CUT_LABEL 
 
 inherit
-
 	CMD_CUT
 		redefine
 			element, undo, redo, update
 		end
-	
-feature {NONE}
 
-	element: CMD_LABEL
+feature -- Access
 
-	c_name: STRING is
+	name: STRING is
 		do
 			Result := Command_names.cmd_cut_label_cmd_name
 		end
 
+feature {NONE} -- Implementation
+
+	element: CMD_LABEL
+
 	list: EB_LINKED_LIST [CMD_LABEL] is
 		do
-			Result := edited_command.labels
+--			Result := edited_command.labels
 		end
 
 	undo is
@@ -39,7 +40,7 @@ feature {NONE}
 				if edited_command.label_exist (element.label) then
 					list.go_i_th (index - 1)
 					list.put_right (element)
-					edited_command.refresh_parent
+					edited_command.refresh_ancestor
 				else
 					list.go_i_th (index - 1)
 					list.put_right (element)
@@ -48,7 +49,7 @@ feature {NONE}
 			update
 				--| Add displayed label if needed.
 			if edited_command.command_editor.shown then
-				edited_command.command_editor.labels.extend (element)
+--				edited_command.command_editor.labels.extend (element)
 			end
 		end
 
@@ -57,8 +58,8 @@ feature {NONE}
 			{CMD_CUT} Precursor
 				--| Remove displayed label if needed.
 			if edited_command.command_editor.shown then
-				edited_command.command_editor.labels.finish
-				edited_command.command_editor.labels.remove
+--				edited_command.command_editor.labels.finish
+--				edited_command.command_editor.labels.remove
 			end
 		end
 
@@ -69,4 +70,5 @@ feature {NONE}
 			App_editor.update_transitions_list (edited_command)
 		end
 
-end
+end -- class CMD_CUT_LABEL
+

@@ -33,7 +33,7 @@ feature
 			arg: ARG
 		once
 			!! Result.make
-			!! arg.session_init (context_catalog.drawing_area_type)
+			!! arg.session_init (context_catalog.primitive_page.draw_area_type)
 			Result.extend (arg)
 		end;
 

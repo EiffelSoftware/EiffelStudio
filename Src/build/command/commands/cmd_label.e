@@ -1,44 +1,43 @@
+indexing
+	description: "Application editor window."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-
-class CMD_LABEL 
+class CMD_LABEL
 
 inherit
-
-	DATA 
+	PND_DATA
 		redefine
 			is_equal
 		end
+
 	EB_HASHABLE
 		redefine
 			is_equal
 		end
-	LABEL_STONE
-		redefine
-			is_equal
-		end;
 
 creation
-
 	make
 	
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (s: STRING) is
 		do
-			label := s;
-		end;
+			label := s
+		end
 
 	help_file_name: STRING is
 		do
 			Result := Help_const.label_help_fn
-		end;
+		end
 
-feature {NONE}
+feature {NONE} -- Hashable
 
 	hash_code: INTEGER is
 		do
 			Result := label.hash_code
-		end;
+		end
 
 feature {NEW_LABEL_BOX, LABEL_BOX} -- Comparison
 
@@ -46,42 +45,38 @@ feature {NEW_LABEL_BOX, LABEL_BOX} -- Comparison
 		do
 			Result := not (other = Void) and then
 				(label.is_equal (other.label))
-		end;
+		end
 	
-feature 
+feature -- Data
 
-	data: CMD_LABEL is
-		do
-			Result := Current
-		end;
-
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		once
 			Result := Pixmaps.label_pixmap
-		end;
+		end
 
-	label: STRING;
+	label: STRING
 
 	is_equal (other: like Current): BOOLEAN is
 		do
 			Result := label.is_equal (other.label)
 		end
 
-feature
+feature -- Access
 
-	parent_type: CMD;
+	parent_type: CMD
 		-- Command which defines
 		-- Current label if
 		-- introduced by inheritance
- 
+
 	set_parent (c: CMD) is
 		do
 			parent_type := c
-		end;
+		end
 
 	inherited: BOOLEAN is
 		do
 			Result := parent_type /= Void
-		end;
+		end
 
-end
+end -- class CMD_LABEL
+

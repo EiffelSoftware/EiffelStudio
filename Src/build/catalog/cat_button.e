@@ -8,46 +8,86 @@ class CAT_BUTTON
 
 inherit
 
-	COMMAND
-
-	EB_BUTTON
-		export {CAT_PAGE}
-			set_symbol
+	EV_TOGGLE_BUTTON
+		redefine
+			make
 		end
+
+--	FOCUSABLE
+
+	CONSTANTS
+
+	EV_COMMAND
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	catalog_page: CAT_PAGE [DATA]
-
-	make (cat_page: like catalog_page ;
-			a_parent: COMPOSITE; a_symbol: PIXMAP) is
+	make (cat_page: CATALOG_PAGE; par: EV_CONTAINER; symb: STRING) is
 		require
 			valid_cat_page: cat_page /= Void
-			valid_a_parent: a_parent /= Void
+			valid_parent: par /= Void
+		local
+			pixmap: EV_PIXMAP
+			arg: EV_ARGUMENT1 [CATALOG_PAGE]
 		do
-			catalog_page := cat_page
-			symbol := a_symbol
-			make_visible (a_parent)
-			add_activate_action (Current, Void)
+			{EV_TOGGLE_BUTTON} Precursor (par)
+			create pixmap.make_from_file (Current, symb)
+			create arg.make (cat_page)
+			add_toggle_command (Current, arg)
 		end
 
-	create_focus_label is
-		do
-			set_focus_string (Focus_labels.catalog_label)
-		end
-		
+feature {NONE} -- Command
 
-feature {NONE}
-
-	execute (arg: ANY) is
+	execute (arg: EV_ARGUMENT1 [CATALOG_PAGE]; data: EV_EVENT_DATA) is
 		do
-			catalog_page.select_it
+			arg.first.select_it
 		end
   
- 	symbol: PIXMAP
+feature {NONE} -- Focus
 
-end
+-- 	Focus_labels: FOCUS_LABEL_CONSTANTS is
+-- 		once
+-- 			!! Result
+-- 		end
+-- 	
+-- 	focus_source: WIDGET is
+-- 		do
+-- 			Result := Current
+-- 		end;
+
+-- 	make_visible (a_parent: COMPOSITE) is	
+-- 		require
+-- 			valid_a_parent: a_parent /= Void
+-- 		do
+-- 			pict_color_make (Widget_names.pcbutton, a_parent);
+-- 			set_symbol (symbol);
+--
+--			-- Default value for focus_string
+--			create_focus_label
+--			initialize_focus;
+--		end;
+
+
+-- 	focus_label: FOCUS_LABEL_I is
+-- 			-- has to be redefined, so that it returns correct toolkit initializer
+-- 			-- to which object belongs for every instance of this class
+--                 local
+--                         ti: TOOLTIP_INITIALIZER
+--                 do
+--                         ti ?= top
+--                         check
+--                                 valid_tooltip_initializer: ti/= void
+--                         end
+--                         Result := ti.label
+--                 end
+-- 		
+-- 	create_focus_label is
+-- 		do
+-- 			set_focus_string (Focus_labels.catalog_label)
+-- 		end
+
+end -- class CAT_BUTTON
+

@@ -275,7 +275,6 @@ feature -- Status setting
 			height_positive: a_height >= 0
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			reset_timer: EV_TIMEOUT
 		do
 			holder := holder_of_widget (a_widget)
 --			from
@@ -293,8 +292,7 @@ feature -- Status setting
 			if Platform_is_windows then
 				holder.remove_simulated_height
 			else
-				create reset_timer.make_with_interval (250)
-				reset_timer.actions.extend (agent remove_tool_minimum_height (holder, reset_timer))
+				application.do_once_on_idle (agent holder.remove_simulated_height)
 			end
 		end
 		
@@ -309,19 +307,6 @@ feature -- Status setting
 	unblock is
 		do
 			is_blocked := False
-		end
-		
-		
-	remove_tool_minimum_height (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; a_timeout: EV_TIMEOUT) is
-			-- Remove minimum height setting applied to `a_tool', and destroy `a_timeout'.
-		require
-			a_tool_not_void: a_tool /= Void
-			a_timeout_not_void: a_timeout /= Void
-		do
-			a_timeout.destroy
-			a_tool.remove_simulated_height
-		ensure
-			timeout_destroyed: a_timeout.is_destroyed	
 		end
 
 	set_maximize_pixmap (pixmap: EV_PIXMAP) is

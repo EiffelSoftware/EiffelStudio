@@ -223,9 +223,6 @@ feature -- Pulldown Menus
 	debug_menu: MENU_PULL;
 			-- Debug menu.
 
-	preference_menu: MENU_PULL;
-			-- Preference menu.
-
 	window_menu: MENU_PULL;
 			-- Window menu.
 
@@ -418,7 +415,6 @@ feature -- Graphical Interface
 			!! format_menu.make ("Formats", menu_bar);
 			!! special_menu.make ("Special", menu_bar);
 			special_menu.button.set_insensitive;
-			!! preference_menu.make ("Preference", menu_bar);
 			!! window_menu.make ("Windows", menu_bar);
 			!! help_menu.make ("Help", menu_bar);
 			menu_bar.set_help_button (help_menu.menu_button);
@@ -432,7 +428,6 @@ feature -- Graphical Interface
 			quit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
 			change_font_button: EB_BUTTON;
-			change_font_menu_entry: EB_MENU_ENTRY;
 			explain_cmd: EXPLAIN_CMD;
 			explain_button: EXPLAIN_HOLE;
 			explain_menu_entry: EB_MENU_ENTRY;
@@ -451,6 +446,9 @@ feature -- Graphical Interface
 			stop_points_cmd: DEBUG_STOPIN_CMD;
 			stop_points_button: DEBUG_STOPIN;
 			stop_points_menu_entry: EB_MENU_ENTRY;
+			show_pref_cmd: SHOW_PREFERENCE_TOOL;
+			show_pref_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
 			!! open_command.make (text_window);
 			!! classic_bar.make (new_name, std_form);
@@ -485,12 +483,17 @@ feature -- Graphical Interface
 			!! stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry);
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, classic_bar);
-			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			if not change_font_cmd.tabs_disabled then
 				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			!! change_font_cmd_holder.make_plain (change_font_cmd);
+			change_font_cmd_holder.set_button (change_font_button);
 			change_font_cmd_holder.set_sensitive (False);
+			!! sep.make ("", window_menu);
+			!! show_pref_cmd.make (text_window);
+			!! show_pref_menu_entry.make (show_pref_cmd, window_menu);
+			!! show_preference_cmd_holder.make_plain (show_pref_cmd);
+			show_preference_cmd_holder.set_menu_entry (show_pref_menu_entry);
 
 			classic_bar.attach_left (explain_button, 0);
 			classic_bar.attach_top (explain_button, 0);
@@ -790,6 +793,8 @@ feature -- Commands
 
 	display_object_cmd_holder: COMMAND_HOLDER;
 
+	show_preference_cmd_holder: COMMAND_HOLDER;
+
 feature -- Hole access
  
 	compatible (dropped_stone: STONE): BOOLEAN is
@@ -995,6 +1000,7 @@ feature {NONE} -- Implementation
 			op.previous_target_cmd_holder.set_menu_entry (previous);
 
 			!! format_object_menu.make ("Object", format_menu);
+			format_object_menu.button.set_insensitive;
 			!! onces.make (op.showonce_frmt_holder.associated_command, format_object_menu);
 			op.showonce_frmt_holder.set_menu_entry (onces);
 			!! attr.make (op.showattr_frmt_holder.associated_command, format_object_menu);

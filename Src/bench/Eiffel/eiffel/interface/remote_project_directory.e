@@ -122,9 +122,9 @@ feature -- Check
 				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
 				-- should be present. If they are not, issue a warning.
 			check_precompiled_optional (<<Eiffelgen, W_code>>, Driver);
-			if has_precompiled_preobj then
-				check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj)
-			end;
+--			if has_precompiled_preobj then
+--				check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj)
+--			end;
 		end
 
 	check_extendible is

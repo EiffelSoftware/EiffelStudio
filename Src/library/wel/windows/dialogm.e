@@ -71,7 +71,7 @@ feature {NONE} -- Externals
 	cwin_dialog_box (hinst, name, hparent, dlgprc: POINTER): INTEGER is
 			-- SDK DialogBox
 		external
-			"C [macro <wel.h>] (HINSTANCE, LPCSTR, HWND,%
+			"C [macro <wel.h>] (HINSTANCE, LPCSTR, HWND, %
 				%DLGPROC): EIF_INTEGER"
 		alias
 			"DialogBox"

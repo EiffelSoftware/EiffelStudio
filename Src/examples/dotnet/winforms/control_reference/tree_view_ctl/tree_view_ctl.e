@@ -99,63 +99,63 @@ feature {NONE} -- Implementation
 			create label_1.make
 
 			check_box_7.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 160)
+			l_point.make (16, 160)
 			check_box_7.set_location (l_point)
 			check_box_7.set_tab_index (6)
 			check_box_7.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
-			check_box_7.set_text (("hideSelected").to_cil)
-			l_size.make_from_width_and_height (100, 23)
+			check_box_7.set_text ("hideSelected")
+			l_size.make (100, 23)
 			check_box_7.set_size (l_size)
 			check_box_7.set_checked (True)
-			tool_tip.set_tool_tip (check_box_7, ("Removes highlight from selected node when the control doesn\'t have focus.").to_cil)
+			tool_tip.set_tool_tip (check_box_7, "Removes highlight from selected node when the control doesn\'t have focus.")
 			check_box_7.add_click (create {EVENT_HANDLER}.make (Current, $check_box_7_click))
 
 			directory_tree.set_image_list (image_list_1)
 			directory_tree.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
-			l_point.make_from_x_and_y (24, 16)
+			l_point.make (24, 16)
 			directory_tree.set_location (l_point)
 			directory_tree.set_tab_index (0)
 			directory_tree.set_indent (19)
-			directory_tree.set_text (("treeView1").to_cil)
+			directory_tree.set_text ("treeView1")
 			directory_tree.set_selected_image_index (1)
-			l_size.make_from_width_and_height (200, 264)
+			l_size.make (200, 264)
 			directory_tree.set_size (l_size)
-			tool_tip.set_tool_tip (directory_tree, ("Indicates whether lines are shown between sibling nodes and b etween parent and children nodes").to_cil)
+			tool_tip.set_tool_tip (directory_tree, "Indicates whether lines are shown between sibling nodes and b etween parent and children nodes")
 			directory_tree.add_after_select (create {WINFORMS_TREE_VIEW_EVENT_HANDLER}.make (Current, $directory_tree_after_select))
 			directory_tree.add_before_expand (create {WINFORMS_TREE_VIEW_CANCEL_EVENT_HANDLER}.make (Current, $directory_tree_before_expand))
 
 			check_box_5.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 112)
+			l_point.make (16, 112)
 			check_box_5.set_location (l_point)
 			check_box_5.set_tab_index (4)
 			check_box_5.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
-			check_box_5.set_text (("showPlusMinus").to_cil)
-			l_size.make_from_width_and_height (120, 23)
+			check_box_5.set_text ("showPlusMinus")
+			l_size.make (120, 23)
 			check_box_5.set_size (l_size)
 			check_box_5.set_checked (True)
-			tool_tip.set_tool_tip (check_box_5, ("Indicates if plus/minus button are shown next to parents.").to_cil)
+			tool_tip.set_tool_tip (check_box_5, "Indicates if plus/minus button are shown next to parents.")
 			check_box_5.add_click (create {EVENT_HANDLER}.make (Current, $check_box_5_click))
 
-			l_point.make_from_x_and_y (16, 224)
+			l_point.make (16, 224)
 			label_2.set_location (l_point)
 			label_2.set_tab_index (9)
 			label_2.set_tab_stop (False)
-			label_2.set_text (("indent:").to_cil)
-			l_size.make_from_width_and_height (48, 16)
+			label_2.set_text ("indent:")
+			l_size.make (48, 16)
 			label_2.set_size (l_size)
 
-			l_point.make_from_x_and_y (88, 224)
+			l_point.make (88, 224)
 			indent_up_down.set_location (l_point)
 			l_decimal.make_from_value (150)
 			indent_up_down.set_maximum (l_decimal)
 			l_decimal.make_from_value (18)
 			indent_up_down.set_minimum (l_decimal)
 			indent_up_down.set_tab_index (10)
-			indent_up_down.set_text (("18").to_cil)
+			indent_up_down.set_text ("18")
 			indent_up_down.set_decimal_places (0)
-			l_size.make_from_width_and_height (120, 20)
+			l_size.make (120, 20)
 			indent_up_down.set_size (l_size)
-			tool_tip.set_tool_tip (indent_up_down, ("The indentation width of a child node in pixels.").to_cil)
+			tool_tip.set_tool_tip (indent_up_down, "The indentation width of a child node in pixels.")
 
 			image_list_2.set_transparent_color (feature {DRAWING_COLOR}.transparent)
 			l_bitmap := loaded_bitmap ("diamond")
@@ -166,44 +166,44 @@ feature {NONE} -- Implementation
 			if l_bitmap /= Void then
 				image_list_2.images.add (l_bitmap)
 			end
-			l_size.make_from_width_and_height (5, 13)
+			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
-			l_size.make_from_width_and_height (502, 293)
+			l_size.make (502, 293)
 			set_client_size (l_size)
-			set_text (("TreeView").to_cil)
+			set_text ("TreeView")
 
 			tool_tip.set_active (True)
 
 			check_box_6.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 136)
+			l_point.make (16, 136)
 			check_box_6.set_location (l_point)
 			check_box_6.set_tab_index (5)
-			check_box_6.set_text (("checkBoxes").to_cil)
-			l_size.make_from_width_and_height (100, 23)
+			check_box_6.set_text ("checkBoxes")
+			l_size.make (100, 23)
 			check_box_6.set_size (l_size)
-			tool_tip.set_tool_tip (check_box_6, ("Indicates wheter checkboxes are displayed beside nodes").to_cil)
+			tool_tip.set_tool_tip (check_box_6, "Indicates wheter checkboxes are displayed beside nodes")
 			check_box_6.add_click (create {EVENT_HANDLER}.make (Current, $check_box_6_click))
 
 			check_box_1.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 16)
+			l_point.make (16, 16)
 			check_box_1.set_location (l_point)
 			check_box_1.set_tab_index (0)
-			check_box_1.set_text (("sorted").to_cil)
-			l_size.make_from_width_and_height (100, 23)
+			check_box_1.set_text ("sorted")
+			l_size.make (100, 23)
 			check_box_1.set_size (l_size)
-			tool_tip.set_tool_tip (check_box_1, ("Indicates whether nodes are sorted.").to_cil)
+			tool_tip.set_tool_tip (check_box_1, "Indicates whether nodes are sorted.")
 			check_box_1.add_click (create {EVENT_HANDLER}.make (Current, $check_box1_add_click))
 
 			check_box_3.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 64)
+			l_point.make (16, 64)
 			check_box_3.set_location (l_point)
 			check_box_3.set_tab_index (2)
 			check_box_3.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
-			check_box_3.set_text (("showLines").to_cil)
-			l_size.make_from_width_and_height (100, 23)
+			check_box_3.set_text ("showLines")
+			l_size.make (100, 23)
 			check_box_3.set_size (l_size)
 			check_box_3.set_checked (True)
-			tool_tip.set_tool_tip (check_box_3, ("Indicates whether lines are displayed between sibling nodes and between parent and children nodes.").to_cil)
+			tool_tip.set_tool_tip (check_box_3, "Indicates whether lines are displayed between sibling nodes and between parent and children nodes.")
 			check_box_3.add_click (create {EVENT_HANDLER}.make (Current, $check_box_3_click))
 
 			image_list_1.set_transparent_color (feature {DRAWING_COLOR}.transparent)
@@ -217,55 +217,55 @@ feature {NONE} -- Implementation
 			end
 
 			image_list_combo_box.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
-			l_point.make_from_x_and_y (88, 192)
+			l_point.make (88, 192)
 			image_list_combo_box.set_location (l_point)
 			image_list_combo_box.set_tab_index (8)
-			image_list_combo_box.set_text (("").to_cil)
-			l_size.make_from_width_and_height (120, 21)
+			image_list_combo_box.set_text ("")
+			l_size.make (120, 21)
 			image_list_combo_box.set_size (l_size)
 			image_list_combo_box.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $image_list_combo_box_selected_index_changed))
 			create l_array.make (3)
-			l_array.put (0, ("(none)").to_cil)
-			l_array.put (1, ("system images").to_cil)
-			l_array.put (2, ("bitmaps").to_cil)
+			l_array.put (0, "(none)")
+			l_array.put (1, "system images")
+			l_array.put (2, "bitmaps")
 			image_list_combo_box.items.add_range (l_array)
 
 			check_box_4.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 88)
+			l_point.make (16, 88)
 			check_box_4.set_location (l_point)
 			check_box_4.set_tab_index (3)
 			check_box_4.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
-			check_box_4.set_text (("showRootLines").to_cil)
-			l_size.make_from_width_and_height (120, 23)
+			check_box_4.set_text ("showRootLines")
+			l_size.make (120, 23)
 			check_box_4.set_size (l_size)
 			check_box_4.set_checked (True)
-			tool_tip.set_tool_tip (check_box_4, ("Indicates whether lines are displayed between root nodes.").to_cil)
+			tool_tip.set_tool_tip (check_box_4, "Indicates whether lines are displayed between root nodes.")
 			check_box_4.add_click (create {EVENT_HANDLER}.make (Current, $check_box_4_click))
 
-			l_point.make_from_x_and_y (248, 16)
+			l_point.make (248, 16)
 			grp_tree_view.set_location (l_point)
 			grp_tree_view.set_tab_index (1)
 			grp_tree_view.set_tab_stop (False)
-			grp_tree_view.set_text (("TreeView").to_cil)
-			l_size.make_from_width_and_height (248, 264)
+			grp_tree_view.set_text ("TreeView")
+			l_size.make (248, 264)
 			grp_tree_view.set_size (l_size)
 
 			check_box_2.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
-			l_point.make_from_x_and_y (16, 40)
+			l_point.make (16, 40)
 			check_box_2.set_location (l_point)
 			check_box_2.set_tab_index (1)
-			check_box_2.set_text (("hotTracking").to_cil)
-			l_size.make_from_width_and_height (100, 23)
+			check_box_2.set_text ("hotTracking")
+			l_size.make (100, 23)
 			check_box_2.set_size (l_size)
-			tool_tip.set_tool_tip (check_box_2, ("Indicates whether nodes give feedback when the mouse is moved over them.").to_cil)
+			tool_tip.set_tool_tip (check_box_2, "Indicates whether nodes give feedback when the mouse is moved over them.")
 			check_box_2.add_click (create {EVENT_HANDLER}.make (Current, $check_box_2_click))
 
-			l_point.make_from_x_and_y (16, 194)
+			l_point.make (16, 194)
 			label_1.set_location (l_point)
 			label_1.set_tab_index (7)
 			label_1.set_tab_stop (False)
-			label_1.set_text (("imageList:").to_cil)
-			l_size.make_from_width_and_height (56, 16)
+			label_1.set_text ("imageList:")
+			l_size.make (56, 16)
 			label_1.set_size (l_size)
 
 			grp_tree_view.controls.add (check_box_7)
@@ -307,7 +307,6 @@ feature {NONE} -- Implementation
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
 		local
-			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -330,7 +329,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				create Result.make_from_filename ((a_bitmap_name + ".bmp").to_cil)
+				create Result.make_from_filename (a_bitmap_name + ".bmp")
 			end
 		rescue
 			retried := True
@@ -346,7 +345,8 @@ feature {NONE} -- Implementation
 			directory: DIRECTORY_INFO
 			sub_directories: NATIVE_ARRAY [DIRECTORY_INFO]
 			directory_name: SYSTEM_STRING
-			dummy: INTEGER
+			return: INTEGER
+			res: WINFORMS_DIALOG_RESULT
 		do
 			if not rescued then
 				create directory.make (path_from_node (node))
@@ -357,11 +357,12 @@ feature {NONE} -- Implementation
 					i = sub_directories.count
 				loop
 					directory_name := sub_directories.item (i).name
-					dummy := node.nodes.add_tree_node (create {DIRECTORY_NODE}.make_from_text (directory_name))
+					return := node.nodes.add_tree_node (create {DIRECTORY_NODE}.make_from_text (directory_name))
 					i := i + 1
 				end
 			end
 		rescue
+			res := feature {WINFORMS_MESSAGE_BOX}.show (feature {EXCEPTION_MANAGER}.last_exception.message)
 			rescued := True
 			retry
 		end
@@ -386,17 +387,27 @@ feature {NONE} -- Implementation
 	directory_tree_after_select(source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_EVENT_ARGS) is
 			-- Event handler for the afterSelect event on the directory_tree. Change the
 			-- title bar to show the path of the selected directoryNode.
+		local
+			l_text: STRING
 		do
-			set_text (text.concat_string_string ((("Windows.Forms File Explorer - ").to_cil), e.node.text))
+			l_text := "Windows.Forms File Explorer - "
+			l_text.append (e.node.text)
+			set_text (l_text)
 		end
 
-	directory_tree_before_expand(source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_EVENT_ARGS) is
+	directory_tree_before_expand (source: SYSTEM_OBJECT; e: WINFORMS_TREE_VIEW_CANCEL_EVENT_ARGS) is
 			-- Event handler for the beforeExpand event on the directory_tree. If the
 			-- node is not already expanded, expand it.
 		local
 			node_expanding: DIRECTORY_NODE
 		do
 			node_expanding ?= e.node
+			check
+				is_node: node_expanding /= Void
+			end
+            if not node_expanding.sub_directories_added then
+            	add_sub_directories (node_expanding)
+			end
 		end
 
 	fill_directory_tree is
@@ -405,9 +416,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			drives: NATIVE_ARRAY [SYSTEM_STRING]
 			root: DIRECTORY_NODE
-			dummy: INTEGER
-			l_drive: ANY
-			l_drive_string: STRING
+			return: INTEGER
+			l_drive: STRING
 			l_ext: EXTERNALS
 			l_ptr: POINTER
 		do
@@ -417,11 +427,11 @@ feature {NONE} -- Implementation
 			until
 				i = drives.count
 			loop
-				create l_drive_string.make_from_cil (drives.item (i))
-				l_ptr := feature {MARSHAL}.string_to_hglobal_ansi (l_drive_string.to_cil)
+				l_drive := drives.item (i)
+				l_ptr := feature {MARSHAL}.string_to_hglobal_ansi (l_drive)
 				if l_ext.get_drive_type (l_ptr) = Drive_fixed then
 					create root.make_from_text (drives.item (i))
-					dummy := directory_tree.nodes.add_tree_node (root)
+					return := directory_tree.nodes.add_tree_node (root)
 					add_directories (root)
 				end
 				feature {MARSHAL}.free_hglobal (l_ptr)

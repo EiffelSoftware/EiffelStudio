@@ -1,4 +1,7 @@
--- Abstract class for access: Current, Result, local, argument, feature
+indexing
+	description: "Abstract class for access: Current, Result, local, argument, feature"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class ACCESS_B 
 
@@ -219,7 +222,7 @@ feature -- C generation
 			-- Print register or generate if there are no register.
 		do
 			if register /= No_register then
-				{CALL_B} Precursor
+				Precursor {CALL_B}
 			else
 				generate_access
 			end
@@ -230,7 +233,7 @@ feature -- C generation
 			-- propagated, also frees the registers used by target and
 			-- last message.
 		do
-			{CALL_B} Precursor
+			Precursor {CALL_B}
 				-- Free those registers which where kept because No_register
 				-- was propagated, hence call was meant to be expanded in-line.
 			if perused then
@@ -385,11 +388,8 @@ feature -- Conveniences
 			-- is the access a message ?
 		require
 			parent_exists: parent /= Void
-		local
-			canonical_call: CALL_B
 		do
-			canonical_call := Current
-			Result := parent.message.canonical = canonical_call
+			Result := parent.message.canonical = Current
 		end
 
 	is_attribute: BOOLEAN is

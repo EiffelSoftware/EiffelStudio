@@ -9,13 +9,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class POINTER_REF inherit
-
+class POINTER_REF
+inherit
 	HASHABLE
 		redefine
-			out, is_hashable
+			out, is_equal, is_hashable
 		end
-
+		
+	REFACTORING_HELPER
+		redefine
+			out, is_equal
+		end
+		
 feature -- Access
 
 	item: POINTER
@@ -33,6 +38,15 @@ feature -- Element change
 			-- Make `p' the `item' value.
 		do
 			item := p
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object of the same type
+			-- as current object and identical to it?
+		do
+			Result := other.item = item
 		end
 
 feature -- Status report
@@ -73,6 +87,18 @@ feature -- Conversion
 			Result.set_item (item)
 		ensure
 			to_reference_not_void: Result /= Void
+		end
+
+	frozen to_integer_32: INTEGER is
+			-- Convert `item' into an INTEGER_32 value.
+		require
+--			not_too_small: item >= feature {INTEGER}.Min_value
+--			not_too_big: item <= feature {INTEGER}.Max_value
+		do
+			fixme ("Do not forget to add proper precondition to ensure we can convert pointer %
+				%value into an INTEGER")
+			fixme ("Change return type to INTEGER_32")
+			Result := item.to_integer_32
 		end
 
 feature -- Memory copy

@@ -330,7 +330,7 @@ feature -- Basic operations
 			-- Sum to current date the duration `d'
 			-- if duration not define, add years and then months and then days.
 		do
-			Result := deep_clone (Current)
+			Result := clone (Current)
 			Result.add (d)
 		ensure
 			result_exists: Result /= Void
@@ -401,15 +401,18 @@ feature -- Basic operations
 			-- Move to next month.
 			-- Can move days backward if next month has less days than the 
 			-- current month.
+		local
+			days_in_new_month: INTEGER
 		do
 			if month = Months_in_year then
 				set_month (1)
 				year_forth
 			else
-				set_month (month + 1)
+				days_in_new_month := days_in_i_th_month (month + 1, year)
 				if day > days_in_month then
 					set_day (days_in_month)
 				end
+				set_month (month + 1)
 			end
 		end
 
@@ -442,10 +445,10 @@ feature -- Basic operations
 			new_month := mod ((month + m - 1), Months_in_year) + 1
 			days_in_new_month := days_in_i_th_month (new_month, year)
 			set_year (year + div ((month + m - 1), Months_in_year))
-			set_month (new_month)
 			if day > days_in_new_month then
 				set_day (days_in_new_month)
 			end
+			set_month (new_month)
 		end
 
 	year_forth is

@@ -78,7 +78,7 @@ feature -- Basic operation
 				sub_test_successful := True
 				s ?= test_list.item.entry (1)
 				p ?= test_list.item.entry (2)
-				tmp := "  " + s + ":"
+				tmp := "  " + s
 				from until tmp.count > 14 loop
 					tmp.append (" ")
 				end
@@ -712,6 +712,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/16 18:06:05  oconnor
+--| tweak output format
+--|
 --| Revision 1.24  2000/03/16 17:29:19  oconnor
 --| typo
 --|

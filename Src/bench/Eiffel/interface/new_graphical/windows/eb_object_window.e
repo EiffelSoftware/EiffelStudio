@@ -57,6 +57,10 @@ feature {NONE} -- Initialization
 			create menu_bar.make (Current)
 			create file_menu.make_with_text (menu_bar, Interface_names.m_File)
 			tool.build_file_menu (file_menu)
+			create format_menu.make_with_text (menu_bar, Interface_names.m_Formats)
+			tool.build_format_menu (format_menu)
+--			create special_menu.make_with_text (menu_bar, Interface_names.m_Special)
+--			tool.build_special_menu (special_menu)
 			create windows_menu.make_with_text (menu_bar, Interface_names.m_Windows)
 			build_windows_menu (windows_menu)
 		end
@@ -68,6 +72,10 @@ feature -- Access
 			-- the profile tool
 
 	file_menu: EV_MENU
+
+	format_menu: EV_MENU
+
+	special_menu: EV_MENU
 
 	windows_menu: EV_MENU
 

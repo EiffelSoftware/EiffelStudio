@@ -73,4 +73,23 @@ feature {NONE}
 			Result.extend (c);
 		end;
 
+	filter_path: STRING is
+		local
+			c: CHARACTER
+		once
+			Result := Execution_environment.get ("EIF_FILTER_PATH");
+			if Result = Void or else Result.empty then
+					-- EIF_FILTER_PATH was not set.
+				c := Directory_separator;
+				!!Result.make (50); 
+				Result.append (Eiffel3_dir_name);
+				Result.extend (c);
+				Result.append ("bench");
+				Result.extend (c);
+				Result.append ("help");
+				Result.extend (c);
+				Result.append ("filters");
+				Result.extend (c)
+			end
+		end;
 end

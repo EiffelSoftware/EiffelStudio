@@ -33,6 +33,7 @@ feature
 			get_class_name;
 			class_name := last_input;
 			troffed := False;
+			filter_name := Void;
 			only_current_class := True;
 			check_arguments_and_execute;
 		end;

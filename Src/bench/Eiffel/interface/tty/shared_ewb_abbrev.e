@@ -28,6 +28,8 @@ feature
 
 	Feature_abb: CHARACTER is 'f';
 
+	Filter_abb: CHARACTER is 'f';
+
 	Flat_abb: CHARACTER is 'f';
 
 	Freeze_abb: CHARACTER is 'f';

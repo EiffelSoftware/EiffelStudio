@@ -53,6 +53,14 @@ feature -- Status report
 			Result := implementation.is_iconic_state
 		end;
 
+	is_maximized_state: BOOLEAN is
+			-- Does application start in maximized state?
+		require
+			exists: not destroyed
+		do
+			Result := implementation.is_maximized_state
+		end;
+
 feature -- Status setting
 
 	set_iconic_state is
@@ -70,6 +78,14 @@ feature -- Status setting
 		do
 			implementation.set_normal_state
 		end;
+
+	set_maximized_state is
+			-- Set start state of the application to be maximized.
+		require
+			exists: not destroyed
+		do
+			implementation.set_maximized_state
+		end
 
 feature -- Element change
 

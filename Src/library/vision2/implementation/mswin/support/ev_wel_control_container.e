@@ -38,29 +38,36 @@ inherit
 			default_ex_style
 		end
 
+feature {NONE} -- Initialization
+
+	make is
+				-- Create the box with the default options.
+		do
+			wel_make (default_parent.item, "")
+		end
+
 feature {NONE} -- Implementation
 
 	top_level_window_imp: WEL_WINDOW
 			-- Top level window that contains the current widget.
 
-	set_top_level_window_imp (a_window: WEL_WINDOW) is
-			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
-		do
-			top_level_window_imp := a_window
-		end
-
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_child + Ws_visible + Ws_clipchildren 
-					+ Ws_clipsiblings
+			Result := Ws_child + Ws_visible + Ws_clipchildren
+						+ Ws_clipsiblings
 		end
 
 	default_ex_style: INTEGER is
 		do
 			Result := Ws_ex_controlparent
+		end
+
+feature {NONE} -- Deferred features
+
+	default_parent: CELL [WEL_FRAME_WINDOW] is
+		deferred
 		end
 
 end -- class EV_WEL_CONTROL_CONTAINER_IMP

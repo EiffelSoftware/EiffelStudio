@@ -13,7 +13,7 @@ inherit
 		rename
 			make as list_make
 		end;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
 		undefine

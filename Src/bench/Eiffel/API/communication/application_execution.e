@@ -24,7 +24,7 @@ inherit
 			{NONE} all;
 			{ANY} Eiffel_project, project_initialized
 		end;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 
 creation {SHARED_APPLICATION_EXECUTION}
 

@@ -895,17 +895,25 @@ feature -- getting the status of a specified breakpoint
 			end
 		end
 
+	breakpoint_not_set: INTEGER is 0
+	breakpoint_set: INTEGER is 1
+	breakpoint_disabled: INTEGER is -1
+	breakpoint_condition_set: INTEGER is 2
+	breakpoint_condition_disabled: INTEGER is -2
+			-- Possible value for `breakpoint_status'.
+	
 	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
-			-- Returns 0 if the breakpoint is not set,
-			--         1 if the breakpoint is set,
-			--		   2 if the breakpoint is enabled and has a condition,
-			--         -1 if the breakpoint is set but disabled,
-			--		   -2 if the breakpoint is disabled and has a condition
+			-- Returns `breakpoint_not_set' if breakpoint is not set,
+			--         `breakpoint_set' if breakpoint is set,
+			--		   `breakpoint_condition_set' if breakpoint is enabled and has a condition,
+			--         `breakpoint_disabled' if breakpoint is set but disabled,
+			--		   `breakpoint_condition_disabled' if breakpoint is disabled and has a condition
 		local
 			bp: BREAKPOINT
 		do
 --|			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
 			error_in_bkpts := False
+			Result := breakpoint_not_set
 			if f.valid_body_index then
 				create bp.make(f,i)
 				if not bp.is_corrupted then
@@ -913,15 +921,15 @@ feature -- getting the status of a specified breakpoint
 						bp := breakpoints.found_item
 						if bp.is_enabled then
 							if bp.condition = Void then
-								Result := 1
+								Result := breakpoint_set
 							else
-								Result := 2
+								Result := breakpoint_condition_set
 							end
 						elseif bp.is_disabled then
 							if bp.condition = Void then
-								Result := -1
+								Result := breakpoint_disabled
 							else
-								Result := -2
+								Result := breakpoint_condition_disabled
 							end
 						end
 					end

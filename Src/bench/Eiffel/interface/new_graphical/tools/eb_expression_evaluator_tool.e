@@ -174,7 +174,10 @@ feature -- Status setting
 			if can_refresh then
 				cst ?= a_stone
 				if cst /= Void and then application.is_stopped then
-					if not application.is_dotnet or else not application.imp_dotnet.callback_notification_processing then
+					if 
+						not application.is_dotnet 
+						or else not application.imp_dotnet.callback_notification_processing
+					then
 						refresh_context_expressions
 					end
 				end				
@@ -590,7 +593,7 @@ feature {NONE} -- Implementation
 				Result.extend (res)
 				Result.extend (typ)
 				
-				if dmp.address /= Void then
+				if dmp /= Void and then dmp.address /= Void then
 					create ost.make (dmp.address, " ", dmp.dynamic_class)
 					Result.set_pebble (ost)
 					Result.set_accept_cursor (ost.stone_cursor)
@@ -701,10 +704,10 @@ feature {NONE} -- Implementation
 				row := ev_list.item
 				expr ?= row.data
 				if expr.on_context then
-					expr.evaluate
 					if expr.evaluation_disabled then
 						row:= disabled_expression_to_row (expr, row)
 					else
+						expr.evaluate
 						row := expression_to_row (expr, row)
 					end
 				end

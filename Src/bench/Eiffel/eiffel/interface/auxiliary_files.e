@@ -162,7 +162,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("();%N")
 
 			if final_mode and then System.array_optimization_on then
-				System.array_optimizer.generate_plug_declarations (Plug_file, table_prefix)
+				System.remover.array_optimizer.generate_plug_declarations (Plug_file, table_prefix)
 			else
 				Plug_file.putstring ("%Nlong *eif_area_table = (long *)0;%N%
 									%long *eif_lower_table = (long *)0;%N")

@@ -1,12 +1,13 @@
 indexing
 	description: "Entry in a menu used to hide or show the %
-				% class selector."
+				% class importer."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CLASS_SELECTOR_ENTRY
+
+	CLASS_IMPORTER_ENTRY
 
 inherit
 
@@ -24,10 +25,10 @@ feature {NONE} -- Implementation
 			-- Hide or show the class selector.
 		do
 			if armed then
-				class_selector.display
+				class_importer.display
 			else
-				class_selector.hide
+				class_importer.hide
 			end
 		end
 
-end -- class CLASS_SELECTOR_ENTRY
+end -- class CLASS_IMPORTER_ENTRY

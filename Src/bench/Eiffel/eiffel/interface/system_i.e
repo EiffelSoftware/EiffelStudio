@@ -270,8 +270,6 @@ feature -- Properties
 
 	conformance_file: INDENT_FILE
 
-	make_file: INDENT_FILE
-
 	array_make_name: STRING
 			-- Name of the C routine corresponding to the
 			-- make routine of ARRAY[ANY]. Needed for the
@@ -2008,46 +2006,43 @@ end
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
-			deg_output.display_degree_output (degree_message, 12, 13)
+			deg_output.display_degree_output (degree_message, 11, 12)
 			generate_skeletons
 
-			deg_output.display_degree_output (degree_message, 11, 13)
+			deg_output.display_degree_output (degree_message, 10, 12)
 			generate_cecil
 
-			deg_output.display_degree_output (degree_message, 10, 13)
+			deg_output.display_degree_output (degree_message, 9, 12)
 			generate_conformance_table
 			is_conformance_table_melted := False
 			melted_conformance_table := Void
 
-			deg_output.display_degree_output (degree_message, 9, 13)
+			deg_output.display_degree_output (degree_message, 8, 12)
 			generate_plug
 
-			deg_output.display_degree_output (degree_message, 8, 13)
+			deg_output.display_degree_output (degree_message, 7, 12)
 			generate_init_file
 
-			deg_output.display_degree_output (degree_message, 7, 13)
-			generate_main_file
-
-			deg_output.display_degree_output (degree_message, 6, 13)
+			deg_output.display_degree_output (degree_message, 6, 12)
 			generate_option_file
 			address_table.generate (False)
 
-			deg_output.display_degree_output (degree_message, 5, 13)
+			deg_output.display_degree_output (degree_message, 5, 12)
 			generate_rout_info_table
 
-			deg_output.display_degree_output (degree_message, 4, 13)
+			deg_output.display_degree_output (degree_message, 4, 12)
 			generate_pattern_table
 
-			deg_output.display_degree_output (degree_message, 3, 13)
+			deg_output.display_degree_output (degree_message, 3, 12)
 			generate_dispatch_table
 
-			deg_output.display_degree_output (degree_message, 2, 13)
+			deg_output.display_degree_output (degree_message, 2, 12)
 			generate_exec_table
 
-			deg_output.display_degree_output (degree_message, 1, 13)
+			deg_output.display_degree_output (degree_message, 1, 12)
 			generate_dle_file
 
-			deg_output.display_degree_output (degree_message, 0, 13)
+			deg_output.display_degree_output (degree_message, 0, 12)
 			generate_make_file
 
 				-- Create an empty update file ("melted.eif")
@@ -2423,53 +2418,49 @@ feature -- Generation
 			deg_output := Degree_output
 
 				-- Address table
-			deg_output.display_degree_output (degree_message, 11, 12)
+			deg_output.display_degree_output (degree_message, 10, 11)
 			address_table.generate (True)
 
 				-- Generation of type size table
-			deg_output.display_degree_output (degree_message, 10, 12)
+			deg_output.display_degree_output (degree_message, 9, 11)
 			generate_size_table
 
 				-- Generation of the reference number table
-			deg_output.display_degree_output (degree_message, 9, 12)
+			deg_output.display_degree_output (degree_message, 8, 11)
 			generate_reference_table
 
 				-- Generation of the skeletons
-			deg_output.display_degree_output (degree_message, 8, 12)
+			deg_output.display_degree_output (degree_message, 7, 11)
 			generate_skeletons
 
 				-- Cecil structures generation
-			deg_output.display_degree_output (degree_message, 7, 12)
+			deg_output.display_degree_output (degree_message, 6, 11)
 			generate_cecil
 
 				-- Generation of the conformance table
-			deg_output.display_degree_output (degree_message, 6, 12)
+			deg_output.display_degree_output (degree_message, 5, 11)
 			generate_conformance_table
 
 				-- Routine table generation
-			deg_output.display_degree_output (degree_message, 5, 12)
+			deg_output.display_degree_output (degree_message, 4, 11)
 			generate_routine_table
 
 				-- Generate plug with run-time.
 				-- The plug file has to be generated after the routine
 				-- table for `dle_max_min_used' to be initialized when
 				-- using DLE stuff.
-			deg_output.display_degree_output (degree_message, 4, 12)
+			deg_output.display_degree_output (degree_message, 3, 11)
 			generate_plug
 
-			-- Generate DLE file
-			deg_output.display_degree_output (degree_message, 3, 12)
+				-- Generate DLE file
+			deg_output.display_degree_output (degree_message, 2, 11)
 			generate_dle_file
 
-				-- Generate main file
-			deg_output.display_degree_output (degree_message, 2, 12)
-			generate_main_file
-
-			deg_output.display_degree_output (degree_message, 1, 12)
+			deg_output.display_degree_output (degree_message, 1, 11)
 			generate_init_file
 
 				-- Generate makefile
-			deg_output.display_degree_output (degree_message, 0, 12)
+			deg_output.display_degree_output (degree_message, 0, 11)
 			generate_make_file
 
 			if System.has_separate then
@@ -3242,6 +3233,7 @@ feature -- Plug and Makefile file
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
 			final_mode: BOOLEAN
+			Plug_file: INDENT_FILE
 		do
 			final_mode := byte_context.final_mode
 
@@ -3407,11 +3399,10 @@ feature -- Plug and Makefile file
 			end
 
 			special_cl ?= special_class.compiled_class
-			special_cl.generate_dynamic_types
+			special_cl.generate_dynamic_types (plug_file)
 			generate_dynamic_ref_type
 
 			Plug_file.close_c
-			Plug_file := Void
 		end
 
 	generate_make_file is
@@ -3462,6 +3453,8 @@ feature -- Pattern table generation
 			pattern_table.generate_in_finalized_mode
 		end
 
+<<<<<<< system_i.e
+=======
 feature -- Main file generation
 
 	generate_main_file is
@@ -3515,6 +3508,7 @@ feature -- Main file generation
 			Main_file.close_c
 		end
 
+>>>>>>> 1.153
 	generate_init_file is
 			-- Generation of the main file
 		local
@@ -3996,11 +3990,6 @@ feature -- Conveniences
 			-- Assign `i' to `max_class_id'.
 		do
 			max_class_id := i
-		end
-
-	set_make_file (f: INDENT_FILE) is
-		do
-			make_file := f
 		end
 
 	root_class: CLASS_I is

@@ -1,0 +1,49 @@
+{\rtf1\mac \deff8\deflang1033{\fonttbl{\f8\fnil\fcharset77\fprq2 Times;}}{\colortbl;\red0\green0\blue0;\red0\green0\blue212;\red2\green171\blue234;\red31\green183\blue20;\red242\green8\blue132;\red221\green8\blue6;
+\red252\green243\blue5;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green100\blue17;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{
+\widctlpar \f8 \snext0 Normal;}{\*\cs10 \additive Default Paragraph Font;}}{\info{\title Getting Started with Eiffel Binding}{\author Microsoft}{\operator Microsoft}{\creatim\yr1998\mo8\dy1\hr13\min13}{\revtim\yr1998\mo8\dy1\hr15\min28}{\version11}
+{\edmins152}{\nofpages0}{\nofwords0}{\nofchars0}{\vern49235}}\widowctrl\ftnbj\aenddoc\formshade \fet0\sectd \linex0\endnhere {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}
+{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}
+{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \widctlpar \f8 {
+\fs28 Getting Started with Eiffel Binding}
+\par \pard \widctlpar 
+\par \pard \li720\widctlpar This note describes how to get started with the MATISSE Eiffel Binding. 
+\par \pard \widctlpar 
+\par 
+\par \pard \widctlpar The MATISSE Eiffel binding consists of a set of Eiffel classes which provides persistence to Eiffel classes and a C library which supports these classes.
+\par \pard \widctlpar 
+\par {\b How to run the example Eiffel programs}
+\par 
+\par \pard \widctlpar Before running the example, you  need to install the MATISSE 4.x. MT_INSTALL_DIR is the top directory of the MATISSE and BINDING_INSTALL_DIR is the top directory of the MATISSE Eiffel Binding.
+\par \pard \widctlpar 
+\par (A) If you\rquote re running Windows
+\par 
+\par \pard \fi-540\li630\widctlpar (A-1) Be sure that your environment variable path includes \lquote MT_INSTALL_DIR\\bin\rquote .
+\par \pard \fi-540\li630\widctlpar (A-2) Create and initialize a new MATISSE database using mts_dba tool. From the Windows Start menu, start mts_dba from the MATISSE Start Menu Program.
+\par \pard \li1440\widctlpar {\fs20 To create and initialize a new database, in the mts_dba tool, (1) select \ldblquote Create...\rdblquote  from the Database menu, (2) complete the configuration file (specify NAME and SILO at least) (3) then click on the 
+\ldblquote Initialize\rdblquote  from the Database menu. For the details, please see the document \ldblquote MATISSE DBA Guide\rdblquote 
+\par }\pard \fi-540\li630\widctlpar (A-3) From the Windows Start menu or from the Control Panel, open a console (MS-DOS-style) window.
+\par \pard \fi-540\li630\widctlpar (A-4) In the console window, go to the BINDING_INSTALL_DIR\\example directory
+\par \pard \fi-540\li630\widctlpar (A-5) From the console window, load the database schema into the newly created database using the utility mt_odl.
+\par \pard \fi-540\li630\widctlpar \tab > mt_odl -h <hostname> -db <databasename> example.odl
+\par \pard \fi-540\li630\widctlpar (A-6) From the console window, generate the Eiffel persistent classes using the utility mt_odl.
+\par \pard \fi-540\li630\widctlpar \tab > mt_odl -eiffel example.odl
+\par \pard \fi-540\li630\widctlpar (A-7) Start the EiffelBench and select the BINDING_INSTALL_DIR\\example directory as a project directory.
+\par \pard \fi-540\li630\widctlpar (A-8) In the EiffelBench Project Tool, click on the System hole and select the Ace.ace file. You need the EiffelTime library from ISE. If it is installed in the different directory f
+rom the one specified in the Ace.ace file, edit and change it. You need to specify the C library file for MATISSE. By default, it is specified as \ldblquote C:\\matisse\\lib\\matisse.lib\rdblquote . If the file is installed
+ in the different directory, edit and change it.
+\par \pard \fi-540\li630\widctlpar (A-9) Compile the project. Click on the Melt button in the EiffelBench window.
+\par \pard \fi-540\li630\widctlpar (A-10) After the compilation, run the system with two arguments, the host name and database name of your database.
+\par \pard \fi-540\li630\widctlpar (A-11) The sample application reads a text file as sample data and creates some objects in the database. Then it executes several queries on those objects. You may edit the procedure \ldblquote make\rdblquote 
+ of the class EXAMPLE_APP and execute the queries one by one.
+\par \pard \widctlpar 
+\par 
+\par 
+\par 
+\par {\b How to generate Eiffel source code with mt_odl}
+\par 
+\par \pard \widctlpar You can write your schema in an ODL file, named schema.odl for instance. To know more about how to write an ODL file, please refer to MATISSE ODL Programming Guide.
+\par \pard \widctlpar In order to generate Eiffel source code, call up the utility mt_odl with the option eiffel.
+\par \tab mt_odl -eiffel schema.odl
+\par \pard \widctlpar This utility generates Eiffel persistent class files in the directory where the utility is executed.
+\par \pard \widctlpar 
+\par }

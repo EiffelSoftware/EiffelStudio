@@ -63,7 +63,7 @@ cluster
 		
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"; "implementation";
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec";
 		end
 		
 	all web:		"$EIFFEL_SRC\library\web"

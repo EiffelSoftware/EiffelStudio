@@ -11,6 +11,7 @@ default
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (no)
+	msil_clr_version ("v1.0.3705")
 
 cluster 
 

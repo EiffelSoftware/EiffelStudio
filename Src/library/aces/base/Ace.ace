@@ -2,7 +2,7 @@ system
 	base
 
 root
-	ANY
+	NONE
 
 default
 	assertion (all);

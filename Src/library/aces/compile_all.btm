@@ -1,6 +1,12 @@
 @echo off
 
-alias precompile `ec -precompile & cd EIFGEN\W_code & finish_freezing -silent & cd ..\..`
+set ise_backup_cflags=%ISE_CFLAGS%
+set ISE_CFLAGS=
+
+del C_OUTPUT
+del E_OUTPUT
+
+alias precompile `rd /q /s EIFGEN & (ec -precompile >> ..\C_OUTPUT) 2>> ..\E_OUTPUT`
 
 iff "%@SEARCH[ec.exe]" == "" then
 	echo Cannot find a version of ec. Cannot continue
@@ -43,3 +49,6 @@ cd ..\base.net
 precompile
 
 cd ..
+
+set ISE_CFLAGS=%ise_backup_cflags%
+set ise_backup_cflags=

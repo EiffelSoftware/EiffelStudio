@@ -28,7 +28,7 @@ cluster
 	
 	all vision2:	"$EIFFEL_SRC\library\vision2"
 		exclude
-			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "Clib"; "obsolete"; "spec"
+			"CVS"; "EIFGEN"; "Documentation"; "libraries"; "gtk"; "gtk2"; "Clib"; "obsolete"; "spec"
 		end
 
 	all time: 		"$EIFFEL_SRC\library\time"

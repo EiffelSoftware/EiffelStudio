@@ -33,8 +33,14 @@ feature
 			!!Result.make (0);
 			Result.append ("%N%Tset_");
 			if not c.is_window then
-				con_group ?= c.parent;
-				if con_group = Void then
+				--con_group ?= c.parent;
+				--if con_group = Void then
+					--full_name := clone (c.entity_name);
+					--full_name.append ("_");
+				--else
+					--full_name := c.group_name;
+				--end;
+				if c.group_name = Void then
 					full_name := clone (c.entity_name);
 					full_name.append ("_");
 				else

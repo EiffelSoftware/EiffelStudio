@@ -49,9 +49,6 @@ feature -- Basic operations
 			l_member.set_comment ("Default IUnknown interface pointer")
 			cpp_class_writer.add_member (l_member, Private)
 
-			-- Default header files include global variables and required header files
-			cpp_class_writer.add_import (Ecom_generated_rt_globals_header_file_name)
-
 			-- Add member "EXCEPINFO * excepinfo" if is not normal interface and
 			-- function "set_exception_information"
 			if dispatch_interface then

@@ -20,7 +20,7 @@ default
 
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\..\samples\vision2\accelerator"
+	root_cluster:		"$ISE_EIFFEL\..\samples\vision2\accelerator"
 
 
 	all base:		"$ISE_EIFFEL\library\base"

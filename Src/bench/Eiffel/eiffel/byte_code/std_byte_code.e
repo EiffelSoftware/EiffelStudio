@@ -399,8 +399,7 @@ feature
 				until
 					i > count
 				loop
-					type_i := locals.item (i);
-					type_i := real_type (type_i);
+					type_i := real_type (locals.item (i))
 							-- Generate only if variable used
 					if context.local_vars.item(i) then
 						if type_i.is_expanded then
@@ -424,8 +423,7 @@ feature
 									if written_class.generics = Void then
 										written_type := written_class.types.first
 									else
-										written_type := written_class.meta_type
-																(class_type.type).associated_class_type;
+										written_type := written_class.meta_type (class_type.type).associated_class_type;
 									end;
 									c_name := creation_feature.body_id.feature_name (written_type.id);
 									generated_file.putstring (");%N%T");
@@ -471,8 +469,7 @@ feature
 							if written_class.generics = Void then
 								written_type := written_class.types.first
 							else
-								written_type := written_class.meta_type
-														(class_type.type).associated_class_type;
+								written_type := written_class.meta_type (class_type.type).associated_class_type;
 							end;
 							c_name := creation_feature.body_id.feature_name (written_type.id);
 							generated_file.putstring (");%N%T");
@@ -571,14 +568,13 @@ feature
 		do
 				-- Eiffel local variables.
 			if locals /= Void then
-				count := locals.count;
 				from
+					count := locals.count;
 					i := locals.lower;
 				until
 					i > count
 				loop
-					type_i := locals.item (i);
-					type_i := real_type (type_i);
+					type_i := real_type (locals.item (i));
 							-- Generate only if variable used
 					if context.local_vars.item(i) then
 							-- Local reference variable are declared via
@@ -1121,9 +1117,11 @@ feature -- Byte code generation
 				ba.append (Bc_goto_body);
 				ba.mark_forward;
 			end;
+
 			if Context.origin_has_precondition and then inh_assert.has_precondition then
 				inh_assert.make_precondition_byte_code (ba);
 			end;
+
 			if have_assert then
 				if has_separate_call_in_precondition then
 					ba.append (Bc_sep_raise_prec);
@@ -1162,6 +1160,7 @@ feature -- Byte code generation
 					old_expressions.forth
 				end;
 			end;
+
 				-- Make byte code for inherited old expressions
 			have_assert := postcondition /= Void or else inh_assert.has_postcondition;
 			if have_assert then
@@ -1179,6 +1178,7 @@ feature -- Byte code generation
 			if compound /= Void then
 				compound.make_byte_code (ba);
 			end;
+
 			make_breakable (ba);
 
 				-- Make byte code for postcondition
@@ -1187,15 +1187,19 @@ feature -- Byte code generation
 				ba.append (Bc_postcond);
 				ba.mark_forward;
 			end;
+
 			if postcondition /= Void then
 				postcondition.make_byte_code (ba);
 			end;
+
 			if inh_assert.has_postcondition then
 				inh_assert.make_postcondition_byte_code (ba);
 			end;
+
 			if have_assert then
 				ba.write_forward;
 			end;
+
 			if system.has_separate and then arguments /= Void then
 					-- Reserve separeate parameters
 				process_sep_paras_in_byte_code (ba, False);
@@ -1390,10 +1394,9 @@ feature -- Concurrent Eiffel
 			has_separate_call_in_precondition := tmp;
 		end
 
-			-- generate codes for reserving separate parameters of a feature
-			-- whose indexes are less than "idx".
 	reserve_separate_parameters is
 			-- generate codes for reserving separate parameters of a feature
+			-- whose indexes are less than "idx".
 		local
 			i, count: INTEGER;
 			var_name: STRING;
@@ -1559,7 +1562,7 @@ feature -- Concurrent Eiffel
 			until
 				Result or (s = Void or else i > s.upper)
 			loop
-				Result := s @ i
+				Result := s.item (i)
 				i := i + 1
 			end
 		end
@@ -1580,7 +1583,7 @@ feature -- Concurrent Eiffel
 			until
 				s = Void or else i > s.upper
 			loop
-				if s @ i then
+				if s.item(i) then
 					count := count + 1;
 				end;
 				i := i + 1;
@@ -1597,7 +1600,7 @@ feature -- Concurrent Eiffel
 				until
 					i > s.upper
 				loop
-					if s @ i then
+					if s.item (i) then
 						ba.append_short_integer (i - 1);
 					end;
 					i := i + 1;

@@ -265,7 +265,13 @@ feature -- Inlining
 	inlined_byte_code: NESTED_B is
 		do
 			Result := Current
-			target := target.inlined_byte_code;
+				-- FIXME
+				-- FIXME
+				-- FIXME
+				-- Done to avoid a bug when both a and f are inlined
+				-- in a a.f call.
+				-- Xavier
+			--target := target.inlined_byte_code;
 			message := message.inlined_byte_code;
 		end
 

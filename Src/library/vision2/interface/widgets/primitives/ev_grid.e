@@ -221,7 +221,9 @@ feature -- Access
 		end
 		
 	row_height: INTEGER is
-			-- Height of all rows within `Current'.
+			-- Height of all rows within `Current'. Only has an effect on `Current'
+			-- while `is_row_height_fixed', otherwise the individual height of each
+			-- row is used directly.
 		require
 			not_destroyed: not is_destroyed
 			is_row_height_fixed: is_row_height_fixed

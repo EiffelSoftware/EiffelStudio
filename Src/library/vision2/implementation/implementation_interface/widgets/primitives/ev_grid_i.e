@@ -220,7 +220,9 @@ feature -- Access
 			-- Must all rows in `Current' have the same height?
 		
 	row_height: INTEGER
-			-- Height of all rows within `Current'.
+			-- Height of all rows within `Current'. Only has an effect on `Current'
+			-- while `is_row_height_fixed', otherwise the individual height of each
+			-- row is used directly.
 			
 	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the

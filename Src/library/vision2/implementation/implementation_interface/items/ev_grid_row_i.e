@@ -156,7 +156,11 @@ feature -- Access
 			-- Are subrows of `Current' displayed?
 		
 	height: INTEGER is
-			-- Height of `Current'.
+			-- Height of `Current' when displayed in a `parent'
+			-- that has `is_row_height_fixed' set to `False'.
+			-- Note that `height' is ignored if the parent has
+			-- `is_row_height_fixed' set to `True' and then all rows
+			-- are displayed with identical heights set to `parent.row_height'.
 		require
 			is_parented: parent /= Void
 		do

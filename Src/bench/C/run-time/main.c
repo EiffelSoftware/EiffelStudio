@@ -24,7 +24,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "err_msg.h"
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #endif
@@ -36,7 +38,14 @@
 
 #define null (char *) 0					/* Null pointer */
 
+#ifdef EIF_WINDOWS
+	/* when malloc() fails, the system dies otherwise !!! */
+	/* FIXME?? */
+public int cc_for_speed = 0;			/* Fast memory allocation */
+#else
 public int cc_for_speed = 1;			/* Fast memory allocation */
+#endif
+
 public char *ename;						/* Eiffel program's name */
 public int scount;						/* Number of dynamic types */
 public int ccount;						/* Number of classes */
@@ -69,7 +78,7 @@ private Signal_t emergency();			/* Emergency exit */
 
 extern void umain();					/* User's initialization routine */
 extern void arg_init();					/* Command line arguments saving */
-#ifndef __WINDOWS_386__
+#ifndef EIF_WIN_31
 public unsigned TIMEOUT;     /* Time out for interprocess communications */
 #endif
 
@@ -85,7 +94,7 @@ char **envp;
 {
 	struct ex_vect *exvect;				/* Execution vector for main */
 	jmp_buf exenv;						/* Jump buffer for rescue */
-#ifndef __WINDOWS_386__
+#ifndef EIF_WIN_31
 	char *eif_timeout;
 	extern char *getenv();				/* Get environment variable value */
 #endif
@@ -96,7 +105,7 @@ char **envp;
 	 * formatting purpose).
 	 */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	extern int _argc;
 	extern char **_argv;
 
@@ -106,6 +115,19 @@ char **envp;
 
 	if (ename++ == (char *) 0)			/* There was no '/' in the name */
 		ename = _argv[0];				/* Program name is the filename */
+#elif defined EIF_WINDOWS
+	static char module_name [255] = {0};
+	extern HANDLE eif_conoutfile, eif_coninfile;
+
+	_fmode = O_BINARY;
+	GetModuleFileName (NULL, module_name, 255);
+
+	eif_coninfile = GetStdHandle (STD_INPUT_HANDLE);
+	eif_conoutfile = GetStdHandle (STD_OUTPUT_HANDLE);
+
+	ename = strrchr (module_name, '\\');
+	if (ename++ == (char *) 0)
+		ename = module_name;
 #else
 	ename = rindex(argv[0], '/');		/* Only last name if '/' found */
 
@@ -130,7 +152,7 @@ char **envp;
 #endif
 
 
-#ifndef __WINDOWS_386__
+#ifndef EIF_WIN_31
 	/* Check if the user wants to override the default timeout value
 	 * for interprocess communications. This new value is specified in
 	 * the EIF_TIMEOUT environment variable
@@ -166,7 +188,7 @@ char **envp;
 		char temp = 0;
 		int i;
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 		for (i=1;i<_argc;i++) {
 			if (0 == strcmp (_argv[i], "-ignore_updt")) {
 #else
@@ -197,7 +219,7 @@ char **envp;
 #endif
 #endif
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	umain(_argc, _argv, envp);			/* User's initializations */
 	arg_init(_argc, _argv);				/* Save copy for class ARGUMENTS */
 #else

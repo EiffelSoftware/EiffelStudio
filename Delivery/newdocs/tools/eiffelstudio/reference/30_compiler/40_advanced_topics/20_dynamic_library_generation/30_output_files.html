@@ -1,0 +1,82 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Generated files</TITLE>
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+<H1>Generated files</H1>
+    <P>Basically, once the Eiffel definition file is created, the compiler will 
+generate a set of files and will compile them to generate the Dynamic
+    library into the <I>EIFGEN/W_code</I> or <I>EIFGEN/F_code</I>  directory.</P>
+<P CLASS="note"><B>Note</B>: To generate and compile these files, you have to
+indicate the definition file that should be used in the HYPERLINK(Project
+settings) project settings of your system. This way EiffelStudio will 
+know which one to use. If you do not specify any definition file, nothing will 
+be generated.</P>
+<P>The set of files is composed of: </P>
+        <ul>
+          <ul>
+            <li><B>EIFGEN/W_code/<FONT color=blue>system.def</FONT></B> (or 
+    F_code)
+            <li><B>EIFGEN/W_code/<FONT color=blue>edynlib.c</FONT></B> (or F_code)
+            <li><B>$(ISE_EIFFEL)/bench/spec/$(PLATFORM)/templates/<FONT 
+    color=blue>egc_dynlib.template</FONT></B><BR>this file will be copied during 
+    the compilation into the EIFGEN/W_code/E1 directory as <B><FONT 
+    color=blue>egc_dynlib.c</font></B>
+            <li><B>$(ISE_EIFFEL)/bench/spec/$(PLATFORM)/include/<FONT 
+    color=blue>egc_dynlib.h</FONT></B> 
+            <li>and the Makefile</li>
+            </ul>
+          </ul>
+<P>The <I><FONT color=blue>system.def</FONT></I> is only used on windows, it is the definition file used to generate a DLL when linking.</P>
+          <ul>
+            <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
+    <TBODY>
+    <TR>
+      <TD><PRE>LIBRARY demo.dll
+DESCRIPTION DEMO.DLL
+
+EXPORTS
+
+;System
+	init_rt
+	reclaim_rt
+
+; CLASS [BAR]
+	get_string
+	print_bar
+
+; CLASS [ROOT_CLASS]
+	make
+	foo
+	test_bar
+</PRE></TD>
+      <TD bgColor=#ffffe8><PRE>- Information about the DLL
+- ...
+-
+- The following are EXPORTed functions.
+-
+- This part concerns the RunTime.
+-	initialize the RT.
+-	reclaim the Eiffel object.
+-
+- The exported for the CLASS BAR
+-	get_string
+-	print_bar
+-
+- The exported for the CLASS BAR
+-	make
+-	foo
+-	test_bar
+</PRE></TD></TR></TBODY></TABLE>
+          </ul>
+<P>The <I><FONT color=blue>edynlib.c</FONT></I> file is the "interface" between 
+the Eiffel system, and the C code, basically it contains the declaration and the
+implementation of the function used to directly call the eiffel feature with its 
+real name.</P>
+<P>The <FONT color=blue><I>egc_dynlib.c </I></FONT> and <FONT color=blue><I>egc_dynlib.h</I></FONT> files are 
+used for operations performed by the RunTime. </P>
+</BODY>
+</HTML>

@@ -18,7 +18,8 @@ inherit
 			set_pebble,
 			set_actual_drop_target_agent,
 			save_to_named_file,
-			set_pebble_function
+			set_pebble_function,
+			draw_straight_line
 		end
 
 	EV_PIXMAP_IMP_STATE

@@ -180,6 +180,7 @@ feature {NONE} -- Initialization
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
 			tree_item_imp: EV_TREE_NODE_IMP
+			timeout_imp: EV_TIMEOUT_IMP
 
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
@@ -195,7 +196,10 @@ feature {NONE} -- Initialization
 				if 
 					tree_item_imp /= Void and then
 					tree_item_imp.pointer_button_press_actions_internal /= Void and then tree_item_imp = selected_item_imp then
-						tree_item_imp.pointer_button_press_actions_internal.call (t)
+						--| IEK This is a hack that prevents the dialog freezing in Studio when show_modal_to_window is called.
+						timeout_imp ?= (create {EV_TIMEOUT}).implementation
+						timeout_imp.interface.actions.extend (agent (tree_item_imp.pointer_button_press_actions_internal).call (t))
+						timeout_imp.set_interval_kamikaze (100)
 				end
 
 			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM then

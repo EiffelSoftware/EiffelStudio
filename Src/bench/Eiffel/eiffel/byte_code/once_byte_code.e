@@ -66,6 +66,10 @@ feature
 					buf.putstring ("*) cmalloc(sizeof(");
 					type_i.c_type.generate (buf);
 					buf.putstring ("*));");
+					buf.new_line
+					buf.putstring ("Result = ")
+					type_i.c_type.generate_cast (buf);
+					buf.putstring ("0;");
 				end;
 			else
 				buf.putstring ("*) 1;");
@@ -93,7 +97,7 @@ feature
 	generate_result_declaration is
 			-- Generate declaration of the Result entity
 		do
-			buffer.putstring ("%N#define Result *PResult%N");
+			buffer.putstring ("%N#define Result *PResult%N%T");
 		end;
 
 feature -- Inlining

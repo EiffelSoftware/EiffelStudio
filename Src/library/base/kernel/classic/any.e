@@ -139,7 +139,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	twin: like Current is
+	frozen twin: like Current is
 			-- New object equal to `Current'
 			-- `twin' calls `copy'; to change copying/twining semantics, redefine `copy'.
 		local

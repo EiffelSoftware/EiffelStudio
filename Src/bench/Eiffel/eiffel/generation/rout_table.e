@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 				buffer.put_string ("[i] = ")
 				buffer.put_string (function_ptr_cast_string);
 				buffer.put_string (a_routine_name);
-				buffer.put_string (";};")
+				buffer.put_string (";}")
 				buffer.put_new_line
 			end
 		end

@@ -228,7 +228,6 @@ feature {NONE} -- Implementation
 				buffer.put_string (a_offset)
 				buffer.put_character (';')
 				buffer.put_character ('}')
-				buffer.put_character (';')
 				buffer.put_new_line
 			end
 		end

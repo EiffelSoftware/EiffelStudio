@@ -25,13 +25,21 @@ feature -- Access
 		require
 			exists: not destroyed
 		deferred
-		end 
+		end
 
 	text_length: INTEGER is
 			-- Length of the text in the widget
 		require
 			exists: not destroyed
 		deferred
+		end
+
+	selected_text: STRING is
+			-- Text which is currently selected
+		require
+			exists: not destroyed
+		do
+			Result := text.substring (selection_start, selection_end)
 		end
 
 feature -- Status report
@@ -109,32 +117,31 @@ feature -- Status setting
 		deferred
 		end
 	
---	set_maximum_text_length (value: INTEGER) is
---			-- Make `value' the new maximal lenght of the text
---			-- in characte number.
---		require
---			exist: not destroyed
---			valid_length: value >= 0
---		deferred
---		end
-	
 feature -- Element change
 
 	set_text (txt: STRING) is
 			-- set text in component to 'txt'
 		require
 			exist: not destroyed			
-			not_void: txt /= Void
-		deferred		
+			valid_text: txt /= Void
+		deferred
 		ensure
 			text_set: text.is_equal (txt)
+		end
+
+	insert_text (txt: STRING) is
+			-- Insert `txt' at the current position.
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		deferred
 		end
 	
 	append_text (txt: STRING) is
 			-- append 'txt' into component
 		require
 			exist: not destroyed			
-			not_void: txt /= Void
+			valid_text: txt /= Void
 		deferred
 		ensure
 			text_appended:
@@ -144,7 +151,7 @@ feature -- Element change
 			-- prepend 'txt' into component
 		require
 			exist: not destroyed			
-			not_void: txt /= Void
+			valid_text: txt /= Void
 		deferred
 		ensure
 			text_prepended:
@@ -167,8 +174,8 @@ feature -- Basic operation
 			-- 'start_pos' and 'end_pos'
 		require
 			exist: not destroyed
-			valid_start: start_pos > 0 and start_pos <= text_length
-			valid_end: end_pos > 0 and end_pos <= text_length
+			valid_start: start_pos > 0 and start_pos <= text_length + 1
+			valid_end: end_pos > 0 and end_pos <= text_length + 1
 		deferred
 		ensure
 			has_selection: has_selection

@@ -51,9 +51,7 @@ feature -- Comparison
 			i, nb: INTEGER
 			other_generics: like generics
 		do
-			Result := is_expanded = other.is_expanded and then
-				is_separate = other.is_separate and then
-				class_id = other.class_id
+			Result := Precursor {CL_TYPE_A} (other)
 			if Result then
 				from
 					i := 1

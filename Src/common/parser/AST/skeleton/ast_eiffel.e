@@ -27,6 +27,31 @@ feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
 		deferred
 		end;
 
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+			--| default version uses `deep_equal'
+		require
+			arg_non_void: other /= Void
+		do
+			Result := c_deep_equal ($Current, $other)
+		end
+
+	frozen equivalent (o1, o2: AST_EIFFEL): BOOLEAN is
+			-- Are `o1' and `o2' equivalent ?
+			-- this feature is similatr to `deep_equal'
+			-- but ARRAYs and STRINGs are processed correctly
+			-- (`deep_equal' will compare the size of the `area')
+		do
+			if o1 = Void then
+				Result := o2 = Void
+			else
+				Result := o2 /= Void and then c_same_type ($o1, $o2) and then
+					o1.is_equivalent (o2)
+			end
+		end
+
 feature {SERVER} -- Identity
 
 	is_feature_obj: BOOLEAN is

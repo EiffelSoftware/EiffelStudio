@@ -34,25 +34,6 @@ feature -- Export status computing
 			end;
 		end;
 
-feature -- Access
-
-	feature_with_name (n: STRING): FEATURE_AS_B is
-			-- Feature ast with internal name `n'
-		local
-			cur: CURSOR
-		do
-			cur := features.cursor;
-			from
-				features.start
-			until
-				features.after or else Result /= Void
-			loop
-				Result := features.item.feature_with_name (n);
-				features.forth
-			end
-			features.go_to (cur)
-		end;
-
 feature {CLASS_AS_B} -- Implementation
 
 	register_features (ast_reg: AST_REGISTRATION) is

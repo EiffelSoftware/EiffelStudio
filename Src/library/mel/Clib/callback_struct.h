@@ -6,6 +6,17 @@
 
 #include "mel.h"
 
+	/*
+	 * Allows or forbids the cursor to move or the text to be modified
+	 * during a `motion' or a `modify' action.
+	 */
+#define c_text_set_do_it(b, _ptr_) ((b) ? \
+			(((XmTextVerifyCallbackStruct *) _ptr_)->doit = True) : \
+			(((XmTextVerifyCallbackStruct *) _ptr_)->doit = False))
+#define c_text_wcs_set_do_it(b, _ptr_) ((b) ? \
+			(((XmTextVerifyCallbackStructWcs *) _ptr_)->doit = True) : \
+			(((XmTextVerifyCallbackStructWcs *) _ptr_)->doit = False))
+
 	/* General */
 
 #define c_reason(_ptr_) (_ptr_)->reason

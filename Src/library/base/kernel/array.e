@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	consistent_size: count = upper - lower + 1;
+	consistent_size: capacity = upper - lower + 1;
 	non_negative_count: count >= 0
 
 end -- class ARRAY

@@ -9,10 +9,19 @@ indexing
 class
 	EV_KEY_CONSTANTS
 
-feature -- Constants
+feature -- Contract support
 
+	valid_key_code (a_code: INTEGER): BOOLEAN is
+			-- Is `a_code' a valid key code?
+		do
+			Result := a_code >= Key_0 and then a_code <= Key_z
+		end
+
+feature -- Constants
 --| Please do not get the bright idea of separating these constants in
---| separate feature clauses. See ETL's section about the uniqueword.
+--| separate feature clauses. See ETL's section about the unique keyword.
+--| Also, do not change the order. New key codes can be added at the end of the
+--| feature clause.
 
 	Key_0: INTEGER is unique
 			-- Code representing "0". 
@@ -326,7 +335,7 @@ feature -- Constants
 end -- class EV_KEY_CONSTANTS
 
 --!-----------------------------------------------------------------------------
---! EiffelVision Library: library of reusable components foR is uniqueE Eiffel.
+--! EiffelVision Library: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
 --! May be used only with ISE Eiffel, under terms of user license. 
@@ -346,6 +355,10 @@ end -- class EV_KEY_CONSTANTS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/15 19:37:57  brendel
+--| Added feature `valid_key_code'.
+--| Improved comments.
+--|
 --| Revision 1.1  2000/03/15 18:49:18  brendel
 --| Constants for {EV_KEY}.code.
 --|

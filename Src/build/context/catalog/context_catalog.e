@@ -126,12 +126,6 @@ feature {CONTEXT_CAT_PAGE}
 
 feature {NONE}
 
--- 	close is
--- 		do
--- 			hide
--- 			main_panel.cont_cat_t.set_toggle_off
--- 		end
-
 	attach_page (page: CONTEXT_CAT_PAGE) is
 		do
 			attach_top_widget (first_separator, page, 0)
@@ -154,7 +148,6 @@ feature
 			end
 			current_button := bt
 			current_page := bt.catalog_page
---			current_page.show	
 			current_page.manage
 			scrolled_w.set_working_area (current_page)
 		ensure
@@ -275,7 +268,7 @@ feature -- Group management
 
 	context_group_types: LINKED_LIST [CONTEXT_GROUP_TYPE] is
 		once
-			!!Result.make
+			!! Result.make
 		end
 
 	add_new_group (a_group: GROUP) is
@@ -283,10 +276,12 @@ feature -- Group management
 			a_context_type: CONTEXT_GROUP_TYPE
 			group_c: GROUP_C
 		do
-			!!group_c
+			!! group_c
 			group_c.set_type (a_group)
-			!!a_context_type.make (a_group.entity_name, group_c)
+			!! a_context_type.make (a_group.entity_name, group_c)
 			add_group_type (a_context_type)
+		ensure
+			consistent: context_group_types.count = shared_group_list.count
 		end
 
 	has_group_name (group_name: STRING): BOOLEAN is
@@ -324,19 +319,23 @@ feature -- Group management
 				Shared_group_list.after
 			loop
 				a_group := Shared_group_list.item
-				!!group_c
+				!! group_c
 				group_c.set_type (a_group)
-				!!a_context_type.make (a_group.entity_name, group_c)
+				!! a_context_type.make (a_group.entity_name, group_c)
 				append_group_type (a_context_type)
 				Shared_group_list.forth
 			end
 			group_page.icon_box.manage
+		ensure
+			consistent: context_group_types.count = shared_group_list.count
 		end
 
 	add_group_type (a_context_type: CONTEXT_GROUP_TYPE) is
 		do
 			append_group_type (a_context_type)
 			Shared_group_list.extend (a_context_type.group)
+		ensure
+			consistent: context_group_types.count = shared_group_list.count
 		end
 
 	remove_group_type (a_context_type: CONTEXT_GROUP_TYPE) is
@@ -356,6 +355,8 @@ feature -- Group management
 			end
 			context_group_types.remove
 			update_groups
+		ensure
+			consistent: context_group_types.count = shared_group_list.count
 		end
 
 feature {NONE}
@@ -571,7 +572,5 @@ feature -- CLOSEABLE (useless so far)
 		do
 		end
 
-invariant
-	consistent_count: context_group_types.count = shared_group_list.count
-end
+end -- class CONTEXT_CATALOG
 

@@ -240,8 +240,11 @@ feature -- Initialization
 	cur_text: STRING
 
 	rotate_tests is
+		local
+			color: EV_COLOR
 		do
 			if cur_test = 1 then
+				my_device.set_copy_mode
 				my_device.remove_tile
 				my_device.remove_clip_area
 				my_device.set_line_width (1)
@@ -251,7 +254,8 @@ feature -- Initialization
 				my_device.set_font (create {EV_FONT})
 				cur_text := "Default values"
 			elseif cur_test = 2 then
-				my_device.set_foreground_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
+				create color.make_with_rgb (1, 1, 0)
+				my_device.set_foreground_color (color)
 				my_device.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 0.5))
 				cur_text := "Different colors"
 			elseif cur_test = 3 then
@@ -259,7 +263,7 @@ feature -- Initialization
 				cur_text := "Tile test"
 			elseif cur_test = 4 then
 				my_device.clear
-				my_device.set_clip_area (create {EV_CLIP}.make (10, 30, 230, 220))
+				my_device.set_clip_area (create {EV_RECTANGLE}.make (10, 30, 230, 220))
 				cur_text := "It's a clip area"
 			elseif cur_test = 5 then
 				my_device.enable_dashed_line_style
@@ -275,9 +279,14 @@ feature -- Initialization
 					19)
 				my_device.set_font (font)
 				cur_text := "Different font...@#$"
+			elseif cur_test = 8 then
+				my_device.set_xor_mode
+				cur_text := "XOR drawing mode."
+			elseif cur_test = 9 then
+				--| Just redraw......
 			end
 			cur_test := cur_test + 1
-			if cur_test = 8 then
+			if cur_test = 10 then
 				cur_test := 1
 			end
 			my_device.redraw
@@ -292,7 +301,7 @@ feature -- Initialization
 				create {EV_COORDINATES}.set (90, 220),
 				create {EV_COORDINATES}.set (90, 230)>>)
 			my_device.fill_pie_slice (200, 200, 120, 120,  0.1, 0.25 * 3.14)
-			my_device.draw_point (10, 10)
+			my_device.draw_point (0, 0)
 			my_device.draw_text (10, 200, cur_text)
 			my_device.draw_segment (5, 5, 100, 50)
 			my_device.draw_straight_line (100, 30, 120, 35)

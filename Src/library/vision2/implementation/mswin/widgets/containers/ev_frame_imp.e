@@ -236,10 +236,10 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	Border_width: INTEGER is 4
+	Border_width: INTEGER is 2
 			-- Number of pixels taken up by border.
 
-	Text_padding: INTEGER is 10
+	Text_padding: INTEGER is 4
 			-- Number of pixels left and right to `text'.
 
 	text_height: INTEGER
@@ -273,7 +273,7 @@ feature {NONE} -- WEL Implementation
 			end
 
 			draw_edge (paint_dc, create {WEL_RECT}.make (
-					1, (text_height // 2).max (1), width - 2, height - 2
+					0, text_height // 2, width, height
 				), wel_style, Bf_rect)
 
 			if text /= Void then
@@ -327,6 +327,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/28 16:32:03  brendel
+--| Changed Text_padding and Border_width to nice value.
+--|
 --| Revision 1.32  2000/04/28 00:40:23  brendel
 --| Fixed text label drawing.
 --|

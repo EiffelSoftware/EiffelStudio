@@ -60,6 +60,7 @@ feature
 					draw_segment (x1 + width, y1, x1 + width, y1 + height);
 					draw_segment (x1, y1 + height, x1 + width, y1 + height);
 					draw_segment (x0, y0, x1 + (width // 2), y1 + (height // 2));
+					showable := False;
 				end;
 			end;	
 		end;

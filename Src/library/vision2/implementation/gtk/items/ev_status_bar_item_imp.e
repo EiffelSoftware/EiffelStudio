@@ -20,6 +20,7 @@ inherit
 		rename
 			set_width as widget_set_width
 		redefine
+			destroy,
 			make_with_text,
 			set_expand,
 			set_text,
@@ -108,6 +109,8 @@ feature -- Status setting
 				-- XX update `width'
 			if (value = -1) then
 				set_expand (True)
+			else
+				set_expand (False)
 			end
 		end
 
@@ -123,6 +126,17 @@ feature -- Status setting
 			end
 		end
 
+	destroy is
+			-- Destroy the status bar item implementation.
+			-- Feature redefined to set expand options
+                do
+			parent_imp.remove_status_bar_item (Current)
+			if not destroyed then
+	                        gtk_widget_destroy (widget)
+			end
+			widget := Default_pointer
+		end
+	
 feature -- Element change
 
 	set_text (txt: STRING) is

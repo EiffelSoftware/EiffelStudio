@@ -13,6 +13,8 @@ inherit
 
 	SHARED_WORKBENCH
 
+	WINDOW_ATTRIBUTES
+
 creation
 
 	make
@@ -75,6 +77,7 @@ feature
 			set_values
 			set_commands
 			display
+			set_composite_attributes (Current)
 		end;
 
 	set_commands is 

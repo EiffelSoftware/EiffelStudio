@@ -1,19 +1,39 @@
 # wel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -W3 -I. -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -Ox -W3 -I. -I$(EIFFEL4)\bench\spec\windows\include
+MTCFLAGS = -DEIF_THREADS -MT -Ox -W3 -I. -I$(EIFFEL4)\bench\spec\windows\include
 
 .c.obj:
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CFLAGS) -c $<
 
-OBJ = des.obj desop.obj
+OBJECTS = des.obj desop.obj
+MT_OBJECTS = MTdes.obj MTdesop.obj
 
-des.lib: $(OBJ)
+all:: des.lib mtdes.lib
+
+des.lib: $(OBJECTS)
 	if exist $@ del $@
-	lib /OUT:$@ $(OBJ)
+	lib /OUT:$@ $(OBJECTS)
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib
 	del $@
 	del *.obj
+
+mtdes.lib: $(MT_OBJECTS)
+	if exist $@ del $@
+	lib /OUT:$@ $(MT_OBJECTS)
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy $@ ..\spec\msc\lib
+	del $@
+	del *.obj
+
+MTdes.obj: des.c
+	$(CC) -FoMTdes.obj $(MTCFLAGS) -c $?
+
+MTdesop.obj: desop.c
+	$(CC) -FoMTdesop.obj $(MTCFLAGS) -c $?

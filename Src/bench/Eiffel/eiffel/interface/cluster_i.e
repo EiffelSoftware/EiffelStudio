@@ -636,7 +636,7 @@ end;
 			class_path: FILE_NAME
 			vd01: VD01
 			vd21: VD21
-			class_file: EXTEND_FILE
+			class_file: PLAIN_TEXT_FILE
 			is_efile, check_dir, found: BOOLEAN
 			sub_dirs: LINKED_LIST [FILE_NAME]
 			suffixes: LINKED_LIST [FILE_NAME]

@@ -206,6 +206,7 @@ rt_public long ei_size(EIF_REFERENCE object)
 	/* Returns physical size occupied by `object'. */
 
 	if (HEADER(object)->ov_flags & EO_SPEC)
+			/* Works for both special and TUPLE */
 		return (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
 	else
 		return (long) EIF_Size(Dtype(object));
@@ -214,7 +215,8 @@ rt_public long ei_size(EIF_REFERENCE object)
 rt_public EIF_BOOLEAN ei_special(EIF_REFERENCE object)
 	/* Is `object' a special one ? */
 {
-	return EIF_TEST((HEADER(object)->ov_flags) & EO_SPEC);
+	uint32 flags = HEADER(object)->ov_flags;
+	return EIF_TEST((flags & EO_SPEC) && !(flags & EO_TUPLE));
 }
 
 rt_public EIF_BOOLEAN eif_special_any_type (EIF_INTEGER dftype)

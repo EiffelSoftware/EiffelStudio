@@ -95,7 +95,7 @@ feature {NONE}
 	dispose is
 			-- Called when the pixmap is garbaged
 		do
-			if objects /= Void and then objects.empty then
+			if not has_objects then
 				free_resources
 			end;
 		end; 

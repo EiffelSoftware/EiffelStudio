@@ -139,25 +139,25 @@ feature {NONE} -- External
 			"C"
 		end
 
-	c_mask_clear (a_mask: ANY; pos: INTEGER) is
+	c_mask_clear (a_mask: POINTER; pos: INTEGER) is
 			--clear the bit in the mask located at pos
 		external
 			"C"
 		end
 
-	c_set_bit (a_mask: ANY; pos: INTEGER) is
+	c_set_bit (a_mask: POINTER; pos: INTEGER) is
 			-- set the bit in the mask located at pos
 		external
 			"C"
 		end
 
-	c_is_bit_set (a_mask: ANY; pos: INTEGER): BOOLEAN is
+	c_is_bit_set (a_mask: POINTER; pos: INTEGER): BOOLEAN is
 			-- is  the bit  in the mask located at pos set
 		external
 			"C"
 		end
 
-	c_zero_mask (a_mask: ANY) is
+	c_zero_mask (a_mask: POINTER) is
 			-- zero total mask area
 		external
 			"C"

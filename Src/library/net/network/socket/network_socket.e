@@ -29,7 +29,6 @@ feature -- Status Report
 			--  port socket is bound to.
 		require
 			valid_socket: exists
-			is_bound: is_open_read
 		local
 			ext: ANY
 			temp_addr: like address

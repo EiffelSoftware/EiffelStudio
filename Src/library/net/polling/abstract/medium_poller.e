@@ -412,7 +412,7 @@ feature -- commands to be executed
 
 feature {NONE}
 
-	c_select (nfds: INTEGER; rmask, wmask, emask: ANY; time_sec, time_msec: INTEGER): INTEGER  is
+	c_select (nfds: INTEGER; rmask, wmask, emask: POINTER; time_sec, time_msec: INTEGER): INTEGER  is
 			-- a external c routine used to set up multiplexing
 			-- of many mediums defined by the mask parameters
 		external

@@ -740,14 +740,14 @@ feature {NONE}
 			"C"
 		end
 
-	c_bind (soc: INTEGER; addr: ANY; length: INTEGER) is
+	c_bind (soc: INTEGER; addr: POINTER; length: INTEGER) is
 			-- external c routine to bind the socket descriptor
 			-- to a local address
 		external
 			"C"
 		end
 
-	c_accept (soc: INTEGER; addr: ANY; length: INTEGER): INTEGER is
+	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
 			-- external c routine to accept a socket connect
 			-- by returning a new socket descriptor to the
 			-- socket we are going to recieve messages from
@@ -764,7 +764,7 @@ feature {NONE}
 			"C"
 		end
 
-	c_connect (soc: INTEGER; addr: ANY; length: INTEGER) is
+	c_connect (soc: INTEGER; addr: POINTER; length: INTEGER) is
 			-- external c routine that connect the socket
 			-- to the peer address
 		external
@@ -778,20 +778,20 @@ feature {NONE}
 			"C"
 		end
 
-	c_unlink (nam: ANY) is
+	c_unlink (nam: POINTER) is
 			-- external c routine to remove a socket from the
 			-- system
 		external
 			"C"
 		end
 
-	c_sock_name (soc: INTEGER; addr: ANY; length: INTEGER) is
+	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER) is
 			-- external c routine that returns the socket name
 		external
 			"C"
 		end
 
-	c_peer_name (soc: INTEGER; addr: ANY; length: INTEGER): INTEGER is
+	c_peer_name (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
 			-- external routine that returns the peers socket name
 		external
 			"C"
@@ -832,7 +832,7 @@ feature {NONE}
 			"C"
 		end
 
-	c_put_string (fd: INTEGER; s: ANY) is
+	c_put_string (fd: INTEGER; s: POINTER) is
 			-- external routine to write a string to a socket
 			-- identified by fd
 		external
@@ -867,34 +867,34 @@ feature {NONE}
 			"C"
 		end
 
-	c_read_stream (fd: INTEGER; l: INTEGER; buf: ANY): INTEGER is
+	c_read_stream (fd: INTEGER; l: INTEGER; buf: POINTER): INTEGER is
 			-- external routine to read a `l' number of characters
 			-- from a socket identified by fd
 		external
 			"C"
 		end
 
-	c_read (fd: INTEGER; buf:ANY; l: INTEGER): INTEGER is
+	c_read (fd: INTEGER; buf:POINTER; l: INTEGER): INTEGER is
 			-- external routine to read `l' length of
 			-- data from the socket identified by
 		external
 			"C"
 		end
 
-	c_write (fd: INTEGER; buf: ANY; l: INTEGER): INTEGER is
+	c_write (fd: INTEGER; buf: POINTER; l: INTEGER): INTEGER is
 			-- external routine to write `l' length of data
 			-- from the socket identified by fd 
 		external
 			"C"
 		end
 
-	c_receive (fd: INTEGER; buf: ANY; len: INTEGER; flags: INTEGER): INTEGER is
+	c_receive (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER is
 			-- Socket receive data routine
 		external
 			"C"
 		end
 
-	c_send (fd: INTEGER; buf: ANY; len: INTEGER; flags: INTEGER): INTEGER is
+	c_send (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER is
 			-- Socket send data routine
 		external
 			"C"

@@ -132,14 +132,14 @@ feature {NONE} -- External
 			"C"
 		end
 
-	set_host_addr (addr: ANY; value: INTEGER) is
+	set_host_addr (addr: POINTER; value: INTEGER) is
 		external
 			"C"
 		alias
 			"set_sin_addr"
 		end
 
-	get_host_addr (addr: ANY): INTEGER is
+	get_host_addr (addr: POINTER): INTEGER is
 			-- get the host number from 'addr'
 		external
 			"C"
@@ -147,25 +147,25 @@ feature {NONE} -- External
 			"get_sin_addr"
 		end
 
-	net_host_addr(host_addr: ANY): INTEGER is
+	net_host_addr(host_addr: POINTER): INTEGER is
 			--  Convert the dotted string address to a host number
 		external
 			"C"
 		end
 
-	net_host (addr: ANY): STRING is
+	net_host (addr: POINTER): STRING is
 		external
 			"C"
 		end
 
-	host_address_from_name (addr, name: ANY) is
+	host_address_from_name (addr, name: POINTER) is
 			-- sets the host address in 'addr' using the
 			-- name to identify the host.
 		external
 			"C"
 		end
 
-	set_from_c (addr: ANY ptr: POINTER) is
+	set_from_c (addr: POINTER ptr: POINTER) is
 			--  copies the address infor in 'ptr'
 			-- to the addr object.
 		external

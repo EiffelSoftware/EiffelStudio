@@ -117,6 +117,12 @@ feature -- Status report
 			valid_on_empty_area: upper = -1 implies Result
 		end
 	
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' within the bounds of Current?
+		do
+			Result := (0 <= i) and then (i < count)
+		end
+		
 feature -- Element change
 
 	frozen put (v: T; i: INTEGER) is

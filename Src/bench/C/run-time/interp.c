@@ -132,6 +132,11 @@ rt_private char *unknown_type = "unknown entity type";
 rt_private void monadic_op(int code);				/* Execute a monadic operation */
 rt_private void diadic_op(int code);				/* Execute a diadic operation */
 
+/* Min and max operation */
+rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' depending
+														   on value of `type' */
+rt_private void eif_interp_generator ();	/* generate the name of the basic type */
+
 /* Assertion checking */
 rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
 rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
@@ -2143,6 +2148,13 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		break;
 
 	/*
+	 * `generator' and `generating_type' function calls
+	 */
+	case BC_GENERATOR:
+		eif_interp_generator ();
+		break;
+
+	/*
 	 * Diadic operators.
 	 */
 	case BC_LT:				/* Lesser than op */
@@ -2162,6 +2174,14 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	case BC_PLUS:			/* Addition op */
 	case BC_OR:				/* Logocal disjunction op */
 		diadic_op(code);
+		break;
+
+	/*
+	 * Min, Max operations
+	 */
+	case BC_MIN:
+	case BC_MAX:
+		eif_interp_min_max (code);
 		break;
 
 	/*
@@ -4208,6 +4228,94 @@ rt_private void diadic_op(int code)
 #undef f
 }
 
+rt_private void eif_interp_generator (void)
+{
+	/* Execute the `generator' or `generating_type' function call for basic types
+	 * in melted code
+	 */
+	struct item *first;			/* First operand */
+	
+	first = otop();				/* First operand will be replace by result */
+	switch (first->type & SK_HEAD) {
+		case SK_BOOL:
+			first->it_ref = RTMS_EX("BOOLEAN", 7);
+			break;
+		case SK_CHAR:
+			first->it_ref = RTMS_EX("CHARACTER", 9);
+			break;
+		case SK_INT:
+			first->it_ref = RTMS_EX("INTEGER", 7);
+			break;
+		case SK_FLOAT:
+			first->it_ref = RTMS_EX("REAL", 4);
+			break;
+		case SK_DOUBLE:
+			first->it_ref = RTMS_EX("DOUBLE", 6);
+			break;
+		case SK_POINTER:
+			first->it_ref = RTMS_EX("POINTER", 7);
+			break;
+		default: eif_panic(MTC botched);
+	}
+	first->type = SK_REF;
+}
+
+rt_private void eif_interp_min_max (int code)
+{
+	/* Execute the `max' or `min' operation (shown by "code") on CHARACTER,
+	 * INTEGER, REAL and DOUBLE and push the result back on the stack.
+	 * Instead of poping the two operands and pushing the result back, we handle
+	 * the references of both, poping only the second. I am relying on the fact
+	 * that the last poped value remains uccorrupted in a non-freed chunk--RAM.
+	 */
+#define EIF_MAX(a,b) ((a)>(b)? (a) : (b))
+#define EIF_MIN(a,b) ((a)<(b)? (a) : (b))
+
+	struct item *second;		/* Second operand */
+	struct item *first;			/* First operand */
+	
+	second = opop();			/* Fetch second operand */
+	first = otop();				/* First operand will be replace by result */
+
+	switch (code) {				/* Execute operation */
+		case BC_MAX:
+			switch(first->type & SK_HEAD) {
+				case SK_CHAR:
+					first->it_char = EIF_MAX(first->it_char, second->it_char);
+					break;
+				case SK_INT:
+					first->it_long = EIF_MAX(first->it_long, second->it_long);
+					break;
+				case SK_FLOAT:
+					first->it_float = EIF_MAX(first->it_float, second->it_float);
+					break;
+				case SK_DOUBLE:
+					first->it_double = EIF_MAX(first->it_double, second->it_double);
+					break;
+				default: eif_panic(MTC botched);
+				}
+			break;
+		case BC_MIN:
+			switch(first->type & SK_HEAD) {
+				case SK_CHAR:
+					first->it_char = EIF_MIN(first->it_char, second->it_char);
+					break;
+				case SK_INT:
+					first->it_long = EIF_MIN(first->it_long, second->it_long);
+					break;
+				case SK_FLOAT:
+					first->it_float = EIF_MIN(first->it_float, second->it_float);
+					break;
+				case SK_DOUBLE:
+					first->it_double = EIF_MIN(first->it_double, second->it_double);
+					break;
+				default: eif_panic(MTC botched);
+				}
+			break;
+	}
+#undef EIF_MAX
+#undef EIF_MIN
+}
 
 /*
  * Function calling routines
@@ -4837,7 +4945,7 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 	if (cnt <= 2)
 		return dtype;
 	
-	return (short) RTCID((int16 *)0,Current, (int16) dtype, gen_types);
+	return (short) eif_compound_id((int16 *)0,Current, (int16) dtype, gen_types);
 
 	EIF_END_GET_CONTEXT
 }

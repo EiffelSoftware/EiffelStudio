@@ -12,7 +12,7 @@ struct token {
 };
 %%
 # Run this file through
-#   gperf -p -t -l -k 1,'$',4 eiffel.gperf > keyword.c
+#   gperf -p -t -l -k 1,'$',3 eiffel.gperf > keyword.c
 # to produce a fast keyword recognition function.
 alias,			TE_ALIAS
 all,			TE_ALL
@@ -64,7 +64,6 @@ result,			TE_RESULT
 retry,			TE_RETRY
 select,			TE_SELECT
 separate,		TE_SEPARATE
-signature,		TE_SIGNATURE
 strip,			TE_STRIP
 then,			TE_THEN
 true,			TE_TRUE

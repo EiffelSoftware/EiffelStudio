@@ -53,11 +53,8 @@ feature {NONE} -- Implementation
 						error := True
 					end;
 					if not error then
-							-- Get the arguments
-						appl_name.extend (' ');
-						appl_name.append (arguments);
 						!! cmd_exec;
-						cmd_exec.execute (appl_name);
+						cmd_exec.execute_with_args (appl_name, arguments);
 					end;
 				end
 			end

@@ -26,4 +26,5 @@ VOMB, chapter 14 (Control structures), page 239
 
         6 All Unique inspect constants, if any,  have  the
           same  class  of origin (the enclosing class or a
-          proper ancestor).
+          proper ancestor) or  are  defined  as  a  static
+		  access to a constant.

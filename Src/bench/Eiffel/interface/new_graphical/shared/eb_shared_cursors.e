@@ -9,6 +9,8 @@ class
 
 inherit
 	EIFFEL_ENV
+	
+	EB_SHARED_PIXMAP_FACTORY
 
 feature -- Accepting cursor shapes
 
@@ -25,16 +27,6 @@ feature -- Accepting cursor shapes
 	cur_Object: EV_CURSOR is
 		once
 			Result := cursor_file_content ("object")
-		end
-
-	cur_Explain: EV_CURSOR is
-		once
-			Result := cursor_file_content ("explcur.bm")
-		end
-
-	cur_System: EV_CURSOR is
-		once
-			Result := cursor_file_content ("systcur.bm")
 		end
 
 	cur_Setstop: EV_CURSOR is
@@ -99,11 +91,6 @@ feature -- Non-Accepting cursor shapes
 			Result := cursor_file_content ("Xobject")
 		end
 
-	cur_X_system: EV_CURSOR is
-		once
-			Result := cursor_file_content ("xsystcur.bm")
-		end
-
 	cur_X_setstop: EV_CURSOR is
 		once
 			Result := cursor_file_content ("Xstopexec")
@@ -130,7 +117,7 @@ feature -- Other cursor
 			Result.set_y_hotspot (0)
 		end
 
-feature {NONE} 
+feature {NONE} -- Implementation
 
 	cursor_file_content (fn: STRING): EV_CURSOR is
 			-- Load the cursor contained in file `fn'.ico or `fn'.xpm, depending on the platform.
@@ -141,30 +128,11 @@ feature {NONE}
 			create Result.make_with_pixmap (a_pix, a_pix.width // 2, a_pix.height // 2)
 		end
 
-	pixmap_file_content (fn: STRING): EV_PIXMAP is
-			-- Create a pixmap and initialize it with contents of file `fn'.ico or `fn'.xpm.
-		local
-			full_path: FILE_NAME
-			retried: BOOLEAN
-		do
-				-- Create the pixmap
-			create Result
-
-			if not retried then
-					-- Initialize the pathname & load the file
-				create full_path.make_from_string (Cursor_path)
-				full_path.set_file_name (fn)
-				full_path.add_extension ("png")
-				Result.set_with_named_file (full_path)
-			else
-				io.error.put_string ("Warning: cannot read pixmap file ")
-				io.error.put_string (full_path)
-				io.error.put_new_line
-				Result.set_size (20, 20) -- Default pixmap size
-			end
-		rescue
-			retried := True
-			retry
+	pixmap_path: DIRECTORY_NAME is
+			-- Path to cursor pixmaps
+		once
+			create Result.make_from_string (eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
 		end
 
 end -- class EB_SHARED_CURSORS

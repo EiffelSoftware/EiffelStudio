@@ -131,6 +131,25 @@ feature
 			end;
 		end;
 
+	add_in_log (encoded_name: STRING) is
+		local
+			log_file: PLAIN_TEXT_FILE;
+			class_t: CLASS_TYPE;
+		do
+			class_t := Context.class_type;
+			log_file := System.used_features_log_file;
+			log_file.putstring (class_t.associated_class.cluster.cluster_name);
+			log_file.putchar ('%T');
+			class_t.type.dump (log_file);
+			log_file.putchar ('%T');
+			log_file.putstring (feature_name);
+			log_file.putchar ('%T');
+			log_file.putstring (encoded_name);
+			log_file.putchar ('%T');
+			log_file.putstring (class_t.relative_file_name);
+			log_file.new_line;
+		end
+
 	generate is
 			-- Generate C code.
 		local
@@ -146,6 +165,10 @@ feature
 			internal_name := Encoder.feature_name
 				(System.class_type_of_id (context.current_type.type_id).id,
 				body_id);
+
+				-- Add entry in the log file
+
+			add_in_log (internal_name);
 
 				-- Generate function name
 			generated_file.putstring (internal_name);
@@ -364,7 +387,7 @@ feature
 									context.local_var.print_register_by_name;
 								end;
 							end;
-							generated_file.putstring (");");
+							generated_file.putstring (gc_rparan_comma);
 							generated_file.new_line;
 						elseif type_i.is_bit then
 							bit_i ?= type_i; -- Cannot fail
@@ -372,7 +395,7 @@ feature
 							context.local_var.print_register_by_name;
 							generated_file.putstring (" = RTLB(");
 							generated_file.putint (bit_i.size);
-							generated_file.putstring (");");
+							generated_file.putstring (gc_rparan_comma);
 							generated_file.new_line;
 						end;
 					end;
@@ -410,14 +433,14 @@ feature
 							context.local_var.print_register_by_name;
 						end;
 					end;
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
 				elseif type_i.is_bit then
 					bit_i ?= type_i; -- Cannot fail
 					context.result_var.print_register_by_name;
 					generated_file.putstring (" = RTLB(");
 					generated_file.putint (bit_i.size);
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
 				end
 			end;
@@ -743,7 +766,7 @@ feature
 		do
 			generated_file.putstring ("RTSA(");
 			generate_current_dtype;
-			generated_file.putstring (");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 		end;
 
@@ -751,9 +774,9 @@ feature
 			-- Generate dynamic type of Current.
 		do
 			if context.dt_current > 1 then
-				generated_file.putstring ("dtype");
+				generated_file.putstring (gc_dtype);
 			else
-				generated_file.putstring ("Dtype(");
+				generated_file.putstring (gc_upper_dtype_lparan);
 				context.current_register.print_register_by_name;
 				generated_file.putchar (')');
 			end;
@@ -784,7 +807,7 @@ feature
 				generated_file.putstring (tag);
 				generated_file.putchar ('(');
 				context.current_register.print_register_by_name;
-				generated_file.putstring (");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
 			end;
 		end;
@@ -797,23 +820,23 @@ feature
 			if rescue_clause /= Void then
 				generated_file.new_line;
 				generated_file.exdent;
-				generated_file.putstring("rescue:");
+				generated_file.putstring ("rescue:");
 				generated_file.new_line;
 				generated_file.indent;
-				generated_file.putstring("RTEU;");
+				generated_file.putstring ("RTEU;");
 				generated_file.new_line;
 					-- Resynchronize local variables stack
 				nb_refs := context.ref_var_used;
 				if nb_refs > 0 then
 					generated_file.putstring ("RTXS(");
 					generated_file.putint (nb_refs);
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
 				end;
 				rescue_clause.generate;
 				generated_file.putstring ("/* NOTREACHED */");
 				generated_file.new_line;
-				generated_file.putstring("RTEF;");
+				generated_file.putstring ("RTEF;");
 				generated_file.new_line;
 			end;
 		end;
@@ -846,9 +869,9 @@ feature
 				generated_file.putstring (feature_name);
 				generated_file.putstring ("%", ");
 				generated_file.putint (feature_origin);
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 				context.Current_register.print_register_by_name;
-				generated_file.putstring (");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
 			elseif rescue_clause /= Void then
 				generated_file.putstring ("RTEV;");
@@ -1090,18 +1113,23 @@ feature -- Inlining
 		end
 
 	pre_inlined_code: like Current is
+		local
+			old_bc: BYTE_CODE
 		do
 			check
 				no_rescue: rescue_clause = Void
 			end
 
+			old_bc := Context.byte_code;
+			Context.set_byte_code (Current);
 			Result := Current;
 			if compound /= Void then
 				compound := compound.pre_inlined_code
 			end
+			Context.set_byte_code (old_bc)
 		end;
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: STD_BYTE_CODE is
 		local
 			inlined_b: INLINED_BYTE_CODE
 			inliner: INLINER

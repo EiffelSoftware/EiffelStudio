@@ -122,7 +122,7 @@ feature {NONE} -- Update
 					io.readline;
 					file_name := io.laststring;
 					if not file_name.is_empty then
-						Eiffel_ace.set_file_name (clone(file_name));
+						Eiffel_ace.set_file_name (file_name.twin);
 					else
 						create file.make ("Ace.ace");
 						if file.exists then
@@ -149,7 +149,7 @@ feature {NONE} -- Update
 						file.copy_to (dest)
 						file.close
 						dest.close
-						Eiffel_ace.set_file_name (clone(file_name));
+						Eiffel_ace.set_file_name (file_name.twin);
 						edit (Eiffel_ace.file_name);
 					end;
 				else

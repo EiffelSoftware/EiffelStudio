@@ -174,9 +174,9 @@ feature -- Project Initialization
 					msg := "You cannot specify a project name which contains a directory separator%N"
 					msg.append ("when you are specifying a project path.")
 				else
-					dir_name := clone (project_path_name)
+					dir_name := project_path_name.twin
 					Project_directory_name.set_directory (dir_name)
-					new_file_name := clone (project_path_name)
+					new_file_name := project_path_name.twin
 					if new_file_name.item (new_file_name.count) /= Operating_environment.Directory_separator then
 						new_file_name.append_character (Operating_environment.Directory_separator)
 					end
@@ -195,7 +195,7 @@ feature -- Project Initialization
 				else
 					dir_name := Execution_environment.current_working_directory
 					Project_directory_name.set_directory (dir_name)
-					new_file_name := clone (dir_name)
+					new_file_name := dir_name.twin
 					if new_file_name.item (new_file_name.count) /= Operating_environment.Directory_separator then
 						new_file_name.append_character (Operating_environment.Directory_separator)
 					end
@@ -303,8 +303,7 @@ feature -- Input/output
 			io.error.putstring ("%N%
 				%Press <Return> to retry saving or <Q> to quit%N");
 			wait_for_return;
-			str := clone (io.laststring)
-			str.to_lower;
+			str := io.laststring.as_lower
 			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
 		end;
 

@@ -10,6 +10,8 @@ extern "C" {
 
 extern void com_initialize ();
 extern EIF_POINTER new_fusion_support ();
+extern EIF_POINTER c_get_bstr (EIF_POINTER);
+extern void c_free_bstr (EIF_POINTER);
 extern EIF_POINTER new_md_dispenser ();
 extern EIF_POINTER c_define_scope_for_md_emit (EIF_POINTER);
 extern EIF_POINTER c_query_assembly_emit (EIF_POINTER);

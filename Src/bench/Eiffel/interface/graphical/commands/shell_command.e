@@ -93,6 +93,15 @@ feature {NONE}
 				cmd_string.append (command_shell_name);
 				req.set_command_name (cmd_string);
 				req.send;		-- execute the command
+			elseif text_window.file_name /= Void then
+				!!req;
+				!!cmd_string.make (0);
+				cmd_string.append ("line=1;target=");
+				cmd_string.append (text_window.file_name);
+				cmd_string.append ("; export target line;");
+				cmd_string.append (command_shell_name);
+				req.set_command_name (cmd_string);
+				req.send;       -- execute the command
 			end;
 		end;
 	

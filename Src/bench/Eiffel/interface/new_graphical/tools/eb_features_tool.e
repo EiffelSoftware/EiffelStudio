@@ -17,8 +17,6 @@ inherit
 			widget
 		end
 
-	EB_SHARED_WINDOW_MANAGER
-
 	SHARED_EIFFEL_PROJECT
 
 creation
@@ -127,8 +125,9 @@ feature -- Element change
 			-- Set `current_class' if c is instance of CLASSC_STONE, `Void' otherwise.
 		local
 			classc_stone: CLASSC_STONE
+			external_classc: EXTERNAL_CLASS_C
 			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			new_class: like current_class
+			new_class: like current_class		
 			conv_cst: CLASSI_STONE
 		do
 			conv_cst ?= c
@@ -156,9 +155,23 @@ feature -- Element change
 							if feature_clauses /= Void then
 								tree.build_tree (feature_clauses)
 							else
-								tree.extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.W_no_feature_to_display))
+								tree.extend (create {EV_TREE_ITEM}.make_with_text 
+									(Warning_messages.W_no_feature_to_display))
 							end
 							Eiffel_system.System.set_current_class (Void)
+						end
+					elseif classc_stone.class_i.is_external_class then
+							-- Special processing for a .NET type since has no 'ast' in the normal sense.
+						external_classc ?= classc_stone.e_class
+						if external_classc /= current_compiled_class and external_classc /= Void then
+							Eiffel_system.System.set_current_class (classc_stone.e_class)
+									-- Build the tree
+							if tree.selected_item /= Void then
+								tree.selected_item.disable_select
+							end
+							tree.wipe_out
+							current_compiled_class := classc_stone.e_class
+							tree.build_tree_for_external
 						end
 					else
 						current_compiled_class := Void
@@ -175,18 +188,19 @@ feature -- Element change
 
 feature {EB_FEATURES_TREE} -- Status setting
 
-	go_to (a_feature: FEATURE_AS) is
+	go_to (a_feature: E_FEATURE) is
 			-- `a_feature' has been selected, the associated class
 			-- window should load corresponding feature.
+		require
+			a_feature_not_void: a_feature /= Void
 		local
 			feature_stone: FEATURE_STONE
-			ef: E_FEATURE
 		do
-			if current_compiled_class /= Void and then current_compiled_class.has_feature_table then
-				ef := current_compiled_class.feature_with_name (a_feature.feature_name)
-				create feature_stone.make (ef)
+--			if current_compiled_class /= Void and then current_compiled_class.has_feature_table then
+--				ef := current_compiled_class.feature_with_name (a_feature.feature_name)
+				create feature_stone.make (a_feature)
 				development_window.set_stone (feature_stone)
-			end
+--			end
 		end
 
 	go_to_clause (a_clause: FEATURE_CLAUSE_AS) is

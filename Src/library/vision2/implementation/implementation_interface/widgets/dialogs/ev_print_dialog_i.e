@@ -133,26 +133,28 @@ feature -- Status report
 			context: EV_PRINT_CONTEXT
 		do
 			create context
-			context.set_range (from_page, to_page)
-			context.set_copies (copies)
-			if all_pages_selected then
-				context.set_selection_to_all
-			elseif page_numbers_selected then
-				context.set_selection_to_range
-			else
-				context.set_selection_to_selection
-			end
-			context.set_printer_name (printer_name)
-			context.set_file_name (output_file_name)
-			if landscape_checked then
-				context.set_landscape
-			else
-				context.set_portrait
-			end
-			if print_to_file_checked then
-				context.set_output_to_file
-			else
-				context.set_output_to_printer
+			if not selected_button.is_equal (ev_cancel) then
+				context.set_range (from_page, to_page)
+				context.set_copies (copies)
+				if all_pages_selected then
+					context.set_selection_to_all
+				elseif page_numbers_selected then
+					context.set_selection_to_range
+				else
+					context.set_selection_to_selection
+				end
+				context.set_printer_name (printer_name)
+				context.set_file_name (output_file_name)
+				if landscape_checked then
+					context.set_landscape
+				else
+					context.set_portrait
+				end
+				if print_to_file_checked then
+					context.set_output_to_file
+				else
+					context.set_output_to_printer
+				end
 			end
 			Result := context
 		end

@@ -422,6 +422,7 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 		default:
 			return 0;       
 	}
+	EIF_END_GET_CONTEXT
 }
 
 void eif_console_cleanup ()

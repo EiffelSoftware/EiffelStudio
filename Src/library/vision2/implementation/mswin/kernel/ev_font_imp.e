@@ -48,7 +48,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	--|----------------------------------------------------------------
 
 	make (an_interface: like interface) is
-			-- Create a font.
+			-- Create `Current'.
 		do
 			base_make (an_interface)
 			create wel_font.make_indirect (default_wel_log_font)
@@ -64,6 +64,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			is_initialized := True
 		end
@@ -246,19 +247,13 @@ feature -- Status report
 	horizontal_resolution: INTEGER is
 			-- Horizontal resolution of screen for which the font is designed.
 		do
-			check
-				to_be_implemented: False
-			end
-			Result := 1
+			Result := text_metrics.digitized_aspect_x
 		end
 
 	vertical_resolution: INTEGER is
 			-- Vertical resolution of screen for which the font is designed.
 		do
-			check
-				to_be_implemented: False
-			end
-			Result := 1
+			Result := text_metrics.digitized_aspect_y
 		end
 
 	is_proportional: BOOLEAN is
@@ -276,7 +271,7 @@ feature -- Obsolete
 		end
 
  	is_standard: BOOLEAN is True
- 			-- Is the font standard and informations available (except for name) ?
+ 			-- Is the font standard and information available (except for name) ?
 
 feature {EV_ANY_I} -- Access
 
@@ -317,7 +312,7 @@ feature {NONE} -- Implementation
 		end
 
 	gui_font: WEL_DEFAULT_GUI_FONT is
-		-- Default screen (WEL) font
+		-- Default screen (WEL) font.
 		once
 			create Result.make
 		end
@@ -586,7 +581,7 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 feature {NONE} -- Not used
 
 	set_charset (a_charset: STRING) is
-			-- Set the charset to a value based on `a_charset'
+			-- Set the charset to a value based on `a_charset'.
 		do
 			if a_charset.is_equal ("ansi") then
 				wel_log_font.set_ansi_character_set
@@ -602,7 +597,7 @@ feature {NONE} -- Not used
 		end
 
 	set_clip_precision (a_clip_precision: STRING) is
-			-- Set the clip precision based on `a_clip_precision'
+			-- Set the clip precision based on `a_clip_precision'.
 		do
 			if a_clip_precision.is_equal ("character") then
 				wel_log_font.set_character_clipping_precision
@@ -614,7 +609,7 @@ feature {NONE} -- Not used
 		end
 
 	set_escapement (an_escapement: STRING) is
-			-- Set escapement based on value of `an_escapement'
+			-- Set escapement based on value of `an_escapement'.
 		do
 			if an_escapement /= Void and an_escapement.is_integer then
 				wel_log_font.set_escapement (an_escapement.to_integer)
@@ -624,7 +619,7 @@ feature {NONE} -- Not used
 		end
 
 	OLD_set_family (a_family: STRING) is
-			-- Set family based on a value in `a_family'
+			-- Set family based on a value in `a_family'.
 		do
 			if a_family.is_equal ("decorative") then
 				wel_log_font.set_decorative_family 
@@ -642,7 +637,7 @@ feature {NONE} -- Not used
 		end
 
 	set_orientation (an_orientation: STRING) is
-			-- Set the orientation based om the value of `an_orientation'
+			-- Set the orientation based on the value of `an_orientation'.
 		do
 			if an_orientation /= Void and then an_orientation.is_integer then
 				wel_log_font.set_orientation (an_orientation.to_integer)
@@ -652,7 +647,7 @@ feature {NONE} -- Not used
 		end
 
 	set_out_precision (a_precision: STRING) is
-			-- Set the precision based on the value of `a_precision'
+			-- Set the precision based on the value of `a_precision'.
 		do
 			if a_precision.is_equal ("character") then
 				wel_log_font.set_character_output_precision
@@ -666,7 +661,7 @@ feature {NONE} -- Not used
 		end
 
 	set_pitch (a_pitch: STRING) is
-			-- Set pitch based on value in `a_pitch'
+			-- Set pitch based on value in `a_pitch'.
 		do
 			if a_pitch.is_equal ("fixed") then
 				wel_log_font.set_fixed_pitch
@@ -678,7 +673,7 @@ feature {NONE} -- Not used
 		end
 
 	set_quality (a_quality: STRING) is
-			-- Set quality based on value in `a_quality'
+			-- Set quality based on value in `a_quality'.
 		do
 			if a_quality.is_equal ("draft") then
 				wel_log_font.set_draft_quality
@@ -690,7 +685,7 @@ feature {NONE} -- Not used
 		end
 
 	set_styles (styles: STRING) is
-			-- Set the style based on values in `styles'
+			-- Set the style based on values in `styles'.
 		do
 			wel_log_font.set_not_italic
 			wel_log_font.set_not_underlined
@@ -714,7 +709,7 @@ invariant
 
 end -- class EV_FONT_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -728,7 +723,7 @@ end -- class EV_FONT_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 
 --|-----------------------------------------------------------------------------
@@ -736,6 +731,10 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/05/01 23:30:01  rogers
+--| Implemented horizontal_resolution and vertical_resolution.
+--| Comments and formatting.
+--|
 --| Revision 1.32  2000/04/11 19:29:45  pichery
 --| cosmetics
 --|

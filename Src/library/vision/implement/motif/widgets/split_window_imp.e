@@ -68,8 +68,8 @@ feature {NONE} -- Initialization
 			set_margin_height (0);
 			set_margin_width (0);
 			set_spacing (split_width);
-			enable_refigure_mode
-			enable_resize_requests
+--			enable_refigure_mode
+--			enable_resize_requests
 			manage
 		end
 
@@ -104,7 +104,7 @@ feature -- Element change
 			proportion := p
 		end
 
-	realize is
+	update, realize is
 			-- Create the actual Windows window.
 		local
 			mc: MEL_COMPOSITE
@@ -121,9 +121,11 @@ feature -- Element change
 			end
 
 			if split_visible then
-				split_position := split_size // 100 * proportion
+				split_position := (split_size * proportion) // 100
 			end
+			resize_children
 		end
+
 
 	set_default_split_size is
 			-- Set default split size after realization
@@ -140,7 +142,7 @@ feature -- Element change
 			end
 
 			if split_visible then
-				split_position := split_size // 100 * proportion
+				split_position := (split_size * proportion) // 100
 			end
 			resize_children
 		end
@@ -165,13 +167,7 @@ feature --Status setting
 					split_position := split_size
 				end
 	
-				if first_child /= Void and then second_child.managed then
-					resize_first_child
-				end
-	
-				if second_child /= Void and then second_child.managed then
-					resize_second_child
-				end
+				resize_children
 			end
 		end
 
@@ -305,16 +301,20 @@ end
 	resize_children is
 			-- Resize the two children if they are managed
 		do
-			if second_child /= Void and then second_child.managed then
-				resize_second_child
-			end
+			if parent.realized then
+				if second_child /= Void and then second_child.managed then
+					resize_second_child
+				end
 
-			if first_child /= Void and then first_child.managed then
-				resize_first_child
+				if first_child /= Void and then first_child.managed then
+					resize_first_child
+				end
+			else
+				if realized then
+					update
+				end
 			end
 		end
-
-
 
 feature -- Status setting
 

@@ -53,8 +53,8 @@ inherit
 		rename
 			parent as wel_window_parent,
 			set_parent as wel_set_parent,
-			shown as is_displayed,
 			destroy as wel_destroy,
+			shown as is_displayed,
 			set_width as wel_set_width,
 			set_height as wel_set_height,
 			item as wel_item,
@@ -224,21 +224,56 @@ feature -- Status setting
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		local
-			app_imp: EV_APPLICATION_IMP
+			app_i: EV_APPLICATION_I
 		do
 			if not on_wm_close_executed then
 				interface.close_actions.prune_all (destroy_agent)
 				interface.close_actions.call ([])
 			end
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			app_imp.remove_root_window (interface)
+			app_i := (create {EV_ENVIRONMENT}).application.implementation
+			app_i.remove_root_window (interface)
 			if parent_imp /= Void then
 				parent_imp.disable_sensitive
 			end
-			wel_destroy
+
+			--| Instead of calling {WEL_COMPOSITE_WINDOW} Precursor,
+			--| We do about the same except we do not quit the application
+			--| if `Current' is application main window, since Vision2
+			--| Does not have such a concept.
+			exists := False
+			unregister_window (Current)
+			cwin_destroy_window (wel_item)
+
 			is_destroyed := True
 			destroy_just_called := True
 		end
+
+	destroy_agent: PROCEDURE [EV_WINDOW, TUPLE []]
+		-- `interface~destroy'.
+
+	on_wm_close is
+			-- User clicked on "close" ('X').
+		do
+			on_wm_close_executed := True
+			interface.close_actions.call ([])
+				-- Do not actually close the window.
+			set_default_processing (False)
+		ensure then
+			on_wm_close_executed_true: on_wm_close_executed /= False
+		end
+
+	on_wm_close_executed: BOOLEAN
+		-- `interface.close_actions' already called.
+		--| There are two cases for destroying a window.
+		--| #1. The user calls destroy.
+		--| #2. The user clicks on the cross.
+		--| if #1 there is no problem, destroy is called, which calls the
+		--| close actions only once.
+		--| if #2 then destroy is called from within the close actions
+		--| which would then call the close_actions again if we do not have
+		--| this variable which tells us that during case #2, on_wm_close
+		--| has already been called and therefore we know not to call the
+		--| close actions again.
 
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
@@ -456,9 +491,6 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-
-	destroy_agent: PROCEDURE [EV_WINDOW, TUPLE []]
-		-- `interface~destroy'.
 
 	on_menu_command (menu_id: INTEGER) is
 			-- `menu_id' has been chosen from the menu.
@@ -841,29 +873,6 @@ feature {NONE} -- Implementation
 				set_message_return_value (Ma_noactivate)
 			end
 		end
-	
-	on_wm_close is
-		do
-			on_wm_close_executed := True
-			interface.close_actions.call ([])
-				-- Call the close events
-			set_default_processing (False)
-		ensure then
-			on_wm_close_executed_true: on_wm_close_executed /= False
-		end
-
-	on_wm_close_executed: BOOLEAN
-		-- `interface.close_actions' already called.
-		--| There are two cases for destroying a window.
-		--| #1. The user calls destroy.
-		--| #2. The user clicks on the cross.
-		--| if #1 there is no problem, destroy is called, which calls the
-		--| close actions only once.
-		--| if #2 then destroy is called from within the close actions
-		--| which would then call the close_actions again if we do not have
-		--| this variable which tells us that during case #2, on_wm_close
-		--| has already been called and therefore we know not to call the
-		--| close actions again.
 
 feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 
@@ -998,6 +1007,12 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/04/20 18:29:24  brendel
+--| Moved all close/destroy related features to same place.
+--| Does not call wel_destroy anymore, because wel would quit when
+--| this window was the application main window and Vision2 does not
+--| have such a concept.
+--|
 --| Revision 1.38  2000/04/20 16:30:20  brendel
 --| Moved accelerator code into here.
 --| enable_modal and disable_modal still not implemented. See code.

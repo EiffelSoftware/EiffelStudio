@@ -1,7 +1,7 @@
 indexing
 	description: "[
 		Managing data used to interpret debugger info
-		we are dealing for a module identified by `module_name' :
+		we are dealing for a module identified by `module_filename' :
 
 		- class_token => CLASS_TYPE.static_type_id 
 			which allow use to retrieve the CLASS_TYPE
@@ -28,12 +28,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_module_name: like module_name; a_syst_name: STRING) is
+	make (a_module_filename: like module_filename; a_syst_name: STRING) is
 			-- Initialize `Current'.
 		require
-			mod_name_valid: a_module_name /= Void and then not a_module_name.is_empty
+			mod_name_valid: a_module_filename /= Void and then not a_module_filename.is_empty
 		do
-			module_name := a_module_name		
+			module_filename := a_module_filename			
 			system_name := a_syst_name
 			create list_class_type_id.make (10)
 			create list_feature_info.make (100)
@@ -41,25 +41,43 @@ feature {NONE} -- Initialization
 
 feature -- reset
 
-	reset (a_module_name: like module_name) is
-			-- Reset data for `module_name'.
+	reset (a_module_filename: like module_filename) is
+			-- Reset data for `module_filename'.
 		do
 			check
-				module_name.is_equal (a_module_name)
+				module_filename.is_equal (a_module_filename)
 			end
 			list_class_type_id.wipe_out
 			list_feature_info.wipe_out
 		end
-
-feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
-
-	update_module_name (a_mod_name: STRING) is
-			-- Update Current module name with `a_mod_name'.
+	
+	set_module_name (a_mod_name: like module_name) is
+			-- Set module name (should not change anymore)
 		require
-			a_mod_name_not_empty: a_mod_name /= Void and then not a_mod_name.is_empty
+			module_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
 		do
 			module_name := a_mod_name
 		end
+
+feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
+
+	update_module_filename (a_mod_filename: STRING) is
+			-- Update Current module filename with `a_mod_filename'.
+		require
+			a_mod_name_not_empty: a_mod_filename /= Void and then not a_mod_filename.is_empty
+		do
+			module_filename := a_mod_filename
+		end
+		
+--	update_project_path	(a_project_path: STRING) is
+--			-- Update module filename according to `a_project_path' value
+--		local
+--			l_fn: FILE_NAME
+--		do
+--			create l_fn.make_from_string (a_project_path)
+--			l_fn.set_file_name (module_name)
+--			update_module_filename (l_fn)
+--		end		
 		
 	merge (other: like Current) is
 			-- Merge information from other into Current.
@@ -76,8 +94,11 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 
 feature -- Properties
 
+	module_filename: STRING
+			-- formatted Module filename
+			
 	module_name: STRING
-			-- formatted Module name 
+			-- Final module file name without the directory path
 			
 	system_name: STRING
 			-- In case this module is a precompiled lib
@@ -184,7 +205,6 @@ feature -- Recording Operation
 				end
 				list_class_type_id.force (l_class_static_type_id , a_class_token)
 			end
-			--| FIXME jfiat [2003/10/13 - 11:20]
 			--| This can be forced any time
 		end
 
@@ -216,8 +236,6 @@ feature -- Recording Operation
 				end
 				list_feature_info.force (l_entry , a_feature_token)
 			end
-			--| FIXME jfiat [2003/10/13 - 11:20]
-			--| This need to be cleaned before ...
 		end
 
 feature -- Cleaning operation
@@ -248,7 +266,7 @@ feature
 			-- 
 		do
 			io.put_string ("************************************************************%N")
-			io.put_string ("* Module=" + module_name + "%N")
+			io.put_string ("* Module=" + module_filename + "%N")
 			io.put_string ("************************************************************%N")
 			io.put_string ("%N Class Token  => static_class_type %N%N")
 
@@ -268,6 +286,6 @@ feature
 		
 invariant
 
-	module_name_not_void: module_name /= Void
+	module_filename_not_void: module_filename /= Void
 
 end

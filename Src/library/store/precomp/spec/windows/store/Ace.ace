@@ -11,37 +11,37 @@ default
 cluster
 
     -- EiffelBase
-	access:             "$EIFFEL4/library/base/structures/access";
-	cursors:            "$EIFFEL4/library/base/structures/cursors";
-	cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
-	dispenser:          "$EIFFEL4/library/base/structures/dispenser";
-	iteration:          "$EIFFEL4/library/base/structures/iteration";
-	kernel:             "$EIFFEL4/library/base/kernel";
-	list:               "$EIFFEL4/library/base/structures/list";
-	set:                "$EIFFEL4/library/base/structures/set";
-	sort:               "$EIFFEL4/library/base/structures/sort";
-	storage:            "$EIFFEL4/library/base/structures/storage";
-	support:            "$EIFFEL4/library/base/support";
-	table:              "$EIFFEL4/library/base/structures/table";
-	traversing:         "$EIFFEL4/library/base/structures/traversing";
-	tree:               "$EIFFEL4/library/base/structures/tree";
+	access:             "$ISE_EIFFEL/library/base/structures/access";
+	cursors:            "$ISE_EIFFEL/library/base/structures/cursors";
+	cursor_tree:        "$ISE_EIFFEL/library/base/structures/cursor_tree";
+	dispenser:          "$ISE_EIFFEL/library/base/structures/dispenser";
+	iteration:          "$ISE_EIFFEL/library/base/structures/iteration";
+	kernel:             "$ISE_EIFFEL/library/base/kernel";
+	list:               "$ISE_EIFFEL/library/base/structures/list";
+	set:                "$ISE_EIFFEL/library/base/structures/set";
+	sort:               "$ISE_EIFFEL/library/base/structures/sort";
+	storage:            "$ISE_EIFFEL/library/base/structures/storage";
+	support:            "$ISE_EIFFEL/library/base/support";
+	table:              "$ISE_EIFFEL/library/base/structures/table";
+	traversing:         "$ISE_EIFFEL/library/base/structures/traversing";
+	tree:               "$ISE_EIFFEL/library/base/structures/tree";
  
 	-- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/store/support";
-	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+	estore_support:		"$ISE_EIFFEL/library/store/support";
+	estore_interface:	"$ISE_EIFFEL/library/store/interface";
+	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
 
 	-- EiffelTime
 
-	time:				"$EIFFEL4/library/time";
-	time_format: 		"$EIFFEL4/library/time/format";
-	time_english:		"$EIFFEL4/library/time/format/english";
+	time:				"$ISE_EIFFEL/library/time";
+	time_format: 		"$ISE_EIFFEL/library/time/format";
+	time_english:		"$ISE_EIFFEL/library/time/format/english";
 
 external
 
 	object:
-		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
-		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib";
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_C_COMPILER)/lib/datetime.lib";
 
 end

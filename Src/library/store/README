@@ -1,4 +1,4 @@
-July 1999, Release: 4.5.020
+July 1999, Release: 5.1.010
 
 --|----------------------------------------------------------------
 --| EiffelStore: library of reusable components for ISE Eiffel.
@@ -9,7 +9,7 @@ July 1999, Release: 4.5.020
 --|
 --| Interactive Software Engineering Inc.
 --| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
@@ -24,25 +24,25 @@ The library interface consists of two sets:
 
 1) A set of general purpose classes designed regardless of any data 
  management system used, to be found in directory 
- $EIFFEL4/library/store/interface, and that you always need in your universe
+ $ISE_EIFFEL/library/store/interface, and that you always need in your universe
 
 2) Specific classes, referred to by the interface classes, bridging
   the application to selected data management systems called ``handles''. 
   The set of handles may be found:
 
-   * in directory $EIFFEL4/library/store/dbms
+   * in directory $ISE_EIFFEL/library/store/dbms
 
-   * in the directory $EIFFEL4/library/store/dbms/rdbms/{server_name}   
+   * in the directory $ISE_EIFFEL/library/store/dbms/rdbms/{server_name}   
    with {server_name} corresponding to a selected relational database 
    management system.
 
    Additional support classes are also needed in your universe
    regardless of the selected handle. They are located in:
    
-   * directory $EIFFEL4/library/store/support and 
-      $EIFFEL4/library/store/dbms/support
+   * directory $ISE_EIFFEL/library/store/support and 
+      $ISE_EIFFEL/library/store/dbms/support
    
-Example classes are located in $EIFFEL4/examples/store
+Example classes are located in $ISE_EIFFEL/examples/store
 
 EiffelStore 4.5 has currently only been tested with:
 		ISE-Eiffel Release 4.5
@@ -57,7 +57,7 @@ Documentation
    (cover page + content in US LTR format)
 
 Then, to install EiffelStore external libraries, go to directory 
-$EIFFEL4/library/store/install (a README file provides full instructions).
+$ISE_EIFFEL/library/store/install (a README file provides full instructions).
 
 Then, making sure that you have the requested database (Oracle,
 Sybase, etc) call: 
@@ -71,4 +71,4 @@ Note
 ----
 If you are using EiffelStore with a specific RDBMS, read carefully
 the following file:
-   $EIFFEL4/library/store/install/{basename}.txt
+   $ISE_EIFFEL/library/store/install/{basename}.txt

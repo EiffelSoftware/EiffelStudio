@@ -240,7 +240,7 @@ database identifiers.
                       ================================
 
 	1. Install EiffelStore on Ingres and Ingres RDBMS properly; set up
-the necessary environment variabler; For example, EIFFEL4, PLATFORM for 
+the necessary environment variabler; For example, ISE_EIFFEL, ISE_PLATFORM for 
 Eiffel, II_SYSTEM for Ingres. 
 
     2. In order to run EiffelStore on Ingres, Ingres Server must be started 

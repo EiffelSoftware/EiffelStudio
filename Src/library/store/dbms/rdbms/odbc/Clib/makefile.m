@@ -1,5 +1,5 @@
 CC = cl
-CFLAGS = -c -Ox -W3 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+CFLAGS = -c -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 OBJ = odbc.obj
 
 all:: clean odbc_store.lib

@@ -19,7 +19,7 @@ errr occurs.
 
 	After commented the statements in feature DATABASE::dispose,
 everything is OK. I've just changed class DATABASE in my home
-directory, but not in EIFFEL4, because I have no such permission.
+directory, but not in ISE_EIFFEL, because I have no such permission.
 
 
 3. Use make_default_table in DB_STORE_XXX, which cause error in
@@ -31,7 +31,7 @@ Eiffel object tries to insert objects into the table.
    
    How to fix? Delete post_condition from SQL_SCAN::next_index;
 change DB_STORE_XXX::update_map_table.
-   I've changed it in my home directory, but not in EIFFEL4,
+   I've changed it in my home directory, but not in ISE_EIFFEL,
 because I have no such permission.
 
    After changing these, EiffelStore is correct in the case the

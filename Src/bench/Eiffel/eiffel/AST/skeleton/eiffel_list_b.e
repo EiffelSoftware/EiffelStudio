@@ -22,7 +22,7 @@ inherit
 		end;
 
 creation
-	make
+	make, make_filled
 
 feature -- Type check, byte code and dead code removal
 

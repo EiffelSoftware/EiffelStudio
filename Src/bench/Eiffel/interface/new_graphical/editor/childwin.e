@@ -40,7 +40,7 @@ feature -- Initialization
 
 
 	initialize is
-			-- perform all initialization
+			-- Perform all initialization.
 		local
 			dc: WEL_CLIENT_DC
 			space_size : WEL_SIZE
@@ -90,7 +90,7 @@ feature -- Initialization
 			set_vertical_range(1,vertical_range_max)
 		end
 
-	read_and_analyse_file(a_name: STRING) is
+	read_and_analyse_file (a_name: STRING) is
 		local
 			file: PLAIN_TEXT_FILE
 			line_item: EDITOR_LINE
@@ -132,7 +132,7 @@ feature -- Basic operations
 			update_buffered_screen(paint_dc, invalid_rect.top, invalid_rect.bottom)
 		end
 
-	on_size(size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 		local
 			dc: WEL_CLIENT_DC
 		do
@@ -194,7 +194,7 @@ feature -- Basic operations
 			end
 		end
 
-	update_buffered_screen(dc: WEL_DC; top: INTEGER; bottom: INTEGER) is
+	update_buffered_screen (dc: WEL_DC; top: INTEGER; bottom: INTEGER) is
 			-- Update the device context `dc'. Redraw the text.
 		local
 			curr_line: INTEGER
@@ -222,8 +222,8 @@ feature -- Basic operations
 			dc.unselect_font
 		end
 
-	display_line(d_x: INTEGER; d_y: INTEGER; line: EDITOR_LINE; dc: WEL_DC) is
-			-- Display the line `line' at the coordinates (`d_x',`d_y') on the
+	display_line (d_x: INTEGER; d_y: INTEGER; line: EDITOR_LINE; dc: WEL_DC) is
+			-- Display `line' at the coordinates (`d_x',`d_y') on the
 			-- device context `dc'.
 		local
 			curr_x		: INTEGER
@@ -301,9 +301,9 @@ feature {NONE} -- Implementation
 			create Result.make
 		end
 
-	cursor: EDITOR_CURSOR
+	cursor: TEXT_CURSOR
 
---	text_displayed: LINKED_LIST[EDITOR_LINE]
+--	text_displayed: LINKED_LIST [EDITOR_LINE]
 	text_displayed: STRUCTURED_TEXT
 			-- text currently displayed on the screen.
 

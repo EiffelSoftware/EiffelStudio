@@ -52,7 +52,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				list_dl.choose_creation
 			else
 				dl_creation := d_creation
-				if dl_creation.arguments /= Void then
+				if dl_creation.arguments /= Void and then d_creation /= d_routine then
 					io.put_string ("%NThe creation procedure must have no argument.%N")
 				elseif d_routine.is_attribute then
 					io.put_string ("%NAn attribute can not be exported.%N")

@@ -569,6 +569,11 @@ feature -- IL code generation
 				il_generator.put_result_info (r_type)
 			end
 
+				-- Set number of meaningful local variables. i.e. we
+				-- do not include local variables that are temporarly
+				-- generated for metamorphose and other operations.
+			il_generator.set_local_count (local_list.count)
+
 			if not local_list.is_empty then
 				generate_il_local_info (local_list)
 			end

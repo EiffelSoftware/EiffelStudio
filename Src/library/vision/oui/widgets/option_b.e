@@ -1,9 +1,3 @@
---|---------------------------------------------------------------
---|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
---|                   (805) 685-1006                            --
---| All rights reserved. Duplication or distribution prohibited --
---|---------------------------------------------------------------
 
 -- Rectangle which display an option menu when armed.
 
@@ -18,7 +12,7 @@ inherit
 
 	BUTTON
 		redefine
-			implementation, parent
+			implementation, parent, set_size, set_height, set_width
 		end
 
 creation
@@ -36,7 +30,7 @@ feature -- Creation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= a_name.duplicate;
+			identifier:= clone (a_name);
 			implementation:= toolkit.option_b (Current);
 			set_default
 		ensure
@@ -79,6 +73,62 @@ feature
 			implementation.attach_menu (a_menu)
 		end;
 
+	title: STRING is
+		do
+			Result := implementation.title;
+		end;
+
+	set_title (a_title: STRING) is
+		do
+			implementation.set_title (a_title);
+		end;
+
+
+	remove_title  is
+		do
+			implementation.remove_title;
+		end;
+
+	title_width: INTEGER is
+		do
+			Result := implementation.title_width;
+		end;
+
+
+	set_size (new_width, new_height: INTEGER) is
+		do
+			if new_width > width or new_height > height then
+				unmanage;
+			end;
+			implementation.set_size (new_width, new_height);
+			if not managed then
+				manage;
+			end;
+		end;
+
+
+	set_width (new_width: INTEGER) is
+		do
+			if new_width > width then
+				unmanage;
+			end;
+			implementation.set_width (new_width);
+			if not managed then
+				manage;
+			end;
+		end;
+
+	set_height (new_height: INTEGER) is
+		do
+			if new_height > height then
+				unmanage;
+			end;
+			implementation.set_height (new_height);
+			if not managed then
+				manage;
+			end;
+		end;
+
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: OPTION_B_I;
@@ -92,3 +142,17 @@ feature {NONE}
 		end 
 
 end
+
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1989, 1991, 1993, Interactive Software
+--|   Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

@@ -5069,13 +5069,13 @@ feature -- Constants generation
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_r4 then
 				put_real_32_constant (i)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u1 then
-				put_natural_8_constant (i)
+				put_natural_8_constant (i.as_natural_8)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u2 then
-				put_natural_16_constant (i)
+				put_natural_16_constant (i.as_natural_16)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u4 then
-				put_natural_32_constant (i)
+				put_natural_32_constant (i.as_natural_32)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_u8 then
-				put_natural_64_constant (i)
+				put_natural_64_constant (i.as_natural_64)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_i1 then
 				put_integer_8_constant (i)
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_i2 then
@@ -5120,12 +5120,12 @@ feature -- Constants generation
 
 	put_natural_8_constant,
 	put_natural_16_constant,
-	put_natural_32_constant (i: INTEGER) is
-			-- Put `i' as NATURAL_8, NATURAL_16, NATURAL on IL stack
+	put_natural_32_constant (n: NATURAL_32) is
+			-- Put `n' as NATURAL_8, NATURAL_16, NATURAL_32 on IL stack.
 		do
-			fixme ("Use NATURAL_XX types")
+			fixme ("Remove conversion to INTEGER_32 after bootstrap.")
 			inspect
-				i
+				n.as_integer_32
 			when 0 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_0)
 			when 1 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_1)
 			when 2 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_2)
@@ -5136,15 +5136,14 @@ feature -- Constants generation
 			when 7 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_7)
 			when 8 then method_body.put_opcode ({MD_OPCODES}.Ldc_i4_8)
 			else
-				method_body.put_opcode_natural_32 ({MD_OPCODES}.Ldc_i4, i)
+				method_body.put_opcode_natural_32 ({MD_OPCODES}.Ldc_i4, n)
 			end
 		end
 
-	put_natural_64_constant (i: INTEGER_64) is
-			-- Put `i' as NATURAL_64 on IL stack
+	put_natural_64_constant (n: NATURAL_64) is
+			-- Put `n' as NATURAL_64 on IL stack.
 		do
-			fixme ("Use NATURAL_XX types")
-			method_body.put_opcode_natural_64 ({MD_OPCODES}.Ldc_i8, i)
+			method_body.put_opcode_natural_64 ({MD_OPCODES}.Ldc_i8, n)
 		end
 
 	put_real_32_constant (r: REAL) is

@@ -376,58 +376,53 @@ feature -- Definition: creation
 			l_i2: INTEGER_16
 			l_i4: INTEGER
 			l_i8: INTEGER_64
-			l_u1: INTEGER_8
-			l_u2: INTEGER_16
-			l_u4: INTEGER
-			l_u8: INTEGER_64
+			l_u1: NATURAL_8
+			l_u2: NATURAL_16
+			l_u4: NATURAL_32
+			l_u8: NATURAL_64
 			l_ptr: POINTER
+			l_size: INTEGER_8
 		do
-			if a_value.is_integer then
-				inspect
-					a_value.size
-				when 8 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i1
-					l_i1 := a_value.integer_8_value
-					l_ptr := $l_i1
-				when 16 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i2
-					l_i2 := a_value.integer_16_value
-					l_ptr := $l_i2
-				when 32 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i4
-					l_i4 := a_value.integer_32_value
-					l_ptr := $l_i4
-				when 64 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_i8
-					l_i8 := a_value.integer_64_value
-					l_ptr := $l_i8
-				end
-			else
-				inspect
-					a_value.size
-				when 8 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u1
-					l_u1 := a_value.natural_8_value
-					l_ptr := $l_u1
-				when 16 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u2
-					l_u2 := a_value.natural_16_value
-					l_ptr := $l_u2
-				when 32 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u4
-					l_u4 := a_value.natural_32_value
-					l_ptr := $l_u4
-				when 64 then
-					l_constant_type := {MD_SIGNATURE_CONSTANTS}.element_type_u8
-					l_u8 := a_value.natural_64_value
-					l_ptr := $l_u8
-				end
+			l_constant_type := a_value.il_element_type
+			inspect l_constant_type
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
+				l_size := 1
+				l_i1 := a_value.integer_8_value
+				l_ptr := $l_i1
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
+				l_size := 2
+				l_i2 := a_value.integer_16_value
+				l_ptr := $l_i2
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
+				l_size := 4
+				l_i4 := a_value.integer_32_value
+				l_ptr := $l_i4
+			when {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
+				l_size := 8
+				l_i8 := a_value.integer_64_value
+				l_ptr := $l_i8
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
+				l_size := 1
+				l_u1 := a_value.natural_8_value
+				l_ptr := $l_u1
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
+				l_size := 2
+				l_u2 := a_value.natural_16_value
+				l_ptr := $l_u2
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
+				l_size := 4
+				l_u4 := a_value.natural_32_value
+				l_ptr := $l_u4
+			when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
+				l_size := 8
+				l_u8 := a_value.natural_64_value
+				l_ptr := $l_u8
 			end
 			create l_field_signature.make
 			l_field_signature.set_type (l_constant_type, 0)
 			last_call_success := c_define_field (item, in_class_token,
 				field_name.item, field_flags, l_field_signature.item.item, l_field_signature.count,
-				l_constant_type, l_ptr, a_value.size // 8, $Result)
+				l_constant_type, l_ptr, l_size, $Result)
 		ensure
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_field_def

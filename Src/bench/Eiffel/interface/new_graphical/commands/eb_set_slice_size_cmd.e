@@ -37,8 +37,14 @@ inherit
 		end
 		
 create
-	make,
-	make_for_pretty_print
+	make
+--	,	make_for_pretty_print
+	
+--| FIXME JFIAT: remove link to EB_SET_SLICE_SIZE_CMD
+--| the slice limits should be specific to Pretty display settings
+--| not linked to other dialog
+--| we need to decide on this
+				
 
 feature -- Initialization
 
@@ -48,16 +54,16 @@ feature -- Initialization
 			tool := a_tool
 			for_tool := True
 		end
-
-	make_for_pretty_print (dl: EB_PRETTY_PRINT_DIALOG) is
-			-- Initialize `Current' and associate it with a pretty print dialog.
-			-- This changes the behavior of the class.
-		do
-			for_tool := False
-			pretty_dlg := dl
-			slice_min := 0
-			slice_max := Application.displayed_string_size
-		end
+				
+--	make_for_pretty_print (dl: EB_PRETTY_PRINT_DIALOG) is
+--			-- Initialize `Current' and associate it with a pretty print dialog.
+--			-- This changes the behavior of the class.
+--		do
+--			for_tool := False
+--			pretty_dlg := dl
+--			slice_min := 0
+--			slice_max := Application.displayed_string_size
+--		end
 
 feature -- Access
 
@@ -124,14 +130,6 @@ feature -- Execution
 				debug ("DEBUGGER_INTERFACE")
 					io.putstring ("Messages are displayed%N")
 				end
-			else
-				get_slice_limits (False, pretty_dlg.current_object.object_address, Void)
-				debug ("DEBUGGER_INTERFACE")
-					io.put_string ("Refreshing between " + slice_min.out + " and " + slice_max.out)
-				end
-				if get_effective then
-					pretty_dlg.refresh
-				end
 			end
 		end
 
@@ -168,7 +166,12 @@ feature -- Basic operations
 					if spec_dv /= Void or nat_dv /= Void then
 						Result := True
 					else
-						if Application.is_dotnet then 
+						if Application.is_dotnet then
+							--| FIXME JFIAT: not working in case of not registered object
+--							create {DEBUGGED_OBJECT_DOTNET} dobj.make (conv_obj.object_address, 0, 1)
+--							if dobj.is_special then
+--								Result := True
+--							end						
 							nat_dv ?= Application.imp_dotnet.kept_object_item (conv_obj.object_address)
 							Result := nat_dv /= Void
 						else
@@ -184,6 +187,11 @@ feature -- Basic operations
 				end
 			else
 				if Application.is_dotnet then
+							--| FIXME JFIAT: not working in case of not registered object
+--					create {DEBUGGED_OBJECT_DOTNET} dobj.make (pretty_dlg.current_object.object_address, 0, 1)
+--					if dobj.is_special then
+--						Result := True
+--					end					
 					nat_dv ?= Application.imp_dotnet.kept_object_item (pretty_dlg.current_object.object_address)
 					Result := nat_dv /= Void
 				else
@@ -275,11 +283,13 @@ feature {NONE} -- Implementation
 				if address /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string ("object found%N")
-						if not Application.is_dotnet then
-							create {DEBUGGED_OBJECT_CLASSIC} dobj.make (address, 0, 2)
-							io.putstring ("Capacity: " + dobj.capacity.out + "%N")
-							io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")							
+						if Application.is_dotnet then
+							create {DEBUGGED_OBJECT_DOTNET} dobj.make (address, 0, 2)			
+						else
+							create {DEBUGGED_OBJECT_CLASSIC} dobj.make (address, 0, 2)						
 						end
+						io.putstring ("Capacity: " + dobj.capacity.out + "%N")
+						io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")						
 					end
 					if for_tool then
 						obj := tool.get_object_display_parameters (address)
@@ -372,7 +382,7 @@ feature {NONE} -- Implementation
 			if for_tool then
 				dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
-				dial.show_modal_to_window (pretty_dlg.dialog)
+				dial.show_modal_to_window (pretty_dlg.window)
 			end
 		end
 
@@ -383,8 +393,10 @@ feature {NONE} -- Implementation
 			st_not_void: st /= Void
 		local
 			obj: EB_OBJECT_DISPLAY_PARAMETERS
+			abs_dv: ABSTRACT_DEBUG_VALUE
 			abs_spec_dv: ABSTRACT_SPECIAL_VALUE
 			spec_dv: SPECIAL_VALUE
+			str_dv: EIFNET_DEBUG_STRING_VALUE
 			nat_arr_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			dobj: DEBUGGED_OBJECT
 			parent: EV_TREE_NODE_LIST
@@ -446,13 +458,20 @@ feature {NONE} -- Implementation
 					end
 					--| FIXME jfiat [2003/10/08 - 18:19] Not very nice design ..
 					if Application.is_dotnet then 
-						nat_arr_dv ?= Application.imp_dotnet.kept_object_item (st.object_address)
-						if nat_arr_dv /= Void then -- is Special
-							get_slice_limits (False, st.object_address, Void)
-							if get_effective then
-								obj.set_lower (slice_min)
-								obj.set_higher (slice_max)
-								obj.refresh
+						abs_dv := Application.imp_dotnet.kept_object_item (st.object_address)
+						str_dv ?= abs_dv
+						if str_dv /= Void then
+							slice_min := 0
+							slice_max := str_dv.length
+						else
+							nat_arr_dv ?= abs_dv
+							if nat_arr_dv /= Void then -- is Special
+								get_slice_limits (False, st.object_address, Void)
+								if get_effective then
+									obj.set_lower (slice_min)
+									obj.set_higher (slice_max)
+									obj.refresh
+								end
 							end
 						end
 					else
@@ -472,6 +491,24 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+feature {NONE} -- Implementation
+
+	internal_set_limits (lower, upper: INTEGER) is
+			-- Change limits to `lower, upper' values.
+		local
+			nmin, nmax: INTEGER
+		do
+			nmin := lower
+			nmax := upper
+
+			nmin := nmin.max (0)
+			nmax := nmax.max (nmin)
+
+			slice_min := nmin
+			slice_max := nmax
+			get_effective := True
+		end
 
 	get_limits (minf: EV_TEXT_FIELD; maxf: EV_TEXT_FIELD; dial: EV_DIALOG) is
 			-- Set `slice_min' and `slice_max' according to the values entered
@@ -480,7 +517,6 @@ feature {NONE} -- Implementation
 			minf_not_void: minf /= Void
 			maxf_not_void: maxf /= Void
 		local
-			nmin, nmax: INTEGER
 			str1, str2: STRING
 			errd: EV_WARNING_DIALOG
 			ok: BOOLEAN
@@ -501,14 +537,8 @@ feature {NONE} -- Implementation
 				ok := False
 			end
 			if ok then
-				nmin := str1.to_integer
-				nmax := str2.to_integer
-				nmin := nmin.max (0)
-				nmax := nmax.max (nmin)
-				slice_min := nmin
-				slice_max := nmax
+				internal_set_limits (str1.to_integer, str2.to_integer)
 				dial.destroy
-				get_effective := True
 			end
 		end
 

@@ -52,8 +52,8 @@ feature {NONE} -- Initialization
 			browser_box.extend (browser_container)
 			
 					-- Toolbar events
-			--back_button.select_actions.extend (agent navigate_back)
-			back_button.select_actions.extend (agent build_composite_document)
+			back_button.select_actions.extend (agent navigate_back)
+			--back_button.select_actions.extend (agent build_composite_document)
 			
 			forward_button.select_actions.extend (agent navigate_forward)
 			refresh_button.select_actions.extend (agent refresh)
@@ -209,101 +209,5 @@ feature {NONE} -- Implementation
 		ensure
 			has_result: Result /= Void
 		end		
-
-feature -- temporary
-
-	build_composite_document is
-			-- 
-		local
-			retried: BOOLEAN
-			l_string: STRING
-			l_parser: XM_EIFFEL_PARSER
-			l_composite_document: COMPOSITE_DOCUMENT
-			l_composite_document_builder: COMPOSITE_DOCUMENT_BUILDER
-		do
-			if not retried then
-				l_string := document.text
-				if not l_string.is_empty then					
-					create l_composite_document_builder.make					
-					create l_parser.make
-					l_parser.set_callbacks (l_composite_document_builder)
-					l_parser.parse_from_string (l_string)
-					check
-						ok_parsing: l_parser.is_correct
-					end
-					l_composite_document := l_composite_document_builder.document
-				end
-				
-				if l_composite_document /= Void then
-					main_comp_loop (l_composite_document)					
-				end
-				
-			else
-				print ("Could not produce composite structure for document " + document.name)
-				print ("<BR><BR>Gobo Error description: " + l_parser.last_error_extended_description)
-			end
-		rescue
-			retried := True
-			retry		
-		end	
-		
-	main_comp_loop (a_comp: COMPOSITE_DOCUMENT) is
-			-- Loop
-		local
-			l_comp: like a_comp			
-		do
-			comp_dets (a_comp, tab_count)
-			tab_count := tab_count + 1
-			from
-				a_comp.components.start				
-			until
-				a_comp.components.after
-			loop				
-				l_comp ?= a_comp.components.item
-				if l_comp /= Void then
-					main_comp_loop (l_comp)
-				else
-					comp_dets (a_comp.components.item, tab_count)
-				end
-				a_comp.components.forth
-			end
-			tab_count := tab_count - 1
-		end
-		
-	comp_dets (a_comp: DOCUMENT_COMPONENT; indents: INTEGER) is
-			-- Dets
-		local
-			l_comp: like a_comp
-			l_cnt: INTEGER
-		do
-			if a_comp /= Void then				
-				from
-					l_cnt := 0
-				until
-					l_cnt = indents
-				loop
-					write_to_file ("%T")
-					l_cnt := l_cnt + 1
-				end
-				write_to_file (a_comp.name)
-				write_to_file ("%N")
-			end			
-		end	
-
-	tab_count: INTEGER
-	
-	write_to_file (a_string: STRING) is
-		do
-			create file.make ("C:\testing_doc.test")
-			if not file.exists then
-				file.create_read_write
-				file.close
-			end
-			file.open_append
-			file.putstring (a_string)
-			file.close
-		end
-		
-	file: PLAIN_TEXT_FILE
 
 end -- class DOCUMENT_BROWSER

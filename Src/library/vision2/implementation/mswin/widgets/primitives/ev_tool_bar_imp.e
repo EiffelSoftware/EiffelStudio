@@ -15,6 +15,7 @@ inherit
 	WEL_TOOL_BAR
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
@@ -28,7 +29,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_key_up,
 			on_key_down,
 			on_set_focus,

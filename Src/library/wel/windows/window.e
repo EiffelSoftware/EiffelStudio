@@ -91,9 +91,18 @@ feature -- Status report
 	exists: BOOLEAN
 			-- Does the window exist?
 
+	default_processing_enabled: BOOLEAN is
+			-- Is the default window processing enabled?
+			-- If True (by default) the standard window
+			-- procedure will be called. Otherwise, the standard
+			-- window procedure will not be called and the
+			-- normal behavior will not occur.
+		do
+			Result := default_processing.item
+		end
+
 	enabled: BOOLEAN is
-			-- Is the window enabled for mouse
-			-- and keyboard input?
+			-- Is the window enabled for mouse and keyboard input?
 		require
 			exists: exists
 		do
@@ -136,8 +145,15 @@ feature -- Status report
 			-- Current window which has been captured.
 		require
 			exists: exists
+			window_captured: window_captured
 		do
 			Result := windows.item (cwin_get_capture)
+		end
+
+	window_captured: BOOLEAN is
+			-- Has a window been captured?
+		do
+			Result := cwin_get_capture /= default_pointer
 		end
 
 	has_focus: BOOLEAN is
@@ -153,7 +169,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := captured_window = Current
+			Result := window_captured and then
+				captured_window = Current
 		end
 
 	has_vertical_scroll_bar: BOOLEAN is
@@ -366,8 +383,40 @@ feature -- Status report
 
 feature -- Status setting
 
+	enable_default_processing is
+			-- Enable default window processing.
+			-- The standard window procedure will be called for
+			-- each messages received by the window and then the
+			-- normal behavior will occur.
+		do
+			default_processing.set_item (True)
+		ensure
+			default_processing_enabled: default_processing_enabled
+		end
+
+	disable_default_processing is
+			-- Disable default window processing.
+			-- The standard window procedure will not be called for
+			-- each messages received by the window and then the
+			-- normal behavior will not occur.
+		do
+			default_processing.set_item (False)
+		ensure
+			default_processing_disabled: not default_processing_enabled
+		end
+
+	set_default_processing (new_state: BOOLEAN) is
+			-- Set the window default processing state with
+			-- `new_state'.
+		do
+			default_processing.set_item (new_state)
+		ensure
+			default_processing_set:
+				default_processing_enabled = new_state
+		end
+
 	enable is
-			-- Enable mouse and keyboard input
+			-- Enable mouse and keyboard input.
 		require
 			exists: exists
 		do
@@ -444,6 +493,8 @@ feature -- Status setting
 			exists: exists
 		do
 			cwin_set_focus (item)
+		ensure
+			has_focus: has_focus
 		end
 
 	set_capture is
@@ -570,18 +621,6 @@ feature -- Element change
 		end
 
 feature -- Basic operations
-
-	destroy is
-			-- Destroy the window
-		require
-			exists: exists
-		do
-			exists := False
-			unregister_window (Current)
-			cwin_destroy_window (item)
-		ensure
-			not_exists: not exists
-		end
 
 	show_with_option (cmd_show: INTEGER) is
 			-- Set the window's visibility with `cmd_show'.
@@ -886,6 +925,20 @@ feature -- Basic operations
 			cwin_win_help (item, $a, command, data)
 		end
 
+feature -- Removal
+
+	destroy is
+			-- Destroy the window.
+		require
+			exists: exists
+		do
+			exists := False
+			unregister_window (Current)
+			cwin_destroy_window (item)
+		ensure
+			not_exists: not exists
+		end
+
 feature {NONE} -- Messages
 
 	on_size (size_type, a_width, a_height: INTEGER) is
@@ -1119,6 +1172,17 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
+	default_processing: BOOLEAN_REF is
+			-- Is the default window processing enabled?
+			-- If True (by default) the standard window
+			-- procedure will be called. Otherwise, the standard
+			-- window procedure will not be called and the
+			-- normal behavior will not occur.
+		once
+			!! Result
+			Result.set_item (True)
+		end
+
 feature {WEL_DISPATCHER}
 
 	frozen window_process_message, process_message (hwnd: POINTER; msg,
@@ -1136,7 +1200,7 @@ feature {WEL_DISPATCHER}
 					c_mouse_message_y (lparam))
 			elseif msg = Wm_setcursor then
 				if on_set_cursor (cwin_lo_word (lparam)) then
-					Result := -1
+					Result := 1
 				end
 			elseif msg = Wm_size then
 				on_size (wparam,
@@ -1194,8 +1258,8 @@ feature {WEL_DISPATCHER}
 
 	call_default_window_procedure (msg, wparam, lparam: INTEGER): INTEGER is
 		do
-			Result := cwin_def_window_proc (item, msg,
-				wparam, lparam)
+			Result := cwin_def_window_proc (item, msg, wparam,
+				lparam)
 		end
 
 	on_wm_destroy is

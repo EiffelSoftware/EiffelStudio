@@ -95,6 +95,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			(history_list @ position).enable_select
 			history_list.select_actions.resume
 			last_selected_item := position
+			command_handler.update
 		ensure
 			item_selected: (history_list @ position).is_selected
 		end	
@@ -152,7 +153,7 @@ feature {NONE} -- Implementation
 					history.step_from (last_selected_item + 1, index_of_current_item)
 				end	
 				last_selected_item := index_of_current_item
-				history.update_button_sensitivity
+				command_handler.update
 		end
 
 	history_list: EV_LIST

@@ -16,8 +16,8 @@ feature -- Access
 				--| the first release. These need specific handling, due to their behaviour.
 				--| Julian 11/12/01.
 			Result := <<"EV_CELL", "EV_FIXED", "EV_FRAME", "EV_HORIZONTAL_SPLIT_AREA",
-				"EV_HORIZONTAL_BOX", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA", "EV_VERTICAL_BOX",
-				"EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT">>
+				"EV_HORIZONTAL_BOX", "EV_NOTEBOOK", "EV_SCROLLABLE_AREA", "EV_TABLE",
+				"EV_VERTICAL_BOX", "EV_VERTICAL_SPLIT_AREA", "EV_VIEWPORT">>
 		end
 				
 	primitives: ARRAY [STRING] is 
@@ -106,6 +106,7 @@ feature {NONE} -- Implementation
 			gb_ev_pixmapable: GB_EV_PIXMAPABLE
 			gb_ev_fixed: GB_EV_FIXED
 			gb_ev_viewport: GB_EV_VIEWPORT
+			gb_ev_table: GB_EV_TABLE
 		do
 		end
 

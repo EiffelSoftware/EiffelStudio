@@ -16,9 +16,10 @@ inherit
 		
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
-			remove_child,
-			child_added,
-			is_child			
+			child_packing_changed
+--			remove_child,
+--			child_added,
+--			is_child			
 		end
 
 feature -- Access
@@ -46,11 +47,7 @@ feature -- Status report
 	is_child_expandable (child: EV_WIDGET): BOOLEAN is
 			-- Is the child corresponding to `index' expandable. ie: does it
 			-- accept the parent to resize or move it.
-		local
-			child_imp: EV_WIDGET_IMP
-		do
-			child_imp ?= child.implementation
-			Result := c_gtk_box_is_child_expandable (widget, child_imp.box_widget)
+		deferred
 		end
 	
 feature -- Status settings
@@ -58,11 +55,7 @@ feature -- Status settings
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
 			-- Make the child corresponding to `index' expandable if `flag',
 			-- not expandable otherwise.
-		local
-			child_imp: EV_WIDGET_IMP
-		do
-			child_imp ?= child.implementation
-			c_gtk_box_set_child_expandable (widget, child_imp.box_widget, flag)
+		deferred
 		end	
 	
 feature -- Element change (box specific)
@@ -86,37 +79,42 @@ feature -- Element change (box specific)
 			gtk_box_set_spacing (widget, value)
 		end	
 
-feature -- Assertion test
+feature {EV_CONTAINER_IMP, EV_WIDGET_IMP} -- Implementation
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the container?
+	child_packing_changed (the_child: EV_WIDGET_IMP) is
+			-- changed the settings of his child `the_child'.
+			-- Redefined because there is an `is_child_expandable' option.
+		local
+			child_interface: EV_WIDGET
 		do
-			Result := c_gtk_container_has_child (widget, a_child.box_widget)
-		end
-
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Has `a_child' been added properly?
-		do
-			Result := c_gtk_container_has_child (widget, a_child.box_widget)
-		end
-
-feature {EV_BOX} -- Implementation
-
-	remove_child (child_imp: EV_WIDGET_IMP) is	
-			-- Remove the given child.
-			-- Function redefined because the widget is in a box. 
-		do
-			gtk_object_ref (child_imp.widget)
-				-- Increment child_imp.widget to 2 so it will
-				-- not be destroyed when removed from child_imp.box_widget
-				-- below.
-			
-			gtk_container_remove (GTK_CONTAINER (child_imp.box_widget), child_imp.widget)
-			gtk_container_remove (GTK_CONTAINER (widget), child_imp.box_widget)
-			child_imp.set_box_widget (default_pointer)
-				-- This destroys child_imp.box_widget as it has no more reference.
-				-- We destroy it as we do not use it any longer, and set it to
-				-- `default_pointer'.
+			child_interface ?= the_child.interface
+			inspect
+				the_child.resize_type
+			when 0 then
+				-- 0 : no horizontal nor vertical resizing, the widget moves
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), False)
+					-- To forbid vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
+					-- To forbid horizontal resizing
+			when 1 then
+				-- 1 : only the width changes
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), False)
+					-- To forbid vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
+					-- To allow horizontal resizing
+			when 2 then
+				-- 2 : only the height changes
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), True)
+					-- To allow vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
+					-- To forbid horizontal resizing
+			when 3 then
+				-- 3 : both width and height change
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), True)
+					-- To allow vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
+					-- To allow horizontal resizing
+			end
 		end
 
 end -- class EV_BOX_IMP

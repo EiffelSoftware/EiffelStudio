@@ -108,7 +108,7 @@ feature -- Element change
 		do
 		end
 	
-	append_page (c: EV_WIDGET_IMP; label: STRING) is
+	append_page (child_imp: EV_WIDGET_IMP; label: STRING) is
 		-- New page for notebook containing child 'c' with tab 
 		-- label 'label
 		local
@@ -118,21 +118,25 @@ feature -- Element change
 			a := label.to_c
 			p := gtk_label_new ($a)
 			gtk_notebook_append_page (widget, 
-						  c.widget, 
+						  child_imp.vbox_widget, 
 						  p)
 
 			-- Add the GtkLabel in the list.
 			labels_list.force (p)
-			
+
+			-- Sets the resizing options.
+			child_packing_changed (child_imp) 
 		end	
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into container
 		do
-			-- We do nothing here except adding a reference to the child
-			-- otherwise the latter will be destroyed after
-			-- `gtk_object_unref' in `set_parent'.
-			gtk_object_ref (child_imp.widget)
+			-- Create `vbox_widget' and `hbox_widget'.
+			add_child_packing (child_imp)
+
+			-- As the child is put into the notebook only
+			-- with feature `append_page', there
+			-- is nothing to do here.
 		end
 
 	set_background_color (color: EV_COLOR) is

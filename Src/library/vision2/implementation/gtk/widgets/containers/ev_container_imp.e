@@ -61,14 +61,67 @@ feature -- Element change
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite
 		do
-			gtk_container_add (GTK_CONTAINER (widget), child_imp.widget)
+			-- Create `vbox_widget' and `hbox_widget'.
+			add_child_packing (child_imp)
+
+			-- Put the `vbox' into the current container. 
+			gtk_container_add (GTK_CONTAINER (widget), child_imp.vbox_widget)
+
+			-- Sets the resizing options.
+			child_packing_changed (child_imp) 
+		end
+
+	add_child_packing (child_imp: EV_WIDGET_IMP) is
+			-- put the child into a GtkHBox, which will be put in a GtkVBox.
+		local
+			hbox_wid, vbox_wid: POINTER
+		do
+			-- create of gtk hbox and vbox where the widget
+			-- will be placed to allow horizontal and vertical
+			-- resizing options.
+			hbox_wid := gtk_hbox_new (False, 0)
+			vbox_wid := gtk_vbox_new (False, 0)	
+
+			child_imp.set_hbox_widget (hbox_wid)
+			child_imp.set_vbox_widget (vbox_wid)
+			gtk_widget_show (child_imp.hbox_widget)
+			gtk_widget_show (child_imp.vbox_widget)
+
+			-- Put the child in the `hbox'.
+			gtk_box_pack_start (child_imp.hbox_widget, child_imp.widget, 
+			    True,
+			    child_imp.vertical_resizable, 0)
+
+			-- Put the `hbox' in the `vbox'.
+			gtk_box_pack_start (child_imp.vbox_widget, child_imp.hbox_widget, 
+			    True,
+			    child_imp.vertical_resizable, 0)
+
+			gtk_object_unref (child_imp.widget)
+				-- After putting child_imp.widget in child_imp.hbox_widget
+				-- its number of references reached 2, so we have to
+				-- decrease it to 1.
+				-- The number of reference of box_widget is 1 (its parent).
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is	
 			-- Remove the given child from the children of
 			-- the container.
 		do
-			gtk_container_remove (GTK_CONTAINER (widget), child_imp.widget)
+			gtk_object_ref (child_imp.widget)
+				-- Increment child_imp.vbox_widget to 2 so it will
+				-- not be destroyed when removed from the `hbox_widget' below.
+
+			-- Remove the child from the `hbox_widget' and remove the `vbox_widget'
+			-- from the current container. 			
+			gtk_container_remove (GTK_CONTAINER (child_imp.hbox_widget), child_imp.widget)
+			gtk_container_remove (GTK_CONTAINER (child_imp.vbox_widget), child_imp.hbox_widget)
+			gtk_container_remove (GTK_CONTAINER (widget), child_imp.vbox_widget)
+
+			-- As they have no more reference, `vbox_widget' and `hbox_widget' have
+			-- been destroyed.
+			child_imp.set_hbox_widget (default_pointer)
+			child_imp.set_vbox_widget (default_pointer)	
 		end
 
 	set_background_pixmap (pixmap: EV_PIXMAP) is
@@ -117,13 +170,21 @@ feature -- Assertion test
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `a_child' a child of the container?
 		do
-			Result := c_gtk_container_has_child (widget, a_child.widget)
+			if a_child.vbox_widget /= default_pointer then
+				Result := c_gtk_container_has_child (widget, a_child.vbox_widget)
+			else
+				Result := c_gtk_container_has_child (widget, a_child.widget)
+			end
 		end
 
 	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Has `a_child' been added properly?
 		do
-			Result := c_gtk_container_has_child (widget, a_child.widget)
+			if a_child.vbox_widget /= default_pointer then
+				Result := c_gtk_container_has_child (widget, a_child.vbox_widget)
+			else
+				Result := c_gtk_container_has_child (widget, a_child.widget)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -131,14 +192,45 @@ feature {NONE} -- Implementation
 	rbg_pointer: POINTER
 						
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_CONTAINER_IMP, EV_WIDGET_IMP} -- Implementation
 
 	child_packing_changed (the_child: EV_WIDGET_IMP) is
-			-- changed the settings of his child `the_child'
+			-- changed the settings of his child `the_child'.
+			-- The child is contained in a GtkHBox which itself, is in
+			-- a GtkVBox. The GtkVBox is then in the current container.
 		require
 			child_resize_type_value_ok: ((the_child.resize_type >=0) and (the_child.resize_type <=3))
+		local
+			child_interface: EV_WIDGET
 		do
---			c_gtk_box_set_child_options (widget, the_child.widget, the_child.expandable, False)
+			child_interface ?= the_child.interface
+			inspect
+				the_child.resize_type
+			when 0 then
+				-- 0 : no horizontal nor vertical resizing, the widget moves
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, False)
+					-- To forbid vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
+					-- To forbid horizontal resizing
+			when 1 then
+				-- 1 : only the width changes
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, False)
+					-- To forbid vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
+					-- To allow horizontal resizing
+			when 2 then
+				-- 2 : only the height changes
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, True)
+					-- To allow vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
+					-- To forbid horizontal resizing
+			when 3 then
+				-- 3 : both width and height change
+				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, True, True)
+					-- To allow vertical resizing
+				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
+					-- To allow horizontal resizing
+			end
 		end
 
 end -- class EV_CONTAINER_IMP

@@ -51,8 +51,8 @@ feature {NONE}-- Initialization
 			create exit_menu_item
 			create options_menu
 			create word_wrapping_menu_item
-			create show_tab_control_menu_item
 			create show_paragraph_toolbar
+			create show_tab_control_menu_item
 			create main_vertical_box
 			create l_ev_horizontal_box_1
 			create font_selection
@@ -119,8 +119,8 @@ feature {NONE}-- Initialization
 			file_menu.extend (exit_menu_item)
 			l_ev_menu_bar_1.extend (options_menu)
 			options_menu.extend (word_wrapping_menu_item)
-			options_menu.extend (show_tab_control_menu_item)
 			options_menu.extend (show_paragraph_toolbar)
+			options_menu.extend (show_tab_control_menu_item)
 			extend (main_vertical_box)
 			main_vertical_box.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (font_selection)
@@ -188,8 +188,9 @@ feature {NONE}-- Initialization
 			options_menu.set_text ("Options")
 			word_wrapping_menu_item.enable_select
 			word_wrapping_menu_item.set_text ("Word Wrapping")
-			show_tab_control_menu_item.set_text ("Tab Control Bar")
+			show_paragraph_toolbar.enable_select
 			show_paragraph_toolbar.set_text ("Paragraph Toolbar")
+			show_tab_control_menu_item.set_text ("Tab Control Bar")
 			main_vertical_box.set_padding_width (tiny_padding)
 			main_vertical_box.disable_item_expand (l_ev_horizontal_box_1)
 			main_vertical_box.disable_item_expand (paragraph_toolbar_holder)
@@ -276,8 +277,8 @@ feature {NONE}-- Initialization
 			save_as_menu_item.select_actions.extend (agent save_file_as)
 			exit_menu_item.select_actions.extend (agent exit)
 			word_wrapping_menu_item.select_actions.extend (agent word_wrapping_toggled)
-			show_tab_control_menu_item.select_actions.extend (agent show_tab_control_toggled)
 			show_paragraph_toolbar.select_actions.extend (agent show_paragraph_toolbar_selected)
+			show_tab_control_menu_item.select_actions.extend (agent show_tab_control_toggled)
 			font_selection.select_actions.extend (agent font_selected)
 			size_selection.select_actions.extend (agent font_size_selected)
 			size_selection.return_actions.extend (agent font_size_selected)
@@ -308,7 +309,7 @@ feature -- Access
 
 	file_menu, options_menu: EV_MENU
 	open_menu_item, save_menu_item, save_as_menu_item, exit_menu_item: EV_MENU_ITEM
-	word_wrapping_menu_item, show_tab_control_menu_item, show_paragraph_toolbar: EV_CHECK_MENU_ITEM
+	word_wrapping_menu_item, show_paragraph_toolbar, show_tab_control_menu_item: EV_CHECK_MENU_ITEM
 	main_vertical_box, paragraph_toolbar_holder, tab_control_holder: EV_VERTICAL_BOX
 	font_selection, size_selection: EV_COMBO_BOX
 	color_toolbar, background_color_toolbar, format_toolbar, paragraph_toolbar: EV_TOOL_BAR
@@ -360,13 +361,13 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-	show_tab_control_toggled is
-			-- Called by `select_actions' of `show_tab_control_menu_item'.
+	show_paragraph_toolbar_selected is
+			-- Called by `select_actions' of `show_paragraph_toolbar'.
 		deferred
 		end
 	
-	show_paragraph_toolbar_selected is
-			-- Called by `select_actions' of `show_paragraph_toolbar'.
+	show_tab_control_toggled is
+			-- Called by `select_actions' of `show_tab_control_menu_item'.
 		deferred
 		end
 	

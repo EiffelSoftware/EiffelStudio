@@ -175,7 +175,7 @@ feature -- Basic operations
 			old_pos, new_pos: INTEGER
 			min, max, p: INTEGER
 		do
-			if scroll_code = Sb_endscroll then
+			if scroll_code /= Sb_endscroll then
 				old_pos := position
 				p := page
 				min := minimum

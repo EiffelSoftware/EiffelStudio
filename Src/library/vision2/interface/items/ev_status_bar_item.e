@@ -93,6 +93,7 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	implementation: EV_STATUS_BAR_ITEM_I
+			-- platform dependent access.
 
 end -- class EV_STATUS_BAR_ITEM
 

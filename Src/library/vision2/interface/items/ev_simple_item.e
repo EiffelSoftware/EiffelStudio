@@ -81,6 +81,7 @@ feature -- Element change
 feature -- Implementation
 
 	implementation: EV_SIMPLE_ITEM_I
+			-- Platform dependent access.
 
 end -- class EV_ITEM
 

@@ -13,20 +13,19 @@ class
 
 inherit
 	EV_HORIZONTAL_BOX_I
-		select
+		redefine
 			interface
 		end
 
 	EV_BOX_IMP
-		rename
-			interface as box_interface
 		undefine
 			compute_minimum_height,
 			compute_minimum_width,
 			compute_minimum_size
 		redefine
-			move_and_resize,
-			set_child_expandable
+			wel_move_and_resize,
+			set_child_expandable,
+			interface
 		end
 
 creation
@@ -75,6 +74,7 @@ feature {NONE} -- Basic operation
 			-- Resize the children to be adapted to the current height.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
+			litem: EV_WIDGET_IMP
 			temp_height: INTEGER
 			cur: CURSOR
 		do
@@ -86,7 +86,9 @@ feature {NONE} -- Basic operation
 				until
 					lchild.after
 				loop
-					lchild.item.parent_ask_resize(lchild.item.child_cell.width, client_height)
+					litem := lchild.item
+		--			litem.integrate_changes
+					lchild.item.parent_ask_resize(litem.child_cell.width, client_height)
 					lchild.forth
 				end
 				lchild.go_to (cur)
@@ -329,7 +331,7 @@ feature {NONE} -- Implementation for automatic size compute
 
 feature {NONE} -- WEL Implementation
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its
@@ -338,6 +340,10 @@ feature {NONE} -- WEL Implementation
 			{EV_BOX_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
 			set_children_width
 		end
+
+feature {NONE} -- Implementation
+
+	interface: EV_HORIZONTAL_BOX
 
 end -- class EV_HORIZONTAL_BOX_IMP
 
@@ -362,6 +368,14 @@ end -- class EV_HORIZONTAL_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.32.2.1  2000/03/11 00:19:15  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
 --| Revision 1.32  2000/02/19 05:45:00  oconnor
 --| released
 --|

@@ -124,6 +124,29 @@ feature -- Element change
 			height_assigned: height = new_height
 		end
 
+	resize (a_width, a_height: INTEGER) is
+			-- Resize to `a_width' and `a_height'.
+		require
+			a_width_positive: a_width >= 0
+			a_height_positive: a_height >= 0
+		do
+			width := a_width
+			height := a_height
+		ensure
+			width_assigned: width = a_width
+			height_assigned: height = a_height
+		end
+
+	move (a_x, a_y: INTEGER) is
+			-- Move to `a_x' and `a_y'.
+		do
+			x := a_x
+			y := a_y
+		ensure
+			x_assigned: x = a_x
+			y_assigned: y = a_y
+		end
+
 	set (upper_left_POINT: EV_COORDINATES; new_width, new_height: INTEGER) is
 			-- Set all values op the clip area.
 		require
@@ -183,6 +206,12 @@ end -- class EV_RECTANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/14 03:02:57  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.9.2.1  2000/03/09 19:16:51  brendel
+--| Added features `resize' and `move'.
+--|
 --| Revision 1.9  2000/02/29 19:20:22  oconnor
 --| removed simicolons from indexing
 --|

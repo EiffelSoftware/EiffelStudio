@@ -22,7 +22,7 @@ inherit
 			compute_minimum_width,
 			compute_minimum_size
 		redefine
-			move_and_resize,
+			wel_move_and_resize,
 			set_child_expandable,
 			interface
 		end
@@ -86,7 +86,7 @@ feature {NONE} -- Basic operation
 					lchild.after
 				loop
 					litem := lchild.item
-					litem.integrate_changes
+			--		litem.integrate_changes
 					litem.parent_ask_resize (client_width, litem.child_cell.height)
 					lchild.forth
 				end
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation for automatic size compute
 
 feature {NONE} -- WEL Implementation
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			-- This feature must be redefine by the containers to readjust its
@@ -366,6 +366,14 @@ end -- class EV_VERTICAL_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.32.2.1  2000/03/11 00:19:16  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
 --| Revision 1.32  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -23,6 +23,13 @@ inherit
 			interface
 		end
 
+	EV_SIZEABLE_PRIMITIVE_IMP
+		undefine
+			initialize
+		redefine
+			interface
+		end
+
 feature -- Access
 
 	top_level_window_imp: EV_WINDOW_IMP
@@ -182,6 +189,16 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/14 03:02:56  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.22.2.2  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
+--| Revision 1.22.2.1  2000/03/09 17:50:15  brendel
+--| Added inheritance of EV_SIZEABLE_PRIMITIVE_IMP.
+--|
 --| Revision 1.22  2000/02/19 05:45:01  oconnor
 --| released
 --|

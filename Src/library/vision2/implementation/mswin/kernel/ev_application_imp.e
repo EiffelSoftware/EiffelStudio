@@ -85,6 +85,25 @@ feature -- Basic operation
 			c_sleep (msec)
 		end
 
+	do_once_on_idle (an_agent: PROCEDURE [ANY, TUPLE []]) is
+			-- On the next idle event, call `an_agent' once. If `an_agent' is
+			-- already queued to be executed next idle event, do nothing.
+			-- Compares by reference, so if you want one action to be executed
+			-- twice, you should recreate the agent.
+		do
+			if once_idle_actions = Void then
+				create once_idle_actions
+				once_idle_actions.compare_references
+			end
+			if not once_idle_actions.has (an_agent) then
+				once_idle_actions.extend (an_agent)
+			end
+		end
+
+	once_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions performed when application becomes idle.
+			-- Clears after calling.
+
 feature -- Root window
 
 	main_window: EV_WINDOW_IMP is
@@ -233,7 +252,10 @@ feature {NONE} -- Message loop, we redefine it because the user
 						end
 					end
 				else
-					if not internal_idle_actions.empty then
+					if not once_idle_actions.empty then
+						once_idle_actions.call ([])
+						once_idle_actions.wipe_out
+					elseif not internal_idle_actions.empty then
 						internal_idle_actions.call ([])
 					elseif not interface.idle_actions.empty then 
 						interface.idle_actions.call ([])
@@ -322,6 +344,16 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/14 03:02:53  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.20.2.2  2000/03/14 00:17:49  brendel
+--| Improved comment.
+--|
+--| Revision 1.20.2.1  2000/03/14 00:05:10  brendel
+--| Added `do_once_on_idle'.
+--| Added `once_idle_actions', called and cleared on idle.
+--|
 --| Revision 1.20  2000/02/29 19:21:27  rogers
 --| Launch now sets the root_window to the main_window. Set root_window now sets the application main_window. Remove window has been altered, see diffs, and destroy now sets destroy just called to True and is_destroyed to True.
 --|

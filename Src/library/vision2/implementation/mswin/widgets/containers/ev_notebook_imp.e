@@ -64,10 +64,14 @@ inherit
 			shown as is_displayed,
 			destroy as wel_destroy,
 			item as wel_item,
-			move as move_to,
 			enabled as is_sensitive, 
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -681,7 +685,7 @@ feature {NONE} -- WEL Implementation
 			if ww /= Void and then ww.exists then
 				ww.show_window (ww.wel_item, Sw_show)
 				rect := sheet_rect
-				ww.move_and_resize (rect.left, rect.top, rect.width,
+				ww.wel_move_and_resize (rect.left, rect.top, rect.width,
 					height, True)
 			end
 		end
@@ -1129,6 +1133,21 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/14 03:02:55  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.48.2.3  2000/03/14 00:07:52  brendel
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.48.2.2  2000/03/11 00:19:16  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.48.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.48  2000/03/03 19:41:05  brendel
 --| Removed feature `put_left'.
 --|

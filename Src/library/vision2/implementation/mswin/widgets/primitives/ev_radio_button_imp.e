@@ -45,7 +45,11 @@ inherit
 			text as wel_text,
 			item as wel_item,
 			enabled as is_sensitive,
-			move as move_to
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			make_by_id,
 			window_process_message,
@@ -152,6 +156,18 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/14 03:02:56  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.25.2.2  2000/03/11 00:19:21  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.25.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.25  2000/03/07 17:40:06  rogers
 --| Undefined on_size from WEL_RADIO_BUTTON as this is now inherited from EV_BUTTON_IMP.
 --|

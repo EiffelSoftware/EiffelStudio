@@ -55,10 +55,14 @@ inherit
 			destroy as wel_destroy,
 			destroy_item as wel_destroy_item,
 			item as wel_item,
-			move as move_to,
 			enabled as is_sensitive,
 			width as wel_width,
-			height as wel_height
+			height as wel_height,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize
 		undefine
 			window_process_message,
 			set_width,
@@ -610,6 +614,18 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/14 03:02:56  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.36.2.2  2000/03/11 00:19:20  brendel
+--| Renamed move to wel_move.
+--| Renamed resize to wel_resize.
+--| Renamed move_and_resize to wel_move_and_resize.
+--|
+--| Revision 1.36.2.1  2000/03/09 21:39:48  brendel
+--| Replaced x with x_position and y with y_position.
+--| Before, both were available.
+--|
 --| Revision 1.36  2000/03/03 03:57:30  pichery
 --| added feature `flush'
 --|

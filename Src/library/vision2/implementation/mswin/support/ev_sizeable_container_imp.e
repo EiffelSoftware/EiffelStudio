@@ -1,10 +1,10 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		" A class for MS-Windows to simulate the resizing of%
-		% a container";
-	status: "See notice at end of class"; 
-	date: "$Date$"; 
+		"Eiffel Vision sizeable container. Mswindows implementation of%N%
+		%of resizing of containers."
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$" 
 
 deferred class
@@ -12,14 +12,6 @@ deferred class
 
 inherit
 	EV_SIZEABLE_IMP
-		redefine
-			internal_set_minimum_width,
-			internal_set_minimum_height,
-			internal_set_minimum_size,
-			integrate_changes,
-			minimum_width,
-			minimum_height
-		end
 
 feature -- Access
 
@@ -27,9 +19,11 @@ feature -- Access
 	in_minimum_height: BOOLEAN
 
 	minimum_width: INTEGER is
-			-- Minimum width of the window.
-			-- We recompute it if necessary.
+			-- Lower bound on `width' in pixels.
 		do
+			--| According to Raphael, the actual resizing done here had
+			--| a good reason.
+
 			if not in_minimum_width then
 				in_minimum_width := True
 				if is_minwidth_recomputation_needed then
@@ -47,8 +41,7 @@ feature -- Access
 		end
 
 	minimum_height: INTEGER is
-			-- Minimum height of the window.
-			-- We recompute it if necessary.
+			-- Lower bound on `height' in pixels.
 		do
 			if not in_minimum_height then
 				in_minimum_height := True
@@ -82,15 +75,16 @@ feature -- Basic operations
 					if managed then
 						if changed then 
 							parent_imp.notify_change (Nc_minwidth)
-						elseif is_displayed then
-							move_and_resize (x, y, width, height, True)
+						elseif is_show_requested then
+							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						move_and_resize (x, y, width.max (value), height, True)
+						-- Only for fixed containers.
+						wel_move_and_resize (x_position, y_position, width.max (value), height, True)
 					end
 				end
-			elseif is_displayed then
-				move_and_resize (x, y, width, height, True)
+			elseif is_show_requested then
+				wel_move_and_resize (x_position, y_position, width, height, True)
 			end
 		end
 
@@ -108,15 +102,15 @@ feature -- Basic operations
 					if managed then
 						if changed then 
 							parent_imp.notify_change (Nc_minheight)
-						elseif is_displayed then
-							move_and_resize (x, y, width, height, True)
+						elseif is_show_requested then
+							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						move_and_resize (x, y, width, height.max (value), True)
+						wel_move_and_resize (x_position, y_position, width, height.max (value), True)
 					end
 				end
-			elseif is_displayed then
-				move_and_resize (x, y, width, height, True)
+			elseif is_show_requested then
+				wel_move_and_resize (x_position, y_position, width, height, True)
 			end
 		end
 
@@ -156,11 +150,11 @@ feature -- Basic operations
 							parent_imp.notify_change (Nc_minwidth)
 						elseif h_cd then
 							parent_imp.notify_change (Nc_minheight)
-						elseif is_displayed then
-							move_and_resize (x, y, width, height, True)
+						elseif is_show_requested then
+							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						move_and_resize (x, y, width.max (mw), height.max (mh), True)
+						wel_move_and_resize (x_position, y_position, width.max (mw), height.max (mh), True)
 					end
 				end
 
@@ -172,11 +166,11 @@ feature -- Basic operations
 					if managed then
 						if w_cd then
 							parent_imp.notify_change (Nc_minwidth)
-						elseif is_displayed then
-							move_and_resize (x, y, width, height, True)
+						elseif is_show_requested then
+							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						move_and_resize (x, y, width.max (mw), height, True)
+						wel_move_and_resize (x_position, y_position, width.max (mw), height, True)
 					end
 				end
 
@@ -187,22 +181,40 @@ feature -- Basic operations
 				if parent_imp /= Void then
 					if managed then
 						if h_cd then
-								parent_imp.notify_change (Nc_minheight)
-						elseif is_displayed then
-							move_and_resize (x, y, width, height, True)
+							parent_imp.notify_change (Nc_minheight)
+						elseif is_show_requested then
+							wel_move_and_resize (x_position, y_position, width, height, True)
 						end
 					else
-						move_and_resize (x, y, width, height.max (mh), True)
+						wel_move_and_resize (x_position, y_position, width, height.max (mh), True)
 					end
 				end
 
 			-- The user did set everything already.
- 			elseif is_displayed then
- 				move_and_resize (x, y, width, height, True)
+ 			elseif is_show_requested then
+ 				wel_move_and_resize (x_position, y_position, width, height, True)
  			end
 		end
 
 	notify_change (type: INTEGER) is
+			-- Called by a child of `Current'.
+			-- - a child has been added/removed.
+			-- - a child's minimum size has in/decreased.
+			-- We have to notify all the way up to the window, because the
+			-- minimum size has to available to WEL at anytime.
+		do
+			compute_minimum_size
+			if parent_imp /= Void then
+				parent_imp.notify_change (type)
+			else
+				check
+					-- In EV_WINDOW_IMP, this feature is redefined.
+					not_called: False
+				end
+			end
+		end
+
+	OLD_notify_change (type: INTEGER) is
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown, 
@@ -257,7 +269,7 @@ feature -- Basic operations
 					end
 				elseif mw_not_needed then
 					set_minwidth_recomputation_needed (True)
-					if is_displayed then
+					if is_show_requested then
 						compute_minimum_width
 						set_minwidth_recomputation_needed (False)
 					else
@@ -267,7 +279,7 @@ feature -- Basic operations
 					end
 				elseif mh_not_needed then
 					set_minheight_recomputation_needed (True)
-					if is_displayed then
+					if is_show_requested then
 						compute_minimum_height
 						set_minheight_recomputation_needed (False)
 					else
@@ -303,8 +315,8 @@ feature -- Basic operations
 			-- Recompute the minimum_width of the object.
 			-- Should call only set_internal_minimum_width.
 		do
-			if is_displayed then
-				move_and_resize (x, y, width, height, True)
+			if is_show_requested then
+				wel_move_and_resize (x_position, y_position, width, height, True)
 			end
 		end
 
@@ -331,6 +343,26 @@ end -- class EV_CONTAINER_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/14 03:02:54  brendel
+--| Merged changed from WINDOWS_RESIZING_BRANCH.
+--|
+--| Revision 1.12.2.3  2000/03/14 00:16:52  brendel
+--| Changed all calls to wel_move_and_resize back to have repaint `True' at
+--| every call. It seems to be inevitable to have every change redrawn.
+--| This is what causes the flickering, though, so a workaround has to be
+--| found or the entire design has to be redone.
+--| Introduced a smaller implementation of notify_change. It is hardly any
+--| less efficient than the old one.
+--|
+--| Revision 1.12.2.2  2000/03/11 00:12:42  brendel
+--| Replaced is_displayed with is_show_requested.
+--| Most calls to wel_move_and_resize are now called with False as repaint
+--| parameter.
+--|
+--| Revision 1.12.2.1  2000/03/09 20:26:40  brendel
+--| Improved comments.
+--| Replaced x with x_position, y with y_position
+--|
 --| Revision 1.12  2000/03/06 21:18:26  brendel
 --| Fixed bug in minimum_width
 --|
@@ -341,7 +373,7 @@ end -- class EV_CONTAINER_SIZEABLE_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.9.10.5  2000/02/07 18:27:04  rogers
---| Replaced all calls to displayed by is_displayed.
+--| Replaced all calls to displayed by is_show_requested.
 --|
 --| Revision 1.9.10.4  2000/01/27 19:30:16  oconnor
 --| added --| FIXME Not for release

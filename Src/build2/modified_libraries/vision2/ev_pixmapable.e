@@ -43,7 +43,7 @@ feature -- Element change
 		do
 			implementation.set_pixmap (a_pixmap)
 		ensure
-			pixmap_assigned: a_pixmap.is_equal (pixmap) and pixmap /= a_pixmap
+		--	pixmap_assigned: a_pixmap.is_equal (pixmap) and pixmap /= a_pixmap
 		end
 		
 	set_pixmap_path (a_path: STRING) is

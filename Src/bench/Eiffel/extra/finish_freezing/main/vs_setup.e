@@ -48,7 +48,7 @@ feature -- Initialization
 				l_batch_file.put_new_line
 				l_batch_file.put_string ("set PATH=")
 				l_batch_file.put_new_line
-				l_batch_file.put_string ("call " + short_path (Vcvars32_bat_path_and_filename))
+				l_batch_file.put_string ("call " + short_path (vcvars_full_path))
 				l_batch_file.put_new_line
 				l_batch_file.put_string ("set > temp")
 				l_batch_file.put_new_line
@@ -149,63 +149,127 @@ feature -- Implementation
 
 feature -- Keys
 
-	Vcvars32_bat_path_and_filename: STRING is
-			-- Full path and filename of vcvars32.bat file.
+	vcvars_full_path: STRING is
+			-- Most recent version of vsvarXX.bat to execute
 		local
-			l_dir: STRING
+			l_buffer: STRING
+			l_file: PLAIN_TEXT_FILE
 		once
-			l_dir := Visual_studio_common_dir
-			if l_dir /= Void then
-				Result := Visual_studio_common_dir + "bin\" + "vcvars32.bat"
-			end
-		end
-
-	Visual_studio_common_dir: STRING is
-			-- Path the the Visual Studio 'Common' directory.
-		local
-			reg: WEL_REGISTRY
-			p: POINTER
-			key: WEL_REGISTRY_KEY_VALUE
-			check_for_vs6: BOOLEAN
-		once
-			create reg
-					-- First look for Visual Studio 7.1.
-			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\7.1\Setup\VC",
-				feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
-
-					-- If registry key doesn't exsits then look in 7.0			
-			if p = default_pointer then
-				reg.close_key (p)
-				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\7.0\Setup\VC",
-					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)				
-			end
-
-			if p /= default_pointer then
-				key := reg.key_value (p, "ProductDir")
-				reg.close_key (p)	
-				if key /= Void then
-					Result := key.string_value
-					vs_version := 7
+				-- VS.NET 2005
+			l_buffer := vc_product_dir_for_vs_dotnet ("8.0")
+			if l_buffer /= Void then
+				create l_file.make (vcvars_bat_path_and_filename (l_buffer, 64))
+				if l_file.exists then
+					Result := l_file.name
 				else
-					check_for_vs6 := True
-				end
-			else
-				check_for_vs6 := True
-			end
-
-			if check_for_vs6 then
-						-- Since previous failed now look for Version 6.0 instead.
-				p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\6.0\Setup\MicrosoftVisual C++",
-					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
-				if p /= default_pointer then
-					key := reg.key_value (p, "ProductDir")
-					reg.close_key (p)
-					if key /= Void then
-						Result := key.string_value + "\"
-						vs_version := 6
+					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+					if l_file.exists then
+						Result := l_file.name
 					end
 				end
 			end
+				-- VS.NET 2003
+			if Result = Void then
+				l_buffer := vc_product_dir_for_vs_dotnet ("7.1")
+				if l_buffer /= Void then
+					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+					if l_file.exists then
+						Result := l_file.name
+					end
+				end
+			end
+			
+				-- VS.NET 2002
+			if Result = Void then
+				l_buffer := vc_product_dir_for_vs_dotnet ("7.0")
+				if l_buffer /= Void then
+					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+					if l_file.exists then
+						Result := l_file.name
+					end
+				end
+			end
+			
+				-- VS 6.0
+			if Result = Void then
+				l_buffer := vc_product_dir_for_vs_6
+				if l_buffer /= Void then
+					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+					if l_file.exists then
+						Result := l_file.name
+					end
+				end	
+			end
+		ensure
+			valid_result: Result /= Void implies not Result.is_empty
+		end
+		
+feature {NONE} -- Keys
+		
+	vc_product_dir_for_vs_dotnet (a_version: STRING): STRING is
+			--Retrieve product dir for VC from a Visual Studio .NET installation
+		require
+			a_version_not_void: a_version /= Void
+			not_a_version_is_empty: not a_version.is_empty
+		local
+			l_key_path: STRING
+		do
+			create l_key_path.make (60 + a_version.count)
+			l_key_path.append ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\")
+			l_key_path.append (a_version)
+			l_key_path.append ("\Setup\VC")
+			Result := vc_product_dir_from_key (l_key_path)
+		ensure
+			valid_result: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
+		end
+
+	vc_product_dir_for_vs_6: STRING is
+			--Retrieve product dir for VC from a Visual Studio .NET installation
+		do
+			Result := vc_product_dir_from_key ("hkey_local_machine\SOFTWARE\Microsoft\VisualStudio\6.0\Setup\MicrosoftVisual C++")
+		ensure
+			valid_result: Result /= Void implies Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
+		end
+		
+	vc_product_dir_from_key (a_key_path: STRING): STRING is
+			-- retrieve product dur from `a_key_path' in registry
+		require
+			a_key_path_not_void: a_key_path /= Void
+			not_a_key_path_is_empty: not a_key_path.is_empty
+		local
+			l_reg: WEL_REGISTRY
+			l_reg_key: POINTER
+			l_key_value: WEL_REGISTRY_KEY_VALUE
+			l_sep: CHARACTER
+		do
+			create l_reg
+			l_reg_key := l_reg.open_key_with_access (a_key_path, feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+			if l_reg_key /= default_pointer then
+				l_key_value := l_reg.key_value (l_reg_key, "ProductDir")
+				l_reg.close_key (l_reg_key)	
+				if l_key_value /= Void then
+					Result := l_key_value.string_value
+					l_sep := (create {OPERATING_ENVIRONMENT}).directory_separator
+					if Result.item (Result.count) /= l_sep then
+						Result.append_character (l_sep)
+					end
+				end
+			end
+
+		end
+
+	vcvars_bat_path_and_filename (a_product_dir: STRING; a_bits: INTEGER): STRING is
+			-- Full path and filename of vcvars`a_bit'.bat file from product instllation `a_product_dir'
+		require
+			non_void_a_product_dir: a_product_dir /= Void
+			not_a_product_dir_is_empty: not a_product_dir.is_empty
+			valid_a_product_dir: a_product_dir.item (a_product_dir.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
+			valid_a_bit: a_bits = 32 or a_bits = 64
+		do
+			Result := a_product_dir + "bin\vcvars" + a_bits.out + ".bat"
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Access
@@ -218,16 +282,8 @@ feature -- Access
 
 	valid_vcvars: BOOLEAN is
 			-- Is the vc_vars32.bat file a valid file?
-		local
-			l_vc_vars: RAW_FILE
-		once
-			
-			if Vcvars32_bat_path_and_filename /= Void then
-				create l_vc_vars.make (Vcvars32_bat_path_and_filename)
-				Result := l_vc_vars.exists
-			else
-				Result := False
-			end
+		once			
+			Result := vcvars_full_path /= Void
 		end
 
 	env: EXECUTION_ENVIRONMENT is

@@ -75,9 +75,16 @@ feature -- Initialization
 					create status_box.make (make_util, retried, c_error, False, False)
 				else
 					if not c_error then
+							-- For eweasel processing
 						io.put_string ("C compilation completed%N")
 						io.default_output.flush
 					end
+				end
+			else
+				if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then
+						-- For eweasel processing
+					io.put_string ("C compilation completed%N")
+					io.default_output.flush
 				end
 			end
 			

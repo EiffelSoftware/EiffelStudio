@@ -48,6 +48,9 @@ extern void (*eif_strset)();		/* STRING `set_count' feature */
 extern void (*eif_arrmake)();		/* STRING creation feature */
 extern char *argarr();				/* ARRAY[STRING] creation from command line arguments */
 
+extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
+extern long *eif_area_table;		/* ARRAY `area' (array optimization) */
+
 #ifdef WORKBENCH
 extern void wstdinit();				/* Composite objects initialization */
 extern char *cr_exp();				/* Creation of expanded objects */

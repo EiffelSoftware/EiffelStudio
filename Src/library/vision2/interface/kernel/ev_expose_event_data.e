@@ -13,7 +13,8 @@ inherit
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation
+			implementation,
+			print_contents
 		end	
 	
 creation
@@ -38,6 +39,16 @@ feature -- Access
 			-- Number of expose events to come
 		do
 			Result := implementation.exposes_to_come
+		end
+
+feature -- Debug
+	
+	print_contents is
+		do
+			io.put_string ("EV_EXPOSE_EVENT_DATA: ")
+			print (widget)
+			clip_region.print_contents
+			io.put_string ("%N")
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation

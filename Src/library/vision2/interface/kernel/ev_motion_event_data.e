@@ -13,7 +13,8 @@ inherit
 	EV_EVENT_DATA	
 		redefine
 			make,
-			implementation
+			implementation,
+			print_contents
 		end
 
 creation
@@ -29,21 +30,88 @@ feature -- Initialization
 feature -- Access	
 	
 	x: INTEGER is
-			-- x coordinate of mouse pointer
+			-- Horizontal position of the mouse pointer relative
+			-- to the receiving widget
 		do
 			Result := implementation.x
 		end
 
 	y: INTEGER is
-			-- y coordinate of mouse pointer 
+			-- Vertical position of the mouse pointer relative
+			-- to the receiving window
 		do
 			Result := implementation.y
 		end
 
-	state: INTEGER is
-			-- State of the mouse buttons
+	absolute_x: INTEGER is
+			-- Absolute horizontal position of the mouse pointer
+			-- (in other words relative to the screen)
 		do
-			Result := implementation.state
+			Result := implementation.absolute_x
+		end
+
+	absolute_y: INTEGER is
+			-- Absolute vertical position of the mouse pointer
+			-- (in other words relative to the screen)
+		do
+			Result := implementation.absolute_y
+		end
+
+	shift_key_pressed: BOOLEAN is
+			-- Is the shift key pressed during the event?
+		do
+			Result := implementation.shift_key_pressed
+		end
+
+	control_key_pressed: BOOLEAN is
+			-- Is the control key pressed during the event?
+		do
+			Result := implementation.control_key_pressed
+		end
+
+	first_button_pressed: BOOLEAN is
+			-- Is the first button of the mouse pressed during the
+			-- event?
+		do
+			Result := implementation.first_button_pressed
+		end
+
+	second_button_pressed: BOOLEAN is
+			-- Is the second button of the mouse pressed during the
+			-- event?
+		do
+			Result := implementation.second_button_pressed
+		end
+
+	third_button_pressed: BOOLEAN is
+			-- Is the third button of the mouse pressed during the
+			-- event?
+		do
+			Result := implementation.third_button_pressed
+		end
+
+feature -- Debug
+	
+	print_contents is
+			-- print the contents of the object
+		do
+			io.put_string ("(X: ")
+			io.put_double (x)
+			io.put_string (", Y: ")
+			io.put_double (y)
+			io.put_string ("%N")
+			io.put_string (" Shift: ")
+			io.put_boolean (shift_key_pressed)
+			io.put_string (" Control: ")
+			io.put_boolean (control_key_pressed)
+			io.put_string ("%N")
+			io.put_string (" First: ")
+			io.put_boolean (first_button_pressed)
+			io.put_string (" Second: ")
+			io.put_boolean (second_button_pressed)
+			io.put_string (" Third: ")
+			io.put_boolean (third_button_pressed)
+			io.put_string ("%N")
 		end
 
 feature {EV_WIDGET_IMP} -- Implementation

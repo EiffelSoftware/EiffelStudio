@@ -1181,7 +1181,7 @@ rt_public void file_mkdir(char *path)
 
 	int status;			/* System call status */
 #ifdef EIF_VMS
-	char duplicate[PATH_MAX];
+	char duplicate[PATH_MAX + 1];
 	strcpy(duplicate,path);
 #endif
 	
@@ -1488,7 +1488,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	 */
 
 	struct stat buf;			/* Buffer to get parent directory statistics */
-	char temp [PATH_MAX];
+	char temp [PATH_MAX + 1];
 	char *ptr;
 
 #ifdef EIF_VMS

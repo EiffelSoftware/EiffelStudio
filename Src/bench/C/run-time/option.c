@@ -36,6 +36,7 @@
 #include "eif_timer.h"
 #include "eif_misc.h"
 #include "eif_tools.h"		/* For hashcode() */
+#include "eif_main.h"
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).

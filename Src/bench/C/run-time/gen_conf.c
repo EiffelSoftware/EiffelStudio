@@ -4,8 +4,8 @@
 	$Id$
 */
 
-#include "eif_struct.h"
 #include "eif_macros.h"
+#include "eif_struct.h"
 #include "eif_gen_conf.h"
 #include "eif_lmalloc.h"
 #include "eif_threads.h"

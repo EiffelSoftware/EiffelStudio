@@ -83,8 +83,6 @@ RT_LNK int is_debug(int st_type, char *key);		/* Debug level query */
 #define PROF_RECORDING	1	/* Mask for checking whethter profiler is currently recording */
 #define IN_ACE_FILE	2	/* Mask for checking whether profile(yes) is in the Ace file */
 
-extern char starting_working_directory [MAX_PATH];
-
 #ifdef HAS_GETRUSAGE	/* Variable to get the total execution time */
 extern struct prof_rusage *init_date;
 #elif defined(HAS_TIMES)

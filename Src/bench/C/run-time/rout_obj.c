@@ -2,8 +2,8 @@
 	Routine objects
 */
 
-#include "eif_struct.h"
 #include "eif_macros.h"
+#include "eif_struct.h"
 #include "eif_rout_obj.h"
 
 /*------------------------------------------------------------------*/

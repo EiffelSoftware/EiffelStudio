@@ -62,12 +62,9 @@
 #define INCL_DOSFILEMGR   /* File Manager values */
 #define INCL_DOSERRORS	  /* DOS error values */
 #include <os2.h>
-#ifndef MAX_PATH
-#define MAX_PATH 255
-#endif
 
 typedef struct tagEIF_OS2_DIRENT {
-	char	name [MAX_PATH];
+	char	name [PATH_MAX + 1];
 	int 	first;
 	HDIR	handle;
 } EIF_OS2_DIRENT;
@@ -427,15 +424,15 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	** Now using lib$find_file, which will accept a file or dir.
 	*/
 	int		status;
-	char		buff[PATH_MAX];
-	char		namecopy[PATH_MAX];
+	char		buff[PATH_MAX + 1];
+	char		namecopy[PATH_MAX + 1];
 	int		i;
 	int		len;
 	struct dsc$descriptor_s	pat;
 	struct dsc$descriptor_s	res;
 	unsigned int		context=0;
 	int			flags = 0xf;
-	char			mesg[PATH_MAX];
+	char			mesg[PATH_MAX + 1];
 	/* $DESCRIPTOR(message_text,mesg);	this generates warning */
 	struct dsc$descriptor_s message_text;
 	unsigned short		mesglen;
@@ -523,7 +520,7 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 	/* Is directory readable */
 
 #ifdef EIF_VMS
-	char	copy[PATH_MAX];
+	char	copy[PATH_MAX + 1];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),R_OK) )
 		return (EIF_BOOLEAN) FALSE;
@@ -587,7 +584,7 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 	/* Is directory writable */
 
 #ifdef EIF_VMS
-	char	copy[PATH_MAX];
+	char	copy[PATH_MAX + 1];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),W_OK) )
 		return (EIF_BOOLEAN) FALSE;
@@ -647,7 +644,7 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 	/* Is directory executable */
 
 #ifdef EIF_VMS
-	char	copy[PATH_MAX];
+	char	copy[PATH_MAX + 1];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),X_OK) )
 		return (EIF_BOOLEAN) FALSE;
@@ -744,7 +741,7 @@ char *	dir_dot_dir ( char *	duplicate )
 	if (orig_strlen == 2 && duplicate[0] == '[') {
 		/* [] means current directory */
 		/* have to get full directory name */
-		getcwd(duplicate,PATH_MAX - 1);
+		getcwd(duplicate,PATH_MAX);
 		orig_strlen = strlen(duplicate);
 	}	/* current directory */
 	/* first locate the last . in the path by stepping backwards */

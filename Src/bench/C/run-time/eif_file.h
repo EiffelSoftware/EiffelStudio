@@ -20,11 +20,26 @@ extern "C" {
 
 #include <stdio.h>		/* %%zs moved from file.c */
 #include <limits.h>							/* For PATH_MAX */
-#include "eif_macros.h"
 
 #ifdef I_DIRENT								/* For PATH_MAX under Linux */
 #include <dirent.h>
 #endif
+
+#ifdef EIF_WIN32
+
+#ifndef PATH_MAX
+#define PATH_MAX 260	/* Maximum length of full path name */
+#endif
+
+#else
+
+#ifndef PATH_MAX
+#define PATH_MAX 1024	/* Maximum length of full path name */
+#endif
+
+#endif
+
+#include "eif_macros.h"
 
 /*
  * The following universal constants might not be found in the standard headers
@@ -82,10 +97,6 @@ extern "C" {
 #endif
 #ifndef S_IFSOCK
 #define S_IFSOCK 0140000
-#endif
-
-#ifndef PATH_MAX
-#define PATH_MAX 512	/* Maximum length of full path name */
 #endif
 
 /* The following access constants seems to be universally accepeted. And

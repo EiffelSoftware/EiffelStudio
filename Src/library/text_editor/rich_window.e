@@ -26,6 +26,7 @@ inherit
 	EIFFEL_TOKENS
 	
 	EV_BASIC_COLORS
+
 creation
 	make
 
@@ -37,7 +38,7 @@ feature {NONE} -- Initialization
 			make_scanner
 			{EV_TEXT_EDITOR} Precursor (par)
 
-			set_minimum_size (300, 200)
+			set_minimum_size (400, 500)
 		end
 
 feature -- Access
@@ -58,6 +59,7 @@ feature {NONE}
 			old_cursor_position: INTEGER
 			old_selection_start: INTEGER
 			old_selection_end: INTEGER
+			rich_edit: WEL_RICH_EDIT
 		do
 
 			if
@@ -74,8 +76,9 @@ feature {NONE}
 				old_cursor_position := position
 				highlight_position_offset := first_pos - 1
 			
-
-				freeze
+				rich_edit ?= implementation
+				rich_edit.hide_selection
+--				freeze
 				scan_string (text.substring (first_pos, last_pos))
 				
 
@@ -88,14 +91,12 @@ feature {NONE}
 					deselect_all
 					set_position (old_cursor_position)
 				end
+				rich_edit.show_selection
 
-				thaw
+--				thaw
 			end
 		end
 
-	
-	
-		
 	highlight_position_offset: INTEGER
 
 	on_token_found is
@@ -112,509 +113,55 @@ feature {NONE}
 
 			inspect
 				last_token
+			when E_COMMENT then
+				cf := comment_char_format
 			when
-				E_CHARACTER
+				E_CHARACTER, E_STRING, E_BIT, E_BITTYPE,
+				E_CHARERR, E_INTERR, E_REALERR, E_STRERR
 			then
 				cf := string_char_format
-			when
-				E_INTEGER
-			then
+			when E_INTEGER, E_REAL then
 				cf := number_char_format
-			when
-				E_REAL
-			then
-				cf := number_char_format
-			when
-				E_IDENTIFIER
-			then
+			when E_IDENTIFIER then
 					-- If identifier is in upper case
 					-- treat it like a class name
-				if
-					is_upper_case_only (scanner_text)
-				then
+				if is_class_identifier (scanner_text) then
 					cf := class_identifier_char_format
 				else
 					cf := general_identifier_char_format
 				end
 			when
-				E_STRING
+				E_BANGBANG, E_ARROW, E_DOTDOT, E_LARRAY,
+				E_RARRAY, E_ASSIGN, E_REVERSE, E_DIV, E_MOD, E_FREEOP,
+				E_NOT, Minus_code, Plus_code, Star_code, Slash_code,
+				Caret_code, Equal_code, Greater_than_code, Less_than_code,
+				Dot_code, Semicolon_code, Comma_code, Colon_code, Exclamation_code,
+				Left_parenthesis_code, Right_parenthesis_code, Left_brace_code,
+				Right_brace_code, Left_bracket_code, Right_bracket_code, Dollar_code
 			then
-				cf := string_char_format
-			when
-				E_BIT 
-			then
-				cf := string_char_format
-			when
-				E_BITTYPE
-			then
-				cf := string_char_format
-			when
-				E_CHARERR
-			then
-				cf := string_char_format
-			when
-				E_INTERR
-			then
-				cf := string_char_format
-			when
-				E_REALERR
-			then
-				cf := string_char_format
-			when
-				E_STRERR
-			then
-				cf := string_char_format
-			when
-				E_UNKNOWN
-			then
+				cf := symbol_char_format
+			when E_UNKNOWN then
 				cf := default_char_format
-			when
-				E_NOMEMORY
-			then
+			when E_NOMEMORY then
 				cf := keyword_char_format
 				check
 					False
 				end
 			when
-				E_BANGBANG
+				E_ALIAS, E_ALL, E_AS, E_CHECK, E_CLASS, E_CREATION, E_DEBUG,
+				E_DEFERRED, E_DO, E_ELSE, E_ELSEIF, E_END, E_ENSURE, E_EXPANDED,
+				E_EXPORT, E_EXTERNAL, E_FALSE, E_FEATURE, E_FROM, E_FROZEN,
+				E_IF, E_INDEXING, E_INFIX, E_INHERIT, E_INSPECT, E_INVARIANT,
+				E_IS, E_LIKE, E_LOCAL, E_LOOP, E_OBSOLETE, E_ONCE, E_PREFIX,
+				E_REDEFINE, E_RENAME, E_REQUIRE, E_RESCUE, E_RETRY, E_SELECT, E_SEPARATE,
+				E_STRIP, E_THEN, E_TRUE, E_UNDEFINE, E_UNIQUE, E_UNTIL, E_VARIANT,
+				E_WHEN, E_CURRENT, E_RESULT, E_STRPLUS, E_STRMINUS, E_STRSTAR, E_STRSLASH,
+				E_STRDIV, E_STRMOD, E_STRPOWER, E_STRLT, E_STRLE, E_STRGT, E_STRGE,
+				E_STRAND, E_STROR, E_STRXOR, E_STRANDTHEN, E_STRORELSE, E_STRIMPLIES,
+				E_STRFREEOP, E_STRNOT, E_IMPLIES, E_OR, E_XOR, E_AND, E_NE,
+				E_LE, E_GE, E_OLD, E_PRECURSOR
 			then
-				cf := symbol_char_format
-			when
-				E_ARROW
-			then
-				cf := symbol_char_format
-			when
-				E_DOTDOT
-			then
-				cf := symbol_char_format
-			when
-				E_LARRAY
-			then
-				cf := symbol_char_format
-			when
-				E_RARRAY
-			then
-				cf := symbol_char_format
-			when
-				E_ASSIGN
-			then
-				cf := symbol_char_format
-			when
-				E_REVERSE
-			then
-				cf := symbol_char_format
-			when
-				E_ALIAS
-			then
-				cf := keyword_char_format
-			when
-				E_ALL
-			then
-				cf := keyword_char_format
-			when
-				E_AS
-			then
-				cf := keyword_char_format
-			when
-				E_CHECK
-			then
-				cf := keyword_char_format
-			when
-				E_CLASS
-			then
-				cf := keyword_char_format
-			when
-				E_CREATION
-			then
-				cf := keyword_char_format
-			when
-				E_DEBUG
-			then
-				cf := keyword_char_format
-			when
-				E_DEFERRED
-			then
-				cf := keyword_char_format
-			when
-				E_DO
-			then
-				cf := keyword_char_format
-			when
-				E_ELSE
-			then
-				cf := keyword_char_format
-			when
-				E_ELSEIF
-			then
-				cf := keyword_char_format
-			when
-				E_END
-			then
-				cf := keyword_char_format
-			when
-				E_ENSURE
-			then
-				cf := keyword_char_format
-			when
-				E_EXPANDED
-			then
-				cf := keyword_char_format
-			when
-				E_EXPORT
-			then
-				cf := keyword_char_format
-			when
-				E_EXTERNAL
-			then
-				cf := keyword_char_format
-			when
-				E_FALSE
-			then
-				cf := keyword_char_format
-			when
-				E_FEATURE
-			then
-				cf := keyword_char_format
-			when
-				E_FROM
-			then
-				cf := keyword_char_format
-			when
-				E_FROZEN
-			then
-				cf := keyword_char_format
-			when
-				E_IF
-			then
-				cf := keyword_char_format
-			when
-				E_INDEXING
-			then
-				cf := keyword_char_format
-			when
-				E_INFIX
-			then
-				cf := keyword_char_format
-			when
-				E_INHERIT
-			then
-				cf := keyword_char_format
-			when
-				E_INSPECT
-			then
-				cf := keyword_char_format
-			when
-				E_INVARIANT
-			then
-				cf := keyword_char_format
-			when
-				E_IS
-			then
-				cf := keyword_char_format
-			when
-				E_LIKE
-			then
-				cf := keyword_char_format
-			when
-				E_LOCAL
-			then
-				cf := keyword_char_format
-			when
-				E_LOOP
-			then
-				cf := keyword_char_format
-			when
-				E_OBSOLETE
-			then
-				cf := keyword_char_format
-			when
-				E_ONCE
-			then
-				cf := keyword_char_format
-			when
-				E_PREFIX
-			then
-				cf := keyword_char_format
-			when
-				E_REDEFINE
-			then
-				cf := keyword_char_format
-			when
-				E_RENAME
-			then
-				cf := keyword_char_format
-			when
-				E_REQUIRE
-			then
-				cf := keyword_char_format
-			when
-				E_RESCUE
-			then
-				cf := keyword_char_format
-			when
-				E_RETRY
-			then
-				cf := keyword_char_format
-			when
-				E_SELECT
-			then
-				cf := keyword_char_format
-			when
-				E_SEPARATE
-			then
-				cf := keyword_char_format
-			when
-				E_STRIP
-			then
-				cf := keyword_char_format
-			when
-				E_THEN
-			then
-				cf := keyword_char_format
-			when
-				E_TRUE
-			then
-				cf := keyword_char_format
-			when
-				E_UNDEFINE
-			then
 				cf := keyword_char_format
-			when
-				E_UNIQUE
-			then
-				cf := keyword_char_format
-			when
-				E_UNTIL
-			then
-				cf := keyword_char_format
-			when
-				E_VARIANT
-			then
-				cf := keyword_char_format
-			when
-				E_WHEN
-			then
-				cf := keyword_char_format
-			when
-				E_CURRENT
-			then
-				cf := keyword_char_format
-			when
-				E_RESULT
-			then
-				cf := keyword_char_format
-			when
-				E_STRPLUS
-			then
-				cf := keyword_char_format
-			when
-				E_STRMINUS
-			then
-				cf := keyword_char_format
-			when
-				E_STRSTAR
-			then
-				cf := keyword_char_format
-			when
-				E_STRSLASH
-			then
-				cf := keyword_char_format
-			when
-				E_STRDIV
-			then
-				cf := keyword_char_format
-			when
-				E_STRMOD
-			then
-				cf := keyword_char_format
-			when
-				E_STRPOWER
-			then
-				cf := keyword_char_format
-			when
-				E_STRLT
-			then
-				cf := keyword_char_format
-			when
-				E_STRLE
-			then
-				cf := keyword_char_format
-			when
-				E_STRGT
-			then
-				cf := keyword_char_format
-			when
-				E_STRGE
-			then
-				cf := keyword_char_format
-			when
-				E_STRAND
-			then
-				cf := keyword_char_format
-			when
-				E_STROR
-			then
-				cf := keyword_char_format
-			when
-				E_STRXOR
-			then
-				cf := keyword_char_format
-			when
-				E_STRANDTHEN
-			then
-				cf := keyword_char_format
-			when
-				E_STRORELSE
-			then
-				cf := keyword_char_format
-			when
-				E_STRIMPLIES
-			then
-				cf := keyword_char_format
-			when
-				E_STRFREEOP
-			then
-				cf := keyword_char_format
-			when
-				E_STRNOT
-			then
-				cf := keyword_char_format
-			when
-				E_IMPLIES
-			then
-				cf := keyword_char_format
-			when
-				E_OR
-			then
-				cf := keyword_char_format
-			when
-				E_XOR
-			then
-				cf := keyword_char_format
-			when
-				E_AND
-			then
-				cf := keyword_char_format
-			when
-				E_NE
-			then
-				cf := keyword_char_format
-			when
-				E_LE
-			then
-				cf := keyword_char_format
-			when
-				E_GE
-			then
-				cf := keyword_char_format
-			when
-				E_DIV
-			then
-				cf := symbol_char_format
-			when
-				E_MOD
-			then
-				cf := symbol_char_format
-			when
-				E_FREEOP
-			then
-				cf := symbol_char_format
-			when
-				E_NOT
-			then
-				cf := symbol_char_format
-			when
-				E_OLD
-			then
-				cf := keyword_char_format
-			when
-				E_PRECURSOR
-			then
-				cf := keyword_char_format
-			when
-				E_COMMENT
-			then
-				cf := comment_char_format
-			when
-				Minus_code
-			then
-				cf := symbol_char_format
-			when
-				Plus_code
-			then
-				cf := symbol_char_format
-			when
-				Star_code
-			then
-				cf := symbol_char_format
-			when
-				Slash_code
-			then
-				cf := symbol_char_format
-			when
-				Caret_code
-			then
-				cf := symbol_char_format
-			when
-				Equal_code
-			then
-				cf := symbol_char_format
-			when
-				Greater_than_code
-			then
-				cf := symbol_char_format
-			when
-				Less_than_code
-			then
-				cf := symbol_char_format
-			when
-				Dot_code
-			then
-				cf := symbol_char_format
-			when
-				Semicolon_code
-			then
-				cf := symbol_char_format
-			when
-				Comma_code
-			then
-				cf := symbol_char_format
-			when
-				Colon_code
-			then
-				cf := symbol_char_format
-			when
-				Exclamation_code
-			then
-				cf := symbol_char_format
-			when
-				Left_parenthesis_code
-			then
-				cf := symbol_char_format
-			when
-				Right_parenthesis_code
-			then
-				cf := symbol_char_format
-			when
-				Left_brace_code
-			then
-				cf := symbol_char_format
-			when
-				Right_brace_code
-			then
-				cf := symbol_char_format
-			when
-				Left_bracket_code
-			then
-				cf := symbol_char_format
-			when
-				Right_bracket_code
-			then
-				cf := symbol_char_format
-			when
-				Dollar_code
-			then
-				cf := symbol_char_format
 			else
 				cf := default_char_format
 			end
@@ -650,20 +197,20 @@ feature {NONE}
 --				end
 
 			
-			debug
-				print ("[raising hl: ")
-				print (last_token.out)
-				print (" [")
-				print (text.substring (first_pos, last_pos))
-				print ("] (")
-				print (first_pos)
-				print (",")
-				print (last_pos)
-				print (",")
-				print (text_length)
-				print (")")
-				print ("]%N")
-			end
+debug
+	print ("[raising hl: ")
+	print (last_token.out)
+	print (" [")
+	print (text.substring (first_pos, last_pos))
+	print ("] (")
+	print (first_pos)
+	print (",")
+	print (last_pos)
+	print (",")
+	print (text_length)
+	print (")")
+	print ("]%N")
+end
 				int_buffer := text_length
 			
 --				execute_highlight (first_pos, last_pos, cf)
@@ -681,112 +228,104 @@ feature {NONE}
 --			end
 		end		
 
+feature {NONE} -- Implementation
 
-
-	default_font: EV_FONT is
-		do
-			--create Result.make_by_name ("Courier New")
-			create Result.make
-			Result.set_height (10)
-		end
-
-
-	keyword_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (blue)
-			Result.set_font (default_font)
-			Result.set_bold (True)
-		end	
-
-	string_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (red)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-	comment_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (dark_green)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-	general_identifier_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (dark_blue)
---			Result.set_italic (True)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-	class_identifier_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (red)
---			Result.set_italic (True)
-			Result.set_font (default_font)
-			Result.set_bold (True)
-		end	
-
-	number_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (red)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-	symbol_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (dark_red)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-	default_char_format: EV_CHARACTER_FORMAT is
-		do
-			create Result.make
-			Result.set_color (black)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-	dcf: EV_CHARACTER_FORMAT is
-		-- test only
-		do
-			create Result.make
-			Result.set_color (black)
-			Result.set_font (default_font)
-			Result.set_bold (False)
-		end	
-
-
-	is_upper_case_only (s: STRING): BOOLEAN is
+	is_class_identifier (s: STRING): BOOLEAN is
 			-- Does `s' consist of upper case characters
 			-- only?
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			area: SPECIAL [CHARACTER]
+			c: CHARACTER
 		do
 			from
+				area := s.area
+				nb := s.count - 1
 				Result := True
-				i := 1
+				i := 0
 			until
-				i > s.count
+				i > nb or not Result
 			loop
-				if
-					s.item (i).is_lower
-				then
-					Result := False
+				c := area.item (i)
+				if c /= '_' then
+					Result := c.is_upper
 				end
 				i := i + 1
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	courrier_font: EV_FONT is
+		once
+			create Result.make_by_name ("Courier New")
+			Result.set_height (8)
+		end
+
+	times_font: EV_FONT is
+		once
+			create Result.make_by_name ("Times New Roman")
+			Result.set_height (9)
+		end
+
+	keyword_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (blue)
+			Result.set_font (times_font)
+			Result.set_bold (True)
+		end	
+
+	string_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (red)
+			Result.set_font (times_font)
+		end	
+
+	comment_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (red)
+			Result.set_font (courrier_font)
+		end	
+
+	general_identifier_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (dark_green)
+			Result.set_font (courrier_font)
+			Result.set_italic (True)
+		end	
+
+	class_identifier_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (magenta)
+			Result.set_font (times_font)
+			Result.set_italic (True)
+		end	
+
+	number_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (red)
+			Result.set_font (times_font)
+		end	
+
+	symbol_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (dark_red)
+			Result.set_font (times_font)
+		end	
+
+	default_char_format: EV_CHARACTER_FORMAT is
+		once
+			create Result.make
+			Result.set_color (black)
+			Result.set_font (courrier_font)
+		end	
 
 end -- class BUTTON_WINDOW
 

@@ -65,7 +65,8 @@ feature -- Creation
 		do			
 			create observers.make (2)
 			create schema_validator	
-			attach (Application_window) 
+			attach (Application_window)
+			attach (shared_web_browser)
 		end
 
 feature -- Access	
@@ -250,7 +251,7 @@ feature -- Status Setting
 			else
 				name := a_new_name
 			end
-		end	
+		end		
 
 	set_text (a_text: STRING) is
 			-- Set `text'
@@ -273,7 +274,6 @@ feature -- Status Setting
 			else
 				internal_save (name)
 			end
-			Application_window.update
 		end	
 
 feature {NONE} -- Implementation
@@ -309,6 +309,7 @@ feature {NONE} -- Implementation
 				name := a_filename
 			end
 			write_to_disk
+			notify_observers
 		end		
 
 	write_to_disk is

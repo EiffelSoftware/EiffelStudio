@@ -88,12 +88,6 @@ feature -- Status report
 			!! Result.make (parsed_string_size)
 		end
 	
-	db_integer_selection: DATABASE_INTEGER_SELECTION [G] is
-			-- DATABASE_INTEGER_SELECTION handle.
-		do
-			!! Result
-		end
-
 	name: STRING is
 			-- Database name
 		local

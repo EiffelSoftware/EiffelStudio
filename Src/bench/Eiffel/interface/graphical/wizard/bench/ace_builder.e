@@ -33,13 +33,14 @@ feature -- Graphical User Interface
 
 	build_interface is
 		local
-			twl: TWO_WAY_LIST [STRING];
-			child: ARRAYED_LIST [WIDGET];
-			toggle: TOGGLE_B;
-			first: BOOLEAN;
-			subdir: DIRECTORY_NAME;
-			l_s_d, l_s_d_lower, std_precomp_name: STRING;
+			twl: TWO_WAY_LIST [STRING]
+			child: ARRAYED_LIST [WIDGET]
+			toggle: TOGGLE_B
+			first: BOOLEAN
+			subdir: DIRECTORY_NAME
+			l_s_d, l_s_d_lower, std_precomp_name: STRING
 			proj: STRING
+			sep1, sep2: THREE_D_SEPARATOR
 		once
 			twl := precompiles;
 			!! dir_edit.make ("dir_edit", dialog.action_form);
@@ -51,6 +52,9 @@ feature -- Graphical User Interface
 			!! system_label.make ("system_label", dialog.action_form);
 			!! root_class_label.make ("root_class_label", dialog.action_form);
 			!! creation_procedure_label.make ("creation_procedure_label", dialog.action_form);
+
+			!! sep1.make (Interface_names.t_Empty, dialog.action_form)
+
 			!! precomp_label.make ("precomp_label", dialog.action_form);
 			!! assertion_label.make ("assertion_label", dialog.action_form);
 
@@ -85,6 +89,8 @@ feature -- Graphical User Interface
 				twl.forth
 			end;
 			standard_precompiles_reverse.compare_objects;
+
+			!! sep2.make (Interface_names.t_Empty, dialog.action_form)
 
 			!! assertion_radio.make ("assertion_radio", dialog.action_form);
 			!! no_ass.make ("ass_no", assertion_radio);
@@ -144,14 +150,22 @@ feature -- Graphical User Interface
 			dialog.action_form.attach_right (creation_procedure_edit, 10);
 			dialog.action_form.attach_top_widget (root_class_edit, creation_procedure_edit, 10);
 
+			dialog.action_form.attach_left (sep1, 2);
+			dialog.action_form.attach_right (sep1, 2);
+			dialog.action_form.attach_top_widget (creation_procedure_edit, sep1, 5);
+
 			dialog.action_form.attach_left (precomp_label, 10);
-			dialog.action_form.attach_top_widget (creation_procedure_edit, precomp_label, 15);
+			dialog.action_form.attach_top_widget (sep1, precomp_label, 5);
 
 			dialog.action_form.attach_left (precomp_box, 10);
 			dialog.action_form.attach_top_widget (precomp_label, precomp_box, 10);
 
+			dialog.action_form.attach_left (sep2, 2);
+			dialog.action_form.attach_right (sep2, 2);
+			dialog.action_form.attach_top_widget (precomp_box, sep2, 5);
+
 			dialog.action_form.attach_left (assertion_label, 10);
-			dialog.action_form.attach_top_widget (precomp_box, assertion_label, 10);
+			dialog.action_form.attach_top_widget (sep2, assertion_label, 5);
 
 			dialog.action_form.attach_left (assertion_radio, 10);
 			dialog.action_form.attach_top_widget (assertion_label, assertion_radio, 10);
@@ -229,8 +243,7 @@ feature -- Information Handling
 							processed := True;
 							generate_ace_file (contents);
 							save_ace_file (contents);
-							if not (c_name.is_equal ("ANY") or else
-								c_name.is_equal ("NONE"))
+							if not c_name.is_equal ("ANY") or else c_name.is_equal ("NONE")
 							then
 								create_root_class;
 							end

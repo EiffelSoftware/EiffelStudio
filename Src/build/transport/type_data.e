@@ -8,12 +8,11 @@ indexing
 deferred class TYPE_DATA
 
 inherit
-	
 	PND_DATA
 
-feature
+feature -- Status report
 
- 	type: CONTEXT_TYPE is
+ 	type: CONTEXT_TYPE [CONTEXT] is
  			-- Context type 
  		deferred
  		end

@@ -15,6 +15,44 @@ ecom_runtime_ec rt_ec;
 
 //-------------------------------------------------------------------------
 
+VARIANT_BOOL *ecom_runtime_ec::ccom_ec_pointed_boolean (EIF_REFERENCE a_bool, VARIANT_BOOL * old)
+
+// Create VARIANT_BOOL from ECOM_BOOLEAN
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_BOOLEAN_FUNCTION item;
+	VARIANT_BOOL * result;
+	EIF_BOOLEAN temp_bool;
+
+	eif_object = eif_protect (a_bool);
+	type_id = eif_type_id ("BOOLEAN_REF");
+	item = eif_boolean_function ("item", type_id);
+
+	result = (VARIANT_BOOL *) CoTaskMemAlloc (sizeof (VARIANT_BOOL));
+	temp_bool = (EIF_BOOLEAN) item (eif_access (eif_object));
+
+	eif_wean (eif_object);
+	if (old != NULL)
+	{
+		if (temp_bool == EIF_TRUE)
+			*old = VARIANT_TRUE;
+		else
+			*old = VARIANT_FALSE;
+		result = NULL;
+	}
+	else
+	{
+		if (temp_bool == EIF_TRUE)
+			*result = VARIANT_TRUE;
+		else
+			*result = VARIANT_FALSE;
+	}
+	return result;
+};
+
+//-------------------------------------------------------------------------
+
 VARIANT_BOOL ecom_runtime_ec::ccom_ec_boolean (EIF_BOOLEAN a_bool)
 
 // Create VARIANT_BOOL from ECOM_BOOLEAN

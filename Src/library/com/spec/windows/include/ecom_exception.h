@@ -16,7 +16,7 @@
 
 #include "eif_eiffel.h"
 
-class  Formatter
+class Formatter
 {
 public:
 	Formatter();

@@ -10,7 +10,8 @@ class
 inherit
 	WIZARD_COCLASS_EIFFEL_GENERATOR
 		redefine
-			generate
+			generate,
+			set_default_ancestors
 		end
 
 feature -- Initialization
@@ -61,6 +62,18 @@ feature --  Basic operation
 		end
 
 feature {NONE} -- Implementation
+
+	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
+			-- Set default ancestors
+		local
+			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
+		do
+			Precursor (an_eiffel_writer)
+
+			create tmp_writer.make
+			tmp_writer.set_name ("INTERNAL")
+			an_eiffel_writer.add_inherit_clause (tmp_writer)
+		end
 
 	add_default_features is
 			-- Generate process dependent feature

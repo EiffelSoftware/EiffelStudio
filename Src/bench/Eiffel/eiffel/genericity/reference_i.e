@@ -23,6 +23,12 @@ feature -- Status report
 		do
 			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_object
 		end
+		
+	tuple_code: INTEGER_8 is
+			-- Tuple code
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
+		end
 
 feature
 
@@ -38,21 +44,13 @@ feature
 	is_reference: BOOLEAN is True
 			-- is the C type a reference type ?
 
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			st.add_string ("EIF_REFERENCE")
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring ("REFERENCE")
-		end
+	name: STRING is "REFERENCE"
+			-- Name of current class type
 
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		once
-			Result := "any"
+			Result := "ANY"
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -82,12 +80,6 @@ feature
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
 
-	c_string_id: INTEGER is
-			-- String ID generated for type.
-		once
-			Result := Names_heap.eif_reference_name_id
-		end
-		
 	union_tag: STRING is "rarg"
 
 	hash_code: INTEGER is
@@ -124,5 +116,5 @@ feature
 		do
 			Result := System.any_class.compiled_class.actual_type
 		end
-
+	
 end

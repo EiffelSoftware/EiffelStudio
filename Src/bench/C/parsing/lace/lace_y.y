@@ -47,6 +47,7 @@
 %token LAC_OBJECT;
 %token LAC_OPTIMIZE;
 %token LAC_OPTION;
+%token LAC_PRECOMPILED;
 %token LAC_RENAME;
 %token LAC_REQUIRE;
 %token LAC_RIGHT_PARAM;
@@ -78,7 +79,7 @@
 						Visible Class_visi_list Class_visibility
 						Creation_restriction Export_restriction External_rename
 						ExternaL_rename_pair Name Ace Cluster_properties
-						Option_name External_name
+						Option_name External_name Precompiled_adaptation
 
 %%
 
@@ -249,9 +250,17 @@ D_option_clause_list    : D_option_clause
 
 D_option_clause         : /* empty */
 							{$$ = NULL;}
+						| LAC_PRECOMPILED Option_mark Precompiled_adaptation
+							{$$ = create_node3(D_PRECOMPILED_SD,create_node(PRECOMPILED_SD),$2,$3);}
                         | Option_name Option_mark
 							{$$ = create_node2 (D_OPTION_SD,$1,$2);}
                         ;
+
+Precompiled_adaptation: /* empty */
+							{$$ = NULL;}
+						| External_rename LAC_END
+							{$$ = $1;}
+						;
 
 Option_name				:	LAC_ASSERTION
 							{$$ = create_node(ASSERTION_SD);}

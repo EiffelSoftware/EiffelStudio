@@ -1,8 +1,9 @@
 class UN_PLUS_B 
 
 inherit
-
 	UNARY_B
+		rename
+			Bc_uplus as operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;
@@ -12,13 +13,6 @@ feature
 	generate_operator is
 			-- Generate the unary operator
 		do
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_uplus;
 		end;
 
 	is_built_in: BOOLEAN is

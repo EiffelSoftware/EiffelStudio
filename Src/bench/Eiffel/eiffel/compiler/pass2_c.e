@@ -92,6 +92,7 @@ feature
 
 					-- Update the freeze list for changed hash tables.
 				System.melted_set.put (associated_class);
+				associated_class.set_generate_descriptors (True)
 			elseif (assert_prop_list /= Void) then
 					-- Propagation of assertion modifications only.
 debug ("ACTIVITY")

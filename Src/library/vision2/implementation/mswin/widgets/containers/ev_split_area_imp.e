@@ -26,6 +26,8 @@ inherit
 			set_height
 		end
 
+	EV_SYSTEM_PEN_IMP
+
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
@@ -45,15 +47,16 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_char,
-			on_key_up
+			on_key_up,
+			on_draw_item
 		redefine
 			on_paint
 		end
 
-	WEL_PS_CONSTANTS
-		export
-			{NONE} all
-		end
+--	WEL_PS_CONSTANTS
+--		export
+--			{NONE} all
+--		end
 
 	WEL_WINDOWS_ROUTINES
 		export
@@ -138,16 +141,16 @@ feature -- Status settings
 
 feature -- Resizing
 
-	set_width (new_width: INTEGER) is
+	set_width (value: INTEGER) is
 		do
-			set_local_width (new_width)
-			parent_imp.child_width_changed (width, Current)
+			child_cell.set_width (value.max (minimum_width))
+			set_local_width (child_cell.width)
 		end
 
-	set_height (new_height: INTEGER) is
+	set_height (value: INTEGER) is
 		do
-			set_local_height (new_height)
-			parent_imp.child_height_changed (height, Current)
+			child_cell.set_height (value.max (minimum_height))
+			set_local_height (child_cell.height)
 		end
 
 feature {NONE} -- Basic operation
@@ -258,53 +261,6 @@ feature {NONE} -- Implementation : Brushes and pen
 			!! log.make (2, 2, 2, 1, 1, $c)
 			!! bitmap.make_indirect (log)
 			!! Result.make_by_pattern (bitmap)
-		end
-
-	window_frame_pen: WEL_PEN is
-			-- Pen with the window frame color
-		local
-			color: WEL_COLOR_REF
-		do
-			!! color.make_system (Color_windowframe)
-			!! Result.make (ps_solid, 1, color)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	face_pen: WEL_PEN is
-			-- Pen with the face color
-		local
-			color: WEL_COLOR_REF
-		do
-			!! color.make_system (Color_btnface)
-			!! Result.make (ps_solid, 1, color)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
-		end
-	
-	shadow_pen: WEL_PEN is
-			-- Pen with the shadow color
-		local
-			color: WEL_COLOR_REF
-		do
-			!! color.make_system (Color_btnshadow)
-			!! Result.make (ps_solid, 1, color)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
-		end
-
-	highlight_pen: WEL_PEN is
-			-- Pen with the highlight color
-		local
-			color: WEL_COLOR_REF
-		do
-			!! color.make_system (Color_btnhighlight)
-			!! Result.make (ps_solid, 1, color)
-		ensure
-			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 Invariant

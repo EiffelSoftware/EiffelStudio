@@ -110,8 +110,9 @@ feature -- Access EV_DRAGABLE_SOURCE.
 						-- Unparent `insert_label'.
 					insert_label.parent.prune (insert_label)
 						-- Now, perform special processing if the parent of `insert_label'
-						-- was a cell.
-					if cell_parent.generating_type.is_equal ("EV_CELL") then
+						-- was a cell. Note that we check `cell_parent' is not Void before checking its
+						-- generating type.
+					if cell_parent /= Void and then cell_parent.generating_type.is_equal ("EV_CELL") then
 						box_cell_parent ?= cell_parent.parent
 						if box_cell_parent /= Void then
 							index := box_cell_parent.index_of (cell_parent, 1)

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_TEXTABLE_TEST
+	EV_TEST_TEXTABLE
 
 inherit
 	EV_TEST2
@@ -141,7 +141,7 @@ feature -- Access
 			-- Description of the test, its results and other
 			-- (ir)relevant information.
 
-end -- class EV_TEXTABLE_TEST
+end -- class EV_TEST_TEXTABLE
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -164,6 +164,9 @@ end -- class EV_TEXTABLE_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/03/30 18:39:17  brendel
+--| Renamed to EV_TEST_TEXTABLE.
+--|
 --| Revision 1.2  2000/03/29 20:15:06  brendel
 --| Fixed some testcases.
 --|

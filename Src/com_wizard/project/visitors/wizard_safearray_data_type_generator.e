@@ -57,8 +57,7 @@ feature -- Basic operations
 
 			elseif 
 				is_integer2 (an_element_type) or 
-				is_unsigned_short (an_element_type) or
-				element_visitor.is_enumeration 
+				is_unsigned_short (an_element_type)
 			then
 				ce_function_name.append ("ccom_ce_safearray_short")
 				ec_function_name.append ("ccom_ec_safearray_short")
@@ -75,6 +74,20 @@ feature -- Basic operations
 				ec_function_name.append ("ccom_ec_safearray_long")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
 
+			elseif 
+				is_long_long (an_element_type) 
+			then
+				ce_function_name.append ("ccom_ce_safearray_int64")
+				ec_function_name.append ("ccom_ec_safearray_int64")
+				eiffel_type.append ("ECOM_ARRAY %(INTEGER_64%)")
+
+			elseif 
+				is_unsigned_long_long (an_element_type) 
+			then
+				ce_function_name.append ("ccom_ce_safearray_int64")
+				ec_function_name.append ("ccom_ec_safearray_uint64")
+				eiffel_type.append ("ECOM_ARRAY %(INTEGER_64%)")
+								
 			elseif is_real4 (an_element_type) then
 				ce_function_name.append ("ccom_ce_safearray_float")
 				ec_function_name.append ("ccom_ec_safearray_float")

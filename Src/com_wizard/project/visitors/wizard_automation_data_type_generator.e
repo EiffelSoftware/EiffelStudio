@@ -71,6 +71,14 @@ feature -- Basic operations
 				cecil_type.append ("EIF_INTEGER")
 				is_basic_type := True
 
+			elseif a_type = Vt_i8 then
+				cecil_type.append ("EIF_INTEGER_64")
+				is_basic_type := True 
+				
+			elseif a_type = Vt_ui8 then
+				cecil_type.append ("EIF_INTEGER_64")
+				is_basic_type := True 
+				
 			elseif a_type = Vt_void or a_type = Vt_empty then
 				is_basic_type := True
 
@@ -141,15 +149,6 @@ feature -- Basic operations
 				can_free := True
 				writable := True
 
-			elseif is_long_long (a_type) then
-				ce_function_name.append ("ccom_ce_long_long")
-				ec_function_name.append ("ccom_ec_long_long")
-				is_structure := True
-
-			elseif is_unsigned_long_long (a_type) then
-				ce_function_name.append ("ccom_ce_u_long_long")
-				ec_function_name.append ("ccom_ec_u_long_long")
-				is_structure := True
 			else
 				message_output.add_warning (Current, message_output.not_supported_data_type)
 

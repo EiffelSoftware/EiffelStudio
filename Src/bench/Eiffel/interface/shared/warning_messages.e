@@ -994,10 +994,16 @@ feature -- Warning messages
 
 	w_End_of_history: STRING is "End of history"
 	
-	w_Export_to_png_failed (a_file_name: STRING): STRING is 
+	w_cannot_save_png_file (a_file_name: STRING): STRING is 
 		do
-			Result := "Could not save diagram to " + a_file_name
+			if a_file_name /= Void then
+				Result := "Could not save diagram to " + a_file_name
+			else
+				Result := "Could not save diagram to specified location."
+			end
 		end
+	
+	w_cannot_generate_png: STRING is "Could not generate PNG file.%NInsufficient video memory."
 	
 	w_Environment_not_initialized: STRING is "$EIFFEL5 is not initialized. Execution impossible%N"
 

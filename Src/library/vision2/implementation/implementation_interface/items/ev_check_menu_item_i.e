@@ -32,6 +32,27 @@ feature -- Status setting
 			correct_state: state = flag
 		end
 
+feature -- Event : command association
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end
+
+feature -- Event -- removing command association
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		require
+			exists: not destroyed
+		deferred	
+		end
+
 end -- class EV_CHECK_MENU_ITEM_I
 
 --|----------------------------------------------------------------

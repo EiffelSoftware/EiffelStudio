@@ -9,7 +9,7 @@ deferred class
 	EV_LIST_ITEM_I
 	
 inherit
-	EV_ITEM_I
+	EV_SIMPLE_ITEM_I
 
 feature {NONE} -- Initialization
 
@@ -103,6 +103,24 @@ feature -- Element change
 
 feature -- Event : command association
 
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end	
+
 	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed
 			-- when the item is double clicked.
@@ -113,6 +131,22 @@ feature -- Event : command association
 		end	
 
 feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		require
+			exists: not destroyed
+		deferred			
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		require
+			exists: not destroyed
+		deferred	
+		end
 
 	remove_double_click_commands is
 			-- Empty the list of commands to be executed when

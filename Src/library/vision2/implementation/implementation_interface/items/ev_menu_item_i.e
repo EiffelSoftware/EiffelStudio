@@ -11,7 +11,7 @@ deferred class
 	EV_MENU_ITEM_I
 	
 inherit
-	EV_ITEM_I
+	EV_SIMPLE_ITEM_I
 		redefine
 			pixmap_size_ok
 		end
@@ -71,13 +71,34 @@ feature -- Assertion
 		deferred
 		end
 
+feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		deferred
+		end	
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		require
+			exists: not destroyed
+		deferred			
+		end	
+
 feature {NONE} -- Implementation
 
 	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do
-			Result := (pixmap.width <= 16) and (pixmap.height <= 16)
+			Result := (pix.width <= 16) and (pix.height <= 16)
 		end
 
 end -- class EV_MENU_ITEM_I

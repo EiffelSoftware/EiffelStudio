@@ -10,9 +10,9 @@ class
 inherit
 	EV_STATUS_BAR_ITEM_I
 
-	EV_ITEM_IMP
+	EV_SIMPLE_ITEM_IMP
 		redefine
-			parent_imp
+			set_text
 		end
 
 creation
@@ -64,7 +64,7 @@ feature -- Status setting
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := txt
+			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
 			end

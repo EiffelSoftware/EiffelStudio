@@ -1,48 +1,24 @@
 indexing	
-	description: "EiffelVision item. Mswindows implementation"
-	note: "It is not necessary to inherit from%
-		% EV_TEXTABLE_IMP because all the features%
-		% use `wel_window', but such a big object isn't%
-		% necessary here."
+	description: "EiffelVision base item, mswindows implementation"
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class 
-	EV_SIMPLE_ITEM_IMP
-
-inherit
-	EV_SIMPLE_ITEM_I
-
 	EV_ITEM_IMP
 
-	EV_PIXMAPABLE_IMP
+inherit
+	EV_ITEM_I
 
-feature {NONE} -- Initialization
-
-	make_with_text (txt: STRING) is
-			-- Create an item with `par' as parent and `txt'
-			-- as text.
-		do
-			make
-			set_text (txt)
+	EV_EVENT_HANDLER_IMP
+		export
+			{EV_ITEM_HOLDER_IMP} execute_command
 		end
+
+	EV_ITEM_EVENTS_CONSTANTS_IMP
 
 feature -- Access
-
-	text: STRING
-			-- Current label of the item
-
-feature -- Element change
-
-	set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
-		do
-			text := txt
-		end
-
-feature {NONE} -- Implementation
 
 	parent_imp: EV_ITEM_HOLDER_IMP is
 			-- The parent of the Current widget
@@ -50,7 +26,22 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-end -- class EV_SIMPLE_ITEM_IMP
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
+		do
+			Result := parent_imp.current_widget
+		end
+
+	wel_window: WEL_WINDOW is
+			-- Window used to create the related pixmap. It has
+			-- to be a wel_control.
+			-- It correspond to the implementation of the
+			-- parent_widget.
+		do
+			Result ?= parent_widget.implementation
+		end
+
+end -- class EV_ITEM_IMP
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

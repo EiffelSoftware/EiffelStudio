@@ -19,9 +19,11 @@ inherit
 			add_item
 		end
 
-	EV_ITEM_IMP
+	EV_SIMPLE_ITEM_IMP
 		undefine
 			pixmap_size_ok
+		redefine
+			set_text
 		end
 
 creation
@@ -103,13 +105,12 @@ feature -- Element change
 			end
 		end
 
-	set_text (str: STRING) is
-			-- Set `text' to `str'
+	set_text (txt: STRING) is
+			-- Set `text' to `txt'.
 		do
+			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
-				parent_menu.modify_string (str, id)
-			else
-				text := str
+				parent_menu.modify_string (txt, id)
 			end
 		end
 
@@ -151,6 +152,24 @@ feature -- Assertion
 			check
 				not_yet_implemented: False
 			end
+		end
+
+feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		do
+			add_command (Cmd_item_activate, cmd, arg)			
+		end
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		do
+			remove_command (Cmd_item_activate)			
 		end
 
 feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation

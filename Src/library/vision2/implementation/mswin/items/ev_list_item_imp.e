@@ -10,11 +10,11 @@ class
 
 inherit
 	EV_LIST_ITEM_I
-		redefine
-			parent_imp
-		end
 
-	EV_ITEM_IMP
+	EV_SIMPLE_ITEM_IMP
+		redefine
+			set_text
+		end
 
 	EV_SYSTEM_PEN_IMP
 		export
@@ -140,7 +140,7 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := txt
+			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			if parent_imp /= Void then
 				parent_imp.internal_set_text (Current, txt)
 			end
@@ -155,6 +155,20 @@ feature -- Element change
 
 feature -- Event : command association
 
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		do
+			add_command (Cmd_item_activate, cmd, arg)			
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		do
+			add_command (Cmd_item_deactivate, cmd, arg)		
+		end
+
 	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed
 			-- when the item is double clicked.
@@ -163,6 +177,20 @@ feature -- Event : command association
 		end	
 
 feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		do
+			remove_command (Cmd_item_activate)			
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		do
+			remove_command (Cmd_item_deactivate)		
+		end
 
 	remove_double_click_commands is
 			-- Empty the list of commands to be executed when

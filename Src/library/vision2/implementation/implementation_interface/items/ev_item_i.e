@@ -1,52 +1,59 @@
-indexing
-	description: "Eiffel Vision status bar item."
-	status: "See notice at end of class."
+indexing	
+	description: 
+		"EiffelVision base item, implementation interface"
+	status: "See notice at end of class"
+	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	EV_STATUS_BAR_ITEM_I
+deferred class 
+	EV_ITEM_I
 
 inherit
-	EV_SIMPLE_ITEM_I
+	EV_ANY_I
 
 feature -- Access
 
-	parent_imp: EV_STATUS_BAR_IMP
-			-- Parent of the current item.
-
-feature -- Measurement
-
-	width: INTEGER is
-			-- The width of the item in the status bar.
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
 		require
 			exists: not destroyed
 		deferred
 		end
 
-feature -- Status setting
-
-	set_width (value: INTEGER) is
-			-- Make `value' the new width of the item.
-			-- If -1, then the item reach the right of the status
-			-- bar.
+	parent_imp: EV_ANY_I is
+			-- The parent of the Current widget
+			-- Can be void.
 		require
 			exists: not destroyed
-			valid_value: value >= 0 or value = -1
 		deferred
-		ensure
-			width_set: (width = value) or (value = -1)
 		end
 
 feature -- Element change
 
-	set_parent (par: EV_STATUS_BAR) is
+	set_parent (par: EV_ANY) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			parent_set: parent_set (par)
 		end
 
-end -- class EV_STATUS_BAR_ITEM_I
+feature -- Assertion
+
+	parent_set (par: EV_ANY): BOOLEAN is
+			-- Is the parent set
+		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface = par
+			else
+				Result := par = Void
+			end				
+		end
+
+end -- class EV_ITEM_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

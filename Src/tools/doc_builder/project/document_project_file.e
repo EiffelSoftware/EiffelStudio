@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Creation
+feature -- Initialization
 
 	make (a_project: DOCUMENT_PROJECT) is
 			-- Create from project
@@ -24,9 +24,25 @@ feature -- Creation
 			project_not_void: a_project /= Void
 		do
 			project := a_project
+			initialize
 		ensure
 			has_project: project /= Void
 		end
+
+	initialize is
+			-- Initialize with default values
+		do
+			process_includes := True
+			process_header := True
+			use_header_file := False
+			override_file_header_declarations := True
+			process_footer := True	
+			use_footer_file := False
+			override_file_footer_declarations := True
+			include_navigation_links := True
+			generate_dhtml_filter := True
+			process_html_stylesheet := True
+		end			
 
 feature -- Access
 
@@ -94,13 +110,21 @@ feature -- Basic operations
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, project.Shared_document_manager.stylesheet.name))
 				l_root.put_last (l_element)
 			end
-			
+
 				-- Header
 			if header_name /= Void then
 				create l_element.make (l_root, header_file_tag, l_ns)
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, header_name))
 				l_root.put_last (l_element)
-			end
+			end			
+			
+			create l_element.make (l_root, header_file_override_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, override_file_header_declarations.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, use_header_file_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, use_header_file.out))
+			l_root.put_last (l_element)
 			
 				-- Footer
 			if footer_name /= Void then
@@ -108,6 +132,39 @@ feature -- Basic operations
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, footer_name))
 				l_root.put_last (l_element)
 			end
+
+			create l_element.make (l_root, footer_file_override_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, override_file_footer_declarations.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, use_footer_file_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, use_footer_file.out))
+			l_root.put_last (l_element)
+		
+				-- Includes
+			create l_element.make (l_root, process_includes_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, process_includes.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, process_header_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, process_header.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, process_footer_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, process_footer.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, process_html_stylesheet_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, process_html_stylesheet.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, include_navigation_links_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, include_navigation_links.out))
+			l_root.put_last (l_element)
+			
+			create l_element.make (l_root, generate_dhtml_filter_tag, l_ns)
+			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, generate_dhtml_filter.out))
+			l_root.put_last (l_element)
 			
 			save_xml_document (document, project.file.name)
 		end
@@ -123,16 +180,16 @@ feature -- Access
 	process_footer: BOOLEAN
 			-- Should footer be included in transformations?
 			
-	use_header_file: BOOLEAN is False
+	use_header_file: BOOLEAN
 			-- Assuming `process_header' should header come from file?
 
-	use_footer_file: BOOLEAN is False
+	use_footer_file: BOOLEAN
 			-- Assuming `process_footer' should footer come from file?
 
-	override_file_header_declarations: BOOLEAN is True
+	override_file_header_declarations: BOOLEAN
 			-- Should the project header override file-level defined header files?
 
-	override_file_footer_declarations: BOOLEAN is True
+	override_file_footer_declarations: BOOLEAN
 			-- Should the project footer override file-level defined footer files?
 
 	header_name: STRING
@@ -169,6 +226,46 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 		do
 			footer_name := a_name
 		end	
+	
+	set_use_header_file (a_flag: BOOLEAN) is
+			-- Set `use_header_file'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			use_header_file := a_flag
+		ensure
+			flag_set: use_header_file = a_flag
+		end	
+		
+	set_use_footer_file (a_flag: BOOLEAN) is
+			-- Set `use_footer_file'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			use_footer_file := a_flag
+		ensure
+			flag_set: use_footer_file = a_flag
+		end	
+	
+	set_override_file_header_declarations (a_flag: BOOLEAN) is
+			-- Set `override_file_header_declarations'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			override_file_header_declarations := a_flag
+		ensure
+			flag_set: override_file_header_declarations = a_flag
+		end	
+		
+	set_override_file_footer_declarations (a_flag: BOOLEAN) is
+			-- Set `override_file_footer_declarations'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			override_file_footer_declarations := a_flag
+		ensure
+			flag_set: override_file_footer_declarations = a_flag
+		end		
 	
 	set_process_includes (a_flag: BOOLEAN) is
 			-- Set if includes should be processed when converting documents
@@ -259,13 +356,55 @@ feature {NONE} -- Implementation
 					project.Shared_document_manager.initialize_stylesheet (e.text)
 				end			
 			end
-				-- Header file
+				-- Header
 			if e.name.is_equal (header_file_tag) then
 				header_name := e.text		
 			end
+			
+			if e.name.is_equal (process_header_tag) then
+				process_header := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (header_file_override_tag) then
+				override_file_header_declarations := e.text.is_equal ("True")
+			end
+			
 				-- Footer file
 			if e.name.is_equal (footer_file_tag) then
 				footer_name := e.text
+			end
+			
+			if e.name.is_equal (process_footer_tag) then
+				process_footer := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (footer_file_override_tag) then
+				override_file_footer_declarations := e.text.is_equal ("True")
+			end
+			
+				-- Includes
+			if e.name.is_equal (process_includes_tag) then
+				process_includes := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (process_html_stylesheet_tag) then
+				process_html_stylesheet := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (include_navigation_links_tag) then
+				include_navigation_links := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (generate_dhtml_filter_tag) then
+				generate_dhtml_filter := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (use_header_file_tag) then
+				use_header_file := e.text.is_equal ("True")
+			end
+			
+			if e.name.is_equal (use_footer_file_tag) then
+				use_footer_file := e.text.is_equal ("True")
 			end
 			
 				-- Process sub_elements

@@ -62,7 +62,30 @@ feature {NONE} -- Commands
 			end
 			if project_preferences.footer_name /= Void then
 				header_loc_text.set_text (project_preferences.footer_name)
-			end		
+			end
+			
+			-- Conversion Options
+			set_check_button_value (header_override_check, project_preferences.override_file_header_declarations)
+			set_check_button_value (footer_override_check, project_preferences.override_file_footer_declarations)
+			set_check_button_value (use_include_tags, project_preferences.process_includes)
+			set_check_button_value (header_include_check, project_preferences.process_header)
+			set_check_button_value (footer_include_check, project_preferences.process_footer)
+			set_check_button_value (html_stylesheet_check, project_preferences.process_html_stylesheet)
+			set_check_button_value (nav_links_check, project_preferences.include_navigation_links)
+			set_check_button_value (dhtml_filter_check, project_preferences.generate_dhtml_filter)
+			
+			if project_preferences.use_header_file then
+				header_file_radio.enable_select
+			else	
+				header_generate_check.enable_select
+			end
+			
+			if project_preferences.use_footer_file then
+				footer_file_radio.enable_select
+			else	
+				footer_generate_check.enable_select
+			end			
+			
 			populate_filter_list
 		end
 
@@ -70,11 +93,7 @@ feature {NONE} -- Commands
 			-- Set chosen preferences
 		require
 			settings_valid: is_valid
-		local
-			l_proj_settings: DOCUMENT_PROJECT_PREFERENCES
-		do			
-			l_proj_settings := shared_project.preferences			
-				
+		do		
 				-- Schema
 			if schema_loc_text.text.is_empty then
 				shared_document_manager.remove_schema
@@ -88,13 +107,27 @@ feature {NONE} -- Commands
 				shared_document_manager.initialize_stylesheet (css_loc_text.text)
 			end		
 			
+				-- Header File		
+			if not header_loc_text.text.is_empty then
+				project_preferences.set_header (header_loc_text.text)
+			end
+
+				-- Footer File	
+			if not footer_loc_text.text.is_empty then
+				project_preferences.set_header (footer_loc_text.text)
+			end			
+			
 				-- Conversion Options
-			l_proj_settings.set_process_includes (use_include_tags.is_selected)
-			l_proj_settings.set_include_header (header_include_check.is_selected)
-			l_proj_settings.set_include_footer (footer_include_check.is_selected)
-			l_proj_settings.set_include_html_stylesheet (html_stylesheet_check.is_selected)
-			l_proj_settings.set_include_nav_links (nav_links_check.is_selected)
-			l_proj_settings.set_generate_dhtml_filter (dhtml_filter_check.is_selected)
+			project_preferences.set_override_file_header_declarations (header_override_check.is_selected)
+			project_preferences.set_override_file_footer_declarations (footer_override_check.is_selected)
+			project_preferences.set_process_includes (use_include_tags.is_selected)
+			project_preferences.set_include_header (header_include_check.is_selected)
+			project_preferences.set_include_footer (footer_include_check.is_selected)
+			project_preferences.set_include_html_stylesheet (html_stylesheet_check.is_selected)
+			project_preferences.set_include_nav_links (nav_links_check.is_selected)
+			project_preferences.set_generate_dhtml_filter (dhtml_filter_check.is_selected)
+			project_preferences.set_use_header_file (header_file_radio.is_selected)
+			project_preferences.set_use_footer_file (footer_file_radio.is_selected)
 				
 			project_preferences.write
 		end		
@@ -305,6 +338,16 @@ feature {NONE} -- Query
 				tags_list.extend (create {EV_LIST_ITEM}.make_with_text (l_tag))
 			end			
 		end
+		
+	set_check_button_value (a_button: EV_CHECK_BUTTON; a_flag: BOOLEAN) is
+			-- Set `a_button' to `a_flag'
+		do
+			if a_flag then
+				a_button.enable_select
+			else				
+				a_button.disable_select
+			end
+		end		
 
 end -- class PREFERENCES_DIALOG
 

@@ -89,7 +89,7 @@ feature {NONE}-- Initialization
 			left_top_padding_cell.set_minimum_height (10)
 			es_logo_pixmap.set_minimum_width (182)
 			es_logo_pixmap.set_minimum_height (80)
-			es_logo_pixmap.set_with_named_file ("E:\Sources\dotnet\codedom_provider\manager\icons\eiffel_software.png")
+			es_logo_pixmap.copy (eiffel_software_png)
 			left_bottom_padding_cell.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			right_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			right_box.set_padding_width (10)

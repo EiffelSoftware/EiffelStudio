@@ -96,7 +96,7 @@ feature {NONE}
 				a_temp_wind ?= a_context;
 				if a_temp_wind = Void then
 					if a_context.parent /= Void and then
-						a_context.parent.is_bulletin 
+						a_context.parent.is_bulletin
 					then
 						a_context.set_position (eb_screen.x, eb_screen.y);
 					end

@@ -57,8 +57,8 @@ RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EI
 
 #ifdef EIF_WINDOWS
 /* DLL declarations */
-extern HANDLE eif_load_dll(char *module_name);
-extern void eif_free_dlls(void);
+RT_LNK HANDLE eif_load_dll(char *module_name);
+RT_LNK void eif_free_dlls(void);
 
 extern char **_argv;
 #endif

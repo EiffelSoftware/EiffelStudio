@@ -617,7 +617,7 @@ feature -- IL code generation
 				-- Make IL code for preconditions
 			if
 				class_c.assertion_level.check_precond and then
-				precondition /= Void or inh_assert.has_precondition
+				(precondition /= Void or inh_assert.has_precondition)
 			then
 				generate_il_precondition
 			end

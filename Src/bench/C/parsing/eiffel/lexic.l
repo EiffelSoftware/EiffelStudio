@@ -54,27 +54,7 @@ extern struct token *in_word_set();		/* Pointer to static data */
  * Macros for lexical analyzer input 
  */
 
-#ifdef FLEX_SCANNER
-
-#define YY_INPUT(buf,result,max_size) \
-	{ \
-	int c = getc( yyin ); \
-	/*result = c == EOF ? (inherit_context ? (buf[0]='\001', 1):(buf[0]=EOF, 0)): (buf[0]=c, 1); */ \
-	if (c == EOF) \
-		if (inherit_context) { \
-			buf[0]='\001'; \
-			result = 1; \
-		} else { \
-			buf[0]=EOF; \
-			result = 0; \
-		} \
-	else { \
-		buf[0]=c; \
-		result = 1; \
-		} \
-	}
-
-#else
+#ifndef FLEX_SCANNER
 
 #undef input
 #define input()	(((yytchar=yysptr>yysbuf?U(*--yysptr):getc(yyin))==10?(yylineno++,yytchar):yytchar)==EOF?\
@@ -99,7 +79,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [ \t\n\r]+					{	start_position = end_position;
 								end_position += yyleng;}
 {D}+/".."					{return process_name(TE_INTEGER);}
-\1							{return process(TE_END);}
 ";"							{return process(TE_SEMICOLON);}
 ":"							{return process(TE_COLON);}
 ","							{return process(TE_COMMA);}
@@ -138,6 +117,17 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 ({D}*\.{D}+{E})|({D}+\.{D}*{E})|({U}(_{T})*)?\.(({T}_)*{U})?{E}|{U}(_{T})*\.((({T}_)*{U})?{E}) {return process_name(TE_REAL); }
 \"							{return get_string();}
 \'							{return get_char();}
+<<EOF>>						{
+								/* This rule has to be removed when compiling with `lex'.
+								 * and the extra rule: \1	{return process(TE_END);} has to be added
+								 */
+
+								if (inherit_context) {
+									inherit_context = 0;
+									return process(TE_END);
+								} else
+									yyterminate();
+							}
 .							{	start_position = end_position;
 								end_position += yyleng;
 								yyerror ((char *) 0);}

@@ -41,17 +41,17 @@ feature {NONE} -- Implementation
 			a_name: STRING) is
 			-- Create the dialog
 		local
-			c_name: ANY
+			c_name: WEL_STRING
 		do
 			item := cwel_temp_dialog_value
 			exists := True
 			register_window (Current)
 			if a_name /= Void then
 				-- Load by name
-				c_name := a_name.to_c
+				!! c_name.make (a_name)
 				item := cwin_create_dialog (
 					main_args.current_instance.item,
-					$c_name, parent_item,
+					c_name.item, parent_item,
 					cwel_dialog_procedure_address)
 			else
 				-- Load by id

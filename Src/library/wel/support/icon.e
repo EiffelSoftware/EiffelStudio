@@ -25,10 +25,10 @@ feature {NONE} -- Initialization
 		require
 			file_name_not_void: file_name /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := file_name.to_c
-			item := cwin_load_image (default_pointer, $a,
+			!! a_wel_string.make (file_name)
+			item := cwin_load_image (default_pointer, a_wel_string.item,
 				Image_icon, 0, 0, Lr_loadfromfile)
 		end
 

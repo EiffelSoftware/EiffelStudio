@@ -68,11 +68,11 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make(a_string)
 			cwin_append_menu (item, Mf_string + Mf_bycommand,
-				an_id, $a)
+				an_id, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
@@ -88,14 +88,14 @@ feature -- Element change
 			a_menu_exists: a_menu.exists
 			a_title_not_void: a_title /= Void
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
 			a_menu.set_shared
 			-- `a_menu' must be shared since Windows will
 			-- destroy it automatically with `Current'.
-			a := a_title.to_c
+			!! a_wel_string.make (a_title)
 			cwin_append_menu (item, Mf_popup,
-				a_menu.to_integer, $a)
+				a_menu.to_integer, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -139,11 +139,11 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make (a_string)
 			cwin_insert_menu (item, a_position,
-				Mf_string + Mf_bycommand, an_id, $a)
+				Mf_string + Mf_bycommand, an_id, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			string_set: id_string (an_id).is_equal (a_string)
@@ -160,11 +160,11 @@ feature -- Element change
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position <= count
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_title.to_c
+			!! a_wel_string.make (a_title)
 			cwin_insert_menu (item, a_position,
-				Mf_popup + Mf_byposition, a_menu.to_integer, $a)
+				Mf_popup + Mf_byposition, a_menu.to_integer, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			popup_menu_set: popup_menu (a_position).item = a_menu.item
@@ -211,11 +211,11 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
 		do
-			a := a_string.to_c
+			!! a_wel_string.make (a_string)
 			cwin_modify_menu (item, an_id,
-				Mf_string + Mf_bycommand, an_id, $a)
+				Mf_string + Mf_bycommand, an_id, a_wel_string.item)
 		ensure
 			string_set: id_string (an_id).is_equal (a_string)
 		end
@@ -462,13 +462,16 @@ feature -- Status report
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		local
-			a: ANY
+			a_wel_string: WEL_STRING
+			nb: INTEGER
 		do
 			!! Result.make (Max_name_length + 1)
 			Result.fill_blank
-			a := Result.to_c
-			Result.head (cwin_get_menu_string (item, an_id,
-				$a, Max_name_length + 1, Mf_bycommand))
+			!! a_wel_string.make (Result)
+			nb := cwin_get_menu_string (item, an_id,
+				a_wel_string.item, Max_name_length + 1, Mf_bycommand)
+			Result := a_wel_string.string
+			Result.head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end

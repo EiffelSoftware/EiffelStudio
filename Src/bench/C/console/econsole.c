@@ -23,7 +23,7 @@
 #include "econsole.h"
 
 #define BUFFER_SIZE 128
-#define BUFFER_LINES 4000
+#define BUFFER_LINES 8192
 
 static char *pBuffer = NULL ;
 static int line_max;
@@ -44,7 +44,7 @@ int dummy_length;
 static int eif_console_eof_value = 0;
 static BOOL eif_console_allocated = FALSE;
 
-BOOL windowed_application = TRUE;
+BOOL windowed_application = FALSE;
 BOOL Reading = FALSE;
 
 extern HANDLE eif_coninfile, eif_conoutfile;
@@ -100,15 +100,18 @@ char *all_buffer ()
 EIF_INTEGER eif_console_readint()
 {
 	long lastint;
+	DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
 	if (windowed_application)
 		eif_GetWindowedInput();
-	else {}
-		//if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		//	eio();
+	else {
+		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+			eio();
+		;
+	}
 
 	if (0 >= sscanf (eif_console_buffer, "%i", &lastint))
 		eio();
@@ -119,15 +122,17 @@ EIF_INTEGER eif_console_readint()
 EIF_REAL eif_console_readreal()
 {
 	float lastreal;
+	DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
 	if (windowed_application)
 		eif_GetWindowedInput();
-	else {}
-		//if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		//	eio();
+	else {
+		if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+			eio();
+	}
 
 	if (0 > sscanf (eif_console_buffer, "%f", &lastreal))
 		eio();
@@ -137,14 +142,17 @@ EIF_REAL eif_console_readreal()
 
 EIF_CHARACTER eif_console_readchar()
 {
+	DWORD buffer_length = (DWORD) 0;
+
 	if (!eif_console_allocated)
 		eif_make_console();
 
 	if (windowed_application)
 		eif_GetWindowedInput();
-	else {}
-		//if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		//	eio();
+	else {
+		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+			eio();
+	}
 
 	return eif_console_buffer [0];
 }
@@ -152,15 +160,17 @@ EIF_CHARACTER eif_console_readchar()
 double eif_console_readdouble()
 {
 	double lastdouble;
+	DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
 	if (windowed_application)
 		eif_GetWindowedInput();
-	else {}
-		//if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
-		//		eio();
+	else {
+		if (!ReadConsole(eif_coninfile,eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+			eio();
+	}
 
 	if (0 > sscanf (eif_console_buffer, "%lf", &lastdouble))
 		eio();
@@ -173,51 +183,47 @@ long eif_console_readline(char *s,long bound,long start)
 	long amount, read;
 	static char *c = NULL;
 	static BOOL done = FALSE;
-	BOOL result;
+	DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
 	read = 0;
 
-	if (!done)
-		{
+	if (!done) {
 		c = NULL;
 		done = TRUE;
-		}
-	if (c == NULL)
-		{
-		if (windowed_application)
-		{
+	}
+	if (c == NULL) {
+		if (windowed_application) {
 			eif_GetWindowedInput();
 			strcat (eif_console_buffer, "\r\n");
 		}
-		else {}
-			//result = ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL);
-		c = eif_console_buffer;
+		else {
+			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+				eio();
 		}
+		c = eif_console_buffer;
+	}
 
 	amount = bound - start;
 	s += start;
 
-	while (amount-- > 0)
-		{
+	while (amount-- > 0) {
 		if (*c == '\n')
 			break;
-		if (*c != '\r')
-			{
+		if (*c != '\r') {
 			*s++ = *c++;
 			read ++;
-			}
+		}
 		else
 			c++;
-		}
+	}
 
-	if (*c == '\n')
-		{
+	if (*c == '\n') {
 		c = NULL;
 		return read;
-		}
+	}
 
 	if (amount == -1)
 		return (read + 1);
@@ -226,15 +232,40 @@ long eif_console_readline(char *s,long bound,long start)
 }
 
 long eif_console_readstream(char *s, long bound)
+       		/* Target buffer where read characters are written */
+       		/* Size of the target buffer */
 {
+	/* Read min (bound, remaining bytes in file) characters into `s' and
+	 * return the number of characters read.
+	 */
+
+	EIF_INTEGER amount = bound;	/* Number of characters to be read */
+	int c;					/* Last char read */
+	int i = 0;					/* Counter */
+	DWORD buffer_length = (DWORD) 0;
+	
+	if (!windowed_application) {
+		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+			eio();
+
+		while (amount-- > 0) {
+			c = eif_console_buffer [i];
+			if (i++ == buffer_length)
+				break;
+			*s++ = c;
+		}
+
+		return bound - amount - 1;	/* Number of characters read */
+	} else
+		return 0;
 }
 
 
 long eif_console_readword(char *s, long bound, long start)
 /*
-	s       target buffer
-	bound   target buffer size
-	start   number of characters already in target buffer
+    s		Target buffer where read characters are written
+	bound   Size of the target buffer
+	start  Amount of characters already held in buffer
 */
 {
 	/* Get a word and fill it into `s' (at most `bound' characters),
@@ -243,18 +274,58 @@ long eif_console_readword(char *s, long bound, long start)
 	 * spaces are skipped.
 	 */
 
-	long amount;    /* Amount of bytes to be read */
-	static int c;   /* Last char read */
+	EIF_INTEGER amount;	/* Amount of bytes to be read */
+	int c;   /* Last char read */
+	long i = 0;   /* Counter */
+	static DWORD buffer_length = (DWORD) 0;
 
 	if (!eif_console_allocated)
 		eif_make_console();
 
-	amount = bound - start;         /* Characters to be read */
-	s += start;                     /* Where read characters are written */
+	if (windowed_application) {
+		eif_GetWindowedInput();
+		c = eif_console_readchar ();
+		*s = c;
+		return 1;
+	} else {
+		amount = bound - start;		/* Characters to be read */
+		s += start;					/* Where read characters are written */
+		i = start;
+		errno = 0;					/* No error, a priori */
 
-	c = eif_console_readchar ();
-	*s = c;
-	return 1;
+		if (start == 0)	{			/* First call */
+			if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+				eio();
+
+			while (i < buffer_length)
+				if (!isspace(c = eif_console_buffer [i++]))
+					break;
+
+			if (isspace(eif_console_buffer [i]) && (i == buffer_length))
+				return (EIF_INTEGER) 0;				/* Reached EOF before word */
+			else
+				i--;
+		}
+
+		while (amount-- > 0) {
+			c = eif_console_buffer [i++];
+			if (i == buffer_length)
+				break;
+			if (isspace(c))
+				break;
+			*s++ = c;
+		}
+		
+		/* If we managed to get the whole string, return the number of characters
+		 * read. Otherwise, return (bound - start + 1) to indicate an error
+		 * condition.
+		 */
+		
+		if ((i == buffer_length) || isspace(c))
+			return bound - start - amount - 1;	/* Number of characters read */
+
+		return bound - start + 1;			/* Error condition */
+	}
 }
 
 void eif_console_putint (long l)
@@ -427,27 +498,30 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 
 void eif_console_cleanup ()
 {
-	if (windowed_application)
-	{
-		MessageBox (NULL, "Execution terminated.\nClick OK to close Execution Tool", "Execution terminated", MB_OK);
+	int result;
+	BOOL b;
+	DWORD buffer_length = (DWORD) 0;
+
+	if (windowed_application) {
+		result = MessageBox (NULL, "Execution terminated.\nDo you want to save the content of the console before to quit?",
+						  "Execution terminated", MB_OKCANCEL + MB_ICONQUESTION + MB_TASKMODAL + MB_TOPMOST);
 		DestroyWindow (eif_conout_window);
-	}
-	else
-	{
+	} else {
+		eif_console_putstring("\nPress Return to finish the execution...\0", 40);
+		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
+			eio ();
+
 		CloseHandle (eif_coninfile);
 		CloseHandle (eif_conoutfile);
+
+		b = FreeConsole ();
 	}
 }
 
 void eif_make_console()
 {
-	BOOL b;
-	SECURITY_ATTRIBUTES sa;
-
-	if (windowed_application)
-	{
+	if (windowed_application) {
 		WNDCLASS wc;
-
 
 		wc.style         = CS_VREDRAW | CS_HREDRAW;
 		wc.lpfnWndProc   = (LPVOID) eif_console_wndproc;
@@ -469,9 +543,10 @@ void eif_make_console()
 			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, eif_hInstance, NULL) ;
 
 		ShowWindow (eif_conout_window, SW_SHOW);
-	}
-	else
-	{
+	} else {
+		BOOL b;
+		SECURITY_ATTRIBUTES sa;
+
 		b = AllocConsole();
 
 		sa.nLength = sizeof (sa);

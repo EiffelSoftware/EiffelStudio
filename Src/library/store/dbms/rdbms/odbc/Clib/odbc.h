@@ -164,7 +164,6 @@ typedef void *          SQLPOINTER;
 #define ODBC_TIMESTAMP		2
 
 
-extern void enomem ();
 /* Raises an "Out of memory" exception
    From Eiffel run-time library */
 

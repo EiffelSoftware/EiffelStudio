@@ -28,8 +28,8 @@
 #include <string.h>
 #include <sql.h>
 #include <sqlext.h>
-#include "odbc.h"
 #include "eif_eiffel.h"
+#include "odbc.h"
 
 
 void odbc_error_handler (HSTMT,int);

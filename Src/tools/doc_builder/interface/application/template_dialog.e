@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			when howto_val then
 				Shared_document_manager.create_document
 			when project_val then
-				Shared_project.create_new ()
+				Shared_project.create_new
 			end
 			hide
 		end

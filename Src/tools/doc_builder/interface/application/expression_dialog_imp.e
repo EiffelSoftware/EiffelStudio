@@ -32,6 +32,8 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create l_ev_vertical_box_1
+			create notebook
+			create l_ev_vertical_box_2
 			create l_ev_horizontal_box_1
 			create l_ev_label_1
 			create l_ev_horizontal_separator_1
@@ -54,15 +56,33 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_7
 			create l_ev_cell_3
 			create expression_button
+			create xml_widget_box
 			create l_ev_horizontal_box_8
 			create l_ev_label_5
 			create l_ev_horizontal_separator_3
-			create l_ev_vertical_box_2
-			create overwrite_documents_check
-			create all_document_check
-			create all_project_check
-			create l_ev_cell_4
+			create xml_structure_list
 			create l_ev_horizontal_box_9
+			create l_ev_label_6
+			create l_ev_horizontal_separator_4
+			create l_ev_horizontal_box_10
+			create l_ev_label_7
+			create l_ev_horizontal_box_11
+			create xml_name_check
+			create xml_name_text
+			create l_ev_horizontal_box_12
+			create xml_expr_check
+			create xml_expr_text
+			create l_ev_horizontal_box_13
+			create l_ev_label_8
+			create l_ev_horizontal_separator_5
+			create l_ev_vertical_box_3
+			create overwrite_documents_radio
+			create new_document_radio
+			create l_ev_vertical_box_4
+			create all_open_radio
+			create all_project_radio
+			create l_ev_cell_4
+			create l_ev_horizontal_box_14
 			create l_ev_cell_5
 			create apply_button
 			create okay_button
@@ -70,58 +90,84 @@ feature {NONE}-- Initialization
 			
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_vertical_box_1.extend (notebook)
+			notebook.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_label_1)
 			l_ev_horizontal_box_1.extend (l_ev_horizontal_separator_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_cell_1)
-			l_ev_vertical_box_1.extend (expression_list)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
+			l_ev_vertical_box_2.extend (expression_list)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (l_ev_cell_2)
 			l_ev_horizontal_box_3.extend (expression_browse_button)
 			l_ev_horizontal_box_3.extend (save_expressions_button)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_4.extend (l_ev_label_2)
 			l_ev_horizontal_box_4.extend (l_ev_horizontal_separator_2)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_5)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_5.extend (l_ev_label_3)
 			l_ev_horizontal_box_5.extend (expression_text)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_6)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_6)
 			l_ev_horizontal_box_6.extend (l_ev_label_4)
 			l_ev_horizontal_box_6.extend (replacement_text)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_7)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_7)
 			l_ev_horizontal_box_7.extend (l_ev_cell_3)
 			l_ev_horizontal_box_7.extend (expression_button)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_8)
+			notebook.extend (xml_widget_box)
+			xml_widget_box.extend (l_ev_horizontal_box_8)
 			l_ev_horizontal_box_8.extend (l_ev_label_5)
 			l_ev_horizontal_box_8.extend (l_ev_horizontal_separator_3)
-			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (overwrite_documents_check)
-			l_ev_vertical_box_2.extend (all_document_check)
-			l_ev_vertical_box_2.extend (all_project_check)
+			xml_widget_box.extend (xml_structure_list)
+			xml_widget_box.extend (l_ev_horizontal_box_9)
+			l_ev_horizontal_box_9.extend (l_ev_label_6)
+			l_ev_horizontal_box_9.extend (l_ev_horizontal_separator_4)
+			xml_widget_box.extend (l_ev_horizontal_box_10)
+			l_ev_horizontal_box_10.extend (l_ev_label_7)
+			xml_widget_box.extend (l_ev_horizontal_box_11)
+			l_ev_horizontal_box_11.extend (xml_name_check)
+			l_ev_horizontal_box_11.extend (xml_name_text)
+			xml_widget_box.extend (l_ev_horizontal_box_12)
+			l_ev_horizontal_box_12.extend (xml_expr_check)
+			l_ev_horizontal_box_12.extend (xml_expr_text)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_13)
+			l_ev_horizontal_box_13.extend (l_ev_label_8)
+			l_ev_horizontal_box_13.extend (l_ev_horizontal_separator_5)
+			l_ev_vertical_box_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (overwrite_documents_radio)
+			l_ev_vertical_box_3.extend (new_document_radio)
+			l_ev_vertical_box_1.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (all_open_radio)
+			l_ev_vertical_box_4.extend (all_project_radio)
 			l_ev_vertical_box_1.extend (l_ev_cell_4)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_9)
-			l_ev_horizontal_box_9.extend (l_ev_cell_5)
-			l_ev_horizontal_box_9.extend (apply_button)
-			l_ev_horizontal_box_9.extend (okay_button)
-			l_ev_horizontal_box_9.extend (cancel_button)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_14)
+			l_ev_horizontal_box_14.extend (l_ev_cell_5)
+			l_ev_horizontal_box_14.extend (apply_button)
+			l_ev_horizontal_box_14.extend (okay_button)
+			l_ev_horizontal_box_14.extend (cancel_button)
 			
-			set_minimum_width (dialog_width)
+			set_minimum_width (dialog_wide_width)
 			set_minimum_height (dialog_tall_height)
 			disable_user_resize
 			set_title ("Parser Tool")
 			l_ev_vertical_box_1.set_padding_width (padding_width)
 			l_ev_vertical_box_1.set_border_width (border_width)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_5)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_6)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_7)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_8)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_2)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_9)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_13)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_3)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_4)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_4)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_14)
+			notebook.set_item_text (l_ev_vertical_box_2, "Regular Expressions")
+			notebook.set_item_text (xml_widget_box, "XML Parsing")
+			l_ev_vertical_box_2.set_padding_width (padding_width)
+			l_ev_vertical_box_2.set_border_width (border_width)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_5)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_6)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_7)
 			l_ev_horizontal_box_1.set_padding_width (padding_width)
 			l_ev_horizontal_box_1.set_border_width (border_width)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
@@ -157,22 +203,55 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_7.disable_item_expand (expression_button)
 			expression_button.set_text (button_add_text)
 			expression_button.set_minimum_width (button_width)
+			xml_widget_box.set_padding_width (padding_width)
+			xml_widget_box.set_border_width (border_width)
+			xml_widget_box.disable_item_expand (l_ev_horizontal_box_8)
+			xml_widget_box.disable_item_expand (l_ev_horizontal_box_9)
+			xml_widget_box.disable_item_expand (l_ev_horizontal_box_10)
+			xml_widget_box.disable_item_expand (l_ev_horizontal_box_11)
+			xml_widget_box.disable_item_expand (l_ev_horizontal_box_12)
 			l_ev_horizontal_box_8.set_padding_width (padding_width)
 			l_ev_horizontal_box_8.set_border_width (border_width)
 			l_ev_horizontal_box_8.disable_item_expand (l_ev_label_5)
-			l_ev_label_5.set_text ("Options")
+			l_ev_label_5.set_text ("XML Elements")
 			l_ev_label_5.align_text_left
-			l_ev_vertical_box_2.set_padding_width (padding_width)
-			l_ev_vertical_box_2.set_border_width (border_width)
-			l_ev_vertical_box_2.disable_item_expand (all_document_check)
-			overwrite_documents_check.set_text ("Overwrite documents")
-			all_document_check.set_text ("Apply to all open documents")
-			all_project_check.set_text ("Apply to all project documents")
 			l_ev_horizontal_box_9.set_padding_width (padding_width)
 			l_ev_horizontal_box_9.set_border_width (border_width)
-			l_ev_horizontal_box_9.disable_item_expand (apply_button)
-			l_ev_horizontal_box_9.disable_item_expand (okay_button)
-			l_ev_horizontal_box_9.disable_item_expand (cancel_button)
+			l_ev_horizontal_box_9.disable_item_expand (l_ev_label_6)
+			l_ev_label_6.set_text ("Actions")
+			l_ev_label_6.align_text_left
+			l_ev_horizontal_box_10.set_padding_width (padding_width)
+			l_ev_horizontal_box_10.set_border_width (border_width)
+			l_ev_label_7.set_text ("On the selected item:")
+			l_ev_label_7.align_text_left
+			l_ev_horizontal_box_11.set_padding_width (padding_width)
+			l_ev_horizontal_box_11.set_border_width (border_width)
+			l_ev_horizontal_box_11.disable_item_expand (xml_name_check)
+			xml_name_check.enable_select
+			xml_name_check.set_text ("Change name to ")
+			l_ev_horizontal_box_12.set_padding_width (padding_width)
+			l_ev_horizontal_box_12.set_border_width (border_width)
+			l_ev_horizontal_box_12.disable_item_expand (xml_expr_check)
+			xml_expr_check.set_text ("Apply regular expression to content")
+			l_ev_horizontal_box_13.set_padding_width (padding_width)
+			l_ev_horizontal_box_13.set_border_width (border_width)
+			l_ev_horizontal_box_13.disable_item_expand (l_ev_label_8)
+			l_ev_label_8.set_text ("Options")
+			l_ev_label_8.align_text_left
+			l_ev_vertical_box_3.set_padding_width (padding_width)
+			l_ev_vertical_box_3.set_border_width (border_width)
+			overwrite_documents_radio.set_text ("Overwrite documents")
+			new_document_radio.set_text ("Create new document (will have .psd extension)")
+			l_ev_vertical_box_4.set_padding_width (padding_width)
+			l_ev_vertical_box_4.set_border_width (border_width)
+			l_ev_vertical_box_4.disable_item_expand (all_open_radio)
+			all_open_radio.set_text ("Apply to open documents")
+			all_project_radio.set_text ("Apply to all project documents")
+			l_ev_horizontal_box_14.set_padding_width (padding_width)
+			l_ev_horizontal_box_14.set_border_width (border_width)
+			l_ev_horizontal_box_14.disable_item_expand (apply_button)
+			l_ev_horizontal_box_14.disable_item_expand (okay_button)
+			l_ev_horizontal_box_14.disable_item_expand (cancel_button)
 			apply_button.set_text (button_apply_text)
 			apply_button.set_minimum_width (button_width)
 			okay_button.set_text (button_ok_text)
@@ -190,18 +269,25 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, xml_widget_box, l_ev_vertical_box_3, 
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	notebook: EV_NOTEBOOK
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, 
 	l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7, l_ev_horizontal_box_8, 
-	l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5: EV_LABEL
-	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3: EV_HORIZONTAL_SEPARATOR
+	l_ev_horizontal_box_9, l_ev_horizontal_box_10, l_ev_horizontal_box_11, l_ev_horizontal_box_12, 
+	l_ev_horizontal_box_13, l_ev_horizontal_box_14: EV_HORIZONTAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6, 
+	l_ev_label_7, l_ev_label_8: EV_LABEL
+	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, 
+	l_ev_horizontal_separator_4, l_ev_horizontal_separator_5: EV_HORIZONTAL_SEPARATOR
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5: EV_CELL
 	expression_list: EV_MULTI_COLUMN_LIST
 	expression_browse_button, save_expressions_button, expression_button, apply_button, 
 	okay_button, cancel_button: EV_BUTTON
-	expression_text, replacement_text: EV_TEXT_FIELD
-	overwrite_documents_check, all_document_check, all_project_check: EV_CHECK_BUTTON
+	expression_text, replacement_text, xml_name_text, xml_expr_text: EV_TEXT_FIELD
+	xml_structure_list: EV_TREE
+	xml_name_check, xml_expr_check: EV_CHECK_BUTTON
+	overwrite_documents_radio, new_document_radio, all_open_radio, all_project_radio: EV_RADIO_BUTTON
 
 feature {NONE} -- Implementation
 

@@ -298,7 +298,10 @@ feature {NONE} -- Implementation
 
 invariant
 
-	sign_times_abs: sign * abs = item
+	sign_times_abs: item /= 1/0 and item /= 0/0 implies sign * abs = item
+			-- IEEE 754 specifies that certain floating point operations
+			-- have a result that is not a number (NaN). sign_times_abs
+			-- does not hold when item is not a number.
 
 end -- class REAL_REF
 

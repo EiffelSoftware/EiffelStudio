@@ -213,6 +213,10 @@ feature -- Resource Update
 							end
 						end
 					end
+				elseif old_res = pr.debugger_object_height then
+					object_form.set_height (new.actual_value)
+				elseif old_res = pr.debugger_feature_height then
+					feature_form.set_height (new.actual_value)
 				elseif old_res = pr.interrupt_every_n_instructions then
 					Application.set_interrupt_number (new.actual_value)
 				elseif old_res = General_resources.tab_step then
@@ -864,7 +868,11 @@ feature -- Graphical Interface
 
 			!! global_form.make (new_name, Current)
 
-  			!! global_verti_split_window.make_vertical_with_proportion (new_name, global_form, 15)
+			if General_resources.motif_1_2.actual_value then
+				!! global_verti_split_window.make_horizontal_with_proportion (new_name, global_form, 15)
+			else
+				!! global_verti_split_window.make_vertical_with_proportion (new_name, global_form, 15)
+			end
 
  			!! selector_form.make (new_name, global_verti_split_window)
 			!! selector_part.make ("Selector",selector_form) 
@@ -876,7 +884,11 @@ feature -- Graphical Interface
 			!! top_form.make (new_name, hori_split_window)
 			top_form.set_size(hori_split_window.width,hori_split_window.height)
 
-			!! top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 50)
+			if General_resources.motif_1_2.actual_value then
+				!! top_verti_split_window.make_horizontal_with_proportion (new_name, top_form, 50)
+			else
+				!! top_verti_split_window.make_vertical_with_proportion (new_name, top_form, 50)
+			end
 
 			!! project_form.make (new_name, top_verti_split_window)
 			!! object_form.make (new_name, top_verti_split_window)

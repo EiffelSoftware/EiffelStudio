@@ -43,11 +43,11 @@ mtnetwork.$lib: $(MT_OBJECTS) $(LIBDIR)\$(LIBMTNAME)
 	$link_mtline
 
 MTapp_listen.$obj: app_listen.c
-	$(CC) -c $(JMTCFLAGS)  $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
 MTapp_proto.$obj: app_proto.c
-	$(CC) -c $(JMTCFLAGS)  $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
 MTapp_server.$obj: app_server.c
-	$(CC) -c $(JMTCFLAGS)  $? $(OUTPUT_CMD)$@
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 

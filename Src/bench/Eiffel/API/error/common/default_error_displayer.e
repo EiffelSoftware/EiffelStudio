@@ -99,8 +99,11 @@ feature -- Output
 				--end;
 				display_separation_line (st);	
 				degree_nbr := Degree_output.current_degree;
-				st.add_string ("Degree: ");
-				st.add_string (degree_nbr.out);
+				if degree_nbr > 0 then
+						-- Case has degree_number equal to 0
+					st.add_string ("Degree: ");
+					st.add_string (degree_nbr.out);
+				end;
 				st.add_string (" Processed: ")
 				st.add_string (Degree_output.processed.out);
 				st.add_string (" To go: ")

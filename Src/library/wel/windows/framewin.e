@@ -10,11 +10,6 @@ class
 inherit
 	WEL_COMPOSITE_WINDOW
 
-	WEL_WS_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	WEL_CS_CONSTANTS
 		export
 			{NONE} all

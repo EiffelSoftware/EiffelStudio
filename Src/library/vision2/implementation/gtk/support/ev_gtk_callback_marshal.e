@@ -176,10 +176,9 @@ feature {NONE} -- Conversion
 				Gdk_key_release_enum
 			then
 					-- gdk_event type GdkEventKey
-				check
-					Gdk_key_event_not_handled: False
-				end
-
+				Result := [
+					C.gdk_event_key_struct_keyval (gdk_event)
+				]
 			when
 				Gdk_enter_notify_enum,
 				Gdk_leave_notify_enum
@@ -294,6 +293,9 @@ end -- class EV_GTK_CALLBACK_MARSHAL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/16 03:39:09  oconnor
+--| initial implementation of key event data
+--|
 --| Revision 1.2  2000/02/14 12:05:08  oconnor
 --| added from prerelease_20000214
 --|

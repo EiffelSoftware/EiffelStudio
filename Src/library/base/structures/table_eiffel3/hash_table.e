@@ -272,6 +272,24 @@ feature -- Status report
 			Result := iteration_position > keys.upper
 		end;
 
+	search (key: H) is
+			-- Search for item of key `key'
+			-- If found, set `found' to True, and set
+			-- `found_item' to item associated with `key'.
+		local
+			default_value: G
+		do
+			internal_search (key)
+			if found then
+				found_item := content.item (position)
+			else
+				found_item := default_value 
+			end
+		ensure
+			found_or_not_found: found or not found
+			item_if_found: found implies (found_item = content.item (position)) 
+		end
+
 	valid_cursor (c: CURSOR): BOOLEAN is
 			-- Can cursor be moved to position `c'?
 		require

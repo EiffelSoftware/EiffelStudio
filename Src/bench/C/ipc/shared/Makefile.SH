@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
-: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
 
 case $CONFIG in
 '')
-	if test -f config.sh; then TOP=.;
-	elif test -f ../config.sh; then TOP=..;
-	elif test -f ../../config.sh; then TOP=../..;
-	elif test -f ../../../config.sh; then TOP=../../..;
-	elif test -f ../../../../config.sh; then TOP=../../../..;
-	else
-		echo "Can't find config.sh."; exit 1
-	fi
-	. $TOP/config.sh
-	;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -47,28 +47,26 @@ MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
-LN = $ln
 SED = $sed
 
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(LSRC)
+USRINC = $usrinc
 OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
+SOURCES =  \$(LSRC)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
 .c.o:
-		\$(RM) \$@
 	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
-
+# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -79,88 +77,76 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-LIBRUN = ../../run-time
-LIBIDR = ../../idrs
-DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)/include
+DPFLAGS = -I$(TOP) -I$(TOP)/run-time -I$(TOP)/idrs -I$(TOP)/run-time/include
 CFLAGS = $(DPFLAGS) -DWORKBENCH
 
 LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
-	stream.c system.c transfer.c rqst_idrs.c
-
-MT_LOBJ = \
-    MTcom.o \
-    MTidentify.o \
-    MTlock.o \
-    MTlogfile.o \
-    MTnetwork.o \
-    MTselect.o \
-    MTshword.o \
-    MTstack.o \
-    MTstream.o \
-    MTsystem.o \
-    MTtransfer.o \
-    MTrqst_idrs.o
-
-all:: libmtipc.a
-
-local_realclean::
-	$(RM) libmtipc.a
-
-libmtipc.a: $(MT_LOBJ)
-	$(RM) $@
-	$(AR) $@ $(MT_LOBJ)
-	$(RANLIB) $@
-
-
-MTcom.o: com.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTidentify.o: identify.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTlogfile.o: logfile.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTnetwork.o: network.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTselect.o: select.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTshword.o: shword.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTstream.o: stream.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTsystem.o: system.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTstack.o: stack.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTtransfer.o: transfer.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTrqst_idrs.o: rqst_idrs.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
-
-MTlock.o: lock.c
-	$(CC) -c $(JMTCFLAGS) $? -o $@
+	       stream.c system.c transfer.c rqst_idrs.c
 
 LOBJ = \
-	com.o \
-	identify.o \
-	lock.o \
-	logfile.o \
-	network.o \
-	select.o \
-	shword.o \
-	stack.o \
-	stream.o \
-	system.o \
-	transfer.o \
-	rqst_idrs.o 
+	       com.o \
+	       identify.o \
+	       lock.o \
+	       logfile.o \
+	       network.o \
+	       select.o \
+	       shword.o \
+	       stack.o \
+	       stream.o \
+	       system.o \
+	       transfer.o \
+	       rqst_idrs.o 
+
+MT_LOBJ = \
+	       MTcom.o \
+	       MTidentify.o \
+	       MTlock.o \
+	       MTlogfile.o \
+	       MTnetwork.o \
+	       MTselect.o \
+	       MTshword.o \
+	       MTstack.o \
+	       MTstream.o \
+	       MTsystem.o \
+	       MTtransfer.o \
+	       MTrqst_idrs.o 
+
+MTcom.o: com.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTidentify.o: identify.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTlock.o: lock.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTlogfile.o: logfile.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTnetwork.o: network.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTselect.o: select.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTshword.o: shword.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTstack.o: stack.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTstream.o: stream.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTsystem.o: system.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTtransfer.o: transfer.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTrqst_idrs.o: rqst_idrs.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
 
 all:: libipc.a
 
@@ -172,6 +158,15 @@ libipc.a: $(LOBJ)
 	$(AR) $@ $(LOBJ)
 	$(RANLIB) $@
 
+all:: libmtipc.a
+
+local_realclean::
+	$(RM) libmtipc.a
+
+libmtipc.a: $(MT_LOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_LOBJ)
+	$(RANLIB) $@
 
 depend:: ../../mkdep
 
@@ -181,7 +176,9 @@ depend:: ../../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
+	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -231,16 +228,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	@echo "install in $(CURRENT) done."
+	       @echo "install in $(CURRENT) done."
 
 deinstall::
-	@echo "deinstall in $(CURRENT) done."
+	       @echo "deinstall in $(CURRENT) done."
 
 install.man::
-	@echo "install.man in $(CURRENT) done."
+	       @echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	@echo "deinstall.man in $(CURRENT) done."
+	       @echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -256,4 +253,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

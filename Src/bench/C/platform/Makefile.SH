@@ -1,18 +1,18 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL60]
-: $X-Id: Jmake.tmpl,v 3.0.1.2 1995/01/11 14:50:21 ram Exp $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
+: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
 
 case $CONFIG in
 '')
-	if test -f config.sh; then TOP=.;
-	elif test -f ../config.sh; then TOP=..;
-	elif test -f ../../config.sh; then TOP=../..;
-	elif test -f ../../../config.sh; then TOP=../../..;
-	elif test -f ../../../../config.sh; then TOP=../../../..;
-	else
-		echo "Can't find config.sh."; exit 1
-	fi
-	. $TOP/config.sh
-	;;
+	       if test -f config.sh; then TOP=.;
+	       elif test -f ../config.sh; then TOP=..;
+	       elif test -f ../../config.sh; then TOP=../..;
+	       elif test -f ../../../config.sh; then TOP=../../..;
+	       elif test -f ../../../../config.sh; then TOP=../../../..;
+	       else
+	               echo "Can't find config.sh."; exit 1
+	       fi
+	       . $TOP/config.sh
+	       ;;
 esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
@@ -51,6 +51,7 @@ SED = $sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
+USRINC = $usrinc
 SOURCES =  \$(LSRC)
 OBJECTS =  \$(LOBJ)
 
@@ -58,15 +59,13 @@ OBJECTS =  \$(LOBJ)
 # New suffixes and associated building rules -- edit with care
 
 .c.o:
-	\$(RM) \$@
 	\$(CC) -c \$(JCFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.5 1995/09/25 09:07:19 ram Exp $
-
+# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -109,7 +108,9 @@ depend:: ../mkdep
 depend::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
 	$(MKDEP) $(SOURCES) | \
-	$(SED) -e 's/: \.\//: /; s/\/usr\/include[^ ]*//g' -e '/: *$$/d' \
+	$(SED) -e 's:/usr/include[^ ]*::g; s:$(USRINC)[^ ]*::g; ' \
+	-e '/: / b print' -e 'H; d; n; : print' -e 'x; s/\\\n//g' \
+	-e 's/  */ /g; s/ :/:/;' -e '/: *$$/d' \
 	) > Makefile.new
 	cp Makefile Makefile.bak
 	cp Makefile.new Makefile
@@ -159,16 +160,16 @@ local_clobber::
 # Empty rules for directories with no sub-directories -- do not edit
 
 install::
-	@echo "install in $(CURRENT) done."
+	       @echo "install in $(CURRENT) done."
 
 deinstall::
-	@echo "deinstall in $(CURRENT) done."
+	       @echo "deinstall in $(CURRENT) done."
 
 install.man::
-	@echo "install.man in $(CURRENT) done."
+	       @echo "install.man in $(CURRENT) done."
 
 deinstall.man::
-	@echo "deinstall.man in $(CURRENT) done."
+	       @echo "deinstall.man in $(CURRENT) done."
 
 Makefiles::
 
@@ -184,4 +185,3 @@ Makefiles.SH::
 !NO!SUBS!
 chmod 644 Makefile
 $eunicefix Makefile
-

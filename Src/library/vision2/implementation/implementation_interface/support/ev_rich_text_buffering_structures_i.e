@@ -179,6 +179,33 @@ feature -- Status Setting
 		do
 			Result := (pixels * 72 // screen.vertical_resolution) * 2
 		end
+		
+	start_line_indexes (a_text: STRING): ARRAYED_LIST [INTEGER] is
+			-- `Result' is index of first character of every line in `a_text'
+			-- as determined by '%N', not displayed lines.
+		require
+			text_not_void: a_text /= Void
+		local
+			counter: INTEGER
+		do
+			create Result.make (50)
+				-- Add the first line which is always 1.
+			Result.extend (1)
+				-- Now iterate `a_string' and determine each line as determined by `%N'.
+			from
+				counter := 1
+			until
+				counter > a_text.count
+			loop
+			if a_text.item (counter).is_equal ('%N') then
+				Result.extend (counter + 1)
+			end
+			counter := counter + 1
+			end
+		ensure
+			result_not_void: Result /= Void
+			count_greater_or_equal_to_one: Result.count >= 1
+		end
 
 feature -- Access
 

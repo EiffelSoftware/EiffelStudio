@@ -236,6 +236,19 @@ feature -- Basic operations
 				hwnd := cwel_integer_to_pointer (handle)
 			end
 		end
+		
+	ensure_item_visible (tree_item: EV_TREE_ITEM) is
+			-- Ensure `tree_item' is visible in `Current'.
+			-- Tree nodes may be expanded to achieve this.
+		local
+			tree_item_imp: EV_TREE_ITEM_IMP
+		do
+			tree_item_imp ?= tree_item.implementation
+			check
+				tree_item_imp /= Void
+			end
+			cwin_send_message (wel_item, Tvm_ensurevisible, 0, cwel_pointer_to_integer (tree_item_imp.h_item))
+		end
 
 feature {EV_TREE_NODE_I} -- Implementation
 
@@ -685,6 +698,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2001/06/25 17:07:18  rogers
+--| Implemented ensure_item_visible.
+--|
 --| Revision 1.72  2001/06/14 00:09:14  rogers
 --| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
 --|

@@ -1,6 +1,10 @@
--- Constant value
+indexing
+	Description: "Description of a constant value"
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class VALUE_I 
+deferred class
+	VALUE_I 
 
 inherit
 	BYTE_CONST
@@ -24,62 +28,60 @@ feature
 		require
 			good_argument: t /= Void
 		deferred
-		end;
+		end
 
 	is_integer: BOOLEAN is
 			-- Is the constant an integer constant ?
 		do
-			-- Do nothing
-		end;
+		end
 
 	is_boolean: BOOLEAN is
 			-- Is the constant a real constant ?
 		do
-			-- Do nothing
-		end;
+		end
 
 	is_character: BOOLEAN is
 			-- is the constant a character constant ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_real: BOOLEAN is
 			-- is the constant a real constant ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_double: BOOLEAN is
 			-- Is the constant a double constant ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_string: BOOLEAN is
 			-- Is the constant a string constant ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_bit: BOOLEAN is
 			-- Is the constant a bit constant ?
 		do
 			-- Do nothing
-		end;
+		end
 
 	is_propagation_equivalent (other: like Current): BOOLEAN is
 			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do
-			Result := True;
-		end;
+			Result := True
+		end
 
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		require
-			good_argument: buffer /= Void;
+			good_argument: buffer /= Void
 		deferred
-		end;
+		end
 
 	generate_il is
 			-- Generate IL code for constant value.
@@ -91,25 +93,27 @@ feature
 		require
 			good_argument: ba /= Void
 		deferred
-		end;
+		end
 
 	vqmc: VQMC is
 		deferred
-		end;
+		end
 
 	append_signature (st: STRUCTURED_TEXT) is
+		require
+			st_not_void: st /= Void
 		do
 			st.add_string (dump)
-		end;
+		end
 
 	dump: STRING is
 		deferred
-		end;
+		end
 
 	string_value: STRING is
 		do
 			Result := dump
-		end;
+		end
 
 	trace is
 		do
@@ -118,6 +122,8 @@ feature
 
 	set_real_value (t: TYPE_A) is
 			-- Used only by BIT_VALUE_I
+		require
+			t_not_void: t /= Void
 		do
 		end
 

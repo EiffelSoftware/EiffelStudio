@@ -40,9 +40,10 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	implementation: EV_RADIO_BUTTON_I
+			-- Platform dependent access.
 	
 end -- class EV_RADIO_BUTTON
 

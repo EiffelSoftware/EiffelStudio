@@ -179,6 +179,13 @@ feature {NONE} -- Widget queries
             "XmIsList"
         end;
 
+    xm_is_sash (widget: POINTER): BOOLEAN is
+        external
+            "C [macro <Xm/SashP.h>] (Widget): EIF_BOOLEAN"
+        alias
+            "XmIsSash"
+        end;
+
     xm_is_text (widget: POINTER): BOOLEAN is
         external
             "C [macro <Xm/Text.h>] (Widget): EIF_BOOLEAN"

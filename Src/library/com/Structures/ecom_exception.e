@@ -58,7 +58,7 @@ feature --  Access
 		local
 			error_messages: WEL_WINDOWS_ERROR_MESSAGES
 		do
-			Result := clone (tag_name)
+			Result := tag_name.twin
 			Result.remove_head (10)
 			Result.left_adjust
 			Result.right_adjust

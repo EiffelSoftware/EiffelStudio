@@ -61,8 +61,8 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			dimension_count := a_dimension_count
-			element_counts := clone (some_element_counts)
-			lower_indices := clone (some_lower_indices)
+			element_counts := some_element_counts.twin
+			lower_indices := some_lower_indices.twin
 			
 			if dimension_count > 0 then
 				a_count := 1
@@ -360,7 +360,7 @@ feature -- Resizing
 
 				from
 					exhausted := False
-					an_index := clone (lower_indices)
+					an_index := lower_indices.twin
 				until
 					exhausted
 				loop

@@ -16,6 +16,8 @@ inherit
 		end
 
 	ECOM_VAR_TYPE
+		undefine
+			copy, is_equal
 		redefine
 			out
 		end

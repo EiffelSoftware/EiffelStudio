@@ -17,6 +17,8 @@ inherit
 		end
 
 	NUMERIC
+		undefine
+			copy
 		redefine
 			is_equal
 		end

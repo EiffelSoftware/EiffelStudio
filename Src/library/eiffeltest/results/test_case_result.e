@@ -8,11 +8,6 @@ indexing
 
 class TEST_CASE_RESULT inherit
 
-	STORABLE
-		undefine
-			copy, is_equal
-		end
-
 	TEST_RESULT
 		undefine
 			copy, is_equal

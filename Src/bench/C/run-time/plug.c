@@ -105,7 +105,7 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	long nbr_attr, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
-	register5 long **offsets;
+	register5 long *offsets;
 #else
 	register6 int32 *rout_ids;
 	long offset;
@@ -152,7 +152,7 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 		if (!found) {
 			type = types[nbr_attr];
 #ifndef WORKBENCH
-			o_ref = curr + (offsets[nbr_attr][curr_dtype]);		
+			o_ref = curr + (offsets[nbr_attr]);		
 #else
 			CAttrOffs(offset,rout_ids[nbr_attr],curr_dtype);
 			o_ref = curr + offset;

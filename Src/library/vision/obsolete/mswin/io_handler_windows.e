@@ -22,7 +22,6 @@ feature -- Initialization
 
 	make (an_io_handler: IO_HANDLER) is
 		do
-			window := win_ioh_make_client ($call_back, Current)
 		end
 
 feature
@@ -45,18 +44,15 @@ feature
 		end
 
 	command: COMMAND
-				-- Command to call
+			-- Command to call
 
 	argument: ANY
-				-- Argument to be passed
+			-- Argument to be passed
 
 	destroy is
 		do
 			command := Void
 			argument := Void
-			if window /= default_pointer then
-				cwin_destroy_window (window)
-			end
 		end
 
 	window: POINTER
@@ -95,23 +91,6 @@ feature
 			-- available for writing.
 		do
 		end
-
-feature {NONE} -- Implmentation
-
-	win_ioh_make_client (cb: POINTER; obj: IO_HANDLER_WINDOWS): POINTER is
-			-- Make the io handler function
-		external
-			"C"
-		end
-
-	cwin_destroy_window (hwnd: POINTER) is
-			-- SDK DestroyWindow
-		external
-			"C [macro <wel.h>] (HWND)"
-		alias
-			"DestroyWindow"
-		end
-
 
 end -- class IO_HANDLER_WINDOWS
 

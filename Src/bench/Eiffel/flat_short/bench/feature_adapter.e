@@ -302,6 +302,7 @@ feature -- Case storage output
 			feature_comments: S_FREE_TEXT_DATA;
 			f_name: STRING;
 			c: EIFFEL_COMMENTS;
+			dummy_constant: CONSTANT_I
 		do
 			!! f_name.make (0);
 			f_name.append (target_feature.feature_name);
@@ -312,6 +313,12 @@ feature -- Case storage output
 			end;
 			if target_feature.is_constant then	
 				Result.set_is_constant
+				dummy_constant ?= target_feature
+				if dummy_constant/= Void 
+					-- This should be anyway the case, but we never know ...
+					and then dummy_constant.value /= Void then
+					Result.set_constant_value(dummy_constant.value.string_value)
+				end
 			end;
 			ast.store_information (Result);
 			target_feature.store_case_information (Result);

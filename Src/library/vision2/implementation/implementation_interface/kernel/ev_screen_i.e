@@ -14,6 +14,23 @@ inherit
 			interface
 		end
 
+feature -- Status report
+
+	pointer_position: EV_COORDINATES is
+			-- Position of the screen pointer.
+		deferred
+		end 
+
+feature -- Basic operation
+
+	set_pointer_position (x, y: INTEGER) is
+			-- Set `pointer_position' to (`x',`y`).		
+		deferred
+		ensure
+			pointer_position_set:
+				pointer_position.x = x and pointer_position.y = y
+		end
+
 feature -- Measurement
 
     width: INTEGER is
@@ -57,6 +74,9 @@ end -- class EV_SCREEN_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/06 20:12:30  oconnor
+--| added pointer position features
+--|
 --| Revision 1.4  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

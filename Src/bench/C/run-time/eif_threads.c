@@ -323,6 +323,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 		EIF_END_GET_CONTEXT
 	}
 	eif_thr_exit ();
+	return (EIF_THR_ENTRY_TYPE) 0;	/* 	NOTREACHED. */
 }
 
 
@@ -715,6 +716,8 @@ rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 	} else
 		eraise("Trying to trywait a NULL semaphore", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
+#else
+	return EIF_FALSE;	/* Not implemented. */
 #endif
 }
 

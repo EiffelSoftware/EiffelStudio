@@ -69,20 +69,20 @@ feature {NONE} -- Initialization
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected
 		local
-			t_item: EV_TREE_ITEM
+			t_item: EV_TREE_ITEM_IMP
 		do
-		 	t_item ?= eif_object_from_c (a_tree_item).interface
-			t_item.select_actions.call ([])
+		 	t_item ?= eif_object_from_c (a_tree_item)
+			t_item.interface.select_actions.call ([])
 			interface.select_actions.call ([])
 		end
 
 	deselect_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is deselected
 		local
-			t_item: EV_TREE_ITEM
+			t_item: EV_TREE_ITEM_IMP
 		do
-		 	t_item ?= eif_object_from_c (a_tree_item).interface
-			t_item.deselect_actions.call ([])
+		 	t_item ?= eif_object_from_c (a_tree_item)
+			t_item.interface.deselect_actions.call ([])
 			interface.deselect_actions.call ([])	
 		end
 
@@ -131,7 +131,10 @@ feature {NONE} -- Implementation
 			item_imp ?= v.implementation
 			C.gtk_widget_show (item_imp.c_object)
 			C.gtk_tree_append (list_widget, item_imp.c_object)
-			item_imp.set_tree_widget_imp (Current)
+			if item_imp.dummy_list_widget /= Default_pointer then
+				C.gtk_tree_item_set_subtree (item_imp.c_object, item_imp.dummy_list_widget)
+				item_imp.set_dummy_list_widget (Default_pointer)
+			end
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
@@ -139,8 +142,7 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_TREE_ITEM_IMP
 		do
-			item_imp ?= interface.i_th (a_position).implementation
-			item_imp.set_tree_widget_imp (Void)	
+			item_imp ?= interface.i_th (a_position).implementation	
 			Precursor (a_position)
 		end
 
@@ -184,6 +186,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/26 01:28:43  king
+--| Implemented to set sub_tree of children
+--|
 --| Revision 1.24  2000/02/24 21:40:08  king
 --| Removed calling of subtree removal from item removal
 --|

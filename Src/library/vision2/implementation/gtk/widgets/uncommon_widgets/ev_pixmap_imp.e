@@ -133,14 +133,76 @@ feature -- Element change
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
 			-- exceptions.
 			--|FIXME do this!
-		local
-			file: RAW_FILE
 		do
-			create file.make_open_read (file_name)
-			read_from_file (file)
-			file.close
+			unref_data
+			c_ev_load_pixmap ($Current, eiffel_to_c (file_name), $update_fields)
 		end
 
+	update_fields (
+		error_code		: INTEGER; -- Loadpixmap_error_xxxx 
+		data_type		: INTEGER; -- Loadpixmap_hicon, ...
+		pixmap_width	: INTEGER; -- Height of the loaded pixmap
+		pixmap_height	: INTEGER; -- Width of the loaded pixmap
+		rgb_data		: POINTER; -- Pointer on a C memory zone
+		alpha_data		: POINTER; -- Pointer on a C memory zone
+		) is
+				-- Callback function called from the C code by c_ev_load_pixmap.
+				-- 
+				-- See `read_from_named_file'
+				-- Exceptions "Unable to retrieve icon information",
+				--            "Unable to load the file"
+		require
+			valid_data_type: 
+			data_type = Loadpixmap_hicon or 
+			data_type = Loadpixmap_hbitmap or 
+			data_type = Loadpixmap_rgb_data or 
+			data_type = Loadpixmap_alpha_data
+		local
+			gdkpix, gdkmask: POINTER
+		do
+			if error_code /= Loadpixmap_error_noerror then
+				(create {EXCEPTIONS}).raise ("Could not load image file.")
+			end
+
+			inspect data_type
+			when
+				Loadpixmap_hicon
+			then
+				(create {EXCEPTIONS}).raise ("Could not load image file, " +
+					"HICON format support not implemented.")
+			when
+				Loadpixmap_hbitmap
+			then
+				(create {EXCEPTIONS}).raise ("Could not load image file, " +
+					"HBITMAP format support not implemented.")
+			when
+				Loadpixmap_alpha_data
+			then
+				(create {EXCEPTIONS}).raise ("Could not load image file, " +
+					"RGBA format support not implemented.")
+			when
+				Loadpixmap_rgb_data
+			then
+				gdkpix := C.gdk_pixmap_new (
+					C.gdk_root_parent,
+					pixmap_width,
+					pixmap_height,
+					-1	
+						-- No color depth, take from gdk_root_parent.
+				)
+				C.gdk_draw_rgb_image (
+					gdkpix,
+					gc,
+					0,0,
+					pixmap_width,
+					pixmap_height,
+					C.Gdk_rgb_dither_normal_enum,
+					rgb_data,
+					pixmap_width * 3
+				)
+				set_pixmap (gdkpix, gdkmask)
+			end
+		end
 
 	set_with_buffer (a_buffer: STRING) is
 			-- Load pixmap data from `a_buffer' in memory.
@@ -270,6 +332,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature -- Externals
+
+	c_ev_load_pixmap(
+		curr_object: POINTER; 
+		file_name: POINTER; 
+		update_fields_routine: POINTER
+		) is
+		external
+			"C | %"load_pixmap.h%""
+		end
+
+	Loadpixmap_error_noerror: INTEGER is 0
+	Loadpixmap_rgb_data: INTEGER is 0
+	Loadpixmap_alpha_data: INTEGER is 1
+	Loadpixmap_hicon: INTEGER is 2
+	Loadpixmap_hbitmap: INTEGER is 3
+
 end -- EV_PIXMAP_IMP
 
 --!-----------------------------------------------------------------------------
@@ -293,6 +372,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/31 19:50:08  oconnor
+--| connected to platform independant C image loader
+--|
 --| Revision 1.24  2000/03/24 01:31:45  king
 --| Commented out mask creation routine in features
 --|
@@ -310,7 +392,8 @@ end -- EV_PIXMAP_IMP
 --| to implementation cluster
 --|
 --| Revision 1.19  2000/03/18 00:55:32  king
---| Added creation of mask, need to implement transparency for cursor compatibility
+--| Added creation of mask, need to implement transparency for cursor
+--| compatibility
 --|
 --| Revision 1.18  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
@@ -362,13 +445,15 @@ end -- EV_PIXMAP_IMP
 --| Commented out feature destroy.
 --|
 --| Revision 1.15.2.1.2.5  1999/12/01 01:02:33  brendel
---| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied on specific things like return value BOOLEAN instead of INTEGER.
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that
+--| relied on specific things like return value BOOLEAN instead of INTEGER.
 --|
 --| Revision 1.15.2.1.2.4  1999/11/30 23:02:36  oconnor
 --| Redefined interface to more refined type
 --|
 --| Revision 1.15.2.1.2.3  1999/11/29 17:37:21  brendel
---| Ignore previous log message. Commented out some old creation stuff. The new one is still to-be-implemented.
+--| Ignore previous log message. Commented out some old creation stuff. The
+--| new one is still to-be-implemented.
 --|
 --| Revision 1.15.2.1.2.2  1999/11/24 22:48:06  brendel
 --| Just managed to compile figure cluster example.

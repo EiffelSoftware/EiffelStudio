@@ -182,7 +182,8 @@ feature -- Access
 			handle: POINTER
 		do
 			if selected then
-				handle := cwel_integer_to_pointer (cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_caret, 0))
+				handle := cwel_integer_to_pointer (cwin_send_message_result 
+				(wel_item, Tvm_getnextitem, Tvgn_caret, 0))
 				Result ?= (all_ev_children @ handle).interface
 			else
 				Result := Void
@@ -191,7 +192,8 @@ feature -- Access
 
 feature -- Basic operations
 
-	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER; an_index: INTEGER) is
+	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER; 
+		an_index: INTEGER) is
 			-- Add `item_imp' to the tree with `par' as parent.
 			-- if `par' is the default_pointer, the parent is the tree.
 		local
@@ -220,7 +222,8 @@ feature -- Basic operations
 				until
 					c.after
 				loop
-					general_insert_item (c.item, item_imp.h_item, Tvi_last, an_index)
+					general_insert_item (c.item, item_imp.h_item, Tvi_last,
+					an_index)
 					c.forth
 				end
 				item_imp.set_internal_children (Void)
@@ -255,7 +258,8 @@ feature -- Basic operations
 			invalidate
 		end
 
-	get_children (item_imp: EV_TREE_ITEM_IMP): ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+	get_children (item_imp: EV_TREE_ITEM_IMP): 
+	ARRAYED_LIST [EV_TREE_ITEM_IMP] is
 			-- List of the direct children of the tree-item.
 			-- If the item is Void, it returns the children of the tree.
 		local
@@ -265,17 +269,21 @@ feature -- Basic operations
 			create Result.make (1)
 			from
 				if item_imp = Void then
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_root, 0)
+					handle := cwin_send_message_result (
+					wel_item, Tvm_getnextitem, Tvgn_root, 0)
 					hwnd := cwel_integer_to_pointer (handle)
 				else
-					handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_child, cwel_pointer_to_integer (item_imp.h_item))
+					handle := cwin_send_message_result (
+						wel_item, Tvm_getnextitem, Tvgn_child,
+						cwel_pointer_to_integer (item_imp.h_item))
 					hwnd := cwel_integer_to_pointer (handle)
 				end
 			until
 				hwnd = default_pointer
 			loop
 				Result.extend (all_ev_children @ hwnd)
-				handle := cwin_send_message_result (wel_item, Tvm_getnextitem, Tvgn_next, handle)
+				handle := cwin_send_message_result (wel_item,
+					Tvm_getnextitem, Tvgn_next, handle)
 				hwnd := cwel_integer_to_pointer (handle)
 			end
 		end
@@ -286,9 +294,11 @@ feature {EV_TREE_ITEM_I} -- Implementation
 			-- Insert `item_imp' at the `an_index' position.
 		do
 			if an_index = 1 then
-				general_insert_item (item_imp, default_pointer, Tvi_first, an_index)
+				general_insert_item (item_imp, default_pointer,
+					Tvi_first, an_index)
 			else
-				general_insert_item (item_imp, default_pointer, (ev_children @ (an_index - 1)).h_item, an_index)
+				general_insert_item (item_imp, default_pointer,
+					(ev_children @ (an_index - 1)).h_item, an_index)
 			end
 				-- We now add the child directly into ev_children.
 			ev_children.go_i_th (an_index - 1)
@@ -338,7 +348,8 @@ feature {EV_ANY_I} -- Implementation
 			when
 				Ev_pnd_start_transport
 			then
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+					start_transport (a_x, a_y, a_button, 0, 0, 0.5,
+						a_screen_x, a_screen_y)
 					set_source_true
 			when
 				Ev_pnd_end_transport
@@ -359,7 +370,8 @@ feature {EV_ANY_I} -- WEL Implementation
 
 	current_image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			-- A list of all items in the image list and their positions.
-			-- [[position in image list, number of items pointing to this image], windows pointer].
+			-- [[position in image list, number of items pointing to this
+			-- image], windows pointer].
 
 	reduce_image_list_references (i: INTEGER) is
 			--  Decrease any references to an image position > `i' by one.
@@ -372,9 +384,11 @@ feature {EV_ANY_I} -- WEL Implementation
 			until
 				current_image_list_info.off
 			loop
-				value := current_image_list_info.item_for_iteration.integer_item (1)
+				value := current_image_list_info.item_for_iteration.
+					integer_item (1)
 				if value > i then
-					current_image_list_info.item_for_iteration.enter (value - 1, 1)
+					current_image_list_info.item_for_iteration.enter
+						(value - 1, 1)
 				end
 				current_image_list_info.forth
 			end
@@ -391,7 +405,8 @@ feature {EV_ANY_I} -- WEL Implementation
 		end
 	
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
+			-- event.
 		local
 			it: EV_TREE_ITEM_IMP
 			pt: WEL_POINT
@@ -399,16 +414,19 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			if it /= Void and it.is_transport_enabled and not tree_is_pnd_source then
-					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			if it /= Void and it.is_transport_enabled and
+				not tree_is_pnd_source then
+				it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			elseif pnd_child_source /= Void then 
 				pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
 
 			if it /= Void then
 				offsets := it.relative_position
-				it.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
-				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+				it.interface.pointer_button_press_actions.call
+					([x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0,
+				pt.x, pt.y])
 			end
 		end
 
@@ -453,16 +471,19 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- or collapsed.
 		do
 			if info.action = Tve_collapse then
-				(all_ev_children @ info.new_item.h_item).interface.collapse_actions.call ([])
+				(all_ev_children @ info.new_item.h_item).interface.
+					collapse_actions.call ([])
 			elseif info.action = Tve_expand then
-				(all_ev_children @ info.new_item.h_item).interface.expand_actions.call ([])
+				(all_ev_children @ info.new_item.h_item).interface.
+					expand_actions.call ([])
 			end
 		end
 
 	on_size (size_type, a_height, a_width: INTEGER) is
 			-- List resized.
 		do
-			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+			interface.resize_actions.call ([screen_x, screen_y, a_width,
+				a_height])
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -498,7 +519,8 @@ feature {EV_ANY_I} -- WEL Implementation
 			if transport_started_in_item = a then
 				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			interface.pointer_button_press_actions.call (
+				[x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -529,8 +551,10 @@ feature {EV_ANY_I} -- WEL Implementation
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
 				offsets := it.relative_position
-				it.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
-				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+				it.interface.pointer_motion_actions.call (
+					[x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x,
+					pt.y])
 			end
 			if pnd_child_source /= Void then
 				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
@@ -612,11 +636,16 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2000/03/28 01:33:32  rogers
+--| Formatting.
+--|
 --| Revision 1.56  2000/03/28 01:11:47  rogers
 --| Added reduce_image_list_references.
 --|
 --| Revision 1.55  2000/03/27 17:35:03  rogers
---| Renamed current_image_list_images -> current_image_list_info, which now stores a tuple which contains the position in the image list and the number of items referencing this image in the tree.
+--| Renamed current_image_list_images -> current_image_list_info, which now
+--| stores a tuple which contains the position in the image list and the 
+--|number of items referencing this image in the tree.
 --|
 --| Revision 1.54  2000/03/24 19:14:11  rogers
 --| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP.
@@ -625,10 +654,14 @@ end -- class EV_TREE_IMP
 --| Added creation of current_image_list_images.
 --|
 --| Revision 1.52  2000/03/24 00:19:34  rogers
---| Added initialize which creates and sets the image list of the tree. Added image_list and current_image_list which is a record of images in the list.
+--| Added initialize which creates and sets the image list of the tree.
+--| Added image_list and current_image_list which is a record of images in
+--| the list.
 --|
 --| Revision 1.51  2000/03/22 20:18:53  rogers
---| Added pnd_press, added functions relating to PND status of object and children.Not complete implementation of PND so more work needs to be undertaken.
+--| Added pnd_press, added functions relating to PND status of object and
+--| children.Not complete implementation of PND so more work needs to be
+--| undertaken.
 --|
 --| Revision 1.50  2000/03/14 18:39:12  rogers
 --| Renamed
@@ -639,19 +672,25 @@ end -- class EV_TREE_IMP
 --| 	move_and_resize -> wel_move_and_resize
 --|
 --| Revision 1.49  2000/03/13 22:39:03  rogers
---| Moved the client_to_screen feature call to within the if statement in on_mouse_move.
+--| Moved the client_to_screen feature call to within the if statement in
+--| on_mouse_move.
 --|
 --| Revision 1.48  2000/03/13 20:50:03  rogers
---| Tree item's events now are called with the relative x and relative y positions instead of 0 0..
+--| Tree item's events now are called with the relative x and relative y
+--| positions instead of 0 0..
 --|
 --| Revision 1.47  2000/03/13 18:30:56  rogers
---| Removed old command association. Connected the select, deselect, collapse and expand events to the tree, and also propogated them to the items of the tree.
+--| Removed old command association. Connected the select, deselect,
+--| collapse and expand events to the tree, and also propogated them to the
+--| items of the tree.
 --|
 --| Revision 1.46  2000/03/13 17:55:41  rogers
---| Redefined on_mouse_move so the pointer_motion_actions can be called on the child.
+--| Redefined on_mouse_move so the pointer_motion_actions can be called on
+--| the child.
 --|
 --| Revision 1.45  2000/03/13 17:45:46  rogers
---| Removed on_left_button_up, on_middle_button_up and on_right_button_up. Added internal propogate_pointer_press and find_item_at position.
+--| Removed on_left_button_up, on_middle_button_up and on_right_button_up.
+--| Added internal propogate_pointer_press and find_item_at position.
 --|
 --| Revision 1.44  2000/03/09 19:59:02  rogers
 --| Removed multiple selection features.
@@ -660,13 +699,17 @@ end -- class EV_TREE_IMP
 --| Connected the addition and removal of ev_children directly now.
 --|
 --| Revision 1.40  2000/03/07 17:34:47  rogers
---| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead of EV_TREE_ITEM_HOLDER_IMP. Reference to item_type replaced with EV_TREE_ITEM_IMP.
+--| Now inherits from EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM] instead 
+--| of EV_TREE_ITEM_HOLDER_IMP. Reference to item_type replaced 
+--| with EV_TREE_ITEM_IMP.
 --|
 --| Revision 1.39  2000/03/06 20:46:07  rogers
 --| Corrected reference from index -> an_index in insert_item.
 --|
 --| Revision 1.38  2000/03/06 19:09:07  rogers
---| Added selected_items, enable_multiple_selection, disable_multiple_selection and multiple_selection_enabled. All these are to be implemented.
+--| Added selected_items, enable_multiple_selection, 
+--| disable_multiple_selection and multiple_selection_enabled.
+--| All these are to be implemented.
 --|
 --| Revision 1.37  2000/03/01 18:09:23  oconnor
 --| released

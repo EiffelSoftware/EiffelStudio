@@ -15,7 +15,7 @@ inherit
 		export 
 			{NONE} all
 			{CACHE_MANAGER} clr_version
-			{ANY} compact_and_clean_cache
+			{ANY} compact_and_clean_cache, cache_reader, cache_writer
 		undefine
 			start
 		end

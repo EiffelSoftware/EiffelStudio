@@ -35,4 +35,13 @@ feature -- Byte code generation
 			ba.append (Bc_ccur);
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring (generator);
+			io.error.new_line;
+		end
+
+
 end

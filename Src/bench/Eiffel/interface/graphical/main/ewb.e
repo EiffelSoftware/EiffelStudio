@@ -55,21 +55,21 @@ feature
 			screen: SCREEN;
 			temp: STRING
 		do
-				-- Check that environment variables
-				-- are properly set.
-			temp := env_variable ("EIFFEL3");
-			if (temp = Void) or else temp.empty then
-				io.error.putstring 
-					("Ise Eiffel3: the environment variable $EIFFEL3 is not set%N");
-				die (-1)
-			end;
-			temp := env_variable ("PLATFORM");
-			if (temp = Void) or else temp.empty then
-				io.error.putstring 
-					("Ise Eiffel3: the environment variable $PLATFORM is not set%N");
-				die (-1)
-			end;
 			if not retried then
+					-- Check that environment variables
+					-- are properly set.
+				temp := env_variable ("EIFFEL3");
+				if (temp = Void) or else temp.empty then
+					io.error.putstring 
+						("ISE Eiffel3: the environment variable $EIFFEL3 is not set%N");
+					die (-1)
+				end;
+				temp := env_variable ("PLATFORM");
+				if (temp = Void) or else temp.empty then
+					io.error.putstring 
+						("ISE Eiffel3: the environment variable $PLATFORM is not set%N");
+					die (-1)
+				end;
 				if argument_count = 2 and then
 					argument (1).is_equal ("-bench")
 				then

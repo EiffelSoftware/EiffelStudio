@@ -64,4 +64,15 @@ feature -- Byte code generation
 			ba.append_short_integer (position);
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring (generator);
+			io.error.putstring ("  ");
+			io.error.putint (position);
+			io.error.new_line;
+		end
+
+
 end

@@ -1,5 +1,9 @@
 class ENV_INTERP
 
+inherit
+
+	EXECUTION_ENVIRONMENT
+
 feature
 
 	interpret (s: STRING): STRING is
@@ -53,7 +57,8 @@ feature
 							j > Result.count or else stop
 						loop
 							current_character := Result.item (j);
-							stop := 	(not c_isalnum (current_character))
+							stop := 	(not (current_character.is_alpha or else
+												current_character.is_digit))
 										and
 										(current_character /= '_');
 							if not stop then
@@ -68,17 +73,13 @@ feature
 					end;
 					if Result.item (j) = '}' then
 						if j - 1 >= i then
-							s2 := Result.substring (i, j - 1);
-							ptr := s2.to_c;
-							s2 := c_getenv ($ptr);
+							s2 := get (Result.substring (i, j - 1));
 						else
 							!!s2.make (0);
 						end;
 					else
 						if j >= i then
-							s2 := Result.substring (i, j);
-							ptr := s2.to_c;
-							s2 := c_getenv ($ptr);
+							s2 := get (Result.substring (i, j));
 						else
 							!!s2.make (0);
 						end;
@@ -98,19 +99,6 @@ feature
 			end;
 		ensure
 			good_result: Result /= Void;
-		end;
-
-feature {NONE} -- Externals
-
-	c_getenv (s: ANY): STRING is
-			-- get enviroment variable
-		external
-			"C"
-		end;
-
-	c_isalnum (c: CHARACTER): BOOLEAN is
-		external
-			"C"
 		end;
 
 end

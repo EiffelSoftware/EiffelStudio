@@ -10,7 +10,10 @@ inherit
 		end;
 	IDABLE;
 	SHARED_WORKBENCH;
-	SHARED_SERVER;
+	SHARED_SERVER
+		export
+			{ANY} all
+		end;
 	SHARED_AST_CONTEXT
 		rename
 			context as ast_context
@@ -511,6 +514,11 @@ end;
 					feature_changed := 	changed_features.has (feature_name)
 										and
 										not feature_i.is_attribute;
+debug ("ACTIVITY")
+	io.error.putstring ("%T%Tfeature_changed: ");
+	io.error.putbool (feature_changed);
+	io.error.new_line;
+end;
 					f_suppliers := dependances.item (feature_name);
 
 						-- Feature is considered syntactically changed if
@@ -524,6 +532,11 @@ end;
 						feature_changed :=
 							(not propagators.melted_empty_intersection
 																(f_suppliers));
+debug ("ACTIVITY")
+	io.error.putstring ("%T%Tfeature_changed (After melted_empty_intersection): ");
+	io.error.putbool (feature_changed);
+	io.error.new_line;
+end;
 						if not feature_changed then
 							if f_suppliers.has_removed_id then
 								feature_changed := True;
@@ -561,10 +574,22 @@ end;
 								))
 						then
 								-- Type check
-debug ("ACTIVITY")
+debug ("VERBOSE", "ACTIVITY")
 	io.error.putstring ("%Ttype check ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
+end;
+debug ("ACTIVITY")
+	io.error.putstring ("%T%Tfeature changed: ");
+	io.error.putbool (feature_changed);
+	io.error.new_line;
+	if f_suppliers /= Void then
+		io.error.putstring ("%T%Tf_suppliers /= Void%N%T%Tempty_intersection: ");
+		io.error.putbool (propagators.empty_intersection (f_suppliers));
+		io.error.putstring ("%N%T%Tchanged_status_empty_intersection: ");
+		io.error.putbool (propagators.changed_status_empty_intersection (f_suppliers.suppliers));
+		io.error.new_line;
+	end;
 end;
 
 							Error_handler.mark;
@@ -610,7 +635,7 @@ end;
 --										-- deferred features
 --									feature_changed := False;
 --								else
-debug ("ACTIVITY")
+debug ("VERBOSE", "ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
@@ -638,8 +663,8 @@ end;
 						and then
 						not (type_check_error or else feature_i.is_deferred)
 					then
-debug ("ACTIVITY")
-	io.error.putstring ("%TMeted_set.put for ");
+debug ("VERBOSE", "ACTIVITY")
+	io.error.putstring ("%TMelted_set.put for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
@@ -677,7 +702,7 @@ end;
 
 				-- Recomputation of invariant clause
 
-debug ("ACTIVITY")
+debug ("VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TProcessing invariant%N");
 end;
 
@@ -744,7 +769,7 @@ end;
 						end;
 						new_suppliers.add_occurence (f_suppliers);
 
-debug ("ACTIVITY")
+debug ("VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TByte code for invariant%N");
 end;
 

@@ -24,10 +24,12 @@ feature
 					if not error_occurred then
 						System.set_precompilation (True);
 						compile;
-						System.save_precompilation_info;
-						terminate_project;
-						print_tail;
-						prompt_finish_freezing (False)
+						if System.successfull then
+							System.save_precompilation_info;
+							terminate_project;
+							print_tail;
+							prompt_finish_freezing (False)
+						end;
 					end;
 				else
 					io.error.putstring ("The project %"");

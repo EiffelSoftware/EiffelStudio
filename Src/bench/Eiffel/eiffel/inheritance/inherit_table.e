@@ -19,6 +19,8 @@ inherit
 			twin
 		end;
 	SHARED_ERROR_HANDLER
+		export
+			{ANY} error_handler
 		undefine
 			twin
 		end;
@@ -823,6 +825,13 @@ end;
 						-- A new body id has been computed for `feature_i'.
 					Body_index_table.force
 									(new_body_id, feature_i.body_index);
+debug ("ACTIVITY")
+	io.error.putstring ("Insert new body id: ");
+	io.error.putint (new_body_id);
+	io.error.putstring ("%NBody index: ");
+	io.error.putint (feature_i.body_index);
+	io.error.new_line;
+end
 					new_body_id := 0;
 				end;
 					-- Put new feature in `inherited_features'.
@@ -986,7 +995,10 @@ end;
 						-- changed features of class `a_class'.
 debug ("ACTIVITY")
 	io.error.putstring (feature_name);
-	io.error.putstring (" inserted in changed_features%N");
+	io.error.putstring (" inserted in changed_features%N%
+			%New body id: ");
+	io.error.putint (new_body_id);
+	io.error.new_line;
 end;
 					changed_features.add_front (feature_name);
 				else

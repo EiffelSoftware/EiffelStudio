@@ -458,10 +458,12 @@ feature -- Equivalent
 		require else
 			valid_other: other /= Void
 		do
-			Result := 	deep_equal (routine_body, other.routine_body) and then
-                        deep_equal (locals, other.locals) and then
-                        deep_equal (rescue_clause, other.rescue_clause) and then
-            			deep_equal (obsolete_message, other.obsolete_message)
+			reset_locals;
+			other.reset_locals;
+			Result :=	deep_equal (routine_body, other.routine_body) and then
+						deep_equal (locals, other.locals) and then
+						deep_equal (rescue_clause, other.rescue_clause) and then
+						deep_equal (obsolete_message, other.obsolete_message)
 		end;
  
 	is_assertion_equiv (other: like Current): BOOLEAN is
@@ -469,8 +471,36 @@ feature -- Equivalent
 		require else
 			valid_other: other /= Void
 		do
+			reset_assertions;
+			other.reset_assertions;
 			Result :=   deep_equal (precondition, other.precondition) and then
 				deep_equal (postcondition, other.postcondition)
+		end;
+
+	reset_locals is
+			-- Reset the positions in the list
+		do
+			if locals /= Void then
+				from
+					locals.start
+				until
+					locals.after
+				loop
+					locals.item.reset;
+					locals.forth
+				end;
+				locals.start;
+			end;
+		end;
+
+	reset_assertions is
+		do
+			if precondition /= Void then
+				precondition.reset;
+			end;
+			if postcondition /= Void then
+				postcondition.reset;
+			end;
 		end;
 
 feature	-- Replication

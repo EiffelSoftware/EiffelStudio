@@ -7,7 +7,7 @@ inherit
 
 	SHARED_BYTE_CONTEXT
 		export
-			{NONE} all
+			{ANY} all
 		end;
 	SHARED_WORKBENCH
 		export

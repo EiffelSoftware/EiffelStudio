@@ -15,7 +15,10 @@ inherit
 	SHARED_FILES;
 	SHARED_CODE_FILES;
 	SHARED_GENERATOR;
-	SHARED_ERROR_HANDLER;
+	SHARED_ERROR_HANDLER
+		export
+			{ANY} Error_handler
+		end;
 	SHARED_TIME;
 	SHARED_CECIL;
 	SHARED_BODY_ID;
@@ -24,6 +27,8 @@ inherit
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
+		export
+			{ANY} byte_context
 		end;
 	SHARED_ARRAY_BYTE;
 	SHARED_DECLARATIONS;

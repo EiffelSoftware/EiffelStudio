@@ -207,11 +207,11 @@ feature
 			new_position: INTEGER
 		do
 			new_position := position + Double_size;
-            if new_position > size then
-                resize (size + Chunk);
-            end;
-            ca_wdouble ($area, r, position - 1);
-            position := new_position;
+			if new_position > size then
+				resize (size + Chunk);
+			end;
+			ca_wdouble ($area, r, position - 1);
+			position := new_position;
 		end;
 
 	append_string (s: STRING) is

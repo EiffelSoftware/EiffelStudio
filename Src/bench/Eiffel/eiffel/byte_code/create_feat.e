@@ -117,4 +117,15 @@ feature -- Byte code generation
 			ba.append_integer (feature_id);
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring (generator);
+			io.error.putstring ("  ");
+			io.error.putstring (feature_name);
+			io.error.new_line;
+		end
+
+
 end

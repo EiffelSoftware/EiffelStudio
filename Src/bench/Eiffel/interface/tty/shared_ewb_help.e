@@ -68,6 +68,8 @@ feature {NONE}
 
 	routines_help: STRING is "show the routines of a class";
 
+	run_help: STRING is "execute the application";
+
 	short_help: STRING is "show the short form of a class";
 
 	stop_help: STRING is "stop on error";

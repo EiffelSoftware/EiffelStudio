@@ -121,12 +121,6 @@ feature -- Conveniences
 
 feature -- Incrementality
 
-	equiv (other: like Current): BOOLEAN is 
-			-- Is the current feature equivalent to `other' ?
-		do
-			Result := deep_equal (body, other.body);
-		end;
-
 	is_body_equiv (other: like Current): BOOLEAN is
 			-- Is the current feature equivalent to `other' ?
 		require

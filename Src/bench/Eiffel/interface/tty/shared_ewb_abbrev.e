@@ -44,7 +44,9 @@ feature
 
 	Quit_abb: CHARACTER is 'q';
 
-	Routines_abb: CHARACTER is 'f';
+	Routines_abb: CHARACTER is 'r';
+
+	Run_abb: CHARACTER is 'r';
 
 	Short_abb: CHARACTER is 's';
 

@@ -158,7 +158,8 @@ feature
 			if System.uses_precompiled then
 				Make_file.putstring ("%T%T");
 				Make_file.putstring (Precompilation_preobj);
-				Make_file.putstring (" \");
+				Make_file.putchar (' ');
+				Make_file.putchar (Continuation);
 				Make_file.new_line;
 			end;
 		end;

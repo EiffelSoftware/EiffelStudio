@@ -62,6 +62,9 @@ feature -- Byte code generation
 		local
 			target_type: TYPE_I;
 		do
+debug
+	info.trace;
+end;
 			ba.append (Bc_create);
 			info.make_byte_code (ba);
 			target_type := Context.real_type (target.type);

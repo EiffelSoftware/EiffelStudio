@@ -140,6 +140,12 @@ feature -- Cecil
 		deferred
 		end;
 
+	continuation: CHARACTER is
+		obsolete "Should be in SYSTEM_CONSTANTS"
+		do
+			Result := '\'
+		end;
+
 	generate_cecil is
 		local
 			libname: STRING;
@@ -166,7 +172,9 @@ feature -- Cecil
 			generate_objects_macros (partial_objects, False);
 			Make_file.putchar (' ');
 			generate_objects_macros (partial_system_objects, True);
-			Make_file.putstring (" \%N");
+			Make_file.putchar (' ');
+			Make_file.putchar (continuation);
+			Make_file.new_line;
 			generate_other_objects;
 			Make_file.putstring ("%T%T$(RCECIL)");
 			Make_file.new_line;
@@ -272,11 +280,11 @@ feature -- Generation, Header
 				%CC = $cc%N%
 				%CFLAGS = $optimize $ccflags $large ");
 			generate_specific_defines;
-			Make_file.putstring ("-I$(EIFFEL3)/bench/spec/$(PLATFORM)/include%N%
+			Make_file.putstring ("-I%H$(EIFFEL3)/bench/spec/%H$(PLATFORM)/include%N%
 				%LDFLAGS = $ldflags%N%
 				%LIBS = $libs%N%
 				%MAKE = make%N%
-				%MKDEP = $mkdep $(DPFLAGS) --%N%
+				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
 				%MV = $mv%N%
 				%RANLIB = $ranlib%N%
 				%RM = $rm -f%N%N");
@@ -345,7 +353,7 @@ feature -- Generation, Object list(s)
 				basket.remove;
 				size := size + file_name.count + 1;
 				if size > 78 then
-					Make_file.putchar ('\');
+					Make_file.putchar (Continuation);
 					Make_file.new_line;
 					Make_file.putchar ('%T');
 					size := 8 + file_name.count + 1;
@@ -377,7 +385,9 @@ feature -- Generation, External archives and object files.
 				until
 					i > nb
 				loop
-					Make_file.putstring (" \%N%T");
+					Make_file.putchar (' ');
+					Make_file.putchar (Continuation);
+					Make_file.putstring ("%N%T");
 					Make_file.putstring (object_file_names.i_th (i));
 					i := i + 1
 				end;
@@ -456,7 +466,7 @@ feature -- Generation (Linking rules)
 			Make_file.putstring (Emain);
 			Make_file.putstring (Dot_o);
 			Make_file.putchar (' ');
-			Make_file.putchar ('\');
+			Make_file.putchar (Continuation);
 			Make_file.new_line;
 			generate_other_objects;
 			Make_file.putstring ("%T%T");

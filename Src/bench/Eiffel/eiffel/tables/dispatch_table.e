@@ -61,6 +61,11 @@ feature	-- Melting and C Generation
 		do
 				-- Write first the new size of the dispatch table
 			write_int (file.file_pointer, counter);
+debug
+	io.error.putstring ("Updating dispatch_table%NCount: ");
+	io.error.putint (counter);
+	io.error.new_line;
+end;
 
 			from
 				melted_list.start

@@ -82,7 +82,7 @@ end;
 						!!application_path.make (50);
 						!!application_name.make (20);
 						application_path.append (Workbench_generation_path);
-						application_path.append ("/");
+						application_path.append_character (Directory_separator);
 						application_path.append (argument_window.application_name);
 						run_request.set_application_name (application_path);
 						run_request.send

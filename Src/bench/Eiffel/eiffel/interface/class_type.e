@@ -11,6 +11,8 @@ inherit
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
+		export
+			{ANY} byte_context
 		end;
 	SHARED_ARRAY_BYTE;
 	SHARED_EXEC_TABLE;
@@ -961,6 +963,14 @@ feature -- Precompilation
 	is_precompiled: BOOLEAN is
 		do
 			Result := id <= System.max_precompiled_type_id
+		end;
+
+feature -- Debug
+
+	trace is
+		do
+			skeleton.trace;
+			type.trace;
 		end;
 
 end

@@ -7,7 +7,8 @@ inherit
 	SHARED_ERROR_HANDLER;
 	SHARED_WORKBENCH;
 	SHARED_ENV;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
+	SYSTEM_CONSTANTS
 
 creation
 
@@ -294,7 +295,7 @@ end;				-- Check if the path is valid
 					file_name := Environ.interpret (ex_l.i_th (i).file__name);
 					!!class_path.make (path.count + file_name.count + 1);
 					class_path.append (path);
-					class_path.append ("/");
+					class_path.append_character (Directory_separator);
 					class_path.append (file_name);
 					!!class_file.make (class_path)
 					if not class_file.exists then
@@ -318,7 +319,7 @@ end;				-- Check if the path is valid
 					file_name := Environ.interpret (inc_l.i_th (i).file__name);
 					!!class_path.make (path.count + file_name.count + 1);
 					class_path.append (path);
-					class_path.append ("/");
+					class_path.append_character (Directory_separator);
 					class_path.append (file_name);
 					!!class_file.make (class_path)
 					if not class_file.exists then
@@ -353,9 +354,9 @@ end;				-- Check if the path is valid
 					i := file_name.count;
 	
 					if i > 2 and then
-						(file_name.item (i - 1) = '.'
+						(file_name.item (i - 1) = Dot
 							and
-							file_name.item (i) = 'e')
+							file_name.item (i) = Eiffel_suffix)
 					then
 						found := False;
 						if exclude_list /= Void then
@@ -421,7 +422,7 @@ end;				-- Check if the path is valid
 		do
 			!!class_path.make (path.count + file_name.count + 1);
 			class_path.append (path);
-			class_path.append ("/");
+			class_path.append_character (Directory_separator);
 			class_path.append (file_name);
 			class_name := read_class_name_in_file (class_path);
 			if class_name /= Void then

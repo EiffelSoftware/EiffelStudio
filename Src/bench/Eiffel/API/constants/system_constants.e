@@ -10,6 +10,8 @@ feature {NONE}
 
 	Directory_separator: CHARACTER is '/';
 
+	Dot: CHARACTER is '.'
+
 	Dot_c: STRING is ".c"
 
 	Dot_e: STRING is ".e"
@@ -37,6 +39,8 @@ feature {NONE}
 	Ehisto: STRING is "Ehisto"
 
 	Eiffelgen: STRING is "EIFFELGEN"
+
+	Eiffel_suffix: CHARACTER is 'e'
 
 	Einit: STRING is "Einit"
 
@@ -68,7 +72,7 @@ feature {NONE}
 
 	Updt: STRING is ".UPDT"
 
-	Version_number: STRING is "3.2.3"
+	Version_number: STRING is "3.2.3b"
 
 	W_code: STRING is "W_code"
 

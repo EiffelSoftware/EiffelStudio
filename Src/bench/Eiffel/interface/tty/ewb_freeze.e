@@ -31,9 +31,11 @@ feature
 				if not error_occurred then
 					System.set_freeze (True);
 					compile;
-					terminate_project;
-					print_tail;
-					prompt_finish_freezing (False)
+					if System.successfull then
+						terminate_project;
+						print_tail;
+						prompt_finish_freezing (False)
+					end;
 				end;
 			end
 		end;

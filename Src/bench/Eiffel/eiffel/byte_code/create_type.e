@@ -58,4 +58,15 @@ feature -- Byte code generation
 			ba.append_short_integer (cl_type_i.type_id - 1);
 		end;
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring (generator);
+			io.error.putstring ("  ");
+			type.trace;
+			io.error.new_line;
+		end
+
+
 end

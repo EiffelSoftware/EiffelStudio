@@ -2,7 +2,7 @@
 <html>
 <head>
    <meta name="MS-HKWD" content="EiffelBuild How To's">
-   <TITLE>EiffelStudio How To's</TITLE>
+   <TITLE>EiffelBuild How To's</TITLE>
 <link REL="stylesheet" HREF="/default.css" TYPE="text/css">
 </head>
 <body>
@@ -10,29 +10,29 @@
 <h1>EiffelBuild How To's</h1>
 
 <H3>How do I undo a mistake?</H3>
-<P>A full history is recorded by EiffelBuild as you work. There are three toolbar buttons located on the main toolbar which allow you to navigate the history. Modifictions to objects are not save in the history, but addition, deletion, and type changing of objects is recorded. Name changes for each object are also recorded.</P>
+<P>A full history is recorded by EiffelBuild as you work. There are three toolbar buttons located on the main toolbar which allow you to navigate the history. Modifications to objects are not saved in the history, but addition, deletion and type changing of objects are recorded. Name changes for each object are also recorded.</P>
 
 <H3>How can I build using a visual representation?</H3>
-<P>Make the Builder window (Accessible through the main toolbar or menus) visible. This shows an approximate representation of your current project. Each of the object representations in this window may be used in the same way as the object representations in the Layout Constructor. For example, you may <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</a> an object from within the Layout Constructor and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Drop</a> it within a non full container representation in the builder window, then it will be moved acoordingly, and both views will update to reflect this change.</P>
+<P>Make the Builder window (accessible through the main toolbar or the <B>View/Show builder window</B> menu) visible. This shows an approximate representation of your current project. Each of the object representations in this window may be used in the same way as the object representations in the Layout Constructor. For example, you may <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">pick</a> an object from within the Layout Constructor and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> it within a non full container representation in the builder window. It will then be moved accordingly, and both views will be updated to reflect this change.</P>
 
 <H3>How can I see an accurate representation of my project?</H3>
-<P>Make the display window visible (On the main toolbar). This shows an accurate representation of the project you are building. This window is non-responsive to events, and unlike the builder window, it does not make containers visible through the use of a frame. Object modifications such as minimum sizes will not be reflected in the builder window, but in this display window, every property of an object that you modify will be reflected directly.
+<P>Make the display window visible (by clicking its associated button in the main toolbar or by selecting the <b>View/Show display window</B> menu). This shows an accurate representation of the project you are building. This window is non-responsive to events, and unlike the builder window, it does not make containers visible through the use of a frame. Object properties such as minimum sizes will not be reflected in the builder window, but in the display window, every property of an object that you modify will be reflected immediately and precisely.
 </P>
-<H3>How can I insert an object at a paticular position within a container?</H3>
+<H3>How can I insert an object at a particular position within a container?</H3>
 <P>
-When you <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> an object on another representation of a Vision2 container, it is always extended to the end. If you wish to insert the object at a paticular position, hold down shift while <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">dropping</a>, on the object contained in the container which you wish for it to be inserted before.
+When you <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> an object on a representation of a Vision2 container, it is always put in its last position. If you wish to insert the object at a particular position, hold down Shift while <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">dropping</a> on the object located at this position in the container.
 </P>
 <H3>How do I change the type of an object with children?</H3>
-<P>Simply <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</a> from an existing object, and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> on the type of the object which you wish to replace it with in the Type Selector. This will replace the exising object with a new one of the selected type. All the children of the existing object will be inserted into the new object. Note that if the object you are changing the type of has one or more children, you may only replace it with type that allows that many children.</P>
+<P>Simply <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">pick</a> from an existing object, and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> on the type of the object which you wish to replace it with in the Type Selector. This will replace the existing object with a new one of the selected type. All the children of the existing object will be inserted into the new object. Note that if the object you are changing the type of has one or more children, you may only replace its type with a type that allows that many children.</P>
 
-<H3>How do I quickly display an Object editor</H3>
-<P>Ctrl right click on a representation of the object (Not in the display window though). This will create a new "floating" object editor, with the object targeted inside it. You may have as many object editors existing concurrently editing the same object if you wish. A change in one will be reflected in all.</P>
+<H3>How do I quickly display an Object editor?</H3>
+<P>Ctrl right click on a representation of an object (not in the display window though). This will create a new &quot;floating&quot; object editor, with the clicked object targeted inside it. You may have as many object editors existing concurrently editing the same object as you wish. A change in one will be reflected in all.</P>
 
-<H3>How do I see what a component looks like </H3>
-<P>Make the Component Viewer visible which can be done from the main toolbar. Then either <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">Pick</a> and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> on the component icon in the Component Viewer, or Ctrl right click on the component you wish to view. A representation of the component will be displayed in the Component Viewer, and you can see if it is what you require. Both a "display" and "builder" view are available by selecting the appropriate icon from the toolbar within the component Viewer.</P>
+<H3>How do I see what a component looks like? </H3>
+<P>Make the Component Viewer visible, which can be done from the main toolbar or the <b>View/Show component viewer</b> menu. Then either <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">pick</a> the component and <A HREF="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">drop</a> it on the component icon in the Component Viewer, or Ctrl right click on the component you wish to view. A representation of the component will be displayed in the Component Viewer, and you can see if it is what you require. Both a &quot;display&quot; view and a &quot;builder&quot; view are available by selecting the appropriate icon from the toolbar within the component Viewer.</P>
 
-<H3>How do I change the name of the window class generated?</H3>
-<P>Open up the project settings, and there will be an available option for changing both the file name and the actual class name to be generated.</P>
+<H3>How do I change the name of the generated class?</H3>
+<P>Open up the project settings, and there will be an option for changing both the file name and the actual class name to be generated.</P>
 
 </body>
 </html>

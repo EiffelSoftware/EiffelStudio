@@ -8,7 +8,7 @@ class
 	MAIN_TOOLBAR
 
 inherit
-	EB_HORIZONTAL_TOOLBAR
+	EV_TOOL_BAR
 		redefine
 			make
 		end
@@ -18,19 +18,22 @@ inherit
 creation
 	make
 
-feature {NONE}-- Initialization
+feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 		local
-			v_separator: EV_VERTICAL_SEPARATOR
+			hbox: EV_HORIZONTAL_BOX
+			v_separator: EV_TOOL_BAR_SEPARATOR
 		do
-			{EB_HORIZONTAL_TOOLBAR} Precursor (par)
+			create hbox.make (par)
+			hbox.set_expand (False)
+			{EV_TOOL_BAR} Precursor (hbox)
 			create create_proj_b.make (Current)
 			create load_proj_b.make (Current)
 			create save_b.make (Current)
 			create import_b.make (Current)
-			create v_separator.make (Current)
-			create execute_b.make (Current)
+--			create v_separator.make (Current)
+--			create execute_b.make (Current)
 			create v_separator.make (Current)
 			create help_b.make (Current)
 			create namer_b.make (Current)
@@ -39,28 +42,28 @@ feature {NONE}-- Initialization
 			create con_b.make (Current)
 			create cmd_b.make (Current)
 			create current_state_hole.make (Current)
-			create current_state_label.make (Current)
+			create current_state_label.make (hbox)
 			set_values
 			set_callbacks
 		end
 
 	set_values is
 		do
-			set_spacing (3)
-			execute_b.set_minimum_width (27)
-			execute_b.set_expand (False)
+			current_state_hole.set_update_procedure (main_window~set_current_state)
+--			execute_b.set_minimum_width (27)
+--			execute_b.set_expand (False)
 		end
 
 	set_callbacks is
 		local
 			cmd: EV_ROUTINE_COMMAND
--- 			change_mode_cmd: CHANGE_MODE_CMD
+--			change_mode_cmd: CHANGE_MODE_CMD
 		do
 			create cmd.make (~process_help)
 			help_b.add_default_pnd_command (cmd, Void)
--- 			!! change_mode_cmd
--- 			execute_b.add_value_changed_action (change_mode_cmd, execute_b)
--- 			edit_b.add_value_changed_action (change_mode_cmd, edit_b)
+--			create change_mode_cmd
+--			execute_b.add_value_changed_action (change_mode_cmd, execute_b)
+--			edit_b.add_value_changed_action (change_mode_cmd, edit_b)
 		end
 
 feature {MAIN_TOOLBAR} -- Help display
@@ -79,8 +82,6 @@ feature -- Enabel/Disable buttons
 	enable is
 			-- Enable all buttons in the buttons menu.
 		do
-			create_proj_b.set_insensitive (False)
-			load_proj_b.set_insensitive (False)
 			cut_b.set_insensitive (False)
 			namer_b.set_insensitive (False)
 			help_b.set_insensitive (False)
@@ -93,8 +94,6 @@ feature -- Enabel/Disable buttons
 	disable is
 			-- Disable all buttons in the buttons menu except Save button.
 		do
-			create_proj_b.set_insensitive (True)
-			load_proj_b.set_insensitive (True)
 			cut_b.set_insensitive (True)
 			namer_b.set_insensitive (True)
 			help_b.set_insensitive (True)
@@ -115,7 +114,7 @@ feature -- GUI attributes
 	import_b: IMPORT_BUTTON
 			-- `Import' button
 
-	execute_b: 	EV_TOGGLE_BUTTON
+--	execute_b: 	EV_TOGGLE_BUTTON
 			-- Button to switch to Execution mode
 
 	help_b: HELP_HOLE

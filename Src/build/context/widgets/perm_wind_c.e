@@ -185,13 +185,15 @@ feature
 			a_pixmap: PIXMAP;
 		do
 			icon_pixmap_name := a_name;
-			icon_pixmap_modified := True;
-			if icon_pixmap_name /= Void then
+			icon_pixmap_modified := False;
+			if icon_pixmap_name /= Void and then 
+				not icon_pixmap_name.empty
+			then
+				icon_pixmap_modified := True;
 				!!a_pixmap.make;
 				a_pixmap.read_from_file (a_name);
 				if a_pixmap.is_valid then
 					widget.set_icon_pixmap (a_pixmap);
-					icon_pixmap_modified := True;
 				end;
 			end
 		end;

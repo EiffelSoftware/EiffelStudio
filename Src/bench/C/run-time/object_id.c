@@ -2,13 +2,17 @@
 	Object id externals
 */
 
+/*
+doc:<file name="object_id.c" header="eif_object_id.h" version="$Id$" summary="Object id externals.">
+*/
+
 #include "eif_portable.h"
 #include "eif_macros.h"
 #include "eif_except.h"
 #include "eif_hector.h"
 #include "eif_sig.h"
 #include "rt_garcol.h"
-#include "eif_object_id.h"
+#include "rt_object_id.h"
 #include "rt_assert.h"
 
 
@@ -27,11 +31,17 @@ rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stac
 rt_public EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
 #endif
 
-/* The following stack records the addresses of objects for which
- * `object_id' has been called.
- */
-
-rt_public struct stack object_id_stack = {
+/*
+doc:	<attribute name="object_id_stack" return_type="struct stack" export="shared">
+doc:		<summary>The following stack records the addresses of objects for which `object_id' has been called.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None in object_id.c, `eif_gc_mutex' while collecting.</synchronization>
+doc:		<eiffel_classes>IDENTIFIED, WEL_IDENTIFIED</eiffel_classes>
+doc:		<fixme>Need a mutex to protect its access.</fixme>
+doc:	</attribute>
+*/
+rt_shared struct stack object_id_stack = {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -40,11 +50,16 @@ rt_public struct stack object_id_stack = {
 };
 
 
-rt_private EIF_INTEGER max_object_id = 0;	/* Max object_id allocated */
-/* This needs to be done as the chunks of memory are not cleared after
- * allocation and we do not want to consider some garbage as a valid
- * descendant of IDENTIFIED and then call `object_id' on it
- */
+/*
+doc:	<attribute name="max_object_id" return_type="EIF_INTEGER" export="private">
+doc:		<summary>Max object_id allocated. This needs to be done as the chunks of memory are not cleared after allocation and we do not want to consider some garbage as a valid descendant of IDENTIFIED and then call `object_id' on it.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Need a mutex (most likely same as the one for object_id_stack).</fixme>
+doc:	</attribute>
+*/
+rt_private EIF_INTEGER max_object_id = 0;
 
 rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 {
@@ -155,12 +170,16 @@ rt_private void eif_private_extend_object_id (EIF_INTEGER nb_chunks, struct stac
 
 #ifdef CONCURRENT_EIFFEL
 
-/* `separate_object_id_set' keeps track of objects referenced from other processors
- * Objects in the set are alive (the GC considers them as roots
- * Free locations are reused
- */
-
-rt_public struct stack separate_object_id_set = {
+/*
+doc:	<attribute name="separate_object_id_set" return_type="struct stack" export="shared">
+doc:		<summary>`separate_object_id_set' keeps track of objects referenced from other processors Objects in the set are alive (the GC considers them as roots). Free locations are reused.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>To fix only when we will do SCOOP.</fixme>
+doc:	</attribute>
+*/
+rt_shared struct stack separate_object_id_set = {
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -168,6 +187,15 @@ rt_public struct stack separate_object_id_set = {
 	(char **) 0,			/* st_end */
 };
 
+/*
+doc:	<attribute name="max_separate_object_id" return_type="EIF_INTEGER" export="private">
+doc:		<summary>Max separate object_id (same as `max_object_id' for non-SCOOP application)</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>To fix only when we will do SCOOP.</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_INTEGER max_separate_object_id = 0;
 
 rt_public EIF_INTEGER eif_separate_object_id(EIF_OBJECT object)
@@ -368,3 +396,7 @@ rt_public EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 	return EIF_FALSE;
 }
 #endif
+
+/*
+doc:</file>
+*/

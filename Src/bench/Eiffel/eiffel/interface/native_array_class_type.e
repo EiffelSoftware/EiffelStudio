@@ -66,6 +66,16 @@ feature -- Access
 			Result.append (cl_type.il_type_name)
 		end
 
+	deep_il_element_type: CL_TYPE_I is
+			-- Find actual type of element array.
+			-- I.e. if you have NATIVE_ARRAY [NATIVE_ARRAY [INTEGER]], it
+			-- will return INTEGER.
+		do
+			Result := type.deep_il_element_type
+		ensure
+			deep_il_element_type_not_void: Result /= Void
+		end
+
 feature -- IL code generation
 
 	generate_il (name_id: INTEGER; array_type: CL_TYPE_I) is

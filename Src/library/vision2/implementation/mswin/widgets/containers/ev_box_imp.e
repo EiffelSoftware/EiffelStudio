@@ -229,15 +229,17 @@ feature {EV_WIDGET_I} -- Implementation
 
 	on_first_display is
 			-- Called by the top_level window.
+		local
+			i: INTEGER
 		do
 			if not ev_children.empty then
 				from
-					ev_children.start
+					i := 1
 				until
-					ev_children.after
+					i = ev_children.count + 1
 				loop
-					ev_children.item.on_first_display
-					ev_children.forth
+					(ev_children @ i).on_first_display
+					i := i + 1
 				end
 			end
 			initialize_length_at_minimum

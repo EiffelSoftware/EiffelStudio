@@ -394,7 +394,7 @@ feature -- Bit operations
 			bit_not_not_void: Result /= Void
 		end
 
-	frozen bit_shift (n: INTEGER): like Current is
+	frozen bit_shift (n: INTEGER): INTEGER_16 is
 			-- Shift Current from `n' position to right if `n' positive,
 			-- to left otherwise.
 		require

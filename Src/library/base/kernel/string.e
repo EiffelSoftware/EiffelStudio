@@ -909,8 +909,7 @@ feature -- Conversion
 		end;
 
 	to_c: ANY is
-			-- An integer which a C function may cast into a pointer
-			-- to a `C' form of current string.
+			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
 		do
 			if count = 0 or else item (count) /= '%U' then

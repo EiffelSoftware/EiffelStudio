@@ -29,7 +29,7 @@ inherit
 		end
 
 create
-	make_boolean, make_character, make_integer, make_real,
+	make_boolean, make_character, make_integer, make_integer_64, make_real,
 	make_double, make_pointer, make_object,	make_manifest_string
 
 feature -- Initialization
@@ -59,6 +59,16 @@ feature -- Initialization
 		do
 			value_integer := value
 			type := Type_integer
+			dynamic_type := dtype
+		ensure
+			type /= Type_unknown
+		end
+
+	make_integer_64 (value: INTEGER_64; dtype: CLASS_C) is
+			-- make a integer_64 item initialized to `value'
+		do
+			value_integer_64 := value
+			type := Type_integer_64
 			dynamic_type := dtype
 		ensure
 			type /= Type_unknown
@@ -302,6 +312,9 @@ feature -- Action
 
 				when Type_integer then
 					send_integer_value(value_integer)
+					
+				when Type_integer_64 then
+					send_integer_64_value (value_integer_64)
 
 				when Type_real then
 					send_real_value(value_real)
@@ -368,6 +381,8 @@ feature -- Access
 				Result.append_character ('%'')
 			when Type_integer then
 				Result := value_integer.out
+			when Type_integer_64 then
+				Result := value_integer_64.out
 			when Type_real then
 				Result := value_real.out
 			when Type_double then
@@ -431,6 +446,7 @@ feature {DUMP_VALUE} -- Implementation
 	value_boolean	: BOOLEAN
 	value_character	: CHARACTER
 	value_integer	: INTEGER
+	value_integer_64: INTEGER_64
 	value_real		: REAL
 	value_double	: DOUBLE
 	value_bits		: BIT_REF -- not yet implemented.
@@ -508,6 +524,7 @@ feature {NONE} -- Private Constants
 	Type_pointer	: INTEGER is 7
 	Type_object		: INTEGER is 8
 	Type_string		: INTEGER is 9
+	Type_integer_64: INTEGER is 10
 
 	character_routines: CHARACTER_ROUTINES is
 			-- To have a printable output of Eiffel strings that have

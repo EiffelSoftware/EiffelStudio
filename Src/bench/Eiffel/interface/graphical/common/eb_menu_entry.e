@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- `associated_command.text_window'.
 		do
 			button_make (a_cmd.name, a_parent);
-			add_activate_action (a_cmd, a_cmd.text_window)
+			add_activate_action (a_cmd, a_cmd.tool)
 		end;
 
 	make_button_only (a_cmd: like associated_command; a_parent: MENU) is

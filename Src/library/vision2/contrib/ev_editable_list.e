@@ -11,6 +11,9 @@ class
 	
 inherit
 	EV_MULTI_COLUMN_LIST
+		redefine
+			extend
+		end
 
 create
 	make
@@ -27,21 +30,41 @@ feature -- Initialization
 			create edit_dialogs.make (0)
 			create change_widgets.make (0)
 			create editable_columns.make (0)
+			create editable_rows.make (0)
 			create end_edit_actions.default_create
 			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?) )
 			end_edit_actions.extend (agent on_change_widget_deselected)
 			set_non_empty_column_values (True)
+			set_all_rows_editable
 		end
 
 feature -- Status report
 		
-	is_all_editable: BOOLEAN
+	all_columns_editable: BOOLEAN
 			-- Are all columns in the list editable?
+		
+	all_rows_editable: BOOLEAN
+			-- Are all rows in the list editable?
 			
 	column_editable (i: INTEGER): BOOLEAN is
 			-- Is column at index 'i' allowed to be edited?
 		do
 			Result := editable_columns.has (i)
+		end
+		
+	row_editable (i: INTEGER): BOOLEAN is
+			-- Is row at index 'i' allowed to be edited?
+		do
+			Result := editable_rows.has (i)
+		end
+
+feature -- Element Change
+
+	extend (v: like item) is
+			-- Add 'v' to Current.
+		do
+			{EV_MULTI_COLUMN_LIST} Precursor (v)
+			set_row_editable (True, count)
 		end
 
 feature -- Status setting		
@@ -69,31 +92,31 @@ feature -- Status setting
 			empty_column_values := a_flag
 		end
 		
-	set_editable (i: INTEGER) is
-			-- Make column at index 'i' editable.
+	set_column_editable (a_flag: BOOLEAN; i: INTEGER) is
+			-- Make column at index 'i' editable according to 'a_flag'. 
 		do
-			if editable_columns.has (i) then
-			else
-				editable_columns.extend (i)
-			end
-		end
-		
-	set_non_editable (i: INTEGER) is
-			-- Make column at index 'i' not editable.
-		do
-			from 
-				editable_columns.start
-			until
-				editable_columns.after
-			loop
-				if editable_columns.item = i then
-					editable_columns.remove
+			if a_flag then
+				if editable_columns.has (i) then
+					-- Already editbale, do nothing.
+				else
+					editable_columns.extend (i)
 				end
-				editable_columns.forth
+			else
+				from 
+					editable_columns.start
+				until
+					editable_columns.after
+				loop
+					if editable_columns.item = i then
+						editable_columns.remove
+					end
+					editable_columns.forth
+				end
 			end
+			
 		end
 
-	set_all_editable is
+	set_all_columns_editable is
 			-- Make every column editable.
 		require
 			has_columns: column_count > 0
@@ -108,7 +131,50 @@ feature -- Status setting
 				editable_columns.extend (i)
 				i := i + 1
 			end
-			is_all_editable := True
+			all_columns_editable := True
+		end
+		
+	set_row_editable (a_flag: BOOLEAN; i: INTEGER) is
+			-- Make row at index 'i' editable according to 'a_flag'.
+		local
+			done: BOOLEAN
+		do
+			if a_flag then
+				if editable_rows.has (i) then
+					-- Already editbale, do nothing.
+				else
+					editable_rows.extend (i)
+				end
+			else
+				from 
+					editable_rows.start
+				until
+					editable_rows.after or done
+				loop
+					if editable_rows.item = i then
+						editable_rows.remove
+						done := True
+					else
+						editable_rows.forth
+					end
+				end
+			end
+		end
+
+	set_all_rows_editable is
+			-- Make every row editable.
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i = count + 1
+			loop
+				editable_rows.extend (i)
+				i := i + 1
+			end
+			all_rows_editable := True
 		end
 		
 	change_widget_type (i: INTEGER; a_widget: EV_TEXTABLE) is
@@ -171,7 +237,7 @@ feature -- Basic operations
 		do
 			if selected_item /= Void then
 				calculate_offsets (x, y)
-				generate_edit_dialog (column_index (x, y))
+				generate_edit_dialog (column_index (x, y), index_of (selected_item, 1))
 			end	
 		end
 
@@ -232,7 +298,6 @@ feature {NONE} -- Actions
 			-- Clear any in-place editing dialogs since row has lost focus and also
 			-- set row data to reflect newly entered text.
 		do
---			if is_hideable then
 			if not edit_dialogs.is_empty then
 				
 			
@@ -247,7 +312,6 @@ feature {NONE} -- Actions
 				end
 				edit_dialogs.wipe_out
 			end
---			end
 		end
 	
 	on_key_release (key: EV_KEY; a_dialog: EV_UNTITLED_DIALOG) is
@@ -337,6 +401,9 @@ feature {NONE} -- Implementation
 	editable_columns: ARRAYED_LIST [INTEGER]
 			-- Indices of all editable columns in row.
 			
+	editable_rows: ARRAYED_LIST [INTEGER]
+			-- Indices of all editable rows in list.
+			
 	edit_dialogs: ARRAYED_LIST [EV_UNTITLED_DIALOG]
 			-- List of dialogs used for editing Current row.
 			
@@ -344,7 +411,7 @@ feature {NONE} -- Implementation
 			-- List of textable widgets associated by column.  Used to determine
 			-- widget type for each column.
 
-	generate_edit_dialog (a_index: INTEGER) is
+	generate_edit_dialog (a_col_index, a_row_index: INTEGER) is
 			-- Generate new edit dialog for row editing in column at index 'i', a text 
 			-- field dialog unless otherwise previously specified by 'change_widget_type'.
 		local
@@ -354,16 +421,16 @@ feature {NONE} -- Implementation
 			i, a_column_width: INTEGER
 			x_pos: INTEGER
 		do
-			if column_editable (a_index) then
+			if column_editable (a_col_index) and row_editable (a_row_index) then
 				
 				from
 					i := 1
 					x_pos := screen_x
 					edit_dialogs.wipe_out
-					saved_text := selected_item @ (a_index)
+					saved_text := selected_item @ (a_col_index)
 					widget_row := index_of (selected_item, 1)
 				until
-					i = a_index + 1
+					i = a_col_index + 1
 				loop
 					x_pos := x_pos + a_column_width
 					a_column_width := column_width (i)
@@ -375,21 +442,21 @@ feature {NONE} -- Implementation
 				change_dialog.set_size (a_column_width, row_height - 5)		
 				change_dialog.disable_user_resize
 				
-				if change_widgets.has (a_index) then
-					change_widget ?= change_widgets.item (a_index)
+				if change_widgets.has (a_col_index) then
+					change_widget ?= change_widgets.item (a_col_index)
 					change_widget.key_release_actions.extend (agent on_key_release (?, change_dialog))
 					change_widget.focus_out_actions.extend (agent update_actions)
 					change_dialog.extend (change_widget)
 				else
 					create {EV_TEXT_FIELD} text_change_widget
-					change_widgets.put (text_change_widget, a_index)
+					change_widgets.put (text_change_widget, a_col_index)
 					text_change_widget.key_release_actions.extend (agent  on_key_release (?, change_dialog))
 					text_change_widget.focus_out_actions.extend (agent update_actions)
 					change_dialog.extend (text_change_widget)
 				end
 
-				widget := change_widgets.item (a_index)
-				change_widgets.item (a_index).set_text (saved_text)
+				widget := change_widgets.item (a_col_index)
+				change_widgets.item (a_col_index).set_text (saved_text)
 				change_dialog.show_relative_to_window (relative_window)
 				change_dialog.set_position (x_pos, y_offset)
 			end

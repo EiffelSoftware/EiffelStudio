@@ -602,6 +602,8 @@ feature -- Store/Retrive
 		
 	load_available_views (f: RAW_FILE) is
 			-- Load avaiable views from `f' store it in `available_views.
+		require
+			f_exists: f /= Void
 		local
 			diagram_input: XM_DOCUMENT
 			node: XM_ELEMENT

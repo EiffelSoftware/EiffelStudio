@@ -4,13 +4,13 @@
 # It generates the Vision2 and Precompilation wizards and puts them in the delivery.
 
 remtrace Building the Vision2 wizard
-cd vision2
+cd vision2_wizard
 untgz_ccode wizard
 move wizard $INSTALL_DIR/studio/wizards/new_projects/vision2
 remtrace Vision2 wizard Built!
 
 remtrace Building the Precompilation wizard
-cd eprecompile
+cd precomp_wizard
 untgz_ccode wizard
 move wizard $ISE_EIFFEL/studio/wizards/precompile/spec/$ISE_PLATFORM/
 remtrace Precompilation wizard Built!

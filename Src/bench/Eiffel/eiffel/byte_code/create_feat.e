@@ -6,7 +6,8 @@ inherit
 
 	CREATE_INFO
 		redefine
-			generate_cid, make_gen_type_byte_code, generate_reverse
+			generate_cid, make_gen_type_byte_code, generate_reverse,
+			generate_cid_array, generate_cid_init
 		end
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
@@ -281,6 +282,164 @@ feature -- Genericity
 				buffer.putstring (gc_comma)
 				context.Current_register.print_register_by_name
 				buffer.putstring ("), ")
+			end
+		end
+
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+			table: POLY_TABLE [ENTRY];
+			table_name: STRING;
+			rout_info: ROUT_INFO;
+			gen_type: GEN_TYPE_I;
+			type_set: ROUT_ID_SET
+		do
+			buffer.putstring ("-13, ")
+			dummy := idx_cnt.next
+			if context.final_mode then
+				table := Eiffel_table.poly_table (rout_id)
+
+				if table = Void then
+						-- Creation with `like feature' where feature is
+						-- deferred and has no effective version anywhere.
+						-- Create anything - cannot be called anyway
+					buffer.putstring ("-10, -10, ")
+					dummy := idx_cnt.next
+					dummy := idx_cnt.next
+				else
+					-- Feature has at least one effective version
+					if table.has_one_type then
+							-- There is a table, but with only one type
+						gen_type ?= table.first.type
+
+						if gen_type /= Void then
+							buffer.putstring ("-10, ")
+							dummy := idx_cnt.next
+							gen_type.generate_cid_array (buffer, 
+													final_mode, True, idx_cnt)
+						else
+							buffer.putint (table.first.feature_type_id - 1)
+							buffer.putstring (", ")
+							dummy := idx_cnt.next
+						end
+					else
+							-- Attribute is polymorphic
+						table_name := rout_id.type_table_name
+
+						buffer.putstring ("0, ")
+						dummy := idx_cnt.next
+
+							-- Side effect. This is not nice but
+							-- unavoidable.
+							-- Mark routine id used
+						Eiffel_table.mark_used (rout_id)
+							-- Remember extern declaration
+						Extern_declarations.add_type_table (clone (table_name))
+
+						-- Make sure that `rout_id' is in type_set
+
+						type_set := System.type_set
+
+						if not type_set.has (rout_id) then
+							-- We found a new routine id which was not in the
+							-- table before, we have to insert it into `type_set'
+							type_set.force (rout_id)
+						end
+					end
+				end
+			else
+				buffer.putstring ("0, ")
+				dummy := idx_cnt.next
+			end
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+			table: POLY_TABLE [ENTRY];
+			table_name: STRING;
+			rout_info: ROUT_INFO;
+			gen_type: GEN_TYPE_I;
+			type_set: ROUT_ID_SET
+		do
+			dummy := idx_cnt.next
+			if context.final_mode then
+				table := Eiffel_table.poly_table (rout_id)
+
+				if table = Void then
+						-- Creation with `like feature' where feature is
+						-- deferred and has no effective version anywhere.
+						-- Create anything - cannot be called anyway
+					dummy := idx_cnt.next
+					dummy := idx_cnt.next
+				else
+					-- Feature has at least one effective version
+					if table.has_one_type then
+							-- There is a table, but with only one type
+						gen_type ?= table.first.type
+
+						if gen_type /= Void then
+							dummy := idx_cnt.next
+							gen_type.generate_cid_init (buffer, 
+													final_mode, True, idx_cnt)
+						else
+							dummy := idx_cnt.next
+						end
+					else
+							-- Attribute is polymorphic
+						table_name := rout_id.type_table_name
+
+						buffer.putstring ("typarr[")
+						buffer.putint (idx_cnt.value)
+						buffer.putstring ("] = RTFCID(")
+						buffer.putint (context.current_type.generated_id (context.final_mode))
+						buffer.putstring (",(")
+						buffer.putstring (table_name)
+						buffer.putstring ("-")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putstring ("), (")
+
+						buffer.putstring (table_name)
+						buffer.putstring ("_gen_type")
+						buffer.putstring ("-")
+						buffer.putint (table.min_type_id - 1)
+						buffer.putstring ("), ")
+						context.Current_register.print_register_by_name
+						buffer.putstring (");")
+						buffer.new_line
+						dummy := idx_cnt.next
+					end
+				end
+			else
+				if
+					Compilation_modes.is_precompiling or
+					context.current_type.base_class.is_precompiled
+				then
+					buffer.putstring ("typarr[")
+					buffer.putint (idx_cnt.value)
+					buffer.putstring ("] = RTWPCT(")
+					context.class_type.id.generated_id (buffer)
+					buffer.putstring (gc_comma)
+					rout_info := System.rout_info_table.item (rout_id)
+					rout_info.origin.generated_id (buffer)
+					buffer.putstring (gc_comma)
+					buffer.putint (rout_info.offset)
+				else
+					buffer.putstring ("typarr[")
+					buffer.putint (idx_cnt.value)
+					buffer.putstring ("] = RTWCT(")
+					buffer.putint (context.current_type.associated_class_type.id.id - 1)
+					buffer.putstring (gc_comma)
+					buffer.putint (feature_id)
+				end
+
+				buffer.putstring (gc_comma)
+				context.Current_register.print_register_by_name
+				buffer.putstring (");")
+				buffer.new_line
+				dummy := idx_cnt.next
 			end
 		end
 

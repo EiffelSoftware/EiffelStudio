@@ -79,6 +79,28 @@ feature -- Generic conformance
 		do
 		end
 
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode: BOOLEAN; idx_cnt : COUNTER) is
+			-- Generate mode dependent sequence of type id's 
+			-- separated by commas. 'idx_cnt' holds the 
+			-- index in the array for this entry.
+		require
+			valid_file : buffer /= Void
+			valid_counter: idx_cnt /= Void
+		do
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+			-- Generate mode dependent initialization of 
+			-- cid array. 'idx_cnt' holds the index in the 
+			-- array for this entry.
+		require
+			valid_file : buffer /= Void
+			valid_counter: idx_cnt /= Void
+		do
+		end
+
 	type_to_create : CL_TYPE_I is
 			-- Type of this info.
 		deferred

@@ -53,6 +53,8 @@ feature
 			final_mode: BOOLEAN;
 			has_init, has_creation: BOOLEAN
 			encoded_name: STRING
+			use_init: BOOLEAN
+			idx_cnt: COUNTER
 		do
 			gen_param := first_generic;
 			is_expanded := gen_param.is_expanded;
@@ -195,16 +197,32 @@ feature
 							buffer.putstring ("static int16 typarr [] = {")
 						else
 							buffer.putstring ("int16 typarr [] = {")
+							use_init := True
 						end
 
 						buffer.putint (byte_context.current_type.generated_id (final_mode))
 						buffer.putstring (", ")
-						gen_ptype.generate_cid (buffer, final_mode, True)
+						if use_init then
+							!!idx_cnt
+							idx_cnt.set_value (1)
+							gen_ptype.generate_cid_array (buffer, final_mode, 
+														  True, idx_cnt)
+						else
+							gen_ptype.generate_cid (buffer, final_mode, True)
+						end
 						buffer.putstring ("-1};")
 						buffer.new_line
 						buffer.putstring ("static int16 typcache = -1;")
 						buffer.new_line
 						buffer.new_line
+						if use_init then
+							idx_cnt.set_value (1)
+							gen_ptype.generate_cid_init (buffer, final_mode, 
+														 True, idx_cnt)
+						else
+							gen_ptype.generate_cid (buffer, final_mode, True)
+						end
+
 						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
 
 						buffer.putint (gen_ptype.generated_id (final_mode))
@@ -278,18 +296,34 @@ feature
 							buffer.putstring ("static int16 typarr [] = {")
 						else
 							buffer.putstring ("int16 typarr [] = {")
+							use_init := True
 						end
 
 						buffer.putint (byte_context.current_type.generated_id (final_mode))
 						buffer.putstring (", ")
-						gen_ptype.generate_cid (buffer, final_mode, True)
+						if use_init then
+							!!idx_cnt
+							idx_cnt.set_value (1)
+							gen_ptype.generate_cid_array (buffer, final_mode, 
+														  True, idx_cnt)
+						else
+							gen_ptype.generate_cid (buffer, final_mode, True)
+						end
+
 						buffer.putstring ("-1};")
 						buffer.new_line
 						buffer.putstring ("static int16 typcache = -1;")
 						buffer.new_line
 						buffer.new_line
-						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
+						if use_init then
+							idx_cnt.set_value (1)
+							gen_ptype.generate_cid_init (buffer, final_mode, 
+														 True, idx_cnt)
+						else
+							gen_ptype.generate_cid (buffer, final_mode, True)
+						end
 
+						buffer.putstring ("pdtype = RTCID(&typcache, l[0],")
 						buffer.putint (gen_ptype.generated_id (final_mode))
 						buffer.putstring (", typarr);")
 						buffer.new_line

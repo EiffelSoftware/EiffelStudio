@@ -7,7 +7,8 @@ inherit
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
-			generate_reverse, make_reverse_byte_code
+			generate_reverse, make_reverse_byte_code,
+			generate_cid_array, generate_cid_init
 		end
 	SHARED_GENERATION
 
@@ -105,6 +106,32 @@ feature -- Generic conformance
 		do
 			ba.append_short_integer (-11)
 			ba.append_short_integer (position)
+		end
+
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			buffer.putstring ("-11, 0,")
+
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			dummy := idx_cnt.next
+			buffer.putstring ("typarr[")
+			buffer.putint (idx_cnt.value)
+			buffer.putstring ("] = RTCA(arg")
+			buffer.putint (position)
+			buffer.putstring (",-10);")
+			buffer.new_line
+			dummy := idx_cnt.next
 		end
 
 	type_to_create : CL_TYPE_I is

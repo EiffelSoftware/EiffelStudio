@@ -205,17 +205,28 @@ feature -- Generic conformance
 			-- into single id's.
 		require
 			valid_type : gtype /= Void
+		local
+			use_init : BOOLEAN
+			idx_cnt : COUNTER
 		do
 			if gtype.is_explicit then
 				-- Optimize: Use static array
 				buffer.putstring ("static int16 typarr [] = {")
 			else
 				buffer.putstring ("int16 typarr [] = {")
+				use_init := True
 			end
 
 			buffer.putint (context.current_type.generated_id (context.final_mode))
 			buffer.putstring (", ")
-			gtype.generate_cid (buffer, context.final_mode, True)
+
+			if use_init then
+				!!idx_cnt
+				idx_cnt.set_value (1)
+				gtype.generate_cid_array (buffer, context.final_mode, True, idx_cnt)
+			else
+				gtype.generate_cid (buffer, context.final_mode, True)
+			end
 			buffer.putstring ("-1};")
 			buffer.new_line
 			buffer.putstring ("int16 typres;")
@@ -223,6 +234,13 @@ feature -- Generic conformance
 			buffer.putstring ("static int16 typcache = -1;")
 			buffer.new_line
 			buffer.new_line
+
+			if use_init then
+				-- Reset counter
+				idx_cnt.set_value (1)
+				gtype.generate_cid_init (buffer, context.final_mode, True, idx_cnt)
+			end
+
 			buffer.putstring ("typres = RTCID(&typcache,")
 
 			context.Current_register.print_register_by_name

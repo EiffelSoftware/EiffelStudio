@@ -17,7 +17,9 @@ inherit
 			append_signature,
 			type_a,
 			generate_cid,
-			make_gen_type_byte_code
+			make_gen_type_byte_code,
+			generate_cid_array,
+			generate_cid_init
 		end
 
 feature -- Comparison
@@ -302,6 +304,59 @@ feature -- Generic conformance
 				i > up
 			loop
 				true_generics.item (i).make_gen_type_byte_code (ba, use_info)
+				i := i + 1
+			end
+		end
+
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			i, up, dummy : INTEGER
+		do
+			if use_info and then (cr_info /= Void) then
+				-- It's an anchored type 
+				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
+			end
+
+			buffer.putint (generated_id (final_mode))
+			buffer.putstring (", ")
+
+			-- Increment counter
+			dummy := idx_cnt.next
+
+			from
+				i  := true_generics.lower
+				up := true_generics.upper
+			until
+				i > up
+			loop
+				true_generics.item (i).generate_cid_array (buffer, 
+												final_mode, use_info, idx_cnt)
+				i := i + 1
+			end
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			i, up, dummy : INTEGER
+		do
+			if use_info and then (cr_info /= Void) then
+				-- It's an anchored type 
+				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
+			end
+
+			-- Increment counter
+			dummy := idx_cnt.next
+
+			from
+				i  := true_generics.lower
+				up := true_generics.upper
+			until
+				i > up
+			loop
+				true_generics.item (i).generate_cid_init (buffer, 
+												final_mode, use_info, idx_cnt)
 				i := i + 1
 			end
 		end

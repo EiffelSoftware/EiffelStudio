@@ -687,7 +687,8 @@ feature -- Generation
 			buffer_exists: buffer /= Void
 			type_exists: gen_type /= Void
 		local
-			final_mode: BOOLEAN
+			use_init, final_mode: BOOLEAN
+			idx_cnt : COUNTER
 		do
 			final_mode := byte_context.final_mode
 
@@ -701,11 +702,20 @@ feature -- Generation
 				buffer.putstring ("static int16 typarr [] = {")
 			else
 				buffer.putstring ("int16 typarr [] = {")
+				use_init := True
 			end
 
 			buffer.putint (type.generated_id (final_mode))
 			buffer.putstring (", ")
-			gen_type.generate_cid (buffer, final_mode, False)
+
+			if use_init then
+				!!idx_cnt
+				idx_cnt.set_value (1)
+				gen_type.generate_cid_array (buffer, final_mode, False, idx_cnt)
+			else
+				gen_type.generate_cid (buffer, final_mode, False)
+			end
+
 			buffer.putstring ("-1};")
 			buffer.new_line
 			buffer.putstring ("int16 typres;")
@@ -713,8 +723,12 @@ feature -- Generation
 			buffer.putstring ("static int16 typcache = -1;")
 			buffer.new_line
 			buffer.new_line
-			buffer.putstring ("typres = RTCID(&typcache, l[0],")
+			if use_init then
+				idx_cnt.set_value (1)
+				gen_type.generate_cid_init (buffer, final_mode, False, idx_cnt)
+			end
 
+			buffer.putstring ("typres = RTCID(&typcache, l[0],")
 			buffer.putint (gen_type.generated_id (final_mode))
 			buffer.putstring (", typarr);")
 			buffer.new_line

@@ -250,4 +250,39 @@ feature -- Generic conformance
 			ba.append_short_integer (generated_id (False))
 		end
 
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+			-- Generate mode dependent sequence of type id's 
+			-- separated by commas. `use_info' is true iff 
+			-- we generate code for a creation instruction.
+			-- 'idx_cnt' holds the index in the array for
+			-- this entry.
+		require
+			valid_file : buffer /= Void
+			valid_counter : idx_cnt /= Void
+		local
+			dummy : INTEGER
+		do
+			generate_cid (buffer, final_mode, use_info)
+
+			-- Increment counter
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+			-- Generate mode dependent initialization of 
+			-- cid array. `use_info' is true iff 
+			-- we generate code for a creation instruction.
+			-- 'idx_cnt' holds the index in the array for
+			-- this entry.
+		require
+			valid_file : buffer /= Void
+			valid_counter : idx_cnt /= Void
+		local
+			dummy : INTEGER
+		do
+			-- Only increment counter.
+			dummy := idx_cnt.next
+		end
 end

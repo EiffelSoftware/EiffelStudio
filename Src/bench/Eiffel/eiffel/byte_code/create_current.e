@@ -7,7 +7,8 @@ inherit
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code,
-			generate_reverse
+			generate_reverse, generate_cid_array,
+			generate_cid_init
 		end
 	SHARED_GENERATION
 
@@ -62,6 +63,31 @@ feature -- Generic conformance
 			ba.append_short_integer (-12)
 		end
 
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			buffer.putstring ("-12, 0,")
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			dummy := idx_cnt.next
+			buffer.putstring ("typarr[")
+			buffer.putint (idx_cnt.value)
+			buffer.putstring ("] = Dftype(")
+			context.Current_register.print_register_by_name
+			buffer.putstring (");")
+			buffer.new_line
+			dummy := idx_cnt.next
+		end
+
 	type_to_create : CL_TYPE_I is
 
 		do
@@ -87,6 +113,4 @@ feature -- Debug
 			io.error.putstring (generator);
 			io.error.new_line;
 		end
-
-
 end

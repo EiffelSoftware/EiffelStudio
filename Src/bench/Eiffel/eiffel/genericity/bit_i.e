@@ -7,7 +7,8 @@ inherit
 			description, sk_value, generate_cecil_value, hash_code,
 			is_pointer, 
 			metamorphose, append_signature,
-			generate_cid, generated_id, make_gen_type_byte_code
+			generate_cid, generated_id, make_gen_type_byte_code,
+			generate_cid_array, generate_cid_init
 		end
 
 feature
@@ -177,4 +178,25 @@ feature -- Generic conformance
 			ba.append_short_integer (size)
 		end
 
+	generate_cid_array (buffer : GENERATION_BUFFER; 
+						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			generate_cid (buffer, final_mode, use_info)
+
+			-- Increment counter twice
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer : GENERATION_BUFFER; 
+					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
+		local
+			dummy : INTEGER
+		do
+			-- Only increment counter twice.
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
 end

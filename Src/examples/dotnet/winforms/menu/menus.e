@@ -37,26 +37,32 @@ feature {NONE} -- Initialization
 			current_font_family := sans_serif_font_family
 
 			-- Add File Menu
-			mi_file := main_menu.get_menu_items.add (("&File").to_cil)
-			dummy := mi_file.get_menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("&Open...").to_cil, create {EVENT_HANDLER}.make (Current, $FileOpen_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
-			dummy := mi_file.get_menu_items.add (("-").to_cil)     --  Gives us a seperator
-			dummy := mi_file.get_menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $FileExit_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
+			mi_file := main_menu.menu_items.add (("&File").to_cil)
+			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("&Open...").to_cil, create {EVENT_HANDLER}.make (Current, $FileOpen_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_O))
+			dummy := mi_file.menu_items.add (("-").to_cil)     --  Gives us a seperator
+			dummy := mi_file.menu_items.add_menu_item (create {WINFORMS_MENU_ITEM}.make_from_text_and_on_click_and_shortcut (("E&xit").to_cil, create {EVENT_HANDLER}.make (Current, $FileExit_Clicked), feature {WINFORMS_SHORTCUT}.ctrl_X))
 
 			-- Add Format Menu
-			mi_format := main_menu.get_menu_items.add (("F&ormat").to_cil)
+			mi_format := main_menu.menu_items.add (("F&ormat").to_cil)
 
 			-- Font Face sub-menu
-			create mmi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_sans_serif.make_from_text_and_on_click (
+				(("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.name),
+				create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
 			mmi_sans_serif.set_checked (True) 
 			mmi_sans_serif.set_default_item (True) 
-			create mmi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
-			create mmi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_serif.make_from_text_and_on_click (
+				(("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.name),
+				create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_mono_space.make_from_text_and_on_click (
+				(("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.name),
+				create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
 
 			create l_array_menu_item.make (3)
 			l_array_menu_item.put (0, mmi_sans_serif)
 			l_array_menu_item.put (1, mmi_serif)
 			l_array_menu_item.put (2, mmi_mono_space)
-			dummy := mi_format.get_menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
+			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
 
 			-- Font Size sub-menu
 			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
@@ -69,19 +75,19 @@ feature {NONE} -- Initialization
 			l_array_menu_item.put (0, mmi_small)
 			l_array_menu_item.put (1, mmi_medium)
 			l_array_menu_item.put (2, mmi_large)
-			dummy := mi_format.get_menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
+			dummy := mi_format.menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
 
 			-- Add Format to label context menu
 			-- Note have to add a clone because menus can't belong to 2 parents
-			dummy := label_1_context_menu.get_menu_items.add_menu_item (mi_format.clone_menu)
+			dummy := label_1_context_menu.menu_items.add_menu_item (mi_format.clone_menu)
 
 			--  Set up the context menu items - we use these to check and uncheck items
-			cmi_sans_serif := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (0)
-			cmi_serif := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (1)
-			cmi_mono_space := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (2)
-			cmi_small := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (0)
-			cmi_medium := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (1)
-			cmi_large := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (2)
+			cmi_sans_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (0)
+			cmi_serif := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (1)
+			cmi_mono_space := label_1_context_menu.menu_items.item (0).menu_items.item (0).menu_items.item (2)
+			cmi_small := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (0)
+			cmi_medium := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (1)
+			cmi_large := label_1_context_menu.menu_items.item (0).menu_items.item (1).menu_items.item (2)
 
 			-- We use these to track which menu items are checked
 			-- This is made more complex because we have both a menu and a context menu
@@ -141,11 +147,11 @@ feature {NONE} -- Implementation
 			l_size.make_from_width_and_height (5, 13)
 			my_window.set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (392, 117)
-			my_window.set_client_size_size (l_size)
+--			my_window.set_client_size_size (l_size)
 			create main_menu.make
 			my_window.set_menu (main_menu)
 
-			label_1.set_back_color (feature {DRAWING_COLOR}.get_light_steel_blue)
+			label_1.set_back_color (feature {DRAWING_COLOR}.light_steel_blue)
 			l_point.make_from_x_and_y (16, 24)
 			label_1.set_location (l_point)
 			label_1.set_tab_index (0)
@@ -155,7 +161,7 @@ feature {NONE} -- Implementation
 			label_1.set_text (("Right Click on me - I have a context menu!").to_cil)
 			label_1.set_context_menu (label_1_context_menu)
 			
-			my_window.get_controls.add (label_1)
+			my_window.controls.add (label_1)
 		end
 
 
@@ -233,7 +239,7 @@ feature {NONE} -- Implementation
 			mi_main_format_size_checked.set_checked (False)
 			mi_context_format_size_checked.set_checked (False)
 
-			font_size_string := mi_clicked.get_text
+			font_size_string := mi_clicked.text
 
 			if font_size_string.equals (("&Small").to_cil) then
 				mi_main_format_size_checked := mmi_small

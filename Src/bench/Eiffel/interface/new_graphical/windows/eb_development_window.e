@@ -2634,7 +2634,6 @@ feature {NONE} -- Implementation
 		local
 			cist: CLASSI_STONE
 			cst: CLASSC_STONE
-			file: RAW_FILE
 			type_changed: BOOLEAN
 		do
 			cst ?= stone

@@ -192,9 +192,12 @@ feature {NONE} -- Constant strings
 		end
 
 	t_Copyright_info: STRING is
+		local
+			c_date: C_DATE
 		once
+			create c_date
 			Result := 
-				"Copyright (C) 1985-2002 Interactive Software Engineering Inc.%N%
+				"Copyright (C) 1985-" + c_date.year_now.out + " Interactive Software Engineering Inc.%N%
 				%All rights reserved"
 		end
 

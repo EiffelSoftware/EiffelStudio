@@ -24,6 +24,8 @@ inherit
 
 	SHARED_TABS
 
+	SHARED_CONFIGURE_RESOURCES
+
 feature -- Window Properties
 
 	last_format: FORMAT_HOLDER;
@@ -422,21 +424,13 @@ feature -- Text window creation
 			ro_text_window, ed_text_window: TEXT_WINDOW
 		do
 			if is_graphics_disabled then
-				if tabs_disabled then
-					!SCROLLED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
-				else
-					!TABBED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
-				end;
+				!SCROLLED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
 			else
 				!GRAPHICAL_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
 			end;
 			set_read_only_text_window (ro_text_window);
 			if has_editable_text and then not ro_text_window.is_editable then
-				if tabs_disabled then
-					!SCROLLED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, Current)
-				else
-					!TABBED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, Current)
-				end;
+				!SCROLLED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, Current)
 				set_editable_text_window (ed_text_window)
 				text_window := ed_text_window;
 			else

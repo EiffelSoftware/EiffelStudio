@@ -64,6 +64,13 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
+	process_feature_text (text: FEATURE_TEXT) is
+			-- Process feature text `text'.
+		require
+			text_not_void: text /= Void
+		deferred
+		end;
+
 	process_breakpoint is
 			-- Process breakpoint.
 		deferred

@@ -67,7 +67,7 @@ feature -- Access
 					interface.forth
 				end
 			else
-				if selected_item /= Void then
+				if selected then
 					Result.extend (selected_item)
 				end
 			end
@@ -154,6 +154,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/02/29 19:39:24  rogers
+--| Selected items now checks selected rather than selected_item /= Void before appending the selected item to the Result. Only when multiple selection is disabled.
+--|
 --| Revision 1.39  2000/02/29 19:04:16  rogers
 --| Removed some redundent code in selected_items.
 --|

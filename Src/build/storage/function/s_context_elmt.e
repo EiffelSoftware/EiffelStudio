@@ -16,7 +16,7 @@ feature
 	make (other: CONTEXT) is
 		do
 			identifier := other.identifier;
-			full_name := clone (other.full_name);
+			--full_name := clone (other.full_name);
 		end;
 
 	
@@ -32,18 +32,14 @@ feature
 
 	context: CONTEXT is
 		do
-			if identifier_changed_table.has (full_name) then
-				identifier := identifier_changed_table.item (full_name);
-			end;
-
-			if for_import.item and then name_changed_table.has (full_name) then
-				full_name := name_changed_table.item (full_name);
-			end;
 			Result := context_table.item (identifier);
-			
-			if Result = Void or else not full_name.is_equal (Result.full_name) then
-				Result := find_context;
-			end;
+			debug ("STORER_CHECK")
+				if Result = Void then
+					io.error.putstring ("Could not retrieve context id: ");
+					io.error.putint (identifier);
+					io.error.new_line
+				end
+			end
 		end;
 
 	find_context: CONTEXT is

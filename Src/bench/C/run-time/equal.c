@@ -33,6 +33,17 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+/*
+doc:<file name="equal.c" header="eif_equal.h">
+doc:	<attribute name="table" return_type="struct s_table *">
+doc:		<summary>Search table for deep equality.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ANY</eiffel_classes>
+doc:		<fixme>table access is not protected. Therefore to do a deep equality in two different threads at the same time will certainly fail. Solution is to put `table' in the `eif_globals' structure, so that two threads can perform parallel deep equality.</fixme>
+doc:	</attribute>
+doc:</file>
+*/
 rt_private struct s_table *table;		/* Search table for deep equal */
 
 /*

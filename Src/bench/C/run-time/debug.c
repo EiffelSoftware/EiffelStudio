@@ -88,15 +88,71 @@
  */
 #define dlevel	0		/* FIXME */
 
+/*
+doc:<file name="debug.c" header="eif_debug.h">
+doc:	<attribute name="db_stack" return_type="struct dbstack">
+doc:		<summary>Debugging stack. This stack records all the calls made to any melted feature (i.e. it records also standard melted feature calls). In case an exception occurs or a breakpoint is reached, this stack will be used to print arguments values. It can also be used to inspect local variables in any of the recorded routines, by simply shifting the context and resynchronizing the interpreter registers.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="once_list" return_type="struct id_list">
+doc:		<summary>Once list. This list records the body_id of once routines that have already been called. This is usefull to prevent those routines to be supermelted losing in that case their memory (whether they have already been called and their result). This list is also needed to inspect result of once functions in order to know if that result has already been evaluated.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="d_data" return_type="struct dbinfo">
+doc:		<summary>For faster reference, the current control table is memorized in a global debugger status structure, along with the execution status and break point hash table.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="d_cxt" return_type="struct pgcontext">
+doc:		<summary>The debugger, when in interactive mode, maintains the notion of run-time context. That is to say the main stacks are saved and their content will be restored undisturbed before resuming execution.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="cop_stack" return_type="struct opstack">
+doc:		<summary>Store local/argument values in debugger.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="d_globaldata" return_type="struct dbglobalinfo">
+doc:		<summary>Is debugging disabled for a while? Is current code location a breakpoint which is set?</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<fixme>No synchronization is done on accessing fileds of this structure.</fixme>
+doc:	</attribute>
+doc:	<attribute name="db_mutex" return_type="EIF_LW_MUTEX_TYPE *">
+doc:		<summary>Ensure that only one thread is stopped at a time in EiffelStudio debugger.</summary>
+doc:		<thread_safety>Safe as initialized in `dbreak_create_table'.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="breakpoint_count" return_type="int">
+doc:		<summary>Interval of time we use to check if we should stop in debugger.</summary>
+doc:		<thread_safety>Safe as it is only modified by `set_breakpoint_count' called from `ipc/app/app_proto.c' while the application is stopped during debugging. So there will be no concurrent access to this variable.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="recorded_breakpoint_count" return_type="int">
+doc:		<summary>Count how many times we have been called, use in conjonction with `breakpoint_count'.</summary>
+doc:		<thread_safety>Safe as it is only modified and accessed by `should_be_interrupted' which is only called through synchronization of `db_mutex'.</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+doc:	<attribute name="previous_bodyid" return_type="int">
+doc:		<summary>Record last body_id where debugger stopped last time.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+doc:	<attribute name="previous_break_index" return_type="uint32">
+doc:		<summary>Record last position where debugger stopped last time.</summary>
+doc:		<thread_safety>Safe.</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+doc:	<attribute name="critical_stack_depth" return_type="uint32">
+doc:		<summary>Limit to which we warn EiffelStudio user there might be a stack overflow.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+doc:	<attribute name="alread_warned" return_type="int">
+doc:		<summary>Did we warn user of a potential stack overflow?</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>db_mutex</synchronization>
+doc:	</attribute>
+doc:</file>
+*/
+
 #ifndef EIF_THREADS
 
-/* Debugging stack. This stack records all the calls made to any melted feature
- * (i.e. it records also standard melted feature calls). In case an exception
- * occurs or a breakpoint is reached, this stack will be used to print arguments
- * values. It can also be used to inspect local variables in any of the
- * recorded routines, by simply shifting the context and resynchronizing the
- * interpreter registers.
- */
 rt_shared struct dbstack db_stack = {
 	(struct stdchunk *) 0,		/* st_hd */
 	(struct stdchunk *) 0,		/* st_tl */
@@ -105,12 +161,6 @@ rt_shared struct dbstack db_stack = {
 	(struct dcall *) 0,			/* st_end */
 };
 
-/* Once list. This list records the body_id of once routines that have already
- * been called. This is usefull to prevent those routines to be supermelted
- * losing in that case their memory (whether they have already been called
- * and their result). This list is also needed to inspect result of
- * once functions in order to know if that result has already been evaluated.
- */
 rt_shared struct id_list once_list = {
 	(struct idlchunk *) 0,		/* idl_hd */
 	(struct idlchunk *) 0,		/* idl_tl */
@@ -118,10 +168,6 @@ rt_shared struct id_list once_list = {
 	(uint32 *) 0,				/* idl_end */
 };
 
-/* For faster reference, the current control table is memorized in a global
- * debugger status structure, along with the execution status and break point
- * hash table.
- */
 rt_shared struct dbinfo d_data = {
 	NULL,			/* db_start */
 	0, 				/* db_status */
@@ -130,10 +176,6 @@ rt_shared struct dbinfo d_data = {
 	0				/* db_stepinto_mode */
 };	/* Global debugger information */
 
-/* The debugger, when in interactive mode, maintains the notion of run-time
- * context. That is to say the main stacks are saved and their content will be
- * restored undisturbed before resuming execution.
- */
 rt_shared struct pgcontext d_cxt;	/* Main program context */
 
 rt_shared struct opstack cop_stack = {

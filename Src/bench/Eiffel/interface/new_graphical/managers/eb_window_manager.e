@@ -419,7 +419,6 @@ feature -- Actions on a given window
 
 				-- Raise the window.
 			real_window.raise
-			real_window.set_focus
 		end
 
 	hide_window (a_window: EB_WINDOW) is

@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			item := cwel_integer_to_pointer (sys_color)
 			shared := True
 		ensure
-			exist: exists
 			shared: shared
 		end
 
@@ -39,8 +38,7 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_solid_brush (a_color.item)
 		ensure
-			exist: exists
-			color_set: color.item = a_color.item
+			color_set: exists implies color.is_equal (a_color)
 		end
 
 	make_hatch (a_hatch: INTEGER; a_color: WEL_COLOR_REF) is
@@ -52,9 +50,8 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_hatch_brush (a_hatch, a_color.item)
 		ensure
-			exist: exists
-			hatch_set: hatch = a_hatch
-			color_set: color.item = a_color.item
+			hatch_set: exists implies hatch = a_hatch
+			color_set: exists implies color.is_equal (a_color)
 		end
 
 	make_by_pattern (bitmap: WEL_BITMAP) is
@@ -64,8 +61,6 @@ feature {NONE} -- Initialization
 			bitmap_exists: bitmap.exists
 		do
 			item := cwin_create_pattern_brush (bitmap.item)
-		ensure
-			exist: exists
 		end
 
 	make_indirect (a_log_brush: WEL_LOG_BRUSH) is
@@ -105,7 +100,7 @@ feature -- Access
 		end
 
 	log_brush: WEL_LOG_BRUSH is
-			-- Create a log brush structure for `Current'
+			-- Log brush structure associated to `Current'
 		require
 			exists: exists
 		do

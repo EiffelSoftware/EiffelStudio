@@ -119,10 +119,6 @@ feature
 			initialize_focus
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := editor.focus_label
--- samik		end;
 
 	source: WIDGET is
 		do

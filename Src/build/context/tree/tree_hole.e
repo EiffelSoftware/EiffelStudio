@@ -12,10 +12,6 @@ inherit
 
 feature {NONE}
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := Tree.focus_label
--- samik		end;
 
 	make (a_parent: COMPOSITE) is
 		do

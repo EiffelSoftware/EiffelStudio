@@ -21,11 +21,6 @@ feature
 			wipe_out_command.execute (function_editor.edited_function)
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do			
--- samik			Result := function_editor.focus_label
--- samik		end;
-	
 feature {NONE}
 
 	function_editor: FUNC_EDITOR;

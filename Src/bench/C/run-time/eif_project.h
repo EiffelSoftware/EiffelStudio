@@ -82,7 +82,7 @@ extern "C" {
 
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
-	RT_LNK struct ctable egc_ce_gtype;			/* Generic class name -> gt_info */
+	RT_LNK struct ctable egc_ce_exp_type;		/* Class name -> type ID for expanded types */
 	RT_LNK struct cnode *egc_fsystem;			/* Describes the full frozen Eiffel system */
 	RT_LNK struct conform **egc_fco_table; 
 	RT_LNK void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */

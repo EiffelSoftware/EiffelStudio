@@ -174,8 +174,8 @@ rt_public int egc_char_dtype;
 rt_public int egc_wchar_dtype;	
 rt_public int egc_point_dtype;	
 
-rt_public struct ctable egc_ce_type;			
-rt_public struct ctable egc_ce_gtype;			
+rt_public struct ctable egc_ce_type;
+rt_public struct ctable egc_ce_exp_type;
 rt_public struct cnode *egc_fsystem;	
 rt_public struct conform **egc_fco_table;  
 rt_public struct eif_par_types **egc_partab;

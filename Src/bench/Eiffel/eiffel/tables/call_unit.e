@@ -89,7 +89,7 @@ feature -- Hash coding
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := 	equal (class_type_id, other.class_type_id)
+			Result := 	class_type_id.is_equal (other.class_type_id)
 						and then
 						equal (id, other.id)
 		end;

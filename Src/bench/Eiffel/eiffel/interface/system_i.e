@@ -604,7 +604,7 @@ end;
 						f := ftable.item_for_iteration;
 						if
 							f.is_external and then
-							equal (f.written_in, id)
+							f.written_in.is_equal (id)
 						then
 							ext ?= f;
 								-- If the external is encapsulated then it was not added to

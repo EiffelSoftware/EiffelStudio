@@ -65,8 +65,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 	process_system_level_options is
 		do
-			if option.is_valid and then
-				option.is_system_level then
+			if option.is_valid and then option.is_system_level then
 				option.process_system_level_options (value);
 			end;
 		end;

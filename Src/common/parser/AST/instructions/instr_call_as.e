@@ -44,7 +44,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.format_ast (call)
 		end;
 
-feature {INSTR_CALL_AS, CMD, USER_CMD} -- Replication
+feature {INSTR_CALL_AS, CMD, USER_CMD, ROUTINE_AS_B} -- Replication
 
 	set_call (c: like call) is
 			-- Set `call' to `c'.

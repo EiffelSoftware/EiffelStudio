@@ -72,6 +72,7 @@ feature -- Initialization
 			general_class := static.general_class;
 			integer_class := static.integer_class;
 			integer_ref_class := static.integer_ref_class;
+			memory_class_i := static.memory_class_i;
 			plug_file := static.plug_file;
 			pointer_class := static.pointer_class;
 			pointer_ref_class := static.pointer_ref_class;
@@ -432,30 +433,34 @@ feature -- Final mode
 	degree_minus_5 is
 			-- Process Degree -5.
 		local
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			a_class: CLASS_C;
 			deg_output: DEGREE_OUTPUT;
-			i: INTEGER
+			j: INTEGER
 		do
 			deg_output := Degree_output;
 			!FINAL_DLE_MAKER! makefile_generator.make;
 			open_log_files;
 				-- Generation of C files associated to the classes of
 				-- the system.
-			from 
-				deg_output.put_start_degree (-5, i);
-				i := classes.count;
-				classes.start 
-			until 
-				classes.after 
-			loop
-				a_class := classes.item_for_iteration;
-						-- Verbose
-				current_class := a_class;
-				if a_class.dle_generate_final_code then
-					deg_output.put_degree_minus_5 (a_class.e_class, i)
-				end;
-				classes.forth;
-				i := i - 1
+			j := classes.count;
+			deg_output.put_start_degree (-5, j);
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						current_class := a_class;
+						if a_class.dle_generate_final_code then
+							deg_output.put_degree_minus_5 (a_class.e_class, j)
+						end;
+						j := j - 1
+					end
+					i := i + 1
+				end
+				classes.forth
 			end;
 			close_log_files
 		end
@@ -583,7 +588,8 @@ end;
 	generate_skeletons is
 			-- Generate skeletons of class types of the DC-set.
 		local
-			i, nb, nb_class: INTEGER;
+			class_array: ARRAY [CLASS_C];
+			j, i, nb, nb_class: INTEGER;
 			cl_type: CLASS_TYPE;
 			a_class: CLASS_C;
 			has_attribute, final_mode: BOOLEAN;
@@ -620,45 +626,47 @@ end;
 				Extern_declarations.wipe_out
 			else
 				Skeleton_file.new_line;
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					a_class := classes.item_for_iteration;
-					i := a_class.id.id;
-					if a_class.has_dynamic then
-						if not a_class.is_precompiled then
-							Skeleton_file.putstring ("extern int32 ra");
-							Skeleton_file.putint (i);
-							Skeleton_file.putstring ("[];%N");
-						end;
-						if a_class.has_visible then
-							Skeleton_file.putstring ("extern char *cl");
-							Skeleton_file.putint (i);
-							Skeleton_file.putstring ("[];%N");
-							Skeleton_file.putstring ("extern uint32 cr");
-							Skeleton_file.putint (i);
-							Skeleton_file.putstring ("[];%N");
-						end;
-						if not a_class.skeleton.empty then
-							from
-								types := a_class.types;
-								types.start
-							until
-								types.after
-							loop
-								if types.item.is_dynamic then
-									Skeleton_file.putstring 
-											("extern uint32 types");
-									Skeleton_file.putint (types.item.type_id);
-									Skeleton_file.putstring ("[];%N")
+				from classes.start until classes.after loop
+					class_array := classes.item_for_iteration;
+					nb := class_counter.item (classes.key_for_iteration).count
+					from i := 1 until i > nb loop
+						a_class := class_array.item (i)
+						if a_class /= Void then
+							j := a_class.id.id;
+							if a_class.has_dynamic then
+								if not a_class.is_precompiled then
+									Skeleton_file.putstring ("extern int32 ra");
+									Skeleton_file.putint (j);
+									Skeleton_file.putstring ("[];%N");
 								end;
-								types.forth
-							end
+								if a_class.has_visible then
+									Skeleton_file.putstring ("extern char *cl");
+									Skeleton_file.putint (j);
+									Skeleton_file.putstring ("[];%N");
+									Skeleton_file.putstring ("extern uint32 cr");
+									Skeleton_file.putint (j);
+									Skeleton_file.putstring ("[];%N");
+								end;
+								if not a_class.skeleton.empty then
+									from
+										types := a_class.types;
+										types.start
+									until
+										types.after
+									loop
+										if types.item.is_dynamic then
+											Skeleton_file.putstring 
+													("extern uint32 types");
+											Skeleton_file.putint (types.item.type_id);
+											Skeleton_file.putstring ("[];%N")
+										end;
+										types.forth
+									end
+								end
+							end;
 						end
-					end;
-
+						i := i + 1
+					end
 					classes.forth
 				end;
 				Skeleton_file.new_line
@@ -667,6 +675,7 @@ end;
 			from 
 					-- Start the iteration from the maximum `type_id' 
 					-- value of the static system.
+				nb := Type_id_counter.value;
 				i := min_type_id
 			until
 				i > nb
@@ -776,6 +785,7 @@ end;
 	generate_cecil is
 			-- Generate Cecil structures.
 		local
+			class_array: ARRAY [CLASS_C];
 			i, nb, generic, no_generic: INTEGER;
 			cl_type: CLASS_TYPE;
 			a_class: CLASS_C;
@@ -795,15 +805,18 @@ end;
 			Cecil_file.putstring ("#include %"struct.h%"%N%N");
 			Cecil_file.putstring ("extern struct ctable ce_type;%N");
 			Cecil_file.putstring ("extern struct ctable ce_gtype;%N%N");
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if a_class.has_visible then
-					a_class.dle_generate_cecil
-				end;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if a_class.has_visible then
+							a_class.dle_generate_cecil
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 			make_cecil_tables;
@@ -1043,6 +1056,7 @@ end;
 	generate_option_file is
 			-- Generate compilation option file.
 		local
+			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER;
 			a_class: CLASS_C;
 			partial_debug: DEBUG_TAG_I;
@@ -1053,18 +1067,21 @@ end;
 			Option_file.putstring ("#include %"struct.h%"%N%N");
 
 				-- First debug keys
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				if a_class.has_dynamic then
-					partial_debug ?= a_class.debug_level;
-					if partial_debug /= Void then
-						partial_debug.generate_keys (Option_file, a_class.id)
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						if a_class.has_dynamic then
+							partial_debug ?= a_class.debug_level;
+							if partial_debug /= Void then
+								partial_debug.generate_keys (Option_file, a_class.id)
+							end
+						end;
 					end
-				end;
+					i := i + 1
+				end
 				classes.forth
 			end;
 

@@ -23,48 +23,57 @@ inherit
 
 creation 
 	make, 
-	make_no_auto_unmanage
+	make_no_auto_unmanage,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif bulletin board.
 		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			create_widget (a_parent.screen_object, widget_name, True);
-			set_default;
-			if do_manage then
-				manage
-			end
-		ensure
-			exists: not is_destroyed
-		end;
-
-	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
-			-- Create a motif bulletin board and set `auto_unmanage' to False.
-		require
-			a_name_exists: a_name /= Void
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
-		local
-			widget_name: ANY
-		do
-			parent := a_parent;
-			widget_name := a_name.to_c;
-			create_widget (a_parent.screen_object, widget_name, False)
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
 			exists: not is_destroyed;
-			auto_unmanage: not auto_unmanage
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
+
+	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+			-- Create a motif bulletin board and set `auto_unmanage' to False.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+		local
+			widget_name: ANY
+		do
+			parent := a_parent;
+			widget_name := a_name.to_c;
+			create_widget (a_parent.screen_object, widget_name, False);
+			Mel_widgets.add (Current);
+			set_default;
+			if do_manage then
+				manage
+			end
+		ensure
+			exists: not is_destroyed;
+			auto_unmanage: not auto_unmanage;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
+		end;
+
+feature {NONE} -- Initialization
 
 	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
 			-- Create bulletin with name `w_name' and manage it according to
@@ -81,9 +90,6 @@ feature {NONE} -- Initialization
 					xm_create_bulletin_board (p_so, 
 						$w_name, auto_unmanage_arg, 1);
 			end
-			Mel_widgets.put (Current, screen_object);
-		ensure then
-			in_widget_manager: Mel_widgets.has (screen_object)
 		end;
 
 feature -- Status report
@@ -110,6 +116,29 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
+			Result := get_xm_font_list (screen_object, XmNbuttonFontList)
+		ensure
+			button_font_list_is_valid: Result /= Void and then Result.is_valid
+		end;
+
+	label_font_list: MEL_FONT_LIST is
+			-- Font list of the label children
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_font_list (screen_object, XmNlabelFontList)
+		ensure
+			label_font_list_is_valid: Result /= Void and then Result.is_valid
+		end;
+
+	text_font_list: MEL_FONT_LIST is
+			-- Font list of the text children
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xm_font_list (screen_object, XmNtextFontList)
+		ensure
+			text_font_list_is_valid: Result /= Void and then Result.is_valid
 		end;
 
 	cancel_button: MEL_RECT_OBJ is
@@ -192,13 +221,6 @@ feature -- Status report
 			Result := get_xm_string (screen_object, XmNdialogTitle)
 		end;
 
-	label_font_list: MEL_FONT_LIST is
-			-- Font list of the label children
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 	margin_height: INTEGER is
 			-- The minimun spacing between a bulletin board's top
 			-- or bottom edge of any child widget
@@ -275,13 +297,6 @@ feature -- Status report
 			Result := (shadowtype = XmSHADOW_ETCHED_IN) or (shadowtype = XmSHADOW_ETCHED_OUT)
 		end;
 
-	text_font_list: MEL_FONT_LIST is
-			-- Font list of the text children
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 feature -- Status setting
 
 	set_overlap_allowed (b: BOOLEAN) is
@@ -295,10 +310,30 @@ feature -- Status setting
 		end;
 
 	set_button_font_list (a_font_list: MEL_FONT_LIST) is
-			-- Set the font list of the button children.
+			-- Set `button_font_list' to a `a_font_list'.
 		require
 			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
 		do
+			set_xm_font_list (screen_object, XmNbuttonFontList, a_font_list)
+		end;
+
+	set_label_font_list (a_font_list: MEL_FONT_LIST) is
+			-- Set `label_font_list' to a `a_font_list'.
+		require
+			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
+		do
+			set_xm_font_list (screen_object, XmNlabelFontList, a_font_list)
+		end;
+
+	set_text_font_list (a_font_list: MEL_FONT_LIST) is
+			-- Set `text_font_list' to `a_font_list'.
+		require
+			exists: not is_destroyed
+			a_font_list_is_valid: a_font_list /= Void and then a_font_list.is_valid
+		do
+			set_xm_font_list (screen_object, XmNtextFontList, a_font_list)
 		end;
 
 	set_cancel_button (a_button: like cancel_button) is
@@ -405,13 +440,6 @@ feature -- Status setting
 			dialog_title_set: dialog_title.is_equal (a_compound_string)
 		end;
 
-	set_label_font_list (a_font_list: MEL_FONT_LIST) is
-			-- Set `label_font_list'.
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 	set_margin_height (a_height: INTEGER) is
 			-- Set `margin_height' to `a_height'.
 		require
@@ -500,13 +528,6 @@ feature -- Status setting
 			end
 		ensure
 			shadow_type_set: is_shadow_in = b and is_shadow_etched
-		end;
-
-	set_text_font_list (a_font_list: MEL_FONT_LIST) is
-			-- Set `text_font_list'.
-		require
-			exists: not is_destroyed
-		do
 		end;
 
 feature -- Element change

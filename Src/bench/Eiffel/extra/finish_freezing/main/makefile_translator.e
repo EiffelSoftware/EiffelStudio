@@ -1819,8 +1819,12 @@ feature {NONE} -- Implementation
 
 			if word.item (1) = '(' then
 				word.remove_head (1)
-			
 				if word.item (word.count) = ')' then
+					word.remove_tail (1)
+				end
+			elseif word.item (1) = '{' then
+				word.remove_head (1)
+				if word.item (word.count) = '}' then
 					word.remove_tail (1)
 				end
 			end

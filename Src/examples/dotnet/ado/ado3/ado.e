@@ -1,6 +1,6 @@
 indexing
 	description: "[
-		Root class for Ado Overview3.
+		Root class for Ado Overview 3.
 
 		DataReaders 
 
@@ -28,48 +28,59 @@ feature -- Initialization
 
 	make is
 		local
-			ok : BOOLEAN
+			ok, retried: BOOLEAN
 		do
-			io.put_string ("Connection to server (`local)\NetSDK' and database `northwind':%N")
-			create my_sql_connection.make_from_connection_string
-				(("server=(local)\NetSDK;Trusted_Connection=yes;database=northwind").to_cil)
-	 		create my_sql_command.make_from_cmd_text_and_connection
-				(("select * from customers").to_cil, my_sql_connection)
-
-			my_sql_connection.open
-			my_reader := my_sql_command.execute_reader
-
-				-- Print header
-			print ("Customer ID    ")
-			print ("Company Name%N")
-
-				-- Iterate through result-set
-			from
-				ok := my_reader.read
-			until
-				not ok
-			loop
-				feature {SYSTEM_CONSOLE}.write (
-					my_reader.item_string (("CustomerID").to_cil).to_string)
-				feature {SYSTEM_CONSOLE}.write (("    ").to_cil)
-				feature {SYSTEM_CONSOLE}.write (
-					my_reader.item_string (("CompanyName").to_cil).to_string)
-				feature {SYSTEM_CONSOLE}.write_line
-				ok := my_reader.read
+			if not retried then
+				create connection.make ("server=(local)\NetSDK;Trusted_Connection=yes;database=northwind")
+		 		create command.make ("select * from customers", connection)
+	
+				io.put_string ("Connecting to server `(local)\NetSDK' and database `northwind'...%N")
+				connection.open
+				io.put_string ("Connection successful, retrieving data...%N%N")
+				reader := command.execute_reader
+	
+					-- Print header
+				io.put_string ("Customer ID%TCompany Name%N")
+				io.put_string ("-------------------------------------------------%N%N")
+	
+					-- Iterate through result-set
+				from
+					ok := reader.read
+				until
+					not ok
+				loop
+					io.put_string (reader.item ("CustomerID").to_string)
+					io.put_string ("%T%T")
+					io.put_string (reader.item ("CompanyName").to_string)
+					io.new_line
+					ok := reader.read
+				end
+	
+					-- Close everything
+				reader.close
+				connection.close
+	
+					-- Wait before closing the console
+				io.read_line
 			end
-
-				-- Close everything
-			my_reader.close
-			my_sql_connection.close
-
-				-- Wait before closing the console
+		rescue
+				-- Rescue any exception and display corresponding error message
+			io.put_string ("%NThe following error occured: ")
+			io.put_string (feature {EXCEPTION_MANAGER}.last_exception.message)
 			io.read_line
+			retried := True
+			retry
 		end
 		
 feature -- Access
 
-	my_reader : DATA_SQL_DATA_READER
-	my_sql_connection : DATA_SQL_CONNECTION
-	my_sql_command : DATA_SQL_COMMAND
+	reader : DATA_SQL_DATA_READER
+			-- ADO.NET SQL data reader
+
+	connection : DATA_SQL_CONNECTION
+			-- ADO.NET SQL connection object
+
+	command : DATA_SQL_COMMAND
+			-- ADO.NET SQL command object
 
 end -- class ADO

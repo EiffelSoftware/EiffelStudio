@@ -26,22 +26,25 @@ feature
 	work (argument: ANY) is
 			-- Save Current project to project_directory
 		local
-			storer: STORER;	
-			mp: MOUSE_PTR;
+			storer: STORER	
+			mp: MOUSE_PTR
+			generate: GENERATE
 		do
 			if not rescued then
 				if main_panel.project_initialized then
-					!!mp;
-					mp.set_watch_shape;
-					!!storer.make;
-					storer.store (Environment.storage_directory);
-					storer := Void;
-					mp.restore;
-					history_window.set_saved_application;
+					!! mp
+					mp.set_watch_shape
+					!! generate
+					generate.execute (Void)
+					!! storer.make
+					storer.store (Environment.storage_directory)
+					storer := Void
+					mp.restore
+					history_window.set_saved_application
 					completed := True
 				end
 			else
-				rescued := False;
+				rescued := False
 			end
 		rescue
 			if original_exception = Operating_system_exception then
@@ -53,8 +56,8 @@ feature
 									Messages.cannot_save_er,
 									Environment.storage_directory)
 			end;
-			rescued := True;
-			mp.restore;
+			rescued := True
+			mp.restore
 			retry
 		end;
 

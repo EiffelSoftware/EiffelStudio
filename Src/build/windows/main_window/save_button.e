@@ -8,6 +8,8 @@ inherit
 			init_toolkit
 		end
 
+	COMMAND_ARGS
+
 creation
 
 	make
@@ -37,8 +39,12 @@ feature {NONE}
 	execute (arg: ANY) is
 		local
 			save_proj: SAVE_PROJECT
+			generate: GENERATE
 		do
-			if main_panel.project_initialized then
+			if arg = First then
+				!! generate
+				generate.execute (arg)
+			elseif main_panel.project_initialized then
 				!!save_proj;
 				save_proj.execute (Void);
 			end

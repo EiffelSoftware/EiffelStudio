@@ -8,9 +8,10 @@ feature -- Access
 	Cmd_file_new: INTEGER is 100
 	Cmd_file_close: INTEGER is 101
 	Cmd_file_exit: INTEGER is 102
-	Cmd_window_tile: INTEGER is 200
-	Cmd_window_cascade: INTEGER is 201
-	Cmd_window_arrange: INTEGER is 202
+	Cmd_window_tile_vertical: INTEGER is 200
+	Cmd_window_tile_horizontal: INTEGER is 201
+	Cmd_window_cascade: INTEGER is 202
+	Cmd_window_arrange: INTEGER is 203
 
 end -- class APPLICATION_IDS
 

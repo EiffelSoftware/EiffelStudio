@@ -441,12 +441,14 @@ feature {NONE} -- Implementation
 			-- The `hbox' will contain the child of the window.
 		do
 			Precursor
-
+			is_initialized := False
 			create upper_bar
 			create lower_bar
 			
 			signal_connect_true ("delete_event", agent call_close_request_actions)
 			initialize_client_area
+			enable_user_resize
+			is_initialized := True
 		end
 		
 	initialize_client_area is
@@ -537,6 +539,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2001/06/29 22:24:44  king
+--| Enabling user_resize
+--|
 --| Revision 1.52  2001/06/21 23:39:32  king
 --| Removed incorrect policy setting, abstracted initialize_client_area
 --|

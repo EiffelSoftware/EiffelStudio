@@ -269,22 +269,23 @@ feature {NONE} -- Implementation
 			create tmp_body.make (10000)
 			tmp_body.append (Tab)
 
-			tmp_body.append (case_body_in_query_interface 
-				(a_coclass_descriptor.interface_descriptors.first.c_type_name,
-				a_coclass_descriptor.interface_descriptors.first.namespace,
-				Iunknown_clsid))
+			if not a_coclass_descriptor.interface_descriptors.empty then
+				tmp_body.append (case_body_in_query_interface 
+					(a_coclass_descriptor.interface_descriptors.first.c_type_name,
+					a_coclass_descriptor.interface_descriptors.first.namespace,
+					Iunknown_clsid))
+			else
+				tmp_body.append (case_body_in_query_interface 
+					("IProvideClassInfo2", Void, Iunknown_clsid))
+			end
 
 			tmp_body.append (Space)
 			tmp_body.append (case_body_in_query_interface 
-				(a_coclass_descriptor.interface_descriptors.first.c_type_name,
-				a_coclass_descriptor.interface_descriptors.first.namespace,
-				iid_name ("IProvideClassInfo")))
+				("IProvideClassInfo2", Void, iid_name ("IProvideClassInfo")))
 
 			tmp_body.append (Space)
 			tmp_body.append (case_body_in_query_interface 
-				(a_coclass_descriptor.interface_descriptors.first.c_type_name,
-				a_coclass_descriptor.interface_descriptors.first.namespace,
-				iid_name ("IProvideClassInfo2")))
+				("IProvideClassInfo2", Void, iid_name ("IProvideClassInfo2")))
 
 			if dispatch_interface then
 				tmp_body.append (Space)
@@ -300,12 +301,16 @@ feature {NONE} -- Implementation
 			until
 				a_coclass_descriptor.interface_descriptors.off
 			loop
-				tmp_body.append (Space)
-				tmp_body.append (case_body_in_query_interface 
-						(a_coclass_descriptor.interface_descriptors.item.c_type_name,
-						a_coclass_descriptor.interface_descriptors.item.namespace,
-						iid_name (a_coclass_descriptor.interface_descriptors.item.c_type_name)))
-
+				if
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Iunknown_type) and 
+					not a_coclass_descriptor.interface_descriptors.item.c_type_name.is_equal (Idispatch_type)
+				then
+					tmp_body.append (Space)
+					tmp_body.append (case_body_in_query_interface 
+							(a_coclass_descriptor.interface_descriptors.item.c_type_name,
+							a_coclass_descriptor.interface_descriptors.item.namespace,
+							iid_name (a_coclass_descriptor.interface_descriptors.item.c_type_name)))
+				end
 				a_coclass_descriptor.interface_descriptors.forth
 			end
 			

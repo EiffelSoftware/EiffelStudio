@@ -1,5 +1,8 @@
 class ARGUMENTS_MERGER
 
+inherit
+    COMPILER_EXPORTER
+
 feature
 
 	merge2 (user, new_tmp: EIFFEL_LIST [TYPE_DEC_AS]) is

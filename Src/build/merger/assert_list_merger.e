@@ -1,5 +1,8 @@
 class ASSERT_LIST_MERGER
 
+inherit
+    COMPILER_EXPORTER
+
 feature
 	
 	merge2 (user, new_tmp: EIFFEL_LIST [TAGGED_AS]) is

@@ -34,20 +34,14 @@ feature {NONE}
 
 	text_f_events: TEXT_F_EVENTS;
 
-	make (a_name: STRING; a_parent: COMPOSITE; fl: FOCUS_LABEL) is
+	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the catalog interface with `a_screen'
 			-- as the parent.
-		require
-			valid_fl: fl /= Void
 		do
-			focus_label := fl;
 			catalog_make (a_name, a_parent);
 		end;
 
 feature 
-
-	focus_label: FOCUS_LABEL;
-			-- Focus label (context editor focus label)
 
 	create_interface is 
 			-- Create interface of an event_catalog 

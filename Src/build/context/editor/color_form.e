@@ -37,12 +37,10 @@ feature -- Interface
 			!!pixmap_open_b.make (Widget_names.open_pixmap_name, Current);
 			!!color_set.make (Widget_names.color_form_name, Current, editor);
 
-			!!colors_stone;
-			!!bg_pixmap_stone;
+			!!colors_stone.make (Current, editor);
+			!!bg_pixmap_stone.make (Current, editor);
 			!!bg_color_stone.make (Current, backgr_color, editor);
 			!!fg_color_stone.make (Current, fgr_color, editor);
-			colors_stone.make (Current, editor);
-			bg_pixmap_stone.make (Current, editor);
 
 			attach_left (colors_stone, 10);
 			attach_left (bg_color_stone, 10);

@@ -8,7 +8,10 @@ inherit
 		redefine
 			process_state
 		end;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	SHARED_APPLICATION;
 	COMMAND
 
@@ -22,6 +25,9 @@ feature
 		do
 			associated_editor := ed;
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.state_label)
+			-- end of samik
 			register;
 			add_button_press_action (3, Current, Void);
 		end;
@@ -31,15 +37,15 @@ feature
 			Result := Pixmaps.state_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.state_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.state_label
+-- samik		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := associated_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := associated_editor.focus_label
+-- samik		end;
 
 	target: WIDGET is
 		do

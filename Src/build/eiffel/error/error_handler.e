@@ -1,29 +1,22 @@
--- Error handler
+indexing
+
+	description: 
+		"Error handler that manages warning and error messages.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ERROR_HANDLER
 
 inherit
 
 	EXCEPTIONS;
-	WINDOWS;
 	SHARED_RESCUE_STATUS
 
-creation
+creation {SHARED_ERROR_HANDLER}
 
 	make
 
-feature -- Attributes
-
-	new_error: BOOLEAN;
-			-- Boolean for testing if new error since last `mark'
-
-	error_list: SORTED_TWO_WAY_LIST [ERROR];
-			-- Error list
-
-	warning_list: SORTED_TWO_WAY_LIST [WARNING];
-			-- Warning list
-
-feature -- Creation feature
+feature {NONE} -- Initialization
 
 	make is
 			-- Initialization
@@ -32,17 +25,93 @@ feature -- Creation feature
 			!!warning_list.make;
 		end;
 
-feature	-- Error handling primitives
+feature -- Properties
+
+	error_displayer: ERROR_DISPLAYER;
+			-- Displays warning and error messages when they occur
+
+	error_list: SORTED_TWO_WAY_LIST [ERROR];
+			-- Error list
+
+	warning_list: SORTED_TWO_WAY_LIST [WARNING];
+			-- Warning list
+
+	new_error: BOOLEAN;
+			-- Boolean for testing if new error since last `mark'
+
+	error_position: INTEGER;
+			-- Position in file where error occurred (during degree 3)?
+
+feature {E_PROJECT, COMPILER_EXPORTER} -- Element change
+
+	insert_interrupt_error (is_during_comp: BOOLEAN) is
+			-- Insert an `interrup_error' so that the compilation
+			-- can be stopped. `is_during_comp' indicates if it was
+			-- done during a compilation.
+		local
+			interrupt_error: INTERRUPT_ERROR
+		do
+			!! interrupt_error;
+			if is_during_comp then
+				interrupt_error.set_during_compilation
+			end;
+			insert_error (interrupt_error);
+		end;
+
+feature {COMPILER_EXPORTER, E_PROJECT} -- Output
+
+	trace is
+			-- Trace the output of the errors if there are any.
+		require	
+			non_void_error_displayer: error_displayer /= Void
+		do
+			if not warning_list.empty then
+				error_displayer.trace_warnings (Current)
+				warning_list.wipe_out
+			end
+			if not error_list.empty then
+				error_displayer.trace_errors (Current)
+				error_position := 0
+				error_list.wipe_out
+			end
+		end
+
+	trace_warnings is
+			-- Trace the output of the warnings if there are any.
+		require	
+			non_void_error_displayer: error_displayer /= Void
+		do
+			if not warning_list.empty then
+				error_displayer.trace_warnings (Current)
+			end
+
+			warning_list.wipe_out
+		end
+
+feature {COMPILER_EXPORTER} -- Error handling primitives
+
+	set_error_position (i: like error_position) is
+			-- Set `error_position' to `i'.
+		require
+			non_negative_value: i >= 0
+		do
+			error_position := i
+		ensure
+			set: error_position = i
+		end;
 
 	insert_error (e: ERROR) is
 			-- Insert `e' in `error_list'.
 		require
 			good_argument: e /= Void
+		local
+			f_error: FEATURE_ERROR
 		do
-debug
-	error_window.put_string ("Inserting error object:%N"); e.trace;
-end;
 			new_error := True;
+			f_error ?= e;
+			if f_error /= Void then
+				f_error.set_error_position (error_position)
+			end;
 			error_list.extend (e);
 		end;
 
@@ -51,10 +120,6 @@ end;
 		require
 			good_argument: w /= Void
 		do
-debug
-	error_window.put_string ("Inserting warning object:%N");
-w.trace;
-end;
 			warning_list.extend (w);
 		end;
 
@@ -79,11 +144,9 @@ end;
 			-- Raise an exception retrieved by routine `recompile'
 			-- of class SYSTEM_I
 		require
+			non_void_error_displayer: error_displayer /= Void
 			has_error: not error_list.empty;
 		do
-debug
-	error_window.put_string ("Raising error%N");
-end;
 			Rescue_status.set_is_error_exception (True);
 			raise ("Compiler error");
 		end;
@@ -91,22 +154,51 @@ end;
 	checksum is
 			-- Check if there are errors in `error_list' and raise
 			-- an error if needed.
+		require	
+			non_void_error_displayer: error_displayer /= Void
 		do
-debug
-	error_window.put_string ("Checking sum%N");
-end;
-			if not warning_list.empty then
-debug
-	error_window.put_string ("Tracing warnings%N");
-end;
-				trace_warnings;
-			end;
 			if not error_list.empty then
 				raise_error;
 			end;
 		end;
 
-feature -- Syntax errors
+	wipe_out is
+			-- Empty `error_list'.
+		do
+			error_list.wipe_out;
+			warning_list.wipe_out;
+		end;
+
+feature {E_PROJECT, COMPILER_EXPORTER} -- Setting
+
+	set_error_displayer (ed: like error_displayer) is
+			-- Set `error_displayer' to `ed'.
+		require
+			non_void_ed: ed /= Void
+		do
+			error_displayer := ed
+		ensure
+			set: error_displayer = ed
+		end;
+
+feature {COMPILER_EXPORTER} 
+
+	send_yacc_information is
+			-- Send to C code of Yacc information for making
+			-- error messages.
+		once
+			error_init ($Current, 	$make_syntax_error,
+									$make_string_too_long,
+									$make_string_extension,
+									$make_string_uncompleted,
+									$make_bad_character,
+									$make_string_empty,
+									$make_id_too_long,
+									$make_basic_generic_type,
+									$make_too_many_generics);
+		end;
+
+feature {EXPR_ADDRESS_AS} -- Passed to C
 
 	make_syntax_error is
 			-- Build a syntax error message
@@ -118,6 +210,21 @@ feature -- Syntax errors
 			insert_error (syntax_error);
 			raise_error;
 		end;
+
+feature {COMPILER_EXPORTER}
+
+	make_separate_syntax_error is
+			-- Build an error message for using `separate' when
+			-- Concurrent Eiffel is not enabled
+		local
+			separate_error: SEPARATE_SYNTAX_ERROR
+		do
+			!! separate_error.init;
+			insert_error (separate_error);
+			raise_error;
+		end
+
+feature {NONE} -- Passed to C
 
 	make_string_too_long is
 			-- Build an error message for a too long manifest string.
@@ -198,114 +305,6 @@ feature -- Syntax errors
 			raise_error;
 		end;
 
-	send_yacc_information is
-			-- Send to C code of Yacc information for making
-			-- error messages.
-		once
-			error_init ($Current, 	$make_syntax_error,
-									$make_string_too_long,
-									$make_string_extension,
-									$make_string_uncompleted,
-									$make_bad_character,
-									$make_string_empty,
-									$make_id_too_long,
-									$make_basic_generic_type,
-									$make_too_many_generics);
-		end;
-
-	wipe_out is
-			-- Empty `error_list'.
-		do
-			error_list.wipe_out;
-			warning_list.wipe_out;
-		end;
-
-feature -- Display
-
-	retried: BOOLEAN;
-
-	trace is
-		local
-			tmp: STRING
-		do
-			if not retried then
-debug
-	error_window.put_string ("Error handler: trace%N")
-end;
-				!! tmp.make (0);
-				from
-					error_list.start
-				until
-					error_list.after
-				loop
-					display_separation_line;
-					error_window.new_line;
-					error_list.item.trace;
-					error_window.new_line;
-					error_list.forth;
-				end;
-				if not error_list.empty then
-					display_separation_line
-				end;
-			else
-				retried := False;
-				display_error_error
-			end;
-		rescue
-			if
-				Rescue_status.is_unexpected_exception
-			and then
-				not Rescue_status.fail_on_rescue
-			then
-				retried := True;
-				retry;
-			end;
-		end;
-
-	trace_warnings is
-		do
-			if not retried then
-				from
-					warning_list.start
-				until
-					warning_list.after
-				loop
-					display_separation_line
-					error_window.new_line;
-					warning_list.item.trace;
-					error_window.new_line;
-					warning_list.forth;
-				end;
-				if not warning_list.empty and then error_list.empty then
-						-- There is no error in the list
-						-- put a separation before the next message
-					display_separation_line
-				end;
-				warning_list.wipe_out;
-			else
-				retried := False;
-				display_error_error
-			end;
-		rescue
-			if Rescue_status.is_unexpected_exception then
-				retried := True;
-				retry;
-			end;
-		end;
-
-	display_error_error is
-		do
-			error_window.clear;
-			error_window.put_string ("Exception occurred while displaying error message.%N%
-										%Please contact ISE to report this bug.%N");
-		end;
-
-	display_separation_line is
-		do
-			-- ecase does not want this
-			--error_window.put_string ("-------------------------------------------------------------------------------%N");
-		end;
-
 feature {NONE} -- Externals
 
 	error_init (obj: POINTER; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
@@ -317,5 +316,6 @@ feature {NONE} -- Externals
 invariant
 
 	error_list_exists: error_list /= Void;
+	warning_list_exists: warning_list /= Void;
 
-end
+end -- class ERROR_HANDLER

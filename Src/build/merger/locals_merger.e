@@ -1,5 +1,8 @@
 class LOCALS_MERGER
 
+inherit
+    COMPILER_EXPORTER
+
 feature
 
 	merge3 (old_tmp, user, new_tmp: EIFFEL_LIST [TYPE_DEC_AS]) is

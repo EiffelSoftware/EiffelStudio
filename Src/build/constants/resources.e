@@ -288,7 +288,7 @@ feature {NONE} -- Creation
 		local
 			parser: RESOURCE_PARSER;
 			file_names: RESOURCE_FILES;
-			file_name: STRING;
+			file_name: FILE_NAME;
 			resource_table: RESOURCE_TABLE
 		once
 			!! resource_table.make (20);
@@ -297,19 +297,19 @@ feature {NONE} -- Creation
 
 			file_name := file_names.system_general;
 			if file_name /= Void and then not file_name.empty then
-				parser.parse (file_name, resource_table)
+				parser.parse_file (file_name, resource_table)
 			end;
 			file_name := file_names.user_general;
 			if file_name /= Void and then not file_name.empty then
-				parser.parse (file_name, resource_table)
+				parser.parse_file (file_name, resource_table)
 			end;
 			file_name := file_names.system_specific;
 			if file_name /= Void and then not file_name.empty then
-				parser.parse (file_name, resource_table)
+				parser.parse_file (file_name, resource_table)
 			end;
 			file_name := file_names.user_specific;
 			if file_name /= Void and then not file_name.empty then
-				parser.parse (file_name, resource_table)
+				parser.parse_file (file_name, resource_table)
 			end;
 debug ("RESOURCES")
 	io.error.put_string ("RESOURCE TABLE:");

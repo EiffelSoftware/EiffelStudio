@@ -45,7 +45,9 @@ feature {NONE}
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (element.label);
+			if element /= Void then
+					Result.append (element.label);
+			end
 		end;
 
 end

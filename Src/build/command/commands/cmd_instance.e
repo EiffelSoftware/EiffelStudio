@@ -27,8 +27,8 @@ feature {NONE} -- Creation
 			inst_identifier := c.instance_count;
 			associated_command := c;
 			init_arguments;
-			!! cmd.make (Current);
-			cmd.execute (associated_command);
+			!! cmd.make (Current, associated_command);
+--samik			cmd.execute (associated_command);
 		end;
 
 	storage_init (c: CMD; al: EB_LINKED_LIST [ARG_INSTANCE]) is

@@ -10,7 +10,8 @@ inherit
 		rename
 			make as dr_area_create,
 			identifier as dr_area_identifier,
-			cursor as drawing_cursor
+			cursor as drawing_cursor,
+			init_toolkit as drawing_area_init_tookit
 		redefine
 			show, hide, shown, realize
 		end;
@@ -36,6 +37,8 @@ inherit
 		redefine
 			compatible, process_type, process_context,
 			process_attribute
+		select
+			init_toolkit
 		end;
 	CONTEXT_DRAG_SOURCE;
 	REMOVABLE;
@@ -166,13 +169,13 @@ feature
 			!! top_shell.make (Widget_names.context_tree, a_screen);
 			!! form.make (Widget_names.form, top_shell);
 			!! top_form.make (Widget_names.form1, form);
-			!! focus_label.make (top_form);
+			!! focus_label.initialize (top_form);
 			!! scrolled_w.make (Widget_names.scrolledwindow, form);
 			dr_area_create (Widget_names.drawingarea, scrolled_w);
 			scrolled_w.set_working_area (Current);
-			!! close_button.make (Current, top_form, focus_label);
-			!! con_ed_hole.make (top_form, focus_label);
-			!! cut_hole.make (top_form, focus_label);
+			!! close_button.make (Current, top_form);
+			!! con_ed_hole.make (top_form);
+			!! cut_hole.make (top_form);
 			!! raise_widget_hole.make (top_form);
 			!! exp_parent_hole.make (top_form);
 			!! show_window_hole.make (top_form);
@@ -182,7 +185,6 @@ feature
 			top_form.attach_top (cut_hole, 0);
 			top_form.attach_top (con_ed_hole, 0);
 			top_form.attach_top (close_button, 0);
-			top_form.attach_top (focus_label, 0);
 			top_form.attach_top (raise_widget_hole, 0);
 			top_form.attach_top (show_window_hole, 0);
 			top_form.attach_top (exp_parent_hole, 0);
@@ -191,11 +193,11 @@ feature
 			top_form.attach_left_widget (exp_parent_hole, raise_widget_hole, 0);
 			top_form.attach_left_widget (raise_widget_hole, show_window_hole, 0);
 			top_form.attach_left_widget (show_window_hole, cut_hole, 0);
-			top_form.attach_left_widget (cut_hole, focus_label, 0);
-			top_form.attach_right_widget (close_button, focus_label, 0);
+		--samik	top_form.attach_left_widget (cut_hole, focus_label, 0);
+		--samik	top_form.attach_right_widget (close_button, focus_label, 0);
 			top_form.attach_right (close_button, 0);
 
-			top_form.attach_bottom (focus_label, 0);
+	    --samik		top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (cut_hole, 0);
 			top_form.attach_bottom (close_button, 0);
 			top_form.attach_bottom (con_ed_hole, 0);

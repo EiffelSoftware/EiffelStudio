@@ -3,9 +3,9 @@ class FEATURE_AS_EBUILD
 inherit
 
 	FEATURE_AS
-		redefine
-			set_comment, format_comment
-		end;
+	--	redefine
+--			set_comment, format_comment
+--		end;
 
 feature
 
@@ -32,12 +32,12 @@ feature
 			routine_as ?= body.content;
 			if routine_as = Void then
 				if comment /= Void then
-					ctxt.indent_one_more;
-					ctxt.indent_one_more;
-					ctxt.next_line;
-					ctxt.put_comment (comment)
-					ctxt.indent_one_less;
-					ctxt.indent_one_less;
+					ctxt.indent
+					ctxt.indent
+					ctxt.new_line;
+					ctxt.put_comments (comment)
+					ctxt.exdent
+					ctxt.exdent
 				end 
 			end
 		end;

@@ -17,6 +17,7 @@ inherit
 			make as bulletin_make,
 			make_unmanaged as bulletin_make_unmanaged,
 			identifier as oui_identifier
+
 		redefine
 			set_managed,
 			add_button_press_action

@@ -3,7 +3,12 @@ class CAT_COM_IS
 
 inherit
 
-	COM_ICON_STONE;
+	COM_ICON_STONE
+		-- added by samik
+        undefine
+            init_toolkit
+        -- end of samik     
+		end;
 	HOLE
 		rename
 			target as source

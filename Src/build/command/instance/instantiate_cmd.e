@@ -61,9 +61,14 @@ feature
 			!!Result.make (0);
 			Result.append (Command_names.cmd_instantiated_cmd_name);
 			Result.append (" (");
-			Result.append (current_argument.type.label);
+			if current_argument.type /= Void then
+				Result.append (current_argument.type.label);
+			end
 			Result.append (" - ");
-			Result.append (current_context.label);
+			if current_context /= Void then
+				Result.append (current_context.label); 
+            end
+
 			Result.append (")");
 		end;
 

@@ -3,12 +3,14 @@ class CUT_HOLE
 
 inherit
 
-	EB_BUTTON;
+	EB_BUTTON
 	HOLE
 		rename
 			target as focus_source
 		redefine
 			process_any
+		select
+			init_toolkit
 		end
 
 creation
@@ -17,21 +19,21 @@ creation
 
 feature {NONE}
 
-	focus_label: FOCUS_LABEL;
- 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.wastebasket_label;
-		end;
+
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.wastebasket_label;
+-- samik		end;
 	
-	make (a_parent: COMPOSITE; l: FOCUS_LABEL) is
+	make (a_parent: COMPOSITE) is
 		require
 			valid_a_parent: a_parent /= Void;
-			valid_l: l /= Void
 		do
-			focus_label := l;
 			make_visible (a_parent);
 			register
+			-- added by samik
+			set_focus_string (Focus_labels.wastebasket_label)
+			-- end of samik
 		end;
 
 	symbol: PIXMAP is

@@ -3,6 +3,8 @@ class CON_ED_HOLE
 inherit
 
 	EDIT_BUTTON
+		rename 
+			make as parent_make
 		redefine
 			process_context
 		end
@@ -12,16 +14,21 @@ creation
 	make
 
 feature {NONE}
+    make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent);
+            set_focus_string(Focus_labels.context_label)
+        end;
 
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.context_pixmap
 		end;
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.context_label
-		end;
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.context_label
+-- samik		end;
 
 	create_empty_editor is
 		local

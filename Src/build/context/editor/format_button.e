@@ -6,14 +6,14 @@ inherit
 
 feature {NONE} -- focus
 
-	focus_string: STRING is
-		deferred
-		end;
+-- samik	focus_string: STRING is
+-- samik		deferred
+-- samik		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := editor.focus_label
-		end
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := editor.focus_label
+-- samik		end
 
 feature
 

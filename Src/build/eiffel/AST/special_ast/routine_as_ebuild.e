@@ -6,11 +6,11 @@ inherit
 		rename
 			is_body_equiv as routine_is_body_equiv
 		redefine
-			simple_format, set_comment, comment
+			simple_format--, set_comment, comment
 		end;
 	ROUTINE_AS
 		redefine
-			simple_format, set_comment, is_body_equiv, comment
+			simple_format, is_body_equiv--, set_comment, comment
 		select
 			is_body_equiv
 		end;
@@ -42,22 +42,22 @@ feature
         do
             ctxt.put_space
             ctxt.put_text_item (ti_Is_keyword)
-            ctxt.indent_one_more
+            ctxt.indent
 
 			if comment /= Void then
-				ctxt.indent_one_more
-				ctxt.next_line
-				ctxt.put_comment (comment)
-				ctxt.indent_one_less
+				ctxt.indent
+				ctxt.new_line
+				ctxt.put_comments (comment)
+				ctxt.exdent
 			end
 
             if obsolete_message /= Void then
-                ctxt.next_line
+                ctxt.new_line
                 ctxt.put_text_item (ti_Obsolete_keyword)
-                ctxt.indent_one_more
-                ctxt.next_line
+                ctxt.indent
+                ctxt.new_line
                 obsolete_message.simple_format (ctxt)
-                ctxt.indent_one_less
+                ctxt.exdent
             end
 
             if precondition /= Void then
@@ -65,17 +65,17 @@ feature
             end
 
             if locals /= Void then
-                ctxt.next_line
+                ctxt.new_line
                 ctxt.put_text_item (ti_Local_keyword)
-                ctxt.indent_one_more
-                ctxt.new_line_between_tokens
-                ctxt.next_line
+                ctxt.indent
+                ctxt.set_new_line_between_tokens
+                ctxt.new_line
                 locals.simple_format (ctxt)
-                ctxt.indent_one_less
+                ctxt.exdent
             end
 
             if routine_body /= Void then
-                ctxt.next_line
+                ctxt.new_line
                 routine_body.simple_format (ctxt)
             end
 
@@ -84,17 +84,17 @@ feature
             end
 
             if rescue_clause /= Void then
-                ctxt.next_line
+                ctxt.new_line
                 ctxt.put_text_item (ti_Rescue_keyword)
-                ctxt.indent_one_more
-                ctxt.next_line
+                ctxt.indent
+                ctxt.new_line
                 rescue_clause.simple_format (ctxt)
-                ctxt.indent_one_less
+                ctxt.exdent
             end
 
-            ctxt.next_line
+            ctxt.new_line
             ctxt.put_text_item (ti_End_keyword)
-            ctxt.indent_one_less
+            ctxt.exdent
         end;
 
 end -- class ROUTINE_AS_EBUILD

@@ -3,21 +3,21 @@ deferred class EDIT_BUTTON
 
 inherit
 
-	EB_BUTTON_COM;
-	HOLE;
+	EB_BUTTON_COM
+	HOLE
 	WINDOWS
+		select
+			init_toolkit
+		end
 
 feature {NONE}
 
-	focus_label: FOCUS_LABEL;
-
-	make (a_parent: COMPOSITE; label: like focus_label) is
+	make (a_parent: COMPOSITE) is
 		require
 			valid_a_parent: a_parent /= Void;
-			valid_label: label /= Void
+	
 		do
 			make_visible (a_parent);
-			focus_label := label;
 			register
 		end;
 

@@ -17,12 +17,15 @@ inherit
 			target as source
 		redefine
 			process_state
+		select
+			init_toolkit
 		end;
 	STATE_STONE;
 	SCROLL_LIST
 		rename 
 			identifier as oui_identifier,
-			make as list_create
+			make as list_create,
+			init_toolkit as scroll_list_init_toolkit
 		end;
 	REMOVABLE
 

@@ -179,6 +179,8 @@ feature {NONE}
 			attach_top_widget (toggle_b, v_sep_double, 15);
 			attach_top_widget (toggle_b, v_sep_single_dashed, 15);
 			attach_top_widget (toggle_b, v_sep_double_dashed, 15);
+
+			button.set_focus_string (Focus_labels.primitives_label)
 		end;
 
 	create_separator (vertical: BOOLEAN; line_mode: INTEGER): SEPARATOR is
@@ -216,9 +218,9 @@ feature {NONE}
 			Result := Pixmaps.Selected_primitives_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.primitives_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.primitives_label
+-- samik		end;
 
 end

@@ -1,5 +1,9 @@
 class GENERICS_MERGER
 
+inherit
+    COMPILER_EXPORTER
+end
+
 feature
 
 	merge2 (user, new_tmp: EIFFEL_LIST [FORMAL_DEC_AS]) is

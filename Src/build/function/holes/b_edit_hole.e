@@ -32,10 +32,10 @@ feature {NONE}
 			Result := Pixmaps.behavior_dot_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.behaviour_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.behaviour_label
+-- samik		end;
 
 	source: WIDGET is
 		do

@@ -26,7 +26,7 @@ feature {NONE}
 			valid_a_parent: a_parent /= Void;
 		do
 			associated_window := hw;
-			button_make (a_parent, associated_window.focus_label);
+			button_make (a_parent);
 		end;
 
 feature {NONE}

@@ -22,13 +22,16 @@ feature {NONE}
 	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
 		do
 			old_make (ed, a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.command_instance_label)
+			-- end of samik
 			add_activate_action (Current, Void)
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.command_instance_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.command_instance_label
+-- samik		end;
 
 	source: WIDGET is
 		do

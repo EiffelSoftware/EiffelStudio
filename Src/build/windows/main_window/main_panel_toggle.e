@@ -5,13 +5,20 @@ inherit
 	HOLE
 		redefine
 			process_any
+			
+		select
+			init_toolkit
 		end;
 	TOGGLE_B
 		rename
 			make as toggle_b_make,
-			state as armed
+			state as armed,
+			init_toolkit as toggle_b_init_toolkit
 		end;
-	LICENCE_COMMAND;
+	LICENCE_COMMAND
+		rename
+			init_toolkit as licence_command_init_toolkit
+		end
 
 feature {NONE}
 

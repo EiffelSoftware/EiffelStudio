@@ -1,5 +1,8 @@
 class PARENTS_MERGER
 
+inherit
+    COMPILER_EXPORTER
+
 feature
 	
 	merge3 (old_tmp, user, new_tmp: EIFFEL_LIST [PARENT_AS]) is

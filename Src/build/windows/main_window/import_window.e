@@ -5,12 +5,16 @@ inherit
 	FORM_D
 		rename
 			make as form_d_create,
-			popup as form_d_popup
+			popup as form_d_popup,
+			init_toolkit as form_d_init_toolkit
 		end;
 	SHARED_STORAGE_INFO;
 	COMMAND;
 	COMMAND_ARGS;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	CLOSEABLE;
 	CONSTANTS
 

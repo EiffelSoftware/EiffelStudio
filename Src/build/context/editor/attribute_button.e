@@ -3,6 +3,8 @@ class ATTRIBUTE_BUTTON
 inherit
 
 	FORMAT_BUTTON
+        rename
+            make as parent_make
 		redefine
 			set_form_number,
 			valid_form_nbr
@@ -13,6 +15,12 @@ creation
 	make
 
 feature 
+
+    make (a_parent: COMPOSITE; ed: like editor) is
+        do
+            parent_make (a_parent, ed)
+            set_focus_string (Focus_labels.attribute_label)
+        end
 
 	form_number: INTEGER;
 
@@ -26,10 +34,10 @@ feature
 			Result := Pixmaps.selected_attribute_pixmap
 		end;
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.attribute_label
-		end;
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.attribute_label
+-- samik		end;
 
 	set_form_number (nbr: INTEGER) is
 		do

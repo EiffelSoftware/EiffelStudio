@@ -91,7 +91,7 @@ feature {NONE}
 
 	worked_on: STRING is
 		do
-			if edited_command.parent_type /= Void then	
+			if edited_command /= Void and then edited_command.parent_type /= Void then	
 				!!Result.make (0);
 				Result.append (edited_command.parent_type.label);
 			end

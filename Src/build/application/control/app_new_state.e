@@ -38,15 +38,18 @@ feature
 			Result := Pixmaps.state_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.create_edit_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.create_edit_label
+-- samik		end;
 
 	make (a_parent: COMPOSITE) is
 		do
 			app_make (a_parent);
 			initialize_transport
+			-- added by samik
+			set_focus_string (Focus_labels.create_edit_label)
+			-- end of samik
 			add_activate_action (Current, Void)
 		end;
 

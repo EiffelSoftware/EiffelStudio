@@ -4,10 +4,11 @@ class SHOW_WINDOW_HOLE
 inherit
 
 	TREE_HOLE
+        rename
+            make as parent_make
 		redefine
 			process_context
 		end;
-	EB_BUTTON 
 
 creation
 
@@ -15,10 +16,16 @@ creation
 
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.show_window_label
-		end;
+    make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent)
+            set_focus_string (Focus_labels.show_window_label)
+        end
+
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.show_window_label
+-- samik		end;
 
 	process_context (dropped: CONTEXT_STONE) is
 		local

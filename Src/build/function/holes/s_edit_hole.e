@@ -27,10 +27,10 @@ feature {NONE}
 			Result := Pixmaps.state_dot_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.state_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.state_label
+-- samik		end;
 
 	set_widget_default is
 		do

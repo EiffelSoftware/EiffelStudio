@@ -3,7 +3,13 @@ class FUNC_COM_IS
 
 inherit
 
+
 	COM_INST_IS
+        -- added by samik
+        undefine
+            init_toolkit
+        -- end of samik 
+		end;
 	FUNCTION_ELEMENT
 		rename
 			target as source

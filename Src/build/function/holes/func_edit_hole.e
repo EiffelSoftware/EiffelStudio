@@ -1,9 +1,12 @@
-
+ 
 deferred class FUNC_EDIT_HOLE 
 
 inherit
 
-	HOLE;
+	HOLE
+		select
+			init_toolkit
+		end
 	EB_BUTTON;
 	REMOVABLE;
 	DRAG_SOURCE
@@ -18,10 +21,10 @@ feature
 			wipe_out_command.execute (function_editor.edited_function)
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do			
-			Result := function_editor.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do			
+-- samik			Result := function_editor.focus_label
+-- samik		end;
 	
 feature {NONE}
 

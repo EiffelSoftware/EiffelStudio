@@ -4,6 +4,8 @@ class HELP_HOLE
 inherit
 
 	EDIT_BUTTON
+		rename
+			make as parent_make
 		redefine
 			process_any
 		end
@@ -14,10 +16,17 @@ creation
 
 feature {NONE}
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.help_label
-		end;
+	make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent)
+            set_focus_string (Focus_labels.help_label)
+        end
+
+
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.help_label
+-- samik		end;
 
 	symbol: PIXMAP is
 		do

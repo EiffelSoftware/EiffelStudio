@@ -1,5 +1,9 @@
 class FEATURE_NAMES_MERGER
 
+inherit
+	COMPILER_EXPORTER
+end
+
 feature
 
 	merge2 (user, new_tmp: EIFFEL_LIST [FEATURE_NAME]) is

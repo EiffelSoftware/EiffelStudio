@@ -8,6 +8,8 @@ inherit
 	HOLE
 		redefine
 			process_event
+		select
+			init_toolkit
 		end;
 	EB_BUTTON_COM
 
@@ -42,6 +44,9 @@ feature {NONE}
 			make_visible (a_parent);
 			register;
 			initialize_transport
+			-- added by samik
+			set_focus_string (Focus_labels.translation_label)
+			-- end of samik
 		end;
 
 	symbol: PIXMAP is
@@ -52,16 +57,6 @@ feature {NONE}
 	full_symbol: PIXMAP is
 		do
 			Result := Pixmaps.event_dot_pixmap
-		end;
-
-	focus_label: FOCUS_LABEL is
-		do
-			Result := editor.focus_label
-		end;
-
-	focus_string: STRING is
-		do	
-			Result := Focus_labels.translation_label
 		end;
 
 feature {NONE}

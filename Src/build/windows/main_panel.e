@@ -121,15 +121,15 @@ feature
 
 			-- icon form
 			!! top_form.make (Widget_names.form1, form)
-			!! focus_label.make (top_form)
-			!! quit_b.make (Current, top_form, focus_label)
-			!! con_b.make (top_form, focus_label)
-			!! cmd_b.make (top_form, focus_label)
-			!! cmdi_b.make (top_form, focus_label)
-			!! state_b.make (top_form, focus_label)
-			!! cut_b.make (top_form, focus_label)
-			!! namer_b.make (top_form, focus_label)
-			!! help_b.make (top_form, focus_label)
+			!! focus_label.initialize (top_form)
+			!! quit_b.make (Current, top_form)
+			!! con_b.make (top_form)
+			!! cmd_b.make (top_form)
+			!! cmdi_b.make (top_form)
+			!! state_b.make (top_form)
+			!! cut_b.make (top_form)
+			!! namer_b.make (top_form)
+			!! help_b.make (top_form)
 			!! separator.make (Widget_names.separator, top_form)
 			!! save_b.make (top_form)
 			!! save_as_b.make (top_form)	
@@ -139,7 +139,6 @@ feature
 			separator.set_horizontal (True)
 			top_form.attach_top (state_b, 0)
 			top_form.attach_top (quit_b, 0)
-			top_form.attach_top (focus_label, 0)
 			top_form.attach_top (con_b, 0)
 			top_form.attach_top (cmd_b, 0)
 			top_form.attach_top (cmdi_b, 0)
@@ -157,14 +156,14 @@ feature
 			top_form.attach_left_widget (state_b, help_b, 0)
 			top_form.attach_left_widget (help_b, namer_b, 0)
 			top_form.attach_left_widget (namer_b, cut_b, 0)
-			top_form.attach_left_widget (cut_b, focus_label, 0)
-			top_form.attach_right_widget (create_proj_b, focus_label, 0)
+			top_form.attach_left_widget (cut_b, create_proj_b, 0)
+		--samik	top_form.attach_right_widget (create_proj_b, focus_label, 0)
 			top_form.attach_right_widget (load_proj_b, create_proj_b, 0)
 			top_form.attach_right_widget (save_b, load_proj_b, 0)
 			top_form.attach_right_widget (save_as_b, save_b, 0)
 			top_form.attach_right_widget (quit_b, save_as_b, 0)
 			top_form.attach_right (quit_b, 0)
-			top_form.attach_bottom_widget (separator, focus_label, 0)
+	--samik		top_form.attach_bottom_widget (separator, focus_label, 0)
 			top_form.attach_bottom_widget (separator, quit_b, 0)
 			top_form.attach_bottom_widget (separator, state_b, 0)
 			top_form.attach_bottom_widget (separator, con_b, 0)
@@ -273,7 +272,7 @@ feature -- Closing Current
 				save_question := False;
 				question_box.popup (Current, Messages.exit_qu, Void)
 			else
-				discard_licence;
+				discard_license;
 				!! quit_app_com;
 				quit_app_com.execute (Void)
 			end

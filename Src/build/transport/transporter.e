@@ -5,15 +5,23 @@ inherit
 
 	BASE
 		rename
-			make as base_create
+			make as base_create,
+			init_toolkit as base_init_tookit
 		end;
-	COMMAND;
-	PAINTER;
+	COMMAND	
+	PAINTER
+		rename
+			init_toolkit as painter_init_tookit
+		end
 	COMMAND_ARGS;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	SHARED_LICENSE;
 	SHARED_CONTEXT;
 	CONSTANTS
+	TOOLTIP_INITIALIZER
 
 creation
 
@@ -189,6 +197,7 @@ feature
 			-- mechanism,
 		do
 			base_create (a_name, a_screen);
+			tooltip_initialize (Current)
 			set_drawing (screen);
 			set_logical_mode (10); 
 			set_subwindow_mode (1);

@@ -2,13 +2,14 @@ class CAT_BUTTON
 
 inherit
 
-	CONSTANTS;
-	PICT_COLOR_B
-		rename
-			make as make_visible,
-			pixmap as symbol
-		end;
+--samik	CONSTANTS;
 	COMMAND
+	EB_BUTTON
+		rename
+			pixmap as symbol
+		export {CAT_PAGE}
+			set_symbol
+		end
 
 creation
 
@@ -25,21 +26,11 @@ feature {NONE}
 			valid_a_parent: a_parent /= Void
 		do
 			catalog_page := cat_page;
-			make_visible (Widget_names.pcbutton, a_parent);
+			make_visible (a_parent);
 			add_activate_action (Current, Void);
 		end;
 
-feature
 
-	set_symbol (s: PIXMAP) is
-			-- Set icon symbol.
-		require
-			valid_argument: s /= Void
-		do
-			if s.is_valid then
-				set_pixmap (s);
-			end
-		end;
 
 feature {NONE}
 
@@ -47,5 +38,6 @@ feature {NONE}
 		do
 			catalog_page.select_it
 		end;
-
+  
+ 
 end

@@ -6,8 +6,10 @@ inherit
 	HOLE
 		redefine
 			process_instance, process_command, compatible 
+		select
+			init_toolkit
 		end;
-	EB_BUTTON_COM;
+	EB_BUTTON_COM
 	STONE;
 	DRAG_SOURCE
 
@@ -53,24 +55,27 @@ feature {NONE}
 
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.create_edit_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.create_edit_label
+-- samik		end;
 
 	target, source: WIDGET is
 		do
 			Result := Current
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := command_catalog.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := command_catalog.focus_label
+-- samik		end;
 
 	make (a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);
+			-- added by samik
+			set_focus_string (Focus_labels.create_edit_label)
+			-- end of samik
 			initialize_transport;
 			initialize_focus;
 			register

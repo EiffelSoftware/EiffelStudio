@@ -3,7 +3,12 @@ class FUNC_BEH_IS
 
 inherit
 
-	B_ICON_STONE;
+	B_ICON_STONE
+		-- added by samik
+        undefine
+            init_toolkit
+        -- end of samik     
+		end;
 	FUNCTION_ELEMENT
 		rename
 			target as source 

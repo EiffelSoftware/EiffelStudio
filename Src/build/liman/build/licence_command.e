@@ -4,9 +4,9 @@ deferred class LICENCE_COMMAND
 inherit
 
 	COMMAND;
-	LICENCED_COMMAND
+	LICENSED_COMMAND
 		rename
-			execute_licenced as execute
+			execute_licensed as execute
 		end;
 	WINDOWS
 

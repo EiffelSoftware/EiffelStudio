@@ -1,5 +1,9 @@
 class COMPOUND_MERGER
 
+inherit
+    COMPILER_EXPORTER
+end
+
 feature
 
 	merge3 (old_c, user_c, new_c: EIFFEL_LIST [INSTRUCTION_AS]) is
@@ -55,7 +59,7 @@ feature
 						from
 							old_c.start
 						until
-							old_c.after or else old_c.item.is_equiv (inst)
+							old_c.after or else old_c.item.is_equivalent (inst)
 						loop
 							old_c.forth
 						end;
@@ -128,7 +132,7 @@ feature
 						until
 							found or else removed_old_template_list.after
 						loop
-							found := (inst.is_equiv (removed_old_template_list.item))
+							found := (inst.is_equivalent (removed_old_template_list.item))
 							removed_old_template_list.forth
 						end;
 

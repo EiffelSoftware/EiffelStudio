@@ -38,9 +38,13 @@ feature {NONE}
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (input_data.label);
+			if input_data /= Void then
+				Result.append (input_data.label);
+			end
 			Result.append (" and ");
-			Result.append (output_data.label);
+			if output_data /= Void then
+				Result.append (output_data.label);
+			end
 		end; -- worked_on
 
 end

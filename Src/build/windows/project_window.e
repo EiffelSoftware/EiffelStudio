@@ -5,7 +5,8 @@ inherit
 	FILE_SEL_D
 		rename
 			make as file_sel_d_create,
-			popup as file_sel_d_popup
+			popup as file_sel_d_popup,
+			init_toolkit as file_sel_d_init_toolkit
 		end;
 	COMMAND;
 	COMMAND_ARGS;

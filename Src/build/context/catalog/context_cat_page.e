@@ -5,18 +5,22 @@ inherit
 
 	FORM
 		rename
-			make as make_visible
+			make as make_visible,
+			init_toolkit as form_init_toolkit
 		end;
 	CONSTANTS;
-	WINDOWS;
+	WINDOWS
+		select
+			init_toolkit
+		end
 	FOCUSABLE
 	
 feature 
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := context_catalog.focus_label
-		end;
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := context_catalog.focus_label
+-- samik		end;
 
 	symbol: PIXMAP is
 		deferred
@@ -26,9 +30,27 @@ feature
 		deferred
 		end;
 
-	focus_string: STRING is
-		deferred
-		end;
+    Focus_labels: FOCUS_LABEL_CONSTANTS is
+        once
+            !! Result
+        end
+    
+	focus_label: FOCUS_LABEL_I is
+			-- has to be redefined, so that it returns correct toolkit initializer
+			-- to which object belongs for every instance of this class
+                local
+                        ti: TOOLTIP_INITIALIZER
+                do
+                        ti ?= top
+                        check
+                                valid_tooltip_initializer: ti/= void
+                        end
+                        Result := ti.label
+                end
+
+-- samik	focus_string: STRING is
+-- samik		deferred
+-- samik		end;
 
 	focus_source: WIDGET is
 		do
@@ -43,8 +65,11 @@ feature {NONE}
 		do
 			make_visible (Widget_names.form, a_parent);
 			!! button.make (Current, button_parent);
-			initialize_focus;
+						
 			build_interface
+			-- build_interface sets the focus string for the button so 
+			-- that call button.initialize_focus is legal
+			button.initialize_focus
 		end;
 
 	create_type (a_name: STRING; 

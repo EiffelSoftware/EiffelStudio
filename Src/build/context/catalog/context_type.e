@@ -8,7 +8,7 @@ inherit
 	COMMAND_ARGS;
 	TYPE_STONE;
 	SHARED_STORAGE_INFO;
-	FOCUSABLE;
+--	FOCUSABLE;
 	TYPE_DATA
 
 creation
@@ -21,7 +21,7 @@ feature  {NONE}
 			-- create a context type associated with `a_context'
 		do
 			dummy_context := a_context;
-			focus_string := a_name;
+		-- samik    	focus_string := a_name;
 			int_generator.next;
 			identifier := int_generator.value;
 			context_type_table.put (Current, identifier);
@@ -52,12 +52,12 @@ feature {NONE}
 			!!Result
 		end;
 
-	focus_string: STRING;
+-- samik	focus_string: STRING;
 
-	focus_label: LABEL is
-		do
-			Result := context_catalog.focus_label
-		end;
+--	focus_label: LABEL is
+	--	do
+		--	Result := context_catalog.focus_label
+--		end;
 
 	focus_source: WIDGET;
 
@@ -69,7 +69,7 @@ feature
 			-- the context_type
 		do
 			focus_source := a_source;
-			initialize_focus;
+			-- samik initialize_focus;
 			initialize_transport;
 		end;
 

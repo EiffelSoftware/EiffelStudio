@@ -4,6 +4,11 @@ class FUNC_CON_IS
 inherit
 
 	CON_ICON_STONE
+		
+		-- added by samik
+        undefine
+            init_toolkit
+        -- end of samik     
 		redefine
 			transportable
 		end;

@@ -33,7 +33,9 @@ feature
 			!!Result.make (0);
 			Result.append (c_name);
 			Result.append (" (");
-			Result.append (edited_command.label);
+			if edited_command /= Void then
+				Result.append (edited_command.label);
+			end
 			if
 				worked_on /= Void
 			then

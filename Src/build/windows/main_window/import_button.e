@@ -4,11 +4,10 @@ class IMPORT_BUTTON
 inherit
 
 	EB_BUTTON_COM
-		rename
-			make_visible as make
-		end;
-	WINDOWS;
-	LICENCE_COMMAND
+	WINDOWS
+		select
+			init_toolkit
+		end
 
 creation
 
@@ -16,15 +15,21 @@ creation
 	
 feature {NONE}
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.import_code_label
-		end;
+    make (a_parent: COMPOSITE) is
+        do
+            make_visible (a_parent)
+            set_focus_string (Focus_labels.import_code_label)
+        end
 
-	focus_label: LABEL is
-		do
-			Result := main_panel.focus_label
-		end;
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.import_code_label
+-- samik		end;
+
+-- samik	focus_label: LABEL is
+-- samik		do
+-- samik			Result := main_panel.focus_label
+-- samik		end;
 
 	symbol: PIXMAP is
 		do
@@ -43,6 +48,11 @@ feature {NONE}
 				!!iw.make (main_panel.base)
 				iw.popup
 			end
+		end
+
+-- added by samik
+	execute (a: ANY) is
+		do
 		end
 
 end

@@ -4,19 +4,39 @@ inherit
 	
 	TOP_SHELL
 		rename
-			set_x_y as old_set_x_y
+			set_x_y as old_set_x_y,
+			init_toolkit as top_shell_toolkit,
+            make as top_shell_make
+	
 		end
 	TOP_SHELL
+		rename
+			init_toolkit as top_shell_toolkit						
 		redefine
-			set_x_y
+			set_x_y,
+			make
 		select
-			set_x_y
+			set_x_y,
+			make
 		end;
 	CONSTANTS
+	TOOLTIP_INITIALIZER
 
 creation
 
 	make
+
+feature -- Initialization
+	make (a_name: STRING; a_screen: SCREEN) is
+			-- Create a eb_top_shell with `a_name' as identifier,
+            -- only if `a_name' not void otherwise identifier
+            -- will be defined as application name and call
+            -- `set_default'. 
+			-- Calls top_shell_make and tooltip_initialize 
+		do
+			top_shell_make (a_name, a_screen)
+			tooltip_initialize (Current)
+		end
 
 feature
 

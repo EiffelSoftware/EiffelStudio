@@ -30,13 +30,33 @@ feature {CATALOG}
 			Result := button
 		end;
 
-	focus_label: FOCUS_LABEL is
-		do
-			Result := associated_catalog.focus_label
-		end;
+    -- added by samik
+    Focus_labels: FOCUS_LABEL_CONSTANTS is
+        once
+            !! Result
+        end
+
+	focus_label: FOCUS_LABEL_I is
+                	-- has to be redefined, so that it returns correct toolkit initializer
+                	-- to which object belongs for every instance of this class
+                local
+                        ti: TOOLTIP_INITIALIZER
+                do
+                       ti ?= top
+                        check
+                                valid_tooltip_initializer: ti/= void
+                        end
+                        Result := ti.label
+                end
+--end of samik
+-- samik	focus_label: FOCUS_LABEL is
+-- samik		do
+-- samik			Result := associated_catalog.focus_label
+-- samik		end;
 
 	make_visible (a_parent: COMPOSITE) is
 		do
+	
 			box_make_visible (Widget_names.row_column, a_parent);
 			set_column_layout;
 			set_preferred_count (5);
@@ -69,9 +89,12 @@ feature {CATALOG}
 		require
 			not_void_form: button_rc /= Void;
 		do	
+--samik			set_focus_string ("DEFAULT_CAT_PAGE_LABEL")
 			!! button.make (Current, button_rc)
 			button.set_symbol (symbol);
-			initialize_focus
+			button.set_focus_string ("DEFAULT_CAT_PAGE_LABEL")
+			button.initialize_focus			
+--samik			initialize_focus
 		end;
 
 	set_selected_symbol is

@@ -2,21 +2,28 @@ class SAVE_AS_BUTTON
 inherit
 
 	CREATE_PROJ_BUTTON
-		redefine
-			focus_string, symbol, popup_window, app_not_save_qu
+		rename
+			make as parent_make
+	redefine
+			symbol, popup_window, app_not_save_qu
 		end;
-	WINDOWS;
-
+	
 creation
 
 	make
 
 feature {NONE} -- Focusable
 
-	focus_string: STRING is 
-		do
-			Result := Focus_labels.save_project_as_label
-		end;
+    make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent)
+            set_focus_string (Focus_labels.save_project_as_label)
+        end
+  
+-- samik	focus_string: STRING is 
+-- samik		do
+-- samik			Result := Focus_labels.save_project_as_label
+-- samik		end;
 
 	symbol: PIXMAP is
 		do

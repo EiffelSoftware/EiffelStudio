@@ -4,7 +4,10 @@ class SHOW
 inherit
 
 	WINDOWS;
-	PAINTER;
+	PAINTER
+        undefine
+            init_toolkit
+        end
 	COMMAND;
 
 creation

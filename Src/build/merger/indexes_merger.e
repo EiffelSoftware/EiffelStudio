@@ -1,5 +1,8 @@
 class INDEXES_MERGER
 
+inherit
+    COMPILER_EXPORTER
+
 feature
 
 	merge2 (user, new_tmp: EIFFEL_LIST [INDEX_AS]) is

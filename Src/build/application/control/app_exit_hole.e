@@ -4,6 +4,8 @@ class APP_EXIT_HOLE
 inherit
 
 	APP_EDITOR_HOLE
+        rename
+            make as parent_make
 		redefine
 			process_label
 		end
@@ -14,15 +16,21 @@ creation
 
 feature {NONE}
 
+    make (a_parent: COMPOSITE) is
+        do
+            parent_make (a_parent)
+            set_focus_string (Focus_labels.exit_label)
+        end
+
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.exit_label_pixmap
 		end;
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.exit_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.exit_label
+-- samik		end;
 
 feature {NONE}
 

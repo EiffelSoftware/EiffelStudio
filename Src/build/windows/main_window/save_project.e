@@ -10,7 +10,7 @@ inherit
 			{NONE} all;
 			{ANY} execute
 		redefine
-			licence_checked
+			license_checked
 		end;
 	ERROR_POPUPER;
 
@@ -58,7 +58,7 @@ feature
 			retry
 		end;
 
-	licence_checked: BOOLEAN is
+	license_checked: BOOLEAN is
 		do
 			Result := True;
 		end;

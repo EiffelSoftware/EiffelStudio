@@ -31,7 +31,9 @@ feature
 			!!Result.make (0);
 			Result.append (c_name);
 			Result.append (" ");
-			Result.append (element.label);
+			if element /= Void then
+				Result.append (element.label);
+			end
 		end;
 
 	

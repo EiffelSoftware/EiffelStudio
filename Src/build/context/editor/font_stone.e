@@ -11,10 +11,10 @@ creation
 
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			Result := Focus_labels.font_att_label
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			Result := Focus_labels.font_att_label
+-- samik		end;
 
 	command: FONT_STONE_CMD is
 		once

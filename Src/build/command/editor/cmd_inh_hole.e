@@ -10,7 +10,7 @@ inherit
 		redefine
 			process_command
 		end;
-	WINDOWS;
+	
 	DRAG_SOURCE;
 	CMD_STONE;
 	REMOVABLE
@@ -21,18 +21,26 @@ creation
 
 feature {NONE}
 
-	focus_string: STRING is
-		do
-			if data = Void then
-				Result := focus_labels.parent_label
-			else
-				Result := data.label
-			end;
-		end;
+-- samik	focus_string: STRING is
+-- samik		do
+-- samik			if data = Void then
+-- samik				Result := focus_labels.parent_label
+-- samik			else
+-- samik				Result := data.label
+-- samik			end;
+-- samik		end;
 
 	make (ed: CMD_EDITOR; a_parent: COMPOSITE) is
 		do
 			old_make (ed, a_parent);
+			-- added by samik
+			if data = Void then
+				set_focus_string (Focus_labels.parent_label)
+			else
+				set_focus_string (data.label)
+			end;
+			-- end of samik
+			
 			initialize_transport;
 		end;
 

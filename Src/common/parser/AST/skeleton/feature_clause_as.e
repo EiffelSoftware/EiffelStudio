@@ -375,4 +375,12 @@ feature {COMPILER_EXPORTER} -- Setting
 			clients := c
 		end;
 
+--this is from build's FEATURE_CLAUSE_AS, don't know why the implementation is empty
+--but this is called by build
+       set_comments (c: EIFFEL_FILE) is
+                        -- Set comments for clause AND features.
+                do
+                end;
+
+ 
 end -- class FEATURE_CLAUSE_AS

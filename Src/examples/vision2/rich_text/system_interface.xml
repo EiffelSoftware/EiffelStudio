@@ -35,9 +35,12 @@
 		<Name>tiny_padding</Name>
 		<Value>2</Value>
 		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>small_padding</Name>
-		<Value>4</Value>
+	<Constant><type>PIXMAP</type>
+		<Name>bold_png</Name>
+		<Value>E:\projects\rich_text\bold.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>rich_text_example_root</Directory>
+		<Filename>bold.png</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>underline_png</Name>
@@ -50,16 +53,13 @@
 		<Name>window_height</Name>
 		<Value>320</Value>
 		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>bold_png</Name>
-		<Value>E:\projects\rich_text\bold.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>rich_text_example_root</Directory>
-		<Filename>bold.png</Filename>
+	<Constant><type>INTEGER</type>
+		<Name>small_padding</Name>
+		<Value>4</Value>
 		</Constant>
 	<Constant><type>INTEGER</type>
 		<Name>window_width</Name>
-		<Value>540</Value>
+		<Value>640</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>right_alignment_png</Name>
@@ -167,7 +167,7 @@
 	</Events>
 </item>
 <item type="EV_CHECK_MENU_ITEM"><Internal_properties>
-	<id>73</id>
+	<id>8</id>
 	<name>show_paragraph_toolbar</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -182,7 +182,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>8</id>
+	<id>9</id>
 	<name>main_vertical_box</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -196,18 +196,18 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>9</id>
+	<id>10</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>00001</Is_item_expanded>
+<EV_BOX><Is_item_expanded>00000000</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>10</id>
+	<id>11</id>
 	<name>font_selection</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -225,7 +225,7 @@
 	</Events>
 </item>
 <item type="EV_COMBO_BOX"><Internal_properties>
-	<id>11</id>
+	<id>12</id>
 	<name>size_selection</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -244,7 +244,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR"><Internal_properties>
-	<id>12</id>
+	<id>13</id>
 	<name>color_toolbar</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -254,7 +254,7 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TOOL_BAR></EV_TOOL_BAR>
 <item type="EV_TOOL_BAR_BUTTON"><Internal_properties>
-	<id>13</id>
+	<id>14</id>
 	<name>color_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -268,7 +268,31 @@
 </item>
 </item>
 <item type="EV_TOOL_BAR"><Internal_properties>
-	<id>14</id>
+	<id>107</id>
+	<name>background_color_toolbar</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TOOL_BAR></EV_TOOL_BAR>
+<item type="EV_TOOL_BAR_BUTTON"><Internal_properties>
+	<id>53</id>
+	<name>background_color_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Font Background Color Selection]]></Tooltip>
+	</EV_TOOLTIPABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES background_color_selected</Event>
+	</Events>
+</item>
+</item>
+<item type="EV_TOOL_BAR"><Internal_properties>
+	<id>15</id>
 	<name>format_toolbar</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -278,13 +302,13 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_TOOL_BAR></EV_TOOL_BAR>
 <item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties>
-	<id>15</id>
+	<id>16</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>16</id>
+	<id>17</id>
 	<name>bold_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -301,7 +325,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>17</id>
+	<id>18</id>
 	<name>italic_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -317,7 +341,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>18</id>
+	<id>19</id>
 	<name>underlined_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -333,7 +357,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>19</id>
+	<id>20</id>
 	<name>striked_through_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -348,9 +372,105 @@
 <Events><Event>select_actions EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES strike_through_selected</Event>
 	</Events>
 </item>
+<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties>
+	<id>446</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>447</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text><![CDATA[Offset]]></Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Vertical Offset of Character from Baseline]]></Tooltip>
+	</EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>450</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET><Minimum_width><Constant>small_padding</Constant>
+		</Minimum_width>
+	</EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>449</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_SPIN_BUTTON"><Internal_properties>
+	<id>695</id>
+	<name>vertical_offset</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Vertical Character Offset]]></Tooltip>
+	</EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_GAUGE><Lower>-25</Lower>
+	<Upper>25</Upper>
+	</EV_GAUGE>
+<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
+<Events><Event>change_actions EV_GAUGE_ACTION_SEQUENCES offset_changed</Event>
+	</Events>
+</item>
+</item>
+</item>
+<item type="EV_VERTICAL_BOX"><Internal_properties>
+	<id>27</id>
+	<name>paragraph_toolbar_holder</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>11</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
+	<id>28</id>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>29</id>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Padding><Constant>small_padding</Constant>
+		</Padding>
+	<Is_item_expanded>00000000001</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
 <item type="EV_TOOL_BAR"><Internal_properties>
-	<id>20</id>
+	<id>21</id>
 	<name>paragraph_toolbar</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -359,14 +479,8 @@
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_TOOL_BAR></EV_TOOL_BAR>
-<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties>
-	<id>21</id>
-	<Expanded>0</Expanded>
-	</Internal_properties>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-</item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>22</id>
+	<id>23</id>
 	<name>left_alignment_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -382,7 +496,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>23</id>
+	<id>24</id>
 	<name>center_alignment_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -398,7 +512,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>24</id>
+	<id>25</id>
 	<name>right_alignment_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -414,7 +528,7 @@
 	</Events>
 </item>
 <item type="EV_TOOL_BAR_TOGGLE_BUTTON"><Internal_properties>
-	<id>25</id>
+	<id>26</id>
 	<name>justified_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -429,44 +543,15 @@
 <Events><Event>select_actions EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES justified_selected</Event>
 	</Events>
 </item>
-</item>
-</item>
-<item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>111</id>
-	<name>paragraph_toolbar_holder</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Is_item_expanded>11</Is_item_expanded>
-	</EV_BOX>
-<EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
-<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>36</id>
+<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties>
+	<id>22</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-</item>
-<item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>112</id>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET></EV_WIDGET>
-<EV_BOX><Padding><Constant>small_padding</Constant>
-		</Padding>
-	<Is_item_expanded>0000000000</Is_item_expanded>
-	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER></EV_CONTAINER>
+</item>
+</item>
 <item type="EV_CELL"><Internal_properties>
-	<id>213</id>
+	<id>30</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -477,7 +562,7 @@
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>113</id>
+	<id>31</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -490,7 +575,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>214</id>
+	<id>32</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -499,7 +584,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>114</id>
+	<id>33</id>
 	<name>left_margin</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -507,7 +592,8 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Paragraph Left Margin]]></Tooltip>
+	</EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
@@ -518,7 +604,7 @@
 </item>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>115</id>
+	<id>34</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -531,7 +617,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>263</id>
+	<id>35</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -540,7 +626,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>116</id>
+	<id>36</id>
 	<name>right_margin</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -548,7 +634,8 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Paragraph Right Margin]]></Tooltip>
+	</EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
@@ -559,7 +646,7 @@
 </item>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>117</id>
+	<id>37</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -572,7 +659,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>265</id>
+	<id>38</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -581,7 +668,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>118</id>
+	<id>39</id>
 	<name>top_spacing</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -589,7 +676,8 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Paragraph Top Spacing]]></Tooltip>
+	</EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
@@ -600,7 +688,7 @@
 </item>
 </item>
 <item type="EV_LABEL"><Internal_properties>
-	<id>119</id>
+	<id>40</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -613,7 +701,7 @@
 <EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>266</id>
+	<id>41</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -622,7 +710,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_SPIN_BUTTON"><Internal_properties>
-	<id>120</id>
+	<id>42</id>
 	<name>bottom_spacing</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -630,7 +718,8 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_TOOLTIPABLE><Tooltip><![CDATA[Paragraph Bottom Spacing]]></Tooltip>
+	</EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width><Constant>font_size_combo_box_width</Constant>
 		</Minimum_width>
 	</EV_WIDGET>
@@ -641,7 +730,7 @@
 </item>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>264</id>
+	<id>216</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -653,7 +742,7 @@
 </item>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>26</id>
+	<id>44</id>
 	<name>tab_control_holder</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
@@ -666,7 +755,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties>
-	<id>27</id>
+	<id>45</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -676,7 +765,7 @@
 </item>
 </item>
 <item type="EV_RICH_TEXT"><Internal_properties>
-	<id>28</id>
+	<id>46</id>
 	<name>rich_text</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -711,7 +800,7 @@ Finally all available fonts:
 <EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
 </item>
 <item type="EV_CELL"><Internal_properties>
-	<id>29</id>
+	<id>47</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -723,7 +812,7 @@ Finally all available fonts:
 <EV_CONTAINER></EV_CONTAINER>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>30</id>
+	<id>48</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -736,7 +825,7 @@ Finally all available fonts:
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_FRAME"><Internal_properties>
-	<id>31</id>
+	<id>49</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -750,7 +839,7 @@ Finally all available fonts:
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>32</id>
+	<id>50</id>
 	<name>general_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -764,7 +853,7 @@ Finally all available fonts:
 </item>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>33</id>
+	<id>51</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -780,7 +869,7 @@ Finally all available fonts:
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>34</id>
+	<id>52</id>
 	<name>caret_position_label</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>

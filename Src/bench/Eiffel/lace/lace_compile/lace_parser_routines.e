@@ -26,7 +26,7 @@ feature -- Parsing
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
-			file: RAW_FILE
+			file: KL_BINARY_INPUT_FILE
 			vd21: VD21
 			vd22: VD22
 		do

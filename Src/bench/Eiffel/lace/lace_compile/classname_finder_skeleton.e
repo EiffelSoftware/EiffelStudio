@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse (a_file: IO_MEDIUM) is
+	parse (a_file: KL_BINARY_INPUT_FILE) is
 			-- Parse `a_file' and set `classname' if `a_file'
 			-- contains an Eiffel class text. Void otherwise.
 		require

@@ -117,9 +117,9 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "ISE offers a variety of personal and professional licenses and support/maintenance contracts covering the diverse needs of users, commercial and academic.",
                     IDC_STATIC,231,55,144,41
-    DEFPUSHBUTTON   "OK",IDOK,166,175,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,279,175,50,14
-    PUSHBUTTON      "Purchase",IDC_REGISTER,53,175,50,14
+    DEFPUSHBUTTON   "OK",IDOK,166,179,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,279,179,50,14
+    PUSHBUTTON      "Purchase",IDC_REGISTER,53,179,50,14
     CONTROL         202,IDC_STATIC,"Static",SS_BITMAP,4,5,222,127
     LTEXT           "Thank you for using EiffelDemo, the demo version of ISE Eiffel from Interactive Software Engineering (ISE). This version is reserved for evaluation of Eiffel; any other use, commercial or academic, requires a license.",
                     IDC_STATIC,231,5,144,42
@@ -129,8 +129,9 @@ BEGIN
                     25,155,129,12
     LTEXT           "Trial Version User",IDC_USERNAME,231,153,140,8
     RTEXT           "Registred to:",IDC_STATIC,175,153,54,8
-    LTEXT           "0 days",IDC_STATIC,17,143,21,8
-    LTEXT           "30 days",IDC_STATIC,139,143,25,8
+    LTEXT           "0",IDC_STATIC,23,143,8,8
+    LTEXT           "30",IDC_STATIC,150,143,8,8
+    LTEXT           "Trial days used",IDC_STATIC,65,143,48,8
 END
 
 IDD_REGISTER DIALOG DISCARDABLE  0, 0, 178, 151
@@ -178,22 +179,6 @@ BEGIN
     "\0"
 END
 
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
-BEGIN
-    IDD_PROMPT, DIALOG
-    BEGIN
-        BOTTOMMARGIN, 182
-    END
-END
 #endif    // APSTUDIO_INVOKED
 
 #endif    // English (U.S.) resources

@@ -294,11 +294,8 @@ feature -- Access
 			-- Note that this algorithm is far from perfect, but is good enough for the
 			-- moment. There is definitely the possibility for improvement. Julian 02/03/03
 		local
-			current_position: INTEGER
-			no_more_tags: BOOLEAN
 			depth: INTEGER
 			counter: INTEGER
-			next_pos: INTEGER
 			closing_index: INTEGER
 			tag_contents: STRING
 		do

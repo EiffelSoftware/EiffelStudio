@@ -60,9 +60,6 @@ feature -- Basic operations
 	
 	execute is
 				-- Execute `Current'.
-		local
-			sensitive_i: EV_SENSITIVE_I
-			sensitive: EV_SENSITIVE
 		do
 			create dialog.make_default
 			dialog.show_modal_to_window (main_window)

@@ -202,25 +202,31 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			-- Mouse Wheel implementation.
-			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
-			elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
-				mouse_wheel_delta := 1
+				
+			if not has_focus and then (a_button = 1 or a_button = 3) then
+					-- We explicitly set the focus for both left and right mouse buttons if not set already
+				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
+			else
+					-- Mouse Wheel implementation.
+				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
+				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
+				elseif a_type = feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM then
+					mouse_wheel_delta := 1
+				end
+				if a_button = 4 and mouse_wheel_delta > 0 then
+					-- This is for scrolling up
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([mouse_wheel_delta])
+					end
+				elseif a_button = 5 and mouse_wheel_delta > 0 then
+					-- This is for scrolling down
+					if mouse_wheel_actions_internal /= Void then
+						mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
+					end
+				end
 			end
-			if a_button = 4 and mouse_wheel_delta > 0 then
-				-- This is for scrolling up
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
-				end
-			elseif a_button = 5 and mouse_wheel_delta > 0 then
-				-- This is for scrolling down
-				if mouse_wheel_actions_internal /= Void then
-					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
-				end
-			end	
 			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
@@ -380,6 +386,7 @@ feature -- Status setting
 		local
 			i: INTEGER
 		do
+			disable_debugger
 			App_implementation.set_capture_widget (interface)
 			feature {EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
@@ -408,6 +415,7 @@ feature -- Status setting
 				0 -- guint32 time
 			)
 			feature {EV_GTK_EXTERNALS}.gdk_keyboard_ungrab (0) -- guint32 time
+			enable_debugger
 		end
 
 feature -- Element change
@@ -576,6 +584,32 @@ feature {NONE} -- Implementation
 	cursor_signal_tag: INTEGER
 			-- Tag returned from Gtk used to disconnect `enter-notify' signal
 			
+	enable_debugger is
+			-- 
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"[
+#ifdef WORKBENCH
+			extern int debug_mode;
+			debug_mode = 1;
+#endif
+			]"
+		end
+
+	disable_debugger is
+			-- 
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"[
+#ifdef WORKBENCH
+			extern int debug_mode;
+			debug_mode = 0;
+#endif
+			]"
+		end
+	
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 
 	store_minimum_size is

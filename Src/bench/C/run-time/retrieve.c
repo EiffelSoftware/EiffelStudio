@@ -600,6 +600,9 @@ rt_private void correct_object_mismatch (
 	EIF_BOOLEAN collecting;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
+
+	RT_GC_PROTECT(object);
+	RT_GC_PROTECT(values);
 	set_mismatch_information (object, values, conversions);
 #ifdef RECOVERABLE_DEBUG
 	printf ("  calling correct_mismatch on %s [%p]\n", EIF_OBJECT_TYPE (object), object);
@@ -611,6 +614,8 @@ rt_private void correct_object_mismatch (
 	if (collecting)
 		gc_run ();
 	c_check_assert (asserting);
+
+	RT_GC_WEAN_N(2);
 }
 
 rt_private void correct_one_mismatch (

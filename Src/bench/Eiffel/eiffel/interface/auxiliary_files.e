@@ -397,7 +397,7 @@ feature -- Plug and Makefile file
 			correct_mismatch_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
-			has_dispose, final_mode: BOOLEAN
+			final_mode: BOOLEAN
 			plug_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 
@@ -514,7 +514,6 @@ feature -- Plug and Makefile file
 									%long *eif_lower_table = (long *)0;%N")
 			end
 
-			has_dispose := System.disposable_class /= Void and System.disposable_class.is_compiled
 
 			if final_mode then
 				init_name :=
@@ -529,12 +528,10 @@ feature -- Plug and Makefile file
 				buffer.putstring (exp_init_name)
 				buffer.putstring ("[])();%N")
 
-				if has_dispose then
-					dispose_name := Encoder.table_name (system.routine_id_counter.dispose_rout_id).twin
-					buffer.putstring ("extern char *(*")
-					buffer.putstring (dispose_name)
-					buffer.putstring ("[])();%N%N")
-				end
+				dispose_name := Encoder.table_name (system.routine_id_counter.dispose_rout_id).twin
+				buffer.putstring ("extern char *(*")
+				buffer.putstring (dispose_name)
+				buffer.putstring ("[])();%N%N")
 			end
 
 				-- Declaration and definition of the egc_init_plug function.
@@ -604,7 +601,7 @@ feature -- Plug and Makefile file
 
 				-- Dispose routine id from class DISPOSABLE (if compiled) 
 			buffer.putstring ("%Tegc_disp_rout_id = ")
-			if has_dispose then
+			if System.disposable_class /= Void and System.disposable_class.is_compiled then
 				buffer.putint (System.disposable_dispose_id)
 			else
 				buffer.putstring ("-1")
@@ -664,13 +661,11 @@ feature -- Plug and Makefile file
 				buffer.putstring (exp_init_name)
 				buffer.putstring (";%N")
 
-				if has_dispose then
-						-- Dispose routines
-					buffer.putstring ("%Tegc_edispose = ")
-					buffer.putstring ("(void (**)(void)) ")
-					buffer.putstring (dispose_name)
-					buffer.putstring (";%N")
-				end
+					-- Dispose routines
+				buffer.putstring ("%Tegc_edispose = ")
+				buffer.putstring ("(void (**)(void)) ")
+				buffer.putstring (dispose_name)
+				buffer.putstring (";%N")
 
 				buffer.putstring ("%Tegc_ce_rname = egc_ce_rname_init;%N")
 				buffer.putstring ("%Tegc_fnbref = egc_fnbref_init;%N")

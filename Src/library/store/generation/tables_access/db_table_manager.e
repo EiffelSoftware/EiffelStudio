@@ -59,11 +59,8 @@ feature -- Status report
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has an error occured during last database operation?
-		do
-			Result := database_manager.has_error or else has_local_error
-		end
 
 	error_message: STRING
 			-- Error message if an error occured during last
@@ -102,7 +99,9 @@ feature -- Access
 			no_error: not has_error
 			is_id_selection: is_id_selection
 		do
-			Result := result_list.first
+			if not result_list.is_empty then
+				Result := result_list.first
+			end
 		end
 
 --	located_codes (tablecode, attributecode: INTEGER) is
@@ -139,7 +138,7 @@ feature -- Access
 --				if code_list /= Void and then code_list.count = 1 then
 --					Result := code_list.first.codestring
 --				else
---					has_local_error := True
+--					has_error := True
 --					error_message := "Error in table CODES: no value for code "
 --							+ codeinteger.out + " located in "
 --							+ codes_description.Table_name + "/"
@@ -299,7 +298,12 @@ feature -- Queries
 		require
 			meaningful_select: s /= Void
 		do
+			has_error := False
 			Result := database_manager.load_integer_with_select (s)
+			if database_manager.has_error then
+				has_error := True
+				error_message := selection_failed (s) + database_manager.error_message
+			end
 		end
 
 	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): ARRAYED_LIST [DB_TABLE] is
@@ -311,9 +315,13 @@ feature -- Queries
 			obj: DB_TABLE
 		do
 			obj := tables.obj (tablecode)
+			has_error := False
 			Result := database_manager.load_list_with_select (query, obj)
+			if database_manager.has_error then
+				has_error := True
+				error_message := selection_failed (query) + database_manager.error_message
+			end
 		end
-
 
 feature -- Queries without result to load.
 
@@ -327,7 +335,7 @@ feature -- Queries without result to load.
 --				create db_change.make
 --				updater_build := True
 --			else
---				has_local_error := True
+--				has_error := True
 --				error_message := "Failure preparing an update."
 --			end
 --		rescue
@@ -344,11 +352,11 @@ feature -- Queries without result to load.
 --			rescued: BOOLEAN
 --		do
 --			if not rescued then
---				has_local_error := False
+--				has_error := False
 --				db_change.set_query (a_query)
 --				db_change.execute_query				
 --			else
---				has_local_error := True
+--				has_error := True
 --				error_message := "Database query execution failure : " + s
 --			end
 --		rescue
@@ -366,7 +374,7 @@ feature -- Queries without result to load.
 --			if not rescued then
 --				session_control.commit		
 --			else
---				has_local_error := True
+--				has_error := True
 --				error_message := "Database commit failure."
 --			end
 --		rescue
@@ -392,7 +400,8 @@ feature -- Update
 			proc_name: STRING
 		do
 			if not rescued then
-				has_local_error := False
+				has_error := False
+				session_control.reset
 				description := tablerow.table_description
 				proc_name := "UPDATE_" + description.Table_name
 				create pr.make (proc_name)
@@ -402,12 +411,17 @@ feature -- Update
 						description.attribute_list)
 				pr.execute (expr)
 				expr.clear_all
+						-- Patch.
+				if session_control.error_code = 1001 then
+					session_control.reset
+				end
 				commit
-				if has_error then
+				if database_manager.has_error then
+					has_error := True
 					error_message := Update_failed + database_manager.error_message
 				end
 			else
-				has_local_error := True
+				has_error := True
 				error_message := "An error occured while executing the following procedure in the database: " + proc_name
 						+ ".%NPlease keep this dialog open and contact your DBA."
 			end
@@ -428,6 +442,8 @@ feature -- Update
 			table_descr: DB_TABLE_DESCRIPTION
 		do
 			if not rescued then
+				has_error := False
+				session_control.reset
 				create pr.make (proc_name)
 				pr.load
 				table_descr := an_obj.table_description
@@ -437,11 +453,12 @@ feature -- Update
 				pr.execute (expr)
 				expr.clear_all
 				commit
-				if has_error then
+				if database_manager.has_error then
+					has_error := True
 					error_message := Update_failed + database_manager.error_message
 				end
 			else
-				has_local_error := True
+				has_error := True
 				error_message := "Database procedure execution failure: " + proc_name
 			end
 		rescue
@@ -564,7 +581,8 @@ feature {NONE}-- Deletions
 			q := "delete from " + description.Table_name + " where " + description.id_name
 				+ " = " + description.printable_id
 			database_manager.execute_query (q)
-			if has_error then
+			if database_manager.has_error then
+				has_error := True
 				error_message := Deletion_failed + database_manager.error_message
 			end
 		end 
@@ -576,7 +594,7 @@ feature {NONE}-- Deletions
 			prepare_select_with_table (table_code)
 			add_value_qualifier (fkey_code, fkey_value.out)
 			load_result
-			if not has_error then
+			if not database_manager.has_error then
 				if result_list /= Void then
 					from
 						result_list.start
@@ -609,33 +627,17 @@ feature {NONE} -- Implementation
 
 	Id_code: INTEGER is 1
 
-	db_change: DB_CHANGE
+--	db_change: DB_CHANGE
 
 	create_item_with_tablecode (an_obj: DB_TABLE; tablecode: INTEGER) is
 			--	Store in the DB object `an_obj'.
-		local
-			rescued: BOOLEAN
-			store_objects: DB_STORE
-			rep: DB_REPOSITORY
 		do
-			if not rescued then
-				has_local_error := False
-				create store_objects.make
-				rep := repository_list.i_th (tablecode)
-				store_objects.set_repository (rep)
-				store_objects.put (an_obj)	
-				commit
-				if has_error then
-					error_message := Creation_failed + database_manager.error_message
-				end
-			else
-				has_local_error := True
-				error_message := "An error occured while creating a table row in the database.%NTable%
-						% name is " + an_obj.table_description.Table_name + ".%N"
+			has_error := False
+			database_manager.insert_with_repository (an_obj, repository_list.i_th (tablecode))
+			if database_manager.has_error then
+				has_error := True
+				error_message := Creation_failed + database_manager.error_message
 			end
-		rescue
-			rescued := TRUE
-			retry
 		end
 
 	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING is
@@ -672,13 +674,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Status report implementation
-
-	has_local_error: BOOLEAN
-			-- Has an error occured during last database operation
-			-- in this class?
-
 feature {NONE} -- Error messages
+
+	selection_failed (query: STRING): STRING is
+			-- Database selection failed.
+		do
+			Result := "Database selection failed:%NSQL query was: "
+					+ query + "%NDatabase message is: "
+		end
 
 	Update_failed: STRING is
 			-- Database update failed.

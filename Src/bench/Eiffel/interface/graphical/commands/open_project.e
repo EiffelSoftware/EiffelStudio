@@ -11,8 +11,7 @@ inherit
 
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND;
-	SHARED_APPLICATION_EXECUTION
+	ICONED_COMMAND
 
 creation
 
@@ -112,7 +111,6 @@ feature -- Project Initialization
 				else
 						-- Create a new project.
 					Eiffel_project.make (project_dir);
-					Application.initialize;
 					!! e_displayer.make (Error_window);
 					Eiffel_project.set_error_displayer (e_displayer)
 					title := clone (l_New_project);
@@ -135,7 +133,6 @@ feature -- Project Initialization
 					set_global_cursor (watch_cursor);
 					retrieve_project (project_dir);
 					if not Eiffel_project.error_occurred then
-						Application.initialize;
 						!! e_displayer.make (Error_window);
 						Eiffel_project.set_error_displayer (e_displayer)
 						title := clone (l_Project);

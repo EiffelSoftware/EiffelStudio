@@ -579,16 +579,18 @@ feature -- Graphical Interface
 				--| on demand and not on purpose.
 			!! edit_feature_menu.make ("Feature", edit_menu);
 			edit_feature_menu.button.set_insensitive;
-			!! format_feature_menu.make ("Feature", format_menu);
-			format_feature_menu.button.set_insensitive;
-			!! special_feature_menu.make ("Feature", special_menu);
-
 			!! edit_object_menu.make ("Object", edit_menu);
 			edit_object_menu.button.set_insensitive;
-			!! special_object_menu.make ("Object", special_menu);
-			special_object_menu.button.set_insensitive;
+
+			!! format_feature_menu.make ("Feature", format_menu);
+			format_feature_menu.button.set_insensitive;
 			!! format_object_menu.make ("Object", format_menu);
 			format_object_menu.button.set_insensitive;
+
+			!! special_feature_menu.make ("Feature", special_menu);
+			special_feature_menu.button.set_insensitive;
+			!! special_object_menu.make ("Object", special_menu);
+			special_object_menu.button.set_insensitive;
 
 			!! sep.make ("", special_menu);
 			!! case_storage_cmd.make (Current);
@@ -1084,7 +1086,7 @@ feature -- Update
 		local
 			new_tool: OBJECT_W
 		do
-			new_tool := window_manager.dialog_object_window;
+			new_tool := window_manager.object_window;
 			new_tool.display;
 			new_tool.process_object (a_stone)
 		end;
@@ -1129,115 +1131,6 @@ feature {NONE} -- Implementation
 	saved_cursor: CURSOR;
 			-- Saved cursor position for displaying the stack
 
-	build_feature_menus is
-			-- Build the feature menus.
-		require
-			feature_part_exists: feature_part /= Void
-		local
-			fp: like feature_part;
-
-			search: EB_MENU_ENTRY;
-			shell: EB_MENU_ENTRY;
-			f_current: EB_MENU_ENTRY;
-			next: EB_MENU_ENTRY;
-			previous: EB_MENU_ENTRY;
-
-			clients: EB_TICKABLE_MENU_ENTRY;
-			hist: EB_TICKABLE_MENU_ENTRY;
-			past: EB_TICKABLE_MENU_ENTRY;
-			flat: EB_TICKABLE_MENU_ENTRY;
-			future: EB_TICKABLE_MENU_ENTRY;
-			stop_points: EB_TICKABLE_MENU_ENTRY;
-			text: EB_TICKABLE_MENU_ENTRY;
-			homonym: EB_TICKABLE_MENU_ENTRY;
-
-			separator: SEPARATOR;
-	
-		do
-
-			fp := feature_part
-			!! search.make (fp.search_cmd_holder.associated_command, edit_feature_menu);
-			fp.search_cmd_holder.set_menu_entry (search);
-			!! shell.make (fp.shell.associated_command, special_feature_menu);
-			fp.shell.set_menu_entry (shell);
-
-			!! separator.make (new_name, special_feature_menu);
-
-			!! f_current.make (fp.current_target_cmd_holder.associated_command, special_feature_menu);
-			fp.current_target_cmd_holder.set_menu_entry (f_current);
-			!! next.make (fp.next_target_cmd_holder.associated_command, special_feature_menu);
-			fp.next_target_cmd_holder.set_menu_entry (next);
-			!! previous.make (fp.previous_target_cmd_holder.associated_command, special_feature_menu);
-			fp.previous_target_cmd_holder.set_menu_entry (previous);
-
-			!! text.make (fp.showtext_frmt_holder.associated_command, format_feature_menu);
-			fp.showtext_frmt_holder.set_menu_entry (text);
-			!! flat.make (fp.showflat_frmt_holder.associated_command, format_feature_menu);
-			fp.showflat_frmt_holder.set_menu_entry (flat);
-			!! separator.make (new_name, format_feature_menu);
-			!! clients.make (fp.showroutclients_frmt_holder.associated_command, format_feature_menu);
-			fp.showroutclients_frmt_holder.set_menu_entry (clients);
-			!! hist.make (fp.showhistory_frmt_holder.associated_command, format_feature_menu);
-			fp.showhistory_frmt_holder.set_menu_entry (hist);
-			!! past.make (fp.showpast_frmt_holder.associated_command, format_feature_menu);
-			fp.showpast_frmt_holder.set_menu_entry (past);
-			!! future.make (fp.showfuture_frmt_holder.associated_command, format_feature_menu);
-			fp.showfuture_frmt_holder.set_menu_entry (future);
-			!! homonym.make (fp.showhomonyms_frmt_holder.associated_command, format_feature_menu);
-			fp.showhomonyms_frmt_holder.set_menu_entry (homonym);
-			!! separator.make (new_name, format_feature_menu);
-			!! stop_points.make (fp.showstop_frmt_holder.associated_command, format_feature_menu);
-			fp.showstop_frmt_holder.set_menu_entry (stop_points);
-
-			set_composite_attributes (edit_feature_menu);
-			set_composite_attributes (format_feature_menu);
-			set_composite_attributes (special_feature_menu)
-		end;
-
-	build_object_menus is
-			-- Build the object menus.
-		local
-			op: like object_part;
-
-			next: EB_MENU_ENTRY;
-			o_current: EB_MENU_ENTRY;
-			previous: EB_MENU_ENTRY;
-			search: EB_MENU_ENTRY;
-			slice: EB_MENU_ENTRY;
-
-			onces: EB_TICKABLE_MENU_ENTRY;
-			attr: EB_TICKABLE_MENU_ENTRY;
-
-			sep: SEPARATOR
-		do
-			op := object_part;
-			!! search.make (op.search_cmd_holder.associated_command, edit_object_menu);
-			op.search_cmd_holder.set_menu_entry (search);
-
-			!! slice.make (op.slice_cmd_holder.associated_command, special_object_menu);
-			slice.remove_activate_action (op.slice_cmd_holder.associated_command, op.slice_cmd_holder.associated_command.tool);
-			slice.add_activate_action (op.slice_cmd_holder.associated_command, Void);
-			op.slice_cmd_holder.set_menu_entry (slice);
-
-			!! sep.make (new_name, special_object_menu);
-
-			!! o_current.make (op.current_target_cmd_holder.associated_command, special_object_menu);
-			op.current_target_cmd_holder.set_menu_entry (o_current);
-			!! next.make (op.next_target_cmd_holder.associated_command, special_object_menu);
-			op.next_target_cmd_holder.set_menu_entry (next);
-			!! previous.make (op.previous_target_cmd_holder.associated_command, special_object_menu);
-			op.previous_target_cmd_holder.set_menu_entry (previous);
-
-			!! onces.make (op.showonce_frmt_holder.associated_command, format_object_menu);
-			op.showonce_frmt_holder.set_menu_entry (onces);
-			!! attr.make (op.showattr_frmt_holder.associated_command, format_object_menu);
-			op.showattr_frmt_holder.set_menu_entry (attr);
-
-			set_composite_attributes (edit_object_menu);
-			set_composite_attributes (format_object_menu);
-			set_composite_attributes (special_object_menu)
-		end;
-
 feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 
 	feature_height: INTEGER; 
@@ -1246,11 +1139,17 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 	hide_feature_portion is
 			-- Hide the feature potion and hide the menu entries
 			-- regarding the feature tool.
+		local
+			h: INTEGER
 		do
 			shown_portions := shown_portions - 1;
 			allow_resize;
+			feature_height := feature_form.height;
+			h := height;
 			feature_form.unmanage;
-			set_height (height - feature_height);
+			if not toolkit_is_motif then
+				set_height (h - feature_height);
+			end;
 			forbid_resize;
 			feature_part.close_windows;
 
@@ -1276,8 +1175,8 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			!! mp.set_watch_cursor;
 			if feature_part = Void then
 				feature_form.unmanage;
-				!! feature_part.form_create (feature_form);
-				build_feature_menus
+				!! feature_part.form_create (feature_form, edit_feature_menu, format_feature_menu,
+						special_feature_menu);
 				feature_height := 
 					Project_tool_resources.debugger_feature_height.actual_value;
 			else
@@ -1302,7 +1201,9 @@ feature {DISPLAY_ROUTINE_PORTION} -- Implementation
 			if y + new_height > screen.height - off then
 				new_height := screen.height - off - y
 			end;
-			set_height (new_height);
+			if not toolkit_is_motif then
+				set_height (new_height);
+			end;
 			forbid_resize;
 
 			show_current_stoppoint;
@@ -1317,12 +1218,18 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 	hide_object_portion is
 			-- Hide the object portion and the menu entries
 			-- regarding the feature tool.
+		local
+			h: INTEGER
 		do
 			shown_portions := shown_portions - 1;
 
 			allow_resize;
+			object_height := object_form.height;
+			h := height;
 			object_form.unmanage;
-			set_height (height - object_height);
+			if not toolkit_is_motif then
+				set_height (h - object_height);
+			end;
 			forbid_resize;
 			object_part.close_windows;
 
@@ -1347,8 +1254,8 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 		do
 			!! mp.set_watch_cursor;
 			if object_part = Void then
-				!! object_part.form_create (object_form);
-				build_object_menus;
+				!! object_part.form_create (object_form, edit_object_menu, format_object_menu,
+						special_object_menu);
 				object_height := 
 					Project_tool_resources.debugger_object_height.actual_value;
 			else
@@ -1373,10 +1280,18 @@ feature {DISPLAY_OBJECT_PORTION} -- Implementation
 			if y + new_height > screen.height - off then
 				new_height := screen.height - off - y
 			end;
-			set_height (new_height);
+			if not toolkit_is_motif then
+				set_height (new_height);
+			end;
 			forbid_resize;
 			show_current_object;
 			mp.restore
 		end;
+
+	toolkit_is_motif: BOOLEAN is
+			-- Is the toolkit motif?
+		do
+			Result := toolkit.name.is_equal ("MOTIF")
+		end
 
 end -- class PROJECT_W

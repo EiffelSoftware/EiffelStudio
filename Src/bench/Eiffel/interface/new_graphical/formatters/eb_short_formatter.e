@@ -145,11 +145,7 @@ feature -- Status setting
 			a_class_not_void: a_class /= Void
 		do		
 			class_i ?= a_class
-			if a_class = Void then
-				class_cmd := Void
-			else
-				create_class_cmd
-			end
+			class_cmd := Void
 			must_format := True
 			format
 			if selected then

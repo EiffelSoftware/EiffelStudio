@@ -45,7 +45,6 @@ feature {NONE} -- Initialization
 			-- the bounding rectangle `rect'
 		require
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		do
 			item := cwin_create_elliptic_indirect (rect.item)
 		end
@@ -93,7 +92,6 @@ feature {NONE} -- Initialization
 			-- the rectangle `rect'.
 		require
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		do
 			item := cwin_create_rect_indirect (rect.item)
 		end
@@ -156,7 +154,6 @@ feature -- Status report
 		require
 			exists: exists
 			rect_not_void: rect /= Void
-			rect_exists: rect.exists
 		do
 			Result := cwin_rect_in_region (item, rect.item)
 		end

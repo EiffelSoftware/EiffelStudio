@@ -62,16 +62,12 @@ feature -- Access
 
 	type: INTEGER is
 			-- Bitmap type
-		require
-			exists: exists
 		do
 			Result := cwel_logbitmap_get_type (item)
 		end
 
 	width: INTEGER is
 			-- Bitmap width
-		require
-			exists: exists
 		do
 			Result := cwel_logbitmap_get_width (item)
 		ensure
@@ -80,8 +76,6 @@ feature -- Access
 
 	height: INTEGER is
 			-- Bitmap height
-		require
-			exists: exists
 		do
 			Result := cwel_logbitmap_get_height (item)
 		ensure
@@ -90,8 +84,6 @@ feature -- Access
 
 	width_bytes: INTEGER is
 			-- Bitmap width_bytes
-		require
-			exists: exists
 		do
 			Result := cwel_logbitmap_get_width_bytes (item)
 		ensure
@@ -100,8 +92,6 @@ feature -- Access
 
 	planes: INTEGER is
 			-- Bitmap planes
-		require
-			exists: exists
 		do
 			Result := cwel_logbitmap_get_planes (item)
 		ensure
@@ -110,8 +100,6 @@ feature -- Access
 
 	bits_pixel: INTEGER is
 			-- Bitmap bits_pixel
-		require
-			exists: exists
 		do
 			Result := cwel_logbitmap_get_bits_pixel (item)
 		ensure
@@ -120,8 +108,6 @@ feature -- Access
 
 	bits: POINTER is
 			-- Bitmap bits
-		require
-			exists: exists
 		do
 			result := cwel_logbitmap_get_bits (item)
 		ensure
@@ -132,8 +118,6 @@ feature -- Element change
 
 	set_type (a_type: INTEGER) is
 			-- Set `type' with `a_type'
-		require
-			exists: exists
 		do
 			cwel_logbitmap_set_type (item, a_type)
 		ensure
@@ -143,7 +127,6 @@ feature -- Element change
 	set_width (a_width: INTEGER) is
 			-- Set `width' with `a_width'
 		require
-			exists: exists
 			positive_width: a_width >= 0
 		do
 			cwel_logbitmap_set_width (item, a_width)
@@ -154,7 +137,6 @@ feature -- Element change
 	set_height (a_height: INTEGER) is
 			-- Set `height' with `a_height'
 		require
-			exists: exists
 			positive_height: a_height >= 0
 		do
 			cwel_logbitmap_set_height (item, a_height)
@@ -165,7 +147,6 @@ feature -- Element change
 	set_width_bytes (a_width_bytes: INTEGER) is
 			-- Set `width_bytes' with `a_width_bytes'
 		require
-			exists: exists
 			positive_width_bytes: a_width_bytes >= 0
 		do
 			cwel_logbitmap_set_width_bytes (item, a_width_bytes)
@@ -176,7 +157,6 @@ feature -- Element change
 	set_planes (a_planes: INTEGER) is
 			-- Set `planes' with `a_planes'
 		require
-			exists: exists
 			positive_planes: a_planes >= 0
 		do
 			cwel_logbitmap_set_planes (item, a_planes)
@@ -187,7 +167,6 @@ feature -- Element change
 	set_bits_pixel (a_bits_pixel: INTEGER) is
 			-- Set `bits_pixel' with `a_bits_pixel'
 		require
-			exists: exists
 			positive_bits_pixel: a_bits_pixel >= 0
 		do
 			cwel_logbitmap_set_bits_pixel (item, a_bits_pixel)
@@ -198,7 +177,6 @@ feature -- Element change
 	set_bits (a_bits: POINTER) is
 			-- Set `bits' with `a_bits'
 		require
-			exists: exists
 			bits_not_void: a_bits /= Void
 		do
 			cwel_logbitmap_set_bits (item, a_bits)

@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			-- See class WEL_HS_CONSTANTS for `a_hatch' values.
 		require
 			color_not_void: a_color /= Void
-			color_exists: a_color.exists
 		do
 			structure_make
 			set_style (a_style)
@@ -58,27 +57,20 @@ feature -- Access
 
 	style: INTEGER is
 			-- Brush style
-		require
-			exists: exists
 		do
 			Result := cwel_logbrush_get_style (item)
 		end
 
 	color: WEL_COLOR_REF is
 			-- Brush color
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_logbrush_get_color (item))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	hatch: INTEGER is
 			-- Brush hatch
-		require
-			exists: exists
 		do
 			Result := cwel_logbrush_get_hatch (item)
 		end
@@ -87,8 +79,6 @@ feature -- Element change
 
 	set_style (a_style: INTEGER) is
 			-- Set `style' with `a_style'
-		require
-			exists: exists
 		do
 			cwel_logbrush_set_style (item, a_style)
 		ensure
@@ -98,9 +88,7 @@ feature -- Element change
 	set_color (a_color: WEL_COLOR_REF) is
 			-- Set `color' with `a_color'
 		require
-			exists: exists
 			a_color_not_void: a_color /= Void
-			a_color_exists: a_color.exists
 		do
 			cwel_logbrush_set_color (item, a_color.item)
 		ensure
@@ -109,8 +97,6 @@ feature -- Element change
 
 	set_hatch (a_hatch: INTEGER) is
 			-- Set `hatch' with `a_hatch'
-		require
-			exists: exists
 		do
 			cwel_logbrush_set_hatch (item, a_hatch)
 		ensure
@@ -173,8 +159,7 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	color_not_void: exists implies color /= Void
-	color_exists: exists implies color.exists
+	color_not_void: color /= Void
 
 end -- class WEL_LOG_BRUSH
 

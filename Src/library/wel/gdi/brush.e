@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			-- Make a brush that has the solid `a_color'
 		require
 			a_color_not_void: a_color /= Void
-			a_color_exists: a_color.exists
 		do
 			item := cwin_create_solid_brush (a_color.item)
 		ensure
@@ -50,7 +49,6 @@ feature {NONE} -- Initialization
 			-- See class WEL_HS_CONSTANTS for `a_hatch'
 		require
 			a_color_not_void: a_color /= Void
-			a_color_exists: a_color.exists
 		do
 			item := cwin_create_hatch_brush (a_hatch, a_color.item)
 		ensure
@@ -74,7 +72,6 @@ feature {NONE} -- Initialization
 			-- Make a brush using `a_log_brush'
 		require
 			a_log_brush_not_void: a_log_brush /= Void
-			a_log_brush_exists: a_log_brush.exists
 		do
 			item := cwin_create_brush_indirect (a_log_brush.item)
 		ensure
@@ -99,7 +96,6 @@ feature -- Access
 			Result := log_brush.color
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	hatch: INTEGER is
@@ -118,7 +114,6 @@ feature -- Access
 			!! Result.make_by_brush (Current)
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature {NONE} -- Externals

@@ -108,7 +108,6 @@ feature -- Access
 			!! Result.make_by_pointer (cwel_choose_font_get_rgbcolors (item))
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature -- Element change
@@ -130,7 +129,6 @@ feature -- Element change
 		require
 			exists: exists
 			a_log_font_not_void: a_log_font /= Void
-			a_log_font_exists: a_log_font.exists
 		do
 			log_font := a_log_font
 			add_flag (Cf_inittologfontstruct)

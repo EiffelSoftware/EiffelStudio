@@ -18,8 +18,6 @@ feature -- Access
 
 	log_font: WEL_LOG_FONT is
 			-- Defines the attribut of a font
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_enumlogfont_get_elflogfont (item))
 		ensure
@@ -28,8 +26,6 @@ feature -- Access
 
 	full_name: STRING is
 			-- Specifies a unique name for the font
-		require
-			exists: exists
 		do
 			!! Result.make (0)
 			Result.from_c (cwel_enumlogfont_get_elffullname (item))
@@ -39,8 +35,6 @@ feature -- Access
 
 	style: STRING is
 			-- Specifies the style of the font
-		require
-			exists: exists
 		do
 			!! Result.make (0)
 			Result.from_c (cwel_enumlogfont_get_elfstyle (item))

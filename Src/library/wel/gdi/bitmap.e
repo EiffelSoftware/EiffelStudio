@@ -41,7 +41,6 @@ feature {NONE} -- Initialization
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 			dib_not_void: dib /= Void
-			dib_exists: dib.exists
 		do
 			item := cwin_create_di_bitmap (a_dc.item, dib.item,
 				Cbm_init, dib.item_bits, dib.item, mode)
@@ -77,7 +76,6 @@ feature -- Access
 			!! Result.make_by_bitmap (Current)
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 feature -- Basic operations
@@ -93,7 +91,6 @@ feature -- Basic operations
 			a_dc_not_void: a_dc /= Void
 			a_dc_exists: a_dc.exists
 			dib_not_void: dib /= Void
-			dib_exists: dib.exists			
 		do
 			cwin_set_di_bits (a_dc.item, item, start_line, length,
 				dib.item_bits, dib.item, mode)

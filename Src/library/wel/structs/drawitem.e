@@ -34,16 +34,12 @@ feature -- Access
 	ctl_type: INTEGER is
 			-- Control type.
 			-- See class WEL_ODT_CONSTANTS.
-		require
-			exists: exists
 		do
 			Result := cwel_drawitemstruct_get_ctltype (item)
 		end
 
 	ctl_id: INTEGER is
 			-- Control identifier
-		require
-			exists: exists
 		do
 			Result := cwel_drawitemstruct_get_ctlid (item)
 		end
@@ -52,8 +48,6 @@ feature -- Access
 			-- Menu item identifier for a menu item or
 			-- the index of the item in a list box or
 			-- combo box
-		require
-			exists: exists
 		do
 			Result := cwel_drawitemstruct_get_itemid (item)
 		end
@@ -61,8 +55,6 @@ feature -- Access
 	item_action: INTEGER is
 			-- Drawing action required.
 			-- See class WEL_ODA_CONSTANTS.
-		require
-			exists: exists
 		do
 			Result := cwel_drawitemstruct_get_itemaction (item)
 		end
@@ -71,16 +63,12 @@ feature -- Access
 			-- Visual state of the item after the current
 			-- drawing action takes place.
 			-- See class WEL_ODS_CONSTANTS.
-		require
-			exists: exists
 		do
 			Result := cwel_drawitemstruct_get_itemstate (item)
 		end
 
 	window_item: WEL_CONTROL is
 			-- Identifies the control.
-		require
-			exists: exists
 		do
 			Result ?= windows.item (cwel_drawitemstruct_get_hwnditem (item))
 		end
@@ -92,8 +80,6 @@ feature -- Access
 	rect_item: WEL_RECT is
 			-- Rectangle that defines the boundaries
 			-- of the control to be drawn.
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_drawitemstruct_get_rcitem (item))
 		ensure
@@ -102,8 +88,6 @@ feature -- Access
 
 	item_data: INTEGER is
 			-- 32-bit value associated with the menu item.
-		require
-			exists: exists
 		do
 			Result := cwel_drawitemstruct_get_itemdata (item)
 		end
@@ -171,7 +155,7 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	dc_exists: exists implies dc /= Void and then dc.exists
+	dc_exists: dc /= Void and then dc.exists
 
 end -- class WEL_DRAW_ITEM_STRUCT
 

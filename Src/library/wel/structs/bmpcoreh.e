@@ -37,29 +37,21 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	width: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapcoreheader_get_width (item)
 		end
 
 	height: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapcoreheader_get_height (item)
 		end
 
 	planes: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapcoreheader_get_planes (item)
 		end
 
 	bit_count: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_bitmapcoreheader_get_bitcount (item)
 		end
@@ -67,8 +59,6 @@ feature -- Access
 feature -- Element change
 
 	set_width (a_width: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapcoreheader_set_width (item, a_width)
 		ensure
@@ -76,8 +66,6 @@ feature -- Element change
 		end
 
 	set_height (a_height: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapcoreheader_set_height (item, a_height)
 		ensure
@@ -85,8 +73,6 @@ feature -- Element change
 		end
 
 	set_planes (a_planes: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapcoreheader_set_planes (item, a_planes)
 		ensure
@@ -94,8 +80,6 @@ feature -- Element change
 		end
 
 	set_bit_count (a_bit_count: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_bitmapcoreheader_set_bitcount (item, a_bit_count)
 		ensure

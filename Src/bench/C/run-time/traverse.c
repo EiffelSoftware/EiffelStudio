@@ -34,6 +34,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 #include "eif_memory.h"
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
+#include "rt_struct.h"
 #include "x2c.h"		/* For LNGPAD macros... */
 #include <string.h>				/* For memset() */
 #include "rt_assert.h"
@@ -115,30 +116,20 @@ rt_private void account_attributes (int16 dtype)
 		int16 *gtypes = System (dtype).cn_gtypes[i] + 1;
 		for (k=0; gtypes[k] != TERMINATOR; k++) {
 			int gtype = gtypes[k];
-			if (gtype <= EXPANDED_LEVEL)
-				gtype = EXPANDED_LEVEL - gtype;
 			if (gtype == TUPLE_TYPE) {
-				k = k + 3;
+				k = k + TUPLE_OFFSET;
 				gtype = gtypes[k];
-				if (gtype <= EXPANDED_LEVEL) {
-					gtype = EXPANDED_LEVEL - gtype;
-				}
 			}
-			if
-				((gtype == LIKE_FEATURE_TYPE)||(gtype == LIKE_PFEATURE_TYPE) ||
-				(gtype == LIKE_ARG_TYPE) || (gtype == LIKE_CURRENT_TYPE))
-			{
+			if (gtype == FORMAL_TYPE) {
+					/* Skip formal position, no special treatment to be done. */
 				k = k + 1;
-				gtype = gtypes [k];
-				if (gtype <= EXPANDED_LEVEL) {
-					gtype = EXPANDED_LEVEL - gtype;
+			} else {
+				if (gtype >= 0) {
+					gtype = RTUD (gtype);
 				}
-			}
-			if (gtype >= 0) {
-				gtype = RTUD (gtype);
-			}
-			if (gtype >= 0) {
-				account[gtype] |= ACCOUNT_TYPE;
+				if (gtype >= 0) {
+					account[gtype] |= ACCOUNT_TYPE;
+				}
 			}
 		}
 	}
@@ -188,21 +179,19 @@ rt_private void account_type (uint32 dftype, int p_accounting)
 		{
 			dtype = *(l_cidarr++);
 
-			if (dtype <= EXPANDED_LEVEL)
-				dtype = (int16) (EXPANDED_LEVEL - dtype); /* expanded parameter */
-
 			if (dtype == TUPLE_TYPE) {
-				i = i - 3;
-				l_cidarr += 3;
+				i = i - TUPLE_OFFSET;
+				l_cidarr += TUPLE_OFFSET;
 				dtype = *l_cidarr;
-				if (dtype <= EXPANDED_LEVEL) {
-					dtype = EXPANDED_LEVEL - dtype;
-				}
 			}
 
-			/* No need to handle LIKE_XX_TYPE since they should not appear in an object
-			 * type.
-			 */
+				/* No need to handle special type since they should not appear in an object
+				 * type.
+				 */
+			CHECK ("No special type",
+				(dtype != LIKE_CURRENT_TYPE) && (dtype != LIKE_ARG_TYPE) &&
+				(dtype != LIKE_FEATURE_TYPE) && (dtype != LIKE_PFEATURE_TYPE) &&
+				(dtype != FORMAL_TYPE));
 
 			if (dtype >= 0)
 				account[dtype] |= ACCOUNT_TYPE;

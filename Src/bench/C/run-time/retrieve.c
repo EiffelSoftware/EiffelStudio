@@ -35,6 +35,7 @@ doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retr
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
 #include "rt_globals.h"
+#include "rt_struct.h"
 #include "rt_compress.h"
 #include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
@@ -85,6 +86,40 @@ extern void print_object (EIF_REFERENCE object);
 
 #define MAX_GENERICS      4		/* Number of generic parameters that are statically
 								   allocated */
+
+/* Constants used for generic conformance in version 5.4 and older. */
+#define OLD_CHARACTER_TYPE		-2
+#define OLD_BOOLEAN_TYPE		-3
+#define OLD_INTEGER_32_TYPE		-4
+#define OLD_REAL_TYPE			-5
+#define OLD_DOUBLE_TYPE			-6
+#define OLD_BIT_TYPE			-7
+#define OLD_POINTER_TYPE		-8
+#define OLD_TUPLE_TYPE			-15
+#define OLD_INTEGER_8_TYPE		-16
+#define OLD_INTEGER_16_TYPE		-17
+#define OLD_INTEGER_64_TYPE		-18
+#define OLD_WIDE_CHAR_TYPE		-19
+#define OLD_FORMAL_TYPE			-32
+#define OLD_EXPANDED_LEVEL		-256
+
+/* Constants used for TUPLE type identification in version 5.4 and older. */
+#define OLD_EIF_BOOLEAN_CODE	'b'
+#define OLD_EIF_CHARACTER_CODE	'c'
+#define OLD_EIF_DOUBLE_CODE		'd'
+#define OLD_EIF_REAL_CODE		'f'
+#define OLD_EIF_INTEGER_CODE	'i'
+#define OLD_EIF_INTEGER_32_CODE	'i'
+#define OLD_EIF_POINTER_CODE	'p'
+#define OLD_EIF_REFERENCE_CODE	'r'
+#define OLD_EIF_INTEGER_8_CODE	'j'
+#define OLD_EIF_INTEGER_16_CODE	'k'
+#define OLD_EIF_INTEGER_64_CODE	'l'
+#define OLD_EIF_WIDE_CHAR_CODE	'u'
+
+
+
+
 #ifndef EIF_THREADS
 /*
 doc:	<attribute name="rt_table" return_type="struct htable *" export="shared">
@@ -915,6 +950,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 			independent_retrieve_init (RETRIEVE_BUFFER_SIZE);
 			break;
 		case RECOVERABLE_STORE_5_3:
+		case INDEPENDENT_STORE_5_5:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = RECOVERABLE_STORE;
 			rt_kind_version = rt_type;
@@ -988,6 +1024,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 		case INDEPENDENT_STORE_4_4:
 		case INDEPENDENT_STORE_5_0:
 		case RECOVERABLE_STORE_5_3:
+		case INDEPENDENT_STORE_5_5:
 			independent_retrieve_reset ();
 			break;
 	}
@@ -2729,57 +2766,22 @@ static char *type2name (long type)
 	return name;
 }
 
-rt_shared char *name_of_basic_attribute_type (int16 type)
-{
-	char *result;
-	CHECK ("Basic type", type < 0 && type > EXPANDED_LEVEL);
-	switch (type) {
-		case CHARACTER_TYPE:     result = "CHARACTER";     break;
-		case BOOLEAN_TYPE:       result = "BOOLEAN";       break;
-		case INTEGER_TYPE:       result = "INTEGER";       break;
-		case REAL_TYPE:          result = "REAL";          break;
-		case DOUBLE_TYPE:        result = "DOUBLE";        break;
-		case BIT_TYPE:           result = "BIT";           break;
-		case POINTER_TYPE:       result = "POINTER";       break;
-		case NONE_TYPE:          result = "NONE";          break;
-		case INTERNAL_TYPE:      result = "INTERNAL";      break;
-		case LIKE_ARG_TYPE:      result = "LIKE_ARG";      break;
-		case LIKE_CURRENT_TYPE:  result = "like Current";  break;
-		case LIKE_PFEATURE_TYPE: result = "LIKE_PFEATURE"; break;
-		case LIKE_FEATURE_TYPE:  result = "LIKE_FEATURE";  break;
-		case TUPLE_TYPE:         result = "TUPLE";         break;
-		case INTEGER_8_TYPE:     result = "INTEGER_8";     break;
-		case INTEGER_16_TYPE:    result = "INTEGER_16";    break;
-		case INTEGER_64_TYPE:    result = "INTEGER_64";    break;
-		default:                 result = "**UNDEFINED**"; break;
-	}
-	return result;
-}
-
 rt_shared char *name_of_attribute_type (int16 **type)
 {
 	static char buffer [512 + 9];
 	char *result;
-	int is_expanded = 0;
 	int16 dftype = **type;
 
-	if (dftype <= EXPANDED_LEVEL) {
-		dftype = EXPANDED_LEVEL - dftype;
-		is_expanded = 1;
-	}
+	REQUIRE ("Not a formal parameter", dftype != FORMAL_TYPE);
 
 	if (dftype == TUPLE_TYPE) {
-		*type += 3;
+		*type += TUPLE_OFFSET;
 		dftype = **type;
-		if (dftype <= EXPANDED_LEVEL) {
-			dftype = EXPANDED_LEVEL - dftype;
-			is_expanded = 1;
-		}
 	}
 
 	if (dftype >= 0) {
 		dftype = RTUD(dftype);
-		if (!is_expanded) {
+		if (EIF_IS_EXPANDED_TYPE(System (dftype).flags)) {
 			result = System (dftype).cn_generator;
 		} else {
 			sprintf (buffer, "expanded %s", System (dftype).cn_generator);
@@ -2789,17 +2791,17 @@ rt_shared char *name_of_attribute_type (int16 **type)
 		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - dftype);
 		result = buffer;
 	}
-	else
-		result = name_of_basic_attribute_type (dftype);
 	return result;
 }
 
 rt_private char *name_of_old_attribute_type (int16 **type)
 {
-	rt_shared char *name_of_basic_attribute_type (int16 type);
 	int16 dftype = **type;
 	static char buffer [512 + 9];
 	char *result;
+
+	REQUIRE ("Not a formal parameter", dftype != FORMAL_TYPE);
+
 	if (dftype >= 0) {
 		if (type_conversions->type_index[dftype] == TYPE_UNDEFINED) {
 			sprintf (buffer, "NOT_YET_KNOWN (%d)", dftype);
@@ -2807,25 +2809,13 @@ rt_private char *name_of_old_attribute_type (int16 **type)
 		}
 		else
 			result = type_description (dftype)->name;
-	} else if (dftype <= EXPANDED_LEVEL) {
-		if (type_conversions->type_index[EXPANDED_LEVEL - dftype] == TYPE_UNDEFINED) {
-			sprintf (buffer, "NOT_YET_KNOWN (%d)", EXPANDED_LEVEL - dftype);
-			result = buffer;
-		}
-		else {
-			sprintf (buffer, "expanded %s",
-					type_description (EXPANDED_LEVEL - dftype)->name);
-			result = buffer;
-		}
 	} else if (dftype == TUPLE_TYPE) {
-		(*type) += 3;
+		(*type) += TUPLE_OFFSET;
 		result = "TUPLE";
 	} else if (dftype <= FORMAL_TYPE) {
 		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - dftype);
 		result = buffer;
 	}
-	else
-		result = name_of_basic_attribute_type (dftype);
 	return result;
 }
 
@@ -2942,67 +2932,135 @@ rt_shared void print_object_summary (
 
 #endif
 
-rt_private int attribute_type_matched (int16 **gtype, int16 **atype)
+/*
+doc:	<routine name="old_attribute_type_matched" export="private">
+doc:		<summary>Find out if `gtype' and `atype' corresponds to the same type. This is similar to `attribute_type_matched' except this one takes care of storable versions that are strictly less than INDEPENDENT_STORE_5_5.</summary>
+doc:		<param name="gtype" type="int16 **">Type array for attribute defined in retrieving system.</param>
+doc:		<param name="atype" type="int16 **">Type array for attribute defined in storing system (here it uses the encoding for storable versions that are strictly less than INDEPENDENT_STORE_5_5.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>GC mutex</synchronization>
+doc:	</routine>
+*/
+rt_private int old_attribute_type_matched (int16 **gtype, int16 **atype)
 {
 	int result = 1;
 	int16 dftype = **gtype;
 	int16 aftype = **atype;
 
-	if (dftype <= EXPANDED_LEVEL) {
-		if (aftype <= EXPANDED_LEVEL) {
-			dftype = EXPANDED_LEVEL - dftype;
-			aftype = EXPANDED_LEVEL - aftype;
-		} else {
-			result = 0;
-		}
+	CHECK("version valid", rt_kind_version < INDEPENDENT_STORE_5_5);
+
+	if (aftype <= OLD_EXPANDED_LEVEL) {
+		aftype = OLD_EXPANDED_LEVEL - aftype;
 	}
 
-	if (result && (dftype == TUPLE_TYPE)) {
-		if (aftype == TUPLE_TYPE) {
-			(*gtype) += 3;
+	if (aftype == OLD_TUPLE_TYPE) {
+		if (dftype == TUPLE_TYPE) {
+				/* Former encoding had 3 values: uniformizer, nb generics, TUPLE base id. */
 			(*atype) += 3;
-			dftype = **gtype;
+				/* New encoding has `TUPLE_OFFSET' values that we can skip. */
+			(*gtype) += TUPLE_OFFSET;
 			aftype = **atype;
-
-			if (dftype <= EXPANDED_LEVEL) {
-				if (aftype <= EXPANDED_LEVEL) {
-					dftype = EXPANDED_LEVEL - dftype;
-					aftype = EXPANDED_LEVEL - aftype;
-				} else {
-					result = 0;
-				}
-			}
+			dftype = **gtype;
 		} else {
 			result = 0;
 		}
 	}
 
-	if
-		((result) && ((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE) ||
-		(dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE)))
-	{
-		if
-			((aftype == LIKE_FEATURE_TYPE)||(aftype == LIKE_PFEATURE_TYPE) ||
-			(aftype == LIKE_ARG_TYPE) || (aftype == LIKE_CURRENT_TYPE))
-		{
-			(*gtype) += 2;
-			(*atype) += 2;
-			result = attribute_type_matched (gtype, atype);
-		} else {
-			result = 0;
-		}
-	} else if (result) {
-		if (dftype >= 0  &&  aftype >= 0) {
-			int16 g = RTUD (dftype);
-			if (type_defined (aftype)) {
-				result = (g == type_description (aftype)->new_type);
+	if (result) {
+		if (aftype <= OLD_FORMAL_TYPE) {
+			if (dftype == FORMAL_TYPE) {
+					/* Former encoding store formal position in `aftype', now next element
+					 * is position. */
+				(*gtype)++;
+				dftype = **gtype;
+				result = ((OLD_FORMAL_TYPE - aftype ) == dftype);
 			} else {
 				result = 0;
 			}
-		} else if (dftype < 0  &&  aftype < 0) {
-				result = (dftype == aftype);
+		} else if (aftype == OLD_BIT_TYPE) {
+			if (dftype == egc_bit_dtype) {
+				(*atype)++;
+				(*gtype)++;
+				result = (**gtype == **atype);
+			} else {
+				result = 0;
+			}
+		} else if (aftype < 0) {
+				/* Former encoding has a special encoding for basic types, new one doesn't need it.
+				 * However we need to apply `RTUD_INV' on `egc_xxx_dtype' to have a valid
+				 * typearr identifier. */
+			switch (aftype) {
+				case OLD_CHARACTER_TYPE: result = (dftype == RTID(egc_char_dtype)); break;
+				case OLD_BOOLEAN_TYPE: result = (dftype == RTID(egc_bool_dtype)); break;
+				case OLD_INTEGER_8_TYPE: result = (dftype == RTID(egc_int8_dtype)); break;
+				case OLD_INTEGER_16_TYPE: result = (dftype == RTID(egc_int16_dtype)); break;
+				case OLD_INTEGER_32_TYPE: result = (dftype == RTID(egc_int32_dtype)); break;
+				case OLD_INTEGER_64_TYPE: result = (dftype == RTID(egc_int64_dtype)); break;
+				case OLD_REAL_TYPE: result = (dftype == RTID(egc_real_dtype)); break;
+				case OLD_DOUBLE_TYPE: result = (dftype == RTID(egc_doub_dtype)); break;
+				case OLD_POINTER_TYPE: result = (dftype == RTID(egc_point_dtype)); break;
+				case OLD_WIDE_CHAR_TYPE: result = (dftype == RTID(egc_wchar_dtype)); break;
+				default:
+					result = 0;
+			}
 		} else {
-			result = 0;
+			if (dftype >= 0) {
+					/* This is a normal type, nothing special to be done. */
+				int16 g = RTUD(dftype);
+				if (type_defined (aftype)) {
+					result = (g == type_description (aftype)->new_type);
+				} else {
+					result = 0;
+				}
+			} else {
+				result = 0;
+			}
+		}
+	}
+
+	return result;
+}
+
+rt_private int attribute_type_matched (int16 **gtype, int16 **atype)
+{
+	RT_GET_CONTEXT
+	int result = 1;
+	int16 dftype = **gtype;
+	int16 aftype = **atype;
+
+	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
+		result = old_attribute_type_matched (gtype, atype);
+	} else {
+		if (dftype == TUPLE_TYPE) {
+			if (aftype == TUPLE_TYPE) {
+				(*gtype) += TUPLE_OFFSET;
+				(*atype) += TUPLE_OFFSET;
+				dftype = **gtype;
+				aftype = **atype;
+			} else {
+				result = 0;
+			}
+		}
+
+		if (dftype == FORMAL_TYPE) {
+			if (aftype == FORMAL_TYPE) {
+				(*gtype)++;
+				(*atype)++;
+				result = (**gtype == **atype ? 1 : 0);
+			} else {
+				result = 0;
+			}
+		} else if (result) {
+			if (dftype >= 0  &&  aftype >= 0) {
+				int16 g = RTUD (dftype);
+				if (type_defined (aftype)) {
+					result = (g == type_description (aftype)->new_type);
+				} else {
+					result = 0;
+				}
+			} else {
+				result = (dftype == aftype ? 1 : 0);
+			}
 		}
 	}
 
@@ -3014,8 +3072,6 @@ rt_private int attribute_types_matched (int16 *gtypes, int16 *atypes)
 	RT_GET_CONTEXT
 	int result;
 	int16 atype = atypes[0];
-	if (atype <= EXPANDED_LEVEL)
-		atype = EXPANDED_LEVEL - atype;
 	if (type_defined (atype) &&
 			type_description (atype)->new_dftype != TYPE_UNDEFINED) {
 		int16 dftype;
@@ -3489,7 +3545,7 @@ rt_private void check_mismatch (type_descriptor *t)
 	for (i=0; i<System (t->new_type).cn_nbattr; i++) {
 		int found = 0;
 		int k;
-		for (k=0; k<t->attribute_count && !found; k++)
+		for (k = 0; k < t->attribute_count && !found; k++)
 			found = (t->attributes[k].new_index == i);
 		if (!found) {
 			t->mismatched = 1;
@@ -3660,6 +3716,21 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	printf ("-- Reading header: %d types\n", type_count);
 #endif
 
+	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
+			/* We need to make sure that `dtypes' array is large enough
+			 * to store basic types ids. */
+		if (egc_bool_dtype > old_max_types) old_max_types = egc_bool_dtype;
+		if (egc_int8_dtype > old_max_types) old_max_types = egc_int8_dtype;
+		if (egc_int16_dtype > old_max_types) old_max_types = egc_int16_dtype;
+		if (egc_int32_dtype > old_max_types) old_max_types = egc_int32_dtype;
+		if (egc_int64_dtype > old_max_types) old_max_types = egc_int64_dtype;
+		if (egc_real_dtype > old_max_types) old_max_types = egc_real_dtype;
+		if (egc_doub_dtype > old_max_types) old_max_types = egc_doub_dtype;
+		if (egc_char_dtype > old_max_types) old_max_types = egc_char_dtype;
+		if (egc_wchar_dtype > old_max_types) old_max_types = egc_wchar_dtype;
+		if (egc_point_dtype > old_max_types) old_max_types = egc_point_dtype;
+	}
+
 	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_max_types * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == NULL)
 		xraise (EN_MEM);
@@ -3673,6 +3744,20 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 
 	for (i=0; i<type_count; i++)
 		rread_type (i);
+
+	if (rt_kind_version < INDEPENDENT_STORE_5_5) {
+			/* Store basic type information. */
+		dtypes[egc_bool_dtype] = egc_bool_dtype;
+		dtypes[egc_int8_dtype] = egc_int8_dtype;
+		dtypes[egc_int16_dtype] = egc_int16_dtype;
+		dtypes[egc_int32_dtype] = egc_int32_dtype;
+		dtypes[egc_int64_dtype] = egc_int64_dtype;
+		dtypes[egc_real_dtype] = egc_real_dtype;
+		dtypes[egc_doub_dtype] = egc_doub_dtype;
+		dtypes[egc_char_dtype] = egc_char_dtype;
+		dtypes[egc_wchar_dtype] = egc_wchar_dtype;
+		dtypes[egc_point_dtype] = egc_point_dtype;
+	}
 
 	map_types ();
 	map_attributes ();
@@ -4497,19 +4582,44 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 	count--;
 	for (; count > 0; count--, l_item++) {
 		ridr_multi_char(&l_type, 1);
-		CHECK("Same type", l_type == eif_tuple_item_type(l_item));
+			/* Because the EIF_XXX and the OLD_EIF_XXX sets are disjoint, there is no
+			 * need for an explicit test to `rt_kind_version'. The OLD_EIF_XXX are used
+			 * when retrieving storable versions that are strictly less than INDEPENDENT_STORE_5_5. */
+		CHECK("Same type", (rt_kind_version >= INDEPENDENT_STORE_5_5) ^ (l_type == eif_tuple_item_type(l_item)));
 		switch (l_type) {
-			case EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
-			case EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
-			case EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
-			case EIF_DOUBLE_CODE: ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
-			case EIF_REAL_CODE: ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
-			case EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
-			case EIF_POINTER_CODE: ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
-			case EIF_WIDE_CHAR_CODE: ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
+			case EIF_REFERENCE_CODE:
+			case OLD_EIF_REFERENCE_CODE:
+				ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
+			case EIF_BOOLEAN_CODE:
+			case OLD_EIF_BOOLEAN_CODE:
+				ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
+			case EIF_CHARACTER_CODE:
+			case OLD_EIF_CHARACTER_CODE:
+				ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+			case EIF_DOUBLE_CODE:
+			case OLD_EIF_DOUBLE_CODE:
+				ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
+			case EIF_REAL_CODE:
+			case OLD_EIF_REAL_CODE:
+				ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_8_CODE:
+			case OLD_EIF_INTEGER_8_CODE:
+				ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_16_CODE:
+			case OLD_EIF_INTEGER_16_CODE:
+				ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_32_CODE:
+			case OLD_EIF_INTEGER_32_CODE:
+				ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_64_CODE:
+			case OLD_EIF_INTEGER_64_CODE:
+				ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
+			case EIF_POINTER_CODE:
+			case OLD_EIF_POINTER_CODE:
+				ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+			case EIF_WIDE_CHAR_CODE:
+			case OLD_EIF_WIDE_CHAR_CODE:
+				ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
 			default:
 				eise_io ("Recoverable retrieve: unsupported tuple element type.");
 		}
@@ -4576,7 +4686,7 @@ rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 {
 	RT_GET_CONTEXT
-	uint32 count, val;
+	uint32 l_real_count, count, val;
 	int16 dftype, *ip;
 	int i;
 
@@ -4594,16 +4704,71 @@ rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 	if (count < 2)  /* Nothing to read */
 		return;
 
-	*cidarr = (int16) count;
-	ip = cidarr + 1;
 
-	for (i = count; i; --i, ++ip)
-	{
-		ridr_norm_int (&val);
-		*ip = (int16) val;
+	if (rt_kind_version >= INDEPENDENT_STORE_5_5) {
+		l_real_count = count;
+		ip = cidarr + 1;
+		for (i = count; i; --i, ++ip) {
+			ridr_norm_int (&val);
+			*ip = (int16) val;
+		}
+	} else {
+			/* Read old format of `cid' array corresponding to storable versions strictly less
+			 * than INDEPENDENT_STORE_5_5 and convert as we go to new format. */
+		ip = cidarr + 1;
+		l_real_count = 0;
+		for (i = count; i; --i) {
+			ridr_norm_int (&val);
+			dftype = (int16) val;
+			if (dftype <= OLD_EXPANDED_LEVEL) {
+				ip[l_real_count] = OLD_EXPANDED_LEVEL - dftype;
+				l_real_count++;
+			} else if (dftype == OLD_TUPLE_TYPE) {
+				ip[l_real_count] = TUPLE_TYPE;
+				l_real_count++;
+				ridr_norm_int (&val);	/* Uniformizer, not used. */
+				ridr_norm_int (&val);	/* Nb of generics. */
+				ip[l_real_count] = (int16) val;
+				l_real_count++;
+				ridr_norm_int (&val);	/* Base id for TUPLE */
+				ip[l_real_count] = (int16) val;
+				l_real_count++;
+					/* We skip the already treated elements */
+				i -= 3;
+			} else if (dftype <= OLD_FORMAL_TYPE) {
+				ip[l_real_count] = FORMAL_TYPE;
+				l_real_count++;
+				ip[l_real_count] = OLD_FORMAL_TYPE - dftype;	/* Insert position of formal */
+				l_real_count++;
+			} else {
+				switch (dftype) {
+					case OLD_CHARACTER_TYPE: ip[l_real_count] = egc_char_dtype; l_real_count++; break;
+					case OLD_BOOLEAN_TYPE: ip[l_real_count] = egc_bool_dtype; l_real_count++; break;
+					case OLD_INTEGER_8_TYPE: ip[l_real_count] = egc_int8_dtype; l_real_count++; break;
+					case OLD_INTEGER_16_TYPE: ip[l_real_count] = egc_int16_dtype; l_real_count++; break;
+					case OLD_INTEGER_32_TYPE: ip[l_real_count] = egc_int32_dtype; l_real_count++; break;
+					case OLD_INTEGER_64_TYPE: ip[l_real_count] = egc_int64_dtype; l_real_count++; break;
+					case OLD_REAL_TYPE: ip[l_real_count] = egc_real_dtype; l_real_count++; break;
+					case OLD_DOUBLE_TYPE: ip[l_real_count] = egc_doub_dtype; l_real_count++; break;
+					case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
+					case OLD_WIDE_CHAR_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
+					case OLD_BIT_TYPE:
+						ip[l_real_count] = egc_bit_dtype;
+						l_real_count++;
+						ridr_norm_int (&val);	/* Number of bits. */
+						ip[l_real_count] = (int16) val;
+						i--;
+						break;
+					default:
+						ip[l_real_count] = dftype;
+						l_real_count++;
+				}
+			}
+		}
 	}
 
-	cidarr [count+1] = -1;
+	cidarr [0] = (int16) l_real_count;
+	cidarr [l_real_count+1] = TERMINATOR;
 
 	if (rt_kind)
 		dftype = eif_gen_id_from_cid (cidarr, dtypes);

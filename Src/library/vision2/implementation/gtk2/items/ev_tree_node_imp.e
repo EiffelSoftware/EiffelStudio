@@ -146,7 +146,7 @@ feature -- Status setting
 		local
 			par_tree: EV_TREE_IMP
 		do
-			internal_text := a_text.string
+			internal_text := a_text.twin
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
 				par_tree.set_text_on_position (Current, internal_text)

@@ -89,7 +89,8 @@ inherit
 
 creation
 	make,
-	make_with_size
+	make_with_size,
+	make_with_height
 
 feature {NONE} -- Initialization
 

@@ -1,0 +1,52 @@
+-- EiffelBench default resource file
+
+--background_color:		white
+--foreground_color:		black
+--font:		"-adobe-new century schoolbook-bold-r-*-*-*-100-*-*-*-*-*-*"
+--editor:				""
+--filter_command:		""
+--filter_name:			PostScript
+--filter_directory:		"$EIFFEL4/bench/filters"
+--history_size:			10
+--raise_on_error:		true
+--shell_command:		"xterm -geometry 80x40 -e vi +$line $target"
+--temporary_directory:	"/tmp"
+--tab_step:				4
+--tabs:					""
+
+-- Keyboard accelerators
+
+--melt_accelerator:					"Alt-m"
+--melt_no_C_accelerator:			"Ctrl-Alt-m"
+--run_accelerator:					"Alt-r"
+--argument_accelerator:				"Shift-Alt-r"
+--melt_and_run_accelerator:			"Ctrl-Alt-r"
+--execution_status_accelerator:		"Alt-t"
+--interrupt_accelerator:			"Alt-k"
+--end_run_accelerator:				"Ctrl-Alt-k"
+--freeze_accelerator:				"Alt-f"
+--freeze_no_C_accelerator:			"Ctrl-Alt-f"
+--finalize_accelerator:				"Alt-z"
+--finalize_no_C_accelerator:		"Ctrl-Alt-z"
+--explanation_accelerator:			"Alt-e"
+--raise_explanation_accelerator:	"Ctrl-Alt-e"
+--system_accelerator:				"Alt-y"
+--raise_system_accelerator:			"Ctrl-Alt-y"
+--class_accelerator:				"Alt-c"
+--raise_class_accelerator:			"Ctrl-Alt-c"
+--feature_accelerator:				"Alt-u"
+--raise_feature_accelerator:		"Ctrl-Alt-u"
+--object_accelerator:				"Alt-o"
+--raise_object_accelerator:			"Ctrl-Alt-o"
+--stop_points_accelerator:			"Alt-s"
+--end_session_accelerator:			"Alt-q"
+--next_accelerator:					"Alt-x"
+--next_and_run_accelerator:			"Ctrl-Alt-x"
+--step_accelerator:					"Alt-v"
+--step_and_run_accelerator:			"Ctrl-Alt-v"
+--out_routine_accelerator:			"Alt-a"
+--out_routine_and_run_accelerator:	"Ctrl-Alt-a"
+--no_stop_accelerator:				"Alt-b"
+--no_stop_and_run_accelerator:		"Ctrl-Alt-b"
+--raise_warner_accelerator:			"Alt-w"
+--raise_project_accelerator:		"Alt-p"

@@ -20,8 +20,7 @@ feature -- Status Report
 	replace_substring_user_precondition (s: STRING; start_pos: INTEGER; end_pos: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `replace_substring'.
 		do
-			Result := end_pos <= s.count and
-					start_pos <= end_pos and
+			Result := start_pos <= end_pos and
 					start_pos > 0
 		end
 

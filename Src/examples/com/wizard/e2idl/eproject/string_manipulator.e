@@ -20,7 +20,7 @@ feature -- Access
 	string: STRING is
 			-- Manipulated string
 		require
-			exists: exists
+			exists: string_exists
 		do
 			Result := local_string
 		end
@@ -38,7 +38,7 @@ feature -- Basic Operations
 	replace_substring (arg_1: STRING; arg_2: INTEGER; arg_3: INTEGER) is
 			-- Copy the characters of `arg_1' to positions `arg_2' .. `arg_3'.
 		require
-			exists: exists
+			exists: string_exists
 		do
 			local_string.replace_substring (arg_1, arg_2, arg_3)
 		end
@@ -46,7 +46,7 @@ feature -- Basic Operations
 	prune_all (arg_1: CHARACTER) is
 			-- Remove all occurrences of `arg_1'.
 		require
-			exists: exists
+			exists: string_exists
 		do
 			local_string.prune_all (arg_1)
 		ensure 
@@ -55,7 +55,7 @@ feature -- Basic Operations
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	string_exists: BOOLEAN is
 			-- String exists.
 		do
 			Result := local_string /= Void

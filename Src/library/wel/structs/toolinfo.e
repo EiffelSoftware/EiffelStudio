@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		end
 
 	main_args: WEL_MAIN_ARGUMENTS is
-			-- Main argurments of the application used by `instance'
+			-- Main arguments of the application used by `instance'
 		once
 			!! Result
 		ensure

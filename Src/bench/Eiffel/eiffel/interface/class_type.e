@@ -16,7 +16,6 @@ inherit
 	SHARED_EXEC_TABLE;
 	SHARED_DECLARATIONS;
 	SHARED_TABLE;
-	SHARED_DIALOG;
 
 creation
 
@@ -289,12 +288,6 @@ feature -- Generation
 					-- The file hasn't been generated
 				System.makefile_generator.record_empty_class_type (id)
 			end;
-        --rescue
-            --Dialog_window.display ("Cannot generate C code ");
-			--if not file.is_closed then
-				--file.close;
-             	--retry;
-			--end
 		end;
 
 	generate_feature (f: FEATURE_I; file: INDENT_FILE) is

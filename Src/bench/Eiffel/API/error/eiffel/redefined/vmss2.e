@@ -1,4 +1,6 @@
 -- Error for useless selections
+-- The selection is not needed or there are two different selection of the
+-- same feature
 
 class VMSS2 obsolete "NOT DEFINED IN THE BOOK%N%
 			%VMSS2 is in fact in class VMSS3"
@@ -35,7 +37,7 @@ feature
 
 	subcode: INTEGER is
 		do
-			Result := 2
+			Result := 3
 		end;
 
 	build_explain is

@@ -31,48 +31,42 @@ feature {NONE}
 			-- With transport button, do nothing.
 		local
 			void_text: TEXT_WINDOW;
-			project_dir: PROJECT_DIR;
 			system_stone: SYSTEM_STONE;
-			show_plain_text: BOOLEAN;
+			fn: STRING;
+			f: UNIX_FILE;
+			temp: STRING
 		do
 			if project_tool.initialized then
-				if show_plain_text then
-					system_tool.display;
-					system_tool.text_window.show_file_content (lace.file_name);
-				elseif lace.file_name = void then
+				if lace.file_name = void then
 					if argument = void then
 						load_default_ace;
 						system_tool.display;
 					elseif argument = warner then
 						name_chooser.call (Current);
 					elseif argument = name_chooser then
-						Lace.set_file_name (name_chooser.selected_file);
-						work (Current);
+						fn := name_chooser.selected_file.duplicate;
+						!! f.make (fn);
+						if 
+							f.exists and then f.is_readable and then f.is_plain
+						then
+							Lace.set_file_name (name_chooser.selected_file);
+							work (Current);
+						else
+							!!temp.make (0);
+							temp.append ("File: ");
+							temp.append (fn);
+							temp.append ("%Ncannot be read. Try again?");
+							warner.custom_call (Current, temp, " Ok ", Void, "Cancel");
+						end;
 					else
 						warner.custom_call (Current, l_Specify_ace,
-							"OK", "Template", "Cancel");
+							" Ok ", "Template", "Cancel");
 					end;	
 				else
 					!!system_stone.make (System);
 					system_tool.receive (system_stone);
 					system_tool.display;
 				end;
-			elseif argument = name_chooser then
-				!!project_dir.make (name_chooser.selected_file);
-				project_dir.check_directory (warner);
-				if project_dir.is_valid then
-					project_tool.open_command.make_project (project_dir);
-					work (Current)
-				end
-			elseif argument = warner then
-				name_chooser.call (Current)
-			else
-				warner.call (Current, l_Initialize);
-			end
-		rescue
-			if project_tool.initialized and not show_plain_text then
-				show_plain_text := true;
-				retry
 			end
 		end;
 

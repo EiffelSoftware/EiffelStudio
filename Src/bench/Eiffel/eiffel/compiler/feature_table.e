@@ -118,6 +118,8 @@ end;
 						Result := False;
 						!!depend_unit.make (feat_tbl_id, f2.feature_id);;
 						pass2_ctrl.propagators.add (depend_unit)
+					else
+						f1.set_code_id (f2.code_id)			
 					end;
 				end;
 				forth

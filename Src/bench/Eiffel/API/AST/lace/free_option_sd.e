@@ -6,7 +6,8 @@ inherit
 		redefine
 			set, process_system_level_options, is_system_level,
 			is_valid, is_free_option, is_precompiled
-		end
+		end;
+	SHARED_RESCUE_STATUS
 
 feature
 
@@ -47,17 +48,18 @@ feature
 feature {NONE}
 
 	dead_code, exception_stack_managed, collect, precompilation,
-	code_replication: INTEGER is UNIQUE;
+	code_replication, fail_on_rescue: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (5);
+			!!Result.make (6);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (collect, "collect");
 			Result.force (exception_stack_managed, "exception_stack_managed");
 			Result.force (precompilation, "precompiled");
 			Result.force (code_replication, "code_replication");
+			Result.force (fail_on_rescue, "fail_on_rescue");
 		end;
 
 feature
@@ -97,6 +99,14 @@ feature
 					System.set_exception_stack_managed (False)
 				elseif value.is_yes then
 					System.set_exception_stack_managed (True)
+				else
+					error_found := True;
+				end;
+			when fail_on_rescue then
+				if value.is_no then
+					Rescue_status.set_fail_on_rescue (False);
+				elseif value.is_yes then
+					Rescue_status.set_fail_on_rescue (True);
 				else
 					error_found := True;
 				end;

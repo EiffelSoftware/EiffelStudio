@@ -2,7 +2,8 @@ class EXTEND_FILE
 
 inherit
 
-	UNIX_FILE
+	UNIX_FILE;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -20,9 +21,10 @@ feature
 				open_read
 			end
 		rescue
-			-- FIXME
-			error_happened := True;
-			retry;
+			if Rescue_status.is_unexpected_exception then
+				error_happened := True;
+				retry;
+			end
 		end
 
 end

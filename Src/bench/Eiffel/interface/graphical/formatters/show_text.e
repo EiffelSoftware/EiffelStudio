@@ -6,9 +6,16 @@ class SHOW_TEXT
 inherit
 
 	FORMATTER
+		rename
+			display_header as format_display_header
 		redefine
-			format, display_header,
-			file_name
+			format, file_name
+		end;
+	FORMATTER
+		redefine
+			format, display_header, file_name
+		select
+			display_header
 		end
 
 creation

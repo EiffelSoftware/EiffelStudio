@@ -115,9 +115,6 @@ feature
 					after or else not Result
 				loop
 					Result := True;
-io.error.putstring ("in subset: class name: ");
-io.error.putstring (other_set.item.written_class.class_name);
-io.error.new_line;
 					--Result := other_set.valid_for (item.written_class);
 					forth;
 				end;

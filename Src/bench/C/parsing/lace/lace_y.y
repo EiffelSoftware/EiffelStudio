@@ -168,15 +168,15 @@ Exclude                 : /* empty */
 							{$$ = list_new(CONSTRUCT_LIST_SD);}
                         ;
 
-Include_file_list		: File_clause
+Include_file_list		: Name
 							{list_push(create_node1(INCLUDE_SD,$1));}
-						|	File_list LAC_SEMICOLON File_clause
+						|	Include_file_list LAC_SEMICOLON Name
 							{list_push(create_node1(INCLUDE_SD,$3));}
 						;
 
-Exclude_file_list		: File_clause
+Exclude_file_list		: Name
 							{list_push(create_node1(EXCLUDE_SD,$1));}
-						|   File_list LAC_SEMICOLON File_clause
+						|   Exclude_file_list LAC_SEMICOLON Name
 							{list_push(create_node1(EXCLUDE_SD,$3));}
 						;
 
@@ -279,7 +279,7 @@ O_option_clause         : /* empty */
 Target_list             : /* empty */
 							{$$ = NULL;}
                         | LAC_COLUMN Name
-								{list_init(); list_push (lace_id (token_str,start_position,end_position));}
+								{list_init(); list_push ($2);}
 							Class_name_list
 								{$$ = list_new(CONSTRUCT_LIST_SD);}
                         ;

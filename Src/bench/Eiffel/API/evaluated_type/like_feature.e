@@ -101,7 +101,7 @@ feature -- Primitives
 			anchor_type := anchor_feature.type;
 			Like_control.on;
 			if Like_control.has (rout_id) then
-				Error_handler.raise ("Like cycle");
+				Like_control.raise_error
 			else
 					-- Update anchored type controler
 				Like_control.put (rout_id);

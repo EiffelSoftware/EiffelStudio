@@ -5,9 +5,25 @@ inherit
 
 	EWB_CMD
 
+creation
+
+	make, null
+
 feature
 
+	make (k: BOOLEAN) is
+		do
+			keep_assertions := k
+		end;
+
+	keep_assertions: BOOLEAN;
+
 	name: STRING is "finalize";
+
+	loop_execute is
+		do
+			execute
+		end;
 
 	execute is
 		do
@@ -27,7 +43,17 @@ feature
 						-- be able to use the project for other melting/freezing
 						-- or finalization afterwards.
 					terminate_project;
-					System.finalized_generation;
+					System.finalized_generation (keep_assertions);
+					if System.poofter_finalization then
+						io.error.putstring 
+							("Warning: the finalized system might not be optimal%N");
+						io.error.putstring
+							("%Tin size and speed. In order to produce and optimal%N");
+						io.error.putstring
+							("%Texecutable, finalize the system from scratch and do%N");
+						io.error.putstring
+							("%Tnot use precompilation.%N%N");
+					end;
 				end;
 				print_tail;
 			end;

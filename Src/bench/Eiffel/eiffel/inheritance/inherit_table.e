@@ -38,7 +38,7 @@ inherit
 		undefine
 			twin
 		end;
-	EXCEPTIONS
+	SHARED_RESCUE_STATUS
 		undefine
 			twin
 		end
@@ -378,7 +378,7 @@ end;
 		ensure
 			No_error: not Error_handler.has_error;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 					-- Error happened during second pass: clear the
 					-- structure
 				clear;

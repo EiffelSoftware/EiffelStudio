@@ -65,7 +65,7 @@ feature -- Licence managment
 					 warner.custom_call (Void, "%
 						%  YOU HAVE LOST YOUR LICENCE!%N%
 						%(You can still save your changes%N%
-						% and exit the project)", "OK", Void, Void);
+						% and exit the project)", Void, Void, " Ok ");
 				end;
 			end;
 		end;

@@ -4,10 +4,10 @@ class SHOW_ROUT_FLAT
 
 inherit
 
-	SHOW_TEXT
+	FORMATTER
 		redefine
 			format
-		end
+		end;
 	SHARED_SERVER
 
 creation
@@ -15,6 +15,16 @@ creation
 	make
 
 feature
+
+	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+		do
+			init (c, a_text_window)
+		end;
+
+	symbol: PIXMAP is
+		once
+			Result := bm_Showflat
+		end;
 
 	format (stone: STONE) is
 			-- Show text of `stone' in `text_window'
@@ -43,5 +53,12 @@ feature
 			end
 		end
 
-	
+feature {NONE}
+
+	title_part: STRING is do Result := l_Feature_flat_form_of end;
+
+	command_name: STRING is do Result := l_Showflat end;
+	display_info (i: INTEGER; d: STONE) is do end
+			-- Useless here
+
 end

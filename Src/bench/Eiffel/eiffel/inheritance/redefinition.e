@@ -48,6 +48,12 @@ feature
 				!!vdrd8;
 				vdrd8.set_class (System.current_class);
 				vdrd8.set_feature (new_feature);
+				if not new_feature.is_require_else then
+					vdrd8.set_postcondition
+				end;
+				if not new_feature.is_ensure_then then
+					vdrd8.set_precondition
+				end;
 				Error_handler.insert_error (vdrd8);
 			end;
 		end;

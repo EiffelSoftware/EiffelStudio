@@ -286,7 +286,7 @@ feature -- formatter
 			ctxt.begin;
 			if arguments /= void and then not arguments.empty then
 				ctxt.put_special (" (");
-				ctxt.set_separator (";");
+				ctxt.set_separator ("; ");
 				ctxt.no_new_line_between_tokens;
 				arguments.format (ctxt);
 				ctxt.put_special (")");

@@ -38,6 +38,7 @@ feature
 			recursive_check (current_type);
 			id_set.wipe_out;
 			Error_handler.checksum;
+			current_type := Void;
 		end;
 
 	
@@ -91,6 +92,55 @@ end;
 				end;
 
 				current_skeleton.forth;
+			end;
+		end;
+
+feature
+
+	check_actual_type (a_type: TYPE_A) is
+		require
+			type_has_generics: a_type.has_generics
+		local
+			gen_type: GEN_TYPE_A
+		do
+			gen_type ?= a_type;
+			recursive_check_type (gen_type);
+			Error_handler.checksum;
+			id_set.wipe_out;
+		end;
+
+feature {NONE}
+
+	recursive_check_type (a_type: TYPE_A) is
+		local
+			ass_c: CLASS_C;
+			generics: ARRAY [TYPE_A];
+			i: INTEGER;
+			vlec: VLEC;
+		do
+			if a_type.has_generics then
+				if a_type.is_expanded then
+					ass_c := a_type.associated_class;
+					if not id_set.has (ass_c.id) then
+						if ass_c.is_expanded then
+							id_set.put (ass_c.id);
+						end;
+					else
+						!!vlec;
+						vlec.set_class (System.current_class);
+						vlec.set_client (ass_c);
+						Error_handler.insert_error (vlec);
+					end;
+				end;
+				from
+					generics := a_type.generics;
+					i := generics.lower
+				until
+					i > generics.upper
+				loop
+					recursive_check_type (generics.item (i));
+					i := i + 1;
+				end;
 			end;
 		end;
 

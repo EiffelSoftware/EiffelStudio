@@ -90,9 +90,25 @@ feature -- Lace recompilation
 				!!cluster.make (directory_name);
 				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
-				cluster.fill;
+				cluster.fill (exclude_list, include_list);
 			else
-				cluster := old_cluster.new_cluster (cluster_name);
+				cluster := old_cluster.new_cluster (cluster_name, exclude_list, include_list);
+			end;
+		end;
+
+	include_list: LACE_LIST [FILE_NAME_SD] is
+		local
+			i: INTEGER
+		do
+			if cluster_properties /= Void then
+				Result := cluster_properties.include_option;
+			end;
+		end;
+
+	exclude_list: LACE_LIST [FILE_NAME_SD] is
+		do
+			if cluster_properties /= Void then
+				Result := cluster_properties.exclude_option
 			end;
 		end;
 

@@ -118,31 +118,42 @@ feature
 						class_i.set_base_name (base_name);
 						class_i.set_cluster (cluster);
 						class_i.set_date;
-						if not cluster.classes.has (fname) then
-							cluster.classes.put (class_i, class_name);
-							stone := class_i.stone;
-							file.open_write;
-							file.putstring ("class ");
-							file.putstring (stone.signature);
-							file.putstring ("%N%Nfeature%N%Nend%N");
-							file.close;
-							class_text.receive (stone);
-							popdown
-						else
+						if cluster.classes.has (fname) then
 							fname.wipe_out;
 							str := class_name.duplicate;
 							str.to_upper;
 							fname.append ("Class ");
 							fname.append (str);
 							fname.append (" already exist in cluster");
-							warner.custom_call (Void, fname, "Continue",
-											Void, Void); 
+							warner.custom_call (Void, fname,
+											Void, Void, " Ok "); 
+						elseif
+							not file.is_creatable
+						then
+							str := fname.duplicate;
+							fname.wipe_out;
+							fname.append ("Cannot create file:%N");
+							fname.append (str);
+							warner.custom_call (Void, fname,
+											Void, Void, " Ok "); 
+						else
+							cluster.classes.put (class_i, class_name);
+							stone := class_i.stone;
+							file.open_write;
+							file.putstring ("class ");
+							file.putstring (stone.signature);
+							file.putstring ("%N%Nfeature%N%Nend -- ");
+							file.putstring (stone.signature);
+							file.new_line;
+							file.close;
+							class_text.receive (stone);
+							popdown
 						end;
 					else
 						fname.prepend ("file ");
 						fname.append ("%N already exists");
-						warner.custom_call (Void, fname, "Continue",
-											Void, Void); 
+						warner.custom_call (Void, fname,
+											Void, Void, " Ok "); 
 					end;
 				end;
 			elseif argument = cancel then
@@ -163,8 +174,8 @@ feature
 			clu := Universe.cluster_of_name (clun);
 			if clu = Void then
 				aok := False;
-				warner.custom_call (Void, "Invalid cluster name", "Continue",
-								Void, Void); 
+				warner.custom_call (Void, "Invalid cluster name",
+								Void, Void, " Ok "); 
 			else
 				aok := True;
 				cluster := clu

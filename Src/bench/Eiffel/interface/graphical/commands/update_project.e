@@ -8,8 +8,8 @@ inherit
 	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
-	SHARED_DIALOG;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	SHARED_RESCUE_STATUS
 
 creation
 
@@ -27,7 +27,7 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Recompile the project.
 		local
-			project_dir: PROJECT_DIR;
+			temp: STRING
 		do
 			debug_info.wipe_out;
 			if project_tool.initialized then
@@ -40,8 +40,18 @@ feature {NONE}
 						link_driver;
 						project_tool.set_changed (false);
 						system.server_controler.wipe_out; -- ???
+						save_failed := False;
 						save_workbench_file;
-						error_window.put_string ("System recompiled%N");
+						if save_failed then
+							!! temp.make (0);
+							temp.append ("Could not write to ");
+							temp.append (Project_file_name);
+							temp.append ("%NPlease check permissions and disk space");
+							temp.append ("%NThen press Melt again%N");
+							error_window.put_string (temp);
+						else
+							error_window.put_string ("System recompiled%N");
+						end;
 					end;
 					restore_cursors;
 					error_window.display;
@@ -55,23 +65,10 @@ feature {NONE}
 				elseif argument = name_chooser then
 					Lace.set_file_name (name_chooser.selected_file);
 					work (Current)
-				else
+				elseif argument = text_window then
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
-			elseif argument = name_chooser then
-				!!project_dir.make (name_chooser.selected_file);
-				project_dir.check_directory (warner);
-				if project_dir.is_valid then
-					project_tool.open_command.make_project (project_dir);
-					work (Current)
-				end
-			elseif argument = warner then
-				name_chooser.call (Current)
-			elseif argument = void then
-				-- help window
-			else
-				warner.call(Current, l_Initialize);
 			end;
 		end;
 
@@ -102,22 +99,31 @@ feature {NONE}
 			end;
 		end;
 
+	retried: BOOLEAN;
+	save_failed: BOOLEAN;
+
 	save_workbench_file is
 			-- Save the `.workbench' file.
 		local
 			file: UNIX_FILE
 		do
-			!!file.make (Project_file_name);
-			file.open_write;
-			workbench.basic_store (file);
-			file.close;
+			if not retried then
+				!!file.make (Project_file_name);
+				file.open_write;
+				workbench.basic_store (file);
+				file.close;
+			else
+				retried := False
+				if not file.is_closed then
+					file.close
+				end;
+				save_failed := True;
+			end
 		rescue
-			if not file.is_closed then
-				file.close
-			end;
-			Dialog_window.display 
-				("Error in opening/writing EIFFELGEN/.workbench file ");
-			retry
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
 		end;
 
 feature 

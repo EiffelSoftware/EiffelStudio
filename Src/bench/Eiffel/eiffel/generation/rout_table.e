@@ -29,33 +29,50 @@ feature
 			-- the maximum entry id ?
 		local
 			pos, first_body_id: INTEGER;
+			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			cl_type: CLASS_TYPE;
-			first_class: CLASS_C;		
+			first_class: CLASS_C;
+			found: BOOLEAN;
+			is_deferred: BOOLEAN;
 		do
 			pos := position;
-				-- Go to the entry of type id greater or equal than `type_id':
-				-- note than deferred feature have no entries in the tables
-			goto_used (type_id);
-			if not after then
-				from
-					entry := item;
-					first_body_id := entry.body_id;
-					cl_type := System.class_type_of_id (type_id);
-					first_class := cl_type.associated_class;
-					forth;
-				until
-					after or else Result
-				loop
-					entry := item;
-					cl_type := System.class_type_of_id (entry.type_id);
-					if cl_type.associated_class.conform_to (first_class) then
-						Result := 	entry.used
-									and then
-									entry.body_id /= first_body_id;
-					end;
-					forth
+				-- If it is not a poofter finalization
+				-- we have a quicker algorithm handy.
+			if not System.poofter_finalization then
+					-- Go to the entry of type id greater or equal than `type_id':
+					-- note than deferred feature have no entries in the tables
+				goto_used (type_id);
+			else
+				start
+			end;
+			from
+				is_deferred := True;
+				cl_type := System.class_type_of_id (type_id);
+				first_class := cl_type.associated_class;
+			until
+				after or else Result
+			loop
+				entry := item;
+				second_type_id := entry.type_id;
+				if second_type_id = type_id then
+					is_deferred := False
 				end;
+				cl_type := System.class_type_of_id (second_type_id);
+				if cl_type.associated_class.conform_to (first_class) then
+					if entry.used then
+						if found then
+							Result := entry.body_id /= first_body_id;
+						else
+							found := True;
+							first_body_id := entry.body_id;
+						end;
+					end;
+				end;
+				forth
+			end;
+			if not Result then
+				Result := is_deferred and then found
 			end;
 			go (pos);
 		end;
@@ -91,8 +108,8 @@ feature
 						file.new_line;
 			
 							-- Remember external routine declaration
-                        Extern_declarations.add_routine
-                            (entry.type.c_type, routine_name.twin);
+						Extern_declarations.add_routine
+							(entry.type.c_type, routine_name.twin);
 					else
 						file.putstring ("(fnptr) 0,%N");
 					end;
@@ -111,10 +128,16 @@ feature
 			-- in a static type greater than `type_id'.
 		do
 			goto_used (type_id);
+				-- FIXME
+				-- test conformance => after can be True
 			check
 				not_off: not after
 			end;
-			Result := item.routine_name
+			if not after then
+				Result := item.routine_name
+			else
+				Result := "((void (*)())  RTNR)"
+			end;
 		end;
 
 	workbench_c_type: STRING is "struct ca_info";

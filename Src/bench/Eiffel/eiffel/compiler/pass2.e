@@ -193,5 +193,5 @@ feature -- Dino stuff
 			pass_c ?= controler_of (a_class);
 			pass_c.set_assertion_prop_list (l);
 		end;
- 
+
 end

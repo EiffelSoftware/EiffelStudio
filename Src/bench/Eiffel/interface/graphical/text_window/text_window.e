@@ -203,8 +203,8 @@ feature
 			focus_start := 0;
 			focus_end := 0;
 			root_stone := Void;
+			file_name := Void;
 			set_changed (false);
-			clean_more;
 		ensure
 			image.empty;
 			position = 0;
@@ -212,11 +212,6 @@ feature
 			focus_start = 0;
 			focus_end = 0;
 			not changed
-		end;
-
-	clean_more is
-		do
-			-- Do nothing
 		end;
 
 	clear_window is
@@ -236,16 +231,28 @@ feature
 	
 feature {NONE}
 
+	init_callback_values is
+		do
+			if modifier /= Void then end;
+			if grabber /= Void then end;
+			if new_tooler /= Void then end;
+			if raise_proj_window /= Void then end;
+			if raise_class_w /= Void then end;
+			if raise_routine_w /= Void then end;
+			if raise_object_w /= Void then end;
+			if raise_explain_w /= Void then end;
+		end;
+
 	add_callbacks is
 		do
-			!!modifier;
-			!!grabber;
-			!!new_tooler;
-			!!raise_proj_window;
 			add_modify_action (Current, modifier);
 			set_action ("<Btn3Down>", Current, grabber);
 			set_action ("!c<Btn3Down>", Current, new_tooler);
-			set_action ("Ctrl<Key>p", Current, raise_proj_window);
+			set_action ("Alt<Key>p", Current, raise_proj_window);
+			set_action ("Alt<Key>c", Current, raise_class_w);
+			set_action ("Alt<Key>f", Current, raise_routine_w);
+			set_action ("Alt<Key>o", Current, raise_object_w);
+			set_action ("Alt<Key>e", Current, raise_explain_w);
 		end;
 
 	c_widget: POINTER;
@@ -358,16 +365,55 @@ feature {NONE}
 					end
 				elseif argument = raise_proj_window then
 					project_tool.raise
+				elseif argument = raise_class_w then
+					window_manager.raise_class_windows
+				elseif argument = raise_routine_w then
+					window_manager.raise_routine_windows
+					project_tool.raise
+				elseif argument = raise_object_w then
+					window_manager.raise_object_windows
+				elseif argument = raise_explain_w then
+					window_manager.raise_explain_windows
 				end
 			end
 		end;
 
 	work (argument: ANY) is do end;
 
-	modifier: ANY;
-	grabber: ANY;
-	new_tooler: ANY;
-	raise_proj_window: ANY;
+feature {NONE} -- Callback values
+
+	modifier: ANY is
+		once
+			!! Result
+		end;
+	grabber: ANY is
+		once
+			!! Result
+		end;
+	new_tooler: ANY is
+		once
+			!! Result
+		end;
+	raise_proj_window: ANY is
+		once
+			!! Result
+		end;
+	raise_class_w: ANY is
+		once
+			!! Result
+		end;
+	raise_routine_w: ANY is
+		once
+			!! Result
+		end;
+	raise_object_w: ANY is
+		once
+			!! Result
+		end;
+	raise_explain_w: ANY is
+		once
+			!! Result
+		end;
 
 feature {NONE} -- External features
 

@@ -168,7 +168,7 @@ feature -- formatting
 				ctxt.put_string (" ");
 				ctxt.put_special ("[");
 				ctxt.no_new_line_between_tokens;
-				ctxt.set_separator (",");
+				ctxt.set_separator (", ");
 				generics.format (ctxt);
 				ctxt.put_special ("]");
 			end;

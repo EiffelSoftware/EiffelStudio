@@ -11,9 +11,13 @@ inherit
 		redefine
 			init_project_directory
 		end;
-	SHARED_DIALOG;
-	BUILD_LIC;
-	WINDOWS
+	WINDOWS;
+	SHARED_RESCUE_STATUS;
+	LIC_EXITER
+
+feature -- Creation
+
+	null is do end;
 
 feature -- Initialization
 
@@ -39,40 +43,132 @@ feature -- Initialization
 			-- Did an error occur during the initialization
 			-- process?
 
+	retried: BOOLEAN;
+
+	initialized: CELL [BOOLEAN] is
+		once
+			!! Result.put (False);
+		end
+
 	init_project is
 			-- Initialize the project, i.e.
 		local
-			project_dir: PROJECT_DIR
+			project_dir: PROJECT_DIR;
+			workbench_file: UNIX_FILE;
+			temp: STRING
 		do
-			!! project_dir.make (project_name); 
-			project_dir.check_directory (error_popup_window);
-			if project_dir.is_valid then
-				init_project_directory := project_dir;
-				project_is_new := project_dir.is_new;
-				if project_dir /= Project_directory then end;
-				Create_compilation_directory;
-				Create_generation_directory;
+
+	-- Do not do anything if already initialized.
+	-- (Introduced for the command loop)
+if not initialized.item then
+
+			if not retried then
+				error_occurred := False;
+
+					-- Project directory
+				!! project_dir.make (project_name); 
+	
+					-- Workbench file
+				!! temp.make (0);
+				temp.append (project_dir.name);
+				temp.append ("/EIFFELGEN/.workbench");
+				!!workbench_file.make (temp);
+
+					-- Is the project new?
+				project_is_new := project_dir.is_new or else
+								(not workbench_file.exists)
+
+				if project_is_new then
+					if not project_dir.exists then
+						!! temp.make (0);
+						temp.append ("Directory: ");
+						temp.append (project_dir.name);
+						temp.append (" does not exist");
+						error_occurred := True;
+					elseif not project_dir.is_directory then
+						!! temp.make (0);
+						temp.append (project_dir.name);
+						temp.append (" is not a directory");
+						error_occurred := True;
+					elseif
+						not (project_dir.is_readable and then
+							project_dir.is_writable and then
+							project_dir.is_executable)
+					then
+						!! temp.make (0);
+						temp.append ("Directory: ");
+						temp.append (project_dir.name);
+						temp.append (" does not have appropriate permissions.")
+	
+						error_occurred := True;
+					else
+						init_project_directory := project_dir;
+						if project_dir /= Project_directory then end;
+						Create_compilation_directory;
+						Create_generation_directory;
+					end
+				else
+					if not workbench_file.is_readable then
+						!! temp.make (0);
+						temp.append (workbench_file.name);
+						temp.append (" is not readable");
+						error_occurred := True
+					elseif not workbench_file.is_plain then
+						!! temp.make (0);
+						temp.append (workbench_file.name);
+						temp.append (" is not a file");
+						error_occurred := True
+					else
+						init_project_directory := project_dir;
+						if project_dir /= Project_directory then end
+					end;
+				end;
+				if error_occurred then
+					io.error.putstring (temp);
+					io.error.new_line;
+				end
 			else
 				error_occurred := True;
-			end;
+				retried := False;
+				!! temp.make (0);
+				temp.append ("Project in: ");
+				temp.append (project_dir.name);
+				temp.append ("%NCannot be retrieved. Check permissions");
+				temp.append (" and please try again");
+				io.error.putstring (temp);
+				io.error.new_line;
+			end
+end;
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
 		end;
-				
 
 	retrieve_project is
 			-- Retrieve existing project.
 		local
-			project_dir: PROJECT_DIR;
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
 			workbench_file: UNIX_FILE;
 			precomp_r: PRECOMP_R;
+			temp: STRING
 		do
-			!!workb;
-			!!workbench_file.make_open_read (Project_file_name);
-			workb ?= workb.retrieved (workbench_file);
-			!!init_work.make (workb);
-			Workbench.init;
-			if Workbench /= Void then
+
+	-- Do not do anything if already initialized.
+	-- (Introduced for the command loop)
+if not initialized.item then
+
+			if not retried then
+				!!workb;
+				!!workbench_file.make_open_read (Project_file_name);
+				workb ?= workb.retrieved (workbench_file);
+				if not workbench_file.is_closed then
+					workbench_file.close
+				end
+				!!init_work.make (workb);
+				Workbench.init;
 				Workbench.lace.set_file_name (Ace_name);
 				if System.uses_precompiled then
 					!!precomp_r;
@@ -81,9 +177,29 @@ feature -- Initialization
 				System.server_controler.init;
 				Universe.update_cluster_paths	
 			else
-				error_occurred := True;
-				io.error.putstring ("Cannot retrieve project%N");
-			end;
+				retried := False;
+				if not workbench_file.is_closed then
+					workbench_file.close
+				end;
+				!! temp.make (0);
+				temp.append ("Project in: ");
+				temp.append (Project_directory.name);
+				temp.append (" is corrupted. Cannot continue");
+				io.error.putstring (temp);
+				io.error.new_line;
+				error_occurred := True
+			end
+
+	-- The project is now initialized
+	-- (Introduced for the command loop)
+initialized.put (True);
+end
+
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
 		end;
 
 	make_new_project is
@@ -94,10 +210,20 @@ feature -- Initialization
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
 		do
+
+	-- Do not do anything if already initialized.
+	-- (Introduced for the command loop)
+if not initialized.item then
+
 			!!workb;
 			!!init_work.make (workb);
 			workb.make;
 			Workbench.lace.set_file_name (Ace_name);
+
+	-- The project is now initialized
+	-- (Introduced for the command loop)
+initialized.put (True);
+end
 		end;
 
 feature -- Compilation
@@ -115,38 +241,82 @@ feature -- Compilation
 				Workbench.recompile;
 				if not Workbench.successfull then
 					if stop_on_error then
-						if licence.registered then
-							licence.unregister
-						end;
-						die (-1);
+						lic_die (-1);
 					end;
-					io.putstring ("%N%
-						%Press <Return> to resume compilation or <Q> to quit%N");
-					wait_for_return;
-					str := io.laststring.duplicate;
-					str.to_lower;
-					if 
-						((str.count >= 1) and then (str.item (1) = 'q')) 
-					then
-						if licence.registered then
-							licence.unregister
-						end;
-						die(0)
-					end;
+					if termination_requested then
+						lic_die (0)
+					end
 				else
 					exit := True
 				end
 			end;
 		end;
 
-feature {NONE}
+feature {NONE} -- I/O
+
+	termination_requested: BOOLEAN is
+		local
+			str: STRING
+		do
+			io.putstring ("%N%
+				%Press <Return> to resume compilation or <Q> to quit%N");
+			wait_for_return;
+			str := io.laststring.duplicate;
+			str.to_lower;
+			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
+		end;
 
 	wait_for_return is
 		do
 			io.readline;
 		rescue
-				-- FIXME: Should abort for CTRL C
 			retry
+		end;
+
+	last_input: STRING;
+
+	get_name is
+		local
+			i: INTEGER;
+			done: BOOLEAN
+		do
+			wait_for_return;
+			!! last_input.make (io.laststring.count);
+			from
+				i := 1
+			until
+				(i > io.laststring.count) or else
+				done
+			loop
+				if
+					(io.laststring.item (i) = ' ') or else
+					(io.laststring.item (i) = '%T')
+				then
+					done := True
+				else
+					last_input.append_character (io.laststring.item (i))
+				end;
+				i := i + 1
+			end;
+			last_input.to_lower;
+		end;
+
+	get_class_name is
+		do
+			io.putstring ("--> Class name: ");
+			get_name;
+			if last_input.empty then
+				get_class_name
+			end;
+		end;
+
+	get_feature_name is
+		do
+			io.putstring ("--> Feature name: ");
+			get_name
+			if last_input.empty then
+				get_feature_name
+			end;
 		end;
 
 feature -- Termination
@@ -155,19 +325,39 @@ feature -- Termination
 			-- Clear the servers and save the system structures
 			-- to disk.
 		local
-			file: UNIX_FILE
+			file: UNIX_FILE;
+			temp: STRING
 		do
-			System.server_controler.wipe_out;
-			!!file.make (Project_file_name);
-			file.open_write;
-			Workbench.basic_store (file);
-			file.close;
-		rescue
-			if not file.is_closed then
+			if not retried then
+				System.server_controler.wipe_out;
+				!!file.make (Project_file_name);
+				file.open_write;
+				Workbench.basic_store (file);
 				file.close;
-			end;
-			Dialog_window.display ("Error in reading/writing .workbench file");
-			retry
+			else
+				retried := False;
+				if not file.is_closed then
+					file.close
+				end;
+					!! temp.make (0);
+					temp.append ("Error: could not write to ");
+					temp.append (Project_file_name);
+					temp.append ("%NPlease check permissions and disk space");
+				io.error.putstring (temp);
+				io.error.new_line;
+				if stop_on_error then
+					lic_die (-1)
+				elseif termination_requested then
+					lic_die (-1)
+				else
+					terminate_project
+				end
+			end
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
 		end;
 
 feature -- Input/Output
@@ -202,13 +392,29 @@ feature -- Input/Output
 feature -- Execution
 
 	work (pn, an: STRING) is
+		local
+			f: UNIX_FILE
 		do
-			project_name := pn;
-			Ace_name := an;
-			execute;
+			!! f.make (an);
+			if
+				f.exists and then f.is_readable and then f.is_plain
+			then
+				project_name := pn;
+				Ace_name := an;
+				execute;
+			else
+				io.error.putstring ("File: ");
+				io.error.putstring (an);
+				io.error.putstring ("%Ncannot be read. Please check permissions%N");
+				lic_die (-1)
+			end
 		end;
 
 	execute is
+		deferred
+		end;
+
+	loop_execute is
 		deferred
 		end;
 

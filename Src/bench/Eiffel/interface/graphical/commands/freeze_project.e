@@ -9,7 +9,7 @@ inherit
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
 	SHARED_DEBUG;
-	SHARED_DIALOG
+	SHARED_RESCUE_STATUS
  
 creation
 
@@ -30,8 +30,8 @@ feature {NONE}
 			-- Update the system and then call "finish freezing" in <project>/C_code.
 		local
 			freeze_with_argument: STRING;
-			project_dir: PROJECT_DIR;
 			file: UNIX_FILE;
+			temp: STRING
 		do
 			debug_info.wipe_out;
 			if project_tool.initialized then
@@ -41,7 +41,7 @@ feature {NONE}
 						warner.custom_call (Current, 
 									"Freezing implies some C compilation%N%
 									%and linking. Do you want to do it now?",
-									"Freeze now", "Cancel", Void);
+									"Freeze now", Void, "Cancel");
 					elseif argument = warner then
 						set_global_cursor (watch_cursor);
 						project_tool.set_changed (true);
@@ -50,9 +50,19 @@ feature {NONE}
 							System.freeze_system;
 							project_tool.set_changed (false);
 							system.server_controler.wipe_out;
+							save_failed := False;
 							save_workbench_file;
-							finish_freezing;
-							error_window.put_string ("System recompiled%N");
+							if save_failed then
+								!! temp.make (0);
+								temp.append ("Could not write to ");
+								temp.append (Project_file_name);
+								temp.append ("%NPlease check permissions and disk space");
+								temp.append ("%NThen press Freeze again%N");
+								error_window.put_string (temp)
+							else
+								finish_freezing;
+								error_window.put_string ("System recompiled%N");
+							end;
 						end;
 					end;
 					restore_cursors;
@@ -67,44 +77,41 @@ feature {NONE}
 				elseif argument = name_chooser then
 					Lace.set_file_name (name_chooser.selected_file);
 					work (Current)
-				else
+				elseif argument = text_window then
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
-			elseif argument = name_chooser then
-				!!project_dir.make (name_chooser.selected_file);
-				project_dir.check_directory (warner);
-				if project_dir.is_valid then
-					project_tool.open_command.make_project (project_dir);
-					work (Current)
-				end
-			elseif argument = warner then
-				name_chooser.call (Current)
-			elseif argument = void then
-				-- help window
-			else
-				warner.call(Current, l_Initialize);
 			end;
 		end;
 
-    save_workbench_file is
-            -- Save the `.workbench' file.
-        local
-            file: UNIX_FILE
-        do
-            !!file.make (Project_file_name);
-            file.open_write;
-            workbench.basic_store (file);
-            file.close;
-        rescue
-            if not file.is_closed then
-                file.close
-            end;
-            Dialog_window.display 
-				("Error in opening/writing EIFFELGEN/.workbench file ");
-            retry
-        end;
- 
+	retried: BOOLEAN;
+	save_failed: BOOLEAN;
+
+	save_workbench_file is
+			-- Save the `.workbench' file.
+		local
+			file: UNIX_FILE;
+			temp: STRING
+		do
+			if not retried then
+				!!file.make (Project_file_name);
+				file.open_write;
+				workbench.basic_store (file);
+				file.close;
+			else
+				retried := False
+				if not file.is_closed then
+					file.close
+				end;
+				save_failed := True;
+			end
+		rescue
+			if Rescue_status.is_unexpected_exception then
+				retried := True;
+				retry
+			end
+		end;
+
 feature 
 
 	symbol: PIXMAP is 

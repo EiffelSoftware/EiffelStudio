@@ -148,8 +148,8 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 #endif
 				dexit (1);
 			}
-			appname = strrchr (meltpath, '/');
-			if (appname = strrchr (meltpath, '/')) *appname = 0;
+			appname = rindex (meltpath, '/');
+			if (appname = rindex (meltpath, '/')) *appname = 0;
 			else strcpy (meltpath, ".");
 			envstring = (char *)malloc (strlen (meltpath)
 				+ strlen ("MELT_PATH=") + 1);

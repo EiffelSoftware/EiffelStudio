@@ -116,9 +116,6 @@ end;
 				Result.set_id (real_id);
 				cache.put (Result);
 			end;
-		--rescue
-		--	Dialog_window.display ("Cannot read compilation information from disk");
-		--	retry
 		end;
 
 	remove (an_id: INTEGER) is

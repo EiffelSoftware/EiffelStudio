@@ -6,10 +6,7 @@ inherit
 
 	SHARED_LIKE_CONTROLER;
 	SHARED_ERROR_HANDLER;
-	EXCEPTIONS
-		export
-			{NONE} all
-		end;
+	SHARED_RESCUE_STATUS
 	
 feature 
 
@@ -28,10 +25,11 @@ feature
 			Like_control.wipe_out;
 			Result := type.solved_type (feat_table, f);
 		rescue
-			if is_programmer_exception ("Like cycle") then
+			if Rescue_status.is_like_exception then
 					-- Cycle in anchor type or unvalid anchor: the
 					-- exception is raise in routine `solved_type' of
 					-- classes LIKE_ID_AS, LIKE_FEATURE and LIKE_ARGUMENT
+				Rescue_status.set_is_like_exception (False);
 				error_msg := new_error;
 				error_msg.set_class (feat_table.associated_class);
 				error_msg.set_type (type);

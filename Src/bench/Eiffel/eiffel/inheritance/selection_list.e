@@ -28,7 +28,7 @@ feature
 			stop: BOOLEAN;
 			id, first_body_id: INTEGER;
 		do
-			if not System.code_replication_off and then count > 1 then
+			if count > 1 then
 				detect_replication (parents, new_t);
 			end;
 			first_feature := first.a_feature;
@@ -259,43 +259,43 @@ end;
 			--| solution is that if code_replication_off is set to true then
 			--| each unselected routine originally under the same
 			--| routine id will be given a new routine id.
-			if System.code_replication_off then
-				from
-					old_pos := index
-				until
-					after
-				loop
-					info := item;
-					a_feature := info.a_feature;
-						-- First condition for unselection: same body id
-					cond := a_feature.body_id = first_body_id;
-					if cond and then in_generic_class then
-							-- Second condition if written in a generic class: same
-							-- instantiated written actual type.
-						info_parent := info.parent;
-						if info_parent = Void then
-							instantiator := written_actual_type;
-						else
-							instantiator := info_parent.parent_type;
-						end;
-						written_type := written_actual_type.duplicate;
-						written_type := written_type.instantiation_in
-														(instantiator, written_id);
-						cond := to_compair.same_as (written_type);
-					end;
-					if cond then
-						a_feature := a_feature.unselected (id);	
-						a_feature.set_is_selected (False);
-						a_feature.set_is_origin (True);
-						a_feature.set_rout_id_set (rout_id_set.duplicate);
-						new_t.replace (a_feature, a_feature.feature_name);
-						remove
-					else
-						forth
-				end
-				end;
-				go_i_th (old_pos)
-			end
+			--if System.code_replication_off then
+				--from
+					--old_pos := index
+				--until
+					--after
+				--loop
+					--info := item;
+					--a_feature := info.a_feature;
+						---- First condition for unselection: same body id
+					--cond := a_feature.body_id = first_body_id;
+					--if cond and then in_generic_class then
+							---- Second condition if written in a generic class: same
+							---- instantiated written actual type.
+						--info_parent := info.parent;
+						--if info_parent = Void then
+							--instantiator := written_actual_type;
+						--else
+							--instantiator := info_parent.parent_type;
+						--end;
+						--written_type := written_actual_type.duplicate;
+						--written_type := written_type.instantiation_in
+														--(instantiator, written_id);
+						--cond := to_compair.same_as (written_type);
+					--end;
+					--if cond then
+						--a_feature := a_feature.unselected (id);	
+						--a_feature.set_is_selected (False);
+						--a_feature.set_is_origin (True);
+						--a_feature.set_rout_id_set (rout_id_set.duplicate);
+						--new_t.replace (a_feature, a_feature.feature_name);
+						--remove
+					--else
+						--forth
+				--end
+				--end;
+				--go_i_th (old_pos)
+			--end
 		end;
 
 feature -- Conceptual Replication
@@ -330,28 +330,30 @@ debug ("ACTUAL_REPLICATION", "REPLICATION")
 end;
 				replication := curr_feat.replicated;
 				new_t.replace (replication, replication.feature_name);
-				if inh_info.parent = Void then
-					-- if feature was redefined or merged or joined
-					-- then try to find parent clause to which
-					-- it came from
-					parents := find_parents (parent_list,
-									curr_feat.feature_name);
-				else
-					!!parents.make;
-					parents.add_front (inh_info.parent);
-				end;
 				inh_info.set_a_feature (replication);
-				from
-					parents.start
-				until
-					parents.after
-				loop
-					parent := parents.item;
-					!!rep_name;
-					rep_name.set_rep_feature (replication);
-					rep_name_list := rep_list_item (parent);
-					rep_name_list.add_front (rep_name);
-					parents.forth
+				if not System.code_replication_off then
+					if inh_info.parent = Void then
+						-- if feature was redefined or merged or joined
+						-- then try to find parent clause to which
+						-- it came from
+						parents := find_parents (parent_list,
+										curr_feat.feature_name);
+					else
+						!!parents.make;
+						parents.add_front (inh_info.parent);
+					end;
+					from
+						parents.start
+					until
+						parents.after
+					loop
+						parent := parents.item;
+						!!rep_name;
+						rep_name.set_rep_feature (replication);
+						rep_name_list := rep_list_item (parent);
+						rep_name_list.add_front (rep_name);
+						parents.forth
+					end;
 				end;
 				forth
 			end;

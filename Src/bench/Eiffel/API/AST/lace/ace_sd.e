@@ -357,4 +357,10 @@ feature -- Lace compilation
 			end;
 		end;
 
+	compile_all_classes: BOOLEAN is
+		-- Is the root class NONE, i.e. all the classes must be compiled
+		do
+			Result := root.compile_all_classes
+		end;
+
 end

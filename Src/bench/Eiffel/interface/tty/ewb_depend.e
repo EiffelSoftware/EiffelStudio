@@ -3,13 +3,12 @@ class EWB_DEPEND
 
 inherit
 
-	WINDOWS;
 	EWB_CMD;
 	SHARED_SERVER
 
 creation
 
-	make
+	make, null
 
 feature -- Creation
 
@@ -26,6 +25,17 @@ feature -- Creation
 feature
 
 	name: STRING is "compute the dependents";
+
+	loop_execute is
+		do
+			get_class_name;
+			class_name := last_input;
+			class_name.to_lower;
+			get_feature_name;
+			feature_name := last_input;
+			feature_name.to_lower;
+			execute;
+		end;
 
 	execute is
 		local

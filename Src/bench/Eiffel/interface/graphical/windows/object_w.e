@@ -16,7 +16,7 @@ inherit
 			make as normal_create
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name
+			tool_name, set_default_position
 		end
 
 creation
@@ -48,6 +48,14 @@ feature {NONE}
 			!!showtext_command.make (format_bar, text_window);
 				format_bar.attach_top (showtext_command, 0);
 				format_bar.attach_left (showtext_command, 0);
+		end;
+
+	set_default_position is
+        local
+            i: INTEGER;
+        do
+            i := 10 * window_manager.object_windows_count;
+			set_x_y (500 + i, 40 + i)
 		end;
 	
 end

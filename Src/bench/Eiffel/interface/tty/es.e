@@ -5,7 +5,8 @@ class ES
 inherit
 
 	ARGUMENTS;
-	SHARED_ERROR_BEHAVIOR
+	SHARED_ERROR_BEHAVIOR;
+	SHARED_EWB_HELP
 
 creation
 
@@ -45,41 +46,34 @@ feature -- Input/Output
 		do
 			io.putstring ("Usage:%N%T");
 			io.putstring (argument (0));
-			io.putstring (" [-help|-freeze|-finalize|-precompile|-clean|%N%
+			io.putstring (" [-help|-freeze|-finalize [-keep]|-precompile|-clean|%N%
+				%%T-loop|-clients class|-suppliers class%N%
 				%%T-flatshort [-troff] class|-flat class|-short [-troff] class%N%
 				%%T-descendants class|-ancestors class|%N%
-				%%T-aversions class feature|-dversions class feature|%N%
+				%%T-aversions class feature|-dversions class feature|-implementers class feature%N%
 				%%T-callers class feature|-dependents class feature|%N%
 				%%T[-stop] [-ace Ace] [-project Project]]%N");
 		end;
 
 	print_help is
 		do
-			print_one_help ("default (no option)", "recompile the system");
-			print_one_help ("-help", "print this help message");
-			print_one_help ("-freeze", "freeze the system");
-			print_one_help ("-finalize", "finalize the system");
-			print_one_help ("-precompile", "precompile the system");
-			print_one_help ("-clean", "clean the compilation structures");
-			print_one_help ("-ace", "specify the Ace file");
-			print_one_help ("-project", "specify the compilation directory");
-			print_one_help ("-callers", "print the callers of a class feature");
-			print_one_help ("-descendants", "print the descendants of a class");
-			print_one_help ("-ancestors", "print the ancestors of a class");
-			print_one_help ("-flatshort", "print the flat-short form of a class");
-			print_one_help ("-flat", "print the flat form of a class");
-			print_one_help ("-short", "print the short form of a class");
-			print_one_help ("-aversions", "print the ancestor versions of a class feature");
-			print_one_help ("-dversions", "print the descendant versions of a class feature");
-			print_one_help ("-dependents", "print the classes depending on a class feature")
-			print_one_help ("-stop", "stop on errror")
+			io.putstring ("%Tdefault (no option): recompile the system.%N");
+			from
+				help_messages.start
+			until
+				help_messages.after
+			loop
+				print_one_help 
+					(help_messages.key_for_iteration, help_messages.item_for_iteration);
+				help_messages.forth
+			end
 		end;
 
 	print_one_help (opt: STRING; txt: STRING) is
 		do
-			io.putstring ("%T");
+			io.putstring ("%T-");
 			io.putstring (opt);
-			io.putstring (" : ");
+			io.putstring (": ");
 			io.putstring (txt);
 			io.putstring (".%N")
 		end;
@@ -103,7 +97,7 @@ feature -- Command line options
 			-- command line options?
 
 	current_option: INTEGER;
-			-- Current indwx in the option list
+			-- Current index in the option list
 
 	help_only: BOOLEAN;
 
@@ -136,12 +130,19 @@ feature -- Command line options
 			option: STRING;
 			cn, fn: STRING;
 			troffed: BOOLEAN;
-			current_class_only: BOOLEAN
+			current_class_only: BOOLEAN;
+			keep: BOOLEAN;
 		do
 			option := argument (current_option);	
 
 			if option.is_equal ("-help") then
 				help_only := True
+			elseif option.is_equal ("-loop") then
+				if command /= Void then
+					option_error := True
+				else
+					!EWB_LOOP!command
+				end;
 			elseif option.is_equal ("-freeze") then
 				if command /= Void then
 					option_error := True
@@ -152,7 +153,13 @@ feature -- Command line options
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_FINALIZE!command
+					if current_option < (argument_count - 1) then
+						if argument (current_option + 1).is_equal ("-keep") then
+							current_option := current_option + 1;
+							keep := True;
+						end;
+					end;
+					!EWB_FINALIZE!command.make (keep);
 				end
 			elseif option.is_equal ("-clean") then
 				if command /= Void then
@@ -166,6 +173,20 @@ feature -- Command line options
 				else
 					!EWB_PRECOMP!command
 				end
+			elseif option.is_equal ("-implementers") then
+				if current_option < (argument_count - 2) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						current_option := current_option + 1;
+						fn := argument (current_option);
+						!EWB_HISTORY!command.make (cn, fn);
+					end;
+				else
+					option_error := True
+				end;
 			elseif option.is_equal ("-aversions") then
 				if current_option < (argument_count - 2) then
 					if command /= Void then
@@ -270,6 +291,30 @@ feature -- Command line options
 						current_option := current_option + 1;
 						cn := argument (current_option);
 						!EWB_ANCESTORS!command.make (cn)
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-clients") then
+				if current_option < (argument_count - 1) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						!EWB_CLIENTS!command.make (cn)
+					end;
+				else
+					option_error := True
+				end;
+			elseif option.is_equal ("-suppliers") then
+				if current_option < (argument_count - 1) then
+					if command /= Void then
+						option_error := True
+					else
+						current_option := current_option + 1;
+						cn := argument (current_option);
+						!EWB_SUPPLIERS!command.make (cn)
 					end;
 				else
 					option_error := True

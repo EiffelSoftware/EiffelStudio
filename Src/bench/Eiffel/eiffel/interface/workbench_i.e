@@ -5,8 +5,8 @@ class WORKBENCH_I
 inherit
 
 	SHARED_ERROR_HANDLER;
+	SHARED_RESCUE_STATUS;
 	SHARED_PASS;
-	EXCEPTIONS;
 	STORABLE;
 
 feature -- Attributes
@@ -107,7 +107,8 @@ feature -- Commands
 
 			end;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
+				Rescue_status.set_is_error_exception (False);
 				error_happened := True;
 				Error_handler.trace;
 				System.set_current_class (Void);
@@ -144,7 +145,7 @@ feature -- Commands
 			-- changed (for precompilation)
 		local
 			class_list: EXTEND_TABLE [CLASS_I, STRING];
-			i: INTEGER
+			i: INTEGER;
 		do
 			from
 				Universe.clusters.start
@@ -163,11 +164,51 @@ feature -- Commands
 				end;
 				Universe.clusters.forth
 			end;
-io.putstring ("Precompiling ");
-io.putint (i);
-io.putstring (" classes%N");
+				-- Verbose
+			io.putstring ("Precompiling ");
+			io.putint (i);
+			io.putstring (" classes%N");
 		end;
 
+	change_all_new_classes is
+			-- Record all the classes in the universe as
+			-- changed (for compilation using `NONE' as root class)
+		local
+			class_list: EXTEND_TABLE [CLASS_I, STRING];
+			c: CLUSTER_I;
+			cl: CLASS_I;
+			file_date: INTEGER;
+			str: ANY;
+		do
+			from
+				Universe.clusters.start
+			until
+				Universe.clusters.after
+			loop
+				c := Universe.clusters.item;
+				if not c.is_precompiled then
+					from
+						class_list := c.classes;
+						class_list.start
+					until
+						class_list.after
+					loop
+						cl := class_list.item_for_iteration;
+						if cl.compiled then
+							str := cl.file_name.to_c;
+							file_date := eif_date ($str);
+							if file_date /= cl.date then
+								change_class (class_list.item_for_iteration);
+							end;
+						else
+							change_class (class_list.item_for_iteration);
+						end;
+						class_list.forth
+					end;
+				end;
+				Universe.clusters.forth
+			end;
+		end;
 
 	add_class_to_recompile (cl: CLASS_I) is
 			-- Recompile the class but do not do the parsing
@@ -220,6 +261,12 @@ feature {NONE} -- Externals
 
 	set_dtype2 (o: INVARIANT_AS) is
 			-- Record dynamic type of INVARIANT_AS
+		external
+			"C"
+		end;
+
+	eif_date (s: ANY): INTEGER is
+			-- Date of file of name `str'.
 		external
 			"C"
 		end;

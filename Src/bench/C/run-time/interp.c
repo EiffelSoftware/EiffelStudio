@@ -2165,7 +2165,7 @@ int where;					/* Invariant after or before */
 	 */
 	while ((p_type = *cn_parents++) != -1)
 		/* Call to potential parent invariant */
-		irecursive_chkinv(p_type, obj, scur, stop);
+		irecursive_chkinv(p_type, obj, scur, stop, where);
 
 	/* Invariant check */
 	{

@@ -24,9 +24,10 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_BODY_ID;
 	SHARED_PASS;
-	EXCEPTIONS;
 	MEMORY;
 	SK_CONST;
+	SHARED_RESCUE_STATUS;
+	SHARED_ASSERTION_LEVEL
 
 creation
 
@@ -231,7 +232,7 @@ feature
 			file.close;
 			Error_handler.checksum;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 					-- Error happened
 				collection_on;
 				if not (file = Void or else file.is_closed) then
@@ -326,7 +327,7 @@ feature
 		ensure
 			No_error: not Error_handler.has_error;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 					-- Error happened
 				if old_syntactical_suppliers /= Void then
 					syntactical_suppliers.copy (old_syntactical_suppliers)
@@ -382,8 +383,35 @@ feature -- Expanded rues validity
 			-- Check the expanded validity rule.
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
+		local
+			generic_dec: FORMAL_DEC_AS;
+			constraint_type: TYPE_A;
 		do
+debug ("CHECK_EXPANDED");
+io.error.putstring ("Checking expanded for: ");
+io.error.putstring (class_name);
+io.error.new_line;
+end;
 			feature_table.check_expanded;
+			if generics /= Void then
+				from
+					generics.start
+				until
+					generics.after
+				loop
+					generic_dec := generics.item;
+					constraint_type := generic_dec.constraint_type;
+					if
+						constraint_type /= Void 
+					and then
+						constraint_type.has_generics
+					then
+						System.expanded_checker.check_actual_type
+							(constraint_type)
+					end;
+					generics.forth;
+				end;
+			end;
 		end;
 
 feature -- Third pass: byte code production and type check
@@ -417,6 +445,13 @@ feature -- Third pass: byte code production and type check
 			feat_dep: FEATURE_DEPENDANCE;
 			rep_removed: BOOLEAN;
 			temp: STRING
+
+				-- Invariant
+			invar_clause: INVARIANT_AS;
+			invar_byte: INVARIANT_B;
+			invariant_changed: BOOLEAN;
+			inv_melted_info: INV_MELTED_INFO;
+			new_body_id: INTEGER;
 		do
 				-- Verbose
 			io.putstring ("Degree 3: class ");
@@ -470,7 +505,6 @@ end;
 					feature_changed := 	changed_features.has (feature_name)
 										and
 										not feature_i.is_attribute;
-
 					f_suppliers := dependances.item (feature_name);
 
 						-- Feature is considered syntactically changed if
@@ -484,13 +518,11 @@ end;
 						feature_changed := 
 							(not propagators.melted_empty_intersection
 																(f_suppliers));
-
 						if not feature_changed then
 							if f_suppliers.has_removed_id then
 								feature_changed := True;
 							end;
 						end;
-
 						if feature_changed then
 								-- Automatic melting of the feature
 							feature_i.change_body_id;
@@ -548,6 +580,9 @@ end;
 								if f_suppliers /= Void then
 										-- Dependances update: remove old
 										-- dependances for `feature_name'.
+									if new_suppliers = Void then
+										new_suppliers := suppliers.same_suppliers;
+									end;
 									new_suppliers.remove_occurence (f_suppliers);
 									dependances.remove (feature_name);
 								end;
@@ -557,6 +592,9 @@ end;
 										-- dependances for `feature_name'.
 									f_suppliers := ast_context.supplier_ids.twin;
 									dependances.put (f_suppliers, feature_name);
+									if new_suppliers = Void then
+										new_suppliers := suppliers.same_suppliers;
+									end;
 									new_suppliers.add_occurence (f_suppliers);
 								end;
 
@@ -632,7 +670,87 @@ end;
 			end;
 
 				-- Recomputation of invariant clause
-			invariant_pass3 (dependances, new_suppliers, melt_set);
+
+
+			f_suppliers := dependances.item ("_inv_");
+
+			if propagators.invariant_removed then
+				dependances.remove ("_inv_");
+				if new_suppliers = Void then
+					new_suppliers := suppliers.same_suppliers;
+				end;
+				new_suppliers.remove_occurence (f_suppliers);
+				invariant_feature := Void;
+			else
+				invariant_changed := propagators.invariant_changed;
+				if not (invariant_changed or else f_suppliers = Void) then
+					invariant_changed := 
+						not propagators.melted_empty_intersection (f_suppliers);
+				end;
+				if invariant_changed then
+					if invariant_feature = Void then
+						!!invariant_feature.make (Current);
+						invariant_feature.set_body_index
+											(System.body_index_counter.next);
+					end;
+					new_body_id := System.body_id_counter.next;
+					System.body_index_table.force
+								(new_body_id, invariant_feature.body_index);
+				end;
+				if	(	invariant_changed
+						or else
+						not	(	f_suppliers = Void
+								or else
+								(propagators.empty_intersection (f_suppliers)
+								and then
+								propagators.changed_status_empty_intersection (f_suppliers.suppliers))
+							)
+					)
+				then
+					invar_clause := Tmp_inv_ast_server.item (id);
+					Error_handler.mark;
+
+debug ("ACTIVITY")
+	io.error.putstring ("%TType check for invariant%N");
+end;
+					invar_clause.type_check;
+					--if	invariant_changed
+					--	and then
+					if
+						not Error_handler.new_error
+					then
+						if f_suppliers /= Void then
+							if new_suppliers = Void then
+								new_suppliers := suppliers.same_suppliers;
+							end;
+							new_suppliers.remove_occurence (f_suppliers);
+							dependances.remove ("_inv_");
+						end;
+						f_suppliers := ast_context.supplier_ids.twin;
+						dependances.put (f_suppliers, "_inv_");
+						if new_suppliers = Void then
+							new_suppliers := suppliers.same_suppliers;
+						end;
+						new_suppliers.add_occurence (f_suppliers);
+
+debug ("ACTIVITY")
+	io.error.putstring ("%TByte code for invariant%N");
+end;
+
+						ast_context.start_lines;
+						!!invar_byte;
+						invar_byte.set_id (id);
+						invar_byte.set_byte_list (invar_clause.byte_node);
+						Tmp_inv_byte_server.put (invar_byte);
+
+						!!inv_melted_info;
+						melt_set.put (inv_melted_info);
+
+					end;
+						-- Clean context
+					ast_context.clear2;
+				end;
+			end;
 
 				-- Check sum error
 			Error_handler.checksum;
@@ -651,6 +769,9 @@ end;
 					if not feature_i.is_code_replicated then
 						f_suppliers := dependances.item (feature_name);
 						if f_suppliers /= Void then
+							if new_suppliers = Void then
+								new_suppliers := suppliers.same_suppliers;
+							end;
 							new_suppliers.remove_occurence (f_suppliers);
 						end;
 						dependances.remove (feature_name);
@@ -719,9 +840,13 @@ end;
 		ensure
 			No_error: not Error_handler.has_error;
 		rescue
-			if exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 					-- Clean context if error
 				ast_context.clear2;
+					-- Clean the caches if error
+				tmp_body_server.cache.wipe_out
+				tmp_rep_feat_server.cache.wipe_out
+				tmp_inv_ast_server.cache.wipe_out
 			end;
 		end;
 
@@ -775,81 +900,88 @@ end;
 						new_suppliers: like suppliers;
 						melt_set: like melted_set) is
 			-- Recomputation of invariant clause
-		require
-			good_argument1: dependances /= Void;
-			good_argument2: changed implies new_suppliers /= Void;
-			good_argument3: melt_set /= Void;
-		local
-			invar_clause: INVARIANT_AS;
-			invar_byte: INVARIANT_B;
-			f_suppliers: FEATURE_DEPENDANCE;
-			invariant_changed: BOOLEAN;
-			melted_info: INV_MELTED_INFO;
-			new_body_id: INTEGER;
+--		require
+--			good_argument1: dependances /= Void;
+--			good_argument2: changed implies new_suppliers /= Void;
+--			good_argument3: melt_set /= Void;
+--		local
+--			invar_clause: INVARIANT_AS;
+--			invar_byte: INVARIANT_B;
+--			f_suppliers: FEATURE_DEPENDANCE;
+--			invariant_changed: BOOLEAN;
+--			melted_info: INV_MELTED_INFO;
+--			new_body_id: INTEGER;
 		do
-			f_suppliers := dependances.item ("_inv_");
-
-			if propagators.invariant_removed then
-				dependances.remove ("_inv_");
-				new_suppliers.remove_occurence (f_suppliers);
-				invariant_feature := Void;
-			else
-				invariant_changed := propagators.invariant_changed;
-				if not (invariant_changed or else f_suppliers = Void) then
-					invariant_changed := 
-						not propagators.melted_empty_intersection (f_suppliers);
-				end;
-				if invariant_changed then
-					if invariant_feature = Void then
-						!!invariant_feature.make (Current);
-						invariant_feature.set_body_index
-											(System.body_index_counter.next);
-					end;
-					new_body_id := System.body_id_counter.next;
-					System.body_index_table.force
-								(new_body_id, invariant_feature.body_index);
-				end;
-				if	(	invariant_changed
-						or else
-						not	(	f_suppliers = Void
-								or else
-								(propagators.empty_intersection (f_suppliers)
-								and then
-								propagators.changed_status_empty_intersection (f_suppliers.suppliers))
-							)
-					)
-				then
-					invar_clause := Tmp_inv_ast_server.item (id);
-					Error_handler.mark;
-					invar_clause.type_check;
-
-					--if	invariant_changed
-					--	and then
-					if
-						not Error_handler.new_error
-					then
-						if f_suppliers /= Void then
-							new_suppliers.remove_occurence (f_suppliers);
-							dependances.remove ("_inv_");
-						end;
-						f_suppliers := ast_context.supplier_ids.twin;
-						dependances.put (f_suppliers, "_inv_");
-						new_suppliers.add_occurence (f_suppliers);
-
-						ast_context.start_lines;
-						!!invar_byte;
-						invar_byte.set_id (id);
-						invar_byte.set_byte_list (invar_clause.byte_node);
-						Tmp_inv_byte_server.put (invar_byte);
-
-						!!melted_info;
-						melt_set.put (melted_info);
-
-					end;
-						-- Clean context
-					ast_context.clear2;
-				end;
-			end;
+--			f_suppliers := dependances.item ("_inv_");
+--
+--			if propagators.invariant_removed then
+--				dependances.remove ("_inv_");
+--				new_suppliers.remove_occurence (f_suppliers);
+--				invariant_feature := Void;
+--			else
+--				invariant_changed := propagators.invariant_changed;
+--				if not (invariant_changed or else f_suppliers = Void) then
+--					invariant_changed := 
+--						not propagators.melted_empty_intersection (f_suppliers);
+--				end;
+--				if invariant_changed then
+--					if invariant_feature = Void then
+--						!!invariant_feature.make (Current);
+--						invariant_feature.set_body_index
+--											(System.body_index_counter.next);
+--					end;
+--					new_body_id := System.body_id_counter.next;
+--					System.body_index_table.force
+--								(new_body_id, invariant_feature.body_index);
+--				end;
+--				if	(	invariant_changed
+--						or else
+--						not	(	f_suppliers = Void
+--								or else
+--								(propagators.empty_intersection (f_suppliers)
+--								and then
+--								propagators.changed_status_empty_intersection (f_suppliers.suppliers))
+--							)
+--					)
+--				then
+--					invar_clause := Tmp_inv_ast_server.item (id);
+--					Error_handler.mark;
+--
+--debug ("ACTIVITY")
+--	io.error.putstring ("%TType check for invariant%N");
+--end;
+--					invar_clause.type_check;
+--					--if	invariant_changed
+--					--	and then
+--					if
+--						not Error_handler.new_error
+--					then
+--						if f_suppliers /= Void then
+--							new_suppliers.remove_occurence (f_suppliers);
+--							dependances.remove ("_inv_");
+--						end;
+--						f_suppliers := ast_context.supplier_ids.twin;
+--						dependances.put (f_suppliers, "_inv_");
+--						new_suppliers.add_occurence (f_suppliers);
+--
+--debug ("ACTIVITY")
+--	io.error.putstring ("%TByte code for invariant%N");
+--end;
+--
+--						ast_context.start_lines;
+--						!!invar_byte;
+--						invar_byte.set_id (id);
+--						invar_byte.set_byte_list (invar_clause.byte_node);
+--						Tmp_inv_byte_server.put (invar_byte);
+--
+--						!!melted_info;
+--						melt_set.put (melted_info);
+--
+--					end;
+--						-- Clean context
+--					ast_context.clear2;
+--				end;
+--			end;
 		end;
 
 	update_suppliers (new_suppliers: like suppliers) is
@@ -1459,21 +1591,21 @@ feature -- Class initialization
 					set_changed (True);
 					System.set_update_sort (True);
 
-						-- Take care of signature conformance for redefinion of
-						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
-						-- from PARENT anymore, the redefinition of f is not valid
-					if removed_parent (old_parents) then
-						from
-							syntactical_clients.start
-						until
-							syntactical_clients.after
-						loop
-							a_client := syntactical_clients.item;
-							a_client.set_changed2 (True);
-							pass2_controler.insert_new_class (a_client);
-							syntactical_clients.forth
-						end;
-					end;
+--						-- Take care of signature conformance for redefinion of
+--						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
+--						-- from PARENT anymore, the redefinition of f is not valid
+--					if removed_parent (old_parents) then
+--						from
+--							syntactical_clients.start
+--						until
+--							syntactical_clients.after
+--						loop
+--							a_client := syntactical_clients.item;
+--							a_client.set_changed2 (True);
+--							pass2_controler.insert_new_class (a_client);
+--							syntactical_clients.forth
+--						end;
+--					end;
 				end;
 				if not changed then
 						-- If the class is not changed, it is marked `changed2'
@@ -1784,6 +1916,7 @@ feature
 			generic_dec: FORMAL_DEC_AS;
 			constraint_type: TYPE;
 		do
+			Inst_context.set_cluster (cluster);
 			from
 				generics.start
 			until
@@ -2207,7 +2340,17 @@ feature -- Convenience features
 	assertion_level: ASSERTION_I is
 			-- Assertion level of the class
 		do
-			Result := lace_class.assertion_level
+			if System.in_final_mode then
+					-- In final mode we do not generate assertions
+					-- if the dead code remover is on.
+				if not System.remover_off then
+					Result := No_level
+				else
+					Result := lace_class.assertion_level
+				end;
+			else
+				Result := lace_class.assertion_level
+			end
 		end;
 
 	trace_level: TRACE_I is
@@ -2716,8 +2859,11 @@ feature -- PS
 			formal_dec: FORMAL_DEC_AS;
 			constraint_type: TYPE;
 			error: BOOLEAN;
+			old_cluster: CLUSTER_I;
 		do
 			if not error then
+				old_cluster := Inst_context.cluster;
+				Inst_context.set_cluster (cluster);
 				!!Result.make (50);
 				Result.append (class_name);
 				if generics /= Void then
@@ -2731,7 +2877,7 @@ feature -- PS
 						Result.append (formal_dec.formal_name);
 						if formal_dec.constraint /= Void then
 							Result.append (" -> ");
-							constraint_type := formal_dec.constraint.a_type (cluster);
+							constraint_type := formal_dec.constraint.actual_type;
 							if constraint_type = Void then
 								constraint_type := formal_dec.constraint
 							end;
@@ -2745,20 +2891,8 @@ feature -- PS
 					Result.append ("]")
 				end;
 				Result.to_upper;
+				Inst_context.set_cluster (old_cluster);
 			end;
-		rescue
-			-- FIX ME ?
-			io.error.putstring ("%NError when building the signature of ");
-			io.error.putstring (class_name.duplicate);
-			io.error.new_line;
-			!!Result.make (50);
-			Result.append (class_name);
-			if generics /= Void then
-				Result.append (" [ ... ]");
-			end;
-			Result.to_upper;
-			error := True;
-			retry;
 		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is
@@ -2768,8 +2902,11 @@ feature -- PS
 			constraint_type: TYPE;
 			c_name: STRING;
 			error: BOOLEAN;
+			old_cluster: CLUSTER_I;
 		do
 			if not error then
+				old_cluster := Inst_context.cluster;
+				Inst_context.set_cluster (cluster);
 				append_clickable_name (a_clickable);
 				if generics /= Void then
 					a_clickable.put_string (" [");
@@ -2784,7 +2921,7 @@ feature -- PS
 						a_clickable.put_string (c_name);
 						if formal_dec.constraint /= Void then
 							a_clickable.put_string (" -> ");
-							constraint_type := formal_dec.constraint.a_type (cluster);
+							constraint_type := formal_dec.constraint.actual_type;
 							if constraint_type = Void then
 									-- Problem in building the type
 									-- Should occur only for invalid constraint
@@ -2800,14 +2937,8 @@ feature -- PS
 					end;
 					a_clickable.put_char (']');
 				end;
+				Inst_context.set_cluster (old_cluster);
 			end;
-		rescue
-			io.error.putstring ("%NError when building the signature of ");
-			io.error.putstring (class_name.duplicate);
-			io.error.new_line;
-			-- FIX ME ?
-			error := True;
-			retry;
 		end;
 
 	append_clickable_name (a_clickable: CLICK_WINDOW) is
@@ -2960,13 +3091,7 @@ end;
 			rep_features: LINKED_LIST [S_REP_NAME];
 		do
 			rep_class_info := Tmp_rep_info_server.item (id);
-debug ("ACTUAL_REPLICATION")
-	io.error.putstring ("Replication for class ");
-	io.error.putstring (class_name);
-	io.error.new_line;
-	rep_class_info.trace;	
-end;
-debug ("REPLICATION")
+debug ("ACTUAL_REPLICATION", "REPLICATION")
 	io.error.putstring ("Replication for class ");
 	io.error.putstring (class_name);
 	io.error.new_line;
@@ -3026,10 +3151,7 @@ end;
 						System.body_index_table.force (new_body_id, new_feat.body_index);
 					end;
 					rep_table.force (new_feat_as, new_body_id);
-debug ("ACTUAL_REPLICATION")
-	new_feat.trace;
-end;
-debug ("REPLICATION")
+debug ("ACTUAL_REPLICATION", "REPLICATION")
 	new_feat.trace;
 end;
 					rep_features.forth;

@@ -81,7 +81,7 @@ feature -- Implementation of inherited deferred features
 					-- Check if there is a cycle
 				if Like_control.has (rout_id) or else anchor_type.is_void then
 						-- Error because of cycle
-					Error_handler.raise ("Like cycle");
+					Like_control.raise_error
 				else
 						-- Update anchored type controler
 					Like_control.put (rout_id);
@@ -106,13 +106,13 @@ feature -- Implementation of inherited deferred features
 							-- There cannot be any like argument targeted
 							-- direclty or indirectly by a type anchored on a
 							-- feature
-						Error_handler.raise ("Like cycle");
+						Like_control.raise_error
 					else
 						if
 							Like_control.arguments.has (argument_position)
 						then
 								-- Cycle involving anchors on arguments
-							Error_handler.raise ("Like cycle");
+							Like_control.raise_error
 						end;
 						Like_control.arguments.put (argument_position);	
 						anchor_type := f.arguments.i_th (argument_position);

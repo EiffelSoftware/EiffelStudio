@@ -3,7 +3,6 @@ class EWB_PAST
 
 inherit
 
-	WINDOWS;
 	EWB_CMD
 
 creation
@@ -20,13 +19,22 @@ feature -- Creation
 			feature_name.to_lower;
 		end;
 
-	null is do end;
-
 	class_name, feature_name: STRING;
 
 feature
 
 	name: STRING is "compute the history";
+
+	loop_execute is
+		do
+			get_class_name;
+			class_name := last_input;
+			class_name.to_lower;
+			get_feature_name;
+			feature_name := last_input;
+			feature_name.to_lower;
+			execute;
+		end;
 
 	execute is
 		local

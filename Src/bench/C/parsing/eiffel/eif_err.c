@@ -40,6 +40,10 @@ void yyerror(s)
 		/* Bad character */
 		(*syntax5)(Error_handler);
 		break;
+	case EIF_ERROR6:
+		/* Empty manifest string */
+		(*syntax6)(Error_handler);
+		break;
 	case EIF_ERROR7:
 		/* Identifier too long: call feature `make_id_too_long' of
 		 * class ERROR_HANDLER.

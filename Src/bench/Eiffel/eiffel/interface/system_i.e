@@ -28,8 +28,7 @@ inherit
 	SHARED_ARRAY_BYTE;
 	SHARED_DECLARATIONS;
 	SHARED_PASS;
-	SHARED_DIALOG;
-	EXCEPTIONS;
+	SHARED_RESCUE_STATUS
 
 feature 
 
@@ -178,6 +177,13 @@ feature
 	first_compilation: BOOLEAN;
 			-- Is it the first compilation of the system
 			-- Used by the time check
+
+	poofter_finalization: BOOLEAN;
+			-- Will the next finalization be a poofter finalization?
+			-- i.e. not straight.
+			-- If it is not a poofter finalization we know how to 
+			-- generate the routine tables much quicker (see classes
+			-- ATTR_TABLE and ROUT_TABLE)
 
 	new_class: BOOLEAN;
 			-- Has a new class been inserted in the universe ?
@@ -629,6 +635,11 @@ end;
 				Workbench.change_class (root_class)
 			end;
 
+				-- `None' is specified as the root class
+			if Lace.compile_all_classes then
+				Workbench.change_all_new_classes
+			end;
+
 			freeze := freeze or else frozen_level = 0;
 
 				-- If status of compilation is successfull, copy
@@ -648,7 +659,6 @@ end;
 				original_body_index_table.copy (body_index_table.twin);
 				melted_set.wipe_out;
 			end;
-
 		end;
 
 feature -- Recompilation 
@@ -661,7 +671,7 @@ feature -- Recompilation
 			do_recompilation;
 			successfull := True;
 		rescue
-			if 	exception = Programmer_exception then
+			if Rescue_status.is_error_exception then
 				successfull := False;
 			end;
 		end;
@@ -672,11 +682,14 @@ feature -- Recompilation
 			root_class_c: CLASS_C;
 		do
 				-- Recompilation initialization
-			if not precompilation then
-				init_recompilation;
-			else
+			if precompilation then
 				init_precompilation
+			else
+				init_recompilation;
 			end;
+
+				-- Set the generation mode in workbench mode
+			byte_context.set_workbench_mode;
 
 				-- The time checker just checks if there is a possible
 				-- conflict for the suppliers of a class, i.e. a new class
@@ -686,6 +699,16 @@ feature -- Recompilation
 				-- The `new_classes' list is not used after the time
 				-- check. If it was successful, the list can be wiped out.
 			new_classes.wipe_out;
+
+				-- If the finalization is still believed to
+				-- be straight at this point we need to pervert it
+				-- into being a poofter once and for all if if is not
+				-- the first compilation and if there are actual classes
+				-- to be parsed.
+			if not poofter_finalization then
+				poofter_finalization := not (first_compilation or else
+					pass1_controler.changed_classes.empty);
+			end;
 
 				-- Syntax analysis: This maybe add new classes to
 				-- the system
@@ -710,13 +733,13 @@ end;
 			end;
 			new_class := False;
 
-			if not precompilation then
+			if not (precompilation or else Lace.compile_all_classes) then
 					-- The root class is not generic
 				root_class_c := root_class.compiled_class;
 				root_class_c.check_non_genericity_of_root_class;
 			end;
 
-			if not precompilation then
+			if not (precompilation or else Lace.compile_all_classes) then
 					-- Remove useless classes i.e classes without syntactical clients
 				remove_useless_classes;
 			end;
@@ -758,14 +781,14 @@ end;
 				-- heirs after
 			process_pass (pass2_controler);
 
-			if not precompilation then
+			if not (precompilation or else Lace.compile_all_classes) then
 				root_class_c.check_root_class_creators;
 			end;
 
 				-- Byte code production and type checking
 			process_pass (pass3_controler);
 
-			if not precompilation then
+			if not (precompilation or else Lace.compile_all_classes) then
 					-- Externals incrementality
 				freeze := freeze or else not externals.equiv;
 			end;
@@ -975,7 +998,7 @@ io.error.putstring ("%N");
 end;
 					-- Process skeleton(s) for `a_class'.
 				if
-					(not precompilation) or else
+					(not (precompilation or else Lace.compile_all_classes)) or else
 					a_class.has_types
 				then
 					a_class.process_skeleton;
@@ -1272,12 +1295,6 @@ end;
 			write_int (file_pointer, -1);
 
 			Update_file.close;
-		rescue
-			if not Update_file.is_closed then
-				Update_file.close
-			end;
-			Dialog_window.display ("Error in writing .UPDT file");
-			retry;
 		end;
 
 	make_conformance_table_byte_code is
@@ -1336,6 +1353,9 @@ end;
 			cl_type: CLASS_TYPE;
 			a_class: CLASS_C;
 		do
+debug ("OPTIONS")
+	io.error.putstring ("Making option table%N");
+end;
 			Byte_array.clear;
 			from
 				i := 1;
@@ -1348,6 +1368,11 @@ end;
 						-- Classes could be removed
 					Byte_array.append_short_integer (cl_type.type_id - 1);
 					a_class := cl_type.associated_class;
+debug ("OPTIONS")
+	io.error.putstring ("%TClass ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 					a_class.assertion_level.make_byte_code (Byte_array);
 					a_class.debug_level.make_byte_code (Byte_array);
 				end;
@@ -1462,10 +1487,6 @@ debug ("ACTIVITY")
 end;
 				-- Rebuild the dispatch table and the execution tables
 			shake;
-
-				-- Set the generation mode in workbench mode
-			byte_context.set_workbench_mode;
-
 
 				-- Generation of the descriptor tables
 			if First_compilation then
@@ -1639,9 +1660,6 @@ end;
 
 				-- Empty update file
 			generate_empty_update_file;
-		rescue
-			Dialog_window.display ("Cannot generate main Eiffel files");
-			retry;	
 		end;
 
 	generate_empty_update_file is
@@ -1775,17 +1793,28 @@ feature -- Final mode generation
 			Result := byte_context.final_mode
 		end;
 
-	finalized_generation is
+	finalized_generation (keep_assert: BOOLEAN) is
 			-- Finalizer generation
 		require
 			root_class.compiled;
 		local
 			i, nb: INTEGER;
 			a_class: CLASS_C;
-			temp: STRING
+			temp: STRING;
+			old_remover_off: BOOLEAN
 		do
+
+				-- Save the value of `remover_off'
+			old_remover_off := remover_off;
+		
+				-- Should dead code be removed?
+			if not remover_off then
+				remover_off := keep_assert and then Lace.has_assertions;
+			end
+
 				-- Set the generation mode in final mode
 			byte_context.set_final_mode;
+
 			Eiffel_table.init;
 
 			from
@@ -1874,6 +1903,7 @@ end;
 			generate_init_file;
 
 			remover := Void;
+			remover_off := old_remover_off;
 		end;
 
 feature -- Dead code removal
@@ -3221,6 +3251,7 @@ feature -- Conveniences
 			remover_off := False;
 			code_replication_off := True;
 			exception_stack_managed := False; 
+			Rescue_status.set_fail_on_rescue (False)
 		end;
 
 	set_id_array (a: like id_array) is

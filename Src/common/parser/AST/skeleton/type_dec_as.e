@@ -32,7 +32,7 @@ feature -- Initialization
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.set_separator(",");
+			ctxt.set_separator(", ");
 			ctxt.no_new_line_between_tokens;
 			id_list.format (ctxt);
 			ctxt.put_special(": ");

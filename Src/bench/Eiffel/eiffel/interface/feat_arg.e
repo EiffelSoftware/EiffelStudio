@@ -151,8 +151,8 @@ feature
 				argument_name := argument_names.i_th (index);
 				Arg_evaluator.set_argument_name (argument_name);
 				if associated_class = f.written_class then
-						-- Check validity of an expanded type
 					solved_type ?= item;
+						-- Check validity of an expanded type
 					if 	solved_type.has_expanded then
 						if 	solved_type.expanded_deferred then
 							!!vtec1;
@@ -167,6 +167,9 @@ feature
 							vtec2.set_entity_name (argument_name);
 							Error_handler.insert_error (vtec2);
 						end
+					end;
+					if solved_type.has_generics then
+						System.expanded_checker.check_actual_type (solved_type);
 					end;
 				end;
 				forth;

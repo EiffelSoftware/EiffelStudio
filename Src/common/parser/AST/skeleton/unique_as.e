@@ -6,7 +6,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_unique, type_check
+			is_unique, type_check, format
 		end
 
 feature -- Conveniences
@@ -29,6 +29,11 @@ feature -- Initialization
 			-- Type check a unique type
 		do
 			context.put (Integer_type);
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+		do
+			ctxt.put_keyword ("unique");
 		end;
 
 end

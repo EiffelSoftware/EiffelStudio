@@ -344,9 +344,6 @@ feature -- Type check, byte code and dead code removal
 			like_arg: LIKE_ARGUMENT;
 			pos: INTEGER;
 		do
-io.error.putstring ("feature call: ");
-io.error.putstring (feat.feature_name);
-io.error.new_line;
 			args := feat.arguments;
 				-- Attachment types are inserted in the reversal
 				-- order in `Attachments' during type check
@@ -364,35 +361,15 @@ io.error.new_line;
 						--| referring to.
 					Attachments.go_i_th (arg_pos);
 					type_a := Attachments.item;
-io.error.putstring ("retrieve from pos: ");
-io.error.putint (arg_pos);
-io.error.putstring (" item: ")
-io.error.putstring (type_a.dump);
-io.error.new_line;
 						--| Replace item in like argument
 					Attachments.go_i_th (pos - i + 1);
 					if Attachments.item.is_basic then
-io.error.putstring ("updating pos: ");
-io.error.putint (pos - i + 1);
-io.error.putstring (" item: ")
-io.error.putstring (Attachments.item.dump);
-io.error.new_line;
 							--| Replace item in like argument
 						Attachments.change_item (type_a);
 					end;
 				end;
 				i := i + 1
 			end;	
-from
-	Attachments.start
-until
-	Attachments.item = Void
-loop
-	io.error.putint (Attachments.cursor);
-	io.error.putstring (Attachments.item.dump);
-	io.error.new_line;
-	Attachments.forth
-end
 			Attachments.go_i_th (pos);
 		end;
 		

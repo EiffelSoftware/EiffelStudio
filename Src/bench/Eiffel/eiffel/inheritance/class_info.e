@@ -160,7 +160,7 @@ feature
 							if a_class.is_expanded 
 								and then
 								(
-									feature_list.count > 1
+									Result.count > 1
 									or else
 									a_feature.argument_count > 0
 								)
@@ -169,6 +169,7 @@ feature
 								vgcp4.set_class (a_class);
 								vgcp4.set_feature (a_feature);
 								Error_handler.insert_error (vgcp4);
+								Error_handler.checksum
 							end;
 						end;
 						feature_list.forth;

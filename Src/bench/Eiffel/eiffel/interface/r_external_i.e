@@ -10,13 +10,15 @@ inherit
 		redefine
 			replicated, code_id, unselected,
 			is_replicated, is_code_replicated,
-			set_is_code_replicated
+			set_is_code_replicated,
+			set_code_id
 		end;
 	EXTERNAL_I
 		redefine
 			replicated, code_id, unselected, transfer_to,
 			is_replicated, is_code_replicated, 
-			set_is_code_replicated
+			set_is_code_replicated,
+			set_code_id
 		select
 			transfer_to
 		end;

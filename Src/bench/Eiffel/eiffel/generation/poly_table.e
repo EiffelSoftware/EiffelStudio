@@ -61,8 +61,8 @@ feature
 		do
 			writer.generate_workbench (Current);
 			if has_type_table then
-                writer.generate_type_table (Current, False)
-            end;
+				writer.generate_type_table (Current, False)
+			end;
 		end;
 
 	generable: BOOLEAN is
@@ -203,29 +203,29 @@ feature
 		end;
 
 	goto_used (type_id: INTEGER) is
-            -- Move cursor to the first entry of type_id `type_id'
-            -- associated to an used effective class (non-deferred).
-        require
-            positive: type_id > 0;
+			-- Move cursor to the first entry of type_id `type_id'
+			-- associated to an used effective class (non-deferred).
+		require
+			positive: type_id > 0;
 		local
 			stop: BOOLEAN;
 			entry: ENTRY;
-        do
-            from
-                start
-            until
-                after or else stop
-            loop
+		do
+			from
+				start
+			until
+				after or else stop
+			loop
 				entry := item;
 				stop := 	entry.type_id >= type_id
 							and then
 							entry.used;
-                forth
-            end;
+				forth
+			end;
 			if stop then
 				back
 			end;
-        end;
+		end;
 
 	has_type_table: BOOLEAN is
 			-- Is a type table needed for the current table ?
@@ -357,20 +357,20 @@ feature
 				local_cursor := local_cursor.right
 			end;
 			if has_type_table then
-                ba.append ('%/001/');
-                from
-                    local_cursor := first_element
-                until
-                    local_cursor = Void
-                loop
+				ba.append ('%/001/');
+				from
+					local_cursor := first_element
+				until
+					local_cursor = Void
+				loop
 					entry := local_cursor.item;
-                    ba.append_short_integer (entry.type_id - 1);
-                    ba.append_short_integer (entry.feature_type_id - 1);
-                    local_cursor := local_cursor.right
-                end;
-            else
-                ba.append ('%U');
-            end;
+					ba.append_short_integer (entry.type_id - 1);
+					ba.append_short_integer (entry.feature_type_id - 1);
+					local_cursor := local_cursor.right
+				end;
+			else
+				ba.append ('%U');
+			end;
 		end;
 
 	make_header_code (ba: BYTE_ARRAY) is

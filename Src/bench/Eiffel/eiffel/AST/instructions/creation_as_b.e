@@ -60,6 +60,7 @@ feature -- Type check, byte code and dead code removal
 			vgcc5: VGCC5;
 			vgcc7: VGCC7;
 			vtug: VTUG;
+			not_supported: NOT_SUPPORTED;
 		do
 				-- Init the type stack
 			context.begin_expression;
@@ -111,6 +112,18 @@ feature -- Type check, byte code and dead code removal
 			else
 				if type /= Void then
 						-- Check specified creation type
+					if type.has_like then
+							-- FIXME
+							-- !like a! is nott supported in 3.2
+							-- The resolution of the type should be done
+							-- as the one for local variables (call to
+							-- local_evalutor and use of solved type!!)
+						!!not_supported;
+						context.init_error (not_supported);
+						not_supported.set_message ("An anchor type cannot be used as an explicit creation type");
+						Error_handler.insert_error (not_supported);
+						Error_handler.raise_error;
+					end;
 					new_creation_type := type.actual_type;
 					if not new_creation_type.good_generics then
 						vtug := new_creation_type.error_generics;

@@ -1,5 +1,6 @@
 indexing
-	description: "encapsulation of standard implementation of IStream interface"
+	description: "Encapsulation of standard implementation of IStream interface"
+	status: "See notice at end of class"
 	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -47,8 +47,6 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			do
-				--project_settings_window.show_relative_to_window (system_status.main_window)
-				--history.dialog.show_relative_to_window (system_status.main_window)
 				history.redo
 				command_handler.update
 			end

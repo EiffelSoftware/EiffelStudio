@@ -128,8 +128,7 @@ typedef enum EIF_PROJECT_TYPES
 {
 	EIF_PROJECT_TYPES_ConsoleApplication = 0,
 	EIF_PROJECT_TYPES_WindowsApplication,
-	EIF_PROJECT_TYPES_ClassLibrary,
-	EIF_PROJECT_TYPES_PrecompiledLibrary
+	EIF_PROJECT_TYPES_ClassLibrary
 } EIF_PROJECT_TYPES;
 
 //---------------------------------------------------------------------

@@ -26,6 +26,8 @@
 
 #include "new_pstore.h"
 
+#define MAX_BUFFER_SIZE	1000000L		/* Default size of buffer */
+
 rt_private EIF_REFERENCE server; /* Current server used when storing */
 rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid);
 rt_private void hash_table_create (int size);	/* Create HASH_TABLE [INTEGER, ADDRESS] */
@@ -42,6 +44,7 @@ rt_private struct store_htable *address_table;	/* HASH_TABLE [INTEGER, ADDRESS] 
 rt_private int max_object_id;	/* Current maximum allowed object id */
 rt_private char *buffer;	/* Memory area when storage is done */
 rt_private EIF_INTEGER current_buffer_pos;	/* Offset where we are writing at the moment */
+rt_private EIF_INTEGER buffer_size = MAX_BUFFER_SIZE;	/* Size of buffer */
 rt_private fnptr make_index, need_index;	/* Hook functions. */
 rt_private int file_position;	/* File position as given */
 rt_private EIF_INTEGER obj_nb;	/* Numberof stored objects computed by `traversal'. */
@@ -79,9 +82,40 @@ rt_public long store_append(
 	return file_position;
 }
 
-rt_public EIF_REFERENCE partial_retrieve (EIF_INTEGER f_desc, long position, long nb_obj)
+rt_public EIF_REFERENCE partial_retrieve (EIF_INTEGER f_desc, long position, long nb_obj, long length)
 {
-	return NULL;
+	EIF_REFERENCE result;
+	char gc_stopped = !gc_ison ();
+
+	gc_stop();
+
+		/* Go to `position' in `f_desc'. */
+	if (lseek (f_desc, position, SEEK_SET) == -1)
+		esys ();
+
+		/* Create buffer */
+	buffer = (char *) xmalloc (length, C_T, GC_OFF);
+
+		/* Read full content of what needs to be read */
+	if (read (f_desc, buffer, length) <= 0)
+			/* If we read 0 bytes, it means that we reached the end of file,
+			 * so we are missing something, instead of going further we stop */
+		eio();
+
+		/* Initialize buffer position */
+	current_buffer_pos = 0;
+
+		/* Retrieve all requested `nb_obj' objects. */
+	result = retrieve_objects (nb_obj);
+
+		/* Free `buffer' */
+	xfree ((char *) buffer);
+	buffer = NULL;
+
+	if (!gc_stopped)
+		gc_run();
+
+	return result;
 }
 
 rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
@@ -112,10 +146,14 @@ rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 			 * so we are missing something, instead of going further we stop */
 		eio();
 
+		/* Initialize buffer position */
+	current_buffer_pos = 0;
+
 		/* Retrieve all requested objects.
 		 * We will retrieve `*(EIF_INTEGER *) buffer' objects, since the number
 		 * of objects to retrieved has been stored at the second position in the
 		 * file */
+
 	result = retrieve_objects (*(EIF_INTEGER *) buffer);
 
 		/* Free `buffer' */
@@ -132,13 +170,15 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 {
 	EIF_INTEGER i, j, object_id, dtype;
 	EIF_INTEGER nb_bytes, nb_ref, object_size;
-	EIF_REFERENCE *obj_array, o_ref, *o_field;
+	EIF_REFERENCE *obj_array, o_ref, o_ptr, *o_field;
+	EIF_INTEGER min_object_id;
 	uint32 crflags, fflags, flags;
 	union overhead *zone;
 	char *tmp_buffer = buffer + sizeof(EIF_INTEGER);
+	EIF_BOOLEAN done = EIF_FALSE;
 
 		/* Allocate array where all retrieved objects will be stored */
-	obj_array = (EIF_REFERENCE *) xmalloc ((nb_obj + 1) * sizeof(EIF_REFERENCE), C_T, GC_OFF);
+	obj_array = (EIF_REFERENCE *) xmalloc (nb_obj * sizeof(EIF_REFERENCE), C_T, GC_OFF);
 
 		/* First pass of retrieving. We create `nb_obj' objects in one
 		 * pass without resolving the references between objects.
@@ -147,6 +187,14 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 	for (i = 0; i < nb_obj ; i++) {
 			/* Read ID of `i-th' object. */
 		tmp_buffer = buffer_read (tmp_buffer, &object_id, sizeof(EIF_INTEGER));
+
+			/* If it is the first object that we are reading, we store its
+			 * ID, since it is used to compute the lower bound of the `obj_array'
+			 * array. */
+		if (!done) {
+			min_object_id = object_id;
+			done = EIF_TRUE;
+		}
 
 			/* Read flags of `i-th' object. */
 		tmp_buffer = buffer_read (tmp_buffer, &flags, sizeof(uint32));
@@ -176,7 +224,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			tmp_buffer = buffer_read (tmp_buffer, o_ref, nb_bytes);
 		}
 			/* Store `o_ref' at `object_id' pos in `obj_array' */
-		obj_array [object_id] = o_ref;
+		obj_array [object_id - min_object_id] = o_ref;
 	}
 
 		/* Now, all objects have been retrieved, we do need to update
@@ -184,7 +232,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		 * We have to start the loop at `1' because `obj_array' starts at
 		 * `1'. This is imposed by the storing mechanism which cannot use
 		 * `0' as lower bound, since it is used for error checking. */
-	for (i = 1; i <= nb_obj ; i++) {
+	for (i = 0; i < nb_obj ; i++) {
 		o_ref = obj_array [i];
 		zone = HEADER(o_ref);
 		flags = zone->ov_flags;
@@ -192,11 +240,13 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 				/* We update SPECIAL object only if it is full of references. */
 			if (flags & EO_REF) {	/* SPECIAL of reference */
 					/* Get the number of elements in SPECIAL */
-				nb_ref = *(EIF_INTEGER *) (o_ref + (zone->ov_size & B_SIZE) - LNGPAD_2);
+				o_ptr = (EIF_REFERENCE) (o_ref + (zone->ov_size & B_SIZE) - LNGPAD_2);
+				nb_ref = *(EIF_INTEGER *) o_ptr;
+
 				for (j = 0; j < nb_ref; j++) {
 					o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 					if (*o_field != NULL) {
-						*o_field = obj_array [(EIF_INTEGER) (*o_field)];
+						*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 						RTAS_OPT (*o_field, j, o_ref);
 					}
 				}
@@ -207,7 +257,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			for (j = 0; j < nb_ref; j ++) {
 				o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 				if (*o_field != NULL) {
-					*o_field = obj_array [(EIF_INTEGER) (*o_field)];
+					*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 					RTAS(*o_field, o_ref);
 				}
 			}
@@ -215,7 +265,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 	}
 
 		/* Return root object stored in first entry of `obj_array'. */
-	return obj_array [1];
+	return obj_array[0];
 }
 
 rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
@@ -239,6 +289,8 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 		 * `0' when it does not find an item */
 	max_object_id = 1;
 
+		/* Initialize buffer position for new storing */
+	current_buffer_pos = 0;
 	current_buffer_pos += 2*sizeof(EIF_INTEGER);
 
 	nb_stored_object = store_object (object, 0);
@@ -273,6 +325,8 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 	saved_buffer = buffer_write (saved_buffer, &max_object_id, sizeof(EIF_REFERENCE));
 	written_byte += sizeof(EIF_REFERENCE);
 
+		/* Reset the EO_STORE flags */
+	zone->ov_flags &= ~EO_STORE;
 
 		/* Get object information */
 	fflags = zone->ov_flags;
@@ -292,16 +346,20 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 		object_size = (zone->ov_size & B_SIZE);
 
 			/* We have to save the size of the SPECIAL object */
-		saved_buffer = buffer_write(saved_buffer, &object_size, sizeof(EIF_INTEGER));
+		saved_buffer = buffer_write(saved_buffer, &(zone->ov_size), sizeof(EIF_INTEGER));
 		written_byte += sizeof(EIF_INTEGER);
 		current_buffer_pos += (written_byte + object_size);
 
 		if (flags & EO_REF) {	/* SPECIAL of references */
-			EIF_INTEGER count;
+			EIF_INTEGER real_count, count;
 			EIF_REFERENCE ref;
 
 			o_ptr = (EIF_REFERENCE) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 			count = *(EIF_INTEGER *) o_ptr;
+
+				/* Compute the difference between `count' and the read count
+				 * because we can have some padding in the area */
+			real_count = (object_size - LNGPAD_2)/sizeof(EIF_REFERENCE) - count;
 
 				/* We do not handle special which contains expanded types */
 			assert (!(flags & EO_COMP));
@@ -315,9 +373,6 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 					if (zone->ov_flags & EO_STORE) {
 							/* Found a new non-stored object. We need to give it a new
 							 * id and to store it in the HASH_TABLE */
-
-							/* Reset the EO_STORE flags */
-						zone->ov_flags &= ~EO_STORE;
 
 							/* Compute new ID for new object */
 						object_id = ++max_object_id;
@@ -333,6 +388,12 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 					saved_buffer = buffer_write (saved_buffer, &null_value, sizeof(EIF_REFERENCE));
 				}
 			}
+				/* Write 0 for the padding area */
+			for (;real_count > 0; real_count--)
+				saved_buffer = buffer_write (saved_buffer, &null_value, sizeof(EIF_REFERENCE));
+
+				/* Write SPECIAL info located at the end of the SPECIAL area */
+			saved_buffer = buffer_write (saved_buffer, object + object_size - LNGPAD_2, LNGPAD_2);
 		} else {				/* SPECIAL of basic types */
 			saved_buffer = buffer_write (saved_buffer, object, object_size);
 		}
@@ -353,9 +414,6 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 				if (zone->ov_flags & EO_STORE) {
 						/* Found a new non-stored object. We need to give it a new
 						 * id and to store it in the HASH_TABLE */
-
-						/* Reset the EO_STORE flags */
-					zone->ov_flags &= ~EO_STORE;
 
 						/* Compute new ID for new object */
 					object_id = ++max_object_id;
@@ -383,11 +441,12 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 			need_index) (server, object);
 
 	if (object_needs_index) 
-		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))
+		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER))
 			make_index)(server,
 						object,
-						file_position + saved_buffer_pos,
-						object_count - saved_object_count);
+						file_position + saved_buffer_pos - sizeof(EIF_REFERENCE),
+						object_count - saved_object_count,
+						current_buffer_pos - saved_buffer_pos);
 
 	return object_count;
 }
@@ -416,7 +475,7 @@ rt_private char *buffer_write (char *tmp_buffer, void *data, int size)
 rt_private void hash_table_create (int size)
 	/* Create data structures used when storing Eiffel objects */
 {
-	buffer = (char *) xmalloc (100000L, C_T, GC_OFF);
+	buffer = (char *) xmalloc (MAX_BUFFER_SIZE, C_T, GC_OFF);
 	address_table = (struct store_htable *) xmalloc(sizeof(struct store_htable), C_T, GC_OFF);
 	if (address_table == (struct store_htable *) 0)
 		xraise(EN_MEM);
@@ -478,7 +537,7 @@ rt_private int st_write_cid (char **tmp_buffer, uint32 dftype)
 
 	if (count > 1) {
 		*tmp_buffer = buffer_write (*tmp_buffer, cidarr+1, count * sizeof (int16));
-		result += count * sizeof(int16);
+		result += (count * sizeof(int16));
 	}
 
 	return result;
@@ -496,10 +555,10 @@ rt_private void traversal (EIF_REFERENCE object)
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if (flags & (EO_C | EO_STORE))
+	if ((flags & EO_C) || (flags & EO_STORE))
 		return;
 
-	flags |= EO_STORE;	/* We marked object as traversed. */
+	zone->ov_flags |= EO_STORE;	/* We marked object as traversed. */
 	obj_nb++;
 
 	if (flags & EO_SPEC) {	/* Special object */

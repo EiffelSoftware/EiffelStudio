@@ -502,7 +502,7 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 	 * byte of each item (the same for all items).
 	 */
 
-/********************** Preconditions ***********************/
+	/********************** Preconditions ***********************/
 	assert (ptr != (EIF_REFERENCE) 0);			/* Object not NULL. */
 	assert (!(HEADER (ptr)->ov_size & B_FWD));	/* Cannot be forwarded. */
 	assert (HEADER (ptr)->ov_flags & EO_SPEC);	/* Must be a special object. */
@@ -510,7 +510,7 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 							/* Cannot be full of references. */
 	assert (!(HEADER (ptr)->ov_flags & EO_COMP));	
 							/* cannot be a composite object. */
-/******************** End of Preconditions. *****************/
+	/******************** End of Preconditions. *****************/
 
 	zone = HEADER(ptr);
 	assert (HEADER (ptr)->ov_flags & EO_SPEC);
@@ -525,7 +525,6 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 
 	epush(&loc_stack, (EIF_REFERENCE) (&ptr));	/* Object may move if GC called */
 
-	/* FIXME with the case we realloc a smaller area. */
 	assert (!(HEADER(ptr)->ov_size & B_FWD));	/* Not forwarded. */
 	if (zone->ov_flags & (EO_NEW | EO_OLD))	/* Is it out of GSZ? */
 	{
@@ -572,26 +571,41 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 	}
 	else	/* Was allocated in the GSZ. */
 	{
-		uint32 tflags;		/* Temporary Eiffel flags. */
-
 #ifdef STRREALLOC_DEBUG
 		printf ("STRREALLOC_DEBUG: special string %x small enough, reallocated in GSZ, size = %d\n", ptr, size);
 #endif	/* STRREALLOC_DEBUG */
 
 		assert (!(HEADER (ptr)->ov_size & B_BUSY));	/* In scavenge zone. */
+		if (nbitems == count) {		/* Does resized object have same size? */
+			epop (&loc_stack, 1);	/* Unprotect `ptr'. */	
+			return ptr;				/* Return unchanged `ptr'. */
+		}
+
 		object = strmalloc (size);	/* Reserve `size' bytes in GSZ. */
-		tflags = HEADER (object)->ov_flags;
+		zone = HEADER (object);
 
-		/* Update the Eiffel flags of new reallocated object. */
-		HEADER (object)->ov_flags = HEADER (ptr)->ov_flags | tflags;
-
-		if ((EIF_REFERENCE) 0 == object) 
-		{
+		if ((EIF_REFERENCE) 0 == object) {
 			eraise("String reallocation", EN_MEM);
 			return (EIF_REFERENCE) 0;
 		}
+
 		/* Copy `ptr' in `object'.	*/
-		bcopy ((char *) ptr, (char *) object, (HEADER (ptr)->ov_size & B_SIZE) - LNGPAD_2);
+		assert (!(HEADER (ptr)->ov_size & B_FWD));	/* Not forwarded. */
+		if (nbitems > count) {	/* Is resized object bigger? */
+			bcopy ((char *) ptr, object, 
+					(HEADER (ptr)->ov_size & B_SIZE) - LNGPAD_2);
+											/* Copy only array of characters. */
+			/* Reset extra item with zeros. */
+			bzero ((char *) object + (count * elem_size), 
+							(nbitems - count) * elem_size);
+		}
+		else					/* Smaller object requested. */
+			bcopy ((char *) ptr, object, (HEADER (object)->ov_size & B_SIZE) - LNGPAD_2);
+								/* Truncate extra bytes. */
+
+		/* Set flags. */
+		zone->ov_flags |= HEADER (ptr)->ov_flags;	
+								/* Same as ptr's header, but size is updated. */	
 	}
 
 	if ((EIF_REFERENCE) 0 == object) 
@@ -608,6 +622,13 @@ rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
 	ref = object + (zone->ov_size & B_SIZE) - LNGPAD_2;
 	*(long *) ref = nbitems;						/* New count */
 	*(long *) (ref + sizeof(long)) = elem_size; 	/* New item size */
+
+	/*** Postconditions. ***/
+	assert (HEADER (object)->ov_flags & EO_SPEC);	/* Must be special. */
+	assert (!(HEADER (object)->ov_flags & EO_REF));	/* Not full of refs. */
+	assert (!(HEADER (object)->ov_flags & EO_C));	/* Not a C one. */
+	assert ((HEADER (object)->ov_size & B_SIZE) >= size);/* Correct new size. */
+	/**** End of Postconditions. ***/	
 
 	return object;
 
@@ -2232,7 +2253,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	 */
 
 	if (zone != (union overhead *) 0) {
-		bcopy(ptr, (EIF_REFERENCE) zone, r & B_SIZE);	/* Move to new location */
+		bcopy((char *) ptr, (char *) zone, r & B_SIZE);	/* Move to new location */
 		HEADER(zone)->ov_flags =				/* Keep Eiffel flags */
 			HEADER(ptr)->ov_flags;
 		if (!(gc_flag & GC_FREE))		/* Will GC take care of free? */

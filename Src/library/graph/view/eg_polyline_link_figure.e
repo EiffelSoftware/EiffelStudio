@@ -162,18 +162,20 @@ feature -- Access
 			line.point_array.item (0).set (source.port_x, source.port_y)
 			
 			if is_reflexive then
-				l_item ?= l_cursor.item
-				l_item.start
-				ax := xml_routines.xml_integer (l_item, "X_POS")
-				ay := xml_routines.xml_integer (l_item, "Y_POS")
-				line.point_array.item (1).set (ax, ay)
-				
-				l_cursor.forth
-				l_item ?= l_cursor.item
-				l_item.start
-				ax := xml_routines.xml_integer (l_item, "X_POS")
-				ay := xml_routines.xml_integer (l_item, "Y_POS")
-				line.point_array.item (2).set (ax, ay)
+				if not l_cursor.after then
+					l_item ?= l_cursor.item
+					l_item.start
+					ax := xml_routines.xml_integer (l_item, "X_POS")
+					ay := xml_routines.xml_integer (l_item, "Y_POS")
+					line.point_array.item (1).set (ax, ay)
+					
+					l_cursor.forth
+					l_item ?= l_cursor.item
+					l_item.start
+					ax := xml_routines.xml_integer (l_item, "X_POS")
+					ay := xml_routines.xml_integer (l_item, "Y_POS")
+					line.point_array.item (2).set (ax, ay)
+				end
 			else
 				from
 				until

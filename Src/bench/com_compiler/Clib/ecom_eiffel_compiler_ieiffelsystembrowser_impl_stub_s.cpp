@@ -113,6 +113,36 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_cluste
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::external_clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters )
+
+/*-----------------------------------------------------------
+	List of system's external clusters.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("external_clusters", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "external_clusters", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*some_clusters = grt_ec_ISE.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*some_clusters = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------

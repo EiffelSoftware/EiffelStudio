@@ -146,6 +146,39 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_system
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_external_clusters(  )
+
+/*-----------------------------------------------------------
+	List of system's external clusters.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelSystemBrowser == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelSystemBrowser_, (void **)&p_IEiffelSystemBrowser);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	ecom_eiffel_compiler::IEnumCluster * ret_value = 0;
+	
+	hr = p_IEiffelSystemBrowser->external_clusters( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_32 (ret_value));
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_INTEGER ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy::ccom_cluster_count(  )
 
 /*-----------------------------------------------------------

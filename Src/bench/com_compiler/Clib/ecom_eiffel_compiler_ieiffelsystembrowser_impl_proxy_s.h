@@ -67,6 +67,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	List of system's external clusters.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_external_clusters(  );
+
+
+	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
 	EIF_INTEGER ccom_cluster_count(  );

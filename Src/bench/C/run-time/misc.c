@@ -376,6 +376,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	int n;					/* Counter for initialization of expanded */
 
 	REQUIRE ("Must be special", HEADER (area)->ov_flags & EO_SPEC);
+	REQUIRE ("Must not be TUPLE", !(HEADER (area)->ov_flags & EO_TUPLE));
  
 	zone = HEADER(area);
 	ref = area + (zone->ov_size & B_SIZE) - LNGPAD_2;
@@ -412,6 +413,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	 * and relaunch the remembering process. */
 
 	CHECK ("Must be special", HEADER (new_area)->ov_flags & EO_SPEC);
+	REQUIRE ("Must not be TUPLE", !(HEADER (new_area)->ov_flags & EO_TUPLE));
 
 	if (!(HEADER(new_area)->ov_flags & EO_COMP))
 		return new_area;				/* No expanded objects */

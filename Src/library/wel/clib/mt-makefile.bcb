@@ -1,7 +1,7 @@
 # mtwel.lib - Makefile for Borland C
 
 CC = bcc32
-CFLAGS = -c -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) @&&|

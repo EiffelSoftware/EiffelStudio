@@ -1,7 +1,7 @@
 # wel.lib - Makefile for Borland C
 
 CC = bcc32
-CFLAGS = -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CFLAGS = -q -w-8064 -w-8065 -w-8057 -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) @&&|
@@ -21,8 +21,8 @@ wel.lib: $(OBJ)
 	tlib $@ +dynload.obj
 	tlib $@ +drawstate.obj
 	tlib $@ +mousehook.obj
-	if not exist $(ISE_EIFFEL)\library\wel\spec\bcb mkdir $(ISE_EIFFEL)\library\wel\spec\bcb
-	if not exist $(ISE_EIFFEL)\library\wel\spec\bcb\lib mkdir $(ISE_EIFFEL)\library\wel\spec\bcb\lib
-	copy $@ $(ISE_EIFFEL)\library\wel\spec\bcb\lib
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
 	del $@
 	del *.obj

@@ -32,10 +32,9 @@ end;
 			-- Invisible parent of shared windows
 			-- (warner, confirmer, ...)
 		once
-			!! Result.make (new_name, project_tool.screen);
-			Result.set_x_y (project_tool.screen.x, project_tool.screen.y);
-			Result.realize;
-			Result.hide
+			!!Result.make (new_name, project_tool.screen);
+			Result.set_size (Result.screen.width, Result.screen.height);
+			Result.set_x_y (0, 0)
 		end;
 
 	name_chooser: NAME_CHOOSER_W is

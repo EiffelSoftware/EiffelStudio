@@ -14,6 +14,8 @@ inherit
 		end
 
 	EV_MENU_ITEM_LIST_IMP
+		export
+			{EV_WINDOW_IMP} list_widget
 		redefine
 			interface,
 			insert_menu_item

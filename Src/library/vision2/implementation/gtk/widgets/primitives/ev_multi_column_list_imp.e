@@ -161,7 +161,11 @@ feature {NONE} -- Initialization
 
 				column_title_changed (temp_title, i)
 				column_width_changed (temp_width, i)
-				column_alignment_changed (temp_alignment, i)
+				
+				if i > 1 then
+					-- 1st column is always left aligned.
+					column_alignment_changed (temp_alignment, i)
+				end
 
 				i := i + 1
 			end
@@ -926,6 +930,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/21 00:57:58  king
+--| Prevented setting alignment for first column
+--|
 --| Revision 1.65  2000/04/20 21:04:28  king
 --| Added alignment implementation
 --|

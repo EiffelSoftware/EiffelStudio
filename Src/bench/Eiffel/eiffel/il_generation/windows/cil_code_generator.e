@@ -60,6 +60,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+		
 feature {NONE} -- Initialization
 
 	make is
@@ -421,8 +426,13 @@ feature -- Generation Structure
 			remap_external_token
 
 			if a_key_pair_file_name /= Void then
-				create public_key.make_from_file (a_key_pair_file_name)
-				l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
+				if (create {MD_STRONG_NAME}).present then
+					create public_key.make_from_file (a_key_pair_file_name)
+					l_assembly_flags := feature {MD_ASSEMBLY_FLAGS}.public_key
+				else
+					public_key := Void
+					Error_handler.insert_warning (create {VISM})
+				end
 			else
 				public_key := Void
 			end

@@ -187,9 +187,8 @@ feature -- Access
 		local
 			current_type: INTEGER
 		do
-			io.putstring ("Entered accepts_child")
 			current_type := dynamic_type_from_string (a_type)
-			if type_conforms_to (current_type, dynamic_type_from_string ("EV_WIDGET")) or
+			if type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_string)) or
 				type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_bar_string)) then
 				Result := True
 			end

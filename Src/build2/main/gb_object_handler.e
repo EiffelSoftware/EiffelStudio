@@ -55,7 +55,7 @@ feature -- Basic operation
 				new_object.build_display_object
 					-- We must only set up these events for widgets, as items do not have the correct
 					-- events that we can hook to.
-				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string ("EV_WIDGET")) then
+				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string (Ev_widget_string)) then
 					new_object.set_up_display_object_events (new_object.display_object, new_object.object)	
 				end
 			end
@@ -570,7 +570,7 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 				new_object.create_object_from_type
 				new_object.build_display_object
 					-- We only set up the user events on widgets at the moment.
-				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string ("EV_WIDGET")) then
+				if type_conforms_to (dynamic_type_from_string (new_object.type), dynamic_type_from_string (Ev_widget_string)) then
 					new_object.set_up_display_object_events (new_object.display_object, new_object.object)
 				end
 			end

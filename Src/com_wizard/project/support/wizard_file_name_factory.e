@@ -188,6 +188,12 @@ feature {WIZARD_TYPE_GENERATOR} -- Visitor
 			process_c_server
 		end
 
+	process_registration_code is
+			-- Create filename for 'a_generator'
+		do
+			process_c_server
+		end
+
 feature {NONE} -- Implementation
 
 	transient_writer: WIZARD_WRITER

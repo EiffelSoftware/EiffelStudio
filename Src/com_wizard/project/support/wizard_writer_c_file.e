@@ -83,16 +83,6 @@ feature -- Access
 				import_files.forth
 			end
 			from
-				functions.start
-			until
-				functions.after
-			loop
-				Result.append (New_line)
-				Result.append (New_line)
-				Result.append (functions.item.generated_header_file)
-				functions.forth
-			end
-			from
 				global_variables.start
 			until
 				global_variables.after
@@ -112,6 +102,17 @@ feature -- Access
 				Result.append (others.item)
 				others.forth
 			end
+			from
+				functions.start
+			until
+				functions.after
+			loop
+				Result.append (New_line)
+				Result.append (New_line)
+				Result.append (functions.item.generated_header_file)
+				functions.forth
+			end
+
 			Result.append (New_line)
 			Result.append (Sharp)
 			Result.append (Endif)

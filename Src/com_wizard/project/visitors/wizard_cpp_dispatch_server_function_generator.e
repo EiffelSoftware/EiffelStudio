@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 
 						arguments.append (Comma_space)
 
-						if visitor.is_basic_type or else visitor.is_basic_type_ref then
+						if is_boolean (visitor.vt_type) or visitor.is_basic_type or else visitor.is_basic_type_ref then
 							arguments.append (Tmp_clause)
 							arguments.append (func_desc.arguments.item.name)
 						else
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 					else
 						variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
-						if visitor.is_basic_type then
+						if visitor.is_basic_type or is_boolean (visitor.vt_type) then
 							arguments.append (Comma_space)
 							arguments.append (Open_parenthesis)
 							arguments.append (visitor.cecil_type)
@@ -86,12 +86,13 @@ feature {NONE} -- Implementation
 						end
 					end
 	
-					if not visitor.is_basic_type then
+					if not visitor.is_basic_type and not is_boolean (visitor.vt_type) then
 						free_object.append (Eif_wean)
 						free_object.append (Space_open_parenthesis)
 						free_object.append (Tmp_clause)
 						free_object.append (func_desc.arguments.item.name)
 						free_object.append (Close_parenthesis)
+						free_object.append (Semicolon)
 						free_object.append (New_line_tab)
 					end
 
@@ -128,12 +129,13 @@ feature {NONE} -- Implementation
 				Result.append (arguments)
 				Result.append (New_line_tab)
 
-				if not visitor.is_basic_type then
+				if not visitor.is_basic_type and not is_boolean (visitor.vt_type) then
 					Result.append (Eif_object)
 					Result.append (Space)
 					Result.append (Tmp_eif_object)
 					Result.append (Space_equal_space)
 					Result.append (Eif_protect)
+					Result.append (Space_open_parenthesis)
 					Result.append (Tmp_variable_name)
 					Result.append (Close_parenthesis)
 					Result.append (Semicolon)
@@ -214,10 +216,14 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
-				Result.append (Eif_wean)
-				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_eif_object)
-				Result.append (Close_parenthesis)
+				if is_boolean (visitor.vt_type) then
+					Result.append (Tmp_variable_name)
+				else
+					Result.append (Eif_wean)
+					Result.append (Space_open_parenthesis)
+					Result.append (Tmp_eif_object)
+					Result.append (Close_parenthesis)
+				end
 				Result.append (Close_parenthesis)
 			end
 

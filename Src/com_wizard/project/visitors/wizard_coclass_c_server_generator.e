@@ -18,6 +18,7 @@ feature -- Basic operations
 			member_writer: WIZARD_WRITER_C_MEMBER
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
 			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
+			a_registration_code_gen: WIZARD_REGISTRATION_CODE_GENERATOR
 			tmp_file_name: STRING
 		do
 			coclass_descriptor := a_descriptor
@@ -44,6 +45,13 @@ feature -- Basic operations
 			member_writer.set_name (Eiffel_object)
 			member_writer.set_result_type (Eif_object)
 			member_writer.set_comment ("Corresponding Eiffel object")
+			cpp_class_writer.add_member (member_writer, Private)
+
+			-- member (EIF_TYPE_ID type_id)
+			create member_writer.make
+			member_writer.set_name (Type_id)
+			member_writer.set_result_type (Eif_type_id)
+			member_writer.set_comment ("Eiffel type id")
 			cpp_class_writer.add_member (member_writer, Private)
 
 			-- member (ITypeInfo * pTypeInfo)
@@ -88,6 +96,11 @@ feature -- Basic operations
 			tmp_coclass_descriptor := clone (coclass_descriptor)
 			a_class_object.initialize
 			a_class_object.generate (tmp_coclass_descriptor)
+
+			-- Generate server registration code
+			create a_registration_code_gen
+			a_registration_code_gen.initialize
+			a_registration_code_gen.generate (tmp_coclass_descriptor)
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
@@ -183,11 +196,16 @@ feature {NONE} -- Implementation
 
 			tmp_string := clone (Eif_type_id)
 			tmp_string.append (Space)
-			tmp_string.append (Type_id)
+			tmp_string.append (Type_id_variable_name)
 
 			constructor_writer.set_signature (tmp_string)
 
 			tmp_string := clone (Tab)
+			tmp_string.append (Type_id)
+			tmp_string.append (Space_equal_space)
+			tmp_string.append (Type_id_variable_name)
+			tmp_string.append (Semicolon)
+			tmp_string.append (New_line_tab)
 			tmp_string.append (Eiffel_object)
 			tmp_string.append (Space_equal_space)
 			tmp_string.append (Eif_create)
@@ -537,8 +555,26 @@ feature {NONE} -- Implementation
 
 	check_type_info: STRING is
 			-- Code to check whether type info exist
+		local
+			tmp_path: STRING
+			counter: INTEGER
 		do
 			Result := clone (Tab)
+
+			-- HRESULT tmp_hr = 0;
+			Result.append (Hresult)
+			Result.append (Space)
+			Result.append (Tmp_clause)
+			Result.append (Hresult_variable_name)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+			-- ITypeLib *pTypeLib
+			Result.append (Type_lib_type)
+			Result.append (Type_lib_variable_name)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
 
 			-- if ( pTypeInfo == 0)
 			Result.append (If_keyword)
@@ -550,42 +586,48 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab)
-			-- ITypeLib *pTypeLib
-			Result.append (Type_lib_type)
-			Result.append (Type_lib_variable_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
 
-			-- OLECHAR tmp_value = OLESTR("file_name")
+			-- OLECHAR * tmp_value = OLESTR("file_name")
 			Result.append (Olechar)
 			Result.append (Space)
+			Result.append (Asterisk)
 			Result.append (Tmp_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Olestr)
 			Result.append (Open_parenthesis)
 			Result.append (Double_quote)
-			Result.append (shared_wizard_environment.type_library_file_name)
+
+			tmp_path := clone (shared_wizard_environment.type_library_file_name)
+
+			from
+				counter := 1
+			until
+				counter > tmp_path.count
+			loop
+				Result.append_character (tmp_path.item (counter))
+				if tmp_path.item (counter).is_equal('\') then
+					Result.append_character ('\')
+				end
+				counter := counter + 1
+			end			
 			Result.append (Double_quote)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
 
-			-- HRESULT tmp_hr = LoadTypeLib (&tmp_value, pTypeLib)
-			Result.append (Hresult)
-			Result.append (Space)
+			--tmp_hr = LoadTypeLib (tmp_value, pTypeLib)
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (Space_equal_space)
 			Result.append (Load_type_lib)
 			Result.append (Space_open_parenthesis)
-			Result.append (Ampersand)
 			Result.append (Tmp_variable_name)
 			Result.append (Comma_space)
 			Result.append (Ampersand)
 			Result.append (Type_lib_variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
-			Result.append (New_line_tab)
+			Result.append (New_line_tab_tab)
 
 			-- if (FAILED(tmp_hr))
 			Result.append (If_keyword)
@@ -596,7 +638,7 @@ feature {NONE} -- Implementation
 			Result.append (Hresult_variable_name)
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
-			Result.append (New_line_tab_tab)
+			Result.append (New_line_tab_tab_tab)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (Tmp_clause)
@@ -640,8 +682,6 @@ feature {NONE} -- Implementation
 			Result.append (Tmp_clause)
 			Result.append (Hresult_variable_name)
 			Result.append (semicolon)
-			Result.append (New_line_tab)			
-			Result.append (Close_curly_brace)
 			Result.append (New_line_tab)			
 		end
 

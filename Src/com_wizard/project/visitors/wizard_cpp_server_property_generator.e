@@ -195,8 +195,11 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
 				Result.append (Argument_name)
-				Result.append (Comma_space)
-				Result.append (Null)
+
+				if visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 			end
@@ -279,8 +282,8 @@ feature {NONE} -- Implementation
 				Result.append (Eiffel_object)
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
 			end
+			Result.append (Semicolon)
 		end
 
 	cecil_function_code (function_type, function_name, call_func_name: STRING): STRING is

@@ -17,6 +17,14 @@ inherit
 		end
 
 	GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR
+		undefine
+			default_create
+		end
+		
+	CONSTANTS
+		undefine
+			default_create
+		end
 		
 feature {GB_XML_STORE} -- Output
 
@@ -34,20 +42,24 @@ feature {GB_XML_STORE} -- Output
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 			new_pixmap: EV_PIXMAP
-			file_name: FILE_NAME
+			a_file_name: FILE_NAME
 			file: RAW_FILE
+			data: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)	
 			if element_info /= Void then
 				create new_pixmap
-				create file_name.make_from_string (element_info.data)
-				create file.make (file_name)
+				data := element_info.data
+				data := data.substring (data.last_index_of (Directory_seperator, data.count), data.count)
+				data := constant_by_name ("pixmap_location") + data
+				create a_file_name.make_from_string (data)
+				create file.make (a_file_name)
 				if file.exists then
-					new_pixmap.set_with_named_file (element_info.data)
+					new_pixmap.set_with_named_file (data)
 					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 				end
-				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (element_info.data))
+				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (a_file_name))
 			end
 		end
 

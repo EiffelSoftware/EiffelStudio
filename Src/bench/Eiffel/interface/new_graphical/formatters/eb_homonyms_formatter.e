@@ -19,10 +19,10 @@ creation
 	
 feature -- Porperties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showhomonyms 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showhomonyms 
+		end
  
 feature {NONE} -- Properties
 
@@ -46,6 +46,8 @@ feature {NONE} -- Properties
 		do
 			Result := Interface_names.t_Homonyms_of
 		end
+
+	post_fix: STRING is "hom"
 
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
 			-- Display homononyms of the routine.

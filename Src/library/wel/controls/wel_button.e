@@ -47,7 +47,7 @@ feature -- Color
 			-- Foreground color has no effect with SCROLL_BAR.
 			-- Cannot be Void.
 		do
-			!! Result.make_system (Color_windowtext)
+			create Result.make_system (Color_windowtext)
 		end
 
 	background_color: WEL_COLOR_REF is
@@ -55,7 +55,7 @@ feature -- Color
 			-- control
 			-- Can be redefined by the user
 		do
-			!! Result.make_system (color_scrollbar)
+			create Result.make_system (color_scrollbar)
 		end
 
 feature -- Notifications

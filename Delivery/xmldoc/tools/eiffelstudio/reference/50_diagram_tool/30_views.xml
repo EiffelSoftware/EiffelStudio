@@ -9,7 +9,7 @@
 		</paragraph>
 		<div>
 			<image>
-				<url>../../../../images/eiffelstudio/diagram/diagram-view-combo.png</url>
+				<url>/images/eiffelstudio/diagram/diagram-view-combo.png</url>
 			</image>
 		</div>
 		<paragraph>The view combo box, as seen in the image above, can be used to add a view or switch to a previously added one. Every class and cluster has a view "DEFAULT" that is generated automatically. If you create a new view and move for example a class around in it, the "DEFAULT" view is unaffected.</paragraph>

@@ -11,6 +11,11 @@ inherit
 	WIZARD_C_WRITER_GENERATOR
 
 	WIZARD_RECORD_GENERATOR
+	
+	ECOM_VAR_TYPE
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -28,7 +33,7 @@ feature -- Access
 				a_descriptor.fields.sort
 			end
 
-			create forward_def.make (0)
+			create forward_def.make (100)
 			if windows_structures.has (a_descriptor.c_type_name) then
 				a_windows_structure := windows_structures.item (a_descriptor.c_type_name)
 				forward_def.append (Hash_if_ndef)
@@ -68,7 +73,7 @@ feature -- Access
 			end
 			c_writer.add_other_forward (forward_def)
 
-			create struct_def.make (0)
+			create struct_def.make (1000)
 			if a_windows_structure /= Void then
 				struct_def.append (Hash_if_ndef)
 				struct_def.append (Space)
@@ -152,7 +157,7 @@ feature -- Access
 			end
 			c_writer.set_header_file_name (a_descriptor.c_header_file_name)
 
-			create header.make (0)
+			create header.make (1000)
 			header.append (Wizard_note)
 			header.append (a_descriptor.creation_message)
 			c_writer.set_header (header)
@@ -178,7 +183,7 @@ feature {NONE} -- Implementation
 			create a_data_visitor
 			a_data_visitor.visit (a_field_descriptor.data_type)
 
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Sharp)
 			Result.append (Define)
 			Result.append (Space)
@@ -283,7 +288,7 @@ feature {NONE} -- Implementation
 			create a_data_visitor
 			a_data_visitor.visit (a_field_descriptor.data_type)
 
-			create Result.make (0)
+			create Result.make (1000)
 			Result.append (Sharp)
 			Result.append (Define)
 			Result.append (Space)
@@ -375,6 +380,36 @@ feature {NONE} -- Implementation
 				
 				end
 
+			elseif a_data_visitor.is_structure then
+				Result.append (Memcpy)
+				Result.append (Space_open_parenthesis)
+				Result.append (Ampersand)
+				Result.append (Open_parenthesis)
+				Result.append (Open_parenthesis)
+				Result.append (Open_parenthesis)
+				Result.append (a_record_descriptor.c_type_name)
+				Result.append (Space)
+				Result.append (Asterisk)
+				Result.append (Close_parenthesis)
+				Result.append ("_ptr_")
+				Result.append (Close_parenthesis)
+				Result.append (Struct_selection_operator)
+				Result.append (a_field_descriptor.name)
+				Result.append (Close_parenthesis)
+				Result.append (Comma_space)
+				Result.append (Open_parenthesis)
+				Result.append (a_data_visitor.c_type)
+				Result.append (Space)
+				Result.append (Asterisk)
+				Result.append (Close_parenthesis)
+				Result.append ("_field_")
+				Result.append (Comma_space)
+				Result.append (Sizeof)
+				Result.append (Space_open_parenthesis)
+				Result.append (a_data_visitor.c_type)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+				
 			else
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
@@ -429,12 +464,16 @@ feature {NONE} -- Implementation
 					Result.append (a_data_visitor.ec_function_name)
 					Result.append (Space)
 					Result.append (Open_parenthesis)
-					Result.append (Eif_access)
-					Result.append (Space)
-					Result.append (Open_parenthesis)
+					if not (a_data_visitor.vt_type = Vt_bool) then
+						Result.append (Eif_access)
+						Result.append (Space)
+						Result.append (Open_parenthesis)
+					end
 					Result.append ("_field_")
 					Result.append (Close_parenthesis)
-					Result.append (Close_parenthesis)
+					if not (a_data_visitor.vt_type = Vt_bool) then
+						Result.append (Close_parenthesis)
+					end
 
 				end	
 			end

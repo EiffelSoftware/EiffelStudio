@@ -54,7 +54,7 @@ feature -- Access
 	adjustment_widget: POINTER is
 			-- Pointer to the widgets asjustment struct
 		do
-			Result := c_gtk_range_adjustment (widget)
+			Result := gtk_range_get_adjustment (widget)
 		end
 
 feature -- Status setting

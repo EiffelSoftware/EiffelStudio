@@ -105,7 +105,9 @@ feature {NONE} -- Initialization
 				-- Set up search tool
 			search_tool.associate_text_entry (search_field)
 				-- Disable search tool if installation incorrect.
-			search_parent_box.disable_sensitive
+			if installation_location = Void then
+				search_parent_box.disable_sensitive
+			end
 			
 				-- Now select font for `flat_short_display'
 			temp_font := flat_short_display.font

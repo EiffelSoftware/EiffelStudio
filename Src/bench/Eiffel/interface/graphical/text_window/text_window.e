@@ -417,17 +417,19 @@ feature
 			-- We are making it even more stupid now in order to
 			-- have the search be case-insensitive.
 		local
+			local_text: like text;
 			search_sub: STRING;
 			c_pos: INTEGER;
 			start_position: INTEGER;
 			temp: STRING
 		do
+			local_text := text;
 			c_pos := cursor_position;
 			if
 				(c_pos >= 0)	and then
-				(c_pos + 1 < text.count)
+				(c_pos + 1 < local_text.count)
 			then
-				search_sub := text.substring (c_pos + 1, text.count);
+				search_sub := local_text.substring (c_pos + 1, local_text.count);
 				search_sub.to_lower;
 				temp := clone (s);
 				temp.to_lower;	
@@ -439,7 +441,7 @@ feature
 					found := true
 				else
 					if (c_pos > 0) then
-						search_sub := text.substring (1, c_pos);
+						search_sub := local_text.substring (1, c_pos);
 						search_sub.to_lower;
 						temp := clone (s);
 						temp.to_lower;

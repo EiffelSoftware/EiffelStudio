@@ -25,7 +25,7 @@ feature -- Initialization
 			-- Make `s' the new target of iterations.
 		do
 			Precursor (s)
-			create internal_item_tuple.make
+			create internal_item_tuple
 		end
 
 feature -- Access

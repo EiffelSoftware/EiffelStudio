@@ -18,6 +18,7 @@ OBJ = 	registry.obj \
 		msgboxpa.obj \
 		diskspace.obj \
 		dynload.obj \
+		choose_folder.obj \
 		mousehook.obj
 
 wel.lib: $(OBJ)

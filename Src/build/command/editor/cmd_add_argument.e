@@ -191,7 +191,7 @@ feature {NONE}
 	update_information is
 		do
 			Precursor
-			command_instantiator.update_command
+			command_instantiator_generator.update_command
 		end
 
 	worked_on: STRING is

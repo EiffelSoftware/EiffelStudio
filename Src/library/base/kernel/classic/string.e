@@ -93,6 +93,7 @@ feature -- Initialization
 			fill_character (c)
 		ensure
 			count_set: count = n
+			area_allocated: capacity >= n
 			filled: occurrences (c) = count
 		end
 
@@ -110,6 +111,7 @@ feature -- Initialization
 			end
 		ensure
 			not_shared_implementation: Current /= s implies not shared_with (s)
+			initialized: same_string (s)
 		end
 
 	make_from_c (c_string: POINTER) is
@@ -223,10 +225,10 @@ feature -- Access
 			end
 		end
 
-	False_constant: STRING is "false"
+	false_constant: STRING is "false"
 			-- Constant string "false"
 
-	True_constant: STRING is "true"
+	true_constant: STRING is "true"
 			-- Constant string "true"
 
 	shared_with (other: STRING): BOOLEAN is
@@ -235,20 +237,20 @@ feature -- Access
 			Result := (other /= Void) and then (area = other.area)
 		end
 
-	index_of (c: CHARACTER; start: INTEGER): INTEGER is
-			-- Position of first occurrence of `c' at or after `start';
+	index_of (c: CHARACTER; start_index: INTEGER): INTEGER is
+			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		require
-			start_large_enough: start >= 1
-			start_small_enough: start <= count + 1
+			start_large_enough: start_index >= 1
+			start_small_enough: start_index <= count + 1
 		local
 			a: like area
 			i, nb: INTEGER
 		do
 			nb := count
-			if start <= nb then
+			if start_index <= nb then
 				from
-					i := start - 1
+					i := start_index - 1
 					nb := nb - 1
 					a := area
 				until
@@ -262,9 +264,11 @@ feature -- Access
 				end
 			end
 		ensure
-			index_of_non_negative: Result >= 0
-			correct_place: Result > 0 implies item (Result) = c
-			-- forall x : start..Result, item (x) /= c
+			valid_result: Result = 0 or (start_index <= Result and Result <= count)
+			zero_if_absent: (Result = 0) = not substring (start_index, count).has (c)
+			found_if_present: substring (start_index, count).has (c) implies item (Result) = c
+			none_before: substring (start_index, count).has (c) implies 
+				not substring (start_index, Result - 1).has (c)
 		end
 
 	last_index_of (c: CHARACTER; start_index_from_end: INTEGER): INTEGER is
@@ -337,13 +341,19 @@ feature -- Access
 			valid_start_index: start_index >= 1 and start_index <= count + 1
 		local
 			a: ANY
+			l_other_count: INTEGER
 		do
-			if other.is_empty then
-				Result := start_index
+			if other = Current then
+				if start_index = 1 then
+					Result := 1
+				end
 			else
-				if start_index <= count then
+				l_other_count := other.count
+				if l_other_count = 0 then
+					Result := start_index
+				elseif start_index <= (count - l_other_count + 1) then
 					a := other.area
-					Result := str_str ($area, $a, count, other.count, start_index, 0)
+					Result := str_str ($area, $a, count, l_other_count, start_index, 0)
 				end
 			end
 		ensure
@@ -405,6 +415,14 @@ feature -- Measurement
 				end
 				counter := counter + 1
 			end
+		ensure then
+			zero_if_empty: count = 0 implies Result = 0
+			recurse_if_not_found_at_first_position:
+				(count > 0 and then item (1) /= c) implies
+					Result = substring (2, count).occurrences (c)
+			recurse_if_found_at_first_position:
+				(count > 0 and then item (1) = c) implies
+					Result = 1 + substring (2, count).occurrences (c)
 		end
 
 	index_set: INTEGER_INTERVAL is
@@ -435,8 +453,26 @@ feature -- Comparison
 			-- Do `Current' and `other' have same character sequence?
 		require
 			other_not_void: other /= Void
+		local
+			i, nb: INTEGER
+			l_area, l_other_area: like area
 		do
-			Result := string.is_equal (other.string)
+			if other = Current then
+				Result := True
+			elseif other.count = count then
+				from
+					i := 0
+					nb := count - 1
+					l_area := area
+					l_other_area := other.area
+					Result := True
+				until
+					i > nb or not Result
+				loop
+					Result := l_area.item (i) = l_other_area.item (i)
+					i := i + 1
+				end
+			end
 		ensure
 			definition: Result = string.is_equal (other.string)
 		end
@@ -481,6 +517,11 @@ feature -- Status report
 				end
 				Result := (counter <= count)
 			end
+		ensure then
+			false_if_empty: count = 0 implies not Result
+			true_if_first: count > 0 and then item (1) = c implies Result
+			recurse: (count > 0 and then item (1) /= c) implies
+				(Result = substring (2, count).has (c))
 		end
 
 	has_substring (other: STRING): BOOLEAN is
@@ -488,9 +529,18 @@ feature -- Status report
 		require
 			other_not_void: other /= Void
 		do
-			if other.count <= count then
+			if other = Current then
+				Result := True
+			elseif other.count <= count then
 				Result := substring_index (other, 1) > 0
 			end
+		ensure
+			false_if_too_small: count < other.count implies not Result
+			true_if_initial: (count >= other.count and then
+				other.same_string (substring (1, other.count))) implies Result
+			recurse: (count >= other.count and then
+				not other.same_string (substring (1, other.count))) implies
+				(Result = substring (2, count).has_substring (other))
 		end
 
 	extendible: BOOLEAN is True
@@ -649,7 +699,9 @@ feature -- Status report
 			s.right_adjust
 			s.left_adjust
 			s.to_lower
-			Result := s.is_equal (True_constant) or else s.is_equal (False_constant)
+			Result := s.is_equal (true_constant) or else s.is_equal (false_constant)
+		ensure
+			is_boolean: Result = (as_lower.has_substring (true_constant) or as_lower.has_substring (false_constant))
 		end
 
 feature -- Element change
@@ -715,8 +767,11 @@ feature -- Element change
 			spsubcopy ($other_area, $area, start0, end0, index0)
 			internal_hash_code := 0
 		ensure
-			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
-			--	 item (index_pos + i) = old other.item (start_pos + i)
+			same_count: count = old count
+			copied: elks_checking implies
+				(is_equal (old substring (1, index_pos - 1) +
+				old other.substring (start_pos, end_pos) +
+				old substring (index_pos + (end_pos - start_pos + 1), count)))
 		end
 
 	replace_substring (s: STRING; start_index, end_index: INTEGER) is
@@ -741,8 +796,9 @@ feature -- Element change
 			internal_hash_code := 0
 		ensure
 			new_count: count = old count + old s.count - end_index + start_index - 1
-			replaced: is_equal (old (substring (1, start_index - 1) +
-				s + substring (end_index + 1, count)))
+			replaced: elks_checking implies
+				(is_equal (old (substring (1, start_index - 1) +
+					s + substring (end_index + 1, count))))
 		end
 
 	replace_substring_all (original, new: like Current) is
@@ -777,7 +833,7 @@ feature -- Element change
 			fill_with (' ')
 		ensure
 			same_size: (count = old count) and (capacity >= old capacity)
-			-- all_blank: For every `i' in 1..`count, `item' (`i') = `Blank'
+			all_blank: elks_checking implies occurrences (' ') = count
 		end
 
 	fill_blank is
@@ -787,7 +843,7 @@ feature -- Element change
 		ensure
 			filled: full
 			same_size: (count = capacity) and (capacity = old capacity)
-			-- all_blank: For every `i' in 1..`capacity', `item' (`i') = `Blank'
+			-- all_blank: For every `i' in `count'..`capacity', `item' (`i') = `Blank'
 		end
 
 	fill_with (c: CHARACTER) is
@@ -797,7 +853,7 @@ feature -- Element change
 			internal_hash_code := 0
 		ensure
 			same_count: (count = old count) and (capacity >= old capacity)
-			filled: occurrences (c) = count
+			filled: elks_checking implies occurrences (c) = count
 		end
 
 	replace_character (c: CHARACTER) is
@@ -808,7 +864,7 @@ feature -- Element change
 			fill_with (c)
 		ensure
 			same_count: (count = old count) and (capacity >= old capacity)
-			filled: occurrences (c) = count
+			filled: elks_checking implies occurrences (c) = count
 		end
 
 	fill_character (c: CHARACTER) is
@@ -837,7 +893,7 @@ feature -- Element change
 			keep_head (n)
 		ensure
 			new_count: count = n.min (old count)
-			-- first_kept: For every `i' in 1..`n', `item' (`i') = old `item' (`i')
+			kept: elks_checking implies is_equal (old substring (1, n.min (count)))
 		end
 
 	keep_head (n: INTEGER) is
@@ -852,7 +908,7 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = n.min (old count)
-			-- first_kept: For every `i' in 1..`n', `item' (`i') = old `item' (`i')
+			kept: elks_checking implies is_equal (old substring (1, n.min (count)))
 		end
 
 	tail (n: INTEGER) is
@@ -866,6 +922,7 @@ feature -- Element change
 			keep_tail (n)
 		ensure
 			new_count: count = n.min (old count)
+			kept: elks_checking implies is_equal (old substring (count - n.min(count) + 1, count))
 		end
 
 	keep_tail (n: INTEGER) is
@@ -892,6 +949,7 @@ feature -- Element change
 			end
 		ensure
 			new_count: count = n.min (old count)
+			kept: elks_checking implies is_equal (old substring (count - n.min(count) + 1, count))
 		end
 
 	left_adjust is
@@ -900,11 +958,13 @@ feature -- Element change
 			count := str_left ($area, count)
 			internal_hash_code := 0
 		ensure
+			valid_count: count <= old count
 			new_count: (count /= 0) implies
 				((item (1) /= ' ') and
 				 (item (1) /= '%T') and
 				 (item (1) /= '%R') and
 				 (item (1) /= '%N'))
+			kept: elks_checking implies is_equal ((old twin).substring (old count - count + 1, old count))
 		end
 
 	right_adjust is
@@ -913,11 +973,13 @@ feature -- Element change
 			count := str_right ($area, count)
 			internal_hash_code := 0
 		ensure
+			valid_count: count <= old count
 			new_count: (count /= 0) implies
 				((item (count) /= ' ') and
 				 (item (count) /= '%T') and
 				 (item (count) /= '%R') and
 				 (item (count) /= '%N'))
+			kept: elks_checking implies is_equal ((old twin).substring (1, count))
 		end
 
 	share (other: STRING) is
@@ -932,7 +994,7 @@ feature -- Element change
 			internal_hash_code := 0
 		ensure
 			shared_count: other.count = count
-			-- sharing: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`i')
+			shared_area: other.area = area
 		end
 
 	put (c: CHARACTER; i: INTEGER) is
@@ -940,6 +1002,10 @@ feature -- Element change
 		do
 			area.put (c, i - 1)
 			internal_hash_code := 0
+		ensure then
+			stable_count: count = old count
+			stable_before_i: elks_checking implies substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: elks_checking implies substring (i + 1, count).is_equal (old substring (i + 1, count))
 		end
 
 	precede, prepend_character (c: CHARACTER) is
@@ -959,20 +1025,11 @@ feature -- Element change
 			-- Prepend a copy of `s' at front.
 		require
 			argument_not_void: s /= Void
-		local
-			new_size: INTEGER
-			s_area: like area
 		do
-			new_size := count + s.count
-			if new_size > safe_capacity then
-				resize (new_size + additional_space)
-			end
-			s_area := s.area
-			str_insert ($area, $s_area, count, s.count, 1)
-			count := new_size
-			internal_hash_code := 0
+			insert_string (s, 1)
 		ensure
 			new_count: count = old (count + s.count)
+			inserted: elks_checking implies string.is_equal (old (s.twin) + old substring (1, count))
 		end
 
 	prepend_boolean (b: BOOLEAN) is
@@ -1025,7 +1082,7 @@ feature -- Element change
 			internal_hash_code := 0
 		ensure
 			new_count: count = old count + old s.count
-			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
+			appended: elks_checking implies is_equal (old twin + old s.twin)
 		end
 
 	infix "+" (s: STRING): like Current is
@@ -1040,6 +1097,8 @@ feature -- Element change
 		ensure
 			Result_exists: Result /= Void
 			new_count: Result.count = count + s.count
+			initial: elks_checking implies Result.substring (1, count).is_equal (Current)
+			final: elks_checking implies Result.substring (count + 1, count + s.count).same_string (s)
 		end
 
 	append_string (s: STRING) is
@@ -1048,6 +1107,9 @@ feature -- Element change
 			if s /= Void then
 				append (s)
 			end
+		ensure
+			appended: s /= Void implies
+				(elks_checking implies is_equal (old twin + old s.twin))
 		end
 
 	append_integer (i: INTEGER) is
@@ -1127,6 +1189,7 @@ feature -- Element change
 		ensure then
 			item_inserted: item (count) = c
 			new_count: count = old count + 1
+			stable_before: elks_checking implies substring (1, count - 1).is_equal (old twin)
 		end
 
 	append_boolean (b: BOOLEAN) is
@@ -1146,8 +1209,8 @@ feature -- Element change
 		do
 			insert_string (s, i)
 		ensure
-			inserted: is_equal (old substring (1, i - 1)
-				+ old (s.twin) + old substring (i, count))
+			inserted: elks_checking implies
+				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 		
 	insert_string (s: STRING; i: INTEGER) is
@@ -1157,20 +1220,79 @@ feature -- Element change
 			string_exists: s /= Void
 			valid_insertion_index: 1 <= i and i <= count + 1
 		local
-			new_size: INTEGER
-			s_area: like area
+			j, nb, pos, new_size: INTEGER
+			l_s_count: INTEGER
+			l_area, s_area: like area
 		do
-			new_size := s.count + count
+				-- Resize Current if necessary.
+			l_s_count := s.count
+			new_size := l_s_count + count
 			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
+			
+				-- Perform all operations using a zero based arrays.
+			l_area := area
 			s_area := s.area
-			str_insert ($area, $s_area, count, s.count, i)
+			pos := i - 1
+			
+				-- First shift from `s.count' position all characters starting at index `pos'.
+			from
+				j := count - 1
+			until
+				j < pos
+			loop
+				l_area.put (l_area.item (j), j + l_s_count)
+				j := j - 1
+			end
+
+				-- Copy string `s' at index `pos'.
+			if l_area /= s_area then
+					-- Normal copy as there is no overlap between `other' and `Current'.
+				from
+					j := 0
+					nb := l_s_count - 1
+				until
+					j > nb
+				loop
+					l_area.put (s_area.item (j), j + pos)
+					j := j + 1
+				end
+			else
+					-- We have an overlap between `s' and `Current'. Since now Current
+					-- is made of `low' + `empty' + `upper' part, we need to copy
+					-- the `low' part at the beginning of `empty' and the `upper' part
+					-- at the end of `empty'.
+					
+					-- First copy characters of Current from low part `0..pos - 1' to
+					-- `pos .. pos + pos - 1'.
+				from
+					j := 0
+					nb := pos - 1
+				until
+					j > nb
+				loop
+					l_area.put (l_area.item (j), j + pos)
+					j := j + 1
+				end
+
+					-- Then copy characters of Current from upper part
+					-- `pos + l_s_count .. new_size - 1' to `pos + pos .. pos + l_s_count - 1'.
+				from
+					j := pos + pos
+					nb := pos + l_s_count - 1
+				until
+					j > nb
+				loop
+					l_area.put (l_area.item (j + l_s_count - pos), j)
+					j := j + 1
+				end
+			end
 			count := new_size
 			internal_hash_code := 0
 		ensure
-			inserted: is_equal (old substring (1, i - 1)
-				+ old (s.twin) + old substring (i, count))
+			inserted: elks_checking implies
+				(is_equal (old substring (1, i - 1) + old (s.twin) + old substring (i, count)))
 		end
 
 	insert_character (c: CHARACTER; i: INTEGER) is
@@ -1179,17 +1301,39 @@ feature -- Element change
 		require
 			valid_insertion_index: 1 <= i and i <= count + 1
 		local
-			new_size: INTEGER
+			j, pos, new_size: INTEGER
+			l_area: like area
 		do
-			new_size := count + 1
+				-- Resize Current if necessary.
+			new_size := 1 + count
 			if new_size > safe_capacity then
 				resize (new_size + additional_space)
 			end
-			str_insert ($area, $c, count, 1, i)
+			
+				-- Perform all operations using a zero based arrays.
+			l_area := area
+			pos := i - 1
+			
+				-- First shift from `s.count' position all characters starting at index `pos'.
+			from
+				j := count - 1
+			until
+				j < pos
+			loop
+				l_area.put (l_area.item (j), j + 1)
+				j := j - 1
+			end
+
+				-- Insert new character
+			l_area.put (c, pos)
+
 			count := new_size
 			internal_hash_code := 0
 		ensure
-			new_count: count = old count + 1
+			one_more_character: count = old count + 1
+			inserted: item (i) = c
+			stable_before_i: elks_checking implies substring (1, i - 1).is_equal (old substring (1, i - 1))
+			stable_after_i: elks_checking implies substring (i + 1, count).is_equal (old substring (i, count))
 		end
 
 feature -- Removal
@@ -1205,6 +1349,7 @@ feature -- Removal
 			internal_hash_code := 0
 		ensure
 			new_count: count = old count - 1
+			removed: elks_checking implies is_equal (old substring (1, i - 1) + old substring (i + 1, count))
 		end
 
 	remove_head (n: INTEGER) is
@@ -1220,7 +1365,7 @@ feature -- Removal
 				keep_tail (count - n)
 			end
 		ensure
-			removed: is_equal (old substring (n.min (count) + 1, count))
+			removed: elks_checking implies is_equal (old substring (n.min (count) + 1, count))
 		end
 
 	remove_substring (start_index, end_index: INTEGER) is
@@ -1242,8 +1387,8 @@ feature -- Removal
 				i := i + 1
 			end
 		ensure
-			removed: is_equal (old substring (1, start_index - 1) +
-					old substring (end_index + 1, count))
+			removed: elks_checking implies
+				is_equal (old substring (1, start_index - 1) + old substring (end_index + 1, count))
 		end
 
 	remove_tail (n: INTEGER) is
@@ -1262,7 +1407,7 @@ feature -- Removal
 				keep_head (l_count - n)
 			end
 		ensure
-			removed: is_equal (old substring (1, count - n.min (count)))
+			removed: elks_checking implies is_equal (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER) is
@@ -1485,6 +1630,8 @@ feature -- Conversion
 				i := i - 1
 			end
 			internal_hash_code := 0
+		ensure
+			length_end_content: elks_checking implies is_equal (old as_lower)
 		end
 
 	to_upper is
@@ -1503,6 +1650,8 @@ feature -- Conversion
 				i := i - 1
 			end
 			internal_hash_code := 0
+		ensure
+			length_end_content: elks_checking implies is_equal (old as_upper)
 		end
 
 	to_integer: INTEGER is
@@ -1512,6 +1661,16 @@ feature -- Conversion
 			is_integer: is_integer
 		do
 			Result := str_atoi ($area, count)
+		ensure
+			single_digit: count = 1 implies Result = ("0123456789").index_of (item (1), 1) - 1
+			minus_sign_followed_by_single_digit:
+				count = 2 and item (1) = '-' implies Result = -substring (2, 2).to_integer
+			plus_sign_followed_by_single_digit:
+				count = 2 and item (1) = '+' implies Result = substring (2, 2).to_integer
+			recurse_to_reduce_length:
+				count > 2 or count = 2 and not(("+-").has (item (1))) implies
+				 Result // 10 = substring (1, count - 1).to_integer and
+				 (Result \\ 10).abs = substring (count, count).to_integer
 		end
 
 	to_integer_64: INTEGER_64 is
@@ -1575,7 +1734,10 @@ feature -- Conversion
 			s.right_adjust
 			s.left_adjust
 			s.to_lower
-			Result := s.is_equal (True_constant)
+			Result := s.is_equal (true_constant)
+		ensure
+			to_boolean: (Result = same_string (true_constant)) or
+				(not Result = same_string (false_constant))
 		end
 
 	linear_representation: LINEAR [CHARACTER] is
@@ -1718,8 +1880,11 @@ feature -- Duplication
 				Result := new_string (0)
 			end
 		ensure
-			new_result_count: Result.count = end_index - start_index + 1 or Result.count = 0
-			-- original_characters: For every `i' in 1..`end_index'-`start_index', `Result'.`item' (`i') = `item' (`start_index'+`i'-1)
+			substring_not_void: Result /= Void
+			substring_count: Result.count = end_index - start_index + 1 or Result.count = 0
+			first_item: Result.count > 0 implies Result.item (1) = item (start_index)
+			recurse: Result.count > 0 implies
+				Result.substring (2, Result.count).is_equal (substring (start_index + 1, end_index))
 		end
 
 	multiply (n: INTEGER) is
@@ -1750,6 +1915,9 @@ feature -- Output
 		do
 			create Result.make (count)
 			Result.append (Current)
+		ensure then
+			out_not_void: Result /= Void
+			same_items: same_type ("") implies Result.same_string (Current)
 		end
 
 feature {STRING_HANDLER} -- Implementation
@@ -1766,6 +1934,9 @@ feature {STRING_HANDLER} -- Implementation
 		end
 
 feature {NONE} -- Empty string implementation
+
+	elks_checking: BOOLEAN is False
+			-- Are ELKS checkings verified? Must be True when changing implementation of STRING or descendant.
 
 	empty_area: SPECIAL [CHARACTER] is
 			-- Empty `area' used when calling `make (0)'.
@@ -1923,14 +2094,6 @@ feature {STRING} -- Implementation
 			-- Prepend `c' to `c_string'.
 		external
 			"C signature (EIF_CHARACTER *, EIF_CHARACTER, EIF_INTEGER) use %"eif_str.h%""
-		end
-
-	str_insert (c_string, other_string: POINTER; c_length, other_length,
-			position: INTEGER) is
-			-- Insert `other_string' into `c_string' at `position'.
-			-- Insertion occurs at the left of `position'.
-		external
-			"C signature (EIF_CHARACTER *, EIF_CHARACTER *, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER) use %"eif_str.h%""
 		end
 
 	str_rmchar (c_string: POINTER; length, i: INTEGER) is

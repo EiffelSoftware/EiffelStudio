@@ -21,6 +21,8 @@ inherit
 		end
 		
 	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end

@@ -1465,6 +1465,8 @@ int how;		/* Implicit or explicit exception? */
 		return;
 #endif
 
+	if (echval == EN_FAIL || echval == EN_OSTK)
+		return;
 	dbreak(how);			/* Stop execution */
 }
 #else

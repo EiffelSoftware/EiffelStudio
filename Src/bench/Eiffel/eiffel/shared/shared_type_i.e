@@ -43,7 +43,7 @@ feature -- Access
 			create Result.make (16)
 		end
 
-	Long_c_type: LONG_I is
+	int32_c_type, long_c_type: LONG_I is
 			-- long C type
 		once
 			create Result.make (32)

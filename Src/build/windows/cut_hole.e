@@ -1,66 +1,61 @@
 indexing
-	description: "Hole for the wastebasket.";
+	description: "Hole for the wastebasket."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class 
 	CUT_HOLE 
 
 inherit
 
-	EB_BUTTON
-	HOLE
-		rename
-			target as focus_source
+ 	EB_BUTTON
 		redefine
-			process_any
-		select
-			init_toolkit
+			make
 		end
+
+	WINDOWS
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-
-	create_focus_label is 
+	make (par: EV_TOOL_BAR) is
+		local
+			rout_cmd: EV_ROUTINE_COMMAND
 		do
-			set_focus_string (Focus_labels.wastebasket_label)
-		end;
-	
-	make (a_parent: COMPOSITE) is
-		require
-			valid_a_parent: a_parent /= Void;
-		do
-			make_visible (a_parent);
-			register
-		end;
+			{EB_BUTTON} Precursor (par)
+			create rout_cmd.make (~process_cut)
+			add_default_pnd_command (rout_cmd, Void)
+		end
 
-	symbol: PIXMAP is
+--	create_focus_label is 
+--		do
+--			set_focus_string (Focus_labels.wastebasket_label)
+--		end
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.wastebasket_pixmap
-		end;
+		end
 	
-feature {NONE}
+feature {CUT_HOLE}
 
-	stone_type: INTEGER is 
-		do 
-			Result := Stone_types.any_type
-		end;
-
-	process_any (dropped: STONE) is
+	process_cut (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 		local
-			r: REMOVABLE;
+			r: REMOVABLE
 			n: NAMABLE
 		do
-			r ?= dropped;
+			r ?= ev_data.data
 			if (r /= Void) then
-				r.remove_yourself;
-				n ?= r;
+				r.remove_yourself
+				n ?= r
 				if n /= Void and then namer_window.namable = n then
 					namer_window.popdown
 				end
-			end;
-		end;
+			end
+		end
 
-end
+end -- class CUT_HOLE

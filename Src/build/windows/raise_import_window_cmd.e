@@ -10,23 +10,23 @@ class
 
 inherit
 
-	COMMAND
+	EV_COMMAND
 
 	WINDOWS
 
 feature
 
-	execute (arg: ANY) is
+	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Raise the window to specify from where and
 			-- what to import.
 		local
-			an_import_window: IMPORT_WINDOW
+--			an_import_window: IMPORT_WINDOW
 		do
-			if main_panel.project_initialized then
---				!! an_import_window.make (new_main_panel.base)
-				!! an_import_window.make (main_panel.base)
-				an_import_window.popup
-			end
+--			if main_panel.project_initialized then
+-- --			!! an_import_window.make (new_main_panel.base)
+--				!! an_import_window.make (main_panel.base)
+--				an_import_window.popup
+--			end
 		end
 
 end -- class RAISE_IMPORT_WINDOW_CMD

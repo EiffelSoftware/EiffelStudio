@@ -19,7 +19,7 @@ inherit
 
 feature {NONE}
 
-	Watch_cursor: SCREEN_CURSOR is
+	Watch_cursor: EV_CURSOR is
 			-- Watch cursor
 		do
 			Result := Cursors.watch_cursor

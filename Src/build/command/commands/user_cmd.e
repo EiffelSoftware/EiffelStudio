@@ -7,17 +7,16 @@ indexing
 class USER_CMD 
 
 inherit
-
 	CMD
 		redefine
-			set_editor, data,
-			set_eiffel_text
+			set_editor,
+			set_eiffel_text,
+			comment
 		end
 	NAMABLE
 	ERROR_POPUPER
 
 creation
-
 	make, session_init, storage_init
 
 feature -- Creation
@@ -28,12 +27,12 @@ feature -- Creation
 		do
 			int_generator.next
 			identifier := int_generator.value
-			!! arguments.make
-			!! labels.make
+			create arguments.make
+			create labels.make
 			initialize_values
 		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.user_command_pixmap
 		end
@@ -47,8 +46,8 @@ feature -- Creation
 			-- Intialize current user command
 			-- for a session.
 		do
-			!! arguments.make
-			!! labels.make
+			create arguments.make
+			create labels.make
 			initialize_values
 		end
 
@@ -60,7 +59,7 @@ feature -- Creation
 			arguments := a
 			labels := l
 			eiffel_text := s
-			set_parent_type (p)
+			set_ancestor_type (p)
 			set_internal_name (in)
 			visual_name := clone (vn)	
 			initialize_values
@@ -71,12 +70,8 @@ feature -- Creation
 		do
 			labels.compare_objects
 		end
-feature -- Stone
 
-	data: USER_CMD is
-		do
-			Result := Current
-		end
+feature -- Stone
 
 	identifier: INTEGER
 			-- Unique identifier for storage
@@ -90,12 +85,12 @@ feature -- Stone
 	arguments: EB_LINKED_LIST [ARG]
 			-- Arguments of Current command
 			-- (Defined in current or introduced
-			-- from a parent)
+			-- from a ancestor)
 
 	labels: EB_LINKED_LIST [CMD_LABEL]
 			-- Labels of Current command.
 			-- (Defined in current or introduced
-			-- from a parent)
+			-- from a ancestor)
 
 	eiffel_text: STRING
 			-- Eiffel class text associated with
@@ -108,6 +103,11 @@ feature -- Stone
 			else
 				Result := eiffel_type
 			end
+		end
+
+	comment: STRING is
+		do
+			Result := "user command"
 		end
 
 feature -- Namable
@@ -126,60 +126,60 @@ feature -- Namable
 			if edited then
 			 	command_editor.update_title
 			end
-			command_catalog.update_icon_stone (Current)
+--			command_catalog.update_icon_stone (Current)
 		end
 
 	update_instance_names is
 			-- Update the instances name
 			-- Does Current have instances?
 		local
-			s: BUILD_STATE
-			b: BEHAVIOR
-			found: BOOLEAN
-			command_tools: LINKED_LIST [COMMAND_TOOL]
-			ed: COMMAND_TOOL
+--			s: BUILD_STATE
+--			b: BEHAVIOR
+--			found: BOOLEAN
+--			command_tools: LINKED_LIST [COMMAND_TOOL]
+--			ed: COMMAND_TOOL
 		do
-			from
-				Shared_app_graph.start
-			until
-				Shared_app_graph.off
-			loop
-				s ?= Shared_app_graph.key_for_iteration
-				if s /= Void then
-					from
-						s.start
-					until
-						s.after 
-					loop
-						found := False
-						b := s.output.data
-						from
-							b.start
-						until
-							b.after or else found
-						loop
-							found := b.output.associated_command 
-										= Current	
-							b.forth
-						end
-						if found then
-							s.input.update_instance_name_in_editor
-						end
-						s.forth
-					end
-				end
-				Shared_app_graph.forth
-			end
-			command_tools := associated_command_tools
-			from
-				command_tools.start
-			until
-				command_tools.after
-			loop
-				ed := command_tools.item
-				ed.update_title
-				command_tools.forth
-			end
+--			from
+--				Shared_app_graph.start
+--			until
+--				Shared_app_graph.off
+--			loop
+--				s ?= Shared_app_graph.key_for_iteration
+--				if s /= Void then
+--					from
+--						s.start
+--					until
+--						s.after 
+--					loop
+--						found := False
+--						b := s.output.data
+--						from
+--							b.start
+--						until
+--							b.after or else found
+--						loop
+--							found := b.output.associated_command 
+--										= Current	
+--							b.forth
+--						end
+--						if found then
+--							s.input.update_instance_name_in_editor
+--						end
+--						s.forth
+--					end
+--				end
+--				Shared_app_graph.forth
+--			end
+--			command_tools := associated_command_tools
+--			from
+--				command_tools.start
+--			until
+--				command_tools.after
+--			loop
+--				ed := command_tools.item
+--				ed.update_title
+--				command_tools.forth
+--			end
 		end
 
 feature -- Editor
@@ -203,84 +203,93 @@ feature -- Undoable and non-undoable
 
 feature -- Inheritance
 
-	has_parent: BOOLEAN is
+	has_ancestor: BOOLEAN is
 			-- Does current command inherit
 			-- from another command?
 		do
-			Result := parent_type /= Void
+			Result := ancestor_type /= Void
 		end
 
-	set_parent (cmd: CMD) is 
-			-- Set parent of Current
+	set_ancestor (cmd: CMD) is 
+			-- Set ancestor of Current
 			-- user command to `cmd'.
 		local
 			set_parent_command: CMD_SET_PARENT
+			arg: EV_ARGUMENT1 [like Current]
 			label_clash: STRING
 			msg: STRING
 		do 
 			label_clash := label_name_clash (cmd)
 			if label_clash /= Void then
-				!! msg.make (0)
+				create msg.make (0)
 				msg.append ("Label name: ")
 				msg.append (label_clash)
 				msg.append (" from class ")
 				msg.append (cmd.eiffel_type_to_upper)
-				error_box.popup (Current,
+				error_dialog.popup (Current,
 					Messages.label_name_clash_er,
 					msg)
 			else
-				!!set_parent_command
-				if not (parent_type = Void) then
-					set_parent_command.set_previous_parent (parent_type)
+				create set_parent_command
+				if ancestor_type /= Void then
+					set_parent_command.set_previous_parent (ancestor_type)
 				end
 				set_parent_command.set_parent_type (cmd)
-				set_parent_command.execute (Current)
+				create arg.make (Current)
+				set_parent_command.execute (arg, Void)
+				set_parent_command.update_history
 			end
 		end
 
-	remove_parent is
-			-- Remove parent from Current.
+	remove_ancestor is
+			-- Remove ancestor from Current.
 		local
 			cut_parent_command: CMD_CUT_PARENT
+			arg: EV_ARGUMENT1 [like Current]
 		do
-			if parent_type /= Void then
-				!!cut_parent_command
-				cut_parent_command.execute (Current)
+			if ancestor_type /= Void then
+				create cut_parent_command
+				create arg.make (Current)
+				cut_parent_command.execute (arg, Void)
+				cut_parent_command.update_history
 			end
 		end
 
-	refresh_parent is
-			-- remove and redo parent with out recording it in the history.
+	refresh_ancestor is
+			-- remove and redo ancestor with out recording it in the history.
 		local
-			refresh_parent_command: CMD_REFRESH_PARENT
+--			refresh_parent_command: CMD_REFRESH_PARENT
+--			arg: EV_ARGUMENT1 [like Current]
 		do
-			if parent_type /= Void then
-				!!refresh_parent_command
-				refresh_parent_command.execute (Current)
+			if ancestor_type /= Void then
+--				create refresh_parent_command
+--				create arg.make (Current)
+--				refresh_parent_command.execute (arg, Void)
+--				refresh_parent_command.update_history
 			end
 		end
 
-	set_parent_type (c: CMD) is
-			-- Set parent_type to `c'.
+	set_ancestor_type (c: CMD) is
+			-- Set ancestor_type to `c'.
 		local
 			user_cmd: USER_CMD
 		do
-			user_cmd ?= parent_type	
+			user_cmd ?= ancestor_type	
 			if user_cmd /= Void then
 				user_cmd.remove_descendent (Current)
 			end
-			parent_type := c
+			ancestor_type := c
 			user_cmd ?= c
 			if user_cmd /= Void then
 				user_cmd.add_descendent (Current)
 			end
 			if edited then
-				command_editor.update_parent_symbol
+				command_editor.update_ancestor_symbol
 			end
 		end
 
-	parent_type: CMD
-			-- Parent type of Current user
+	ancestor_type: CMD
+			-- Ancestor type of Current user
 			-- command
 
 	descendents: LINKED_LIST [CMD]
@@ -308,7 +317,7 @@ feature -- Inheritance
 			not_has_c: descendents = Void or else  not descendents.has (c)
 		do
 			if descendents = Void then
-				!! descendents.make
+				create descendents.make
 			end
 			descendents.put_front (c)	
 		ensure
@@ -364,25 +373,25 @@ feature {NONE} -- Naming
 	arg_entity_namer: LOCAL_NAMER is
 			-- Argument entities namer
 		once
-			!! Result.make ("argument")
+			create Result.make ("argument")
 		end
 
 	arg_param_namer: LOCAL_NAMER is
 			-- Argument parameters namer
 		once
-			!! Result.make ("arg")
+			create Result.make ("arg")
 		end
 
 	int_generator: INT_GENERATOR is
 			-- Generator of unique integers
 		once
-			!! Result
+			create Result
 		end
 
 	namer: NAMER is
 			-- User command namer
 		once
-			!! Result.make (Command_seed)
+			create Result.make (Command_seed)
 		end
 
 feature -- Editing
@@ -420,7 +429,7 @@ feature -- Editing
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			!! file.make (associated_file_name)
+			create file.make (associated_file_name)
 			file.open_write
 			file.putstring (eiffel_text)
 			file.close
@@ -432,7 +441,7 @@ feature -- Editing
 			file: PLAIN_TEXT_FILE
 			fl_nm: STRING
 		do
-			!! file.make (associated_file_name)
+			create file.make (associated_file_name)
 			if file.exists and then file.is_readable then
 				file.open_read
 				file.readstream (file.count)
@@ -470,13 +479,13 @@ feature {S_COMMAND} -- Update from storage
 
 	update_inherited_label is
 		require
-			inherited: parent_type /= Void
+			inherited: ancestor_type /= Void
 		local
 			inherited_labels: like labels
 			inh_cmd_label, cmd_label: CMD_LABEL
 			found: BOOLEAN
 		do
-			inherited_labels := parent_type.labels
+			inherited_labels := ancestor_type.labels
 			if not inherited_labels.empty then
 				from
 					labels.start
@@ -494,7 +503,7 @@ feature {S_COMMAND} -- Update from storage
 						inherited_labels.forth
 					end
 					if found then
-						cmd_label.set_parent (parent_type)
+						cmd_label.set_parent (ancestor_type)
 					end
 					labels.forth
 				end
@@ -511,7 +520,7 @@ feature {NONE}
 			l: EB_LINKED_LIST [ARG]
 		do 
 			from
-				!!l.make
+				create l.make
 				arguments.start
 			until
 				arguments.after
@@ -530,7 +539,7 @@ feature {NONE}
 			l: EB_LINKED_LIST [CMD_LABEL]
 		do 
 			from
-				!!l.make
+				create l.make
 				labels.start
 			until
 				labels.after
@@ -547,23 +556,23 @@ feature  -- Generation
 			-- Template of the Eiffel
 			-- command.
 		local
-			parent_name: STRING
+			ancestor_name: STRING
 			inherited_args: LINKED_LIST [STRING]
 		do
-			!!Result.make (0)
+			create Result.make (0)
 
 				--| Class declaration
 			Result.append ("class ")
 			Result.append (eiffel_type_to_upper)
 			Result.append ("%N%Ninherit%N%N%T")
-			if (parent_type = Void) then
+			if ancestor_type = Void then
 				if undoable then
 					Result.append ("BUILD_UNDOABLE_CMD")
 				else
 					Result.append ("BUILD_NON_UNDOABLE_CMD")
 				end
 			else
-				Result.append (parent_type.eiffel_inherit_text)
+				Result.append (ancestor_type.eiffel_inherit_text)
 			end
 			Result.append ("%N%Ncreation%N%N%Tmake")
 
@@ -583,7 +592,7 @@ feature  -- Generation
 					arg_param_namer.next
 					Result.append (arg_param_namer.value)
 					Result.append (": ")
-					Result.append (arguments.item.data.eiffel_type)
+					Result.append (arguments.item.eiffel_type)
 					arguments.forth
 					if not arguments.after then
 						Result.append ("%N%T%T")
@@ -596,12 +605,12 @@ feature  -- Generation
 				arguments.start
 				arg_param_namer.reset
 				arg_entity_namer.reset
-				!!inherited_args.make
+				create inherited_args.make
 			until
 				arguments.after
 			loop
 				arg_param_namer.next
-				if (arguments.item.parent_type = Void) then
+				if arguments.item.parent_type = Void then
 					arg_entity_namer.next
 					Result.append ("%N%T%T%T")
 					Result.append (arg_entity_namer.value)
@@ -614,8 +623,8 @@ feature  -- Generation
 				arguments.forth
 			end
 			Result.append ("%N")
-			if not (parent_type = Void) then
-				Result.append (parent_type.eiffel_creation_text (inherited_args))
+			if ancestor_type /= Void then
+				Result.append (ancestor_type.eiffel_creation_text (inherited_args))
 			end
 			Result.append ("%T%Tend%N%N")
 
@@ -627,12 +636,12 @@ feature  -- Generation
 			until
 				arguments.after
 			loop
-				if (arguments.item.parent_type = Void) then
+				if arguments.item.parent_type = Void then
 					Result.append ("%T")
 					arg_entity_namer.next
 					Result.append (arg_entity_namer.value)
 					Result.append (": ")
-					Result.append (arguments.item.data.eiffel_type)
+					Result.append (arguments.item.eiffel_type)
 					Result.append ("%N%N")
 				end
 				arguments.forth
@@ -644,7 +653,7 @@ feature  -- Generation
 			until
 				labels.after
 			loop
-				if (labels.item.parent_type = Void) then
+				if labels.item.parent_type = Void then
 					Result.append ("%T")
 					Result.append (labels.item.label)
 					Result.append ("_label: STRING is %"")
@@ -656,7 +665,7 @@ feature  -- Generation
 
 				--| Body clause
 			Result.append ("feature -- Command%N%N")
-			if (parent_type = Void) then
+			if ancestor_type = Void then
 				Result.append ("%Texecute is%N%T%Tdo%N")
 				if not labels.empty then
 					from
@@ -664,7 +673,7 @@ feature  -- Generation
 					until
 						labels.after
 					loop
-						if (labels.item.parent_type = Void) then
+						if labels.item.parent_type = Void then
 							Result.append ("%T%T%Tset_transition_label (")
 							Result.append (labels.item.label)
 							Result.append ("_label)%N")
@@ -674,7 +683,7 @@ feature  -- Generation
 				end
 				Result.append ("%T%Tend")
 			else
-				Result.append (parent_type.eiffel_body_text)
+				Result.append (ancestor_type.eiffel_body_text)
 			end
 
 			if undoable then
@@ -701,14 +710,15 @@ feature -- labels {CMD_EDITOR}
 		require
 			Edited: edited
 		local
---			lab: CMD_LABEL
 			add_label_cmd: CMD_ADD_LABEL
+			arg: EV_ARGUMENT1 [like Current]
 		do
 			if not label_exist (l.label) then
---				!!lab.make (l)
-				!!add_label_cmd
+				create add_label_cmd
 				add_label_cmd.set_element (l)
-				add_label_cmd.execute (Current)
+				create arg.make (Current)
+				add_label_cmd.execute (arg, Void)
+				add_label_cmd.update_history
 			end
 		end
 
@@ -743,18 +753,21 @@ feature -- labels {CMD_EDITOR}
 			Edited: edited
 		local
 			remove_label_cmd: CMD_CUT_LABEL
+			arg: EV_ARGUMENT1 [like Current]
 		do
 			labels.start
 			labels.search (l)
 			if not labels.exhausted then
 				if labels.item.inherited then
-					Error_box.popup (Current,
+					error_dialog.popup (Current,
 						Messages.Cannot_remove_label_er,
 						labels.item.label)	
 				else
-					!!remove_label_cmd
+					create remove_label_cmd
+					create arg.make (Current)
 					remove_label_cmd.set_index (labels.index)
-					remove_label_cmd.execute (Current)
+					remove_label_cmd.execute (arg, Void)
+					remove_label_cmd.update_history
 				end
 			end
 		end
@@ -772,7 +785,7 @@ feature -- Text generation
 			tmp := eiffel_type_to_lower
 			tmp.replace_substring_all (Command_seed_to_lower, 
 						Resources.command_file_name)
-			!! Result.make_from_string (tmp)
+			create Result.make_from_string (tmp)
 		end
 
 	base_file_name: FILE_NAME is
@@ -789,7 +802,7 @@ feature -- Text generation
 			tmp: STRING
 			tmp_to_lower: STRING
 		do
-			!! Result.make_from_string (Environment.commands_directory)
+			create Result.make_from_string (Environment.commands_directory)
 			Result.set_file_name (base_file_name)
 		end
 
@@ -798,7 +811,7 @@ feature -- Text generation
 			file: PLAIN_TEXT_FILE
 			fl_nm: STRING
 		do
-			!! file.make (associated_file_name)
+			create file.make (associated_file_name)
 			if file.exists and then file.is_readable and then
 				not file.empty
 			then
@@ -834,7 +847,7 @@ feature -- Text generation
 			-- Perform diff and update the class file
 			-- if there is a difference.
 		local
-			mp: MOUSE_PTR
+--			mp: MOUSE_PTR
 			merger: MERGER
 			temp: STRING
 			file: PLAIN_TEXT_FILE
@@ -844,9 +857,9 @@ feature -- Text generation
 			pos: INTEGER
 			fname: FILE_NAME
 		do
-			!!mp
-			mp.set_watch_shape
-			!!merger
+--			create mp
+--			mp.set_watch_shape
+			create merger
 			if old_template = Void then
 				save_old_template
 			end
@@ -859,9 +872,9 @@ feature -- Text generation
 				merger.integrate_command (associated_file_name, 
 						old_template, new_template)
 				if not merger.error then
-					!! tmp_eiffel_text.make (merger.merge_result.count)
+					create tmp_eiffel_text.make (merger.merge_result.count)
 					if visual_name /= Void then
-						!! temp.make (0)
+						create temp.make (0)
 						temp.append ("indexing%N%Tvisual_name: %"")
 						temp.append (visual_name)
 						temp.append ("%"%N%N")
@@ -872,33 +885,33 @@ feature -- Text generation
 					if not tmp_eiffel_text.is_equal (eiffel_text) then
 				   		-- Now save to disk if necessary
 						eiffel_text := tmp_eiffel_text
-						if edited then
-							pos := command_editor.text_editor.top_character_position
-							command_editor.text_editor.set_text (eiffel_text)
-							if pos > eiffel_text.count then
-								pos := eiffel_text.count
-							end
-							command_editor.text_editor.set_top_character_position (pos)
-						end
+--						if edited then
+--							pos := command_editor.text_editor.top_character_position
+--							command_editor.text_editor.set_text (eiffel_text)
+---							if pos > eiffel_text.count then
+--								pos := eiffel_text.count
+--							end
+--							command_editor.text_editor.set_top_character_position (pos)
+--						end
 							-- Update the user file content
-			   			!! file.make (associated_file_name)
+			   			create file.make (associated_file_name)
 						file.open_write
 			   			file.putstring (eiffel_text)
 			   			file.close
 							-- Update the template file content for
 							-- further diffs when user modifies
 							-- outside the ebuild environment.
-						!! old_template_file.make_from_string (Environment.templates_directory)
+						create old_template_file.make_from_string (Environment.templates_directory)
 						old_template_file.set_file_name (base_file_name_without_dot_e)
-			   			!! file.make (old_template_file)
+			   			create file.make (old_template_file)
 						file.open_write
 			   			file.putstring (new_template)
 			   			file.close
 					end
 				end
-				mp.restore
+--				mp.restore
 			else
-				error_box.popup (Current,
+				error_dialog.popup (Current,
 					Messages.Invalid_file_name_er,
 					fname)	
 			end
@@ -913,7 +926,7 @@ feature -- Text generation
 			doc: EB_DOCUMENT
 			error: BOOLEAN
 		do
-			!! file.make (associated_file_name)
+			create file.make (associated_file_name)
 			if file.exists then
 				file.open_read
 				file.readstream (file.count)
@@ -921,7 +934,7 @@ feature -- Text generation
 				disk_file := file.last_string
 				if not disk_file.is_equal (eiffel_text) then
 					disk_file := clone (disk_file)
-					!! doc
+					create doc
 					doc.set_directory_name (Environment.commands_directory)
 					doc.set_document_name (base_file_name_without_dot_e)
 					if doc.is_file_name_valid then
@@ -929,7 +942,7 @@ feature -- Text generation
 						error := doc.error
 					else
 						error := True
-						error_box.popup (Current,
+						error_dialog.popup (Current,
 							Messages.Invalid_file_name_er,
 							doc.document_file_name)	
 					end
@@ -957,7 +970,7 @@ feature -- Text generation
 		local
 			class_file: PLAIN_TEXT_FILE
 		do
-			!!class_file.make (associated_file_name)
+			create class_file.make (associated_file_name)
 			if class_file.exists then
 				class_file.delete
 			end
@@ -967,7 +980,7 @@ feature -- Text generation
 		local
 			class_file: PLAIN_TEXT_FILE
 		do
-			!!class_file.make (associated_file_name)
+			create class_file.make (associated_file_name)
 			if not class_file.exists then
 				class_file.open_write
 				class_file.putstring (eiffel_text)

@@ -6,10 +6,13 @@ inherit
 	SHARED_RESCUE_STATUS
 	CONSTANTS;
 	ERROR_POPUPER
-			redefine
-				continue_after_error_popdown
-			end
+		redefine
+			continue_after_error_popdown
+		end
 	WINDOWS
+		redefine
+			popuper_parent
+		end		
 	COMPILER_EXPORTER
 
 feature -- Result of merging the three files
@@ -114,19 +117,18 @@ feature
 					Rescue_status.set_is_error_exception (False);
 					Error_handler.trace;
 					if command_caller /= Void then
-						Error_box.put_string ("Class: ");
-						Error_box.put_string 
+						Error_dialog.put_string ("Class: ");
+						Error_dialog.put_string 
 						(command_caller.current_command.eiffel_type_to_upper);
-						Error_box.put_string (" (");
-						Error_box.put_string 
+						Error_dialog.put_string (" (");
+						Error_dialog.put_string 
 						(command_caller.current_command.label);
-						Error_box.put_string (")");
+						Error_dialog.put_string (")");
 					end;
-					Error_box.display_error_message (Current);
+					Error_dialog.display_error_message (Current);
 					Error_handler.wipe_out
 				else
-					Error_box.popup (Current, Messages.update_text_er,
-							user)
+					Error_dialog.popup (Current, Messages.update_text_er, user)
 				end;
 			end
 		rescue
@@ -187,7 +189,7 @@ feature
 				merge_result := ast_to_string (merge_as, user)
 			else
 				retried := False;
-				Error_box.popup (Current, Messages.update_text_er,
+				Error_dialog.popup (Current, Messages.update_text_er,
 						user)
 			end
 		rescue
@@ -236,10 +238,10 @@ feature -- Integrate command
 			command_caller := c
 		end;
 
-	popuper_parent: COMPOSITE is
+	popuper_parent: EV_CONTAINER is
 		do
 			if command_caller = Void then
-				Result := main_panel.base
+				Result := main_window
 			else
 				Result := command_caller
 			end
@@ -260,7 +262,7 @@ feature {NONE} -- Implemantation
 	
 	output_window: BUILD_OUTPUT_WINDOW is
 		once
-			!!Result.make (Error_box)
+			!!Result.make (Error_dialog)
 		end
 	
 	

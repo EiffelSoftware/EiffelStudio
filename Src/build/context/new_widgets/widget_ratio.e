@@ -1,12 +1,10 @@
+indexing
 
-class WIDGET_RATIO 
+	status: "See notice at end of class";
+	date: "$Date$";
+	revision: "$Revision$"
 
-inherit
-
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end
+class WIDGET_RATIO
 
 creation
 
@@ -70,20 +68,20 @@ feature
 					widget.unmanage
 				end;
 				if is_width_resizeable then
-					widget.set_width (real_to_integer 
-							(parent_width * width_ratio));
+					widget.set_width (
+						(parent_width * width_ratio).truncated_to_integer);
 				end;
 				if is_height_resizeable then
-					widget.set_height (real_to_integer
-							(parent_height * height_ratio));
+					widget.set_height (
+						(parent_height * height_ratio).truncated_to_integer);
 				end;
 				if to_follow_x then
-					widget.set_x (real_to_integer
-							(parent_width * x_ratio));
+					widget.set_x (
+						(parent_width * x_ratio).truncated_to_integer);
 				end;
 				if to_follow_y then
-					widget.set_y (real_to_integer
-							(parent_height * y_ratio));
+					widget.set_y (
+						(parent_height * y_ratio).truncated_to_integer);
 				end;
 				widget.manage
 			end;
@@ -123,3 +121,14 @@ feature {SCALABLE}
 
 end
 
+--|----------------------------------------------------------------
+--| EiffelBuild library.
+--| Copyright (C) 1995 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <eiffel@eiffel.com>
+--|----------------------------------------------------------------

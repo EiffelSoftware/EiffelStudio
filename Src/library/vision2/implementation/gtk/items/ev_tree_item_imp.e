@@ -24,8 +24,7 @@ inherit
 			set_text,
 			text,
 			destroy,
-			destroyed,
-			dispose
+			destroyed
 		end
 
 	EV_TREE_ITEM_HOLDER_IMP
@@ -771,16 +770,22 @@ feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 	set_widget (p: POINTER) is
 			-- Sets `widget' to the new pointer `p'.
 		do
-			widget := p
-		end
+			set_shared
+				-- We do this because as the GtkCTreeRow is just
+				-- a GList, we let Gtk destroy it (we can not do use
+				-- gtk_object_destroy).
 
-feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
-
-	dispose is
-			-- Function called when the Eiffel
-			-- Object is garbage-collected.
-			-- Does nothing here.
-		do
+			-- As `widget' will point on another GtkCTreeRow,
+			-- we have to unregister the former one and
+			-- register the new one.
+			if (widget /= default_pointer) then
+				unregister_object (Current)
+				widget := p
+				register_object (Current)
+			else
+				widget := p
+				register_object (Current)
+			end
 		end
 
 feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation - constant

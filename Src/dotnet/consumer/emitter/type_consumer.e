@@ -238,7 +238,7 @@ feature -- Basic Operation
 								end
 							else
 								cp_procedure := consumed_procedure (l_meth, False)
-								if cp_function /= Void then
+								if cp_procedure /= Void then
 									l_procedures.extend (cp_procedure)
 								end
 							end
@@ -323,7 +323,7 @@ feature -- Basic Operation
 			l_property: PROPERTY_INFO
 			l_event: EVENT_INFO
 		do
-				-- Add properties in overload_solver.
+				-- Add properties to `properties_and_events'.
 			from
 				i := 0
 				nb := internal_properties.count
@@ -336,11 +336,10 @@ feature -- Basic Operation
 					non_void_l_propery: l_property /= Void
 				end
 				add_property (l_property)
-				overload_solver.add_property (l_property)
 				i := i + 1
 			end
 
-				-- Add events in overload_solver.
+				-- Add events to `properties_and_events'.
 			from
 				i := 0
 				nb := internal_events.count
@@ -352,11 +351,10 @@ feature -- Basic Operation
 					non_void_l_event: l_event /= Void
 				end
 				add_event (l_event)
-				overload_solver.add_event (l_event)
 				i := i + 1
 			end				
 
-				-- Add methods in overload_solver
+				-- Add methods (procedures, functions, properties and events) in overload_solver
 			from
 				i := 0
 				nb := internal_members.count
@@ -370,11 +368,7 @@ feature -- Basic Operation
 						is_method: l_meth /= Void
 					end
 					if is_consumed_method (l_meth) then
-						if not is_property_or_event (l_meth) then
-							overload_solver.add_method (l_meth)
-						else
-							-- The method will be added at the same time than the property or the event.
-						end
+						overload_solver.add_method (l_meth)
 					end
 				end
 				i := i + 1

@@ -622,7 +622,13 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 		
 	on_line_inserted (line_number: INTEGER) is
 			-- Update `Current' when line number `line_number' has been inserted.
+		local
+			wdth: INTEGER 
 		do
+			wdth := text_displayed.line (line_number).width + left_margin_width + 50
+			if editor_width < wdth then
+				set_editor_width (wdth)
+			end
 			update_vertical_scrollbar
 		end
 

@@ -32,6 +32,14 @@ feature {AST_FACTORY} -- Initialization
 			location_set: location = l
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_type_dec_as (Current)
+		end
+
 feature -- Access
 
 	id_list: ARRAYED_LIST [INTEGER]

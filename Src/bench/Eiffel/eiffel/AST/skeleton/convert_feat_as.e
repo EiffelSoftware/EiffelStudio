@@ -33,6 +33,14 @@ feature {NONE} -- Initialization
 			conversion_types_set: conversion_types = t
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_convert_feat_as (Current)
+		end
+
 feature -- Access
 
 	is_creation_procedure: BOOLEAN

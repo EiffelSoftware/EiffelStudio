@@ -35,6 +35,14 @@ feature {AST_FACTORY} -- Initialization
 			selecting_set: selecting = s
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_parent_as (Current)
+		end
+
 feature -- Attributes
 
 	type: CLASS_TYPE_AS

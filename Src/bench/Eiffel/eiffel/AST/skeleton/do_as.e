@@ -7,6 +7,17 @@ class DO_AS
 
 inherit
 	INTERNAL_AS
+		redefine
+			process
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_do_as (Current)
+		end
 
 feature {NONE}
 

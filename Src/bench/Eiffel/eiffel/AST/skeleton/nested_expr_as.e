@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			message_set: message = m
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_nested_expr_as (Current)
+		end
+
 feature -- Attributes
 
 	target: EXPR_AS

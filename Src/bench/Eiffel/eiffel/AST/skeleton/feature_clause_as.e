@@ -30,6 +30,14 @@ feature {AST_FACTORY} -- Initialization
 			location_set: location.is_equal (l)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_feature_clause_as (Current)
+		end
+
 feature -- Attributes
 
 	clients: CLIENT_AS

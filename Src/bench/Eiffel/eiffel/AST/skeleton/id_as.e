@@ -38,6 +38,14 @@ feature {AST_FACTORY} -- Initialization
 			append_string (s)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_id_as (Current)
+		end
+
 feature -- Properties
 
 	is_id: BOOLEAN is True

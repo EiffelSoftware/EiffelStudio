@@ -15,6 +15,7 @@ inherit
 		export
 			{NONE} feat_initialize
 		redefine
+			process,
 			type_check, is_equivalent, simple_format, format,
 			valid_feature, report_error_for_feature,
 			assoc_class, context_last_type,
@@ -55,6 +56,14 @@ feature {AST_FACTORY} -- Initialization
 			class_type_set: class_type = c
 			feature_name_set: feature_name = f
 			parameters_set: parameters = p
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_static_access_as (Current)
 		end
 
 feature -- Attributes

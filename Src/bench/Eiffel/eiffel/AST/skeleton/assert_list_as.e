@@ -23,6 +23,14 @@ feature {AST_FACTORY} -- Initialization
 			assertions_set: assertions = a
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_assert_list_as (Current)
+		end
+
 feature -- Access
 
 	number_of_breakpoint_slots: INTEGER is

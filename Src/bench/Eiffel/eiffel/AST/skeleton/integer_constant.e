@@ -73,6 +73,14 @@ feature -- Initialization
 			read_hexa_value (s)
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_integer_constant_as (Current)
+		end
+
 feature -- Properties
 
 	value: INTEGER is

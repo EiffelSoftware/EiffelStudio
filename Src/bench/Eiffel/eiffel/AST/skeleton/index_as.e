@@ -28,6 +28,14 @@ feature {AST_FACTORY} -- Initialization
 			index_list_set: index_list = i
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_index_as (Current)
+		end
+
 feature -- Attributes
 
 	tag: ID_AS

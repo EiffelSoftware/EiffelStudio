@@ -26,6 +26,14 @@ feature {AST_FACTORY} -- Initialization
 			content_set: content = c
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_body_as (Current)
+		end
+
 feature -- Attributes
 
 	arguments: EIFFEL_LIST [TYPE_DEC_AS]

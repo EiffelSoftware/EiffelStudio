@@ -24,6 +24,14 @@ feature {AST_FACTORY} -- Initialization
 			-- Do nothing.
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_result_as (Current)
+		end
+
 feature -- Properties
 
 	access_name: STRING is "Result"

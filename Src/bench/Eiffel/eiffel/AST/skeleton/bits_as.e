@@ -35,6 +35,14 @@ feature {AST_FACTORY} -- Initialization
 			bits_value_set: bits_value = v
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_bits_as (Current)
+		end
+
 feature -- Attributes
 
 	bits_value: INTEGER_CONSTANT

@@ -16,6 +16,14 @@ feature {AST_FACTORY} -- Initialization
 			-- Do nothing.
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_all_as (Current)
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

@@ -12,6 +12,7 @@ inherit
 			{NONE} all
 			{ANY} is_empty
 		redefine
+			process,
 			make, extend
 		end
 
@@ -26,6 +27,14 @@ feature -- Initialization
 		do
 			Precursor {EIFFEL_LIST} (n)
 			create lookup_table.make (n)
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_indexing_clause_as (Current)
 		end
 
 feature -- Access

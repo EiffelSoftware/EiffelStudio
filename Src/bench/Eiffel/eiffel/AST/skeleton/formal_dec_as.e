@@ -11,6 +11,7 @@ inherit
 		rename
 			initialize as initialize_formal_as
 		redefine
+			process,
 			is_equivalent, format, simple_format
 		end
 
@@ -36,6 +37,14 @@ feature {AST_FACTORY} -- Initialization
 			constraint_set: constraint = c
 			creation_feature_list_set: creation_feature_list = cf
 			position_set: position = p
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_formal_dec_as (Current)
 		end
 
 feature -- Attributes

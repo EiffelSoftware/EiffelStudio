@@ -18,6 +18,14 @@ feature {AST_FACTORY} -- Initialization
 			feature_list_set: feature_list = f
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_create_as (Current)
+		end
+
 feature -- Attributes
 
 	clients: CLIENT_AS

@@ -10,6 +10,7 @@ class DELAYED_ACCESS_FEAT_AS
 inherit
 	ACCESS_FEAT_AS
 		redefine
+			process,
 			is_delayed, is_export_valid, is_equivalent
 		end
 
@@ -30,6 +31,14 @@ feature -- Initialization
 			name_set : feature_name = fname
 			parameters_set : parameters = params
 			has_target_set: has_target = v
+		end
+
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_delayed_access_feat_as (Current)
 		end
 
 feature -- Comparison

@@ -7,24 +7,30 @@ class
 	EV_PARAGRAPH_FORMAT
 	
 inherit
-	ANY
+	EV_ANY
 		redefine
-			default_create
+			implementation,
+			initialize
 		end
 		
 feature {NONE} -- Initialization
 
-	default_create is
-			-- Perform default creation of `Current'.
+	initialize is
+			-- Perform initialization of `Current'.
 		do
 			enable_left_alignment 
 		end
 		
 feature -- Status report
 
-	alignment: INTEGER
-		-- Current alignment. See EV_PARAGRAPH_CONSTANTS
-		-- for possible values.
+	alignment: INTEGER is
+			-- Current alignment. See EV_PARAGRAPH_CONSTANTS
+			-- for possible values.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.alignment
+		end
 
 	is_left_aligned: BOOLEAN is
 			-- Is `Current' left aligned?
@@ -50,58 +56,98 @@ feature -- Status report
 			Result := alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
 		
-	left_margin: INTEGER
-		-- Left margin between border and text in pixels
+	left_margin: INTEGER is
+			-- Left margin between border and text in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.left_margin
+		end
 		
-	right_margin: INTEGER
-		-- Right margin between line end and border in pixels
+	right_margin: INTEGER is
+			-- Right margin between line end and border in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.right_margin
+		end
 		
-	top_spacing: INTEGER
-		-- Spacing between top of paragraph and previous line in pixels.
+	top_spacing: INTEGER is
+			-- Spacing between top of paragraph and previous line in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.top_spacing
+		end
 		
-	bottom_spacing: INTEGER
-		-- Spacing between bottom of paragraph and next line in pixels.
-
+	bottom_spacing: INTEGER is
+			-- Spacing between bottom of paragraph and next line in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.bottom_spacing
+		end
+		
 feature -- Status setting
 
 	enable_left_alignment is
 			-- Ensure `is_left_aligned' is `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
-			alignment := feature {EV_PARAGRAPH_CONSTANTS}.alignment_left
+			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_left)
 		ensure
 			is_left_aligned: is_left_aligned
 		end
 		
 	enable_center_alignment is
 			-- Ensure `is_center_aligned' is `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
-			alignment := feature {EV_PARAGRAPH_CONSTANTS}.alignment_center
+			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_center)
 		ensure
 			is_center_aligned: is_center_aligned
 		end
 		
 	enable_right_alignment is
 			-- Ensure `is_right_aligned' is `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
-			alignment := feature {EV_PARAGRAPH_CONSTANTS}.alignment_right
+			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_right)
 		ensure
 			is_right_aligned: is_right_aligned
 		end
 		
 	enable_justification is
 			-- Ensure `is_justified' is `True'.
+		require
+			not_destroyed: not is_destroyed
 		do
-			alignment := feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
+			set_alignment (feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified)
 		ensure
 			is_justified: is_justified
 		end
 		
+	set_alignment (an_alignment: INTEGER) is
+			-- Assign `an_alignment' to `alignment.
+		require
+			not_destroyed: not is_destroyed
+			valid_alignment (an_alignment)
+		do
+			implementation.set_alignment (an_alignment)
+		ensure
+			alignment_set: alignment = an_alignment
+		end
+
 	set_left_margin (a_margin: INTEGER) is
 			-- Set `left_margin' to `a_margin'.
 		require
+			not_destroyed: not is_destroyed
 			margin_non_negative: a_margin >= 0
 		do
-			left_margin := a_margin
+			implementation.set_left_margin (a_margin)
 		ensure
 			margin_set: left_margin = a_margin
 		end
@@ -109,31 +155,60 @@ feature -- Status setting
 	set_right_margin (a_margin: INTEGER) is
 			-- Set `right_margin' to `a_margin'.
 		require
+			not_destroyed: not is_destroyed
 			margin_non_negative: a_margin >= 0
 		do
-			right_margin := a_margin
+			implementation.set_right_margin (a_margin)
 		ensure
 			margin_set: right_margin = a_margin
 		end
 		
-	set_top_spacing (a_margin: INTEGER) is
-			-- Set `top_spacing' to `a_margin'.
+	set_top_spacing (a_spacing: INTEGER) is
+			-- Set `top_spacing' to `a_spacing'.
 		require
-			margin_non_negative: a_margin >= 0
+			not_destroyed: not is_destroyed
+			spacing_non_negative: a_spacing >= 0
 		do
-			top_spacing := a_margin
+			implementation.set_top_spacing (a_spacing)
 		ensure
-			margin_set: top_spacing = a_margin
+			spacing_set: top_spacing = a_spacing
 		end
 		
-	set_bottom_spacing (a_margin: INTEGER) is
-			-- Set `bottom_spacing' to `a_margin'.
+	set_bottom_spacing (a_spacing: INTEGER) is
+			-- Set `bottom_spacing' to `a_spacing'.
 		require
-			margin_non_negative: a_margin >= 0
+			not_destroyed: not is_destroyed
+			spacing_non_negative: a_spacing >= 0
 		do
-			bottom_spacing := a_margin
+			implementation.set_bottom_spacing (a_spacing)
 		ensure
-			margin_set: bottom_spacing = a_margin
+			spacing_set: bottom_spacing = a_spacing
+		end
+		
+feature -- Contract Support
+
+	valid_alignment (an_alignment: INTEGER): BOOLEAN is
+			-- Is `an_alignment' a valid paragraph alignment?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_left or
+				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_center or
+				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_right or
+				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_PARAGRAPH_FORMAT_I
+			-- Implementation of the current object
+		
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- Create implementation of drawing area.
+		do
+			create {EV_PARAGRAPH_FORMAT_IMP} implementation.make (Current)
 		end
 
 invariant

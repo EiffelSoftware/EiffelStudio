@@ -18,50 +18,50 @@ feature -- Properties
 
 feature -- Execution
 
-	format_debuggable (routine: E_FEATURE) is
-			-- Format text for eiffel `routine' and take
+	format_debuggable (a_feature: E_FEATURE) is
+			-- Format text for eiffel `a_feature' and take
 			-- into consideration renaming.
 		require
-			valid_routine: routine /= Void
+			valid_feature: a_feature /= Void
 		local
 			f: DEBUG_CONTEXT
 		do
-			!! f.make (routine.associated_class);
+			!! f.make (a_feature.associated_class);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
-			f.execute (routine);
+			f.execute (a_feature);
 			text := f.text;
 			error := f.execution_error
 		end;
 
-	simple_format_debuggable (routine: E_FEATURE) is
-			-- Do a simple format for eiffel `routine' 
+	simple_format_debuggable (a_feature: E_FEATURE) is
+			-- Do a simple format for eiffel `a_feature' 
 			-- which doesn't only formats the text and doesn't
 			-- take into consideration renaming.
 		require
-			valid_routine: routine /= Void
+			valid_feature: a_feature /= Void
 		local
 			f: SIMPLE_DEBUG_CONTEXT
 		do
-			!! f.make (routine);
+			!! f.make (a_feature);
 			text := f.text;
 			error := f.execution_error
 		end;
 
-	format (routine: E_FEATURE) is
-			-- Format text for eiffel `routine' and take
+	format (a_feature: E_FEATURE) is
+			-- Format text for eiffel `a_feature' and take
 			-- into consideration renaming.
 		require
-			valid_routine: routine /= Void
+			valid_feature: a_feature /= Void
 		local
 			f: FORMAT_FEAT_CONTEXT
 		do
-			!! f.make (routine.associated_class);
+			!! f.make (a_feature.associated_class);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
-			f.execute (routine);
+			f.execute (a_feature);
 			text := f.text;
 			error := f.execution_error
 		end;

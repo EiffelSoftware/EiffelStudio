@@ -74,51 +74,26 @@ feature -- Status setting
 		
 feature {GB_CONSTANTS_DIALOG} -- Implementation
 
---	can_modify_to_value (new_value: EV_FONT): BOOLEAN is
---			-- May `Current' be changed to `new_value' or are certain
---			-- referers not permitted to use `new_value'?
---		local
---			constant_context: GB_CONSTANT_CONTEXT
---			validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
---		do
---			Result := True
---			from
---				referers.start
---			until
---				referers.off or not Result
---			loop
---				constant_context := referers.item
---					
---					validate_agent ?= new_gb_ev_any (constant_context).validate_agents.item (constant_context.attribute)
---					check
---						validate_agent_not_void: validate_agent /= Void
---					end
---					validate_agent.call ([new_value])
---					Result := validate_agent.last_result
---				referers.forth
---			end
---		end
---		
 	modify_value (new_value: EV_FONT) is
 			-- Modify `value' to `new_value' and update all referers.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]
+			execution_agent: PROCEDURE [ANY, TUPLE [EV_FONT]]
 		do
---			from
---				referers.start
---			until
---				referers.off
---			loop
---				constant_context := referers.item
---				execution_agent ?= new_gb_ev_any (constant_context).execution_agents.item (constant_context.attribute)
---				check
---					execution_agent_not_void: execution_agent /= Void
---				end
---				execution_agent.call ([new_value])
---				referers.forth
---			end
---			value := new_value
+			from
+				referers.start
+			until
+				referers.off
+			loop
+				constant_context := referers.item
+				execution_agent ?= new_gb_ev_any (constant_context).execution_agents.item (constant_context.attribute)
+				check
+					execution_agent_not_void: execution_agent /= Void
+				end
+				execution_agent.call ([new_value])
+				referers.forth
+			end
+			value := new_value
 		ensure
 			value_set: value = new_value
 		end

@@ -13,7 +13,6 @@ cluster
 
 	-- EiffelBase
 	kernel: 		"$EIFFEL4\library\base\kernel";
-	routines: 		"$EIFFEL4\library\base\routines";
 	support:		"$EIFFEL4\library\base\support";
 	access: 		"$EIFFEL4\library\base\structures\access";
 	cursors:		"$EIFFEL4\library\base\structures\cursors";

@@ -12,7 +12,7 @@ deferred class
 inherit
 	EV_TREE_ITEM_HOLDER_I
 
-	EV_ITEM_HOLDER_IMP
+	--EV_ITEM_HOLDER_IMP
 
 --	EV_CONTAINER_IMP
 --		-- Inheriting from container, because tree item and subtree
@@ -104,6 +104,9 @@ end -- class EV_TREE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/23 00:00:22  king
+--| Removed association with extinct class
+--|
 --| Revision 1.17  2000/02/22 18:39:37  oconnor
 --| updated copyright date and formatting
 --|

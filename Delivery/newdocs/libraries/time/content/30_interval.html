@@ -1,0 +1,92 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Interval</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+
+<h1>Interval</h1>
+
+<p>Class INTERVAL deals with intervals between two instances of the same class
+which conform to
+ 
+ABSOLUTE (<a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>, <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>, <A HREF="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a>). The notions of interval is directly linked
+with the notion of order.</p>
+<p>
+The start_bound must be before the end_bound.</p>
+
+<h4>Creation</h4>
+
+<p>The features make, set_start_bound and set_end_bound take clones of their
+arguments, so that if these
+ 
+arguments are changed, the interval previously created is not.</p>
+<p>It would have been possible to create intervals with references to date or
+time, but a modification of the dates
+ 
+would have been effective in the interval so that only the invariant would
+have been able to check if the
+ 
+start_bound is still before the end_bound.</p>
+
+<h4>Interval measurement</h4>
+
+<p>The measure of intervals is made by duration: the result is an instance of
+the class <a href="/libraries/time/reference/duration.html"><span class="eclass">DURATION</span></a>. However, as
+ 
+<a href="/libraries/time/reference/duration.html"><span class="eclass">DURATION</span></a> is the common parent of <a href="/libraries/time/reference/time_duration.html"><span class="eclass">TIME_DURATION</span></a>, <a href="/libraries/time/reference/date_duration.html"><span class="eclass">DATE_DURATION</span></a> and
+<a href="/libraries/time/reference/date_time_duration.html"><span class="eclass">DATE_TIME_DURATION</span></a>, it
+ 
+does not have many features available. Some features in class <a href="/libraries/time/reference/time.html"><span class="eclass">TIME</span></a>, <a href="/libraries/time/reference/date.html"><span class="eclass">DATE</span></a>,
+<A HREF="/libraries/time/reference/date_time.html"><span class="eclass">DATE_TIME</span></a> return the same result and
+ 
+are more efficient to use. <a href="/libraries/time/reference/duration.html"><span class="eclass">DURATION</span></a> has to be use as the last solution.</p>
+
+<h4>Comparison</h4>
+
+<p>It includes intersection, inclusion and a special comparison.</p>
+<ul>
+  <li>is_equal is present and compare values, not references.</li>
+  <li>Feature intersects returns the mathematical result of the intersection of
+two intervals.</li>
+  <li>is_strict_included_by, strict_includes, is_included_by and includes are
+connected to the same notion of inclusion.</li>
+  <li>&lt;, + &gt; and &gt;= use a special rule to compare intervals. int1 &lt;
+int2 is true if int1 starts and ends strictly before int2.
+ 
+The other features use the same rule and is_equal if needed.</li>
+  <li>overlaps looks like intersects but the argument has to be after the current
+interval. is_overlapped is the opposite.</li>
+  <li>meets and is_met are used to test if two intervals have a common bound.</li>
+</ul>
+
+<h4>Status Report</h4>
+
+<p>The main part of the functions need an argument from the same generic type
+and return a BOOLEAN value.</p>
+<ul>
+  <li>empty
+ 
+tests if the bounds are equal.</li>
+  <li>has, strict_before, strict_after, before and
+after test the position of an element
+ 
+relatively to the current interval.</li>
+</ul>
+
+<h4>Element change</h4>
+
+<p>set_start_bound and set_end_bound are available to change the bounds.</p>
+
+<h4>Operations</h4>
+
+<p>Union and intersection are the mathematical functions. gather requires that
+two intervals meet each other and then
+ 
+yields the union.</p>
+
+	</BODY>
+</HTML>

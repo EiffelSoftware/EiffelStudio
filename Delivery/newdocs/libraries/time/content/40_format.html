@@ -1,0 +1,131 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Format</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+
+<h1>Format</h1>
+
+<p>The aim of classes dealing with format is to get a printable representation
+of date (or time) which conforms
+ 
+to the local habits. It means that for each country and for each habit a
+different set of data has to be used.</p>
+<p>
+For this reason data and formatting features which use the data are
+completely separated in EiffelTime. This makes it easy to switch from one set of data to another.</p>
+<p>Data are organized in classes which inherit from LOCALIZER. They are
+classified by their type: BOOLEAN, 
+STRING, ARRAY [STRING] and INTEGER. Each piece of information is stored with
+a key and manipulated with it.</p>
+<p>Formatting features are organized in classes which inherit from FORMAT:
+FORMAT [TIME], FORMAT [DATE], FORMAT 
+[DATE_TIME], they are clients of LOCALIZER.</p>
+
+<h2> Storing data</h2>
+
+<h3>LOCALIZER</h3>
+
+<p>The class is written so that all the common operations are available to
+manipulate data. Four types of data are
+ 
+available: BOOLEAN, STRING, ARRAY [STRING] and INTEGER. For each of them
+features are present.&nbsp;
+</p>
+<ul>
+  <li>to record data: record_boolean_value, record_integer_value,
+record_string_array_value and record_string_value. A
+ 
+value is stored with a key. If the key is already present, nothing happens.
+To force the system to record a new
+ 
+value, features force_boolean, force_integer, force_string and
+force_string_array are available, with the same signature.</li>
+  <li>to test the presence of data: has_boolean_entry, has_integer_entry,
+has_string_array_entry and has_string_entry.</li>
+  <li>to remove data: remove_boolean, remove_integer, remove_string and
+    remove_string_array.</li>
+  <li>to access data: boolean_value, integer_value, string_array_value and
+string_value. To keep the access process 
+convenient, a default value is required for each access. This is to avoid the
+client of the class testing for each request. 
+It is a little bit disturbing for arrays but much time is saved while
+accessing data.</li>
+</ul>
+<p>LOCALIZER is not specific to EiffelTime. It will be useful for other
+libraries and users applications.</p>
+
+<h3>TIME_LOCALIZER</h3>
+
+<p>The class represents a more specific type of data structure. It inherits from
+LOCALIZER. Invariants are
+ 
+present to ensure that data needed in classes FORMAT and its heirs are well
+defined.</p>
+
+<h2>Formatting date and time</h2>
+
+<h3>FORMAT</h3>
+
+<p>The class is deferred and generic. It contains features to justify strings.
+Four options are available:
+ 
+left_justified, centered, right_justified and not_justified. The total width
+(width) has to be defined (generally during
+ 
+initialization). Function justify returns a new string whose length is equal
+to width, and which contains the
+ 
+string argument justified according to the current parameters. Only its heirs
+provide effective formatting feature:
+ 
+formatted. Then justify and formatted may be used together to provide a
+formatted and justified representation of
+ 
+a date (or time).</p>
+
+<h3>FORMAT [TIME] and FORMAT [DATE]</h3>
+
+<p>These classes have several common points.</p>
+<ul>
+  <li>They are clients of LOCALIZER. LOCALIZER provides them data to format date
+or time. The creation procedure
+ 
+has its first argument which conforms to LOCALIZER. It is possible to change
+localizer with set_localizer.</li>
+  <li>In these classes, feature formatted is effective and provides a formatted
+representation of the its argument. formatted
+ 
+includes many options (the attributes of the class).</li>
+</ul>
+
+<h3>FORMAT [DATE_TIME]</h3>
+
+<p>FORMAT [DATE_TIME] inherits from FORMAT. It is a client of FORMAT [TIME] and
+FORMAT [DATE]. An
+ 
+instance of this class gathers one instance of FORMAT [TIME] and one of
+FORMAT [DATE]. Several options are then
+ 
+available (which are not in FORMAT):</p>
+<ul>
+  <li>to have date before or after time with
+set_date_first and set_time_first.</li>
+  <li>to justify the date and the time before they are formatted together with
+justify_date and justify_time.</li>
+  <li>to change element such as the separator, or the attributes format_date and
+format_time (with set_separator_date_time,
+ 
+set_format_date and set_format_time). A special care has to be brought to the
+attribute width since it must keep
+ 
+larger or equal to the sum of the formatted date plus the formatted time plus
+the separator length.</li>
+</ul>
+
+	</BODY>
+</HTML>

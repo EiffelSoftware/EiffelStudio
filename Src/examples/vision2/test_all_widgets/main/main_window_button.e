@@ -12,7 +12,7 @@ class
 	
 inherit
 	
-	EV_BUTTON
+	EV_TOGGLE_BUTTON
 	
 creation
 	
@@ -23,7 +23,7 @@ feature {NONE} --Initialization
 	make_button (main_w: MAIN_WINDOW; button_name, pixmap_file_name: STRING; cmd: DEMO_WINDOW) is
 		local
 			p: EV_PIXMAP
-			a: EV_ARGUMENT1[MAIN_WINDOW]
+			a: EV_ARGUMENT2[MAIN_WINDOW, EV_TOGGLE_BUTTON]
 		do
 			make (main_w.container)
 
@@ -31,8 +31,8 @@ feature {NONE} --Initialization
 			if pixmap_file_name /= Void and then not pixmap_file_name.empty then
 				!! p.make_from_file (pixmap_container, pixmap_file_name)
 			end
-			!!a.make (main_w)
-			add_click_command (cmd, a)
+			!!a.make_2 (main_w, Current)
+			add_toggle_command (cmd, a)
 		end
 	
 end

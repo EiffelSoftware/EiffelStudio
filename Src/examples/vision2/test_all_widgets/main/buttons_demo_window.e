@@ -1,5 +1,5 @@
 indexing
-	description: "ALL_BUTTON_DEMO_WINDOW, demo window to test all kinds %
+	description: "BUTTONS_DEMO_WINDOW, demo window to test all kinds %
 			%of buttons. Belongs to EiffelVision example test_all_widgets."
 	status: "See notice at end of class"
 	id: "$$"
@@ -7,7 +7,7 @@ indexing
 	revision: "$$"
 	
 class 
-	ALL_BUTTON_DEMO_WINDOW
+	BUTTONS_DEMO_WINDOW
 
 inherit
 	
@@ -43,6 +43,7 @@ feature -- Status setting
 	set_widgets is
 		do
 			!! b1.make_with_text (main_widget, "Button")
+			
 			!! pixmap.make_from_file (b1.pixmap_container, "../pixmaps/power_small.xpm")
 			!! b2.make (main_widget)
 			!! pixmap.make_from_file (b2.pixmap_container, "../pixmaps/power_small.xpm")

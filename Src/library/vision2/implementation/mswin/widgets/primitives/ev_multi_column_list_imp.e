@@ -223,13 +223,13 @@ feature -- Status setting
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `an_index' the list.
 		do
-			(ev_children @ an_index).set_selected (True)
+			(ev_children @ an_index).enable_select
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `an_index'.
 		do
-			(ev_children @ an_index).set_selected (False)
+			(ev_children @ an_index).disable_select
 		end
 
 	clear_selection is
@@ -243,7 +243,7 @@ feature -- Status setting
 			until
 				c.after
 			loop
-				c.item.set_selected (False)
+				c.item.disable_select
 				c.forth
 			end
 		end
@@ -505,7 +505,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			remove_item (item_imp)
 			insert_item (item_imp, an_index)
 			if bool then
-				item_imp.set_selected (True)
+				item_imp.enable_select
 			end
 		end
 
@@ -809,6 +809,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/03 00:54:20  brendel
+--| set_selected -> en/dis-able_select.
+--|
 --| Revision 1.37  2000/03/02 22:19:40  brendel
 --| is_multiple_selection -> multiple_selection_enabled.
 --| Formatted to 80 columns.

@@ -323,8 +323,7 @@ feature {NONE} -- Implementation
 				pen := shadow_pen
 				draw_horizontal_line (paint_dc, pen, split_position + 4)
 				pen.delete
-				pen := black_pen
-				draw_horizontal_line (paint_dc, pen, split_position + 5)
+				draw_horizontal_line (paint_dc, Black_pen, split_position + 5)
 				bk_pen.delete
 			end
 			paint_dc.release
@@ -337,6 +336,7 @@ feature {NONE} -- Implementation
 		do
 			paint_dc.select_pen (a_pen)
 			paint_dc.line (0, a_y, wel_width, a_y)
+			paint_dc.unselect_pen			
 		end
 
 feature {NONE} -- WEL internal

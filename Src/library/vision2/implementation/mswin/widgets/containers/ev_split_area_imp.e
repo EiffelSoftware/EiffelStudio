@@ -339,6 +339,7 @@ feature {NONE} -- Implementation
 			a_dc.select_brush (splitter_brush)
 			a_dc.rectangle (a_left, a_top, a_right, a_bottom)
 			a_dc.set_rop2 (old_rop2)
+			a_dc.unselect_brush
 			a_dc.release
 		end
 

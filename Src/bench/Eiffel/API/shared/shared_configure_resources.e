@@ -27,19 +27,26 @@ feature -- Resource names
 	r_Graphics_disabled: STRING is		"graphics_disabled";
 	r_Tabs_disabled: STRING is			"tabs_disabled"
 	r_Windows_timer_delay: STRING is	"windows_timer_delay"
+	r_Metamorphosis_disabled: STRING is	"metamorphosis_disabled"
 
 feature {NONE} -- Convenient access
 
-	enabled_debug_trace: BOOLEAN is
+	Enabled_debug_trace: BOOLEAN is
 			-- Enable debug trace
 		once
 			Result := Configure_resources.get_boolean (r_trace_debug, False)
 		end;
 
-	fail_on_rescue: BOOLEAN is
+	Fail_on_rescue: BOOLEAN is
 			-- Fail on rescue?
 		once
 			Result := Configure_resources.get_boolean (r_Fail_on_rescue, False)
+		end
+
+	metamorphosis_disabled: BOOLEAN is
+			-- Is extra metamorphosis disabled?
+		once
+			Result := Configure_resources.get_boolean (r_Metamorphosis_disabled, False)
 		end
 
 end -- class SHARED_RESOURCES

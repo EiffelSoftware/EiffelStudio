@@ -43,27 +43,6 @@ feature -- Externals
 			"GDK_CURRENT_TIME"
 		end
 
-	x_list_fonts (display, pattern: POINTER; max_return: INTEGER;
-		actual_size: POINTER): POINTER is
-			-- Display * display
-			-- char * pattern
-			-- int max_return
-			-- int * actual_size
-			-- char ** Result
-		external
-			" C | <X11/Xlib.h>"
-		alias
-			"XListFonts"
-		end
-
-	x_free_font_names (fonts_list: POINTER) is
-			-- char ** fonts_list
-		external
-			" C | <X11/Xlib.h>"
-		alias
-			"XFreeFontNames"
-		end
-
 feature -- Externals (XTEST extension)
 
 	x_test_fake_motion_event (
@@ -108,20 +87,6 @@ feature -- Externals (XTEST extension)
 			"C: EIF_INTEGER| <X11/Xlib.h>"
 		alias
 			"XKeysymToKeycode"
-		end
-
-	x_display_name (a_display_name: POINTER): POINTER is
-		external
-			"C: char *| <X11/Xlib.h>"
-		alias
-			"XDisplayName"
-		end
-
-	x_open_display (a_display: POINTER): POINTER is
-		external
-			"C: Display *| <X11/Xlib.h>"
-		alias
-			"XOpenDisplay"
 		end
 
 	x_test_query_extension (

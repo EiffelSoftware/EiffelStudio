@@ -1305,14 +1305,9 @@ feature {NONE} -- Implementation
 			--
 			-- Call `WEL_BITMAP.decrement_reference' when Result is no
 			-- more needed to free a GDI resource.
-		local
-			s_dc: WEL_SCREEN_DC
 		do
-			create s_dc
-			s_dc.get
-			create Result.make_compatible (s_dc, width, height)
+			create Result.make_direct (width, height, 1, 1, "%/255/")
 			Result.enable_reference_tracking
-			s_dc.release
 		end
 
 	reset_resource_content is

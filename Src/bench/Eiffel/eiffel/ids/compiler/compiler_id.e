@@ -50,7 +50,10 @@ feature -- Status report
 		do
 			Result := id < other.id
 		end
+
 	dummy_id: INTEGER is
+			-- Exportable id used when handling precompiled library during
+			-- a reverse_engineering.
 		do
 			Result := internal_id
 		end

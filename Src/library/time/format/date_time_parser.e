@@ -251,8 +251,10 @@ feature -- Basic operations
 								
 								-- We need a smart century correction
 								-- eventually.
-								if (year_val - c_year_now).abs > 50 then
+								if year_val - c_year_now > 50 then
 									year_val := year_val - 100
+								elseif c_year_now - year_val > 50 then
+									year_val := year_val + 100
 								end
 							else
 								-- `base_century' has been set manually.

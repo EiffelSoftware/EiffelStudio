@@ -277,6 +277,8 @@ feature -- Access
 			cf: COMPLETION_FEATURE
 			def_parser: DEFINITION_PARSER
 			def_parsed_result: DEFINITION_PARSED_RESULT
+			local_name: STRING
+			feature_call: STRING
         do
             if not retried then
                 classes := eiffel_universe.classes_with_name (a_class_name)
@@ -311,16 +313,26 @@ feature -- Access
 				            		end                        			
                         		end
 							else
-								cf := internal_target_feature (def_parsed_result.parsed_result_string, "default_create", class_i.file_name, false)
-								if cf /= Void then
-			                    	create class_file_name.make_from_string (cf.file_name)
-									class_i := eiffel_universe.class_with_file_name (class_file_name)
-									if class_i /= Void and then class_i.compiled_class /= Void then
-										feature_i := class_i.compiled_class.feature_named (cf.feature_name)
-										if feature_i /= Void then
-											create {DEFINITION_SEARCH_RESULT_FEATURE} Result.make (class_i, feature_i)
-										end
-									end									
+								-- with inherited features we have to trick compiler into believing that it is a feature call
+								local_name := "local"
+								add_local (local_name, class_i.name_in_upper)
+								feature_call := clone (local_name) + "."
+								feature_call.append (def_parsed_result.parsed_result_string)
+
+								classes := eiffel_universe.classes_with_name ("ANY")
+								if classes /= Void and classes.count >= 1 then
+									class_i := classes @ (1)
+									cf := internal_target_feature (feature_call, "default_create", class_i.file_name, False)
+									if cf /= Void then
+				                    	create class_file_name.make_from_string (cf.file_name)
+										class_i := eiffel_universe.class_with_file_name (class_file_name)
+										if class_i /= Void and then class_i.compiled_class /= Void then
+											feature_i := class_i.compiled_class.feature_named (cf.feature_name)
+											if feature_i /= Void then
+												create {DEFINITION_SEARCH_RESULT_FEATURE} Result.make (class_i, feature_i)
+											end
+										end									
+									end	
 								end
                         	end
                         end

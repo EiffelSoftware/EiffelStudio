@@ -78,7 +78,7 @@ feature -- Access
 			-- Path of the current selected file
 		do
 			if
-				selected_button /= Void and then selected_button.is_equal ("OK")
+				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
 				create Result.make (0)
 				Result.from_c (C.gtk_file_selection_get_filename (c_object))

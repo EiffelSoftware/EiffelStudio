@@ -888,7 +888,7 @@ feature {NONE} -- Implementation
 		local
 			gb_ev_any: GB_EV_ANY
 			generated_info: GB_GENERATED_INFO
-			supported_types: ARRAYED_LIST [STRING]
+			supported_types, current_settings: ARRAYED_LIST [STRING]
 			temp_set: STRING
 		do
 			from
@@ -910,18 +910,27 @@ feature {NONE} -- Implementation
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-					temp_set := gb_ev_any.generate_code (generated_info.supported_type_elements @ (supported_types.index), generated_info)
-						-- We must handle a root object as a special case, as there
-						-- is no need for a dot call, unless we are using the window as a client.
-					if generated_info.is_root_object then
-						temp_set := temp_set.substring (temp_set.index_of ('.', 1) + 1, temp_set.count)
-						if project_settings.client_of_window and not temp_set.is_empty then
-							temp_set := Client_window_string + "." + temp_set
+					current_settings := gb_ev_any.generate_code (generated_info.supported_type_elements @ (supported_types.index), generated_info)
+					from
+						current_settings.start
+					until
+						current_settings.off
+					loop
+							-- We must handle a root object as a special case, as there
+							-- is no need for a dot call, unless we are using the window as a client.
+						temp_set := current_settings.item
+						check
+							temp_set_not_empty: not temp_set.is_empty
 						end
-					end
-					if not temp_set.is_empty then
+						if generated_info.is_root_object then
+							temp_set := temp_set.substring (temp_set.index_of ('.', 1) + 1, temp_set.count)
+							if project_settings.client_of_window and not temp_set.is_empty then
+								temp_set := Client_window_string + "." + temp_set
+							end
+						end
 						add_set (temp_set)	
-					end
+						current_settings.forth
+					end					
 					supported_types.forth
 				end
 
@@ -1073,7 +1082,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	add_local_on_grouped_line (generated_info: GB_GENERATED_INFO) is--local_type, name: STRING) is
+	add_local_on_grouped_line (generated_info: GB_GENERATED_INFO) is
 			-- Add code representation of new local named `name' of type
 			-- `local_type' to `local_string'.
 			-- Each new local will be grouped with other locals of same type. e.g.

@@ -79,9 +79,14 @@ feature -- Access
 			Result := Eiffel_project.project_directory.name
 		end
 		
-	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
+	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
 			-- Project Properties.
 			-- Void until a project is opened.
+		require
+			project_initialized: valid_project
+		once
+			Result := project_properties_internal
+		end
 
 feature -- Basic Operations
 
@@ -100,7 +105,7 @@ feature -- Basic Operations
 						else
 							if not Eiffel_project.initialized then
 								open_project_file (file_name)
-								create {PROJECT_PROPERTIES} project_properties.make
+								create {PROJECT_PROPERTIES} project_properties_internal.make
 								Valid_project_ref.set_item (True)
 							else
 								last_error_message := "Project has already been initialized"
@@ -132,9 +137,9 @@ feature -- Basic Operations
 						Eiffel_project.make_new (project_dir, True, Void, Void)
 						if Eiffel_project.initialized then
 							Eiffel_ace.set_file_name (ace_name)
-							create {PROJECT_PROPERTIES} project_properties.make
+							create {PROJECT_PROPERTIES} project_properties_internal.make
 							create enum
-							project_properties.set_compilation_type (enum.is_application)
+							project_properties_internal.set_compilation_type (enum.is_application)
 							Valid_project_ref.set_item (True)
 						else
 							last_error_message := "Project could not be initialized"
@@ -253,6 +258,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	project_properties_internal: IEIFFEL_PROJECT_PROPERTIES_INTERFACE
+			-- Instance-specific representation of project properties.
+			-- Might be Void if another instance succesfully initialized project.
 		
 	valid_ace_file: BOOLEAN
 			-- Was last file checked by `check_ace_file' a valid ace file?

@@ -21,19 +21,17 @@ inherit
 feature -- Access
 	
 	client_width: INTEGER is
-			-- Width of the client area of container
+			-- Width of the client area of container.
+			-- Redefined in children.
 		do
-                        check
-                                not_yet_implemented: False
-                        end		
+			Result := 0
 		end
 	
 	client_height: INTEGER is
 			-- Height of the client area of container
+			-- Redefined in children.
 		do
-                        check
-                                not_yet_implemented: False
-                        end		
+			Result := 0
 		end
 
 	background_pixmap: EV_PIXMAP
@@ -140,7 +138,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 		require
 			child_resize_type_value_ok: ((the_child.resize_type >=0) and (the_child.resize_type <=3))
 		do
-			c_gtk_box_set_child_options (widget, the_child.widget, the_child.expandable, False)
+--			c_gtk_box_set_child_options (widget, the_child.widget, the_child.expandable, False)
 		end
 
 end -- class EV_CONTAINER_IMP

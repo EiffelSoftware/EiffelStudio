@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 				-- Transform coordinates to take into account offset of actual diagram.
 			x := x_position - diagram_border
 			y := y_position - diagram_border
-			if selected_item /= Void then
+			if selected_item /= Void and not resizing_widget and not moving_widget then
 				column_position := (first.item_column_position (selected_item) - 1) * grid_size
 				row_position := (first.item_row_position (selected_item) - 1) * grid_size
 				end_column_position := column_position + first.item_column_span (selected_item) * grid_size

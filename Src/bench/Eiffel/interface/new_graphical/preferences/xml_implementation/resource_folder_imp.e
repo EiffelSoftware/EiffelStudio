@@ -96,10 +96,14 @@ feature -- Update
 					elseif node.name.is_equal ("TEXT") then
 						create res_xml.make (node)
 						resource := res_xml.value
+						resource_list.start
 						resource_list.compare_objects
 						resource_list.search(resource)
 						if not resource_list.exhausted then
-							if resource.description = Void and resource_list.item.description /= Void then
+							if
+								resource.description = Void and
+								resource_list.item.description /= Void
+							then
 								resource.set_description (resource_list.item.description)
 							end
 							resource.set_effect_is_delayed (resource_list.item.effect_is_delayed)

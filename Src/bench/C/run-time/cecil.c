@@ -406,11 +406,10 @@ rt_public void *eifaddr(EIF_REFERENCE object, char *name, int * const ret)
 
 	i = locate(object, name);		/* Locate attribute in skeleton */
 	if (i == EIF_NO_ATTRIBUTE) {					/* Attribute not found */
-		void **failed;				/* Necessary for avoiding seg. fault */
 		*ret = EIF_NO_ATTRIBUTE;	/* Set "*ret" */
-		failed = (void **) malloc (sizeof(void *));	
-		*failed = (void *) 0;
-		return failed;	/* So that "*(EIF_TYPE *) failed" does not crash */
+		eif_panic ("Attribute not found.");
+		return (void *) 0;	/* NOTREACHED */	
+						   
 	}
 
 	*ret = EIF_CECIL_OK; 	/* Set "*ret" for successfull return. */

@@ -146,6 +146,7 @@ feature -- Access
 
 	Tcs_bottom: INTEGER is
 			-- Undocmented style.
+			-- Set the tabs at the bottom of the notebook.
 		external
 			"C [macro <cctrl.h>]"
 		alias
@@ -154,6 +155,8 @@ feature -- Access
 
 	Tcs_right: INTEGER is
 			-- Undocmented style.
+			-- Set the tabs at the right of the notebook.
+			-- Need `Tcs_vertical' style.
 		external
 			"C [macro <cctrl.h>]"
 		alias
@@ -170,6 +173,8 @@ feature -- Access
 
 	Tcs_vertical: INTEGER is
 			-- Undocmented style.
+			-- Set the tabs verticaly at the left of the 
+			-- notebook.
 		external
 			"C [macro <cctrl.h>]"
 		alias

@@ -12,7 +12,8 @@ inherit
 
 	EV_MENU_CONTAINER_IMP
 		undefine
-			add_menu
+			add_menu,
+			remove_menu
 		end
 
 	EV_BUTTON_IMP
@@ -127,12 +128,19 @@ feature {NONE} -- Implementation
 	menu_container: WEL_MENU
 			-- Actual WEL container for the menu
 
-	add_menu (menu: EV_MENU) is
+	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Add `a_menu' into container.
 		do
-			{EV_MENU_CONTAINER_IMP} Precursor (menu)
-			set_text (menu.text)
+			{EV_MENU_CONTAINER_IMP} Precursor (menu_imp)
+			set_text (menu_imp.text)
 		end 
+
+	remove_menu (menu_imp: EV_MENU_IMP) is
+			-- Remove the menu from the option button.
+		do
+			{EV_MENU_CONTAINER_IMP} Precursor (menu_imp)
+			set_text ("")
+		end
 
 feature {NONE} -- WEL implementation
 

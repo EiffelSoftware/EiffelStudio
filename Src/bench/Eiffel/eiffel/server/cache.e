@@ -10,7 +10,7 @@ inherit
 		export
 			{CACHE} out_index, in_index, lower, upper, area
 		end;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 
 feature
 
@@ -29,8 +29,7 @@ feature
 		do
 			s := generator
 			s.to_lower
-			Result := Resources.get_integer (
-				s, Resources.get_integer ("cache_size", Default_size))
+			Result := Configure_resources.get_integer (s, default_value)
 
 debug ("SERVER")
 	io.error.putstring ("Size of ")
@@ -39,7 +38,13 @@ debug ("SERVER")
 	io.error.putint (Result)
 	io.error.new_line
 end
-		end
+		end;
+
+	default_value: INTEGER is
+			-- Default value of cache
+		once
+			Result :=  Configure_resources.get_integer (r_Cache_size, Default_size)
+		end;
 
 	Default_size: INTEGER is
 			-- Default cache size

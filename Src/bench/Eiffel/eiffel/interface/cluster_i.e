@@ -929,8 +929,6 @@ feature
 			Result := path < other.path
 		end;
 
-		
-
 feature {NONE} -- Externals
 
 	c_clname (file_pointer: POINTER): STRING is

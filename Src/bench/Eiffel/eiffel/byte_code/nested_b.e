@@ -104,7 +104,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for a nested call.
 		do
-			generate_il_call (True)
+			generate_il_call (True, False)
 		end
 	
 	generate_il_creation is
@@ -112,14 +112,16 @@ feature -- IL code generation
 			-- i.e. no invariant check will be called before calling creation
 			-- procedure
 		do
-			generate_il_call (False)
+			generate_il_call (False, True)
 		end
 		
 feature {NONE} -- IL code generation
 
-	generate_il_call (inv_checked: BOOLEAN) is
+	generate_il_call (inv_checked, in_creation: BOOLEAN) is
 			-- Generate IL code for a nested call with invariant
 			-- checked before calling the feature if `inv_checked'.
+			-- If `in_creation' it means that we already have target of
+			-- call generated on top of stack.
 		local
 			can_discard_target: BOOLEAN
 			is_target_generated: BOOLEAN
@@ -129,36 +131,38 @@ feature {NONE} -- IL code generation
 			local_number: INTEGER
 			l_type: TYPE_I
 		do
-			can_discard_target := not message.need_target
+			if not in_creation then
+				can_discard_target := not message.need_target
 
-			if can_discard_target then
-					-- If we have a constant or a static external call,
-					-- we can forget about the generation of `target' only
-					-- if it is not a routine call. If the generation
-					-- of `target' occurred, we need to pop from
-					-- execution stack the value returned by `target'
-					-- because it is not needed to perform the call to `message'.
-				is_target_generated := (not target.is_predefined and
-					(parent /= Void or not target.is_attribute))
-			else
-				is_target_generated := True
-			end
-			
-			if is_target_generated then
-					-- We pass `True' to force a special treatment on 
-					-- generation of `target' if it is an expanded object.
-					-- Namely if `target' is predefined we will load
-					-- the address of `target' instead of `target' itself.
-					-- `message' will manage the boxing operation if needed.
-				target.generate_il_call_access (True)
-					-- We need to generate an address operation of most recently
-					-- pushed value, but because it is not a predefined entity
-					-- we need to do something special.
-				l_attr ?= target
-			end
+				if can_discard_target then
+						-- If we have a constant or a static external call,
+						-- we can forget about the generation of `target' only
+						-- if it is not a routine call. If the generation
+						-- of `target' occurred, we need to pop from
+						-- execution stack the value returned by `target'
+						-- because it is not needed to perform the call to `message'.
+					is_target_generated := (not target.is_predefined and
+						(parent /= Void or not target.is_attribute))
+				else
+					is_target_generated := True
+				end
+				
+				if is_target_generated then
+						-- We pass `True' to force a special treatment on 
+						-- generation of `target' if it is an expanded object.
+						-- Namely if `target' is predefined we will load
+						-- the address of `target' instead of `target' itself.
+						-- `message' will manage the boxing operation if needed.
+					target.generate_il_call_access (True)
+						-- We need to generate an address operation of most recently
+						-- pushed value, but because it is not a predefined entity
+						-- we need to do something special.
+					l_attr ?= target
+				end
 
-			if can_discard_target and is_target_generated then
-				il_generator.pop
+				if can_discard_target and is_target_generated then
+					il_generator.pop
+				end
 			end
 
 				-- Generate call

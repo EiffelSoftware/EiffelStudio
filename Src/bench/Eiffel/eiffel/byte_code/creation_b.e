@@ -127,10 +127,11 @@ feature -- IL code generation
 				else
 						-- Standard creation call for a normal Eiffel class.
 					info.generate_il
-					target.generate_il_assignment (target_type)
 					if call /= Void then
+						il_generator.duplicate_top
 						call.generate_il_creation
 					end
+					target.generate_il_assignment (target_type)
 				end
 			else
 					-- Creation on expanded or basic types

@@ -104,11 +104,12 @@ creation
 %type <INVARIANT_AS>		Class_invariant
 %type <LOOP_AS>				Loop
 %type <NESTED_AS>			Call_on_feature_access Call_on_precursor
-							Call_on_feature Call_on_result Call_on_current
+							Call_on_feature Call_on_result Call_on_current Call_on_static
 %type <NESTED_EXPR_AS>		Call_on_expression
 %type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
+%type <STATIC_ACCESS_AS>	A_static_call
 %type <REAL_AS>				Real_constant
 %type <RENAME_AS>			Rename_pair
 %type <REQUIRE_AS>			Precondition
@@ -116,7 +117,7 @@ creation
 %type <REVERSE_AS>			Reverse_assignment
 %type <ROUT_BODY_AS>		Routine_body
 %type <ROUTINE_AS>			Routine
-%type <ROUTINE_CREATION_AS>	Delayed_call
+%type <ROUTINE_CREATION_AS>	Agent_call
 %type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string
 %type <TAGGED_AS>			Assertion_clause Assertion_clause_impl
 %type <TUPLE_AS>			Manifest_tuple
@@ -164,7 +165,7 @@ creation
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 194
+%expect 196
 
 %%
 
@@ -1430,7 +1431,7 @@ Creation_clause:
 			}
 	;
 
-Delayed_call:
+Agent_call:
 		TE_AGENT TE_RESULT TE_DOT Identifier Delayed_actuals
 		{ $$ := new_routine_creation_as (new_result_operand_as (Void, Void, Void), $4, $5) }
 	|	TE_AGENT TE_CURRENT TE_DOT Identifier Delayed_actuals
@@ -1561,6 +1562,10 @@ Call: A_feature
 			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	Call_on_precursor
 			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
+	|	A_static_call
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
+	|	Call_on_static
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	;
 
 Check: Position TE_CHECK Assertion TE_END
@@ -1582,7 +1587,7 @@ Expression: Expression_constant
 			{ $$ := new_value_as ($1) }
 	|	Feature_call
 			{ $$ := new_expr_call_as ($1) }
-	|	Delayed_call
+	|	Agent_call
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := new_paran_as ($2) }
@@ -1674,6 +1679,10 @@ Feature_call: Call_on_current
 			{ $$ := $1 }
 	|	Call_on_precursor
 			{ $$ := $1 }
+	|	A_static_call
+			{ $$ := $1 }
+	|	Call_on_static
+			{ $$ := $1 }
 	|	Creation_expression
 			{ $$ := $1 }
 	;
@@ -1727,6 +1736,18 @@ A_precursor: TE_PRECURSOR Parameters
 	|	TE_LCURLY Clickable_real TE_RCURLY TE_PRECURSOR Parameters
 			{ $$ := new_precursor ($2, $5) }
 	;
+
+Call_on_static: A_static_call TE_DOT Remote_call
+		{ $$ := new_nested_as ($1, $3) }
+	;
+
+A_static_call:
+		TE_FEATURE TE_LCURLY Clickable_identifier TE_RCURLY TE_DOT Identifier Parameters
+			{
+				$$ := new_static_access_as (new_class_type ($3, Void), $6, $7);
+			}
+	;
+
 
 Remote_call: Call_on_feature_access
 			{ $$ := $1 }

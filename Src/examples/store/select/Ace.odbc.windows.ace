@@ -8,17 +8,17 @@ default
 
 	assertion (all);
 	multithreaded(yes);
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
 
 cluster
 
-	root_cluster:		"$ISE_EIFFEL/examples/store/select";
-	estore_examples_objects:"$ISE_EIFFEL/examples/store/Utilities";
-	odbc_handle:		"$ISE_EIFFEL/examples/store/Utilities/odbc";
+	root_cluster:		"$ISE_EIFFEL\examples\store\select";
+	estore_examples_objects:"$ISE_EIFFEL\examples\store\Utilities";
+	odbc_handle:		"$ISE_EIFFEL\examples\store\Utilities\odbc";
 
 -- EiffelBase
 
-	all base:			"$ISE_EIFFEL/library/base"
+	all base:			"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
@@ -26,16 +26,16 @@ cluster
 
 -- EiffelStore
 
-	estore_support:		"$ISE_EIFFEL/library/store/support";
-	estore_interface:	"$ISE_EIFFEL/library/store/interface";
-	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
-	estore_odbc:		"$ISE_EIFFEL/library/store/dbms/rdbms/odbc";
+	estore_support:		"$ISE_EIFFEL\library\store\support";
+	estore_interface:	"$ISE_EIFFEL\library\store\interface";
+	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
+	estore_odbc:		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc";
 
 -- EiffelTime
 	
-	time:				"$ISE_EIFFEL/library/time";
-	time_format(time):	"$/format";
-	english_format(time_format):	"$/english";
+	time:				"$ISE_EIFFEL\library\time";
+	time_format(time):	"$\format";
+	english_format(time_format):	"$\english";
 
 
 external
@@ -43,7 +43,7 @@ external
 		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib"
 
 	object:
-		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/odbc_store.lib",
+		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\odbc_store.lib",
 		"odbc32.lib" -- Specify the path
 
 end

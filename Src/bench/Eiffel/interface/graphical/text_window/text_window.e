@@ -36,6 +36,7 @@ feature
 			text_create (a_name, a_parent);
 			!! history.make (10);
 			tool := a_tool;
+			set_read_only;
 			add_callbacks;
 			upper := -1 			-- Init clickable array.
 		end;
@@ -180,8 +181,8 @@ feature
 		do
 			if compatible (a_stone) then
 				if a_stone.is_valid then 
-					history.extend (a_stone);
-					last_format.execute (a_stone)
+					last_format.execute (a_stone);
+					history.extend (root_stone)
 				else
 					warner.set_window (Current);
 					warner.gotcha_call ("Pebble is not valid")
@@ -201,6 +202,8 @@ feature
 	synchronise_stone is
 			-- Synchronize the root stone of the window
 			-- and the history's stones.
+		local
+			old_do_format: BOOLEAN
 		do
 			history.extend (root_stone);
 			history.synchronize;
@@ -209,9 +212,10 @@ feature
 				root_stone.synchronized_stone /= Void 
 			then
 					-- The root stone is still valid.
+				old_do_format := last_format.do_format;
 				last_format.set_do_format (true);
 				last_format.execute (history.item);
-				last_format.set_do_format (false)
+				last_format.set_do_format (old_do_format)
 			else
 					-- The root stone is not valid anymore.
 				history.forth;

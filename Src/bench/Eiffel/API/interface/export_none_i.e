@@ -65,7 +65,7 @@ feature
 		do
 			ctxt.put_text_item (ti_L_curly);
 			ctxt.put_string ("NONE");
-			ctxt.put_text_item (ti_R_curly)
+			ctxt.put_text_item_without_tabs (ti_R_curly);
 		end;
 
 feature -- Case storage

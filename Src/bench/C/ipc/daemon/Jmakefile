@@ -20,8 +20,10 @@ LIBDIR = ../shared
 LIBNAME = libipc.a
 LIBARCH = $(LIBDIR)/$(LIBNAME)
 
+LIBRUN = ../../run-time
+
 /* The following are understood by jmake to alter built-in commands */
-DPFLAGS = -I$(TOP) -I$(LIBDIR)
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN)
 CFLAGS = $(DPFLAGS)
 LDFLAGS = $(LIBARCH)
 

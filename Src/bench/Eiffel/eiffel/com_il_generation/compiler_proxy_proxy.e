@@ -471,11 +471,11 @@ feature -- Basic Operations
 			ccom_generate_feature_il (initializer, feature_id, type_id, code_feature_id)
 		end
 
-	generate_feature_internal_clone (feature_id: INTEGER) is
+	generate_feature_internal_duplicate (feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
 		do
-			ccom_generate_feature_internal_clone (initializer, feature_id)
+			ccom_generate_feature_internal_duplicate (initializer, feature_id)
 		end
 
 	generate_implementation_feature_il (feature_id: INTEGER) is
@@ -1559,7 +1559,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER)"
 		end
 
-	ccom_generate_feature_internal_clone (cpp_obj: POINTER; feature_id: INTEGER) is
+	ccom_generate_feature_internal_duplicate (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"

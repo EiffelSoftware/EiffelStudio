@@ -374,7 +374,7 @@ feature -- IL Generation
 		deferred
 		end
 
-	generate_feature_internal_clone (feature_id: INTEGER) is
+	generate_feature_internal_duplicate (feature_id: INTEGER) is
 		require
 			positive_feature_id: feature_id > 0
 		deferred

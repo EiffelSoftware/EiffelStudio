@@ -10,7 +10,8 @@ inherit
 		redefine
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
-			pre_inlined_code, inlined_byte_code, generate_il
+			pre_inlined_code, inlined_byte_code, generate_il,
+			allocates_memory, has_call
 		end
 
 	PREDEFINED_NAMES
@@ -18,12 +19,14 @@ inherit
 			{NONE} all
 		end
 
-feature 
+feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
 			-- Expressions in the tuple
 
 	type: TUPLE_TYPE_I;
+
+feature -- Settings
 
 	set_expressions (e: like expressions) is
 			-- Assign `e' to `expressions'.
@@ -37,9 +40,32 @@ feature
 			type := t;
 		end;
 
+feature -- Status report
+
 	used (r: REGISTRABLE): BOOLEAN is
 		do
 		end;
+
+	allocates_memory: BOOLEAN is True
+			-- Current allocates memory.
+
+	has_call: BOOLEAN is
+			-- Does Current contains calls?
+		local
+			expr: EXPR_B
+		do
+			from
+				expressions.start
+			until
+				expressions.after or else Result
+			loop
+				expr ?= expressions.item
+				Result := expr.has_call
+				expressions.forth
+			end
+		end
+
+feature -- Code generation
 
 	enlarge_tree is
 			-- Enlarge the expressions.
@@ -157,7 +183,7 @@ feature -- Byte code generation
 				expr.make_byte_code (ba);
 
 				if actual_type = Void then
-					ba.append (Bc_Void)
+					ba.append (Bc_void)
 				elseif actual_type.is_basic then 
 						-- Simple type objects are metamorphosed
 					ba.append (Bc_metamorphose);
@@ -172,7 +198,7 @@ feature -- Byte code generation
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer (context.class_type.static_type_id-1)
-				real_ty.make_gen_type_byte_code (ba, true)
+				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_array);
@@ -180,7 +206,7 @@ feature -- Byte code generation
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer
 					(context.current_type.associated_class_type.static_type_id - 1)
-				real_ty.make_gen_type_byte_code (ba, true)
+				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;
 				ba.append_short_integer (feat_id);

@@ -66,6 +66,8 @@ extern int is_debug();		/* Debug level query */
  * Options for E-PROFILE && E-TRACE
  */
 
+extern EIF_BOOLEAN eif_profiler_on;		/* Is the Eiffel profiler on */
+
 extern int trace_call_level;			/* Call level to report at E-TRACE output */
 
 struct profile_stack *prof_stack;		/* Stack that maintains profile information

@@ -321,15 +321,16 @@ public int acollect()
 	int allocated;					/* Memory used since last full collect */
 	int started_here = 0;			/* Was this the original entry point? */
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
-		
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
+
 	if (g_data.status & GC_STOP)
 		return -1;					/* Garbage collection stopped */
 
@@ -376,13 +377,14 @@ public int acollect()
 
 	nb_calls++;			/* Records the call */
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 
 	return status;		/* Collection done, forward status */
 }
@@ -410,14 +412,15 @@ int i;					/* Index in g_stat array where statistics are kept */
 	int nbstat;							/* Current number of statistics */
 	int started_here = 0;
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
 
 	if (g_data.status & GC_STOP)
 		return -1;						/* Garbage collection stopped */
@@ -557,13 +560,14 @@ int i;					/* Index in g_stat array where statistics are kept */
 	dprintf(1)("scollect: Avg interval sys time: %lf\n", gstat->sys_iavg);
 #endif
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 
 	return status;		/* Forward status report */
 }
@@ -612,27 +616,29 @@ public void mksp()
 
 	int started_here = 0;
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
 
 	if (g_data.status & GC_STOP)
 		return;						/* Garbage collection stopped */
 
 	(void) scollect(mark_and_sweep, GST_PART);
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 }
 
 private int mark_and_sweep()
@@ -1643,27 +1649,29 @@ public void plsc()
 
 	int started_here = 0;
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
 
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 }
 
 private int partial_scavenging()
@@ -1706,14 +1714,15 @@ char **object;
 
 	int started_here = 0;
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
 	
 	if (g_data.status & GC_STOP)
 		return;							/* Garbage collection stopped */
@@ -1729,13 +1738,14 @@ char **object;
 
 	run_plsc();				/* Normal sequence */
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 }
 
 private void clean_zones()
@@ -2561,24 +2571,26 @@ public int collect()
 	int result;
 	int started_here = 0;
 
-	if (!gc_running) {
-		double dummy;
+	if (eif_profiler_on)
+		if (!gc_running) {
+			double dummy;
 
-		gc_running = 1;
-		getcputime(&dummy,&last_gc_time);
-		started_here = 1;
-		gc_ran = 1;
-	}
+			gc_running = 1;
+			getcputime(&dummy,&last_gc_time);
+			started_here = 1;
+			gc_ran = 1;
+		}
 
 	result = scollect(generational_collect, GST_GEN);
 
-	if (started_here) {			/* Keep track of this run */
-		double dummy, new_time;
+	if (eif_profiler_on)
+		if (started_here) {			/* Keep track of this run */
+			double dummy, new_time;
 
-		getcputime(&dummy, &new_time);
-		last_gc_time = new_time - last_gc_time;
-		gc_running = 0;
-	}
+			getcputime(&dummy, &new_time);
+			last_gc_time = new_time - last_gc_time;
+			gc_running = 0;
+		}
 
 	return result;
 }

@@ -203,6 +203,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_7.disable_item_expand (expression_button)
 			expression_button.set_text (button_add_text)
 			expression_button.set_minimum_width (button_width)
+			xml_widget_box.hide
 			xml_widget_box.set_padding_width (padding_width)
 			xml_widget_box.set_border_width (border_width)
 			xml_widget_box.disable_item_expand (l_ev_horizontal_box_8)

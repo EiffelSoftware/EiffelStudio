@@ -8,6 +8,13 @@ class
 	
 inherit 
 	DOCUMENT_BROWSER_IMP
+	
+	OBSERVER
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
 
 create
 	make
@@ -18,6 +25,7 @@ feature -- Creation
 			-- Create 
 		do
 			default_create
+			should_update := True
 		end		
 
 feature -- Access
@@ -51,12 +59,12 @@ feature {NONE} -- Initialization
 			browser_container.extend (Internal_browser)
 			browser_box.extend (browser_container)
 			
-					-- Toolbar events
-			back_button.select_actions.extend (agent navigate_back)
-			--back_button.select_actions.extend (agent build_composite_document)
-			
-			forward_button.select_actions.extend (agent navigate_forward)
+					-- Events
+--			create events.make (internal_browser)			
+--			back_button.select_actions.extend (agent build_composite_document)	
 			refresh_button.select_actions.extend (agent refresh)
+			
+			update
 		end	
 
 feature -- Commands
@@ -65,24 +73,14 @@ feature -- Commands
 			-- Load `a_url'
 		local
 			l_ptr: SYSTEM_OBJECT
+			l_url: SYSTEM_STRING
 		do
-			Internal_browser.navigate (a_url, $l_ptr, $l_ptr, $l_ptr, $l_ptr)
+			l_url := a_url.to_cil
+			Internal_browser.navigate (l_url, $l_ptr, $l_ptr, $l_ptr, $l_ptr)
 			if not urls.has (a_url) then
 				add_url (a_url)
 			end
 		end		
-	
-	navigate_back is
-			-- Navigate to previous document
-		do
-			Internal_browser.go_back
-		end	
-		
-	navigate_forward is
-			-- Navigate to document loaded before call to `go_back'
-		do
-			Internal_browser.go_forward
-		end	
 	
 	refresh is
 			-- Reload the HTML based upon changes made to `document'.  If there is no
@@ -105,23 +103,24 @@ feature -- Status Setting
 			l_util: UTILITY_FUNCTIONS
 			l_filename: FILE_NAME
 			l_target_dir: DIRECTORY
+			l_name: STRING
 		do
 			document := a_doc
-			if document_hash.has (document.name) then
-				create l_util
-				create l_filename.make_from_string (document_hash.item (document.name).name)
-				l_filename.extend (l_util.short_name (l_util.file_no_extension (document.name)))
+			create l_util
+			l_name := document.name
+			l_name.replace_substring_all ("\", "/")
+			if document_hash.has (l_name) then				
+				create l_filename.make_from_string (document_hash.item (l_name).name)
+				l_filename.extend (l_util.short_name (l_util.file_no_extension (l_name)))
 				l_filename.add_extension ("html")
 				load_url (l_filename.string)
-			else
-				create l_util
-				create l_target_dir.make (l_util.temporary_html_location (document.name, False))
-				document_hash.extend (l_target_dir, document.name)
+			elseif l_util.file_type (l_name).is_equal ("xml") or l_util.file_type (l_name).is_equal ("html") then
+				create l_target_dir.make (l_util.temporary_html_location (l_name, False))
+				document_hash.extend (l_target_dir, l_name)
 				load_url (generated_document)
 			end
 		ensure
 			is_set: document = a_doc
-			is_know: document_hash.has (a_doc.name)
 		end	
 	
 feature {NONE} -- Status Setting
@@ -203,11 +202,30 @@ feature {NONE} -- Implementation
 		local
 			l_generator: HTML_GENERATOR
 		do
-			create l_generator
-			l_generator.generate_file (document, document_hash.item (document.name))
-			Result := l_generator.last_generated_file.name.string
+			create Result.make_empty
+			if document.is_persisted then
+				create l_generator			
+				l_generator.generate_file (document, document_hash.item (document.name))
+				Result.append (l_generator.last_generated_file.name.string)
+				Result.replace_substring_all ("\", "/")
+			end			
 		ensure
 			has_result: Result /= Void
 		end		
+
+	update is
+			-- Update
+		local
+			l_consts: SHARED_OBJECTS
+			l_doc: DOCUMENT
+		do
+			create l_consts
+			l_doc := l_consts.shared_document_editor.current_document
+			if l_doc /= Void then
+				set_document (l_doc)
+			end
+		end				
+	
+	events: DOCUMENT_BROWSER_EVENTS
 
 end -- class DOCUMENT_BROWSER

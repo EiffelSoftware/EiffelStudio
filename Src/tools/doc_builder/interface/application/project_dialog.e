@@ -56,11 +56,13 @@ feature {NONE} -- Implementation
 				if l_question_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					l_question_dialog.destroy
 				end
+				valid := False
 			else
+				valid := True
 				Shared_project.set_name (name_field.text)
 				Shared_project.set_root_directory (path_field.text)
-			end
-			hide
+				hide
+			end			
 		end
 
 	set_path_field (a_location: STRING) is
@@ -68,6 +70,11 @@ feature {NONE} -- Implementation
 		do
 			path_field.set_text (a_location)	
 		end	
+
+feature {DOCUMENT_PROJECT} -- Implementation
+		
+	valid: BOOLEAN
+			-- Were optins valid?
 
 end -- class PROJECT_DIALOG
 

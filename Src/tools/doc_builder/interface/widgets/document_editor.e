@@ -112,16 +112,12 @@ feature -- Editing
 		
 	paste_text is
 			-- Paste
-		local
-			l_line: INTEGER
 		do
 			if not clipboard_empty then
-				l_line := current_widget.internal_edit_widget.current_line_number
 				if current_widget.internal_edit_widget.has_selection then
 					current_widget.internal_edit_widget.delete_selection
 				end
 				current_widget.internal_edit_widget.insert_text (Clipboard.text)
-				current_widget.internal_edit_widget.scroll_to_line (l_line)
 			end
 		end		
 	
@@ -141,10 +137,9 @@ feature -- Editing
 			if l_widget /= Void then							
 				l_widget.select_all
 				l_text := l_widget.selected_text
-				if l_widget.can_insert (l_text) then					
-					l_widget.set_text ("")
-					Clipboard.set_text (l_widget.pretty_xml (l_text))
-					paste_text
+				if l_widget.can_insert (l_text) then
+					l_text := l_widget.pretty_xml (l_text)
+					current_document.set_text (l_text)
 				else
 					l_widget.deselect_all
 				end
@@ -203,7 +198,9 @@ feature -- GUI Commands
 				current_widget.internal_edit_widget.resize_actions.resume
 			end			
 			notebook.set_item_text (current_widget, current_widget.title)
+			notebook.selection_actions.block
 			notebook.select_item (current_widget)			
+			notebook.selection_actions.resume
 		end		
 	
 	close_widget is
@@ -223,7 +220,7 @@ feature -- Commands
 			set_current_document (a_doc)
 			display_document
 			Application_window.update
-			refresh
+--			refresh
 		end
 		
 	close_documents is
@@ -404,7 +401,7 @@ feature -- Events
 			if l_widget /= Void then
 				shared_dialogs.search_dialog.set_widget (l_widget.internal_edit_widget)
 				set_current_document (l_widget.document)
-				l_widget.internal_edit_widget.set_font (preferences.font)				
+				l_widget.internal_edit_widget.set_font (preferences.font)
 				l_widget.update
 			else
 				set_current_document (Void)
@@ -420,7 +417,7 @@ feature -- Access
 	split_position: INTEGER
 			-- Split position in pixels
 		
-feature {DOCUMENT_EDITOR, DOC_BUILDER_WINDOW, ERROR_ACTIONS, DOCUMENT_WIDGET} -- Implementation
+feature -- Implementation
 
 	notebook: EV_NOTEBOOK
 			-- Notebook

@@ -171,6 +171,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Location: ")
 			location_label.align_text_left
+			l_ev_vertical_box_3.hide
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_5)
@@ -229,6 +230,7 @@ feature {NONE}-- Initialization
 			toc_20_pseudo_box.set_border_width (2)
 			toc_20_pseudo_box.disable_item_expand (l_ev_label_10)
 			l_ev_label_10.set_text ("Pseudo Name")
+			l_ev_vertical_box_7.hide
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_8)
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_9)
 			l_ev_horizontal_box_8.set_padding_width (5)

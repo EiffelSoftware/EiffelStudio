@@ -44,10 +44,7 @@ feature -- Commands
 			end	
 			if link_relative_check.is_selected then
 				l_manager.set_links_relative
-			end
-			if link_absolute_check.is_selected then
-				l_manager.set_links_absolute
-			end
+			end			
 		end		
 
 feature {NONE}  -- Events

@@ -36,7 +36,7 @@ feature {NONE}-- Initialization
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
 			
-			set_title ("Display window")
+			set_title ("Document Builder")
 			
 				--Connect events.
 				-- Close the application when an interface close

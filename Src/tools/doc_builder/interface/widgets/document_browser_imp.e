@@ -34,8 +34,6 @@ feature {NONE}-- Initialization
 			create toolbar_box
 			create l_ev_horizontal_box_1
 			create toolbar
-			create back_button
-			create forward_button
 			create refresh_button
 			create l_ev_horizontal_box_2
 			create l_ev_label_1
@@ -46,8 +44,6 @@ feature {NONE}-- Initialization
 			extend (toolbar_box)
 			toolbar_box.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (toolbar)
-			toolbar.extend (back_button)
-			toolbar.extend (forward_button)
 			toolbar.extend (refresh_button)
 			toolbar_box.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_label_1)
@@ -61,11 +57,7 @@ feature {NONE}-- Initialization
 			toolbar_box.set_border_width (border_width)
 			toolbar_box.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
-			back_button.set_tooltip ("Previous")
-			back_button.set_pixmap (icon_back_color_ico)
-			forward_button.set_tooltip ("Forward")
-			forward_button.set_pixmap (icon_forth_color_ico)
+			l_ev_horizontal_box_1.set_border_width (border_width)		
 			refresh_button.set_tooltip ("Refresh")
 			refresh_button.set_pixmap (icon_refresh_ico)
 			l_ev_horizontal_box_2.set_padding_width (padding_width)
@@ -87,7 +79,7 @@ feature -- Access
 	toolbar_box, browser_box: EV_VERTICAL_BOX
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 	toolbar: EV_TOOL_BAR
-	back_button, forward_button, refresh_button: EV_TOOL_BAR_BUTTON
+	refresh_button: EV_TOOL_BAR_BUTTON
 	l_ev_label_1: EV_LABEL
 	address_bar: EV_COMBO_BOX
 

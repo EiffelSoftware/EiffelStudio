@@ -138,7 +138,7 @@ feature {NONE}-- Initialization
 			convert_box.set_border_width (border_width)
 			convert_box.disable_item_expand (l_ev_label_1)
 			convert_box.disable_item_expand (transform_file_combo)
-			l_ev_label_1.set_text ("Convert XML documents into")
+			l_ev_label_1.set_text ("Convert documents into")
 			l_ev_label_1.align_text_left
 			transform_file_combo.set_minimum_width (100)
 			transform_file_combo.disable_edit

@@ -17,15 +17,15 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include "eif_portable.h"
 #include "eif_confmagic.h"	
 #include "eif_macros.h"
-#include "eif_debug.h"
+#include "rt_debug.h"
 #include "eif_hashin.h"
 #include "eif_malloc.h"
-#include "eif_sig.h"
+#include "rt_sig.h"
 #include "rt_struct.h"
 #include "eif_local.h"			/* For epop() */
 #include "eif_out.h"			/* For build_out() */
 #include "eif_hector.h"
-#include "eif_interp.h"
+#include "rt_interp.h"
 #include "eif_update.h"
 #include "eif_main.h"
 #include "eif_lmalloc.h"
@@ -33,7 +33,6 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include "rt_except.h"
 #include "eif_urgent.h"
 #include "rt_garcol.h"
-#include "eif_sig.h"				/* For signal description */
 #include "eif_err_msg.h"
 #include "eif_error.h"
 #include "eif_project.h"
@@ -100,6 +99,7 @@ doc:	<attribute name="db_stack" return_type="struct dbstack" export="shared">
 doc:		<summary>Debugging stack. This stack records all the calls made to any melted feature (i.e. it records also standard melted feature calls). In case an exception occurs or a breakpoint is reached, this stack will be used to print arguments values. It can also be used to inspect local variables in any of the recorded routines, by simply shifting the context and resynchronizing the interpreter registers.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_shared struct dbstack db_stack = {
@@ -115,6 +115,7 @@ doc:	<attribute name="once_list" return_type="struct id_list" export="shared">
 doc:		<summary>Once list. This list records the body_id of once routines that have already been called. This is usefull to prevent those routines to be supermelted losing in that case their memory (whether they have already been called and their result). This list is also needed to inspect result of once functions in order to know if that result has already been evaluated.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_shared struct id_list once_list = {
@@ -125,13 +126,13 @@ rt_shared struct id_list once_list = {
 };
 
 /*
-doc:	<attribute name="d_data" return_type="struct dbinfo" export="shared">
+doc:	<attribute name="d_data" return_type="struct dbinfo" export="public">
 doc:		<summary>For faster reference, the current control table is memorized in a global debugger status structure, along with the execution status and break point hash table.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_shared struct dbinfo d_data = {
+rt_public struct dbinfo d_data = {
 	NULL,			/* db_start */
 	0, 				/* db_status */
 	0,				/* db_callstack_depth */
@@ -144,18 +145,19 @@ doc:	<attribute name="d_cxt" return_type="struct pgcontext" export="shared">
 doc:		<summary>The debugger, when in interactive mode, maintains the notion of run-time context. That is to say the main stacks are saved and their content will be restored undisturbed before resuming execution.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
 doc:	</attribute>
 */
 rt_shared struct pgcontext d_cxt;	/* Main program context */
 
 /*
-doc:	<attribute name="cop_stack" return_type="struct opstack" export="shared">
+doc:	<attribute name="cop_stack" return_type="struct opstack" export="public">
 doc:		<summary>Store local/argument values in debugger.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_shared struct opstack cop_stack = {
+rt_public struct opstack cop_stack = {
 	(struct stochunk *) 0,	/* st_hd */
 	(struct stochunk *) 0,	/* st_tl */
 	(struct stochunk *) 0,	/* st_cur */

@@ -21,7 +21,7 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
-	override_cluster ("build2_demo_version")
+	override_cluster ("preferences")
 	check_vape (no)
 	console_application (no)
 	address_expression (no)
@@ -39,14 +39,14 @@ default
 cluster
 	all build2:		"$EIFFEL_SRC/build2"
 		exclude
-			"object_editor"; "EIFGEN"; "templates"; "Windows"; "WEL"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version";
+			"gb_about_dialog.e"; "gb_code_generation_dialog.e"; "gb_code_generator.e"; "object_editor"; "EIFGEN"; "templates"; "Windows"; "WEL"; "hact"; "se"; "ve"; "base"; "test"; "CVS"; "demo_version";
 		end
 
 	build2_demo_version:		"$EIFFEL_SRC/build2/demo_version"
 
 	all gobo:		"$EIFFEL_SRC/library/gobo"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "gelint"; "test"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "gelint"; "test"; "example"; 
 		default
 			assertion (no)
 		end
@@ -56,7 +56,7 @@ cluster
 			"ev_button"; 
 		exclude
 			"new_figures"; "mswin"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e";
-			"ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; "ev_pixmap.e";
+			"ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; "ev_pixmap.e"; "gtk2";
 		default
 			assertion (require)
 		end

@@ -11,7 +11,7 @@ inherit
 			operator_is_keyword, simple_format,
 			type_check, byte_node, format,
 			replicate, fill_calls_list
-		end;
+		end
 
 	SHARED_TYPES
 
@@ -31,65 +31,67 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check
 		local
-			vaol1: VAOL1;
-			vaol2: VAOL2;
-			saved_vaol_check: BOOLEAN;
+			vaol1: VAOL1
+			vaol2: VAOL2
+			saved_vaol_check: BOOLEAN
 		do
 			if not context.level1 then
 					-- Old expression found somewhere else that in a
 					-- postcondition
-				!! vaol1;
-				context.init_error (vaol1);
-				Error_handler.insert_error (vaol1);
-				Error_handler.raise_error;
-			end;
+				!! vaol1
+				context.init_error (vaol1)
+				Error_handler.insert_error (vaol1)
+				Error_handler.raise_error
+			end
 
-			saved_vaol_check := context.check_for_vaol;
+			saved_vaol_check := context.check_for_vaol
 			if not saved_vaol_check then
 					-- Set flag for vaol check.
 					-- Check for an old expression within
 					-- an old expression.
 				context.set_check_for_vaol (True)
-			end;
+			end
 				-- Expression type check
-			expr.type_check;
+			expr.type_check
 
 			if not saved_vaol_check then
 					-- Reset flag for vaol check
 				context.set_check_for_vaol (False)
-			end;
+			end
 			if 
 				context.item.conform_to (Void_type) or else
 				context.check_for_vaol
 			then
 					-- Not an expression
-				!! vaol2;
-				context.init_error (vaol2);
-				Error_handler.insert_error (vaol2);
-			end;
-		end;
+				!! vaol2
+				context.init_error (vaol2)
+				Error_handler.insert_error (vaol2)
+			end
+		end
 
 	byte_node: UN_OLD_B is
 			-- Associated byte code
 		local
-			old_expr: EXPR_B;
+			old_expr: EXPR_B
 		do
-			!! Result;
-			old_expr := expr.byte_node;
-			Result.set_expr (old_expr);
-			Result.add_old_expression;
-		end;
+			!! Result
+			old_expr := expr.byte_node
+			Result.set_expr (old_expr)
+			Result.add_old_expression
+		end
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
-			ctxt.begin;
-			simple_format (ctxt);
+			ctxt.begin
+			ctxt.put_text_item (ti_Old_keyword)
+			ctxt.put_space
+			expr.format (ctxt)
 			if ctxt.last_was_printed then
-				ctxt.commit;
+				ctxt.commit
 			else
-				ctxt.rollback;
-			end;
+				ctxt.rollback
+			end
 		end; 
 			
 feature	-- Replication
@@ -97,15 +99,15 @@ feature	-- Replication
 	fill_calls_list (l: CALLS_LIST) is
 			-- find calls to Current
 		do
-			expr.fill_calls_list (l);
-		end;
+			expr.fill_calls_list (l)
+		end
 
 	replicate (ctxt: REP_CONTEXT): like Current is
 			-- Adapt to replication
 		do
-			Result := clone (Current);
-			Result.set_expr (expr.replicate (ctxt));
-		end;
+			Result := clone (Current)
+			Result.set_expr (expr.replicate (ctxt))
+		end
 
 feature {AST_EIFFEL} -- Output
 
@@ -114,7 +116,7 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_text_item (ti_Old_keyword)
 			ctxt.put_space
-			ctxt.format_ast (expr)
+			expr.simple_format (ctxt)
 		end
 
 end -- class UN_OLD_AS

@@ -12,7 +12,7 @@
 
 #define UUID_LIBEIFFELCOMPILER                  E1FFE1C0-2C7D-4D1C-A98B-4599BDCDFA58
 #define MAJ_LIBEIFFELCOMPILER					2
-#define MIN_LIBEIFFELCOMPILER					0
+#define MIN_LIBEIFFELCOMPILER					5
 #define VER_LIBEIFFELCOMPILER					MAJ_LIBEIFFELCOMPILER.MIN_LIBEIFFELCOMPILER
 
 // =========================================================================

@@ -1,5 +1,5 @@
 var eiffel_studio = false;
-var Eiffel_version = "Eiffel52";
+var Eiffel_version = "Eiffel54";
 
 function write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name) {
 	document.write ("<p>To compile the example: </p> " +

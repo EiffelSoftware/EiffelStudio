@@ -1,6 +1,6 @@
 indexing
-	description: "Content filter.  Use directly to retrieve unfiltered%
-		%content, use/create descendents for content specific output."
+	description: "Document content filter.  Filter DOCUMENTs based%
+		%on content tags, does not alter actual content structure."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +12,6 @@ inherit
 		rename
 			make as make_basic_filter
 		redefine			
-			description,	
 			on_start_tag,
 			on_end_tag,
 			on_attribute,
@@ -26,25 +25,39 @@ create
 	
 feature -- Creation
 
-	make (a_id: INTEGER; a_output_flag: STRING) is
-				-- Create with `a_id'
+	make (a_output_flag, a_description: STRING) is
+				-- Create with initial output flag and description
 		require			
 			flag_not_void: a_output_flag /= Void
+			description_not_void: a_description /= Void
+			description_valid: not a_description.is_empty
 		do
-			make_basic_filter (a_id)
-			output_flag := a_output_flag
+			make_basic_filter
+			create output_flags.make (1)
+			output_flags.compare_objects
+			if not a_output_flag.is_empty then
+				output_flags.extend (a_output_flag)	
+			end
+			description := a_description
 		end	
 		
 feature -- Access	
 
-	description: STRING is
-			-- Textual description of filter
-		do
-			Result := unfiltered
-		end
+	output_flags: ARRAYED_LIST [STRING]
+			-- Output determinants
 
-	output_flag: STRING
-			-- Output determinant
+feature -- Status Setting
+
+	add_output_flag (a_flag: STRING) is
+			-- Add new output flag
+		require
+			flag_not_void: a_flag /= Void
+			flag_not_empty: not a_flag.is_empty
+		do
+			if not output_flags.has (a_flag) then
+				output_flags.extend (a_flag)
+			end
+		end		
 
 feature -- Tag
 
@@ -119,7 +132,7 @@ feature -- Processing
 		do
 					-- Determine if current is in filterable mode
 			if in_filterable_element then
-				if a_name.is_equal ("output") and then (a_value.is_equal (output_flag) or output_flag.is_empty) then
+				if a_name.is_equal ("output") and then (output_flags.has (a_value)) then
 					can_output := True
 				end
 			elseif can_output then							
@@ -152,7 +165,6 @@ feature {NONE} -- Implementation
 			create Result.make (1)
 			Result.compare_objects
 			Result.extend ("output")
---			Result.extend ("document")
 		end		
 
 end -- class STUDIO_FILTER

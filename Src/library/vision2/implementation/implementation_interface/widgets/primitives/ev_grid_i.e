@@ -1175,7 +1175,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			i, j: INTEGER
 			a_col: EV_GRID_COLUMN_I
-			a_visible_count: INTEGER
 		do
 			create Result.make (visible_column_count)
 			from

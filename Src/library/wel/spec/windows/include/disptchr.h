@@ -19,6 +19,11 @@ extern "C" {
 
 EIF_REFERENCE generize (EIF_OBJECT g_item);
 
+struct EIF_WEL_USERDATA {
+	EIF_INTEGER object_id;
+	WNDPROC default_window_procedure;
+};
+
 #ifndef EIF_IL_DLL
 typedef EIF_INTEGER (* EIF_WNDPROC) (
 	EIF_OBJECT,     /* WEL_DISPATCHER Eiffel object */

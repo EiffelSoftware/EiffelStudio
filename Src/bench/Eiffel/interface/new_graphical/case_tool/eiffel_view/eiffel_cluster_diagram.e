@@ -480,6 +480,18 @@ feature {NONE} -- Implementation
 					else
 						new_cluster.prune_all (new_class)
 					end
+					if class_was_inserted then
+						from
+							new_class.internal_links.start
+						until
+							new_class.internal_links.is_empty
+						loop
+							model.remove_link (new_class.internal_links.first)
+						end
+						model.remove_node (new_class)
+					elseif class_was_reincluded then
+						new_class.disable_needed_on_diagram
+					end
 				end
 			end
 			if is_right_angles then

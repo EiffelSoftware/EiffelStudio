@@ -437,12 +437,14 @@ feature -- Status setting
 			l_text: STRING
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 		do
+			initialize_for_saving
 			create text_file.make_open_read (a_filename)
 			text_file.read_stream (text_file.count)
 			l_text := text_file.last_string
 			text_file.close
 			create buffer.set_rich_text (Current)
 			buffer.set_with_rtf (l_text)
+			complete_saving
 		ensure
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies

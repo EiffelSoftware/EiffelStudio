@@ -10,7 +10,7 @@ class
 inherit
 	APPLICATION_STATUS
 		redefine
-			call_stack
+			current_call_stack
 		end
 		
 create {APPLICATION_STATUS_EXPORTER}
@@ -79,7 +79,7 @@ feature {STOPPED_HDLR} -- Initialization
 
 feature {NONE} -- CallStack Impl
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK_CLASSIC is
+	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
 			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 		do
 			create Result.make (a_stack_max_depth)
@@ -87,18 +87,12 @@ feature {NONE} -- CallStack Impl
 
 feature -- Values
 
+	current_call_stack: EIFFEL_CALL_STACK_CLASSIC
+
 	refresh_current_thread_id is
 		do
 			-- FIXME jfiat: for now Classic system do not support thread selection
 			-- TODO
-		end
-
-feature {NONE} -- Values Impl
-
-	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_CLASSIC is
-			-- Eiffel call stack
-		do
-			Result ?= Precursor {APPLICATION_STATUS} (tid)
 		end
 
 end -- class APPLICATION_STATUS_CLASSIC

@@ -12,7 +12,7 @@ inherit
 		redefine
 			display_status,
 			current_call_stack_element,
-			call_stack,
+			current_call_stack,
 			update,
 			set_current_thread_id
 		end
@@ -134,42 +134,37 @@ feature -- Thread info
 			end
 		end
 		
-feature -- Call stack creation
+feature -- Call stack related
+
+	current_call_stack: EIFFEL_CALL_STACK_DOTNET
 
 	clean_current_call_stack is
 			-- Clean Eiffel callstack data
-		local
-			ccs: EIFFEL_CALL_STACK_DOTNET
 		do
-			ccs ?= current_call_stack
-			if ccs /= Void then
-				ccs.clean
+			if current_call_stack /= Void then
+				current_call_stack.clean
 			end
 		end
 
 feature {NONE} -- CallStack Impl
 
-	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK_DOTNET is
+	new_current_callstack_with (a_stack_max_depth: INTEGER): like current_call_stack is
 			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 		do
 			clean_current_call_stack
 			create Result.make (a_stack_max_depth)
-		end
-
-	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_DOTNET is
-			-- Eiffel call stack for `tid'
-		do
-			Result ?= Precursor {APPLICATION_STATUS} (tid)
 		end
 			
 	current_call_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed
 		local
 			ccs: EIFFEL_CALL_STACK_DOTNET
+			cesn: INTEGER
 		do
-			ccs := current_call_stack; 
-			if ccs.valid_index (Application.current_execution_stack_number) then
-				Result := ccs.i_th (Application.current_execution_stack_number)				
+			ccs := current_call_stack
+			cesn := Application.current_execution_stack_number
+			if ccs.valid_index (cesn) then
+				Result := ccs.i_th (cesn)				
 			end
 		end
 
@@ -184,7 +179,7 @@ feature -- Values
 feature -- Reason for stopping
 
 	set_reason (val: like reason) is
-			-- 
+			-- Set reason of stopped state
 		do
 			reason := val
 		ensure

@@ -74,8 +74,8 @@ feature -- Update
 					-- the same than the current one
 				update_breakpoints(bpts)
 				if status /= Void then
-					if status.where /= Void then
-						curr_callstack_depth := status.where.count
+					if status.current_call_stack /= Void then
+						curr_callstack_depth := status.current_call_stack.count
 
 						-- set a stack breakpoint, set on the current stack depth plus one
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we have to add 1 for step by step)
@@ -91,8 +91,8 @@ feature -- Update
 					-- equal to the current one - 1
 				update_breakpoints(bpts)
 				if status /= Void then
-					if status.where /= Void then
-						curr_callstack_depth := status.where.count
+					if status.current_call_stack /= Void then
+						curr_callstack_depth := status.current_call_stack.count
 
 						-- set a stack breakpoint, set on the current stack depth
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we dont have to substract 1 for step out)

@@ -10,12 +10,20 @@ class
 inherit
 	APPLICATION_STATUS
 		redefine
-			where
+			call_stack
 		end
 		
 create {APPLICATION_STATUS_EXPORTER}
 
-	do_nothing
+	make
+	
+feature {NONE} -- Initialization
+
+	make is
+			-- Create Current
+		do
+			initialize
+		end		
 
 feature {STOPPED_HDLR} -- Initialization
 
@@ -25,6 +33,7 @@ feature {STOPPED_HDLR} -- Initialization
 		local
 --			stack_num: INTEGER
 			cont_request: EWB_REQUEST
+			ccs: EIFFEL_CALL_STACK_CLASSIC
 		do
 			object_address := obj
 			reason := reas
@@ -45,13 +54,14 @@ feature {STOPPED_HDLR} -- Initialization
 				break_index := offs
 		
 					-- create the call stack
-				create where.dummy_make
+				create ccs.dummy_make
+				set_call_stack (current_thread_id, ccs)
 	
 --				stack_num := Application.current_execution_stack_number
---				if stack_num > where.count then
---					stack_num := where.count
+--				if stack_num > ccs.count then
+--					stack_num := ccs.count
 --				end
---				Application.set_current_execution_stack(stack_num)
+--				Application.set_current_execution_stack (stack_num)
 			else
 				-- application has stopped to take into account the
 				-- new breakpoints. So let's send the new breakpoints
@@ -69,14 +79,21 @@ feature {STOPPED_HDLR} -- Initialization
 
 feature -- Class stack creation
 
-	create_where_with (a_stack_max_depth: INTEGER) is
+	create_current_callstack_with (a_stack_max_depth: INTEGER) is
+			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+		local
+			ecs: EIFFEL_CALL_STACK_CLASSIC
 		do
-			create where.make (a_stack_max_depth)
-		end
+			create ecs.make (a_stack_max_depth)
+			set_call_stack (current_thread_id, ecs)
+		end		
 
 feature -- Values
 
-	where: EIFFEL_CALL_STACK_CLASSIC
+	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_CLASSIC is
 			-- Eiffel call stack
+		do
+			Result ?= Precursor {APPLICATION_STATUS} (tid)
+		end
 
-end -- class APPLICATION_STATUS_DOTNET
+end -- class APPLICATION_STATUS_CLASSIC

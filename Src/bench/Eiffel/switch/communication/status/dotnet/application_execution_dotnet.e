@@ -81,28 +81,31 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 	estudio_callback_notify is
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
+		local
+			l_status: APPLICATION_STATUS_DOTNET
 		do
 			debug ("debugger_trace_callback_notify")
 				print ("Notify callback: " + Eifnet_debugger_info.last_managed_callback_name + "%N")
 			end
-			callback_notification_processed := False		
+			callback_notification_processed := False
 			if eifnet_debugger /= Void then
 				if eifnet_debugger.data_changed then
+					l_status := status
 					if
-						status.is_stopped
-						and then not status.is_evaluating					
+						l_status.is_stopped
+						and then not l_status.is_evaluating
 					then
 						eifnet_debugger.reset_data_changed
 						if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
 							notify_execution_on_exit_process
 						elseif Eifnet_debugger_info.debugger_error_occurred then
 							notify_execution_on_debugger_error
-						else							
+						else
 							notify_execution_on_stopped
 						end
 					elseif --| Evaluation |--
 						Eifnet_debugger_info.last_managed_callback_is_eval_complete
-						and then status.is_evaluating
+						and then l_status.is_evaluating
 					then
 						eifnet_debugger.reset_data_changed
 						notify_evaluation_done
@@ -309,7 +312,7 @@ feature -- Execution
 				eifnet_debugger_info.set_jit_debugging_mode (optimized_jit_debugging_enabled)
 				
 				process_before_running
-				create l_status.do_nothing
+				create l_status.make
 				set_status (l_status)
 				
 				eifnet_debugger.do_run
@@ -321,9 +324,9 @@ feature -- Execution
 					eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
 				end
 				
-				if status /= Void then
+				if l_status /= Void then
 						-- Application was able to be started
-					status.set_is_stopped (False)
+					l_status.set_is_stopped (False)
 				end
 			end
 		end
@@ -527,6 +530,8 @@ feature -- Stepping
 
 	step_next is
 			-- Stepping to next step point
+		local
+			l_status: APPLICATION_STATUS_DOTNET
 		do
 			process_before_running
 
@@ -536,9 +541,10 @@ feature -- Stepping
 				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 			end			
 
+			l_status := status
 			if
-				(status.e_feature /= Void)
-				and then (status.break_index = status.e_feature.number_of_breakpoint_slots)
+				(l_status.e_feature /= Void)
+				and then (l_status.break_index = l_status.e_feature.number_of_breakpoint_slots)
 			then
 				--| This is an optimisation when we are at the end of a routine
 				--| End of feature, go out ...
@@ -572,7 +578,7 @@ feature {NONE} -- Stepping
 				status.set_is_stopped (False)
 			else
 				if eifnet_debugger.stepping_possible then
-					l_call_stack_element := status.current_stack_element_dotnet
+					l_call_stack_element := status.current_call_stack_element_dotnet
 					if l_call_stack_element /= Void then
 						l_current_il_offset := l_call_stack_element.il_offset
 						debug ("debugger_trace_stepping")
@@ -940,6 +946,7 @@ feature {NONE} -- Events on notification
 	notify_execution_on_stopped is
 		local
 			need_to_continue: BOOLEAN
+			l_status: APPLICATION_STATUS_DOTNET
 		do
 			debug ("debugger_trace")
 				print ("%N*** REASON TO STOP *** %N")
@@ -958,11 +965,12 @@ feature {NONE} -- Events on notification
 
 				--| We need to stop
 				--| Already "stopped" but let's be sure ..
-			status.set_is_stopped (True)
-			status.set_top_level
+			l_status := status
+			l_status.set_is_stopped (True)
+			l_status.set_top_level
 
 				--| CallStack
-			status.reload_call_stack --| since we stop, let's reload the whole callstack
+			l_status.reload_call_stack --| since we stop, let's reload the whole callstack
 			
 			debug ("debugger_trace_callstack")
 				io.put_new_line
@@ -977,20 +985,20 @@ feature {NONE} -- Events on notification
 			end
 
 			if Eifnet_debugger_info.last_managed_callback_is_step_complete then
-				status.set_reason_as_step
+				l_status.set_reason_as_step
 			elseif Eifnet_debugger_info.last_managed_callback_is_breakpoint then
-				status.set_reason_as_break
+				l_status.set_reason_as_break
 				need_to_continue := not do_stop_on_breakpoint				
 			elseif Eifnet_debugger_info.last_managed_callback_is_exception then
-				status.set_reason_as_raise				
-				status.set_exception (0, "Exception occurred .. waiting for information")
+				l_status.set_reason_as_raise				
+				l_status.set_exception (0, "Exception occurred .. waiting for information")
 			end
 --| not true in case of empty stack .. when exception occurs during launching
 --			set_current_execution_stack (1)
 			Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 
 			if need_to_continue then
-				status.set_is_stopped (False)
+				l_status.set_is_stopped (False)
 				eifnet_debugger_info.set_data_changed (False)
 				eifnet_debugger.do_continue
 			else

@@ -34,6 +34,13 @@ inherit
 --
 --	do_nothing
 
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize Current
+		do
+			create call_stack_list.make (5)
+		end
 
 feature -- Callstack
 
@@ -42,10 +49,10 @@ feature -- Callstack
 			-- object for example to make sure the modification was successful).
 		do
 				-- re-create the call stack
-			create_where_with (stack_max_depth)
+			create_current_callstack_with (stack_max_depth)
 		end
 
-	create_where_with (a_stack_max_depth: INTEGER) is
+	create_current_callstack_with (a_stack_max_depth: INTEGER) is
 		deferred
 		end
 
@@ -79,8 +86,34 @@ feature -- Values
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
 
-	where: EIFFEL_CALL_STACK
-			-- Eiffel call stack
+	current_thread_id: INTEGER
+	
+	all_thread_ids: ARRAY [INTEGER]
+	
+	set_current_thread_id (tid: INTEGER) is
+		require
+			id_valid: tid > 0
+		do
+			current_thread_id := tid
+		end
+		
+	set_thread_ids (a: ARRAY [INTEGER]) is
+			-- 
+		require
+			a_not_empty: a /= Void and then not a.is_empty
+		do
+			all_thread_ids := a.twin
+		end
+		
+	set_call_stack (tid: INTEGER; ecs: EIFFEL_CALL_STACK) is
+		require
+			id_valid: tid > 0
+			callstack_not_void: ecs /= Void
+		do
+			call_stack_list.force (ecs, tid)
+		end
+		
+	call_stack_list: HASH_TABLE [EIFFEL_CALL_STACK, INTEGER]
 
 	exception_code: INTEGER
 			-- Exception code if any
@@ -88,12 +121,30 @@ feature -- Values
 	exception_tag: STRING
 			-- Exception tag if any
 
-	current_stack_element: CALL_STACK_ELEMENT is
-			-- Current call stack element being displayed
+	call_stack (tid: INTEGER): EIFFEL_CALL_STACK is
 		do
-			Result := where.i_th (Application.current_execution_stack_number)
+			Result := call_stack_list.item (tid)
+		ensure
+			Result /= Void implies tid > 0
+		end
+		
+	current_call_stack: like call_stack is
+		do
+			Result := call_stack (current_thread_id)
 		end
 
+	current_call_stack_element: CALL_STACK_ELEMENT is
+			-- Current call stack element being displayed
+		do
+			Result := current_call_stack.i_th (Application.current_execution_stack_number)
+		end
+		
+	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT is
+			-- Current call stack element being displayed
+		do
+			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
+		end
+		
 	stack_max_depth: INTEGER
 			-- Maximum number of stack elements that we retrieve from the application.
 
@@ -132,14 +183,18 @@ feature -- Access
 			-- Returns True when the couple ('f','index') is active (i.e is the current
 			--	       active feature on stack)
 		local
-			stack_elem: CALL_STACK_ELEMENT
+			stack_elem: EIFFEL_CALL_STACK_ELEMENT
 			current_execution_stack_number: INTEGER
+			l_ccs: EIFFEL_CALL_STACK
 		do
-			if is_stopped and then where /= Void and then not where.is_empty then
-				current_execution_stack_number := Application.current_execution_stack_number
-				stack_elem := where.i_th(Application.current_execution_stack_number)
-				if f_body_index = stack_elem.body_index and then index = stack_elem.break_index then
-					Result := True
+			if is_stopped then
+				l_ccs := current_call_stack
+				if l_ccs /= Void and then not l_ccs.is_empty then
+					current_execution_stack_number := Application.current_execution_stack_number
+					stack_elem ?= l_ccs.i_th (Application.current_execution_stack_number)
+					Result := stack_elem /= Void 
+							and then f_body_index = stack_elem.body_index 
+							and then index = stack_elem.break_index 
 				end
 			end
 		end
@@ -149,15 +204,35 @@ feature -- Access
 			-- Return False if the couple ('f','index') is somewhere else in the stack,
 			-- 		or if the couple ('f','index') is not in the stack.
 		local
-			stack_elem: CALL_STACK_ELEMENT
+			stack_elem: EIFFEL_CALL_STACK_ELEMENT
+			l_ccs: EIFFEL_CALL_STACK
 		do
-			if is_stopped and then where /= Void and then not where.is_empty then
-				stack_elem := where.i_th (1)
-				if f_body_index = stack_elem.body_index and then index = stack_elem.break_index then
+			if is_stopped then
+				l_ccs := current_call_stack
+				if l_ccs /= Void and then not l_ccs.is_empty then
+					stack_elem ?= l_ccs.i_th (1)
+					Result := stack_elem /= Void 
+							and then f_body_index = stack_elem.body_index 
+							and then index = stack_elem.break_index
+				end
+			end
+		end
+		
+	has_valid_call_stack: BOOLEAN is
+			-- Has a valid callstack ?
+		do
+			if is_stopped then
+				if current_call_stack /= Void and then current_call_stack.count > 0 then
 					Result := True
 				end
 			end
 		end
+		
+	has_valid_current_eiffel_call_stack_element: BOOLEAN is
+			-- Is current call stack element a valid Eiffel Call Stack Element ?
+		do
+			Result := current_eiffel_call_stack_element /= Void	
+		end		
 
 feature -- Update
 
@@ -197,6 +272,7 @@ feature -- Output
 			c, oc: CLASS_C
 			cs: CALL_STACK_ELEMENT
 			stack_num: INTEGER
+			ccs: EIFFEL_CALL_STACK
 		do
 			if not is_stopped then
 				st.add_string ("System is running")
@@ -257,12 +333,13 @@ feature -- Output
 					st.add_string ("Unknown")
 					st.add_new_line
 				end
-				if not where.is_empty then
+				ccs := current_call_stack
+				if not ccs.is_empty then
 					stack_num := Application.current_execution_stack_number
-					cs := where.i_th (stack_num)
+					cs := ccs.i_th (stack_num)
 					cs.display_arguments (st)
 					cs.display_locals (st)
-					where.display_stack (st)
+					ccs.display_stack (st)
 				end
 			end
 		end

@@ -11,16 +11,25 @@ inherit
 	APPLICATION_STATUS
 		redefine
 			display_status,
-			current_stack_element,
-			where,
-			update
+			current_call_stack_element,
+			call_stack,
+			update,
+			set_current_thread_id
 		end
 		
 	EIFNET_DEBUGGER_INFO_ACCESSOR
 
 create {APPLICATION_STATUS_EXPORTER}
 
-	do_nothing
+	make
+	
+feature {NONE} -- Initialization
+
+	make is
+			-- Create Current
+		do
+			initialize
+		end	
 	
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
@@ -111,42 +120,61 @@ feature -- Output
 			-- for instance if we run with or without break points
 		end
 
-feature -- Class stack creation
+feature -- Thread info
 
-	clean_where is
-			-- Clean Eiffel callstack data
+	set_current_thread_id (tid: INTEGER) is
+			-- Set current thread ID.
 		do
-			if where /= Void then
-				where.clean
+			Precursor {APPLICATION_STATUS} (tid)
+			eifnet_debugger_info.set_last_icd_thread_id (tid)
+		end
+		
+feature -- Call stack creation
+
+	clean_current_call_stack is
+			-- Clean Eiffel callstack data
+		local
+			ccs: EIFFEL_CALL_STACK_DOTNET
+		do
+			ccs ?= current_call_stack
+			if ccs /= Void then
+				ccs.clean
 			end
 		end
 
-	create_where_with (a_stack_max_depth: INTEGER) is
+	create_current_callstack_with (a_stack_max_depth: INTEGER) is
 			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
+		local
+			ecs: EIFFEL_CALL_STACK_DOTNET
 		do
-			clean_where
-			create where.make (a_stack_max_depth)
+			clean_current_call_stack
+			create ecs.make (a_stack_max_depth)
+			set_call_stack (current_thread_id, ecs)
 		end
 
 feature -- Values
 
-	where: EIFFEL_CALL_STACK_DOTNET
-			-- Eiffel call stack
-
-	current_stack_element: CALL_STACK_ELEMENT is
-			-- Current call stack element being displayed
+	call_stack (tid: INTEGER): EIFFEL_CALL_STACK_DOTNET is
+			-- Eiffel call stack for `tid'
 		do
-			if
-				where.valid_index (Application.current_execution_stack_number)
-			then
-				Result := where.i_th (Application.current_execution_stack_number)				
+			Result ?= Precursor {APPLICATION_STATUS} (tid)
+		end
+			
+	current_call_stack_element: CALL_STACK_ELEMENT is
+			-- Current call stack element being displayed
+		local
+			ccs: EIFFEL_CALL_STACK_DOTNET
+		do
+			ccs := current_call_stack; 
+			if ccs.valid_index (Application.current_execution_stack_number) then
+				Result := ccs.i_th (Application.current_execution_stack_number)				
 			end
 		end
 
-	current_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
+	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
 			-- Current call stack element being displayed
 		do
-			Result ?= current_stack_element
+			Result ?= current_call_stack_element
 		end
 		
 feature -- Reason for stopping

@@ -59,6 +59,34 @@ feature -- Element change
 			top_level_window_imp := a_window
 		end
 
+feature -- Basic operations
+
+	tab_action (direction: BOOLEAN) is
+			-- Go to the next widget that takes the focus through to the tab key.
+			-- If `direction' it goes to the next widget otherwise, it goes to the 
+			-- previous one.
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			hwnd := next_dlgtabitem (top_level_window_imp.item, item, direction)
+			window := windows.item (hwnd)
+			window.set_focus
+		end
+
+	arrow_action (direction: BOOLEAN) is
+			-- Go to the next widget that takes the focus through the arrow keys.
+			-- If `direction' it goes to the next widget otherwise, it goes to the 
+			-- previous one.
+		local
+			hwnd: POINTER
+			window: WEL_WINDOW
+		do
+			hwnd := next_dlggroupitem (top_level_window_imp.item, item, direction)
+			window := windows.item (hwnd)
+			window.set_focus
+		end
+
 feature {NONE} -- WEL Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -70,21 +98,34 @@ feature {NONE} -- WEL Implementation
 		do
 			{EV_WIDGET_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_tab then
-				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
-				window := windows.item (hwnd)
-				window.set_focus
+				tab_action (True)
+--				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
+--				window := windows.item (hwnd)
+--				window.set_focus
 			elseif virtual_key = Vk_down then
-				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
-				window := windows.item (hwnd)
-				window.set_focus
+				arrow_action (True)
+--				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
+--				window := windows.item (hwnd)
+--				window.set_focus
 			elseif virtual_key = Vk_up then
-				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
-				window := windows.item (hwnd)
-				window.set_focus
+				arrow_action (False)
+--				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
+--				window := windows.item (hwnd)
+--				window.set_focus
 			end
 		end
 
 feature {NONE} -- Deferred features
+
+	item: POINTER is
+		deferred
+		end
+
+	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
+		deferred
+		end
+
+feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
@@ -97,14 +138,6 @@ feature {NONE} -- Deferred features
 			-- Encapsulation of the SDK GetNextDlgGroupItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
-		deferred
-		end
-
-	item: POINTER is
-		deferred
-		end
-
-	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
 		deferred
 		end
 

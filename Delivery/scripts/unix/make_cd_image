@@ -17,12 +17,12 @@ if ($#argv != 3) then
 endif
 
 if ("$ISE_PLATFORM" != "solaris-2.5+") then
-	mkisofs -R -v -T -l -d -D -L -quiet \
+	mkisofs -R -v -l -d -D -L -quiet \
 	-p "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" \
 	-P "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" \
 	-A $1 -o $2 $3
 else
-	mkisofs -R -v -T -l -d -D -L \
+	mkisofs -R -v -l -d -D -L \
 	-p "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" \
 	-P "ISE 356 Storke Road, Goleta, CA 93117 (805) 685 1006,info@eiffel.com" \
 	-A $1 -o $2 $3

@@ -68,15 +68,15 @@ rt_public void trace_event_hr (char* mesg,HRESULT hr)
 // COM_CACHE_MANAGER---------------------------------------------------------------------
 
 rt_public EIF_POINTER new_cache_manager ()
-	/* Create new instance of IID_EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER */
+	/* Create new instance of EiffelSoftware_MetadataConsumer_Interop_Impl_ComCacheManager */
 {
 	HRESULT hr;
-	EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER *pICM = NULL;
+	EiffelSoftware_MetadataConsumer_Interop_IComCacheManager *pICM = NULL;
 
-	hr = CoCreateInstance (CLSID_EiffelSoftware_MetadataConsumer_Impl_COM_CACHE_MANAGER, NULL,
-		CLSCTX_INPROC_SERVER, IID_EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER, (void **) & pICM);
+	hr = CoCreateInstance (CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_ComCacheManager, NULL,
+		CLSCTX_INPROC_SERVER, IID_EiffelSoftware_MetadataConsumer_Interop_IComCacheManager, (void **) & pICM);
 
-	CHECK (hr, "Could not instansiate COM Object EiffelSoftware_MetadataConsumer_ComCacheManager")
+	CHECK (hr, "Could not instansiate COM Object EiffelSoftware_MetadataConsumer_Interop_Impl_ComCacheManager")
 
 	return pICM;
 }

@@ -44,16 +44,20 @@ struct cnode {
 	long nb_ref;				/* Number of references in the object */
 	char cn_deferred;			/* Is the class type deferred ? */
 	char cn_composite;			/* is the class type a composite one ? */
-	union {
-		struct {
-			int32 cn_creation_id;	/* Creation feature id for expanded types */
-			int32 static_id; /* Static id of class (used for expanded types) */
-		} noprecomp;		/* Not precompiled creation routine of expanded */
-		struct {
-			int32 origin;		/* Origin class id */
-			int32 offset;		/* Offset in origin class */
-		} precomp;				/* Precompiled creation routine for expanded */
-	} exp_info;					/* Info for creation routine of expanded */
+
+		/* The following two entities (`cn_creation_id' and `static_id')
+		 * are used to identify the creation procedure for expanded types.
+		 * They have two different meanings depending on whether the
+		 * corresponding type is precompiled or not. If the type is not
+		 * precompiled, `cn_creation_id' represents the feature_id of the
+		 * creation procedure and `static_id' is the static id of the
+		 * corresponding class. Otherwise, `cn_creation_id' is origin class
+		 * id and `static_id' the offset of the creation procedure in its
+		 * origin class.
+		 */
+	int32 cn_creation_id;
+	int32 static_id;
+
 	char cn_disposed;			/* Does class type have a dispose routine? */ 
 	int32 *cn_routids;   		/* Pointer on routine id array */
 	struct ctable cn_cecil;		/* Cecil hash table */

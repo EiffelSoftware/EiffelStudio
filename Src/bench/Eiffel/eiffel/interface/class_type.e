@@ -857,7 +857,6 @@ feature -- Skeleton generation
 					Skeleton_file.putstring ("'\0',%N");
 				end;
 
-				Skeleton_file.putstring ("{{");
 				if
 					not Compilation_modes.is_precompiling and
 					not associated_class.is_precompiled
@@ -887,7 +886,7 @@ feature -- Skeleton generation
 						Skeleton_file.putstring ("0,(int32) 0");
 					end
 				end;
-				Skeleton_file.putstring ("}},%N");
+				Skeleton_file.putstring (",%N");
 					
 					-- Dispose routine id
 				if System.memory_descendants.has (associated_class) then
@@ -1219,7 +1218,7 @@ feature -- DLE
 
 				if associated_class.is_precompiled then
 						-- Creation origin class.
-					Skeleton_file.putstring ("node->exp_info.precomp.origin = ")
+					Skeleton_file.putstring ("node->cn_creation_id = ")
 					Skeleton_file.putstring ("(int32) ");
 					creation_feature := a_class.creation_feature;
 					if creation_feature /= Void then
@@ -1227,19 +1226,19 @@ feature -- DLE
 						rout_info := System.rout_info_table.item (r_id);
 						Skeleton_file.putint (rout_info.origin.id);
 						Skeleton_file.putstring
-							("node->exp_info.precomp.offset = ")
+							("node->static_id = ")
 						Skeleton_file.putint (rout_info.offset)
 					else
 						Skeleton_file.putint (0);
 						Skeleton_file.putstring
-							("node->exp_info.precomp.offset = (int32) 0")
+							("node->static_id = (int32) 0")
 					end;
 					Skeleton_file.putchar (';');
 					Skeleton_file.new_line;
 				else
 						-- Creation feature id if any.
 					Skeleton_file.putstring
-						("node->exp_info.noprecomp.cn_creation_id = ");
+						("node->cn_creation_id = ");
 					Skeleton_file.putstring ("(int32) ");
 					creation_feature := a_class.creation_feature;
 					if creation_feature /= Void then
@@ -1251,7 +1250,7 @@ feature -- DLE
 					Skeleton_file.new_line;
 	
 						-- Class id 
-					Skeleton_file.putstring ("node->exp_info.noprecomp.static_id = ");
+					Skeleton_file.putstring ("node->static_id = ");
 					Skeleton_file.putstring ("(int32) ");
 					Skeleton_file.putint (id - 1);
 					Skeleton_file.putchar (';');

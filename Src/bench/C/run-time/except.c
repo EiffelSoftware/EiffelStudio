@@ -1290,7 +1290,10 @@ public void esfail()
 }
 
 #ifdef WORKBENCH
+
+#ifndef NOHOOK
 extern int debug_mode;
+#endif
 private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {
@@ -1307,8 +1310,10 @@ int how;		/* Implicit or explicit exception? */
 	if (db_ign[echval])		/* Current exception to be ignored */
 		return;				/* Do not stop execution */
 
+#ifndef NOHOOK
 	if (!debug_mode)
 		return;
+#endif
 
 	dbreak(how);			/* Stop execution */
 }

@@ -15,10 +15,11 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		undefine
-			make_with_text,
-			destroy
+			make_with_text
 		redefine
 			make,
+			destroy,
+			destroyed,
 			text,
 			set_editable,
 			set_text,
@@ -61,7 +62,9 @@ inherit
 			add_selection_command,
 			remove_selection_commands,
 			add_item,
-			remove_item
+			remove_item,
+			destroy,
+			destroyed
 		end
 
 creation
@@ -72,10 +75,17 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a combo-box with `par' as parent.
 		do
+			-- Creation of the array where the items will be listed.
 			!! ev_children.make (1)
+
+			-- Creation of the gtk object.
 			widget := gtk_combo_new
 			gtk_object_ref (widget)
+
+			-- Pointer to the text we see.
 			entry_widget := c_gtk_combo_entry (widget)
+
+			-- Pointer to the list of items.
 			list_widget := c_gtk_combo_list (widget)
 		end
 
@@ -145,6 +155,13 @@ feature -- Status report
 			Result := c_gtk_editable_selection_end (entry_widget)
 		end
 
+	destroyed: BOOLEAN is
+			-- Is screen window destroyed?
+		do
+			Result := (widget = Default_pointer) and (entry_widget = Default_pointer) and (list_widget = Default_pointer)
+		end
+
+
 feature -- Measurement
 
 	extended_height: INTEGER is
@@ -156,6 +173,20 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
+	destroy is
+			-- destroy the gtk objects.
+		do
+			clear_items
+			if not destroyed then
+	                        gtk_widget_destroy (list_widget)
+	                        gtk_widget_destroy (entry_widget)
+	                        gtk_widget_destroy (widget)
+			end
+			widget := Default_pointer
+			list_widget := Default_pointer
+			entry_widget := Default_pointer			
+		end
 
 	rows: INTEGER is
 		 	-- Number of lines
@@ -216,6 +247,12 @@ feature -- Status setting
 		do
 			gtk_entry_select_region (entry_widget, start_pos-1, end_pos)
 		end	
+
+	set_extended_height (value: INTEGER) is
+			-- Make `value' the new extended-height of the box.
+		do
+			-- XX Not yet implemented.
+		end
 
 feature -- Element change
 
@@ -296,25 +333,27 @@ feature -- Event : command association
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be
 			-- executed when the "Return" button is pressed
-		local
-			p: POINTER
+--		local
+--			p: POINTER
 		do
-			p := widget
-			widget := entry_widget
-			add_command (widget, "activate", cmd,  arg)
-			widget := p
+--			p := widget
+--			widget := entry_widget
+--			add_command (widget, "activate", cmd,  arg)
+--			widget := p
+			add_command (entry_widget, "activate", cmd,  arg)
 		end
 
 	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text of the widget have changed.
-		local
-			p: POINTER
+--		local
+--			p: POINTER
 		do
-			p := widget
-			widget := entry_widget
-			add_command (widget, "changed", cmd,  arg)
-			widget := p
+--			p := widget
+--			widget := entry_widget
+--			add_command (widget, "changed", cmd,  arg)
+--			widget := p
+			add_command (entry_widget, "changed", cmd,  arg)
 		end
 
 feature -- Event -- removing command association
@@ -380,9 +419,6 @@ feature {NONE} -- Implementation
 
 	entry_widget: POINTER
 		-- A pointer on the text field
-
-	list_widget: POINTER
-		-- A pointer on the list
 
 end -- class EV_COMBO_BOX_IMP
 

@@ -10,7 +10,7 @@ default
  	il_verifiable (yes)
  	cls_compliant (yes)
  	line_generation (yes)
- 	dotnet_naming_convention (no)
+ 	dotnet_naming_convention (yes)
  	msil_generation_type ("dll")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
  	use_all_cluster_name_as_namespace (yes)

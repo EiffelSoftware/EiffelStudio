@@ -81,7 +81,10 @@ feature -- IL code generation
 					il_generator.generate_metamorphose (l_expr_type)
 				else
 						-- FIXME: We only handle metamorphose of basic types here.
-					generate_il_eiffel_metamorphose (l_expr_type)
+					if l_expr_type.is_basic then
+						generate_il_eiffel_metamorphose (l_expr_type)
+					else
+					end
 				end
 			end
 		end

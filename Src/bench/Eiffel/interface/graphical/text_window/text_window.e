@@ -38,7 +38,7 @@ feature
 	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
 		do
 			text_create (a_name, a_parent);
-			!! history.make (10);
+			!! history.make;
 			tool := a_tool;
 			set_mode_for_editing;
 			add_callbacks;

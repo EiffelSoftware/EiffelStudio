@@ -1,4 +1,4 @@
--- Retrieve the ".workbench" of the precompiled project
+-- Retrieve the "project.eif" of the precompiled project
 
 class PRECOMP_R
 

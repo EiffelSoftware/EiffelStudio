@@ -1,0 +1,36 @@
+
+
+Here is a set of two classes, along with some C code which impliments a 
+basic wrapper around the GNU rx regular expression library.
+
+This code was developed and tested on Linux for the SmallEiffel compiler.
+
+To install, simply add location of the classes to the loadpath, and link 
+with regex_glue.c or a compiled version.
+
+To use:
+
+	the class REGEX_COMPILER, which may be used expanded or inherited 
+from, is used to create regular expressions.  The basic procedure uses
+`compile' on the pattern of the expression, with succeeded true if the 
+pattern could be compiled, and last_regex then containing the compiled regex
+object.  There are also a number of flags which may be set to change this 
+behaviour,  the action of which is as in the rx manual.
+
+A compiled regular expression is used with the match procedure in class REGEX.
+After a match 'succeeded' is true if the string matched.  The substrings of 
+the match are available from item(i) and the number of substrings is the value
+of count.  item(0) contains the string matched by the whole expreesion.
+
+
+Todo:
+	Mainly I havn't done much on the error reporting in the regular
+expression compilation processes beyond reporting the presence of an error.
+
+
+this library is from 
+http://www.ign.com.au/~wielinga
+
+Share and enjoy,
+
+Bruce Wielinga (wielinga@ign.com.au) 

@@ -13,17 +13,6 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
-
-	system_color (index: INTEGER): WEL_COLOR_REF is
-			-- System color associated to `index'
-			-- See WEL_COLOR_CONSTANTS for `index' values.
-		do
-			!! Result.make_by_pointer (cwin_get_sys_color (index))
-		ensure
-			result_not_void: Result /= Void
-		end
-
 feature -- Basic operations
 
 	message_beep_asterisk is
@@ -171,14 +160,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (int): EIF_BOOLEAN"
 		alias
 			"GetKeyState"
-		end
-
-	cwin_get_sys_color (index: INTEGER): POINTER is
-			-- SDK GetSysColor
-		external
-			"C [macro <wel.h>] (int): EIF_POINTER"
-		alias
-			"GetSysColor"
 		end
 
 	cwel_is_win32: BOOLEAN is

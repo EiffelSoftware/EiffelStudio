@@ -11,10 +11,12 @@ inherit
 	EXTERNAL_EXT_I
 		rename
 			is_equal as ext_is_equal
+		redefine
+			is_cpp
 		end
 	EXTERNAL_EXT_I
 		redefine
-			is_equal
+			is_equal, is_cpp
 		select
 			is_equal
 		end
@@ -28,6 +30,8 @@ feature -- Properties
 	type: INTEGER
 
 feature -- Convenience
+
+	is_cpp: BOOLEAN is True
 
 	set_class_header_file (h: STRING) is
 			-- Assign `h' to `class_header_file'.
@@ -54,7 +58,7 @@ feature -- Comparison
 			Result := ext_is_equal (other) and then
 				class_name.is_equal (other.class_name) and then
 				class_header_file.is_equal (other.class_header_file) and then
-				type.is_equal (other.type)
+				type = other.type
 		end
 
 end -- class CPP_EXTENSION_I

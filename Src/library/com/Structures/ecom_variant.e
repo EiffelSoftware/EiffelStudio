@@ -390,8 +390,8 @@ feature -- Access
 			Result := ccom_ce_safearray_dispatch (ecom_rt_ptr, ptr)
 		end
 
-	unknown_array: ECOM_ARRAY [ECOM_GENERIC_INTERFACE] is
-			-- ARRAY of ECOM_GENERIC_INTERFACEs.
+	unknown_array: ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE] is
+			-- ARRAY of ECOM_UNKNOWN_INTERFACEs.
 		require
 			is_unknown: is_unknown (variable_type)
 			is_array: is_array (variable_type)
@@ -614,7 +614,7 @@ feature {NONE} -- Externals
 			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
 		end
 
-	ccom_ce_safearray_unknown (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_GENERIC_INTERFACE] is
+	ccom_ce_safearray_unknown (cpp_obj: POINTER; a_safearray: POINTER): ECOM_ARRAY [ECOM_UNKNOWN_INTERFACE] is
 		external
 			"C++ [ecom_runtime_ce %"ecom_runtime_c_e.h%"] (SAFEARRAY *): EIF_REFERENCE"
 		end

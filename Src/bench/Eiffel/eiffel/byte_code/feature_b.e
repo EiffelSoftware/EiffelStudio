@@ -28,8 +28,8 @@ feature
 	type: TYPE_I;
 			-- Type of the call
 
-	parameters: BYTE_LIST [BYTE_NODE];
-			-- Feature parameters {list of EXPR_B}: can be Void
+	parameters: BYTE_LIST [EXPR_B];
+			-- Feature parameters: can be Void
 
 	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
@@ -358,7 +358,6 @@ feature -- Concurrent Eiffel
 					Result or parameters.after
 				loop
 					p ?= parameters.item;
-					-- can't fail
 					if real_type(p.attachment_type).is_separate and
 						not real_type(p.expression.type).is_separate then
 						Result := True;
@@ -394,38 +393,38 @@ feature -- Concurrent Eiffel
 			end;
 		end
 
-	    reset_added_gc_hooks is
-        local
-            expr: PARAMETER_B;
-            para_type: TYPE_I;
-            loc_idx: INTEGER
-        do
-            if system.has_separate and  parameters /= Void then
-                from
-                    parameters.start;
-                until
-                    parameters.after
-                loop
-                    expr ?= parameters.item;    -- Cannot fail
-                    if expr /= Void then
-                        para_type := real_type(expr.attachment_type);
-                        if para_type.is_separate then
-                            if expr.stored_register.register_name /= Void then
-                                loc_idx := context.local_index (expr.stored_register.register_name);
-                            else
-                                loc_idx := -1;
-                            end;
-                            if loc_idx /= -1 then
-                                generated_file.putstring ("l[");
-                                generated_file.putint (context.ref_var_used + loc_idx);
-                                generated_file.putstring ("] = (char *)0;");
-                                generated_file.new_line;
-                            end
-                        end
-                    end
-                    parameters.forth;
-                end;
-            end
-        end
-                                             
+	reset_added_gc_hooks is
+		local
+			expr: PARAMETER_B;
+			para_type: TYPE_I;
+			loc_idx: INTEGER
+		do
+			if system.has_separate and  parameters /= Void then
+				from
+					parameters.start;
+				until
+					parameters.after
+				loop
+					expr ?= parameters.item;	-- Cannot fail
+					if expr /= Void then
+						para_type := real_type(expr.attachment_type);
+						if para_type.is_separate then
+							if expr.stored_register.register_name /= Void then
+								loc_idx := context.local_index (expr.stored_register.register_name);
+							else
+								loc_idx := -1;
+							end;
+							if loc_idx /= -1 then
+								generated_file.putstring ("l[");
+								generated_file.putint (context.ref_var_used + loc_idx);
+								generated_file.putstring ("] = (char *)0;");
+								generated_file.new_line;
+							end
+						end
+					end
+					parameters.forth;
+				end;
+			end
+		end
+
 end

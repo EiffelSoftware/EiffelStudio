@@ -53,7 +53,7 @@ inherit
 
 creation
 	make,
-	make_with_bitmap_size
+	make_with_size
 
 feature -- Initialization
 
@@ -65,7 +65,7 @@ feature -- Initialization
 			create ev_children.make (1)
 		end
 
-	make_with_bitmap_size (w, h: INTEGER) is
+	make_with_size (w, h: INTEGER) is
 			-- Create the tool-bar with `par' as parent.
 		do
 			make

@@ -34,10 +34,9 @@ feature {NONE} -- Initialization
 			-- button processing and can be removed if necessary.
 			-- See comment of `dialog_key_press_action'.
 		do
-			set_icon_pixmap (default_pixmaps.Default_window_icon)
 			key_press_actions.extend (agent dialog_key_press_action)
 			implementation.disable_closeable
-			is_initialized := True
+			Precursor {EV_TITLED_WINDOW}
 		end
 
 feature -- Access

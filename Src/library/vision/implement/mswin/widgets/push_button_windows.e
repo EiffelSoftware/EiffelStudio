@@ -14,7 +14,10 @@ inherit
 		redefine
 			realize,
 			realized,
-			unrealize
+			unrealize,
+			set_insensitive,
+			insensitive,
+			destroy
 		end;
 
 	BUTTON_WINDOWS
@@ -22,7 +25,10 @@ inherit
 			realize,
 			realized,
 			unrealize,
-			set_managed
+			set_managed,
+			set_insensitive,
+			insensitive,
+			destroy
 		select
 			set_managed
 		end
@@ -166,6 +172,31 @@ feature -- Access
 			end
 		end
 
+	set_insensitive (flag: BOOLEAN) is
+			-- Set current widget in insensitive mode if `flag'. This means
+			-- that any events with an event type of KeyPress,
+			-- KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
+			-- EnterNotify, LeaveNotify, FocusIn or FocusOut will
+			-- not be dispatched to current widget and to all its children.
+			-- Set it to sensitive mode otherwise.
+		local
+			mp: MENU_PULL_WINDOWS
+		do
+			private_attributes.set_insensitive (flag)
+			if exists then
+				if in_menu then
+					mp ?= parent
+					mp.set_insensitive_widget (Current, flag)
+				else
+					if flag then
+						disable
+					else
+						enable
+					end
+				end
+			end
+		end
+
 	unrealize is
 			-- Unrealize the button.
 		do
@@ -187,6 +218,20 @@ feature -- Status report
 	accelerator_text: STRING
 			-- Text of accelerator.
 
+	insensitive: BOOLEAN is
+			-- Is Current insensitive?
+		do
+			if in_menu then
+				Result := private_attributes.insensitive
+			else
+				if exists then
+					Result := not enabled
+				else
+					Result := private_attributes.insensitive
+				end
+			end
+		end
+
 feature -- Status setting
 
 	set_accelerator_action (a_translation: STRING) is
@@ -199,6 +244,31 @@ feature -- Status setting
 		end
 
 feature -- Removal
+
+	destroy (wid_list: LINKED_LIST [WIDGET]) is
+			-- Destroy Current.
+		local
+			ww: WIDGET_WINDOWS
+		do
+			if
+				in_menu and then
+				managed
+			then
+				set_managed (False)
+			end
+			if exists then
+				wel_destroy
+			end
+			from
+				wid_list.start
+			until
+				wid_list.after
+			loop
+				ww ?= wid_list.item.implementation
+				actions_manager_list.deregister (ww)
+				wid_list.forth
+			end
+		end
 
 	remove_accelerator_action is
 			-- Remove the accelerator action.

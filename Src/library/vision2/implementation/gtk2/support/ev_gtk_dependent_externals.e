@@ -75,7 +75,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"(GValue*)$args_array + (int)($an_index - 1)"
+			"(GValue*)$args_array + (int)($an_index)"
 		end
 
 	frozen g_value_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
@@ -297,6 +297,14 @@ feature -- Externals
 		end
 		
 	frozen gtk_value_int (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_int ((GValue*) $arg)"
+		end
+
+	frozen gtk_value_uint (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
 		external
 			"C inline use <gtk/gtk.h>"

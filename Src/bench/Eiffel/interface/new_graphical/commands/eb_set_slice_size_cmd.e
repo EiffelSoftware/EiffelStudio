@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 						parent.start
 						parent.search (item)
 						parent.remove
-						item2 := tool.debug_value_to_item (abs_spec_dv)
+						item2 := tool.debug_value_to_tree_item (abs_spec_dv)
 						parent.put_left (item2)
 						item2.expand
 					end						

@@ -102,12 +102,19 @@ feature {NONE} -- Initialization
 			remove_object_cmd.enable_sensitive
 			create mini_toolbar
 			mini_toolbar.extend (remove_object_cmd.new_mini_toolbar_item)
+
 			create cmd.make (Current)
 			cmd.enable_sensitive
 			mini_toolbar.extend (cmd.new_mini_toolbar_item)
+
 			create pretty_print_cmd.make (Current)
 			pretty_print_cmd.enable_sensitive
 			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
+
+			create hex_format_cmd.make (Current)
+			hex_format_cmd.enable_sensitive
+			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
+
 
 			create explorer_bar_item.make_with_mini_toolbar (
 				explorer_bar, widget, title, False, mini_toolbar
@@ -167,6 +174,27 @@ feature -- Access
 				Result := Void
 			end
 		end
+		
+feature -- Properties setting
+
+	hexa_mode_enabled: BOOLEAN
+
+	set_hexa_mode (v: BOOLEAN) is
+		do
+			hexa_mode_enabled := v
+			local_tree.recursive_do_all (agent propagate_hexa_mode)
+			object_tree.recursive_do_all (agent propagate_hexa_mode)
+		end
+	
+	propagate_hexa_mode (t: EV_TREE_ITEM) is
+		local
+			l_eb_t: EB_OBJECT_TREE_ITEM
+		do
+			l_eb_t ?= t
+			if l_eb_t /= Void then
+				l_eb_t.update
+			end
+		end		
 
 feature -- Status setting
 
@@ -202,10 +230,10 @@ feature -- Status setting
 					end
 					if abstract_value /= Void then
 						Application.imp_dotnet.keep_object (abstract_value)					
-						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (abstract_value)
+						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make_from_debug_value (Current, abstract_value)
 					end
 					if n_obj = Void then
-						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make (a_stone.dynamic_class, a_stone.object_address)
+						create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} n_obj.make (Current, a_stone.dynamic_class, a_stone.object_address)
 					end
 					debugger_manager.kept_objects.extend (a_stone.object_address)
 					displayed_objects.extend (n_obj)
@@ -215,11 +243,11 @@ feature -- Status setting
 					if tree_item /= Void then
 						conv_spec ?= tree_item.data
 						if conv_spec /= Void then
-							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make_from_debug_value (conv_spec)
+							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make_from_debug_value (Current, conv_spec)
 						end
 					end
 					if n_obj = Void then
-						create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make (a_stone.dynamic_class, a_stone.object_address)
+						create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} n_obj.make (Current, a_stone.dynamic_class, a_stone.object_address)
 					end
 					debugger_manager.kept_objects.extend (a_stone.object_address)
 					displayed_objects.extend (n_obj)
@@ -322,9 +350,9 @@ feature -- Status setting
 						end
 
 						if Application.is_dotnet then
-							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} obj.make (cse.dynamic_class, cse.object_address)
+							create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} obj.make (Current, cse.dynamic_class, cse.object_address)
 						else
-							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} obj.make (cse.dynamic_class, cse.object_address)
+							create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} obj.make (Current, cse.dynamic_class, cse.object_address)
 						end
 						obj.set_front (True)
 						obj.set_display (display_first)
@@ -452,28 +480,15 @@ feature -- Memory management
 			end
 		end
 
-feature {EB_SET_SLICE_SIZE_CMD}
+feature {EB_SET_SLICE_SIZE_CMD, EB_OBJECT_DISPLAY_PARAMETERS}
 
-	debug_value_to_item (dv: ABSTRACT_DEBUG_VALUE): EV_TREE_ITEM is
+	debug_value_to_tree_item (dv: ABSTRACT_DEBUG_VALUE): EB_OBJECT_TREE_ITEM is
 			-- Convert `dv' into a tree item.
-		local
-			ost: OBJECT_STONE
 		do
-			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
-			Result.set_pixmap (icons @ (dv.kind))
-			Result.set_data (dv)
-			if dv.expandable then
-				Result.extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
-				Result.expand_actions.extend (agent fill_item (Result))
-			end
-			if dv.address /= Void then
-					--| For now we don't support this for external type
-				create ost.make (dv.address, dv.name, dv.dynamic_class)
-				ost.set_associated_tree_item (Result)
-				ost.set_associated_debug_value (dv)
-				Result.set_pebble (ost)
-				Result.set_accept_cursor (ost.stone_cursor)
-				Result.set_deny_cursor (ost.X_stone_cursor)				
+			if application.is_dotnet then
+				create {EB_DOTNET_OBJECT_TREE_ITEM} Result.make_with_value (dv, Current)
+			else
+				create {EB_CLASSIC_OBJECT_TREE_ITEM} Result.make_with_value (dv, Current)
 			end
 		end
 
@@ -508,6 +523,9 @@ feature {NONE} -- Implementation
 
 	remove_object_cmd: EB_REMOVE_OBJECT_CMD
 			-- Command that is used to remove objects from the tree.
+
+	hex_format_cmd: EB_HEX_FORMAT_CMD
+			-- FIXME JFIAT
 
 	split: EB_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `local_tree' and `object_tree'.
@@ -669,7 +687,7 @@ feature {NONE} -- Implementation
 					until
 						list.after
 					loop
-						item.extend (debug_value_to_item (list.item))
+						item.extend (debug_value_to_tree_item (list.item))
 						list.forth
 					end
 					if expand_args then
@@ -705,7 +723,7 @@ feature {NONE} -- Implementation
 					until
 						i > dbg_nb
 					loop
-						item.extend (debug_value_to_item (tmp @ i))
+						item.extend (debug_value_to_tree_item (tmp @ i))
 						i := i + 1
 					end
 					if expand_locals then
@@ -722,7 +740,7 @@ feature {NONE} -- Implementation
 					item.set_text (Interface_names.l_Result)
 					item.set_pixmap (Pixmaps.Icon_feature_clause_any)
 					local_tree.extend (item)
-					item.extend (debug_value_to_item (dv))
+					item.extend (debug_value_to_tree_item (dv))
 					if expand_result then
 						item.expand
 					end
@@ -775,10 +793,10 @@ feature {NONE} -- Implementation
 					check 
 						value_not_void: value /= Void
 					end
-					create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} current_object.make_from_debug_value (value)
+					create {EB_OBJECT_DISPLAY_PARAMETERS_DOTNET} current_object.make_from_debug_value (Current, value)
 				end
 			else
-				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (current_stack_element)
+				create {EB_OBJECT_DISPLAY_PARAMETERS_CLASSIC} current_object.make_from_stack_element (Current, current_stack_element)
 			end
 			if current_object /= Void then
 				current_object.set_display (display_first)
@@ -804,139 +822,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-	fill_item (item: EV_TREE_ITEM) is
-			-- If a tree item was expandable, fill it with its children. (Not the onces)
-		local
-			conv_abs_spec: ABSTRACT_SPECIAL_VALUE
-			dv: ABSTRACT_DEBUG_VALUE
-			folder_item: EV_TREE_ITEM
-			new_item: EV_TREE_ITEM
-			list: LIST [ABSTRACT_DEBUG_VALUE]
-			flist: LIST [E_FEATURE]
-		do
-			item.expand_actions.wipe_out
-			dv ?= item.data
-			if dv /= Void then
-				list := dv.children
-				if list /= Void and then not list.is_empty then
-					create folder_item.make_with_text (Interface_names.l_Object_attributes)
-					folder_item.set_pixmap (Pixmaps.Icon_attributes)
-					item.extend (folder_item)
-
-					from
-						list.start
-					until
-						list.after
-					loop
-						folder_item.extend (debug_value_to_item (list.item))
-						list.forth
-					end
-					conv_abs_spec ?= dv
-					if conv_abs_spec /= Void then
-						if conv_abs_spec.sp_lower > 0 then
-							folder_item.put_front (create {EV_TREE_ITEM}.make_with_text (
-								Interface_names.l_More_items))
-						end
-						if 0 <= conv_abs_spec.sp_upper and then conv_abs_spec.sp_upper < conv_abs_spec.capacity - 1 then
-							folder_item.extend (create {EV_TREE_ITEM}.make_with_text (
-								Interface_names.l_More_items))
-						end
-						folder_item.expand
-					else
-						folder_item.expand
-					end
-				end
-				if dv.dynamic_class = Void then
-					--| FIXME: JFIAT : why do we have Void dynamic_class ?
-					--| ANSWER : because of external class in dotnet system
-				else
-					flist := dv.dynamic_class.once_functions
-					if not flist.is_empty then
-						create folder_item.make_with_text (Interface_names.l_Once_functions)
-						folder_item.set_pixmap (Pixmaps.Icon_once_objects)
-						item.extend (folder_item)
-						create new_item.make_with_text (Interface_names.l_Dummy)
-							--| Add expand actions.
-						folder_item.extend (new_item)
-						folder_item.set_data (dv)
-						folder_item.expand_actions.extend (agent fill_onces (folder_item))
-					end
-				end
-			end
-				-- We remove the dummy item.
-			item.start
-			item.remove
-		end
-
-	fill_onces (parent: EV_TREE_ITEM) is
-			-- Fill `parent' with the once functions of the debug_value it is in.
-		local
-			once_r: ONCE_REQUEST
-			item: EV_TREE_ITEM
-			flist: LIST [E_FEATURE]
-			dv: ABSTRACT_DEBUG_VALUE
-
-			item_dv: ABSTRACT_DEBUG_VALUE
-			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
-			l_feat: E_FEATURE
-		do
-			dv ?= parent.data
-			parent.expand_actions.wipe_out
-			if dv /= Void then
-				flist := dv.dynamic_class.once_functions
-				if Application.is_dotnet then
-					l_dotnet_ref_value ?= dv
-					check
-						dotnet_ref_value: l_dotnet_ref_value /= Void
-					end
-					
-					--| Eiffel dotnet |--
-					from
-						flist.start
-					until
-						flist.after
-					loop
-						l_feat := flist.item				
-						item_dv := l_dotnet_ref_value.once_function_value (l_feat)
-						if item_dv /= Void then
-							item := debug_value_to_item (item_dv)						
-						else
-							create item
-							item.set_pixmap (Pixmaps.Icon_void_object)
-							item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
-						end						
-						parent.extend (item)
-
-						flist.forth
-					end
-				else 
-					--| Classic Eiffel |--
-					once_r := Application.debug_info.Once_request
-
-					from
-						flist.start
-					until
-						flist.after
-					loop
-						l_feat := flist.item
-						
-						if once_r.already_called (l_feat) then
-							item := debug_value_to_item (once_r.once_result (l_feat))
-						else
-							create item
-							item.set_pixmap (Pixmaps.Icon_void_object)
-							item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
-						end
-						parent.extend (item)
-						flist.forth
-					end
-				end
-			end
-				-- We remove the dummy item.
-			parent.start
-			parent.remove
-		end
 
 	drop_stack_element (st: CALL_STACK_STONE) is
 			-- Display stack element represented by `st'.

@@ -12,11 +12,6 @@ inherit
 		export
 			{NONE} all
 		end
-
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -32,12 +27,13 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	make (n_type: CLASS_C; n_addr: STRING) is
+	make (ot: EB_OBJECT_TOOL; n_type: CLASS_C; n_addr: STRING) is
 			-- Initialize `Current' and associate it with object
 			-- of dynamic type `n_type', named `n_name' and located at address `n_addr'.
 		require
 			valid_address: n_addr /= Void
 		do
+			tool := ot
 			display_attributes := True
 			display_onces := False
 			display_special := True
@@ -48,7 +44,7 @@ feature {NONE} -- Initialization
 			spec_higher := max_slice_ref.item
 		end
 
-	make_from_debug_value (val: ABSTRACT_DEBUG_VALUE) is
+	make_from_debug_value (ot: EB_OBJECT_TOOL; val: ABSTRACT_DEBUG_VALUE) is
 			-- Initialize `Current' and associate it with object
 			-- represented by `val'.
 		local
@@ -69,17 +65,19 @@ feature {NONE} -- Initialization
 					addr := "Unknown address"
 				end
 			end
-			make (val.dynamic_class, addr)
+			make (ot, val.dynamic_class, addr)
 		end
 
-	make_from_stack_element (elem: CALL_STACK_ELEMENT) is
+	make_from_stack_element (ot: EB_OBJECT_TOOL; elem: CALL_STACK_ELEMENT) is
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
 		do
-			make (elem.dynamic_class, elem.object_address)
+			make (ot, elem.dynamic_class, elem.object_address)
 		end
 
-feature -- Access
+feature {NONE} -- Properties
+
+	tool: EB_OBJECT_TOOL	
 
 feature -- Measurement
 
@@ -356,25 +354,8 @@ feature {NONE} -- Implementation
 
 	debug_value_to_item (dv: ABSTRACT_DEBUG_VALUE): EV_TREE_ITEM is
 			-- Convert `dv' into a tree item.
-		local
-			ost: OBJECT_STONE
 		do
-			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
-			Result.set_pixmap (icons @ (dv.kind))
-			Result.set_data (dv)
-			if dv.expandable then
-				Result.extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Dummy))
-				Result.expand_actions.extend (agent fill_item (Result))
-			end
-			if dv.address /= Void then
-					--| For now we don't support this for external type
-				create ost.make (dv.address, dv.name, dv.dynamic_class)
-				ost.set_associated_tree_item (Result)
-				ost.set_associated_debug_value (dv)
-				Result.set_pebble (ost)
-				Result.set_accept_cursor (ost.stone_cursor)
-				Result.set_deny_cursor (ost.X_stone_cursor)
-			end
+			Result := tool.debug_value_to_tree_item (dv)
 		end
 
 feature {NONE} -- Implementation

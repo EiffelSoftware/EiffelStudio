@@ -136,9 +136,6 @@ feature -- Externals
 		
 feature -- Externals
 
-	c_gtk_init_toolkit is
-		 external " C | %"gtk_eiffel.h%"" end
-
 	c_gtk_widget_set_all_events (a_w: POINTER) is
 		 external " C | %"gtk_eiffel.h%"" end
 

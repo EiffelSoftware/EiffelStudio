@@ -1,6 +1,7 @@
 indexing
 	description	: "Controls execution of debugged application under dotnet."
 	date		: "$Date$"
+	author		: "$Author$"
 	revision	: "$Revision$"
 
 class APPLICATION_EXECUTION_DOTNET
@@ -112,7 +113,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 		local
 			w_dlg: EV_WARNING_DIALOG
 		do
-			Il_debug_info_recorder.load
+			Il_debug_info_recorder.load_workbench_data
 			if not Il_debug_info_recorder.load_successful then
 				if (create {EV_ENVIRONMENT}).application /= Void then
 					create w_dlg.make_with_text (Il_debug_info_recorder.loading_errors_message)
@@ -690,6 +691,10 @@ feature -- BreakPoints
 				l_class_type := l_class_type_list.item
 				l_module_name := Il_debug_info_recorder.module_file_name_for_class (l_class_type)			
 				l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
+				if l_class_token = 0 then
+						--| Try to find the token, using the Meta Data
+					l_class_token := Eifnet_debugger.class_token (l_module_name, l_class_type)
+				end
 				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (f.associated_feature_i, l_class_type)
 
 				l_il_offset_list := Il_debug_info_recorder.feature_breakable_il_line_for (l_class_type, f.associated_feature_i, i)

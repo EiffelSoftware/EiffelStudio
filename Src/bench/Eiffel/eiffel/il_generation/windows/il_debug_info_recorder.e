@@ -35,6 +35,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BYTE_CONTEXT
+		export
+			{NONE} all
+		end	
+		
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all
@@ -95,27 +100,60 @@ feature {IL_CODE_GENERATOR} -- Access
 
 	is_debug_info_enabled: BOOLEAN
 			-- Are we generating debug information ?
+			
+	is_recording: BOOLEAN
+			-- Are we inside a recording session ?
 
-	init_recording_session (debug_mode: BOOLEAN) is
-			-- Initialize recording session.
+	start_recording_session (debug_mode: BOOLEAN) is
+			-- Start recording session.
+		require
+			is_outside_recording: not is_recording
 		do
 			debug ("debugger_il_info_trace")
 				print ("IL_DEBUG_INFO_RECORDER.init_recording_session .. %N")
 			end
-
-			if not load_successful then
-					--| Load IL Info, should be already loaded, but in case.
-				load
+			is_recording := True
+			if load_successful then
+					-- Load only if in different mode
+				if context.workbench_mode and then not last_loading_is_workbench then
+					load_workbench_data
+				elseif context.final_mode and then last_loading_is_workbench then
+					load_final_data
+				end				
+			else
+					-- Load corresponding mode
+				if context.workbench_mode then
+					load_workbench_data
+				else
+					load_final_data
+				end
 			end
 
 				--| Reset internal value to recompute the CLASS_TYPES array
 			Il_debug_info.reset
 				--| Enable/Disable debug info
 			is_debug_info_enabled := debug_mode
-
 				--| Reset Internal attributes used for optimisation 
 			internal_reset
+		ensure
+			is_inside_recording_session: is_recording			
 		end
+		
+	end_recording_session is
+			-- End recording session
+		require
+			is_inside_recording_session: is_recording
+		do
+			
+			if context.workbench_mode then
+--|				save (workbench_il_info_file_name)
+				save (il_info_file_name)
+			else
+				save (final_il_info_file_name)				
+			end
+		ensure
+			is_outside_recording: not is_recording
+		end		
 
 feature -- Queries : eStudio data
 
@@ -236,6 +274,63 @@ feature -- Queries : eStudio data from debugger data
 			Result := l_class.feature_table.item (System.creation_name)
 		end
 
+feature -- Access to module name computing
+
+	module_file_name_for_class (a_class_type: CLASS_TYPE): FILE_NAME is
+			-- Computed module file name for `a_class_type'
+			--| we use CLASS_TYPE for the precompiled case .
+		require
+			class_type_not_void: a_class_type /= Void
+			a_class_type_is_not_external: not a_class_type.is_external
+		local
+			l_assembly_name: STRING
+			l_module_filename: STRING
+			l_type_id: INTEGER
+			l_is_single_module: BOOLEAN
+		do
+				--| Please make sure this computing is similar to 
+				--| the one inside IL_CODE_GENERATOR.il_module
+			if a_class_type.is_precompiled then
+					--| it is is precompiled, this mean we are using it, not compiling
+					--| so no recording process
+				l_assembly_name := a_class_type.assembly_info.assembly_name
+
+-- FIXME: when we debug .. we load the W_code\assemblies\...dll 
+--				if system.msil_use_optimized_precompile then
+--					Result := finalized_precompilation_module_filename (l_assembly_name)					
+--				else
+					Result := workbench_precompilation_module_filename (l_assembly_name)
+--				end					
+			else
+					--| Compute module file name
+					--| WARNING : Please make sure this computing is similar to 
+					--| the one inside IL_CODE_GENERATOR.il_module
+				if is_recording then
+						-- The context is pertinent only in recording context
+					if context.workbench_mode then
+						l_is_single_module := False
+						create Result.make_from_string (workbench_module_directory_path_name)
+					else
+						l_is_single_module := True					
+						create Result.make_from_string (finalized_module_directory_path_name)					
+					end
+				else
+						--| We assume, we are debugging only Workbench application for now.
+					l_is_single_module := False
+					create Result.make_from_string (workbench_module_directory_path_name)
+				end
+				if l_is_single_module then
+					l_type_id := 1
+				else
+					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
+				end
+				l_module_filename := "module_" + l_type_id.out + ".dll"
+
+					--| There complete creation of module file name
+				Result.set_file_name (l_module_filename)
+			end
+		end
+
 feature -- Queries : dotnet data from estudio data
 
 	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): INTEGER is
@@ -244,28 +339,28 @@ feature -- Queries : dotnet data from estudio data
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 			l_id: INTEGER
 		do
-			Result := a_class_type.last_implementation_type_token
-			if Result = 0 then --| Precompilated class_type for instance
-				l_id := a_class_type.static_type_id
+				--| FIXME jfiat [2004/06/07] : in case of recompilation from Finalized
+				--| we use to optimize using:
+				--|	Result := a_class_type.last_implementation_type_token
+				--| but this value may be wrong if recompiled.
+			l_id := a_class_type.static_type_id
+			Result := internal_requested_class_tokens.item (l_id)
+			if Result = 0 then --| Not yet known, no requested yet
+				if a_module_filename = Void then
+					l_info_from_module := info_from_module_if_exists (module_file_name_for_class (a_class_type))
+				else
+					l_info_from_module := info_from_module_if_exists (a_module_filename)
+				end
+				if l_info_from_module /= Void then --| no module known for it .. (external)
 
-				Result := internal_requested_class_tokens.item (l_id)
-				if Result = 0 then --| Not yet known, no requested yet
-					if a_module_filename = Void then
-						l_info_from_module := info_from_module_if_exists (module_file_name_for_class (a_class_type))
-					else
-						l_info_from_module := info_from_module_if_exists (a_module_filename)
-					end
-					if l_info_from_module /= Void then --| no module known for it .. (external)
+					Result := l_info_from_module.class_token_for_class_type (a_class_type)
 
-						Result := l_info_from_module.class_token_for_class_type (a_class_type)
-
-							--| Save the result
-						internal_requested_class_tokens.put (Result, l_id)
-					end
+						--| Save the result
+					internal_requested_class_tokens.put (Result, l_id)
 				end
 			end
 		ensure
-			class_token_positive: Result /= 0
+			class_token_positive: Result > 0
 		end
 
 	entry_point_token: INTEGER
@@ -692,7 +787,8 @@ feature {NONE} -- Record processing
 				--| and then not a_feat.feature_name.is_equal ("_invariant")
 		end
 
-	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feature: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
+	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE; 
+				a_feature: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
 			-- Record feature information regarding token
 		require
 			module_not_void: a_module /= Void
@@ -746,7 +842,8 @@ feature {NONE} -- Class Specific info
 			internal_record_class_type (a_module.module_file_name, a_module.module_name, a_class_type, a_class_token)
 		end
 
-	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING; a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
+	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING; 
+			a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
 				--| New mecanism
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -927,11 +1024,57 @@ feature {NONE} -- Debugger Info List
 			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
 feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
+	
+	load_final_data is
+			-- Load final data
+		do
+			load (final_il_info_file_name)
+			last_loading_is_workbench := False
+		end
+		
+	load_workbench_data is
+			-- Load workbench data (mainly for debugging)
+		do
+--|			load (workbench_il_info_file_name)
+			load (il_info_file_name)
+			last_loading_is_workbench := True
+		end
+		
+	last_loading_is_workbench: BOOLEAN
+			-- Is last loading for workbench mode ?
 
-	save is
+	load_successful: BOOLEAN
+			-- Is last loading successful ?
+
+	loading_errors_message: STRING is
+		do
+			create Result.make (50)
+			Result.append_string (" ERROR while retrieving IL DEBUG INFO data ...%N")
+			if loading_errors /= Void then
+				Result.append_string ("%N")
+				from
+					loading_errors.start
+				until
+					loading_errors.after
+				loop
+					Result.append_string ("   - " + loading_errors.item + "%N")
+					loading_errors.forth
+				end
+			end
+			Result.append_string ("%N")
+			Result.append_string ("   Debugging will be disabled.%N")
+			Result.append_string ("   Please reload, until you do not get this message.%N")
+			Result.append_string ("%N")
+		end
+		
+
+feature {NONE}-- Implementation for save and load task
+
+	save (a_filename_to_save: STRING) is
 			-- Save info into file.
 		local
 			l_object_to_save: IL_DEBUG_INFO_STORAGE
+			l_project_path: STRING
 		do
 			if is_debug_info_enabled then
 				debug ("debugger_il_info_trace")
@@ -942,16 +1085,21 @@ feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_IN
 				create l_object_to_save.make
 
 				l_object_to_save.set_system_name (system.name)
-				l_object_to_save.set_project_path (module_key (module_directory_name))
+				if context.workbench_mode then
+					l_project_path := workbench_module_directory_path_name
+				else
+					l_project_path := finalized_module_directory_path_name					
+				end
+				l_object_to_save.set_project_path (module_key (l_project_path))
 				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
 				l_object_to_save.set_class_types_debugger_info (dbg_info_class_types)
 				l_object_to_save.set_entry_point_token (entry_point_token)
 
-				save_storable_data (l_object_to_save)
+				save_storable_data (l_object_to_save, a_filename_to_save)
 			end
 		end
 
-	load is
+	load (a_il_info_file_name: STRING) is
 			-- Load info from saved file.
 		local
 			l_succeed: BOOLEAN
@@ -967,7 +1115,7 @@ feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_IN
 			create loading_errors.make
 
 			reset
-			l_succeed := import_file_data (Il_info_file_name, System.name, False)
+			l_succeed := import_file_data (a_il_info_file_name, System.name, False)
 
 			load_successful := load_successful and l_succeed
 
@@ -1003,44 +1151,19 @@ feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_IN
 			end
 		end
 
-	load_successful: BOOLEAN
-			-- Is last loading successful ?
-
-	loading_errors_message: STRING is
-		do
-			create Result.make (50)
-			Result.append_string (" ERROR while retrieving IL DEBUG INFO data ...%N")
-			if loading_errors /= Void then
-				Result.append_string ("%N")
-				from
-					loading_errors.start
-				until
-					loading_errors.after
-				loop
-					Result.append_string ("   - " + loading_errors.item + "%N")
-					loading_errors.forth
-				end
-			end
-			Result.append_string ("%N")
-			Result.append_string ("   Debugging will be disabled.%N")
-			Result.append_string ("   Please reload, until you do not get this message.%N")
-			Result.append_string ("%N")
-		end
-
-feature {NONE}-- Implementation for save and load task
-
 	loading_errors: LINKED_LIST [STRING]
 			-- Loading error messages.
 
-	save_storable_data (d: IL_DEBUG_INFO_STORAGE) is
+	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: STRING) is
 			-- Save Storable data
 		require
 			data_valid: d /= Void
+			filename_not_empty: a_filename_to_save /= Void
 		local
 			l_il_info_file: RAW_FILE
 		do
 				--| Save into file
-			create l_il_info_file.make (Il_info_file_name)
+			create l_il_info_file.make (a_filename_to_save)
 
 			l_il_info_file.open_write
 			l_il_info_file.independent_store (d)
@@ -1072,9 +1195,7 @@ feature {NONE}-- Implementation for save and load task
 				Result := True
 
 				create l_il_info_file.make (a_fn)
-				if not l_il_info_file.exists then
-						--| File does not exists !
-				else
+				if l_il_info_file.exists then
 					l_il_info_file.open_read
 					l_retrieved := l_il_info_file.retrieved
 					l_il_info_file.close
@@ -1088,9 +1209,10 @@ feature {NONE}-- Implementation for save and load task
 						l_dbg_info_class_types  := l_retrieved_object.class_types_debugger_info
 						l_entry_point_token     := l_retrieved_object.entry_point_token
 
-							--| Assign values
-						l_current_project_path := module_key (module_directory_name)
 						if not is_from_precompiled then
+								--| when we load the project, by default we load as workbench
+							l_current_project_path := module_key (workbench_module_directory_path_name)
+
 								--| First, we check if the project didn't moved to a new location
 							if 
 								l_dbg_info_project_path /= Void and then 
@@ -1120,7 +1242,8 @@ feature {NONE}-- Implementation for save and load task
 									update_imported_project_info_module (l_current_project_path, l_info_module)
 
 									check
-										item_not_already_inside: not l_patched_dbg_info_modules.has (l_info_module.module_filename)
+										item_not_already_inside: 
+											not l_patched_dbg_info_modules.has (l_info_module.module_filename)
 									end
 									l_patched_dbg_info_modules.put (l_info_module, l_info_module.module_filename)
 									check 
@@ -1132,7 +1255,7 @@ feature {NONE}-- Implementation for save and load task
 								l_retrieved_object.set_modules_debugger_info (l_patched_dbg_info_modules)
 								l_retrieved_object.set_project_path (l_current_project_path)
 								io.error.put_string (" done.%N")
-								save_storable_data (l_retrieved_object)
+								save_storable_data (l_retrieved_object, Il_info_file_name)
 								io.error.put_string (" [!] Updated data saved.%N")
 
 								l_dbg_info_modules := l_retrieved_object.modules_debugger_info
@@ -1190,8 +1313,16 @@ feature {NONE}-- Implementation for save and load task
 
 	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
 			-- Update imported precompilation module name to effective module name.
+		local
+			l_mod_fn: STRING
 		do
-			a_info_module.update_module_filename (module_key (precompilation_module_filename (a_info_module.system_name)))
+-- FIXME: when we debug we use the W_code\assemblies\....dll one
+--			if system.msil_use_optimized_precompile then
+--				l_mod_fn := finalized_precompilation_module_filename (a_info_module.system_name)				
+--			else
+				l_mod_fn := workbench_precompilation_module_filename (a_info_module.system_name)
+--			end
+			a_info_module.update_module_filename (module_key (l_mod_fn))			
 		end
 
 feature {NONE} -- Module indexer implementation

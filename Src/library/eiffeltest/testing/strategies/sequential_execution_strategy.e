@@ -27,7 +27,7 @@ feature -- Status report
 	is_ready: BOOLEAN is
 			-- Is strategy ready for execution?
 		do
-			Result := Precursor and then not context.empty and then 
+			Result := Precursor and then not context.is_empty and then 
 				all_indices_valid
 		end
 
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	all_indices_valid: BOOLEAN is
 			-- Are all test indices in context valid?
 		require
-			context_not_empty: not context.empty
+			context_not_empty: not context.is_empty
 		local
 			i: INTEGER
 			min: INTEGER

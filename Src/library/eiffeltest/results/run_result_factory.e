@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			create r.make_failure; Result.extend (r, "F")
 			create r.make_exception; Result.extend (r, "E")
 		ensure
-			not_empty: Result /= Void and then not Result.empty
+			not_empty: Result /= Void and then not Result.is_empty
 		end
 		
 end -- class RUN_RESULT_FACTORY

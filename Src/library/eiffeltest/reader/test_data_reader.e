@@ -220,7 +220,8 @@ feature -- Basic operations
 					if all_values_valid then inject_record (count) end
 				end
 				
-				if (invalid or not all_values_valid) and not last_string.empty 
+				if (invalid or not all_values_valid) 
+					and not last_string.is_empty 
 					and is_log_set then
 					log.put_string ("Record " + count.out + " not valid!")
 					log.put_new_line
@@ -229,7 +230,7 @@ feature -- Basic operations
 			end
 			file.close
 		ensure
-			suite_not_empty: is_suite_generated implies not suite.empty
+			suite_not_empty: is_suite_generated implies not suite.is_empty
 		end
 				 
 feature {NONE} -- Constants

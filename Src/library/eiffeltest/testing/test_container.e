@@ -41,7 +41,7 @@ feature -- Measurement
 	total_run_count: INTEGER is
 			-- Number of total runs
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			old_idx: INTEGER
 			i: INTEGER

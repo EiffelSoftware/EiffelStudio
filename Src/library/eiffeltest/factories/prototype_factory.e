@@ -25,17 +25,17 @@ feature -- Access
 
 	available_products: ARRAY [STRING] is
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		deferred
 		ensure
-			non_empty_result: Result /= Void and then not Result.empty
+			non_empty_result: Result /= Void and then not Result.is_empty
 		end
 
 	product: G is
 			-- Selected product
 		require
 			product_selected: selected_product_key /= Void
-			not_empty: not empty
+			not_empty: not is_empty
 		deferred
 		ensure
 			non_void_result: Result /= Void
@@ -53,12 +53,12 @@ feature -- Status report
 	has_product (k: STRING): BOOLEAN is
 			-- Is there a product with key `k'?
 		require
-			not_empty: not empty
-			non_empty_product_string: k /= Void and then not k.empty
+			not_empty: not is_empty
+			non_empty_product_string: k /= Void and then not k.is_empty
 		deferred
 		end
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is factory empty?
 		deferred
 		end
@@ -71,8 +71,8 @@ feature -- Status setting
 	select_product (k: STRING) is
 			-- Select product with key `k'.
 		require
-			not_empty: not empty
-			non_empty_product_string: k /= Void and then not k.empty
+			not_empty: not is_empty
+			non_empty_product_string: k /= Void and then not k.is_empty
 			product_exists: has_product (k)
 		deferred
 		ensure
@@ -101,7 +101,7 @@ feature -- Element change
 			-- Add product `v' under `key'
 		require
 			product_exists: v /= Void
-			non_empty_key: key /= Void and then not key.empty
+			non_empty_key: key /= Void and then not key.is_empty
 			key_not_registered: not has_product (key)
 		deferred
 		ensure
@@ -114,7 +114,7 @@ feature -- Removal
 	remove (key: STRING) is
 			-- Remove product registered under `key'.
 		require
-			non_empty_key: key /= Void and then not key.empty
+			non_empty_key: key /= Void and then not key.is_empty
 			key_registered: has_product (key)
 		deferred
 		ensure
@@ -126,14 +126,14 @@ feature -- Removal
 			-- Remove all products.
 		deferred
 		ensure
-			empty: empty
+			empty: is_empty
 		end
 
 invariant
 
-	empty_definition: empty = (count = 0)
+	empty_definition: is_empty = (count = 0)
 	no_empty_key: selected_product_key /= Void implies 
-			not selected_product_key.empty
+			not selected_product_key.is_empty
 	only_valid_products: selected_product_key /= Void implies 
 			has_product (selected_product_key)
 		

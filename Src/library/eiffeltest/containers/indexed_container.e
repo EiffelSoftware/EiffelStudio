@@ -15,7 +15,7 @@ feature -- Access
 	item, infix "@" (i: INTEGER): G is
 			-- `i'-th item
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 			valid_index: valid_index (i)
 		deferred
 		ensure

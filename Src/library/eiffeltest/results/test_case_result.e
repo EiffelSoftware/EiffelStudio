@@ -54,7 +54,7 @@ feature -- Access
 		do
 			Result := i_th (run).failure_reason (n)
 		ensure
-			non_empty_reason: Result /= Void and then not Result.empty
+			non_empty_reason: Result /= Void and then not Result.is_empty
 		end
 
 	exception_info (n: INTEGER): EXCEPTION_INFO is
@@ -101,7 +101,7 @@ feature -- Status report
 	has_current_result: BOOLEAN is
 			-- Has a current result been recorded?
 		do
-			Result := not current_record.empty
+			Result := not current_record.is_empty
 		end
 
 	all_tests_passed: BOOLEAN is
@@ -190,7 +190,7 @@ feature -- Status report
 	has_results: BOOLEAN is
 			-- Are there test results available?
 		do
-			Result := not empty
+			Result := not is_empty
 		end
 
 	valid_assertion_index (n: INTEGER): BOOLEAN is
@@ -213,16 +213,16 @@ feature -- Element change
 			create a.make_true
 			current_record.extend (a)
 		ensure
-			empty_implies_pass: current_record.empty implies
+			empty_implies_pass: current_record.is_empty implies
 					current_record.passed
-			not_empty_implies_no_change: not current_record.empty implies
+			not_empty_implies_no_change: not current_record.is_empty implies
 					(current_record.passed = old current_record.passed)
 		end
 
 	add_failure (reason: STRING) is
 			-- Add failure with `reason'.
 		require
-			non_empty_reason: reason /= Void and then not reason.empty
+			non_empty_reason: reason /= Void and then not reason.is_empty
 		local
 			a: ASSERTION_RESULT
 		do
@@ -272,7 +272,7 @@ feature -- Element change
 			if current_record.is_exception then
 				exceptions := exceptions + 1
 			end
-			if empty then run := 1 end
+			if is_empty then run := 1 end
 			extend (current_record)
 			create current_record.make
 		ensure

@@ -31,7 +31,7 @@ feature -- Access
 			Result := format_factory.available_products
 		ensure
 			non_void_result: Result /= Void
-			non_empty_result: not Result.empty
+			non_empty_result: not Result.is_empty
 		end
 
 feature -- Status report
@@ -51,7 +51,7 @@ feature -- Status report
 	is_format_supported (f: STRING): BOOLEAN is
 			-- Is format `f' supported?
 		require
-			format_string: f /= Void and then not f.empty
+			format_string: f /= Void and then not f.is_empty
 		do
 			Result := format_factory.has_product (f)
 		end
@@ -68,7 +68,7 @@ feature -- Status setting
 			-- Set format to `f'.
 		require
 			device_set: is_device_set
-			non_empty_format_string: f /= Void and then not f.empty
+			non_empty_format_string: f /= Void and then not f.is_empty
 			format_supported: is_format_supported (f)
 		do
 			format_factory.select_product (f)

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			create {SEQUENTIAL_EXECUTION_STRATEGY} e
 			Result.extend (e, "sequential")
 		ensure
-			not_empty: Result /= Void and then not Result.empty
+			not_empty: Result /= Void and then not Result.is_empty
 		end
 
 end -- class STRATEGY_FACTORY

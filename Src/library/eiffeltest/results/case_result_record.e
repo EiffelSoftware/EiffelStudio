@@ -53,7 +53,7 @@ feature -- Access
 		do
 			Result := i_th (i).failure_reason
 		ensure
-			non_empty_reason: Result /= Void and then not Result.empty
+			non_empty_reason: Result /= Void and then not Result.is_empty
 		end
 
 	exception_info (i: INTEGER): EXCEPTION_INFO is
@@ -72,7 +72,7 @@ feature -- Status report
 	passed: BOOLEAN is
 			-- Is result a pass?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			c: COMPARATOR
 		do
@@ -83,7 +83,7 @@ feature -- Status report
 	is_exception: BOOLEAN is
 			-- Was exception thrown in this run?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			c: COMPARATOR
 		do
@@ -139,7 +139,7 @@ feature -- Status setting
 
 invariant
 
-	empty_definition: empty = (assertion_count = 0)
+	empty_definition: is_empty = (assertion_count = 0)
 		
 end -- class CASE_RESULT_RECORD
 

@@ -34,7 +34,7 @@ feature -- Status report
 	is_ready: BOOLEAN is
 			-- Is test ready for execution?
 		do
-			Result := not empty
+			Result := not is_empty
 		end
 		
 	is_log_set: BOOLEAN is
@@ -134,7 +134,7 @@ feature -- Basic operations
 	clear_results is
 			-- Clear test results.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			old_idx: INTEGER
 			i: INTEGER
@@ -168,7 +168,7 @@ feature {NONE} -- Initialization
 
 invariant
 
-	ready_definition: is_ready = not empty
+	ready_definition: is_ready = not is_empty
 	log_set_up: log /= Void and then log.is_format_set
 
 end -- class TEST_DRIVER

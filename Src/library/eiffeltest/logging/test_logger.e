@@ -31,7 +31,7 @@ feature -- Output
 	put_string (s: STRING) is
 			-- Output `s'.
 		require
-			non_empty_string: s /= Void and then not s.empty
+			non_empty_string: s /= Void and then not s.is_empty
 			writable: is_log_writable
 		deferred
 		end

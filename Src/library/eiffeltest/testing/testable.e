@@ -36,7 +36,7 @@ feature -- Access
 			end
 			Result.append (number.out)
 		ensure
-			non_empty_result: Result /= Void and then not Result.empty
+			non_empty_result: Result /= Void and then not Result.is_empty
 		end
 	 
 	name: STRING is
@@ -90,7 +90,7 @@ feature -- Status report
 	is_name_set: BOOLEAN is
 			-- Is name set?
 		do
-			Result := name /= Void and then not name.empty
+			Result := name /= Void and then not name.is_empty
 		end
 
 	has_fixture: BOOLEAN is
@@ -114,7 +114,7 @@ feature -- Status report
 	is_container_set: BOOLEAN is
 			-- Is container set?
 		do
-			Result := container /= Void and then not container.empty and then
+			Result := container /= Void and then not container.is_empty and then
 				container.has (Current)
 		end
 
@@ -258,7 +258,7 @@ invariant
 	top_level_definition: is_top_level = (container = Void)
 	number_set_definition: is_number_set = (number > 0)
 	test_number_non_negative: number >= 0
-	non_empty_name: name /= Void and then not name.empty
+	non_empty_name: name /= Void and then not name.is_empty
 	ready_test_constraint: is_ready implies (is_number_set and is_name_set)
 	parent_container_or_top_level:
 			is_ready implies (is_top_level xor is_container_set)

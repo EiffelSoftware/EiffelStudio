@@ -31,7 +31,7 @@ feature -- Status report
 	is_ready: BOOLEAN is
 	 		-- Is strategy ready for execution?
 		do
-			Result := is_suite_set and then (not suite.empty and
+			Result := is_suite_set and then (not suite.is_empty and
 					(is_context_needed implies is_context_set))
 		end
 

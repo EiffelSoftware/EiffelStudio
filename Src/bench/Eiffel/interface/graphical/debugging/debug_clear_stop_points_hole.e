@@ -124,6 +124,7 @@ feature -- Execution
 					!! disp_bp.do_nothing;
 					disp_bp.work (Void);	
 					Window_manager.routine_win_mgr.resynchronize_debugger (Void)
+					Project_tool.resynchronize_debugger
 				else
 					warner (popup_parent).custom_call (Current,
 						Warning_messages.w_Clear_breakpoints, Interface_names.b_Ok, Void, Interface_names.b_Cancel)

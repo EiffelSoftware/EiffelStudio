@@ -214,15 +214,29 @@ feature
 						extension.has_include_list
 					then
 						extension.generate_header_files
+						if extension.has_return_type then
+							buf.putchar ('(')
+							buf.putstring (extension.return_type)
+							buf.putchar (')')
+						end
 						buf.putstring (external_name);
 					else
-						buf.putchar ('(')
 						local_argument_types := argument_types
-						type_c.generate_function_cast (buf, local_argument_types);
-						buf.putstring (external_name);
+						if extension /= Void and then extension.has_signature then
+							if extension.has_return_type then
+								buf.putchar ('(')
+								buf.putstring (extension.return_type)
+								buf.putchar (')')
+							end
+							buf.putstring (external_name);
+						else
+							buf.putchar ('(')
+							type_c.generate_function_cast (buf, local_argument_types);
+							buf.putstring (external_name);
+							buf.putchar (')')
+						end
 							-- Remember external routine declaration
 						Extern_declarations.add_routine_with_signature (type_c, external_name, local_argument_types);
-						buf.putchar (')')
 					end;
 				end;
 			end;

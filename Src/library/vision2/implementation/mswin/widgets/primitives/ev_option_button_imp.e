@@ -21,19 +21,44 @@ inherit
 
 	EV_BUTTON_IMP
 		rename
-			set_text as internal_set_text
+			set_text as internal_set_text,
+			add_click_command as add_popup_command
 		undefine
-			add_click_command,
 			set_right_alignment,
 			set_left_alignment,
 			set_center_alignment
 		redefine
-			make,
 			on_bn_clicked,
-			draw_body,
-			draw_edge,
-			draw_focus,
-			set_parent
+			default_style,
+			set_parent,
+			make
+		end
+
+	WEL_RASTER_OPERATIONS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_DT_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ODS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_ODA_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_DRAWING_ROUTINES
+		rename
+			draw_edge as routine_draw_edge
+		export
+			{NONE} all
 		end
 
 creation
@@ -83,11 +108,46 @@ feature -- Event association
 			-- `sitem' has been selected'
 		do
 			internal_set_text (sitem.text)
-			pixmap_imp := sitem.pixmap_imp
+			if sitem.pixmap_imp /= Void then
+				set_pixmap (sitem.pixmap)
+			end
 			selected_item ?= sitem.interface
 		end
 
-feature {NONE} -- Basic operation
+feature {EV_CONTAINER_IMP} -- Basic operation
+
+ 	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
+ 			-- Called when the system ask to redraw
+ 			-- the container
+ 		local
+ 			action: INTEGER
+ 			dc: WEL_DC
+ 		do
+ 			action := struct.item_action
+ 			dc := struct.dc
+ 			if action = Oda_focus then
+ 				draw_focus (dc)
+ 			elseif action = Oda_select then
+ 				dc.fill_rect (client_rect, background_brush)
+ 				draw_edge (dc)
+ 				draw_focus (dc)
+ 				draw_body (dc)
+			elseif action = Oda_drawentire then
+ 				dc.fill_rect (client_rect, background_brush)
+ 				if struct.item_state = Ods_focus then
+ 					draw_focus (dc)
+ 				end
+ 				draw_edge (dc)
+ 				draw_body (dc)
+			end
+ 		end
+
+feature {NONE} -- Implementation
+
+	background_brush: WEL_BRUSH is
+		do
+			!! Result.make_solid (background_color_imp)
+		end
 
 	draw_edge (dc: WEL_DC) is
 			-- Draw the edge of the button.
@@ -120,11 +180,11 @@ feature {NONE} -- Basic operation
 				-- We draw the rest of the button
 				inrect.set_rect (5, 5, width - 30, height - 6)
 				if pixmap_imp /= Void and text /= "" then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					dc.draw_text (text, inrect, Dt_singleline + Dt_left + Dt_vcenter)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					dc.draw_text (text, inrect, Dt_singleline + Dt_left + Dt_vcenter)
 				end
@@ -138,13 +198,13 @@ feature {NONE} -- Basic operation
 				-- We draw the rest
 				if pixmap_imp /= Void and text /= "" then
 					!! inrect.make (5, 5, width - 30, height - 6)
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
 					inrect.set_left (pixmap_imp.width + 5)
 					tx := inrect.left 
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2) 
 					draw_insensitive_text (dc, text, tx, ty)
 				elseif pixmap_imp /= Void then
-					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.dc, 0, 0, Srccopy)
+					dc.bit_blt (inrect.left, inrect.top, inrect.width, inrect.height, pixmap_imp.internal_dc, 0, 0, Srccopy)
 				elseif text /= "" then
 					tx := inrect.left
 					ty := inrect.top + ((inrect.height - dc.string_height (text)) // 2)
@@ -173,6 +233,14 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- WEL implementation
+
+	default_style: INTEGER is
+			-- Not visible or child at creation
+		do
+			Result := Ws_child + Ws_visible + Ws_group
+						+ Ws_tabstop + Bs_pushbutton
+						+ Bs_text + Bs_ownerdraw
+		end
 
 	on_bn_clicked is
 			-- When the button is pressed

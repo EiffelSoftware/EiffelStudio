@@ -9,37 +9,42 @@ class
 
 feature -- Access
 
-	gb_main_window_title: STRING is "Graphical builder"
+	Gb_main_window_title: STRING is "Graphical builder"
 		-- Title to be displayed in GB_MAIN_WINDOW.
 		
-	gb_display_window_title: STRING is "Display window"
+	Gb_display_window_title: STRING is "Display window"
 		-- Title to be displayed in GB_DISPLAY_WINDOW.
 		
-	gb_builder_window_title: STRING is "Builder window"
+	Gb_builder_window_title: STRING is "Builder window"
 		-- Title to be displayed in GB_BUILDER_WINDOW.
 		
-	gb_object_editor_window_title: STRING is "Object editor"
+	Gb_object_editor_window_title: STRING is "Object editor"
 		-- Title to be displayed in GB_OBJECT_EDITOR.
 
 	
 	
 feature -- Menu texts.
 	
-	gb_file_menu_text: STRING is "&File"
+	Gb_file_menu_text: STRING is "&File"
 		-- Text of file menu.
 		
-	gb_about_menu_text: STRING is "&About"
-		-- Text of about menu.
+	Gb_help_about_menu_text: STRING is "&About"
+	
+	Gb_help_menu_text: STRING is "&Help"
 		
-	gb_settings_menu_text: STRING is "&Settings"
+--	Gb_settings_menu_text: STRING is "&Settings"
 	
-	gb_warnings_on_menu_text: STRING is "Warnings enabled"
+	Gb_project_menu_text: STRING is "Project"
 	
-	gb_warnings_off_menu_text: STRING is "Warnings disabled"
+	Gb_project_menu_build_text: STRING is "Build"
+
+	Gb_project_menu_settings_text: STRING is "&Settings"
+	
+	Gb_view_menu_text: STRING is "&View"
 	
 feature -- String representations of class names.
 
-	gb_primitive_object_class_name: STRING is "GB_PRIMITIVE_OBJECT"
+	Gb_primitive_object_class_name: STRING is "GB_PRIMITIVE_OBJECT"
 	
 	Ev_window_string: STRING is "EV_WINDOW"
 	
@@ -55,8 +60,9 @@ feature -- Directories
 
 	gb_ev_directory: FILE_NAME is
 		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-			Result.extend ("build")
+			--create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			create Result.make_from_string ("D:\work")
+			Result.extend ("build2")
 			Result.extend ("interface")
 		end
 	
@@ -119,6 +125,12 @@ feature -- Generation constants
 		once
 			Result := "%N%T%T%T"
 		end
+		
+	Local_object_name_prepend_string: STRING is "l_"
+			-- generated local variables are of the form
+			-- `Result' + short type + number.
+			-- i.e. l_button1
+		
 		
 feature -- XML saving
 

@@ -186,10 +186,10 @@ feature -- Access
 		do
 				-- FIXME????: separate
 			if not is_true_expanded then
-				Result := Sk_ref + (type_id - 1)
+				Result := Sk_ref | (type_id - 1)
 			else
 				is_true_expanded := False
-				Result := Sk_exp + (type_id - 1)
+				Result := Sk_exp | (type_id - 1)
 				is_true_expanded := True
 			end
 		end
@@ -200,7 +200,7 @@ feature -- Access
 			if not is_true_expanded then
 				Result := Sk_dtype
 			else
-				Result := Sk_exp + class_id
+				Result := Sk_exp | class_id
 			end
 		end
 

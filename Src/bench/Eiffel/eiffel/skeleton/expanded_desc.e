@@ -114,7 +114,7 @@ feature
 	sk_value: INTEGER is
 			-- Sk value
 		do
-			Result := Sk_exp + type_id - 1;
+			Result := Sk_exp | (type_id - 1);
 		end;
 
 	trace is

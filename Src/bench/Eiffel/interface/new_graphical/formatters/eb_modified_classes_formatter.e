@@ -26,10 +26,10 @@ feature -- Initialization
 
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showmodified 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showmodified 
+		end
  
 feature {NONE} -- Properties
 

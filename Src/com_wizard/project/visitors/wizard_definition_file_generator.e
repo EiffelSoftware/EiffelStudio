@@ -9,7 +9,15 @@ class
 	WIZARD_DEFINITION_FILE_GENERATOR
 
 inherit
-	WIZARD_TYPE_GENERATOR
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
+		export
+			{NONE} all
+		end
+
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
 
 	WIZARD_VARIABLE_NAME_MAPPER
 		export
@@ -22,7 +30,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	generate (a_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
+	generate  is
 			-- Generated writer
 		local
 			entry: WIZARD_WRITER_DEFINITION_ENTRY
@@ -76,14 +84,8 @@ feature -- Basic Operations
 				can_generate_definition: definition_file_writer.can_generate
 			end
 
-			Shared_file_name_factory.create_file_name (Current, definition_file_writer)
+			Shared_file_name_factory.create_definition_file_name (Current, definition_file_writer)
 			definition_file_writer.save_file (Shared_file_name_factory.last_created_file_name)
-		end
-
-	create_file_name (a_file_name_factory: WIZARD_FILE_NAME_FACTORY) is
-			-- Get file name.
-		do
-			a_file_name_factory.process_definition_file
 		end
 
 	Dll_register_ordinal: INTEGER is 1

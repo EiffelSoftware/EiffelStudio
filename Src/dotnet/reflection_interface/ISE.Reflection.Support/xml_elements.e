@@ -257,6 +257,12 @@ feature -- Access
 			description: "Implementation element in XML file for a type"
 			external_name: "ImplementationElement"
 		end
+	
+	Bit_or_infix_element: STRING is "bit_or_infix"
+		indexing
+			description: "Bit or infix element in XML file for a type"
+			external_name: "BitOrInfixElement"
+		end
 		
 	Feature_element: STRING is "feature"
 		indexing
@@ -328,6 +334,12 @@ feature -- Access
 		indexing
 			description: "Enum literal element in XML file for a type"
 			external_name: "EnumLiteralElement"
+		end
+
+	Is_literal_element: STRING is "is_literal"
+		indexing
+			description: "Is literal element in XML file for a type"
+			external_name: "IsLiteralElement"
 		end
 		
 	Feature_eiffel_name_element: STRING is "feature_eiffel_name"
@@ -442,6 +454,12 @@ feature -- Access
 		indexing
 			description: "Postcondition text element in XML file for a type"
 			external_name: "PostconditionTextElement"
+		end
+	
+	Literal_value_element: STRING is "literal_value"
+		indexing
+			description: "Literal value element"
+			external_name: "LiteralValueElement"
 		end
 	
 	Footer_element: STRING is "footer"

@@ -81,7 +81,8 @@ feature {NONE} -- Access
 			-- Does `Current' accept `an_object'?
 			-- Only widgets are accepted.
 		do
-			if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_widget_string)) then
+			if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_widget_string))
+				and not type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string (Ev_window_string)) then
 				Result := True
 			end
 		end

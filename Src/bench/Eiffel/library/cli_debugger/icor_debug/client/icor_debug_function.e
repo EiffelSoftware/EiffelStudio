@@ -33,9 +33,13 @@ feature -- Addons
 		do
 			Result := "Function [Ox" + item.out + "] " 
 					+ " Token="+ get_token.out + "~0x"+get_token.to_hex_string
-					+ " ClassToken=" + get_class.get_token.out + "~0x"+get_class.get_token.to_hex_string
-					+ " Module["+get_module.get_token.out+"]=" + get_module.get_name
-					+ " ."
+			if get_class /= Void then
+				Result.append (" ClassToken=" + get_class.get_token.out + "~0x"+get_class.get_token.to_hex_string)
+			else
+				Result.append (" Class= not IL ")
+				
+			end
+			Result.append (" Module["+get_module.get_token.out+"]=" + get_module.get_name + " .")
 		end
 		
 feature {ICOR_EXPORTER} -- Access

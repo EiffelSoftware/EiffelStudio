@@ -53,12 +53,8 @@ feature -- Basic operations
 		do
 			create c_writer.make
 
-			-- File name
 			c_writer.set_header_file_name (Server_registration_header_file_name)
-
-			-- Header
 			c_writer.set_header ("Component registration code")
-
 
 			from
 				system_descriptor.coclasses.start
@@ -155,6 +151,7 @@ feature -- Basic operations
 				tmp_string.append (Long)
 				tmp_string.append (Space)
 				tmp_string.append (Locks_variable_name)
+				tmp_string.append (" = 0")
 				tmp_string.append (Semicolon)
 				c_writer.add_other_source (tmp_string)
 			else
@@ -1240,7 +1237,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (New_line_tab)
 			tmp_string.append (Close_curly_brace)
 			tmp_string.append (New_line_tab)
-			tmp_string.append ("return 0;")
+			tmp_string.append ("return hr;")
 
 			Result.set_body (tmp_string)
 		end
@@ -1284,6 +1281,10 @@ feature {NONE} -- Implementation
 			tmp_string.append (Inproc_server32)
 
 			Result := struct_creator (tchar_creator (tmp_string), Zero, Module_file_name, C_true)
+			Result.append (Comma)
+			Result.append (New_line_tab)
+
+			Result.append (struct_creator (tchar_creator (tmp_string), tchar_creator ("ThreadingModel"), tchar_creator ("Apartment"), C_true))
 		end
 
 	application_specific_registry_entries: STRING is 
@@ -1329,6 +1330,10 @@ feature {NONE} -- Implementation
 			string_one.append (Local_server32)
 
 			Result.append (struct_creator (tchar_creator (string_one), Zero, Module_file_name, C_true))
+			Result.append (Comma)
+			Result.append (New_line_tab)
+
+			Result.append (struct_creator (tchar_creator (string_one), tchar_creator ("ThreadingModel"), tchar_creator ("Apartment"), C_true))
 			Result.append (Comma)
 			Result.append (New_line_tab)
 

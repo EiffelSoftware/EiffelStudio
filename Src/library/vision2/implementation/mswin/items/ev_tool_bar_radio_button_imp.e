@@ -16,12 +16,12 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
 			type,
-			set_checked,
 			interface,
-			initialize
+			initialize,
+			enable_select
 		end
 
 	EV_RADIO_PEER_IMP
@@ -50,7 +50,18 @@ feature -- Status report
 			Result := 3
 		end
 
-	set_checked is
+	checked: BOOLEAN
+		-- Is `Current' checked.?
+
+	disable_select is
+		do
+			checked := False
+			if parent_imp /= Void then
+				parent_imp.uncheck_button (id)
+			end
+		end
+
+	enable_select is
 			-- Select the current button.
 		local
 			cur: CURSOR
@@ -62,12 +73,35 @@ feature -- Status report
 				until
 					radio_group.off
 				loop
-					radio_group.item.disable_select
+					radio_group.item.disable_select	
 					radio_group.forth
 				end
 				radio_group.go_to (cur)
 			end
-			Precursor
+			if parent_imp /= Void then
+					parent_imp.check_button (id)
+			end
+			checked := True
+		end
+
+	internal_enable_select is
+			-- Select the current button.
+		local
+			cur: CURSOR
+		do
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					radio_group.item.disable_select	
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			end
+			checked := True
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -97,6 +131,11 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/05 17:33:58  rogers
+--| Inheritance changed from EV_TOOL_BAR_TOGGLE_BUTTON_IMP to
+--| EV_TOOL_BAR_SELECT_BUTTON_IMP. Added checked, disable_select,
+--| enable_select and internal_enable_select.
+--|
 --| Revision 1.7  2000/04/04 17:20:59  rogers
 --| Now inherits EV_RADIO_PEER_IMP. Implemented initialize,
 --| set_checked. Removed on_activate and on_unselect. Added interface.

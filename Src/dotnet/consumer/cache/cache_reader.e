@@ -215,6 +215,12 @@ feature -- Access
 			end
 		end
 
+	initialize is
+			-- Initialize cache reader.
+		do
+			(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, Absolute_info_path)
+		end
+		
 feature -- Status Report
 
 	is_initialized: BOOLEAN is
@@ -279,8 +285,8 @@ feature {CACHE_WRITER, EMITTER, CACHE_PATH} -- Implementation
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			if not is_initialized then
-				create Result.make;
-				(create {EIFFEL_XML_SERIALIZER}).serialize (Result, Absolute_info_path)
+				initialize
+				create Result.make
 			else
 				create des
 				des.deserialize (Absolute_info_path)

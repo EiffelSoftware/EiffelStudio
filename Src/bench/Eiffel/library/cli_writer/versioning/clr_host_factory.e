@@ -15,13 +15,15 @@ feature -- Access
 			-- CLR runtime version currently loaded in process.
 			-- Check documentation available at:
 			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/grfuncorbindtoruntimeex.asp
+		require
+			has_version: version /= Void implies (create {IL_ENVIRONMENT}).installed_runtimes.has (version)
 		local
 			l_version: UNI_STRING
 			l_host: POINTER
 		once
-			if version = Void or else version.is_empty then
+			if version = Void then
 					-- Default version.
-				create l_version.make ("v1.0.3705")
+				create l_version.make ((create {IL_ENVIRONMENT}).default_version)
 			else			
 				create l_version.make (version)
 			end

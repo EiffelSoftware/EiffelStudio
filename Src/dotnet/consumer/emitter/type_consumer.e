@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 
-			if count <= nb then
+			if count > 0 and then count <= nb then
 					-- Resize array only if needed.
 				interfaces := interfaces.subarray (1, count)
 			end
@@ -318,7 +318,6 @@ feature -- Basic Operation
 			rescued := True
 			retry
 		end
-
 
 	initialize_overload_solver is
 			-- Initialize overload solver.

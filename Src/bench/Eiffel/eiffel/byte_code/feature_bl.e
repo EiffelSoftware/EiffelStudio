@@ -132,9 +132,15 @@ end
 		end
 
 	generate_access is
-			-- Generate access for a feature in current
+			-- Generate access call of feature in current on `current_register'
 		do
-			generate_on (Current_register)
+			do_generate (Current_register)
+		end
+
+	generate_on (reg: REGISTRABLE) is
+			-- Generate access call of feature in current on `current_register'
+		do
+			do_generate (reg)
 		end
 
 	check_dt_current (reg: REGISTRABLE) is
@@ -185,12 +191,6 @@ end
 				class_type ?= type_i;	-- Cannot fail
 				Result := entry.is_polymorphic (class_type.type_id)
 			end
-		end
-
-	generate_on (reg: REGISTRABLE) is
-			-- Generate call of feature on `reg'
-		do
-			do_generate (reg)
 		end
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is

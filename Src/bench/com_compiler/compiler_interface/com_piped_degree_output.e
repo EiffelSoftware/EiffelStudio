@@ -29,16 +29,16 @@ feature {NONE} -- Initialization
 			-- Initialize structure.
 		require
 			non_void_pipe: a_pipe /= Void
-			pipe_writable: not a_pipe.output_closed
+			pipe_writable: not a_pipe.input_closed
 		do
-			output_pipe := a_pipe
+			input_pipe := a_pipe
 		end
 
 feature -- Start output features
 
 	put_header (displayed_version_number: STRING) is
 		do
-			output_pipe.put_string (
+			input_pipe.put_string (
 				"Eiffel compilation manager (version " + 
 				displayed_version_number + ")")
 		end
@@ -46,37 +46,37 @@ feature -- Start output features
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			output_pipe.put_string ("Processing options")
+			input_pipe.put_string ("Processing options")
 		end
 		
 	put_melting_changes_message  is
 			-- Put message indicating that melting changes is ocurring.
 		do
-			output_pipe.put_string (melting_changes_message)
+			input_pipe.put_string (melting_changes_message)
 		end
 
 	put_freezing_message is
 			-- Put message indicating that freezing is occurring.
 		do
-			output_pipe.put_string (freezing_system_message)
+			input_pipe.put_string (freezing_system_message)
 		end
 
 	put_start_dead_code_removal_message  is
 			-- Put message indicating the start of dead code removal.
 		do
-			output_pipe.put_string (removing_dead_code_message)
+			input_pipe.put_string (removing_dead_code_message)
 		end
 		
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			output_pipe.put_string (a_message)
+			input_pipe.put_string (a_message)
 		end				
 
 	put_system_compiled is
 			-- Put message indicating that the system has been compiled.
 		do
-			output_pipe.put_string ("System recompiled.")
+			input_pipe.put_string ("System recompiled.")
 		end
 				
 feature -- Output on per class
@@ -85,7 +85,7 @@ feature -- Output on per class
 			-- Put message progress the start of dead code removal.
 		do
 			processed := processed + total_nbr
-			output_pipe.put_string ("Features done: " + 
+			input_pipe.put_string ("Features done: " + 
 											processed.out + 
 											"%TFeatures to go: " + 
 											nbr_to_go.out)
@@ -97,12 +97,12 @@ feature -- Other
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			total_number := total
-			output_pipe.put_string (percentage_output (to_go) + deg_nbr)
+			input_pipe.put_string (percentage_output (to_go) + deg_nbr)
 		end
 
 feature {NONE} -- Implementation
 
-	output_pipe: WEL_PIPE
+	input_pipe: WEL_PIPE
 			-- Pipe to send output to
 			
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 		local
 			should_continue: BOOLEAN_REF
 		do
-			output_pipe.put_string (percentage_output (to_go) + 
+			input_pipe.put_string (percentage_output (to_go) + 
 										deg_nbr + a_name)
 		end
 		

@@ -3,6 +3,11 @@
  */
 
 #include "mel.h"
+#ifdef EIF_VMS
+#include "eif4:[c.ipc.shared]ipcvms.h"
+# define NeedFunctionPrototypes 1	/* ensure we get Xt prototypes */
+#endif
+
 
 rt_private EIF_OBJ dispatcher; 		/* Eiffel Class Dispatcher in MEL */
 rt_private EIF_PROC e_handle_callback;	/* Eiffel routine that dispatches motif events */
@@ -107,11 +112,23 @@ void c_add_callback (EIF_POINTER scr_obj, EIF_POINTER resource_name)
 
 EIF_POINTER c_add_input (EIF_POINTER app_context, EIF_INTEGER fid, EIF_POINTER mask)
 {
+#ifdef EIF_VMS
+	int efn = ipcvms_get_fd_efn(fid, O_RDONLY);
+	static int save_fid;
+	save_fid = fid;
+	fid = efn;
 	return (EIF_POINTER) XtAppAddInput ((XtAppContext) app_context, 
-								(int) fid,
-								(XtPointer) mask,
-								handle_input, 
-								NULL);
+			(int) fid,
+			(XtPointer) 0,	    /* can be an IOSB? */
+			handle_input, 
+			NULL);
+#else  /* EIF_VMS */
+	return (EIF_POINTER) XtAppAddInput ((XtAppContext) app_context, 
+			(int) fid,
+			(XtPointer) mask,
+			handle_input, 
+			NULL);
+#endif /* EIF_VMS */
 }
 
 EIF_POINTER c_add_timer (EIF_POINTER app_context, EIF_INTEGER time)
@@ -145,7 +162,11 @@ void c_add_event_handler (EIF_POINTER scr_obj, EIF_INTEGER mask)
 	XtAddEventHandler ((Widget) scr_obj, 
 				(EventMask) mask, 
 				False,
+#ifdef EIF_VMS
 				(XtEventHandler) handle_event, 
+#else
+				handle_event, 
+#endif
 				(XtPointer) mask);
 }
 
@@ -154,7 +175,11 @@ void c_remove_event_handler (EIF_POINTER scr_obj, EIF_INTEGER mask)
 	XtRemoveEventHandler ((Widget) scr_obj, 
 				(EventMask) mask, 
 				False,
+#ifdef EIF_VMS
 				(XtEventHandler) handle_event, 
+#else
+				handle_event, 
+#endif
 				(XtPointer) mask);
 }
 
@@ -190,7 +215,11 @@ void xt_remove_work_proc (EIF_POINTER id)
 	struct work_struct *ws = (struct work_struct *) id;
 
 	XtRemoveWorkProc (ws->id);
+#ifdef EIF_VMS
+	xfree (id);
+#else
 	xfree (ws);
+#endif
 }
 
 /*

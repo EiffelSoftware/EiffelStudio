@@ -266,7 +266,7 @@ feature {NONE} -- Events handling
 			lc: CHARACTER
 		do
 			if not to_be_inserted.text.is_empty then
-				searched_w := to_be_inserted.text.out
+				searched_w := to_be_inserted.text
 			end
 			build_displayed_list (searched_w)
 			if not choice_list.is_empty then

@@ -1,6 +1,5 @@
 indexing
 	description: "Temporization buffer used during the C generation"
-	author: "Emmanuel Stapf"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,7 +17,7 @@ inherit
 			clear_all
 		end
 
-creation
+create
 	make
 
 feature -- Status report
@@ -274,6 +273,8 @@ feature -- Element change
 	
 	putstring (s: STRING) is
 			-- Write string `s'.
+		require
+			s_not_void: s /= Void
 		do
 			emit_tabs
 			append (s)

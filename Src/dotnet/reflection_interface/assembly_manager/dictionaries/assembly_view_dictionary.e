@@ -10,22 +10,52 @@ inherit
 	
 feature -- Access
 
-	Alignment: INTEGER is 5
-			-- Alignment in list view
+	Cancel: INTEGER is 2
 		indexing
-			external_name: "Alignment"
-		end
-				
-	Close_button_label: STRING is "Close"
-			-- Close button label
-		indexing
-			external_name: "CloseButtonLabel"
+			description: "Value indicating that the `Cancel' button of the message box has been clicked"
+			external_name: "Cancel"
 		end
 		
-	List_view_border_style: INTEGER is 1
-			-- List view border style
+	Caption_text: STRING is "Types"
 		indexing
-			external_name: "ListViewBorderStyle"
+			description: "Text that appears in the blue header of the data grid"
+			external_name: "CaptionText"
+		end
+
+	Data_table_title: STRING is "Types table"
+		indexing
+			description: "Data table title"
+			external_name: "DataTableTitle"
+		end
+		
+	Edit_type: STRING is "ISE Assembly Manager will now edit the selected type. This may take a few seconds. Please be patient."
+		indexing
+			description: "Message displayed to the user before opening the type view"
+			external_name: "EditType"
+		end
+		
+	Empty_string: STRING is ""
+		indexing
+			description: "Empty string"
+			external_name: "EmptyString"
+		end	
+		
+	Row_height: INTEGER is 20
+		indexing
+			description: "Height of rows in data grid"
+			external_name: "RowHeight"
+		end
+
+	Scrollbar_width: INTEGER is 25
+		indexing
+			description: "Scrollbar width"
+			external_name: "ScrollbarWidth"
+		end
+		
+	System_string_type: STRING is "System.String"
+		indexing
+			description: "System.String type"
+			external_name: "SystemStringType"
 		end
 		
 	Title: STRING is "Assembly view"
@@ -33,17 +63,19 @@ feature -- Access
 		indexing
 			external_name: "Title"
 		end
-		
-	Types_label_text: STRING is "Types: "
-			-- Types label text
+
+feature -- Columns names
+
+	Eiffel_name_column_title: STRING is "Eiffel Name"
 		indexing
-			external_name: "TypesLabelText"
+			description: "Eiffel name column title"
+			external_name: "EiffelNameColumnTitle"
 		end
 
-	View: INTEGER is 3
-			-- View property for list view
+	External_name_column_title: STRING is "External Name"
 		indexing
-			external_name: "View"
+			description: "External name column title"
+			external_name: "ExternalNameColumnTitle"
 		end
-	
+		
 end -- class ASSEMBLY_VIEW_DICTIONARY

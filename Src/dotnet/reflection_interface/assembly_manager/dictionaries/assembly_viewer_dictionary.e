@@ -52,7 +52,7 @@ feature -- Menu items
 			external_name: "PublicKeyMenuItem"
 		end
 		
-	Dependancies_menu_item: STRING is "&Dependancies"
+	Dependancies_menu_item: STRING is "&Dependencies"
 		indexing
 			description: "Text of dependancies menu item"
 			external_name: "DependanciesMenuItem"
@@ -185,44 +185,38 @@ feature -- Toolbar constants
 		end
 
 feature -- Toolbar icons filename
-		
-	Name_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\open.bmp"
+	
+	Name_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_name_color.ico"
 		indexing
 			description: "Filename of icon on name toolbar button"
-			external_name: "NameIconFilename"
+			external_name: "NameIconFilename"			
 		end
 		
-	Version_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\dynlib.bmp"
+	Version_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_version_color.ico"
 		indexing
 			description: "Filename of icon on version toolbar button"
 			external_name: "VersionIconFilename"
 		end
 
-	Culture_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\general.bmp"
+	Culture_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_culture_color.ico"
 		indexing
 			description: "Filename of icon on culture toolbar button"
 			external_name: "CultureIconFilename"
 		end
 		
-	Public_key_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\explain.bmp"
+	Public_key_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_key_color.ico"
 		indexing
 			description: "Filename of icon on public key toolbar button"
 			external_name: "PublicKeyIconFilename"
 		end
 		
-	Dependancies_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\general.bmp"
+	Dependancies_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_dependencies_color.ico"
 		indexing
 			description: "Filename of icon on dependancies toolbar button"
 			external_name: "DependanciesIconFilename"
 		end
-		
-	Show_all_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\general.bmp"
-		indexing
-			description: "Filename of icon on `show all' toolbar button"
-			external_name: "ShowAllIconFilename"
-		end
-				
-	Help_icon_filename: STRING is "F:\Eiffel50\bench\bitmaps\bmp\explicon.bmp"
+						
+	Help_icon_filename: STRING is "F:\Src\dotnet\reflection_interface\assembly_manager\icons\icon_assembly_help_color.ico"
 		indexing
 			description: "Filename of icon on help toolbar button"
 			external_name: "HelpIconFilename"
@@ -254,7 +248,7 @@ feature -- Columns names
 			external_name: "AssemblyPublicKeyColumnTitle"
 		end
 
-	Dependancies_column_title: STRING is "Dependancies"
+	Dependancies_column_title: STRING is "Dependencies"
 		indexing
 			description: "Dependancies column title"
 			external_name: "DependanciesColumnTitle"
@@ -266,18 +260,6 @@ feature -- Other constants
 		indexing
 			description: "Cell info type"
 			external_name: "Cell"
-		end
-	
-	Column_header: INTEGER is 2
-		indexing
-			description: "Column header info type"
-			external_name: "ColumnHeader"
-		end
-	
-	Column_resize: INTEGER is 8
-		indexing
-			description: "Column resize info type"
-			external_name: "ColumnResize"
 		end
 	
 	Data_table_title: STRING is "Assemblies table"
@@ -316,23 +298,17 @@ feature -- Other constants
 			external_name: "RowHeight"
 		end
 	
-	Row_resize: INTEGER is 16
+	Scrollbar_width: INTEGER is 25
 		indexing
-			description: "Row resize info type"
-			external_name: "RowResize"
+			description: "Scrollbar width"
+			external_name: "ScrollbarWidth"
 		end
-	
+		
 	System_string_type: STRING is "System.String"
 		indexing
 			description: "System.String type"
 			external_name: "SystemStringType"
 		end
-		
---	System_windows_forms_mouse_event_handler_type: STRING is "System.Windows.Forms.MouseEventHandler"
---		indexing
---			description: "System.Windows.Forms.MouseEventHandler type"
---			external_name: "SystemWindowsFormsMouseEventHandlerType"
---		end
 		
 	Title: STRING is "ISE Assembly Manager"
 		indexing
@@ -354,4 +330,10 @@ feature -- Other constants
 			external_name: "WindowHeight"
 		end	
 
+	Window_width: INTEGER is 750
+			-- Window width
+		indexing
+			external_name: "WindowWidth"
+		end
+		
 end -- class ASSEMBLY_VIEWER_DICTIONARY	

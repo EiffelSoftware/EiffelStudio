@@ -69,7 +69,7 @@ feature -- Access
 		indexing
 			external_name: "ListHeight"
 		once
-			Result := Window_height - 14 * Margin - 6 * Label_height - 2 * Button_height
+			Result := Window_height - 12 * Margin - 6 * Label_height - 2 * Button_height
 		end
 
 	List_view_border_style: INTEGER is 1
@@ -146,10 +146,16 @@ feature -- Access
 			external_name: "View"
 		end
 
-	Window_height: INTEGER is 600
+	Window_height: INTEGER is 400
 			-- Window height
 		indexing
 			external_name: "WindowHeight"
 		end
 
+	Window_width: INTEGER is 650
+			-- Window width
+		indexing
+			external_name: "WindowWidth"
+		end
+		
 end -- class RENAME_CLAUSES_VIEWER_DICTIONARY

@@ -10,12 +10,6 @@ inherit
 	
 feature -- Access
 
-	Access: INTEGER is 2
-			-- Constant corresponding to access feature clause
-		indexing
-			external_name: "Access"
-		end	
-
 	Access_comment: STRING is "-- Access"
 			-- Comment for access feature clause
 		indexing
@@ -28,23 +22,23 @@ feature -- Access
 			external_name: "AlignLeft"
 		end
 
-	Basic_operations: INTEGER is 4
-			-- Constant corresponding to basic operations feature clause
+	Alignment: INTEGER is 1
+			-- Left alignment (in list view)
 		indexing
-			external_name: "BasicOperations"
-		end		
-
+			external_name: "Alignment"
+		end
+		
+	Argument_string: STRING is "Argument"
+		indexing
+			description: "Argument string"
+			external_name: "ArgumentString"
+		end
+		
 	Basic_operations_comment: STRING is "-- Basic Operations"
 			-- Comment for basic operations feature clause
 		indexing
 			external_name: "BasicOperationsComment"
 		end
-
-	Binary_operators: INTEGER is 6
-			-- Constant corresponding to binary operators feature clause
-		indexing
-			external_name: "BinaryOperators"
-		end	
 
 	Binary_operators_comment: STRING is "-- Binary Operators"
 			-- Comment for binary operators clause
@@ -57,6 +51,18 @@ feature -- Access
 		indexing
 			external_name: "CancelButtonLabel"
 		end
+	
+	Check_validity_message: STRING is "ISE Assembly Manager will now check the validity of your changes. Please wait."
+		indexing
+			description: "Message to the user before starting verification of the class"
+			external_name: "CheckValidityMessage"
+		end
+	
+	Class_name: STRING is "Class Name"
+		indexing
+			description: "Class name string"
+			external_name: "ClassName"
+		end
 		
 	Class_color: SYSTEM_DRAWING_COLOR is
 			-- Class color
@@ -67,9 +73,21 @@ feature -- Access
 		end
 
 	Closing_curl_bracket: STRING is "}"
-			-- Closing round bracket
+			-- Closing curl bracket
 		indexing
 			external_name: "ClosingCurlBracket"
+		end
+
+	Closing_round_bracket: STRING is ")"
+			-- Closing round bracket
+		indexing
+			external_name: "ClosingRoundBracket"
+		end
+	
+	Colon: STRING is ":"
+		indexing
+			description: "Colon"
+			external_name: "Colon"
 		end
 		
 	Comment_color: SYSTEM_DRAWING_COLOR is
@@ -80,16 +98,36 @@ feature -- Access
 			Result := Result.DarkRed
 		end
 
-	Element_change: INTEGER is 3
-			-- Constant corresponding to element change feature clause
+	Editable_color: SYSTEM_DRAWING_COLOR is
+			-- Color for editable text fields
 		indexing
-			external_name: "ElementChange"
+			external_name: "EditableColor"
+		once
+			Result := Result.Ivory
 		end
-
+	
+	Eiffel_generation_question: STRING is "Your changes have been saved in the Eiffel assembly cache. Would you like to regenerate Eiffel sources too?"
+		indexing
+			description: "Question to the user after saving changes in the XML files"
+			external_name: "EiffelGenerationQuestion"
+		end
+		
 	Element_change_comment: STRING is "-- Element Change"
 			-- Comment for element change feature clause
 		indexing
 			external_name: "ElementChangeComment"
+		end
+	
+	Enter_key: INTEGER is 13
+		indexing
+			description: "Enter key"
+			external_name: "EnterKey"
+		end
+
+	Error: STRING is "Error"
+		indexing
+			description: "Error string"
+			external_name: "Error"
 		end
 		
 	Feature_color: SYSTEM_DRAWING_COLOR is
@@ -106,22 +144,16 @@ feature -- Access
 			external_name: "FeatureKeyword"
 		end		
 
-	Implementation: INTEGER is 8
-			-- Constant corresponding to implementation feature clause
+	Feature_string: STRING is "Feature"
+			-- Feature string
 		indexing
-			external_name: "Implementation"
+			external_name: "FeatureString"
 		end	
-
+		
 	Implementation_comment: STRING is "-- Implementation"
 			-- Comment for implementation clause
 		indexing
 			external_name: "ImplementationComment"
-		end
-
-	Initialization: INTEGER is 1
-			-- Constant corresponding to initialization feature clause
-		indexing
-			external_name: "Initialization"
 		end
 
 	Initialization_comment: STRING is "-- Initialization"
@@ -144,6 +176,12 @@ feature -- Access
 			Result := Result.DarkBlue
 		end
 
+	List_view_border_style: INTEGER is 1
+		indexing
+			description: "List view border style"
+			external_name: "ListViewBorderStyle"
+		end
+		
 	None_class: STRING is "NONE"
 			-- `NONE' class
 		indexing
@@ -157,11 +195,17 @@ feature -- Access
 		end
 
 	Opening_curl_bracket: STRING is "{"
-			-- Opening round bracket
+			-- Opening curl bracket
 		indexing
 			external_name: "OpeningCurlBracket"
 		end
-	
+
+	Opening_round_bracket: STRING is "("
+			-- Opening round bracket
+		indexing
+			external_name: "OpeningRoundBracket"
+		end
+		
 	Red_color: SYSTEM_DRAWING_COLOR is
 			-- Red color
 		indexing
@@ -170,12 +214,12 @@ feature -- Access
 			Result := Result.Red
 		end
 
-	Specials: INTEGER is 7
-			-- Constant corresponding to specials feature clause
+	Space: STRING is " "
 		indexing
-			external_name: "Specials"
-		end	
-
+			description: "Space as a string"
+			external_name: "Space"
+		end
+		
 	Specials_comment: STRING is "-- Specials"
 			-- Comment for specials clause
 		indexing
@@ -196,18 +240,18 @@ feature -- Access
 			external_name: "Title"
 		end
 
-	Unary_operators: INTEGER is 5
-			-- Constant corresponding to unary operators feature clause
-		indexing
-			external_name: "UnaryOperators"
-		end
-
 	Unary_operators_comment: STRING is "-- Unary Operators"
 			-- Comment for unary operators clause
 		indexing
 			external_name: "UinaryOperatorsComment"
 		end
 
+	View: INTEGER is 2
+		indexing
+			description: "List view"
+			external_name: "View"
+		end
+		
 	White_color: SYSTEM_DRAWING_COLOR is
 			-- White color
 		indexing

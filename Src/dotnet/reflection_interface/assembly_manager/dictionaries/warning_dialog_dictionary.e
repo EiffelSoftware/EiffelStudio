@@ -6,7 +6,7 @@ class
 	WARNING_DIALOG_DICTIONARY
 
 inherit
-	DIALOG_DICTIONARY
+	DEPENDANCY_DIALOG_DICTIONARY
 	
 feature -- Access
 
@@ -15,29 +15,23 @@ feature -- Access
 		indexing
 			external_name: "AssemblyLabelText"
 		end
-	
-	Dependancies_label_text: STRING is "Dependancies: "
-			-- Text of dependancies label
-		indexing
-			external_name: "DependanciesLabelText"
-		end
-
+		
 	No_button_label: STRING is "No"
 			-- No button label
 		indexing
 			external_name: "NoButtonLabel"
 		end
 		
-	Title: STRING is "WARNING - Assembly manager"
+	Title: STRING is "WARNING - ISE Assembly Manager"
 			-- Window title
 		indexing
 			external_name: "Title"
 		end
-		
+
 	Yes_button_label: STRING is "Yes"
 			-- Yes button label
 		indexing
 			external_name: "YesButtonLabel"
 		end
-
+		
 end -- class WARNING_DIALOG_DICTIONARY

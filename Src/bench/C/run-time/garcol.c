@@ -264,7 +264,7 @@ rt_public EIF_REFERENCE root_obj = (EIF_REFERENCE) 0;
 
 #endif /* !EIF_THREADS */
 
-#ifndef NDEBUG
+#ifdef DEBUG
 rt_private int nb_items(register1 struct stack *);	
 #endif
 									/* Number of items held in a stack */
@@ -1021,7 +1021,10 @@ rt_public void reclaim(void)
 #endif /* EIF_THREADS */
 
 #ifdef LMALLOC_CHECK
-	eif_lm_display ();
+#ifdef EIF_THREADS
+	if (eif_thr_is_root ())	
+#endif
+		eif_lm_display ();
 #endif
 	EIF_END_GET_CONTEXT
 }

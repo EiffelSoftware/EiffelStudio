@@ -9,7 +9,7 @@ class OPERATOR_TEXT
 
 inherit
 
-	FEATURE_NAME_TEXT
+	FEATURE_TEXT
 		redefine
 			append_to
 		end

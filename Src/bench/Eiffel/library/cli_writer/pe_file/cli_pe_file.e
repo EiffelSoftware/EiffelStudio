@@ -276,6 +276,11 @@ feature -- Saving
 			is_valid := False
 			
 			if has_strong_name then
+				check
+						-- Signing should be available as it is checked
+						-- by caller.
+					Signing_should_be_present: (create {MD_STRONG_NAME}).present
+				end
 				create l_pe_file.make_open_read (file_name)
 				create l_padding.make (l_pe_file.count)
 				l_pe_file.read_data (l_padding.item, l_padding.count)

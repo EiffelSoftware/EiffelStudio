@@ -12,7 +12,7 @@ extern EIF_INTEGER xm_text_get_end_of_selection (EIF_POINTER w);
 extern EIF_BOOLEAN xm_text_is_selection_active (EIF_POINTER w);
 extern EIF_INTEGER xm_text_x_coord (EIF_POINTER widget, EIF_INTEGER pos);
 extern EIF_INTEGER xm_text_y_coord (EIF_POINTER widget, EIF_INTEGER pos);
-EIF_INTEGER xm_text_find_string (EIF_POINTER widget, EIF_INTEGER pos, char *pattern);
+EIF_INTEGER xm_text_find_string (Widget widget, EIF_INTEGER pos, char *pattern);
 
 
 /*

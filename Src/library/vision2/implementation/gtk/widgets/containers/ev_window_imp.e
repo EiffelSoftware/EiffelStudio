@@ -18,7 +18,9 @@ inherit
 		undefine
 			initialize_colors
 		redefine
-			add_child
+			add_child,
+			x,
+			y
 		end
 	
 creation
@@ -92,6 +94,18 @@ feature  -- Access
                 end 
 
 feature -- Measurement
+
+	x: INTEGER is
+			-- Horizontal position relative to parent
+		do
+			Result := c_gtk_window_x (widget) 
+		end
+
+	y: INTEGER is
+			-- Vertical position relative to parent
+		do
+			Result := c_gtk_window_y (widget) 
+		end	
 
 	maximum_width: INTEGER is
 			-- Maximum width that application wishes widget
@@ -195,6 +209,27 @@ feature -- Resizing
 		do
 		end
 
+feature -- Event - command association
+
+	add_resize_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		local
+			ev_data: EV_EVENT_DATA		
+		do
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+			add_command_with_event_data ("configure_event", command, arguments, ev_data, 2, False)
+		end
+
+	add_move_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		local
+			ev_data: EV_EVENT_DATA		
+		do
+			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
+			add_command_with_event_data ("configure_event", command, arguments, ev_data, 1, False)
+		end
 
 feature {NONE} -- Implementation
 	

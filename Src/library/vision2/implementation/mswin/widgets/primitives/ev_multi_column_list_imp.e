@@ -23,6 +23,7 @@ inherit
 			on_left_button_up,
 			on_middle_button_up,
 			on_right_button_up,
+			on_mouse_move,
 			on_key_down,
 			interface
 		end
@@ -163,8 +164,7 @@ feature -- Access
 			end			
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): 
-				EV_MULTI_COLUMN_LIST_ROW_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- Find the item at the given position.
 			-- Position is relative to the toolbar.
 		local
@@ -620,6 +620,18 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
+	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
+		-- Propagate `event_id' to the good item. 
+		local 
+			it: EV_MULTI_COLUMN_LIST_ROW_IMP 
+	do
+		it := find_item_at_position (x_pos, y_pos) 
+		if it /= Void then 
+		--it.execute_command (event_id, ev_data) 
+		end 
+	end 
+
+
 	process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is
 			-- Call the routine `on_*' corresponding to the
@@ -767,7 +779,24 @@ feature {NONE} -- WEL Implementation
 			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
 		end
 
-feature {EV_PND_TRANSPORTER_IMP}
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+			-- Mouse moved on list.
+		local
+			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			pt: WEL_POINT
+			offsets: TUPLE [INTEGER, INTEGER]
+		do
+			mcl_row := find_item_at_position (x_pos, y_pos)
+			if mcl_row /= Void then
+				pt := client_to_screen (x_pos, y_pos)
+				offsets := mcl_row.relative_position
+				mcl_row.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end
+
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
 	child_y (child: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
 			-- `Result' is relative ycoor of row to `parent_imp'
@@ -857,6 +886,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/03/13 23:15:21  rogers
+--| Added internal_propagate_event, not yet implemented. Redfined on_mouse_move from ev_primitive and call the pointer_motion_actions on an item if required. Changed the export status of implementation feature to {EV_MULTI_COLUMN_LIST_ROW_IMP}.
+--|
 --| Revision 1.48  2000/03/13 22:22:13  rogers
 --| Fixed set_columns so if the list does not have a parent and items are added, the default_parent will be used.
 --|

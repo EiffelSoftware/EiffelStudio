@@ -1,0 +1,43 @@
+INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
+DELDIR = rd /q /s
+LN = copy 
+RM = del
+CP = copy
+CFLAGS = -tWM -DEIF_THREADS -I$(INCLUDE_PATH)
+FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
+EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+EIFLIB = EIFGEN\W_code\libbank_account.lib 
+LIBS = 
+OBJECTS = main.obj fext.obj
+
+all: $(OBJECTS) compile_eiffel compile_c bank_account.exe
+
+compile_eiffel:
+	$(EC) -freeze
+
+compile_c:
+	cd EIFGEN\W_code
+	$(FINISH_FREEZING)
+	$(MAKE) cecil
+	cd ..\..
+
+bank_account.exe: $(OBJECTS) EIFGEN\W_code\libbank_account.lib
+	$(LN) EIFGEN\W_code\bank_account.melted bank_account.melted
+	ilink32 -ap -c -Tpe main.obj c0w32.obj, $@,,\
+		EIFGEN\W_code\libbank_account.lib CW32MT IMPORT32 OLE2w32,,
+
+clean:
+	$(RM) main.obj 
+	$(RM) fext.obj 
+	$(RM) core 
+	$(RM) bank_account.epr
+	$(RM) bank_account.ilc
+	$(RM) bank_account.ild
+	$(RM) bank_account.ilf
+	$(RM) bank_account.ils
+	$(RM) bank_account.map
+	$(RM) bank_account.melted
+	$(RM) bank_account.rc
+	$(RM) bank_account.tds
+	$(DELDIR) EIFGEN
+	

@@ -661,7 +661,7 @@ feature -- Output
 					--| header, we need to set the position, otherwise the
 					--| result is quite strange and won't be retrievable
 				project_file.go (project_file.count)
-				project_file.basic_store (Current)
+				project_file.independent_store (Current)
 				project_file.close
 			else
 				if project_file /= Void and then not project_file.is_closed then

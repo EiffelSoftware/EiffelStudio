@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>EXECUTION_ENVIRONMENT Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -49,7 +49,7 @@
 			<SPAN CLASS="etag">root_directory_supported</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_operating_environment">operating_environment</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/support/operating_environment.html#f_root_directory_supported">root_directory_supported</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">result_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_change_working_directory"><A CLASS="efeature" HREF="../../../base/reference/support/execution_environment.html#f_change_working_directory">change_working_directory</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">path</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
@@ -76,12 +76,12 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If </SPAN><SPAN CLASS="equoted">s</SPAN><SPAN CLASS="ecomment"> is empty, use the default shell as command.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">s_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">s</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status</SPAN>
 
 	<A NAME="f_return_code"><A CLASS="efeature" HREF="../../../base/reference/support/execution_environment.html#f_return_code">return_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status code set by last call to </SPAN><A CLASS="efeature" HREF="../../../base/reference/support/execution_environment.html#f_system">system</A><SPAN CLASS="ecomment"> or </SPAN><A CLASS="efeature" HREF="../../../base/reference/support/execution_environment.html#f_put">put</A><SPAN CLASS="ecomment"></SPAN>
-	
+
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
@@ -101,7 +101,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

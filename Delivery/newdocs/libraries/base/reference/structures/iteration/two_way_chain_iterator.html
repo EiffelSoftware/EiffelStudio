@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>TWO_WAY_CHAIN_ITERATOR Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -37,7 +37,7 @@
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/iteration/iterator.html">ITERATOR</A>
 			<A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN>
 			<A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
 	<A NAME="f_item"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/linear_iterator.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN>
@@ -52,7 +52,7 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
 	<A NAME="f_target"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/list/chain.html">CHAIN</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_invariant_value"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/iterator.html#f_invariant_value">invariant_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -61,7 +61,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="ecomment">; if so, make sure that the result is defined</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> when `target = Void'.)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/iteration/iterator.html">ITERATOR</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Cursor movement</SPAN>
 
 	<A NAME="f_back"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_back">back</A>
@@ -85,13 +85,13 @@
 	<A NAME="f_start"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/linear_iterator.html#f_start">start</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to first position of </SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
 
 	<A NAME="f_internal_item_tuple"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/linear_iterator.html#f_internal_item_tuple">internal_item_tuple</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Field holding the last item of </SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="ecomment"></SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A><SPAN CLASS="ecomment">)</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Iteration</SPAN>
 
 	<A NAME="f_continue_for"><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/linear_iterator.html#f_continue_for">continue_for_back</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">action</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/procedure.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/tuple.html">TUPLE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
@@ -367,7 +367,7 @@
 			<SPAN CLASS="etag">test_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">test</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
 			<SPAN CLASS="etag">finished</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/linear_iterator.html#f_exhausted">exhausted</A> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">test</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/function.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../../base/reference/structures/iteration/linear_iterator.html#f_item_tuple">item_tuple</A><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/kernel/any.html">ANY</A>
@@ -393,7 +393,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

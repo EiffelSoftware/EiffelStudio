@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>MEM_INFO Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -22,7 +22,7 @@
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
 	<A CLASS="eclass" HREF="../../../base/reference/kernel/mem_info.html">MEM_INFO</A>
 
-<SPAN CLASS="ekeyword">create</SPAN> 
+<SPAN CLASS="ekeyword">create</SPAN>
 
 	<A NAME="f_make"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Update Current for </SPAN><SPAN CLASS="equoted">memory</SPAN><SPAN CLASS="ecomment"> type.</SPAN>
@@ -43,7 +43,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/mem_info.html">MEM_INFO</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_make">make</A><SPAN CLASS="ecomment">.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">type_updated</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_type">type</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">memory</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
 	<A NAME="f_c_memory"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_const.html#f_c_memory">C_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
@@ -71,7 +71,7 @@
 
 	<A NAME="f_type"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Memory type (Total, Eiffel, C)</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
 	<A NAME="f_free"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_free">free</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
@@ -91,7 +91,7 @@
 	<A NAME="f_used"><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_used">used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of bytes used for </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_type">type</A><SPAN CLASS="ecomment"></SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
-	
+
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 	<SPAN CLASS="etag">consistent_memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_total">total</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_free">free</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_used">used</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/integer_ref.html#f__infix_plus">+</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/mem_info.html#f_overhead">overhead</A>
@@ -112,7 +112,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

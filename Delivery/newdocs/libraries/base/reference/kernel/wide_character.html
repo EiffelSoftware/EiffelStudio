@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>WIDE_CHARACTER Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -36,7 +36,7 @@
 	<A NAME="f_item"><A CLASS="efeature" HREF="../../../base/reference/kernel/wide_character_ref.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/wide_character.html">WIDE_CHARACTER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Unicde character value</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/wide_character_ref.html">WIDE_CHARACTER_REF</A><SPAN CLASS="ecomment">)</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Comparison</SPAN>
 
 	<A NAME="f_is_equal"><A CLASS="efeature" HREF="../../../base/reference/kernel/wide_character_ref.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -111,25 +111,25 @@
 			<SPAN CLASS="etag">other_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/comparable.html">COMPARABLE</A>
 			<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_is_hashable"><A CLASS="efeature" HREF="../../../base/reference/kernel/wide_character_ref.html#f_is_hashable">Is_hashable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="ekeyword">True</SPAN></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> May current object be hashed?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/wide_character_ref.html">WIDE_CHARACTER_REF</A><SPAN CLASS="ecomment">)</SPAN>
-	
+
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_set_item"><A CLASS="efeature" HREF="../../../base/reference/kernel/wide_character_ref.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/wide_character.html">WIDE_CHARACTER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> the </SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/wide_character_ref.html#f_item">item</A><SPAN CLASS="ecomment"> value.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/wide_character_ref.html">WIDE_CHARACTER_REF</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output</SPAN>
 
 	<A NAME="f_out"><A CLASS="efeature" HREF="../../../base/reference/kernel/wide_character_ref.html#f_out">out</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Printable representation of wide character</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/wide_character_ref.html">WIDE_CHARACTER_REF</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
@@ -151,7 +151,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

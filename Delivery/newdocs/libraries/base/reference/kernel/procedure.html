@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>PROCEDURE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -38,7 +38,7 @@
 			<SPAN CLASS="etag">conforming</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A>
 			<SPAN CLASS="etag">same_call_status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
 	<A NAME="f_hash_code"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_hash_code">hash_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
@@ -71,13 +71,13 @@
 	<A NAME="f_target"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Target of call.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
 	<A NAME="f_open_count"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_open_count">open_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of open operands.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_callable"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -104,7 +104,7 @@
 	<A NAME="f_valid_operands"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are </SPAN><SPAN CLASS="equoted">args</SPAN><SPAN CLASS="ecomment"> valid operands for this routine?</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_set_operands"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_set_operands">set_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -112,7 +112,7 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A>
 			<SPAN CLASS="etag">valid_operands</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
 
 	<A NAME="f_copy"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -125,7 +125,7 @@
 			<SPAN CLASS="etag">is_equal</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A>
 			<SPAN CLASS="etag">same_call_status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
 
 	<A NAME="f_call"><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_call">call</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">OPEN_ARGS</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -134,7 +134,7 @@
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A>
 			<SPAN CLASS="etag">valid_operands</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">args</SPAN><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="etag">callable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Calls</SPAN>
 
 	<A NAME="f_apply"><A CLASS="efeature" HREF="../../../base/reference/kernel/procedure.html#f_apply">apply</A>
@@ -142,7 +142,7 @@
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/routine.html">ROUTINE</A>
 			<SPAN CLASS="etag">valid_operands</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_valid_operands">valid_operands</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_operands">operands</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="etag">callable</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/routine.html#f_callable">callable</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
@@ -162,7 +162,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

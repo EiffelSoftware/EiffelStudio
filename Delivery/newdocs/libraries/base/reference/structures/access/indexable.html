@@ -1,10 +1,10 @@
 <HTML>
 	<HEAD>
-		
+
 <META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
+
 <TITLE>INDEXABLE Flat contracts</TITLE>
-		
+
 <LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 
 	</HEAD>
@@ -45,7 +45,7 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/table.html">TABLE</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/table.html">TABLE</A>
 			<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/indexable.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
 
 	<A NAME="f_index_set"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/indexable.html#f_index_set">index_set</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_interval.html">INTEGER_INTERVAL</A>
@@ -60,7 +60,7 @@
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/bag.html">BAG</A><SPAN CLASS="ecomment">)</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/bag.html">BAG</A>
 			<SPAN CLASS="etag">non_negative_occurrences</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
 
 	<A NAME="f_changeable_comparison_criterion"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean.html">BOOLEAN</A>
@@ -96,7 +96,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> a valid index?</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
 			<SPAN CLASS="etag">only_if_in_index_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/indexable.html#f_index_set">index_set</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/integer_interval.html#f_lower">lower</A><SPAN CLASS="esymbol">)</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__infix_and">and</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/indexable.html#f_index_set">index_set</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../../base/reference/kernel/integer_interval.html#f_upper">upper</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
 
 	<A NAME="f_compare_objects"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_compare_objects">compare_objects</A>
@@ -116,7 +116,7 @@
 			<A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/container.html">CONTAINER</A>
 			<SPAN CLASS="etag">reference_comparison</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
 
 	<A NAME="f_extend"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/bag.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -144,7 +144,7 @@
 			<SPAN CLASS="etag">valid_key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/indexable.html#f_valid_index">valid_index</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
 			<SPAN CLASS="etag">insertion_done</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/table.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">k</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
 
 	<A NAME="f_prune"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prune">prune</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN>
@@ -172,13 +172,13 @@
 			<A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prunable">prunable</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/collection.html">COLLECTION</A>
 			<SPAN CLASS="etag">wiped_out</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_is_empty">is_empty</A>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
 
 	<A NAME="f_linear_representation"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/traversing/linear.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Representation as a linear structure</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../../base/reference/structures/access/container.html">CONTAINER</A><SPAN CLASS="ecomment">)</SPAN>
-</A>	
+</A>
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
 	<SPAN CLASS="etag">index_set_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/structures/access/indexable.html#f_index_set">index_set</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../../base/reference/kernel/any.html#f_void">void</A>
@@ -199,7 +199,7 @@
 <SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
 <SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
 <SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
-<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/../base/reference/license.html">http://eiffel.com/products/../base/reference/license.html</A><SPAN CLASS="estring">.</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
 	<SPAN CLASS="estring">]"</SPAN>
 	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
 <SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>

@@ -74,8 +74,6 @@ feature {NONE} -- Initialization
 			C.gtk_container_add (c_object, drawing_area_widget)
 			C.gtk_container_set_focus_child (c_object, NULL)
 			gc := C.gdk_gc_new (default_gdk_window)
-			gcvalues := C.c_gdk_gcvalues_struct_allocate
-			c.gdk_gc_get_values (gc, gcvalues)
 			init_default_values
 			gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
 				-- Needed for focus hack

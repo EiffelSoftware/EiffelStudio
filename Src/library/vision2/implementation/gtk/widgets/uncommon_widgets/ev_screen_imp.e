@@ -32,9 +32,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			gc := C.gdk_gc_new (drawable)
-			gcvalues := C.c_gdk_gcvalues_struct_allocate
 			C.gdk_gc_set_subwindow (gc, C.Gdk_include_inferiors_enum)
-			C.gdk_gc_get_values (gc, gcvalues)
 			init_default_values
 		end
 
@@ -50,7 +48,6 @@ feature {NONE} -- Initialization
 
 	destroy is
 		do
-			C.c_gdk_gcvalues_struct_free (gcvalues)
 			C.gdk_gc_unref (gc)
 			is_destroyed := True
 		end

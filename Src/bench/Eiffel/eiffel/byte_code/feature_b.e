@@ -324,7 +324,7 @@ feature -- IL code generation
 				
 				if need_generation then
 						-- Perform call to feature
-					if is_any_feature then
+					if is_any_feature and precursor_type = Void then
 						generate_il_any_call (target_type, cl_type,
 							cl_type.is_reference or else real_metamorphose)
 					else
@@ -358,6 +358,7 @@ feature {NONE} -- IL code generation
 			is_any_feature: is_any_feature
 			written_type_not_void: written_type /= Void
 			target_type_not_void: target_type /= Void
+			not_precursor_call: precursor_type = Void
 		do
 		end
 

@@ -9,7 +9,7 @@ deferred class
 
 inherit
 	DB_TABLES_ACCESS_USE
-
+	
 feature -- Initialization
 
 	make is
@@ -93,8 +93,17 @@ feature -- Access
 			-- String value of attribute with `code'.
 		require
 			valid_code: valid (code)
+		local
+			r_any: ANY
 		do
-			Result := attribute (code).out
+			r_any := attribute (code)
+			if r_any /= Void then
+				Result := r_any.out
+			else
+				Result := ""
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	set_attribute (code: INTEGER; value: ANY) is

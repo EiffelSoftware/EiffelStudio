@@ -525,205 +525,199 @@ feature -- Generation
 
 			current_class := associated_class
 
-			if current_class.types.search_item (type) = Current then
-					-- Do not generate twice the same type if it has
-					-- been derived in two different merged precompiled
-					-- libraries.
-
-					-- Clear buffers for the new generation
-				buffer := generation_buffer
-				buffer.clear_all
-				header_buffer := header_generation_buffer
-				header_buffer.clear_all
-				if final_mode then
-					create headers.make (100)
-				end
-
-				feature_table := current_class.feature_table
-				if final_mode then
-						-- Check to see if there is really something to generate
-	
-					generate_c_code := has_creation_routine or else
-							(current_class.has_invariant and then
-							 current_class.assertion_level.check_invariant)
-					from
-						feature_table.start
-					until
-						generate_c_code or else feature_table.after
-					loop
-						feature_i := feature_table.item_for_iteration
-						if feature_i.to_generate_in (current_class) then
-							generate_c_code := feature_i.used
-						end
-						feature_table.forth
-					end
-				else
-					generate_c_code := is_modifiable
-				end
-
-				if generate_c_code then
-						-- First, we reset the `has_cpp_externals_calls' of `BYTE_CONTEXT'
-						-- which will enable us to know wether or not a C++ call has been
-						-- generated
-					byte_context.set_has_cpp_externals_calls (False)
-						-- Then we reset `global_onces'.
-					byte_context.reset_global_onces
-
-					if final_mode then
-						tmp := headers
-					else
-						tmp := header_buffer
-					end
-
-							-- Write header
-					tmp.putstring ("/*%N * Code for class ")
-					type.dump (tmp)
-					tmp.putstring ("%N */%N%N")
-						-- Includes wanted
-					tmp.putstring ("#include %"eif_eiffel.h%"%N%N")
-
-
-					if final_mode then
-						headers.putstring ("%N#include %"")
-						headers.putstring (base_file_name)
-						headers.putstring (".h%"%N%N")
-	
-							-- Generation of extern declarations
-						header_buffer.putstring ("#ifndef ")
-						header_buffer.putstring (already_included_header)
-						header_buffer.putstring ("%N#define ")
-						header_buffer.putstring (already_included_header)
-						header_buffer.new_line
-						Extern_declarations.generate_header (header_buffer)
-					else
-						header_buffer.start_c_specific_code
-					end
-
-					buffer.open_write_c
-
-					byte_context.set_buffer (buffer)
-					byte_context.set_header_buffer (header_buffer)
-
-					if final_mode and then has_creation_routine then
-							-- Generate the creation routine in final mode
-						generate_creation_routine (buffer, header_buffer)
-					end
-
-					from
-						feature_table.start
-						byte_context.init (Current)
-					until
-						feature_table.after
-					loop
-						feature_i := feature_table.item_for_iteration
-						if feature_i.to_generate_in (current_class) then
-							if feature_i.is_once then
-									-- If it's a once, give it a key.
-								byte_context.set_once_index (once_count)
-								once_count := once_count + 1
-								if once_count = 1 then
-										--| First declaration of EIF_oidx_off in the
-										--| C code
-									buffer.putstring ("static int EIF_oidx_off")
-									buffer.putint (static_type_id)
-									buffer.putstring (" = 0;%N")
-								end
-							end
-							
-								-- Generate the C code of `feature_i'
-							generate_feature (feature_i, buffer)
-						end
-						feature_table.forth
-					end
-
-						-- Create module initialization procedure
-					buffer.generate_function_signature ("void", Encoder.module_init_name
-						(static_type_id), True, header_buffer, <<>>, <<>>)
-	
-					if once_count > 0 then
-						buffer.indent
-						buffer.putstring ("EIF_oidx_off")
-						buffer.putint (static_type_id)
-						buffer.putstring (" = EIF_once_count;")
-						buffer.new_line
-						buffer.putstring ("EIF_once_count += ")
-						buffer.putint (once_count)
-						buffer.putchar (';')
-						l_globals := byte_context.global_onces
-						from
-							l_globals.start
-						until
-							l_globals.after
-						loop
-							buffer.new_line
-							buffer.putstring (encoder.feature_name (static_type_id, l_globals.item))
-							buffer.putstring ("_mutex = eif_thr_mutex_create ();")
-							l_globals.forth
-						end
-						buffer.exdent
-					end
-
-					buffer.new_line
-					buffer.putchar ('}')
-					buffer.new_line
-					buffer.new_line
-
-					if
-						current_class.has_invariant and then
-						((not final_mode) or else
-						current_class.assertion_level.check_invariant)
-					then
-						inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
-						byte_context.set_byte_code (create {STD_BYTE_CODE})
-						inv_byte_code.generate_invariant_routine
-						byte_context.clear_all
-					end
-	
-					if final_mode then
-						Extern_declarations.generate (header_buffer)
-						Extern_declarations.generate_header_files (headers)
-						Extern_declarations.wipe_out
-
-							-- End of header protection
-						header_buffer.putstring ("%N#endif%N")
-
-						create extern_decl_file.make_open_write (extern_declaration_filename)
-						header_buffer.put_in_file (extern_decl_file)
-						extern_decl_file.close
-					else
-						Extern_declarations.generate (header_buffer)
-						Extern_declarations.generate_header_files (header_buffer)
-						Extern_declarations.wipe_out
-					end
-					buffer.close_c
-
-					if not final_mode then
-							-- Give the information status in Workbench mode only on the
-							-- C generate file type (either .c/.x or .cpp/.xpp)
-							-- This information is used later to create the `file_to_compile'
-							-- file in each sudirectories of the W_code.
-						set_has_cpp_externals (byte_context.has_cpp_externals_calls)
-						file := open_generation_file (has_cpp_externals)
-					else
-						file := open_generation_file (byte_context.has_cpp_externals_calls)
-					end
-					
-					if not final_mode then
-						Header_generation_buffer.put_in_file (file)
-					else
-						headers.put_in_file (file)
-					end
-					buffer.put_in_file (file)
-					file.close
-
-				else
-						-- The file hasn't been generated
-					System.makefile_generator.record_empty_class_type (static_type_id)
-				end
-
-					-- clean the list of shared include files
-				shared_include_queue.wipe_out
+				-- Clear buffers for the new generation
+			buffer := generation_buffer
+			buffer.clear_all
+			header_buffer := header_generation_buffer
+			header_buffer.clear_all
+			if final_mode then
+				create headers.make (100)
 			end
+
+			feature_table := current_class.feature_table
+			if final_mode then
+					-- Check to see if there is really something to generate
+
+				generate_c_code := has_creation_routine or else
+						(current_class.has_invariant and then
+						 current_class.assertion_level.check_invariant)
+				from
+					feature_table.start
+				until
+					generate_c_code or else feature_table.after
+				loop
+					feature_i := feature_table.item_for_iteration
+					if feature_i.to_generate_in (current_class) then
+						generate_c_code := feature_i.used
+					end
+					feature_table.forth
+				end
+			else
+				generate_c_code := is_modifiable
+			end
+
+			if generate_c_code then
+					-- First, we reset the `has_cpp_externals_calls' of `BYTE_CONTEXT'
+					-- which will enable us to know wether or not a C++ call has been
+					-- generated
+				byte_context.set_has_cpp_externals_calls (False)
+					-- Then we reset `global_onces'.
+				byte_context.reset_global_onces
+
+				if final_mode then
+					tmp := headers
+				else
+					tmp := header_buffer
+				end
+
+						-- Write header
+				tmp.putstring ("/*%N * Code for class ")
+				type.dump (tmp)
+				tmp.putstring ("%N */%N%N")
+					-- Includes wanted
+				tmp.putstring ("#include %"eif_eiffel.h%"%N%N")
+
+
+				if final_mode then
+					headers.putstring ("%N#include %"")
+					headers.putstring (base_file_name)
+					headers.putstring (".h%"%N%N")
+
+						-- Generation of extern declarations
+					header_buffer.putstring ("#ifndef ")
+					header_buffer.putstring (already_included_header)
+					header_buffer.putstring ("%N#define ")
+					header_buffer.putstring (already_included_header)
+					header_buffer.new_line
+					Extern_declarations.generate_header (header_buffer)
+				else
+					header_buffer.start_c_specific_code
+				end
+
+				buffer.open_write_c
+
+				byte_context.set_buffer (buffer)
+				byte_context.set_header_buffer (header_buffer)
+
+				if final_mode and then has_creation_routine then
+						-- Generate the creation routine in final mode
+					generate_creation_routine (buffer, header_buffer)
+				end
+
+				from
+					feature_table.start
+					byte_context.init (Current)
+				until
+					feature_table.after
+				loop
+					feature_i := feature_table.item_for_iteration
+					if feature_i.to_generate_in (current_class) then
+						if feature_i.is_once then
+								-- If it's a once, give it a key.
+							byte_context.set_once_index (once_count)
+							once_count := once_count + 1
+							if once_count = 1 then
+									--| First declaration of EIF_oidx_off in the
+									--| C code
+								buffer.putstring ("static int EIF_oidx_off")
+								buffer.putint (static_type_id)
+								buffer.putstring (" = 0;%N")
+							end
+						end
+						
+							-- Generate the C code of `feature_i'
+						generate_feature (feature_i, buffer)
+					end
+					feature_table.forth
+				end
+
+					-- Create module initialization procedure
+				buffer.generate_function_signature ("void", Encoder.module_init_name
+					(static_type_id), True, header_buffer, <<>>, <<>>)
+
+				if once_count > 0 then
+					buffer.indent
+					buffer.putstring ("EIF_oidx_off")
+					buffer.putint (static_type_id)
+					buffer.putstring (" = EIF_once_count;")
+					buffer.new_line
+					buffer.putstring ("EIF_once_count += ")
+					buffer.putint (once_count)
+					buffer.putchar (';')
+					l_globals := byte_context.global_onces
+					from
+						l_globals.start
+					until
+						l_globals.after
+					loop
+						buffer.new_line
+						buffer.putstring (encoder.feature_name (static_type_id, l_globals.item))
+						buffer.putstring ("_mutex = eif_thr_mutex_create ();")
+						l_globals.forth
+					end
+					buffer.exdent
+				end
+
+				buffer.new_line
+				buffer.putchar ('}')
+				buffer.new_line
+				buffer.new_line
+
+				if
+					current_class.has_invariant and then
+					((not final_mode) or else
+					current_class.assertion_level.check_invariant)
+				then
+					inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
+					byte_context.set_byte_code (create {STD_BYTE_CODE})
+					inv_byte_code.generate_invariant_routine
+					byte_context.clear_all
+				end
+
+				if final_mode then
+					Extern_declarations.generate (header_buffer)
+					Extern_declarations.generate_header_files (headers)
+					Extern_declarations.wipe_out
+
+						-- End of header protection
+					header_buffer.putstring ("%N#endif%N")
+
+					create extern_decl_file.make_open_write (extern_declaration_filename)
+					header_buffer.put_in_file (extern_decl_file)
+					extern_decl_file.close
+				else
+					Extern_declarations.generate (header_buffer)
+					Extern_declarations.generate_header_files (header_buffer)
+					Extern_declarations.wipe_out
+				end
+				buffer.close_c
+
+				if not final_mode then
+						-- Give the information status in Workbench mode only on the
+						-- C generate file type (either .c/.x or .cpp/.xpp)
+						-- This information is used later to create the `file_to_compile'
+						-- file in each sudirectories of the W_code.
+					set_has_cpp_externals (byte_context.has_cpp_externals_calls)
+					file := open_generation_file (has_cpp_externals)
+				else
+					file := open_generation_file (byte_context.has_cpp_externals_calls)
+				end
+				
+				if not final_mode then
+					Header_generation_buffer.put_in_file (file)
+				else
+					headers.put_in_file (file)
+				end
+				buffer.put_in_file (file)
+				file.close
+
+			else
+					-- The file hasn't been generated
+				System.makefile_generator.record_empty_class_type (static_type_id)
+			end
+
+				-- clean the list of shared include files
+			shared_include_queue.wipe_out
 		end
 
 	generate_feature (f: FEATURE_I; buffer: GENERATION_BUFFER) is

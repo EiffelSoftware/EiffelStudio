@@ -19,7 +19,18 @@ inherit
 
 creation
 	make,
+	make_by_nmhdr,
 	make_by_pointer
+
+feature {NONE} -- Initialization
+
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+			-- Make the structure with `a_nmhdr'.
+		require
+			a_nmhdr_not_void: a_nmhdr /= Void
+		do
+			make_by_pointer (a_nmhdr.item)
+		end
 
 feature -- Access
 

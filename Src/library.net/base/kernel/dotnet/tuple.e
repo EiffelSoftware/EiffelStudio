@@ -280,7 +280,7 @@ feature -- Status report
 			l_code, l_item_code: INTEGER_8
 			l_int: INTERNAL
 			l_any: ANY
-			l_child, l_parent: TYPE
+			l_child, l_parent: SYSTEM_TYPE
 		do
 			if v = Void then
 					-- A Void entry is always valid.
@@ -1054,7 +1054,7 @@ feature {NONE} -- Implementation
 			-- Are all items of type `code'?
 		local
 			i, nb: INTEGER
-			first_type, type: TYPE
+			first_type, type: SYSTEM_TYPE
 			l_val: SYSTEM_OBJECT
 		do
 			Result := True
@@ -1108,43 +1108,43 @@ feature {NONE} -- Implementation
 		end
 
 	reverse_lookup: HASHTABLE is
-			-- Given a TYPE object, returns its associated `typecode'.
+			-- Given a SYSTEM_TYPE object, returns its associated `typecode'.
 		once
 			create Result.make_from_capacity (10)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Boolean").to_cil), boolean_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Char").to_cil), character_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Double").to_cil), real_64_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Single").to_cil), real_32_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.IntPtr").to_cil), pointer_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Object").to_cil), reference_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Byte").to_cil), natural_8_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.UInt16").to_cil), natural_16_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.UInt32").to_cil), natural_32_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.UInt64").to_cil), natural_64_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.SByte").to_cil), integer_8_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Int16").to_cil), integer_16_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Int32").to_cil), integer_32_code)
-			Result.set_item (feature {TYPE}.get_type_string (("System.Int64").to_cil), integer_64_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Boolean").to_cil), boolean_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Char").to_cil), character_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil), real_64_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil), real_32_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.IntPtr").to_cil), pointer_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Object").to_cil), reference_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Byte").to_cil), natural_8_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.UInt16").to_cil), natural_16_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.UInt32").to_cil), natural_32_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.UInt64").to_cil), natural_64_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.SByte").to_cil), integer_8_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Int16").to_cil), integer_16_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Int32").to_cil), integer_32_code)
+			Result.set_item (feature {SYSTEM_TYPE}.get_type_string (("System.Int64").to_cil), integer_64_code)
 		end
 		
-	codemap: NATIVE_ARRAY [TYPE] is
-			-- Conversion between `code' type and TYPE object.
+	codemap: NATIVE_ARRAY [SYSTEM_TYPE] is
+			-- Conversion between `code' type and SYSTEM_TYPE object.
 		once
 			create Result.make (128)
-			Result.put (boolean_code, feature {TYPE}.get_type_string (("System.Boolean").to_cil))
-			Result.put (character_code, feature {TYPE}.get_type_string (("System.Char").to_cil))
-			Result.put (real_64_code, feature {TYPE}.get_type_string (("System.Double").to_cil))
-			Result.put (real_32_code, feature {TYPE}.get_type_string (("System.Single").to_cil))
-			Result.put (pointer_code, feature {TYPE}.get_type_string (("System.IntPtr").to_cil))
-			Result.put (reference_code, feature {TYPE}.get_type_string (("System.Object").to_cil))
-			Result.put (natural_8_code, feature {TYPE}.get_type_string (("System.Byte").to_cil))
-			Result.put (natural_16_code, feature {TYPE}.get_type_string (("System.UInt16").to_cil))
-			Result.put (natural_32_code, feature {TYPE}.get_type_string (("System.UInt32").to_cil))
-			Result.put (natural_64_code, feature {TYPE}.get_type_string (("System.UInt64").to_cil))
-			Result.put (integer_8_code, feature {TYPE}.get_type_string (("System.SByte").to_cil))
-			Result.put (integer_16_code, feature {TYPE}.get_type_string (("System.Int16").to_cil))
-			Result.put (integer_32_code, feature {TYPE}.get_type_string (("System.Int32").to_cil))
-			Result.put (integer_64_code, feature {TYPE}.get_type_string (("System.Int64").to_cil))
+			Result.put (boolean_code, feature {SYSTEM_TYPE}.get_type_string (("System.Boolean").to_cil))
+			Result.put (character_code, feature {SYSTEM_TYPE}.get_type_string (("System.Char").to_cil))
+			Result.put (real_64_code, feature {SYSTEM_TYPE}.get_type_string (("System.Double").to_cil))
+			Result.put (real_32_code, feature {SYSTEM_TYPE}.get_type_string (("System.Single").to_cil))
+			Result.put (pointer_code, feature {SYSTEM_TYPE}.get_type_string (("System.IntPtr").to_cil))
+			Result.put (reference_code, feature {SYSTEM_TYPE}.get_type_string (("System.Object").to_cil))
+			Result.put (natural_8_code, feature {SYSTEM_TYPE}.get_type_string (("System.Byte").to_cil))
+			Result.put (natural_16_code, feature {SYSTEM_TYPE}.get_type_string (("System.UInt16").to_cil))
+			Result.put (natural_32_code, feature {SYSTEM_TYPE}.get_type_string (("System.UInt32").to_cil))
+			Result.put (natural_64_code, feature {SYSTEM_TYPE}.get_type_string (("System.UInt64").to_cil))
+			Result.put (integer_8_code, feature {SYSTEM_TYPE}.get_type_string (("System.SByte").to_cil))
+			Result.put (integer_16_code, feature {SYSTEM_TYPE}.get_type_string (("System.Int16").to_cil))
+			Result.put (integer_32_code, feature {SYSTEM_TYPE}.get_type_string (("System.Int32").to_cil))
+			Result.put (integer_64_code, feature {SYSTEM_TYPE}.get_type_string (("System.Int64").to_cil))
 		end
 
 	internal_primes: PRIMES is

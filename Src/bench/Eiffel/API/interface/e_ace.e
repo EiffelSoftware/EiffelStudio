@@ -93,7 +93,9 @@ feature -- Setting
 		require
 			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
 		do
-			Lace.set_file_name (f_name)
+			if f_name /= Void then
+				Lace.set_file_name (f_name)
+			end
 		ensure
 			file_name_set: equal (f_name, file_name)
 		end

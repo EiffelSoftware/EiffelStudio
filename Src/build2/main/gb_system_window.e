@@ -129,7 +129,6 @@ feature {NONE} -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 		do
 			set_title ("Project configuration")
-			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).icon_system_window)
 
 			create hbox
 			hbox.set_padding (Small_padding_size)

@@ -20,14 +20,14 @@ inherit
 		export 
 			{NONE} array_put, array_enter, array_wipe_out
 		redefine
-			force, subcopy, clear_all, copy
+			force, subcopy, clear_all, copy, prunable
 		end
 	
 	ARRAY [G]
 		rename
 			put as array_put
 		redefine
-			enter, wipe_out, force, subcopy, clear_all, copy
+			enter, wipe_out, prunable, force, subcopy, clear_all, copy
 		select
 			enter, wipe_out
 		end
@@ -123,6 +123,12 @@ feature -- Access
 			mt_remove_all
 		end
 	
+	prunable: BOOLEAN is
+			-- May items be removed? (Answer: yes.)
+		do
+			Result := True
+		end;
+
 feature -- Inapplicable
 
 	copy (other: like Current) is

@@ -56,8 +56,6 @@ feature -- Basic operations
 
 	activate is
 			-- Activate the dialog.
-		require else
-			not_exists: not exists
 		do
 			internal_dialog_make (parent, resource_id,
 				resource_name)

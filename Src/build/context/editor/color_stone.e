@@ -20,6 +20,7 @@ inherit
 		select
 			set_background_color
 		end;
+	FOCUSABLE;
 	STONE;
 	DRAG_SOURCE
 
@@ -30,6 +31,8 @@ creation
 feature 
 
 	color_name: STRING;
+
+	editor: CONTEXT_EDITOR;
 
 	stone_type: INTEGER is
 		do
@@ -65,13 +68,14 @@ feature
 			Result := Cursors.color_cursor
 		end;
 
-	make (a_color_name: STRING; a_parent: COMPOSITE) is
+	make (a_color_name: STRING; a_parent: COMPOSITE; ed: CONTEXT_EDITOR) is
 		require
 			valid_args: a_color_name /= Void and 
-						(a_parent /= Void)
+						(a_parent /= Void) and then ed /= Void
 		local
 			a_color: COLOR;
 		do
+			editor := ed;
 			color_name := clone (a_color_name);
 			!!a_color.make;
 			a_color.set_name (color_name);
@@ -79,6 +83,22 @@ feature
 			set_size (20, 20);
 			pict_set_background_color (a_color);
 			initialize_transport;
+			initialize_focus;
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := editor.focus_label
+		end;
+
+	focus_string: STRING is
+		do
+			Result := color_name
+		end;
+
+	focus_source: WIDGET is
+		do
+			Result := Current
 		end;
 
 	set_background_color (color: COLOR) is

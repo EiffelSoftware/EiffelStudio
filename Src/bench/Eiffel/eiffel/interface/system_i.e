@@ -59,6 +59,9 @@ feature -- Counters
 	body_index_counter: BODY_INDEX_COUNTER;
 			-- Body index counter
 
+	feature_as_counter: FEATURE_AS_COUNTER;
+			-- Counter of instances of FEATURE_AS
+
 	init_counters is
 			-- Initialize various counters.
 		do
@@ -68,7 +71,9 @@ feature -- Counters
 			body_id_counter.init_counter;
 			body_index_counter.init_counter;
 			dispatch_table.counter.init_counter;
-			execution_table.counter.init_counter
+			execution_table.counter.init_counter;
+			server_controler.file_counter.init_counter;
+			feature_as_counter.init_counter
 		end;
 
 	compilation_id: INTEGER is 
@@ -99,9 +104,6 @@ feature -- Properties
 
 	type_id_counter: COUNTER;
 			-- Counter of valid instances of CLASS_TYPE
-
-	feature_counter: COUNTER;
-			-- Counter of instances of FEATURE_AS
 
 	feat_tbl_server: FEAT_TBL_SERVER;
 			-- Server for feature tables
@@ -255,6 +257,14 @@ feature -- Properties
 	max_class_id: INTEGER;
 			-- Greater class id: computed by class CLASS_SORTER
 
+	min_type_id: INTEGER is
+			-- Value from which to start the dynamic type_id numbering
+			-- for newly created class types
+			-- (In the DC-set, will start from the max DR-system type_id)
+		do
+			Result := 1
+		end
+
 	freeze_set1: LINKED_SET [CLASS_ID];
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
@@ -291,7 +301,7 @@ feature -- Properties
 			-- | duplicated one in order to compair versions of a same
 			-- | feature.
 
-	onbidt: O_N_TABLE;
+	onbidt: O_N_TABLE [BODY_ID];
 			-- Correspondance table between old body ids
 			-- (changed trough `change_body_id' of FEATURE_I)
 			-- and new body id.
@@ -332,7 +342,10 @@ feature -- Properties
 			-- Current processed class
 
 	is_precompiled: BOOLEAN;
-			-- Is the Current system from a precompilation
+			-- Is the Current system from a precompilation?
+
+	uses_precompiled: BOOLEAN;
+			-- Does current system use a precompiled library?
 
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
@@ -395,8 +408,8 @@ feature -- Properties
 			!!static_type_id_counter.make;
 			!!body_id_counter.make;
 			!!body_index_counter.make;
+			!!feature_as_counter.make;
 			!!type_id_counter;
-			!!feature_counter;
 				-- Routine table controler creation
 			!!history_control.make;
 			!!instantiator.make;
@@ -496,7 +509,7 @@ feature -- Properties
 debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ");
 io.error.putstring (c.class_name);
-io.error.putint (new_id.id);
+new_id.trace;
 io.error.new_line;
 end;
 
@@ -533,9 +546,9 @@ end;
 
 	remove_class (a_class: CLASS_C) is
 			-- Remove class `a_class' from the system even if
-			-- it has syntactical_clients
+			-- it has syntactical_clients.
 		require
-			 good_argument: a_class /= Void;
+			 good_argument: a_class /= Void
 		local
 			parents: ARRAYED_LIST [CL_TYPE_A];
 			compiled_root_class: CLASS_C;
@@ -548,7 +561,7 @@ end;
 			f: FEATURE_I;
 			ext: EXTERNAL_I
 		do
-			if not a_class.is_precompiled then
+			if a_class.is_removable then
 				id := a_class.id;
 
 debug ("ACTIVITY", "REMOVE_CLASS");
@@ -566,8 +579,8 @@ end;
 
 					-- Remove one occurrence for each external written
 					-- in the class
-				if Feat_tbl_server.has (id.id) then
-					ftable := Feat_tbl_server.item (id.id)
+				if Feat_tbl_server.has (id) then
+					ftable := Feat_tbl_server.item (id)
 					from
 						ftable.start
 					until
@@ -613,40 +626,44 @@ end;
 					-- Remove if from the servers
 debug ("ACTIVITY");
 	io.error.putstring ("%TRemoving id from servers: ");
-	io.error.putint (id.id);
+	id.trace;
 	io.error.new_line;
 end;
-				Inv_byte_server.remove (id.id);
-				Ast_server.remove (id.id);
-				Feat_tbl_server.remove (id.id);
-				Class_info_server.remove (id.id);
-				Inv_ast_server.remove (id.id);
-				Depend_server.remove (id.id);
-				Rep_depend_server.remove (id.id);
-				M_rout_id_server.remove (id.id);
-				M_desc_server.remove (id.id);
+				Inv_byte_server.remove (id);
+				Ast_server.remove (id);
+				Feat_tbl_server.remove (id);
+				Class_info_server.remove (id);
+				Inv_ast_server.remove (id);
+				Depend_server.remove (id);
+				Rep_depend_server.remove (id);
+				M_rout_id_server.remove (id);
+				M_desc_server.remove (id);
 				if Compilation_modes.is_precompiling then
 						-- Do not need to remove id from
 						-- Class_comments_server since
 						-- we are not able to remove a
 						-- precompiled class
-					Tmp_class_comments_server.remove (id.id);
+					Tmp_class_comments_server.remove (id);
 				end;
-				Tmp_inv_byte_server.remove (id.id);
-				Tmp_ast_server.remove (id.id);
-				Tmp_feat_tbl_server.remove (id.id);
-				Tmp_class_info_server.remove (id.id);
-				Tmp_rep_info_server.remove (id.id);
-				Tmp_inv_ast_server.remove (id.id);
-				Tmp_depend_server.remove (id.id);
-				Tmp_rep_depend_server.remove (id.id);
-				Tmp_m_rout_id_server.remove (id.id);
-				Tmp_m_desc_server.remove (id.id);
+				Tmp_inv_byte_server.remove (id);
+				Tmp_ast_server.remove (id);
+				Tmp_feat_tbl_server.remove (id);
+				Tmp_class_info_server.remove (id);
+				Tmp_rep_info_server.remove (id);
+				Tmp_inv_ast_server.remove (id);
+				Tmp_depend_server.remove (id);
+				Tmp_rep_depend_server.remove (id);
+				Tmp_m_rout_id_server.remove (id);
+				Tmp_m_desc_server.remove (id);
 
 				freeze_set1.prune (id);
 				freeze_set2.prune (id);
 				melted_set.prune (id);
 				classes.remove (id);
+					-- Remove `id' from the set of dynamic class ids
+					-- when associated class is part of DC-set.
+					-- Do nothing otherwise.
+				remove_dynamic_class_id (id);
 
 					-- Remove client/supplier syntactical relations
 					-- and remove classes recursively
@@ -699,7 +716,7 @@ end;
 			Result := classes.item (id)
 debug ("CLASS_OF_ID")
 io.error.putstring ("Class of id ");
-io.error.putint (id.id);
+id.trace;
 io.error.putstring (": ");
 if Result /= Void then
 	io.error.putstring (Result.class_name);
@@ -737,19 +754,7 @@ end;
 	init_recompilation is
 			-- Initialization before a recompilation.
 		do
-				-- If first initialization, special initialization
-			if not general_class.compiled then
-				init;
-			elseif root_class.compiled_class = Void then
-				-- If root_class is not compiled (i.e. root class has changed since
-				-- last compilaton), insert it in the changed_classes
-				Workbench.change_class (root_class)
-			end;
-
-				-- `None' is specified as the root class
-			if Lace.compile_all_classes then
-				Workbench.change_all_new_classes
-			end;
+			change_classes;
 
 			private_freeze := private_freeze or else frozen_level = 0;
 
@@ -771,6 +776,24 @@ end;
 				melted_set.wipe_out;
 			end;
 		end;
+
+	change_classes is
+			-- Mark classes to be recompiled.
+		do
+			if not general_class.compiled then
+					-- First compilation.
+				init;
+			elseif root_class.compiled_class = Void then
+				-- If root_class is not compiled (i.e. root class has
+				-- changed since last compilaton), insert it in the
+				-- changed_classes.
+				Workbench.change_class (root_class)
+			end;
+			if Lace.compile_all_classes then
+					-- `None' is specified as the root class
+				Workbench.change_all_new_classes
+			end
+		end
 
 feature -- Recompilation 
 
@@ -797,7 +820,7 @@ feature -- Recompilation
 			if Compilation_modes.is_precompiling then
 				init_precompilation
 			else
-				init_recompilation;
+				init_recompilation
 			end;
 
 				-- Set the generation mode in workbench mode
@@ -835,14 +858,19 @@ debug ("ACTIVITY")
 end;
 			if not first_compilation and then new_class then
 				check_generics;
-					-- The association name <==> supplier has been done in pass1 so
-					-- even if the compilation fails after this point, the
+					-- The association name <==> supplier has been done in pass1
+					-- so even if the compilation fails after this point, the
 					-- check must not be done again if no classes are introduced
 					-- before the recompilation
 			end;
 			new_class := False;
 
-			if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
+			if Compilation_modes.is_extending then
+				remove_useless_classes
+			elseif
+				not Compilation_modes.is_precompiling and
+				not Lace.compile_all_classes
+			then
 					-- The root class is not generic
 				root_class_c := root_class.compiled_class;
 				current_class := root_class_c;
@@ -850,11 +878,11 @@ end;
 				current_class := Void;
 					-- Remove useless classes i.e classes without 
 					-- syntactical clients
-				remove_useless_classes;
+				remove_useless_classes
 			end;
 
 				-- Topological sort and building of the conformance
-				-- table (if new classes have been added by first pass
+				-- table (if new classes have been added by first pass)
 debug ("ACTIVITY")
 	io.error.putstring ("%Tmoved = ");
 	io.error.putbool (moved);
@@ -869,8 +897,9 @@ end;
 					-- Check sum error
 				Error_handler.checksum;
 					-- Re-sort the list `changed_classes' of `pass2',
-					-- because the topological sort modified the class ids, and the
-					-- second pass needs it and rebuild the conformance tables
+					-- because the topological sort modified the class ids,
+					-- and the second pass needs it and rebuild the
+					-- conformance tables
 				pass2_controler.sort;
 				pass3_controler.sort;
 				pass4_controler.sort;
@@ -886,14 +915,25 @@ end;
 				-- heirs after
 			process_pass (pass2_controler);
 
-			if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
-				root_class_c.check_root_class_creators;
+			if Compilation_modes.is_extending then
+					-- Check each descendant of DYNAMIC in the DC-set is not
+					-- generic and include a `make' procedure with one argument
+					-- of type ANY in its creation clause.
+				Universe.check_descendants_of_dynamic
+			elseif
+				not Compilation_modes.is_precompiling and
+				not Lace.compile_all_classes
+			then
+				root_class_c.check_root_class_creators
 			end;
 
 				-- Byte code production and type checking
 			process_pass (pass3_controler);
 
-			if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
+			if
+				not Compilation_modes.is_precompiling and
+				not Lace.compile_all_classes
+			then
 					-- Externals incrementality
 				private_freeze := private_freeze or else not externals.equiv;
 			end;
@@ -962,7 +1002,7 @@ end;
 		end;
 
 	remove_useless_classes is
-			-- Remove useless classes
+			-- Remove useless classes.
 		local
 			a_class: CLASS_C;
 			root_class_c: CLASS_C;
@@ -986,6 +1026,10 @@ end;
 			array_class.compiled_class.mark_class (marked_classes);
 			bit_class.compiled_class.mark_class (marked_classes);
 			pointer_class.compiled_class.mark_class (marked_classes);
+
+				-- Mark the descendants of DYNAMIC when compiling
+				-- DLE's DC-set. Do nothing otherwise.
+			mark_dynamic_classes (marked_classes);
 
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
@@ -1072,27 +1116,29 @@ end;
 		local
 			a_class: CLASS_C;
 			skeleton: SKELETON;
+			changed_classes: PART_SORTED_TWO_WAY_LIST [PASS4_C]
 		do
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("Process_skeleton%N");
 end;
-			from
-				pass4_controler.changed_classes.start
-			until
-				pass4_controler.changed_classes.after
-			loop
-				a_class := pass4_controler.changed_classes.item.associated_class;
+			changed_classes := pass4_controler.changed_classes
+			if
+				not Compilation_modes.is_precompiling and
+				not Compilation_modes.is_extending and
+				not Lace.compile_all_classes
+			then
+				from
+					changed_classes.start
+				until
+					changed_classes.after
+				loop
+					a_class := changed_classes.item.associated_class;
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("%T");
 io.error.putstring (a_class.class_name);
-io.error.putstring ("%N");
+io.error.new_line
 end;
-					-- Process skeleton(s) for `a_class'.
-				if
-					(not (Compilation_modes.is_precompiling or else
-					Lace.compile_all_classes)) or else
-					a_class.has_types
-				then
+						-- Process skeleton(s) for `a_class'.
 					a_class.process_skeleton;
 
 					check
@@ -1101,9 +1147,33 @@ end;
 						-- Check valididty of special classes ARRAY, STRING,
 						-- TO_SPECIAL, SPECIAL
 					a_class.check_validity;
-				end;
-
-				pass4_controler.changed_classes.forth
+					changed_classes.forth
+				end
+			else
+				from
+					changed_classes.start
+				until
+					changed_classes.after
+				loop
+					a_class := changed_classes.item.associated_class;
+debug ("ACTIVITY", "SKELETON")
+io.error.putstring ("%T");
+io.error.putstring (a_class.class_name);
+io.error.new_line
+end;
+					if a_class.has_types then
+							-- Process skeleton(s) for `a_class'.
+						a_class.process_skeleton;
+	
+						check
+							has_class_type: not a_class.types.empty
+						end;
+							-- Check valididty of special classes ARRAY, STRING,
+							-- TO_SPECIAL, SPECIAL
+						a_class.check_validity
+					end;
+					changed_classes.forth
+				end
 			end;
 
 				-- Check expanded client relation
@@ -1236,22 +1306,14 @@ end;
 			-- Produce the update file resulting of the consecutive
 			-- melting process after the system has been frozen.
 		local
-			id_list: LINKED_LIST [CLASS_ID];
 			a_class: CLASS_C;
-			types: TYPE_LIST;
-			feat_tbl: MELTED_FEATURE_TABLE;
-			class_id: CLASS_ID;
-			nb_tables: INTEGER;
 			file_pointer: POINTER;
-			cl_type: CLASS_TYPE;
-
 			root_feat: FEATURE_I;
 			dtype: INTEGER;
 			has_argument: INTEGER;
 			rout_info: ROUT_INFO;
 			rcorigin, rcoffset: INTEGER;
-			rout_id: ROUTINE_ID;
-			server_id: INTEGER
+			rout_id: ROUTINE_ID
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating melted.eif%N");
@@ -1295,93 +1357,113 @@ end;
 				-- Write the new `dle_level' 
 				-- (`dle_frozen_level' has the same value).
 			write_int (file_pointer, dle_level);
+			make_update_feature_tables (Update_file);
+			make_update_rout_id_arrays (Update_file);
+				-- Write first the new size of the dispatch table
+			Dispatch_table.write_dispatch_count (Update_file);
+				-- Update the dispatch table
+			Dispatch_table.make_update (Update_file);
+				-- Open the file for reading byte code for melted features
+				-- Update the execution table
+			execution_table.make_update (Update_file);
+			make_conformance_table_byte_code (Update_file);
+			make_option_table (Update_file);
+			make_rout_info_table (Update_file);
+			make_update_descriptors (Update_file);
+				-- End mark
+			write_int (file_pointer, -1);
+			Update_file.close
+		end;
 
+	make_update_feature_tables (file: RAW_FILE) is
+			-- Write the byte code for feature tables to be updated
+			-- into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			id_list: LINKED_LIST [CLASS_ID];
+			a_class: CLASS_C;
+			types: TYPE_LIST;
+			nb_tables: INTEGER;
+			feat_tbl: MELTED_FEATURE_TABLE
+		do
 debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature tables%N");
 end;
 				-- Count of feature tables to update
-			from
-				id_list := freeze_set2;
-				id_list.start
-			until
-				id_list.after
-			loop
+			id_list := freeze_set2;
+			from id_list.start until id_list.after loop
 				a_class := class_of_id (id_list.item);
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-				nb_tables := nb_tables + 
-					(a_class.types.count - a_class.nb_precompiled_class_types);
+				nb_tables := nb_tables + a_class.nb_modifiable_types;
 				id_list.forth
 			end;
 				-- Write the number of feature tables to update
-			write_int (file_pointer, nb_tables);
+			write_int (file.file_pointer, nb_tables);
 debug ("ACTIVITY")
 	io.error.putstring ("%Tbyte code%N");
 end;
 
 				-- Write then the byte code for feature tables to update.
-				-- First, open the reading file associated to the melted
-				-- feature table server.
-			from
-				id_list.start
-			until
-				id_list.after
-			loop
+			from id_list.start until id_list.after loop
 				a_class := class_of_id (id_list.item);
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-				from
-					types := a_class.types;
-					types.start
-				until
-					types.after
-				loop
-					if not types.item.is_precompiled then
-						feat_tbl := m_feat_tbl_server.item (types.item.type_id);
+				types := a_class.types;
+				from types.start until types.after loop
+					if types.item.is_modifiable then
+						feat_tbl := m_feat_tbl_server.item (types.item.id);
 debug ("ACTIVITY")
 	io.error.putstring ("melting class desc of ");
 	types.item.type.trace;
 	io.error.new_line;
 end;
-						feat_tbl.store (Update_file);
+						feat_tbl.store (file)
 					end;
 					types.forth
 				end;
 				id_list.forth
-			end;
+			end
+		end
 
+	make_update_rout_id_arrays (file: RAW_FILE) is
+			-- Write the melted routine id arrays into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			class_id: CLASS_ID;
+			a_class: CLASS_C;
+			file_pointer: POINTER;
+			types: TYPE_LIST;
+			cl_type: CLASS_TYPE
+		do
+			file_pointer := file.file_pointer;
 debug ("ACTIVITY")
 	io.error.putstring ("%TMelted routine id array%N");
 end;
 				-- Melted routine id array
-			from
-				m_rout_id_server.start
-			until
-				m_rout_id_server.after
-	 		loop
-				server_id := m_rout_id_server.key_for_iteration;
-				class_id := m_rout_id_server.disk_item (server_id).class_id;
+			from m_rout_id_server.start until m_rout_id_server.after loop
+				class_id := m_rout_id_server.key_for_iteration;
 				a_class := class_of_id (class_id);
 debug ("ACTIVITY")
 io.error.putstring ("melting routine id array of ");
-io.error.putint (class_id.id);
+class_id.trace;
 io.error.putstring (a_class.class_name);
-io.error.new_line;
+io.error.new_line
 end;
 				write_int (file_pointer, class_id.id);
-				m_rout_id_server.item (class_id.id).store (Update_file);
-				from
-					types := a_class.types;
-					types.start
-				until
-					types.after
-				loop
+				m_rout_id_server.item (class_id).store (file);
+				types := a_class.types;
+				from types.start until types.after loop
 					cl_type := types.item;
 						-- Write dynamic type
 					write_int (file_pointer, cl_type.type_id - 1);
@@ -1390,40 +1472,29 @@ end;
 					types.forth
 				end;
 				write_int (file_pointer, -1);
-				m_rout_id_server.forth;
+				m_rout_id_server.forth
 			end;
-			write_int (file_pointer, -1);
+			write_int (file_pointer, -1)
+		end
 
-				-- Write first the new size of the dispatch table
-			Dispatch_table.write_dispatch_count (Update_file);
-				-- Update the dispatch table
-			Dispatch_table.make_update (Update_file);
-
-				-- Open the file for reading byte code for melted features
-				-- Update the execution table
-			execution_table.make_update (Update_file);
-
-			make_conformance_table_byte_code (Update_file);
-
-			make_option_table (Update_file);
-
-			make_rout_info_table (Update_file);
-
-				-- Melted descriptors
+	make_update_descriptors (file: RAW_FILE) is
+			-- Write melted descriptors into `file'.
+		require
+			file_not_void: file /= Void;
+			file_open_write: file.is_open_write
+		local
+			class_id: CLASS_ID
+		do
 			from
 				M_desc_server.start
 			until
 				M_desc_server.after
 			loop
-				server_id := M_desc_server.key_for_iteration;
-				M_desc_server.item (server_id).store (Update_file);
+				class_id := M_desc_server.key_for_iteration;
+				M_desc_server.item (class_id).store (file);
 				M_desc_server.forth
-			end;
-				-- End mark
-			write_int (file_pointer, -1);
-
-			Update_file.close;
-		end;
+			end
+		end
 
 	reset_melted_conformance_table is
 			-- Forget the `melted_conformance_table', i.e. a new
@@ -1493,18 +1564,21 @@ end;
 
 	make_option_table (file: RAW_FILE) is
 			-- Generate byte code for the option table.
+		require
+			file_not_void: file /= Void;
+			file_is_open_write: file.is_open_write
 		local
 			i, nb: INTEGER;
 			cl_type: CLASS_TYPE;
-			a_class: CLASS_C;
+			a_class: CLASS_C
 		do
 debug ("OPTIONS")
 	io.error.putstring ("Making option table%N");
 end;
 			Byte_array.clear;
 			from
-				i := 1;
-				nb := Type_id_counter.value;
+				i := min_type_id;
+				nb := Type_id_counter.value
 			until
 				i > nb
 			loop
@@ -1521,16 +1595,16 @@ end;
 					a_class.assertion_level.make_byte_code (Byte_array);
 					a_class.debug_level.make_byte_code (Byte_array);
 					a_class.trace_level.make_byte_code (Byte_array);
-					a_class.profile_level.make_byte_code (Byte_array);
+					a_class.profile_level.make_byte_code (Byte_array)
 				end;
-				i := i + 1;
+				i := i + 1
 			end;
 				-- End mark
 			Byte_array.append_short_integer (-1);
 
 				-- Put the byte code description of the option table
 				-- in update file
-			Byte_array.character_array.store (file);
+			Byte_array.character_array.store (file)
 		end;
 
 	make_rout_info_table (file: RAW_FILE) is
@@ -1606,16 +1680,20 @@ feature -- Freeezing
 			id_list: LINKED_LIST [CLASS_ID];
 			i, nb: INTEGER;
 			temp: STRING;
-			server_id: INTEGER;
-			descriptors: ARRAY [INTEGER]
+			descriptors: ARRAY [CLASS_ID]
 		do
-			dle_frozen_nobid_table.clear_all;
-			dle_frozen_nobid_table.set_threshold (body_id_counter.total_count);
 			freezing_occurred := True;
-			if Compilation_modes.is_precompiling then
-				!PRECOMP_MAKER!makefile_generator.make
+			if Compilation_modes.is_extending then
+				!WBENCH_DLE_MAKER!makefile_generator.make
 			else
-				!WBENCH_MAKER!makefile_generator.make
+				dle_frozen_nobid_table.clear_all;
+				dle_frozen_nobid_table.set_threshold
+						(body_id_counter.total_count);
+				if Compilation_modes.is_precompiling then
+					!PRECOMP_MAKER!makefile_generator.make
+				else
+					!WBENCH_MAKER!makefile_generator.make
+				end
 			end;
 				-- Re-process dynamic types
 			--process_dynamic_types;
@@ -1677,8 +1755,7 @@ end;
 				until
 					i > nb
 				loop
-					server_id := descriptors.item (i);
-					a_class := class_of_id (m_desc_server.disk_item (server_id).class_id);
+					a_class := class_of_id (descriptors.item (i));
 					if a_class /= Void then
 						melted_set.put (a_class.id)
 					end;
@@ -1764,7 +1841,7 @@ debug ("COUNT")
 	io.error.putstring ("] ");
 	i := i - 1;
 end;
-					if not a_class.is_precompiled then
+					if a_class.is_modifiable then
 							-- Verbose
 						io.error.putstring ("Degree -3: class ");
 							temp := clone (a_class.class_name);
@@ -1785,39 +1862,28 @@ end;
 
 			freeze_set1.wipe_out;
 			freeze_set2.wipe_out;
-			generate_main_eiffel_files;
+			generate_main_eiffel_files
 		end;
 
 	generate_main_eiffel_files is
-			-- Generate the "E*.c" files.
+			-- Generate the "e*.c" files.
 		do
 			generate_skeletons;
-
 			generate_cecil;
-
 			generate_conformance_table;
 			is_conformance_table_melted := False;
 			melted_conformance_table := Void;
-
 			generate_plug;
-
 			generate_init_file;
-
 			generate_main_file;
-
 			generate_option_file;
-
 			address_table.generate (False);
-
 			generate_rout_info_table;
-
-			pattern_table.generate;
-
+			generate_pattern_table;
 			generate_make_file;
-
 			generate_dispatch_table;
 			generate_exec_table;
-
+			generate_dle_file;
 				-- Empty update file
 			generate_empty_update_file;
 		end;
@@ -1859,8 +1925,7 @@ end;
 
 			update_valid_body_ids;
 
-			execution_table.shake;
-			dispatch_table.shake;
+			shake_tables;
 
 			from
 				execution_table.start
@@ -1887,9 +1952,15 @@ end;
 
 				-- Freeze the external table: reset the real body ids,
 				-- remove all unused externals and make the duplication
-			externals.freeze;
-
+			externals.freeze
 		end;
+
+	shake_tables is
+			-- Compress dispatch and execution tables.
+		do
+			execution_table.shake;
+			dispatch_table.shake
+		end
 
 feature -- Final mode generation
 
@@ -1900,12 +1971,10 @@ feature -- Final mode generation
 		end;
 
 	finalized_generation (keep_assert: BOOLEAN) is
-			-- Finalizer generation
+			-- Finalized generation.
 		require
-			root_class.compiled;
+			root_class_compiled: root_class.compiled
 		local
-			a_class: CLASS_C;
-			temp: STRING;
 			old_remover_off: BOOLEAN;
 			old_exception_stack_managed: BOOLEAN;
 			old_inlining_on, old_array_optimization_on: BOOLEAN
@@ -1939,81 +2008,35 @@ feature -- Final mode generation
 				-- Set the generation mode in final mode
 			byte_context.set_final_mode;
 
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-debug ("COUNT");
-	io.error.putstring ("[");
---	io.error.putint (nb-i+1);
-	io.error.putstring ("] ");
-end;
-						-- Verbose
-				io.error.putstring ("Degree -4: class ");
-					temp := clone (a_class.class_name)
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
-
-				a_class.process_polymorphism;
-				History_control.check_overload;
-
-				classes.forth
-			end;
-			History_control.transfer;
-			tmp_poly_server.flush;
+			degree_minus_4;
 
 				-- Dead code removal
 			if not remover_off then
 				-- Verbose
 				io.error.putstring ("Removing dead code%N");
-				remove_dead_code;
+				remove_dead_code
 			end;
 			tmp_opt_byte_server.flush;
 
-			!FINAL_MAKER!makefile_generator.make;
-
+				-- DLE stuff. Do nothing if system is not dynamic. Otherwise
+				-- check whether some feature calls have been statically bound
+				-- in the extendible system, but need to be dynamically bound
+				-- because of the DC-set.
+			check_static_calls;
+				
 			--process_dynamic_types;
 
 				-- Generation of C files associated to the classes of
 				-- the system.
-			from
-				classes.start;
-				open_log_files
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-						-- Verbose
-debug ("COUNT")
-	io.error.putstring ("[");
---	io.error.putint (nb-i+1);
-	io.error.putstring ("] ");
-end;
-				io.error.putstring ("Degree -5: class ");
-					temp := clone (a_class.class_name)
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
-
-				current_class := a_class;
-
-				a_class.pass4;
-
-				classes.forth
-			end;
-			close_log_files;
+			degree_minus_5;
 
 				-- Address table
 			address_table.generate (True)
-
 			generate_table;
-
 				-- Generate makefile
 			generate_make_file;
-
+				-- Generate DLE file
+			generate_dle_file;
 				-- Generate main file
 			generate_main_file;
 			generate_init_file;
@@ -2036,6 +2059,9 @@ end;
 
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out;
+			if is_dynamic then
+				Old_eiffel_table.wipe_out
+			end;
 			Tmp_opt_byte_server.clear;
 
 			remover := Void;
@@ -2051,6 +2077,55 @@ end;
 			Tmp_opt_byte_server.clear;
 			clear_dle_finalization_data
 		end;
+
+	degree_minus_4 is
+			-- Process Degree -4.
+		local
+			a_class: CLASS_C;
+			temp: STRING
+		do
+			from classes.start until classes.after loop
+				a_class := classes.item_for_iteration;
+						-- Verbose
+				io.error.putstring ("Degree -4: class ");
+					temp := clone (a_class.class_name)
+					temp.to_upper;
+				io.error.putstring (temp);
+				io.error.new_line;
+
+				a_class.process_polymorphism;
+				History_control.check_overload;
+				classes.forth
+			end;
+			History_control.transfer;
+			tmp_poly_server.flush
+		end
+
+	degree_minus_5 is
+			-- Process Degree -5.
+		local
+			a_class: CLASS_C;
+			temp: STRING
+		do
+			!FINAL_MAKER! makefile_generator.make;
+			open_log_files;
+				-- Generation of C files associated to the classes of
+				-- the system.
+			from classes.start until classes.after loop
+				a_class := classes.item_for_iteration;
+						-- Verbose
+				io.error.putstring ("Degree -5: class ");
+					temp := clone (a_class.class_name)
+					temp.to_upper;
+				io.error.putstring (temp);
+				io.error.new_line;
+
+				current_class := a_class;
+				a_class.pass4;
+				classes.forth
+			end;
+			close_log_files
+		end
 
 feature -- Dead code removal
 
@@ -2092,6 +2167,9 @@ feature -- Dead code removal
 				if a_class.visible_level.has_visible then
 					a_class.mark_visible (remover)
 				end;
+					-- Protection of features of descendants
+					-- of DYNAMIC in the DC-set.
+				mark_dynamic_descendant_used (a_class);
 				classes.forth
 			end;
 
@@ -2182,38 +2260,34 @@ feature -- Generation
 
 	generate_table is
 			-- Generation of all the tables needed by the finalized
-			-- Eiffel executable
+			-- Eiffel executable.
 		do
 				-- Generation of type size table
 			generate_size_table;
-
 				-- Generation of the reference number table
 			generate_reference_table;
-
 				-- Generation of the skeletons
 			generate_skeletons;
-
 				-- Cecil structures generation
 			generate_cecil;
-
 				-- Generation of the conformance table
 			generate_conformance_table;
-
-				-- Generate plug with run-time
-			generate_plug;
-
 				-- Routine table generation
 			generate_routine_table;
+				-- Generate plug with run-time.
+				-- The plug file has to be generated after the routine
+				-- table for `dle_max_min_used' to be initialized when
+				-- using DLE stuff.
+			generate_plug
 		end;
 
 	process_dynamic_types is
-			-- Processing of the dynamic types
+			-- Processing of the dynamic types.
 		local
 			class_list: ARRAY [CLASS_C];
 			a_class: CLASS_C;
 			types: TYPE_LIST;
-			class_type: CLASS_TYPE;
-			new_type_id, i, nb: INTEGER;
+			i, nb: INTEGER
 		do
 				-- First re-process all the type id of instances of
 				-- CLASS_TYPE available in attribute list `types' of
@@ -2238,9 +2312,8 @@ end;
 				-- Iteration on `class_list' in order to compute new type
 				-- id's
 			from
-					-- Reset the type id counter
-				type_id_counter.reset;
-				i := 1;
+				type_id_counter.set_value (min_type_id - 1);
+				i := 1
 			until
 				i > nb
 			loop
@@ -2251,34 +2324,41 @@ end;
 				until
 					types.after
 				loop
-					class_type := types.item;
-					new_type_id := type_id_counter.next;
-					class_type.set_type_id (new_type_id);
+					reset_type_id (types.item);
+					types.forth
+				end;
+				i := i + 1
+			end;
+		end;
+
+	reset_type_id (class_type: CLASS_TYPE) is
+			-- Assign a new dynamic type id to `class_type'.
+		require
+			class_type_not_void: class_type /= Void
+		local
+			new_type_id: INTEGER
+		do
+			new_type_id := type_id_counter.next;
+			class_type.set_type_id (new_type_id);
 debug ("ACTIVITY")
 	io.error.putint (new_type_id);
 	io.error.putstring (": ");
 	class_type.type.trace;
 	io.error.putstring (" [");
-	io.error.putint (class_type.id.id);
+	class_type.id.trace;
 	io.error.putstring ("]%N");
 end;
-						-- Update `class_types'
-					insert_class_type (class_type);
-					types.forth
-				end;
-				i := i + 1
-			end;
-
-		end;
+				-- Update `class_types'
+			insert_class_type (class_type)
+		end
 
 	generate_routine_table is
-			-- Generate routine tables
+			-- Generate routine and attribute tables.
 		require
 			in_final_mode: byte_context.final_mode
 		local
-			server_id: INTEGER;
 			rout_id: ROUTINE_ID;
-			table: POLY_TABLE [ENTRY];
+			table: POLY_TABLE [ENTRY]
 		do
 			Attr_generator.init;
 			Rout_generator.init;
@@ -2288,20 +2368,20 @@ end;
 			until
 				Tmp_poly_server.after
 			loop
-				server_id := Tmp_poly_server.key_for_iteration;
-				table := Tmp_poly_server.item (server_id).poly_table;
-				rout_id := table.rout_id;
+				rout_id := Tmp_poly_server.key_for_iteration;
 
 				if Eiffel_table.is_used (rout_id) then
+					table := Tmp_poly_server.item (rout_id).poly_table;
 					table.write;
 				end;
 				Tmp_poly_server.forth;
 			end;
 			generate_initialization_table;
 			generate_dispose_table;
+			generate_dle_make_table;
 
 			Attr_generator.finish;
-			Rout_generator.finish;
+			Rout_generator.finish
 		end;
 
 	generate_size_table is
@@ -3090,6 +3170,14 @@ feature -- Dispatch and execution tables generation
 				-- is now empty
 		end
 
+feature -- Pattern table generation
+
+	generate_pattern_table is
+			-- Generate pattern table.
+		do
+			pattern_table.generate
+		end
+
 feature -- Main file generation
 
 	generate_main_file is
@@ -3610,13 +3698,8 @@ feature -- Precompilation
 			-- precompiled code.
 		do
 			is_precompiled := True;
-			server_controler.save_precompiled_id;
+			uses_precompiled := True;
 			Universe.mark_precompiled;
-		end;
-
-	uses_precompiled: BOOLEAN is
-		do
-			Result := (server_controler.last_precompiled_id > 0)
 		end;
 
 feature -- Log files
@@ -3732,14 +3815,6 @@ feature -- DLE
 		do
 		end;
 
-	dle_max_dr_type_id: INTEGER is
-			-- Greatest class_type type_id of the static system
-			--| Only used in the DC-Set system
-		require
-			dymanic_system: is_dynamic
-		do
-		end;
-
 	dle_type_set: ROUT_ID_SET is
 			-- Set of the routine ids for which a type table should
 			-- have been generated in the extendible system
@@ -3771,12 +3846,12 @@ feature -- DLE
 			-- Array of data tables for the final Eiffel executable
 			-- (Generated when finalizing an extendible system)
 
-	dle_frozen_nobid_table: NEW_OLD_TABLE;
+	dle_frozen_nobid_table: NEW_OLD_TABLE [BODY_ID];
 			-- Frozen New/Old body id table; Keep track of body_id
 			-- modifications since last time the static system has
 			-- been frozen
 
-	dle_finalized_nobid_table: NEW_OLD_TABLE is
+	dle_finalized_nobid_table: NEW_OLD_TABLE [BODY_ID] is
 			-- Finalized New/Old body id table; Keep track of body_id
 			-- modifications between finalization of the static system
 			-- and finalization of the dynamic system
@@ -3804,7 +3879,33 @@ feature -- DLE
 		require
 			dynamic_system: is_dynamic
 		do
+		ensure
+			not_void: Result /= Void
 		end;
+
+	remove_dynamic_class_id (id: CLASS_ID) is
+			-- Remove `id' from the set of dynamic class id.
+			-- when associated class is part of DC-set.
+			-- Do nothing otherwise.
+		require
+			id_not_void: id /= Void
+		do
+		end
+
+	mark_dynamic_classes (marked_classes: SEARCH_TABLE [CLASS_ID]) is
+			-- Mark the descendants of DYNAMIC in the DC-set.
+		require
+			marked_classes_not_void: marked_classes /= Void
+		do
+		end
+
+	mark_dynamic_descendant_used (a_class: CLASS_C) is
+			-- Mark features of descendants of DYNAMIC in the DC-set as used.
+		require
+			a_class_not_void: a_class /= Void;
+			remover_not_void: remover /= Void
+		do
+		end
 
 	was_used (f: FEATURE_I): BOOLEAN is
 			-- Was feature `f' used in the static system?
@@ -3846,6 +3947,7 @@ feature -- DLE
 			f_name: FILE_NAME;
 			type_id: INTEGER;
 			rout_id: ROUTINE_ID;
+			server_id: INTEGER_ID;
 			rout_ids: DLE_STATIC_CALLS;
 			feature_table: FEATURE_TABLE;
 			feat: FEATURE_I;
@@ -3856,8 +3958,9 @@ feature -- DLE
 			!! log_file.make (f_name);
 			log_file.open_write;
 			from dle_static_calls.start until dle_static_calls.after loop
-				type_id := dle_static_calls.key_for_iteration;
-				rout_ids := dle_static_calls.item (type_id);
+				server_id := dle_static_calls.key_for_iteration;
+				rout_ids := dle_static_calls.item (server_id);
+				type_id := server_id.id;
 				c_type := class_types.item (type_id);
 				feature_table := c_type.associated_class.feature_table;
 				from rout_ids.start until rout_ids.after loop
@@ -3872,6 +3975,25 @@ feature -- DLE
 			end;
 			log_file.close
 		end;
+
+	generate_dle_file is
+			-- Generate DLE related data to be loaded at run-time.
+		do
+		end
+
+	generate_dle_make_table is
+			-- Generate the table of `make' creation procedures of
+			-- the descendants of DYNAMIC in the DC-set.
+		do
+		end
+
+	check_static_calls is
+			-- Do nothing if system is not dynamic. Otherwise
+			-- check whether some feature calls have been statically bound
+			-- in the extendible system, but need to be dynamically bound
+			-- because of the DC-set.
+		do
+		end
 
 invariant
 

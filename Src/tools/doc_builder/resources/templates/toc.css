@@ -16,15 +16,7 @@ a
 
 a:hover
 {
-	color:black;
-	font-size: 70%;
-	font-family: verdana, arial, helvetica, sans-serif;
-	text-decoration:none;
-}
-
-a:visited
-{
-	color:black;
+	color:red;
 	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
@@ -45,6 +37,11 @@ a:active
 	font-size: 70%;
 	font-family: verdana, arial, helvetica, sans-serif;
 	text-decoration:none;
+}
+
+img
+{
+	border: 0px;
 }
 
 td
@@ -86,7 +83,7 @@ table.toc_outer_table
 table.toc_toolbar
 {
 	margin: 0px 0px 0px 0px;
-	background-color: gray;
+	background-color: white;
 	width: 100%;
 }
 

@@ -183,7 +183,15 @@ feature
 			-- final instruction of dispose has been reached, the object is
 			-- freed.
 		do
+		end;
+
+	free (object: ANY) is
+			-- Free `object', by-passing the garbage collector.
+			-- Behavior is undefined if the object is still referenced.
+		do
+			mem_free ($object)
 		end
+
 
 feature {NONE}
 
@@ -193,6 +201,12 @@ feature {NONE}
 			"C"
 		alias
 			"gc_mon"
+		end;
+
+	mem_free (obj: ANY) is
+			-- Free object held at `obj'.
+		external
+			"C"
 		end;
 
 end

@@ -57,7 +57,7 @@ feature -- Comparing
 	equal_to: BOOLEAN is
 			-- Is value equal to the specified value?
 		local
-			wildcard_matcher: WILDCARD_MATCHER
+			wildcard_matcher: OLD_WILDCARD_MATCHER
 		do
 			if has_wildcards (value) then
 				!! wildcard_matcher.make (value)

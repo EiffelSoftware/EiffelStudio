@@ -128,7 +128,7 @@ feature {QUERY_EXECUTER} -- Implementation
 			i: INTEGER
 			dir_name, wc_name, name: STRING
 			directory: DIRECTORY
-			wildcard_matcher: WILDCARD_MATCHER
+			wildcard_matcher: OLD_WILDCARD_MATCHER
 			entries: ARRAYED_LIST [STRING]
 			empty_array: ARRAY [STRING]
 		do

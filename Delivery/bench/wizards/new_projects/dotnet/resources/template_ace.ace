@@ -18,7 +18,7 @@ cluster
 	root_cluster: "<FL_LOCATION>"
 
 		-- EiffelBase.NET
-	all base: "$ISE_EIFFEL\library.net\base"
+	all base: "$ISE_EIFFEL\library.net\base.net"
 <FL_EXTERNAL_CLASSES>	
 <FL_EXTERNAL_ASSEMBLIES>
 end

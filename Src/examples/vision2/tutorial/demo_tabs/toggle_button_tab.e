@@ -29,13 +29,14 @@ feature -- Initialization
 		
 			create cmd1.make (~get_state_val)		
 			create cmd2.make (~set_state_val)
-			create f1.make (Current, "State", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "State", cmd1, cmd2)
+
 			create cmd1.make (~toggle_button)
 			create b1.make_with_text(Current,"Toggle State")
 			b1.add_click_command(cmd1, Void)
 			b1.set_vertical_resize(False)
 	
-				-- Creates the objects and their commands
+			-- Creates the objects and their commands
 			set_parent(par)
 		end
 

@@ -28,11 +28,13 @@ feature -- Initialization
 		
 			-- Create the objects and their commands
 			create cmd2.make (~get_client_width)
-			create f1.make (Current, "client width", Void, cmd2)
+			create f1.make (Current, 0, 0, "client width", Void, cmd2)
+
 			create cmd2.make (~get_client_height)
-			create f2.make (Current, "client height", Void, cmd2)
+			create f2.make (Current, 1, 0, "client height", Void, cmd2)
+
 			create cmd2.make (~get_managed)
-			create f3.make (Current, "Managed", Void, cmd2)
+			create f3.make (Current, 2, 0, "Managed", Void, cmd2)
 			set_parent(par)
 		end
 

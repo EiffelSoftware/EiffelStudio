@@ -29,9 +29,11 @@ feature -- Initialization
 				-- Create the objects and their commands
 			create cmd1.make (~set_cp)
 			create cmd2.make (~get_cp)
-			create f1.make (Current, "Current Page", cmd1, cmd2)			
+			create f1.make (Current, 0, 0, "Current Page", cmd1, cmd2)			
+
 			create cmd2.make (~get_count)
-			create f2.make (Current, "Pages", cmd1, cmd2)
+			create f2.make (Current, 1, 0, "Pages", cmd1, cmd2)
+
 			create b1.make_with_text(Current,"Add New Page")
 			create cmd1.make (~add_page)
 			b1.add_click_command(cmd1, Void)

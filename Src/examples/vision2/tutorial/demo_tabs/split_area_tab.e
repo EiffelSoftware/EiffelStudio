@@ -30,7 +30,7 @@ feature -- Initialization
 				-- Creates the objects and their commands
 			create cmd1.make (~set_split_position)
 			create cmd2.make (~get_split_position)
-			create f1.make (Current, "Split Position", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Split Position", cmd1, cmd2)
 --			create cmd1.make (~set_minimum_position)
 --			create cmd2.make (~get_minimum_position)
 --			create f2.make (Current, "Minimum Position", Void, cmd2)

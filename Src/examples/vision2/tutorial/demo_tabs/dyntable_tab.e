@@ -28,10 +28,12 @@ feature -- Initialization
 		
 			-- Creates the objects and their commands
 			create cmd2.make (~get_row_layout)
-			create f1.make (Current, "Uses Row Layout?", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Uses Row Layout?", cmd1, cmd2)
+
 			create cmd1.make (~set_finite_dimens)
 			create cmd2.make (~get_finite_dimens)
-			create f2.make (Current, "Finite Dimension", cmd1, cmd2)
+			create f2.make (Current, 1, 0, "Finite Dimension", cmd1, cmd2)
+
 			create cmd1.make(~set_row_layout)
 			create b1.make_with_text (Current, "Row Layout")
 			b1.add_click_command(cmd1, Void)

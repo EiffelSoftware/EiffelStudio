@@ -28,18 +28,18 @@ feature -- Initialization
 		do
 		{ANY_TAB} Precursor (Void)
 
-		create cmd2.make (~rows)
-		create f1.make (Current, "Rows", Void, cmd2)	
+		create cmd2.make (~e_rows)
+		create f1.make (Current, 0, 0, "Rows", Void, cmd2)	
 		create cmd2.make (~selected)
-		create f2.make (Current, "Selected", Void, cmd2)
+		create f2.make (Current, 1, 0, "Selected", Void, cmd2)
 		create cmd2.make (~selected_items)
-		create f3.make (Current, "Selected Items", cmd2, cmd2)
+		create f3.make (Current, 2, 0, "Selected Items", cmd2, cmd2)
 		create cmd1.make (~get_item)
-		create f4.make (Current, "Item", cmd1, cmd1)
+		create f4.make (Current, 3, 0, "Item", cmd1, cmd1)
 		create cmd1.make (~select_item)
-		create f5.make (Current, "Select Item", cmd1, cmd1)
+		create f5.make (Current, 4, 0, "Select Item", cmd1, cmd1)
 		create cmd1.make (~deselect_item)
-		create f6.make (Current, "Deselect Item", cmd1, cmd1)
+		create f6.make (Current, 5, 0, "Deselect Item", cmd1, cmd1)
 		create cmd1.make (~clear_selection)
 		create b1.make_with_text (Current, "Clear Selection")
 		b1.set_vertical_resize (False)
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Execution Feature
 
-	rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	e_rows (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Return the number of rows in the list.
 		do
 			f1.set_text(current_widget.count.out)	

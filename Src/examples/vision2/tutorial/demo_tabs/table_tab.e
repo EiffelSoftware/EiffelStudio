@@ -28,15 +28,15 @@ feature -- Initialization
 				
 				-- Creates the objects and their commands
 			create cmd2.make (~get_rows)
-			create f1.make (Current, "Rows", Void, cmd2)
+			create f1.make (Current, 0, 0, "Rows", Void, cmd2)
 			create cmd2.make (~get_columns)
-			create f2.make (Current, "Columns", Void, cmd2)
-			create cmd1.make (~set_row_spacing)
+			create f2.make (Current, 1, 0, "Columns", Void, cmd2)
+			create cmd1.make (~aset_row_spacing)
 			create cmd2.make (~get_row_spacing)
-			create f3.make (Current, "Row Spacing", cmd1, cmd2)
-			create cmd1.make (~set_column_spacing)
+			create f3.make (Current, 2, 0, "Row Spacing", cmd1, cmd2)
+			create cmd1.make (~aset_column_spacing)
 			create cmd2.make (~get_column_spacing)
-			create f4.make (Current, "Column Spacing", cmd1, cmd2)
+			create f4.make (Current, 3, 0, "Column Spacing", cmd1, cmd2)
 			create b2.make_with_text (Current,"Add Buttons To Table")
 			create cmd1.make (~add_buttons)
 			b2.add_click_command(cmd1, Void)
@@ -79,7 +79,7 @@ feature -- Execution feature
 			f1.set_text(current_widget.rows.out)
 		end
 
-	set_row_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	aset_row_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Set the row spacing between two table objects.
 		do
 			if f3.get_text.is_integer then
@@ -93,7 +93,7 @@ feature -- Execution feature
 			f3.set_text(current_widget.row_spacing.out)
 		end
 
-	set_column_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	aset_column_spacing (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Set the column spacing between two table objects.
 		do
 			if f4.get_text.is_integer then

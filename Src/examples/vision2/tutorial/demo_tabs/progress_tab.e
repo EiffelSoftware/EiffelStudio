@@ -30,9 +30,11 @@ feature -- Initialization
 
 			create cmd1.make (~set_level)
 			create cmd2.make (~get_level)
-			create f1.make (Current, "Bar Level", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Bar Level", cmd1, cmd2)
+
 			create cmd2.make (~get_mode)
-			create f2.make (Current, "Mode", Void, cmd2)
+			create f2.make (Current, 1, 0, "Mode", Void, cmd2)
+
 			create cmd1.make (~set_continuous)
 			--create b1.make_with_text(Current, "Continuous Mode")
 			create b1.make(Current)

@@ -29,7 +29,7 @@ feature -- Initialization
 			
 		create cmd1.make (~set_maximum_text_length)
 		create cmd2.make (~get_maximum_text_length)
-		create f1.make (Current, "Maximum Text Length", cmd1, cmd2)	
+		create f1.make (Current, 0, 0, "Maximum Text Length", cmd1, cmd2)	
 
 		set_parent (par)
 		end

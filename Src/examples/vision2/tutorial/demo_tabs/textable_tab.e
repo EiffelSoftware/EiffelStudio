@@ -30,7 +30,7 @@ feature -- Initialization
 				-- Creates the objects and their commands
 			create cmd1.make (~set_text_val)
 			create cmd2.make (~get_text_val)
-			create f1.make (Current, "Text", cmd1, cmd2)
+			create f1.make (Current, 0, 0, "Text", cmd1, cmd2)
 			
 			create cmd1.make (~center_alignment)
 			create b1.make_with_text (Current, "Center Alignment")

@@ -415,6 +415,8 @@ feature -- Command generation
 	generate_eiffel_text (parent_perm_wind: STRING): STRING is
 			-- Generate Eiffel text corresponding to the setting
 			-- of the query correpsonding to `query'.
+		local
+			actual_argument: STRING
 		do
 			!! Result.make (0)
 			Result.append ("%T%T%T")
@@ -422,20 +424,26 @@ feature -- Command generation
 				Result.append ("if not ")
 				Result.append (text_field_name)
 				Result.append (".text.empty then%N%T%T%T")
-				Result.append (eiffel_setting (parent_perm_wind, text_field_name))
-				Result.append (".text")
-				Result.append (extension_to_add)
-				Result.append (")%N")
+				!! actual_argument.make (0)
+				actual_argument.append (parent_perm_wind)
+				actual_argument.append (".")
+				actual_argument.append (text_field_name)
+				actual_argument.append (".text")
+				actual_argument.append (extension_to_add)
+				Result.append (eiffel_setting (actual_argument))
 				if test_toggle_b.state and not procedure.precondition_list.empty then
 					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
 					Result.append (test_text_field.text)
 					Result.append ("%")%N%T%T%T%Tend%N")
 				end	
 				Result.append ("%T%T%Telse%N%T%T%T%T")
-				Result.append (eiffel_setting (parent_perm_wind, opt_pull_name))
-				Result.append (".selected_button.text")
-				Result.append (extension_to_add)
-				Result.append (")%N")
+				!! actual_argument.make (0)
+				actual_argument.append (parent_perm_wind)
+				actual_argument.append (".")
+				actual_argument.append (opt_pull_name)
+				actual_argument.append (".selected_button.text")
+				actual_argument.append (extension_to_add)
+				Result.append (eiffel_setting (actual_argument))
 				if test_toggle_b.state and not procedure.precondition_list.empty then
 					Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
 					Result.append (test_text_field.text)
@@ -443,53 +451,59 @@ feature -- Command generation
 				end	
 				Result.append ("%T%T%Tend%N")
 			elseif text_field_name /= Void then
-				Result.append (eiffel_setting (parent_perm_wind, text_field_name))
-				Result.append (".text")
-				Result.append (extension_to_add)
-				Result.append (")%N")
+				!! actual_argument.make (0)
+				actual_argument.append (parent_perm_wind)
+				actual_argument.append (".")
+				actual_argument.append (text_field_name)
+				actual_argument.append (".text")
+				actual_argument.append (extension_to_add)
+				Result.append (eiffel_setting (actual_argument))
 			else
-				Result.append (eiffel_setting (parent_perm_wind, opt_pull_name))
-				Result.append (".selected_button.text")
-				Result.append (extension_to_add)
-				Result.append (")%N")
+				!! actual_argument.make (0)
+				actual_argument.append (parent_perm_wind)
+				actual_argument.append (".")
+				actual_argument.append (opt_pull_name)
+				actual_argument.append (".selected_button.text")
+				actual_argument.append (extension_to_add)
+				Result.append (eiffel_setting (actual_argument))
 			end
 			if test_toggle_b.state and not procedure.precondition_list.empty and not is_both then
-				Result.append ("%N%T%T%T%Telse%N%T%T%T%T%Tio.put_string (%"")
+				Result.append ("%T%T%Telse%N%T%T%T%Tio.put_string (%"")
 				Result.append (test_text_field.text)
-				Result.append ("%")%N%T%T%T%Tend%N")
+				Result.append ("%")%N%T%T%Tend%N")
 			end		
 		end
 
-	eiffel_setting (perm_wind, argument: STRING): STRING is
+	eiffel_setting (actual_argument: STRING): STRING is
 			-- Generate the setting of the query using `argument'.
 		local
 			preconditions: LINKED_LIST [APPLICATION_PRECONDITION]
 		do
 			!! Result.make (0)
 			if test_toggle_b.state and not procedure.precondition_list.empty then 
-				Result.append ("if ")
+				Result.append ("precondition := True%N")
+
 				preconditions := procedure.precondition_list
 				from
 					preconditions.start
 				until
-					preconditions.islast
+					preconditions.after
 				loop
-					Result.append (preconditions.item.precondition)
-					Result.append ("%N%T%T%T%Tand then ")
+					Result.append ("%T%T%Tprecondition := precondition and then ")
+					Result.append (preconditions.item.generated_eiffel_text (procedure.argument_name, actual_argument))
+					Result.append ("%N")
 					preconditions.forth
 				end		
-				Result.append (preconditions.last.precondition)
-				Result.append ("%N%T%T%Tthen%N%T%T%T%T")
+				Result.append ("%N%T%T%Tif precondition then%N%T%T%T%T")
 			end
 			Result.append ("target.")
-			Result.append (procedure.method_name)
+			Result.append (procedure.command_name)
 			Result.append (" (")
-			Result.append (perm_wind)
-			Result.append (".")
-			Result.append (argument)
+			Result.append (actual_argument)
+			Result.append (")%N")
 		end
 
-	procedure: APPLICATION_METHOD is
+	procedure: APPLICATION_COMMAND is
 			-- Procedure chosen to set `query'
 		require
 			item_selected: procedure_opt_pull.selected_button /= Void
@@ -497,7 +511,7 @@ feature -- Command generation
 			application_method_button: APPLICATION_METHOD_PUSH_B
 		do
 			application_method_button ?= procedure_opt_pull.selected_button
-			Result := application_method_button.application_method
+			Result ?= application_method_button.application_method
 		end
 
 	text_field_name: STRING 

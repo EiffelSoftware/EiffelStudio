@@ -281,15 +281,10 @@ feature {NONE} -- Implementation
 		require
 			pattern_not_void: pattern /= Void
 		local
-			c_expanded_name_pointer: POINTER
+			temp_pattern: ANY
 		do
-			
-			c_expanded_name_pointer :=
-				C.c_match_font_name (eiffel_to_c (pattern))
-			if c_expanded_name_pointer /= NULL then
-				create Result.make (0)
-				Result.from_c (c_expanded_name_pointer)
-			end
+			temp_pattern := pattern.to_c
+			Result := C.c_match_font_name ($temp_pattern)
 		end
 
 feature {EV_FONT_DIALOG_IMP} -- Implementation

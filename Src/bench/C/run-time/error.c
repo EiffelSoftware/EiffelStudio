@@ -50,7 +50,12 @@ public void esys()
 	 * If errno is zero, the 'External event' exception is generated instead.
 	 */
 
+
+#ifdef EIF_WIN32
+	if ((errno == 0) && (_doserrno == 0)) /* Function did not set errno? */
+#else
 	if (errno == 0)					/* Function did not set errno? */
+#endif
 		xraise(EN_EXT);				/* External event */
 
 	xraise(EN_SYS);					/* Operating system error */

@@ -188,9 +188,14 @@ feature -- C code generation
 			l_buf.put_string ("if (thread_id != eif_thr_thread_id()) {")
 			l_buf.put_new_line
 			l_buf.indent
+				-- We need to let the GC know that we are potentially stopped
+			l_buf.put_string ("EIF_ENTER_C;")
+			l_buf.put_new_line
 			l_buf.put_string ("eif_thr_mutex_lock (")
 			l_buf.put_string (l_mutex_name)
 			l_buf.put_string (");")
+			l_buf.put_new_line
+			l_buf.put_string ("EIF_EXIT_C;")
 			l_buf.put_new_line
 			l_buf.put_string ("eif_thr_mutex_unlock (")
 			l_buf.put_string (l_mutex_name)
@@ -246,9 +251,14 @@ feature {NONE} -- Implementation
 			buf.put_string ("if (!done) {")
 			buf.put_new_line
 			buf.indent
+				-- We need to let the GC know that we are potentially stopped
+			buf.put_string ("EIF_ENTER_C;")
+			buf.put_new_line
 			buf.put_string ("eif_thr_mutex_lock (")
 			buf.put_string (l_mutex_name)
 			buf.put_string (");")
+			buf.put_new_line
+			buf.put_string ("EIF_EXIT_C;")
 			buf.put_new_line
 				-- Double-Checked Locking on `done' is safe, because
 				-- `done' is marked volatile.

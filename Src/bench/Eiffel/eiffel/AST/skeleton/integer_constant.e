@@ -120,7 +120,7 @@ feature -- Type checking
 			Result := t.is_integer 
 			if Result then
 				int_a ?= t
-				Result := int_a.size >= size
+				Result := int_a.compatibility_size >= size
 			end
 		end
 
@@ -129,8 +129,8 @@ feature -- Type checking
 		do
 				-- Put onto the type stack an integer actual type
 			inspect size
-			when 8 then ast_context.put (Integer_8_type)
-			when 16 then ast_context.put (Integer_16_type)
+			when 8 then ast_context.put (Integer_8_constant_type)
+			when 16 then ast_context.put (Integer_16_constant_type)
 			when 32 then ast_context.put (Integer_type)
 			when 64 then ast_context.put (Integer_64_type)
 			end
@@ -214,7 +214,7 @@ feature -- Settings
 			-- It will discard existing information, because it might be
 			-- possible that we entered an INTEGER_8 constant value.
 		do
-			size := t.size
+			size := t.compatibility_size
 		ensure then
 			size_set: size = t.size
 		end
@@ -222,6 +222,7 @@ feature -- Settings
 feature -- Output
 
 	string_value: STRING is
+			-- String representation of manifest constant.
 		do
 			if size <= 32 then
 				Result := lower.out
@@ -235,9 +236,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (
-				create {NUMBER_TEXT}.make (string_value)
-			)
+			ctxt.put_text_item (create {NUMBER_TEXT}.make (string_value))
 		end
 
 feature -- Generation
@@ -255,24 +254,16 @@ feature -- Generation
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
+			buf.putchar ('(')
 			inspect size
-			when 8 then
-				buf.putstring ("(EIF_INTEGER_8) (")
+			when 8, 16, 32 then
 				buf.putstring (lower.out)
-				buf.putstring ("L)")
-			when 16 then
-				buf.putstring ("(EIF_INTEGER_16) (")
-				buf.putstring (lower.out)
-				buf.putstring ("L)")
-			when 32 then
-				buf.putstring ("(EIF_INTEGER_32) (")
-				buf.putstring (lower.out)
-				buf.putstring ("L)")
 			when 64 then
-				buf.putstring ("(EIF_INTEGER_64) (")
+				buf.putstring ("EIF_INTEGER_64) (")
 				buf.putstring (to_integer_64.out)
-				buf.putstring ("L)")
 			end
+			buf.putchar ('L')
+			buf.append_character (')')
 		end
 
 	generate_il is
@@ -318,6 +309,20 @@ feature {COMPILER_EXPORTER}
 			-- Is the atomic a good integer bound for multi-branch ?
 		do
 			Result := size <= 32
+		end
+
+feature {NONE} -- Integer_type constants
+
+	integer_8_constant_type: INTEGER_A is
+			-- Type of a manifest integer 8 constant.
+		once
+			create Result.make_for_constant (32, 8)
+		end
+
+	integer_16_constant_type: INTEGER_A is
+			-- Type of a manifest integer 16 constant.
+		once
+			create Result.make_for_constant (32, 16)
 		end
 
 feature {NONE} -- Translation
@@ -396,17 +401,13 @@ feature {NONE} -- Translation
 			else
 					-- Force size of integer constant depending on number
 					-- of hexadecimal character in hex string.
-				if System.manifest_integers_as_integer_32 then
-					size := 32
+				if j <= 3 then
+					size := 8
+				elseif j <= 5 then
+					size := 16
 				else
-					if j <= 3 then
-						size := 8
-					elseif j <= 5 then
-						size := 16
-					else
-						check j <= 9 end
-						size := 32
-					end
+					check j <= 9 end
+					size := 32
 				end
 			end
 		end
@@ -456,18 +457,14 @@ feature {NONE} -- Translation
 					end
 					lower := last_integer
 
-					if System.manifest_integers_as_integer_32 then
+					if -128 <= lower and lower <= 127 then
+						size := 8
+					elseif -32768 <= lower and lower <= 32767 then
+						size := 16
+					elseif -2147483648 <= lower and lower <= 2147483647 then
 						size := 32
 					else
-						if -128 <= lower and lower <= 127 then
-							size := 8
-						elseif -32768 <= lower and lower <= 32767 then
-							size := 16
-						elseif -2147483648 <= lower and lower <= 2147483647 then
-							size := 32
-						else
-							check False end
-						end
+						check False end
 					end
 				else
 					from

@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelVision message dialog. Implemenation interface."
+	description: "EiffelVision message dialog. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ feature {NONE} -- Initialization
 			-- Create the dialog box.
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			c_gtk_window_set_modal (widget, True)
+			gtk_window_set_position (GTK_WINDOW (widget), 1)
+
 			initialize
 			parent_imp ?= par.implementation
 		end
@@ -29,6 +32,9 @@ feature {NONE} -- Initialization
 			-- title and `a_msg' as message.
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			c_gtk_window_set_modal (widget, True)
+			gtk_window_set_position (GTK_WINDOW (widget), 1)
+
 			initialize
 			parent_imp ?= par.implementation
 			set_message (a_msg)
@@ -38,6 +44,9 @@ feature {NONE} -- Initialization
 	make_default (par: EV_CONTAINER; a_title, a_msg: STRING) is
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			c_gtk_window_set_modal (widget, True)
+			gtk_window_set_position (GTK_WINDOW (widget), 1)
+
 			parent_imp ?= par.implementation
 			initialize
 			show
@@ -49,6 +58,7 @@ feature {NONE} -- Initialization
 			dbox: EV_VERTICAL_BOX
 			container_interface: EV_DIALOG
 			parent: EV_WINDOW
+
 			color: EV_COLOR
 		do
 			-- First the build of the window
@@ -59,6 +69,12 @@ feature {NONE} -- Initialization
 			-- We cannot use the precursor, but it is
 			-- almost the same. The build of the dialog
 			parent ?= parent_imp.interface
+
+-- Test
+			if (parent = Void) then
+				create parent.make_top_level
+			end
+
 			!! container_interface.make (parent)
 			container_interface.set_implementation (Current)
 			check
@@ -420,13 +436,14 @@ feature {NONE} -- Implementation
 	help_button: EV_BUTTON
 		-- Help button of the dialog
 
-feature {EV_MESSAGE_DIALOG_IMP} -- Execute procedure
-
-	execute (argument: EV_ARGUMENT1[EV_MESSAGE_DIALOG_I]; data: EV_EVENT_DATA) is
-			-- Command to close the dialog
-		do
-			argument.first.interface.destroy
-		end
+--feature {EV_MESSAGE_DIALOG_IMP} -- Execute procedure
+--
+--	execute (argument: EV_ARGUMENT1[EV_MESSAGE_DIALOG_I]; data: EV_EVENT_DATA) is
+--			-- Command to close the dialog
+--		do
+--			argument.first.interface.destroy
+--				-- destroy the gtk object
+--		end
 
 end -- class EV_MESSAGE_DIALOG_IMP
 

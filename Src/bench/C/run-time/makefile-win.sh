@@ -300,7 +300,7 @@ all:: eif_size.h
 all:: $output_libraries
 
 standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib 
-standard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
+mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib

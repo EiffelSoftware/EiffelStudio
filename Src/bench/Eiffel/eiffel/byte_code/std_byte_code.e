@@ -293,15 +293,12 @@ feature
 				-- If there is a rescue clause, generate it now...
 			generate_rescue;
 				-- End of C function
-			generated_file.putstring ("EDCX%N");
 			if is_once and then context.result_used then
 				generated_file.putstring ("#undef Result%N");
 			end
 			generated_file.exdent;
-			generated_file.putchar ('}');
-			generated_file.new_line;
 				-- Leave a blank line after function definition
-			generated_file.new_line;
+			generated_file.putstring ("}%N%N");
 			Context.inherited_assertion.wipe_out;
 		end;
 

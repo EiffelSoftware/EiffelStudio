@@ -11,7 +11,7 @@ inherit
 			make as make_with_count
 		redefine
 			solved_type, dump, ext_append_to,
-			is_equivalent
+			is_equivalent, is_full_named_type
 		end
 
 create {COMPILER_EXPORTER}
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_count (c)
 			feature_name := f.feature_name
-			class_id := System.current_class.class_id
+			current_class_id := System.current_class.class_id
 			rout_id := f.rout_id_set.first
 		end
 
@@ -33,6 +33,12 @@ feature -- Properties
 
 	rout_id: INTEGER
 
+	current_class_id: INTEGER
+			-- Class declaring current
+
+	is_full_named_type: BOOLEAN is False
+			-- Current is not fully named
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -41,7 +47,7 @@ feature -- Comparison
 			Result := bit_count = other.bit_count and then
 				rout_id = other.rout_id and then
 				feature_name.is_equal (other.feature_name) and then
-				class_id = other.class_id
+				current_class_id = other.current_class_id
 		end
 
 feature -- Output
@@ -77,8 +83,8 @@ feature {COMPILER_EXPORTER}
 			int_value: INTEGER_CONSTANT
 		do
 			origin_table := feat_table.origin_table
-			if not (System.current_class.class_id = class_id) then
-				anchor_feature := System.class_of_id (class_id).feature_table
+			if not (System.current_class.class_id = current_class_id) then
+				anchor_feature := System.class_of_id (current_class_id).feature_table
 								.item (feature_name)
 			else
 				anchor_feature := feat_table.item (feature_name)

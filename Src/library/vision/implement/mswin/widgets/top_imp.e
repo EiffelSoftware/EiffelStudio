@@ -37,13 +37,14 @@ feature -- Status setting
     			-- contained in wid_list
 		local
 			ww: WIDGET_IMP
+			l_result: INTEGER
  		do
 			remove_main_window (Current)
 			if exists then
 				if application_main_window = Current then
 					cwin_post_quit_message (0)
 				else
-					cwin_destroy_window (wel_item)
+					l_result := cwin_destroy_window (wel_item)
 				end
 			end
 			from

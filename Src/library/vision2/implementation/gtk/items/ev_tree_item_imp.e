@@ -88,10 +88,22 @@ feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
+		local
+			par_imp: EV_TREE_IMP
+				-- local variable created to get the tree_widget Pointer
+				-- which is specific to EV_TREE_IMP and is not in EV_TREE_ITEM_HOLDER_IMP
 		do
-			check
-				Not_yet_implemented: False
+			par_imp ?= parent_imp
+			if (par_imp /= void) then
+				-- the parent is a EV_TREE_IMP. Therefore the parent
+				-- of the tree item is tree_widget.
+				Result := c_gtk_tree_item_is_selected (par_imp.tree_widget, widget)
+			else
+				-- the parent is not a EV_TREE_IMP but a EV_TREE_ITEM_IMP. Therefore the parent
+				-- of the tree item is widget.
+				Result := c_gtk_tree_item_is_selected (GTK_TREE_ITEM_SUBTREE(parent_imp.widget), widget)
 			end
+				
 		end
 
 	is_expanded: BOOLEAN is
@@ -101,10 +113,9 @@ feature -- Status report
 		end
 
 	is_parent: BOOLEAN is
+			-- is the item the parent of other items?
 		do
-			check
-				not_yet_implemented: False
-			end
+			Result := (GTK_TREE_ITEM_SUBTREE(widget) /= default_pointer)
 		end
 
 feature -- Status setting
@@ -112,9 +123,11 @@ feature -- Status setting
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		do
-			check
-				not_yet_implemented: False
-			end	
+			if (flag) then
+				gtk_tree_item_select (widget)
+			else
+				gtk_tree_item_deselect (widget)
+			end
 		end
 	
 feature -- Element change
@@ -188,6 +201,7 @@ feature {NONE} -- Implementation
 			if GTK_TREE_ITEM_SUBTREE(widget) = default_pointer then
 				p := gtk_tree_new
 				gtk_tree_item_set_subtree (widget, p)
+				c_gtk_tree_set_single_selection_mode (GTK_TREE_ITEM_SUBTREE(widget))
 			end
 			gtk_tree_append (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
 		end

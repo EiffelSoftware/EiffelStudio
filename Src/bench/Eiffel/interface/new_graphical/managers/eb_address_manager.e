@@ -1297,7 +1297,7 @@ feature {NONE} -- open new class
 
 	last_key_was_backspace: BOOLEAN
 			-- Was the last pressed key `back_space'?
-
+			
 	is_typing_cluster: BOOLEAN
 			-- Is the user typing in the cluster address combo box (we don't complete otherwise).
 
@@ -1361,18 +1361,23 @@ feature {NONE} -- open new class
 			array_count: INTEGER
 			do_not_complete: BOOLEAN
 			same_st, dif: BOOLEAN
+			last_caret_position: INTEGER
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
 		do
 				-- The text in `class_address' has changed => we don't know what's inside.
 			current_typed_class := Void
-			class_address.change_actions.block
 			str := clone (class_address.text)
+			last_caret_position := class_address.caret_position
+			class_address.change_actions.block
 			if str /= Void then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower
 				nb := str.count
-				do_not_complete := (last_key_was_delete or not enable_complete) or not is_typing
+				do_not_complete :=	last_key_was_delete or
+									not enable_complete or
+									not is_typing or
+									last_caret_position /= str.count + 1
 				if nb > 0 and last_key_was_backspace and had_selection then
 					str.head (nb - 1)
 					nb := nb - 1
@@ -1446,9 +1451,10 @@ feature {NONE} -- open new class
 			else
 				str.to_upper
 				class_address.set_text (str)
-				class_address.set_caret_position (str.count + 1)
+				class_address.set_caret_position (last_caret_position)
 			end
 			class_address.change_actions.resume
+			is_typing := False
 		end
 
 	type_cluster is
@@ -1462,17 +1468,22 @@ feature {NONE} -- open new class
 			cname: STRING
 			array_count: INTEGER
 			do_not_complete: BOOLEAN
+			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
 		do
 			cluster_address.change_actions.block
+			last_caret_position := cluster_address.caret_position
 			str := clone (cluster_address.text)
 			if str /= Void then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower
 				nb := str.count
-				do_not_complete := (last_key_was_delete or not enable_cluster_complete) or not is_typing_cluster
+				do_not_complete :=	last_key_was_delete or
+									not enable_complete or
+									not is_typing or
+									last_caret_position /= str.count + 1
 				if nb > 0 and last_key_was_backspace and cluster_had_selection then
 					str.head (nb - 1)
 					nb := nb - 1
@@ -1541,7 +1552,7 @@ feature {NONE} -- open new class
 				end
 			else
 				cluster_address.set_text (str)
-				cluster_address.set_caret_position (str.count + 1)
+				cluster_address.set_caret_position (last_caret_position)
 			end
 			cluster_address.change_actions.resume
 		end
@@ -1558,17 +1569,22 @@ feature {NONE} -- open new class
 			cname: STRING
 			array_count: INTEGER
 			do_not_complete: BOOLEAN
+			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN
 			str_area, current_area, other_area: SPECIAL [CHARACTER]
 		do
 			feature_address.change_actions.block
 			str := clone (feature_address.text)
+			last_caret_position := feature_address.caret_position
 			if str /= Void then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower
 				nb := str.count
-				do_not_complete := (last_key_was_delete or not enable_feature_complete) or not is_typing_feature
+				do_not_complete :=	last_key_was_delete or
+									not enable_complete or
+									not is_typing or
+									last_caret_position /= str.count + 1
 				if nb > 0 and last_key_was_backspace and feature_had_selection then
 					str.head (nb - 1)
 					nb := nb - 1
@@ -1642,7 +1658,7 @@ feature {NONE} -- open new class
 				end
 			else
 				feature_address.set_text (str)
-				feature_address.set_caret_position (str.count + 1)
+				feature_address.set_caret_position (last_caret_position)
 			end
 			feature_address.change_actions.resume
 		end

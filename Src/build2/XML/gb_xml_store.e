@@ -79,6 +79,7 @@ feature -- Basic operation
 			warning_text: STRING
 			abort_saving: BOOLEAN
 			is_vs: BOOLEAN
+			warning_dialog: EV_WARNING_DIALOG
 		do
 			create generation_settings
 			generation_settings.enable_is_saving
@@ -140,10 +141,16 @@ feature -- Basic operation
 					-- Save nicely formatted XML ouput to disk in `filename'.
 				create output_file.make (filename)
 				output_file.open_write
-				output_file.put_string (xml_format)
-				output_file.put_string (last_string.string)
-				output_file.close
-				set_timed_status_text ("Saved.")
+				if output_file.is_open_write then
+					output_file.put_string (xml_format)
+					output_file.put_string (last_string.string)
+					output_file.close
+					set_timed_status_text ("Saved.")
+				else
+					create warning_dialog.make_with_text (unable_to_save_part1 + filename + unable_to_save_part2)
+					warning_dialog.show_modal_to_window (main_window)
+					clear_status_bar
+				end
 			end
 		end
 		

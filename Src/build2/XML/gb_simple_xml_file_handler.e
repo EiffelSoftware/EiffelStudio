@@ -54,6 +54,7 @@ feature -- Basic operations
 			file: KL_TEXT_OUTPUT_FILE
 			last_string: KL_STRING_OUTPUT_STREAM
 			processed_string: STRING
+			warning_dialog: EV_WARNING_DIALOG
 		do
 				-- Create the root element.
 			create namespace.make_default
@@ -89,8 +90,13 @@ feature -- Basic operations
 				-- Save document.
 			create file.make (file_name)
 			file.open_write
-			file.put_string (processed_string)
-			file.close
+			if file.is_open_write then
+				file.put_string (processed_string)
+				file.close
+			else
+				create warning_dialog.make_with_text (unable_to_save_part1 + file_name + unable_to_save_part2)
+				warning_dialog.show_modal_to_window (main_window)
+			end
 		end
 		
 	load_file (file_name: STRING): HASH_TABLE [STRING, STRING] is

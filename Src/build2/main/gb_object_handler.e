@@ -67,7 +67,12 @@ feature -- Basic operation
 			if cell_object /= Void then
 				cell_object.add_child_object (new_object)
 			end
-			objects.extend (new_object)
+			
+				-- If we are moving an object within objects, then it will already
+				-- exist in `objects' and should not be added again.-
+			if not objects.has (new_object) then
+				objects.extend (new_object)
+			end
 			
 				-- We must now update the object editors to take into account
 				-- This information. Some representations of objects in the editor
@@ -94,7 +99,8 @@ feature -- Basic operation
 			system_status.enable_project_modified
 			command_handler.update
 		ensure
-			new_obect_added_to_object_list: objects.has (new_object)
+			new_object_added_to_object_list: objects.has (new_object)
+			new_object_only_occurs_once_in_object_list: objects.occurrences (new_object) = 1
 			new_object_layout_item_not_void: new_object.layout_item /= Void
 			new_object_display_object_not_void: new_object.display_object /= Void
 			new_object_object_not_void: new_object.object /= Void

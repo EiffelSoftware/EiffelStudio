@@ -1,12 +1,12 @@
 indexing
 	description:
-		"Implementation of agent builder"
+		"Implementation of transfer manager builder"
 
 	status:	"See note at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class AGENT_BUILDER_IMPL inherit
+class TRANSFER_MANAGER_BUILDER_IMPL inherit
 	
 	RESOURCE_FACTORY
 		export
@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Create agent builder.
+			-- Create transfer manager builder.
 		do
 			create transactions.make (1)
 			create readable_set.make
@@ -35,12 +35,12 @@ feature -- Constants
 			
 feature -- Access
 
-	agent: TRANSFER_AGENT is
-			-- The built agent
+	manager: TRANSFER_MANAGER is
+			-- The built manager
 		require
-			built: agent_built
+			built: manager_built
 		do
-			Result := transfer_agent
+			Result := transfer_manager
 		end
 
 	transaction (n: INTEGER): TRANSACTION is
@@ -70,10 +70,11 @@ feature -- Status report
 			Result := transactions.empty
 		end
 
-	agent_built: BOOLEAN is
-			-- Has agent been built?
+	manager_built: BOOLEAN is
+			-- Has manager been built?
 		do
-			Result := transfer_agent /= Void and then not transfer_agent.empty
+			Result := transfer_manager /= Void and then 
+				not transfer_manager.empty
 		end
 
 	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN is
@@ -113,13 +114,13 @@ feature -- Status report
 	transfer_finished: BOOLEAN is
 			-- Has a transfer occurred?
 		do
-			Result := agent_built and then agent.transfer_finished
+			Result := manager_built and then manager.transfer_finished
 		end
 
 	transfer_succeeded: BOOLEAN is
 			-- Has the last transfer succeeded?
 		do
-			Result := agent_built and then agent.transactions_succeeded
+			Result := manager_built and then manager.transactions_succeeded
 		end
 
 			
@@ -140,7 +141,7 @@ feature -- Element change
 			ta: SINGLE_TRANSACTION
 		do
 			optimized_transactions := Void
-			transfer_agent := Void
+			transfer_manager := Void
 
 			resource_factory.set_address (s)
 			su := resource_factory.url
@@ -179,7 +180,7 @@ feature -- Removal
 			idx: INTEGER
 		do
 			optimized_transactions := Void
-			transfer_agent := Void
+			transfer_manager := Void
 			idx := transactions.index
 			transactions.go_i_th (n)
 
@@ -198,31 +199,31 @@ feature -- Removal
 		end
 			
 	wipe_out is
-			-- Clear agent.
+			-- Clear manager.
 		do
 			transactions.wipe_out
 			readable_set.wipe_out
 			writable_set.wipe_out
 			resource_hash.clear_all
 			optimized_transactions := Void
-			transfer_agent := Void
+			transfer_manager := Void
 		ensure
 			empty: empty
 			no_optimized_transactions: optimized_transactions = Void
-			no_agent: not agent_built
+			no_manager: not manager_built
 		end
 		
 feature -- Basic operations
 
-	build_agent is
-			-- Build agent.
+	build_manager is
+			-- Build manager.
 		require
 			not_empty: not empty
 		do
 			optimize_transactions
-			setup_agent
+			setup_manager
 		ensure
-			agent_ready: agent_built
+			manager_ready: manager_built
 		end
 
 feature {NONE} -- Implementation
@@ -233,8 +234,8 @@ feature {NONE} -- Implementation
 	optimized_transactions: ARRAYED_LIST[TRANSACTION]
 			-- Optimized transactions
 
-	transfer_agent: TRANSFER_AGENT
-			-- The agent
+	transfer_manager: TRANSFER_MANAGER
+			-- The manager
 
 	readable_set: BINARY_SEARCH_TREE_SET[STRING]
 			-- Set storing readable adresses
@@ -320,23 +321,23 @@ feature {NONE} -- Implementation
 					optimized_transactions.empty
 		end
 
-	setup_agent is
-			-- Setup transfer agent.
+	setup_manager is
+			-- Setup transfer manager.
 		require
-			no_agent: not agent_built
+			no_manager: not manager_built
 			optimized: optimized_count > 0
 		do
 			from 
 				optimized_transactions.start
-				create transfer_agent.make
+				create transfer_manager.make
 			until 
 				optimized_transactions.after
 			loop
-				transfer_agent.add_transaction (optimized_transactions.item)
+				transfer_manager.add_transaction (optimized_transactions.item)
 				optimized_transactions.forth
 			end
 		ensure
-			agent_set_up: agent_built
+			manager_set_up: manager_built
 		end
 
 	add_reference (s: SET[STRING]; r: RESOURCE;
@@ -380,7 +381,7 @@ invariant
 	success_constraint: transfer_succeeded implies transfer_finished
 	count_equality: (optimized_count > 0) implies (count = optimized_count)
 
-end -- class AGENT_BUILDER_IMPL
+end -- class TRANSFER_MANAGER_BUILDER_IMPL
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

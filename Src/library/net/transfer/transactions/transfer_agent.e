@@ -1,12 +1,12 @@
 indexing
 	description:
-		"Agents that are able to transfer data"
+		"Managers that control the data transactions"
 
 	status:	"See note at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TRANSFER_AGENT inherit
+class TRANSFER_MANAGER inherit
 
 	TRANSACTION_CONTAINER[TRANSACTION]
 		rename
@@ -30,7 +30,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			-- Create agent.
+			-- Create manager.
 		do
 			list_make (1)
 			stop_on_error
@@ -178,7 +178,7 @@ invariant
 	finished_transaction_range: 0 <= finished_transactions and
 			finished_transactions <= total_count
 
-end -- class TRANSFER_AGENT
+end -- class TRANSFER_MANAGER
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

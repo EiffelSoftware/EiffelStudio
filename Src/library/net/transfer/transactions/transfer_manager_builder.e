@@ -1,23 +1,23 @@
 indexing
 	description:
-		"Singleton instance of the agent builder"
+		"Singleton instance of the transfer manager builder"
 
 	status:	"See note at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class 
-	AGENT_BUILDER
+	TRANSFER_MANAGER_BUILDER
 
 feature -- Access
 
-	Agent_builder: AGENT_BUILDER_IMPL is
-			-- Agent builder singleton
+	Transfer_manager_builder: TRANSFER_MANAGER_BUILDER_IMPL is
+			-- Transfer manager builder singleton
 		once
 			create Result.make
 		end
 
-end -- class AGENT_BUILDER
+end -- class TRANSFER_MANAGER_BUILDER
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

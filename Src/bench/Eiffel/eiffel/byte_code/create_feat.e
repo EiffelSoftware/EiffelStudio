@@ -143,8 +143,7 @@ feature
 					buffer.putint (rout_info.offset)
 				else
 					buffer.putstring ("RTWCT(");
-					buffer.putint
-						(context.current_type.associated_class_type.id.id - 1);
+					buffer.putint (context.current_type.associated_class_type.id.id - 1);
 					buffer.putstring (gc_comma);
 					buffer.putint (feature_id);
 				end;
@@ -277,8 +276,9 @@ feature -- Genericity
 					buffer.putstring (gc_comma)
 					buffer.putint (feature_id)
 				end
+
 				buffer.putstring (gc_comma)
-				buffer.putstring (context.Current_register.register_name)
+				context.Current_register.print_register_by_name
 				buffer.putstring ("), ")
 			end
 		end
@@ -392,13 +392,13 @@ feature -- Genericity
 					buffer.putint (rout_info.offset)
 				else
 					buffer.putstring ("RTWCT(")
-					buffer.putint
-						(context.current_type.associated_class_type.id.id - 1)
+					buffer.putint (context.current_type.associated_class_type.id.id - 1)
 					buffer.putstring (gc_comma)
 					buffer.putint (feature_id)
 				end
+
 				buffer.putstring (gc_comma)
-				buffer.putstring (context.Current_register.register_name)
+				context.Current_register.print_register_by_name
 				buffer.putstring (")")
 			end
 		end

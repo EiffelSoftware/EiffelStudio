@@ -37,41 +37,31 @@ inherit
 
 	SHARED_EDITOR_PREFERENCES
 
-
 creation
 	make
 
 feature -- Initialization
 
-
 	initialize is
 			-- Perform all initialization.
 		local
-			dc: WEL_CLIENT_DC
-			space_size : WEL_SIZE
-			log_font: WEL_LOG_FONT
-			screen_dc: WEL_SCREEN_DC
+			dc			: WEL_MEMORY_DC
+			space_size	: WEL_SIZE
 		do
 			if not initialized then
-
-					-- create the font
-				create log_font.make(14, "Courier New")
-				create current_font.make_indirect(log_font)
-				
-					-- Compute Font related constants
-				create dc.make (Current)
-				dc.get
-				dc.select_font(current_font)
-				space_size := dc.string_size(" ")
-				line_increment := space_size.height + 1
-				line_height := space_size.height
-				dc.unselect_font
-				dc.release
-
-				first_line_displayed := 1
-
 					-- Initialisation done.
 				initialized := True
+
+					-- Compute Font related constants
+				create dc.make
+				dc.select_font(font)
+				space_size := dc.string_size(" ")
+				line_height := space_size.height
+				line_increment := line_height + 1
+				dc.unselect_font
+
+					-- First display the first line...
+				first_line_displayed := 1
 			end
 		end
 
@@ -95,7 +85,7 @@ feature -- Initialization
 			set_vertical_range(1,vertical_range_max)
 
 				-- Create the cursor
-			create cursor.make_from_absolute_pos(0,1,text_displayed)
+			create cursor.make_from_absolute_pos(0,1,Current)
 		end
 
 	read_and_analyse_file (a_name: STRING) is
@@ -124,6 +114,17 @@ feature -- Initialization
 		end
 
 feature -- Access
+
+	insert_mode: BOOLEAN
+
+	first_line_displayed: INTEGER
+		-- First line currently displayed on the screen.
+
+	number_of_lines_displayed: INTEGER
+		-- Number of lines currently displayed on the screen.
+
+	text_displayed: STRUCTURED_TEXT
+			-- text currently displayed on the screen.
 
 feature -- Basic operations
 
@@ -239,7 +240,7 @@ feature -- Basic operations
 				cursor.delete_previous
 				invalidate
 				update
-			elseif  virtual_key = Vk_Insert and then cursor /= Void then
+			elseif  virtual_key = Vk_Insert then
 	   			io.putstring("toggle insertion mode%N")
 				insert_mode := not insert_mode
 				invalidate
@@ -350,14 +351,6 @@ feature {NONE} -- Display functions
 
 feature {NONE} -- Status Report
 	
-	insert_mode: BOOLEAN
-
-	first_line_displayed: INTEGER
-		-- First line currently displayed on the screen.
-
-	number_of_lines_displayed: INTEGER
-		-- Number of lines currently displayed on the screen.
-
 	number_of_lines: INTEGER
 		-- Whole number of lines.
 
@@ -411,11 +404,16 @@ feature {NONE} -- Implementation
 			Result := ws_overlappedwindow + ws_vscroll
 		end
 
-	cursor: TEXT_CURSOR
+	font: WEL_FONT is
+		local
+			log_font: WEL_LOG_FONT
+		once
+				-- create the font
+			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
+			create Result.make_indirect(log_font)
+		end
 
---	text_displayed: LINKED_LIST [EDITOR_LINE]
-	text_displayed: STRUCTURED_TEXT
-			-- text currently displayed on the screen.
+	cursor: TEXT_CURSOR
 
 end -- class CHILD_WINDOW
 

@@ -1,8 +1,8 @@
 indexing	
 	description: "EiffelVision item. Mswindows implementation"
-	note: "It is not necessary to inherit from              %
-		% EV_TEXT_CONTAINER_IMP because all the features %
-		% use `wel_window', but such a big object isn't  %
+	note: "It is not necessary to inherit from%
+		% EV_TEXT_CONTAINER_IMP because all the features%
+		% use `wel_window', but such a big object isn't%
 		% necessary here."
 	status: "See notice at end of class"
 	id: "$$"
@@ -15,6 +15,8 @@ deferred class
 inherit
 	EV_ITEM_I
 
+	EV_PIXMAPABLE_IMP
+
 	EV_EVENT_HANDLER_IMP
 		export
 			{EV_ITEM_CONTAINER_IMP} execute_command
@@ -22,55 +24,12 @@ inherit
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
-feature {NONE} -- Access for implementation
+feature -- Access
 
-	id: INTEGER
-		-- Id of the item in the menu_item_container
-
-	parent: EV_ITEM_CONTAINER_IMP
-		-- The current container of the item
-
-feature -- Status report
-
-	text: STRING is
-			-- Current label of the item
-		deferred
-		end
-
-	destroyed: BOOLEAN is
-			-- Is current object destroyed
-		deferred
-		end
-
-feature -- Status setting
-
-	set_text (str: STRING) is
-			-- Set `text' to `str'
-		deferred
-		end
-
-	set_center_alignment is
-			-- Set text alignment of current label to center.
+	parent_widget: EV_WIDGET is
+			-- Parent widget of the current item
 		do
-			check
-				not_yet_implemented: False
-            end
-		end
-
-	set_right_alignment is
-			-- Set text alignment of current label to right.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	set_left_alignment is
-			-- Set text alignment of current label to left.
-		do
-			check
-				not_yet_implemented: False
-			end
+			Result := parent.current_widget
 		end
 
 feature -- Event : command association
@@ -89,12 +48,29 @@ feature -- Event : command association
 			add_command (Cmd_item_deactivate, cmd, arg)		
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ITEM_CONTAINER_IMP} -- Implementation
+
+	id: INTEGER
+		-- Id of the item in its container
 
 	set_id (new_id: INTEGER) is
 			-- Set `id' to `new_id'
 		do
 			id := new_id
+		end
+
+feature {NONE} -- Implementation
+
+	parent: EV_ITEM_CONTAINER_IMP
+		-- The current container of the item
+
+	wel_window: WEL_WINDOW is
+			-- Window used to create the related pixmap. It has
+			-- to be a wel_control.
+			-- It correspond to the implementation of the
+			-- parent_widget.
+		do
+			Result ?= parent_widget.implementation
 		end
 
 end -- class EV_ITEM_IMP

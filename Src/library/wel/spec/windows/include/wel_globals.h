@@ -106,20 +106,24 @@ typedef struct tag_wel_globals
 
 /* estream.c */
 	
-	EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure_cx;
+	EIF_EDITSTREAM_PROCEDURE wel_editstream_in_procedure_cx;
 	/* Address of the Eiffel routine `internal_callback' 
-	 * (class WEL_EDIT_STREAM) */
+	 * (class WEL_EDIT_STREAM_IN) */
 
-	EIF_OBJ wel_editstream_object_cx;
+	EIF_EDITSTREAM_PROCEDURE wel_editstream_out_procedure_cx;
+	/* Address of the Eiffel routine `internal_callback' 
+	 * (class WEL_EDIT_STREAM_OUT) */
+
+//	EIF_OBJ wel_editstream_object_cx;
 	/* Address of the Eiffel object WEL_EDIT_STREAM created */
 
-	EIF_POINTER wel_editstream_buffer_cx;
+//	EIF_POINTER wel_editstream_buffer_cx;
 	/* Address of the buffer */
 
-	EIF_INTEGER wel_editstream_buffer_size_cx;
+//	EIF_INTEGER wel_editstream_buffer_size_cx;
 	/* Size of `wel_editstream_buffer' */
 
-	EIF_BOOLEAN wel_editstream_in_cx;
+//	EIF_BOOLEAN wel_editstream_in_cx;
 	/* Is the operation stream_in? */
 
 } wel_global_context_t;
@@ -138,11 +142,12 @@ typedef struct tag_wel_globals
 
 /* estream.c */
 
-#define wel_editstream_procedure		(wel_globals->wel_editstream_procedure_cx)
-#define wel_editstream_object			(wel_globals->wel_editstream_object_cx)
-#define wel_editstream_buffer			(wel_globals->wel_editstream_buffer_cx)
-#define wel_editstream_buffer_size		(wel_globals->wel_editstream_buffer_size_cx)
-#define wel_editstream_in				(wel_globals->wel_editstream_in_cx)
+#define wel_editstream_in_procedure		(wel_globals->wel_editstream_in_procedure_cx)
+#define wel_editstream_out_procedure		(wel_globals->wel_editstream_out_procedure_cx)
+//#define wel_editstream_object			(wel_globals->wel_editstream_object_cx)
+//#define wel_editstream_buffer			(wel_globals->wel_editstream_buffer_cx)
+//#define wel_editstream_buffer_size		(wel_globals->wel_editstream_buffer_size_cx)
+//#define wel_editstream_in				(wel_globals->wel_editstream_in_cx)
 
 	extern EIF_TSD_TYPE wel_global_key;
 
@@ -170,11 +175,8 @@ typedef struct tag_wel_globals
 
 /* estream.c */
 
-	extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
-	extern EIF_OBJ wel_editstream_object;
-	extern EIF_POINTER wel_editstream_buffer;
-	extern EIF_INTEGER wel_editstream_buffer_size;
-	extern EIF_BOOLEAN wel_editstream_in;
+	extern EIF_EDITSTREAM_IN_PROCEDURE wel_editstream_in_procedure;
+	extern EIF_EDITSTREAM_OUT_PROCEDURE wel_editstream_out_procedure;
 
 #endif	/* EIF_THREADS */
 

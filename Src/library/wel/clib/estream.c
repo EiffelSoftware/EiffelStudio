@@ -8,55 +8,76 @@
 #include "wel_globals.h"
 
 #ifndef EIF_THREADS
-	EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure = NULL;
-	/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM) */
+	EIF_EDITSTREAM_IN_PROCEDURE wel_editstream_in_procedure = NULL;
+	/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_IN) */
+
+	EIF_EDITSTREAM_OUT_PROCEDURE wel_editstream_out_procedure = NULL;
+	/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_OUT) */
 	
-	EIF_OBJ wel_editstream_object = NULL;
-	/* Address of the Eiffel object WEL_EDIT_STREAM created */
-	
-	EIF_POINTER wel_editstream_buffer = NULL;
-	/* Address of the buffer */
-	
-	EIF_INTEGER wel_editstream_buffer_size = 0;
-	/* Size of `wel_editstream_buffer' */
-	
-	EIF_BOOLEAN wel_editstream_in;
-	/* Is the operation stream_in? */
 #endif
 
-DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
+
+
+DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
 {
-	/*
-	 * The control calls the this callback function repeatedly, transferring
-	 * a portion of the data with each call.
-	 * -- PK.
-	 */
+	 
+	// This function is called by the system to transfere text into a Rich Edit Control.
+	// dwCookie holds a EIF_OBJECT pointing to the WEL_RICH_EDIT_STREAM_IN object that will
+	// process the transfere.
+	// pbBuff is a pointer to a character array that receives (from the Eiffel side) the data
+	// that will be transfered to the Rich Edit Control.
+	// cb is the size of the character array.
+	// *pcb will be set to the actual size of data written into pbBuff.
 
 	WGTCX
-	dwCookie = dwCookie;
 
-	if (wel_editstream_object)
+	if (dwCookie)
 	{
 		DWORD result;
 
-		/* If EM_STREAMOUT message, let's close the string. */
-		if (!wel_editstream_in)
-			pbBuff [cb] = '\0';
+		/* Call the Eiffel routine `internal_callback'. */
+		result = (DWORD) ((wel_editstream_in_procedure) (
+			(EIF_REFERENCE) eif_access ((EIF_EDITSTREAM_IN_PROCEDURE)dwCookie),
+			(EIF_POINTER) pbBuff,
+			(EIF_INTEGER) cb, 
+			(EIF_POINTER)pcb));
+
+		return result;
+	}
+	else
+	{
+		return (DWORD) 0;
+	}
+}
+
+
+DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
+{
+
+	// This function is called by the system to read text from a Rich Edit Control.
+	// dwCookie holds a EIF_OBJECT pointing to the WEL_RICH_EDIT_STREAM_IN object that will
+	// process the transfere.
+	// pbBuff is a pointer to a character array that holds the text that has been read 
+	// from the Rich Edit Control.
+	// cb is the size of the character array.
+	// *pcb will be set to the actual size of data read (and processed).
+	// We always read all data so it will be set to cb.
+
+	EIF_REFERENCE eif_str_buffer;
+
+	WGTCX
+
+	if (dwCookie)
+	{
+		DWORD result;
+
+		eif_str_buffer = eif_make_string (pbBuff, cb);
+		* pcb = cb;
 
 		/* Call the Eiffel routine `internal_callback'. */
-		result = (DWORD) ((wel_editstream_procedure) (
-			(EIF_REFERENCE) eif_access (wel_editstream_object),
-			(EIF_POINTER) pbBuff,
-			(EIF_INTEGER) cb));
-
-		/* Set the number of bytes read or written. */
-		* pcb = wel_editstream_buffer_size;
-
-		/* If EM_STREAMIN, let's copy the Eiffel string
-		 * into the C buffer `pbBuff'.
-		 */
-		if (wel_editstream_in)
-			memcpy (pbBuff, wel_editstream_buffer, * pcb);
+		result = (DWORD) ((wel_editstream_out_procedure) (
+			(EIF_REFERENCE) eif_access ((EIF_EDITSTREAM_OUT_PROCEDURE) dwCookie),
+			(EIF_REFERENCE) eif_str_buffer));
 
 		return result;
 	}
@@ -69,41 +90,16 @@ DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb,
 #ifdef EIF_THREADS
 
 
-void wel_set_editstream_procedure_address(EIF_POINTER _value_) 
+void wel_set_editstream_in_procedure_address(EIF_POINTER _value_) 
 {
 		WGTCX
-		wel_editstream_procedure = (EIF_EDITSTREAM_PROCEDURE) _value_;
+		wel_editstream_in_procedure = (EIF_EDITSTREAM_IN_PROCEDURE) _value_;
 }
 
-void wel_set_editstream_object(EIF_OBJ _value_) 
+void wel_set_editstream_out_procedure_address(EIF_POINTER _value_) 
 {
 		WGTCX
-		wel_editstream_object = (EIF_OBJ) eif_adopt (_value_); 
-}
-
-void wel_release_editstream_object() 
-{
-		WGTCX
-		eif_wean (wel_editstream_object);
-		wel_editstream_object = NULL;
-}
-
-void wel_set_editstream_buffer(EIF_POINTER _value_) 
-{
-		WGTCX
-		wel_editstream_buffer = (EIF_POINTER) _value_;
-}
-
-void wel_set_editstream_buffer_size(EIF_INTEGER _value_) 
-{
-		WGTCX
-		wel_editstream_buffer_size = (EIF_INTEGER) _value_;
-}
-
-void wel_set_editstream_in(EIF_BOOLEAN _value_) 
-{
-		WGTCX
-		wel_editstream_in = (EIF_BOOLEAN) _value_;
+		wel_editstream_out_procedure = (EIF_EDITSTREAM_OUT_PROCEDURE) _value_;
 }
 
 #endif

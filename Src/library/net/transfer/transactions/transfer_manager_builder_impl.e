@@ -24,7 +24,9 @@ feature {NONE} -- Initialization
 		do
 			create transactions.make (1)
 			create readable_set.make
+			readable_set.compare_objects
 			create writable_set.make
+			writable_set.compare_objects
 			create resource_hash.make (0)
 		end
 

@@ -9,7 +9,7 @@
 	<paragraph>
 		<paragraph>This document contains details of modifications and bug fixes to the vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</paragraph>
 		<heading>
-			<size>2</size> Eiffel Studio 5.5
+			<size>2</size> EiffelStudio 5.5
 		</heading>
 		<paragraph>
 			<bold>Interface modifications</bold>
@@ -112,7 +112,7 @@
 			</item>
 		</list>
 		<heading>
-			<size>2</size> Eiffel Studio 5.4
+			<size>2</size> EiffelStudio 5.4
 		</heading>
 		<paragraph>
 			<bold>Interface modifications</bold>
@@ -388,7 +388,7 @@
 			</item>
 		</list>
 		<heading>
-			<size>2</size>Eiffel Studio 5.3
+			<size>2</size>EiffelStudio 5.3
 		</heading>
 		<paragraph>
 			<bold>Interface modifications</bold>
@@ -628,7 +628,7 @@
 			<bold/>
 		</paragraph>
 		<heading>
-			<size>2</size>Eiffel Studio 5.2
+			<size>2</size>EiffelStudio 5.2
 		</heading>
 		<paragraph>
 			<bold>Interface modifications</bold>
@@ -887,7 +887,7 @@
 				</item>
 			</list>
 			<heading>
-				<size>2</size>Eiffel Studio 5.1
+				<size>2</size>EiffelStudio 5.1
 			</heading>
 			<paragraph>
 				<bold>Interface modifications</bold>

@@ -25,8 +25,8 @@ feature {NONE} -- Implementation
 			-- No Ws_tabstop style otherwise, the focus is
 			-- lost when it is its turn.
 		do
-			Result := Ws_visible + Ws_child + Uds_arrowkeys 
-				 + Uds_setbuddyint + Uds_alignright
+			Result := Ws_visible | Ws_child | Uds_arrowkeys |
+				Uds_setbuddyint | Uds_alignright
 		end
 
 end -- class EV_INTERNAL_UP_DOWN_CONTROL

@@ -1,7 +1,7 @@
 indexing
 	description: "Actual type for pointer type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class POINTER_A
 
@@ -43,7 +43,7 @@ feature {COMPILER_EXPORTER}
 			if in_generics then
 				Result := other.is_pointer
 			else
-				Result := {BASIC_A} precursor (other, False)
+				Result := Precursor {BASIC_A} (other, False)
 			end
 		end
 

@@ -5,7 +5,7 @@ class TMP_BODY_SERVER
 
 inherit
 
-	READ_SERVER [FEATURE_AS_B]
+	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		rename
 			clear as old_clear,
 			make as basic_make,
@@ -15,7 +15,7 @@ inherit
 		redefine
 			ontable, updated_id, trace
 		end;
-	READ_SERVER [FEATURE_AS_B]
+	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		redefine
 			clear, make, ontable, updated_id, has, trace
 		select
@@ -28,7 +28,7 @@ creation
 	
 feature 
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: BODY_ID): BOOLEAN is
 		local
 			i: INTEGER
 		do
@@ -39,15 +39,15 @@ feature
 				until
 					(i > nb_useless) or else not Result
 				loop
-					if useless_body_ids.item (i) /= -1 then
-						Result := (updated_id (an_id) /= updated_id (useless_body_ids.item (i)))
+					if useless_body_ids.item (i) /= Void then
+						Result := not equal (updated_id (an_id), updated_id (useless_body_ids.item (i)))
 					end;
 					i := i + 1
 				end;
 			end;
 		end;
 
-	ontable: O_N_TABLE is
+	ontable: O_N_TABLE [BODY_ID] is
 			-- Mapping table between old id s and new ids.
 			-- Used by `change_id'
 		require else
@@ -56,12 +56,12 @@ feature
 			Result := System.onbidt
 		end;
 
-	updated_id (i: INTEGER): INTEGER is
+	updated_id (i: BODY_ID): BODY_ID is
 		do
 			Result := ontable.item (i)
 		end;
 
-	useless_body_ids: ARRAY [INTEGER];
+	useless_body_ids: ARRAY [BODY_ID];
 			-- Set of body ids which have to desappear after a successfull
 			-- recompilation
 
@@ -81,19 +81,19 @@ feature
 			!!Result.make;
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 		do
 			Result := Tmp_ast_server;
 		end;
 
-	desactive (body_id: INTEGER) is
+	desactive (body_id: BODY_ID) is
 			-- Put `body_id' in `useless_body_ids'.
 		local
 			nb: INTEGER;
 		do
 debug
 	io.error.putstring ("TMP_BODY_SERVER.desactivate ");
-	io.error.putint (body_id);
+	body_id.trace;
 	io.error.new_line;
 end;
 				-- Check if resizing is needed.
@@ -106,14 +106,14 @@ end;
 			useless_body_ids.put (body_id, nb_useless);
 		end;
 
-	reactivate (body_id: INTEGER) is
+	reactivate (body_id: BODY_ID) is
 		local
 			i: INTEGER;
-			real_id, ubi: INTEGER
+			real_id, ubi: BODY_ID
 		do
 debug
 	io.error.putstring ("TMP_BODY_SERVER.reactivate ");
-	io.error.putint (body_id);
+	body_id.trace;
 	io.error.new_line;
 end;
 			real_id := updated_id (body_id);
@@ -123,8 +123,8 @@ end;
 				i > nb_useless
 			loop
 				ubi := useless_body_ids.item (i);
-				if (ubi /= -1) and then (updated_id(ubi) = real_id) then
-					useless_body_ids.put (-1, i);
+				if (ubi /= Void) and then equal (updated_id(ubi), real_id) then
+					useless_body_ids.put (Void, i);
 				end;
 				i := i + 1
 			end;
@@ -136,7 +136,8 @@ end;
 	finalize is
 			-- Finalization after a successfull recompilation.
 		local
-			i, body_id, useless_body_id: INTEGER;
+			i: INTEGER;
+			body_id, useless_body_id: BODY_ID;
 			read_info: READ_INFO;
 		do
 debug
@@ -149,12 +150,12 @@ end;
 				i > nb_useless
 			loop
 				useless_body_id := useless_body_ids.item (i);
-				if (useless_body_id /= -1) then
+				if useless_body_id /= Void then
 						-- Note: `remove' will get the updated id
 						-- before performing the removal.
 debug
 	io.error.putstring ("Useless body_id: ");
-	io.error.putint (useless_body_id);
+	useless_body_id.trace;
 	io.error.new_line;
 end;
 					Body_server.remove (useless_body_id);
@@ -190,7 +191,7 @@ end;
 				after
 			loop
 				io.error.putstring ("%T");
-				io.error.putint (key_for_iteration);
+				key_for_iteration.trace;
 				io.error.new_line;
 				forth
 			end;
@@ -201,7 +202,7 @@ end;
 				i > nb_useless
 			loop
 				io.error.putstring ("%T");
-				io.error.putint (useless_body_ids.item (i));
+				useless_body_ids.item (i).trace;
 				io.error.new_line;
 				i := i + 1
 			end;

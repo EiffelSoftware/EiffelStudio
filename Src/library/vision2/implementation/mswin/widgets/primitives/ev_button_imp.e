@@ -166,7 +166,7 @@ feature -- Status setting
 				check
 					font_not_void: fw /= Void
 				end
-				w := extra_width + fw.string_width (text)
+				w := extra_width + fw.string_width (safe_text)
 				h := 7 * fw.height // 4 
 			else
 				w := extra_width
@@ -312,6 +312,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/03 00:55:56  brendel
+--| Changed `text' to `safe_text'.
+--|
 --| Revision 1.39  2000/02/23 20:23:41  rogers
 --| Added wel parenting compiler hack. Removed old command association.
 --|

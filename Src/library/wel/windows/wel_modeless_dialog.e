@@ -42,10 +42,15 @@ feature {NONE} -- Implementation
 			-- Create the dialog
 		local
 			c_name: WEL_STRING
+			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 		do
 			item := cwel_temp_dialog_value
 			exists := True
 			register_window (Current)
+
+				-- Initialise the common controls
+			common_controls_dll: WEL_COMMON_CONTROLS_DLL
+
 			if a_name /= Void then
 				-- Load by name
 				!! c_name.make (a_name)

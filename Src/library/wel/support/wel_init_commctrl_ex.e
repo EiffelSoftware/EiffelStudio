@@ -1,6 +1,6 @@
 indexing
-	description: "Contains information about the initialization%
-		% of the common controls dll."
+	description: "Contains information about the initialization of the common controls dll.%
+				 % Note: Require Windows98 or Windows95+IE4 or WindowsNT4+IE4 or Windows2000"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -122,8 +122,8 @@ feature
 
 feature
 
-	generate_basic_creation (buffer : GENERATION_BUFFER) is
-			-- Creation of entities of basic type
+	generate_default_value (buffer : GENERATION_BUFFER) is
+			-- Generate default value associated to current basic type.
 		require
 			valid_buffer: buffer /= Void
 		do
@@ -132,8 +132,8 @@ feature
 			buffer.putstring ("0)")
 		end
 	
-	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
-			-- Creation of entities of basic type
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
 		require
 			valid_array: ba /= Void
 		deferred

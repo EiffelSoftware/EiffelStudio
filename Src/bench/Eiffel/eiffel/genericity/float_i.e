@@ -174,11 +174,13 @@ feature -- IL code generation
 		
 feature
 
-	make_basic_creation_byte_code (ba : BYTE_ARRAY) is
-
+	make_default_byte_code (ba: BYTE_ARRAY) is
+			-- Generate default value of basic type on stack.
 		do
+				-- For precision purpose, `Bc_float' accepts
+				-- a double value.
 			ba.append (Bc_float)
-			ba.append_real (0.0)
+			ba.append_double (0.0)
 		end 
 
 end

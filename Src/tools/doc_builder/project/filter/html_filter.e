@@ -368,11 +368,14 @@ feature {NONE} -- Query
 				if not l_dir.exists then							
 						-- Convert to relative links
 					Result := l_link.relative_url
-					create l_filename.make_from_string (l_util.file_no_extension (Result))
-					if not l_filename.is_empty then
-						l_filename.add_extension ("html")
-						Result := l_filename.string
-					end
+						-- If link is an XML link, convert it to HTML (otherwise leave it as is)
+					if l_util.file_type (a_url).is_equal ("xml") then
+						create l_filename.make_from_string (l_util.file_no_extension (Result))
+						if not l_filename.is_empty then
+							l_filename.add_extension ("html")
+							Result := l_filename.string
+						end
+					end					
 				else
 						-- A directory
 					Result := a_url

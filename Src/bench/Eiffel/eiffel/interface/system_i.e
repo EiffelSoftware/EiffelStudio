@@ -860,13 +860,13 @@ feature -- Recompilation
 				-- the system (degree 5)
 			process_pass (pass1_controler)
 
-				-- Check generic validity on old classes
-				-- generic parameters cannot be new classes
 debug ("ACTIVITY")
 	io.error.putstring ("%Tnew_class = ")
 	io.error.putbool (new_class)
 	io.error.new_line
 end
+				-- Check generic validity on old classes
+				-- generic parameters cannot be new classes
 			if not first_compilation and then new_class then
 				check_generics
 					-- The association name <==> supplier has been done in pass1
@@ -890,8 +890,6 @@ end
 				remove_useless_classes
 			end
 
-				-- Topological sort and building of the conformance
-				-- table (if new classes have been added by first pass)
 debug ("ACTIVITY")
 	io.error.putstring ("%Tmoved = ")
 	io.error.putbool (moved)
@@ -899,6 +897,8 @@ debug ("ACTIVITY")
 	io.error.putbool (update_sort)
 	io.error.new_line
 end
+				-- Topological sort and building of the conformance
+				-- table (if new classes have been added by first pass)
 			update_sort := update_sort or else moved
 			if update_sort then
 					-- Sort

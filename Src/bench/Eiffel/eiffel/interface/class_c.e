@@ -233,10 +233,10 @@ feature -- Access
 
 feature -- Access: Convertibility
 
-	convert_to: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+	convert_to: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert to.
 	
-	convert_from: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+	convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert from.
 
 feature -- Access: CLI implementation
@@ -384,7 +384,7 @@ feature -- Action
 			-- directory of EIFGEN.
 		local
 			parser: like eiffel_parser
-			file: KL_BINARY_INPUT_FILE
+			file, l_copied_file: KL_BINARY_INPUT_FILE
 			f_name: FILE_NAME
 			vd21: VD21
 		do
@@ -411,9 +411,10 @@ feature -- Action
 					-- Save the source class in a Backup directory
 				if save_copy and Workbench.automatic_backup then
 					create f_name.make_from_string (cluster.backup_directory)
-					f_name.extend (lace_class.name)
+					f_name.extend (lace_class.name.as_lower)
 					f_name.add_extension ("e")
-					file.copy_file (f_name)
+					create l_copied_file.make (file_name)
+					l_copied_file.copy_file (f_name)
 				end
 
 				has_unique := False
@@ -702,7 +703,7 @@ feature -- Building conformance table
 		local
 			a_parent: CLASS_C
 			a_table: PACKED_BOOLEANS
-			l_area: SPECIAL [CL_TYPE_A]
+			l_area: SPECIAL [CLASS_C]
 			i, nb: INTEGER
 		do
 			a_table := cl.conformance_table
@@ -710,15 +711,13 @@ feature -- Building conformance table
 					-- The parent has not been inserted yet
 				a_table.put (True, topological_id)
 				from
-					l_area := parents.area
-					nb := parents.count
+					l_area := parents_classes.area
+					nb := parents_classes.count
 				until
 					i = nb
 				loop
-					a_parent := l_area.item (i).associated_class
-					if a_parent /= Void then
-						a_parent.build_conformance_table_of (cl)
-					end
+					a_parent := l_area.item (i)
+					a_parent.build_conformance_table_of (cl)
 					i := i + 1
 				end
 			end
@@ -770,19 +769,6 @@ end
 						System.expanded_checker.check_actual_type (constraint_type)
 					end
 					generics.forth
-				end
-			end
-
-				-- Now we must check if `creation_feature' is set.
-				-- If not, set it to `default_create_feature'.
-				-- Cannot be done earlier!
-			if creation_feature = Void then
-				creation_feature := default_create_feature
-				if creation_feature /= Void and then
-							creation_feature.is_empty then
-					-- Don't force a creation call if it does
-					-- nothing.
-					creation_feature := Void
 				end
 			end
 		end
@@ -1713,6 +1699,16 @@ feature
 			Result := private_base_file_name
 			if Result = Void then
 				Result := name.substring (1, name.count.min (2))
+				Result.to_lower
+				if Result.count = 1 then
+						-- To prevent an issue where you might have a class A
+						-- with an id of 36 (thus a name of "a36") and a class
+						-- A3 with an id of 6 (thus the same name of "a36")
+						-- which generate the same CLASS_TYPE.base_file_name and
+						-- we do not want that.
+						-- Found after slightly changing eweasel test `ccomp043'
+					Result.append_character ('_')
+				end
 				private_base_file_name := Result
 			end
 		ensure
@@ -1806,7 +1802,7 @@ feature -- Class initialization
 		require
 			good_argument: ast_b /= Void
 		local
-			old_parents: like parents
+			old_parents: like parents_classes
 			old_generics: like generics
 			old_is_expanded: BOOLEAN
 			old_is_deferred: BOOLEAN
@@ -1815,18 +1811,14 @@ feature -- Class initialization
 			p: ARRAY [PARENT_AS]
 			lower, upper: INTEGER
 			raw_type: CLASS_TYPE_AS
-			cl_type: CLASS_TYPE
 			parent_type: CL_TYPE_A
 			parent_class: CLASS_C
-			parent_list: PARENT_LIST
-			parent_c: PARENT_C
 			ve04: VE04
 			vhpr1: VHPR1
 			dummy_list: LINKED_LIST [INTEGER]
 			a_client: CLASS_C
 			changed_status, changed_frozen: BOOLEAN
 			is_exp, changed_generics, changed_expanded: BOOLEAN
-			pars: like parents
 			gens: like generics
 			obs_msg: like obsolete_message
 			ancestor_id: INTEGER
@@ -1855,7 +1847,7 @@ feature -- Class initialization
 				obs_msg := Void
 			end
 			set_obsolete_message (obs_msg)
-			old_parents := parents
+			old_parents := parents_classes
 
 			if old_parents /= Void then
 					-- Class was compiled before so we have to update
@@ -1955,17 +1947,9 @@ feature -- Class initialization
 					syntactical_clients.forth
 				end
 
-					-- All the skeletons must be processed
-				changed4 := True
-				from
-					types.start
-				until
-					types.after
-				loop
-					cl_type := types.item
-					cl_type.set_is_changed (True)
-					cl_type.type.set_is_true_expanded (is_expanded)
-					types.forth
+				if changed_expanded then
+						-- We need to reset its `types' so that they are recomputed.
+					remove_types
 				end
 			end
 
@@ -1978,7 +1962,11 @@ feature -- Class initialization
 
 			Inst_context.set_cluster (cluster)
 			parents_as := ast_b.parents
-			parent_list := class_info.parents
+
+				-- We reset computed information about `parents'
+				-- that will be later computed in `fill_parents'.
+			parents := Void
+			computed_parents := Void
 
 			ancestor_id := System.ancestor_class_to_all_classes_id
 			if parents_as /= Void and then not parents_as.is_empty then
@@ -2021,23 +2009,21 @@ feature -- Class initialization
 					check p.lower = 1 end
 					lower := 1
 					upper := parents_as.count
-					create pars.make_filled (upper)
+					create parents_classes.make_filled (upper)
 				until
 					lower > upper
 				loop
-						-- Fill attribute `pars' of class CLASS_INFO
-					parent_c := p.item (lower).parent_c
-					parent_list.put_i_th (parent_c, lower)
 						-- Insertion of a new descendant for the parent class
-					parent_type := parent_c.parent_type
-					parent_class := parent_type.associated_class
+					parent_class := p.item (lower).type.associated_classi.compiled_class
 					check
 						parent_class_exists: parent_class /= Void
 							-- This ensures that routine `check_suppliers'
 							-- has been called before.
 					end
 					parent_class.add_descendant (Current)
-					pars.put_i_th (parent_type, lower)
+
+						-- Insertion in `parents_classes'.
+					parents_classes.put_i_th (parent_class, lower)
 					lower := lower + 1
 				end
 			elseif not (class_id = ancestor_id) then
@@ -2045,28 +2031,24 @@ feature -- Class initialization
 					-- the default parent for Eiffel classes, but not for CLI
 					-- classes which inherits from SYSTEM_OBJECT. And ANY
 					-- also inherits from SYSTEM_OBJECT.
-				create pars.make (1)
+				create parents_classes.make (1)
 
 				if is_external or else class_id = System.any_id then
-					pars.extend (System_object_type)
 						-- Add a descendant to class SYSTEM_OBJECT
 					System.system_object_class.compiled_class.add_descendant (Current)
-						-- Fill parent list of corresponding class info
-					parent_list.put_i_th (System_object_parent, 1)
+						-- Insertion in `parents_classes'
+					parents_classes.extend (System.system_object_class.compiled_class)
 				else
-					pars.extend (Any_type)
 						-- Add a descendant to class SYSTEM_OBJECT
 					System.any_class.compiled_class.add_descendant (Current)
-						-- Fill parent list of corresponding class info
-					parent_list.put_i_th (Any_parent, 1)
+						-- Insertion in `parents_classes'
+					parents_classes.extend (System.any_class.compiled_class)
 				end
 			else
 					-- In case of the ancestor class to all classes, just create an empty
 					-- parent structure.
-				create pars.make (0)
+				create parents_classes.make (0)
 			end
-
-			set_parents (pars)
 
 				-- Init generics
 			old_generics := generics
@@ -2081,26 +2063,26 @@ feature -- Class initialization
 			end
 
 			if old_parents /= Void then
-				-- Recompilation of the class
 				if gens /= Void then
-					if
-						old_generics = Void
-					or else
-						old_generics.count /= generics.count
-					then
-						changed_generics := True
-					else
-						from
-							old_generics.start
-							gens.start
-						until
-							changed_generics or else gens.after
-						loop
-							if not gens.item.equiv (old_generics.item) then	
-								changed_generics := True
+						-- Sometime we retrieve twice the same `generics' because the
+						-- AST is still in memory, in which case if `gens' and `old_generics'
+						-- point to the same object reference, `changed_generics' is False.
+					if gens /= old_generics then
+						if old_generics = Void or else old_generics.count /= generics.count then
+							changed_generics := True
+						else
+							from
+								old_generics.start
+								gens.start
+							until
+								changed_generics or else gens.after
+							loop
+								if not gens.item.equiv (old_generics.item) then	
+									changed_generics := True
+								end
+								gens.forth
+								old_generics.forth
 							end
-							gens.forth
-							old_generics.forth
 						end
 					end
 				elseif old_generics /= Void then
@@ -2176,7 +2158,7 @@ feature -- Class initialization
 				System.set_update_sort (True)
 			end
 		ensure
-			parents /= Void
+			parents_classes_set: parents_classes /= Void
 		end
 
 	init_class_interface is
@@ -2190,33 +2172,33 @@ feature -- Class initialization
 			end
 		end
 
-	same_parents (old_parents: like parents): BOOLEAN is
-			-- Are `old_parents' the same as `parents' ?
+	same_parents (old_parents: like parents_classes): BOOLEAN is
+			-- Are `old_parents' the same as `parents_classes' ?
 			-- [Incrementality for conformance tables building.]
 		require
 			good_argument: old_parents /= Void
 		local
 			i, nb, j, l_count: INTEGER
-			l_area, o_area: SPECIAL [CL_TYPE_A]
+			l_area, o_area: SPECIAL [CLASS_C]
 			parent_class: CLASS_C
 		do
 			from
 				Result := True
-				l_area := parents.area
-				nb := parents.count
+				l_area := parents_classes.area
+				nb := parents_classes.count
 				o_area := old_parents.area
 				l_count := old_parents.count
 			until
 				i = nb or else not Result
 			loop
-				parent_class := l_area.item (i).associated_class
+				parent_class := l_area.item (i)
 				from
 					j := 0
 					Result := False
 				until
 					j = l_count or else Result
 				loop
-					Result := parent_class = o_area.item (j).associated_class
+					Result := parent_class = o_area.item (j)
 					j := j + 1
 				end
 				i := i + 1
@@ -2226,33 +2208,33 @@ feature -- Class initialization
 			end
 		end
 
-	removed_parent (old_parents: like parents): BOOLEAN is
-			-- A parent has been removed from `parents' ?
+	removed_parent (old_parents: like parents_classes): BOOLEAN is
+			-- A parent has been removed from `parents_classes' ?
 			-- [Incrementality for propagation of pass2.]
 		require
 			good_argument: old_parents /= Void
 		local
 			parent_class: CLASS_C
-			l_area, o_area: SPECIAL [CL_TYPE_A]
+			l_area, o_area: SPECIAL [CLASS_C]
 			i, nb: INTEGER
 			j, l_count: INTEGER
 		do
 			from
 				Result := True
-				l_area := parents.area
-				l_count := parents.count
+				l_area := parents_classes.area
+				l_count := parents_classes.count
 				o_area := old_parents.area
 				nb := old_parents.count
 			until
 				i = nb or else not Result
 			loop
-				parent_class := o_area.item (i).associated_class
+				parent_class := o_area.item (i)
 				from
 					j := 0	
 				until
 					j= l_count or else Result
 				loop
-					Result := parent_class = l_area.item (j).associated_class
+					Result := parent_class = l_area.item (j)
 					j := j + 1
 				end
 				i := i + 1
@@ -2345,7 +2327,7 @@ feature
 			-- Remove client/supplier and parent/descendant relations
 			-- of the current class.
 		require
-			parents_exists: parents /= Void
+			parents_exists: parents_classes /= Void
 		local
 			local_suppliers: SUPPLIER_LIST
 			clients_list: ARRAYED_LIST [CLASS_C]
@@ -2371,20 +2353,20 @@ feature
 	remove_parent_relations is
 			-- Remove parent/descendant relations of the Current class
 		require
-			parents_exists: parents /= Void
+			parents_exists: parents_classes /= Void
 		local
 			des: ARRAYED_LIST [CLASS_C]
-			l_area: SPECIAL [CL_TYPE_A]
+			l_area: SPECIAL [CLASS_C]
 			i, nb: INTEGER
 			c: CLASS_C
 		do
 			from
-				l_area := parents.area
-				nb := parents.count
+				l_area := parents_classes.area
+				nb := parents_classes.count
 			until
 				i = nb
 			loop
-				c := l_area.item (i).associated_class
+				c := l_area.item (i)
 				if c /= Void then
 					des:= c.descendants
 					des.start
@@ -2589,8 +2571,55 @@ feature
 
 feature -- Parent checking
 
+	fill_parents (a_class_info: CLASS_INFO) is
+			-- File `parents' and update `a_class_info' accordingly.
+		require
+			a_class_info_not_void: a_class_info /= Void
+			parents_classes_not_void: parents_classes /= Void
+		local
+			l_parents_as: EIFFEL_LIST [PARENT_AS]
+			l_parent_c: PARENT_C
+		do
+			create computed_parents.make (parents_classes.count)
+			create parents.make (parents_classes.count)
+			l_parents_as := a_class_info.parents
+
+			if l_parents_as /= Void and then not l_parents_as.is_empty then
+					-- Take the structure produced by Yacc
+				from
+					l_parents_as.start
+				until
+					l_parents_as.after
+				loop
+					l_parent_c := l_parents_as.item.parent_c
+					computed_parents.extend (l_parent_c)
+					parents.extend (l_parent_c.parent_type)
+					l_parents_as.forth
+				end
+			elseif not (class_id = System.ancestor_class_to_all_classes_id) then
+					-- No parents are syntactiaclly specified: ANY is
+					-- the default parent for Eiffel classes, but not for CLI
+					-- classes which inherits from SYSTEM_OBJECT. And ANY
+					-- also inherits from SYSTEM_OBJECT.
+				if is_external or else class_id = System.any_id then
+					parents.extend (System_object_type)
+						-- Fill parent list of corresponding class info
+					computed_parents.extend (System_object_parent)
+				else
+					parents.extend (Any_type)
+						-- Fill parent list of corresponding class info
+					computed_parents.extend (Any_parent)
+				end
+			end
+		ensure
+			parents_not_void: parents /= Void
+			computed_parents_not_void: computed_parents /= Void
+		end
+
 	check_parents is
 			-- Check generical parents
+		require
+			parents_not_void: parents /= Void
 		local
 			vtug: VTUG
 			vtcg4: VTCG4
@@ -2680,6 +2709,8 @@ feature -- Parent checking
 				remove_types
 			end
 			Error_handler.checksum
+		ensure
+			parents_set: parents /= Void
 		end
 
 	remove_types is
@@ -2786,7 +2817,7 @@ feature -- Supplier checking
 				--		for the system.
 			Universe.compute_last_class (cl_name, cluster)
 			supplier_class := Universe.last_class
-			if supplier_class /= Void and then not cl_name.is_equal ("none") then
+			if supplier_class /= Void and then not cl_name.is_equal ("NONE") then
 					-- The supplier class is in the universe associated
 					-- to `cluster'.
 				if not supplier_class.is_compiled then
@@ -3259,7 +3290,7 @@ feature -- Actual class type
 					actual_generic.put (constraint (i), i)
 					i := i + 1
 				end
-				Result.set_is_true_expanded (is_expanded)
+				Result.set_is_expanded (is_expanded)
 			end
 		ensure
 			constraint_actual_type_not_void: Result /= Void
@@ -3268,7 +3299,7 @@ feature -- Actual class type
 	actual_type: CL_TYPE_A is
 			-- Actual type of the class
 		local
-			i, count: INTEGER
+			i, nb: INTEGER
 			actual_generic: ARRAY [FORMAL_A]
 			formal: FORMAL_A
 		do
@@ -3277,11 +3308,11 @@ feature -- Actual class type
 			else
 				from
 					i := 1
-					count := generics.count
-					create actual_generic.make (1, count)
+					nb := generics.count
+					create actual_generic.make (1, nb)
 					create {GEN_TYPE_A} Result.make (class_id, actual_generic)
 				until
-					i > count
+					i > nb
 				loop
 					create formal
 					formal.set_position (i)
@@ -3289,11 +3320,37 @@ feature -- Actual class type
 					i := i + 1
 				end
 			end
-			Result.set_is_true_expanded (is_expanded)
+			Result.set_is_expanded (is_expanded)
 		ensure
 			actual_type_not_void: Result /= Void
 		end
-		
+
+feature {CLASS_TYPE_AS} -- Actual class type
+
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_ref, is_exp, is_sep: BOOLEAN): CL_TYPE_A is
+			-- Actual type of `current depending on the context in which it is declared
+			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
+			-- be a generic class. Or it could be a reference even though it is an
+			-- expanded class. It simplifies creation of `CL_TYPE_A' instances in
+			-- CLASS_TYPE_AS when trying to resolve types, by using dynamic binding
+			-- rather than if statements.
+		require
+			is_ref_set: is_ref implies (not is_exp and not is_sep)
+			is_exp_set: is_exp implies (not is_ref and not is_sep)
+			is_sep_set: is_sep implies (not is_ref and not is_exp)
+		do
+			if gen /= Void then
+				create {GEN_TYPE_A} Result.make (class_id, gen)
+			else
+				create Result.make (class_id)
+			end
+			Result.set_is_expanded (is_exp or (not is_ref and is_expanded))
+		ensure
+			actual_type_not_void: Result /= Void
+		end
+
+feature -- Incrementality
+
 	insert_changed_feature (feature_name_id: INTEGER) is
 			-- Insert feature `feature_name_id' in `changed_features'.
 		require
@@ -3321,15 +3378,17 @@ end
 		end
 
 	update_instantiator1 is
-			-- Look for generic types in the inheritance clause of
-			-- a syntactically changed class
+			-- Ensure that parents classes have a proper generic derivation
+			-- matching needs of current class which has syntactically
+			-- been changed.
 		require
 			is_syntactically_changed: changed
+			parents_not_void: parents /= Void
 		local
-			generic_parent: GEN_TYPE_A
 			parent_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
+			l_old_expanded_status: BOOLEAN
 		do
 			from
 				l_area := parents.area
@@ -3338,11 +3397,13 @@ end
 				i = nb
 			loop
 				parent_type := l_area.item (i)
-				if parent_type.generics /= Void then
-						-- Found a generic type in the inheritance clause
-					generic_parent ?= parent_type
-					Instantiator.dispatch (generic_parent, Current)
-				end
+					-- Because inheritance clause does not care about expanded
+					-- status, we remove it in case parent class is by default
+					-- expanded.
+				l_old_expanded_status := parent_type.is_expanded
+				parent_type.set_is_expanded (False)
+				Instantiator.dispatch (parent_type, Current)
+				parent_type.set_is_expanded (l_old_expanded_status)
 				i := i + 1
 			end
 		end
@@ -3356,21 +3417,23 @@ end
 			class_type: CLASS_TYPE
 			type_i: CL_TYPE_I
 		do
-			create type_i.make (class_id)
+			type_i := actual_type.type_i
 			class_type := new_type (type_i)
 			types.extend (class_type)
 			System.insert_class_type (class_type)
 		end
 
-	update_types (data: GEN_TYPE_I) is
+	update_types (data: CL_TYPE_I) is
 			-- Update `types' with `data'.
 		require
 			good_argument: data /= Void
 			good_context: not data.has_formal
 			consistency: data.base_class = Current
 		local
-			filter: GEN_TYPE_I
+			filter: CL_TYPE_I
+			l_gen_type: GEN_TYPE_I
 			new_class_type: CLASS_TYPE
+			l_cursor: CURSOR
 		do
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
@@ -3411,15 +3474,20 @@ end
 
 					-- Propagation along the filters since we have a new type
 					-- Clean the filters. Some of the filters can be obsolete
-					-- if the base class has been remove from the system
+					-- if the base class has been removed from the system
 				filters.clean
+				l_gen_type ?= data
 				from
 					filters.start
 				until
 					filters.after
 				loop
 						-- Instantiation of the filter with `data'
-					filter := filters.item.instantiation_in (data)
+					if l_gen_type /= Void then
+						filter := filters.item.instantiation_in (l_gen_type)
+					else
+						filter := filters.item
+					end
 debug ("GENERICITY")
 	io.error.putstring ("Propagation of ")
 	filter.trace
@@ -3427,7 +3495,13 @@ debug ("GENERICITY")
 	io.error.putstring (filter.base_class.name)
 	io.error.new_line
 end
+						-- We need to store cursor position because when you
+						-- have an expanded class used as a reference or vice versa
+						-- and that this class has some `like Current' then 
+						-- we are going to traverse recursively the `filters' list.
+					l_cursor := filters.cursor
 					filter.base_class.update_types (filter)
+					filters.go_to (l_cursor)
 					filters.forth
 				end
 			end
@@ -3470,6 +3544,11 @@ end
 			-- Is class TUPLE?
 		do
 			
+		end
+
+	is_typed_pointer: BOOLEAN is
+			-- Is class TYPED_POINTER?
+		do
 		end
 
 	is_special_array: BOOLEAN is
@@ -3557,7 +3636,7 @@ feature -- Validity class
 					-- We are checking ANY.
 				l_cor_mism := feature_table.item_id (names_heap.Internal_correct_mismatch_name_id)
 				if
-					l_cor_mism = void or else 
+					l_cor_mism = Void or else 
 					not l_cor_mism.is_routine or l_cor_mism.argument_count > 0
 				then
 					error_handler.insert_error (
@@ -3587,16 +3666,15 @@ feature -- default_create routine
 			-- does not posess the feature or class is deferred.
 		require
 			has_feature_table: has_feature_table
-			any_class_compiled: System.any_class /= Void
 		do
-			if not is_deferred then
-				Result := feature_table.feature_of_rout_id (System.default_create_id)
-			end
+			Result := feature_table.feature_of_rout_id (System.default_create_id)
 		end
 
 	allows_default_creation : BOOLEAN is
 			-- Can an instance of this class be
 			-- created with 'default_create'?
+		require
+			has_feature_table: has_feature_table
 		local
 			dcr_feat : FEATURE_I
 		do
@@ -3654,19 +3732,18 @@ feature -- Cecil
 				buffer.putstring ("SK_EXP + ")
 			end
 			buffer.putstring ("(uint32) ")
-			buffer.putint (types.first.type_id - 1)
+			buffer.putint (actual_type.type_i.type_id - 1)
 		end
 
 	cecil_value: INTEGER is
 			-- Cecil type value for a non generic class
 		require
 			no_generics: not is_generic
-			one_type_only: types.count = 1
 		do
 			if is_expanded then
 				Result := Sk_exp
 			end
-			Result := Result | (types.first.type_id - 1)
+			Result := Result | (actual_type.type_i.type_id - 1)
 		end
 
 feature -- Conformance table generation
@@ -3675,17 +3752,6 @@ feature -- Conformance table generation
 		do
 			System.set_current_class (Current)
 			feature_table.origin_table.add_units (class_id)
-		end
-
-feature -- Redeclaration valididty
-
-	valid_redeclaration (a_precursor: TYPE_A; redeclared: TYPE_A): BOOLEAN is
-			-- Is the redeclaration of `a_precursor' into `redeclared' valid
-			-- in the current class ?
-		require
-			good_argument: not (a_precursor = Void or else redeclared = Void)
-		do
-			Result := redeclared.redeclaration_conform_to (a_precursor)
 		end
 
 feature -- Invariant feature
@@ -3698,17 +3764,16 @@ feature -- Invariant feature
 			
 feature -- Process the creation feature
 
-	process_creation_feature (tbl: like feature_table) is
-			-- Assign the first creation procedure (if any) to
+	process_creation_feature is
+			-- Assign `default_create' creation procedure (if applicable) to
 			-- `creation_feature'.
+		require
+			has_feature_table: has_feature_table
 		do
-			if creators /= Void then
-				if not creators.is_empty then
-					creators.start
-					creation_feature := tbl.item (creators.key_for_iteration)
-				end
+			if allows_default_creation then
+				creation_feature := default_create_feature
 			else
-				creation_feature := Void
+				creation_feature := Void	
 			end
 		end
 
@@ -3752,8 +3817,8 @@ feature -- Initialization
 		do
 			lace_class := l
 				-- Set `is_class_any' and `is_class_none'
-			is_class_any := name_in_upper.is_equal ("ANY")
-			is_class_none := name_in_upper.is_equal ("NONE")
+			is_class_any := name.is_equal ("ANY")
+			is_class_none := name.is_equal ("NONE")
 				-- Creation of the descendant list
 			create descendants.make (10)
 				-- Creation of the supplier list
@@ -3775,8 +3840,14 @@ feature -- Properties
 	number_of_features: INTEGER
 			-- Number of features in current class including inherited one.
 
-	parents: FIXED_LIST [CL_TYPE_A]
+	parents_classes: FIXED_LIST [CLASS_C]
 			-- Parent classes
+
+	parents: FIXED_LIST [CL_TYPE_A]
+			-- Parent class types
+
+	computed_parents: PARENT_LIST
+			-- Computed version of parent clauses.
 
 	descendants: ARRAYED_LIST [CLASS_C]
 			-- Direct descendants of the current class
@@ -3809,10 +3880,6 @@ feature -- Properties
 	topological_id: INTEGER
 			-- Unique number for a class. Could change during a topological
 			-- sort on classes.
-
-	reverse_engineered: BOOLEAN
-			-- Does the Storage mechanism for EiffelCase need
-			-- to regenerate the EiffelCase description for Current class?
 
 	is_deferred: BOOLEAN
 			-- Is class deferred ?
@@ -3870,7 +3937,7 @@ feature -- Properties
 			if private_external_name /= Void then
 				Result := private_external_name
 			else
-				Result := name.as_upper
+				Result := name
 			end
 		end
 
@@ -3910,11 +3977,12 @@ feature -- Access
 			-- Does current class contain only deferred features?
 		require
 			has_feature_table: has_feature_table
+			parents_classes_not_void: parents_classes /= Void
 		local
 			feat: FEATURE_I
 			feat_tbl: FEATURE_TABLE
 			written_in: INTEGER
-			par: like parents
+			par: like parents_classes
 		do
 			Result := True
 				-- FIXME: Manu 1/21/2002: Test below is not the most correct one.
@@ -3922,12 +3990,12 @@ feature -- Access
 				Result := is_deferred
 				if Result then
 					from
-						par := parents
-					  	par.start
+						par := parents_classes
+						par.start
 					until
 						par.after or else not Result
 					loop
-						Result := Result and then par.item.associated_class.is_fully_deferred
+						Result := Result and then par.item.is_fully_deferred
 						par.forth
 					end
 					if Result then
@@ -3952,7 +4020,7 @@ feature -- Access
 	name_in_upper: STRING is
 			-- Class name in upper case
 		do
-			Result := name.as_upper
+			Result := name
 		ensure
 			name_in_upper_not_void: Result /= Void
 		end
@@ -4344,7 +4412,6 @@ feature -- Output
 		do
 			create Result.make (50)
 			Result.append (name)
-			Result.to_upper
 			gens := generics
 			if gens /= Void then
 				old_cluster := Inst_context.cluster
@@ -4425,7 +4492,7 @@ feature -- Output
 		require
 			non_void_st: st /= Void
 		do
-			st.add_classi (lace_class, name_in_upper)
+			st.add_classi (lace_class, name)
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
@@ -4483,14 +4550,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_enum_set: is_enum = b
 		end
 
-	set_parents (p: like parents) is
-			-- Assign `p' to `parents'.
-		do
-			parents := p
-		ensure
-			parents_set: parents = p
-		end
-
 	set_suppliers (s: like suppliers) is
 			-- Assign `s' to `suppliers'.
 		do
@@ -4505,14 +4564,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			generics := g
 		ensure
 			generics_set: generics = g
-		end
-
-	set_reverse_engineered (b: BOOLEAN) is
-			-- Set reversed_engineered to `b'.
-		do
-			reverse_engineered := b
-		ensure
-			reverse_engineered_set: reverse_engineered = b
 		end
 
 	set_obsolete_message (m: like obsolete_message) is
@@ -4575,6 +4626,8 @@ feature -- Genericity
 
 	update_generic_features is
 			-- Update `generic_features' with information of Current.
+		require
+			parents_not_void: parents /= Void
 		local
 			l_parents: like parents
 			l_formal, l_parent_formal: TYPE_FEATURE_I
@@ -4664,7 +4717,7 @@ feature -- Genericity
 						l_formal_type.set_position (i)
 						
 						create l_formal
-						l_formal.set_feature_name ("_" + name_in_upper + "_Formal#" + i.out)
+						l_formal.set_feature_name ("_" + name + "_Formal#" + i.out)
 						l_formal.set_type (l_formal_type)
 						l_formal.set_written_in (class_id)
 						l_formal.set_origin_class_id (class_id)
@@ -4695,7 +4748,7 @@ feature -- Genericity
 		
  			debug ("FORMAL_GENERIC")
 				if l_generic_features /= Void then
-					print ("%NFor class " + name_in_upper + ": " + l_generic_features.count.out)
+					print ("%NFor class " + name + ": " + l_generic_features.count.out)
 					print (" local + inherited generic parameters%N")
 				end
  			end
@@ -4750,7 +4803,7 @@ feature -- Anchored types
 			l_anchor, l_previous_anchor: TYPE_FEATURE_I
 			l_anchored_features, l_old: like anchored_features
 			l_inherited_features: like anchored_features
-			l_parents: like parents
+			l_parents: like parents_classes
 			l_feat: FEATURE_I
 			l_rout_id: INTEGER
 			l_rout_id_set: ROUT_ID_SET
@@ -4760,12 +4813,12 @@ feature -- Anchored types
 				-- Get all inherited anchored features.
 			from
 				create l_inherited_features.make (0)
-				l_parents := parents
+				l_parents := parents_classes
 				l_parents.start
 			until
 				l_parents.after
 			loop
-				l_old := l_parents.item.associated_class.anchored_features
+				l_old := l_parents.item.anchored_features
 				if l_old /= Void then
 					l_inherited_features.merge (l_old)
 				end
@@ -4825,7 +4878,7 @@ feature -- Anchored types
 		
  			debug ("ANCHORED_FEATURES")
 				if l_anchored_features /= Void then
-					print ("%NFor class " + name_in_upper + ": " + l_anchored_features.count.out)
+					print ("%NFor class " + name + ": " + l_anchored_features.count.out)
 					print (" local + inherited generic parameters%N")
 				end
  			end
@@ -5187,7 +5240,7 @@ feature -- output
 		local
 			l_name: STRING
 		do
-			l_name := name_in_upper
+			l_name := name
 			create Result.make (l_name.count + 6)
 			Result.append_integer (class_id)
 			Result.append_character (':')

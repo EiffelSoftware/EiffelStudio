@@ -69,10 +69,8 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 	}
 		
 	public string LastError() {
-		string error;
-		if (core == null) {
-			error = "";
-		} else {
+		string error = null;
+		if (core != null) {
 			error = core.LastError ();
 		}
 		cleanup();

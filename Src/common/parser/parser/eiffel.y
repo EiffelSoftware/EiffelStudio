@@ -1762,14 +1762,14 @@ Call_on_static: A_static_call TE_DOT Remote_call
 	;
 
 A_static_call:
-		TE_FEATURE TE_LCURLY Type TE_RCURLY TE_DOT Identifier Parameters
+		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier Parameters
 			{
 				$$ := new_static_access_as ($3, $6, $7);
 			}
 	;
 
 A_static_constant_call:
-		TE_FEATURE TE_LCURLY Type TE_RCURLY TE_DOT Identifier
+		TE_FEATURE TE_LCURLY Class_type TE_RCURLY TE_DOT Identifier
 			{
 				$$ := new_static_access_as ($3, $6, Void);
 			}

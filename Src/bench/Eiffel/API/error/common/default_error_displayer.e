@@ -76,13 +76,26 @@ feature -- Output
 			-- Display error messages from `handler'.
 		local
 			error_list: SORTED_TWO_WAY_LIST [ERROR];
-			st: STRUCTURED_TEXT
+			st: STRUCTURED_TEXT;
+			degree_nbr: INTEGER;
+			to_go: INTEGER
 		do
 			if not retried then
 				!! st.make;
 				display_separation_line (st);	
-				st.add_string ("Compilation error during Degree ");
-				st.add_string (Degree_output.current_degree.out);
+				degree_nbr := Degree_output.current_degree;
+				st.add_string ("Degree: ");
+				st.add_string (degree_nbr.out);
+				st.add_new_line;
+				st.add_string ("Processed: ")
+				st.add_string (Degree_output.processed.out);
+				st.add_new_line;
+				st.add_string ("To go: ")
+				to_go := Degree_output.total_number - Degree_output.processed;
+				st.add_string (to_go.out);
+				st.add_new_line;
+				st.add_string ("Total: ")
+				st.add_string (Degree_output.total_number.out);
 				st.add_new_line;
 				error_list := handler.error_list;
 				from

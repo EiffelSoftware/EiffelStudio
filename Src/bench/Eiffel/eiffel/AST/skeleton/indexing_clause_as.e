@@ -81,10 +81,15 @@ feature -- Access
 
 	custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Metadata_header)
 			if Result /= Void then
-				Result.append (internal_custom_attributes (Attribute_header))
+				l_list := internal_custom_attributes (Attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
 			else
 				Result := internal_custom_attributes (Attribute_header)
 			end
@@ -92,10 +97,15 @@ feature -- Access
 
 	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Class_metadata_header)
 			if Result /= Void then
-				Result.append (internal_custom_attributes (Class_attribute_header))
+				l_list := internal_custom_attributes (Class_attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
 			else
 				Result := internal_custom_attributes (Class_attribute_header)
 			end
@@ -103,10 +113,15 @@ feature -- Access
 
 	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes.
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Interface_metadata_header)
 			if Result /= Void then
-				Result.append (internal_custom_attributes (Interface_attribute_header))
+				l_list := internal_custom_attributes (Interface_attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
 			else
 				Result := internal_custom_attributes (Interface_attribute_header)
 			end
@@ -114,10 +129,15 @@ feature -- Access
 		
 	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes for an assembly
+		local
+			l_list: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
 			Result := internal_custom_attributes (Assembly_metadata_header)
 			if Result /= Void then
-				Result.append (internal_custom_attributes (Assembly_attribute_header))
+				l_list := internal_custom_attributes (Assembly_attribute_header)
+				if l_list /= Void then
+					Result.append (l_list)
+				end
 			else
 				Result := internal_custom_attributes (Assembly_attribute_header)
 			end

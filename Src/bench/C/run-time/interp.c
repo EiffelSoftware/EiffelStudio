@@ -71,6 +71,10 @@
 #define INTERP_CMPD 1			/* Interpretation of a compound */
 #define INTERP_INVA	2			/* Interpretation of invariant */
 
+/* Access to precursor type */
+
+#define GET_PTYPE   (is_extern ? -1 : get_short ())
+
 #ifndef EIF_THREADS
 
 /* Operational stack. This is the stack used by the virtual stack machine,
@@ -1615,7 +1619,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 0;						/* Invariant check turned off */
-		if (icall(MTC (int)offset, code, is_extern, get_short()))
+		if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
 			sync_registers(MTC scur, stop);
 		is_extern = 0;
 		break;
@@ -1644,7 +1648,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 0;					/* Invariant check turned off */
-			if (ipcall(MTC origin, offset, is_extern, get_short()))
+			if (ipcall(MTC origin, offset, is_extern, GET_PTYPE))
 				sync_registers(MTC scur, stop);
 			is_extern = 0;
 			break;
@@ -1675,7 +1679,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 		nstcall = 1;					/* Invariant check turned on */
-		if (icall(MTC (int)offset, code, is_extern, get_short()))
+		if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
 			sync_registers(MTC scur, stop);
 		is_extern = 0;						/* No side effect */
 		break;
@@ -1709,7 +1713,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 1;					/* Invariant check turned on */
-			if (ipcall(MTC origin, offset, is_extern, get_short()))
+			if (ipcall(MTC origin, offset, is_extern, GET_PTYPE))
 				sync_registers(MTC scur, stop);
 			is_extern = 0;						/* No side effect */
 			break;
@@ -2797,10 +2801,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-					if (icall(MTC (int)offset, code, is_extern, get_short()))
+					if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-					if (ipcall(origin, offset, is_extern, get_short()))
+					if (ipcall(origin, offset, is_extern, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 
@@ -2962,10 +2966,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				/* get the current object on the local processor */
 				otop()->it_ref = CURPROXY_OBJ(otop()->it_ref); 
 				if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-					if (icall(MTC (int)offset, code, is_extern, get_short()))
+					if (icall(MTC (int)offset, code, is_extern, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
-					if (ipcall(origin, offset, is_extern, get_short()))
+					if (ipcall(origin, offset, is_extern, GET_PTYPE))
 						sync_registers(MTC scur, stop);
 				}
 				/* if the return value's type is REFERENCE object, change it 

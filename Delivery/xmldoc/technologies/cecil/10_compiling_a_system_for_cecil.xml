@@ -55,7 +55,7 @@
 		</code>, only the features with no export clause in the Eiffel code, will be available. The creation procedure of a visible class is always available.
 		<heading>
 			<size>2</size>Building a CECIL archive
-		</heading>The  Eiffel Software -EiffelBench 5.0 compiler produces both C code and a "Makefile". The Makefile compiles and links that C code in a subdirectory one level below the EIFGEN directory of a project. For frozen/melted code, the Makefile is located in the W_code subdirectory. For finalized code, it is in the F_code subdirectory.
+		</heading>The EiffelStudio compiler produces both C code and a "Makefile". The Makefile compiles and links that C code in a subdirectory one level below the EIFGEN directory of a project. For frozen/melted code, the Makefile is located in the W_code subdirectory. For finalized code, it is in the F_code subdirectory.
 		<paragraph>To produce a CECIL library, you must: open a shell (unix) or the MS-DOS prompt (Windows), go to the subdirectory that contains the Makefile, and then type:</paragraph>
 		<code_block>
 		<bold>make cecil</bold> (on unix and on windows with Borland)<bold>

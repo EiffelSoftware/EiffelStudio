@@ -1,0 +1,23 @@
+/*
+ * Jmakefile for platform specific information
+ */
+
+;# Files used to build the daemon
+SRC = names.c sizes.c
+
+;# Derived object file names
+OBJ = \
+|expand f!$(SRC)!
+    !f:\.c=.o \
+-expand \\
+
+;# Where shared archive is located (path and name)
+LIBRUN = ../run-time
+
+/* The following are understood by jmake to alter built-in commands */
+DPFLAGS = -I$(TOP) -I$(LIBRUN)
+CFLAGS = $(DPFLAGS)
+
+NormalLibraryTarget(platform,$(SRC),$(OBJ))
+DependTarget()
+LintTarget()

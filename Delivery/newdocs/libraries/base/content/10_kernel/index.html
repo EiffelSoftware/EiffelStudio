@@ -708,76 +708,181 @@
         <a CLASS="eclass" HREF="../../reference/kernel/std_files_chart.html">STD_FILES</a>
         has all the <SPAN CLASS="efeature">put_xxx</SPAN>, <SPAN CLASS="efeature">read_xxx</SPAN> and <SPAN CLASS="efeature">last_xxx</SPAN> features of <a CLASS="eclass" HREF="../../reference/kernel/file_chart.html">FILE</a>.</p>
         <h2>PERSISTENCE, STORAGE AND RETRIEVAL</h2>
-        <p>Most object-oriented applications need the ability to store object structures on persistent
-        storage for later retrieval, and to transfer such object structures to other applications.<br>
-        Class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
-        addresses this need.</p>
+        <p>Most object-oriented applications need the ability to store object 
+        structures on persistent storage for later retrieval, and to transfer 
+        such object structures to other applications.<br>
+        Class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a> addresses this need.</p>
         <h3>Persistence completeness</h3>
-        <p>A fundamental requirement on object persistence mechanisms is the <i> Persistence
-        Completeness</i> rule, stated as follows in Eiffel: The Language:<br>
-        Whenever a routine of class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
-        stores an object into an external file, it stores with it the dependents of that object. Whenever
-        one of the associated retrieval routines retrieves a previously stored object, it also retrieves all its dependents.<br>
-        Storing an object just by itself would usually result in wrong semantics: most
-        objects contain references to other objects, which must also be stored and retrieved with
-        it. The persistence completeness rule ensures that this is always the case. It also means,
-        of course, that the features of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
-        must do much more than simple input and&nbsp; output; they must perform complete traversals of object structures.</p>
+        <p>A fundamental requirement on object persistence mechanisms is the <i> 
+        Persistence Completeness</i> rule, stated as follows in Eiffel: The 
+        Language:<br>
+        Whenever a routine of class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a> stores an object into an external file, it stores with it 
+        the dependents of that object. Whenever one of the associated retrieval 
+        routines retrieves a previously stored object, it also retrieves all its 
+        dependents.<br>
+        Storing an object just by itself would usually result in wrong 
+        semantics: most objects contain references to other objects, which must 
+        also be stored and retrieved with it. The persistence completeness rule 
+        ensures that this is always the case. It also means, of course, that the 
+        features of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a> must do much more than simple input and&nbsp; output; they 
+        must perform complete traversals of object structures.</p>
         <h3>Using the storage and retrieval facilities</h3>
-        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
-        is meant to be used as ancestor. You can use its features in any descendant <SPAN CLASS="eclass">C</SPAN>; for example a routine of <SPAN CLASS="eclass">C</SPAN> may contain a call of the form
-        <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
+        <p>Class <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a> is meant to be used as ancestor. You can use its features 
+        in any descendant <SPAN CLASS="eclass">C</SPAN>; for example a routine 
+        of <SPAN CLASS="eclass">C</SPAN> may contain a call of the form
+        <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
+        basic_store</A>
         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_descriptor</SPAN><SPAN CLASS="esymbol">).<br>
-        </SPAN>The effect of this call will be to store the current object and all its dependents into
-        the file denoted by my_descriptor.<br>
+        </SPAN>The effect of this call will be to store the current object and 
+        all its dependents into the file denoted by my_descriptor.<br>
         Although
-        <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
-        and other procedures of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>will in general process
-        objects of many different types, only the generating class of the structure’s initial object,
-        <SPAN CLASS="eclass">C</SPAN> in our example, needs to be a descendant of
-        <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>.</p>
+        <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
+        basic_store</A> and other procedures of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a>will in general process objects of many different types, 
+        only the generating class of the structure’s initial object,
+        <SPAN CLASS="eclass">C</SPAN> in our example, needs to be a descendant 
+        of
+        <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a>.</p>
         <h3>Varieties of store operations</h3>
-        <p>Two variants of the store operation are supported: basic store and general store. Basic
-        store produces more compact structures in the resulting files, and is slightly faster; but
-        the resulting structure is dependent on the system which executes the store
-        operation (“System” is taken here, as elsewhere in this
-        documentation, in its Eiffel sense of an executable assembly of classes, compiled together with the help of an Ace specification.) This
-        means that you can use procedure <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
-        to store an object structure during an execution of a system if you will only retrieve it later in that execution, or in a<br>
-        subsequent execution of the same system. If you need to store objects from a certain system and then retrieve them from a
-        different system, possibly running on a different computer, use <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">general_store</a>.
-        The result of <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">general_store</a>
-        is still platform-dependent; the representation of numbers, in particular, is determined by the underlying machine architecture. A third variant called
-        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_independent_store">independent_store</a>
-        will be added in the future to <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>, using an entirely platform-independent
-        storage format; then a system running on a computer with a certain architecture
-        will be able to retrieve, without any explicit conversion operation, object structures stored by a
-        system running on a machine of a completely different architecture. With
-        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">general_store</a>
-        the<br>
+        <p>Two variants of the store operation are supported: basic store and 
+        general store. Basic store produces more compact structures in the 
+        resulting files, and is slightly faster; but the resulting structure is 
+        dependent on the system which executes the store operation (“System” is 
+        taken here, as elsewhere in this documentation, in its Eiffel sense of 
+        an executable assembly of classes, compiled together with the help of an 
+        Ace specification.) This means that you can use procedure <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
+        basic_store</A> to store an object structure during an execution of a 
+        system if you will only retrieve it later in that execution, or in a<br>
+        subsequent execution of the same system. If you need to store objects 
+        from a certain system and then retrieve them from a different system, 
+        possibly running on a different computer, use <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">
+        general_store</a>. The result of <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">
+        general_store</a> is still platform-dependent; the representation of 
+        numbers, in particular, is determined by the underlying machine 
+        architecture. A third variant called
+        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_independent_store">
+        independent_store</a> will be added in the future to <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a>, using an entirely platform-independent storage format; 
+        then a system running on a computer with a certain architecture will be 
+        able to retrieve, without any explicit conversion operation, object 
+        structures stored by a system running on a machine of a completely 
+        different architecture. With
+        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">
+        general_store</a> the<br>
         storing and retrieving computers must have compatible architectures.</p>
         <h3>Retrieval</h3>
-        <p>You only need to be aware of the difference between basic and general store at storage
-        time. The stored structure will always be available through feature retrieved; this feature
-        will figure out, from the format of the stored structure, whether it was stored by
-        <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">basic_store</A>
-        or <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">general_store</a>, and will decode it accordingly.<br>
-        Feature retrieved returns a result of type <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>
-        and is typically used through an assignment attempt of the form<br>
+        <p>You only need to be aware of the difference between basic and general 
+        store at storage time. The stored structure will always be available 
+        through feature retrieved; this feature will figure out, from the format 
+        of the stored structure, whether it was stored by
+        <A CLASS="efeature" HREF="../../reference/kernel/storable.html#f_basic_store">
+        basic_store</A> or <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_general_store">
+        general_store</a>, and will decode it accordingly.<br>
+        Feature retrieved returns a result of type <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a> and is typically used through an assignment attempt of the 
+        form<br>
         <code>
         <SPAN CLASS="local">x</SPAN> <SPAN CLASS="esymbol">?=</SPAN>
-        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">retrieved</a>
+        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">
+        retrieved</a>
         <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">my_descriptor</SPAN><SPAN CLASS="esymbol">)</SPAN>
         </code><br>
-        <p>The assignment attempt is necessary because <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">retrieved</a>
-        returns a result of type
-        <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>&nbsp;
-        whereas the type of <SPAN CLASS="elocal">x</SPAN> will be based on a proper descendant of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">STORABLE</a>.
-        If the structure in the file has been corrupted and retrieved is unable to do its job, it
-        will trigger an exception. The code for that exception in class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">EXCEPTIONS</a>
-        (which inherits it from <a CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">EXCEP_CONST</a>
-        and is discussed in the next section, together with the notion of exception code) is
+        <p>The assignment attempt is necessary because <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">
+        retrieved</a> returns a result of type
+        <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a>&nbsp; whereas the type of <SPAN CLASS="elocal">x</SPAN> 
+        will be based on a proper descendant of <a CLASS="eclass" HREF="../../reference/kernel/storable_chart.html">
+        STORABLE</a>. If the structure in the file has been corrupted and 
+        retrieved is unable to do its job, it will trigger an exception. The 
+        code for that exception in class <a CLASS="eclass" HREF="../../reference/kernel/exceptions_chart.html">
+        EXCEPTIONS</a> (which inherits it from <a CLASS="eclass" HREF="../../reference/kernel/excep_const_chart.html">
+        EXCEP_CONST</a> and is discussed in the next section, together with the 
+        notion of exception code) is
         <SPAN CLASS="efeature">Retrieve_exception</SPAN>.</p>
+        <h3><a name="Recoverable_storable"></a>Recoverable storable</h3>
+        <p>Sometime you will be in a position where the schema of a class will 
+        have changed between the time you stored your object and the time you 
+        are trying to retrieve it. Such changes include:</p>
+        <ul>
+          <li>class name changed</li>
+          <li>attributes have been added or removed</li>
+          <li>attributes have been renamed</li>
+          <li>attributes type have changed</li>
+        </ul>
+        <p>The storable mechanism allows you to retrieve the old version of the 
+        object only if it was saved using the
+        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_independent_store">
+        independent_store</a> facility. Each time you retrieve an object of 
+        a certain base class whose schema has changed, the feature 
+        <span class="efeature">correct_mismatch</span> will be called. This 
+        feature is defined in <span class="eclass">ANY</span> and by default will raise an exception. 
+        To handle the mismatch, you need to redefine 
+        <span class="efeature">correct_mismatch</span> in the base class whose 
+        schema has been changed. For example in EiffelBase, <span class="eclass">
+        HASH_TABLE</span> has 
+        changed between version 5.1 and version 5.2 to use <span class="eclass">
+        SPECIAL</span> rather than 
+        <span class="eclass">ARRAY </span>for its internal data storage. To retrieve a 5.1 version of <span class="eclass">
+        HASH_TABLE</span> , you need to define 
+        <span class="efeature">correct_mismatch</span> as following:</p>
+        <pre>	<span class="efeature">correct_mismatch</span> <span class="ekeyword">is</span>
+<span class="ecomment">			-- Attempt to correct object mismatch during retrieve using `mismatch_information'.</span>
+		<span class="ekeyword">local</span>
+			array_content: <span class="eclass">ARRAY</span> [G]
+			array_keys: <span class="eclass">ARRAY</span> [H]
+			array_marks: <span class="eclass">ARRAY</span> [<span class="eclass">BOOLEAN</span>]
+		<span class="ekeyword">do</span>
+<span class="ecomment">				-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'
+				-- where of base class ARRAY. In 5.2 we changed it to be a SPECIAL for
+				-- efficiency reasons. In order to retrieve an old HASH_TABLE we
+				-- need to convert those ARRAY instances into SPECIAL instances.
+				
+				-- Convert `content' from ARRAY to SPECIAL</span>
+			array_content ?= <span class="efeature">mismatch_information</span>.<span class="efeature">item</span> ("content")
+			<span class="ekeyword">if</span> array_content /= Void <span class="ekeyword">then</span>
+				<span class="efeature">content</span> := array_content.<span class="efeature">area</span>
+			<span class="ekeyword">end</span>
+
+<span class="ecomment">				-- Convert `keys' from ARRAY to SPECIAL</span>
+			array_keys ?= <span class="efeature">mismatch_information</span>.<span class="efeature">item</span> ("keys")
+			<span class="ekeyword">if</span> array_keys /= Void <span class="ekeyword">then</span>
+				<span class="efeature">keys</span> := array_keys.<span class="efeature">area</span>
+			<span class="ekeyword">end</span>
+
+<span class="ecomment">				-- Convert `deleted_marks' from ARRAY to SPECIAL</span>
+			array_marks ?= <span class="efeature">mismatch_information</span>.<span class="efeature">item</span> ("deleted_marks")
+			<span class="ekeyword">if</span> array_marks /= Void <span class="ekeyword">then</span>
+				<span class="efeature">deleted_marks</span> := array_marks.<span class="efeature">area</span>
+			<span class="ekeyword">end</span>
+			
+			<span class="ekeyword">if</span> <span class="efeature">content</span> = Void or <span class="efeature">keys</span> = Void or <span class="efeature">deleted_marks</span> = Void <span class="ekeyword">then</span>
+<span class="ecomment">					-- Could not retrieve old version of HASH_TABLE. We throw an exception.</span>
+				Precursor {TABLE}
+			<span class="ekeyword">end</span>
+		<span class="ekeyword">end</span></pre>
+        <p>Note the use of <span class="efeature">mismatch_information</span>, 
+        this is a once feature of <span class="eclass">ANY</span> of type <span class="eclass">
+        MISMATCH_INFORMATION </span>which behaves like a <span class="eclass">
+        HASH_TABLE</span>. The keys of the table are the names of the attributes 
+        on which a mismatch occurred and the values are the corresponding object 
+        fields as they were originally stored. In this particular case of <span class="eclass">
+        HASH_TABLE</span> we know that the previous version was an 
+        <span class="eclass">ARRAY</span>, so we do an assignment attempt and 
+        if it succeeds we assign its <span class="efeature">area </span>to the 
+        corresponding attribute of <span class="eclass">
+        HASH_TABLE</span>.</p>
+        <p>&nbsp;</p>
+        <p>If a class name changed, then you need to create an instance of 
+        <span class="eclass">CLASS_NAME_TRANSLATIONS</span>, it behaves like a <span class="eclass">
+        HASH_TABLE</span> where the keys represent the old name, and the value 
+        the new name. This instance needs to be created before the call to
+        <a CLASS="efeature" HREF="../../reference/kernel/storable.html#f_retrieved">
+        retrieved</a>.</p>
         <h2>ACCESS TO INTERNAL PROPERTIES</h2>
         <p>In some applications you may need to fine-tune the exception handling and memory
         management mechanisms. You may also need a simple way to access command-line

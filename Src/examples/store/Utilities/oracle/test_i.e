@@ -25,13 +25,13 @@ creation
 feature
 
 	login_name: STRING is
-			-- Database login.
+			-- Database login
 		once
 			Result := "scott"
 		end;
 		
 	password: STRING is
-			-- Database password.
+			-- Database password
 		once
 			Result := "tigger"
 		end;

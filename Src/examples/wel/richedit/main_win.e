@@ -255,6 +255,21 @@ feature {NONE} -- Implementation
 					char_format.set_height (choose_font.log_font.height_in_points)
 					char_format.set_char_set (choose_font.log_font.char_set)
 					char_format.set_pitch_and_family (choose_font.log_font.pitch_and_family)
+					char_format.set_text_color (choose_font.color)
+					if choose_font.log_font.italic then
+						char_format.set_italic
+						tool_bar.check_button (Cmd_italic)
+					else
+						char_format.unset_italic
+						tool_bar.uncheck_button (Cmd_italic)
+					end
+					if choose_font.log_font.weight > 500 then
+						char_format.set_bold
+						tool_bar.check_button (Cmd_bold)
+					else
+						char_format.unset_bold
+						tool_bar.uncheck_button (Cmd_bold)
+					end
 					rich_edit.set_character_format_selection (char_format)
 				end
 			when Cmd_color then

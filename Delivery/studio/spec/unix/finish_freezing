@@ -1,0 +1,37 @@
+#!/bin/sh
+arg=none
+
+if [ "`uname`" = "Linux" ] ; then
+	if [ -f /proc/cpuinfo ] ; then
+		ncpus=`grep processor /proc/cpuinfo | wc -l`
+	fi
+else
+	ncpus=1
+fi
+
+if [ $# -gt 0 ]; then
+	arg=$1
+	if [ "$arg" != cecil -a "$arg" != "-cecil" -a "$arg" != "-library" -a "$arg" != "-silent" ]; then
+		echo "Usage: finish_freezing [ -cecil | -library | -silent ]"
+		exit 1
+	fi
+fi
+
+if [ "$arg" != "-library" ]; then
+	echo "Preparing C compilation ..."
+	quick_finalize . o
+else
+	echo "Generating C libraries ..."
+fi
+
+if [ ! -f config.sh ]; then
+	cp $ISE_EIFFEL/bench/spec/$ISE_PLATFORM/include/config.sh .
+fi
+sh Makefile.SH
+
+if [ "$arg"  = cecil -o "$arg" = "-cecil" ] ; then
+	echo Generating CECIL library ...
+	make -j $ncpus cecil && echo "C compilation completed"
+else
+	make -j $ncpus && echo "C compilation completed"
+fi

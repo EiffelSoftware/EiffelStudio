@@ -168,13 +168,20 @@ feature -- Element change
 			-- Make `color' the new `foreground_color'
 		do
 			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
-			c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
+
+			if label_widget /= default_pointer then
+				c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
+			end
 		end
 
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
 			c_gtk_statusbar_item_set_bg_color (widget, color.red, color.green, color.blue)
+
+			if label_widget /= default_pointer then
+				c_gtk_widget_set_bg_color (label_widget, color.red, color.green, color.blue)
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -193,7 +200,7 @@ feature {NONE} -- Implementation
 			if (pixmap = Void) then
 				-- No pixmap, so create a GtkPixmap to put
 				-- in the status bar and show it.
-				pixmap_widget := c_gtk_statusbar_item_create_pixmap_place (widget)
+				pixmap_widget := c_gtk_statusbar_item_create_pixmap_place (pixmap_imp.create_window)
 			end
 
 			-- We replace the former gdk_pixmap of the gtk_pixmap (in pixmap_widget)

@@ -171,6 +171,7 @@ feature -- Action sequences
 
 	proximity_in_actions: EV_PROXIMITY_ACTION_SEQUENCE is
 			-- Actions to be performed when pointing device comes into range.
+		obsolete "Not supported."
 		do
 			if internal_proximity_in_actions = Void then
 				create internal_proximity_in_actions
@@ -180,6 +181,7 @@ feature -- Action sequences
 
 	proximity_out_actions: EV_PROXIMITY_ACTION_SEQUENCE is
 			-- Actions to be performed when pointing device goes out of range.
+		obsolete "Not supported."
 		do
 			if internal_proximity_out_actions = Void then
 				create internal_proximity_out_actions

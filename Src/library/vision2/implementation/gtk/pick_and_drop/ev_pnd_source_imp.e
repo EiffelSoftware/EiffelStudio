@@ -15,7 +15,7 @@ inherit
 
 feature {EV_PND_SOURCE_I} -- Implementation
 
-	initialize_transport (arg: EV_ARGUMENT3 [INTEGER, TUPLE[EV_COMMAND, EV_ARGUMENT],EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
+	initialize_transport (args: EV_ARGUMENT2 [EV_INTERNAL_COMMAND, EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
 		do
 			check

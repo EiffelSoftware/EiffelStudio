@@ -162,9 +162,9 @@ feature -- Generation
 				il_generator.set_verifiability (System.il_verifiable)
 				il_generator.set_cls_compliant (System.cls_compliant)
 
-					-- We add `8' because they are 8 types from ISE.Runtime
+					-- We add `9' because they are 9 types from ISE.Runtime
 					-- we want to reuse.
-				il_generator.initialize_class_mappings (static_type_id_counter.count + 8)
+				il_generator.initialize_class_mappings (static_type_id_counter.count + 9)
 
 					-- Identify all runtime types.
 				il_generator.set_runtime_type_id (static_type_id_counter.count + 1)
@@ -175,9 +175,11 @@ feature -- Generation
 				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
 				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
 				il_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
+				il_generator.set_assertion_level_enum_type_id (static_type_id_counter.count + 9)
 
 				il_generator.start_assembly_generation (System.name, file_name,
-					l_public_key, location, assembly_info, System.line_generation)
+					l_public_key, location, assembly_info,
+					System.line_generation or not System.in_final_mode)
 
 					-- Split classes into modules
 				prepare_classes (System.classes, is_finalizing)

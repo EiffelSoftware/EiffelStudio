@@ -1,58 +1,39 @@
-class FUNCTION [T_T -> ANY, A_T ->TUPLE, R_T]
+class FUNCTION [TBASE, TOPEN -> TUPLE, TRESULT]
 
 inherit
-	ROUTINE [T_T, A_T]
+	ROUTINE [TBASE, TOPEN]
 		redefine
-			call, apply_to, is_equal, copy
+			call, is_equal, copy
 		end
+
 feature -- Access
 	
-	last_result : R_T
+	last_result: TRESULT
 
 feature -- Calls
 
-	call (tgt : T_T; args : A_T) is
+	call (args: TOPEN) is
 
 		do
-			target := tgt
-			rout_set_arguments (args)
+			arguments := args
+			rout_set_cargs
 			call_function
 		end
 
 	apply is
 
 		do
-			call_function
-		end
-
-	apply_to (tgt : T_T) is
-
-		do
-			target := tgt
 			rout_set_cargs
 			call_function
 		end
 
-	eval (tgt : T_T; args : A_T) : R_T is
-			-- Evaluate function for `tgt' with `args'.
+	eval (args: TOPEN): TRESULT is
+			-- Evaluate function for `args'.
 		require
-			valid_target : tgt /= Void
 			valid_arguments: valid_arguments (args)
 			callable: callable
 		do
-			target := tgt
-			rout_set_arguments (args)
-			call_function
-			Result := last_result
-		end
-
-	eval_for (tgt : T_T) : R_T is
-			-- Evaluate function for `tgt' with `arguments'.
-		require
-			valid_target : tgt /= Void
-			callable: callable
-		do
-			target := tgt
+			arguments := args
 			rout_set_cargs
 			call_function
 			Result := last_result
@@ -60,7 +41,7 @@ feature -- Calls
 
 feature -- Comparison
 
-	is_equal (other : like Current) : BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
 
 		do
 			Result := Precursor (other) and then
@@ -69,7 +50,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other : like Current) is
+	copy (other: like Current) is
 
 		do
 			Precursor (other)
@@ -78,14 +59,10 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	-- WARNING:
-	-- Modifying or using one of the following
-	-- features may give unpredictable results.
-
 	frozen call_function is
 		-- Execute function call. 
 		local
-			ra : ARRAY [R_T]
+			ra: ARRAY [TRESULT]
 		do
 			!!ra.make (1, 1)
 			rout_obj_call_function ($Current, $ra, 
@@ -93,7 +70,7 @@ feature {NONE} -- Implementation
 			last_result := ra.item (1)
 		end
 
-	rout_obj_call_function (cur, res, rout, args : POINTER) is
+	rout_obj_call_function (cur, res, rout, args: POINTER) is
 
 		external "C | %"eif_rout_obj.h%""
 		end

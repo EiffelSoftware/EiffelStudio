@@ -15,7 +15,7 @@ inherit
 			close_windows as old_close_windows,
 			set_stone as old_set_stone
 		redefine
-			build_format_bar, hole, hole_button,
+			build_format_bar, hole, 
 			tool_name, open_cmd_holder, save_cmd_holder,
 			save_as_cmd_holder, editable,
 			create_edit_buttons, set_default_size,
@@ -277,14 +277,10 @@ feature -- Window Settings
 
 	close_windows is
 			-- Close sub-windows.
-		local
-			fw: FILTER_W;
-			fc: FILTER_COMMAND
 		do
 			old_close_windows;
 			class_text_field.close_choice_window;
-			fc ?= filter_cmd_holder.associated_command;
-			fc.close_filter_window;
+			filter_command.close_filter_window;
 		end;
 
 feature -- Widgets
@@ -366,7 +362,7 @@ feature -- Grahpical Interface
 		do
 			shell_cmd ?= shell.associated_command;
 			shell_window := shell_cmd.shell_window;
-			if shell_window.is_popped_up then
+			if shell_window /= Void and then shell_window.is_popped_up then
 				shell_window.raise
 			end
 		end;
@@ -382,12 +378,9 @@ feature {NONE} -- Properties; Window Properties
 			Result := l_Class
 		end;
 
-	hole: CLASS_CMD;
+	hole: CLASS_HOLE;
 			-- Hole caraterizing current
  
-	hole_button: CLASS_HOLE;
-			-- HOle to represent Current.
-
 	format_label: LABEL;
 
 	class_name_tf: TEXT_FIELD;
@@ -435,7 +428,11 @@ feature {NONE} -- Commands
 
 	next_target_cmd_holder: COMMAND_HOLDER;
 
-	filter_cmd_holder: COMMAND_HOLDER
+	super_melt_menu_entry: EB_MENU_ENTRY;
+
+	filter_menu_entry: EB_MENU_ENTRY;
+
+	filter_command: FILTER_COMMAND;
 
 feature {NONE} -- Implementation; Graphical Interface
 
@@ -506,26 +503,22 @@ feature {NONE} -- Implementation; Graphical Interface
 			current_target_cmd: CURRENT_CLASS;
 			current_target_button: EB_BUTTON;
 			current_target_menu_entry: EB_MENU_ENTRY;
-			filter_cmd: FILTER_COMMAND;
-			filter_button: EB_BUTTON;
-			filter_menu_entry: EB_MENU_ENTRY;
+			super_melt_cmd: SUPER_MELT;
 			sep: SEPARATOR;
-			history_list_cmd: LIST_HISTORY
+			history_list_cmd: LIST_HISTORY;
+			new_class_button: EB_BUTTON_HOLE
 		do
-			!! shell_cmd.make (edit_bar, text_window);
+			!! shell_cmd.make (text_window);
 			!! shell_button.make (shell_cmd, edit_bar);
-			shell_button.add_button_press_action (3, shell_cmd, Void);
+			shell_button.add_third_button_action;
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
-			!! filter_cmd.make (Current);
 
-				--| filter_button.add_button_press_action (3, filter_cmd, Void);
-				--| Keep this comment! (I need it, Guus)
+			!! filter_command.make (Current);
+			!! filter_menu_entry.make (filter_command, special_menu);
 
-			!! sep.make (new_name, special_menu);
-			!! filter_menu_entry.make (filter_cmd, special_menu);
-			!! filter_cmd_holder.make_plain (filter_cmd);
-			filter_cmd_holder.set_menu_entry (filter_menu_entry);
+			!! super_melt_cmd.make (Current);
+			!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
 
 			!! current_target_cmd.make (text_window);
 			!! sep.make (new_name, special_menu);
@@ -545,8 +538,13 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
+			!! new_class_button.make
+					(Project_tool.class_hole_holder.associated_command,
+					edit_bar);
 			edit_bar.attach_left_widget (hole_button, shell_button, 0);
+			edit_bar.attach_left_widget (shell_button, new_class_button, 0);
 			edit_bar.attach_top (shell_button, 0);
+			edit_bar.attach_top (new_class_button, 0);
 
 			edit_bar.attach_top (next_target_button, 0);
 			edit_bar.attach_top (previous_target_button, 0);
@@ -706,7 +704,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			-- Build top bar: editing commands
 		do
 			edit_bar.set_fraction_base (21);
-			!! hole.make (text_window);
+			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);

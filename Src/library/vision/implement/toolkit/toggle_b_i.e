@@ -39,7 +39,7 @@ feature
 			-- Assign False to `state'
 		deferred
 		ensure
-			--state_is_false: not state
+			state_is_false: not state
 		end; -- disarm
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
@@ -59,12 +59,16 @@ feature
 			-- Set Current toggle on and set
 			-- state to True.
 		deferred
+		ensure
+			state_is_true: state
 		end;
 
 	set_toggle_off is
 			-- Set Current toggle off and set
 			-- state to False.
 		deferred
+		ensure
+			state_is_false: not state
 		end;
 
 feature

@@ -14,9 +14,9 @@ inherit
 
 	EV_MENU_ITEM_HOLDER_IMP
 
-	EV_MENU_ITEM_HANDLER_IMP
-
 	WEL_MENU
+		rename
+			insert_separator as wel_insert_separator
 		redefine
 			make
 		end
@@ -46,7 +46,7 @@ feature -- Access
 	item_handler: EV_MENU_ITEM_HANDLER_IMP is
 			-- The handler of the item.
 		do
-			Result := Current
+			Result := parent_imp
 		end
 
 feature -- Status report

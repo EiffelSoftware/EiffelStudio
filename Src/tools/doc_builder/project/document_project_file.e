@@ -50,7 +50,7 @@ feature -- Basic operations
 			if not is_valid then
 				create l_error_report.make ("Could not load project.")
 				error_description := "The project file is invalid."
-				l_error_report.append_error (create {ERROR}.make_with_line_information (error_description, 0 ,0))
+				l_error_report.append_error (create {ERROR}.make (error_description))
 				l_error_report.show
 			end			
 		end
@@ -59,6 +59,7 @@ feature -- Basic operations
 			-- Write preferences to disk
 		local
 			l_root, l_element: XM_ELEMENT
+			l_ns: XM_NAMESPACE
 		do
 			if document = Void then
 				create document.make
@@ -66,43 +67,44 @@ feature -- Basic operations
 				document.wipe_out
 			end
 			
-			create l_root.make_root (document, project_tag, create {XM_NAMESPACE}.make_default)
+			create l_ns.make_default
+			create l_root.make_root (document, project_tag, l_ns)
 			document.put_first (l_root)
 
-					-- Name
-			create l_element.make_child (l_root, project_name_tag, Void)
+				-- Name
+			create l_element.make (l_root, project_name_tag, l_ns)
 			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, project.name))
 			l_root.put_last (l_element)
 			
-					-- Location
-			create l_element.make_child (l_root, root_directory_tag, Void)
+				-- Location
+			create l_element.make (l_root, root_directory_tag, l_ns)
 			l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, project.root_directory))
 			l_root.put_last (l_element)
 			
-					-- Schema
+				-- Schema
 			if project.Shared_document_manager.has_schema then
-				create l_element.make_child (l_root, schema_file_tag, Void)
+				create l_element.make (l_root, schema_file_tag, l_ns)
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, project.Shared_document_manager.schema.name))
 				l_root.put_last (l_element)
 			end
 			
-					-- HTML Stylesheet
+				-- HTML Stylesheet
 			if project.Shared_document_manager.has_stylesheet then
-				create l_element.make_child (l_root, html_stylesheet_file_tag, Void)
+				create l_element.make (l_root, html_stylesheet_file_tag, l_ns)
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, project.Shared_document_manager.stylesheet.name))
 				l_root.put_last (l_element)
 			end
 			
 				-- Header
 			if header_name /= Void then
-				create l_element.make_child (l_root, header_file_tag, Void)
+				create l_element.make (l_root, header_file_tag, l_ns)
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, header_name))
 				l_root.put_last (l_element)
 			end
 			
 				-- Footer
 			if footer_name /= Void then
-				create l_element.make_child (l_root, footer_file_tag, Void)
+				create l_element.make (l_root, footer_file_tag, l_ns)
 				l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, footer_name))
 				l_root.put_last (l_element)
 			end
@@ -144,12 +146,9 @@ feature -- Access
 			
 	include_navigation_links: BOOLEAN
 			-- Should easy navigation links be generated during transformation?
-			
-	generate_dhtml_toc: BOOLEAN
-			-- Should DHTML TOC be generated for web based outputting?
 	
 	generate_dhtml_filter: BOOLEAN
-			-- Should DHTML filter combo be genrates for web based outputting?
+			-- Should DHTML filter combo be generated for web based outputting?
 	
 feature {PREFERENCES_DIALOG} -- Status Setting	
 	
@@ -221,16 +220,6 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			flag_set: include_navigation_links = a_flag
 		end	
 		
-	set_generate_dhtml_toc (a_flag: BOOLEAN) is
-			-- Set if DHTML TOC should be built for web based outputting
-		require
-			flag_not_void: a_flag /= Void
-		do
-			generate_dhtml_toc := a_flag
-		ensure
-			flag_set: generate_dhtml_toc = a_flag
-		end	
-		
 	set_generate_dhtml_filter (a_flag: BOOLEAN) is
 			-- Set if DHTML filter should be built for web based outputting
 		require
@@ -279,7 +268,7 @@ feature {NONE} -- Implementation
 				footer_name := e.text
 			end
 			
-					-- Process sub_elements
+				-- Process sub_elements
 			l_elements := e.elements
 			from
 				l_elements.start

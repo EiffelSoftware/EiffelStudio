@@ -10,33 +10,17 @@ class
 
 feature -- Access
 
-	tme_cancel: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TME_CANCEL"
-		end
-	
-	tme_hover: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TME_HOVER"
-		end	
+	Tme_cancel: INTEGER is -2147483648
+			-- Declared in Windows as TME_CANCEL
 
-	tme_leave: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TME_LEAVE"
-		end	
+	Tme_hover: INTEGER is 1
+			-- Declared in Windows as TME_HOVER
 
-	tme_query: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TME_QUERY"
-		end	
+	Tme_leave: INTEGER is 2
+			-- Declared in Windows as TME_LEAVE
+
+	Tme_query: INTEGER is 1073741824
+			-- Declared in Windows as TME_QUERY
 
 end -- class WEL_TME_CONSTANTS
 

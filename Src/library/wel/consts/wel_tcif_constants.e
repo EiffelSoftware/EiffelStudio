@@ -9,46 +9,30 @@ class
 
 feature -- Access
 
-	Tcif_text: INTEGER is
+	Tcif_text: INTEGER is 1
 			-- The pszText member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCIF_TEXT"
-		end
+			--
+			-- Declared in Windows as TCIF_TEXT
 
-	Tcif_image: INTEGER is
+	Tcif_image: INTEGER is 2
 			-- The iImage member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCIF_IMAGE"
-		end
+			--
+			-- Declared in Windows as TCIF_IMAGE
 
-	Tcif_rtlreading: INTEGER is
+	Tcif_rtlreading: INTEGER is 4
 			-- Windows 95 only: Displays the text of pszText
 			-- using right-to-left reading order on Hebrew or
 			-- Arabic systems.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCIF_RTLREADING"
-		end
+			--
+			-- Declared in Windows as TCIF_RTLREADING
 
-	Tcif_param: INTEGER is
+	Tcif_param: INTEGER is 8
 			-- The lParam member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCIF_PARAM"
-		end
+			--
+			-- Declared in Windows as TCIF_PARAM
 
-	Tcif_state: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TCIF_STATE"
-		end
+	Tcif_state: INTEGER is 16
+			-- Declared in Windows as TCIF_STATE
 
 end -- class WEL_TCIF_CONSTANTS
 

@@ -9,848 +9,377 @@ class
 
 feature -- Access
 
-	Lang_neutral: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LANG_NEUTRAL"
-		end
+	Lang_neutral: INTEGER is 0
+			-- Declared in Windows as LANG_NEUTRAL
 
-	Lang_afrikaans: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LANG_AFRIKAANS"
-		end
-	
-	Lang_albanian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"LANG_ALBANIAN"
-		end
- 	Lang_arabic: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_ARABIC"
-		end
+	Lang_afrikaans: INTEGER is 54
+			-- Declared in Windows as LANG_AFRIKAANS
 
- 	Lang_basque: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_BASQUE"
-		end
+	Lang_albanian: INTEGER is 28
+			-- Declared in Windows as LANG_ALBANIAN
 
- 	Lang_belarusian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_BELARUSIAN"
-		end
+	Lang_arabic: INTEGER is 1
+			-- Declared in Windows as LANG_ARABIC
 
- 	Lang_bulgarian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_BULGARIAN"
-		end
+	Lang_basque: INTEGER is 45
+			-- Declared in Windows as LANG_BASQUE
 
- 	Lang_catalan: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_CATALAN"
-		end
+	Lang_belarusian: INTEGER is 35
+			-- Declared in Windows as LANG_BELARUSIAN
 
- 	Lang_chinese: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_CHINESE"
-		end
+	Lang_bulgarian: INTEGER is 2
+			-- Declared in Windows as LANG_BULGARIAN
 
- 	Lang_croatian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_CROATIAN"
-		end
+	Lang_catalan: INTEGER is 3
+			-- Declared in Windows as LANG_CATALAN
 
- 	Lang_czech: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_CZECH"
-		end
+	Lang_chinese: INTEGER is 4
+			-- Declared in Windows as LANG_CHINESE
 
-  	Lang_danish: INTEGER is
-  		external
-  			"C [macro %"wel.h%"]"
-  		alias
-  			"LANG_DANISH"
-		end
+	Lang_croatian: INTEGER is 26
+			-- Declared in Windows as LANG_CROATIAN
 
- 	Lang_dutch: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_DUTCH"
-		end
+	Lang_czech: INTEGER is 5
+			-- Declared in Windows as LANG_CZECH
 
- 	Lang_english: INTEGER is 9
+	Lang_danish: INTEGER is 6
+			-- Declared in Windows as LANG_DANISH
 
-  	Lang_estonian: INTEGER is
-  		external
-  			"C [macro %"wel.h%"]"
-  		alias
-  			"LANG_ESTONIAN"
-		end
+	Lang_dutch: INTEGER is 19
+			-- Declared in Windows as LANG_DUTCH
 
- 	Lang_faeroese: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_FAEROESE"
-		end
+	Lang_english: INTEGER is 9
+			-- Declared in Windows as LANG_ENGLISH
 
- 	Lang_farsi: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_FARSI"
-		end
+	Lang_estonian: INTEGER is 37
+			-- Declared in Windows as LANG_ESTONIAN
 
- 	Lang_finnish: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_FINNISH"
-		end
+	Lang_faeroese: INTEGER is 56
+			-- Declared in Windows as LANG_FAEROESE
 
- 	Lang_french: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_FRENCH"
-		end
+	Lang_farsi: INTEGER is 41
+			-- Declared in Windows as LANG_FARSI
 
- 	Lang_german: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_GERMAN"
-		end
+	Lang_finnish: INTEGER is 11
+			-- Declared in Windows as LANG_FINNISH
 
-  	Lang_greek: INTEGER is
-  		external
-  			"C [macro %"wel.h%"]"
-  		alias
-  			"LANG_GREEK"
-		end
+	Lang_french: INTEGER is 12
+			-- Declared in Windows as LANG_FRENCH
 
- 	Lang_hebrew: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_HEBREW"
-		end
+	Lang_german: INTEGER is 7
+			-- Declared in Windows as LANG_GERMAN
 
- 	Lang_hungarian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_HUNGARIAN"
-		end
- 	
-	Lang_icelandic: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_ICELANDIC"
-		end 
+	Lang_greek: INTEGER is 8
+			-- Declared in Windows as LANG_GREEK
 
- 	Lang_indonesian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_INDONESIAN"
-		end
+	Lang_hebrew: INTEGER is 13
+			-- Declared in Windows as LANG_HEBREW
 
- 	Lang_italian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_ITALIAN"
-		end
+	Lang_hungarian: INTEGER is 14
+			-- Declared in Windows as LANG_HUNGARIAN
 
- 	Lang_japanese: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_JAPANESE"
-		end
+	Lang_icelandic: INTEGER is 15
+			-- Declared in Windows as LANG_ICELANDIC
 
- 	Lang_korean: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_KOREAN"
-		end
+	Lang_indonesian: INTEGER is 33
+			-- Declared in Windows as LANG_INDONESIAN
 
- 	Lang_latvian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_LATVIAN"
-		end
+	Lang_italian: INTEGER is 16
+			-- Declared in Windows as LANG_ITALIAN
 
- 	Lang_lithuanian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_LITHUANIAN"
-		end
-		
- 	Lang_norwegian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_NORWEGIAN"
-		end
+	Lang_japanese: INTEGER is 17
+			-- Declared in Windows as LANG_JAPANESE
 
- 	Lang_polish: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_POLISH"
-		end
+	Lang_korean: INTEGER is 18
+			-- Declared in Windows as LANG_KOREAN
 
- 	Lang_portuguese: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_PORTUGUESE"
-		end
+	Lang_latvian: INTEGER is 38
+			-- Declared in Windows as LANG_LATVIAN
 
- 	Lang_romanian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_ROMANIAN"
-		end
-		
- 	Lang_russian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_RUSSIAN"
-		end
+	Lang_lithuanian: INTEGER is 39
+			-- Declared in Windows as LANG_LITHUANIAN
 
- 	Lang_serbian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_SERBIAN"
-		end
+	Lang_norwegian: INTEGER is 20
+			-- Declared in Windows as LANG_NORWEGIAN
 
- 	Lang_slovak: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_SLOVAK"
-		end
+	Lang_polish: INTEGER is 21
+			-- Declared in Windows as LANG_POLISH
 
- 	Lang_slovenian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_SLOVENIAN"
-		end 
+	Lang_portuguese: INTEGER is 22
+			-- Declared in Windows as LANG_PORTUGUESE
 
- 	Lang_spanish: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_SPANISH"
-		end
+	Lang_romanian: INTEGER is 24
+			-- Declared in Windows as LANG_ROMANIAN
 
- 	Lang_swedish: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_SWEDISH"
-		end
+	Lang_russian: INTEGER is 25
+			-- Declared in Windows as LANG_RUSSIAN
 
- 	Lang_thai: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_THAI"
-		end
+	Lang_serbian: INTEGER is 26
+			-- Declared in Windows as LANG_SERBIAN
 
- 	Lang_turkish: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_TURKISH"
-		end
+	Lang_slovak: INTEGER is 27
+			-- Declared in Windows as LANG_SLOVAK
 
- 	Lang_ukrainian: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_UKRAINIAN"
-		end
+	Lang_slovenian: INTEGER is 36
+			-- Declared in Windows as LANG_SLOVENIAN
 
- 	Lang_vietnamese: INTEGER is
- 		external
- 			"C [macro %"wel.h%"]"
- 		alias
- 			"LANG_VIETNAMESE"
-		end
-		
-	Sublang_arabic_saudi_arabia: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_SAUDI_ARABIA"
-		end
+	Lang_spanish: INTEGER is 10
+			-- Declared in Windows as LANG_SPANISH
 
-	Sublang_german: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_GERMAN"
-		end
+	Lang_swedish: INTEGER is 29
+			-- Declared in Windows as LANG_SWEDISH
 
-	Sublang_arabic_iraq: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_IRAQ"
-		end
-			
-	Sublang_german_swiss: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_GERMAN_SWISS"
-		end
+	Lang_thai: INTEGER is 30
+			-- Declared in Windows as LANG_THAI
 
-	Sublang_arabic_egypt: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_EGYPT"
-		end
-			
-	Sublang_german_austrian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_GERMAN_AUSTRIAN"
-		end
-			 
-	Sublang_arabic_libya: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_LIBYA"
-		end
+	Lang_turkish: INTEGER is 31
+			-- Declared in Windows as LANG_TURKISH
 
-	Sublang_german_luxembourg: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_GERMAN_LUXEMBOURG"
-		end
-		
-	Sublang_arabic_algeria: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_ALGERIA"
-		end
-			
-	Sublang_german_liechtenstein: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_GERMAN_LIECHTENSTEIN"
-		end
-			 
-	Sublang_arabic_morocco: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_MOROCCO"
-		end
+	Lang_ukrainian: INTEGER is 34
+			-- Declared in Windows as LANG_UKRAINIAN
 
-	Sublang_italian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ITALIAN"
-		end
+	Lang_vietnamese: INTEGER is 42
+			-- Declared in Windows as LANG_VIETNAMESE
 
-	Sublang_arabic_tunisia: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_TUNISIA"
-		end
+	Sublang_arabic_saudi_arabia: INTEGER is 1
+			-- Declared in Windows as SUBLANG_ARABIC_SAUDI_ARABIA
 
-	Sublang_italian_swiss: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ITALIAN_SWISS"
-		end
-			 
-	Sublang_arabic_oman: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_OMAN"
-		end
-			
-	Sublang_korean: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_KOREAN"
-		end
-	
+	Sublang_german: INTEGER is 1
+			-- Declared in Windows as SUBLANG_GERMAN
+
+	Sublang_arabic_iraq: INTEGER is 2
+			-- Declared in Windows as SUBLANG_ARABIC_IRAQ
+
+	Sublang_german_swiss: INTEGER is 2
+			-- Declared in Windows as SUBLANG_GERMAN_SWISS
+
+	Sublang_arabic_egypt: INTEGER is 3
+			-- Declared in Windows as SUBLANG_ARABIC_EGYPT
+
+	Sublang_german_austrian: INTEGER is 3
+			-- Declared in Windows as SUBLANG_GERMAN_AUSTRIAN
+
+	Sublang_arabic_libya: INTEGER is 4
+			-- Declared in Windows as SUBLANG_ARABIC_LIBYA
+
+	Sublang_german_luxembourg: INTEGER is 4
+			-- Declared in Windows as SUBLANG_GERMAN_LUXEMBOURG
+
+	Sublang_arabic_algeria: INTEGER is 5
+			-- Declared in Windows as SUBLANG_ARABIC_ALGERIA
+
+	Sublang_german_liechtenstein: INTEGER is 5
+			-- Declared in Windows as SUBLANG_GERMAN_LIECHTENSTEIN
+
+	Sublang_arabic_morocco: INTEGER is 6
+			-- Declared in Windows as SUBLANG_ARABIC_MOROCCO
+
+	Sublang_italian: INTEGER is 1
+			-- Declared in Windows as SUBLANG_ITALIAN
+
+	Sublang_arabic_tunisia: INTEGER is 7
+			-- Declared in Windows as SUBLANG_ARABIC_TUNISIA
+
+	Sublang_italian_swiss: INTEGER is 2
+			-- Declared in Windows as SUBLANG_ITALIAN_SWISS
+
+	Sublang_arabic_oman: INTEGER is 8
+			-- Declared in Windows as SUBLANG_ARABIC_OMAN
+
+	Sublang_korean: INTEGER is 1
+			-- Declared in Windows as SUBLANG_KOREAN
+
+	Sublang_arabic_yemen: INTEGER is 9
+			-- Declared in Windows as SUBLANG_ARABIC_YEMEN
+
+	Sublang_arabic_syria: INTEGER is 10
+			-- Declared in Windows as SUBLANG_ARABIC_SYRIA
+
+	Sublang_neutral: INTEGER is 0
+			-- Declared in Windows as SUBLANG_NEUTRAL
+
+	Sublang_arabic_jordan: INTEGER is 11
+			-- Declared in Windows as SUBLANG_ARABIC_JORDAN
+
+	Sublang_norwegian_bokmal: INTEGER is 1
+			-- Declared in Windows as SUBLANG_NORWEGIAN_BOKMAL
+
+	Sublang_arabic_lebanon: INTEGER is 12
+			-- Declared in Windows as SUBLANG_ARABIC_LEBANON
+
+	Sublang_norwegian_nynorsk: INTEGER is 2
+			-- Declared in Windows as SUBLANG_NORWEGIAN_NYNORSK
+
+	Sublang_arabic_kuwait: INTEGER is 13
+			-- Declared in Windows as SUBLANG_ARABIC_KUWAIT
+
+	Sublang_portuguese: INTEGER is 2
+			-- Declared in Windows as SUBLANG_PORTUGUESE
+
+	Sublang_arabic_uae: INTEGER is 14
+			-- Declared in Windows as SUBLANG_ARABIC_UAE
+
+	Sublang_portuguese_brazilian: INTEGER is 1
+			-- Declared in Windows as SUBLANG_PORTUGUESE_BRAZILIAN
+
+	Sublang_arabic_bahrain: INTEGER is 15
+			-- Declared in Windows as SUBLANG_ARABIC_BAHRAIN
+
+	Sublang_serbian_latin: INTEGER is 2
+			-- Declared in Windows as SUBLANG_SERBIAN_LATIN
+
+	Sublang_arabic_qatar: INTEGER is 16
+			-- Declared in Windows as SUBLANG_ARABIC_QATAR
+
+	Sublang_serbian_cyrillic: INTEGER is 3
+			-- Declared in Windows as SUBLANG_SERBIAN_CYRILLIC
+
+	Sublang_chinese_traditional: INTEGER is 1
+			-- Declared in Windows as SUBLANG_CHINESE_TRADITIONAL
+
+	Sublang_spanish: INTEGER is 1
+			-- Declared in Windows as SUBLANG_SPANISH
+
+	Sublang_chinese_simplified: INTEGER is 2
+			-- Declared in Windows as SUBLANG_CHINESE_SIMPLIFIED
+
+	Sublang_spanish_mexican: INTEGER is 2
+			-- Declared in Windows as SUBLANG_SPANISH_MEXICAN
+
+	Sublang_chinese_hongkong: INTEGER is 3
+			-- Declared in Windows as SUBLANG_CHINESE_HONGKONG
+
+	Sublang_spanish_modern: INTEGER is 3
+			-- Declared in Windows as SUBLANG_SPANISH_MODERN
+
+	Sublang_chinese_singapore: INTEGER is 4
+			-- Declared in Windows as SUBLANG_CHINESE_SINGAPORE
+
+	Sublang_spanish_guatemala: INTEGER is 4
+			-- Declared in Windows as SUBLANG_SPANISH_GUATEMALA
+
+	Sublang_default: INTEGER is 1
+			-- Declared in Windows as SUBLANG_DEFAULT
+
+	Sublang_spanish_costa_rica: INTEGER is 5
+			-- Declared in Windows as SUBLANG_SPANISH_COSTA_RICA
+
+	Sublang_dutch: INTEGER is 1
+			-- Declared in Windows as SUBLANG_DUTCH
+
+	Sublang_spanish_panama: INTEGER is 6
+			-- Declared in Windows as SUBLANG_SPANISH_PANAMA
+
+	Sublang_dutch_belgian: INTEGER is 2
+			-- Declared in Windows as SUBLANG_DUTCH_BELGIAN
+
+	Sublang_spanish_dominican_republic: INTEGER is 7
+			-- Declared in Windows as SUBLANG_SPANISH_DOMINICAN_REPUBLIC
+
+	Sublang_english_us: INTEGER is 1
+			-- Declared in Windows as SUBLANG_ENGLISH_US
+
+	Sublang_spanish_venezuela: INTEGER is 8
+			-- Declared in Windows as SUBLANG_SPANISH_VENEZUELA
+
+	Sublang_english_uk: INTEGER is 2
+			-- Declared in Windows as SUBLANG_ENGLISH_UK
+
+	Sublang_spanish_colombia: INTEGER is 9
+			-- Declared in Windows as SUBLANG_SPANISH_COLOMBIA
+
+	Sublang_english_aus: INTEGER is 3
+			-- Declared in Windows as SUBLANG_ENGLISH_AUS
+
+	Sublang_spanish_peru: INTEGER is 10
+			-- Declared in Windows as SUBLANG_SPANISH_PERU
+
+	Sublang_english_can: INTEGER is 4
+			-- Declared in Windows as SUBLANG_ENGLISH_CAN
+
+	Sublang_spanish_argentina: INTEGER is 11
+			-- Declared in Windows as SUBLANG_SPANISH_ARGENTINA
+
+	Sublang_english_nz: INTEGER is 5
+			-- Declared in Windows as SUBLANG_ENGLISH_NZ
+
+	Sublang_spanish_ecuador: INTEGER is 12
+			-- Declared in Windows as SUBLANG_SPANISH_ECUADOR
+
+	Sublang_english_eire: INTEGER is 6
+			-- Declared in Windows as SUBLANG_ENGLISH_EIRE
+
+	Sublang_spanish_chile: INTEGER is 13
+			-- Declared in Windows as SUBLANG_SPANISH_CHILE
+
+	Sublang_english_south_africa: INTEGER is 7
+			-- Declared in Windows as SUBLANG_ENGLISH_SOUTH_AFRICA
+
+	Sublang_spanish_uruguay: INTEGER is 14
+			-- Declared in Windows as SUBLANG_SPANISH_URUGUAY
+
+	Sublang_english_jamaica: INTEGER is 8
+			-- Declared in Windows as SUBLANG_ENGLISH_JAMAICA
+
+	Sublang_spanish_paraguay: INTEGER is 15
+			-- Declared in Windows as SUBLANG_SPANISH_PARAGUAY
+
+	Sublang_english_caribbean: INTEGER is 9
+			-- Declared in Windows as SUBLANG_ENGLISH_CARIBBEAN
+
+	Sublang_spanish_bolivia: INTEGER is 16
+			-- Declared in Windows as SUBLANG_SPANISH_BOLIVIA
+
+	Sublang_english_belize: INTEGER is 10
+			-- Declared in Windows as SUBLANG_ENGLISH_BELIZE
+
+	Sublang_spanish_el_salvador: INTEGER is 17
+			-- Declared in Windows as SUBLANG_SPANISH_EL_SALVADOR
+
+	Sublang_english_trinidad: INTEGER is 11
+			-- Declared in Windows as SUBLANG_ENGLISH_TRINIDAD
+
+	Sublang_spanish_honduras: INTEGER is 18
+			-- Declared in Windows as SUBLANG_SPANISH_HONDURAS
+
+	Sublang_french: INTEGER is 1
+			-- Declared in Windows as SUBLANG_FRENCH
+
+	Sublang_spanish_nicaragua: INTEGER is 19
+			-- Declared in Windows as SUBLANG_SPANISH_NICARAGUA
+
+	Sublang_french_belgian: INTEGER is 2
+			-- Declared in Windows as SUBLANG_FRENCH_BELGIAN
+
+	Sublang_spanish_puerto_rico: INTEGER is 20
+			-- Declared in Windows as SUBLANG_SPANISH_PUERTO_RICO
+
+	Sublang_french_canadian: INTEGER is 3
+			-- Declared in Windows as SUBLANG_FRENCH_CANADIAN
+
+	Sublang_swedish: INTEGER is 1
+			-- Declared in Windows as SUBLANG_SWEDISH
+
+	Sublang_french_swiss: INTEGER is 4
+			-- Declared in Windows as SUBLANG_FRENCH_SWISS
+
+	Sublang_swedish_finland: INTEGER is 2
+			-- Declared in Windows as SUBLANG_SWEDISH_FINLAND
+
+	Sublang_french_luxembourg: INTEGER is 5
+			-- Declared in Windows as SUBLANG_FRENCH_LUXEMBOURG
+
+	Sublang_sys_default: INTEGER is 2
+			-- Declared in Windows as SUBLANG_SYS_DEFAULT
+
+feature -- obsolete
+
 	Sublang_korean_johab: INTEGER is
 		obsolete
 			"Not defined any more for some %
 			 %C compilers, returns old defined value"
 		do
 			Result := 2
-		end
-
-	Sublang_arabic_yemen: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_YEMEN"
-		end
-
-	Sublang_arabic_syria: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_SYRIA"
-		end
-
-	Sublang_neutral: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_NEUTRAL"
-		end
-			 
-	Sublang_arabic_jordan: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_JORDAN"
-		end
-
-	Sublang_norwegian_bokmal: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_NORWEGIAN_BOKMAL"
-		end
-			 
-	Sublang_arabic_lebanon: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_LEBANON"
-		end
-
-	Sublang_norwegian_nynorsk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_NORWEGIAN_NYNORSK"
-		end
-			 
-	Sublang_arabic_kuwait: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_KUWAIT"
-		end
-
-	Sublang_portuguese: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_PORTUGUESE"
-		end
-			 
-	Sublang_arabic_uae: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_UAE"
-		end
-
-	Sublang_portuguese_brazilian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_PORTUGUESE_BRAZILIAN"
-		end
-			 
-	Sublang_arabic_bahrain: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_BAHRAIN"
-		end
-
-	Sublang_serbian_latin: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SERBIAN_LATIN"
-		end
-			 
-	Sublang_arabic_qatar: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ARABIC_QATAR"
-		end
-
-	Sublang_serbian_cyrillic: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SERBIAN_CYRILLIC"
-		end
-			 
-	Sublang_chinese_traditional: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_CHINESE_TRADITIONAL"
-		end
-
-	Sublang_spanish: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH"
-		end
-			 
-	Sublang_chinese_simplified: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_CHINESE_SIMPLIFIED"
-		end
-
-	Sublang_spanish_mexican: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_MEXICAN"
-		end
-			 
-	Sublang_chinese_hongkong: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_CHINESE_HONGKONG"
-		end
-
-	Sublang_spanish_modern: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_MODERN"
-		end
-			 
-	Sublang_chinese_singapore: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_CHINESE_SINGAPORE"
-		end
-
-	Sublang_spanish_guatemala: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_GUATEMALA"
-		end
-			 
-	Sublang_default: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_DEFAULT"
-		end
-
-	Sublang_spanish_costa_rica: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_COSTA_RICA"
-		end
-			 
-	Sublang_dutch: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_DUTCH"
-		end
-
-	Sublang_spanish_panama: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_PANAMA"
-		end
-			 
-	Sublang_dutch_belgian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_DUTCH_BELGIAN"
-		end
-
-	Sublang_spanish_dominican_republic: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_DOMINICAN_REPUBLIC"
-		end 
-			 
-	Sublang_english_us: INTEGER is 1
-		
-	Sublang_spanish_venezuela: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_VENEZUELA"
-		end
-			 
-	Sublang_english_uk: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_UK"
-		end
-
-	Sublang_spanish_colombia: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_COLOMBIA"
-		end
-			 
-	Sublang_english_aus: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_AUS"
-		end
-
-	Sublang_spanish_peru: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_PERU"
-		end
-			 
-	Sublang_english_can: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_CAN"
-		end
-
-	Sublang_spanish_argentina: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_ARGENTINA"
-		end
-			 
-	Sublang_english_nz: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_NZ"
-		end
-
-	Sublang_spanish_ecuador: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_ECUADOR"
-		end
-			 
-	Sublang_english_eire: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_EIRE"
-		end
-
-	Sublang_spanish_chile: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_CHILE"
-		end
-			 
-	Sublang_english_south_africa: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_SOUTH_AFRICA"
-		end
-			
-	Sublang_spanish_uruguay: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_URUGUAY"
-		end
-			 
-	Sublang_english_jamaica: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_JAMAICA"
-		end
-
-	Sublang_spanish_paraguay: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_PARAGUAY"
-		end
-			 
-	Sublang_english_caribbean: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_CARIBBEAN"
-		end
-
-	Sublang_spanish_bolivia: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_BOLIVIA"
-		end
-			 
-	Sublang_english_belize: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_BELIZE"
-		end
-
-	Sublang_spanish_el_salvador: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_EL_SALVADOR"
-		end
-			 
-	Sublang_english_trinidad: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_ENGLISH_TRINIDAD"
-		end
-
-	Sublang_spanish_honduras: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_HONDURAS"
-		end
-			 
-	Sublang_french: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_FRENCH"
-		end
-
-	Sublang_spanish_nicaragua: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_NICARAGUA"
-		end
-			 
-	Sublang_french_belgian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_FRENCH_BELGIAN"
-		end
-
-	Sublang_spanish_puerto_rico: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SPANISH_PUERTO_RICO"
-		end
-			 
-	Sublang_french_canadian: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_FRENCH_CANADIAN"
-		end
-
-	Sublang_swedish: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SWEDISH"
-		end
-			 
-	Sublang_french_swiss: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_FRENCH_SWISS"
-		end
-
-	Sublang_swedish_finland: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SWEDISH_FINLAND"
-		end
-			 
-	Sublang_french_luxembourg: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_FRENCH_LUXEMBOURG"
-		end
-
-	Sublang_sys_default: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"SUBLANG_SYS_DEFAULT"
 		end
 
 end -- class WEL_LANGUAGE_CONSTANTS

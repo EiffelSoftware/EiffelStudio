@@ -65,8 +65,6 @@ feature -- Access
 			"MAKEROP4(SRCCOPY, PATCOPY)"
 		end
 
-
-
 end -- class WEL_RASTER_OPERATIONS_CONSTANTS
 
 --|----------------------------------------------------------------

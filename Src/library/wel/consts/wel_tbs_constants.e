@@ -9,96 +9,44 @@ class
 
 feature -- Access
 
-	Tbs_autoticks: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_AUTOTICKS"
-		end
+	Tbs_autoticks: INTEGER is 1
+			-- Declared in Windows as TBS_AUTOTICKS
 
-	Tbs_vert: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_VERT"
-		end
+	Tbs_vert: INTEGER is 2
+			-- Declared in Windows as TBS_VERT
 
-	Tbs_horz: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_HORZ"
-		end
+	Tbs_horz: INTEGER is 0
+			-- Declared in Windows as TBS_HORZ
 
-	Tbs_top: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_TOP"
-		end
+	Tbs_top: INTEGER is 4
+			-- Declared in Windows as TBS_TOP
 
-	Tbs_bottom: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_BOTTOM"
-		end
+	Tbs_bottom: INTEGER is 0
+			-- Declared in Windows as TBS_BOTTOM
 
-	Tbs_left: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_LEFT"
-		end
+	Tbs_left: INTEGER is 4
+			-- Declared in Windows as TBS_LEFT
 
-	Tbs_right: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_RIGHT"
-		end
+	Tbs_right: INTEGER is 0
+			-- Declared in Windows as TBS_RIGHT
 
-	Tbs_both: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_BOTH"
-		end
+	Tbs_both: INTEGER is 8
+			-- Declared in Windows as TBS_BOTH
 
-	Tbs_noticks: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_NOTICKS"
-		end
+	Tbs_noticks: INTEGER is 16
+			-- Declared in Windows as TBS_NOTICKS
 
-	Tbs_enableselrange: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_ENABLESELRANGE"
-		end
+	Tbs_enableselrange: INTEGER is 32
+			-- Declared in Windows as TBS_ENABLESELRANGE
 
-	Tbs_fixedlength: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_FIXEDLENGTH"
-		end
+	Tbs_fixedlength: INTEGER is 64
+			-- Declared in Windows as TBS_FIXEDLENGTH
 
-	Tbs_nothumb: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_NOTHUMB"
-		end
+	Tbs_nothumb: INTEGER is 128
+			-- Declared in Windows as TBS_NOTHUMB
 
-	Tbs_tooltips: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBS_TOOLTIPS"
-		end
+	Tbs_tooltips: INTEGER is 256
+			-- Declared in Windows as TBS_TOOLTIPS
 
 end -- class WEL_TBS_CONSTANTS
 

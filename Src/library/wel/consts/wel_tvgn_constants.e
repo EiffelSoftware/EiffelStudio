@@ -9,93 +9,63 @@ class
 
 feature -- Access
 
-	Tvgn_caret: INTEGER is
+	Tvgn_caret: INTEGER is 9
 			-- Sets the selection to the given item or retrieves
 			-- the currently selected item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_CARET"
-		end
+			--
+			-- Declared in Windows as TVGN_CARET
 
-	Tvgn_child: INTEGER is
+	Tvgn_child: INTEGER is 4
 			-- Retrieves the first child item.
 			-- (the hitem parameter must be Void)
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_CHILD"
-		end
+			--
+			-- Declared in Windows as TVGN_CHILD
 
-	Tvgn_drophilite: INTEGER is
+	Tvgn_drophilite: INTEGER is 8
 			-- Redraws the given item in the style used to indicate
 			-- the target of a drag and drop operation or retrieves
 			-- the item that is the target of a drag and drop
 			-- operation.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_DROPHILITE"
-		end
+			--
+			-- Declared in Windows as TVGN_DROPHILITE
 
-	Tvgn_firstvisible: INTEGER is
+	Tvgn_firstvisible: INTEGER is 5
 			-- Scrolls the tree view vertically so that the given
 			-- item is the first visible item or retrieves the
 			-- first visible item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_FIRSTVISIBLE"
-		end
+			--
+			-- Declared in Windows as TVGN_FIRSTVISIBLE
 
-	Tvgn_next: INTEGER is
+	Tvgn_next: INTEGER is 1
 			-- Retrieves the next siblings item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_NEXT"
-		end
+			--
+			-- Declared in Windows as TVGN_NEXT
 
-	Tvgn_nextvisible: INTEGER is
+	Tvgn_nextvisible: INTEGER is 6
 			-- Retrieves the next visible item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_NEXTVISIBLE"
-		end
+			--
+			-- Declared in Windows as TVGN_NEXTVISIBLE
 
-	Tvgn_parent: INTEGER is
+	Tvgn_parent: INTEGER is 3
 			-- Retrieves the parent of the specified item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_PARENT"
-		end
+			--
+			-- Declared in Windows as TVGN_PARENT
 
-	Tvgn_previous: INTEGER is
+	Tvgn_previous: INTEGER is 2
 			-- Retrieves the previous siblings item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_PREVIOUS"
-		end
+			--
+			-- Declared in Windows as TVGN_PREVIOUS
 
-	Tvgn_previousvisible: INTEGER is
+	Tvgn_previousvisible: INTEGER is 7
 			-- Retrieves the previous visible item.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_PREVIOUSVISIBLE"
-		end
+			--
+			-- Declared in Windows as TVGN_PREVIOUSVISIBLE
 
-	Tvgn_root: INTEGER is
+	Tvgn_root: INTEGER is 0
 			-- Retrieves the top-most or very-first item
 			-- of the tree-view control.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVGN_ROOT"
-		end
+			--
+			-- Declared in Windows as TVGN_ROOT
 
 end -- class WEL_TVGN_CONSTANTS
 

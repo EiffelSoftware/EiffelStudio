@@ -1,8 +1,7 @@
 indexing
-
 	description: "Registry keys value types"
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -10,86 +9,57 @@ class
 		
 feature -- Access
 
-	Reg_binary: INTEGER is
+	Reg_binary: INTEGER is 3
 			-- General binary value
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_BINARY"
-		end
-		
-	Reg_dword: INTEGER is
+			--
+			-- Declared in Windows as REG_BINARY
+
+	Reg_dword: INTEGER is 4
 			-- Double word value
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_DWORD"
-		end
-		
-	Reg_dword_little_endian: INTEGER is
+			--
+			-- Declared in Windows as REG_DWORD
+
+	Reg_dword_little_endian: INTEGER is 4
 			-- Synonym of `Reg_dword'
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_DWORD_LITTLE_ENDIAN"
-		end
-		
-	Reg_dword_big_endian: INTEGER is
+			--
+			-- Declared in Windows as REG_DWORD_LITTLE_ENDIAN
+
+	Reg_dword_big_endian: INTEGER is 5
 			-- Double word value in big-endian format
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_DWORD_BIG_ENDIAN"
-		end
-		
-	Reg_expand_sz: INTEGER is
-			-- C-String that contains unexpanded references to environment variables
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_EXPAND_SZ"
-		end
-		
-	Reg_sz: INTEGER is
+			--
+			-- Declared in Windows as REG_DWORD_BIG_ENDIAN
+
+	Reg_expand_sz: INTEGER is 2
+			-- C-String that contains unexpanded references to environment
+			-- variables
+			--
+			-- Declared in Windows as REG_EXPAND_SZ
+
+	Reg_sz: INTEGER is 1
 			-- C-String
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_SZ"
-		end
-		
-	Reg_link: INTEGER is
+			--
+			-- Declared in Windows as REG_SZ
+
+	Reg_link: INTEGER is 6
 			-- Unicode symbolic link
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_LINK"
-		end
-		
-	Reg_multi_sz: INTEGER is 
+			--
+			-- Declared in Windows as REG_LINK
+
+	Reg_multi_sz: INTEGER is 7
 			-- Array of C-strings, terminated by two null characters
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_MULTI_SZ"
-		end
-		
-	Reg_none: INTEGER is
+			--
+			-- Declared in Windows as REG_MULTI_SZ
+
+	Reg_none: INTEGER is 0
 			-- No defined value type
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_NONE"
-		end
-		
-	Reg_resource_list: INTEGER is
+			--
+			-- Declared in Windows as REG_NONE
+
+	Reg_resource_list: INTEGER is 8
 			-- Device-driver resource list
-		external
-			"C [macro <winnt.h>]"
-		alias
-			"REG_RESOURCE_LIST"
-		end
-	 
+			--
+			-- Declared in Windows as REG_RESOURCE_LIST
+
 end -- class WEL_REGISTRY_KEY_VALUE_TYPE
 
 --|----------------------------------------------------------------

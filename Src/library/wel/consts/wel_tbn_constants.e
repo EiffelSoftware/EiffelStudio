@@ -9,82 +9,38 @@ class
 
 feature -- Access
 
-	Tbn_getbuttoninfo: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_GETBUTTONINFO"
-		end
+	Tbn_getbuttoninfo: INTEGER is -700
+			-- Declared in Windows as TBN_GETBUTTONINFO
 
-	Tbn_begindrag: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_BEGINDRAG"
-		end
+	Tbn_begindrag: INTEGER is -701
+			-- Declared in Windows as TBN_BEGINDRAG
 
-	Tbn_enddrag: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_ENDDRAG"
-		end
+	Tbn_enddrag: INTEGER is -702
+			-- Declared in Windows as TBN_ENDDRAG
 
-	Tbn_beginadjust: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_BEGINADJUST"
-		end
+	Tbn_beginadjust: INTEGER is -703
+			-- Declared in Windows as TBN_BEGINADJUST
 
-	Tbn_endadjust: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_ENDADJUST"
-		end
+	Tbn_endadjust: INTEGER is -704
+			-- Declared in Windows as TBN_ENDADJUST
 
-	Tbn_reset: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_RESET"
-		end
+	Tbn_reset: INTEGER is -705
+			-- Declared in Windows as TBN_RESET
 
-	Tbn_queryinsert: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_QUERYINSERT"
-		end
+	Tbn_queryinsert: INTEGER is -706
+			-- Declared in Windows as TBN_QUERYINSERT
 
-	Tbn_querydelete: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_QUERYDELETE"
-		end
+	Tbn_querydelete: INTEGER is -707
+			-- Declared in Windows as TBN_QUERYDELETE
 
-	Tbn_toolbarchange: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_TOOLBARCHANGE"
-		end
+	Tbn_toolbarchange: INTEGER is -708
+			-- Declared in Windows as TBN_TOOLBARCHANGE
 
-	Tbn_custhelp: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_CUSTHELP"
-		end
+	Tbn_custhelp: INTEGER is -709
+			-- Declared in Windows as TBN_CUSTHELP
 
-	Tbn_dropdown: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_DROPDOWN"
-		end
+	Tbn_dropdown: INTEGER is -710
+			-- Declared in Windows as TBN_DROPDOWN
 
 end -- class WEL_TBN_CONSTANTS
 

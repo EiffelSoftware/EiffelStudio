@@ -9,61 +9,40 @@ class
 
 feature -- Access
 
-	Tvif_children: INTEGER is
+	Tvif_children: INTEGER is 64
 			-- The cChildren member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_CHILDREN"
-		end
+			--
+			-- Declared in Windows as TVIF_CHILDREN
 
-	Tvif_image: INTEGER is
+	Tvif_image: INTEGER is 2
 			-- The iImage member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_IMAGE"
-		end
+			--
+			-- Declared in Windows as TVIF_IMAGE
 
-	Tvif_param: INTEGER is
+	Tvif_param: INTEGER is 4
 			-- The lParam member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_PARAM"
-		end
+			--
+			-- Declared in Windows as TVIF_PARAM
 
-	Tvif_selectedimage: INTEGER is
+	Tvif_selectedimage: INTEGER is 32
 			-- The iSelectedImage member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_SELECTEDIMAGE"
-		end
+			--
+			-- Declared in Windows as TVIF_SELECTEDIMAGE
 
-	Tvif_state: INTEGER is
+	Tvif_state: INTEGER is 8
 			-- The state and stateMask members are valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_STATE"
-		end
+			--
+			-- Declared in Windows as TVIF_STATE
 
-	Tvif_text: INTEGER is
+	Tvif_text: INTEGER is 1
 			-- The pszText and cchTextMax members are valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_TEXT"
-		end
+			--
+			-- Declared in Windows as TVIF_TEXT
 
-	Tvif_handle: INTEGER is
+	Tvif_handle: INTEGER is 16
 			-- The hitem member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TVIF_HANDLE"
-		end
+			--
+			-- Declared in Windows as TVIF_HANDLE
 
 end -- class WEL_TVIF_CONSTANTS
 

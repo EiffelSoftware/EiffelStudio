@@ -57,17 +57,6 @@ feature -- Status setting
 		end
 
 
-	set_commands is
-		local
-		--	c: HELLO_COMMAND
-			e: EV_EVENT
-			a: EV_ARGUMENT1 [STRING]
-		do
-		--	!!e.make ("clicked")
-		--	!!a.make (button.text)
-		--	!!c
-		--	button.add_command (e, c, a)
-		end
 end
 
 --|----------------------------------------------------------------

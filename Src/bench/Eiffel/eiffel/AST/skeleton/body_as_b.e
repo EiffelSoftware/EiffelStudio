@@ -46,6 +46,14 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
+	local_table_for_format (f: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+			-- Check conflicts between local names and feature names
+		do
+			if content /= Void then
+				Result := content.local_table_for_format (f);
+			end;
+		end;
+
 	byte_node: BYTE_CODE is
 			-- Associated byte code
 		do
@@ -260,7 +268,7 @@ feature -- Debugger
 				content.find_breakable
 			end;
 		end
- 
+
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is

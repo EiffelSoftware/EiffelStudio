@@ -258,11 +258,10 @@ feature {NONE} -- Internal generation
 			if not result_type.is_void then
 				buf.putstring ("Result = ")
 			end
-			buf.putstring ("(fp)(")
+			buf.putstring ("fp")
 			if arguments /= Void then
 				generate_arguments_with_cast
 			end
-			buf.putstring (");")
 			buf.new_line
 			if not result_type.is_void then
 				buf.putstring ("return ")

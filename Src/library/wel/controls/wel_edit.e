@@ -19,6 +19,11 @@ inherit
 			process_notification
 		end
 
+	WEL_ES_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_EM_CONSTANTS
 		export
 			{NONE} all
@@ -37,6 +42,16 @@ feature -- Access
 			-- Can be redefined by the user
 		do
 			!! Result.make_system (Color_window)
+		end
+
+feature -- Status report
+
+	read_only: BOOLEAN is
+			-- Is the current edit control read-only?
+		require
+			exists: exists
+		do
+			Result := flag_set (style, Es_readonly)
 		end
 
 feature -- Basic operations

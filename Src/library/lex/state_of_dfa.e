@@ -11,7 +11,7 @@ class STATE_OF_DFA inherit
 
 	STATE
 		undefine
-			copy, consistent, setup, is_equal
+			copy, is_equal
 		end;
 
 	ARRAY [STATE_OF_DFA]

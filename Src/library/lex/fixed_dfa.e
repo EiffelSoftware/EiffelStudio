@@ -11,7 +11,7 @@ class FIXED_DFA inherit
 
 	DFA
 		undefine
-			copy, consistent, is_equal, setup
+			copy, is_equal
 		end;
 
 	FIXED_AUTOMATON [STATE_OF_DFA]

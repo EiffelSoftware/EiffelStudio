@@ -74,7 +74,14 @@ feature
 			i, j, n : INTEGER;
 		do
 			buffer.putstring ("static int16 ptf");
-			buffer.putint (type_id);
+
+			if type_id <= -256 then
+				-- expanded
+				buffer.putint (-256-type_id);
+			else
+				buffer.putint (type_id);
+			end
+
 			buffer.putstring ("[] = {%N");
 
 			from
@@ -96,7 +103,14 @@ feature
 
 			buffer.putint (-1);
 			buffer.putstring ("};%N%Nstatic struct eif_par_types par");
-			buffer.putint (type_id);
+
+			if type_id <= -256 then
+				-- expanded
+				buffer.putint (-256-type_id);
+			else
+				buffer.putint (type_id);
+			end
+
 			buffer.putstring (" = {(int16) ");
 			buffer.putint (generic_count);
 			buffer.putstring (", %"");
@@ -108,7 +122,12 @@ feature
 				buffer.putstring ("%", (char)0, ptf");
 			end
 
-			buffer.putint (type_id);
+			if type_id <= -256 then
+				-- expanded
+				buffer.putint (-256-type_id);
+			else
+				buffer.putint (type_id);
+			end
 			buffer.putstring ("};%N%N");
 		end;
 
@@ -118,7 +137,12 @@ feature
 			i, n: INTEGER;
 		do
 			-- Dynamic type associated to the table
-			ba.append_short_integer (type_id);
+			if type_id <= -256 then
+				-- expanded
+				ba.append_short_integer (-256-type_id);
+			else
+				ba.append_short_integer (type_id);
+			end
 			-- Number of formal generics
 			ba.append_short_integer (generic_count)
 			-- Classname

@@ -2771,6 +2771,11 @@ end
 					cl_type.generate_parent_table (buffer, final_mode);
 					cid := cl_type.type.generated_id (final_mode);
 
+					if cid <= -256 then
+							-- Expanded reference
+						cid := -256-cid
+					end
+
 					if cid > max_id then
 						max_id := cid;
 					end
@@ -2791,6 +2796,11 @@ end
 				cl_type := class_types.item (i);
 				if cl_type /= Void then
 					cid := cl_type.type.generated_id (final_mode);
+
+					if cid <= -256 then
+							-- Expanded reference
+						cid := -256-cid
+					end
 					used_ids.put (True, cid);
 				end;
 				i := i + 1;

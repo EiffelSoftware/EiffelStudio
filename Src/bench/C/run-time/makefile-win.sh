@@ -272,140 +272,148 @@ eif_portable.h : $(TOP)\eif_portable.h
 
 *.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h
 
-wmath.c : math.c
+###################
+# W__FILES
+###################
+
+"$(RTSRC)\wmath.c" : math.c
 	$(LN) math.c wmath.c
 
-wmalloc.c : malloc.c
+"$(RTSRC)\wmalloc.c" : malloc.c
 	$(LN) malloc.c wmalloc.c
 
-wgarcol.c : garcol.c
+"$(RTSRC)\wgarcol.c" : garcol.c
 	$(LN) garcol.c wgarcol.c
 
-weif_threads.c : eif_threads.c
+"$(RTSRC)\weif_threads.c" : eif_threads.c
 	$(LN) eif_threads.c weif_threads.c
 
-weif_cond_var.c : eif_cond_var.c
+"$(RTSRC)\weif_cond_var.c" : eif_cond_var.c
 	$(LN) eif_cond_var.c weif_cond_var.c
 
-weif_once.c : eif_once.c
+"$(RTSRC)\weif_once.c" : eif_once.c
 	$(LN) eif_once.c weif_once.c
 
-wlocal.c : local.c
+"$(RTSRC)\wlocal.c" : local.c
 	$(LN) local.c wlocal.c
 
-wexcept.c : except.c
+"$(RTSRC)\wexcept.c" : except.c
 	$(LN) except.c wexcept.c
 
-wstore.c : store.c
+"$(RTSRC)\wstore.c" : store.c
 	$(LN) store.c wstore.c
 
-wrun_idr.c : run_idr.c
+"$(RTSRC)\wrun_idr.c" : run_idr.c
 	$(LN) run_idr.c wrun_idr.c
 
-wretrieve.c : retrieve.c
+"$(RTSRC)\wretrieve.c" : retrieve.c
 	$(LN) retrieve.c wretrieve.c
 
-whash.c : hash.c
+"$(RTSRC)\whash.c" : hash.c
 	$(LN) hash.c whash.c
 
-wtravers.c : traverse.c
+"$(RTSRC)\wtravers.c" : traverse.c
 	$(LN) traverse.c wtravers.c
 
-whashin.c : hashin.c
+"$(RTSRC)\whashin.c" : hashin.c
 	$(LN) hashin.c whashin.c
 
-wtools.c : tools.c
+"$(RTSRC)\wtools.c" : tools.c
 	$(LN) tools.c wtools.c
 
-winterna.c : internal.c
+"$(RTSRC)\winterna.c" : internal.c
 	$(LN) internal.c winterna.c
 
-wpath_name.c : path_name.c
+"$(RTSRC)\wpath_name.c" : path_name.c
 	$(LN) path_name.c wpath_name.c
 
-wplug.c : plug.c
+"$(RTSRC)\wplug.c" : plug.c
 	$(LN) plug.c wplug.c
 
-wcopy.c : copy.c
+"$(RTSRC)\wcopy.c" : copy.c
 	$(LN) copy.c wcopy.c
 
-wequal.c : equal.c
+"$(RTSRC)\wequal.c" : equal.c
 	$(LN) equal.c wequal.c
 
-wlmalloc.c : lmalloc.c
+"$(RTSRC)\wlmalloc.c" : lmalloc.c
 	$(LN) lmalloc.c wlmalloc.c
 
-wout.c : out.c
+"$(RTSRC)\wout.c" : out.c
 	$(LN) out.c wout.c
 
-wtimer.c : timer.c
+"$(RTSRC)\wtimer.c" : timer.c
 	$(LN) timer.c wtimer.c
 
-wurgent.c : urgent.c
+"$(RTSRC)\wurgent.c" : urgent.c
 	$(LN) urgent.c wurgent.c
 
-wsig.c : sig.c
+"$(RTSRC)\wsig.c" : sig.c
 	$(LN) sig.c wsig.c
 
-whector.c : hector.c
+"$(RTSRC)\whector.c" : hector.c
 	$(LN) hector.c whector.c
 
-wcecil.c : cecil.c
+"$(RTSRC)\wcecil.c" : cecil.c
 	$(LN) cecil.c wcecil.c
 
-wbits.c : bits.c
+"$(RTSRC)\wbits.c" : bits.c
 	$(LN) bits.c wbits.c
 
-wconsole.c : console.c
+"$(RTSRC)\wconsole.c" : console.c
 	$(LN) console.c wconsole.c
 
-wfile.c : file.c
+"$(RTSRC)\wfile.c" : file.c
 	$(LN) file.c wfile.c
 
-wdir.c : dir.c
+"$(RTSRC)\wdir.c" : dir.c
 	$(LN) dir.c wdir.c
 
-wstring.c : string.c
+"$(RTSRC)\wstring.c" : string.c
 	$(LN) string.c wstring.c
 
-wmisc.c : misc.c
+"$(RTSRC)\wmisc.c" : misc.c
 	$(LN) misc.c wmisc.c
 
-wpattern.c : pattern.c
+"$(RTSRC)\wpattern.c" : pattern.c
 	$(LN) pattern.c wpattern.c
 
-werror.c : error.c
+"$(RTSRC)\werror.c" : error.c
 	$(LN) error.c werror.c
 
-wumain.c : umain.c
+"$(RTSRC)\wumain.c" : umain.c
 	$(LN) umain.c wumain.c
 
-wmemory.c : memory.c
+"$(RTSRC)\wmemory.c" : memory.c
 	$(LN) memory.c wmemory.c
 
-woption.c : option.c
+"$(RTSRC)\woption.c" : option.c
 	$(LN) option.c woption.c
 
-wargv.c : argv.c
+"$(RTSRC)\wargv.c" : argv.c
 	$(LN) argv.c wargv.c
 
-wboolstr.c : boolstr.c
+"$(RTSRC)\wboolstr.c" : boolstr.c
 	$(LN) boolstr.c wboolstr.c
 
-wsearch.c : search.c
+"$(RTSRC)\wsearch.c" : search.c
 	$(LN) search.c wsearch.c
 
-wmain.c : main.c
+"$(RTSRC)\wmain.c" : main.c
 	$(LN) main.c wmain.c
 
-wobject_id.c : object_id.c
+"$(RTSRC)\wobject_id.c" : object_id.c
 	$(LN) object_id.c wobject_id.c
 
-wdle.c : dle.c
+"$(RTSRC)\wdle.c" : dle.c
 	$(LN) dle.c wdle.c
 
-weif_project.c : eif_project.c
+"$(RTSRC)\weif_project.c" : eif_project.c
 	$(LN) eif_project.c weif_project.c
+
+###################
+# OBJECTS
+###################
 
 "$(INDIR)\argv.obj" :	"$(RTSRC)\argv.c"
 	$(CC) $(JCFLAGS) "$(RTSRC)\argv.c"
@@ -699,13 +707,13 @@ weif_project.c : eif_project.c
 final: finalized.lib
 work: wkbench.lib
 
-bmain.c : main.c
+"$(RTSRC)\bmain.c" : main.c
 	$(LN) main.c bmain.c
 
 "$(INDIR)\bmain.obj" :	"$(RTSRC)\bmain.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK "$(RTSRC)\bmain.c"
 
-bexcept.c : except.c
+"$(RTSRC)\bexcept.c" : except.c
 	$(LN) except.c bexcept.c
 
 "$(INDIR)\bexcept.obj" :	"$(RTSRC)\bexcept.c"

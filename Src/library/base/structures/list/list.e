@@ -40,18 +40,6 @@ feature -- Status report
 			Result := (index = 0)
 		end;
 
-feature -- Obsolete
-
-	offleft: BOOLEAN is obsolete "Use ``before''"
-		do
-			Result := before or empty
-		end;
-
-	offright: BOOLEAN is obsolete "Use ``after''"
-		do
-			Result := after or empty
-		end;
-
 invariant
 
 	before_definition: before = (index = 0);

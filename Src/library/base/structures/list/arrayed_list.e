@@ -16,7 +16,6 @@ class ARRAYED_LIST [G] inherit
 
 	ARRAY [G]
 		rename
-			duplicate as array_duplicate,
 			force as force_i_th,
 			item as i_th,
 			make as array_make,
@@ -41,7 +40,6 @@ class ARRAYED_LIST [G] inherit
 
 	ARRAY [G]
 		rename
-			duplicate as array_duplicate,
 			force as force_i_th,
 			item as i_th,
 			make as array_make,

@@ -74,14 +74,6 @@ feature -- Conversion
 		deferred
 		end;
 
-feature -- Obsolete
-
-	sequential_representation: LINEAR [G] is
-				obsolete "Use ``linear_representation'' instead"
-		do
-			Result := linear_representation
-		end;
-
 end -- class CONTAINER
 
 

@@ -308,35 +308,6 @@ feature -- Duplication
 		deferred
 		end;
 
-feature -- Obsolete
-
-	position: INTEGER is obsolete "Use ``index''"
-		do
-			Result := index
-		end;
-
-	mark is obsolete "Use ``pos := cursor''"
-			-- Mark cursor position.
-		do
-		end;
-
-	return is obsolete "Use ``go_to (pos)''"
-			-- Move cursor to last marked position.
-		do
-		end;
-
-
-
-	go (i: INTEGER) is obsolete "Use ``go_i_th''"
-			-- Move cursor to `i'-th position.
-		require
-			valid_cursor_index: valid_cursor_index (i)
-		do
-			go_i_th (i)
-		ensure
-			position_expected: index = i
-		end;
-
 feature {NONE} -- Inapplicable
 
 	remove is

@@ -541,22 +541,6 @@ feature -- Duplication
 			go_to (pos)
 		end;
 
-feature -- Obsolete
-
-	offleft: BOOLEAN is
-		obsolete "Use ``before'' and ``empty''"
-			-- Is cursor off left edge?
-		do
-			Result := before or empty
-		end;
-
-	offright: BOOLEAN is
-		obsolete "Use ``after'' and ``empty''"
-			-- Is cursor off right edge?
-		do
-			Result := after or empty
-		end;
-
 feature {NONE} -- Inapplicable
 
 	prune (v: G) is

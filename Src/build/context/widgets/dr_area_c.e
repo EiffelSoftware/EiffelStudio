@@ -44,7 +44,7 @@ feature
 			set_drawing_area_size (1000, 1000);
 		end;
 
-	widget: EB_DRAWING_BOX;
+	widget: DRAWING_BOX;
 	
 feature {NONE}
 
@@ -89,25 +89,35 @@ feature
 		local
 			a_color: COLOR;
 		do
-			fg_color_name := a_name;
-			if a_name /= Void then
+			if a_name = Void or else a_name.empty then
+				fg_color_modified := False;
+				fg_color_name := Void;
+				a_color := default_foreground_color;
+				if a_color /= Void then
+					widget.set_foreground_color (a_color)
+				end
+			else
+				if fg_color_name = Void then
+					save_default_foreground_color
+				end;
+				fg_color_name := a_name;
 				fg_color_modified := True;
 				!!a_color.make;
 				a_color.set_name (a_name);
-				widget.set_foreground (a_color)
-			else
-				fg_color_modified := False
+				widget.set_foreground_color (a_color)
 			end;
 		end;
 
-	default_foreground_color: COLOR is
+	save_default_foreground_color is
 		do
-			Result := widget.foreground_color
+			if default_foreground_color = Void then
+				default_foreground_color := widget.foreground_color
+			end
 		end;
 
-	set_default_foreground_color (color: COLOR) is
+	reset_default_foreground_color is
 		do
-			widget.set_foreground_color (color)
+			widget.set_foreground_color (default_foreground_color);
 		end;
 
 	drawing_area_width: INTEGER is

@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 			utf8_ptr: POINTER
 			string_value: ANY
 			bytes_read, bytes_written, gerror: INTEGER
-			a_char: CHARACTER
 			i: INTEGER
 			a_str, temp_string: STRING
 			a_end: POINTER

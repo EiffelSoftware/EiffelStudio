@@ -161,13 +161,13 @@ feature -- Element change
 				v_imp_not_void: v_imp /= Void
 			end
 			ev_children.put_front (v_imp)
-			notify_change (Nc_minsize)
 			ww ?= Current
 			check
 				ww_not_void: ww /= Void
 			end
 			v_imp.wel_set_parent (ww)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
+			notify_change (Nc_minsize)
 			new_item_actions.call ([v])
 		end
 
@@ -296,6 +296,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/14 16:22:48  brendel
+--| Fixed bug in put_front.
+--|
 --| Revision 1.13  2000/03/03 20:02:28  brendel
 --| Fixed bug in replace, where before it did not remove the item from the
 --| old list if it had one.

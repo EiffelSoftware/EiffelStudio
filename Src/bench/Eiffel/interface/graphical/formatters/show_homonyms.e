@@ -37,14 +37,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Homonyms_of end;
 
-	display_info (i: INTEGER; f: FEATURE_STONE)  is
+	display_info (f: FEATURE_STONE)  is
 			-- Display homonyms of the routine.
 		local
-			cmd: EWB_HOMONYMS;
+			cmd: E_SHOW_ROUTINE_HOMONYMNS;
 		do
-			!!cmd.null;
-			cmd.set_output_window (text_window);
-			cmd.display (f.feature_i, f.class_c);
+			!! cmd.make (f.feature_i, f.class_c, text_window);
+			cmd.execute
 		end;
 
 	display_temp_header (stone: STONE) is

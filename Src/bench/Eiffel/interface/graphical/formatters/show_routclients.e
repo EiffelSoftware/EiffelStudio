@@ -37,14 +37,15 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Senders end;
 
-	display_info (i: INTEGER; f: FEATURE_STONE)  is
+	display_info (f: FEATURE_STONE)  is
 			-- Display Senders of `c'.
 		local
-			cmd: EWB_SENDERS;
+			cmd: E_SHOW_CALLERS;
 		do
-			!!cmd.null;
-			cmd.set_output_window (text_window);
-			cmd.display (f.feature_i, f.class_c);
+			!! cmd.make (f.feature_i, f.class_c, text_window);
+			if cmd.has_valid_feature then
+				cmd.execute
+			end
 		end;
 
 	display_temp_header (stone: STONE) is

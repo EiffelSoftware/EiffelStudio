@@ -39,17 +39,16 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Modified_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Show modified classes list, in `text_window'.
 		local
-			ewb_modified: EWB_MODIFIED
+			cmd: E_SHOW_MODIFIED_CLASSES
 		do
 			text_window.put_string ("Classes modified since last compilation:");
 			text_window.new_line;
 			text_window.new_line;
-			!! ewb_modified;
-			ewb_modified.set_output_window (text_window)
-			ewb_modified.display
+			!! cmd.make (text_window);
+			cmd.execute
 		end;
 
 	display_temp_header (stone: STONE) is

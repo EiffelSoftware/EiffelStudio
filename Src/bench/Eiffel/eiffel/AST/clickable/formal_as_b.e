@@ -21,9 +21,7 @@ inherit
 		rename
 			position as text_b_position
 		undefine
-			simple_format
-		redefine
-			format
+			simple_format, format
 		end;
 
 	STONABLE;
@@ -44,6 +42,24 @@ feature
 			Result.set_base_type (position);
 		end;
 
+feature -- Output
+
+	format (ctxt: FORMAT_CONTEXT_B) is
+		local
+			l_a: LOCAL_FEAT_ADAPTATION;
+			new_type: TYPE_A
+		do
+			l_a := ctxt.local_adapt;
+			if l_a /= Void then
+				new_type := ctxt.local_adapt.adapted_type (Current);
+			end;
+			if new_type = Void then
+				simple_format (ctxt)
+			else
+				new_type.format (ctxt)
+			end;
+		end;
+
 feature -- Stoning
  
 	stone (reference_class: CLASS_C): CLASSC_STONE is
@@ -52,23 +68,6 @@ feature -- Stoning
 		do  
 			aclass := actual_type.associated_class;
 			!!Result.make (aclass)
-		end;
-
-
-feature -- Formatting
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		local
-			s: STRING; 
-			new_type: TYPE_B;
-		do
-			new_type := ctxt.format.global_types.adapted_type (Current);
-			if new_type = void then
-				ctxt.put_string (ctxt.formal_name (position));
-			else
-				new_type.format (ctxt);
-			end
 		end;
 
 end -- class FORMAL_AS_B

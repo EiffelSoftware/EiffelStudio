@@ -269,25 +269,31 @@ feature -- Stoning
 			end
 		end;
 
+	associated_classc: CLASS_C is
+			-- Associated class_c.
+		do
+			check
+				Inst_context.cluster /= Void
+			end
+			Result := 
+				Universe.class_named (class_name,
+                        Inst_context.cluster).compiled_class;
+		end
+
+feature -- Formatting
+
 	format (ctxt: FORMAT_CONTEXT_B) is 
 			-- Reconstitute text
-		local
-			s: STRING;
 		do
-			ctxt.begin;
-			s := clone (class_name)
-			s.to_upper;
-			ctxt.put_class_name (Universe.class_named (class_name,
-						Inst_context.cluster).compiled_class);
+			ctxt.put_class_name (associated_classc);
 			if generics /= Void then
 				ctxt.put_space;
-				ctxt.put_text_item (ti_L_bracket);
-				ctxt.space_between_tokens;
+				ctxt.put_text_item_without_tabs (ti_L_bracket);
+				ctxt.set_space_between_tokens;
 				ctxt.set_separator (ti_Comma);
 				generics.format (ctxt);
-				ctxt.put_text_item (ti_R_bracket)
+				ctxt.put_text_item_without_tabs (ti_R_bracket)
 			end;
-			ctxt.commit;
 		end;
 			
 feature -- Replication

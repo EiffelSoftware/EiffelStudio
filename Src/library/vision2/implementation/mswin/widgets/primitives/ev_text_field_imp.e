@@ -23,7 +23,7 @@ inherit
 			wel_window
 		end
 
-              
+	              
 creation
 
 	make
@@ -49,6 +49,13 @@ feature -- Status setting
 	set_text (txt: STRING) is
 		do
 			wel_window.set_text (txt)	
+		end
+
+feature -- Event - command association
+	
+	add_activate_command ( command: EV_COMMAND; 
+			       arguments: EV_ARGUMENTS) is	
+		do
 		end
 
 feature -- Implementation

@@ -209,7 +209,7 @@ feature -- Pngs
 				-- We first attempt to retrieve the pixmap
 				-- from `pixmaps_by_name'. If it is contained
 				-- then this means that the pixmap has already been loaded.
-				-- This stops us form having to load the pixmap every time.
+				-- This stops us from having to load the pixmap every time.
 			if pixmaps_by_name.has (a_name) then
 				Result := pixmaps_by_name @ (a_name)
 			else
@@ -287,13 +287,6 @@ feature {NONE} -- Update
 			Result.extend (Pixmap_suffix)
 		end
 
-	Icon_path: DIRECTORY_NAME is
-			-- Path for Icons for Windows.
-		once
-			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
-			Result.extend ("ico")
-		end
-
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
 			-- Build an array of 2 pixmaps. The first pixmap is the
 			-- colored pixmap, the second is the corresponding gray pixmap.
@@ -337,19 +330,13 @@ feature {NONE} -- Update
 			if visual_studio_information.is_visual_studio_wizard then
 				create Result.make_from_string (visual_studio_information.wizard_installation_path)
 				Result.extend ("bitmaps")
-				Result.extend ("ico")
+				Result.extend (Pixmap_suffix)
 				Result.set_file_name (file)
-				Result.add_extension ("ico")
+				Result.extend (pixmap_suffix)
 			else
-				if Eiffel_platform.as_lower.is_equal ("windows") then
-					create Result.make_from_string (Icon_path)
-					Result.set_file_name (file)
-					Result.add_extension ("ico")
-				else
-					create Result.make_from_string (Bitmap_path)
-					Result.set_file_name (file)
-					Result.add_extension (Pixmap_suffix)
-				end
+				create Result.make_from_string (Bitmap_path)
+				Result.set_file_name (file)
+				Result.add_extension (Pixmap_suffix)
 			end
 		ensure
 			Result_not_void: Result /= Void

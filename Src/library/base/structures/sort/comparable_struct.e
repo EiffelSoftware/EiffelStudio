@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Data structures whose items may be compared %
-		%according to a partial order relation";
+		%according to a total order relation";
 
 	status: "See notice at end of class";
 	names: comparable_struct;

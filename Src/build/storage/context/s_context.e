@@ -78,6 +78,7 @@ feature
 feature 
 
 	full_name: STRING;
+			-- To be removed
 
 	arity: INTEGER;
 	
@@ -118,6 +119,10 @@ feature {NONE}
 			if visual_name /= Void then
 				c.retrieve_set_visual_name (visual_name);
 			end;
+			if font_name_modified then
+					-- Set font before setting size
+				c.set_font_named (font_name);
+			end;
 			if position_modified then
 				c.set_x_y (x, y);
 			end;
@@ -133,9 +138,6 @@ feature {NONE}
 			if fg_color_modified then
 				c.set_fg_color_name (fg_color_name);
 			end;
-			if font_name_modified then
-				c.set_font_named (font_name);
-			end;
 			if not (resize_policy = Void) then
 				c.set_resize_policy (resize_policy.resize_policy (c))
 			end;
@@ -149,7 +151,7 @@ feature {NONE}
 			--if context_table.has (identifier) then
 				--full_name := context_table.item (identifier).full_name;
 			--else
-				full_name := node.full_name;
+				--full_name := node.full_name;
 			--end;
 			debug ("STORER_CHECK") 
 				io.error.putstring ("storing: ");
@@ -200,8 +202,10 @@ feature -- Debugging
 
 	trace is
 		do
-			io.error.putstring ("fn: ");
-			io.error.putstring (full_name);
+			if full_name /= Void then
+				io.error.putstring ("fn: ");
+				io.error.putstring (full_name);
+			end;
 			io.error.putstring (" int: ");
 			io.error.putstring (internal_name);
 			io.error.putstring (" id: ");

@@ -24,6 +24,8 @@
 #include "debug.h"
 #include "err_msg.h"
 
+#include <stdlib.h>				/* For exit(), abort() */
+
 #ifdef I_STRING
 #include <string.h>
 #else
@@ -150,7 +152,7 @@ public void esfail();				/* Eiffel system failure */
 private void dump_core();			/* Dumps a core for debugging infos */
 private char *exception_string();	/* Name of an exception */
 private void dump_trace_stack();	/* Dumps the Eiffel trace stack */
-private struct ex_vect *find_call();	/* Find enclosing call ID */
+private void find_call();			/* Find enclosing call ID */
 private void recursive_dump();		/* Dump the stack at a given level */
 private void print_top();			/* Prints top value of the stack */
 
@@ -1596,9 +1598,8 @@ private void dump_core()
 	/* Stdout has already been flushed */
 	print_err_msg(stderr, "%s: dumping core to generate debugging information...\n",
 		ename);
-	if (-1 == abort()) {
-		perror("Failed");
-	}
+	abort();
+
 	exit(1);					/* Bede Bede Bede, That's all Folks ! */
 }
 
@@ -1616,7 +1617,7 @@ int code;
 	/* NOTREACHED */
 }
 
-private struct ex_vect *find_call()
+private void find_call()
 {
 	/* The Eiffel exception trace stack was built upside-down. So we have to
 	 * walk forward through the stack to find the enclosing call record (an

@@ -158,6 +158,11 @@ feature -- Change by value
 		do
 			eifnet_debugger_info.set_last_step_complete_reason (v)
 		end
+		
+	set_last_exception_handled (v: BOOLEAN) is
+		do
+			eifnet_debugger_info.set_last_exception_handled (v)
+		end
 
 feature -- reset
 		

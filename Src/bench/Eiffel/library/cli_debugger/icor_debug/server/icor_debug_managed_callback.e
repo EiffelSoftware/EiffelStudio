@@ -408,16 +408,24 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
 			-- `unhandled' [in].  
+			--| unhandled :=  --| TRUE =1 , FALSE = 0
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
 				debug ("DEBUGGER_TRACE_MESSAGE")
-					-- unhandled :=  --| TRUE = 1 , FALSE = 0
 				end
 				begin_of_managed_callback (Cst_managed_cb_exception)
 				set_last_app_domain_by_pointer (p_app_domain)
 				set_last_thread_by_pointer (p_thread)
+
+				if unhandled = 1 then 
+						--| unhandled : TRUE
+					set_last_exception_handled (False)
+				else 
+						--| unhandled : FALSE
+					set_last_exception_handled (True)
+				end
 				end_of_managed_callback (Cst_managed_cb_exception)
 			end
 		rescue
@@ -881,7 +889,7 @@ end -- class ICOR_DEBUG_MANAGED_CALLBACK
 --	breakpoint (p_app_domain: ICOR_DEBUG_APP_DOMAIN; p_thread: ICOR_DEBUG_THREAD; p_breakpoint: ICOR_DEBUG_BREAKPOINT) is
 --	step_complete (p_app_domain: ICOR_DEBUG_APP_DOMAIN; p_thread: ICOR_DEBUG_THREAD; p_stepper: ICOR_DEBUG_STEPPER; reason: INTEGER) is
 --	break (p_app_domain: ICOR_DEBUG_APP_DOMAIN; thread: ICOR_DEBUG_THREAD) is
---	exception (p_app_domain: ICOR_DEBUG_APP_DOMAIN; p_thread: ICOR_DEBUG_THREAD; unhandled: INTEGER) is
+--	exception (p_app_domain: ICOR_DEBUG_APP_DOMAIN; p_thread: ICOR_DEBUG_THREAD; unhandled: BOOL) is
 --	eval_complete (p_app_domain: ICOR_DEBUG_APP_DOMAIN; p_thread: ICOR_DEBUG_THREAD; p_eval: ICOR_DEBUG_EVAL) is
 --	eval_exception (p_app_domain: ICOR_DEBUG_APP_DOMAIN; p_thread: ICOR_DEBUG_THREAD; p_eval: ICOR_DEBUG_EVAL) is
 --	create_process (p_process: ICOR_DEBUG_PROCESS) is

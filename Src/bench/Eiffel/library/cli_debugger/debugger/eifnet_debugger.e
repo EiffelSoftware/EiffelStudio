@@ -496,6 +496,11 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			Result := Eifnet_debugger_info.last_managed_callback_is_exception
 		end	
 		
+	last_exception_is_handled: BOOLEAN is
+		do
+			Result := Eifnet_debugger_info.last_exception_is_handled
+		end			
+		
 	last_managed_callback_is_eval_exception: BOOLEAN is
 		do
 			Result := Eifnet_debugger_info.last_managed_callback_is_eval_exception

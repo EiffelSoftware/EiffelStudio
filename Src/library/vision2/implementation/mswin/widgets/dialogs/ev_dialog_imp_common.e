@@ -588,8 +588,6 @@ feature {NONE} -- Implementation
 		
 	window_on_wm_activate (wparam, lparam: INTEGER) is
 			-- `Wm_activate' message recieved form Windows by `Current'.
-		local
-			titled_window: EV_TITLED_WINDOW_IMP
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
 			if wparam = Wel_window_constants.Wa_inactive then

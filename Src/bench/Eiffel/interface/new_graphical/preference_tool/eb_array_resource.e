@@ -11,7 +11,7 @@ inherit
 	EB_RESOURCE
 
 creation
-	make, make_with_values, make_from_old
+	make, make_with_values
 
 feature {NONE} -- Initialization
 
@@ -162,13 +162,6 @@ feature {NONE} -- Implementation
 					actual_value.force (value.substring (start_pos, value.count), actual_value.count + 1)
 				end
 			end
-		end
-
-feature {NONE} -- Obsolete
-
-	make_from_old (old_r: ARRAY_RESOURCE) is
-		do
-			make_with_values (old_r.name, old_r.actual_value)
 		end
 
 end -- class EB_ARRAY_RESOURCE

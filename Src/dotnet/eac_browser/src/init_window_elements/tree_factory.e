@@ -144,20 +144,20 @@ feature {NONE} -- Add element to tree
 	deserialize_information_assembly (an_assembly: CONSUMED_ASSEMBLY) is
 			-- Deserialize informations of `an_assembly' and store it in `assemblies_informations'.
 			-- It would be interesting to launch this process in a Thread.
---		local
---			my_thread: ASSEMBLY_INFORMATION_THREAD
---		do
---			create my_thread.make (an_assembly)
---			my_thread.launch
---		end
 		local
-			l_assembly_info: ASSEMBLY_INFORMATION
+			my_thread: ASSEMBLY_INFORMATION_THREAD
 		do
-			create l_assembly_info.make ((create {COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
-			if l_assembly_info /= Void then
-				(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
-			end
+			create my_thread.make (an_assembly)
+			my_thread.launch
 		end
+--		local
+--			l_assembly_info: ASSEMBLY_INFORMATION
+--		do
+--			create l_assembly_info.make ((create {COMMON_PATH}).dotnet_framework_path + an_assembly.name + ".xml")
+--			if l_assembly_info /= Void then
+--				(create {CACHE}).assemblies_informations.put (l_assembly_info, an_assembly.out)
+--			end
+--		end
 		
 
 	add_types_branches (an_assembly: CONSUMED_ASSEMBLY; a_tree_item_namespace: EV_TREE_ITEM; a_namespace_name: STRING; cat: CONSUMED_ASSEMBLY_TYPES) is

@@ -78,8 +78,6 @@ feature -- Access
 			positive_assembly_id: assembly_id >= 0
 		local
 			l_cam: CONSUMED_ASSEMBLY_MAPPING
-			des: EIFFEL_XML_DESERIALIZER
-			a_file_name: STRING
 		do
 			l_cam ?= referenced_assemblies (an_assembly)
 			
@@ -108,7 +106,7 @@ feature -- Access
 			l_referenced_assemblies: CONSUMED_ASSEMBLY_MAPPING
 			l_assembly_of_referenced_type: CONSUMED_ASSEMBLY
 			l_referenced_consumed_type: CONSUMED_TYPE
-			l_array_referenced_type: CONSUMED_ARRAY_TYPE
+--			l_array_referenced_type: CONSUMED_ARRAY_TYPE
 		do
 			l_referenced_assemblies := referenced_assemblies (an_assembly)
 			l_assembly_of_referenced_type := l_referenced_assemblies.assemblies.item (a_referenced_type.assembly_id)

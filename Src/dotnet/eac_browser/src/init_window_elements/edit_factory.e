@@ -134,7 +134,6 @@ feature -- Access
 --			not_empty_an_eiffel_feature_name: not an_eiffel_feature_name.is_empty
 		local
 			output: TYPE_PRINTER
-			l_split_position: INTEGER
 		do
 			create output.make (parent_window.edit_area)
 			output.print_type (an_assembly, a_dotnet_type_name, an_eiffel_feature_name)
@@ -147,7 +146,6 @@ feature -- Access
 		local
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			l_list: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
-			l_split_position: INTEGER
 			tree_factory: TREE_FACTORY
 			popup_not_found: POPUP_NOT_FOUND
 		do

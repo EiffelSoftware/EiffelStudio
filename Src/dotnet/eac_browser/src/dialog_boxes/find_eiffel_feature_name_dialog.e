@@ -49,10 +49,6 @@ feature {NONE} -- Implementation
 
 	user_initialization is
 			-- Called by `select_actions' of `execute'.
-		local
-			l_list: ARRAYED_LIST [EV_LIST_ITEM]
-			cache: CACHE
-			l_item: EV_LIST_ITEM
 		do
 			set_size (400, 85)
 			--set_default_push_button (ok_btn)

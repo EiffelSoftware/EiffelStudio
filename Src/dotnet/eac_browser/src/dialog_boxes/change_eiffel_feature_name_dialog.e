@@ -90,7 +90,6 @@ feature {NONE} -- Implementation
 		local
 			eac: EAC_BROWSER
 			ct: CONSUMED_TYPE
-			counter: INTEGER
 			path: CACHE_PATH
 			assembly_of_type: CONSUMED_ASSEMBLY
 			dotnet_type_name: STRING
@@ -122,8 +121,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_array: array /= Void
 		local
-			counter, counter_2: INTEGER
---			signature_feature: STRING
+			counter: INTEGER
 			signature: SIGNATURE
 			l_item: EV_LIST_ITEM_COMPARABLE
 			l_tri_list: SORTABLE_ARRAY [EV_LIST_ITEM_COMPARABLE]
@@ -337,11 +335,8 @@ feature {NONE} -- Implementation
 	on_change_eiffel_feature is
 			-- Called by `change_actions' of `eiffel_features_combo'.
 		local
-			counter: INTEGER
 			signature_feature: STRING
 			l_constructor_feature: CONSUMED_CONSTRUCTOR
-			l_function_feature: CONSUMED_FUNCTION
-			l_attribute_feature: CONSUMED_FIELD
 			l_feature: CONSUMED_MEMBER
 			signature: SIGNATURE
 		do

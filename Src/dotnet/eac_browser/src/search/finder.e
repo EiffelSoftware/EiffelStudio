@@ -53,7 +53,6 @@ feature -- Access
 			eac: EAC_BROWSER
 			cat: CONSUMED_ASSEMBLY_TYPES
 			ct: CONSUMED_TYPE
-			full_dotnet_type_name: STRING
 		do
 			create eac
 			cat := eac.consumed_assembly (an_assembly)

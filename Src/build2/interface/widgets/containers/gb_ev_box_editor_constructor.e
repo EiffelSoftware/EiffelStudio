@@ -17,12 +17,7 @@ inherit
 		undefine
 			default_create
 		end
---| FIXME temporarily commented out to enable compilation for the Vision2 Tour.
---	GB_SHARED_OBJECT_HANDLER	
---		undefine
---			default_create
---		end
---		
+
 feature -- Access
 
 	ev_type: EV_BOX
@@ -40,6 +35,7 @@ feature -- Access
 			check_button: EV_CHECK_BUTTON
 			counter: INTEGER
 			first_item, second_item: EV_WIDGET
+			children: ARRAYED_LIST [GB_OBJECT]
 		do
 			create check_buttons.make (0)
 			create Result
@@ -62,7 +58,8 @@ feature -- Access
 			if not first.is_empty then
 				create label.make_with_text ("Is_item_expanded?")
 				Result.extend (label)			
-			end		
+			end
+			children := object.children
 			from
 				counter := 1
 			until
@@ -75,9 +72,9 @@ feature -- Access
 				create check_button.make_with_text (class_name (first_item))
 				check_button.set_pebble_function (agent retrieve_pebble (first_item))
 				check_buttons.force (check_button)
-				check_button.select_actions.extend (agent update_widget_expanded (check_button, first_item))
+				check_button.select_actions.extend (agent update_widget_expanded (check_button, first_item, children.i_th (counter)))
 				if second_item /= Void then
-					check_button.select_actions.extend (agent update_widget_expanded (check_button, second_item))
+					check_button.select_actions.extend (agent update_widget_expanded (check_button, second_item, children.i_th (counter)))
 				end
 				check_button.select_actions.extend (agent update_editors)
 				Result.extend (check_button)
@@ -136,30 +133,26 @@ feature {NONE} -- Implementation
 			validate_agents.extend (agent valid_input (?), Border_string)
 		end
 
-	update_widget_expanded (check_button: EV_CHECK_BUTTON; w: EV_WIDGET) is
+	update_widget_expanded (check_button: EV_CHECK_BUTTON; w: EV_WIDGET; child_object: GB_OBJECT) is
 			-- Change the expanded status of `w'.
+		require
+			check_button_not_void: check_button /= Void
+			widget_not_void: w /= Void
+			child_object_not_void: child_object /= Void
 		local
 			box_parent: EV_BOX
-			child_object: GB_OBJECT
 		do
 			box_parent ?= w.parent
 			check
 				parent_is_box: box_parent /= Void
 			end
---			child_object := Object_handler.object_from_display_widget (w)
-				-- As this is called twice, once for the display, and once
-				-- for the builder window, `child_object' may be `Void'.
-				-- We only need to perform the setting if `child_object' is non `Void'.
+
 			if check_button.is_selected then
 				box_parent.enable_item_expand (w)
---				if child_object /= Void then
---					child_object.enable_expanded_in_box
---				end
+				child_object.enable_expanded_in_box
 			else
 				box_parent.disable_item_expand (w)
---				if child_object /= Void then
---					child_object.disable_expanded_in_box
---				end
+				child_object.disable_expanded_in_box
 			end
 			
 			enable_project_modified

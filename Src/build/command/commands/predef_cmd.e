@@ -39,8 +39,8 @@ feature
 			!! full_path.make_from_string (Environment.predefined_commands_directory);
 				fn := clone (eiffel_type);
 				fn.to_lower;
-				fn.append (".e");
 			full_path.extend (fn);
+			full_path.add_extension ("e");
 			!! f.make (full_path);
 			f.open_read;
 			f.readstream (f.count);

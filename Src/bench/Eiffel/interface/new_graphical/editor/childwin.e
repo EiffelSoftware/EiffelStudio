@@ -153,6 +153,16 @@ feature -- Access
 	has_selection: BOOLEAN
 			-- Is there a selection ?
 
+feature -- Selection
+
+	set_selection_start (c: TEXT_CURSOR) is
+			-- Set the selection to be from `c' to `cursor'.
+			-- Allows empty selections. Be careful about this.
+		do
+			has_selection := True
+			selection_start := clone (c)
+		end
+
 feature -- Process Windows Messages
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
@@ -322,8 +332,7 @@ feature -- Process Windows Messages
 				-- There is no selection, so we don't need to do anything.
 			end
 
-				-- Setup the new cursor.
-			cursor := new_cursor
+				-- Record move in history.
 			history.record_move
 			invalidate
 			update

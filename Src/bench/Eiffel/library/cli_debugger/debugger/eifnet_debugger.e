@@ -91,7 +91,7 @@ feature -- Initialization
 				initialize_clr_host
 	
 				eif_debug_display ("[EIFDBG] initialize debugger session")
-				last_icor_debug_pointer := (create {ICOR_DEBUG_FACTORY}).new_cordebug_pointer
+				last_icor_debug_pointer := (create {ICOR_DEBUG_FACTORY}).new_cordebug_pointer_for (eiffel_system.system.clr_runtime_version)
 
 				if last_icor_debug_pointer /= Default_pointer then
 					create icor_debug.make_by_pointer (last_icor_debug_pointer)
@@ -693,7 +693,7 @@ feature -- Function Evaluation
 			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
 			l_dispose_mod: BOOLEAN
 		do
-			if ct.is_external and icdv /= Void then
+			if icdv /= Void and ct.is_external then
 				l_icd_obj_val := icdv.query_interface_icor_debug_object_value
 				if l_icd_obj_val /= Void then
 					l_icd_class := l_icd_obj_val.get_class
@@ -715,7 +715,10 @@ feature -- Function Evaluation
 			if l_icd_module /= Void then
 					--| Now we have the ICOR_DEBUG_MODULE ...				
 				if l_feat_tok = 0 then
-					l_feat_tok := l_icd_module.md_member_token_by_names (ct.full_il_implementation_type_name, l_feat_name)					
+					l_feat_tok := l_icd_module.md_member_token_by_names (
+								ct.full_il_implementation_type_name,
+								l_feat_name
+							)
 				end
 				if l_feat_tok > 0 then
 					Result := l_icd_module.get_function_from_token (l_feat_tok)

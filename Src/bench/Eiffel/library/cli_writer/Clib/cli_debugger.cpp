@@ -1,8 +1,9 @@
 #include <objbase.h>
 
+#include <eif_lmalloc.h>
+
 #include "cli_debugger.h"
 #include "cli_debugger_callback_id.h"
-#include <objbase.h>
 #include <cor.h>
 
 #include <cordebug.h>
@@ -23,6 +24,8 @@ const CLSID CLSID_CorDebug = {0x6fef44d0,0x39e7,0x4c77,0xbe,0x8e,0xc9,0xf8,0xcf,
 //const IID IID_ICorDebugManagedCallback = {0x3d6f5f60,0x7538,0x11d3,0x8d,0x5b,0x00,0x10,0x4b,0x35,0xe7,0xef};
 //const IID IID_ICorDebugUnmanagedCallback = {0x5263E909,0x8CB5,0x11d3,0xBD,0x2F,0x00,0x00,0xF8,0x08,0x49,0xBD};
 const IID IID_ICorDebug = {0x3d6f5f61,0x7538,0x11d3,0x8d,0x5b,0x00,0x10,0x4b,0x35,0xe7,0xef};
+//const IID IID_ICorDebug2 = {0xECCCCF2E, 0xB286, 0x4b3e, 0xA983, 0x86, 0x0A, 0x87, 0x93, 0xD1, 0x05};
+
 const IID IID_ICorDebugController = {0x3d6f5f62,0x7538,0x11d3,0x8d,0x5b,0x00,0x10,0x4b,0x35,0xe7,0xef};
 //const IID IID_ICorDebugAppDomain = {0x3d6f5f63,0x7538,0x11d3,0x8d,0x5b,0x00,0x10,0x4b,0x35,0xe7,0xef};
 //const IID IID_ICorDebugAssembly = {0xdf59507c,0xd47a,0x459e,0xbc,0xe2,0x64,0x27,0xea,0xc8,0xfd,0x06};
@@ -98,8 +101,10 @@ rt_private void raise_error (HRESULT hr, char *msg)
 #ifdef ASSERTIONS
 rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 #define CHECK(hr,msg) if (hr) raise_error (hr, msg);
+#define CHECKHR(cond, hr, msg) if (cond) raise_error (hr, msg);
 #else
 #define CHECK(hr,msg)
+#define CHECKHR(cond,hr,msg)
 #endif
 
 
@@ -108,12 +113,28 @@ rt_private void raise_error (HRESULT hr, char *msg); /* Raise error */
 */
 #ifdef DBGTRACE_ENABLED
 /*
-rt_private pthread_mutex_t trace_mutex;
-#define LOCK_DEBUG_OUTPUT_ACCESS WaitForSingleObject (trace_mutex, INFINITE);
-#define UNLOCK_DEBUG_OUTPUT_ACCESS ReleaseMutex (trace_mutex);
+#define CLI_MUTEX_TYPE	CRITICAL_SECTION
+#define CLI_MUTEX_CREATE(m,msg) \
+    	m = (CLI_MUTEX_TYPE *) eif_malloc (sizeof(CLI_MUTEX_TYPE)); \
+		InitializeCriticalSection(m);
+#define CLI_MUTEX_LOCK(m,msg) \
+		EnterCriticalSection(m)
+#define CLI_MUTEX_UNLOCK(m,msg) \
+		LeaveCriticalSection(m)
+#define CLI_MUTEX_DESTROY(m,msg) \
+		DeleteCriticalSection(m); \
+		eif_free(m)
+
+#define LOCK_DEBUG_OUTPUT_ACCESS CLI_MUTEX_LOCK(trace_mutex, "")
+#define UNLOCK_DEBUG_OUTPUT_ACCESS CLI_MUTEX_UNLOCK(trace_mutex, "")
+
+rt_private CLI_MUTEX_TYPE *trace_mutex;
+
 */
 #define LOCK_DEBUG_OUTPUT_ACCESS 
-#define UNLOCK_DEBUG_OUTPUT_ACCESS
+#define UNLOCK_DEBUG_OUTPUT_ACCESS 
+#define CLI_MUTEX_CREATE(m,msg) 
+#define CLI_MUTEX_DESTROY(m,msg)
 
 rt_public DWORD debug_thread_id () {
 	return GetCurrentThreadId();
@@ -285,12 +306,19 @@ rt_public EIF_BOOLEAN dbg_is_synchronizing () {
 rt_public void dbg_init_synchro () {
 	/* Initialize synchronisation */
 	DBG_INIT_ESTUDIO_THREAD_HANDLE;
+	
+#ifdef DBGTRACE_ENABLED
+	CLI_MUTEX_CREATE(trace_mutex, "");
+#endif
 	dbg_keep_synchro = 1;
 }
 rt_public void dbg_terminate_synchro () {
 	/* Terminate synchronisation */
 	dbg_keep_synchro = 0;
 	DBG_CLOSE_ESTUDIO_THREAD_HANDLE;
+#ifdef DBGTRACE_ENABLED
+	CLI_MUTEX_DESTROY(trace_mutex, "");
+#endif
 }
 
 rt_public void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event) {
@@ -561,22 +589,66 @@ rt_public void dbg_debugger_after_callback (Callback_ids callback_id) {
 /**************************************************************************/
 /* ICorDebug  */
 
+/* Commented for now, remove it later
 rt_public EIF_POINTER new_cordebug ()
+*/
 	/* Create new instance of ICorDebug */
+/*
 {
 	HRESULT hr;
 	ICorDebug *icd;
 
-//    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-//COINIT_MULTITHREADED
-	
 	hr = CoCreateInstance (CLSID_CorDebug, NULL,
 		CLSCTX_INPROC_SERVER, IID_ICorDebug, (void **) & icd);
 
 	DBGTRACE_HR("@@@ [DEBUGGER] New ICorDebug : hr = ", hr);
 
-	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorDebug");
+	CHECKHR ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), hr, "Could not create ICorDebug");
 	return icd;
+}
+*/
+
+rt_public EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** icd)
+	/* Create new instance of ICorDebug */
+{
+	HRESULT hr;
+	rt_private FARPROC create_debug_address;
+	HMODULE mscoree_module;
+
+	mscoree_module = NULL;
+	mscoree_module = LoadLibrary("mscoree.dll");
+
+	create_debug_address = NULL;
+	create_debug_address = GetProcAddress (mscoree_module, "CreateDebuggingInterfaceFromVersion");
+
+	if (create_debug_address) {
+		/*
+		 * from cordebug.idl :
+		 *	CorDebugInvalidVersion = 0,
+		 *	CorDebugVersion_1_0 = CorDebugInvalidVersion + 1,
+		 *	CorDebugVersion_1_1 = CorDebugVersion_1_0 + 1,
+		 *	CorDebugVersion_2_0 = CorDebugVersion_1_1 + 1,
+		 *
+		 */
+		hr = (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (int, LPCWSTR, IUnknown**)) create_debug_address)(
+					3, /* ie CorDebugLatestVersion */
+					a_dbg_version,
+					(IUnknown**) icd
+				);
+		DBGTRACE_HR("[DEBUGGER] CreateDebuggingInterfaceFromVersion : hr = ", hr);
+	} else { 
+		hr = CoCreateInstance (
+					CLSID_CorDebug, 
+					NULL,
+					CLSCTX_INPROC_SERVER,
+					IID_ICorDebug, 
+					(void **) icd
+				);
+		DBGTRACE_HR("[DEBUGGER] CoCreateInstance (.. CorDebug ...) : hr = ", hr);
+	}
+	
+	CHECKHR ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), hr, "Could not create ICorDebug");
+	return hr;
 }
 
 #ifdef _cplusplus

@@ -500,18 +500,18 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /* Mutex management */
 #define EIF_MUTEX_CREATE(m,msg) \
         m = CreateMutex(NULL,FALSE,NULL); \
-        if (!m) eif_thr_panic(msg);
+        if (!m) eraise(msg, EN_EXT);
 #define EIF_MUTEX_LOCK(m,msg) \
         if (WaitForSingleObject(m, INFINITE) == WAIT_FAILED) \
-        eif_thr_panic(msg)
+        eraise(msg, EN_EXT)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)  \
         r = (WaitForSingleObject(m,0)); \
-        if (r==WAIT_FAILED) eif_thr_panic(msg); \
+        if (r==WAIT_FAILED) eraise (msg, EN_EXT); \
         r = (r==WAIT_TIMEOUT)
 #define EIF_MUTEX_UNLOCK(m,msg) \
-        if (!ReleaseMutex(m)) eif_thr_panic(msg)
+        if (!ReleaseMutex(m)) eraise(msg, EN_EXT)
 #define EIF_MUTEX_DESTROY(m,msg) \
-        if (!CloseHandle(m)) eif_thr_panic(msg)
+        if (!CloseHandle(m)) eraise (msg, EN_EXT)
 
 
 /* tid */

@@ -1,8 +1,14 @@
+#===============================================================================
 # Action sequence definitions
 # NOTE: This is not supported: x,y: INTEGER
 #       Do this instead: x: INTEGER; y: INTEGER
+#===============================================================================
 
 birthday: what to do on a birthday; age: INTEGER; name: STRING
-pointer_button: for mouse click events; x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
+pointer_button: for mouse click events;	x: INTEGER; y: INTEGER; button: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
 pointer_motion: for mouse movment events; x: INTEGER; y: INTEGER; x_tilt: REAL; y_tilt: REAL; pressure: REAL
 destroy: for widget destruction events;
+key_press: for keyboard press events; key: INTEGER; modifiers: EV_KEYBOARD_MODIFIERS
+key_release: for keyboard release events; key: INTEGER; modifiers: EV_KEYBOARD_MODIFIERS
+focus_in: for obtaining focus events;
+focus_out: for leaving focus events;

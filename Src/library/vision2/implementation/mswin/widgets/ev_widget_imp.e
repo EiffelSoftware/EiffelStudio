@@ -467,81 +467,126 @@ feature {NONE} -- Implementation, mouse button events
 			-- `y_pos' and `keys'
 		do
 			!! Result.make
-			Result.set_x (x_pos)
-			Result.set_y (y_pos)
+			Result.implementation.set_widget (interface)
+			Result.implementation.set_x (x_pos)
+			Result.implementation.set_y (y_pos)
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the left button is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_one_press, data)
-
+			if has_command (Cmd_button_one_press) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_one_press, data)
+			end
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the middle button is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_two_press, data)
+			if has_command (Cmd_button_two_press) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_two_press, data)
+			end
 		end
 	
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_three_press, data)
+			if has_command (Cmd_button_three_press) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_three_press, data)
+			end
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the left button is released.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_one_release, data)
+			if has_command (Cmd_button_one_release) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_one_release, data)
+			end
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the middle button is released.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_two_release, data)
+			if has_command (Cmd_button_two_release) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_two_release, data)
+			end
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is released.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_three_release, data)
+			if has_command (Cmd_button_three_release) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_three_release, data)
+			end
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is double clicked.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_one_dblclk, data)
+			if has_command (Cmd_button_one_dblclk) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_one_dblclk, data)
+			end
 		end
 
 	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is double clicked.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_two_dblclk, data)
+			if has_command (Cmd_button_two_dblclk) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_two_dblclk, data)
+			end
 		end
 
 	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the right button is double clicked.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_BUTTON_EVENT_DATA
 		do
-			data := get_button_data (keys, x_pos, y_pos)
-			execute_command (Cmd_button_three_dblclk, data)
+			if has_command (Cmd_button_three_press) then
+				data := get_button_data (keys, x_pos, y_pos)
+				execute_command (Cmd_button_three_dblclk, data)
+			end
 		end
 
 feature {NONE} -- Implementation, mouse move, enter and leave events
@@ -559,6 +604,9 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the mouse move.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_MOTION_EVENT_DATA
 		do
@@ -569,10 +617,13 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 				cursor_on_widget.replace (Current)
 				on_mouse_enter
 			end
-			!! data.make
-			data.set_x (x_pos)
-			data.set_y (y_pos)
-			execute_command (Cmd_motion_notify, data)
+			if has_command (Cmd_motion_notify) then
+				!! data.make
+				data.implementation.set_widget (interface)
+				data.implementation.set_x (x_pos)
+				data.implementation.set_y (y_pos)
+				execute_command (Cmd_motion_notify, data)
+			end
 		end
 
 	on_mouse_enter is
@@ -590,22 +641,34 @@ feature {EV_WIDGET_IMP} -- on_mouse_leave must be visible
 feature {NONE} -- Implementation, key events
 
 	on_char (character_code, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_KEY_EVENT_DATA
 		do
-			!! data.make
-			data.set_string (character_code.ascii_char.out)
-			data.set_state (key_data)
-			execute_command (Cmd_key_press, data)
+			if has_command (Cmd_key_press) then
+				!! data.make
+				data.implementation.set_widget (interface)
+				data.implementation.set_string (character_code.ascii_char.out)
+				data.implementation.set_state (key_data)
+				execute_command (Cmd_key_press, data)
+			end
 		end
 
 	on_key_up (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is released.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
 		local
 			data: EV_KEY_EVENT_DATA
 		do
-			!! data.make
-			data.set_keyval (key_data)
-			execute_command (Cmd_key_release, data)
+			if has_command (Cmd_key_release) then
+				!! data.make
+				data.implementation.set_widget (interface)
+				data.implementation.set_keyval (key_data)
+				execute_command (Cmd_key_release, data)
+			end
 		end
 
 feature {NONE} -- Implementation, focus event

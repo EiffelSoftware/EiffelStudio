@@ -341,7 +341,9 @@ doc:	</attribute>
 */
 rt_public char *starting_working_directory;
 
+#ifndef WORKBENCH
 rt_private void display_reminder (void);	/* display reminder of license */
+#endif
 
 #ifdef EIF_ASSERTIONS
 rt_shared int ise_printf (char *StrFmt, ...)
@@ -776,6 +778,7 @@ rt_public void dexit(int code)
 	esdie(code);						/* Propagate dying request */
 }
 
+#ifndef WORKBENCH
 rt_private void display_reminder(void)
 {
 	char *msg;
@@ -789,6 +792,7 @@ rt_private void display_reminder(void)
 	printf ("%s", msg);
 #endif
 }
+#endif
 
 #if !defined( WORKBENCH ) && defined( NON_COMMERCIAL)
 rt_private void display_non_commercial(void)

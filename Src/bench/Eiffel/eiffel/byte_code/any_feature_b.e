@@ -43,71 +43,71 @@ feature {NONE} -- IL code generation
 			inspect
 				feature_name_id
 			when
-				feature {PREDEFINED_NAMES}.conforms_to_name_id,
-				feature {PREDEFINED_NAMES}.deep_equal_name_id,
-				feature {PREDEFINED_NAMES}.same_type_name_id,
-				feature {PREDEFINED_NAMES}.standard_equal_name_id,
-				feature {PREDEFINED_NAMES}.standard_is_equal_name_id
+				{PREDEFINED_NAMES}.conforms_to_name_id,
+				{PREDEFINED_NAMES}.deep_equal_name_id,
+				{PREDEFINED_NAMES}.same_type_name_id,
+				{PREDEFINED_NAMES}.standard_equal_name_id,
+				{PREDEFINED_NAMES}.standard_is_equal_name_id
 			then
 				generate_frozen_boolean_routine
 
-			when feature {PREDEFINED_NAMES}.default_name_id then
+			when {PREDEFINED_NAMES}.default_name_id then
 				generate_default (target_type)
 
-			when feature {PREDEFINED_NAMES}.default_pointer_name_id then
+			when {PREDEFINED_NAMES}.default_pointer_name_id then
 				generate_default_pointer (target_type)
 
-			when feature {PREDEFINED_NAMES}.do_nothing_name_id then
+			when {PREDEFINED_NAMES}.do_nothing_name_id then
 				generate_do_nothing (target_type)
 
-			when feature {PREDEFINED_NAMES}.io_name_id then
+			when {PREDEFINED_NAMES}.io_name_id then
 				generate_io (written_type, target_type)
 
-			when feature {PREDEFINED_NAMES}.operating_environment_name_id then
+			when {PREDEFINED_NAMES}.operating_environment_name_id then
 				generate_operating_environment (written_type, target_type)
 
 			when
-				feature {PREDEFINED_NAMES}.generating_type_name_id,
-				feature {PREDEFINED_NAMES}.generator_name_id,
-				feature {PREDEFINED_NAMES}.out_name_id,
-				feature {PREDEFINED_NAMES}.tagged_out_name_id
+				{PREDEFINED_NAMES}.generating_type_name_id,
+				{PREDEFINED_NAMES}.generator_name_id,
+				{PREDEFINED_NAMES}.out_name_id,
+				{PREDEFINED_NAMES}.tagged_out_name_id
 			then
 				generate_string_routine (written_type)
 
 			when
-				feature {PREDEFINED_NAMES}.clone_name_id,
-				feature {PREDEFINED_NAMES}.deep_clone_name_id,
-				feature {PREDEFINED_NAMES}.standard_clone_name_id
+				{PREDEFINED_NAMES}.clone_name_id,
+				{PREDEFINED_NAMES}.deep_clone_name_id,
+				{PREDEFINED_NAMES}.standard_clone_name_id
 			then
 				generate_clone_routine (l_return_type)
 
 			when
-				feature {PREDEFINED_NAMES}.copy_name_id,
-				feature {PREDEFINED_NAMES}.deep_copy_name_id,
-				feature {PREDEFINED_NAMES}.standard_copy_name_id
+				{PREDEFINED_NAMES}.copy_name_id,
+				{PREDEFINED_NAMES}.deep_copy_name_id,
+				{PREDEFINED_NAMES}.standard_copy_name_id
 			then
 				generate_copy_routine
 
 			when
-				feature {PREDEFINED_NAMES}.deep_twin_name_id,
-				feature {PREDEFINED_NAMES}.standard_twin_name_id,
-				feature {PREDEFINED_NAMES}.twin_name_id
+				{PREDEFINED_NAMES}.deep_twin_name_id,
+				{PREDEFINED_NAMES}.standard_twin_name_id,
+				{PREDEFINED_NAMES}.twin_name_id
 			then
 				generate_twin_routine (l_return_type)
 
 			when
-				feature {PREDEFINED_NAMES}.equal_name_id,
-				feature {PREDEFINED_NAMES}.is_equal_name_id
+				{PREDEFINED_NAMES}.equal_name_id,
+				{PREDEFINED_NAMES}.is_equal_name_id
 			then
 				generate_equal_routine
 
 			when
-				feature {PREDEFINED_NAMES}.default_create_name_id,
-				feature {PREDEFINED_NAMES}.default_rescue_name_id
+				{PREDEFINED_NAMES}.default_create_name_id,
+				{PREDEFINED_NAMES}.default_rescue_name_id
 			then
 				generate_default_routine (written_type, target_type)
 			when
-				feature {PREDEFINED_NAMES}.to_dotnet_name_id
+				{PREDEFINED_NAMES}.to_dotnet_name_id
 			then
 					-- Nothing to be done, we like what we have on top of the stack
 					-- since it is already a .NET object.
@@ -130,7 +130,7 @@ feature {NONE} -- IL code generation
 						il_generator.pop
 						l_count := l_count - 1
 					end
-					il_generator.generate_raise_exception (feature {EXCEP_CONST}.precondition,
+					il_generator.generate_raise_exception ({EXCEP_CONST}.precondition,
 						"Feature of ANY not implemented for .NET class")
 				end
 			end
@@ -142,11 +142,11 @@ feature {NONE} -- IL code generation
 			-- definition if ANY) and that returns a boolean value.
 		require
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.conforms_to_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.deep_equal_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.same_type_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.standard_equal_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.standard_is_equal_name_id
+				feature_name_id = {PREDEFINED_NAMES}.conforms_to_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.deep_equal_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.same_type_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.standard_equal_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.standard_is_equal_name_id
 		local
 			l_extension: IL_EXTENSION_I
 			l_id: INTEGER
@@ -157,22 +157,22 @@ feature {NONE} -- IL code generation
 				-- Create representation of the routine we are calling.			
 			create l_extension
 			l_extension.set_alias_name_id (feature_name_id)
-			l_extension.set_return_type (feature {PREDEFINED_NAMES}.system_boolean_name_id)
+			l_extension.set_return_type ({PREDEFINED_NAMES}.system_boolean_name_id)
 			l_extension.set_base_class (runtime_class_name)
-			l_extension.set_type (feature {SHARED_IL_CONSTANTS}.static_type)
+			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 			
-			l_id := feature {PREDEFINED_NAMES}.system_object_name_id
+			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			inspect
 				feature_name_id
 			when
-				feature {PREDEFINED_NAMES}.conforms_to_name_id,
-				feature {PREDEFINED_NAMES}.same_type_name_id,
-				feature {PREDEFINED_NAMES}.standard_is_equal_name_id
+				{PREDEFINED_NAMES}.conforms_to_name_id,
+				{PREDEFINED_NAMES}.same_type_name_id,
+				{PREDEFINED_NAMES}.standard_is_equal_name_id
 			then
 				l_extension.set_argument_types (<<l_id, l_id>>)
 			when
-				feature {PREDEFINED_NAMES}.deep_equal_name_id,
-				feature {PREDEFINED_NAMES}.standard_equal_name_id
+				{PREDEFINED_NAMES}.deep_equal_name_id,
+				{PREDEFINED_NAMES}.standard_equal_name_id
 			then
 				l_extension.set_argument_types (<<l_id, l_id, l_id>>)				
 			end
@@ -186,9 +186,9 @@ feature {NONE} -- IL code generation
 		require
 			a_result_type_not_void: a_result_type /= Void
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.clone_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.deep_clone_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.standard_clone_name_id
+				feature_name_id = {PREDEFINED_NAMES}.clone_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.deep_clone_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.standard_clone_name_id
 		local
 			l_extension: IL_EXTENSION_I
 			l_id: INTEGER
@@ -199,11 +199,11 @@ feature {NONE} -- IL code generation
 				-- Create representation of the routine we are calling.			
 			create l_extension
 			l_extension.set_alias_name_id (feature_name_id)
-			l_extension.set_return_type (feature {PREDEFINED_NAMES}.system_object_name_id)
+			l_extension.set_return_type ({PREDEFINED_NAMES}.system_object_name_id)
 			l_extension.set_base_class (runtime_class_name)
-			l_extension.set_type (feature {SHARED_IL_CONSTANTS}.static_type)
+			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 			
-			l_id := feature {PREDEFINED_NAMES}.system_object_name_id
+			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			l_extension.set_argument_types (<<l_id, l_id>>)
 			
 				-- Call routine
@@ -217,9 +217,9 @@ feature {NONE} -- IL code generation
 			-- Generate inlined call to xx_copy' routines of ANY.
 		require
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.copy_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.deep_copy_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.standard_copy_name_id
+				feature_name_id = {PREDEFINED_NAMES}.copy_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.deep_copy_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.standard_copy_name_id
 		local
 			l_extension: IL_EXTENSION_I
 			l_id: INTEGER
@@ -231,9 +231,9 @@ feature {NONE} -- IL code generation
 			create l_extension
 			l_extension.set_alias_name_id (feature_name_id)
 			l_extension.set_base_class (runtime_class_name)
-			l_extension.set_type (feature {SHARED_IL_CONSTANTS}.static_type)
+			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 			
-			l_id := feature {PREDEFINED_NAMES}.system_object_name_id
+			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			l_extension.set_argument_types (<<l_id, l_id>>)
 			
 				-- Call routine
@@ -269,8 +269,8 @@ feature {NONE} -- IL code generation
 			written_type_not_void: written_type /= Void
 			target_type_not_void: target_type /= Void
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.default_create_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.default_rescue_name_id
+				feature_name_id = {PREDEFINED_NAMES}.default_create_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.default_rescue_name_id
 		local
 			l_dotnet_label, l_end_label: IL_LABEL
 		do
@@ -319,8 +319,8 @@ feature {NONE} -- IL code generation
 			-- Generate inlined call to `equal' and `is_equal' routines of ANY.
 		require
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.equal_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.is_equal_name_id
+				feature_name_id = {PREDEFINED_NAMES}.equal_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.is_equal_name_id
 		local
 			l_extension: IL_EXTENSION_I
 			l_id: INTEGER
@@ -331,12 +331,12 @@ feature {NONE} -- IL code generation
 				-- Create representation of the routine we are calling.			
 			create l_extension
 			l_extension.set_alias_name_id (feature_name_id)
-			l_extension.set_return_type (feature {PREDEFINED_NAMES}.system_boolean_name_id)
+			l_extension.set_return_type ({PREDEFINED_NAMES}.system_boolean_name_id)
 			l_extension.set_base_class (runtime_class_name)
-			l_extension.set_type (feature {SHARED_IL_CONSTANTS}.static_type)
+			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 			
-			l_id := feature {PREDEFINED_NAMES}.system_object_name_id
-			if feature_name_id = feature {PREDEFINED_NAMES}.is_equal_name_id then
+			l_id := {PREDEFINED_NAMES}.system_object_name_id
+			if feature_name_id = {PREDEFINED_NAMES}.is_equal_name_id then
 				l_extension.set_argument_types (<<l_id, l_id>>)
 			else
 				l_extension.set_argument_types (<<l_id, l_id, l_id>>)
@@ -394,16 +394,16 @@ feature {NONE} -- IL code generation
 		require
 			written_type_not_void: written_type /= Void
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.generating_type_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.generator_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.out_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.tagged_out_name_id
+				feature_name_id = {PREDEFINED_NAMES}.generating_type_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.generator_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.out_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.tagged_out_name_id
 		local
 			l_extension: IL_EXTENSION_I
 			l_local: INTEGER
 			l_out_label, l_end_label: IL_LABEL
 		do
-			if feature_name_id = feature {PREDEFINED_NAMES}.out_name_id then
+			if feature_name_id = {PREDEFINED_NAMES}.out_name_id then
 					-- Since `out' is virtual in ANY, we need to perform
 					-- a dynamic dispatch when we handle an Eiffel class.
 				l_out_label := il_generator.create_label
@@ -423,10 +423,10 @@ feature {NONE} -- IL code generation
 				-- Create representation of the routine we are calling.			
 			create l_extension
 			l_extension.set_alias_name_id (feature_name_id)
-			l_extension.set_return_type (feature {PREDEFINED_NAMES}.system_string_name_id)
+			l_extension.set_return_type ({PREDEFINED_NAMES}.system_string_name_id)
 			l_extension.set_base_class (runtime_class_name)
-			l_extension.set_argument_types (<<feature {PREDEFINED_NAMES}.system_object_name_id>>)
-			l_extension.set_type (feature {SHARED_IL_CONSTANTS}.static_type)
+			l_extension.set_argument_types (<<{PREDEFINED_NAMES}.system_object_name_id>>)
+			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 			
 				-- Call routine
 			l_extension.generate_call (False)
@@ -440,7 +440,7 @@ feature {NONE} -- IL code generation
 				-- Generate Eiffel STRING object from SYSTEM_STRING object
 			il_generator.put_manifest_string_from_system_string_local (l_local)
 
-			if feature_name_id = feature {PREDEFINED_NAMES}.out_name_id then
+			if feature_name_id = {PREDEFINED_NAMES}.out_name_id then
 				il_generator.mark_label (l_end_label)
 			end
 		end
@@ -450,9 +450,9 @@ feature {NONE} -- IL code generation
 		require
 			a_result_type_not_void: a_result_type /= Void
 			valid_feature_name:
-				feature_name_id = feature {PREDEFINED_NAMES}.twin_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.deep_twin_name_id or
-				feature_name_id = feature {PREDEFINED_NAMES}.standard_twin_name_id
+				feature_name_id = {PREDEFINED_NAMES}.twin_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.deep_twin_name_id or
+				feature_name_id = {PREDEFINED_NAMES}.standard_twin_name_id
 		local
 			l_extension: IL_EXTENSION_I
 			l_id: INTEGER
@@ -463,11 +463,11 @@ feature {NONE} -- IL code generation
 				-- Create representation of the routine we are calling.			
 			create l_extension
 			l_extension.set_alias_name_id (feature_name_id)
-			l_extension.set_return_type (feature {PREDEFINED_NAMES}.system_object_name_id)
+			l_extension.set_return_type ({PREDEFINED_NAMES}.system_object_name_id)
 			l_extension.set_base_class (runtime_class_name)
-			l_extension.set_type (feature {SHARED_IL_CONSTANTS}.static_type)
+			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
 			
-			l_id := feature {PREDEFINED_NAMES}.system_object_name_id
+			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			l_extension.set_argument_types (<<l_id>>)
 			
 				-- Call routine

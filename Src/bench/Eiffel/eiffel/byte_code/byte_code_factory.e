@@ -137,7 +137,7 @@ feature {NONE} -- Implementation: Byte node
 						-- trying to create an instance of the basic type and then
 						-- calling its creation procedure.
 					l_feat := a_source_type.associated_class.
-						feature_table.item_id (feature {PREDEFINED_NAMES}.item_name_id)
+						feature_table.item_id ({PREDEFINED_NAMES}.item_name_id)
 					check
 						l_feat_not_void: l_feat /= Void
 					end
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation: Byte node
 					l_basic_i ?= a_source_type.type_i
 					l_ref := l_basic_i.reference_type
 					l_feat := l_ref.base_class.
-						feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
+						feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 					check
 						l_feat_not_void: l_feat /= Void
 						l_basic_i_not_void: l_basic_i /= Void

@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			vb.extend (command_field)
 			
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_etched_in)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_etched_in)
 			f.extend (vb)
 			
 			create hb

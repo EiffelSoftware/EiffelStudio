@@ -256,67 +256,67 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	c_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (100)
-			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
-			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
-			Result.put (out_type, feature {PREDEFINED_NAMES}.out_name_id)
-			Result.put (hash_code_type, feature {PREDEFINED_NAMES}.hash_code_name_id)
-			Result.put (hash_code_type, feature {PREDEFINED_NAMES}.code_name_id)
-			Result.put (max_type, feature {PREDEFINED_NAMES}.max_name_id)
-			Result.put (min_type, feature {PREDEFINED_NAMES}.min_name_id)
-			Result.put (abs_type, feature {PREDEFINED_NAMES}.abs_name_id)
-			Result.put (zero_type, feature {PREDEFINED_NAMES}.zero_name_id)
-			Result.put (one_type, feature {PREDEFINED_NAMES}.one_name_id)
-			Result.put (generator_type, feature {PREDEFINED_NAMES}.generator_name_id)
-			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
-			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
-			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
-			Result.put (as_integer_8_type, feature {PREDEFINED_NAMES}.as_integer_8_name_id)
-			Result.put (as_integer_16_type, feature {PREDEFINED_NAMES}.as_integer_16_name_id)
-			Result.put (as_integer_32_type, feature {PREDEFINED_NAMES}.as_integer_32_name_id)
-			Result.put (as_integer_64_type, feature {PREDEFINED_NAMES}.as_integer_64_name_id)
-			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
-			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
-			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
-			Result.put (as_natural_8_type, feature {PREDEFINED_NAMES}.as_natural_8_name_id)
-			Result.put (as_natural_16_type, feature {PREDEFINED_NAMES}.as_natural_16_name_id)
-			Result.put (as_natural_32_type, feature {PREDEFINED_NAMES}.as_natural_32_name_id)
-			Result.put (as_natural_64_type, feature {PREDEFINED_NAMES}.as_natural_64_name_id)
-			Result.put (to_natural_8_type, feature {PREDEFINED_NAMES}.to_natural_8_name_id)
-			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
-			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
-			Result.put (to_natural_64_type, feature {PREDEFINED_NAMES}.to_natural_64_name_id)
-			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_real_64_name_id)
-			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_32_name_id)
-			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
-			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
-			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
-			Result.put (default_type, feature {PREDEFINED_NAMES}.default_name_id)
-			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.bit_and_name_id)
-			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.infix_and_name_id)
-			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.bit_or_name_id)
-			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.infix_or_name_id)
-			Result.put (bit_xor_type, feature {PREDEFINED_NAMES}.bit_xor_name_id)
-			Result.put (bit_not_type, feature {PREDEFINED_NAMES}.bit_not_name_id)
-			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.bit_shift_left_name_id)
-			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.infix_shift_left_name_id)
-			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.bit_shift_right_name_id)
-			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.infix_shift_right_name_id)
-			Result.put (bit_test_type, feature {PREDEFINED_NAMES}.bit_test_name_id)
-			Result.put (memory_copy, feature {PREDEFINED_NAMES}.memory_copy_name_id)
-			Result.put (memory_move, feature {PREDEFINED_NAMES}.memory_move_name_id)
-			Result.put (memory_set, feature {PREDEFINED_NAMES}.memory_set_name_id)
-			Result.put (memory_calloc, feature {PREDEFINED_NAMES}.memory_calloc_name_id)
-			Result.put (memory_alloc, feature {PREDEFINED_NAMES}.memory_alloc_name_id)
-			Result.put (memory_free, feature {PREDEFINED_NAMES}.memory_free_name_id)
-			Result.put (set_bit_with_mask_type, feature {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
-			Result.put (lower_type, feature {PREDEFINED_NAMES}.lower_name_id)
-			Result.put (upper_type, feature {PREDEFINED_NAMES}.upper_name_id)
-			Result.put (is_digit_type, feature {PREDEFINED_NAMES}.is_digit_name_id)
-			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
-			Result.put (twin_type, feature {PREDEFINED_NAMES}.twin_name_id)
+			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
+			Result.put (is_equal_type, {PREDEFINED_NAMES}.standard_is_equal_name_id)
+			Result.put (out_type, {PREDEFINED_NAMES}.out_name_id)
+			Result.put (hash_code_type, {PREDEFINED_NAMES}.hash_code_name_id)
+			Result.put (hash_code_type, {PREDEFINED_NAMES}.code_name_id)
+			Result.put (max_type, {PREDEFINED_NAMES}.max_name_id)
+			Result.put (min_type, {PREDEFINED_NAMES}.min_name_id)
+			Result.put (abs_type, {PREDEFINED_NAMES}.abs_name_id)
+			Result.put (zero_type, {PREDEFINED_NAMES}.zero_name_id)
+			Result.put (one_type, {PREDEFINED_NAMES}.one_name_id)
+			Result.put (generator_type, {PREDEFINED_NAMES}.generator_name_id)
+			Result.put (generator_type, {PREDEFINED_NAMES}.generating_type_name_id)
+			Result.put (to_character_type, {PREDEFINED_NAMES}.to_character_name_id)
+			Result.put (to_character_type, {PREDEFINED_NAMES}.ascii_char_name_id)
+			Result.put (as_integer_8_type, {PREDEFINED_NAMES}.as_integer_8_name_id)
+			Result.put (as_integer_16_type, {PREDEFINED_NAMES}.as_integer_16_name_id)
+			Result.put (as_integer_32_type, {PREDEFINED_NAMES}.as_integer_32_name_id)
+			Result.put (as_integer_64_type, {PREDEFINED_NAMES}.as_integer_64_name_id)
+			Result.put (to_integer_8_type, {PREDEFINED_NAMES}.to_integer_8_name_id)
+			Result.put (to_integer_16_type, {PREDEFINED_NAMES}.to_integer_16_name_id)
+			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.truncated_to_integer_name_id)
+			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_name_id)
+			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_32_name_id)
+			Result.put (to_integer_64_type, {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (as_natural_8_type, {PREDEFINED_NAMES}.as_natural_8_name_id)
+			Result.put (as_natural_16_type, {PREDEFINED_NAMES}.as_natural_16_name_id)
+			Result.put (as_natural_32_type, {PREDEFINED_NAMES}.as_natural_32_name_id)
+			Result.put (as_natural_64_type, {PREDEFINED_NAMES}.as_natural_64_name_id)
+			Result.put (to_natural_8_type, {PREDEFINED_NAMES}.to_natural_8_name_id)
+			Result.put (to_natural_16_type, {PREDEFINED_NAMES}.to_natural_16_name_id)
+			Result.put (to_natural_32_type, {PREDEFINED_NAMES}.to_natural_32_name_id)
+			Result.put (to_natural_64_type, {PREDEFINED_NAMES}.to_natural_64_name_id)
+			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_real_64_name_id)
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_32_name_id)
+			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
+			Result.put (offset_type, {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
+			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
+			Result.put (bit_and_type, {PREDEFINED_NAMES}.infix_and_name_id)
+			Result.put (bit_or_type, {PREDEFINED_NAMES}.bit_or_name_id)
+			Result.put (bit_or_type, {PREDEFINED_NAMES}.infix_or_name_id)
+			Result.put (bit_xor_type, {PREDEFINED_NAMES}.bit_xor_name_id)
+			Result.put (bit_not_type, {PREDEFINED_NAMES}.bit_not_name_id)
+			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.bit_shift_left_name_id)
+			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.infix_shift_left_name_id)
+			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_name_id)
+			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.infix_shift_right_name_id)
+			Result.put (bit_test_type, {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (memory_copy, {PREDEFINED_NAMES}.memory_copy_name_id)
+			Result.put (memory_move, {PREDEFINED_NAMES}.memory_move_name_id)
+			Result.put (memory_set, {PREDEFINED_NAMES}.memory_set_name_id)
+			Result.put (memory_calloc, {PREDEFINED_NAMES}.memory_calloc_name_id)
+			Result.put (memory_alloc, {PREDEFINED_NAMES}.memory_alloc_name_id)
+			Result.put (memory_free, {PREDEFINED_NAMES}.memory_free_name_id)
+			Result.put (set_bit_with_mask_type, {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
+			Result.put (lower_type, {PREDEFINED_NAMES}.lower_name_id)
+			Result.put (upper_type, {PREDEFINED_NAMES}.upper_name_id)
+			Result.put (is_digit_type, {PREDEFINED_NAMES}.is_digit_name_id)
+			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
+			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -326,53 +326,53 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	byte_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (100)
-			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.is_equal_name_id)
-			Result.put (is_equal_type, feature {PREDEFINED_NAMES}.standard_is_equal_name_id)
-			Result.put (max_type, feature {PREDEFINED_NAMES}.max_name_id)
-			Result.put (min_type, feature {PREDEFINED_NAMES}.min_name_id)
-			Result.put (generator_type, feature {PREDEFINED_NAMES}.generator_name_id)
-			Result.put (generator_type, feature {PREDEFINED_NAMES}.generating_type_name_id)
-			Result.put (offset_type, feature {PREDEFINED_NAMES}.infix_plus_name_id)
-			Result.put (zero_type, feature {PREDEFINED_NAMES}.zero_name_id)
-			Result.put (one_type, feature {PREDEFINED_NAMES}.one_name_id)
-			Result.put (default_type, feature {PREDEFINED_NAMES}.default_name_id)
-			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.bit_and_name_id)
-			Result.put (bit_and_type, feature {PREDEFINED_NAMES}.infix_and_name_id)
-			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.bit_or_name_id)
-			Result.put (bit_or_type, feature {PREDEFINED_NAMES}.infix_or_name_id)
-			Result.put (bit_xor_type, feature {PREDEFINED_NAMES}.bit_xor_name_id)
-			Result.put (bit_not_type, feature {PREDEFINED_NAMES}.bit_not_name_id)
-			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.bit_shift_left_name_id)
-			Result.put (bit_shift_left_type, feature {PREDEFINED_NAMES}.infix_shift_left_name_id)
-			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.bit_shift_right_name_id)
-			Result.put (bit_shift_right_type, feature {PREDEFINED_NAMES}.infix_shift_right_name_id)
-			Result.put (bit_test_type, feature {PREDEFINED_NAMES}.bit_test_name_id)
-			Result.put (to_character_type, feature {PREDEFINED_NAMES}.to_character_name_id)
-			Result.put (to_character_type, feature {PREDEFINED_NAMES}.ascii_char_name_id)
-			Result.put (as_integer_8_type, feature {PREDEFINED_NAMES}.as_integer_8_name_id)
-			Result.put (as_integer_16_type, feature {PREDEFINED_NAMES}.as_integer_16_name_id)
-			Result.put (as_integer_32_type, feature {PREDEFINED_NAMES}.as_integer_32_name_id)
-			Result.put (as_integer_64_type, feature {PREDEFINED_NAMES}.as_integer_64_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.truncated_to_integer_name_id)
-			Result.put (to_integer_8_type, feature {PREDEFINED_NAMES}.to_integer_8_name_id)
-			Result.put (to_integer_16_type, feature {PREDEFINED_NAMES}.to_integer_16_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_name_id)
-			Result.put (to_integer_32_type, feature {PREDEFINED_NAMES}.to_integer_32_name_id)
-			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
-			Result.put (as_natural_8_type, feature {PREDEFINED_NAMES}.as_natural_8_name_id)
-			Result.put (as_natural_16_type, feature {PREDEFINED_NAMES}.as_natural_16_name_id)
-			Result.put (as_natural_32_type, feature {PREDEFINED_NAMES}.as_natural_32_name_id)
-			Result.put (as_natural_64_type, feature {PREDEFINED_NAMES}.as_natural_64_name_id)
-			Result.put (to_natural_8_type, feature {PREDEFINED_NAMES}.to_natural_8_name_id)
-			Result.put (to_natural_16_type, feature {PREDEFINED_NAMES}.to_natural_16_name_id)
-			Result.put (to_natural_32_type, feature {PREDEFINED_NAMES}.to_natural_32_name_id)
-			Result.put (to_natural_64_type, feature {PREDEFINED_NAMES}.to_natural_64_name_id)
-			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_real_64_name_id)
-			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_32_name_id)
-			Result.put (to_real_64_type, feature {PREDEFINED_NAMES}.to_double_name_id)
-			Result.put (to_real_32_type, feature {PREDEFINED_NAMES}.to_real_name_id)
-			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
-			Result.put (twin_type, feature {PREDEFINED_NAMES}.twin_name_id)
+			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
+			Result.put (is_equal_type, {PREDEFINED_NAMES}.standard_is_equal_name_id)
+			Result.put (max_type, {PREDEFINED_NAMES}.max_name_id)
+			Result.put (min_type, {PREDEFINED_NAMES}.min_name_id)
+			Result.put (generator_type, {PREDEFINED_NAMES}.generator_name_id)
+			Result.put (generator_type, {PREDEFINED_NAMES}.generating_type_name_id)
+			Result.put (offset_type, {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (zero_type, {PREDEFINED_NAMES}.zero_name_id)
+			Result.put (one_type, {PREDEFINED_NAMES}.one_name_id)
+			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
+			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
+			Result.put (bit_and_type, {PREDEFINED_NAMES}.infix_and_name_id)
+			Result.put (bit_or_type, {PREDEFINED_NAMES}.bit_or_name_id)
+			Result.put (bit_or_type, {PREDEFINED_NAMES}.infix_or_name_id)
+			Result.put (bit_xor_type, {PREDEFINED_NAMES}.bit_xor_name_id)
+			Result.put (bit_not_type, {PREDEFINED_NAMES}.bit_not_name_id)
+			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.bit_shift_left_name_id)
+			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.infix_shift_left_name_id)
+			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_name_id)
+			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.infix_shift_right_name_id)
+			Result.put (bit_test_type, {PREDEFINED_NAMES}.bit_test_name_id)
+			Result.put (to_character_type, {PREDEFINED_NAMES}.to_character_name_id)
+			Result.put (to_character_type, {PREDEFINED_NAMES}.ascii_char_name_id)
+			Result.put (as_integer_8_type, {PREDEFINED_NAMES}.as_integer_8_name_id)
+			Result.put (as_integer_16_type, {PREDEFINED_NAMES}.as_integer_16_name_id)
+			Result.put (as_integer_32_type, {PREDEFINED_NAMES}.as_integer_32_name_id)
+			Result.put (as_integer_64_type, {PREDEFINED_NAMES}.as_integer_64_name_id)
+			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.truncated_to_integer_name_id)
+			Result.put (to_integer_8_type, {PREDEFINED_NAMES}.to_integer_8_name_id)
+			Result.put (to_integer_16_type, {PREDEFINED_NAMES}.to_integer_16_name_id)
+			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_name_id)
+			Result.put (to_integer_32_type, {PREDEFINED_NAMES}.to_integer_32_name_id)
+			Result.put (to_integer_64_type, {PREDEFINED_NAMES}.to_integer_64_name_id)
+			Result.put (as_natural_8_type, {PREDEFINED_NAMES}.as_natural_8_name_id)
+			Result.put (as_natural_16_type, {PREDEFINED_NAMES}.as_natural_16_name_id)
+			Result.put (as_natural_32_type, {PREDEFINED_NAMES}.as_natural_32_name_id)
+			Result.put (as_natural_64_type, {PREDEFINED_NAMES}.as_natural_64_name_id)
+			Result.put (to_natural_8_type, {PREDEFINED_NAMES}.to_natural_8_name_id)
+			Result.put (to_natural_16_type, {PREDEFINED_NAMES}.to_natural_16_name_id)
+			Result.put (to_natural_32_type, {PREDEFINED_NAMES}.to_natural_32_name_id)
+			Result.put (to_natural_64_type, {PREDEFINED_NAMES}.to_natural_64_name_id)
+			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_real_64_name_id)
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_32_name_id)
+			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
+			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
+			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
+			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -479,7 +479,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `ctype.h' for C compilation where `tolower' and `toupper' are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.ctype_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_is_digit (buffer: GENERATION_BUFFER;
@@ -497,7 +497,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `ctype.h' for C compilation where `isdigit' is declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.ctype_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
 	generate_equal (buffer: GENERATION_BUFFER; target, parameter: REGISTRABLE) is
@@ -565,7 +565,7 @@ feature {NONE} -- C code generation
 				buffer.put_string (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
 
 					-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
-				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_plug_header_name_id)
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_plug_header_name_id)
 			else
 				inspect
 					type_of_basic
@@ -599,7 +599,7 @@ feature {NONE} -- C code generation
 				buffer.put_character (')')
 
 					-- Add `eif_out.h' for C compilation where all output functions are declared.
-				shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_out_header_name_id)
+				shared_include_queue.put ({PREDEFINED_NAMES}.eif_out_header_name_id)
 			end
 		end
 
@@ -710,7 +710,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_min (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
@@ -753,7 +753,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
@@ -796,7 +796,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_abs (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE) is
@@ -830,7 +830,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 		end
 
 	generate_memory_routine (buffer: GENERATION_BUFFER; f_type: INTEGER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
@@ -845,7 +845,7 @@ feature {NONE} -- C code generation
 				f_type = memory_set or f_type = memory_free or
 				f_type = memory_alloc or f_type = memory_calloc
 		do
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.string_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.string_header_name_id)
 
 			inspect
 				f_type
@@ -932,7 +932,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
 	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
@@ -958,7 +958,7 @@ feature {NONE} -- C code generation
 			buffer.put_character (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+			shared_include_queue.put ({PREDEFINED_NAMES}.eif_misc_header_name_id)
 		end
 
 	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is

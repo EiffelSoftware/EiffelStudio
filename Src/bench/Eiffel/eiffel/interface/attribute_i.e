@@ -108,7 +108,7 @@ feature -- Element Change
 				solved_type.is_true_expanded and then
 				solved_type.associated_class = class_c and then
 				(extension = Void or else
-					extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
+					extension.type /= {SHARED_IL_CONSTANTS}.static_field_type)
 			then
 				create vlec
 				vlec.set_class (solved_type.associated_class)

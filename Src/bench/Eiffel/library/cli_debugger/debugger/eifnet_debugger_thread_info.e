@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 		do
 			icd_thread_pointer := p
 
-			r := feature {ICOR_DEBUG_THREAD}.cpp_get_id (icd_thread_pointer, $thread_id)
-			r := feature {CLI_COM}.add_ref (icd_thread_pointer)
+			r := {ICOR_DEBUG_THREAD}.cpp_get_id (icd_thread_pointer, $thread_id)
+			r := {CLI_COM}.add_ref (icd_thread_pointer)
 			create pending_steppers.make (7)
 		end
 
@@ -170,7 +170,7 @@ feature -- Disposable
 			n: INTEGER
 		do
 			opo_icd_thread := Void
-			n := feature {CLI_COM}.release (icd_thread_pointer)
+			n := {CLI_COM}.release (icd_thread_pointer)
 			icd_thread_pointer := Default_pointer
 			pending_steppers := Void
 			last_icd_func_eval := Void

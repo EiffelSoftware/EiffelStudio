@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 			widget.extend (output_line)
 			widget.disable_item_expand (output_line)
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (formatter_container)
 			widget.extend (f)
 			output_line.set_text (Interface_names.l_Not_in_system_no_info)

@@ -693,7 +693,7 @@ end
 					l_ext ?= feature_i.extension
 					attribute_type := feature_i.type.actual_type
 					if
-						(l_ext = Void or else l_ext.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
+						(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
 					then
 							-- We do not take IL static fields, only attributes of a class.
 						attr_type := attribute_type.type_i

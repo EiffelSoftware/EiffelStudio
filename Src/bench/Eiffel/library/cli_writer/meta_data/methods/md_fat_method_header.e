@@ -24,8 +24,8 @@ feature -- Initialization
 				-- Set internal data with `size' of current structure
 				-- and default flags.
 			internal_data := Header_size | (
-				feature {MD_METHOD_CONSTANTS}.Fat_format |
-				feature {MD_METHOD_CONSTANTS}.Init_locals)
+				{MD_METHOD_CONSTANTS}.Fat_format |
+				{MD_METHOD_CONSTANTS}.Init_locals)
 		ensure
 			max_stack_set: max_stack = a_max_stack
 			code_size_set: code_size = a_code_size
@@ -71,8 +71,8 @@ feature -- Settings
 			-- Set `flags' with `f'.
 		do
 			internal_data := Header_size | (f |
-				feature {MD_METHOD_CONSTANTS}.Fat_format |
-				feature {MD_METHOD_CONSTANTS}.Init_locals)
+				{MD_METHOD_CONSTANTS}.Fat_format |
+				{MD_METHOD_CONSTANTS}.Init_locals)
 		end
 		
 feature {NONE} -- Implementation
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			-- Size of current structure.
 
 invariant
-	valid_flags: flags & feature {MD_METHOD_CONSTANTS}.Fat_format = 
-			feature {MD_METHOD_CONSTANTS}.Fat_format
+	valid_flags: flags & {MD_METHOD_CONSTANTS}.Fat_format = 
+			{MD_METHOD_CONSTANTS}.Fat_format
 
 end -- class MD_FAT_METHOD_HEADER

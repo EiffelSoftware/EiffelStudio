@@ -755,29 +755,29 @@ feature {NONE} -- Initialization
 				if l_member.is_static then
 					if l_member.is_attribute then
 						if external_class.is_enum then
-							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Enum_field_type)
+							l_ext.set_type ({SHARED_IL_CONSTANTS}.Enum_field_type)
 						else
-							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Static_field_type)
+							l_ext.set_type ({SHARED_IL_CONSTANTS}.Static_field_type)
 						end
 					else
 						if l_member.is_prefix or l_member.is_infix then
 							check
 								not_manually_added: not l_member.is_artificially_added
 							end
-							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Operator_type)
+							l_ext.set_type ({SHARED_IL_CONSTANTS}.Operator_type)
 						else
-							l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Static_type)
+							l_ext.set_type ({SHARED_IL_CONSTANTS}.Static_type)
 						end
 					end
 				else
 					if l_member.is_attribute then
-						l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Field_type)
+						l_ext.set_type ({SHARED_IL_CONSTANTS}.Field_type)
 					elseif l_constructor /= Void then
-						l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Creator_type)
+						l_ext.set_type ({SHARED_IL_CONSTANTS}.Creator_type)
 					elseif l_deferred /= Void then
-						l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Deferred_type)
+						l_ext.set_type ({SHARED_IL_CONSTANTS}.Deferred_type)
 					else
-						l_ext.set_type (feature {SHARED_IL_CONSTANTS}.Normal_type)
+						l_ext.set_type ({SHARED_IL_CONSTANTS}.Normal_type)
 					end
 				end
 
@@ -785,7 +785,7 @@ feature {NONE} -- Initialization
 
 				l_names_heap.put (l_member.dotnet_name)
 				l_ext.set_alias_name_id (l_names_heap.found_item)
-				if l_ext.type = feature {SHARED_IL_CONSTANTS}.Enum_field_type then
+				if l_ext.type = {SHARED_IL_CONSTANTS}.Enum_field_type then
 					check
 						l_enum_ext_not_void: l_enum_ext /= Void
 					end

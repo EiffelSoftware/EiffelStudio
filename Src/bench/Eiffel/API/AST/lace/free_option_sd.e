@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Create a new FREE_OPTION AST node with code `type_id'.
 		require
 			type_id_positive: type_id > 0
-			type_id_big_enough: type_id < feature {FREE_OPTION_SD}.free_option_count
+			type_id_big_enough: type_id < {FREE_OPTION_SD}.free_option_count
 		do
 			code := type_id
 		ensure

@@ -404,12 +404,12 @@ feature -- Access
 		require
 			valid_cl_class: associated_class.clients.has (cl_class)
 			valid_flags: a_flag = 0 or
-				a_flag = feature {DEPEND_UNIT}.is_in_assignment_flag or
-				a_flag = feature {DEPEND_UNIT}.is_in_check_flag or
-				a_flag = feature {DEPEND_UNIT}.is_in_creation_flag or
-				a_flag = feature {DEPEND_UNIT}.is_in_ensure_flag or
-				a_flag = feature {DEPEND_UNIT}.is_in_invariant_flag or
-				a_flag = feature {DEPEND_UNIT}.is_in_require_flag
+				a_flag = {DEPEND_UNIT}.is_in_assignment_flag or
+				a_flag = {DEPEND_UNIT}.is_in_check_flag or
+				a_flag = {DEPEND_UNIT}.is_in_creation_flag or
+				a_flag = {DEPEND_UNIT}.is_in_ensure_flag or
+				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
+				a_flag = {DEPEND_UNIT}.is_in_require_flag
 		local
 			dep: CLASS_DEPENDANCE;
 			fdep: FEATURE_DEPENDANCE;

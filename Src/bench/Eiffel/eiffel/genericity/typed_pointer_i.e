@@ -54,13 +54,13 @@ feature -- Access
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref
+			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_byref
 		end
 
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type
 		do
-			Result := feature {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
+			Result := {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
 		end
 
 feature

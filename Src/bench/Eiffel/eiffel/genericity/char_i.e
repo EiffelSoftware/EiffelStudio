@@ -50,16 +50,16 @@ feature -- Property
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_char
+			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_char
 		end
 
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type
 		do
 			if is_wide then
-				Result := feature {SHARED_GEN_CONF_LEVEL}.wide_character_tuple_code
+				Result := {SHARED_GEN_CONF_LEVEL}.wide_character_tuple_code
 			else	
-				Result := feature {SHARED_GEN_CONF_LEVEL}.character_tuple_code
+				Result := {SHARED_GEN_CONF_LEVEL}.character_tuple_code
 			end
 		end
 
@@ -178,7 +178,7 @@ feature -- Code generation
 	maximum_interval_value: CHAR_VAL_B is
 			-- Maximum value in inspect interval for current type
 		do
-			create Result.make (feature {EIFFEL_SCANNER_SKELETON}.Maximum_character_code.to_character)
+			create Result.make ({EIFFEL_SCANNER_SKELETON}.Maximum_character_code.to_character)
 		end
 
 	make_default_byte_code (ba: BYTE_ARRAY) is

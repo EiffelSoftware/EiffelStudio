@@ -203,8 +203,8 @@ feature -- Settings
 		require
 			not_is_closed: not is_closed
 			valid_token:
-				entry_point_token & feature {MD_TOKEN_TYPES}.Md_mask =
-					feature {MD_TOKEN_TYPES}.Md_method_def
+				entry_point_token & {MD_TOKEN_TYPES}.Md_mask =
+					{MD_TOKEN_TYPES}.Md_method_def
 		do
 			last_call_success := c_set_user_entry_point (item, entry_point_token)
 		ensure

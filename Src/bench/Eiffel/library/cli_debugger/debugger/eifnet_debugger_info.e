@@ -330,7 +330,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_p_icd_controller := p
 				last_icd_controller_updated := False
 				if last_p_icd_controller /= Default_pointer then
-					n := feature {CLI_COM}.add_ref (last_p_icd_controller)
+					n := {CLI_COM}.add_ref (last_p_icd_controller)
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Controller changed%N")
@@ -347,7 +347,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_controller := Void				
 			end
 			if last_p_icd_controller /= Default_pointer then
-				n := feature {CLI_COM}.release (last_p_icd_controller)
+				n := {CLI_COM}.release (last_p_icd_controller)
 				last_p_icd_controller := Default_pointer
 			end
 			last_icd_controller_updated := True
@@ -363,7 +363,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_p_icd_process := p
 				last_icd_process_updated := False
 				if last_p_icd_process /= Default_pointer then
-					n := feature {CLI_COM}.add_ref (last_p_icd_process)
+					n := {CLI_COM}.add_ref (last_p_icd_process)
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Process changed%N")
@@ -380,7 +380,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_process := Void
 			end
 			if last_p_icd_process /= Default_pointer then
-				n := feature {CLI_COM}.release (last_p_icd_process)
+				n := {CLI_COM}.release (last_p_icd_process)
 				last_p_icd_process := Default_pointer
 			end
 			last_icd_process_updated := True
@@ -396,7 +396,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_p_icd_breakpoint := p
 				last_icd_breakpoint_updated := False
 				if last_p_icd_breakpoint /= Default_pointer then
-					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)
+					n := {CLI_COM}.add_ref (last_p_icd_breakpoint)
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Breakpoint changed%N")
@@ -413,7 +413,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_breakpoint := Void
 			end
 			if last_p_icd_breakpoint /= Default_pointer then
-				n := feature {CLI_COM}.release (last_p_icd_breakpoint)
+				n := {CLI_COM}.release (last_p_icd_breakpoint)
 				last_p_icd_breakpoint := Default_pointer
 			end
 			last_icd_breakpoint_updated := True
@@ -454,7 +454,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_p_icd_exception := p
 				last_icd_exception_updated := False
 				if last_p_icd_exception /= Default_pointer then
-					n := feature {CLI_COM}.add_ref (last_p_icd_exception)
+					n := {CLI_COM}.add_ref (last_p_icd_exception)
 				end
 				debug ("DEBUGGER_EIFNET_DATA")
 					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: Exception changed%N")
@@ -471,7 +471,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 				last_icd_exception := Void
 			end
 			if last_p_icd_exception /= Default_pointer then
-				n := feature {CLI_COM}.release (last_p_icd_exception)
+				n := {CLI_COM}.release (last_p_icd_exception)
 				last_p_icd_exception := Default_pointer
 			end
 			last_icd_exception_updated := True
@@ -532,7 +532,7 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_controller.make_by_pointer (last_p_icd_controller)
-					n := feature {CLI_COM}.add_ref (last_p_icd_controller)
+					n := {CLI_COM}.add_ref (last_p_icd_controller)
 				end
 				last_icd_controller_updated := True
 			end
@@ -553,7 +553,7 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_process.make_by_pointer (last_p_icd_process)
-					n := feature {CLI_COM}.add_ref (last_p_icd_process)					
+					n := {CLI_COM}.add_ref (last_p_icd_process)					
 				end
 				last_icd_process_updated := True
 			end
@@ -574,7 +574,7 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_breakpoint.make_by_pointer (last_p_icd_breakpoint)
-					n := feature {CLI_COM}.add_ref (last_p_icd_breakpoint)					
+					n := {CLI_COM}.add_ref (last_p_icd_breakpoint)					
 				end
 				last_icd_breakpoint_updated := True
 			end
@@ -595,7 +595,7 @@ feature {NONE} -- COM Object
 					end
 				else
 					create last_icd_exception.make_by_pointer (last_p_icd_exception)
-					n := feature {CLI_COM}.add_ref (last_p_icd_exception)					
+					n := {CLI_COM}.add_ref (last_p_icd_exception)					
 				end
 				last_icd_exception_updated := True
 			end
@@ -778,7 +778,7 @@ feature -- JIT Thread
 			n: INTEGER
 			tid: INTEGER
 		do
-			n := feature {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
+			n := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
 			if loaded_managed_threads.has (tid) then
 				loaded_managed_threads.remove (tid)
 					-- FIXME jfiat: maybe find a better way for that .. a kind of history of selected thread ?
@@ -799,7 +799,7 @@ feature -- JIT Thread
 			r: INTEGER
 			tid: INTEGER
 		do
-			r := feature {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
+			r := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
 			if tid > 0 then
 				set_last_icd_thread_id (tid)				
 			end

@@ -619,7 +619,7 @@ feature -- IL code generation
 				(old_expressions /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_ensure)
+				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_ensure)
 				il_generator.branch_on_false (end_of_assertion)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
@@ -652,7 +652,7 @@ feature -- IL code generation
 				(postcondition /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_ensure)
+				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_ensure)
 				il_generator.branch_on_false (end_of_assertion)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
@@ -707,7 +707,7 @@ feature -- IL code generation
 			inh_assert := Context.inherited_assertion
 
 			end_of_assertion := il_label_factory.new_label
-			il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_require)
+			il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_require)
 			il_generator.branch_on_false (end_of_assertion)
 			il_generator.put_boolean_constant (True)
 			il_generator.generate_set_assertion_status

@@ -120,7 +120,7 @@ feature -- IL code generation
 
 			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
 				l_label := il_label_factory.new_label
-				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_loop)
+				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
 				il_generator.branch_on_false (l_label)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status					
@@ -159,7 +159,7 @@ feature -- IL code generation
 
 			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
 				l_label := il_label_factory.new_label
-				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_loop)
+				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
 				il_generator.branch_on_false (l_label)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status					

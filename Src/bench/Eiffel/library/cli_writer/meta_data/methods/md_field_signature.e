@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
-			internal_put (feature {MD_SIGNATURE_CONSTANTS}.field_sig, 0)
+			internal_put ({MD_SIGNATURE_CONSTANTS}.field_sig, 0)
 			current_position := 1
 		ensure then
 			current_position_set: current_position = 1
@@ -32,7 +32,7 @@ feature -- Reset
 	reset is
 			-- Reset content.
 		do
-			internal_put (feature {MD_SIGNATURE_CONSTANTS}.field_sig, 0)
+			internal_put ({MD_SIGNATURE_CONSTANTS}.field_sig, 0)
 			current_position := 1
 		ensure
 			current_position_set: current_position = 1

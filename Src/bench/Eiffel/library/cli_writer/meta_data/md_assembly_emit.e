@@ -48,15 +48,15 @@ feature -- Definition
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
 			valid_flags: public_key /= Void implies assembly_flags &
-				feature {MD_ASSEMBLY_FLAGS}.public_key = feature {MD_ASSEMBLY_FLAGS}.public_key
+				{MD_ASSEMBLY_FLAGS}.public_key = {MD_ASSEMBLY_FLAGS}.public_key
 		do
 			if public_key = Void then
 				last_call_success := c_define_assembly (item, default_pointer, 0,
-					feature {MD_HASH_IDS}.sha1, assembly_name.item, assembly_info.item,
+					{MD_HASH_IDS}.sha1, assembly_name.item, assembly_info.item,
 					assembly_flags, $Result)
 			else
 				last_call_success := c_define_assembly (item, public_key.item.item,
-					public_key.item.count, feature {MD_HASH_IDS}.sha1, assembly_name.item,
+					public_key.item.count, {MD_HASH_IDS}.sha1, assembly_name.item,
 					assembly_info.item, assembly_flags, $Result)				
 			end
 		ensure

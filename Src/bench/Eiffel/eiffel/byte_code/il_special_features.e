@@ -490,7 +490,7 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local_assignment (l_local)
 
 				-- Generate: if Current < x then Result := -1
-			il_generator.generate_binary_operator (feature {IL_CONST}.il_lt)
+			il_generator.generate_binary_operator ({IL_CONST}.il_lt)
 			il_generator.branch_on_false (l_elseif_label)
 				-- Remove duplicate occurrence of `Current' that we push in case
 				-- we had to perform one more comparison.
@@ -501,7 +501,7 @@ feature {NONE} -- IL code generation
 				-- Generate: elseif x < Current then Result := 1
 			il_generator.mark_label (l_elseif_label)
 			il_generator.generate_local (l_local)
-			il_generator.generate_binary_operator (feature {IL_CONST}.il_gt)
+			il_generator.generate_binary_operator ({IL_CONST}.il_gt)
 			il_generator.branch_on_false (l_else_label)
 			il_generator.put_integer_32_constant (1)
 			il_generator.branch_to (l_end_label)

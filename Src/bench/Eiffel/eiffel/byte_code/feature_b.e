@@ -262,9 +262,9 @@ feature -- IL code generation
 					inspect
 						feature_name_id
 					when
-						feature {PREDEFINED_NAMES}.Item_name_id,
-						feature {PREDEFINED_NAMES}.Infix_at_name_id,
-						feature {PREDEFINED_NAMES}.Put_name_id
+						{PREDEFINED_NAMES}.Item_name_id,
+						{PREDEFINED_NAMES}.Infix_at_name_id,
+						{PREDEFINED_NAMES}.Put_name_id
 					then
 						special_array_class_type.prepare_generate_il (feature_name_id, cl_type)
 						is_special_handled := True
@@ -276,7 +276,7 @@ feature -- IL code generation
 						-- Generate parameters if any.
 					if
 						native_array_class_type /= Void and then
-						feature_name_id = feature {PREDEFINED_NAMES}.put_name_id
+						feature_name_id = {PREDEFINED_NAMES}.put_name_id
 					then
 						check
 							parameters_count_is_two: parameters.count = 2

@@ -31,11 +31,11 @@ feature -- Settings
 	set_byref_type (element_type: INTEGER_8; a_token: INTEGER) is
 			-- Set type as a byref type in current signature.
 		require
-			token_valid: (element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
+			token_valid: (element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_class or
+				element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
 				a_token /= 0
 		do
-			internal_put (feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, current_position)
+			internal_put ({MD_SIGNATURE_CONSTANTS}.Element_type_byref, current_position)
 			current_position := current_position + 1
 			set_type (element_type, a_token)
 		end
@@ -43,8 +43,8 @@ feature -- Settings
 	set_type (element_type: INTEGER_8; token: INTEGER) is
 			-- Set type in current signature.
 		require
-			token_valid: (element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
+			token_valid: (element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_class or
+				element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
 				token /= 0
 		do
 			internal_put (element_type, current_position)
@@ -52,8 +52,8 @@ feature -- Settings
 			inspect
 				element_type
 			when
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
+				{MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				{MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
 			then
 				compress_type_token (token)
 			else
@@ -106,13 +106,13 @@ feature {NONE} -- Implementation
 			l_header := i & 0xFF000000
 			l_val := i & 0x00FFFFFF
 
-			if l_header = feature {MD_TOKEN_TYPES}.Md_type_ref then
+			if l_header = {MD_TOKEN_TYPES}.Md_type_ref then
 					-- TypeRef token
 				l_encoding := 1
-			elseif l_header = feature {MD_TOKEN_TYPES}.Md_type_def then
+			elseif l_header = {MD_TOKEN_TYPES}.Md_type_def then
 					-- TypeDef token
 				l_encoding := 0
-			elseif l_header = feature {MD_TOKEN_TYPES}.Md_type_spec then
+			elseif l_header = {MD_TOKEN_TYPES}.Md_type_spec then
 					-- TypeSpec token
 				l_encoding := 2
 			else

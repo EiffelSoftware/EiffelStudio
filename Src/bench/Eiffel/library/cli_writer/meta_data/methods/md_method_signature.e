@@ -73,8 +73,8 @@ feature -- Settings
 			-- Set return type of method.
 		require
 			valid_state: state = Return_type_state
-			token_valid: (element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_class or
-				element_type = feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
+			token_valid: (element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_class or
+				element_type = {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype) implies
 				token /= 0
 		do
 			set_type (element_type, token)

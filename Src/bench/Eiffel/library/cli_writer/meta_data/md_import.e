@@ -36,7 +36,7 @@ feature -- dispose
 			l_nb_ref: INTEGER
 		do
 			if item /= Default_pointer then
-				l_nb_ref := feature {CLI_COM}.release (item)
+				l_nb_ref := {CLI_COM}.release (item)
 				item := default_pointer
 			end
 		end

@@ -43,9 +43,9 @@ feature -- Status report
 	flags: INTEGER_16 is
 			-- Flags of exception clause
 		do
-			Result := feature {MD_METHOD_CONSTANTS}.clause_filter
+			Result := {MD_METHOD_CONSTANTS}.clause_filter
 		ensure then
-			definition: Result = feature {MD_METHOD_CONSTANTS}.clause_filter
+			definition: Result = {MD_METHOD_CONSTANTS}.clause_filter
 		end
 
 feature -- Access

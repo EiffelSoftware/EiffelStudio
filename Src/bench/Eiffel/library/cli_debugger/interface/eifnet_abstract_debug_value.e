@@ -200,7 +200,7 @@ feature {NONE} -- Special childrens
 								l_is_static := l_md_import.last_field_is_static
 								if l_is_static and l_icd_frame /= Void then
 									l_att_icd_debug_value := l_icd_class.get_static_field_value (l_att_token, l_icd_frame)
-									if (l_icd_class.last_call_success & 0x0000FFFF) = feature {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
+									if (l_icd_class.last_call_success & 0x0000FFFF) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
 										l_error_message := "Static not yet initialized"
 									end
 									debug ("DBG_EXTRA_DISPLAY")

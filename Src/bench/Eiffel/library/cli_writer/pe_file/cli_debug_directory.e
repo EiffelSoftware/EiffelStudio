@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor {WEL_STRUCTURE}
 			c_set_characteristics (item, 0)
-			c_set_date_stamp (item, feature {CLI_TIME}.time (default_pointer))
+			c_set_date_stamp (item, {CLI_TIME}.time (default_pointer))
 			c_set_major_version (item, 0)
 			c_set_minor_version (item, 0)
-			c_set_type (item, feature {CLI_DEBUG_CONSTANTS}.Type_codeview)
+			c_set_type (item, {CLI_DEBUG_CONSTANTS}.Type_codeview)
 		end
 
 feature -- Settings

@@ -965,9 +965,9 @@ feature {NONE} -- Implementation, cosmetic
 		do
 			f := lab.font
 			if is_bold  then
-				f.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+				f.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			else
-				f.set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)				
+				f.set_weight ({EV_FONT_CONSTANTS}.weight_regular)				
 			end
 			lab.set_font (f)
 		end

@@ -11,7 +11,7 @@ inherit
 
 	LACE_PARSER_SKELETON
 
-creation
+create
 
 	make
 

@@ -74,7 +74,7 @@ feature -- Call generation
 			-- Generate external feature call on Current.
 		require
 			valid_call: alias_name_id > 0 or else
-				type = feature {SHARED_IL_CONSTANTS}.Creator_type
+				type = {SHARED_IL_CONSTANTS}.Creator_type
 		do
 			check
 				type_not_enum: type /= Enum_field_type
@@ -87,7 +87,7 @@ feature -- Call generation
 			-- Generate external feature call on constructor `n' using information
 			-- of Current wihtout creating an object.
 		require
-			valid_call: type = feature {SHARED_IL_CONSTANTS}.Creator_type
+			valid_call: type = {SHARED_IL_CONSTANTS}.Creator_type
 		do
 				-- Generate a normal non-virtual call.
 			il_generator.generate_external_call (base_class, Names_heap.item (alias_name_id),

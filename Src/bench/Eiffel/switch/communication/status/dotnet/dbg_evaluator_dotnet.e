@@ -379,13 +379,13 @@ feature {NONE} -- Implementation
 					--| This means this value has been created by eStudioDbg
 					--| We need to build the corresponding ICorDebugValue object.
 				inspect dmv.type 
-				when feature {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+				when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
 					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmv.value_integer_32)
-				when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
+				when {DUMP_VALUE_CONSTANTS}.type_boolean then
 					Result := eifnet_evaluator.new_boolean_evaluation (new_active_icd_frame, dmv.value_boolean )
-				when feature {DUMP_VALUE_CONSTANTS}.type_character then
+				when {DUMP_VALUE_CONSTANTS}.type_character then
 					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmv.value_character )
-				when feature {DUMP_VALUE_CONSTANTS}.type_string then
+				when {DUMP_VALUE_CONSTANTS}.type_string then
 					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
 				else					
 				end
@@ -405,17 +405,17 @@ feature {NONE} -- Implementation
 						
 						--| typically result of previous expression
 					inspect dmv.type 
-					when feature {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+					when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
 						Result := eifnet_evaluator.icdv_reference_integer_32_from_icdv_integer_32 (new_active_icd_frame, Result)
-					when feature {DUMP_VALUE_CONSTANTS}.type_real_32 then
+					when {DUMP_VALUE_CONSTANTS}.type_real_32 then
 						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (new_active_icd_frame, Result)							
-					when feature {DUMP_VALUE_CONSTANTS}.type_real_64 then
+					when {DUMP_VALUE_CONSTANTS}.type_real_64 then
 						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (new_active_icd_frame, Result)	
-					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
+					when {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.icdv_reference_boolean_from_icdv_boolean (new_active_icd_frame, Result)
-					when feature {DUMP_VALUE_CONSTANTS}.type_character then
+					when {DUMP_VALUE_CONSTANTS}.type_character then
 						Result := eifnet_evaluator.icdv_reference_character_from_icdv_character (new_active_icd_frame, Result)
-					when feature {DUMP_VALUE_CONSTANTS}.type_string then
+					when {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (new_active_icd_frame, Result)
 					else					
 					end
@@ -425,17 +425,17 @@ feature {NONE} -- Implementation
 						--| This means this value has been created by eStudioDbg
 						--| We need to build the corresponding ICorDebugValue object.
 					inspect dmv.type 
-					when feature {DUMP_VALUE_CONSTANTS}.type_integer_32 then
+					when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
 						Result := eifnet_evaluator.new_reference_i4_evaluation (new_active_icd_frame, dmv.value_integer_32)
-					when feature {DUMP_VALUE_CONSTANTS}.type_real_32 then
+					when {DUMP_VALUE_CONSTANTS}.type_real_32 then
 						Result := eifnet_evaluator.new_reference_real_evaluation (new_active_icd_frame, dmv.value_real )
-					when feature {DUMP_VALUE_CONSTANTS}.type_real_64 then
+					when {DUMP_VALUE_CONSTANTS}.type_real_64 then
 						Result := eifnet_evaluator.new_reference_double_evaluation (new_active_icd_frame, dmv.value_double )
-					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
+					when {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.new_reference_boolean_evaluation (new_active_icd_frame, dmv.value_boolean )
-					when feature {DUMP_VALUE_CONSTANTS}.type_character then
+					when {DUMP_VALUE_CONSTANTS}.type_character then
 						Result := eifnet_evaluator.new_reference_character_evaluation (new_active_icd_frame, dmv.value_character )
-					when feature {DUMP_VALUE_CONSTANTS}.type_string then
+					when {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
 					else					
 					end

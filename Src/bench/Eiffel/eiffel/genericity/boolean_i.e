@@ -25,13 +25,13 @@ feature -- Status report
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean
+			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_boolean
 		end
 
 	tuple_code: INTEGER_8 is
 			-- Tuple code for class type
 		do
-			Result := feature {SHARED_GEN_CONF_LEVEL}.boolean_tuple_code
+			Result := {SHARED_GEN_CONF_LEVEL}.boolean_tuple_code
 		end
 
 	reference_type: CL_TYPE_I is

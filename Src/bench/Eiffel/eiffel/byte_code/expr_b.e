@@ -127,7 +127,7 @@ feature -- Il code generation
 				
 					-- Call `set_item' from the _REF class
 				ref_class := l_cl_type.reference_type.base_class
-				feat := ref_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
+				feat := ref_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 
 				l_decl_type := il_generator.implemented_type (feat.origin_class_id,
 					l_cl_type.reference_type)

@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			create widget
 			create vp
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 			create label
 			vp.extend (label)
 			f.extend (vp)

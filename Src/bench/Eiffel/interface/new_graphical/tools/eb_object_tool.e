@@ -956,7 +956,7 @@ feature {NONE} -- Implementation
 			-- Actions performed when a key is pressed on a top-level object.
 			-- Handle `Del'.
 		do
-			if k.code = feature {EV_KEY_CONSTANTS}.Key_delete then
+			if k.code = {EV_KEY_CONSTANTS}.Key_delete then
 				remove_object_cmd.execute
 			end
 		end
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 			it: EV_TREE_NODE
 		do
 			if
-				k.code = feature {EV_KEY_CONSTANTS}.Key_c or k.code = feature {EV_KEY_CONSTANTS}.Key_insert and then
+				k.code = {EV_KEY_CONSTANTS}.Key_c or k.code = {EV_KEY_CONSTANTS}.Key_insert and then
 				ev_application.ctrl_pressed and then
 				not ev_application.alt_pressed and then
 				not ev_application.Shift_pressed

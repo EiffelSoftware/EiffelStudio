@@ -155,7 +155,7 @@ feature -- Access
 		do
 			create reg
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
-				feature {WEL_REGISTRY_ACCESS_MODE}.Key_read)
+				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
 			if p /= default_pointer then
 				l_major_version := version.twin
 				l_major_version.keep_head (4)
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 		once
 			create reg
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
-				feature {WEL_REGISTRY_ACCESS_MODE}.Key_read)
+				{WEL_REGISTRY_ACCESS_MODE}.Key_read)
 			if p /= default_pointer then
 				key := reg.key_value (p, runtime_root_key)
 				if key /= Void then

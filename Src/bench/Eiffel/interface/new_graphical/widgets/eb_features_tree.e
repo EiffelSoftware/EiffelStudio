@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			if selected_item /= Void then
 				l_data := selected_item.data
 			end
-			if a_key.code = feature {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
+			if a_key.code = {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
 				l_feature ?= l_data
 				if l_feature /= Void then
 					features_tool.go_to (l_feature)

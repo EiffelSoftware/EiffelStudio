@@ -40,18 +40,18 @@ feature -- Status report
 			Result := Precursor and then class_token /= 0
 		ensure then
 			valid_class_token: Result implies
-				(class_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_def or else
-				class_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_ref or else
-				class_token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_spec)
+				(class_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_def or else
+				class_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_ref or else
+				class_token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_spec)
 			valid_state: state = Frozen_state implies Result
 		end
 
 	flags: INTEGER_16 is
 			-- Flags of exception clause
 		do
-			Result := feature {MD_METHOD_CONSTANTS}.clause_exception
+			Result := {MD_METHOD_CONSTANTS}.clause_exception
 		ensure then
-			definition: Result = feature {MD_METHOD_CONSTANTS}.clause_exception
+			definition: Result = {MD_METHOD_CONSTANTS}.clause_exception
 		end
 
 feature -- Access
@@ -65,9 +65,9 @@ feature -- Modification
 			-- Set `class_token' to `token'.
 		require
 			valid_token:
-				token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_def or else
-				token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_ref or else
-				token & feature {MD_TOKEN_TYPES}.md_mask = feature {MD_TOKEN_TYPES}.md_type_spec
+				token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_def or else
+				token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_ref or else
+				token & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_spec
 		do
 			class_token := token
 		ensure

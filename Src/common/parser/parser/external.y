@@ -153,14 +153,14 @@ CPP_specific:
 
 DLL_specification:	TE_DLL_LANGUAGE Dll_identifier DLL_index Signature_opt Use_opt
 			{
-				create {DLL_EXTENSION_AS} $$.initialize (feature {EXTERNAL_CONSTANTS}.dll32_type,
+				create {DLL_EXTENSION_AS} $$.initialize ({EXTERNAL_CONSTANTS}.dll32_type,
 					$2, $3, $4, $5)
 			}
 	;
 
 DLLwin_specification: TE_DLLWIN_LANGUAGE Dll_identifier DLL_index Signature_opt Use_opt
 			{
-				create {DLL_EXTENSION_AS} $$.initialize (feature {EXTERNAL_CONSTANTS}.dllwin32_type,
+				create {DLL_EXTENSION_AS} $$.initialize ({EXTERNAL_CONSTANTS}.dllwin32_type,
 					$2, $3, $4, $5)
 			}
 	;

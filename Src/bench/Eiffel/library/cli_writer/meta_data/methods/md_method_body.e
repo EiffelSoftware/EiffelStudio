@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create new instance ready to be updated.
 		require
 			is_method_token:
-				token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
+				token & {MD_TOKEN_TYPES}.Md_mask = {MD_TOKEN_TYPES}.Md_method_def
 		do
 			create item.make (Chunk_size)
 			create labels.make (1, 5)
@@ -50,7 +50,7 @@ feature -- Reset
 			-- Reuse current object for body of method `token'.
 		require
 			is_method_token:
-				token & feature {MD_TOKEN_TYPES}.Md_mask = feature {MD_TOKEN_TYPES}.Md_method_def
+				token & {MD_TOKEN_TYPES}.Md_mask = {MD_TOKEN_TYPES}.Md_method_def
 		do
 			current_position := 0
 			max_stack := 0
@@ -180,7 +180,7 @@ feature -- Opcode insertion
 		require
 			not_yet_written: not is_written
 		do
-			internal_put (feature {MD_OPCODES}.nop.to_integer_8, current_position)
+			internal_put ({MD_OPCODES}.nop.to_integer_8, current_position)
 			current_position := current_position + 1
 		end
 		
@@ -189,7 +189,7 @@ feature -- Opcode insertion
 		require
 			not_yet_written: not is_written
 		do
-			put_opcode (feature {MD_OPCODES}.throw)
+			put_opcode ({MD_OPCODES}.throw)
 			last_current_stack_depth := -1
 		end
 
@@ -198,7 +198,7 @@ feature -- Opcode insertion
 		require
 			not_yet_written: not is_written
 		do
-			put_opcode (feature {MD_OPCODES}.rethrow)
+			put_opcode ({MD_OPCODES}.rethrow)
 			last_current_stack_depth := -1
 		end
 		
@@ -237,7 +237,7 @@ feature -- Opcode insertion
 		require
 			not_yet_written: not is_written
 		do
-			put_opcode (feature {MD_OPCODES}.Ldstr)
+			put_opcode ({MD_OPCODES}.Ldstr)
 			add_integer (string_token)
 		end
 	
@@ -457,7 +457,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 		require
 			not_yet_written: not is_written
 		do
-			internal_put_call (feature {MD_OPCODES}.call, feature_token,
+			internal_put_call ({MD_OPCODES}.call, feature_token,
 				nb_arguments, is_function, False)
 		end
 		
@@ -476,7 +476,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 		require
 			not_yet_written: not is_written
 		do
-			internal_put_call (feature {MD_OPCODES}.newobj, constructor_token,
+			internal_put_call ({MD_OPCODES}.newobj, constructor_token,
 				nb_arguments, True, False)
 		end
 

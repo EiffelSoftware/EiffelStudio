@@ -360,19 +360,19 @@ feature -- Element change
 		do
 			inspect bp_status
 			when
-				feature {DEBUG_INFO}.breakpoint_not_set
+				{DEBUG_INFO}.breakpoint_not_set
 			then
 				debug_info.remove_breakpoint (f, i)
 
 			when
-				feature {DEBUG_INFO}.Breakpoint_set,
-				feature {DEBUG_INFO}.Breakpoint_condition_set
+				{DEBUG_INFO}.Breakpoint_set,
+				{DEBUG_INFO}.Breakpoint_condition_set
 			then
 				debug_info.enable_breakpoint (f, i)
 
 			when
-				feature {DEBUG_INFO}.Breakpoint_disabled,
-				feature {DEBUG_INFO}.Breakpoint_condition_disabled
+				{DEBUG_INFO}.Breakpoint_disabled,
+				{DEBUG_INFO}.Breakpoint_condition_disabled
 			then
 				debug_info.disable_breakpoint (f, i)
 			end

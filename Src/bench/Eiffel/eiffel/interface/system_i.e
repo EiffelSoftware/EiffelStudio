@@ -2736,83 +2736,83 @@ feature -- Dead code removal
 
 				-- Protection of `make' from ARRAY
 			l_class := array_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 			
 				-- Protection of feature `make' of class STRING.
 			l_class := string_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
 				-- Protection of feature `make' of class TUPLE
 			l_class := tuple_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
 
 				-- Protection of feature `set_rout_disp' of ROUTINE classes
 			l_class := routine_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
 			
 				-- Protection of feature `internal_correct_mismatch' of ANY
 			l_class := any_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Internal_correct_mismatch_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Internal_correct_mismatch_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference BOOLEAN'
 			l_class := boolean_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference CHARACTER'
 			l_class := character_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference WIDE_CHARACTER'
 			l_class := wide_char_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference POINTER'
 			l_class := pointer_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference TYPED_POINTER_ [G]'
 			l_class := typed_pointer_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference REAL'
 			l_class := real_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference DOUBLE'
 			l_class := real_64_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference NATURAL_8'
 			l_class := natural_8_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference NATURAL_16'
 			l_class := natural_16_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference NATURAL_32'
 			l_class := natural_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference NATURAL_64'
 			l_class := natural_64_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference INTEGER_8'
 			l_class := integer_8_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference INTEGER_16'
 			l_class := integer_16_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference INTEGER_32'
 			l_class := integer_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference INTEGER_64'
 			l_class := integer_64_class.compiled_class
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
+			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 
 debug ("DEAD_CODE")

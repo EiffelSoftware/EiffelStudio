@@ -196,7 +196,7 @@ feature -- Store/Retrieve
 					override_cluster_names.after
 				loop
 					defaults.extend (new_special_option_sd (
-						feature {FREE_OPTION_SD}.override_cluster,
+						{FREE_OPTION_SD}.override_cluster,
 						override_cluster_names.item_for_iteration, False))
 					override_cluster_names.forth
 				end
@@ -308,7 +308,7 @@ feature {NONE} -- Filling
 			val := a_opt.value
 			if opt.is_free_option then
 				free_option ?= opt
-				if free_option.code = feature {FREE_OPTION_SD}.override_cluster then
+				if free_option.code = {FREE_OPTION_SD}.override_cluster then
 					override_cluster_names.force (val.value.string)
 					is_item_removable := True
 				end
@@ -440,11 +440,11 @@ feature {NONE} -- Cluster display and saving
 		do
 			free_option ?= opt.option
 			val := opt.value
-			if free_option.code = feature {FREE_OPTION_SD}.profile then
+			if free_option.code = {FREE_OPTION_SD}.profile then
 				is_item_removable := True
 				enable_select (override_default_profile)
 				set_selected (profile_check, val.is_yes)
-			elseif free_option.code = feature {FREE_OPTION_SD}.Namespace then
+			elseif free_option.code = {FREE_OPTION_SD}.Namespace then
 				namespace_name.set_text (val.value)
 			end
 		end
@@ -601,7 +601,7 @@ feature {NONE} -- Cluster display and saving
 			store_cluster_assertions (prop)
 
 			if override_default_profile.is_selected then
-				default_options.extend (new_special_option_sd (feature {FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
+				default_options.extend (new_special_option_sd ({FREE_OPTION_SD}.profile, Void, profile_check.is_selected))
 			end
 
 			if override_default_trace.is_selected then

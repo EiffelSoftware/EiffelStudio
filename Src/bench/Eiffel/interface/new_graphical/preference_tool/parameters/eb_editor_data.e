@@ -376,7 +376,7 @@ feature -- Update
 			df: EV_FONT
 		do
 			tabulation_spaces := integer_resource_value ("tab_step", 4)
-			create df.make_with_values (feature {EV_FONT_CONSTANTS}.Family_screen, feature {EV_FONT_CONSTANTS}.Weight_regular, feature {EV_FONT_CONSTANTS}.Shape_regular, 12)
+			create df.make_with_values ({EV_FONT_CONSTANTS}.Family_screen, {EV_FONT_CONSTANTS}.Weight_regular, {EV_FONT_CONSTANTS}.Shape_regular, 12)
 			df.preferred_families.extend ("verdana")
 			df.preferred_families.extend ("arial")
 			df.preferred_families.extend ("helvetica")

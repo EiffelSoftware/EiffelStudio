@@ -75,13 +75,13 @@ feature -- Basic operations
 					mem.full_collect
 					
 					debug ("MEMORY")
-						mem_info := mem.memory_statistics (feature {MEM_CONST}.Eiffel_memory)
+						mem_info := mem.memory_statistics ({MEM_CONST}.Eiffel_memory)
 						print ("Eiffel total memory: " + mem_info.total.out + "%N")
 						print ("Eiffel used memory: " + mem_info.used.out + "%N")
 						print ("Eiffel overhead memory: " + mem_info.overhead.out + "%N")
 						print ("Eiffel free memory: " + mem_info.free.out + "%N")
 
-						mem_info := mem.memory_statistics (feature {MEM_CONST}.C_memory)
+						mem_info := mem.memory_statistics ({MEM_CONST}.C_memory)
 						print ("C total memory: " + mem_info.total.out + "%N")
 						print ("C used memory: " + mem_info.used.out + "%N")
 						print ("C overhead memory: " + mem_info.overhead.out + "%N")

@@ -61,7 +61,7 @@ feature -- Settings
 		require
 			valid_size: a_size >= 0 and a_size < 64
 		do
-			internal_data := feature {MD_METHOD_CONSTANTS}.tiny_format.to_integer_32 | (a_size |<< 2)
+			internal_data := {MD_METHOD_CONSTANTS}.tiny_format.to_integer_32 | (a_size |<< 2)
 		ensure
 			code_size_set: code_size = a_size			
 		end

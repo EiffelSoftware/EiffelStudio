@@ -128,7 +128,7 @@ feature -- Generation
 				end
 				
 					-- Sign assembly only if we are allowed to.
-				if feature {EIFFEL_ENV}.has_signable_generation then
+				if {EIFFEL_ENV}.has_signable_generation then
 					l_key_file_name := System.msil_key_file_name
 				end
 

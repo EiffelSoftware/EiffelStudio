@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			f: EV_FRAME
 		do
 			create f
-			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create text_area.make (a_tool)
 			text_area.drop_actions.extend (agent drop_class)
 			text_area.drop_actions.extend (agent drop_feature)

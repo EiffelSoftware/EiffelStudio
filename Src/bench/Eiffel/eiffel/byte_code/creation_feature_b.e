@@ -45,12 +45,17 @@ feature -- Code generation
 				buf := buffer
 						-- Procedures have a void return type
 				if register /= Void then
+					info.generate_start (Current)
+					info.generate_gen_type_conversion (Current)
+
 					register.print_register
 					buf.putstring (" = RTLN(")
 					info.generate
 						-- Generate creation information
 					buf.putstring (");")
 					buf.new_line
+					info.generate_end (Current)
+
 --					if register.is_separate and then
 --						not context.real_type(type).is_separate then
 --						buf.putstring ("CURLTS(")

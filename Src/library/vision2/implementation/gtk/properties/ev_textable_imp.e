@@ -97,8 +97,8 @@ feature -- Element change
 			temp_string: ANY
 		do
 			temp_string := a_text.to_c
-			C.gtk_widget_show (text_label)
 			C.gtk_label_set_text (text_label, $temp_string)
+			C.gtk_widget_show (text_label)
 		end
 
 	remove_text is

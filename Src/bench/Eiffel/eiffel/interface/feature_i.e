@@ -137,6 +137,12 @@ feature
 			feature_name := s
 		end
 
+	set_renamed_name (s: STRING) is
+			-- Set `s' to `feature_name' for a renaming.
+		do
+			feature_name := s
+		end
+
 	set_written_in (s: like written_in) is
 			-- Assign `s' to `written_in'.
 		require

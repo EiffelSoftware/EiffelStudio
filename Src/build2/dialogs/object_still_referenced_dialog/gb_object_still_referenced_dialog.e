@@ -44,15 +44,13 @@ feature {NONE} -- Initialization
 		require
 			an_object_not_void: an_object /= Void
 		do
-			default_create
 			object := an_object
+			default_create
 			object.instance_referers.start
 			if an_object.instance_referers.count = 1 then
-				view_next_button.set_text ("View referer")
-				error_label.set_text (cannot_delete_as_still_referenced_single)
+				error_label.set_text (cannot_delete_as_still_referenced_single + cannot_delete_as_still_referenced_part2)
 			else
-				view_next_button.set_text ("View next")
-				error_label.set_text (cannot_delete_as_still_referenced_multiple)
+				error_label.set_text (cannot_delete_as_still_referenced_multiple + cannot_delete_as_still_referenced_part2)
 			end
 		end
 
@@ -98,43 +96,6 @@ feature {NONE} -- Implementation
 				linear_rep.forth
 			end
 			destroy
-		end
-	
-	view_next is
-			-- Called by `select_actions' of `view_next_button'.
-		local
-			current_object_instance: GB_OBJECT
-			locked_in_here: BOOLEAN
-		do
-			from
-			until
-				current_object_instance /= Void
-			loop
-					-- Find the next instance that has not already been deleted.
-				current_object_instance := object_handler.deep_object_from_id (object.instance_referers.item_for_iteration)
-				if object_handler.deleted_objects.has (current_object_instance.id) then
-					current_object_instance := Void
-				end
-				object.instance_referers.forth
-				if object.instance_referers.off then
-					object.instance_referers.start
-				end
-			end
-			
-			if ((create {EV_ENVIRONMENT}).application).locked_window = Void then
-				main_window.lock_update
-				locked_in_here := True
-			end
-			current_object_instance.top_level_parent_object.window_selector_item.enable_select
-			current_object_instance.layout_item.enable_select
-			if locked_in_here then
-				main_window.unlock_update
-			end
-			
-			object.instance_referers.forth
-			if object.instance_referers.off then
-				object.instance_referers.start
-			end
 		end
 	
 	cancel_selected is

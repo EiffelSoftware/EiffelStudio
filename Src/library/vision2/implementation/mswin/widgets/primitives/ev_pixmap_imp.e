@@ -15,11 +15,12 @@ inherit
 		end
 
 	EV_DRAWING_AREA_IMP
-		undefine
-			width,
-			height,
-			destroy
+		rename
+			dc as display_dc,
+			height as display_height,
+			width as display_width
 		redefine
+			destroy,
 			clear,
 			clear_rectangle,
 			draw_point,
@@ -38,8 +39,38 @@ inherit
 			fill_pie_slice,
 			interface,
 			initialize,
-			dc,
 			set_size
+		end
+
+	EV_DRAWING_AREA_IMP
+		redefine
+			dc,
+			destroy,
+			width,
+			height,
+			clear,
+			clear_rectangle,
+			draw_point,
+			draw_text,
+			draw_segment,
+			draw_straight_line,
+			draw_arc,
+			draw_pixmap,
+			draw_rectangle,
+			draw_ellipse,
+			draw_polyline,
+			draw_pie_slice,
+			fill_rectangle,
+			fill_ellipse,
+			fill_polygon,
+			fill_pie_slice,
+			interface,
+			initialize,
+			set_size
+		select
+			dc,
+			width,
+			height
 		end
 
 	WEL_DIB_COLORS_CONSTANTS
@@ -68,6 +99,8 @@ feature {NONE} -- Initialization
 			bitmap_dc.select_bitmap (bmp)
 			s_dc.release
 
+			interface.expose_actions.extend (~paint_bitmap)
+
 			{EV_DRAWING_AREA_IMP} Precursor
 		end
 
@@ -83,7 +116,7 @@ feature -- Access
 			-- The DC of the bitmap in memory.
 
 	bitmap: WEL_BITMAP is
-			-- Bitmap selected in the internal_dc
+			-- Current Bitmap displayed on the screen.
 		do
 			Result := bitmap_dc.bitmap
 		end
@@ -111,31 +144,49 @@ feature -- Status setting
 			end
 		end
 
-	set_size (w, h: INTEGER) is
+	set_size (new_width, new_height: INTEGER) is
+			-- Resize the current bitmap. If the new size
+			-- is smaller than the old one, the bitmap is
+			-- clipped.
 		local
 			bmp: WEL_BITMAP
 			s_dc: WEL_SCREEN_DC
+			old_bitmap_dc: like bitmap_dc
+			old_width, old_height: INTEGER
 		do
+				-- Retrieve the current values
+			old_bitmap_dc := bitmap_dc
+			old_width := width
+			old_height := height
+
 				-- release the old bitmap
 			if bitmap_dc.bitmap_selected then
 				bitmap_dc.unselect_bitmap
 			end
-
-				-- create and assign a new bitmap
+				-- create and assign a new bitmap & bitmap_dc
 			create s_dc
 			s_dc.get
 			create bitmap_dc.make_by_dc (s_dc)
-			create bmp.make_compatible (s_dc, w, h)
+			create bmp.make_compatible (s_dc, new_width, new_height)
 			bitmap_dc.select_bitmap (bmp)
 			s_dc.release
+
+				-- Copy the content of the old bitmap into the
+				-- new one
+			bitmap_dc.bit_blt(0, 0, new_width.min(old_width), new_height.min(old_height),
+				old_bitmap_dc, 0, 0, Srccopy)
 
 				-- Initialize the new device context
 			bitmap_dc.set_background_opaque
 			bitmap_dc.set_background_transparent
 			reset_pen
 			reset_brush
+
+				-- Delete the old bitmap_dc.
+			old_bitmap_dc.delete
 		
-			Precursor (w, h)
+				-- Finally, call the precursor.
+			Precursor (new_width, new_height)
 		end
 
 feature -- Measurement
@@ -175,29 +226,27 @@ feature -- Basic operation
 			-- wrong format, an exception is raised.
 		local
 			file: RAW_FILE
-			dib: WEL_DIB
+			dib: EV_WEL_DIB
 			bmp:WEL_BITMAP
 		do
-			file ?= a_file
-			check
-				a_file_not_void: file /= Void
-			end
-			create dib.make_by_file (file)
+			create dib.make_by_stream (a_file)
 			bitmap_dc.select_palette (dib.palette)
 			create bmp.make_by_dib (bitmap_dc, dib, Dib_rgb_colors)
 			bitmap_dc.select_bitmap (bmp)
 		end
 
-	apply_bitmap is
-			-- Copy the bitmap-dc to the screen-dc.
+	update_display is
+			-- Update the display.
 		do
-			if False then
-				--| FIXME if on_screen then ...
-				screen_dc.copy_dc (bitmap_dc, create {WEL_RECT}.make_window (screen_dc.window))
+				-- If the bitmap is exposed, then ask for
+				-- redrawing it (`invalidate' causes
+				-- `paint_bitmap' to be called)
+			if parent /= Void then
+				invalidate
 			end
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	interface: EV_PIXMAP
 
@@ -208,118 +257,189 @@ feature -- Implementation
 			screen_dc.delete
 		end
 
+	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Paint the bitmap onto the screen (i.e. the display_dc).
+		local
+			wel_rect: WEL_RECT
+			bitmap_top, bitmap_left: INTEGER
+				-- coordinates of the top-left corner of the bitmap inside the drawn area
+			bitmap_right, bitmap_bottom: INTEGER
+				-- coordinates of the bottom-right corner of the bitmap inside the drawn area
+			bitmap_width, bitmap_height: INTEGER
+		do
+			if bitmap /= Void then
+					-- Compute usefull constants
+				bitmap_height := bitmap.height
+				bitmap_width := bitmap.width
+				bitmap_left := (display_width - bitmap_width) // 2
+				bitmap_top := (display_height - bitmap_height) // 2
+				bitmap_right := bitmap_left + bitmap_width
+				bitmap_bottom := bitmap_top + bitmap_height
+							
+					-- Draw the bitmap (If it is larger than the displayed
+					-- area, it will be clipped by Windows.
+				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, bitmap_dc, 0, 0, Srccopy)
+
+					--|  if the displayed area is larger than the bitmap, we erase the
+					--|  background that is outside the bitmap (i.e: AREA 1, 2, 3 & 4)
+					--|
+					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+					--|  X                             X
+					--|  X          AREA 1             X
+					--|  X                             X
+					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+					--|  X         X         X         X
+					--|  X AREA 3  X BITMAP  X  AREA 4 X
+					--|  X         X         X         X
+					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+					--|  X                             X
+					--|  X          AREA 2             X
+					--|  X                             X
+					--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+				create wel_rect.make (0, 0, 0, 0)
+					-- fill AREA 1
+				if bitmap_top > 0 then
+					wel_rect.set_rect (0, 0, display_width, bitmap_top)
+					display_dc.fill_rect(wel_rect, our_background_brush)
+				end
+
+					-- fill AREA 2
+				if bitmap_bottom < display_height then
+					wel_rect.set_rect (0, bitmap_bottom, display_width, display_height)
+					display_dc.fill_rect(wel_rect, our_background_brush)
+				end
+
+					-- fill AREA 3
+				if bitmap_left > 0 then
+					wel_rect.set_rect (0, bitmap_top, bitmap_left, bitmap_bottom)
+					display_dc.fill_rect(wel_rect, our_background_brush)
+				end
+
+					-- fill AREA 4
+				if bitmap_right < display_width then
+					wel_rect.set_rect (bitmap_right, bitmap_top, display_width, bitmap_bottom)
+					display_dc.fill_rect(wel_rect, our_background_brush)
+				end
+			else
+					-- Simply erase the background.
+				create wel_rect.make (0, 0, display_width, display_height)
+				display_dc.fill_rect(wel_rect, our_background_brush)
+			end
+		end
+
 feature -- Drawing primitives
 
 	clear is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor
-			apply_bitmap
+			update_display
 		end
 
 	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (x1, y1, x2, y2)
-			apply_bitmap
+			update_display
 		end
 
 	draw_point (a_x, a_y: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y)
-			apply_bitmap
+			update_display
 		end
 
 	draw_text (a_x, a_y: INTEGER; a_text: STRING) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_text)
-			apply_bitmap
+			update_display
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (x1, y2, x2, y2)
-			apply_bitmap
+			update_display
 		end
 
 	draw_straight_line (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (x1, y1, x2, y2)
-			apply_bitmap
+			update_display
 		end
 
 	draw_arc (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
-			apply_bitmap
+			update_display
 		end
 
 	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_pixmap)
-			apply_bitmap
+			update_display
 		end
 
 	draw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_width, a_height)
-			apply_bitmap
+			update_display
 		end
 
 	draw_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-			apply_bitmap
+			update_display
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (points, is_closed)
-			apply_bitmap
+			update_display
 		end
 
 	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
-			apply_bitmap
+			update_display
 		end
 
 	fill_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_width, a_height)
-			apply_bitmap
+			update_display
 		end
 
 	fill_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-			apply_bitmap
+			update_display
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATES]) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (points)
-			apply_bitmap
+			update_display
 		end
 
 	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
-			apply_bitmap
+			update_display
 		end
 
 feature -- Obsolete
@@ -418,6 +538,10 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/24 05:06:35  pichery
+--| Work on the Windows implementation of EV_PIXMAP. Some work remains but
+--| the main part is done.
+--|
 --| Revision 1.18  2000/02/20 20:29:27  pichery
 --| created a factory that build WEL objects (pens & brushes). This factory
 --| keeps created objects into an hashtable in order to avoid multiple object

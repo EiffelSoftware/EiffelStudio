@@ -885,7 +885,12 @@ feature {NONE} -- Implementation
 
 					-- Add code for inheritance structure to `class_text'.
 				if info.generate_as_client then
-					temp_string := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two
+					if constants.all_constants.is_empty then
+							-- Do not inherit from the constants class if there are no constants.
+						temp_string := "feature -- Access%N" + indent_less_two
+					else
+						temp_string := "inherit" + Indent_less_two + project_settings.constants_class_name.as_upper + "%N%Nfeature -- Access%N" + indent_less_two
+					end
 					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
 						temp_string.append (client_window_string)
 					else
@@ -916,7 +921,12 @@ feature {NONE} -- Implementation
 --						end
 					add_generated_string (class_text, temp_string,  inheritance_tag)
 				else
-					temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
+					if constants.all_constants.is_empty then
+							-- As there are no constants, we do not generate the inheritence from the constants class.
+						temp_string := window_inheritance_no_constant
+					else
+						temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
+					end
 					if not info.type.is_equal (Ev_titled_window_string)  then
 						temp_string.replace_substring_all (Ev_titled_window_string, info.type)
 					end

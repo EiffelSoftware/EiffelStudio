@@ -32,6 +32,8 @@ feature
 	arx_pixmap: POINTER;
 			-- Pointer to the C ArXpixmap structure
 
+	default_pixmap: POINTER;
+
 feature {NONE}
 
 	bitmaps: BITMAPS_RES_X;
@@ -55,6 +57,7 @@ feature
 			a_resource: RESOURCE_X;
 			null_pointer: POINTER
 		do
+			default_pixmap := null_pointer;
 			new_arx_pixmap := c_copy_from (a_widget.screen_object, 
 								x, y, p_width, p_height);
 			if new_arx_pixmap /= null_pointer then
@@ -72,7 +75,7 @@ feature
 	make (a_pixmap: pixmap) is
 			-- Create a pixmap.
 		require
-			a_pixmap_exists: not (a_pixmap = Void)
+			a_pixmap_exists: a_pixmap /= Void
 		do
 			resources_x_make;
 			!!bitmaps.make
@@ -82,11 +85,14 @@ feature
 
 	depth: INTEGER is
 			-- Depth of pixmap (Number of colors)
-		
 		do
-			Result := c_pixmap_depth (arx_pixmap)
+			if is_arx_valid then
+				Result := c_pixmap_depth (arx_pixmap)
+			else
+				Result := 1
+			end
 		ensure then
-			Result >= 1
+			valid_result: Result >= 1
 		end; 
 
 feature {NONE}
@@ -111,7 +117,7 @@ feature {NONE}
 				after
 			loop
 				if item.is_allocated then
-					c_free_xpixmap (item.identifier);
+					c_free_xpixmap (item.screen_object, item.identifier);
 					item.set_allocated (False);
 				end;
 				forth
@@ -123,7 +129,7 @@ feature {NONE}
 				bitmaps.after
 			loop
 				if bitmaps.item.is_allocated then
-					x_free_pixmap (bitmaps.item.screen.screen_object, 
+					x_free_pixmap (bitmaps.item.screen_object, 
 							bitmaps.item.identifier);
 					bitmaps.item.set_allocated (False);
 				end;
@@ -137,29 +143,34 @@ feature
 
 	height: INTEGER is
 			-- Height of pixmap
-		
 		do
-			Result := c_pixmap_height (arx_pixmap)
+			if is_arx_valid then
+				Result := c_pixmap_height (arx_pixmap)
+			else
+				Result := 1
+			end
 		ensure then
-			Result >= 1
+			valid_result: Result >= 1
 		end;
 
 	hot_x: INTEGER is
 			-- Horizontal position of "hot" point
-		
 		do
-			Result := c_pixmap_hot_x (arx_pixmap)
+			if is_arx_valid then
+				Result := c_pixmap_hot_x (arx_pixmap)
+			end;
 		ensure then
-			Result >= 0
+			valid_result: Result >= 0
 		end;
 
 	hot_y: INTEGER is
 			-- Vertical position of "hot" point
-		
 		do
-			Result := c_pixmap_hot_y (arx_pixmap)
+			if is_arx_valid then
+				Result := c_pixmap_hot_y (arx_pixmap)
+			end
 		ensure then
-			Result >= 0
+			valid_result: Result >= 0
 		end;
 
 	
@@ -170,20 +181,35 @@ feature {NONE}
 		require else
 			a_widget_exists: not (a_widget = Void)
 		do
-			Result := (not (a_widget.background_pixmap = Void)) and then (a_widget.background_pixmap.implementation = Current)
+			Result := (not (a_widget.background_pixmap = Void)) and then 
+						(a_widget.background_pixmap.implementation = Current)
 		ensure then
 			(number_of_uses = 0) implies (not Result)
 		end;
-
 	
 feature 
 
 	is_valid: BOOLEAN is
 			-- Is the pixmap valid and usable ?
+		do
+			Result := (is_arx_valid or else is_default_valid)
+				and then (is_arx_valid = not is_default_valid)
+		end;
+
+	is_arx_valid: BOOLEAN is
+			-- Is the pixmap valid and usable ?
 		local
 			null_pointer: POINTER
 		do
 			Result := arx_pixmap /= null_pointer
+		end;
+
+	is_default_valid: BOOLEAN is
+			-- Is the pixmap valid and usable ?
+		local
+			null_pointer: POINTER
+		do
+			Result := default_pixmap /= null_pointer
 		end;
 
 	last_operation_correct: BOOLEAN;
@@ -218,13 +244,13 @@ feature
 			-- Number of resource with the window `screen_object'
 			-- To be used as a bitmap
 		require
-			is_valid
-		
+			is_valid: is_valid
 		local
 			a_resource: RESOURCE_X
 		do
 			a_resource := bitmaps.find_same_screen (a_screen);
 			if (a_resource = Void) then
+					-- C Type: Result -> Pixmap
 				Result := c_resource_bitmap (arx_pixmap, a_screen.screen_object);
 				!BITMAP_RES_X! a_resource.make (a_screen, Result, true);
 				bitmaps.put_front (a_resource)
@@ -233,24 +259,44 @@ feature
 			end
 		end;
 
+	set_default_pixmap (pix: POINTER) is
+			-- Set default pixmap for widget's screen object `src_obj'
+		require
+			void_arx_pixmap: not is_arx_valid;
+		do
+			default_pixmap := pix
+		end;
+
 	resource_pixmap (a_screen: SCREEN_I): POINTER is
 			-- Number of resource with the window `screen_object'
 			-- To be used as a pixmap
 		require
-			is_valid
-		
+			is_valid: is_valid;
 		local
 			pixmap_pointer: POINTER;
 			a_resource: RESOURCE_X
 		do
 			a_resource := find_same_screen (a_screen);
 			if (a_resource = Void) then
-				Result := c_resource_pixmap (arx_pixmap, a_screen.screen_object);
-				!PIXMAP_RES_X! a_resource.make (a_screen, Result, true);
-				put_front (a_resource);
-				Result := c_real_pixmap (Result)
-			else
-				Result := c_real_pixmap (a_resource.identifier)
+				if is_arx_valid then
+						-- C Type: Result -> ArXXpixmap
+					Result := c_resource_pixmap 
+						(arx_pixmap, a_screen.screen_object);
+					!PIXMAP_RES_X! a_resource.make (a_screen, Result, true);
+					put_front (a_resource);
+						-- C Type: Result -> Pixmap
+					Result := c_real_pixmap (Result)
+				else
+						-- C Type: Result -> Pixmap
+					Result := default_pixmap;
+				end
+			else 
+				if is_arx_valid then
+						-- C Type: Result -> Pixmap
+					Result := c_real_pixmap (a_resource.identifier)
+				else
+					Result := default_pixmap
+				end
 			end
 		end;
 
@@ -258,14 +304,14 @@ feature
 			-- Retreive the pixmap from a file named `a_file_name'.
 			-- Set `last_operation_correct'.
 		require else
-			a_file_name_exists: not (a_file_name = Void)
-		
+			a_file_name_exists: a_file_name /= Void
 		local
 			new_arx_pixmap: POINTER;
 			ext_name: ANY;
 			null_pointer: POINTER
 		do
 			ext_name := a_file_name.to_c;		
+			default_pixmap := null_pointer;
 			new_arx_pixmap := c_retrieve ($ext_name);
 			if new_arx_pixmap /= null_pointer then
 				free_resources;
@@ -286,9 +332,8 @@ feature
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
 		require else
-			a_file_name_exists: not (a_file_name = Void);
+			a_file_name_exists: a_file_name /= Void;
 			is_valid: is_valid
-		
 		local
 			ext_name: ANY;
 		do
@@ -301,13 +346,13 @@ feature {NONE}
 	update_widgets is
 			-- Update widgets.
 		local
-			widgets_to_update: LIST [WIDGET_X]
+			widgets_to_update: LINKED_LIST [WIDGET_X]
 		do
 			from
 				widgets_to_update ?= objects;
 				widgets_to_update.start
 			until
-				widgets_to_update.off
+				widgets_to_update.after
 			loop
 				widgets_to_update.item.update_background_pixmap;
 				widgets_to_update.forth
@@ -318,11 +363,14 @@ feature
 
 	width: INTEGER is
 			-- Width of pixmap
-		
 		do
-			Result := c_pixmap_width (arx_pixmap)
+			if is_arx_valid then
+				Result := c_pixmap_width (arx_pixmap)
+			else
+				Result := 1
+			end
 		ensure then
-			Result >= 1
+			valid_result: Result >= 1
 		end
 
 feature {NONE} -- External features
@@ -382,7 +430,7 @@ feature {NONE} -- External features
 			"C"
 		end; 
 
-	c_free_xpixmap (ident: POINTER) is
+	c_free_xpixmap (scr_obj, ident: POINTER) is
 		external
 			"C"
 		end;

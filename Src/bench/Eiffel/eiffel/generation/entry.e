@@ -92,6 +92,8 @@ feature -- previously in POLY_UNIT
 
 	entry (class_type: CLASS_TYPE): ENTRY is
 			-- Entry in a poly-table for final mode
+		require
+			class_type_not_void: class_type /= Void
 		deferred
 		end;
 
@@ -99,13 +101,10 @@ feature -- previously in POLY_UNIT
 			-- Type id of the result type in `class_type'.
 		require
 			good_argument: class_type /= Void
-		local
-			gen_type: GEN_TYPE_I;
 		do
 			Result := type_a.actual_type.type_i
 			if Result.has_formal then
-				gen_type ?= class_type.type;
-				Result := Result.instantiation_in (gen_type);
+				Result := Result.instantiation_in (class_type);
 			end;
 		end;
 
@@ -113,6 +112,8 @@ feature -- updates
 
 	update (class_type: CLASS_TYPE) is
 			-- Enlarged current entry to manage correctly polymorphism with generics.
+		require
+			class_type_not_void: class_type /= Void
 		do
 			set_type_id (class_type.type_id)
 			set_type (feature_type (class_type))

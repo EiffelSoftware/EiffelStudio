@@ -22,14 +22,4 @@ feature -- Access
 			Result := 1
 		end
 
-feature -- Comparison
-
-	is_equiv (other: INSTRUCTION_AS): BOOLEAN is
-		deferred
-		end;
-
-	equiv (other: INSTRUCTION_AS): BOOLEAN is
-		deferred
-		end;
-
 end -- class INSTRUCTION_AS

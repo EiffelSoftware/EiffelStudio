@@ -1,4 +1,0 @@
-#define triangle_width 5
-#define triangle_height 5
-static char triangle_bits[] = {
-   0x04, 0x04, 0x0e, 0x0e, 0x1f};

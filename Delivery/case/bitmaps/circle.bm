@@ -1,4 +1,0 @@
-#define circle_width 5
-#define circle_height 5
-static char circle_bits[] = {
-   0x0e, 0x1f, 0x1f, 0x1f, 0x0e};

@@ -1,4 +1,0 @@
-#define right_arrow_width 3
-#define right_arrow_height 5
-static char right_arrow_bits[] = {
-   0x01, 0x03, 0x07, 0x03, 0x01};

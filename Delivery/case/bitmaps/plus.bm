@@ -1,4 +1,0 @@
-#define plus_width 5
-#define plus_height 5
-static char plus_bits[] = {
-   0x04, 0x04, 0x1f, 0x04, 0x04};

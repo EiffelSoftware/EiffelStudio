@@ -1,4 +1,0 @@
-#define o_arrow_width 7
-#define o_arrow_height 7
-static char o_arrow_bits[] = {
-   0x03, 0x0f, 0x3f, 0x7f, 0x3f, 0x0f, 0x03};

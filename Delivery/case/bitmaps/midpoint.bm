@@ -1,4 +1,0 @@
-#define middle_point_width 5
-#define middle_point_height 5
-static char middle_point_bits[] = {
-   0x00, 0x04, 0x0e, 0x04, 0x00};

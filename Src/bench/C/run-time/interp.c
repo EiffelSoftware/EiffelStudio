@@ -238,17 +238,14 @@ rt_private char *rcsid =
 
 rt_public void metamorphose_top()
 {
-	EIF_REFERENCE volatile new_obj = NULL;
+	EIF_REFERENCE new_obj = NULL;
 	uint32 head_type;
-	register2 struct item * volatile last;	/* Last pushed value */
+	register2 struct item * last;	/* Last pushed value */
 	unsigned long stagval;
-	STACK_PRESERVE;			/* Stack contextual informations */
-	RTXD;					/* Store stack contexts */
-
-	dstart();					/* Get calling record */
-	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
+	struct item * stop;				
+	struct stochunk * scur;
+	
 	SAVE(op_stack, scur, stop);	/* Save operation stack */
-
 	last = opop();
 	stagval = tagval;
 	head_type = last->type & SK_HEAD;
@@ -304,7 +301,7 @@ rt_public void metamorphose_top()
 		last->type = SK_REF;
 		last->it_ref = new_obj;
 	} else {
-		/* Bit metamorhose is a clone */
+		/* Bit metamorphose is a clone */
 		new_obj = b_clone(last->it_bit);
 		last = iget();
 		last->type = SK_REF;
@@ -4857,6 +4854,12 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	RTXD; /* declares the variables used to save the run-time stacks context */
 	RTLXD;
 
+	RTLXL;
+	dstart();
+	SAVE(db_stack, dcur, dtop);
+	SAVE(op_stack, scur, stop);
+	db_cstack = d_data.db_callstack_depth;
+
 	if (is_basic_type)
 			/* We need to create a reference to the basic type on the fly */
 		metamorphose_top();
@@ -4870,12 +4873,6 @@ rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_pr
 	OLD_IC = IC;					/* IC back up */
 	discard_breakpoints();			/* discard all breakpoints. We don't want to stop */ 
 	debug_mode = 0; /* We don't want exceptions to be caught */
-
-	RTLXL;
-	dstart();
-	SAVE(db_stack, dcur, dtop);
-	SAVE(op_stack, scur, stop);
-	db_cstack = d_data.db_callstack_depth;
 
 	excatch(&exenv);
 	if (setjmp(exenv)) {

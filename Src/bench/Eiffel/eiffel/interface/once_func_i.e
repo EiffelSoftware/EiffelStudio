@@ -66,20 +66,18 @@ feature
 
 feature {NONE} -- Implementation
 
-	new_api_feature: E_ROUTINE is
+	new_api_feature: E_FUNCTION is
 			-- API feature creation
 		local
 			t: TYPE_A;
-			new_f: E_FUNCTION
 		do
+			!! Result.make (feature_name, feature_id);
 			t ?= type;
 			if t = Void then
 				t := type.actual_type
 			end;
-			!! new_f.make (feature_name, feature_id);
-			new_f.set_type (t);
-			update_api (new_f);
-			Result := new_f
+			Result.set_type (t);
+			update_api (Result)
 		end;
 
 end

@@ -1,6 +1,5 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision accelerator. Implementation interface."
+	description: "Eiffel Vision accelerator. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,9 +15,8 @@ inherit
 
 feature -- Access
 
-	key_code: INTEGER is
-			-- Representation of the character that must be entered
-			-- by the user. See class EV_KEY_CODE
+	key: EV_KEY is
+			-- Key that has to pressed to trigger actions.
 		deferred
 		end
 
@@ -39,7 +37,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_key_code (a_key_code: INTEGER) is
+	set_key (a_key: EV_KEY) is
 			-- Set `a_key_code' as new key that has to be pressed.
 		deferred
 		end
@@ -101,6 +99,9 @@ end -- class EV_ACCELERATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/15 21:15:46  brendel
+--| Changed key_code to key like in interface.
+--|
 --| Revision 1.3  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

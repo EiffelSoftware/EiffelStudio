@@ -273,26 +273,19 @@ feature
 				level
 			when Reference_level then
 				value := index - 1
-				if not is_in_attr_table then
-					if value /= 0 then
-						file.putstring (" + REFACS(");
-						file.putint (value);
-						file.putchar (')');
-					end
-				else
-					file.putstring ("REFACS(");
+				if value /= 0 then
+					file.putstring (" + @REFACS(");
 					file.putint (value);
 					file.putchar (')');
+				elseif is_in_attr_table then
+					file.putchar ('0')
 				end
 			when Character_level then
 				nb_ref := nb_reference;
 				file.putstring ("+ @CHROFF(");
 				file.putint (nb_ref + nb_expanded);
-				value := index - nb_ref - 1
-				if value /= 0 then
-					file.putstring (") + CHRACS(");
-					file.putint (value);
-				end
+				file.putchar (',');
+				file.putint (index - nb_ref - 1)
 				file.putchar (')');
 			when Integer_level then
 				nb_ref := nb_reference;
@@ -301,11 +294,8 @@ feature
 				file.putint (nb_ref + nb_expanded);
 				file.putchar (',');
 				file.putint (nb_character);
-				value := index - nb_ref - nb_char - 1
-				if value /= 0 then
-					file.putstring (") + LNGACS(");
-					file.putint (value);
-				end
+				file.putchar (',');
+				file.putint (index - nb_ref - nb_char - 1)
 				file.putchar (')');
 			when Real_level then
 				nb_ref := nb_reference;
@@ -317,11 +307,8 @@ feature
 				file.putint (nb_char);
 				file.putchar (',');
 				file.putint (nb_int);
-				value := index - nb_ref - nb_char - nb_int - 1
-				if value /= 0 then
-					file.putstring (") + FLTACS(");
-					file.putint (value);
-				end
+				file.putchar (',');
+				file.putint (index - nb_ref - nb_char - nb_int - 1)
 				file.putchar (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
@@ -336,11 +323,8 @@ feature
 				file.putint (nb_int);
 				file.putchar (',');
 				file.putint (nb_flt);
-				value := index - nb_ref - nb_char - nb_int - nb_flt - 1
-				if value /= 0 then
-					file.putstring (") + PTRACS(");
-					file.putint (value);
-				end
+				file.putchar (',');
+				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - 1)
 				file.putchar (')');
 			when Double_level then
 				nb_ref := nb_reference;
@@ -358,11 +342,8 @@ feature
 				file.putint (nb_flt);
 				file.putchar (',');
 				file.putint (nb_ptr);
-				value := index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1
-				if value /= 0 then
-					file.putstring (") + DBLACS(");
-					file.putint (value);
-				end
+				file.putchar (',');
+				file.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr - 1)
 				file.putchar (')');
 			else
 				nb_ref := nb_reference;

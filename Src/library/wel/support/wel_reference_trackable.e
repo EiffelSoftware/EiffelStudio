@@ -1,8 +1,8 @@
 indexing
-	description	: "Facility to track references of an object."
-	status		: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Facility to track references of an object."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WEL_REFERENCE_TRACKABLE
@@ -13,7 +13,7 @@ inherit
 feature -- Status Report
 
 	reference_tracked: BOOLEAN
-			-- Are the number references of `Current' tracked?
+			-- Are number references of `Current' tracked?
 
 	shared: BOOLEAN is
 			-- Is `item' shared by another object?
@@ -29,7 +29,7 @@ feature -- Status Report
 		end
 	
 	references_count: INTEGER
-			-- Number of object referring this object.
+			-- Number of object referring to current object.
 
 feature -- Status Setting
 
@@ -44,7 +44,6 @@ feature -- Status Setting
 
 	enable_reference_tracking is
 			-- Set `references_tracked' to True.
-			-- 
 		require
 			exists: exists
 			tracking_reference_not_started: not reference_tracked
@@ -56,23 +55,19 @@ feature -- Status Setting
 				references_count := -1 -- Shared
 			end
 
-				-- Give a unique number to this object, to follow it.
+				-- Give a unique number to current object, to follow it.
 			internal_number_id := internal_number_id_cell.item
 			debug ("WEL_GDI_REFERENCES")
-				io.putstring ("references are enabled for object #"+internal_number_id.out+"%N")
+				io.putstring ("references are enabled for object #" + internal_number_id.out + "%N")
 				internal_id_list.extend (internal_number_id)
-				if internal_number_id = 162 then
-					internal_number_id := 162
-				end
 			end
 			internal_number_id_cell.put (internal_number_id + 1)
 		end
 
 	decrement_reference is
-			-- Decrement the number of references to this object.
-			--
-			-- When the number of references reach zero, 
-			-- `delete' is called if the object is not protected.
+			-- Decrement number of references to current object.
+			-- When number of references reaches zero, 
+			-- `delete' is called if object is not protected.
 		require
 			exists: exists
 			tracking_references_started: reference_tracked
@@ -83,14 +78,14 @@ feature -- Status Setting
 					destroy_item
 					debug ("WEL_GDI_REFERENCES")
 						internal_id_list.prune_all (internal_number_id)
-						io.putstring ("Object #"+internal_number_id.out+" destroyed%N")
+						io.putstring ("Object #" + internal_number_id.out + " destroyed%N")
 						io.putstring ("Objects currently tracked: ")
 						from
 							internal_id_list.start
 						until
 							internal_id_list.after
 						loop
-							io.putstring (internal_id_list.item.out+" ")
+							io.putstring (internal_id_list.item.out + " ")
 							internal_id_list.forth
 						end
 						io.putstring ("%N%N")
@@ -99,7 +94,8 @@ feature -- Status Setting
 			else
 				debug ("WEL_GDI_REFERENCES")
 					if references_count = 0 then
-						io.putstring ("Error: `decrement_reference' was called with an invalid object%N")
+						io.putstring (
+							"Error: `decrement_reference' was called with an invalid object%N")
 						io.putstring ("Object: %N")
 						print (Current)
 					end
@@ -108,7 +104,7 @@ feature -- Status Setting
 		end
 
 	increment_reference is
-			-- Increment the number of references to this object.
+			-- Increment number of references to current object.
 		require
 			exists: exists
 			tracking_references_started: reference_tracked
@@ -121,11 +117,9 @@ feature -- Status Setting
 feature {NONE} -- Removal
 
 	dispose is
-			-- Destroy the inner structure of `Current'.
-			--
-			-- This function is called by the GC when the
-			-- object is collected, the developer should
-			-- use `delete'. 
+			-- Destroy inner structure of `Current'.
+			--| Called by GC when object is collected,
+			--| developer should use `delete'. 
 		do
 			if exists and then not shared then
 				debug ("WEL_GDI_REFERENCES")
@@ -154,13 +148,12 @@ feature {NONE} -- Removal
 feature -- Removal
 
 	delete is
-			-- Destroy the inner structure of `Current'.
-			--
-			-- Call this function when Current is no more needed
+			-- Destroy inner structure of `Current'.
+			-- To be called when Current is no more needed
 		require
 			reference_not_tracked: not reference_tracked
 		do
- 			if exists and then (not shared) then
+ 			if exists and then not shared then
 				destroy_item
 			end
 		ensure
@@ -170,7 +163,7 @@ feature -- Removal
 feature {NONE} -- Removal
 
 	destroy_item is
-			-- Ensure the current object is destroyed.
+			-- Ensure current object is destroyed.
 		require
 			exists: exists
 		deferred
@@ -184,11 +177,10 @@ feature {NONE} -- Implementation
 			-- Object ID of Current if recorded.
 
 	internal_number_id: INTEGER
-			-- Debugging purpose
-			--
-			-- Number identifying uniquely every object (do not change
-			-- during the whole run). Helps debugging object disposed
-			-- by a reference_number > 0
+			-- For debugging purpose only.
+			--| Number identifying uniquely every object (do not change
+			--| during whole run). Helps debugging object disposed
+			--| by a reference_number > 0
 
 	internal_number_id_cell: CELL [INTEGER] is
 			-- Cell to give a unique integer to each new object.
@@ -196,11 +188,12 @@ feature {NONE} -- Implementation
 			create Result.put (0)
 		end
 
-	internal_id_list: LINKED_LIST[INTEGER] is
+	internal_id_list: ARRAYED_LIST [INTEGER] is
 			-- Cell to give a unique integer to each new object.
 		once
-			create Result.make
+			create Result.make (10)
 		end
+
 end -- class WEL_REFERENCE_TRACKABLE
 
 

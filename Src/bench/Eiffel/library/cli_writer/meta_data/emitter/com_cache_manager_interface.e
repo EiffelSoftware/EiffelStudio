@@ -216,6 +216,13 @@ feature -- Basic Oprtations
 			non_void_result: Result /= Void
 		end
 
+	unload is
+			-- unloads initialized app domain and cache releated objects to preserve resources
+		do
+			last_call_success := c_unload (item)
+		ensure
+			success: last_call_success = 0
+		end
 		
 feature {NONE} -- Implementation
 		
@@ -290,6 +297,14 @@ feature {NONE} -- Implementation
 			"C++ EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER signature (BSTR, EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"assembly_info_from_assembly"
+		end
+		
+	c_unload (ap: POINTER): INTEGER is
+			-- -- retrieve the assembly information from a assembly
+		external
+			"C++ EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
+		alias
+			"unload"
 		end
 
 		

@@ -10,7 +10,7 @@ inherit
 		redefine
 			is_true_expanded, is_separate, is_out, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, format
+			has_expanded, is_valid, format, convert_to
 		end
 
 	HASHABLE
@@ -186,6 +186,45 @@ feature {COMPILER_EXPORTER}
 		end
 
 feature {COMPILER_EXPORTER} -- Conformance
+
+	convert_to (a_class: CLASS_C; other: TYPE_A): BOOLEAN is
+			-- Does current convert to `other'?
+			-- Update `supplier_ids' of AST_CONTEXT if True.
+		local
+			l_class, l_other_class: CLASS_C
+			l_type: CL_TYPE_A
+			l_feat: FEATURE_I
+			l_depend_unit: DEPEND_UNIT
+		do
+			l_type ?= other
+			if l_type /= Void then
+				l_class := associated_class
+				l_other_class := l_type.associated_class
+				if
+					l_other_class.convert_from /= Void and then
+					l_other_class.convert_from.has (Current)
+				then
+					l_feat := l_other_class.feature_table.
+						item_id (l_other_class.convert_from.item (Current))
+					check
+						l_feat_not_void: l_feat /= Void
+					end
+					create l_depend_unit.make (l_other_class.class_id, l_feat)
+					Result := l_feat.is_exported_for (a_class)
+				elseif (l_class.convert_to /= Void and then l_class.convert_to.has (l_type)) then
+					l_feat := l_class.feature_table.item_id (l_class.convert_to.item (l_type))
+					check
+						l_feat_not_void: l_feat /= Void
+					end
+					create l_depend_unit.make (l_class.class_id, l_feat)
+					Result := l_feat.is_exported_for (a_class)
+				end
+			end
+			if Result then
+					-- Process for incrementality and finalization.
+				Context.supplier_ids.extend (l_depend_unit)
+			end
+		end
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?

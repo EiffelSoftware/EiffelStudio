@@ -52,7 +52,7 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 #define eif_reference_function	eifref	/* Get an Eiffel function returning an Eiffel Reference */
 #define eif_boolean_function	eifbool	/* Get an Eiffel function returning an Eiffel Boolean */
 #define eif_bit_function	eifbit	/* Get an Eiffel function returning an Eiffel Bit */
-#define eif_pointer_function	eifpointer	/* Get an Eiffel function returning an Eiffel Pointer */
+#define eif_pointer_function	eifptr	/* Get an Eiffel function returning an Eiffel Pointer */
 
 /*
  * Miscellaneous Macros

@@ -33,15 +33,10 @@ feature -- Access
 		
 	items: ARRAY [STRING] is
 		once
-			Result := <<"EV_LIST_ITEM", "EV_MENU_BAR", "EV_MENU", "EV_MENU_ITEM", "EV_TREE_ITEM">>
+			Result := <<"EV_LIST_ITEM", "EV_MENU_BAR", "EV_MENU", "EV_MENU_ITEM", "EV_TREE_ITEM", "EV_TOOL_BAR_BUTTON",
+				"EV_TOOL_BAR_TOGGLE_BUTTON", "EV_TOOL_BAR_RADIO_BUTTON", "EV_TOOL_BAR_SEPARATOR", "EV_CHECK_MENU_ITEM",
+				"EV_RADIO_MENU_ITEM", "EV_MENU_SEPARATOR">>
 		end
-		
-	tool_bar_items: ARRAY [STRING] is
-		once
-			Result := <<"EV_TOOL_BAR_BUTTON", "EV_TOOL_BAR_TOGGLE_BUTTON", "EV_TOOL_BAR_RADIO_BUTTON", "EV_TOOL_BAR_SEPARATOR">>
-		end
-		
-		
 
 feature {NONE} -- Implementation
 		

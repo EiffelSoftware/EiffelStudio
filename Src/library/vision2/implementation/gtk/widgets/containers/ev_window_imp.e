@@ -19,6 +19,7 @@ inherit
 		redefine
 			add_child_ok,
 			add_child,
+			child_packing_changed,
 			is_child,
 			child_added,
 			remove_child,
@@ -37,7 +38,7 @@ feature {NONE} -- Initialization
 	make is
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
--- alex
+
 			c_gtk_widget_set_all_events (widget)
 				-- set the events to be handled by the window
 
@@ -434,6 +435,15 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 	has_close_command: BOOLEAN
 			-- Did the user added a close command to the window.
+
+feature {NONE} -- Implementation
+
+	child_packing_changed (child_imp: EV_WIDGET_IMP) is
+			-- changed the settings of his child `the_child'.
+			-- Redefined because the child is placed in a hbox (see `add_child').
+		do
+			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
+		end
 
 end -- class EV_WINDOW_IMP
 

@@ -354,6 +354,20 @@ feature {NONE} -- Implementation
 	destroyed: BOOLEAN
 			-- Is object destroy? Yes, only if the user call it.
 
+feature {NONE} -- Inapplicable
+
+	build is
+			-- Common initializations for Gtk and Windows.
+			-- Needed by gtk, do nothing here.
+		do
+		end
+
+	set_default (a_msg, a_title: STRING) is
+			-- Set default settings
+			-- Needed by gtk, do nothing here.
+		do
+		end
+
 end -- class EV_MESSAGE_DIALOG_I
 
 --|----------------------------------------------------------------

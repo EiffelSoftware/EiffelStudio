@@ -29,9 +29,11 @@ extern "C" {
 	RT_LNK EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
 	RT_LNK void (*egc_strmake)(char *, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK void (*egc_strset)(char *, EIF_INTEGER);		/* STRING `set_count' feature */
-	RT_LNK void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* STRING creation feature */
+	RT_LNK void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	/* ARRAY creation feature */
+	RT_LNK void (*egc_tupmake)(char *);	/* TUPLE creation feature */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
+	RT_LNK int egc_tup_dtype;				/* Dynamic type for TUPLE */
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
 	RT_LNK int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
 	RT_LNK int egc_any_dtype;			/* Dynamic type of ANY */

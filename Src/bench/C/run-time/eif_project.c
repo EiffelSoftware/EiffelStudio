@@ -23,9 +23,11 @@ extern "C" {
 	void (*egc_strmake)(char *, EIF_INTEGER); 
 	void (*egc_strset)(char *, EIF_INTEGER); 
 	void (*egc_arrmake)(char *, EIF_INTEGER, EIF_INTEGER);	
+	void (*egc_tupmake)(char *);
 
 	int egc_str_dtype;				
 	int egc_arr_dtype;				
+	int egc_tup_dtype;
 	int32 egc_disp_rout_id;			
 	int egc_bit_dtype;			
 	int egc_any_dtype;

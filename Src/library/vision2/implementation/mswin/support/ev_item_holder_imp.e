@@ -11,30 +11,46 @@ deferred class
 	EV_ITEM_HOLDER_IMP
 
 inherit
-	EV_ANY_I
+	EV_ITEM_HOLDER_I
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 		rename
 			command_count as item_command_count
 		end
 
-feature -- Access
+feature -- Element change
 
-	current_widget: EV_WIDGET is
-			-- Current widget related to the container
-		local
-			cwidget: EV_WIDGET_IMP
-			citem: EV_SIMPLE_ITEM_IMP
+	add_item (item_imp: like item_type) is
+			-- Add `item_imp' to the list.
 		do
-			cwidget ?= Current
-			if cwidget /= Void then
-				Result ?= cwidget.interface
-			else
-				citem ?= Current
-				if citem /= Void then
-					Result := citem.parent_widget
-				end
-			end
+			insert_item (item_imp, count + 1)
+		end
+
+	insert_item (item_imp: like item_type; index: INTEGER) is
+			-- Insert `item_imp' at the `index' position.
+		deferred
+		end
+
+	move_item (item_imp: like item_type; index: INTEGER) is
+			-- Move `item_imp' to the `index' position.
+		do
+			remove_item (item_imp)
+			insert_item (item_imp, index)
+		end
+
+	remove_item (item_imp: like item_type) is
+			-- Remove `item_imp' from the list.
+		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	item_type: EV_ITEM_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
+		deferred
 		end
 
 end -- class EV_ITEM_HOLDER_IMP

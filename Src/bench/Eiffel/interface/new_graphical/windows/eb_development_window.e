@@ -245,7 +245,7 @@ feature {NONE} -- Initialization
 			if has_dll_generation then
 				create show_dynamic_lib_tool.make
 				show_dynamic_lib_tool.set_menu_name (Interface_names.m_New_dynamic_lib)
-				show_dynamic_lib_tool.add_agent (~show_dynamic_library_dialog)
+				show_dynamic_lib_tool.add_agent (agent show_dynamic_library_dialog)
 			end
 			if has_profiler then
 				create show_profiler
@@ -281,11 +281,11 @@ feature {NONE} -- Initialization
 			send_stone_to_context_cmd.set_tooltip (Interface_names.e_Send_stone_to_context)
 			send_stone_to_context_cmd.set_menu_name (Interface_names.m_Send_stone_to_context)
 			send_stone_to_context_cmd.set_name ("Send_to_context")
-			send_stone_to_context_cmd.add_agent (~send_stone_to_context)
+			send_stone_to_context_cmd.add_agent (agent send_stone_to_context)
 			create accel.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Kcst.Key_down), False, True, False
 			)
-			accel.actions.extend (~send_stone_to_context)
+			accel.actions.extend (agent send_stone_to_context)
 			send_stone_to_context_cmd.set_accelerator (accel)
 			send_stone_to_context_cmd.disable_sensitive
 			toolbarable_commands.extend (send_stone_to_context_cmd)
@@ -301,7 +301,7 @@ feature {NONE} -- Initialization
 			create show_tool_commands.make (7)
 			create show_toolbar_commands.make (3)
 
-			window.focus_in_actions.extend(~on_focus)
+			window.focus_in_actions.extend(agent on_focus)
 
 			new_feature_cmd.disable_sensitive
 
@@ -378,7 +378,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code (Kcst.Key_t),
 					True, False, True)
-			accel.actions.extend (form~execute)
+			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
 			managed_main_formatters.extend (form)
 
@@ -386,7 +386,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code (Kcst.Key_c),
 					True, False, True)
-			accel.actions.extend (form~execute)
+			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
 			managed_main_formatters.extend (form)
 
@@ -394,7 +394,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code (Kcst.Key_f),
 					True, False, True)
-			accel.actions.extend (form~execute)
+			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
 			managed_main_formatters.extend (form)
 
@@ -402,7 +402,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code (Kcst.Key_o),
 					True, False, True)
-			accel.actions.extend (form~execute)
+			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
 			managed_main_formatters.extend (form)
 
@@ -410,7 +410,7 @@ feature {NONE} -- Initialization
 			create accel.make_with_key_combination (
 					create {EV_KEY}.make_with_code (Kcst.Key_i),
 					True, False, True)
-			accel.actions.extend (form~execute)
+			accel.actions.extend (agent form.execute)
 			form.set_accelerator (accel)
 			managed_main_formatters.extend (form)			
 
@@ -552,7 +552,7 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(save_as_cmd)
 			editor_tool.text_area.add_edition_observer(print_cmd)
 			editor_tool.text_area.add_edition_observer(Current)
-			editor_tool.text_area.drop_actions.set_veto_pebble_function (~can_drop)
+			editor_tool.text_area.drop_actions.set_veto_pebble_function (agent can_drop)
 			editor_tool.text_area.add_cursor_observer (Current)
 			add_recyclable (editor_tool)
 
@@ -869,7 +869,7 @@ feature -- Graphical Interface
 
 				-- Cell to fill in empty space and receive the right click menu holder.
 			create cell
-			cell.pointer_button_release_actions.extend (~toolbar_right_click_action)
+			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
 			hbox.extend (cell)
 
 				-- Create the vertical layout (separator + toolbar)
@@ -878,7 +878,7 @@ feature -- Graphical Interface
 			general_toolbar.extend (hsep)
 			general_toolbar.disable_item_expand (hsep)
 			general_toolbar.extend (hbox)
-			general_toolbar.pointer_button_release_actions.extend (~toolbar_right_click_action)
+			general_toolbar.pointer_button_release_actions.extend (agent toolbar_right_click_action)
 
 				-- Create the command to show/hide this toolbar.
 			create show_general_toolbar_command.make (general_toolbar, Interface_names.m_General_toolbar)
@@ -927,13 +927,13 @@ feature -- Graphical Interface
 			create accel.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Kcst.Key_right), False, True, False
 			)
-			accel.actions.extend (~on_forth)
+			accel.actions.extend (agent on_forth)
 			window.accelerators.extend (accel)
 			
 			create accel.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Kcst.Key_left), False, True, False
 			)
-			accel.actions.extend (~on_back)
+			accel.actions.extend (agent on_back)
 			window.accelerators.extend (accel)
 
 			------------------------------------------
@@ -953,7 +953,7 @@ feature -- Graphical Interface
 
 				-- Cell to fill in empty space and receive the right click menu holder.
 			create cell
-			cell.pointer_button_release_actions.extend (~toolbar_right_click_action)
+			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
 			hbox.extend (cell)
 		end
 
@@ -988,7 +988,7 @@ feature -- Graphical Interface
 
 				-- Cell to fill in empty space and receive the right click menu holder.
 			create cell
-			cell.pointer_button_release_actions.extend (~toolbar_right_click_action)
+			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
 			hbox.extend (cell)
 			project_toolbar.extend (hbox)
 		end
@@ -1028,7 +1028,7 @@ feature -- Menu Building
 
 				-- Close
 			create menu_item.make_with_text (Interface_names.m_Close)
-			menu_item.select_actions.extend (~destroy)
+			menu_item.select_actions.extend (agent destroy)
 			file_menu.extend (menu_item)
 
 				-- Separator --------------------------------------
@@ -1064,7 +1064,7 @@ feature -- Menu Building
 				-- New Project
 			create new_project_cmd.make_with_parent (window)
 			create menu_item.make_with_text (Interface_names.m_New_project)
-			menu_item.select_actions.extend (new_project_cmd~execute)
+			menu_item.select_actions.extend (agent new_project_cmd.execute)
 			file_menu.extend (menu_item)
 
 				-- Open Project
@@ -1171,7 +1171,7 @@ feature -- Menu Building
 			os_cmd.set_pixmaps (pixmaps.icon_cut)
 			os_cmd.set_name ("Editor_cut")
 			os_cmd.set_tooltip (interface_names.f_cut)
-			os_cmd.add_agent (~cut_selection)
+			os_cmd.add_agent (agent cut_selection)
 			toolbarable_commands.extend (os_cmd)
 			os_cmd.set_needs_editable (True)
 			command_controller.add_selection_command (os_cmd)
@@ -1185,7 +1185,7 @@ feature -- Menu Building
 			os_cmd.set_pixmaps (pixmaps.icon_copy)
 			os_cmd.set_name ("Editor_copy")
 			os_cmd.set_tooltip (interface_names.f_copy)
-			os_cmd.add_agent (~copy_selection)
+			os_cmd.add_agent (agent copy_selection)
 			toolbarable_commands.extend (os_cmd)
 			os_cmd.set_needs_editable (False)
 			command_controller.add_selection_command (os_cmd)
@@ -1204,7 +1204,7 @@ feature -- Menu Building
 				-- Select all
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_select_all)
-			cmd.add_agent (~select_all)
+			cmd.add_agent (agent select_all)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1216,7 +1216,7 @@ feature -- Menu Building
 				-- Search
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Search + "%T" + Editor_preferences.shorcut_name_for_action (3))
-			cmd.add_agent (~search)
+			cmd.add_agent (agent search)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1225,7 +1225,7 @@ feature -- Menu Building
 				-- Replace
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Replace + "%T" + Editor_preferences.shorcut_name_for_action (4))
-			cmd.add_agent (editor~replace)
+			cmd.add_agent (agent editor.replace)
 			cmd.set_needs_editable (True)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1239,7 +1239,7 @@ feature -- Menu Building
 				-- Find next
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Find_next + "%T" + Editor_preferences.shorcut_name_for_action (6))
-			cmd.add_agent (~find_next)
+			cmd.add_agent (agent find_next)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1248,7 +1248,7 @@ feature -- Menu Building
 				-- Find previous
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_Find_previous + "%T" + Editor_preferences.shorcut_name_for_action (7))
-			cmd.add_agent (~find_previous)
+			cmd.add_agent (agent find_previous)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1257,7 +1257,7 @@ feature -- Menu Building
 				-- Find selection
 			create os_cmd.make (Current)
 			os_cmd.set_menu_name (Interface_names.m_Find_selection + "%T" + Editor_preferences.shorcut_name_for_action (5))
-			os_cmd.add_agent (~find_selection)
+			os_cmd.add_agent (agent find_selection)
 			command_menu_item := os_cmd.new_menu_item
 			command_controller.add_selection_command (os_cmd)
 			add_recyclable (command_menu_item)
@@ -1275,7 +1275,7 @@ feature -- Menu Building
 			os_cmd.set_needs_editable (True)
 			command_controller.add_selection_command (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_Indent)
-			os_cmd.add_agent (editor~indent_selection)
+			os_cmd.add_agent (agent editor.indent_selection)
 			command_menu_item := os_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1284,7 +1284,7 @@ feature -- Menu Building
 			os_cmd.set_needs_editable (True)
 			command_controller.add_selection_command (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_Unindent)
-			os_cmd.add_agent (editor~unindent_selection)
+			os_cmd.add_agent (agent editor.unindent_selection)
 			command_menu_item := os_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1293,7 +1293,7 @@ feature -- Menu Building
 			os_cmd.set_needs_editable (True)
 			command_controller.add_selection_command (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_To_lower)
-			os_cmd.add_agent (editor~set_selection_case (True))
+			os_cmd.add_agent (agent editor.set_selection_case (True))
 			command_menu_item := os_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1302,7 +1302,7 @@ feature -- Menu Building
 			os_cmd.set_needs_editable (True)
 			command_controller.add_selection_command (os_cmd)
 			os_cmd.set_menu_name (Interface_names.m_To_upper)
-			os_cmd.add_agent (editor~set_selection_case (False))
+			os_cmd.add_agent (agent editor.set_selection_case (False))
 			command_menu_item := os_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1310,7 +1310,7 @@ feature -- Menu Building
 			create cmd.make
 			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_Comment)
-			cmd.add_agent (editor~comment_selection)
+			cmd.add_agent (agent editor.comment_selection)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1319,7 +1319,7 @@ feature -- Menu Building
 			create cmd.make
 			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_Uncomment)
-			cmd.add_agent (editor~uncomment_selection)
+			cmd.add_agent (agent editor.uncomment_selection)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1332,7 +1332,7 @@ feature -- Menu Building
 			create cmd.make
 			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_If_block)
-			cmd.add_agent (editor~embed_in_block("if  then", 3))
+			cmd.add_agent (agent editor.embed_in_block("if  then", 3))
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1342,7 +1342,7 @@ feature -- Menu Building
 			create cmd.make
 			cmd.set_needs_editable (True)
 			cmd.set_menu_name (Interface_names.m_debug_block)
-			cmd.add_agent (editor~embed_in_block("debug", 5))
+			cmd.add_agent (agent editor.embed_in_block("debug", 5))
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)
@@ -1358,7 +1358,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Complete_word + "%T" + Editor_preferences.shorcut_name_for_action (1))
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
-			cmd.add_agent (editor~complete_feature_name)
+			cmd.add_agent (agent editor.complete_feature_name)
 
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1369,7 +1369,7 @@ feature -- Menu Building
 			cmd.set_menu_name (Interface_names.m_Complete_class_name + "%T" + Editor_preferences.shorcut_name_for_action (2))
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
-			cmd.add_agent (editor~complete_class_name)
+			cmd.add_agent (agent editor.complete_class_name)
 
 			add_recyclable (command_menu_item)
 			sub_menu.extend (command_menu_item)
@@ -1385,7 +1385,7 @@ feature -- Menu Building
 			end
 			formatting_marks_command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
-			cmd.add_agent (~toggle_formatting_marks)
+			cmd.add_agent (agent toggle_formatting_marks)
 
 			add_recyclable (formatting_marks_command_menu_item)
 			sub_menu.extend (formatting_marks_command_menu_item)
@@ -1428,7 +1428,7 @@ feature -- Menu Building
 			loop
 				form := managed_main_formatters.item
 				new_basic_item := form.new_menu_item
-				new_basic_item.select_actions.put_front (form~invalidate)
+				new_basic_item.select_actions.put_front (agent form.invalidate)
 				view_menu.extend (new_basic_item)
 				--add_recyclable (new_basic_item)
 				managed_main_formatters.forth
@@ -1442,11 +1442,11 @@ feature -- Menu Building
 			
 			create show_favorites_menu_item
 			update_show_favorites_menu_item
-			show_favorites_menu_item.select_actions.extend (~execute_show_favorites)
+			show_favorites_menu_item.select_actions.extend (agent execute_show_favorites)
 			
 			favorites_menu.start
 			favorites_menu.put_right (show_favorites_menu_item)
-			favorites_menu.select_actions.extend (~update_show_favorites_menu_item)
+			favorites_menu.select_actions.extend (agent update_show_favorites_menu_item)
 		end
 	
 	build_project_menu is
@@ -1671,7 +1671,7 @@ feature -- Stone process
 					set_stone_after_first_check (a_stone)
 				else
 					create cd.make_initialized (2, "already_editing_class", warning_messages.w_Class_already_edited, Interface_names.L_do_not_show_again)
-					cd.set_ok_action (~set_stone_after_first_check (a_stone))
+					cd.set_ok_action (agent set_stone_after_first_check (a_stone))
 					cd.show_modal_to_window (window)
 				end
 			else
@@ -1727,7 +1727,7 @@ feature -- Stone process
 					-- there is something to be saved
 					-- if user chooses to save, current file will be parsed
 					-- if there is a syntax_error, new file is not loaded 
-				save_and (~set_stone_after_check (a_stone))
+				save_and (agent set_stone_after_check (a_stone))
 				if text_saved and then not syntax_is_correct then
 					text_saved := False
 					during_synchronization := True
@@ -1992,7 +1992,7 @@ feature -- Resource Update
 			end
 			if editor_tool.text_area.open_backup then
 				create dial.make_with_text(Warning_messages.w_Save_backup)
-				dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<~continue_save, ~cancel_save>>)
+				dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<agent continue_save, agent cancel_save>>)
 				dial.set_default_push_button(dial.button("Continue"))
 				dial.set_default_cancel_button(dial.button("Cancel"))
 				dial.set_title ("Save Backup")
@@ -2898,7 +2898,7 @@ feature {NONE} -- Implementation
 			if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
 				if Window_manager.development_windows_count > 1 then
 					create dialog_w.make_with_text (Warning_messages.w_Save_before_closing)
-					dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<~save_and_destroy, ~force_destroy, ~do_nothing>>)
+					dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
 					dialog_w.set_default_push_button (dialog_w.button("Yes"))
 					dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
 					dialog_w.show_modal_to_window (window)
@@ -3207,9 +3207,9 @@ feature {NONE} -- external edition handling
 						create button_labels.make (1, 2)
 						create actions.make (1, 2)
 						button_labels.put (interface_names.b_Reload, 1)
-						actions.put (editor_tool~reload, 1)
+						actions.put (agent editor_tool.reload, 1)
 						button_labels.put (interface_names.b_Continue_anyway, 2)
-						actions.put (editor_tool~set_changed (True), 2)
+						actions.put (agent editor_tool.set_changed (True), 2)
 						dialog.set_buttons_and_actions (button_labels,actions)
 						dialog.set_default_push_button (dialog.button (button_labels @ 1))
 						dialog.set_default_cancel_button (dialog.button (button_labels @ 2))

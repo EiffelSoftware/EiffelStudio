@@ -1782,6 +1782,8 @@ feature {NONE} -- Events
 			end
 		end
 
+feature {BON_CLASS_FIGURE}
+
 	on_move_class_end (cf: CLASS_FIGURE; new_cluster: CLUSTER_FIGURE) is
 			-- `cf' has moved in `new_cluster'.
 		require

@@ -58,17 +58,17 @@ feature {NONE} -- Initialization
 			generics_figure.set_font (bon_generics_font)
 			generics_figure.point.set_origin (point)
 
-			pointer_button_press_actions.extend (~button_press)
-			move_actions.force_extend (~update)
-			move_actions.force_extend (~update_scrollable_area_size)
-			start_actions.extend (~move_to_front)
-			start_actions.extend (~save_position)
+			pointer_button_press_actions.extend (agent button_press)
+			move_actions.force_extend (agent update)
+			move_actions.force_extend (agent update_scrollable_area_size)
+			start_actions.extend (agent move_to_front)
+			start_actions.extend (agent save_position)
 			start_actions.extend (agent start_capture)
 			end_actions.extend (agent stop_capture)
-			start_actions.extend (~set_pointer_style (Default_pixmaps.Sizeall_cursor))
-			end_actions.extend (~set_pointer_style (Default_pixmaps.Standard_cursor))
-			end_actions.extend (~update_cluster_size)
-			end_actions.extend (~extend_history)
+			start_actions.extend (agent set_pointer_style (Default_pixmaps.Sizeall_cursor))
+			end_actions.extend (agent set_pointer_style (Default_pixmaps.Standard_cursor))
+			end_actions.extend (agent update_cluster_size)
+			end_actions.extend (agent extend_history)
 		end
 
 feature -- Memory management
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation
 			name_figure.set_foreground_color (bon_class_name_color)
 			name_figure.set_text (s)
 			name_figure.point.set_origin (point)
-			name_figure.drop_actions.extend (~on_class_drop)
+			name_figure.drop_actions.extend (agent on_class_drop)
 			name_figures.extend (name_figure)
 			extend (name_figure)
 
@@ -658,31 +658,31 @@ feature {NONE} -- Events
 					saved_y_abs := (saved_y * cluster_figure.point.scale_y_abs).rounded + cluster_figure.point.y_abs
 					world.context_editor.history.do_named_undoable (
 						Interface_names.t_Diagram_move_class_cmd,
-						[<<cd~on_move_class_end (Current, new_cluster_figure),
-							point~set_position (
+						[<<agent cd.on_move_class_end (Current, new_cluster_figure),
+							agent point.set_position (
 								((point.x_abs - new_cluster_figure.point.x_abs) /
 									new_cluster_figure.point.scale_x_abs).rounded,
 								((point.y_abs - new_cluster_figure.point.y_abs) /
 									new_cluster_figure.point.scale_y_abs).rounded),
-							~update_and_project>>],
-						[<<cd~on_move_class_end (Current, cluster_figure),
-							point~set_position (saved_x, saved_y),
-							~update_and_project>>])	
+							agent update_and_project>>],
+						[<<agent cd.on_move_class_end (Current, cluster_figure),
+							agent point.set_position (saved_x, saved_y),
+							agent update_and_project>>])	
 				else
 					world.context_editor.history.do_named_undoable (
 						Interface_names.t_Diagram_move_class_cmd,
-						[<<point~set_position (point.x, point.y),
-							~update_and_project>>],
-						[<<point~set_position (saved_x, saved_y),
-							~update_and_project>>])	
+						[<<agent point.set_position (point.x, point.y),
+							agent update_and_project>>],
+						[<<agent point.set_position (saved_x, saved_y),
+							agent update_and_project>>])	
 				end
 			else
 				world.context_editor.history.do_named_undoable (
 					Interface_names.t_Diagram_move_class_cmd,
-					[<<point~set_position (point.x, point.y),
-						~update_and_project>>],
-					[<<point~set_position (saved_x, saved_y),
-						~update_and_project>>])
+					[<<agent point.set_position (point.x, point.y),
+						agent update_and_project>>],
+					[<<agent point.set_position (saved_x, saved_y),
+						agent update_and_project>>])
 			end
 		end
 

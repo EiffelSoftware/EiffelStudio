@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			query_window_set: query_window.is_equal (a_query_window)
 		end
 
-feature {NONE} -- Command Execution
+feature {EB_PROFILE_QUERY_WINDOW} -- Command Execution
 
 	execute is
 			-- Execute Current

@@ -129,7 +129,7 @@ feature -- Search
 			Result := text_displayed.found_feature
 		end
 
-feature {EB_COMMAND} -- Commands
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 
 	complete_feature_name is
 			-- Autocomplete feature name before cursor.

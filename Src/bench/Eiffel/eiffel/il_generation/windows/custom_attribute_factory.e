@@ -236,6 +236,7 @@ feature {NONE} -- Generation
 			nested_b: NESTED_B
 			ext: EXTERNAL_B
 			il_ext: IL_EXTENSION_I
+			il_enum_ext: IL_ENUM_EXTENSION_I
 			l_target: ACCESS_EXPR_B
 			l_feat: FEATURE_B
 		do
@@ -256,7 +257,7 @@ feature {NONE} -- Generation
 					end
 				else
 					string ?= e
-					if string /= Void then
+					if string /= Void and then string.is_dotnet_string then
 						a_ca_blob.put_string (string.value)
 					else
 						real ?= e
@@ -279,7 +280,11 @@ feature {NONE} -- Generation
 											il_ext /= Void and then
 											il_ext.type = feature {SHARED_IL_CONSTANTS}.enum_field_type
 										then
-											a_ca_blob.put_integer_32 (ext.external_name.to_integer)
+											il_enum_ext ?= il_ext
+											check
+												il_enum_ext_not_void: il_enum_ext /= Void
+											end
+											a_ca_blob.put_integer_32 (il_enum_ext.value)
 										else
 											check
 												not_supported_type: False

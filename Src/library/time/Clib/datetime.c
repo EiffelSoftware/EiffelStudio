@@ -1,6 +1,6 @@
 #include <sys/types.h>
 #include <stdio.h>
-#include "eif_eiffel.h"
+#include <eif_eiffel.h>
 #include <time.h>
 #include <sys/timeb.h>
 
@@ -63,7 +63,7 @@ EIF_INTEGER c_millisecond_now ()
 	return ((EIF_INTEGER)(date_time_fine.millitm));
 }
 
-EIF_INTEGER c_make_date (int d, int m, int y)
+EIF_INTEGER c_make_date (EIF_INTEGER d, EIF_INTEGER m, EIF_INTEGER y)
 {   int compact_date = 0;
 	compact_date = ((int) d << 24);
 	compact_date = compact_date + ((int) m << 16);
@@ -71,43 +71,40 @@ EIF_INTEGER c_make_date (int d, int m, int y)
 	return compact_date;
 }
 
-EIF_INTEGER c_day (int compact_date)
+EIF_INTEGER c_day (EIF_INTEGER compact_date)
 {
 	return ((EIF_INTEGER) (compact_date&0xff000000)>>24);
 }
 
-EIF_INTEGER c_month (int compact_date)
+EIF_INTEGER c_month (EIF_INTEGER compact_date)
 {
 	return ((EIF_INTEGER) (compact_date&0x00ff0000)>>16);
 }
 
-EIF_INTEGER c_year (int compact_date)
+EIF_INTEGER c_year (EIF_INTEGER compact_date)
 {
 	return ((EIF_INTEGER) (compact_date&0x0000ffff));
 }
 
-EIF_INTEGER c_set_day (int d, int compact_date)
+c_set_day (EIF_INTEGER d, EIF_INTEGER *compact_date)
 {
-	compact_date = compact_date&0x00ffffff;
-	compact_date = compact_date + ((int) (d<<24));
-	return compact_date;
+	*compact_date = *compact_date&0x00ffffff;
+	*compact_date = *compact_date + ((int) (d<<24));
 }
 
-EIF_INTEGER c_set_month (int m, int compact_date)
+c_set_month (EIF_INTEGER m, EIF_INTEGER *compact_date)
 {
-	compact_date = compact_date&0xff00ffff;
-	compact_date = compact_date + ((int) (m<<16));
-	return compact_date;
+	*compact_date = *compact_date&0xff00ffff;
+	*compact_date = *compact_date + ((int) (m<<16));
 }
 
-EIF_INTEGER c_set_year (int y, int compact_date)
+c_set_year (EIF_INTEGER y, EIF_INTEGER *compact_date)
 {
-	compact_date = compact_date&0xffff0000;
-	compact_date = compact_date + ((int) (y));
-	return compact_date;
+	*compact_date = *compact_date&0xffff0000;
+	*compact_date = *compact_date + ((int) (y));
 }
 
-EIF_INTEGER c_make_time (int h, int m, int s)
+EIF_INTEGER c_make_time (EIF_INTEGER h, EIF_INTEGER m, EIF_INTEGER s)
 {   int compact_time = 0;
 	compact_time = ((int) h << 16);
 	compact_time = compact_time + ((int) m << 8);
@@ -115,39 +112,36 @@ EIF_INTEGER c_make_time (int h, int m, int s)
 	return compact_time;
 }
 
-EIF_INTEGER c_hour (int compact_time)
+EIF_INTEGER c_hour (EIF_INTEGER compact_time)
 {
 	return ((EIF_INTEGER) (compact_time&0xff0000)>>16);
 }
 
-EIF_INTEGER c_minute (int compact_time)
+EIF_INTEGER c_minute (EIF_INTEGER compact_time)
 {
 	return ((EIF_INTEGER) (compact_time&0x00ff00)>>8);
 }
 
-EIF_INTEGER c_second (int compact_time)
+EIF_INTEGER c_second (EIF_INTEGER compact_time)
 {
 	return ((EIF_INTEGER) (compact_time&0x0000ff));
 }
 
-EIF_INTEGER c_set_hour (int h, int compact_time)
+EIF_INTEGER c_set_hour (EIF_INTEGER h, EIF_INTEGER *compact_time)
 {
-	compact_time = compact_time&0x00ffff;
-	compact_time = compact_time + ((int) (h<<16));
-	return compact_time;
+	*compact_time = *compact_time&0x00ffff;
+	*compact_time = *compact_time + ((int) (h<<16));
 }
 
-EIF_INTEGER c_set_minute (int m, int compact_time)
+EIF_INTEGER c_set_minute (EIF_INTEGER m, EIF_INTEGER *compact_time)
 {
-	compact_time = compact_time&0xff00ff;
-	compact_time = compact_time + ((int) (m<<8));
-	return compact_time;
+	*compact_time = *compact_time&0xff00ff;
+	*compact_time = *compact_time + ((int) (m<<8));
 }
 
-EIF_INTEGER c_set_second (int s, int compact_time)
+EIF_INTEGER c_set_second (EIF_INTEGER s, EIF_INTEGER *compact_time)
 {
-	compact_time = compact_time&0xffff00;
-	compact_time = compact_time + ((int) (s));
-	return compact_time;
+	*compact_time = *compact_time&0xffff00;
+	*compact_time = *compact_time + ((int) (s));
 }
 

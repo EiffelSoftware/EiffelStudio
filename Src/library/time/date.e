@@ -325,7 +325,7 @@ feature -- Element change
 			d_large_enough: d >= 1;
 			d_small_enough: d <= days_in_month
 		do
-			c_set_day (d, compact_date)
+			c_set_day (d, $compact_date)
 		ensure
 			day_set: day = d
 		end;
@@ -339,7 +339,7 @@ feature -- Element change
 			m_small_enough: m <= Months_in_year;
 			d_small_enough: day <= days_in_i_th_month (m, year)
 		do
-			c_set_month (m, compact_date)
+			c_set_month (m, $compact_date)
 		ensure
 			month_set: month = m
 		end;
@@ -349,7 +349,7 @@ feature -- Element change
 		require
 			can_not_cut_29th_feb: day <= days_in_i_th_month (month, y)
 		do
-			c_set_year (y, compact_date)
+			c_set_year (y, $compact_date)
 		ensure
 			year_set: year = y
 		end;
@@ -583,19 +583,19 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	c_set_day (d, c_d: INTEGER) is
+	c_set_day (d:INTEGER; c_d: POINTER) is
 			-- Initialize the day in `compact_date'.
 		external
 			"C"
 		end;
 
-	c_set_month (m, c_d: INTEGER) is
+	c_set_month (m: INTEGER; c_d: POINTER) is
 			-- Initialize the month in `compact_date'.
 		external
 			"C"
 		end;
 
-	c_set_year (y, c_d: INTEGER) is
+	c_set_year (y:INTEGER; c_d: POINTER) is
 			-- Initialize the year in `compact_date'.
 		external
 			"C"

@@ -1,6 +1,6 @@
 # Finalized Version
-CFLAGS = -nologo -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include
-#CFLAGS = -nologo -Zi -W3 -I$(ISE_EIFFEL)\studio\spec\windows\include -DNONAMELESSUNION -DASSERTIONS
+CFLAGS = -nologo -Ox -W4 -I$(ISE_EIFFEL)\studio\spec\windows\include
+#CFLAGS = -nologo -Zi -W4 -I$(ISE_EIFFEL)\studio\spec\windows\include -DASSERTIONS
 
 .cpp.obj:
 	$(CC) $(CFLAGS) -c $<

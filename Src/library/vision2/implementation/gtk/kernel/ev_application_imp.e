@@ -12,7 +12,7 @@ class
 inherit
 	EV_APPLICATION_I
 			export
-				{EV_WIDGET_IMP} capture_widget
+				{EV_PICK_AND_DROPABLE_IMP} capture_widget
 			end
 
 	IDENTIFIED
@@ -313,6 +313,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			trg: EV_PICK_AND_DROPABLE
 			i: INTEGER
 		do
+			enable_is_in_transport
 			cur := pnd_targets.cursor
 			from
 				pnd_targets.start
@@ -337,7 +338,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
-
+			disable_is_in_transport
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -353,8 +354,8 @@ feature {EV_ANY_IMP} -- Implementation
 
 feature -- Implementation
 
-	is_in_docking: BOOLEAN
-		-- Is application currently in docking?
+	is_in_transport: BOOLEAN
+		-- Is application currently in transport (either PND or docking)?
 
 	set_capture_widget (a_capture_widget: EV_WIDGET) is
 			-- Set `capture_widget' to the widget that has the current capture 'a_capture_widget'.
@@ -362,16 +363,20 @@ feature -- Implementation
 			capture_widget := a_capture_widget
 		end
 
-	enable_is_in_docking is
-			-- Set is_in_docking to True.
+	enable_is_in_transport is
+			-- Set `is_in_transport' to True.
+		require
+			not_in_transport: not is_in_transport
 		do
-			is_in_docking := True
+			is_in_transport := True
 		end
 		
-	disable_is_in_docking is
-			-- Set is_in_docking to False.
+	disable_is_in_transport is
+			-- Set `is_in_transport' to False.
+		require
+			in_transport: is_in_transport
 		do
-			is_in_docking := False
+			is_in_transport := False
 		end
 
 	keyboard_modifier_mask: INTEGER is

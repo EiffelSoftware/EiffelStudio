@@ -1,0 +1,20 @@
+# ecom_runtime.lib - Makefile for Microsoft C
+CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
+AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
+CFLAGS = -w- -P -c -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib
+
+OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
+
+com_runtime.lib: $(OBJ)
+	if exist $@ del $@
+	$(AR) $@ +ecom_runtime_c_e.obj
+	$(AR) $@ +ecom_runtime_ce_arrays.obj
+	$(AR) $@ +ecom_runtime_e_c.obj
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
+	del *.obj
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+

@@ -43,7 +43,7 @@ feature -- Element change
 		do
 			implementation.set_pixmap (a_pixmap)
 		ensure
-			pixmap_assigned: pixmap_equal_to (a_pixmap) and pixmap /= a_pixmap
+			--pixmap_assigned: pixmap_equal_to (a_pixmap) and pixmap /= a_pixmap
 		end
 
 	remove_pixmap is

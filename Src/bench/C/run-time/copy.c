@@ -40,7 +40,6 @@ rt_private struct hash hclone;			/* Cloning hash table */
 /* Function declarations */
 rt_private void rdeepclone(char *source, char *enclosing, int offset);			/* Recursive cloning */
 rt_private void expanded_update(char *source, char *target, int shallow_or_deep);		/* Expanded reference update */
-rt_private void efcopy(register char *source, register char *target, uint32 s_flags, uint32 t_flags, char *enclosing);				/* Copy field by field */
 rt_private char *duplicate(char *source, char *enclosing, int offset);			/* Duplication with aging tests */
 
 #ifndef lint
@@ -359,9 +358,9 @@ rt_public void ecopy(register char *source, register char *target)
 	/* Copy Eiffel object `source' into Eiffel object `target'.
 	 * Problem: updating intra-references on expanded object
 	 * because the garbage collector needs to explore those references.
-	 * Dynamic type of `source' is supposed to conform to dynamic type
-	 * of the target. It assumes also that `source' and `target' are
-	 * not references on special objects.
+	 * Dynamic type of `source' is supposed to be the same as dynamic type
+	 * of `target'. It assumes also that `source' and `target' are not 
+	 * references on special objects.
 	 */
 
 	register3 uint32 s_flags;			/* Source object flags */
@@ -412,15 +411,7 @@ rt_public void ecopy(register char *source, register char *target)
 			 */
 			expanded_update(source, target, SHALLOW);
 		}
-	} else {
-
-		/* Dynamic types of source and target are different. Copy field
-		 * by field here.
-		 */
-		
-		efcopy(source, target, s_flags, t_flags, enclosing);
 	}
-
 }
 
 rt_public void spcopy(register char *source, register char *target)
@@ -452,130 +443,6 @@ rt_public void spcopy(register char *source, register char *target)
 	flags = HEADER(target)->ov_flags;
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
 		eremb(target);
-}
-
-rt_private void efcopy(register char *source, register char *target, uint32 s_flags, uint32 t_flags, char *enclosing)
-					   
-					   
-			   
-			   
-						/* Enclosing target object (may differ from target) */
-{
-	/* Copy field by field of `source' into `target' */
-
-	register3 long t_offset;	/* Target offset */
-	register4 long s_offset;	/* Source offset */
-	register5 uint32 *s_types;	/* Source type array*/
-	register6 uint32 *t_types;	/* Target type array*/
-#ifndef WORKBENCH
-	long **t_offsets;			/* Target attribute tables */
-	long **s_offsets;			/* Source attribute tables */
-	long *attr_table;
-#else
-	int32 *tcn_attr;			/* Array of attribute keys for target object */
-	int32 *scn_attr;			/* Array of attribute keys for source object */
-	int32 attr_key;				/* Attribute key */
-#endif
-	struct cnode *t_skeleton;	/* Target skeleton */
-	uint32 t_type;				/* Type of target object */
-	uint32 s_type;				/* Type of source object */
-	int target_type, source_type;
-	char *t_ref, *s_ref;
-	long t_index, s_index;
-	uint32 e_flags;						/* Flags from enclosing object */
-
-
-	s_type = Deif_bid(s_flags & EO_TYPE);
-	t_type = Deif_bid(t_flags & EO_TYPE);
-	t_skeleton = &System(t_type);
-	t_types = t_skeleton->cn_types;
-	s_types = System(s_type).cn_types;
-#ifdef WORKBENCH
-	tcn_attr = t_skeleton->cn_attr;
-	scn_attr = System(s_type).cn_attr;
-#else
-	t_offsets = t_skeleton->cn_offsets;
-	s_offsets = System(s_type).cn_offsets;
-#endif
-	e_flags = HEADER(enclosing)->ov_flags;
-
-	/* Iteration on the attributes of the target */
-	for(t_index = t_skeleton->cn_nbattr - 1; t_index >= 0; t_index--) {
-
-#ifdef WORKBENCH
-		/* Evaluation of the attribute key */
-		attr_key = tcn_attr[t_index];
-
-		/* Evaluation of the target attribute offset */
-		CAttrOffs(t_offset,attr_key,t_type);
-
-		/* Evaluation of the source attribute offset */
-		CAttrOffs(s_offset,attr_key,s_type);
-
-		/* Evaluation of the source index */
-		 for (s_index = 0; scn_attr[s_index] != attr_key; s_index++)
-			;
-#else
-		/* Evaluation of the attribute table */
-		attr_table = t_offsets[t_index];
-
-		/* Evaluation of the source index */
-		for (s_index = 0; s_offsets[s_index] != attr_table;s_index++)
-			;
-
-		/* Evaluation of the source field depending on its type */
-		t_offset = attr_table[t_type];
-		s_offset = attr_table[s_type];
-#endif
-		target_type = t_types[t_index];
-		source_type = s_types[s_index];
-		t_ref = target + t_offset;
-		s_ref = source + s_offset;
-
-		switch (target_type & SK_HEAD) {
-		case SK_BOOL:
-		case SK_CHAR:
-			*t_ref = *s_ref;
-			break;
-		case SK_INT:
-			*(long *) t_ref = *(long *) s_ref;
-			break;
-		case SK_FLOAT:
-			*(float *) t_ref = *(float *) s_ref;
-			break;
-		case SK_DOUBLE:
-			*(double *) t_ref = *(double *) s_ref;
-			break;
-		case SK_POINTER:
-			*(fnptr *) t_ref = *(fnptr *) s_ref;
-			break;
-		default:
-			/* Copy of BITS field or a reference */
-			if ((target_type & SK_HEAD) == SK_BIT) {
-				/* FIXME */
-				/* Copy of a bits field */
-			} else if ((target_type & SK_HEAD) == SK_EXP)
-				/* Target expanded attribute: corresponding source
-				 * attribute is then also expanded. Block copy because
-				 * there is no polymorhism on expanded objects.
-				 */
-				ecopy(s_ref,t_ref);
-			else {
-				char *copied;		/* Copied reference value */
-
-				copied = *(char **) s_ref;
-				*(char **) t_ref = copied;
-
-				if (
-					copied != (char *) 0 &&		/* Non void reference */
-					e_flags & EO_OLD &&			/* Object is old */
-					!(e_flags & EO_REM)	&&		/* Not remembered */
-					RTAN(copied)				/* And copied is new */
-				)
-					erembq(enclosing);	/* Then remember enclosing object */
-			}
-		}
-	}	
 }
 
 rt_private void expanded_update(char *source, char *target, int shallow_or_deep)

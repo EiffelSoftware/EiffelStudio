@@ -1019,42 +1019,9 @@ feature {GB_SET_ROOT_WINDOW_COMMAND}
 			system_status.enable_project_modified
 			command_handler.update
 		end
-
-feature {NONE} -- Implementation
 		
-	show_invalid_directory_warning (a_dialog: EV_DIALOG; last_dialog_name: STRING) is
-			-- Show a warning dialog modal to `a_dialog', indicating that `last_dialog_name'
-			-- was not a valid directory name.
-		require
-			dialog_not_void: a_dialog /= Void
-			last_dialog_name_not_void: last_dialog_name /= Void
-		local
-			warning_dialog: EV_WARNING_DIALOG
-			actual_warning: STRING
-		do
-			if last_dialog_name.is_empty then
-				actual_warning := "You have not entered a name."
-			else
-				actual_warning := "The directory name '" + last_dialog_name + "' is not valid."
-			end
-			create warning_dialog.make_with_text (actual_warning + "%N%NPlease enter a valid directory name.")
-			warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
-			warning_dialog.show_modal_to_window (a_dialog)
-		end
+feature {GB_OBJECT} -- Implementation
 
-	valid_directory_name (a_name: STRING; parent_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM): BOOLEAN is
-			-- Is `a_name' a valid name for a new directory in `parent_item' or `Current' if
-			-- `parent_item' is Void?
-		require
-			a_name_not_void: a_name /= Void
-		do
-			if parent_item = Void then
-				Result := not directory_names.has (a_name)
-			else
-				Result := not parent_item.directory_names.has (a_name)
-			end
-		end
-		
 	update_display_and_builder_windows (an_object: GB_OBJECT) is
 			-- Update windows referenced by `builder_window' and `display_window' to
 			-- reflect `titled_window_object'.
@@ -1118,6 +1085,41 @@ feature {NONE} -- Implementation
 			if application.is_launched then
 					-- Force the newly displayed window to redraw immediately.
 				application.process_events
+			end
+		end
+
+feature {NONE} -- Implementation
+		
+	show_invalid_directory_warning (a_dialog: EV_DIALOG; last_dialog_name: STRING) is
+			-- Show a warning dialog modal to `a_dialog', indicating that `last_dialog_name'
+			-- was not a valid directory name.
+		require
+			dialog_not_void: a_dialog /= Void
+			last_dialog_name_not_void: last_dialog_name /= Void
+		local
+			warning_dialog: EV_WARNING_DIALOG
+			actual_warning: STRING
+		do
+			if last_dialog_name.is_empty then
+				actual_warning := "You have not entered a name."
+			else
+				actual_warning := "The directory name '" + last_dialog_name + "' is not valid."
+			end
+			create warning_dialog.make_with_text (actual_warning + "%N%NPlease enter a valid directory name.")
+			warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
+			warning_dialog.show_modal_to_window (a_dialog)
+		end
+
+	valid_directory_name (a_name: STRING; parent_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM): BOOLEAN is
+			-- Is `a_name' a valid name for a new directory in `parent_item' or `Current' if
+			-- `parent_item' is Void?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if parent_item = Void then
+				Result := not directory_names.has (a_name)
+			else
+				Result := not parent_item.directory_names.has (a_name)
 			end
 		end
 

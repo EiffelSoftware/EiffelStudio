@@ -656,8 +656,8 @@ feature -- IL code generation
 				(old_expressions /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_in_assertion_status
-				il_generator.branch_on_true (end_of_assertion)
+				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_ensure)
+				il_generator.branch_on_false (end_of_assertion)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
 				if old_expressions /= Void then
@@ -688,8 +688,8 @@ feature -- IL code generation
 				(postcondition /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_in_assertion_status
-				il_generator.branch_on_true (end_of_assertion)
+				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_ensure)
+				il_generator.branch_on_false (end_of_assertion)
 				il_generator.put_boolean_constant (True)
 				il_generator.generate_set_assertion_status
 				context.set_assertion_type (In_postcondition)
@@ -744,8 +744,8 @@ feature -- IL code generation
 			inh_assert := Context.inherited_assertion
 
 			end_of_assertion := il_label_factory.new_label
-			il_generator.generate_in_assertion_status
-			il_generator.branch_on_true (end_of_assertion)
+			il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_require)
+			il_generator.branch_on_false (end_of_assertion)
 			il_generator.put_boolean_constant (True)
 			il_generator.generate_set_assertion_status
 			if precondition /= Void then
@@ -799,7 +799,7 @@ feature -- IL code generation
 			i: INTEGER
 		do
 				-- Do we generate debug information for local variables.
-			debug_generation := System.line_generation
+			debug_generation := System.line_generation or context.workbench_mode
 
 			if debug_generation then
 				feature_as := System.Body_server.item (body_index)

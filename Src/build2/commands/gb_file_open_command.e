@@ -128,7 +128,7 @@ feature -- Basic operations
 					-- Reset this value.
 				location_update_cancelled := False
 				create dialog
-				dialog.set_filter (project_file_filter)
+				dialog.filters.extend ([project_file_filter, "Files of type (" + project_file_filter + ")"])
 				create file_handler
 					-- We do not allow the dialog to close until a valid
 					-- file name has been entered or the user clicks the

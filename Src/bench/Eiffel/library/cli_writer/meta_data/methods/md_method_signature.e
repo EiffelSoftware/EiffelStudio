@@ -1,7 +1,7 @@
 indexing
 	description: "[
-		Represent a method signature both for reference
-		and definition as we do not consume varargs.
+		Representation a method signature both for reference
+		and definition as we do not consumme varargs.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,11 +25,12 @@ feature {NONE} -- Initialization
 		do
 			Precursor {MD_SIGNATURE}
 			state := Method_type_setting_state
-		ensure
+		ensure then
+			current_position_set: current_position = 0
 			state_set: state = Method_type_setting_state
 		end
 
-feature -- Access
+feature -- Settings
 
 	set_method_type (t: INTEGER_8) is
 			-- Set type of method.

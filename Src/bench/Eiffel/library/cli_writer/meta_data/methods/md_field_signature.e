@@ -1,5 +1,5 @@
 indexing
-	description: "Represent a field signature both for definition."
+	description: "Representation a field signature used for defining a field."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,8 +8,8 @@ class
 
 inherit
 	MD_SIGNATURE
-		rename
-			make as old_make
+		redefine
+			make
 		end
 	
 create
@@ -20,9 +20,11 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize current.
 		do
-			old_make
-			internal_put (feature {MD_SIGNATURE_CONSTANTS}.field, 0)
-			current_position := current_position + 1
+			Precursor {MD_SIGNATURE}
+			internal_put (feature {MD_SIGNATURE_CONSTANTS}.field_sig, 0)
+			current_position := 1
+		ensure then
+			current_position_set: current_position = 1
 		end
 
 end -- class MD_FIELD_SIGNATURE

@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 			current_position := 0
 			is_written := False
 		ensure
-			current_position_set: current_position = 0
 			not_is_written: not is_written
 		end
 			

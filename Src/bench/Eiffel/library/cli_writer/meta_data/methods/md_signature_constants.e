@@ -14,8 +14,12 @@ feature -- Access
 	vararg_sig: INTEGER_8 is 0x05
 			-- Flags for signature description of methods.
 			
-	field: INTEGER_8 is 0x06
-			-- Flag for signatre description of a field.
+	field_sig: INTEGER_8 is 0x06
+			-- Flag for signature description of a field.
+			
+	local_sig: INTEGER_8 is 0x07
+			-- Flag for a signature description of all locals in
+			-- a method body.
 
 feature -- Types
 

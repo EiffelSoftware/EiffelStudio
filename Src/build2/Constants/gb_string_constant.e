@@ -50,8 +50,9 @@ feature -- Access
 			-- Representation of `Current' as a multi column list row.
 		do
 			create Result
-			Result.extend (type)
+			Result.set_pixmap (icon_string @ 1)
 			Result.extend (name)
+			Result.extend (type)
 			Result.extend (value)
 			Result.set_data (Current)
 		end

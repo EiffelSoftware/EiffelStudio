@@ -39,7 +39,7 @@ feature -- Access
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 		local
-			l: LINKED_LIST [EV_LIST_ITEM]
+			l: like selected_items
 		do
 			l := selected_items
 			if not l.empty then
@@ -47,14 +47,14 @@ feature -- Access
 			end
 		end
 
-	selected_items: LINKED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
 		local
 			litem: EV_LIST_ITEM
 			original_position: INTEGER
 		do
 			original_position := interface.index
-			create Result.make
+			create Result.make(2)
 			from
 				interface.start
 			until
@@ -141,6 +141,10 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/04/19 01:26:18  pichery
+--| Changed `selected_items' from LINKED_LIST to
+--| ARRAYED_LIST
+--|
 --| Revision 1.43  2000/03/28 20:32:08  brendel
 --| Revised.
 --|

@@ -34,7 +34,7 @@ feature -- Initialization
 		do
 			tool := a_tool;
 			to_show_all_callers :=
-				Feature_tool_resources.show_all_callers.actual_value
+				Feature_resources.show_all_callers.actual_value
 		end;
 
 feature -- Properties
@@ -66,10 +66,9 @@ feature -- Executions
 			end
 		end;	
 
-	execute_save_action (a_cust_tool: like associated_custom_tool) is
+	execute_ok_action (a_cust_tool: like associated_custom_tool) is
 			-- Action performed when save button is activated
 		do
-				-- ******* FIXME need to save resource
 			execute_apply_action (a_cust_tool)
 		end;
 

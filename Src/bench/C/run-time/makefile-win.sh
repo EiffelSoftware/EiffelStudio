@@ -1142,8 +1142,10 @@ $(INDIR)\weif_type_id.$obj : eif_gen_conf.h eif_struct.h eif_cecil.h
 $(INDIR)\rout_obj.$obj : eif_rout_obj.h
 $(INDIR)\wrout_obj.$obj : eif_rout_obj.h
 
-$(INDIR)\eif_threads.$obj : eif_threads.h eif_cond_var.h
+$(INDIR)\eif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
+$(INDIR)\MTeif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
 $(INDIR)\eif_cond_var.$obj : eif_cond_var.h
 
-$(INDIR)\weif_threads.$obj : eif_threads.h eif_cond_var.h
+$(INDIR)\weif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
+$(INDIR)\MTweif_threads.$obj : eif_threads.h eif_cond_var.h include/rt_threads.h
 $(INDIR)\weif_cond_var.$obj : eif_cond_var.h

@@ -43,11 +43,7 @@ rt_public EIF_REFERENCE eif_exec_suffix (void)
 
 rt_public EIF_REFERENCE eif_finish_freezing (void)
 {
-#if defined EIF_WINDOWS || defined EIF_OS2
-	return RTMS ("es4sh");
-#else
 	return RTMS ("finish_freezing");
-#endif
 }
 
 rt_public EIF_REFERENCE eif_preobj (void)

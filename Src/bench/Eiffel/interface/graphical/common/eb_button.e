@@ -34,10 +34,10 @@ feature -- Element change
 
 	add_third_button_action is
 			-- Add the `associated_command' to the third mouse button action.
-        do
+		do
 			add_button_press_action (3, associated_command,
 				associated_command.button_three_action)
-        end;
+		end;
 
 feature -- Access
 
@@ -56,14 +56,6 @@ feature -- Access
 	focus_string: STRING is
 		do
 			Result := associated_command.name
-		end
-
-feature {NONE} -- Implementation
-
-	focus_label: FOCUS_LABEL_I is
-			-- Focus label for Current.
-		once
-			!FOCUS_LABEL! Result.initialize (Project_tool)
 		end
 
 feature {NONE} -- Properties

@@ -42,7 +42,7 @@ feature {NONE} --Implementation
 			a_point: WEL_POINT
 			a_window: WEL_WINDOW
 		do
-			!! a_point.make (0,0)
+			!! a_point.make (0, 0)
 			a_point.set_cursor_position
 			a_window := a_point.window_at
 			if a_window /= Void then

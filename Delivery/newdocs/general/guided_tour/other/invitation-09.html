@@ -48,11 +48,11 @@ operation</SPAN>
 . This is especially useful if you want to build an object structure that refers to operations, so that you can later traverse the structure and execute the operations encountered. A typical application is <SPAN CLASS="ff-bold">
 event-driven programming</SPAN>
  for Graphical User Interfaces (GUI), including Web programming. In GUI programming you will want to record properties of the form
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltext">
-<A NAME="pgfId-512772"></A>&quot;When the user clicks on this OK button, the system must update the file&quot;
+<A NAME="pgfId-512772"></A>&quot;When the user clicks this OK button, the system must update the file&quot;
 </TD>
 </TR>
 </table></ul><p>
@@ -76,7 +76,7 @@ else if</SPAN>
 <SPAN CLASS="tt-nsymbol">
  &#8230;</SPAN>
  and so on with many branches); but this leads to bulky software architectures where introducing any new control or event requires updating a central part of the code. It's preferable to let any element of the system that encounters a new control-event-operation association
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -118,7 +118,7 @@ r</SPAN>
  is a routine. This denotes an object. If <SPAN CLASS="ee-text">
 your_agent</SPAN>
  is such an agent object, the call
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -201,14 +201,14 @@ a</SPAN>
 b</SPAN>
  of the appropriate types.
 <P CLASS="nn-first">
-<A NAME="pgfId-512841"></A>A typica use of agents with EiffelVision 2 is
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<A NAME="pgfId-512841"></A>A typical use of agents with EiffelVision 2 is
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
 <A NAME="pgfId-512853"></A>ok_button<SPAN CLASS="ee-keyword">
 .</SPAN>
- click_actions<SPAN CLASS="ee-keyword">
+ select_actions<SPAN CLASS="ee-keyword">
 .</SPAN>
 extend <SPAN CLASS="ee-comment">
 (</SPAN>
@@ -223,16 +223,16 @@ agent</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-512897"></A>which says: &quot;add <SPAN CLASS="ee-text">
 your_routine</SPAN>
- to the list of operations to be performed whenever the event <SPAN CLASS="ee-text">
-click</SPAN>
- happens on <SPAN CLASS="ee-text">
+ to the list of operations to be performed whenever a <SPAN CLASS="ee-text">
+select</SPAN>
+ event (left click) happens on <SPAN CLASS="ee-text">
 ok_button</SPAN>
 &quot;. <SPAN CLASS="ee-text">
 ok_button</SPAN>
 <SPAN CLASS="ee-dot">
 .</SPAN>
 <SPAN CLASS="ee-text">
-click_actions</SPAN>
+select_actions</SPAN>
  is the list of agents associated with the button and the event; in list classes, procedure <SPAN CLASS="ee-text">
 extend</SPAN>
  adds an item at the end of a list. Here, the object to be added is the agent.

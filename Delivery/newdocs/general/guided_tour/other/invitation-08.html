@@ -47,7 +47,7 @@ fail</SPAN>
 rescue</SPAN>
 <A NAME="marker-445314"></A> clause. This optional clause attempts to &quot;patch things up&quot; by bringing the current object to a stable state (one satisfying the class invariant). Then it can terminate in either of two ways: 
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445318"></A>The <SPAN CLASS="ee-keyword">
 rescue</SPAN>
 <A NAME="marker-445316"></A> clause may execute a <SPAN CLASS="ee-keyword">
@@ -56,15 +56,15 @@ retry</SPAN>
 rescue</SPAN>
  clause, before the <SPAN CLASS="ee-keyword">
 retry</SPAN>
-, have attempted to correct the cause of the exception. </LI>
-<LI CLASS="ll-bull">
+, have attempted to correct the cause of the exception. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445319"></A>If the <SPAN CLASS="ee-keyword">
 rescue</SPAN>
  clause does not end with <SPAN CLASS="ee-keyword">
 retry</SPAN>
 , then the routine fails: it returns to its caller, immediately triggering an exception. (The caller's <SPAN CLASS="ee-keyword">
 rescue</SPAN>
- clause will be executed according to the same rules.) </LI>
+ clause will be executed according to the same rules.) 
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-445320"></A>The principle is that <SPAN CLASS="ff-bold">
@@ -102,7 +102,7 @@ False</SPAN>
 <SPAN CLASS="ee-keyword">
  </SPAN>
 depending on the outcome. Here is the text of the routine:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">

@@ -37,18 +37,20 @@
 <P CLASS="nn-first">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
 <P CLASS="nn-first">
+<A NAME="pgfId-556409"></A>This appendix provides reference information, not needed in simple uses of EiffelStudio.
+<P CLASS="nn-normal">
 <A NAME="pgfId-495697"></A>We saw in the section on documentation (<A HREF="index-09.html#20935" CLASS="XRef"><SPAN CLASS="ww-crossref">
 8, page 39</SPAN>
-</A>) that you can output documentation about your system in many different formats. A number of predefined formats are available, from Postscript to Microsoft's Rich Text Format, FrameMaker, TEX and others. There's nothing special about these formats: they just make their conventions known to EiffelStudio through a <SPAN CLASS="ff-bold">
+</A>) that you can output documentation about your system in many different formats. A number of predefined formats are available, from Postscript to Microsoft's Rich Text Format, FrameMaker, HTML with and without style sheets, TEX and others. There's nothing special about these formats: they just make their conventions known to EiffelStudio through a <SPAN CLASS="ff-bold">
 filter</SPAN>
  expressed in a simple notation called EFF, or Eiffel Filter Format. If you have a favorite format that you'd like EiffelStudio to use for producing documentation, you can define your own filter in EFF. Applications include:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-495698"></A>Producing a variant of an existing format, to support some &quot;house style&quot; that you have defined, such as a different formating or fonts.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-495699"></A>Producing documentation for a text processing tool that's not among those supported by default.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-495700"></A>Producing documentation that purposely omit some parts of Eiffel texts, in line with the ideas applied by the Contract and Interface forms.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-495698"></A>Producing a variant of an existing format, to support some &quot;house style&quot; that you have defined, such as a different formatting or fonts.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-495699"></A>Producing documentation for a text processing tool that's not among those supported by default.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-495700"></A>Producing documentation that purposely omit some parts of Eiffel texts, in line with the ideas applied by the Contract and Flat Contract forms.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-495701"></A>This appendix describes EFF and its conventions, enabling you to write filters. Note that in practice the best way to write an EFF filter is usually not from scratch, but by copying an existing filter -- one that seems closest to your needs -- and adapting the copy.
@@ -61,7 +63,7 @@ filter</SPAN>
 <SPAN CLASS="ee-keyword">
 fil </SPAN>
 in the directory
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltext">
@@ -89,11 +91,11 @@ name</SPAN>
 <A NAME="pgfId-495711"></A>An EFF filter follows a very simple structure. As with all other Eiffel-related notations (such as Eiffel itself and Lace, the control language for Eiffel systems), any line or part of a line beginning with two consecutive dashes <SPAN CLASS="ee-keyword">
 -  - </SPAN>
 is a comment, except if it immediately follows a percent sign since, as will be seen below, <SPAN CLASS="ee-keyword">
-%-- </SPAN>
+%-  - </SPAN>
 is used to denote an Eiffel comment in the class text. Blank lines are also permitted. Comments and blank lines carry no semantic value.
 <P CLASS="nn-normal">
 <A NAME="pgfId-495715"></A>Except for comments and blank lines, a filter is a sequence of entries, all of the form
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -110,9 +112,9 @@ Replacement</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-495716"></A>where: <SPAN CLASS="ee-text">
 Construct</SPAN>
- is one of a set of possible strings, most of which corresponds to Eiffel constructs, such as <SPAN CLASS="ee-keyword">
-Class_declaration</SPAN>
-, or keywords, such as <SPAN CLASS="ee-keyword">
+ is one of a set of possible strings, most of which correspond to Eiffel constructs such as <SPAN CLASS="ee-keyword">
+Class_declaration </SPAN>
+or Eiffel keywords such as <SPAN CLASS="ee-keyword">
 class</SPAN>
 ; and <SPAN CLASS="ee-text">
 Replacement</SPAN>
@@ -137,7 +139,7 @@ Replacement</SPAN>
  part, you may use the symbol <SPAN CLASS="ee-symbol">
 &#8727;</SPAN>
  (asterisk) to denote the construct specimen itself. So for example the entry
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -148,14 +150,14 @@ Feature_clause | %N%N*%N%N</SPAN>
 </TR>
 </table></ul><p>
 <P CLASS="nn-first">
-<A NAME="pgfId-495724"></A>specifies the following formating for any <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-495724"></A>specifies the following formatting for any <SPAN CLASS="ee-keyword">
 Feature_clause</SPAN>
 : two successive blank lines (expressed as <SPAN CLASS="ee-keyword">
 %N</SPAN>
 , New Line, a convention taken from Eiffel); the feature clause itself; two blank lines.
 <P CLASS="nn-first">
 <A NAME="pgfId-495728"></A>Similarly, in an HTML format, the entry
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -179,7 +181,7 @@ must appear in the filtered form immediately preceded by <SPAN CLASS="ee-keyword
 , the code for reverting to the previous setup. Here you can also write the right-hand side without the asterisks, as <SPAN CLASS="ee-keyword">
 &lt;B&gt;external&lt;/B&gt;</SPAN>
 . If, however, all keywords are to use boldface, it is preferable to write a single entry
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -205,7 +207,7 @@ Keyword</SPAN>
 <A NAME="pgfId-495737"></A>The<A NAME="marker-495736"></A> following general syntactic constructs may appear as the left-hand side, <SPAN CLASS="ee-text">
 Construct</SPAN>
 , of an entry:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -294,13 +296,13 @@ Tab</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-495760"></A>Most of these denote Eiffel constructs as they appear in the official language reference, the book <SPAN CLASS="ww-crossref">
 <A HREF="http://eiffel.com/doc/documentation.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
-. Since the the Eiffel construct names <SPAN CLASS="ee-keyword">
+. Since the Eiffel construct names <SPAN CLASS="ee-keyword">
 Feature</SPAN>
 , <SPAN CLASS="ee-keyword">
 Invariant</SPAN>
  and <SPAN CLASS="ee-keyword">
 Obsolete </SPAN>
-are also keywords and EFF, like Eiffel, is case-insensitive, the EFF construct names use the the suffix <SPAN CLASS="ee-keyword">
+are also keywords and EFF, like Eiffel, is case-insensitive, the EFF construct names use the suffix <SPAN CLASS="ee-keyword">
 _clause</SPAN>
 , for example <SPAN CLASS="ee-keyword">
 Feature_clause</SPAN>
@@ -308,38 +310,38 @@ Feature_clause</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-495762"></A>The constructs corresponding to syntactic constructs are self-explanatory. The others are: 
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495763"></A><SPAN CLASS="ee-keyword">
 Class_end</SPAN>
-, denoting the final end of a class text.</LI>
-<LI CLASS="ll-bull">
+, denoting the final end of a class text.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495764"></A><SPAN CLASS="ee-keyword">
 Keyword</SPAN>
 , denoting any Eiffel keyword among those listed in boldface in the corresponding appendix in <SPAN CLASS="ww-crossref">
 <A HREF="http://eiffel.com/doc/documentation.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
-</LI>
-<LI CLASS="ll-bull">
+
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495766"></A><SPAN CLASS="ee-keyword">
 New_line</SPAN>
-, denoting any passage to a new line in the class text.</LI>
-<LI CLASS="ll-bull">
+, denoting any passage to a new line in the class text.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495767"></A><SPAN CLASS="ee-keyword">
 Suffix</SPAN>
-, used to introduce the file extension for the generated documentation files. If you don't specify this, EiffelStudio will use the filter's name as extension.</LI>
-<LI CLASS="ll-bull">
+, used to introduce the file extension for the generated documentation files. If you don't specify this, EiffelStudio will use the filter's name as extension.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495768"></A><SPAN CLASS="ee-keyword">
 Symbol</SPAN>
 , denoting any of the Eiffel symbols listed in the corresponding appendix of <SPAN CLASS="ww-crossref">
 <A HREF="http://eiffel.com/doc/documentation.html#etl" CLASS="URL">Eiffel: The Language</A></SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495770"></A><SPAN CLASS="ee-keyword">
 Escape</SPAN>
-, to protect special characters of the external tool, as explained below.</LI>
-<LI CLASS="ll-bull">
+, to protect special characters of the external tool, as explained below.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495772"></A><SPAN CLASS="ee-keyword">
 Tab</SPAN>
-, denoting any tab character appearing in the class text.<A NAME="marker-495771"></A></LI>
+, denoting any tab character appearing in the class text.<A NAME="marker-495771"></A>
 </UL>
 </DIV>
 <DIV>
@@ -377,12 +379,12 @@ Construct</SPAN>
 part may consist of an Eiffel symbol, such as <SPAN CLASS="ee-keyword">
 :=</SPAN>
 , <SPAN CLASS="ee-keyword">
-&lt;&lt; </SPAN>
+/= </SPAN>
 and many others. Again, you may see the complete list by looking at <SPAN CLASS="ee-keyword">
 format.fil-template</SPAN>
 . Note the following conventions:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495783"></A><SPAN CLASS="ee-keyword">
 %</SPAN>
 <SPAN CLASS="ee-symbol">
@@ -391,13 +393,13 @@ format.fil-template</SPAN>
  </SPAN>
 represents an asterisk. for example as a multiplication operator; the <SPAN CLASS="ee-keyword">
 % </SPAN>
-avoids the confusion with the special meaning of the asterisk for EFF. You can find examples of this convention in the EFF filters for troff and gtroff.</LI>
-<LI CLASS="ll-bull">
+avoids the confusion with the special meaning of the asterisk for EFF. You can find examples of this convention in the EFF filters for troff and gtroff.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495784"></A>Similarly, the Eiffel comment symbol appears as <SPAN CLASS="ee-keyword">
 %-  -</SPAN>
 , since just writing <SPAN CLASS="ee-keyword">
 -  - </SPAN>
-would introduce a comment in the EFF filter itself.</LI>
+would introduce a comment in the EFF filter itself.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-495785"></A>As with keywords, you may specify a general convention for symbols, defined by an entry for the construct <SPAN CLASS="ee-keyword">
@@ -431,7 +433,7 @@ Escape </SPAN>
 (after one or more blanks or tabs) is the character to be escaped. The string after the vertical bar is the replacement for that character.
 <P CLASS="nn-normal">
 <A NAME="pgfId-495793"></A>Here for example is an escape entry for the backslash in tools that need to escape it through another backslash:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -456,7 +458,7 @@ Replacement</SPAN>
 %- </SPAN>
 to represent a dash that does not introduce an Eiffel comment. In addition:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495801"></A><SPAN CLASS="ee-keyword">
 %|</SPAN>
  denotes a vertical bar. (This is necessary since EFF uses <SPAN CLASS="ee-keyword">
@@ -465,27 +467,27 @@ to represent a dash that does not introduce an Eiffel comment. In addition:
 Construct</SPAN>
  from the corresponding <SPAN CLASS="ff-italics">
 Replacement</SPAN>
-.)</LI>
-<LI CLASS="ll-bull">
+.)
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495802"></A><SPAN CLASS="ee-keyword">
 %N </SPAN>
 (recommended form) or <SPAN CLASS="ee-keyword">
 %n </SPAN>
-denotes a new line.</LI>
-<LI CLASS="ll-bull">
+denotes a new line.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495803"></A><SPAN CLASS="ee-keyword">
 %T </SPAN>
 (recommended form) or <SPAN CLASS="ee-keyword">
 %t</SPAN>
- denotes a tab.</LI>
-<LI CLASS="ll-bull">
+ denotes a tab.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495804"></A><SPAN CLASS="ee-keyword">
 %% </SPAN>
-denotes a percent sign.</LI>
-<LI CLASS="ll-bull">
+denotes a percent sign.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495805"></A><SPAN CLASS="ee-keyword">
 % </SPAN>
-  (percent followed by a space) denotes a space. This is equivalent to just a space, but more visible.</LI>
+  (percent followed by a space) denotes a space. This is equivalent to just a space, but more visible.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-495806"></A>If <SPAN CLASS="ee-text">

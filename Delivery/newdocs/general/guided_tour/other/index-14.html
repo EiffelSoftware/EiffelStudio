@@ -46,14 +46,14 @@
 <P CLASS="nn-normal">
 <A NAME="pgfId-520215"></A>The facilities to be described now are also useful when you find such an error, as they will help you study its execution context. In fact, one of the characteristics of the debugging mechanism is that there is no &quot;debugger&quot; proper, no more than there is a &quot;browser&quot;; you have instead a set of facilities supporting controlled execution and debugging. This means for example that:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-520222"></A>While debugging, you can access all the browsing capabilities to explore the features and classes surrounding the cause of an error.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-520235"></A>While browsing, you can launch or resume execution, and follow its progress through the debugging facilities.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-520222"></A>While debugging, you can access all the browsing capabilities to explore the features and classes surrounding the cause of an error.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-520235"></A>While browsing, you can launch or resume execution, and follow its progress through the debugging facilities.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520243"></A>If execution stops on an exception -- assertion violation, arithmetic overflow, call on a void target <SPAN CLASS="tt-nsymbol">
 &#8230;</SPAN>
- -- you have all the environment's facilities at your disposal to understand what happened.</LI>
+ -- you have all the environment's facilities at your disposal to understand what happened.
 </UL>
 </DIV>
 <DIV>
@@ -73,25 +73,29 @@ buttonholes</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-520254"></A>The labels correspond to the icons' use as buttons: enable all set breakpoints, disable them all, clear all, display information on current breakpoints. The difference between &quot;disabling&quot; and &quot;removing&quot; is that disabling turns breakpoints off until further notice but remembers them, so that you can later re-enable them, whereas &quot;removing&quot; clears them for good.
+<A NAME="pgfId-520254"></A>The labels correspond to the icons' use as buttons: enable all set breakpoints, disable them all, clear all, display information on current breakpoints. The difference between &quot;disabling&quot; and &quot;removing&quot; is that disabling turns off breakpoints until further notice but remembers them, so that you can later re-enable them, whereas &quot;removing&quot; clears them for good.
 <P CLASS="nn-normal">
-<A NAME="pgfId-520257"></A>Target a Development Tool to the class <SPAN CLASS="ee-text">
+<A NAME="pgfId-520257"></A>Target a Development Window to the class <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
  and pick-and-drop the name of the procedure <SPAN CLASS="ee-text">
 make</SPAN>
- (the first routine, after the declaration of the two attributes o1 and o2) to the <SPAN CLASS="ee-keyword">
+ (the first routine, after the declaration of the two attributes <SPAN CLASS="ee-text">
+o1</SPAN>
+ and <SPAN CLASS="ee-text">
+o2</SPAN>
+) to the <SPAN CLASS="ee-keyword">
 Enable all</SPAN>
- icon, used here as a hole. This sets a breakpoint on the routine. Click the button labeled <SPAN CLASS="ee-keyword">
-Display info</SPAN>
-above to get the list of breakpoints, as shown in the the next figure.
+ icon, used here as a hole. This sets and enables a breakpoint on the routine. Click the button labeled <SPAN CLASS="ee-keyword">
+Display info </SPAN>
+above to get the list of breakpoints, as shown in the next figure.
 <P CLASS="jj-small">
-<A NAME="pgfId-520262"></A>If you don't see this list in the Context pane, make sure the Context pane is present (if not, click on the <SPAN CLASS="ee-keyword">
-Context</SPAN>
- button in the top tool bar). In this case you can get the same effect as that of <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-520262"></A>If the Context Tool is not present, <SPAN CLASS="ee-keyword">
+Display info</SPAN>
+ will bring it up. You can get the same effect as that of <SPAN CLASS="ee-keyword">
 Display info </SPAN>
 by selecting the <SPAN CLASS="ee-keyword">
 Output</SPAN>
- tab in the Context pane..
+ Tab in the Context Tool.
 <DIV>
 <p>
 <ul>
@@ -102,9 +106,9 @@ Output</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-520395"></A>This shows that so far you have enabled only one breakpoint. For a finer degree of control, let's look at the feature's flat form. Pick-and-drop <SPAN CLASS="ee-text">
 make</SPAN>
- to the Context pane -- from the Context pane itself, since its name appears there, or the Text pane); this sets the Context to the <SPAN CLASS="ee-keyword">
+ to the Context Tool -- from the Context Tool itself, since its name appears there, or the Editing Tool); this sets the Context to the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
- tab. Select the <SPAN CLASS="ee-keyword">
+ Tab. Select the <SPAN CLASS="ee-keyword">
 Flat</SPAN>
  view if that wasn't the last one used:
 <DIV>
@@ -115,9 +119,9 @@ Flat</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-520433"></A>The small circles on the left side of the Flat form indicate breakpoint positions. Empty ones are not set; set breakpoints are marked by a circle filled with red. At the moment only one is set, corresponding to the first instruction of the routine since, as noted, setting a breakpoint on a routine as a whole means setting it on its first operation.
+<A NAME="pgfId-520433"></A>The small circles on the left side of the Flat form indicate breakpoint positions. Empty ones are not set; enabled breakpoints are marked by a circle filled with red. At the moment only one is enabled, corresponding to the first instruction of the routine since, as noted, setting a breakpoint on a routine as a whole means setting it on its first operation.
 <P CLASS="nn-normal">
-<A NAME="pgfId-520436"></A>By (left) clicking on a breakpoint mark, you toggle it between set and not set. You can also right-click on a mark to get a menu of possibilities. Try setting and unsetting a few of these marks; you might get something like this:
+<A NAME="pgfId-520436"></A>By (left) clicking on a breakpoint mark, you toggle it between enabled and not set. You can also right-click on a mark to get a menu of possibilities. Try enabling and unsetting a few of these marks; you might get something like this:
 <DIV>
 <p>
 <ul>
@@ -136,13 +140,13 @@ Disable breakpoint</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-520482"></A>You can see the list of enabled and disabled breakpoints by clicking the <SPAN CLASS="ee-keyword">
 Output</SPAN>
- tab, or the <SPAN CLASS="ee-keyword">
+ Tab, or the <SPAN CLASS="ee-keyword">
 Display info</SPAN>
- button in the Project Tool.
+ button in the Project Toolbar.
 <P CLASS="nn-normal">
 <A NAME="pgfId-520487"></A>For the continuation of this tour it doesn't matter which exact breakpoints of <SPAN CLASS="ee-text">
 make </SPAN>
-you've set, as long as the one of its first instruction is set and enabled (red-filled circle) as above. Please make sure this is the case before proceeding.
+you've set, as long as the one on its first instruction is set and enabled (red-filled circle) as above. Please make sure this is the case before proceeding.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
@@ -185,7 +189,7 @@ Terminate</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-520532"></A>Start execution of the compiled system by clicking <SPAN CLASS="ee-keyword">
 Run with breakpoints</SPAN>
-. The display automatically switches to accommodate supplementary panes providing debugging information. Execution stops on the breakpoint that you have enabled on the first instruction of procedure <SPAN CLASS="ee-text">
+. The display automatically switches to accommodate supplementary tools providing debugging information. Execution stops on the breakpoint that you have enabled on the first instruction of procedure <SPAN CLASS="ee-text">
 make</SPAN>
 :
 <DIV>
@@ -199,15 +203,19 @@ make</SPAN>
 <A NAME="pgfId-520541"></A>The pane at the bottom left indicates that execution has stopped in <SPAN CLASS="ee-text">
 make</SPAN>
 . The Context shows the flat form of that routine, with a new icon to indicate the stop point which execution has reached. At the bottom right is a new tool, the <SPAN CLASS="ff-bold">
-object editor</SPAN>
+Object Editor</SPAN>
 , which shows the content of current object and (later) related objects. At the moment you can see that:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520551"></A>The current object is an instance of class <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-520552"></A>The class (as you can also see from its text in a Development Tool) has two attributes o1 and o2, for which the corresponding fields in the current object are both void; this is as expected since you haven't yet executed the two creation instructions <SPAN CLASS="ee-keyword">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-520552"></A>The class (as you could also see from its text in a Development Window) has two attributes <SPAN CLASS="ee-text">
+o1</SPAN>
+ and <SPAN CLASS="ee-text">
+o2</SPAN>
+, for which the corresponding fields in the current object are both void; this is as expected since you haven't yet executed the two creation instructions <SPAN CLASS="ee-keyword">
 create </SPAN>
 <SPAN CLASS="ee-comment">
 {</SPAN>
@@ -221,13 +229,13 @@ o1</SPAN>
 create</SPAN>
  <SPAN CLASS="ee-text">
 o2</SPAN>
-, which come after the breakpoint.</LI>
-<LI CLASS="ll-bull">
+, as they come after the breakpoint.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520571"></A>Along with attributes, an Eiffel class may have <SPAN CLASS="ff-bold">
 once functions</SPAN>
 , executed at most once -- the first time they are called -- in a given session, and from then on always returning the same value. Here the once function <SPAN CLASS="ee-text">
-io</SPAN>
-, has been called and returned an object of type <SPAN CLASS="ee-text">
+io </SPAN>
+has been called, returning an object of type <SPAN CLASS="ee-text">
 STD_FILES</SPAN>
 , but <SPAN CLASS="ee-text">
 operating_environment</SPAN>
@@ -235,7 +243,7 @@ operating_environment</SPAN>
 io</SPAN>
 , from the top-level class <SPAN CLASS="ee-text">
 ANY</SPAN>
-) has not yet been called.</LI>
+) has not yet been called.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-520574"></A>The execution-time objects that you may display in an Object Editor are our latest kind of EiffelStudio &quot;development object&quot;, along with classes, features, explanations, clusters; notice their distinctive icon, a rectangular mesh suggestion an object's division into fields. It appears colored for actual objects, gray for void references such as <SPAN CLASS="ee-text">
@@ -252,7 +260,7 @@ Step-by-step</SPAN>
 make</SPAN>
 , the marker that shows execution progress; note that the marker always points to the <SPAN CLASS="ff-italics">
 next</SPAN>
- operation to be executed. After the two steps, the Context and Object panes look like this:
+ operation to be executed. After the two steps, the Context and Object Tools look like this:
 <DIV>
 <p>
 <ul>
@@ -281,15 +289,15 @@ use its proper descendant <SPAN CLASS="ee-text">
 HEIR</SPAN>
 . As a result, the entry for <SPAN CLASS="ee-text">
 o1</SPAN>
- in the Object Tool no longer shows void but an object of type <SPAN CLASS="ee-text">
+ in the Object Tool no longer shows <SPAN CLASS="ee-text">
+Void </SPAN>
+but an object of type <SPAN CLASS="ee-text">
 HEIR</SPAN>
-. Note that all objects are identified by their address in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object. The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- different from the ones appearing here.<SPAN CLASS="ee-text">
-</SPAN>
-
+. Note that all objects are identified by their addresses in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object. The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- be different from the ones appearing here.
 <P CLASS="jj-small">
 <A NAME="pgfId-520600"></A>Note that since the ISE Eiffel garbage collector compacts memory and hence may move objects around, the address of a given object is not guaranteed to remain the same throughout a session.
 <P CLASS="nn-first">
-<A NAME="pgfId-520607"></A>To see the details of the object, pick-and-drop its indentifer in place (that is to say, drop it in the Object pane itself). A new object entry appears, showing the object:
+<A NAME="pgfId-520607"></A>To see the details of the object, pick-and-drop its identifier in place (that is to say, drop it in the Object Tool itself). A new object entry appears, showing the object:
 <DIV>
 <p>
 <ul>
@@ -304,13 +312,13 @@ HEIR</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-520669"></A>Now try pick-and-dropping that same object, the instance of <SPAN CLASS="ee-text">
 HEIR</SPAN>
-, to the Context pane above the Object window<SPAN CLASS="ee-text">
+, to the Context Tool above the Object window<SPAN CLASS="ee-text">
 . </SPAN>
 The effect is the same as if you had pick-and-dropped the <SPAN CLASS="ff-bold">
 class</SPAN>
  name <SPAN CLASS="ee-text">
 HEIR</SPAN>
-: retarget the Context pane to that class.
+: retarget the Context Tool to that class.
 <DIV>
 <p>
 <ul>
@@ -325,13 +333,13 @@ feature</SPAN>
 object</SPAN>
  pebble, which will be understood as denoting the object's generating class.
 <P CLASS="nn-normal">
-<A NAME="pgfId-520670"></A>Because the Context pane is showing a class, it has switched to the default format for classes, <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-520670"></A>Because the Context Tool is showing a class, it has switched to the default format for classes, <SPAN CLASS="ee-keyword">
 Ancestors</SPAN>
 , and is showing the ancestors of <SPAN CLASS="ee-text">
 HEIR</SPAN>
 . Click the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
- tab of the Context pane to set it back to feature information for the continuation of our debugging session. No feature is currently displayed.
+ Tab of the Context Tool to set it back to feature information for the continuation of our debugging session. No feature is currently displayed.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
@@ -354,9 +362,9 @@ display</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-520627"></A>If at this stage you chose <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-520627"></A>Choosing <SPAN CLASS="ee-keyword">
 Step-by-step </SPAN>
-again this would execute the next step in the current routine, the call <SPAN CLASS="ee-text">
+again would execute the next step in the current routine, the call <SPAN CLASS="ee-text">
 o1</SPAN>
 <SPAN CLASS="ee-dot">
 .</SPAN>
@@ -366,7 +374,9 @@ display</SPAN>
 display </SPAN>
 from class <SPAN CLASS="ee-text">
 HEIR</SPAN>
- as a single operation. Assume instead that you want to get into that routine and follow the details of its execution. For one thing, you might not know that it's a routine of class <SPAN CLASS="ee-text">
+ as a single operation. Assume instead that you want to go <SPAN CLASS="ff-italics">
+into</SPAN>
+ that routine and follow the details of its execution. For one thing, you might not know that it's a routine of class <SPAN CLASS="ee-text">
 HEIR</SPAN>
 , since <SPAN CLASS="ee-text">
 o1 </SPAN>
@@ -382,7 +392,7 @@ HEIR</SPAN>
 create </SPAN>
 a few lines up, but in many cases, especially all those for which polymorphism and dynamic binding are <SPAN CLASS="ff-italics">
 really </SPAN>
-interetsing, the exact type won't be obvious from the software text.
+interesting, the exact type won't be immediately clear from the neighboring software text.
 <P CLASS="nn-normal">
 <A NAME="pgfId-520634"></A>Click the <SPAN CLASS="ee-keyword">
 Step into routine</SPAN>
@@ -419,7 +429,7 @@ TESTROOT</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-520650"></A>You may now click the <SPAN CLASS="ee-keyword">
 Terminate</SPAN>
- button (Shift-F5) to end execution. The execution-specific panes go away and the display returns to what it was before execution.
+ button (Shift-F5) to end execution. The execution-specific tools go away and the display returns to what it was before execution.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
@@ -431,13 +441,13 @@ without</SPAN>
 Interrupt</SPAN>
  button (CTRL-Shift-F5). It will interrupt execution at the closest potential breakpoint position, letting you -- as when execution stops because of an exception -- take advantage of all the debugging and browsing facilities to see what's going on inside the program. You may then restart execution -- with or without breakpoints, single-stepping, out of the current routine, into the next routine -- by choosing the appropriate Run button
 <P CLASS="nn-normal">
-<A NAME="pgfId-520672"></A>In debugging sessions for more advanced applications, you will also find the self-explanatory mechanisms enabling you, in addition to what we have seen, to examine all the objects on the &quot;call stack&quot;: arguments and local entities of the current routine, its caller, caller's caller and so on.
+<A NAME="pgfId-520672"></A>In debugging sessions for more advanced applications, you will also find self-explanatory mechanisms enabling you, in addition to what we have seen, to examine all the objects on the &quot;call stack&quot;: arguments and local entities of the current routine, its caller, caller's caller and so on.
 <P CLASS="nn-normal">
 <A NAME="pgfId-520681"></A>The combination of these facilities provides you with a level of <SPAN CLASS="ff-italics">
 dynamic</SPAN>
  information on the execution of your system that matches the <SPAN CLASS="ff-italics">
 static </SPAN>
-information that the browsing mechanisms studied in preceding chapters provide about the system's structure.
+information that the browsing mechanisms studied in preceding sections provide about the system's structure.
 </DIV>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-13.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-15.html"><area shape="default" nohref></MAP>
 

@@ -477,35 +477,35 @@ deposit</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-514881"></A>To be more precise:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514882"></A>A precondition violation signals a bug in the client, which did not observe its part of the deal.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514883"></A>A postcondition (or invariant) violation signals a bug in the supplier -- the routine -- which did not do its job.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514882"></A>A precondition violation signals a bug in the client, which did not observe its part of the deal.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514883"></A>A postcondition (or invariant) violation signals a bug in the supplier -- the routine -- which did not do its job.
 </UL>
 <P CLASS="nn-normal">
 <A NAME="pgfId-514884"></A>That violations indicate bugs explains why it is legitimate to enable or disable assertion monitoring through mere compilation options: for a correct system -- one without bugs -- assertions will always hold, so the compilation option makes no difference to the semantics of the system. 
 <P CLASS="nn-normal">
 <A NAME="pgfId-514885"></A>But of course for an incorrect system the best way to find out where the bug is -- or just that there is a bug -- is often to monitor the assertions during development and testing. Hence the presence of the compilation options, which ISE's EiffelStudio lets you set separately for each class, with defaults at the system and cluster levels:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514886"></A><SPAN CLASS="ee-keyword">
 no</SPAN>
-: assertions have no run-time effect.</LI>
-<LI CLASS="ll-bull">
+: assertions have no run-time effect.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514887"></A><SPAN CLASS="ee-keyword">
 require</SPAN>
-: monitor preconditions only, on routine entry.</LI>
-<LI CLASS="ll-bull">
+: monitor preconditions only, on routine entry.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514888"></A><SPAN CLASS="ee-keyword">
 ensure</SPAN>
-: preconditions on entry, postconditions on exit.</LI>
-<LI CLASS="ll-bull">
+: preconditions on entry, postconditions on exit.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514889"></A><SPAN CLASS="ee-keyword">
 invariant</SPAN>
 : like <SPAN CLASS="ee-keyword">
 ensure</SPAN>
-, plus class invariant on both entry and exit for qualified calls.</LI>
-<LI CLASS="ll-bull">
+, plus class invariant on both entry and exit for qualified calls.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514892"></A><SPAN CLASS="ee-keyword">
 all</SPAN>
 : like <SPAN CLASS="ee-keyword">
@@ -514,7 +514,7 @@ invariant</SPAN>
 check</SPAN>
  instructions, loop invariants and loop variants (<A HREF="tutorial-11.html#38021" CLASS="XRef"><SPAN CLASS="ww-crossref">
 &quot;Instructions&quot;,  page 84</SPAN>
-</A>).</LI>
+</A>).
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-514894"></A>An assertion violation, if detected at run time under one of these options other than the first, will cause an exception (<A HREF="tutorial-09.html#10722" CLASS="XRef"><SPAN CLASS="ww-crossref">
@@ -635,16 +635,16 @@ class</SPAN>
 short form</SPAN>
 &quot;) retains all its interface properties, relevant to client authors:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514932"></A>Names and signatures (argument and result type information) for exported features.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514932"></A>Names and signatures (argument and result type information) for exported features.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514933"></A>Header comments of these features, which carry informal descriptions of their purpose. (Hence the importance, mentioned in section <A HREF="tutorial-05.html#35212" CLASS="XRef"><SPAN CLASS="ww-crossref">
 4</SPAN>
-</A>, of always including such comments and writing them carefully.)</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514937"></A>Preconditions and postconditions of these features (at least the subclauses involving only exported features).</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514938"></A>Class invariant (same observation).</LI>
+</A>, of always including such comments and writing them carefully.)
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514937"></A>Preconditions and postconditions of these features (at least the subclauses involving only exported features).
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514938"></A>Class invariant (same observation).
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-514939"></A>The following elements, however, are not in the Contract Form: any information about non-exported features; all the routine bodies (<SPAN CLASS="ee-keyword">
@@ -671,14 +671,14 @@ balance</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-514951"></A>The Contract Form satisfies two key requirements of good software documentation:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514952"></A>It is truly abstract, free from the implementation details of what it describes and concentrating instead on its functionality.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514952"></A>It is truly abstract, free from the implementation details of what it describes and concentrating instead on its functionality.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514953"></A>Rather than being developed separately -- an unrealistic requirement, hard to impose on developers initially and becoming impossible in practice if we expect the documentation to remain up to date as the software evolves -- the documentation is extracted from the software itself. It is not a separate product but a different view of the same product. This prolongs the<SPAN CLASS="ff-bold">
  Single Product</SPAN>
  principle that lies at the basis of Eiffel's seamless development model (section <A HREF="tutorial-04.html#41726" CLASS="XRef"><SPAN CLASS="ww-crossref">
 3</SPAN>
-</A>).</LI>
+</A>).
 </UL>
 <P CLASS="nn-normal">
 <A NAME="pgfId-514957"></A>The Contract Form is only one of the relevant views. EiffelStudio, for example, generates graphical representations of system structures, to show classes and their relations -- client, inheritance -- according to the conventions of BON (the Business Object Notation). In accordance with the principles of seamlessness and reversibility, EiffelStudio lets you both work on the text, producing the graphics on the fly, or work on the graphics, updating the text on the fly; you can alternate as you wish between these two modes. The resulting process is quite different from more traditional approaches based on separate tools: an analysis and CASE workbench, often based on UML, to deal with an initial &quot;bubble-and-arrow&quot; description; and a separate programming environment, to deal with implementation aspects only. In Eiffel the environment provides consistent, seamless support from beginning to end.
@@ -699,20 +699,20 @@ reuse without a contract documentation</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-514964"></A>Another application of Design by Contract governs the handling of unexpected cases. The vagueness of many discussions of this topic follows from the lack of a precise definition of terms such as &quot;exception&quot;. With Design by Contract we are in a position to be specific:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514965"></A>Any routine has a contract to achieve.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514966"></A>Its body defines a strategy to achieve it -- a sequence of operations, or some other control structure involving operations. Some of these operations are calls to routines, with their own contracts; but even an atomic operation, such as the computation of an arithmetic operation, has an implicit contract, stating that the result will be representable.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514965"></A>Any routine has a contract to achieve.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514966"></A>Its body defines a strategy to achieve it -- a sequence of operations, or some other control structure involving operations. Some of these operations are calls to routines, with their own contracts; but even an atomic operation, such as the computation of an arithmetic operation, has an implicit contract, stating that the result will be representable.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514967"></A>Any one of these operations may <SPAN CLASS="ee-keyword">
 fail</SPAN>
-, that is to say be unable to meet its contract; for example an arithmetic operation may produce an overflow (a non-representable result).</LI>
-<LI CLASS="ll-bull">
+, that is to say be unable to meet its contract; for example an arithmetic operation may produce an overflow (a non-representable result).
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-514968"></A>The failure of an operation is an <SPAN CLASS="ff-bold">
 exception</SPAN>
- for the routine that needed the operation.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-514969"></A>As a result the routine may fail too -- causing an exception in its own caller.</LI>
+ for the routine that needed the operation.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-514969"></A>As a result the routine may fail too -- causing an exception in its own caller.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-514970"></A>Note the precise definitions of the two key concepts, failure and exception. Although failure is the more basic one -- since it is defined for atomic, non-routine operations -- the definitions are mutually recursive, since an exception may cause a failure of the recipient routine, and a routine's failure causes an exception in its own caller.
@@ -973,15 +973,15 @@ retry</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-515030"></A>Concretely, exceptions may result from the following events:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515031"></A>A routine failure (<SPAN CLASS="ee-keyword">
 rescue</SPAN>
  clause executed to the end with no <SPAN CLASS="ee-keyword">
 retry</SPAN>
-), as just seen.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515032"></A>Assertion violation, if for a system that runs with assertion monitoring on.</LI>
-<LI CLASS="ll-bull">
+), as just seen.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515032"></A>Assertion violation, if for a system that runs with assertion monitoring on.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515033"></A>Attempt to call a feature on a void reference: <SPAN CLASS="ee-text">
 x</SPAN>
 <SPAN CLASS="ee-dot">
@@ -994,11 +994,11 @@ f</SPAN>
 )</SPAN>
 , the fundamental computational mechanism, can only work if <SPAN CLASS="ee-text">
 x</SPAN>
- is attached to an object, and will cause an exception otherwise.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515034"></A>Developer exception, as seen next.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515035"></A>Operating system signal:arithmetic overfolow; no memory available for a requested creation or clone -- even after garbage collection has rummaged everything to find some space. (But no C/C++-like &quot;wrong pointer address&quot;, which cannot occur thanks to the statically typed nature of Eiffel.)</LI>
+ is attached to an object, and will cause an exception otherwise.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515034"></A>Developer exception, as seen next.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515035"></A>Operating system signal:arithmetic overfolow; no memory available for a requested creation or clone -- even after garbage collection has rummaged everything to find some space. (But no C/C++-like &quot;wrong pointer address&quot;, which cannot occur thanks to the statically typed nature of Eiffel.)
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515036"></A>It is sometimes useful, when handling exceptions in <SPAN CLASS="ee-keyword">
@@ -1033,16 +1033,16 @@ not</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-515043"></A>The Design by Contract ideas pervade the Eiffel method. In addition to the applications just mentioned, they have two particularly important consequences:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515044"></A>They make it possible to use Eiffel for analysis and design. At a high level of abstraction, it is necessary to be precise too. With the exception of BON, object-oriented analysis and design methods tend to favor abstraction over precision. Thanks to assertions, it is possible to express precise properties of a system (&quot;<SPAN CLASS="ff-italics">
 At what speed should the alarm start sounding?</SPAN>
 &quot;) without making any commitment to implementation. The discussion of deferred classes (<A HREF="tutorial-10.html#48949" CLASS="XRef"><SPAN CLASS="ww-crossref">
 &quot;Applications of deferred classes&quot;,  page 60</SPAN>
-</A>) will show how to write a purely descriptive, non-software model in Eiffel, using contracts to describe the essential properties of a system without any computer or software aspect.</LI>
-<LI CLASS="ll-bull">
+</A>) will show how to write a purely descriptive, non-software model in Eiffel, using contracts to describe the essential properties of a system without any computer or software aspect.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515048"></A>Assertions also serve to control the power of inheritance-related mechanisms -- redeclaration, polymorphism, dynamic binding -- and channel them to correct uses by assigning the proper semantic limits. See <A HREF="tutorial-10.html#83610" CLASS="XRef"><SPAN CLASS="ww-crossref">
 &quot;Inheritance and contracts&quot;,  page 66</SPAN>
-</A>.</LI>
+</A>.
 </UL>
 </DIV>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-08.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-10.html"><area shape="default" nohref></MAP>

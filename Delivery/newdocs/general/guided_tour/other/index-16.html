@@ -37,30 +37,30 @@
 <P CLASS="nn-first">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
 <P CLASS="nn-first">
-<A NAME="pgfId-527345"></A>So far the project modifications that we have made used the text editor. We used graphics, but as a way to reflect system structures, not to build them (<A HREF="index-07.html#46460" CLASS="XRef"><SPAN CLASS="ww-crossref">
+<A NAME="pgfId-527345"></A>So far the project modifications that we have made used the text editor in the Editing Tool. We used graphics, but as a way to reflect system structures, not to build them (<A HREF="index-07.html#46460" CLASS="XRef"><SPAN CLASS="ww-crossref">
 &quot;A peek at diagrams&quot;,  page 21</SPAN>
 </A>, and subsequent discussions).
 <P CLASS="nn-normal">
-<A NAME="pgfId-527354"></A>In line with the principles of seamlessness and reversibility recalled at the beginning of this Tour, EiffelStudio's text-diagram interaction is completely both ways. When you make a textual modification, the diagram will be updated after the next incremental recompilation; but you can also work directly from the diagram, and the text will be generated or updated after each graphical operations.
+<A NAME="pgfId-527354"></A>In line with the principles of seamlessness and reversibility recalled at the beginning of this Tour, EiffelStudio's text-diagram interaction is bi-directional. When you make a textual modification, the next incremental recompilation will update the diagram; but you can also work directly from the diagram, and the text will be generated or updated after each graphical operation.
 <P CLASS="nn-normal">
 <A NAME="pgfId-527355"></A>Many people like to use the graphical mechanisms at the beginning of a project, to draft the overall structure of a system in &quot;bubbles-and-arrows&quot; style, then concentrate on text as they get closer to implementation. But there is really no such obligation. At any point in the development, just use the form that is more suited to your taste and to your needs of the moment.
 <DIV>
 <H2 CLASS="aa-sec3">
 <A NAME="pgfId-527356"></A>Displaying a cluster view</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-527357"></A>We are going to play with the root cluster. Make sure the Cluster tree and the Context pane are up. Also make sure that the Context tool is in Isolate rather than Merge behavior (<A HREF="index-11.html#89659" CLASS="XRef"><SPAN CLASS="ww-crossref">
+<A NAME="pgfId-527357"></A>We are going to play with the root cluster. Make sure the Cluster tree and the Context Tool are up. Also make sure that the Context tool is in Isolate rather than Merge behavior (<A HREF="index-11.html#89659" CLASS="XRef"><SPAN CLASS="ww-crossref">
 &quot;Isolating the context&quot;,  page 68</SPAN>
 </A>); you can see this by going to the <SPAN CLASS="ee-keyword">
 Edit menu</SPAN>
 : if there is an entry <SPAN CLASS="ee-keyword">
 Isolate context tool</SPAN>
-, select it; otherwise (the corresponding entry reads &quot;Merge context tool) don't do anything, you're fine. (You can also use the Merge/Isolate button added earlier to the Browsing toolbar for this very purpose.)
+, select it; otherwise (the corresponding entry reads &quot;Merge context tool&quot;) don't do anything, you're fine. (You can also use the Merge/Isolate button added earlier to the Browsing toolbar for this very purpose.)
 <P CLASS="nn-normal">
-<A NAME="pgfId-527381"></A>The earlier diagrams were &quot;class views&quot;, giving a picture of the world around a class. For a change, we are going to work for the moment with <SPAN CLASS="ff-bold">
+<A NAME="pgfId-527381"></A>The earlier diagrams were &quot;class views&quot;, giving a picture of the world around a class. For a change, we are now going to start working with <SPAN CLASS="ff-bold">
 cluster views</SPAN>
-, showing the content of a cluster. Select the Diagram tab in the Context pane; from the Cluster Tree, pick-and-drop <SPAN CLASS="ee-text">
+, showing the content of a cluster. Select the Diagram Tab in the Context Tool; from the Cluster Tree, pick-and-drop <SPAN CLASS="ee-text">
 root_cluster</SPAN>
- to the Context pane. This displays the graphical view of the root cluster in the Context pane:
+ to the Context Tool. This displays the graphical view of the root cluster in the Context Tool:
 <DIV>
 <p>
 <ul>
@@ -135,7 +135,7 @@ New class</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-527450"></A>This button is a pebble, meant to be dropped into the diagram. Drop it somewhere above the bubble for <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
-; the exact place doesn't matter, but it has to be within the aread of the cluster <SPAN CLASS="ee-text">
+; the exact place doesn't matter, but it has to be within the area of the cluster <SPAN CLASS="ee-text">
 root_cluster </SPAN>
 because we'll want our class to part of it. You're asked to name the class:
 <DIV>
@@ -177,7 +177,7 @@ HEIR2</SPAN>
 TESTROOT</SPAN>
  and <SPAN CLASS="ee-text">
 PARENT</SPAN>
- so that the display looks approximately like the following. Note that the double circle around <SPAN CLASS="ee-text">
+ so that the display looks approximately like the following. The double circle around <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
  is the BON convention to identify a system's root class.
 <DIV>
@@ -222,15 +222,15 @@ PARENT</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527514"></A>To convince yourself that the new class has been made like an heir of <SPAN CLASS="ee-text">
+<A NAME="pgfId-527514"></A>To convince yourself that the new class has been made an heir of <SPAN CLASS="ee-text">
 PARENT</SPAN>
 , in its text and not just in the diagram, pick-and-drop <SPAN CLASS="ee-text">
 HEIR2 </SPAN>
-bubble to the Text pane at the top to see its text. (You could also control-right-click to the bubble to bring up a new Development Tool on this class.) You see the result of the initial creation operation, which produced a class template with all the standard style and clauses, and the latest parenting operation, which made <SPAN CLASS="ee-text">
+bubble to the Editing Tool at the top to see its text. (You could also control-right-click to the bubble to bring up a new Development Window on this class.) All the code has been generated from your graphical operations: creating the class produced a class template with all the standard style and clauses, and the reparenting operation made <SPAN CLASS="ee-text">
 HEIR2 </SPAN>
 inherit from <SPAN CLASS="ee-text">
 PARENT</SPAN>
-:
+.
 <DIV>
 <p>
 <ul>
@@ -239,11 +239,11 @@ PARENT</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527531"></A>In a moment we'll use this Text pane to see how, conversely, EiffelStudio will automatically reflect in the diagram a change made to the text. For the moment go back to first the Development Tool.
+<A NAME="pgfId-527531"></A>In a moment we'll use this Editing Tool to see how, conversely, EiffelStudio will automatically reflect in the diagram a change made to the text. For the moment go back to the Development Window.
 <P CLASS="nn-normal">
 <A NAME="pgfId-527534"></A>In the Cluster Tree in the top-left pane, you will notice that the name of <SPAN CLASS="ee-text">
-HEIR2</SPAN>
-, a appears grayed out; so does the name of <SPAN CLASS="ee-text">
+HEIR2 </SPAN>
+appears grayed out; so does the name of <SPAN CLASS="ee-text">
 INVALID</SPAN>
 :
 <DIV>
@@ -254,17 +254,17 @@ INVALID</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527580"></A>This is EiffelStudio's way of telling us that the two classes are not part of the system, because although they belong to one of its clusters they are not referenced, directly or indiirectly, from the root.
+<A NAME="pgfId-527580"></A>This is EiffelStudio's way of telling us that these two classes, listed because they appear in one of the system's clusters, are not actually in the system because the root class doesn't reference them directly or indirectly.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
 <A NAME="pgfId-527599"></A>Adding a client link</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-527598"></A>Let's indeed make <SPAN CLASS="ee-text">
-TESTROOT</SPAN>
- a client of <SPAN CLASS="ee-text">
+<A NAME="pgfId-527598"></A>Let's add <SPAN CLASS="ee-text">
 HEIR2</SPAN>
-. Click the button that selects <SPAN CLASS="ee-keyword">
+ to the system by making <SPAN CLASS="ee-text">
+TESTROOT</SPAN>
+ a client of this class. Click the button that selects <SPAN CLASS="ee-keyword">
 Client</SPAN>
  as the next relation to make links (the link creation buttons were shown on page <A HREF="index.html#LINK CREATION" CLASS="XRef"><SPAN CLASS="ww-crossref">
 117</SPAN>
@@ -281,7 +281,7 @@ HEIR2</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527592"></A>This gives you many option and in fact is a convenient way to build your classes, whether at the analysis, design or implementation level. Here, fill the fields as follows. For the top choice, keep the default, <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-527592"></A>This technique gives you many option and in fact is a convenient way to build your classes, whether at the analysis, design or implementation level. Here, fill the fields as follows. For the top choice, keep the default, <SPAN CLASS="ee-keyword">
 Attribute</SPAN>
 ; we'll give class <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
@@ -297,12 +297,12 @@ ANY</SPAN>
 Access</SPAN>
 . For its name, replace the default, <SPAN CLASS="ee-text">
 new_feature</SPAN>
-, by <SPAN CLASS="ee-text">
+, by the name <SPAN CLASS="ee-text">
 my_heir</SPAN>
 . In the <SPAN CLASS="ee-keyword">
 invariant</SPAN>
  clause, enter
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -323,7 +323,7 @@ for more readability -- shows that <SPAN CLASS="ee-text">
 TESTROOT </SPAN>
 is now a client of <SPAN CLASS="ee-text">
 HEIR2</SPAN>
-. By default it only showed inheritance links; now it has switched automatically to a mode that shows client links as well, so that we also see that <SPAN CLASS="ee-text">
+. By default it only displays inheritance links; now it has switched automatically to a mode that shows client links as well, so that we also see that <SPAN CLASS="ee-text">
 TESTROOT </SPAN>
 is (and always was) a client of <SPAN CLASS="ee-text">
 PARENT</SPAN>
@@ -340,7 +340,7 @@ o2</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-527617"></A>Now pick-and-drop the class bubble <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
- to the top Text pane to see how the class has been modified. The situation here is different from what we saw earlier with <SPAN CLASS="ee-text">
+ to the top Editing Tool to see how the class has been modified. The situation here is different from what we saw earlier with <SPAN CLASS="ee-text">
 HEIR2</SPAN>
 , which had been generated from scratch by the diagram. Here <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
@@ -379,8 +379,8 @@ invariant</SPAN>
 TESTROOT</SPAN>
  a client of <SPAN CLASS="ee-text">
 HEIR</SPAN>
-. In the top Text pane, use the editor to add an attribute declaration
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+. In the top Editing Tool, use the editor to add an attribute declaration
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -399,9 +399,9 @@ create </SPAN>
 my_heir</SPAN>
 . Without it the just added invariant would be violated upon creation.
 <P CLASS="nn-first">
-<A NAME="pgfId-527647"></A>Nothing happens yet to the diagram. This is normal: EiffelStudio doesn't update the diagram every time you type some text (which, for one thing, might be syntactically incorrect or invalid). You need to recompile first. Click the <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-527647"></A>Nothing happens yet to the diagram. This is normal: EiffelStudio doesn't update the diagram every time you type some text (which, for one thing, might be syntactically incorrect, or invalid). You need to recompile first. Click the <SPAN CLASS="ee-keyword">
 Compile</SPAN>
- button. Then on the Context pane click <SPAN CLASS="ee-keyword">
+ button. Then on the Context Tool click <SPAN CLASS="ee-keyword">
 Diagram</SPAN>
 ; the new relation appears:
 <DIV>
@@ -446,7 +446,7 @@ Project settings</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527687"></A>Instead of the <SPAN CLASS="ee-text">
+<A NAME="pgfId-556252"></A>Instead of the <SPAN CLASS="ee-text">
 NEW_CLUSTER</SPAN>
  default name, type <SPAN CLASS="ee-text">
 my_cluster</SPAN>
@@ -456,7 +456,7 @@ root_cluster</SPAN>
 Create</SPAN>
  at the bottom of the dialog.
 <P CLASS="jj-small">
-<A NAME="pgfId-527688"></A>As you will have noted, this technique only allows you to create a new cluster as a subcluster of an existing one. You can create a top-level cluster by going through <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-556253"></A>This technique only allows you to create a new cluster as a subcluster of an existing one. You can create a top-level cluster by going through <SPAN CLASS="ee-keyword">
 Project </SPAN>
 <SPAN CLASS="ee-symbol">
 --> </SPAN>
@@ -497,7 +497,7 @@ MY_CLUSTER</SPAN>
 </ul>
 <p>
 </DIV>
-<P CLASS="nn-normal">
+<P CLASS="nn-first">
 <A NAME="pgfId-527727"></A>If you like, you can also look into the project directory -- using the Windows Explorer, or <SPAN CLASS="ee-keyword">
 cd</SPAN>
  and <SPAN CLASS="ee-keyword">
@@ -514,11 +514,11 @@ e</SPAN>
 HEIR2</SPAN>
 .
 <P CLASS="nn-normal">
-<A NAME="pgfId-527728"></A>Clearly, it's much more convenient to use EiffelStudio for such manipulations than to move files around manually. 
+<A NAME="pgfId-556258"></A>Clearly, it's much more convenient to use EiffelStudio for such manipulations than to move files around manually. 
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
-<A NAME="pgfId-527729"></A>Changing a class name</H2>
+<A NAME="pgfId-556259"></A>Changing a class name</H2>
 <P CLASS="nn-first">
 <A NAME="pgfId-527730"></A>Here is another operation that would be even more tedious if you had to perform it manually: changing a class name. You must make sure that <SPAN CLASS="ff-italics">
 every</SPAN>
@@ -590,7 +590,7 @@ Color hole</SPAN>
 Relation depth</SPAN>
  enables you to select the depth at which inter-class relations will be displayed. (Don't change this setting now.) <SPAN CLASS="ee-keyword">
 Extend to cluster</SPAN>
- is more useful for class diagrams than the cluster diagram we have now, which by default included all classes of the cluster; if you click it now it will add the class <SPAN CLASS="ee-text">
+ is more useful for class diagrams than for the cluster diagram we have now, which by default included all classes of the cluster; if you click it here it will add the class <SPAN CLASS="ee-text">
 INVALID</SPAN>
  that you removed earlier. There is no need to do this now.<SPAN CLASS="ee-text">
 </SPAN>
@@ -615,7 +615,7 @@ DEFAULT</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527789"></A>you can produce diagrams that only show the inheritance links, and others that only show the client links. If you want to keep both, simply define views by typing view names -- such as <SPAN CLASS="ee-text">
+<A NAME="pgfId-527789"></A>you can produce diagrams that only show the inheritance links, and others that only show the client links. If you want to keep both kinds of diagram, simply define views by typing view names -- such as <SPAN CLASS="ee-text">
 Inheritance</SPAN>
 , <SPAN CLASS="ee-text">
 Client</SPAN>
@@ -639,9 +639,9 @@ View</SPAN>
 <H2 CLASS="aa-sec3">
 <A NAME="pgfId-527821"></A>Class diagrams, cluster diagrams</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-527822"></A>Whereas our initial encounter with diagrams at the beginning of this Tour used class diagrams, in the present discussion we have used cluster diagrams. Both are interesting. To obtain a class diagram, target a Context pane to a class, and select the <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-527822"></A>Whereas our initial encounter with diagrams at the beginning of this Tour used class diagrams, in the present discussion we have used cluster diagrams. Both are interesting. To obtain a class diagram, you will target a Context Tool to a class, and select the <SPAN CLASS="ee-keyword">
 Diagram</SPAN>
- tab. By default, this shows the parents of the class. Do this for <SPAN CLASS="ee-text">
+ Tab. By default, this shows the parents of the class. Do this now for <SPAN CLASS="ee-text">
 TESTROOT</SPAN>
 :
 <DIV>
@@ -663,7 +663,7 @@ button is most interesting. It will let you select the exact depth that you wish
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-527850"></A>This will conclude our review of the Diagram facilities of EiffelStudio, although you'll surely discover some further riches by yourself and through the contextual documentation. We hope the complete seamlessness between text and pictures will enable you to increase the effectiveness of your analysis work, or your design work, or your programming -- whatever level of system development you need to tackle.
+<A NAME="pgfId-527850"></A>This will conclude our review of the Diagram facilities of EiffelStudio, although you'll surely discover some further riches by yourself and through the rest of the documentation. We hope the complete seamlessness between text and pictures will enable you to increase the effectiveness of your analysis work, or your design work, or your programming -- whatever level of system development you need to tackle.
 </DIV>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-15.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-17.html"><area shape="default" nohref></MAP>
 

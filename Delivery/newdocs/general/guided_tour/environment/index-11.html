@@ -56,7 +56,7 @@ Feature</SPAN>
 LIST</SPAN>
 ; target it to its feature <SPAN CLASS="ee-text">
 forth </SPAN>
-by clicking its name in the Feature tree; make sure both the top-right Text pane and the bottom-right Context pane are visible; in the Context pane, select the <SPAN CLASS="ee-keyword">
+by clicking its name in the Feature tree; make sure both the top-right Editing pane and the bottom-right Context pane are visible; in the Context pane, select the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
  tab and its <SPAN CLASS="ee-keyword">
 Ancestor versions</SPAN>
@@ -113,7 +113,7 @@ without pressing any button</SPAN>
 <DIV>
 <p>
 <ul>
-<!----><IMG SRC="index-61.png">
+<!--THUMBNAIL_NO--><!----><IMG SRC="index-61.png">
 </ul>
 <p>
 </DIV>
@@ -132,7 +132,7 @@ right-click</SPAN>
 forth</SPAN>
  from <SPAN CLASS="ee-text">
 ARRAYED_CIRCULAR</SPAN>
-. The retargeting affects both the Text pane and the Context pane, which keeps its current view (<SPAN CLASS="ee-keyword">
+. The retargeting affects both the Editing pane and the Context pane, which keeps its current view (<SPAN CLASS="ee-keyword">
 Ancestor versions</SPAN>
  in the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
@@ -151,20 +151,20 @@ Feature</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-515373"></A>The Pick-and-Drop mechanism is very simple. It consists of three steps:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515374"></A><SPAN CLASS="ff-bold">
 Pick</SPAN>
- step: find the development object you want to pick, right-click on it, release the mouse button immediately.</LI>
-<LI CLASS="ll-bull">
+ step: find the development object you want to pick, right-click on it, release the mouse button immediately.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515375"></A><SPAN CLASS="ff-bold">
 Move</SPAN>
  step: move the mouse to the desired drop point, <SPAN CLASS="ff-italics">
 without pressing any button</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515376"></A><SPAN CLASS="ff-bold">
 Drop</SPAN>
- step: right-click (again releasing the button immediately) at the drop position.</LI>
+ step: right-click (again releasing the button immediately) at the drop position.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515383"></A>During the Move step, you can at any time <SPAN CLASS="ff-bold">
@@ -207,7 +207,7 @@ ARRAYED_CIRCULAR </SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-515516"></A>This is similar to a <SPAN CLASS="ff-bold">
 double-click</SPAN>
-, a commonly used interaction technique, but without the stress of double-click, which requires you to wait no more than a specified time -- typically half a second or so -- between the two clicks. With Pick-and-Drop the effect is the same whether the second click follows the first after one tenth of a second or two minutes.
+, a commonly used interaction technique, but without the stress of the usual double-click, which requires you to wait no more than a specified time -- typically half a second or so -- between the two clicks. With Pick-and-Drop the effect is the same whether the second click follows the first after one tenth of a second or two days.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
@@ -221,7 +221,7 @@ File </SPAN>
 --></SPAN>
 <SPAN CLASS="ee-keyword">
  New window</SPAN>
- (unless you already have a second Development Tool open, in which case you can simply reuse it). Make sure the two Development Tool do not overlap too much, so that you can see enough of each. In the first Development Tool, pick a class (right-click on it). Move the mouse to the Text pane of the second Development Tool. Drop the class by right-clicking again. The tool retargets itself to the chosen class.
+ (unless you already have a second Development Tool open, in which case you can simply reuse it). Make sure the two Development Tool do not overlap too much, so that you can see enough of each. In the first Development Tool, pick a class (right-click on it). Move the mouse to the Editing pane of the second Development Tool. Drop the class by right-clicking again. The tool retargets itself to the chosen class.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515440"></A>Many people like to take advantage of this possibility to keep two or more Development Tools open, and pick-and-drop frequently from one to the other when they see a development object of interest and want to know more about it, without losing the original context.
 </DIV>
@@ -253,14 +253,14 @@ development object</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-511553"></A>Pick-and-Drop works differently from the usual Drag-and-Drop present on many computing platforms. The usual Drag-and-Drop retains a small role within EiffelStudio (to move class bubbles around in the Diagram view) and you may of course have to use it when relying on for operating system functions such as copying files. But the key EiffelStudio operation is Pick-and-Drop. This technique is motivated by careful consideration of ergonomics -- human engineering and user comfort. In particular:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-511554"></A>Pick-and-Drop is much less stressful. Drag-and-Drop requires you to maintain pressure throughout the move, being careful not to drop on the wrong place. With Pick-and-Drop there is no stress: you click and release; get a drop of coffee if you like (optional step); move the cursor with no pressure from your fingers or on your mind; make sure, at your leisure, to find the right drop place; and right-click again on it. At the end of the day, after many such operations, the stress reduction can make a real difference.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-511554"></A>Pick-and-Drop is much less stressful. Drag-and-Drop requires you to maintain pressure throughout the move, being careful not to drop on the wrong place. With Pick-and-Drop there is no stress: you click and release; get a drop of coffee if you like (optional step); move the cursor with no pressure from your fingers or on your mind; make sure, at your leisure, to find the right drop place; and right-click again on it. At the end of the day, after many such operations, the stress reduction can make a real difference.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-511555"></A>With Drag-and-Drop, it's easy to lessen the pressure involuntarily and drop on the wrong place. The consequences can be damaging, especially since in such a case you may well <SPAN CLASS="ff-italics">
 not know</SPAN>
- where you dropped the element; after all, that wasn't intentional. It's possible, for example, to lose files that way. With Pick-and-Drop this is much less likely to happen.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-511556"></A>Pick-and-Drop makes it easy to cancel the operation if you change your mind: just left-click anywhere. With Drag-and-Drop you have to find an invalid place to drop; this may be difficult, or even impossible! (Sometimes pressing the Escape key works, but this is not universal.)</LI>
+ where you dropped the element; after all, that wasn't intentional. It's possible, for example, to lose files that way. With Pick-and-Drop this is much less likely to happen.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-511556"></A>Pick-and-Drop makes it easy to cancel the operation if you change your mind: just left-click anywhere. With Drag-and-Drop you have to find an invalid place to drop; this may be difficult, or even impossible! (Sometimes pressing the Escape key works, but this is not universal.)
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-511557"></A>If you are new to ISE Eiffel you may find Pick-and-Drop surprising at first. We trust you will join the ranks of ISE Eiffel users who consistently rate it among the most convenient features of the environment.
@@ -269,13 +269,13 @@ not know</SPAN>
 <H2 CLASS="aa-sec3">
 <A NAME="pgfId-515548"></A><A NAME="89659"></A>Isolating the context</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-515549"></A>In all the examples so far, the Context pane was targeted to the same target as the the enclosing Development Tool and its Text pane. You can retarget the Context pane separately, for example by pick-and-dropping a class or feature into it; but the next time you retarget the Development Tool as a whole the Context pane will follow.
+<A NAME="pgfId-515549"></A>In all the examples so far, the Context pane was targeted to the same target as the the enclosing Development Tool and its Editing pane. You can retarget the Context pane separately, for example by pick-and-dropping a class or feature into it; but the next time you retarget the Development Tool as a whole the Context pane will follow.
 <P CLASS="nn-normal">
 <A NAME="pgfId-520282"></A>This is called <SPAN CLASS="ff-italics">
 merged</SPAN>
- behavior, meaning that the target of the Context pane is merged with the target of the enclosing Development Tool and Text pane. It's the default behavior, appropriate for your first steps with EiffelStudio.
+ behavior, meaning that the target of the Context pane is merged with the target of the enclosing Development Tool and Editing pane. It's the default behavior, appropriate for your first steps with EiffelStudio.
 <P CLASS="nn-normal">
-<A NAME="pgfId-515550"></A>As you become more proficient with the environment, you might not want this behavior any more: you might prefer the ability to retarget the tool and its Text pane while keeping the Context targeted to its previous target. This enables you to see, in the same tool, information on two different classes, and is called <SPAN CLASS="ff-italics">
+<A NAME="pgfId-515550"></A>As you become more proficient with the environment, you might not want this behavior any more: you might prefer the ability to retarget the tool and its Editing pane while keeping the Context targeted to its previous target. This enables you to see, in the same tool, information on two different classes, and is called <SPAN CLASS="ff-italics">
 isolating</SPAN>
  the Context.
 <P CLASS="nn-normal">
@@ -303,7 +303,7 @@ View </SPAN>
 --></SPAN>
 <SPAN CLASS="ee-keyword">
  Merge context tool</SPAN>
-, so that you can later revert to merged behavior. Under isolation behavior, try pick-and-dropping a class or feature into the top Text pane; then pick-and-drop a class or feature into the bottom Context pane. You will notice that either of these operations retargets the affected pane, but not the other.
+, so that you can later revert to merged behavior. Under isolation behavior, try pick-and-dropping a class or feature into the top Editing pane; then pick-and-drop a class or feature into the bottom Context pane. You will notice that either of these operations retargets the affected pane, but not the other.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
@@ -371,25 +371,17 @@ OK</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-520293"></A>If you start repeatedly retargeting the Context pane -- especially under &quot;isolated&quot; behavior -- you will notice the following properties:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-520300"></A>Regardless of the tab to which the Context pane is currently set (<SPAN CLASS="ee-keyword">
-Output</SPAN>
-, <SPAN CLASS="ee-keyword">
-Diagram</SPAN>
-, <SPAN CLASS="ee-keyword">
-Class</SPAN>
-, <SPAN CLASS="ee-keyword">
-Metrics</SPAN>
-), pick-and-dropping a <SPAN CLASS="ff-italics">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-520300"></A>In most cases, pick-and-dropping a <SPAN CLASS="ff-italics">
 class</SPAN>
- to it switches to the <SPAN CLASS="ee-keyword">
+ to the Context switches the view to the <SPAN CLASS="ee-keyword">
 Class</SPAN>
  tab, and pick-and-dropping a <SPAN CLASS="ff-italics">
 feature</SPAN>
  switches to the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
- tab.</LI>
-<LI CLASS="ll-bull">
+ tab.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-520312"></A>The view displayed in each case -- for example <SPAN CLASS="ee-keyword">
 Ancestors</SPAN>
  for the <SPAN CLASS="ee-keyword">
@@ -398,7 +390,7 @@ Class</SPAN>
 Flat</SPAN>
  for the <SPAN CLASS="ee-keyword">
 Feature</SPAN>
- tab -- is the last one that you selected for the corresponding tab.</LI>
+ tab -- is default view for the corresponding tab.
 </UL>
 </DIV>
 <DIV>

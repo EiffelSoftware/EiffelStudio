@@ -49,7 +49,7 @@ there are two things that [Eiffel] got right that nobody else got right anywhere
 <A NAME="pgfId-515064"></A>To make a class inherit from another, simply use an <SPAN CLASS="ee-keyword">
 inherit</SPAN>
  clause:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -155,7 +155,7 @@ reuse with adaptation</SPAN>
 . Traditional forms of reuse are all-or-nothing: either you take a component exactly as it is, or you build your own. Inheritance will get us out of this &quot;reuse or redo&quot; dilemma by allowing us to reuse <SPAN CLASS="ff-italics">
 and</SPAN>
  redo. The mechanism is feature redefinition:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -243,7 +243,7 @@ deposit</SPAN>
  (called &quot;<SPAN CLASS="ee-comment">
 New implementation</SPAN>
 &quot; above) could be of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -361,7 +361,7 @@ X<SPAN CLASS="ee-comment">
  and so on.
 <P CLASS="nn-first">
 <A NAME="pgfId-515110"></A>So with the inheritance structure that we have seen, the declarations
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -379,7 +379,7 @@ SAVINGS_ACCOUNT</SPAN>
 </table></ul><p>
 <P CLASS="nn-first">
 <A NAME="pgfId-515114"></A>make it valid to write the assignment
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -409,7 +409,7 @@ ACCOUNT</SPAN>
  to become attached to an object of type <SPAN CLASS="ee-text">
 DEPOSIT</SPAN>
 . Hence the second typing rule:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltitle">
@@ -633,7 +633,7 @@ SAVINGS_ACCOUNT</SPAN>
  among them, redefine features such as <SPAN CLASS="ee-text">
 deposit</SPAN>
 . Then we have to ask what the effect will be for a call of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -707,7 +707,7 @@ ACCOUNT</SPAN>
 , illustrated in the last figure, and at each step let <SPAN CLASS="ee-text">
 acc</SPAN>
  represent the current list element, you can repeatedly apply
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -797,7 +797,7 @@ LIST</SPAN>
 , some features such as <SPAN CLASS="ee-text">
 extend</SPAN>
  (add an item at the end of the list) will have no implementation and hence will be declared as deferred. Here is the corresponding form, illustrating the syntax for both deferred classes and their deferred features:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -921,7 +921,7 @@ fully</SPAN>
  deferred. They may contain some effective features along with their deferred ones. Here, for example, we may express <SPAN CLASS="ee-text">
 count</SPAN>
  as a function:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -971,7 +971,7 @@ after</SPAN>
 ) to advance the cursor to the next element. Procedure <SPAN CLASS="ee-text">
 forth</SPAN>
  itself appears as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1110,14 +1110,14 @@ create</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-515254"></A>Deferred classes cover abstract notions with many possible variants. They are widely used in Eiffel where they cover various needs:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515255"></A>Capturing high-level classes, with common behaviors.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515256"></A>Defining the higher levels of a general taxonomy, especially in the inheritance structure of a library.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515257"></A>Defining the components of an architecture during system design, without commitment to a final implementation.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515258"></A>Describing domain-specific concepts in analysis and modeling.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515255"></A>Capturing high-level classes, with common behaviors.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515256"></A>Defining the higher levels of a general taxonomy, especially in the inheritance structure of a library.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515257"></A>Defining the components of an architecture during system design, without commitment to a final implementation.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515258"></A>Describing domain-specific concepts in analysis and modeling.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515259"></A>These applications make deferred classes a central tool of the Eiffel method's support for seamlessness and reversibility. The last one in particular uses deferred classes and features to model objects from an application domain, without any commitment to implementation, design, or even software (and computers). Deferred classes are the ideal tool here: they express the properties of the domain's abstractions, without any temptation of implementation bias, yet with the precision afforded by type declarations, inheritance structures (to record classifications of the domain concepts), and contracts to express the abstract properties of the objects being described.
@@ -1135,7 +1135,7 @@ Object-Oriented Software Construction</SPAN>
 ) illustrates these ideas on the example of scheduling the programs of a TV station. This is pure modeling of an application domain; no computers or software are involved yet. The class describes the notion of program segment.
 <P CLASS="nn-normal">
 <A NAME="pgfId-529576"></A>Note the use of assertions to define semantic properties of the class, its instances and its features. Although often presented as high-level, most object-oriented analysis methods (with the exception of Wald&eacute;n's and Nerson's Business Object Notation) have no support for the expression of such properties, limiting themselves instead to the description of broad structural relationships.
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1364,7 +1364,7 @@ end</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-515309"></A>Some deferred classes describe a structural property, useful to the description of many other classes. Typical examples are classes of the Kernel Library in EiffelBase:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-529521"></A><SPAN CLASS="ee-text">
 NUMERIC</SPAN>
  describes objects on which arithmetic operations +, -, &#8727;, / are available, with the properties of a ring (associativity, distributivity, zero elements etc.). Kernel Library classes such as <SPAN CLASS="ee-text">
@@ -1379,8 +1379,8 @@ NUMERIC</SPAN>
 MATRIX</SPAN>
  may also make it a descendant of <SPAN CLASS="ee-text">
 NUMERIC</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-529522"></A><SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
  describes objects on which comparison operations &lt;, &lt;=, &gt;, &gt;= are available, with the properties of a total preorder (transitivity, irreflexivity). Kernel Library classes such as <SPAN CLASS="ee-text">
@@ -1393,7 +1393,7 @@ INTEGER </SPAN>
 MATRIX </SPAN>
 example -- are descendants of <SPAN CLASS="ee-text">
 NUMERIC</SPAN>
-.</LI>
+.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-529523"></A>For such classes it is again essential to permit effective features in a deferred class, and to include assertions. For example class <SPAN CLASS="ee-text">
@@ -1417,7 +1417,7 @@ like</SPAN>
 </A>; you may understand it, in the following class, as equivalent to <SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
 .
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1549,7 +1549,7 @@ end</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-515347"></A>It is often necessary to define a new class in terms of several existing ones. For example:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515348"></A>The Kernel Library classes <SPAN CLASS="ee-text">
 INTEGER</SPAN>
  and <SPAN CLASS="ee-text">
@@ -1558,29 +1558,29 @@ REAL</SPAN>
 NUMERIC</SPAN>
  and <SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515349"></A>A class <SPAN CLASS="ee-text">
 TENNIS_PLAYER</SPAN>
 , in a system for keeping track of player ranking, will inherit from <SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
-, as well as from other domain-specific classes.</LI>
-<LI CLASS="ll-bull">
+, as well as from other domain-specific classes.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515350"></A>A class <SPAN CLASS="ee-text">
 COMPANY_PLANE</SPAN>
  may inherit from both <SPAN CLASS="ee-text">
 PLANE</SPAN>
  and <SPAN CLASS="ee-text">
 ASSET</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515351"></A>Class <SPAN CLASS="ee-text">
 ARRAYED_LIST</SPAN>
 , describing an implementation of lists through arrays, may inherit from both <SPAN CLASS="ee-text">
 LIST</SPAN>
  and <SPAN CLASS="ee-text">
 ARRAY</SPAN>
-.</LI>
+.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515352"></A>In all such cases multiple inheritance provides the answer.
@@ -1590,7 +1590,7 @@ name clashes</SPAN>
 : two parents may include a feature with the same name. This would conflict with the ban on name overloading within a class -- the rule that no two features of a class may have the same name. Eiffel provides a simple way to remove the name clash at the point of inheritance through the <SPAN CLASS="ee-keyword">
 rename</SPAN>
  subclause, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1686,7 +1686,7 @@ LIST</SPAN>
 <A NAME="pgfId-515370"></A>Every feature of a class has a <SPAN CLASS="ff-bold">
 final name</SPAN>
 : for a feature introduced in the class itself (&quot;immediate&quot; feature) it is the name appearing in the declaration; for an inherited feature that is not renamed, it is the feature's name in the parent; for a renamed feature, it is the name resulting from the renaming. This definition yields a precise statement of the rule against in-class overloading:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltitle">
@@ -1740,7 +1740,7 @@ subcontracting</SPAN>
 .
 <P CLASS="nn-normal">
 <A NAME="pgfId-515386"></A>The first rule is that invariants accumulate down an inheritance structure:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltitle">
@@ -1811,7 +1811,7 @@ B</SPAN>
 <A NAME="pgfId-515444"></A>The problem is to keep subcontractors honest. Assuming preconditions and postconditions as shown on the last figure, a call in <SPAN CLASS="ee-text">
 C </SPAN>
 of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -1943,7 +1943,7 @@ ensure then</SPAN>
  will perform an <SPAN CLASS="ee-keyword">
 and</SPAN>
 , which can only strengthen the original. Hence the rule:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltitle">
@@ -1957,22 +1957,22 @@ or <SPAN CLASS="ee-keyword">
 ensure</SPAN>
  clause. Instead you may:
 <UL>
-<LI CLASS="mm-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-529768"></A>Introduce a new condition with <SPAN CLASS="ee-keyword">
 require</SPAN>
 <SPAN CLASS="ee-text">
  </SPAN>
 <SPAN CLASS="ee-keyword">
 else</SPAN>
-, for or-ing with the original precondition.</LI>
-<LI CLASS="mm-bull">
+, for or-ing with the original precondition.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515456"></A>Introduce a new condition with <SPAN CLASS="ee-keyword">
 ensure</SPAN>
 <SPAN CLASS="ee-text">
  </SPAN>
 <SPAN CLASS="ee-keyword">
 then</SPAN>
-, for and-ing with the original postcondition.</LI>
+, for and-ing with the original postcondition.
 </UL>
 <P CLASS="mm-celltext">
 <A NAME="pgfId-515457"></A>In the absence of such a clause, the original assertions are retained.
@@ -2005,7 +2005,7 @@ LIST</SPAN>
  provided an example. We wrote the routine (page <A HREF="tutorial-10.html#17380" CLASS="XRef"><SPAN CLASS="ww-crossref">
 58</SPAN>
 </A>) as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2049,7 +2049,7 @@ LIST </SPAN>
 should by default make <SPAN CLASS="ee-text">
 full</SPAN>
  always return false:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2089,7 +2089,7 @@ ARRAY</SPAN>
 ) may redefine <SPAN CLASS="ee-text">
 full</SPAN>
 :
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2185,7 +2185,7 @@ uneffecting</SPAN>
 the other features; uneffecting an inherited effective feature makes it deferred (this is the reverse of effecting, which turns an inherited deferred feature into an effective one). The syntax uses the <SPAN CLASS="ee-keyword">
 undefine</SPAN>
  subclause:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2270,18 +2270,18 @@ f</SPAN>
 export</SPAN>
 , makes it possible to change the export status of an inherited feature. By default -- covering the behavior desired in the vast majority of practical cases -- an inherited feature keeps its original export status (exported, secret, selectively exported). In some cases, however, this is not appropriate:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-515527"></A>A feature may have played a purely implementation-oriented role in the parent, but become interesting to clients of the heir. Its status will change from secret to exported.</LI>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515527"></A>A feature may have played a purely implementation-oriented role in the parent, but become interesting to clients of the heir. Its status will change from secret to exported.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515528"></A>In implementation inheritance (for example <SPAN CLASS="ee-text">
 ARRAYED_LIST</SPAN>
  inheriting from <SPAN CLASS="ee-text">
 ARRAY</SPAN>
-) an exported feature of the parent may not be suitable for direct use by clients of the heir. The change of status in this case is from exported to secret.</LI>
+) an exported feature of the parent may not be suitable for direct use by clients of the heir. The change of status in this case is from exported to secret.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515535"></A>You can achieve either of these goals by writing
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2319,7 +2319,7 @@ NONE</SPAN>
 , to hide a previously exported feature. It is also possible, in lieu of the feature list, to use the keyword <SPAN CLASS="ee-keyword">
 all </SPAN>
 to apply the new status to all features inherited from the listed parent. Then there can be more than one class-feature list, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2467,27 +2467,27 @@ TEACHING_ASSISTANT  </SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-515599"></A>There are two possibilities: sharing (the repeatedly inherited feature yields just one feature in the repeated descendant) and duplication (it yields two). Examination of various cases shows quickly that a fixed policy, or one that would apply to all the features of a class, would be inappropriate. 
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-530189"></A>Feature <SPAN CLASS="ee-text">
 change_address</SPAN>
- calls for sharing: as a teaching assistant, you may be both teacher and student, but you are just one person, with just one official domicile.</LI>
-<LI CLASS="ll-bull">
+ calls for sharing: as a teaching assistant, you may be both teacher and student, but you are just one person, with just one official domicile.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-530190"></A>If there are separate accounts for students' course work and for faculty, you may need one of each kind, suggesting that <SPAN CLASS="ee-text">
 computer_account</SPAN>
- calls for duplication.</LI>
+ calls for duplication.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515600"></A>The Eiffel rule enables, once again, the software developer to craft the resulting class so as to tune it to the exact requirements. Not surprisingly, it is based on names, in accordance with the Final Name rule (no in-class overloading):
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltitle">
 <A NAME="pgfId-515603"></A>Repeated Inheritance rule
 <UL>
-<LI CLASS="mm-bull">
-<A NAME="pgfId-515604"></A>A feature inherited multiply under one name will be shared: it is considered to be just one feature in the repeated descendant.</LI>
-<LI CLASS="mm-bull">
-<A NAME="pgfId-515605"></A>A feature inherited multiply under different names will be replicated, yielding as many variants as names.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515604"></A>A feature inherited multiply under one name will be shared: it is considered to be just one feature in the repeated descendant.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515605"></A>A feature inherited multiply under different names will be replicated, yielding as many variants as names.
 </UL>
 </TD>
 </TR>
@@ -2495,7 +2495,7 @@ computer_account</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-530268"></A>So to tune the repeated descendant, feature by feature, for sharing and replication it suffices to use renaming.
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-530285"></A>Doing nothing will cause sharing, which is indeedthe desired policy in most cases (especially those cases of <SPAN CLASS="ff-italics">
 unintended</SPAN>
  repeated inheritance: making <SPAN CLASS="ee-text">
@@ -2506,13 +2506,13 @@ A</SPAN>
 B</SPAN>
 , which you forgot is already a descendant of <SPAN CLASS="ee-text">
 A</SPAN>
-).</LI>
-<LI CLASS="ll-bull">
+).
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-530286"></A>If you use renaming somewhere along the way, so that the final names are different, you will obtain two separate features. It does not matter where the renaming occurs; all that counts is whether in the common descendant, <SPAN CLASS="ee-text">
 TEACHING_ASSISTANT</SPAN>
  in the last figure, the names are the same or different. So you can use renaming at that last stage to cause replication; but if the features have been renamed higher you can also use last-minute renaming to <SPAN CLASS="ff-italics">
 avoid</SPAN>
- replication, by bringing them back to a single name.</LI>
+ replication, by bringing them back to a single name.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515607"></A>The Repeated Inheritance rule gives the desired flexibility to disambiguate the meaning of repeatedly inherited features. There remains a problem in case of redeclaration and polymorphism. Assume that somewhere along the inheritance paths one or both of two replicated versions of a feature <SPAN CLASS="ee-text">
@@ -2542,7 +2542,7 @@ TEACHING_ASSISTANT</SPAN>
 <A NAME="pgfId-515622"></A>A <SPAN CLASS="ee-keyword">
 select</SPAN>
  clause will resolve the ambiguity, as in
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2602,7 +2602,7 @@ TEACHING_ASSISTANT</SPAN>
  <SPAN CLASS="ff-bold">
 must</SPAN>
  select the corresponding version. Note that no problem arises for an entity declared as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2634,7 +2634,7 @@ TEACHING_ASSISTANT</SPAN>
  has no feature of that name. The <SPAN CLASS="ee-keyword">
 select</SPAN>
  only applies to a call
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2695,14 +2695,14 @@ two different features</SPAN>
 &quot;Join and uneffecting&quot;,  page 70</SPAN>
 </A>.) The two possible solutions follow from the previous discussions:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515636"></A>If you do want sharing, one of the two versions must take precedence over the other. It suffices to <SPAN CLASS="ff-bold">
 undefine</SPAN>
- the other, and everything gets back to order. Alternatively, you can redefine both into a new version, which takes precedence over both.</LI>
-<LI CLASS="ll-bull">
+ the other, and everything gets back to order. Alternatively, you can redefine both into a new version, which takes precedence over both.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515637"></A>If you want to keep both versions, switch from sharing to replication: rename one or both of the features so that they will have different names; then you must <SPAN CLASS="ee-keyword">
 select</SPAN>
- one of them.</LI>
+ one of them.
 </UL>
 </DIV>
 <DIV>
@@ -2734,7 +2734,7 @@ G</SPAN>
  which will have a procedure <SPAN CLASS="ee-text">
 sort</SPAN>
  that needs, at some stage, to perform tests of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2802,7 +2802,7 @@ COMPLEX</SPAN>
 .
 <P CLASS="nn-normal">
 <A NAME="pgfId-515650"></A>To cover such cases, declare the class as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2831,7 +2831,7 @@ constrained generic</SPAN>
 -&gt;</SPAN>
  recalls the arrow of inheritance diagrams; what follows it is a type, known as the generic constraint. Such a declaration means that:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515652"></A>Within the class, you may apply the features of the generic constraint -- here the features of <SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
 : <SPAN CLASS="ee-keyword">
@@ -2844,8 +2844,8 @@ infix </SPAN>
 &quot;&lt;=&quot;</SPAN>
  etc. -- to expressions of type <SPAN CLASS="ee-text">
 G</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515653"></A>A generic derivation is only valid if the chosen actual generic parameter conforms to the constraint. Here you can use <SPAN CLASS="ee-text">
 SORTABLE_ARRAY </SPAN>
 <SPAN CLASS="ee-comment">
@@ -2870,7 +2870,7 @@ COMPLEX</SPAN>
 COMPLEX</SPAN>
  is not a descendant of <SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
-.</LI>
+.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-515654"></A>A class can have a mix of constrained and unconstrained generic parameters, as in the EiffelBase class <SPAN CLASS="ee-text">
@@ -2944,7 +2944,7 @@ ANY</SPAN>
 <A NAME="pgfId-515665"></A>In such cases you cannot trust the declared type but must check it against the type of an actual run-time object. Eiffel introduces for this purpose the<SPAN CLASS="ff-bold">
  assignment attempt</SPAN>
  operation, written
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -2961,22 +2961,22 @@ y</SPAN>
 x</SPAN>
  is a writable entity of reference type):
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515670"></A>If <SPAN CLASS="ee-text">
 y</SPAN>
  is attached, at the time of the instruction's execution to an object whose type conforms to the type of <SPAN CLASS="ee-text">
 x</SPAN>
-, perform a normal reference assignment.</LI>
-<LI CLASS="ll-bull">
+, perform a normal reference assignment.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-515671"></A>Otherwise (if <SPAN CLASS="ee-text">
 y</SPAN>
  is void, or attached to a non-conforming object), make <SPAN CLASS="ee-text">
 x</SPAN>
- void.</LI>
+ void.
 </UL>
 <P CLASS="nn-normal">
 <A NAME="pgfId-515680"></A>Using this mechanism, a typical object structure retrieval will be of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -3027,7 +3027,7 @@ interest_rate</SPAN>
  which was not in <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
 . We want to find the maximum interest rate for savings accounts in the list. Assignment attempt easily solves the problem:
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -3135,7 +3135,7 @@ signature</SPAN>
 <A NAME="pgfId-515703"></A>In many cases the signature of a redeclared feature remains the same as the original's. But in some cases you may want to adapt it to the new class. Assume for example that class <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
  has features
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -3196,7 +3196,7 @@ BUSINESS</SPAN>
 ; the same signature redefinition must be applied to the argument of <SPAN CLASS="ee-text">
 set_owner</SPAN>
 . This case is typical of the general scheme of signature redefinition: in a descendant, you may need to redefine both results and arguments to types conforming to the originals. This is reflected by a language rule:
-<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="mm-celltitle">
@@ -3214,7 +3214,7 @@ set_owner </SPAN>
 has to be redefined for more than its signature -- to update its implementation or assertions -- the signature redefinition will be explicit. For example <SPAN CLASS="ee-text">
 set_owner </SPAN>
 could do more for business owners than it does for ordinary owners. Then the redefinition will be of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -3242,7 +3242,7 @@ set_owner</SPAN>
  in <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
  should be of the form
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -3295,7 +3295,7 @@ like</SPAN>
  anchor</SPAN>
  means the following:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-530477"></A>In the class in which it appears, <SPAN CLASS="ee-keyword">
 like</SPAN>
 <SPAN CLASS="ee-text">
@@ -3314,15 +3314,15 @@ HOLDER</SPAN>
 owner</SPAN>
  in class <SPAN CLASS="ee-text">
 ACCOUNT</SPAN>
-.</LI>
-<LI CLASS="ll-bull">
+.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-530483"></A>The difference comes in proper descendants: if a type redefinition changes the type of <SPAN CLASS="ee-text">
 anchor</SPAN>
 , any entity declared <SPAN CLASS="ee-keyword">
 like</SPAN>
  <SPAN CLASS="ee-text">
 anchor</SPAN>
- will be considered to have been redefined too.</LI>
+ will be considered to have been redefined too.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-530491"></A>This means that anchored declaration are a form of of implicit covariant redeclaration. 
@@ -3348,7 +3348,7 @@ like</SPAN>
 </A>, that it applies in class <SPAN CLASS="ee-text">
 COMPARABLE</SPAN>
  to features such as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">
@@ -3394,7 +3394,7 @@ ANY</SPAN>
  declares procedure <SPAN CLASS="ee-text">
 copy </SPAN>
 as
-<p><ul><table bgcolor="#cfffcf" width="79%">
+<p><ul><table width="79%">
 <TR>
 <TD ROWSPAN="1" COLSPAN="1">
 <P CLASS="ee-text">

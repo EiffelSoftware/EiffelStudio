@@ -33,17 +33,15 @@
 <p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-07.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-09.html"><area shape="default" nohref></MAP>
 </DIV>
 <H1 CLASS="aa-sec2">
-<A NAME="pgfId-479692"></A>7  <SPAN CLASS="ff-bold">
-CLASS VIEWS</SPAN>
-<A NAME="76845"></A></H1>
+<A NAME="pgfId-479692"></A>7  <A NAME="76845"></A>CLASS VIEWS</H1>
 <P CLASS="nn-first">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
 <P CLASS="nn-first">
 <A NAME="pgfId-487092"></A>We haven't even looked at a class text yet, but it's important anyway to see how EiffelStudio provides you with numerous, complementary <SPAN CLASS="ff-italics">
 views</SPAN>
- of your software. The Context Pane is the primary place to look for such views.
+ of your software. The Context Tool is the primary place to look for such views.
 <P CLASS="nn-normal">
-<A NAME="pgfId-487093"></A>We'll need just one Development Tool for the moment, the one that was targeted to <SPAN CLASS="ee-text">
+<A NAME="pgfId-487093"></A>We'll need just one Development Window for the moment, the one that was targeted to <SPAN CLASS="ee-text">
 LIST</SPAN>
 . You can get rid of the others by closing their windows (through the top right cross mark on Windows and the equivalent in other window managers), or through <SPAN CLASS="ee-keyword">
 File </SPAN>
@@ -70,7 +68,7 @@ LIST</SPAN>
 <P CLASS="jj-small">
 <A NAME="pgfId-487131"></A>Another way to hide a pane is to click its Close icon, the little cross mark highlighted (for the Features Tree pane) on the left in the last figure.
 <P CLASS="nn-first">
-<A NAME="pgfId-487144"></A>Two panes remain, Text and Context.
+<A NAME="pgfId-487144"></A>Two panes remain, showing the Editing Tool and the Context Tool.
 <DIV>
 <p>
 <ul>
@@ -79,12 +77,12 @@ LIST</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-487154"></A>Make sure the Context Pane is large enough; you can resize the window and, if necessary, narrow down the Text pane since we don't need it for the moment. Don't worry, though, if the Context Pane shows only part of the diagram, as it does on the last figure, since we will use the Context Tool to show other views.
+<A NAME="pgfId-487154"></A>Make sure the Context Tool pane is large enough; you can resize the window and, if necessary, narrow down the Editing Tool pane since we don't need it for the moment. Don't worry, though, if the Context Tool shows only part of the diagram, as it does on the last figure, since we will now use the Context Tool to display information other than the diagram, by selecting the corresponding tabs.
 <DIV>
 <H2 CLASS="aa-sec3">
-<A NAME="pgfId-495624"></A>The Class View</H2>
+<A NAME="pgfId-495624"></A>The Class Tab</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-487167"></A>The first view we'll look at is the Class View. You get it by clicking the corresponding tab at the bottom:
+<A NAME="pgfId-487167"></A>The first tab we'll look at is the Class Tab. You'll find it at the bottom of the Context Tool:
 <DIV>
 <p>
 <ul>
@@ -93,11 +91,11 @@ LIST</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-487195"></A>This gives you access to many forms of information about the current class -- the target of the Development Tool. A set of buttons at the top of the Context Pane enables you to display a number of <SPAN CLASS="ff-bold">
+<A NAME="pgfId-487195"></A>This gives you access to many forms of information about the current class -- the target of the Development Window. A set of buttons at the top of the Context Tool enables you to display a number of <SPAN CLASS="ff-bold">
 views</SPAN>
  of the class. The currently highlighted button indicates the default view: <SPAN CLASS="ee-keyword">
 Ancestors</SPAN>
-. You can see the others'names by moving the cursor over the various view icons, <SPAN CLASS="ff-bold">
+. You can see the others' names by moving the cursor over the various view icons, <SPAN CLASS="ff-bold">
 without clicking</SPAN>
 , and reading the tooltips.
 <DIV>
@@ -133,15 +131,15 @@ INDEXABLE</SPAN>
 repeated</SPAN>
  inheritance -- <SPAN CLASS="ee-text">
 SEQUENCE</SPAN>
-. If, because of direct or indirect repeated inheritance, a class appears more than once, the display doesn't repeat its ancestry the second and subsequent times; the omitted repetition appears as just three dots, <SPAN CLASS="ee-dot">
-...</SPAN>
+. If, because of direct or indirect repeated inheritance, a class appears more than once, the display doesn't repeat its ancestry the second and subsequent times; the omitted repetition appears as just three dots, <SPAN CLASS="ff-bold">
+&#8230;</SPAN>
 , as illustrated here for the second occurrences of <SPAN CLASS="ee-text">
 BAG</SPAN>
 , <SPAN CLASS="ee-text">
 ACTIVE</SPAN>
  and others.
 <P CLASS="nn-normal">
-<A NAME="pgfId-487299"></A>As you may have guessed, all the class names that appear on this display, by default in blue, can function as hyperlinks: you can use any one of them to retarget the Development Tool to the corresponding class. This will be another major retargeting mechanism. But let's not pursue it for the moment and instead continue looking at the documentation views.
+<A NAME="pgfId-487299"></A>As you may have guessed, all the class names that appear on this display, by default in blue, can function as hyperlinks: you can use any one of them to retarget the Development Window to the corresponding class. This will be another major retargeting mechanism. But let's not pursue it for the moment and instead continue looking at the documentation views.
 <P CLASS="nn-normal">
 <A NAME="pgfId-487304"></A>Next to <SPAN CLASS="ee-keyword">
 Ancestors</SPAN>
@@ -160,27 +158,27 @@ Descendants</SPAN>
 LIST</SPAN>
 , as you can see, is just as impressive as its ancestry.
 <P CLASS="nn-normal">
-<A NAME="pgfId-490903"></A>Let's now look at the other formats starting from the left. The first button, <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-490903"></A>Let's now look at the other formats, starting from the left. The first button, <SPAN CLASS="ee-keyword">
 Clickable</SPAN>
-, gives the class text. It's essentially the same information as appears in the top Text Pane (reduced to its bare minimum in the last few pictures, to show only the first three lines or so), but with some differences:
+, gives the class text. It's essentially the same information as appears in the top Editing Tool (whose pane was reduced to its bare minimum in the last few pictures, showing only the first three lines or so), but with some differences:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-490906"></A>The top Text view is editable. In fact it will be your primary tool for entering software texts. The botton <SPAN CLASS="ee-keyword">
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-490906"></A>The top Text view is editable. In fact it's EiffelStudio's primary tool for entering software texts. The bottom <SPAN CLASS="ee-keyword">
 Clickable </SPAN>
-view is just a view; you can't change it.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-490907"></A>The Text view retains the formating of the class text the way it was typed in; the <SPAN CLASS="ee-keyword">
+view is just a view; you can't change it.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-490907"></A>The Text view retains the formatting of the class text the way it was typed in; the <SPAN CLASS="ee-keyword">
 Clickable</SPAN>
- view is automatically formatted -- &quot;pretty-printed&quot; -- according to the standard Eiffel layout rules.</LI>
-<LI CLASS="ll-bull">
+ view is automatically formatted -- &quot;pretty-printed&quot; -- according to the standard Eiffel layout rules.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-491071"></A>The <SPAN CLASS="ee-keyword">
 Clickable </SPAN>
 view does not include comments inside routine implementations (<SPAN CLASS="ee-keyword">
 do</SPAN>
  and <SPAN CLASS="ee-keyword">
 once</SPAN>
- clauses), although it does retain features' header comments.</LI>
-<LI CLASS="ll-bull">
+ clauses), although it does retain features' header comments.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-490916"></A>As part of the pretty-printing, the <SPAN CLASS="ee-keyword">
 Clickable</SPAN>
  view uses colors and fonts to distinguish keywords, identifiers, comments and other syntactical elements. You can change the fonts and colors, like many other elements of the interface, through <SPAN CLASS="ee-keyword">
@@ -189,7 +187,7 @@ Tools </SPAN>
 --> </SPAN>
 <SPAN CLASS="ee-keyword">
 Preferences</SPAN>
-. (Now's not the time.)</LI>
+. (Now's not the time.)
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-490935"></A>This view is called &quot;clickable&quot; because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing. Here is the beginning of the <SPAN CLASS="ee-text">
@@ -225,32 +223,42 @@ require else</SPAN>
  and <SPAN CLASS="ee-keyword">
 ensure then</SPAN>
  clauses into consideration. (The <SPAN CLASS="ww-crossref">
-<A HREF="tutorial.html" CLASS="URL">Eiffel Tutorial</A></SPAN>
+<A HREF="../language/tutorial.html" CLASS="URL">Eiffel Tutorial</A></SPAN>
  explains these notions in detail.)
 <P CLASS="nn-normal">
 <A NAME="pgfId-490995"></A>As a result, the <SPAN CLASS="ee-keyword">
 Flat </SPAN>
-view shows the class text as it might have been written had inheritance (what a horrible thought even to contemplate!) <SPAN CLASS="ff-italics">
+view shows the class text as it might have come out had inheritance (what a horrible thought even to contemplate!) <SPAN CLASS="ff-italics">
 not</SPAN>
  been available to write it.
 <P CLASS="nn-normal">
-<A NAME="pgfId-491015"></A>The first two features appearing in the above display, <SPAN CLASS="ee-text">
+<A NAME="pgfId-555504"></A>The first two features appearing in the above display, <SPAN CLASS="ee-text">
 cursor</SPAN>
  and <SPAN CLASS="ee-text">
 first</SPAN>
 , are indeed inherited from ancestors, rather than declared in <SPAN CLASS="ee-text">
 LIST</SPAN>
- itself. Note how EiffelStudio, when producing the flat form, adds a line of the form <SPAN CLASS="ee-comment">
+ itself. Note how EiffelStudio, when producing the flat form, adds a line of the form
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-555507"></A><SPAN CLASS="ee-comment">
 -- (From </SPAN>
 <SPAN CLASS="ee-text">
 CLASS_OF_ORIGIN</SPAN>
 <SPAN CLASS="ee-comment">
 )</SPAN>
- to the header comments of inherited routines, to document where they come from.
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-555520"></A>to the header comments of inherited routines, to document where they come from.
 <P CLASS="nn-normal">
-<A NAME="pgfId-491020"></A>The flat form is an important notion of object technology, making it possible to understand a class by itself, regardless of the sophistication of the inheritance structure that led to it. Looking at the Flat view of <SPAN CLASS="ee-text">
+<A NAME="pgfId-491020"></A>The flat form is an important notion of object technology, making it possible to understand a class by itself, regardless of the possibly rich inheritance structure that led to it. Looking at the Flat view of <SPAN CLASS="ee-text">
 LIST</SPAN>
-, you may note how little of the information comes from the class itself; most of the interesting work has been done in ancestors, and <SPAN CLASS="ee-text">
+, you may note how few of its properties come from the class itself; most of the interesting work has been done in ancestors, and <SPAN CLASS="ee-text">
 LIST</SPAN>
  just adds a few details.
 <P CLASS="jj-small">
@@ -258,19 +266,19 @@ LIST</SPAN>
 Search</SPAN>
  button at the top of the window, or type CTRL-<SPAN CLASS="ee-keyword">
 F</SPAN>
-. A self-explanatory Search Pane will come up, with various options such as <SPAN CLASS="ff-italics">
+. A self-explanatory Search Tool will come up, with various options such as <SPAN CLASS="ff-italics">
 Match case</SPAN>
  and <SPAN CLASS="ff-italics">
 Whole word</SPAN>
 . 
 <P CLASS="nn-first">
-<A NAME="pgfId-491033"></A>Next come two essential documentation views: <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-555531"></A>Next come two essential documentation views: <SPAN CLASS="ee-keyword">
 Contract</SPAN>
  and <SPAN CLASS="ee-keyword">
-Interface</SPAN>
+Flat Contract</SPAN>
 . Based on Eiffel's principles of Design by Contract, they document the interface properties of a class. Unlike the previous two, they do not show actual Eiffel texts, but information useful for client classes.
 <P CLASS="nn-normal">
-<A NAME="pgfId-491039"></A>Here is the beginning of the <SPAN CLASS="ee-keyword">
+<A NAME="pgfId-555535"></A>Here is the beginning of the <SPAN CLASS="ee-keyword">
 Contract</SPAN>
  view for our example class <SPAN CLASS="ee-text">
 LIST</SPAN>
@@ -291,18 +299,18 @@ do</SPAN>
 once</SPAN>
  clause -- but retains the header (feature name, arguments, results), the header comment, and the contracts (precondition, postcondition, invariant) minus any contract clause that refers to a non-exported feature and hence would be useless to clients.
 <P CLASS="nn-normal">
-<A NAME="pgfId-491072"></A>As you will know, especially if you have read the book <SPAN CLASS="ff-note">
+<A NAME="pgfId-491072"></A>As you will know, particularly if you have read the book <SPAN CLASS="ff-note">
 <A HREF="http://eiffel.com/doc/oosc/" CLASS="URL"></A></SPAN>
 <SPAN CLASS="ww-crossref">
 Object-Oriented Software Construction</SPAN>
-, the contract form is the preferred way of documenting software elements, especially reusable components, as it provides clients with just the right level of abstraction: precise enough thanks to the type signature and especially the contracts; clear enough thanks to the header comments; and general enough since it omits implementation details that are irrelevant to client programmers (and might lead them to write client code that won't work any more if the implementation changes).
+, the contract form is the preferred way of documenting software elements, especially reusable components, as it provides clients with just the right level of abstraction: precise enough thanks to the type signature and the contracts; clear enough thanks to the header comments; and general enough since it omits implementation details that are irrelevant to client programmers (and might lead them to write client code that won't work any more if the implementation changes).
 <P CLASS="nn-normal">
 <A NAME="pgfId-491088"></A>In practice you will often want to use, instead of the <SPAN CLASS="ee-keyword">
 Contract </SPAN>
 view, the next one, <SPAN CLASS="ee-keyword">
-Interface</SPAN>
-, also known as &quot;flat-short form&quot;, which applies the same rules to the flat form rather than to the original class. This means it shows information on all the features of the class, immediate (defined in the class itself) as well as inherited, whereas the short form, non-flat, only considers immediate features. The <SPAN CLASS="ee-keyword">
-Interface</SPAN>
+Flat Contract</SPAN>
+, also known as &quot;flat-short form&quot; and &quot;interface form&quot;, which applies the same rules to the flat form rather than to the original class. This means it shows information on all the features of the class, immediate (defined in the class itself) as well as inherited, whereas the short form, non-flat, only considers immediate features. The <SPAN CLASS="ee-keyword">
+Flat Contract</SPAN>
  view provides the complete interface information for the class. Try it now on class <SPAN CLASS="ee-text">
 LIST</SPAN>
 .
@@ -347,7 +355,7 @@ LIST</SPAN>
 <P CLASS="nn-first">
 <A NAME="pgfId-491124"></A>The only two classes that <SPAN CLASS="ee-text">
 LIST</SPAN>
- needs for its own algorithms are basic types from the Kernel Libray, <SPAN CLASS="ee-text">
+ needs for its own algorithms are basic types from the Kernel Library, <SPAN CLASS="ee-text">
 BOOLEAN</SPAN>
  and <SPAN CLASS="ee-text">
 INTEGER</SPAN>
@@ -400,30 +408,30 @@ BAG</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-495623"></A>The remaining Class View buttons all display information in the same format. Each selects a specific subset of the target class's features. The last two selected attributes and routines. You can now try any of the others by clicking the corresponding button:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495641"></A><SPAN CLASS="ee-keyword">
 Deferred</SPAN>
  features: abstract features which don't have an implementation in the current class, only in eventual descendants. Try this for <SPAN CLASS="ee-text">
 LIST</SPAN>
-; you'll see that this deferred class indeed has a number of deferred features.</LI>
-<LI CLASS="ll-bull">
+; you'll see that this deferred class indeed has a number of deferred features.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495644"></A><SPAN CLASS="ee-keyword">
 Once and constants</SPAN>
-: constant attributes, &quot;once functions&quot; which provide shared objects (close to the &quot;singleton&quot; pattern), and once procedure which provide a convenient initialization mechanism. <SPAN CLASS="ee-text">
+: constant attributes, &quot;once functions&quot; which provide shared objects (close to the &quot;singleton&quot; pattern), and once procedures which provide a convenient initialization mechanism. <SPAN CLASS="ee-text">
 LIST</SPAN>
- hasn't any.</LI>
-<LI CLASS="ll-bull">
+ hasn't any.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495648"></A><SPAN CLASS="ee-keyword">
 External</SPAN>
  features, implemented as calls to routines, macros or other elements implemented in other languages. <SPAN CLASS="ee-text">
 LIST</SPAN>
- hasn't any.</LI>
-<LI CLASS="ll-bull">
+ hasn't any.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-495649"></A><SPAN CLASS="ee-keyword">
 Exported</SPAN>
- features: all the features available to general clients. <SPAN CLASS="ee-text">
+ features: those available to all clients. <SPAN CLASS="ee-text">
 LIST</SPAN>
- has quite a few.</LI>
+ has quite a few.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-495664"></A>All the views you have now learned to produce were about <SPAN CLASS="ff-italics">
@@ -432,7 +440,7 @@ classes</SPAN>
 features</SPAN>
  throughout the classes where they appear. This will be the purpose of the <SPAN CLASS="ee-keyword">
 Features</SPAN>
- tab of the Context Pane. But before we look at it let's see how to do more with the Class View facilities just seen, by exporting them to the outside world: to the Web, to a text processing tool, or in fact any other tool.
+ Tab of the Context Tool. But before we look at it let's see how to do more with the Class View facilities just seen, by exporting them to the outside world: to the Web, to a text processing tool, or in fact any other tool.
 </DIV>
 <p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-07.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-09.html"><area shape="default" nohref></MAP>
 

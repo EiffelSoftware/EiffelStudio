@@ -41,18 +41,18 @@ systems</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-513123"></A>How do you get an executable system? All you need is to
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445607"></A>Provide a set of classes, called a <SPAN CLASS="ff-bold">
 universe</SPAN>
-<A NAME="marker-445606"></A>.</LI>
-<LI CLASS="ll-bull">
+<A NAME="marker-445606"></A>.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445609"></A>Designate of these classes as the <SPAN CLASS="ff-bold">
 root class</SPAN>
-<A NAME="marker-445608"></A>.</LI>
-<LI CLASS="ll-bull">
+<A NAME="marker-445608"></A>.
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-445610"></A>Designate one of its creation procedures as the <SPAN CLASS="ff-bold">
 root procedure</SPAN>
-<A NAME="marker-445611"></A>.</LI>
+<A NAME="marker-445611"></A>.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-445614"></A>This defines what it means to execute the system: create one <A NAME="marker-445612"></A>direct instance of the root class (the execution's <A NAME="marker-445613"></A><SPAN CLASS="ff-bold">
@@ -87,7 +87,7 @@ iteration</SPAN>
 <P CLASS="nn-normal">
 <A NAME="pgfId-513508"></A>How will you specify a universe? Any Eiffel implementation can use its own conventions. EiffelStudio applies a simple policy:
 <UL>
-<LI CLASS="ll-bull">
+<p class="nn-first"><img src="greenball.gif" alt="+">
 <A NAME="pgfId-513452"></A><A NAME="marker-513450"></A>Store <A NAME="marker-513460"></A>each class in a single file, called its <A NAME="marker-513451"></A>class file, with a name of the form <SPAN CLASS="ee-text">
 name</SPAN>
 <SPAN CLASS="ee-dot">
@@ -96,15 +96,15 @@ name</SPAN>
 e</SPAN>
 . For clarity, <SPAN CLASS="ee-text">
 name</SPAN>
- should be the lower-case version of the class name, although this is a style rule, not a requirement.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-513476"></A>Put all the class files of a cluster into a single directory (folder on Windows), called its cluster directory.</LI>
+ should be the lower-case version of the class name, although this is a style rule, not a requirement.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-513476"></A>Put all the class files of a cluster into a single directory (folder on Windows), called its cluster directory.
 </UL>
 <P CLASS="jj-small">
 <A NAME="pgfId-513501"></A>It is desirable for clarity, as a style rule, to separate clusters that directly contain classes (&quot;terminal clusters&quot;) from those that have subclusters. Cluster directories will then contain class files or cluster subdirectories, but not both.
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-513545"></A>To specify a system, it suffices to provide a list of cluster directories, along with the name of the root class and root procedure. The universe consists of the classes contained in all the class files in the listed cluster directories.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-513545"></A>To specify a system, it suffices to provide a list of cluster directories, along with the name of the root class and root procedure. The universe consists of the classes contained in all the class files in the listed cluster directories.
 </UL>
 <P CLASS="nn-normal">
 <A NAME="pgfId-445634"></A><A NAME="marker-445632"></A>Here is<A NAME="marker-445633"></A> an example of such a system specification. It's <SPAN CLASS="ff-italics">

@@ -1,39 +1,26 @@
 /*  Automatically generated, all edits will be lost, see css-model.css */
 BODY {
-    font-family: Verdana, Times-New-Roman, Times, Lucida, Arial, Helvetica;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
 	margin-right:10px;
 	margin-left:10px;
+	font-size:71.9%;
+	background:#FFFEEF;
  }
 
 A {
-	color: #c90000;
-	text-decoration:underline;
-}
-
-A.active {
-}
-
-A.link {
-	color: blue;
-}
-
-A.visited {
-	color: purple;
-}
-
-A.Hypertext {
-	color:navy;
-	font-weight:Bold;
+	font-family: Verdana, Lucida, Arial, Helvetica, sans-serif;
+	color: #003399;
+	text-decoration: none;
 }
 
 A:hover {
-    COLOR: #D15FEE;
-	text-decoration:none;
+	color: #006633;
+	text-decoration:underline;
 }
 
 blockquote {
 	color:c90000;
-	font-size: 70%;
+	font-style: Italic;
 }
 
 H1, H1.aa-sec2, H2.aa-sec2 {
@@ -44,11 +31,8 @@ H1, H1.aa-sec2, H2.aa-sec2 {
 	margin-bottom: 6pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
-	font-size: 150%;
 	font-weight: Bold;
-	font-style: Regular;
-	color: #c90000;
-	color: #008200;
+	font-style: normal;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -64,9 +48,7 @@ H2.aa-sec2TOC, H2.aa-sec2TOC {
 	margin-left: 0pt;
 	font-size: 90%;
 	font-weight: Bold;
-	font-style: Regular;
-	color: #c90000;
-	color: #008200;
+	font-style: normal;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -80,10 +62,7 @@ H1.aa-sec3, H2.aa-sec3, H3.aa-sec3, H4.aa-sec3, H5.aa-sec3, H6.aa-sec3 {
 	margin-bottom: 6pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
-	font-size: 90%;
 	font-weight: Bold;
-	font-style: Italic;
-	color: #008200;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -98,8 +77,7 @@ H1.bb-chapnonum, P.bb-chapnonum {
 	margin-left: 500px;
 	font-size: 2px;
 	font-weight: Bold;
-	font-style: Regular;
-	color: #008200;
+	font-style: normal;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -115,23 +93,43 @@ H2.index {
 	margin-left: 0pt;
 	font-size: 110%;
 	font-weight: Bold;
-	font-style: Regular;
-	color: navy;
+	font-style: normal;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
+}
+
+H3 {
+	color:#990000;
+	font-size:110%; 
+	text-decoration:none
+}
+H2 {
+	color:#700000;
+	background:#ffcc00;
+	font-size:110%;
+	width:90%;
+	padding: 1px 6px;
+}
+H1 {
+	color:#990000;
+	font-size:150%;
+	margin-top:0em;
+}
+IMG {
+	border="0";
 }
 LI.bb-chapter {
 	display: block;
 	text-align: left;
 	text-indent: 0pt;
 	margin-top: 0pt;
-	margin-bottom: 111pt;
+	margin-bottom: 110pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
 	font-size: 200%;
 	font-weight: Bold;
-	font-style: Regular;
+	font-style: normal;
 	color: #008200;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -147,7 +145,7 @@ LI.cc-abullnum {
 	margin-left: 17pt;
 	font-size: 70%;
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -163,14 +161,14 @@ LI.cc-acelltitle {
 	margin-left: 0pt;
 	font-size: 90%;
 	font-weight: Bold;
-	font-style: Regular;
+	font-style: normal;
 	color: #0000a8;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
 }
 P {
-    font-size: 70%;
+    font-size: 100%;
 }
 
 P.book-title {
@@ -183,8 +181,8 @@ P.book-title {
     margin-left: 0pt;
     font-size: 200%;
     font-weight: Bold;
-    font-style: Regular;
-	color: #008200;
+    font-style: normal;
+    color:#990000;
     text-decoration: none;
     vertical-align: baseline;
     text-transform: none;
@@ -199,8 +197,8 @@ P.book-title1 {
     margin-left: 0pt;
     font-size: 150%;
     font-weight: Bold;
-    font-style: Regular;
-	color: #008200;
+    font-style: normal;
+    color:#990000;
     text-decoration: none;
     vertical-align: baseline;
     text-transform: none;
@@ -208,9 +206,9 @@ P.book-title1 {
 P.copyright, P.bottom,P.top {
 	margin-top: 2pt;
 	margin-bottom: 0pt;
-	font-size: 60%;
+	font-size: 90%;
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -224,9 +222,9 @@ H1.dd-sec0, H1.dd-sec0TOC {
     margin-bottom: 1pt;
     margin-right: 28.3pt;
     margin-left: 0pt;
-    font-size: 70%;
+    font-size: 100%;
     font-weight: Bold;
-    font-style: Regular;
+    font-style: normal;
     color: #c90000;
     text-decoration: none;
     vertical-align: baseline;
@@ -241,16 +239,17 @@ P.ee-comment {
 	margin-bottom: 1pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
-	font-size: 70%;
+	font-size: 110%;
 	font-weight: Regular;
-	font-style: Regular;
-	color: #0000ff;
+	font-style: Italic;
+	font-family: Courier;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
 }
 P.ee-text {
-	font-family: Arial, Helvetica;
+	font-family: courier new;
 	display: block;
 	text-align: justify;
 	text-indent: 0pt;
@@ -258,14 +257,13 @@ P.ee-text {
 	margin-bottom: 0pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
-	font-size: 70%;
+	font-size: 110%;
 	font-weight: Regular;
-	font-style: Italic;
-	color: #0000ff;
+	font-style: normal;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
-	font-family: Arial, Helvetica;
 }
 P.ee-text1 {
 	display: block;
@@ -275,9 +273,8 @@ P.ee-text1 {
 	margin-bottom: 1pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
-	font-size: 70%;
+	font-size: 100%;
 	font-weight: Regular;
-	font-style: Italic;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -290,7 +287,7 @@ P.jj-small {
     margin-bottom: 4pt;
     margin-right: 85pt;
     margin-left: 28.3pt;
-	font-size: 70%;
+	font-size: 100%;
     font-weight: medium;
     font-style: Italic;
     color: #000000;
@@ -315,9 +312,9 @@ LI.ll-bullnum {
 	margin-bottom: 5pt;
 	margin-right: 56.5t;
 	margin-left: 17pt;
-	font-size: 70%;
+	/* font-size: 100%; */
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -330,9 +327,9 @@ LI.mm-bull {
 	margin-bottom: 5pt;
 	margin-right: 5.7pt;
 	margin-left: 28.3pt;
-	font-size: 70%;
+	/* font-size: 100%; */
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -346,9 +343,9 @@ LI.mm-bullnum {
 	margin-bottom: 4pt;
 	margin-right: 5.7pt;
 	margin-left: 28.3pt;
-	font-size: 70%;
+	/* font-size: 100%; */
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -362,13 +359,9 @@ P.mm-celltext {
 	margin-bottom: 4pt;
 	margin-right: 5.7pt;
 	margin-left: 0pt;
-	font-size: 70%;
-	font-weight: Regular;
-	font-style: Regular;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
-	text-transform: none;
 }
 P.mm-celltitle {
 	display: block;
@@ -378,10 +371,8 @@ P.mm-celltitle {
 	margin-bottom: 6pt;
 	margin-right: 0pt;
 	margin-left: 0pt;
-	font-size: 90%;
 	font-weight: Bold;
-	font-style: Regular;
-	color: #0000a8;
+	font-style: normal;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -394,9 +385,9 @@ P.nn-first, P.nn-normal {
 	margin-bottom: 8pt;
 	margin-right: 56.5pt;
 	margin-left: 0pt;
-	font-size: 70%;
+	font-size: 100%;
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -413,9 +404,9 @@ P.nn-normal {
 	margin-bottom: 4pt;
 	margin-right: 56.5pt;
 	margin-left: 0pt;
-	font-size: 70%;
+	font-size: 100%;
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -432,7 +423,7 @@ P.title-tiny {
     margin-left: 0pt;
     font-size: 90%;
     font-weight: Bold;
-    font-style: Regular;
+    font-style: normal;
     color: #c90000;
     text-decoration: none;
     vertical-align: baseline;
@@ -446,9 +437,9 @@ P.tt-first, H1.tt-first, H2.tt-first, H3.tt-first, H4.tt-first, H5.tt-first, H6.
     margin-bottom: 3pt;
     margin-right: 0pt;
     margin-left: 28.3pt;
-    font-size: 70%;
+    font-size: 100%;
     font-weight: Regular;
-    font-style: Regular;
+    font-style: normal;
     color: #000000;
     text-decoration: none;
     vertical-align: baseline;
@@ -463,9 +454,9 @@ P.yy-right {
     margin-bottom: 8pt;
     margin-right: 56.5pt;
     margin-left: 40pt;
-    font-size: 70%;
+    font-size: 100%;
     font-weight: Regular;
-    font-style: Regular;
+    font-style: normal;
     color: #000000;
     text-decoration: none;
     vertical-align: baseline;
@@ -485,14 +476,14 @@ SPAN.aa-upper {
 }
 SPAN.C {
 	font-weight: Regular;
-	font-style: Regular;
-	color: #0000ff;
+	font-style: normal;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
 }
 SPAN.ee-comment {
-	font-family: Arial, Helvetica;
+	font-family: courier new;
 	text-align: justify;
 	text-indent: 0pt;
 	margin-top: 0pt;
@@ -500,15 +491,16 @@ SPAN.ee-comment {
 	margin-right: 0pt;
 	margin-left: 0pt;
 	font-weight: Regular;
-	font-style: Regular;
-	color: #0000ff;
+	font-style: Italic;
+	color: #2222AA;
 	text-decoration: none;
+	font-size: 110%;
 }
 SPAN.ee-dot {
 	font-size: large;
 	font-weight: Regular;
-	font-style: Regular;
-	color: #0000ff;
+	font-style: normal;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -516,29 +508,31 @@ SPAN.ee-dot {
 }
 SPAN.ee-junk {
 	font-weight: Regular;
-	font-style: Regular;
-	color: #0000ff;
+	font-style: normal;
+	color: #2222AA;
 	font-family: Arial, Helvetica;
 }
 SPAN.ee-keyword {
 	font-weight: Bold;
-	font-style: Regular;
-	color: #0000ff;
-	font-family: Arial, Helvetica;
+	font-style: normal;
+	color: #2222AA;
+	font-family: courier new;
 }
 SPAN.ee-reserved {
 	font-weight: Regular;
 	font-style: Italic;
-	color: #0000ff;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
+	font-family: courier new;
 }
 SPAN.ee-sub {
-	font-size: 60%;
+	font-family: courier new;
+	font-size: 90%;
 	font-weight: Regular;
 	font-style: Italic;
-	color: #0000ff;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: sub;
 	text-transform: none;
@@ -546,8 +540,8 @@ SPAN.ee-sub {
 SPAN.ee-symbol {
 	font-size: 90%;
 	font-weight: Regular;
-	font-style: Regular;
-	color: #0000ff;
+	font-style: normal;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -555,12 +549,12 @@ SPAN.ee-symbol {
 }
 SPAN.ee-syntax {
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #008200;
 }
 SPAN.ee-title {
 	font-style: Italic;
-	color: #0000ff;
+	color: #2222AA;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
@@ -575,7 +569,7 @@ SPAN.ff-attent {
 }
 SPAN.ff-bold {
 	font-weight: Bold;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 }
 SPAN.ff-boldital {
@@ -600,7 +594,7 @@ SPAN.ff-note {
 }
 SPAN.ff-roman {
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -609,7 +603,7 @@ SPAN.ff-roman {
 SPAN.I {
 	font-weight: Regular;
 	font-style: Italic;
-	color: #0000ff;
+	color: #2222AA;
 }
 SPAN.ll-validity {
 	font-weight: Regular;
@@ -621,9 +615,9 @@ SPAN.mm-math {
 	font-family: "Symbol";
 }
 SPAN.mm-roman11 {
-	font-size: 60%;
+	font-size: 90%;
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -638,7 +632,7 @@ SPAN.nn-smallcaps {
 	text-transform: none;
 }
 SPAN.P {
-	font-style: Regular;
+	font-style: normal;
 	color: #008200;
 }
 SPAN.R {
@@ -646,7 +640,7 @@ SPAN.R {
 }
 SPAN.S {
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -654,7 +648,7 @@ SPAN.S {
 	font-family: "Symbol";
 }
 SPAN.SUB {
-	font-size: 60%;
+	font-size: 90%;
 	font-weight: Regular;
 	font-style: Italic;
 	color: #000000;
@@ -663,7 +657,7 @@ SPAN.SUB {
 	text-transform: none;
 }
 SPAN.subscript {
-	font-size: 60%;
+	font-size: 90%;
 	font-weight: Bold;
 	font-style: Italic;
 	color: #000000;
@@ -671,25 +665,20 @@ SPAN.subscript {
 	vertical-align: sub;
 }
 SPAN.superscript {
-	font-size: 60%;
+	font-size: 90%;
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: super;
 }
 SPAN.tt-basic {
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #000000;
 	text-decoration: none;
 	vertical-align: baseline;
 	text-transform: none;
-}
-SPAN.ww-crossref {
-	color: #c90000;
-	font-style: Regular;
-	text-decoration: underline ;
 }
 SPAN.ww-locref {
 	font-weight: Regular;
@@ -701,7 +690,7 @@ SPAN.ww-locref {
 }
 SPAN.yy-ding {
 	font-weight: Regular;
-	font-style: Regular;
+	font-style: normal;
 	color: #ff00ff;
 	text-decoration: none;
 	vertical-align: baseline;
@@ -712,13 +701,12 @@ SPAN.zz-underline {
 	text-decoration: underline ;
 }
 SPAN.ee-text {
+	font-style: normal;
 	font-weight: Regular;
-	font-style: Italic;
-	color: #0000ff;
-	font-family: Arial, Helvetica;
+	color: #2222AA;
+	font-family: courier new;
 }
 SPAN.SUB {
-    font-size: 60%;
     font-weight: Regular;
     font-style: Italic;
     color: #000000;
@@ -727,7 +715,7 @@ SPAN.SUB {
     text-transform: none;
 }
 SPAN.subscript {
-    font-size: 60%;
+    font-size: 90%;
     font-weight: Bold;
     font-style: Italic;
     color: #000000;
@@ -735,16 +723,12 @@ SPAN.subscript {
     vertical-align: sub;
 }
 SPAN.superscript {
-    font-size: 60%;
+    font-size: 90%;
     font-weight: Regular;
-    font-style: Regular;
+    font-style: normal;
     color: #000000;
     text-decoration: none;
     vertical-align: super;
-}
-SPAN.ww-crossref {
-    color: #c90000;
-    text-decoration: underline ;
 }
 SPAN.ww-locref {
     font-weight: Regular;
@@ -755,6 +739,15 @@ SPAN.ww-locref {
     text-transform: none;
 }
 
+TABLE {
+	background:#FFECDD;
+	margin:5px 5px 5px 5px;
+	padding:0px 0px 0px 0px;
+	color:#000000;
+	font-size:100%;
+	border: 2px solid #EEDBCC;
+}
+
 UL {
-	font-size: 70%;
+	font-size: 100%;
 }

@@ -48,12 +48,12 @@ operations</SPAN>
 represent</SPAN>
  operations, so that we can include them in object structures that some other piece of the software will later traverse to uncover the operations and, usually, execute them. Such &quot;operation wrapper&quot; objects, called agents, are useful in a number of application areas such as:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555127"></A>GUI (Graphical User Interface) programming, where we may associate an agent with a certain event of the interface, such as a mouse click at a certain place on the screen, to prescribe that if the event occurs -- a user clicks there -- it must cause execution of the agent's associated operation.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555128"></A>Iteration on data structures, where we may define a general-purpose routine that can apply an arbitrary operation to all the elements of a structure such as a list; to specify a particular operation to iterate, we will pass to the iteration mechanism an agent representing that operation.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555129"></A>Numerical computation, where we may define a routine that computes the integral of any applicable function on any applicable interval; to represent that function and pass its representation to the integration routine, we will use an agent.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555127"></A>GUI (Graphical User Interface) programming, where we may associate an agent with a certain event of the interface, such as a mouse click at a certain place on the screen, to prescribe that if the event occurs -- a user clicks there -- it must cause execution of the agent's associated operation.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555128"></A>Iteration on data structures, where we may define a general-purpose routine that can apply an arbitrary operation to all the elements of a structure such as a list; to specify a particular operation to iterate, we will pass to the iteration mechanism an agent representing that operation.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555129"></A>Numerical computation, where we may define a routine that computes the integral of any applicable function on any applicable interval; to represent that function and pass its representation to the integration routine, we will use an agent.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-555130"></A>Operations in Eiffel are expressed as routines, and indeed every agent will have an associated routine. Remember, however, that the fundamental distinction between objects and operations remains: an agent is an object, and it is not a routine; it <SPAN CLASS="ff-italics">
@@ -1112,10 +1112,10 @@ LIST</SPAN>
 do_all</SPAN>
 , for both purposes:
 <UL>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555278"></A>Depositing money on every account in a list of accounts.</LI>
-<LI CLASS="ll-bull">
-<A NAME="pgfId-555279"></A>Adding all the integers in a list of integers.</LI>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555278"></A>Depositing money on every account in a list of accounts.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-555279"></A>Adding all the integers in a list of integers.
 </UL>
 <P CLASS="nn-first">
 <A NAME="pgfId-555120"></A>Agents provide a welcome complement to the other mechanisms of Eiffel. They do not conflict with them but, when appropriate -- as in the examples sketched in this section -- provide clear and expressive programming schemes, superior to the alternatives.

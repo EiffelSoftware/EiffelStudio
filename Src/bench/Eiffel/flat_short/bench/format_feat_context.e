@@ -11,9 +11,18 @@ inherit
 
 	FORMAT_CONTEXT_B
 		rename
+			execute as old_execute,
+			put_origin_comment as old_put_origin_comment
+		redefine
+			chained_assertion
+		end
+	FORMAT_CONTEXT_B
+		rename
 			execute as old_execute
 		redefine
-			put_origin_comment, chained_assertion
+			chained_assertion, put_origin_comment
+		select
+			put_origin_comment
 		end
 
 creation
@@ -38,16 +47,17 @@ feature -- Execution
 			f_ast: FEATURE_AS_B;
 			source_feat: FEATURE_I;
 			s_table: SELECT_TABLE;
-			rout_fsas: ROUTINE_FSAS;
+			rout_as: ROUTINE_AS;
 			rout_id_set: ROUT_ID_SET;
 			comment: EIFFEL_COMMENTS;
 			nbr, i, rout_id: INTEGER;
-			written_in_class: CLASS_C
+			written_in_class: CLASS_C;
+			c_comments: CLASS_COMMENTS
 		do
 			if not rescued then
 				execution_error := false;
 				Error_handler.wipe_out;
-				f_ast := Body_server.item (target_feat.body_id)
+				f_ast := target_feat.body;
 				export_status := target_feat.export_status;
 				!! format_stack.make;
 				!! text.make;
@@ -87,39 +97,32 @@ feature -- Execution
 				else
 					source_feat := target_feat
 				end;
-				f_ast := f_ast.new_ast;
-				rout_fsas ?= f_ast.body.content;
-				!! file.make (written_in_class.file_name);
+				rout_as ?= f_ast.body.content;
 				start_pos := f_ast.start_position;
-				end_pos := f_ast.end_position;
-				if file.exists then
-					if rout_fsas /= Void then
-						!! eiffel_file.make_for_feature_comments (file,
-							start_pos, end_pos);
-						comment := trailing_comment (start_pos);
-						rout_fsas.set_comment (comment);
-					end;
-					!! assert_server.make_for_feature (target_feat, f_ast);
-					init_feature_context (source_feat, target_feat, f_ast);
-					indent;
-					f_ast.format (Current);
-					if rout_fsas = Void then
-							--! Must have been an attribute or constant
-						indent;
-						indent;
-						if written_in_class /= class_c then
-							put_text_item (ti_Dashdash);
-							put_space;
-							put_comment_text ("(from ");
-							put_class_name (written_in_class);
-							put_comment_text (")");
-							new_line;
-							print_export_status;
-						else
-							print_export_status
-						end;
+				if written_in_class.is_precompiled then
+					if Class_comments_server.has 
+							(written_in_class.id) 
+					then
+						c_comments := 
+							Class_comments_server.disk_item 
+									(written_in_class.id);
+						feature_comments := c_comments.item (start_pos)
 					end
-				end
+				else
+					!! file.make (written_in_class.file_name);
+					if file.exists and then rout_as /= Void then
+						end_pos := rout_as.body_start_position;
+						!! eiffel_file.make_with_positions (file.name,
+							start_pos, end_pos);
+						eiffel_file.set_current_feature (f_ast);
+						feature_comments := 
+								eiffel_file.current_feature_comments;
+					end;
+				end;
+				!! assert_server.make_for_feature (target_feat, f_ast);
+				init_feature_context (source_feat, target_feat, f_ast);
+				indent;
+				f_ast.format (Current);
 				commit;
 				System.set_current_class (Void);
 				Inst_context.set_cluster (Void);
@@ -153,30 +156,19 @@ feature -- Execution
 			end
 		end;
 
+feature -- Element change
+
+	put_origin_comment is
+			-- Print the origin comment if necessary and
+			-- print the export status.
+		do
+			old_put_origin_comment;
+			print_export_status
+		end;
+
 feature {NONE} -- Feature comments 
 
 	export_status: EXPORT_I;
-
-	put_origin_comment is
-		local
-			s: STRING;
-			c: CLASS_C;
-		do
-			if
-				global_adapt.source_enclosing_class
-				/= global_adapt.target_enclosing_class
-			then
-				!!s.make (50);
-				put_text_item (ti_Dashdash);
-				put_space;
-				put_comment_text ("(from ");
-				c := global_adapt.source_enclosing_class;
-				put_class_name (c);
-				put_comment_text (")");
-				new_line;
-			end;
-			print_export_status;
-		end;
 
 	print_export_status is
 		do
@@ -189,21 +181,5 @@ feature {NONE} -- Feature comments
 				new_line;
 			end;
 		end;
-
-	eiffel_file: EIFFEL_FILE
-			-- For format feature 
-
-	trailing_comment (start_pos: INTEGER): EIFFEL_COMMENTS is
-		local
-			file: EIFFEL_FILE
-		do
-			if start_pos >= 0 then
-				file := eiffel_file;
-				if file /= Void then
-					file.go_after (start_pos);
-					Result := file.trailing_comment
-				end
-			end
-		end
 
 end	

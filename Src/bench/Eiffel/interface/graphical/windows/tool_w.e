@@ -822,8 +822,4 @@ feature {TEXT_WINDOW} -- Initialization
 		do
 		end
  
-invariant
-
-	non_void_history: history /= Void
-
 end -- class TOOL_W

@@ -9,6 +9,20 @@ class
 
 feature -- Access
 
+	Pbm_getpos: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"PBM_GETPOS"
+		end
+
+	Pbm_getrange: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"PBM_GETRANGE"
+		end
+
 	Pbm_setrange: INTEGER is
 		external
 			"C [macro %"cctrl.h%"]"

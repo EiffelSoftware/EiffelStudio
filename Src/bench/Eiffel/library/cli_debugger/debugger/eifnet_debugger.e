@@ -38,7 +38,11 @@ inherit
 	EIFNET_DEBUGGER_SYNCHRO
 		export
 			{NONE} all
-			{EIFNET_EXPORTER} dbg_timer_active, stop_dbg_timer, start_dbg_timer, lock_and_wait_for_callback
+			{EIFNET_EXPORTER} dbg_timer_active, stop_dbg_timer, start_dbg_timer, 
+					lock_and_wait_for_callback, 
+					callback_notification_processing, set_callback_notification_processing,
+					restore_callback_notification_state,
+					notify_debugger
 		end
 
 	SHARED_DEBUG
@@ -73,13 +77,21 @@ create
 
 feature -- Initialization
 
-	make, init is
+	make is
 			-- Creation
 		do
 			debug ("debugger")
-				print ("New EIFNET_DEBUGGER %N")
+				print ("call " + generator + ".make%N")
 			end
 		end
+		
+	init is
+			-- Initialize current object
+		do
+			debug ("debugger")
+				print ("call " + generator + ".init%N")
+			end
+		end		
 		
 	create_icor_debug is
 			-- Create icor_debug as ICorDebug
@@ -387,13 +399,14 @@ feature -- Interaction with .Net Debugger
 		
 	do_continue is
 		local
-			l_controller: ICOR_DEBUG_CONTROLLER		
+			l_controller: ICOR_DEBUG_CONTROLLER
+			l_hr: INTEGER
 		do	
 			if exit_process_occurred or else icor_debug_controller = Void then
 				on_exit_process
 			else
 				l_controller := icor_debug_controller
-				l_controller.continue (False)
+				l_hr := process_continue (l_controller, False)
 				last_dbg_call_success := l_controller.last_call_success
 				debug ("debugger_trace_eifnet")
 					if last_dbg_call_success /= 0 then
@@ -423,8 +436,13 @@ feature {NONE} -- Stepping Implementation
 			-- Result value is the error code
 		local
 			edti: EIFNET_DEBUGGER_THREAD_INFO
+			thid: INTEGER
 		do
-			edti := eifnet_debugger_info.managed_thread (application.status.current_thread_id)
+			thid := application.status.current_thread_id
+			if thid = 0 then
+				thid := eifnet_debugger_info.last_icd_thread_id
+			end
+			edti := eifnet_debugger_info.managed_thread (thid)
 			if edti /= Void then
 				Result := edti.new_stepper
 				Result.add_ref 

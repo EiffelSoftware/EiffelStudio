@@ -82,7 +82,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
 		require
-			not_alread_inside_notify: not callback_notification_processing
+			not_alread_inside_notify: not eifnet_debugger.callback_notification_processing
 		local
 			l_status: APPLICATION_STATUS_DOTNET
 		do
@@ -92,7 +92,8 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 					print ("** WARNING ** there is already an Estudio notification running%N")
 				end
 			end
-			callback_notification_processing := True
+			eifnet_debugger.set_callback_notification_processing (True)
+
 			if 
 				eifnet_debugger /= Void 
 				and then eifnet_debugger.data_changed
@@ -120,7 +121,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 					--| do_nothing
 				end
 			end
-			callback_notification_processing := False
+			eifnet_debugger.set_callback_notification_processing (False)
 			debug ("debugger_trace_callback_notify")
 				print ("** ->END::NotifyEstudio ** [" + Eifnet_debugger_info.last_managed_callback_name + "].%N")
 			end
@@ -128,8 +129,11 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 
 feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL}  -- Trigger eStudio status
 
-	callback_notification_processing: BOOLEAN
+	callback_notification_processing: BOOLEAN is
 			-- Is inside callback notification processing ?
+		do
+			Result := eifnet_debugger.callback_notification_processing
+		end
 		
 feature {APPLICATION_EXECUTION} -- load and save
 
@@ -377,6 +381,7 @@ feature -- Execution
 
 				process_before_running	
 				eifnet_debugger.set_last_control_mode_is_stop
+				eifnet_debugger.stop_dbg_timer
 				eifnet_debugger.do_stop
 
 				debug ("debugger_eifnet_data")
@@ -389,6 +394,10 @@ feature -- Execution
 				debug ("debugger_eifnet_data_extra")
 					debug_display_threads
 				end
+
+					--| In case the stored current Thread id is obsolete
+					--| we refresh the thread id's value
+				status.refresh_current_thread_id
 				eifnet_debugger.do_step_next
 			end
 		end		
@@ -993,15 +1002,20 @@ feature {NONE} -- Events on notification
 				display_full_callstack_info
 			end
 
-			if Eifnet_debugger_info.last_managed_callback_is_step_complete then
-				l_status.set_reason_as_step
-			elseif Eifnet_debugger_info.last_managed_callback_is_breakpoint then
-				l_status.set_reason_as_break
-				need_to_continue := not do_stop_on_breakpoint				
-			elseif Eifnet_debugger_info.last_managed_callback_is_exception then
-				l_status.set_reason_as_raise				
-				l_status.set_exception (0, "Exception occurred .. waiting for information")
+			if eifnet_debugger_info.last_control_mode_is_stop then
+				l_status.set_reason_as_interrupt
+			else
+				if Eifnet_debugger_info.last_managed_callback_is_step_complete then
+					l_status.set_reason_as_step
+				elseif Eifnet_debugger_info.last_managed_callback_is_breakpoint then
+					l_status.set_reason_as_break
+					need_to_continue := not do_stop_on_breakpoint				
+				elseif Eifnet_debugger_info.last_managed_callback_is_exception then
+					l_status.set_reason_as_raise				
+					l_status.set_exception (0, "Exception occurred .. waiting for information")
+				end
 			end
+				
 --| not true in case of empty stack .. when exception occurs during launching
 --			set_current_execution_stack (1)
 			Application.set_current_execution_stack_number (Application.number_of_stack_elements)

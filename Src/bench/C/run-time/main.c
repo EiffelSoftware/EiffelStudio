@@ -62,6 +62,8 @@ extern void einit();					/* System-dependent initializations */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
+extern void esdie();	/* need prototype for this routine */
+
 public void failure();					/* The Eiffel exectution failed */
 private Signal_t emergency();			/* Emergency exit */
 

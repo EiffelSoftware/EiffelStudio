@@ -32,6 +32,10 @@ private char *rcsid =
 /* 
  * Function definitions
  */
+extern void xfree();
+extern char * xcalloc();
+
+
 
 shared void hash_malloc(hp, size)
 struct hash *hp;

@@ -34,6 +34,7 @@ extern int full_coalesc();		/* Perform free blocks coalescing */
 extern void gfree();			/* Garbage collector's free routine */
 
 extern long eiffel_usage;		/* For memory statistics */
+extern void sc_stop();
 
 public void mem_free(object)
 char *object;

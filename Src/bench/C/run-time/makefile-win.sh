@@ -94,7 +94,7 @@ all:: x2c.exe
 
 x2c.exe: x2c.c
 	$(RM) $@
-	$(CC) $(JCFLAGS) x2c.c
+	$(CC) x2c.c 
 
 all:: config.h portable.h
 

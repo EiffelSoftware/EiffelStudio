@@ -340,18 +340,14 @@ feature -- Status setting
 		require
 			filename_not_void: a_filename /= Void
 		local
-			l_text_length: INTEGER
+			l_text_length, current_lower_line_index, last_counter,
+			last_paragraph_change, current_paragraph_index, counter: INTEGER
 			l_text: STRING
-			counter: INTEGER
 			current_format: EV_CHARACTER_FORMAT_I
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
-			last_counter: INTEGER
 			text_file: PLAIN_TEXT_FILE
 			paragraph_indexes: ARRAYED_LIST [INTEGER]
-			current_lower_line_index: INTEGER
-			last_paragraph_change: INTEGER
 			paragraph_formats: ARRAYED_LIST [STRING]
-			current_paragraph_index: INTEGER
 			paragraphs_exhausted: BOOLEAN
 		do
 			create buffer.set_rich_text (Current)
@@ -382,7 +378,7 @@ feature -- Status setting
 			loop
 				current_format := internal_character_format (counter + 1)
 					-- Retrieve next character change index.
-				counter := next_change_of_character (counter, l_text_length)
+				counter := next_change_of_character (counter, l_text_length + 1)
 
 				current_paragraph_index := paragraph_indexes.i_th (current_lower_line_index)
 				if counter > current_paragraph_index and not paragraphs_exhausted then
@@ -470,16 +466,17 @@ feature -- Status setting
 			-- If an invalid RTF file is passed, `Result' is `False'.
 			-- `Result' is undefined if `set_with_named_file' not called.
 		
-	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
+	next_change_of_character (current_pos: INTEGER; maximum_caret_pos: INTEGER): INTEGER is
 			-- `Result' is caret position at next change of character from `current_pos',
-			-- checking maximum position `a_text_length'. By passing `a_text_length' as
+			-- checking maximum caret position `maximum_caret_pos'. By passing `maximum_caret_pos' as
 			-- an argument, it prevents querying from the rich text constantly as it can be
 			-- precomputed instead.
+		require
+			valid_position: current_pos < maximum_caret_pos
+			maximum_pos_valid: maximum_caret_pos <= text_length + 1
 		local
-			counter: INTEGER
-			last_false_pos, current_step: INTEGER
-			value_finder: INTEGER
-			last_contiguous_position: INTEGER
+			counter, last_false_pos, current_step,
+			value_finder, last_contiguous_position: INTEGER
 		do
 			counter := current_pos
 			from
@@ -487,14 +484,14 @@ feature -- Status setting
 				value_finder := default_step
 				last_false_pos := 0				
 			until
-				(last_contiguous_position - last_false_pos).abs = 1 or counter = a_text_length
+				(last_contiguous_position - last_false_pos).abs = 1 or counter = maximum_caret_pos
 			loop
 					-- We must check that we are not attempting to query outside of the current text bounds.
 					-- If so, we treat it as a non contiguous find, and keep processing.
-				if counter + current_step <= a_text_length and then internal_character_format_contiguous (counter, counter + current_step) then
+				if counter + current_step <= maximum_caret_pos and then internal_character_format_contiguous (counter, counter + current_step) then
 					last_contiguous_position := current_step
 					if value_finder = default_step then
-						counter := (counter + default_step - 1).min (a_text_length)
+						counter := (counter + default_step - 1).min (maximum_caret_pos)
 						current_step := default_step
 					else
 						value_finder := value_finder // 2
@@ -506,9 +503,9 @@ feature -- Status setting
 					current_step := current_step - value_finder
 				end
 			end
-			Result := (counter + last_contiguous_position).min (a_text_length)
+			Result := (counter + last_contiguous_position).min (maximum_caret_pos)
 		ensure
-			Result_valid: Result <= a_text_length
+			Result_valid: Result <= maximum_caret_pos
 		end
 	
 	default_step: INTEGER is 8

@@ -13,6 +13,8 @@ indexing
 deferred class STACK [G] inherit
 
 	DISPENSER [G]
+		export
+			{NONE} prune, prune_all
 		redefine
 			fill
 		end;

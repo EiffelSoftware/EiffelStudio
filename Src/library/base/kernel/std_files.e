@@ -147,24 +147,28 @@ feature -- Input
 
 	readint is
 			-- Read a new integer from standard input.
+			-- Make result available in `lastint'.
 		do
 			input.readint
 		end;
 
 	readreal is
 			-- Read a new real from standard input.
+			-- Make result available in `lastreal'.
 		do
 			input.readreal
 		end;
 
 	readdouble is
 			-- Read a new double from standard input.
+			-- Make result available in `lastdouble'.
 		do
 			input.readdouble
 		end;
 
 	readline is
 			-- Read a line from standard input.
+			-- Make result available in `laststring'.
 		do
 			input.readline
 		end;
@@ -172,18 +176,21 @@ feature -- Input
 	readstream (nb_char: INTEGER) is
  			-- Read a string of at most `nb_char' bound characters
 			-- from standard input.
+			-- Make result available in `laststring'.
 		do
 			input.readstream (nb_char)
 		end;
 
 	readword is
 			-- Read a new word from standard input.
+			-- Make result available in `laststring'.
 		do
 			input.readword
 		end;
 
 	readchar is
 			-- Read a new character from standard input.
+			-- Make result available in `lastchar'.
 		do
 			input.readchar
 		end;

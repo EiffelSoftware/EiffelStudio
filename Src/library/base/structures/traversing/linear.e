@@ -38,17 +38,20 @@ feature -- Access
 		local
 			occur, pos: INTEGER;
 		do			
-			if object_comparison and v /= Void then
-				from
-					start; pos := 1
-				until
-					off or else (occur = i)
-				loop
-					if v.is_equal (item) then
-						occur := occur + 1
-					end;
-					forth;
-					pos := pos + 1
+			if object_comparison then
+				if v /= Void then
+					from
+						start; 
+						pos := 1
+					until
+						off or else (occur = i)
+					loop
+						if item /= Void and then v.is_equal (item) then
+							occur := occur + 1
+						end;
+						forth;
+						pos := pos + 1
+					end
 				end
 			else
 				from
@@ -67,7 +70,7 @@ feature -- Access
 				Result := pos - 1
 			end;
 		ensure
-			Result >= 0
+			non_negative_result: Result >= 0
 		end;
 
 	search (v: like item) is
@@ -76,8 +79,6 @@ feature -- Access
 			-- (Reference or object equality,
 			-- based on `object_comparison'.) 
 			-- If no such position ensure that `exhausted' will be true.
-		local
-			done: BOOLEAN
 		do
 			if object_comparison then
 				if v = Void then
@@ -86,7 +87,7 @@ feature -- Access
 				else
 					from
 					until
-						exhausted or else v.is_equal (item)
+						exhausted or else (item /= Void and then v.is_equal (item))
 					loop
 						forth
 					end
@@ -100,9 +101,9 @@ feature -- Access
 				end
 			end		
 		ensure
-			(not exhausted and object_comparison and v /= Void)
+			object_found: (not exhausted and object_comparison and v /= Void)
 				 implies v.is_equal (item);
-			(not exhausted and not object_comparison)
+			item_found: (not exhausted and not object_comparison)
 				 implies v = item
 		end;
 
@@ -117,12 +118,14 @@ feature -- Access
 			-- based on `object_comparison'.) 
 		do
 			from
-				start; search (v)
+				start; 
+				search (v)
 			until
 				exhausted
 			loop
 				Result := Result + 1;
-				forth; search (v)
+				forth;
+				search (v)
 			end;
 		end;
 	
@@ -133,7 +136,7 @@ feature -- Status report
 		do
 			Result := off
 		ensure
-			off implies Result
+			exhausted_when_off: off implies Result
 		end;
 
 	after: BOOLEAN is
@@ -161,7 +164,7 @@ feature -- Cursor movement
 			not_after: not after
 		deferred
 		ensure
-			moved_forth: index = old index + 1
+			-- moved_forth_before_end: (not after) implies index = old index + 1
 		end;
 
 feature -- Conversion

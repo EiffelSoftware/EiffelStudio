@@ -153,6 +153,20 @@ feature -- Access
 			Result := area
 		end;
 
+	index_of (c: CHARACTER; start: INTEGER): INTEGER is
+			-- Position of first occurrence of `c' at or after `start';
+			-- 0 if none.
+		do
+			Result := str_search ($area, c, start, count)
+		end;
+
+	substring_index (other: STRING; start: INTEGER): INTEGER is
+			-- Position of first occurrence of `other' at or after `start';
+			-- 0 if none.
+		do
+			Result := str_str (area, other.area, count, other.count, start, 0);
+		end;
+
 feature -- Measurement
 
 	capacity: INTEGER is
@@ -529,8 +543,7 @@ feature -- Removal
 			count := str_rmall ($area, $c, count)
 		ensure then
 			-- `for all i: 1..count, item (i) /= c'
-			-- `count' = old `count' - number of
-			-- occurrences of `c' in initial string
+			changed_count: count = (old count) - (old occurrences (c))
 		end;
 
 	wipe_out is
@@ -695,16 +708,14 @@ feature -- Output
 			Result := clone (Current);
 		end;
 
-feature -- Pattern matching
-
-	index_of (c: CHARACTER; start: INTEGER): INTEGER is
-		do
-			Result := str_search (area, c, start, count)
-		end;
+feature -- Inapplicable
 
 	search_substring (other: STRING; start: INTEGER): INTEGER is
+			-- Position of first occurrence of `other' at or after `start';
+			-- 0 if none.
+		obsolete "Use ``substring_index'' instead"
 		do
-			Result := str_str (area, other.area, count, other.count, start, 0);
+			Result := substring_index (other, start);
 		end;
 
 feature -- Obsolete

@@ -20,11 +20,14 @@ class ARRAYED_TREE [G] inherit
 
 	DYNAMIC_TREE [G]
 		undefine
-			child_after, readable_child,  writable_child,
-			child_off, child_before
+			child_after, readable_child,  
+			writable_child,	child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
 			duplicate_all, fill_subtree
+		select
+			object_comparison, linear_representation,
+			has, sequential_representation
 		end;
 
 	ARRAYED_LIST [ARRAYED_TREE [G]]
@@ -48,6 +51,7 @@ class ARRAYED_TREE [G] inherit
 			remove_right as al_remove_right,
 			prunable as al_prunable,
 			linear_representation as al_lin_rep,
+			sequential_representation as al_seq_rep,
 			count as arity,
 			empty as is_leaf,
 			full as al_full,
@@ -68,7 +72,8 @@ class ARRAYED_TREE [G] inherit
 			put_left as al_put_left,
 			put_right as al_put_right,
 			merge_left as al_merge_left,
-			merge_right as al_merge_right			
+			merge_right as al_merge_right,
+			object_comparison as al_object_comparison			
 		export
 			{NONE}
 				al_extend, al_extendible,
@@ -76,8 +81,13 @@ class ARRAYED_TREE [G] inherit
 				al_put, al_replace,
 				al_fill, al_lin_rep, al_full;
 		undefine
-			copy, is_equal, is_leaf, child_isfirst, child_islast,
-			valid_cursor_index, consistent, setup
+			copy, is_equal, is_leaf, child_isfirst,
+			child_islast, valid_cursor_index,
+			consistent, setup,
+			changeable_comparison_criterion,
+			compare_objects, compare_references
+		select
+			is_leaf
 		end
 
 creation

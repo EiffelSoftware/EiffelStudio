@@ -62,7 +62,7 @@ feature -- Access
 	search_before (c: CHARACTER) is
 			-- Move cursor to greatest position at or before cursor
 			-- where `current_item' and `c' are identical;
-			-- go offleft if unsuccessful.
+			-- go before if unsuccessful.
 		local
 			str: like Current;
 		do
@@ -79,7 +79,7 @@ feature -- Access
 			-- Move cursor to first position
 			-- (at or after cursor position) where `substring
 			-- (index, index + s.count)' and `s' are identical.
-			-- Go offright if unsuccessful. 
+			-- Go after if unsuccessful. 
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
@@ -99,7 +99,7 @@ feature -- Access
 			-- Move cursor to first position
 			-- (at or before cursor position) where `substring
 			-- (index, index + s.count)' and `s' are identical.
-			-- Go offleft if unsuccessful.
+			-- Go before if unsuccessful.
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
@@ -116,12 +116,11 @@ feature -- Access
 						str_mirrored.index, fuzzy) + 1;
 				if index = count + 1 then
 					index := 0
+				else
+					index := index - s.count + 1
 				end
 			end
 		end;
-
- 
-
  
 	current_item: CHARACTER is
 			-- Current item
@@ -133,19 +132,6 @@ feature -- Access
 			-- Index of `current_item', if valid
 			-- Valid values are between 1 and `count' (if `count' > 0).
 	
-	
---	index_of (c: CHARACTER; i: INTEGER): INTEGER is
---			-- Index of the first occurrence of `c' equal or
---			-- following the position `i'; 0 if not found.
---		require
---			index_small_enough: i <= count;
---			index_large_enough: i > 0
---		do
---			Result := str_search ($area, $c, i, count)
---		ensure
---			Index_value: Result = 0 or item (Result) = c
---		end;
-
 	index_of_occurrence (c: CHARACTER; i: INTEGER): INTEGER is
 			-- Index of `i'-th occurrence of `c'.
 			-- 0 if none.

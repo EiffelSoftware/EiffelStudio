@@ -81,6 +81,7 @@ feature -- Access
 			dir_entry := dir_temp.dir_search (dir_temp.directory_pointer,
 							$ext_entry_name);
 			Result := dir_entry /= Void;
+			dir_temp.close
 		end;
 
 	open_read is
@@ -129,6 +130,7 @@ feature -- Measurement
 				dir_temp.readentry;
 			end;
 			Result := counter;
+			dir_temp.close
 		end;
 
 	
@@ -151,6 +153,7 @@ feature -- Conversion
 				Result.extend (dir_temp.lastentry);
 				dir_temp.readentry
 			end;
+			dir_temp.close
 		end;
 
 				

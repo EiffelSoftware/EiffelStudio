@@ -12,7 +12,19 @@ indexing
 
 deferred class LIST [G] inherit
 
-	CHAIN [G];
+	CHAIN [G]
+		redefine
+			forth
+		end;
+feature -- Cursor movement
+
+	forth is 
+			-- Move to next position; if no next position,
+			-- ensure that `exhausted' will be true.
+		deferred
+		ensure then
+			moved_forth: index = old index + 1
+		end;
 
 feature -- Status report
 

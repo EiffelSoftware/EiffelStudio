@@ -19,6 +19,8 @@ class TWO_WAY_TREE [G] inherit
 			child_off
 		redefine
 			parent
+		select
+			has
 		end;
 
 	BI_LINKABLE [G]
@@ -90,6 +92,8 @@ class TWO_WAY_TREE [G] inherit
 			child_isfirst, child_islast, valid_cursor_index
 		redefine
 			first_child, last_child, new_cell
+		select
+			is_leaf
 		end
 
 creation
@@ -243,6 +247,24 @@ feature {NONE} -- Implementation
 			end;
 			other.child_go_to (cursor)
 		end;
+
+feature -- Obsolete
+
+	child_add_left (v: like item) is
+			-- Put `v' to the left of the child.
+			-- Do not move child
+		obsolete "Use %"child_put_left%" instead."
+		do
+			child_put_left (v)
+		end
+
+	child_add_right (v: like item) is
+			-- Put `v' to the right of the child.
+			-- Do not move child.
+		obsolete "Use %"child_put_right%" instead."
+		do
+			child_put_right (v)
+		end
 
 invariant
 

@@ -76,16 +76,18 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			if object_comparison and v /= Void then
-				from 
-					i := out_index
-				until
-					i = in_index or v.is_equal (i_th (i))
-				loop
-					i := i + 1;
-					if i > capacity then
-						i := 1
-					end;
+			if object_comparison then
+				if v /= Void then
+					from 
+						i := out_index
+					until
+						i = in_index or (i_th (i) /= Void and then v.is_equal (i_th (i)))
+					loop
+						i := i + 1;
+						if i > capacity then
+							i := 1
+						end;
+					end
 				end
 			else
 				from 

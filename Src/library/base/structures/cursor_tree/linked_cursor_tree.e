@@ -42,7 +42,7 @@ feature -- Status report
 	full: BOOLEAN is false;
 			-- Is tree filled to capacity? (Answer: no.)
 
-	prunable: BOOLEAN is false;
+	prunable: BOOLEAN is true
 
 feature -- Element change
 

@@ -57,11 +57,17 @@ class FIXED_LIST [G] inherit
 			{FIXED_LIST}
 				array_make
 		undefine
-			linear_representation, put
+			linear_representation, put, resizable
 		redefine
 			extendible
 		end;
-	
+
+	FIXED [G]
+		undefine
+			copy, consistent, is_equal, setup,
+			full
+		end;
+
 creation
 
 	make

@@ -19,6 +19,8 @@ class LINKED_TREE [G] inherit
 			child_off
 		redefine
 			parent
+		select
+			has
 		end;
 
 	LINKABLE [G]
@@ -85,6 +87,8 @@ class LINKED_TREE [G] inherit
 			child_isfirst, child_islast, valid_cursor_index
 		redefine
 			first_child, new_cell
+		select
+			is_leaf
 		end
 
 creation
@@ -159,7 +163,8 @@ feature -- Element change
 		do
 			child_back;
 			put_child_right (n);
-			child_forth; child_forth
+			child_forth;
+			child_forth
 		end;
 
 	put_child_right (n: like parent) is

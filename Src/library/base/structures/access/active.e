@@ -53,8 +53,8 @@ feature -- Removal
 	remove is
 			-- Remove current item.
 		require
-			prunable;
-			writable
+			prunable: prunable;
+			writable: writable
 		deferred
 		end;
 

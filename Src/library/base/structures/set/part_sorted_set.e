@@ -21,12 +21,13 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 		redefine
 			disjoint, symdif
 		select
-			extend
+			extend, prune
 		end;
 
 	PART_SORTED_TWO_WAY_LIST [G]
 		rename
-			extend as pstwl_extend
+			extend as pstwl_extend,
+			prune as pstwl_prune
 		export
 			{ANY}
 				put, merge, duplicate
@@ -105,6 +106,15 @@ feature -- Element change
 			end
 		end;
 
+feature -- Removal
+
+	prune (v : like item) is			
+		-- Remove `v' if present.
+		do	
+			start
+			pstwl_prune (v)
+		end
+	
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
@@ -173,6 +183,7 @@ feature -- Basic operations
 				Result := other.has (item);
 				forth
 			end
+			Result := not Result
 		end;
 
 	symdif (other: like Current) is

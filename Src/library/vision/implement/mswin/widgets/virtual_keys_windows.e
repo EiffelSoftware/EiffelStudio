@@ -1,14 +1,13 @@
 indexing
-	description: "This class represents a MS_WINDOWS widget"
+	description: "This class represents the MS WINDOWS virtual keys."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-class
 
+class
 	VIRTUAL_KEYS_WINDOWS
 
 inherit
-
 	WEL_VK_CONSTANTS
 
 feature

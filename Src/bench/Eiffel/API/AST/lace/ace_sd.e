@@ -107,8 +107,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 
 	process_external_clause is
 		local
-			c_file_names, include_paths: FIXED_LIST [STRING]
-			object_file_names, makefile_names: FIXED_LIST [STRING]
+			c_file_names, include_paths: LIST [STRING]
+			object_file_names, makefile_names: LIST [STRING]
 			no_change: BOOLEAN
 		do
 				-- Incrementality on external clause

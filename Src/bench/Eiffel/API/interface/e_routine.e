@@ -43,7 +43,7 @@ feature -- Properties
 
 feature -- Access
 
-	argument_names: FIXED_LIST [STRING] is
+	argument_names: LIST [STRING] is
 			-- Argument names
 		do
 			Result := arguments.argument_names;

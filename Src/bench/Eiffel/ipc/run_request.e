@@ -39,7 +39,7 @@ feature
 				else
 					debug_info.tenure;
 					debug_window.clear_window;
-					debug_window.put_string ("Unable to launch system%N");
+					debug_window.put_string (eif_timeout_msg);
 					debug_window.display					
 				end
 			end
@@ -52,4 +52,11 @@ feature {NONE} -- External features
 			"C"
 		end
 
+	eif_timeout_msg: STRING is
+			-- Message displayed when ebench is unable to launch
+			-- the system (because of a timeout)
+		external
+			"C"
+		end;
+	
 end

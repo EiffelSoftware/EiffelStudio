@@ -3,13 +3,62 @@ indexing
 	description:
 		"Hash tables, used to store items identified by hashable keys"
 
+	instructions:
+		"Several procedures are provided for inserting an item %
+		%with a given key. %
+		%%
+		%Here is how to choose between them: %
+		%%
+		%	- Use `put' if you want to do an insertion only if %
+		%	  there was no item with the given key, doing nothing %
+		%	  otherwise. (You can find out on return if there was one, %
+		%	  and what it was.) %
+		%%
+		%	- Use `force' if you always want to insert the item; %
+		%	  if there was one for the given key it will be removed, %
+		%	  (and you can find out on return what it was). %
+		%%
+		%	- Use `extend' if you are sure there is no item with %
+		%	  the given key, enabling faster insertion (but %
+		%	  unpredictable behavior if this assumption is not true). %
+		%%
+		%	- Use `replace' if you want to replace an already present %
+		%	  item with the given key, and do nothing if there is none. %
+		%%
+		%In addition you can use `replace_key' to change the key of an %
+		%already present item, identified by its previous key, or %
+		%do nothing if there is nothing for that previous key. %
+		%You can find out on return."
+
+	instructions:
+		"To find out whether a key appears in the table, use `has'. %
+		%To find out the item, if any, associated with a certain key, %
+		%use `item'. %
+		%%
+		%Both of these routines perform a search. If you need %
+		%both pieces of information (does a key appear? And, if so, %
+		%what is the associated item?), you can avoid performing %
+		%two redundant traversals by using instead the combination %
+		%of `search', `found' and `found_item' as follows:  %
+		%%
+		%	your_table.search (your_key) %
+		%	if your_table.found then %
+		%		what_you_where_looking_for := your_table.found_item %
+		%		... Do whatever is needed to `what_you_were_looking_for' ...  %
+		%	else %
+		%		... No item was present for `your_key' ... %
+		%	end"
+
 	compatibility:
 		"This version of the class accepts any value of type H as key. %
 		%Previous versions did not accept the default value as a key; %
 		%this restriction no longer applies. Most clients of the old version %
 		%should work correctly with this one; a client that explicitly relied %
 		%on the default value not being hashable should use the old version %
-		%available in the EiffelBase 3.3 compatibility cluster." 
+		%available in the EiffelBase 3.3 compatibility cluster. %
+		%%
+		%Also, `force' now sets either `found' or `not_found'. %
+		%(Previously it would always set `inserted'.)"
 
 	storable_compatibility:
 		"Persistent instances of the old version of this class will not be %
@@ -37,7 +86,8 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 	TABLE [G, H]
 		rename
 			has as has_item,
-			wipe_out as clear_all
+			wipe_out as clear_all,
+			extend as collection_extend
 		export
 			{NONE} prune_all
 		redefine
@@ -66,24 +116,26 @@ feature -- Initialization
 					-- Position `capacity' ignored by hash sequences,
 					-- used to store value for default key.
 
-			!! deleted_marks.make (0, capacity-1)
+			!! deleted_marks.make (0, capacity - 1)
 			iteration_position := capacity + 1
 		ensure
-			breathing_space: count * 100 < capacity * Initial_occupation
+			breathing_space: n * 100 < capacity * Initial_occupation
+			minimum_space: Minimum_capacity * 100 < capacity * Initial_occupation
 			more_than_minimum: capacity >= Minimum_capacity
 			no_status: not special_status
 		end
 
 	accommodate (n: INTEGER) is
-			-- Reallocate table to hold at least `n' items;
-			-- keep all current items
+			-- Reallocate table with enough space for `n' items;
+			-- keep all current items.
 		require
 			n >= 0
 		local
 			i: INTEGER
 			other: HASH_TABLE [G, H]
+			default_key: H
 		do
-				-- Could also use iteration facilities.
+				-- (Could also use iteration facilities.)
 			from
 				!! other.make (count.max (n))
 			until
@@ -100,8 +152,12 @@ feature -- Initialization
 			end
 
 			if has_default then
-				other.put (content.item (capacity), keys.item (capacity))
+				other.put (content.item (capacity), default_key)
 			end
+
+			set_content (other.content)
+			set_keys (other.keys)
+			set_deleted_marks (other.deleted_marks)
 
 			capacity := other.capacity
 			used_slot_count := count
@@ -112,9 +168,6 @@ feature -- Initialization
 				set_no_default
 			end
 
-			set_content (other.content)
-			set_keys (other.keys)
-			set_deleted_marks (other.deleted_marks)
 		ensure
 			count_not_changed: count = old count
 			slot_count_same_as_count: used_slot_count = count
@@ -123,6 +176,9 @@ feature -- Initialization
 
 
 feature -- Access
+
+	found_item: G
+			-- Item, if any, yielded by last search operation
 
 	item, infix "@" (key: H): G is
 			-- Item associated with `key', if present
@@ -136,6 +192,9 @@ feature -- Access
 				Result := content.item (position)
 			end
 			control := old_control; position := old_position
+		ensure then
+			default_value_if_not_present:
+				(not (has (key))) implies (Result = computed_default_value)
 		end
 
 	has (key: H): BOOLEAN is
@@ -147,6 +206,9 @@ feature -- Access
 			internal_search (key)
 			Result := found
 			control := old_control; position := old_position
+		ensure then
+			default_case:
+				(key = computed_default_key) implies (Result = has_default)
 		end
 
 	has_item (v: G): BOOLEAN is
@@ -216,10 +278,9 @@ feature -- Access
 			not_off: not off
 		do
 			Result := keys.item (iteration_position)
+		ensure
+			at_iteration_position: Result = key_at (iteration_position)
 		end
-
-	search_item: G
-			-- Item, if any, yielded by last `search' operation
 
 	cursor: CURSOR is
 			-- Current cursor position
@@ -229,6 +290,16 @@ feature -- Access
 			cursor_not_void: Result /= Void
 		end
 
+	hash_code (key: H): INTEGER is
+			-- Hash code for `key';
+			-- by default, the hash code defined for H,
+			-- but may be redefined in a descendant.
+		do
+			Result := key.hash_code
+		ensure
+			good_hash_value: Result >= 0
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -236,6 +307,39 @@ feature -- Measurement
 
 	capacity: INTEGER
 			-- Number of items that may be stored.
+
+	occurrences (v: G): INTEGER is
+			-- Number of table items equal to `v'.
+		local
+			old_iteration_position: INTEGER
+		do
+			iteration_position := old_iteration_position
+			if object_comparison then
+				from
+					start
+				until
+					off
+				loop
+					if equal (item_for_iteration, v) then
+						Result := Result + 1
+					end
+					forth
+				end
+			else
+				from
+					start
+				until
+					off
+				loop
+					if item_for_iteration = v then
+						Result := Result + 1
+					end
+					forth
+				end
+			end
+			old_iteration_position := iteration_position
+		end
+
 
 feature -- Comparison
 
@@ -302,8 +406,11 @@ feature -- Status report
 	after, off: BOOLEAN is
 			-- Is cursor past last item?
 		do
-			Result := (not has_default and (iteration_position >= capacity)) or
-				(has_default and (iteration_position > capacity))
+			Result := is_off_position (iteration_position)
+		ensure
+			definition:
+				Result = ((not has_default and (iteration_position >= capacity)) or
+							(has_default and (iteration_position = (capacity + 1))))
 		end
 
 	valid_cursor (c: CURSOR): BOOLEAN is
@@ -317,11 +424,11 @@ feature -- Status report
 			ht_cursor ?= c
 			if ht_cursor /= Void then
 				cursor_position := ht_cursor.position
-				if cursor_position = capacity + 1 then
-					Result := True
-				elseif cursor_position >= 0 then
-					Result := truly_occupied (cursor_position)
-				end
+				Result :=
+						(is_off_position (cursor_position)) or else
+							((cursor_position >= 0) and
+							(cursor_position <= capacity) and then
+							truly_occupied (cursor_position))
 			end
 		end
 
@@ -344,7 +451,8 @@ feature -- Cursor movement
 		end
 
 	forth is
-			-- Advance cursor to next occupied position.
+			-- Advance cursor to next occupied position,
+			-- or `off' if no such position remains.
 		require
 			not_off: not off
 		do
@@ -373,13 +481,18 @@ feature -- Cursor movement
 
 	search (key: H) is
 			-- Search for item of key `key'.
-			-- If found, set `found' to true and `search_item' to item for `key'.
+			-- If found, set `found' to true, and set
+			-- `found_item' to item associated with `key'.
+			--| Also set `search_item' (for compatibility).
 		do
 			internal_search (key)
-			search_item := content.item (position)
+			found_item := content.item (position)
+				--| The following instruction for compatibility;
+				--| see comments in Obsolete section.
+			internal_search_item := found_item
 		ensure
 			found_or_not_found: found or not_found
-			item_if_found: found implies (search_item = content.item (position)) 
+			item_if_found: found implies (found_item = content.item (position)) 
 		end
 
 feature -- Element change
@@ -391,16 +504,24 @@ feature -- Element change
 			-- been made (i.e. `key' was not present).
 			-- If so, set `position' to the insertion position.
 			-- If not, set `conflict'.
-		local
-			default_key: H
+			-- In either case, set `found_item' to the item
+			-- now associated with `key' (previous item if
+			-- there was one, `new' otherwise).
+			--
+			-- To choose between various insert/replace procedures,
+			-- see `instructions' in the Indexing clause.
 		do
-			internal_search (key)
+			compatibility_search (key)
 			if found then
 				set_conflict
 			else
 				if soon_full then
 					add_space
 					internal_search (key)
+						check
+							not found
+								-- The key didn't magically insert itself.
+						end
 				end
 				if deleted_position /= Impossible_position then
 					position := deleted_position
@@ -408,31 +529,47 @@ feature -- Element change
 				end
 				count := count + 1
 				used_slot_count := used_slot_count + 1
-				insert_at_position (new, key)
+				put_at_position (new, key)
+				found_item := new
+				set_inserted
 			end
 		ensure then
 			conflict_or_inserted: conflict or inserted
 			insertion_done: inserted implies item (key) = new
+			now_present: inserted implies has (key)
 			one_more_if_inserted: inserted implies (count = old count + 1)
 			one_more_slot_if_inserted_unless_reallocated:
 				inserted implies
 					((used_slot_count = old used_slot_count + 1) or
 					(used_slot_count = count))
 			unchanged_if_conflict: conflict implies (count = old count)
+			same_item_if_conflict: conflict implies (item (key) = old (item (key)))
 			slot_count_unchanged_if_conflict:
 				conflict implies (used_slot_count = old used_slot_count)
+			found_item_associated_with_key: found_item = item (key)
+			new_item_if_inserted: inserted implies (found_item = new)
+			old_item_if_conflict: conflict implies (found_item = old (item (key)))
+			default_property:
+				has_default =
+					((inserted and (key = computed_default_key))  or
+						((conflict or (key /= computed_default_key))
+							and (old has_default)))
 		end
 
 	force (new: G; key: H) is
-			-- If `key' is present, replace corresponding item by `new',
-			-- if not, insert item `new' with key `key'.
-			-- Set `inserted'.
+			-- Update table so that `new' will be the item associated
+			-- with `key'.
+			-- If there was an item for that key, set `found'
+			-- and set `found_item' to that item.
+			-- If there was none, set `not_found' and set
+			-- `found_item' to the default value.
+			--
+			-- To choose between various insert/replace procedures,
+			-- see `instructions' in the Indexing clause.
 		require else
 			True
-		local
-			default_key: H
 		do
-			internal_search (key)
+			compatibility_search (key)
 			if not_found then
 				if soon_full then
 					add_space
@@ -445,15 +582,64 @@ feature -- Element change
 				count := count + 1
 				used_slot_count := used_slot_count + 1
 			end
-			insert_at_position (new, key)
+			put_at_position (new, key)
 		ensure then
-			inserted: inserted
 			insertion_done: item (key) = new
+			now_present: has (key)
+			found_or_not_found: found or not_found
+			not_found_iff_was_not_present: not_found = not (old has (key))
 			same_count_or_one_more:  (count = old count) or (count = old count + 1)
 			same_slot_count_or_one_more_unless_reallocated:
-					(used_slot_count = old used_slot_count) or
-					(used_slot_count = old used_slot_count + 1) or
-					(used_slot_count = count)
+				(used_slot_count = old used_slot_count) or
+				(used_slot_count = old used_slot_count + 1) or
+				(used_slot_count = count)
+			found_item_is_old_item: found_item = old (item (key))
+					-- (In both `found' and `not_found' cases)
+			default_value_if_not_found:
+				not_found implies (found_item = computed_default_value) 
+					-- The reverse is not true, as we can always insert
+					-- an item with the default value, for any key.
+			
+			default_property:
+				has_default =
+					((key = computed_default_key) or
+						((key /= computed_default_key) and (old has_default)))
+		end
+
+	extend (new: G; key: H) is
+			-- Assuming there is no item of key `key',
+			-- insert `new' with `key'.
+			-- Set `inserted'.
+			--
+			-- To choose between various insert/replace procedures,
+			-- see `instructions' in the Indexing clause.
+		require
+			not_present: not has (key)
+		do
+			search_for_insertion (key)
+			if soon_full then
+				add_space
+				search_for_insertion (key)
+			end
+			if deleted (position) then
+				set_not_deleted (position)
+			else
+				used_slot_count := used_slot_count + 1
+			end
+			count := count + 1
+			put_at_position (new, key)
+			set_inserted
+		ensure
+			inserted: inserted
+			insertion_done: item (key) = new
+			one_more: count = old count + 1
+			same_slot_count_or_one_more_unless_reallocated:
+				(used_slot_count = old used_slot_count) or
+				(used_slot_count = old used_slot_count + 1) or
+				(used_slot_count = count)
+			default_property:
+				has_default =
+					((key = computed_default_key) or (old has_default))
 		end
 
 	replace (new: G; key: H) is
@@ -461,8 +647,13 @@ feature -- Element change
 			-- with `new'; do not change associated key.
 			-- Set `replaced' if and only if a replacement has been made
 			-- (i.e. `key' was present); otherwise set `not_found'.
+			-- Set `found_item' to the item previously associated
+			-- with `key' (default value if there was none).
+			--
+			-- To choose between various insert/replace procedures,
+			-- see `instructions' in the Indexing clause.
 		do
-			internal_search (key)
+			compatibility_search (key)
 			if found then
 				content.put (new, position)
 				set_replaced
@@ -472,24 +663,31 @@ feature -- Element change
 			insertion_done: replaced implies item (key) = new
 			no_change_if_not_found: not_found implies
 						item (key) = old (item (key))
+			found_item_is_old_item: found_item = old (item (key))
 		end
 
 	replace_key (new_key: H; old_key: H) is
 			-- If there is an item of key `old_key' and no item of key
-			-- `new_key', replace the former's key by `new_key'
-			-- and set `replaced'.
+			-- `new_key', replace the former's key by `new_key',
+			-- set `replaced', and set `found_item' to the item
+			-- previously associated with `old_key'.
 			-- Otherwise set `not_found' or `conflict' respectively.
+			-- If `conflict', set `found_item' to the item previously
+			-- associated with `new_key'.
+			--
+			-- To choose between various insert/replace procedures,
+			-- see `instructions' in the Indexing clause.
 		local
 			insert_position: INTEGER
 			default_value: G
 			default_key: H
 		do
 			put (default_value, new_key)
-			if not conflict then
+			if inserted then
 				count := count - 1
 				used_slot_count := used_slot_count - 1
 				insert_position := position
-				internal_search (old_key)
+				compatibility_search (old_key)
 				if found then
 					content.put (content.item (position), insert_position)
 					if old_key = default_key then
@@ -501,11 +699,15 @@ feature -- Element change
 						set_default
 					end
 					set_replaced
+						-- The call to `compatibility_search' has set `found_item'
+						-- to the item previously associated with `old_key'.
 				else
 					position := insert_position
 					remove_at_position
 						check not_found: not_found end
 				end
+			-- else the call to `put' has set `found_item'
+			-- to the item previously associated with `new_key'.
 			end
 		ensure
 			same_count: count = old count
@@ -515,10 +717,14 @@ feature -- Element change
 								implies (not has (old_key))
 			new_present: (replaced or conflict) = has (new_key)
 			new_item: replaced implies (item (new_key) = old (item (old_key)))
-			not_found_if_no_old_key: not_found = old (not has (old_key))
-			conflict_if_already_there: conflict = old (has (new_key))
+			not_found_iff_no_old_key: not_found = old (not has (old_key))
+			conflict_iff_already_present: conflict = old (has (new_key))
 			not_inserted_if_conflict: conflict implies
 						(item (new_key) = old (item (new_key)))
+			default_property:
+				has_default =
+					((new_key = computed_default_key) or
+					((new_key /= computed_default_key) and (old has_default)))
 		end
 
 feature -- Removal
@@ -544,9 +750,14 @@ feature -- Removal
 			end
 		ensure
 			removed_or_not_found: removed or not_found
-			not_there: not has (key)
+			not_present: not has (key)
 			one_less: found implies (count = old count - 1)
 			same_slot_count: used_slot_count = old used_slot_count
+			default_case:
+				(key = computed_default_key) implies (not has_default)
+			non_default_case:
+				(key /= computed_default_key) implies
+					(has_default = old has_default)
 		end
 
 	clear_all is
@@ -606,21 +817,54 @@ feature -- Duplication
 
 feature -- Obsolete
 
-	dead_key: H is
-			obsolete "this special key is no more used"
+	search_item: G is obsolete
+			"Use `found_item' instead; in the next release %
+			%the two will be merged. %
+			%CAVEAT: procedures `force', `extend' %
+			%and `replace' will set `found_item' %
+			%but not `search_item'. Only `put' sets %
+			%`search_item' as well as `found_item'. %
+			%If your client software relied on the property %
+			%that procedures other than `put' do not affect %
+			%`search_item', it may malfunction when you %
+			%replace calls to the obsolete `search_item' %
+			%by calls to `found_item'.%
+			%Adapt your software to the new conventions %
+			%before switching to `found_item'. %
+			%<made_obsolete: ISE Eiffel 4.2>%
+			%<intended_removal: ISE Eiffel 4.3>%
+			%<OK_until: March 1998>"
 		do
+			Result := internal_search_item
 		end
-		
-	pos_for_iter: INTEGER is
-			obsolete "use iteration_position"
+
+	--| (ISE Internal)
+	--|
+	--| What to do when removing `search_item' in 4.3:
+	--|
+	--|		- Remove `internal_search_item'.   
+	--| 
+	--| 	- Replace comment and body of `search'
+	--|				by those of `compatibility_search'
+	--|
+	--|		- Remove `compatibility_search' .
+	--| 
+	--|		- Replace every call to `compatibility_search'
+	--|		  by a call to `search'. 
+	
+
+feature {NONE} -- Obsolete
+
+	compatibility_search (key: H) is
+			-- Search for item of key `key'.
+			-- If found, set `found' to true, and set
+			-- `found_item' to item associated with `key'.
 		do
-			Result:= iteration_position
-		end
-		
-	changed_constant: INTEGER is
-			obsolete "use Replaced_constant"
-		do
-			Result := Replaced_constant
+			internal_search (key)
+			found_item := content.item (position)
+		ensure
+			found_or_not_found: found or not_found
+			item_if_found: found implies (found_item = content.item (position)) 
 		end
 
 feature {HASH_TABLE} -- Implementation: content attributes and preservation
@@ -645,8 +889,11 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
 	set_no_default is
 			-- Record information that there is no value for default key.
+		local
+			default_value: G
 		do
 			has_default := False
+			content.put (default_value, capacity)
 		end
 
 feature {HASH_TABLE} -- Implementation: search attributes
@@ -673,6 +920,11 @@ feature {HASH_TABLE} -- Implementation: search attributes
 
 	deleted_position: INTEGER
 			-- Place where a deleted element was found during a search
+
+	internal_search_item: G
+			-- Item, if any, yielded by last search operation
+			-- Will be removed in 4.3: see `search_item'.
+
 
 feature {NONE} -- Implementation
 
@@ -707,9 +959,20 @@ feature {NONE} -- Implementation
 			Result := (has_default and i = capacity) or else (i < capacity and then occupied (i))
 		ensure
 			normal_key: (i < capacity) implies (occupied (i) implies Result)
-			default_key: (i= capacity)implies (Result = has_default)
+			default_key: (i= capacity) implies (Result = has_default)
 		end
 
+
+	is_off_position (pos: INTEGER): BOOLEAN is
+			-- Is `pos' a cursor position past last item?
+		do
+			Result := (not has_default and (pos >= capacity)) or
+				(has_default and (pos = (capacity + 1)))
+		ensure
+			definition:
+				Result = ((not has_default and (pos >= capacity)) or
+							(has_default and (pos = (capacity + 1))))
+		end
 
 	set_content (c: like content) is
 			-- Assign `c' to `content'.
@@ -764,6 +1027,22 @@ feature {NONE} -- Implementation
 			Result := content.item (capacity)
 		end
 
+	computed_default_key: H is
+			-- Default key
+			-- (For performance reasons, used only in assertions;
+			-- elsewhere, see use of local entity `default_key'.)
+		do
+			-- No instructions necessary (returns default value of type H)
+		end
+
+	computed_default_value: G is
+			-- Default value of type G
+			-- (For performance reasons, used only in assertions;
+			-- elsewhere, see use of local entity `default_value'.)
+		do
+			-- No instructions necessary (returns default value of type H)
+		end
+
 	internal_search (key: H) is
 			-- Search for item of key `key'.
 			-- If successful, set `position' to index
@@ -772,7 +1051,7 @@ feature {NONE} -- Implementation
 			-- and set status to `found' or `not_found'.
 		local
 			default_key: H
-			hash_code, increment: INTEGER
+			hash_value, increment: INTEGER
 			stop: BOOLEAN
 		do
 			deleted_position := Impossible_position
@@ -785,9 +1064,9 @@ feature {NONE} -- Implementation
 				end
 			else
 				from
-					hash_code := key.hash_code
-					increment := position_increment (hash_code)
-					position := initial_position (hash_code)
+					hash_value := hash_code (key)
+					increment := position_increment (hash_value)
+					position := initial_position (hash_value)
 				until
 					stop
 				loop
@@ -812,28 +1091,72 @@ feature {NONE} -- Implementation
 			deleted_item_at_deleted_position:
 				(deleted_position /= Impossible_position) implies
 					(deleted (deleted_position))
+			default_value_if_not_found:
+				not_found implies
+					(content.item (position) = computed_default_value) 
+			default_iff_at_capacity:
+				(position = capacity) = (key = computed_default_key)
 		end
 
-	insert_at_position (new: G; key: H) is
-			-- Insert `new' with `key' at current position,
-			-- or, if resizing necessary, at new position after resizing.
-			-- Correct only after a call to `internal_search'
-			-- (so that `deleted_position' is meaningful).
+	search_for_insertion (key: H) is
+			-- Assuming there is no item of key `key', compute
+			-- `position' at which to insert such an item.
+		require
+			not_present: not has (key)
+		local
+			default_key: H
+			hash_value, increment: INTEGER
+		do
+			if key = default_key then
+					check
+						not has_default
+							-- Because of the precondition
+					end
+				position := capacity
+			else
+				from
+					hash_value := hash_code (key)
+					increment := position_increment (hash_value)
+					position := initial_position (hash_value)
+				until
+					deleted (position) or keys.item (position) = default_key
+				loop
+					to_next_candidate (increment)
+				end
+			end
+		ensure
+			deleted_or_default:
+				deleted (position) or (key_at (position) = computed_default_key)
+			default_iff_at_capacity:
+				(position = capacity) = (key = computed_default_key)
+		end
+
+	put_at_position (new: G; key: H) is
+			-- Put `new' with `key' at `position'.
+		require
+			in_bounds: position >= 0 and position <= capacity
+			default_if_at_capacity:
+				(position = capacity) implies (key = computed_default_key)
+			
 		local
 			default_key: H
 		do
 			content.put (new, position)
 			keys.put (key, position)
-			set_inserted
 			if key = default_key then
 				set_default
 			end
 		ensure
-			inserted: inserted
+			item_at_position: content.item (position) = new
+			key_at_position: key_at (position) = key
+			default_if_at_capacity:
+				(position = capacity) implies has_default
 		end
 
 	remove_at_position is
 			-- Remove item at `position'
+		require
+			in_bounds: position >= 0 and position <= capacity
 		local
 			default_value: G
 			default_key: H
@@ -849,27 +1172,28 @@ feature {NONE} -- Implementation
 			status_not_changed: control = old control
 			count_not_changed: count = old count
 			slot_count_not_changed: used_slot_count = old used_slot_count
+			key_at (position) = computed_default_key
 		end
 
 	key_at (n: INTEGER): H is
-			-- Key corresponding to entry `n'
+			-- Key at position `n'
 		require
-			in_bounds: n >=0 and n < capacity
+			in_bounds: n >= 0 and n < capacity
 		do
 			Result := keys.item (n)
 		end
 
-	initial_position (hash_code: INTEGER): INTEGER is
-				-- The initial position for this hash code
+	initial_position (hash_value: INTEGER): INTEGER is
+				-- Initial position for an item of hash code `hash_value'
 			do
-				Result := (hash_code \\ capacity)
+				Result := (hash_value \\ capacity)
 			end
 
-	position_increment (hash_code: INTEGER): INTEGER is
-				-- The distance between successive positions for this hash_code
-				-- (computed for no cycle: `capacity' is prime)
+	position_increment (hash_value: INTEGER): INTEGER is
+				-- Distance between successive positions for hash code
+				-- `hash_value' (computed for no cycle: `capacity' is prime)
 			do
-				Result := 1 + hash_code \\ (capacity - 1)
+				Result := 1 + hash_value \\ (capacity - 1)
 			end
 
 	to_next_candidate (increment: INTEGER) is
@@ -981,14 +1305,8 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
-	extend (v: G) is
-			-- Insert a new occurrence of `v'
-		do
-		end
-
-	occurrences (v: G): INTEGER is
-			-- Here temporarily; must be brought back as
-			-- exported feature!
+	collection_extend (v: G) is
+			-- Insert a new occurrence of `v'.
 		do
 		end
 
@@ -1035,4 +1353,3 @@ end -- class HASH_TABLE
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -413,7 +413,6 @@ feature -- Status setting
 			minimize_tool (tool_holder)
 			tool_holder.minimize_button.set_pixmap (restore_pixmap)
 			tool_holder.minimize_button.set_tooltip ("Restore")
-			tool_holder.label.disable_dockable
 
 			if locked_in_here then
 				parent_window (Current).unlock_update
@@ -462,7 +461,6 @@ feature -- Status setting
 				restore_minimized_tool (tool_holder)
 				tool_holder.minimize_button.set_pixmap (minimize_pixmap)
 				tool_holder.minimize_button.set_tooltip ("Minimize")
-				tool_holder.label.enable_dockable
 			end
 		
 			if locked_in_here then

@@ -440,17 +440,17 @@ feature {NONE} -- Externals
 		alias
 			"c_ev_any_imp_get_eif_reference_from_object_id"
 		end
-		
+
+feature {EV_ANY_IMP} -- Externals
+
 	gtk_value_pointer (arg: POINTER): POINTER is
 			-- Pointer to the value of a GtkArg.
-			--| FIXME find a better home for this feature. - sam
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
 		end
 
 	gtk_value_int (arg: POINTER): INTEGER is
 			-- Integer value from a GtkArg.
-			--| FIXME find a better home for this feature. - sam
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
 		end

@@ -11,8 +11,6 @@ class
 inherit
 	EV_TOOLTIP_I
 
-	EV_ANY_IMP
-
 	WEL_TOOLTIP
 		rename
 			make as wel_make,

@@ -65,7 +65,12 @@ rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif
 
 rt_public char *ename;						/* Eiffel program's name */
+
+#ifndef VXWORKS  /* In the case of VxWorks, the declaration and 
+					initialization of scount is added by finish_freezing
+					to the file E1/ececil.c (paulv) */
 rt_public int scount;						/* Number of dynamic types */
+#endif
 
 rt_public int in_assertion = 0;			/* Is an assertion being evaluated ? */
 #ifdef WORKBENCH

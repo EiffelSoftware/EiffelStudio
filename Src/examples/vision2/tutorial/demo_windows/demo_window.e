@@ -40,6 +40,23 @@ feature -- Status report
 			Result := action_window /= Void
 		end
 
+	event_window_shown: BOOLEAN is
+			-- Is the event window shown ?
+		do
+			if event_window /= Void then
+				Result := event_window.shown
+			else
+				Result := False
+			end
+		end
+
+	has_event_window: BOOLEAN is
+			-- Does the demo_window has an event_window?
+		do
+			Result := event_window /= Void
+		end
+
+
 feature -- Basic operation
 
 	show_action_window is
@@ -55,6 +72,22 @@ feature -- Basic operation
 		do
 			if (action_window /= Void) then
 				action_window.hide
+			end
+		end
+
+	show_event_window is
+			-- Shows the event window.
+		do
+			if (event_window /= Void) then
+				event_window.show
+			end
+		end
+
+	hide_event_window is
+			-- Hides the action window.
+		do
+			if (event_window /= Void) then
+				event_window.hide
 			end
 		end
 	
@@ -80,7 +113,7 @@ feature -- Basic operation
 	set_dialog_tabs is
 			-- Sets the dialog tabs
 		do
-			set_widget_tabs
+			create tab_list.make
 			tab_list.extend(standard_dialog_tab)
 		end
 		
@@ -94,6 +127,8 @@ feature -- Basic operation
 	tab_list:LINKED_LIST[ANY_TAB]
 
 	action_window:ACTION_WINDOW
+	
+	event_window: EVENT_WINDOW
 
 	widget_tab:WIDGET_TAB IS
 			-- Creation of the widget_tab.
@@ -302,7 +337,47 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+	item_holder_tab: ITEM_HOLDER_TAB is
+			-- Creation of the item holder tab.
+		once
+			create Result.make (Void)
+		end
 
+	tool_bar_tab: TOOL_BAR_TAB is
+			-- Creation of the tool bar tab.
+		once
+			create Result.make (Void)
+		end
+
+	selection_dialog_tab: SELECTION_DIALOG_TAB is
+			-- Creation of the selection dialog tab.
+		once
+			create Result.make (Void)
+		end
+
+	file_dialog_tab: FILE_DIALOG_TAB is
+			-- Creation of the file dialog tab.
+		once
+			create result.make (Void)
+		end
+
+	file_open_dialog_tab: FILE_OPEN_DIALOG_TAB is
+			-- Creation of the file open dialog tab.
+		once
+			create Result.make (Void)
+		end
+
+	tool_tip_tab: TOOL_TIP_TAB is
+			-- Creation of the tool tip tab.
+		once
+			create Result.make (Void)
+		end
+
+	timeout_tab: TIMEOUT_TAB is
+			-- Creation of the timeout tab.
+		once
+			create Result.make (Void)
+		end
 
 feature -- Deferred features
 

@@ -14,6 +14,7 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -27,7 +28,9 @@ feature {NONE} -- Initialization
 		do
 			{EV_FRAME} Precursor (par)
 			set_text ("A frame with text")
-
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "frame")
+			set_parent (par)
 		end
 
 	set_tabs is
@@ -36,7 +39,7 @@ feature {NONE} -- Initialization
 			set_container_tabs
 			create frame_tab.make(Void)
 			tab_list.extend(frame_tab)
-			create action_window.make(Current,tab_list)
+			create action_window.make(Current,tab_list)	
 		end
 
 feature -- Access

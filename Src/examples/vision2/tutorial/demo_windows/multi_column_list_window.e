@@ -15,6 +15,7 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -25,6 +26,7 @@ feature {NONE} -- Initialization
 			-- Create the demo window in `par'.
 		local
 			type: EV_PND_TYPE
+			cmd: EV_ROUTINE_COMMAND
 		do
 			--{EV_MULTI_COLUMN_LIST} Precursor (Void)
 			make_with_text (par, <<"Part 1", "Part 2", "Part 3", "Part 4", "Part 5">>)
@@ -52,6 +54,14 @@ feature {NONE} -- Initialization
 			row4.set_data (4)
 			--set_parent (par)
 			set_single_selection
+		--	create cmd.make (~select_command)
+		--	add_select_command (cmd, Void)
+		--	create cmd.make (~unselect_command)
+		--	add_unselect_command (cmd, Void)
+			create cmd.make (~column_click_command)
+			add_column_click_command (cmd, Void)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "multi column list")
 		end
 
 	set_tabs is
@@ -66,6 +76,28 @@ feature -- Access
 
 	row1, row2, row3, row4: EV_MULTI_COLUMN_LIST_ROW
 		-- Rows
+
+feature -- Execution Feature
+
+	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When a row is selected, inform user in `event_window'.
+		do
+			event_window.display ("Row selected in multi column list.")
+		end
+
+	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When a row is unselected, inform user in `event_window'.
+		do
+			event_window.display ("Row unselected in multi column list.")
+		end
+
+	column_click_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When a column is clicked, inform user in `event_window'.
+		do
+			event_window.display ("Column clicked in multi column list.")
+		end
+
+
 
 end -- class MULTI_COLUMN_LIST_WINDOW
 

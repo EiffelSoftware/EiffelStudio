@@ -14,6 +14,10 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+	TEXT_COMPONENT_COMMANDS
+	TEXT_FIELD_COMMANDS
+	
 
 creation
 	make
@@ -26,8 +30,11 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 			{EV_SPIN_BUTTON} Precursor (par)
-			set_parent(par)
-		
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "spin button")
+			add_text_component_commands (Current, event_window, "Spin button")
+			add_text_field_commands (Current, event_window, "spin button")
+			set_parent(par)		
 		end
 
 

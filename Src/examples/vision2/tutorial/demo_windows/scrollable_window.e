@@ -16,6 +16,8 @@ inherit
 
 	PIXMAP_PATH
 
+	WIDGET_COMMANDS
+
 creation
 	make
 
@@ -29,6 +31,9 @@ feature {NONE} -- Initialization
 			{EV_SCROLLABLE_AREA} Precursor (par)
 			create pix.make_from_file (pixmap_path ("isepower"))
 			create ta.make_with_pixmap (Current, pix)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "scrollable area")
+			set_parent (par)
 		end
 
 	set_tabs is

@@ -15,6 +15,8 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+	BUTTON_COMMANDS
 
 creation
 	make
@@ -37,34 +39,10 @@ feature {NONE} -- Initialization
 			!! menu_item.make_with_text (menu2, "Item 1")
 			!! menu_item.make_with_text (menu2, "Item 2")
 			!! menu_item.make_with_text (menu2, "Item 3")
-
---			!! static.make (Current)
---			!! menu.make_with_text (static, "File")
---			!! menu_item.make_with_text (menu, "New")
---			!! menu_item.make_with_text (menu, "Open")
---			!! menu_item.make_with_text (menu, "Save")
---			menu_item.set_insensitive (True)
---			!! check_menu_item.make_with_text (menu, "Auto save")
---			!! menu_item5.make_with_text (menu, "Quit")
---			menu_item5.add_activate_command (Current, Void)
---						
---			!! menu.make_with_text (static, "Edit")
---			!! check_menu_item.make_with_text (menu, "Cut")
---			!! check_menu_item.make_with_text (menu, "Copy")
---			!! check_menu_item.make_with_text (menu, "Paste")
---			
---			!! menu.make_with_text (static, "Test")
---			!! menu_item.make_with_text (menu, "Sub menu1")
---			!! menu_item2.make_with_text (menu_item, "Selection 1")
---			!! menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
---			!! menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
---			!! menu_item2.make_with_text (menu_item, "Selection 1")
---			!! menu_item3.make_peer_with_text (menu_item, "Selection 2", menu_item2)
---			!! menu_item4.make_peer_with_text (menu_item, "Selection 3", menu_item2)
-
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "option window")
+			add_button_commands (Current, event_window, "Option window")
 			set_parent(par)
-
-
 		end
 
 	set_tabs is

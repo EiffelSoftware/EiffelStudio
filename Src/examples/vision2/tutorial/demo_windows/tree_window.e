@@ -14,6 +14,7 @@ inherit
 		redefine
 			make
 		end
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -41,6 +42,12 @@ feature {NONE} -- Initialization
 			-- We add a command on an item.
 			--create cmd.make (~execute1)
 			--action_item.add_select_command (cmd, Void)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "tree")
+			create cmd.make (~select_command)
+			add_select_command (cmd, Void)
+			create cmd.make (~unselect_command)
+			add_unselect_command (cmd, Void)
 		end
 
 	set_tabs is
@@ -96,6 +103,19 @@ feature -- Execution features
 			else
 				item.set_parent (tree_item2)
 			end
+		end
+
+	select_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- If a selection is about to be performed then
+			-- inform the user in `event_window'.
+		do
+			event_window.display ("Select command in tree.")
+		end
+	unselect_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- If an unselect command is about to be performed then
+			-- inform the user in `event_window'.
+		do
+			event_window.display ("Unselect command in tree.")
 		end
 
 end -- class TREE_WINDOW

@@ -14,6 +14,9 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+	BUTTON_COMMANDS
+	TOGGLE_BUTTON_COMMANDS
 
 creation
 	make
@@ -28,6 +31,10 @@ feature {NONE} -- Initialization
 			{EV_TOGGLE_BUTTON} Precursor (par)
 			set_text ("Toggle Button")
 			set_parent (par)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "toggle button")
+			add_button_commands (Current, event_window, "Toggle button")
+			add_toggle_button_commands (Current, event_window, "Toggle button")
 		end
 
 	set_tabs is

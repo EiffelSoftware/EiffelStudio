@@ -15,6 +15,8 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+
 creation
 	make
 
@@ -26,6 +28,8 @@ feature {NONE} -- Initialization
 			make_with_text (par, "A Label")
 			set_vertical_resize (False)
 			set_center_alignment
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "label")
 		end
 
 	set_tabs is

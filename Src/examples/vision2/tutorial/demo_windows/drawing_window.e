@@ -14,6 +14,7 @@ inherit
 		redefine
 			make
 		end
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -27,7 +28,12 @@ feature {NONE} -- Initialization
 		do
 			{EV_DRAWING_AREA} Precursor (par)
 			set_minimum_size (200, 200)
-
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "drawing area")
+			create cmd.make (~resize_command)
+			add_resize_command (cmd, Void)
+			create cmd.make (~paint_command)
+			add_paint_command (cmd, Void)
 		end
 
 	set_tabs is
@@ -43,9 +49,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 
-feature -- Execute command
+feature -- Execution Features
 
-	
+	resize_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When the drawing area is resized, inform the user in `event window'.
+		do
+			event_window.display ("Drawing area resized.")
+		end
+
+	paint_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When the drawing area is redrawn, inform the user in `event window'.	
+		do
+			event_window.display ("Drawing area redrawn.")
+		end
 end -- class DRAWING_WINDOW
 
 --|----------------------------------------------------------------

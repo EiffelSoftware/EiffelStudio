@@ -45,18 +45,8 @@ feature {NONE} -- Initialization
 			--label.set_font (font)
 			--label.set_default_minimum_size
 
-			create sep.make (Current)
-			create hbox.make (Current)
-			set_child_expandable (hbox, False)
-			hbox.set_border_width (20)
-			create button.make_with_text (hbox, "Create timeout")
-			button.set_horizontal_resize (False)
-			create cmd.make (~create_timeout)
-			button.add_click_command (cmd, Void)
-			create button.make_with_text (hbox, "Destroy timeout")
-			button.set_horizontal_resize (False)
-			create cmd.make (~destroy_timeout)
-			button.add_click_command (cmd, Void)
+			create cmd.make (~timeout_action)
+			create timeout.make (150, cmd, Void)
 
 			set_parent (par)
 		end
@@ -64,6 +54,9 @@ feature {NONE} -- Initialization
 	set_tabs is
 			-- Set the tabs for the action window.
 		do
+			create tab_list.make
+			tab_list.extend (timeout_tab)
+			create action_window.make (timeout, tab_list)
 		end
 
 feature -- Access
@@ -88,25 +81,6 @@ feature -- Execution features
  				color.start
 			else
 				color.forth
-			end
-		end
-
-	create_timeout (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Executed when we press the first button
-		local
-			cmd: EV_ROUTINE_COMMAND
-		do
-			destroy_timeout (Void, Void)
-			create cmd.make (~timeout_action)
-			create timeout.make (1500, cmd, Void)
-		end
-
-	destroy_timeout (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Executed when we press the first button
-		do
-			if timeout /= Void then
-				timeout.destroy
-				timeout := Void
 			end
 		end
 

@@ -14,6 +14,7 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -26,6 +27,8 @@ feature {NONE} -- Initialization
 			-- is faster.
 		do
 			{EV_HORIZONTAL_RANGE} Precursor (par)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "range")
 			set_parent (par)
 		end
 

@@ -13,6 +13,9 @@ inherit
 			make
 		end
 	DEMO_WINDOW
+	WIDGET_COMMANDS
+	BUTTON_COMMANDS
+	TOGGLE_BUTTON_COMMANDS
 
 creation
 	make
@@ -31,6 +34,10 @@ feature {NONE} -- Initialization
 			set_homogeneous (False)
 			create radio.make_with_text (Current, "Dummy Radio")
 			!! radio_b.make_with_text (Current, "Action Button")
+			create event_window.make (radio_b)
+			add_widget_commands (radio_b, event_window, "toggle button")
+			add_button_commands (radio_b, event_window, "Toggle button")
+			add_toggle_button_commands (radio_b, event_window, "Toggle button")
 		end
 
 	set_tabs is

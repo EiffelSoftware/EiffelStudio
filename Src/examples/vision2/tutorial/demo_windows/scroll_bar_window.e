@@ -14,6 +14,7 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -28,6 +29,8 @@ feature {NONE} -- Initialization
 
 			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)	
 			make_with_range (par, 0, 100)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "scroll bar")
 			set_parent(par)
 		end
 
@@ -37,7 +40,6 @@ feature {NONE} -- Initialization
 			set_gauge_tabs
 			tab_list.extend(scroll_bar_tab)
 			create action_window.make(Current,tab_list)
-
 		end
 
 

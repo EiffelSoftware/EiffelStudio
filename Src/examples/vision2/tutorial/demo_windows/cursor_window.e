@@ -26,28 +26,43 @@ feature {NONE} -- Initialization
 			frame: EV_FRAME
 			color: EV_BASIC_COLORS
 			code: EV_CURSOR_CODE
-			pix: EV_PIXMAP
-			but: EV_BUTTON
-			hbox: EV_HORIZONTAL_BOX
 		do
 			{EV_VERTICAL_BOX} Precursor (par)
 			!! color
 			!! code.make
 
-			!! frame.make_with_text (Current, "Busy...")
-			frame.set_foreground_color (color.red)
+			!! frame.make_with_text (Current, "Normal Cursor")
 
-			!! frame.make_with_text (Current, "another cursor")
-			frame.set_foreground_color (color.red)
-			create hbox.make (frame)
-			hbox.set_border_width (20)
-			hbox.set_spacing (20)
+			!! frame.make_with_text (Current, "Busy Cursor")
 			!! cur.make_by_code (code.busy)
 			frame.set_cursor (cur)
-			create but.make_with_text (hbox, "Button 1")
+			!! frame.make_with_text (Current, "Crosshair Cursor")
 			!! cur.make_by_code (code.crosshair)
-			but.set_cursor (cur)
-			create but.make_with_text (hbox, "Button 2")
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Help Cursor")
+			!! cur.make_by_code (code.help)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Ibeam Cursor")
+			!! cur.make_by_code (code.ibeam)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "No Cursor")
+			!! cur.make_by_code (code.no)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Sizeall Cursor")
+			!! cur.make_by_code (code.sizeall)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Sizens Cursor")
+			!! cur.make_by_code (code.sizens)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Sizewe Cursor")
+			!! cur.make_by_code (code.sizewe)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Uparrow Cursor")
+			!! cur.make_by_code (code.uparrow)
+			frame.set_cursor (cur)
+			!! frame.make_with_text (Current, "Wait Cursor")
+			!! cur.make_by_code (code.wait)
+			frame.set_cursor (cur)
 		end
 
 	set_tabs is
@@ -60,23 +75,6 @@ feature -- Access
 
 	cur: EV_CURSOR
 		-- A cursor used for the demo.
-
-feature -- Execution features
-
-	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Executed when we press the first button
-		do
-		end
-
-	execute2 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Executed when we press the first button
-		do
-		end
-
-	execute3 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Executed when we press the first button
-		do
-		end
 
 end -- class CURSOR_WINDOW
 

@@ -15,6 +15,7 @@ inherit
 		end
 
 	DEMO_WINDOW
+	WIDGET_COMMANDS
 
 creation
 	make
@@ -29,6 +30,7 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
+			create event_window.make (Current)
 			!! cmd.make (~execute1)
 			add_click_command (cmd, Void)
 			set_parent (par)
@@ -71,6 +73,7 @@ feature -- Execution features
 				create item.make_with_title (Void, "", "")
 				item.action_button.set_insensitive (False)
 				item.destroy
+				add_widget_commands (current_widget, event_window, "window")
 			end
 			current_widget.show
 		end

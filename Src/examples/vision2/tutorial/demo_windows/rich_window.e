@@ -16,6 +16,9 @@ inherit
 		end
 
 	EV_COMMAND
+	WIDGET_COMMANDS
+	TEXT_COMPONENT_COMMANDS
+	
 
 creation
 	make
@@ -26,6 +29,7 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 		local
 			color: EV_COLOR
+			cmd: EV_ROUTINE_COMMAND
 		do
 			{EV_RICH_TEXT} Precursor (Void)
 			add_button_release_command (3, Current, Void)
@@ -34,17 +38,32 @@ feature {NONE} -- Initialization
 			%You can choose the color, the font, the size...%
 			%%Nof each word.%N%NHave a good day.%N")
 			apply_format (make_format)
+			create event_window.make (Current)
+			add_widget_commands (Current, event_window, "rich edit")
+			add_text_component_commands (Current, event_window, "Rich window")
+			create cmd.make (~insert_text_command)
+			add_insert_text_command (cmd, Void)
+			create cmd.make (~delete_text_command)
+			add_delete_text_command (cmd, Void)
+			create cmd.make (~delete_right_character_command)
+			add_delete_right_character_command (cmd, Void)
+			create cmd.make (~undo_command)
+			add_undo_command (cmd, Void)
+			create cmd.make (~redo_command)
+			add_redo_command (cmd, Void)
 			set_parent (par)
 		end
 
 	set_tabs is
 			-- Set the tabs for the action window.
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
 			set_primitive_tabs
 			tab_list.extend(text_component_tab)
 			tab_list.extend(text_tab)
 			tab_list.extend(rich_tab)
-			create action_window.make(Current, tab_list)
+			create action_window.make (Current, tab_list)
 		end
 
 feature -- Access
@@ -81,6 +100,7 @@ feature -- Basic operation
 
 feature -- Command execution
 
+	
 	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when the mouse button is released.
 		local
@@ -96,6 +116,49 @@ feature -- Command execution
 			format.set_font (ft)
 			set_character_format (format)
 		end
+	
+	insert_text_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		local
+			ev: EV_INSERT_TEXT_EVENT_DATA
+			temp_string: STRING
+		do
+			ev ?= data
+			event_window.display ("Insert text command in rich edit.")
+			temp_string := "Text : "
+			temp_string.append_string (ev.text)
+			temp_string.append_string (" at position : ")
+			temp_string.append_string (ev.position.out)
+			event_window.displayi (temp_string)
+		end
+
+	delete_text_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When text is to be deleted then inform the user in `event_window'.
+		do
+			event_window.display ("Delete text command in rich edit.")
+		end
+
+	delete_right_character_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When the right charcter is to be deleted then inform the user
+			-- in `event_window'.
+		do
+			event_window.display ("Delete right character command in rich edit.")
+		end
+	
+	undo_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When an undo command is to be performed then inform the user
+			-- in `event_window'.
+		do
+			event_window.display ("Undo command in rich edit.")
+		end
+
+	redo_command (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- When a redo command is to be performed then inform the user
+			-- in `event_window'
+		do
+			event_window.display ("Redo command in rich edit.")
+		end
+
+	
 
 end -- class BUTTON_WINDOW
 

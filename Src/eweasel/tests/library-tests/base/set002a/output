@@ -11,7 +11,7 @@ Set 2: 2, 4, 5,
 Create string set configuration #1
 reference comparison set
 Filling string set
-Set 1: foo, bar, baz, bla, 
+Set 1: baz, bar, bla, foo, 
 Set 2: baz, bla, boo, 
 Create string set configuration #1
 object comparison set
@@ -31,7 +31,7 @@ Set 2: 2, 4, 5,
 Create string set configuration #2
 reference comparison set
 Filling string set
-Set 1: foo, bar, baz, bla, 
+Set 1: baz, bar, bla, foo, 
 Set 2: baz, bla, boo, 
 Create string set configuration #2
 object comparison set

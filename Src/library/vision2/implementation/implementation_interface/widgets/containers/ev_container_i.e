@@ -1,10 +1,9 @@
 indexing
-	description: 
-		"Eiffel Vision container. Implementation interface."
-	status: "See notice at end of class"
-	keywords: "container"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Eiffel Vision container. Implementation interface."
+	status		: "See notice at end of class"
+	keywords	: "container"
+	date		: "$Date$"
+	revision	: "$Revision$"
 	
 deferred class
 	EV_CONTAINER_I
@@ -60,7 +59,7 @@ feature -- Status setting
 		end
 
 feature -- Basic operations
-
+			
 	propagate_foreground_color is
 			-- Propagate the current foreground color of the
 			-- container to the children.
@@ -113,6 +112,13 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CONTAINER
 
+feature {NONE} -- Implementation
+
+	Key_constants: EV_KEY_CONSTANTS is
+		once
+			create Result
+		end
+
 end -- class EV_CONTAINER_I
 
 --!-----------------------------------------------------------------------------
@@ -136,6 +142,9 @@ end -- class EV_CONTAINER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/29 03:07:42  pichery
+--| Cosmetics
+--|
 --| Revision 1.12  2000/02/28 23:19:42  brendel
 --| Declared `connect_radio_groups' as deferred.
 --|

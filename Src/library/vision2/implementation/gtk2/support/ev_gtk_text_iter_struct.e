@@ -15,16 +15,9 @@ inherit
 create
 	make
 
-feature -- Access
-
-	structure_size: INTEGER is
-		do
-			Result := gtk_text_iter_struct_size
-		end
-
 feature {NONE} -- Externals
 
-	gtk_text_iter_struct_size: INTEGER is
+	structure_size: INTEGER is
 		external
 			"C [macro <gtk/gtk.h>]"
 		alias

@@ -121,13 +121,7 @@ feature -- Widget
 				count := count + 1;
 				last_inserted_position := count;
 			else
-				insert_position := a_parent.implementation.widget_index;
-				if insert_position = 0 then
-					insert_position := index_of (a_parent) + 1;
-				end;
-				check
-					valid_widget: insert_position = index_of (widget) + 1
-				end;
+				insert_position := index_of (a_parent) + 1;
 				if count + 1 > array_count then
 						-- Resize Current if necessary
 					resize (1, array_count + Chunk)
@@ -179,8 +173,8 @@ feature -- Widget
 			end;
 			Result := widget
 		ensure
-			Result /= Void;
-			Result.implementation = widget_i
+			valid_result: Result /= Void;
+			valid_implemenation: Result.implementation = widget_i
 		end; 
 
 	parent (widget: WIDGET): WIDGET is
@@ -233,15 +227,7 @@ feature -- Widget
 			from
 					-- Calculate the number of widgets
 					-- to be removed from list.
-				w_position := widget.implementation.widget_index;
-				if w_position = 0 then
-					w_position := index_of (widget);
-				else
-					w_position := w_position - 1;
-					check
-						valid_widget: w_position = index_of (widget)
-					end;
-				end;
+				w_position := index_of (widget);
 				position := w_position + 1;
 				nbr_to_remove := 1;
 				widget_depth := widget.depth;
@@ -314,7 +300,7 @@ feature -- Widget
 			from
 				i := 0
 			until
-				Result /= Void
+				Result /= Void or else count >= i
 			loop
 				widget := widget_area.item (i);
 				if 	
@@ -324,8 +310,6 @@ feature -- Widget
 				end;
 				i := i+1
 			end;
-		ensure
-			valid_result: Result /= Void
 		end;
 
 	show_tree (a_file: PLAIN_TEXT_FILE) is
@@ -479,16 +463,24 @@ feature {NONE}
 			widget_exists: widget /= Void;
 		local
 			widget_area: like area;
-			widget_index: INTEGER
+			widget_index: INTEGER;
+			widget_i: WIDGET_I
 		do
-			widget_area := area;
-			from
-				Result := 0
-			until
-				widget.same (widget_area.item (Result))
-			loop
-				Result := Result + 1
+			widget_i := widget.implementation;
+			if widget_i /= Void then
+				Result := widget.implementation.widget_index;
 			end;
+			if Result = 0 then
+				widget_area := area;
+				from
+				until
+					widget.same (widget_area.item (Result))
+				loop
+					Result := Result + 1
+				end;
+			else
+				Result := Result - 1;
+			end
 		ensure
 			Widget_found: widget.same (area.item (Result))
 		end;

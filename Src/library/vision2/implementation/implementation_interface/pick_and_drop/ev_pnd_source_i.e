@@ -26,8 +26,11 @@ feature -- Access
 
 	transportable: BOOLEAN is
 			-- Is the data transportable.
+		local
+			interf: EV_PND_SOURCE
 		do
-			Result := interface.transportable
+			interf ?= interface
+			Result := interf.transportable
 		end
 
 	activate_pick_and_drop (mouse_button: INTEGER; dt: EV_PND_DATA; dt_type: EV_PND_TYPE; cmd: EV_COMMAND; args: EV_ARGUMENT) is
@@ -93,10 +96,6 @@ feature {EV_PND_SOURCE_I} -- Implementation
 
 	initialize_transport (args: EV_ARGUMENT3 [INTEGER, TUPLE [EV_COMMAND, EV_ARGUMENT], EV_COMMAND]; data: EV_BUTTON_EVENT_DATA) is
 			-- Initialize the pick and drop mechanism.
-		deferred
-		end
-
-	interface: EV_PND_SOURCE is
 		deferred
 		end
 

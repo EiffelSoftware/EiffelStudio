@@ -81,6 +81,8 @@ fullrf studio/wizards/new_projects/dotnet.dsc
 
 remtrace eifinit
 exprt -r $DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
+remtrace install
+exprt -r $DEFAULT_CVS_TAG -d install Delivery/install
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
@@ -100,7 +102,7 @@ remtrace C_library
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
 remtrace root
 exprt -l -r $DEFAULT_CVS_TAG Delivery/
-move Delivery/*.* . >> $INSTALL_LOG
+move Delivery/* . >> $INSTALL_LOG
 fullrd Delivery >> $INSTALL_LOG
 
 remtrace Borland files

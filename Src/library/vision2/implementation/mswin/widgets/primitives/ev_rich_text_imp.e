@@ -626,6 +626,13 @@ feature -- Status setting
 		
 	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+		do
+			format_paragraph_internal (start_line, end_line, format, pfm_alignment + pfm_startindent + pfm_rightindent + pfm_spacebefore + pfm_spaceafter)
+		end
+		
+	format_paragraph_internal (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
+			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive, only
+			-- modifying attributes specified in `mask'.
 		local
 			paragraph: WEL_PARAGRAPH_FORMAT2
 			screen_dc: WEL_SCREEN_DC
@@ -635,7 +642,6 @@ feature -- Status setting
 			screen_dc.get
 			
 			create paragraph.make
-			paragraph.set_mask (pfm_alignment)
 			if format.is_left_aligned then
 				paragraph.set_left_alignment
 			elseif format.is_center_aligned then
@@ -653,7 +659,10 @@ feature -- Status setting
 			paragraph.set_space_after (pixel_to_point (screen_dc, format.bottom_spacing) * 20)
 			paragraph.set_space_before (pixel_to_point (screen_dc, format.top_spacing) * 20)
 
-
+				-- Paticular calls to `paragraph' modify its `mask', so we perform the setting here,
+				-- after initializing the paragraph structure. Without this, a call to `modify_paragraph'
+				-- does not work correctly.
+			paragraph.set_mask (mask)
 			screen_dc.release
 			disable_redraw
 			safe_store_caret
@@ -703,6 +712,30 @@ feature -- Status setting
 			set_character_format_selection (wel_character_format)
 			safe_restore_caret
 			enable_redraw
+		end
+		
+	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		local
+			mask: INTEGER
+		do
+			if applicable_attributes.alignment then
+				mask := mask | pfm_alignment
+			end
+			if applicable_attributes.left_margin then
+				mask := mask | pfm_startindent
+			end
+			if applicable_attributes.right_margin then
+				mask := mask | pfm_rightindent
+			end
+			if applicable_attributes.top_spacing then
+				mask := mask | pfm_spacebefore
+			end
+			if applicable_attributes.bottom_spacing then
+				mask := mask | pfm_spaceafter
+			end
+			format_paragraph_internal (start_line, end_line, format, mask)
 		end
 		
 	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is

@@ -31,21 +31,14 @@ DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG 
 
 	WGTCX
 
-	if (dwCookie)
-	{
-		DWORD result;
-
+	if (dwCookie) {
 		/* Call the Eiffel routine `internal_callback'. */
-		result = (DWORD) (((EIF_EDITSTREAM_IN_PROCEDURE)wel_editstream_in_procedure) (
+		return (DWORD) (((EIF_EDITSTREAM_IN_PROCEDURE)wel_editstream_in_procedure) (
 			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie),
 			(EIF_POINTER) pbBuff,
 			(EIF_INTEGER) cb, 
 			(EIF_POINTER)pcb));
-
-		return result;
-	}
-	else
-	{
+	} else {
 		return (DWORD) 0;
 	}
 }
@@ -65,24 +58,13 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 
 	WGTCX
 
-	EIF_REFERENCE eif_str_buffer;
-
-	if (dwCookie)
-	{
-		DWORD result;
-
-		eif_str_buffer = eif_make_string ((char *) pbBuff, cb);
+	if (dwCookie) {
 		* pcb = cb;
 
-		/* Call the Eiffel routine `internal_callback'. */
-		result = (DWORD) (((EIF_EDITSTREAM_OUT_PROCEDURE) wel_editstream_out_procedure) (
-			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie),
-			(EIF_REFERENCE) eif_str_buffer));
-
-		return result;
-	}
-	else
-	{
+			/* Call the Eiffel routine `internal_callback'. */
+		return (DWORD) (((EIF_EDITSTREAM_OUT_PROCEDURE) wel_editstream_out_procedure) (
+			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie), pbBuff, cb));
+	} else {
 		return (DWORD) 0;
 	}
 }

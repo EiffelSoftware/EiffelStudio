@@ -134,6 +134,21 @@ feature -- Access
 			Result.append (cpp_protector_end)
 			Result.append (New_line)
 
+			from
+				import_files_after.start
+			until
+				import_files_after.after
+			loop
+				Result.append (Include_clause)
+				Result.append (Space)
+				Result.append ("%"")
+				Result.append (import_files_after.item)
+				Result.append ("%"")
+				Result.append (New_line)
+				Result.append (New_line)
+				import_files_after.forth
+			end
+
 			Result.append (New_line)
 			Result.append (Sharp)
 			Result.append (Endif)

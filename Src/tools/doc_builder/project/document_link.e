@@ -64,6 +64,7 @@ feature -- Access
 			l_match: BOOLEAN
 			l_filename: FILE_NAME
 		do
+			create Result.make_empty
 			if not external_link then				
 				if relative_from_document then
 					Result := url
@@ -142,6 +143,7 @@ feature -- Access
 					end
 				end	
 			end
+			Result.replace_substring_all ("\", "/")
 		end		
 		
 	root_url: STRING is
@@ -235,6 +237,7 @@ feature -- Access
 					-- simply relative `file.ext' then it must be either an external link or absolute link.
 				Result := url
 			end
+			Result.replace_substring_all ("\", "/")
 		ensure
 			result_not_void: Result /= Void
 		end	
@@ -263,6 +266,7 @@ feature -- Status Setting
 			filename_not_void: a_filename /= Void
 		do
 			filename := a_filename
+			tidy
 		ensure
 			filename_set: filename = a_filename
 		end	
@@ -273,6 +277,7 @@ feature -- Status Setting
 			url_not_void: a_url /= Void
 		do
 			url := a_url
+			tidy
 		ensure
 			url_set: url = a_url
 		end	
@@ -347,16 +352,18 @@ feature {DOCUMENT_LINK} -- Query
 			l_file: RAW_FILE
 			l_filename: FILE_NAME
 		do
+				-- If the url begins with a '.' it must be relative to this document
+			l_first_char := url.item (1)
 			Result := l_first_char = '.'
-					-- Can file be created from location of filename appended with
-					-- url?  If so must be relative to document
 			if not Result and then (l_first_char /= '/' and l_first_char /= '\') then
 				create l_file.make (url)
-				if not l_file.exists then
+				if not l_file.exists and then url.occurrences (':') < 0 then
 					create l_filename.make_from_string (directory_no_file_name (filename))
 					l_filename.extend (url)
 					create l_file.make (l_filename.string)
 					Result := l_file.exists
+				else
+					Result := url.occurrences (':') = 0
 				end				
 			end		
 		end		
@@ -401,6 +408,10 @@ feature {NONE} -- Implmentation
 			url.prune_all_leading ('%T')
 			url.prune_all_trailing ('%N')
 			url.prune_all_trailing ('%T')
+			url.replace_substring_all ("\", "/")
+			if filename /= Void then
+				filename.replace_substring_all ("\", "/")
+			end
 		end	
 
 	root_directory: STRING is

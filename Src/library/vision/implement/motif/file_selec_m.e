@@ -15,7 +15,9 @@ inherit
 
 	TERMINAL_M
 		rename
-			set_background_color_from_imp as old_set_background_color_from_imp, text_widget_list as old_text_widget_list
+			set_background_color_from_imp as 
+				old_set_background_color_from_imp,
+			text_widget_list as old_text_widget_list
 		undefine
 			create_callback_struct, create_widget,
 			default_button, cancel_button,
@@ -426,14 +428,14 @@ feature {NONE} -- Implementation
 			l.append (list.parent.children);
 			l.append (mel_dir_list.parent.children);
 			color_id := color_imp.identifier;
-            from
-                l.start
-            until
-                l.after
-            loop
-                xm_change_color (l.item, color_id);
-                l.forth
-            end
+			from
+				l.start
+			until
+				l.after
+			loop
+				xm_change_color (l.item, color_id);
+				l.forth
+			end
 		end;
 
 	text_widget_list: LINKED_LIST [POINTER] is

@@ -231,6 +231,7 @@ feature {NONE} -- Implementation
 				create parent_child.make (0)
 				
 				set_progress (0.8)
+				
 					-- Generate the widget building code.
 				generate_structure (current_document.root_element, 1, "", "")
 				
@@ -240,44 +241,48 @@ feature {NONE} -- Implementation
 				
 					-- Generate the event code.
 				generate_events (current_document.root_element, 1)
-	
-					-- Add code for local declarations to `class_text'.
-					-- Need to generate slightly different code dependent
-					-- on whether the attributes are local or not. Then
-					-- remove unused tag.
+				
+					-- Add code for widget attribute settings to `class_text'.
+				add_generated_string (class_text, set_string, set_tag)
+
+					-- If a pixmap is specified in the project, then
+					-- we must create  a local which is used for loading and
+					-- assigning this pixmap. This is always hiddedd, i.e.
+					-- declared in the locals of `initialize'. The different
+					-- cases are handled below when we generate the local or attribute
+					-- declarations.
 				if project_settings.attributes_local then
+					if class_text.substring_index (pixmap_name, 1) /= 0 then
+						add_local_on_single_line ("EV_PIXMAP", pixmap_name)
+					end
 					add_generated_string (class_text, local_string, local_tag)
 					class_text.replace_substring_all (attribute_tag + "%R%N", "")
 				else
 					add_generated_string (class_text, local_string, attribute_tag)
-					class_text.replace_substring_all (local_tag + "%R%N%T%T", "")
+					if class_text.substring_index (pixmap_name, 1) /= 0 then
+						class_text.replace_substring_all (local_tag + "%R%N%T%T", "local" + indent + pixmap_name + ": EV_PIXMAP" + indent_less_one)	
+					else
+						class_text.replace_substring_all (local_tag + "%R%N%T%T", "")
+					end
 				end
 
+					-- If a pixmap was included then we must create the temporary pixmap
+					-- used to load and assign it.
+				if class_text.substring_index (pixmap_name, 1) /= 0 then
+					create_string.append_string (indent + "create " + pixmap_name)
+				end
 					-- Add code for creation of widgets to `class_text'.
 				add_generated_string (class_text, create_string, create_tag)
 				
 					-- Add code for construction of widget hierarchy to `class_text'.
 				add_generated_string (class_text, build_string, build_tag)	
-				
-					-- Add code for widget attribute settings to `class_text'.
-				add_generated_string (class_text, set_string, set_tag)
 	
-					-- Add code connecting event+s to features to `class_text'.
+					-- Add code connecting events to features to `class_text'.
 				add_generated_string (class_text, event_connection_string, event_connection_tag)
 
 					-- Add declaration of features as deferred to `class_text'.
 				add_generated_string (class_text, event_declaration_string, event_declaration_tag)				
 
-				
-					-- Need to add pixmap initialization if `class_text' contains
-					-- `pixmap'. If it does, this means that some pixmaps have been set,
-					-- and we must add a pixmap to `class_text'. This really is somewhat of a hack. Julian.
-				if class_text.substring_index (pixmap_name, 1) /= 0 then
-					class_text.insert_string (pixmap_name + ": EV_PIXMAP" + indent, local_tag_index)
-					class_text.insert_string ("create " + pixmap_name + indent, create_tag_index + pixmap_name.count +
-						(": EV_PIXMAP").count + indent.count)
-				end
-					
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
 				window_file_name.extend (system_status.current_project_settings.main_window_class_name.as_lower + class_implementation_extension.as_lower + eiffel_class_extension)
@@ -881,7 +886,9 @@ feature {NONE} -- Implementation
 			if progress_bar /= Void then
 				create env
 				progress_bar.set_proportion (value)
-				env.application.process_events
+				if not system_status.is_wizard_system then
+					env.application.process_events	
+				end
 			end
 		end
 		

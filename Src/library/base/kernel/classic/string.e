@@ -120,7 +120,7 @@ feature -- Initialization
 		do
 			length := str_len (c_string)
 			make_area (length + 1)
-			($area).memory_copy (c_string, length)
+			area.base_address.memory_copy (c_string, length)
 			count := length
 		end
 
@@ -136,7 +136,7 @@ feature -- Initialization
 			if safe_capacity < length then
 				make_area (length + 1)
 			end
-			($area).memory_copy (c_string, length)
+			area.base_address.memory_copy (c_string, length)
 			count := length
 		ensure
 			no_zero_byte: not has ('%/0/')
@@ -160,9 +160,9 @@ feature -- Initialization
 			if safe_capacity < length then
 				make_area (length + 1)
 			end
-				-- Make `$area' the substring of `c_string'
+				-- Make `area' the substring of `c_string'
 				-- from `start_pos' .. `end_pos'.
-			($area).memory_copy (c_string + (start_pos - 1), end_pos - start_pos + 1)
+			area.base_address.memory_copy (c_string + (start_pos - 1), end_pos - start_pos + 1)
 			count := length
 		ensure
 			valid_count: count = end_pos - start_pos + 1
@@ -679,7 +679,7 @@ feature -- Element change
 				if old_area = Void or else old_area.count <= count then
 					area := standard_clone (area)
 				else
-					($old_area).memory_copy ($area, count)
+					old_area.base_address.memory_copy ($area, count)
 					area := old_area
 				end
 				internal_hash_code := 0
@@ -788,7 +788,7 @@ feature -- Element change
 	fill_with (c: CHARACTER) is
 			-- Replace every character with `c'.
 		do
-			($area).memory_set (c.code, count)
+			area.base_address.memory_set (c.code, count)
 			internal_hash_code := 0
 		ensure
 			same_count: (count = old count) and (capacity >= old capacity)
@@ -809,7 +809,7 @@ feature -- Element change
 	fill_character (c: CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
 		do
-			($area).memory_set (c.code, safe_capacity)
+			area.base_address.memory_set (c.code, safe_capacity)
 			count := safe_capacity
 			internal_hash_code := 0
 		ensure
@@ -1012,7 +1012,7 @@ feature -- Element change
 				resize (new_size + additional_space)
 			end
 			s_area := s.area;
-			($area + count).memory_copy ($s_area, s.count)
+			area.element_address (count).memory_copy ($s_area, s.count)
 			count := new_size
 			internal_hash_code := 0
 		ensure
@@ -1698,7 +1698,8 @@ feature -- Duplication
 			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
 				create Result.make (end_index - start_index + 1)
 				other_area := Result.area;
-				($other_area).memory_copy ($area + (start_index - 1), end_index - start_index + 1)
+				other_area.base_address.memory_copy (
+					area.element_address (start_index - 1), end_index - start_index + 1)
 				Result.set_count (end_index - start_index + 1)
 			else
 				create Result.make (0)

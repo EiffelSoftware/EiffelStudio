@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EB_PREFERENCE_MANAGER
+			l_manager: EC_PREFERENCE_MANAGER
 			l_ext_pref: STRING_PREFERENCE
 		do								
 			create l_manager.make (preferences, "misc")	

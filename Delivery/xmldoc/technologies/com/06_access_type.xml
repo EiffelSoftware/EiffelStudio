@@ -8,7 +8,7 @@
 			<feature_name>invoke</feature_name>
 		</code> that allows to call a method, set or get a property on the Automation server. One advantage of that approach is that the interface has a known virtual table layout. As a result, Windows can include a built-in marshaler for that interface (See 
 		<link>
-			<url>07_deeper_into_com.xml</url><anchor_name>20493</anchor_name>
+			<url>07_deeper_into_com.xml</url><anchor_name>marshalling</anchor_name>
 			<label>Marshaling</label>
 		</link> for information on what a marshaler is). The supported types (known as Automation types) and their Eiffel equivalents are listed in the following table:
 		<table>
@@ -237,7 +237,7 @@
 			<size>2</size>Direct Access
 		</heading>Direct interface access is the preferred way to access remote servers where speed becomes a concern and data types are specific to the application. The first interface pointer on the component is obtained through the class object (see 
 		<link>
-			<url>04_coclass.xml</url><anchor_name>37472</anchor_name>
+			<url>04_coclass.xml</url>
 			<label>Class Object</label>
 		</link> ). Other interfaces on the component are obtained by calling the QueryInterface function.
 		<paragraph>As information on any interface cannot be accessed dynamically, the description of the interfaces must be provided to tools that need to handle the components such as the EiffelCOM wizard. The official way of describing components and interfaces is through IDL. Once an IDL file has been written to describe a component it can be compiled with MIDL to generate both a type library and the code for the marshaller specific to that interface. </paragraph>

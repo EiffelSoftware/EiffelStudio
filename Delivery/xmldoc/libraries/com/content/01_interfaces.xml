@@ -56,7 +56,7 @@
 			</link>,    and has feature 
 			<code>
 				<link>
-					<url>../reference/interfaces/ecom_stub.xml</url><anchor_name>f_create_item</anchor_name>
+					<url>../reference/interfaces/ecom_stub_chart.xml</url><anchor_name>f_create_item</anchor_name>
 					<label>create_item</label>
 				</link>
 			</code>,    which allows to create a COM object corresponding to an Eiffel object.

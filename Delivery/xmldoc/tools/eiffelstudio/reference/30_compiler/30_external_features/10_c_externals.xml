@@ -26,6 +26,7 @@
 				<label>Structs</label>
 			</link> are also available for C++ if the macro or the struct is defined in a C++ header file.
 		</paragraph>
+		<anchor>C</anchor>
 		<heading>
 			<size>2</size>C routines
 		</heading>
@@ -78,6 +79,7 @@ extern size_t one_param_return(FILE *f);</code_block>
 		<keyword>alias</keyword>
 			"one_param_return"
 		<keyword>end</keyword></code_block>
+		<anchors>macros</anchor>
 		<heading>
 			<size>2</size>Macros
 		</heading>
@@ -114,6 +116,7 @@ extern size_t one_param_return(FILE *f);</code_block>
 		<keyword>alias</keyword>
 			"i_th"
 		<keyword>end</keyword></code_block>
+		<anchor>structs</anchor>
 		<heading>
 			<size>2</size>Structs
 		</heading>
@@ -158,6 +161,7 @@ typdef struct point {
 		<keyword>alias</keyword>
 			"y"
 		<keyword>end</keyword></code_block>
+		<anchor>windows</anchor>
 		<heading>
 			<size>2</size>Windows externals
 		</heading>

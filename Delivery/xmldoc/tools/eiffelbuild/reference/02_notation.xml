@@ -5,6 +5,7 @@
 			<link/>
 		</paragraph>
 		<heading>
+		<anchor>object</anchor>
 			<size>2</size>Object
 		</heading>
 		<paragraph>An EiffelBuild object is a representation of a Vision2 component and its properties. When developing with EiffelBuild, you manipulate objects to build the desired interface.</paragraph>
@@ -50,6 +51,7 @@
 				<label>display window</label>
 			</link> also provides a view of the objects in your system, except the objects cannot be manipulated from this view. It can be thought of as a preview of the project you are developing.
 		</paragraph>
+		<anchor>component</anchor>
 		<heading>
 			<size>2</size>Component
 		</heading>
@@ -73,6 +75,7 @@
 			</link> it. 
 			<link/>
 		</paragraph>
+		<anchor>pick_and_drop</anchor>
 		<heading>
 			<size>2</size>Pick and Drop
 		</heading>

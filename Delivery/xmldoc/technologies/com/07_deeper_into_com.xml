@@ -15,6 +15,7 @@
 				<url>images/com-2.gif</url>
 			</image>
 		</div>Apartments solve the problem of concurrency by removing the necessity of knowing the multithreaded capability of a component and its clients. Multithreaded clients can always make asynchronous calls and depending on whether the component handles concurrent access or not, they will be forwarded or first synchronized. There can be multiple instances of STA running in one process while there will be at most one MTA.
+		<anchor>marshalling</anchor>
 		<heading>
 			<size>2</size>Marshaling
 		</heading>At this point you might wonder how calls can "cross" the apartments boundaries. Components from a STA can make calls to components running in a MTA and vice versa. These apartments might be running in different processes or even on different machines. The approach chose in the COM specification is using the proxy and stub patterns.

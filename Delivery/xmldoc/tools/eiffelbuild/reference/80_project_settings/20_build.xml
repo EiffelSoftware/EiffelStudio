@@ -17,6 +17,7 @@
 		<paragraph>The options available in this tab are as as follows:
 			<list ordered="false">
 				<item>
+					<anchor>build_type</anchor>
 					<bold>Build type</bold>
 					<paragraph>Select 'Project' if you wish to generate a complete project including an ace file, and an application class, which will launch the GUI you are developing.</paragraph>
 					<paragraph>Select `Class' if you wish to generate a single class that represents the GUI you are developing. This option is useful if you wish to incorporate your current project into an exising Vision2 system.</paragraph>

@@ -93,6 +93,7 @@
 			</link>.
 			<link/>
 		</paragraph>
+		<anchor>delete_component</anchor>
 		<heading>
 			<size>2</size>Deleting a component
 		</heading>

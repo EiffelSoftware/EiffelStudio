@@ -165,9 +165,7 @@ feature -- Output
 			res: PREFERENCE_RESOURCE
 		do
 			holder.set_selected (True);
-			if been_displayed then
-				manage
-			else
+			if not been_displayed then
 				from
 					resources.start
 				until
@@ -181,6 +179,7 @@ feature -- Output
 				init_colors;
 				been_displayed := True
 			end
+			manage
 		end;
 
 	undisplay is

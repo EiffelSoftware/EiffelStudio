@@ -1,36 +1,36 @@
-CC = cl
-MAKE = nmake
 INCLUDE_PATH = $(ISE_EIFFEL)\studio\spec\windows\include
-DELDIR = rmdir /S
+DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
-FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing
-ES4 = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
+EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
+EIFLIB = EIFGEN\W_code\libcecil.lib 
 CFLAGS = -DEIF_WIN32
 LIBS = 
-OBJECT = main.obj
-VERSION_NUMBER=43
+OBJECT = fext.obj
 
-all: fext.obj compile_eiffel compile_c  mklink 
+all: fext.obj compile_eiffel compile_c
 
 compile_eiffel:
-	$(ES4) -freeze
+	$(EC) -freeze
+
 compile_c:
 	cd EIFGEN\W_code
 	$(FINISH_FREEZING)
 	cd ..\..
-mklink: 
-	$(LN) EIFGEN\W_code\tst.exe tst.exe
-	$(LN) EIFGEN\W_code\tst.melted tst.melted
+	$(LN) EIFGEN\W_code\cecil.exe .
+	$(LN) EIFGEN\W_code\cecil.melted .
 
 fext.obj: fext.c
-	$(CC) -DVERSION=$(VERSION_NUMBER) -I$(INCLUDE_PATH) -c fext.c 
+	$(CC) -I$(INCLUDE_PATH) -c fext.c 
+
 clean:
 	$(RM) fext.obj 
 	$(RM) core 
-	$(RM) tst.epr
-	$(RM) tst.exe
-	$(RM) tst.melted
+	$(RM) cecil.epr
+	$(RM) cecil.rc
+	$(RM) cecil.melted
+	$(RM) cecil.exe
 	$(DELDIR) EIFGEN
 	

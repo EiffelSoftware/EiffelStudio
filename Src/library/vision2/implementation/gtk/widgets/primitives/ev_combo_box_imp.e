@@ -236,21 +236,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
+	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
 			-- Add `v' to container.
 		local
-			imp: EV_LIST_ITEM_IMP
 			a_gs: GEL_STRING
 		do
-			imp ?= v.implementation
-			create a_gs.make (imp.text)
-			C.gtk_combo_set_item_string (container_widget, imp.c_object, a_gs.item)
-			C.gtk_container_add (list_widget, imp.c_object)
-			imp.set_item_parent_imp (Current)
-			real_signal_connect (imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
-			real_signal_connect (imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
+			create a_gs.make (v_imp.text)
+			C.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_gs.item)
+			C.gtk_container_add (list_widget, v_imp.c_object)
+			v_imp.set_item_parent_imp (Current)
+			real_signal_connect (v_imp.c_object, "button-press-event", on_item_clicked_intermediary_agent, Void)
+			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 			if count = 1 and is_sensitive then
-				imp.enable_select
+				v_imp.enable_select
 			end
 		end
 

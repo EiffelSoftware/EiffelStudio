@@ -169,7 +169,25 @@ feature -- Basic operation
 		do
 			implementation.process_events
 		end
-
+		
+	process_events_until_stopped is
+			-- Process all events until 'stop_processing' is called.
+		require
+			not_destroyed: not is_destroyed
+			is_launched: is_launched
+		do
+			implementation.process_events_until_stopped
+		end
+		
+	stop_processing is
+			--  Exit `process_events_until_stopped'.
+		require
+			not_destroyed: not is_destroyed
+			is_launched: is_launched
+		do
+			implementation.stop_processing
+		end
+		
 	sleep (msec: INTEGER) is
 			-- Wait for `msec' milliseconds and return.
 		require

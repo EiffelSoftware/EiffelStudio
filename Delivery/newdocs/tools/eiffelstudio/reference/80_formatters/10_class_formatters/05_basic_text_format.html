@@ -13,10 +13,16 @@
 editable view; this is why it is only available through the
 <a href="/tools/eiffelstudio/reference/20_editor/index.html">editor</a>.
 <P align="center"><IMG SRC="/images/eiffelstudio/class_mini_format_bar.png"></P>
-This is also the view selected by default when the editor is opened for the first time.</p>
+This is also the view selected by default when the editor is opened for the first time.
 <p>In this view, most of the development objects are <a href="/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.html">clickable</a>,
 except for special cases like assertions, anchored types, identifiers within a comment line... for which
 the <a href="./10_clickable_format.html">clickable view</a> might be needed.
+<p><b>Note</b>: The generated text is not editable, but it is compilable.&nbsp;
+This view is not available to .NET classes which are imported through by means
+of an assembly.&nbsp; This is because the assembly .exe or .dll exposes only the
+interface methods and therefore is no implementation to display.&nbsp; Such
+classes may be viewed, in a clickable format using the Contract View or
+Interface View.
 
 <p CLASS="seealso">
 	<b>See Also</b><br>

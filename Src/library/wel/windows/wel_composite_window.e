@@ -15,6 +15,7 @@ inherit
 			move_and_resize,
 			move,
 			process_message,
+			on_getdlgcode,
 			on_wm_nc_destroy,
 			on_wm_notify,
 			destroy
@@ -640,6 +641,12 @@ feature {NONE}-- Messages
 		do
 		end
 
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+			set_message_return_value (feature {WEL_DLGC_CONSTANTS}.dlgc_want_all_keys)
+		end
+
 feature {NONE} -- Implementation
 
 	on_wm_notify (wparam, lparam: INTEGER) is
@@ -1008,8 +1015,6 @@ feature {WEL_DISPATCHER}
 				on_wm_syscolor_change
 			when Wm_close then
 				on_wm_close
-			when wm_getdlgcode then
-				set_message_return_value (feature {WEL_DLGC_CONSTANTS}.dlgc_want_all_keys)
 			else
 				called := True
 				-- Call the `process_message' routine of the

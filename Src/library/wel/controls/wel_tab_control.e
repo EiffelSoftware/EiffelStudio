@@ -23,6 +23,7 @@ inherit
 	WEL_CONTROL
 		undefine
 			process_message,
+			on_getdlgcode,
 			on_wm_notify
 		redefine
 			process_notification_info,

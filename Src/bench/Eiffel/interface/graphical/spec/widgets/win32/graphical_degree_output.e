@@ -33,7 +33,8 @@ inherit
 			put_case_class_message, put_case_message, put_string,
 			put_resynchronizing_breakpoints_message,
 			put_class_document_message,
-			put_start_documentation
+			put_start_documentation,
+			display_degree_output
 		end
 
 feature -- Start output
@@ -369,6 +370,24 @@ feature -- Per entity output
 			processed := processed + 1;
 			progress_bar.set_position (a_per);
 			update_interface (a_class.name_in_upper, to_go, a_per);
+
+			process_messages
+		end
+
+	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
+			-- Update the interface.
+		local
+			a_per_out: STRING
+			a_per: INTEGER
+		do
+			total_number := total
+			put_string (deg_nbr)
+			a_per := percentage_calculation (to_go)
+			a_per_out := a_per.out
+			a_per_out.append (" %%")
+			percentage_text.set_text (a_per_out)
+
+			progress_bar.set_position (a_per)
 
 			process_messages
 		end

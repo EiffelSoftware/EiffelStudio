@@ -8,7 +8,6 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	SHARED_ENV;
 	SHARED_RESCUE_STATUS;
-	SHARED_LACE_PARSER
 	PROJECT_CONTEXT;
 	COMPARABLE
 		undefine
@@ -17,6 +16,7 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_TEXT_ITEMS
 	SHARED_CONFIGURE_RESOURCES
+	SHARED_LACE_PARSER
 
 creation
 
@@ -105,6 +105,9 @@ feature -- Attributes
 
 	sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			-- List of sub clusters for Current cluster
+
+	is_recursive: BOOLEAN
+			-- Are subclusters processed recursively?
 
 feature -- Access
 
@@ -226,6 +229,24 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			is_override_cluster := flag
 		end;
 
+	set_is_recursive (is_rec: BOOLEAN) is
+			-- Set `is_recursive' to `is_rec'.
+		do
+			is_recursive := is_rec
+		ensure
+			set: is_recursive = is_rec
+		end
+
+	set_path (p: STRING) is
+			-- Set `path' to `p'.
+		require
+			path_exists: p /= Void
+		do
+			path := p
+		ensure
+			set: (path /= Void) and then path.is_equal (p)
+		end
+
 feature {COMPILER_EXPORTER}
 
 	clear is
@@ -270,6 +291,7 @@ end;
 			precomp_ids := old_cluster_i.precomp_ids;
 			hide_implementation := old_cluster_i.hide_implementation;
 			set_date (old_cluster_i.date);
+			set_is_recursive (old_cluster_i.is_recursive)
 			exclude_list := old_cluster_i.exclude_list;
 			include_list := old_cluster_i.include_list;
 			from
@@ -361,11 +383,13 @@ end;
 			!!Result.make_from_old_cluster (Current);
 		end;
 
-	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD]): CLUSTER_I is
+	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD];
+				 process_subclusters: BOOLEAN): CLUSTER_I is
 		do
 				-- If the cluster has changed,
 				-- do a degree 6
-			if changed (ex_l, inc_l) then
+			if changed (ex_l, inc_l) or else
+					process_subclusters /= is_recursive then
 				!! Result.make (dollar_path);
 				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
@@ -374,6 +398,7 @@ end;
 debug ("REMOVE_CLASS")
 	io.error.putstring ("New cluster calling fill%N");
 end;
+				Result.set_is_recursive (process_subclusters)
 				Result.fill (ex_l, inc_l);
 			else
 				Degree_output.skip_entity;
@@ -384,114 +409,128 @@ end;
 		end;
 
 	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
-			-- Fill the cluster name table with what is found in the path. If 
-			-- `old_cluster' exists, fill current with it.
+			-- Fill the cluster name table with what is found in the path.
 		require
 			table_is_empty: classes.empty;
 		local
-			cluster_file: DIRECTORY;
-			file_name: STRING;
-			i, j: INTEGER;
-			class_path: FILE_NAME;
-			vd01: VD01;
-			vd07: VD07;
-			vd12: VD12;
-			vd22: VD22;
-			class_file: EXTEND_FILE;
-			found: BOOLEAN;
+			file_name, cl_id: STRING
+			i: INTEGER
+			already_done: LINKED_LIST [STRING]
 		do
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Fill ");
-	io.error.putstring (cluster_name);
-	io.error.putstring (" path ");
-	io.error.putstring (path);
-	io.error.new_line;
-end;				-- Check if the path is valid
-			!!cluster_file.make (path);
-			if not cluster_file.exists then
-				!!vd01;
-				vd01.set_path (path);
-				vd01.set_cluster_name (cluster_name);
-				Error_handler.insert_error (vd01);
-				Error_handler.raise_error;
-			end;
-
 			Degree_output.put_degree_6 (Current)
 
 				-- Process the include and exclude lists
 			if ex_l /= Void then
 				from
-					!!exclude_list.make_filled (ex_l.count);
-					i := 1;
+					!!exclude_list.make_filled (ex_l.count)
+					i := 1
 				until
 					i > ex_l.count
 				loop
-					file_name := Environ.interpreted_string (ex_l.i_th (i).file__name);
-					!!class_path.make_from_string (path);
-					class_path.set_file_name (file_name);
-					!!class_file.make (class_path)
-					if not class_file.exists then
-						!!vd12;
-						vd12.set_cluster (Current);
-						vd12.set_file_name (file_name);
-						Error_handler.insert_error (vd12);
-					else
-						exclude_list.put_i_th (file_name, i);
-					end;
-					i := i + 1;
-				end;
-			end;
+					file_name := Environ.interpreted_string (ex_l.i_th (i).file__name)
+					exclude_list.put_i_th (file_name, i)
+					i := i + 1
+				end
+			end
+
 			if inc_l /= Void then
 				from
-					!!include_list.make_filled (inc_l.count);
-					i := 1;
+					!!include_list.make_filled (inc_l.count)
+					i := 1
 				until
 					i > inc_l.count
 				loop
 					file_name := Environ.interpreted_string
-										(inc_l.i_th (i).file__name);
-					!!class_path.make_from_string (path);
-					class_path.set_file_name (file_name);
-					!!class_file.make (class_path)
-					if not class_file.exists then
-						!!vd07;
-						vd07.set_cluster (Current);
-						vd07.set_file_name (file_name);
-						Error_handler.insert_error (vd07);
-					else
-						include_list.put_i_th (file_name, i);
-					end;
-					i := i + 1;
-				end;
-			end;
-			Error_handler.checksum;
+										(inc_l.i_th (i).file__name)
+					include_list.put_i_th (file_name, i)
+					i := i + 1
+				end
+			end
+			Error_handler.checksum
 
 				-- Set date first
-			date := new_date;
+			date := new_date
+
+			if is_recursive then
+				!!already_done.make
+				already_done.compare_objects
+				cl_id := physical_id (path)
+				already_done.extend (cl_id)
+			end
+
+			fill_recursively (path, "", already_done)
+
+			Error_handler.checksum
+		end
+
+	fill_recursively (cl_path, suffix : STRING; already_done: LINKED_LIST [STRING]) is
+			-- Fill the cluster name table with what is found in the path. 
+			-- If `is_recursive' is True process subclusters recursively.
+			-- Keep track of clusters already processed in `already_done'.
+			-- `cl_path' is the full path, `suffix' is the full path
+			-- minus the prefix `path'.
+		require
+			path_exists: cl_path /= Void
+			suffix_exists: suffix /= Void
+			valid_list: is_recursive implies already_done /= Void
+		local
+			cluster_file: DIRECTORY
+			file_name: STRING
+			prefixed_file_name: FILE_NAME
+			i, j: INTEGER
+			class_path: FILE_NAME
+			vd01: VD01
+			vd22: VD22
+			class_file: EXTEND_FILE
+			is_efile, check_dir, found: BOOLEAN
+			sub_dirs: LINKED_LIST [FILE_NAME]
+			suffixes: LINKED_LIST [FILE_NAME]
+			sub_dir_path: FILE_NAME
+			sub_dir_suffix: FILE_NAME
+			sub_dir_file: DIRECTORY
+			sub_dir_id: STRING
+		do
+			!!cluster_file.make (cl_path)
+			if not cluster_file.exists then
+				!!vd01
+				vd01.set_path (cl_path)
+				vd01.set_cluster_name (cluster_name)
+				Error_handler.insert_error (vd01)
+				Error_handler.raise_error
+			end
 
 			if open_directory_error (cluster_file) then
-				!!vd22;
-				vd22.set_cluster (Current);
-				vd22.set_file_name (cluster_file.name);
-				Error_handler.insert_error (vd22);
+				!!vd22
+				vd22.set_cluster (Current)
+				vd22.set_file_name (cluster_file.name)
+				Error_handler.insert_error (vd22)
 			else
+				if is_recursive then
+					!!sub_dirs.make
+					!!suffixes.make
+				end
 				from
-					cluster_file.start;
-					cluster_file.readentry;
-					file_name := cluster_file.lastentry;
+					cluster_file.start
+					cluster_file.readentry
+					file_name := cluster_file.lastentry
 				until
 					file_name = Void
 				loop
-					i := file_name.count;
-	
-					if
-						i > 2
-					and then
-						(file_name.item (i - 1) = Dot
-						and
-						valid_class_file_extension (file_name.item (i)))
-					then
-						found := False;
+					i := file_name.count
+
+					-- Must we check if it is a subcluster?
+					check_dir := is_recursive and then
+								 not is_current_or_parent_cluster (file_name)
+
+					-- Is it an Eiffel source file?
+					is_efile := (i > 2) and then
+								(file_name.item (i-1) = Dot) and then
+								valid_class_file_extension (file_name.item (i))
+
+					if check_dir or is_efile then
+						-- First check if it is excluded.
+						found := False
+
 						if exclude_list /= Void then
 							from
 								i := 1
@@ -500,27 +539,55 @@ end;				-- Check if the path is valid
 							loop
 								if file_name.is_equal (exclude_list.i_th (i)) then
 									found := True
-								end;
-								i := i + 1;
-							end;
-						end;
-						if not found then
-							insert_class_from_file (file_name);
-						end;
-					end;
+								end
+								i := i + 1
+							end
+						end
 
-					cluster_file.readentry;
-					file_name := cluster_file.lastentry;
-				end;
-				cluster_file.close;
+						if not found then
+							if check_dir then
+								-- Check that it is really a directory.
+								!!sub_dir_path.make_from_string (clone (cl_path))
+								sub_dir_path.extend (file_name)
+								!!sub_dir_suffix.make_from_string (clone (suffix))
+								sub_dir_suffix.extend (file_name)
+								!!sub_dir_file.make (sub_dir_path)
+
+								if sub_dir_file.exists then
+									-- Add it to the list
+									sub_dirs.extend (sub_dir_path)
+									suffixes.extend (sub_dir_suffix)
+								else
+									if is_efile then
+										!!prefixed_file_name.make_from_string(
+																clone (suffix)
+																			 )
+										prefixed_file_name.extend (file_name)
+										-- It's an Eiffel source file.
+										insert_class_from_file (prefixed_file_name)
+									end
+								end
+							else
+								-- It's an Eiffel source file.
+								insert_class_from_file (file_name)
+							end
+						end
+					end
+
+					cluster_file.readentry
+					file_name := cluster_file.lastentry
+				end
+
+				cluster_file.close
+
 				if include_list /= Void then
 					from
 						i := 1
 					until
 						i >  include_list.count
 					loop
-						file_name := include_list.i_th (i);
-						found := False;
+						file_name := include_list.i_th (i)
+						found := False
 						if exclude_list /= Void then
 							from
 								j := 1
@@ -529,19 +596,55 @@ end;				-- Check if the path is valid
 							loop
 								if file_name.is_equal (exclude_list.i_th (j)) then
 									found := True
-								end;
-								j := j + 1;
-							end;
-						end;
+								end
+								j := j + 1
+							end
+						end
 						if not found then
-							insert_class_from_file (file_name);
-						end;
-						i := i + 1;
-					end;
-				end;
-			end;
-			Error_handler.checksum;
-		end;
+							-- If file exists insert it.
+							!!class_path.make_from_string (cl_path);
+							class_path.set_file_name (file_name);
+							!!class_file.make (class_path)
+							if class_file.exists then
+								if is_recursive then
+									!!prefixed_file_name.make_from_string(
+															clone (suffix)
+																		 )
+									prefixed_file_name.extend (file_name)
+									insert_class_from_file (prefixed_file_name)
+
+								else
+									insert_class_from_file (file_name)
+								end
+							end
+						end
+						i := i + 1
+					end
+				end
+			end
+			Error_handler.checksum
+
+			if sub_dirs /= Void then
+				-- Process subclusters
+				from
+					sub_dirs.start
+					suffixes.start
+				until
+					sub_dirs.after
+				loop
+					sub_dir_path := sub_dirs.item
+					sub_dir_suffix := suffixes.item
+					sub_dir_id := physical_id (sub_dir_path)
+
+					if not already_done.has (sub_dir_id) then
+						already_done.extend (sub_dir_id)
+						fill_recursively (sub_dir_path, sub_dir_suffix, already_done)
+					end
+					sub_dirs.forth
+					suffixes.forth
+				end
+			end
+		end
 
 	insert_class_from_file (file_name: STRING) is
 		local
@@ -633,7 +736,7 @@ end;
 					vd22.set_file_name (file_name);
 					Error_handler.insert_error (vd22);
 				else
-					Classname_finder.parse (class_file)
+					Classname_finder.parse (class_file);
 					Result := Classname_finder.classname
 					class_file.close;
 					if Result /= Void then
@@ -1253,6 +1356,36 @@ feature {NONE} -- Implementation
 			-- Is `c' a valid class file extension?
 		do
 			Result := c = 'e' or c = 'E'
+		end
+
+	is_current_or_parent_cluster (cl_path: STRING) : BOOLEAN is
+			-- Does `cl_path' point to the current
+			-- cluster or its parent?
+		require
+			path_exists: cl_path /= Void
+		do
+			-- NOTE: This code may not be correct for VMS!
+			--       Perhaps we need a run-time function here.
+
+			Result := cl_path.is_equal (".") or else
+					  cl_path.is_equal ("..")
+		end
+
+	physical_id (cl_path: STRING) : STRING is
+			-- Id which uniquely identifies the
+			-- directory pointed to by `cl_path'.
+		do
+			-- NOTE: This code is not correct for UNIX (->links)!
+			--       We need a run-time function which
+			--       returns the inode number (UNIX).
+			--       For VMS: I don't know.
+			--       The point is that two different paths
+			--       can point to the same physical directory,
+			--       so comparing paths alone will not prevent
+			--       us from running into trouble (infinite
+			--       loop in the worst case).
+
+			Result := cl_path
 		end
 
 feature {NONE} -- Externals

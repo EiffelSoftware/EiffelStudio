@@ -102,7 +102,9 @@ feature {NONE} -- Implementation
 				-- This is because the minimum size of that widget is consrained by
 				-- the additional parenting used in the builer display.
 			first.set_item_width (integer)
-			(objects @ 2).set_item_width (integer.max ((objects @ 2).item.width))
+			if objects @ 2 /= Void then
+				(objects @ 2).set_item_width (integer.max ((objects @ 2).item.width))
+			end
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
@@ -118,7 +120,9 @@ feature {NONE} -- Implementation
 				-- This is because the minimum size of that widget is consrained by
 				-- the additional parenting used in the builer display.
 			first.set_item_height (integer)
-			(objects @ 2).set_item_height (integer.max ((objects @ 2).item.height))
+			if objects @ 2 /= Void then
+				(objects @ 2).set_item_height (integer.max ((objects @ 2).item.height))
+			end
 				-- We update the system settings to reflect
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save

@@ -325,9 +325,5 @@ feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
 			name_field.set_text (object.name)
 			name_field.change_actions.resume
 		end
-		
-invariant
-	
-	parent /= Void
 
 end -- class GB_OBJECT_EDITOR

@@ -13,7 +13,7 @@
 		</heading>
 		<paragraph>The most general class describing sets is 
 			<link>
-				<url>../../reference/structures/set/set_chart.xml</url>
+				<url>../../reference/structures/set/SET_chart.xml</url>
 				<label>SET</label>
 			</link>. The usual operations of set theory such as union and intersection have been relegated to 
 			<link>
@@ -56,17 +56,17 @@
 		<link><url>../../reference/structures/set/comparable_set_chart.xml</url><label>COMPARABLE_SET</label></link>[G -&gt; <link><url>../../reference/kernel/comparable_chart.xml</url><label>COMPARABLE</label></link>]
 
 	<keyword>inherit</keyword>
-		<link><url>../../reference/structures/set/subset.xml</url><label>SUBSET</label></link> [G]
+		<link><url>../../reference/structures/set/subset_chart.xml</url><label>SUBSET</label></link> [G]
 		<link><url>/libraries/base/reference/structures/sort/comparable_struct_chart.xml</url><label>COMPARABLE_STRUCT</label></link> [G]
 	...
 		</code_block>
 		<paragraph> describes sets whose items may be compared by a total order relation. The class has the features 
 			<link>
-				<url>../../reference/structures/set/comparable_set.xml#f_min</url>
+				<url>../../reference/structures/set/comparable_set_chart.xml</url><anchor_name>f_min</anchor_name>
 				<label>min</label>
 			</link> and 
 			<link>
-				<url>../../reference/structures/set/comparable_set.xml#f_max</url>
+				<url>../../reference/structures/set/comparable_set_chart.xml</url><anchor_name>f_max</anchor_name>
 				<label>max</label>
 			</link>.
 			<line_break/>   Two implementations of 

@@ -12,15 +12,15 @@
 				<size>2</size>Why use hash tables?
 			</heading> The main advantage of hash tables is the efficiency of the basic operations: store (
 			<link>
-				<url>../../reference/structures/table/hash_table.xml#f_put</url>
+				<url>../../reference/structures/table/hash_table_chart.xml</url><anchor_name>f_put</anchor_name>
 				<label>put</label>
 			</link>) and retrieve (
 			<link>
-				<url>../../reference/structures/table/hash_table.xml#f_item</url>
+				<url>../../reference/structures/table/hash_table_chart.xml</url><anchor_name>f_item</anchor_name>
 				<label>item</label>
 			</link>, 
 			<link>
-				<url>../../reference/structures/table/hash_table.xml#f_remove</url>
+				<url>../../reference/structures/table/hash_table_chart.xml</url><anchor_name>f_remove</anchor_name>
 				<label>remove</label>
 			</link>).
 			<line_break/> The idea behind hash tables is to try to emulate the data structure that provides the ultimate in efficiency: the array. On an array 
@@ -89,7 +89,7 @@
 				<label>HASH_TABLE</label>
 			</link> attempts to address the first concern; for the second, client developers will be responsible for choosing the proper hashing function, although Base provides a few predefined functions, in particular for class 
 			<link>
-				<url>/libraries/base/reference/kernel/string_chart.xml</url>
+				<url>/libraries/base/reference/kernel/classic/string_chart.xml</url>
 				<label>STRING</label>
 			</link>.
 		</paragraph>
@@ -105,11 +105,11 @@
 			<item>
 				<bold>H2</bold>. Frequently, the objects will be composite, that is to say, instances of a developer-defined  class, and one of the attributes of that class, of type  
 				<link>
-					<url>/libraries/base/reference/kernel/string_chart.xml</url>
+					<url>/libraries/base/reference/kernel/classic/string_chart.xml</url>
 					<label>STRING</label>
 				</link>, can serve as  the key. For example if you were writing an Eiffel compiler you would probably  need to keep a data structure that includes information about classes of the  system. Each class is represented by an object with several fields describing the  properties of the class; one of these fields, the class name, corresponding to an  attribute of type 
 				<link>
-					<url>/libraries/base/reference/kernel/string_chart.xml</url>
+					<url>/libraries/base/reference/kernel/classic/string_chart.xml</url>
 					<label>STRING</label>
 				</link>, will serve as key.
 			</item>
@@ -125,12 +125,12 @@
 				<label>HASHABLE</label>
 			</link>. This is true of both 
 			<link>
-				<url>/libraries/base/reference/kernel/integer_chart.xml</url>
+				<url>/libraries/base/reference/kernel/classic/integer_chart.xml</url>
 				<label>INTEGER</label>
 			</link> (case 
 			<bold>H1</bold>) and 
 			<link>
-				<url>/libraries/base/reference/kernel/string_chart.xml</url>
+				<url>/libraries/base/reference/kernel/classic/string_chart.xml</url>
 				<label>STRING</label>
 			</link> (case 
 			<bold>H2</bold>). The requirements for being a 

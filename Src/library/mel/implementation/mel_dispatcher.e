@@ -102,7 +102,7 @@ feature {MEL_OBJECT} -- Implementation
 			added: xt_event_callbacks.has_callback (a_screen_object, a_resource)
 		end;
 
-	add_translation (a_screen_object: POINTER;
+	set_translation (a_screen_object: POINTER;
 				a_translation: STRING;
 				a_callback_exec: MEL_CALLBACK_EXEC) is
 			-- Add a translation callback for `a_screen_object' with `a_translation'
@@ -112,15 +112,35 @@ feature {MEL_OBJECT} -- Implementation
 			valid_exec: a_callback_exec /= Void
 		local
 			mt: MEL_TRANSLATION;
-			ext: ANY
+			widget_callbacks: HASH_TABLE [MEL_CALLBACK_EXEC, MEL_TRANSLATION];
+			ext: ANY;
+			call_c: BOOLEAN
 		do	
+			widget_callbacks := translation_callbacks.item (a_screen_object);
 			!! mt.make (a_translation);
-			translation_callbacks.add_callback (a_screen_object, 
-						mt, a_callback_exec)
-			ext := mt.xt_translation_string.to_c;
-			c_set_override_translations (a_screen_object, $ext)
+			if widget_callbacks = Void then
+				!! widget_callbacks.make (2);
+				translation_callbacks.put (widget_callbacks, a_screen_object);
+				widget_callbacks.put (a_callback_exec, mt);
+				call_c := True
+			else
+				if widget_callbacks.has (mt) then
+					widget_callbacks.force (a_callback_exec, mt)
+					-- Note: `mt' will not be forced into the table - only
+					-- `a_callback_exec' which means `mt' needs to be weaned
+				else
+					widget_callbacks.put (a_callback_exec, mt);
+					call_c := True
+				end
+			end;
+			if call_c then
+				ext := mt.xt_translation_string.to_c;
+				c_set_override_translations (a_screen_object, $ext)
+			else
+				mt.dispose -- wean the translation right away
+			end
 		ensure
-			added: translation_callbacks.has_callback (a_screen_object, 
+			added: translation_callbacks.item (a_screen_object).has ( 
 							mel_translation_from (a_translation))
 		end;
 
@@ -185,15 +205,20 @@ feature {MEL_OBJECT} -- Implementation
 		local
 			mt: MEL_TRANSLATION;
 			ext: ANY
+			widget_callbacks: HASH_TABLE [MEL_CALLBACK_EXEC, MEL_TRANSLATION];
+			call_c: BOOLEAN
 		do	
 			!! mt.make_no_adopted (a_translation);
-			translation_callbacks.remove_callback_list (a_screen_object, mt)
-			if translation_callbacks.need_to_call_c then
-				ext := mt.xt_translation_string.to_c;
-				c_set_override_translations (a_screen_object, $ext)
+			widget_callbacks := translation_callbacks.item (a_screen_object)
+			if widget_callbacks /= Void then
+				if widget_callbacks.has (mt) then
+					widget_callbacks.remove (mt);
+					ext := mt.xt_translation_null_string.to_c;
+					c_set_override_translations (a_screen_object, $ext)
+				end
 			end
 		ensure
-			removed: not translation_callbacks.has_callback (a_screen_object, 
+			removed: not translation_callbacks.item (a_screen_object).has ( 
 							mel_translation_from (a_translation))
 		end;
 
@@ -383,7 +408,7 @@ feature {NONE} -- Implementation
 	xt_work_proc_callbacks: HASH_TABLE [MEL_CALLBACK_EXEC, POINTER];
 			-- Xt callbacks for work procedures
 
-	translation_callbacks: MEL_CALLBACK_TABLE [MEL_TRANSLATION];
+	translation_callbacks: HASH_TABLE [HASH_TABLE [MEL_CALLBACK_EXEC, MEL_TRANSLATION], POINTER];
 			-- Translation callbacks for all widgets
 
 feature {MEL_APPLICATION_CONTEXT}
@@ -410,7 +435,9 @@ feature {NONE} -- External features passed out to C
 			a_widget: MEL_OBJECT
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
-			!! a_callback_struct.make (a_widget, a_callback_struct_ptr); 
+			!! a_callback_struct.make (a_widget,  a_callback_struct_ptr); 
+			--!! a_callback_struct.make (a_widget, 
+					--c_event (a_callback_struct_ptr)); 
 			wm_protocol_callbacks.execute_callback (a_widget, 
 							atom, a_callback_struct)
 		end;
@@ -470,18 +497,20 @@ feature {NONE} -- External features passed out to C
 			translation_not_void: a_translation /= Void;
 			a_callback_struct_ptr: event_ptr /= default_pointer;
 			widget_exists: Mel_widgets.has (a_screen_object);
-			callback_exists: translation_callbacks.has_callback 
-					(a_screen_object, mel_translation_from (a_translation))
+			widget_in_callback: translation_callbacks.has (a_screen_object);
+			has_callback: translation_callbacks.item (a_screen_object).has (
+					(mel_translation_from (a_translation)))
 		local
 			a_callback_struct: MEL_CALLBACK_STRUCT;
+			widget_callbacks: HASH_TABLE [MEL_CALLBACK_EXEC, MEL_TRANSLATION];
 			a_widget: MEL_OBJECT;
 			mt: MEL_TRANSLATION
 		do
-			!! mt.make (a_translation)
 			a_widget := Mel_widgets.item (a_screen_object);
+			!! mt.make_no_adopted (a_translation);
 			!! a_callback_struct.make (a_widget, event_ptr);
-			translation_callbacks.execute_callback (a_widget, 
-							mt, a_callback_struct)
+			widget_callbacks := translation_callbacks.item (a_screen_object);
+			widget_callbacks.item (mt).execute (a_callback_struct);
 		end;
 
 	frozen handle_input (id: POINTER) is

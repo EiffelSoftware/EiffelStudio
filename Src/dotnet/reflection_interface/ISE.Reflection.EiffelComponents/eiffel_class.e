@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			external_name: "Make"
 		do
 			create parents.make
-			create creation_routines.make 
+			--create creation_routines.make 
 			create initialization_features.make
 			create access_features.make
 			create element_change_features.make
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create invariants.make
 		ensure
 			non_void_parents: parents /= Void
-			non_void_creation_routines: creation_routines /= Void
+		--	non_void_creation_routines: creation_routines /= Void
 			non_void_initialization_features: initialization_features /= Void
 			non_void_access_features: access_features /= Void
 			non_void_element_change_features: element_change_features /= Void
@@ -88,12 +88,12 @@ feature -- Access
 			external_name: "Parents"
 		end
 		
-	creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
-			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
-		indexing
-			description: "Creation routines Eiffel names "
-			external_name: "CreationRoutines"
-		end
+--	creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST
+--			-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+--		indexing
+--			description: "Creation routines Eiffel names "
+--			external_name: "CreationRoutines"
+--		end
 		
 	initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST 
 			-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
@@ -168,7 +168,8 @@ feature -- Eiffel names from .NET reflection info
 		require
 			non_void_info: info /= Void
 		do
-			if creation_routines.get_count = 0 then
+--			if creation_routines.get_count = 0 then
+			if initialization_features.get_count = 0 then
 				Result := Void
 			else
 				if has_creation_routine (info) then
@@ -179,7 +180,8 @@ feature -- Eiffel names from .NET reflection info
 			end
 		ensure
 			non_void_feature_if_creation_routine_found: has_creation_routine (info) implies Result /= Void	
-			void_feature_if_no_creation_routine_or_not_found: (creation_routines.get_count = 0 or else not has_creation_routine (info)) implies Result = Void
+--			void_feature_if_no_creation_routine_or_not_found: (creation_routines.get_count = 0 or else not has_creation_routine (info)) implies Result = Void
+			void_feature_if_no_creation_routine_or_not_found: (initialization_features.get_count = 0 or else not has_creation_routine (info)) implies Result = Void
 		end
 		
 	attribute_from_info (info: SYSTEM_REFLECTION_MEMBERINFO): EIFFEL_FEATURE is
@@ -528,20 +530,20 @@ feature -- Basic Operations
 			parent_added: parents.Contains_Key (a_parent.name)
 		end
 	
-	add_creation_routine (a_name: STRING) is
-		indexing
-			description: "Add `a_name' to `creation_routines'."
-			external_name: "AddCreationRoutine"
-		require
-			non_void_routine_name: a_name /= Void
-			not_empty_routine_name: a_name.get_length > 0
-		local
-			routine_added: INTEGER
-		do
-			routine_added := creation_routines.Add (a_name)
-		ensure
-			routine_added: creation_routines.Contains (a_name)
-		end
+--	add_creation_routine (a_name: STRING) is
+--		indexing
+--			description: "Add `a_name' to `creation_routines'."
+--			external_name: "AddCreationRoutine"
+--		require
+--			non_void_routine_name: a_name /= Void
+--			not_empty_routine_name: a_name.get_length > 0
+--		local
+--			routine_added: INTEGER
+--		do
+--			routine_added := creation_routines.Add (a_name)
+--		ensure
+--			routine_added: creation_routines.Contains (a_name)
+--		end
 
 	add_initialization_feature (a_feature: EIFFEL_FEATURE) is
 		indexing
@@ -636,7 +638,7 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := special_features.Add (a_feature)
+			feature_added := special_features.add (a_feature)
 		ensure
 			feature_added: special_features.Contains (a_feature)
 		end
@@ -650,7 +652,7 @@ feature -- Basic Operations
 		local
 			feature_added: INTEGER
 		do
-			feature_added := implementation_features.Add (a_feature)
+			feature_added := implementation_features.add (a_feature)
 		ensure
 			feature_added: implementation_features.Contains (a_feature)
 		end
@@ -684,21 +686,22 @@ feature {NONE} -- Implementation
 			external_name: "HasCreationRoutine"
 		require
 			non_void_info: info /= Void
-		local
-			i: INTEGER
-			a_routine_name: STRING
+--		local
+--			i: INTEGER
+--			a_routine_name: STRING
 		do
-			from
-				routine := Void
-			until
-				i = creation_routines.get_count or Result 
-			loop
-				a_routine_name ?= creation_routines.get_item (i)
-				if a_routine_name /= Void then
-					Result := has_routine (info, initialization_features)
-				end
-				i := i + 1
-			end
+			Result := has_routine (info, initialization_features)
+	--		from
+	--			routine := Void
+	--		until
+	--			i = creation_routines.get_count or Result
+	--		loop
+	--			a_routine_name ?= creation_routines.get_item (i)
+	--			if a_routine_name /= Void then
+	--				Result := has_routine (info, initialization_features)
+	--			end
+	--			i := i + 1
+	--		end
 		end
 
 	attribute: EIFFEL_FEATURE
@@ -864,7 +867,7 @@ feature {NONE} -- Implementation
 		
 invariant
 	non_void_parents: parents /= Void
-	non_void_creation_routines: creation_routines /= Void
+--	non_void_creation_routines: creation_routines /= Void
 	non_void_initialization_features: initialization_features /= Void
 	non_void_access_features: access_features /= Void
 	non_void_element_change_features: element_change_features /= Void
@@ -875,6 +878,7 @@ invariant
 	non_void_implementation_features: implementation_features /= Void
 	non_void_invariants: invariants /= Void
 	frozen_xor_deferred: is_frozen xor is_deferred
-	is_expanded_implies_no_creation_routine: is_expanded implies creation_routines.get_count = 0
+--	is_expanded_implies_no_creation_routine: is_expanded implies creation_routines.get_count = 0
+	is_expanded_implies_no_creation_routine: is_expanded implies initialization_features.get_count = 0
 
 end -- class EIFFEL_CLASS

@@ -12,37 +12,50 @@ deferred class
 
 inherit
 	EV_CONTAINER
+		rename
+			implementation as ev_container_implementation
 		export
 			{NONE} fill
 		undefine
 			extend,
 			put
 		redefine
-			implementation
+			replace,
+			item,
+			client_height,
+			client_width
 		end
 
+	EV_WIDGET
+		redefine
+			implementation,
+			create_implementation
+		select
+			implementation
+		end
+	
+
 feature -- Access
+
+	item: EV_WIDGET
+			-- Current item
 
 	first: EV_WIDGET is
 			-- First item.
 		do
-			Result := implementation.first_item
-		ensure
-			bridge_ok: Result = implementation.first_item
+			Result := first_cell.item
 		end
 
 	second: EV_WIDGET is
 			-- Second item.
 		do
-			Result := implementation.second_item
-		ensure
-			bridge_ok: Result = implementation.second_item
+			Result := second_cell.item
 		end
 
 	go_to_first is
 			-- Make `first' current `item'.
 		do
-			implementation.go_to_first
+			item := first
 		ensure
 			item_is_first: item = first
 		end
@@ -50,7 +63,7 @@ feature -- Access
 	go_to_second is
 			-- Make `first' current `item'.
 		do
-			implementation.go_to_second
+			item := second
 		ensure
 			item_is_second: item = second
 		end
@@ -58,7 +71,7 @@ feature -- Access
 	has (v: like item): BOOLEAN is
 			-- Does structure include `v'?
 		do
-			Result := implementation.has (v)
+			Result := first_cell.has(v) or second_cell.has (v)
 		end
 
 feature -- Status report
@@ -90,8 +103,7 @@ feature -- Status report
 	split_position: INTEGER is
 			-- Current position of the splitter.
 			--| FIXME position relative to...?
-		do
-			Result := implementation.split_position
+		deferred
 		ensure
 			result_large_enough: Result >= minimum_split_position
 			result_small_enough: Result <= maximum_split_position
@@ -99,8 +111,7 @@ feature -- Status report
 
 	minimum_split_position: INTEGER is
 			-- Minimum position the splitter can have.
-		do
-			Result := implementation.minimum_split_position
+		deferred
 		ensure
 			positive_value: Result >= 0
 			coherent_position: Result <= maximum_split_position
@@ -108,11 +119,24 @@ feature -- Status report
 
 	maximum_split_position: INTEGER is
 			-- Maximum position the splitter can have.
-		do
-			Result := implementation.maximum_split_position
+		deferred
 		ensure
 			positive_value: Result >= 0
 			coherent_position: Result >= minimum_split_position
+		end
+
+feature -- Measurement
+
+	client_width: INTEGER is
+			-- Width of the client area of container.
+		do
+			Result := implementation.box.client_width
+		end
+
+	client_height: INTEGER is
+			-- Height of the client area of container.
+		do
+			Result := implementation.box.client_height
 		end
 
 feature -- Element change
@@ -121,12 +145,31 @@ feature -- Element change
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
-			implementation.extend (an_item)
+			if an_item.parent /= Void then
+				an_item.parent.prune_all (an_item)
+			end
+			if first_cell.empty then
+				first_cell.put (an_item)
+			else 
+				second_cell.put (an_item)
+			end
 		ensure then
-			first_used_first:
-				old first = Void implies first = an_item
-			second_used_second:
+			first_item_used_first:
+				old first  = Void implies first = an_item
+			second_item_used_second:
 				old first /= Void implies second = an_item
+			has_an_item: has (an_item)
+
+		end
+
+	replace (an_item: like item) is
+			-- Replace `item' with `v'.
+		do
+			if item = second then
+				second_cell.replace (an_item)
+			else
+				first_cell.replace (an_item)
+			end
 		end
 
 	set_first (an_item: like item) is
@@ -135,7 +178,7 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			not_has_an_item: not has (an_item)
 		do
-			implementation.set_first_item (an_item)
+			first_cell.put (an_item)
 		ensure
 			an_item_assigned: first = an_item
 		end
@@ -146,7 +189,7 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			not_has_an_item: not has (an_item)
 		do
-			implementation.set_second_item (an_item)
+			second_cell.put (an_item)
 		ensure
 			an_item_assigned: second = an_item
 		end	
@@ -158,8 +201,7 @@ feature -- Status setting
 		require
 			position_in_valid_range:
 				(a_split_position >= minimum_split_position and a_split_position <= maximum_split_position)
-		do
-			implementation.set_split_position (a_split_position)
+		deferred
 		ensure
 			--split_position = a_split_position
 			--| FIXME IEK This doesn't always hold true as GTK may not resize the
@@ -173,8 +215,7 @@ feature -- Status setting
 		require
 			proportion_in_valid_range:
 				(a_proportion >= 0 and a_proportion <= 1)
-		do
-			implementation.set_proportion (a_proportion)
+		deferred
 		end
 
 feature -- Removal
@@ -182,13 +223,15 @@ feature -- Removal
 	prune (v: like item) is
 			-- Remove one occurrence of `v' if any.
 		do
-			implementation.prune (v)
+			first_cell.prune (v)
+			second_cell.prune (v)
 		end
 
 	wipe_out is
 			-- Remove all items.
 		do
-			implementation.wipe_out
+			first_cell.wipe_out
+			second_cell.wipe_out
 		end
 
 feature -- Conversion
@@ -204,11 +247,52 @@ feature -- Conversion
 			Result := l
 		end
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
-	implementation: EV_SPLIT_AREA_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+	first_cell, second_cell: EV_CELL
+		-- Two client areas.
+
+	split_box: EV_BOX
+		-- Contains `first_cell', a seperator and `second_cell'.
+
+	sep: EV_SEPARATOR
+		-- Separator used to split between the two items.
+
+	scr: EV_SCREEN
+		-- Used for drawing guideline on screen.
+
+	initialize_split_area is
+			-- Initialize the split area and screen.
+		do
+			create scr
+			scr.set_line_width (3)
+			scr.set_invert_mode
+			sep.set_minimum_height (8)
+			sep.set_minimum_width (8)
+			create first_cell
+			split_box.extend (first_cell)
+			split_box.extend (sep)
+			split_box.disable_child_expand (sep)
+			create second_cell
+			split_box.extend (second_cell)
+			implementation.box.extend (split_box)
+		end
+
+	create_implementation is
+		do
+			create {EV_AGGREGATE_WIDGET_IMP} implementation.make (Current)
+		end
+
+	implementation: EV_AGGREGATE_WIDGET_I
+
+invariant
+	split_box_not_void: is_useable implies split_box /= Void
+	separator_not_void: is_useable implies sep /= Void
+	first_cell_not_void: is_useable implies first_cell /= Void
+	second_cell_not_void: is_useable implies second_cell /= Void
+	split_box_has_three_items: is_useable implies split_box.count = 3
+	split_box_first_is_first_cell: is_useable implies split_box.first = first_cell
+	split_box_last_is_second_cell: is_useable implies split_box.last = second_cell
 
 end -- class EV_SPLIT_AREA
 
@@ -233,6 +317,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/21 20:09:15  rogers
+--| There is no longer an EV_SPLIT_AREA_I, so moved the appropriate implementation into this class. Now also inherits EV_WIDGET.
+--|
 --| Revision 1.11  2000/02/14 11:40:51  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -22,7 +22,8 @@ inherit
 			replace as dl_replace,
 			put_front as dl_put_front,
 			put_right as dl_put_right,
-			put_i_th as dl_put_i_th
+			put_i_th as dl_put_i_th,
+			put_left as dl_put_left
 		export
 			{NONE} duplicate, new_chain
 			{EV_DYNAMIC_LIST_I} sequential_index_of
@@ -36,7 +37,8 @@ inherit
 			start,
 			dl_put_i_th,
 			merge_left,
-			merge_right
+			merge_right,
+			dl_put_left
 		end
 
 	SET [G]
@@ -226,6 +228,24 @@ feature -- Element change
 	 		cursor_not_moved: index = old index
 		end
 
+	put_left (v: like item) is
+			-- Add `v' to the left of cursor position. Do not move cursor.
+		require
+			extendible: extendible
+			not_before: not before
+			v_not_void: v /= Void
+			v_parent_void: parent_void (v)
+			v_not_current: not same (v)
+			v_not_parent_of_current: not is_parent_recursive (v)
+		do
+			implementation.put_left (v)
+		ensure
+			parent_is_current: is_parent_of (v)
+			v_at_index_plus_one: v = i_th (index - 1)
+			count_increased: count = old count + 1
+	 		cursor_not_moved: index = old index + 1
+		end
+
 	put_i_th (v: like item; i: INTEGER) is
 			-- Replace item at `i'-th position by `v'.
 		require
@@ -371,6 +391,11 @@ feature {NONE} -- Inapplicable
 			put_i_th (v, i)
 		end
 
+	dl_put_left (v: like item) is
+		do
+			put_left (v)
+		end
+
 	new_chain: like Current is
 		do
 			check
@@ -407,6 +432,9 @@ end -- class EV_DYNAMIC_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/07 23:59:37  brendel
+--| Added put_left.
+--|
 --| Revision 1.5  2000/04/06 00:01:50  brendel
 --| Removed action sequences.
 --|

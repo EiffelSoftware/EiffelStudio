@@ -140,19 +140,19 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	b_item (a_bit: BIT_REF; index: INTEGER): BOOLEAN is
+	b_item (a_bit: POINTER; index: INTEGER): BOOLEAN is
 			-- Boolean item at position `i' in `a_bit'
 		external
 			"C"
 		end;
 
-	b_count (a_bit: BIT_REF): INTEGER is
+	b_count (a_bit: POINTER): INTEGER is
 			-- Size of `a_bit'
 		external
 			"C"
 		end;
 
-	c_standard_is_equal (target, source: BIT_REF): BOOLEAN is
+	c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
 			"C"
@@ -160,49 +160,49 @@ feature {NONE} -- Implementation
 			"b_equal"
 		end;
 
-	b_shift (a_bit: BIT_REF; s: INTEGER): BIT_REF is
+	b_shift (a_bit: POINTER; s: INTEGER): BIT_REF is
 			-- Result of shifting `a_bit' by `s' positions
 		external
 			"C"
 		end;
 
-	b_rotate (a_bit: BIT_REF; s: INTEGER): BIT_REF is
+	b_rotate (a_bit: POINTER; s: INTEGER): BIT_REF is
 			-- Result of rotating `a_bit' by `s' positions
 		external
 			"C"
 		end;
 
-	b_and (a_bit1, a_bit2: BIT_REF): BIT_REF is
+	b_and (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Conjunction of `a_bit1' with `a_bit2'
 		external
 			"C"
 		end;
 
-	b_implies (a_bit1, a_bit2: BIT_REF): BIT_REF is
+	b_implies (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Implication for `a_bit1' of `a_bit2'
 		external
 			"C"
 		end;
 
-	b_or (a_bit1, a_bit2: BIT_REF): BIT_REF is
+	b_or (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Disjunction of `a_bit1' with `a_bit2'
 		external
 			"C"
 		end;
 
-	b_xor (a_bit1, a_bit2: BIT_REF): BIT_REF is
+	b_xor (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Exclusive or of `a_bit1' with `a_bit2'
 		external
 			"C"
 		end;
 
-	b_not (a_bit: BIT_REF): BIT_REF is
+	b_not (a_bit: POINTER): BIT_REF is
 			-- Negation of `a_bit'
 		external
 			"C"
 		end;
 
-	c_standard_copy (source, target: ANY) is
+	c_standard_copy (source, target: POINTER) is
 			-- Copy of bit sequence
 		external
 			"C"
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			"b_copy"
 		end;
 
-	c_standard_clone (other: ANY): like other is
+	c_standard_clone (other: POINTER): BIT_REF is
 			-- New object of same dynamic type as `other'
 		external
 			"C"
@@ -218,13 +218,13 @@ feature {NONE} -- Implementation
 			"b_clone"
 		end;
 
-	b_put (a_bit: BIT_REF; val: BOOLEAN; index: INTEGER) is
+	b_put (a_bit: POINTER; val: BOOLEAN; index: INTEGER) is
 			-- Put `val' in `a_bit' at position `index'.
 		external
 			"C"
 		end;
 
-	c_out (b: BIT_REF): STRING is
+	c_out (b: POINTER): STRING is
 			-- Out representation of Current
 		external
 			"C"

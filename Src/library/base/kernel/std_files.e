@@ -98,7 +98,7 @@ feature -- Element change
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
 		do
-			console_pc (standard_default.file_pointer, $c)
+			console_pc (standard_default.file_pointer, c)
 		end;
 
 	put_string, putstring (s: STRING) is
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	console_ps (file: POINTER; s_name: ANY; lenght: INTEGER) is
+	console_ps (file: POINTER; s_name: POINTER; lenght: INTEGER) is
 			-- Write string `s' at end of `file'
 		external
 			"C"

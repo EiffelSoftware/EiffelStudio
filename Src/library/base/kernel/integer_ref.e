@@ -265,7 +265,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of integer value
 		do
-			Result := c_outi ($item)
+			Result := c_outi (item)
 		end;
 
 

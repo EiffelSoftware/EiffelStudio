@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-   file_open (f_name: ANY; how: INTEGER): POINTER is
+   file_open (f_name: POINTER; how: INTEGER): POINTER is
             -- File pointer for file `f_name', in mode `how'.
         external
             "C"
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			"file_binary_dopen"
         end;
 
-    file_reopen (f_name: ANY; how: INTEGER; file: POINTER): POINTER is
+    file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
            -- File pointer to `file', reopened to have new name `f_name'
            -- in a mode specified by `how'.
         external

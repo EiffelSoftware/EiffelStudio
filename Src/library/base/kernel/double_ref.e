@@ -277,7 +277,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of double value
 		do
-			Result := c_outd ($item)
+			Result := c_outd (item)
 		end;
 
 feature {NONE} -- Implementation

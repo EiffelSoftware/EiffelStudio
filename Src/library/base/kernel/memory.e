@@ -172,7 +172,7 @@ feature -- Removal
 			mem_free ($object)
 		end;
 
-	mem_free (addr: ANY) is
+	mem_free (addr: POINTER) is
 			-- Free memory of object at `addr'.
 			-- (Preferred interface is `free'.)
 		external

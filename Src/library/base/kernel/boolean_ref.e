@@ -125,7 +125,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of boolean
 		do
-			Result := c_outb ($item)
+			Result := c_outb (item)
 		end;
 
 feature {NONE} -- Implementation

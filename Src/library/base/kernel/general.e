@@ -269,7 +269,7 @@ feature -- Basic operations
 
 feature {GENERAL} -- Implementation
 
-	c_standard_clone (other: GENERAL): like other is
+	c_standard_clone (other: POINTER): GENERAL is
 			-- New object of same dynamic type as `other'
 		external
 			"C"
@@ -279,7 +279,7 @@ feature {GENERAL} -- Implementation
 
 feature {NONE} -- Implementation
 
-	frozen c_conforms_to (obj1, obj2: GENERAL): BOOLEAN is
+	frozen c_conforms_to (obj1, obj2: POINTER): BOOLEAN is
 			-- Does dynamic type of object attached to `obj1' conform to
 			-- dynamic type of object attached to `obj2'?
 		external
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			"econfg"
 		end;
 
-	frozen c_same_type (obj1, obj2: GENERAL): BOOLEAN is
+	frozen c_same_type (obj1, obj2: POINTER): BOOLEAN is
 			-- Are dynamic type of object attached to `obj1' and 
 			-- dynamic type of object attached to `obj2' the same?
 		external
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			"estypeg"
 		end;
 
-	c_standard_is_equal (target, source: GENERAL): BOOLEAN is
+	c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
 			"C"
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			"eequal"
 		end;
 
-	c_standard_copy (source, target: GENERAL) is
+	c_standard_copy (source, target: POINTER) is
 			-- C external performing standard copy
 		external
 			"C"
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			"ecopy"
 		end;
 
-	frozen c_deep_clone (other: GENERAL): like other is
+	frozen c_deep_clone (other: POINTER): GENERAL is
 			-- New object structure recursively duplicated from the one
 			-- attached to `other'
 		external
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			"edclone"
 		end;
 
-	frozen c_deep_equal (some: GENERAL; other: like some): BOOLEAN is
+	frozen c_deep_equal (some: POINTER; other: like some): BOOLEAN is
 			-- Are `some' and `other' attached to recursively isomorphic
 			-- object structures?
 		external
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-	frozen c_generator (some: GENERAL): STRING is
+	frozen c_generator (some: POINTER): STRING is
 			-- Name of the generating class of current object
 		external
 			"C"

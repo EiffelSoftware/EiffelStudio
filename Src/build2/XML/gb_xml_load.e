@@ -141,22 +141,22 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			window_object_not_void: window_object /= Void
 			window_not_void: window /= Void
 		do
-			internal_build_window (window, "", window_object)
+			internal_build_window (window, window_selector, window_object)
 		end
 		
-	build_window (window: XM_ELEMENT; directory_name: STRING) is
+	build_window (window: XM_ELEMENT; parent_list: EV_TREE_NODE_LIST) is
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
 		require
 			window_not_void: window /= Void
-			directory_not_void: directory_name /= Void
+--			directory_not_void: directory_name /= Void
 		do
-			internal_build_window (window, directory_name, Void)
+			internal_build_window (window, parent_list, Void)
 		end
 
-	internal_build_window (window: XM_ELEMENT; directory_name: STRING; object: GB_OBJECT) is
+	internal_build_window (window: XM_ELEMENT; parent_list: EV_TREE_NODE_LIST; object: GB_OBJECT) is
 			-- Build a window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
@@ -173,12 +173,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					-- As `object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
 				an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
-				if not directory_name.is_empty then
-					directory_item := Window_selector.directory_object_from_name (directory_name)
-					unparent_tree_node (an_object.window_selector_item)
-					directory_item.extend (an_object.window_selector_item)
-					directory_item.expand
-				end
+				unparent_tree_node (an_object.window_selector_item)
+				parent_list.extend (an_object.window_selector_item)
 			else
 				an_object := object
 			end
@@ -376,17 +372,38 @@ feature {NONE} -- Implementation
 	create_system is
 			-- Create a system from the parsed XML file.
 		local
-			application_element, window_element, current_element, constants_element, constant_item_element: XM_ELEMENT
-			current_name, current_type: STRING
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			application_element: XM_ELEMENT
 		do
 			application_element := pipe_callback.document.root_element
+			build_window_structure (application_element, window_selector)
+				-- Building the project causes the project to be marked as
+				-- modified. We do not want this, as it should only
+				-- be marked as so when the user does something.
+			system_status.disable_project_modified
+				-- Update all names in `window_selector' to ensure that
+				-- they are current after the load.
+			Window_selector.update_displayed_names
+				-- Now expand the layout selector item, so that the window is displayed as
+				-- it was when last edited.
+			Layout_constructor.update_expanded_state_from_root_object		
+			
+			constants.build_deferred_elements
+		end
+		
+	build_window_structure (an_element: XM_ELEMENT; parent_node_list: EV_TREE_NODE_LIST) is
+			--
+		local
+			current_element, constant_item_element: XM_ELEMENT
+			current_name, current_type: STRING
+			window_element: XM_ELEMENT
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+		do
 			from
-				application_element.start
+				an_element.start
 			until
-				application_element.off
+				an_element.off
 			loop
-				current_element ?= application_element.item_for_iteration
+				current_element ?= an_element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
@@ -403,46 +420,33 @@ feature {NONE} -- Implementation
 									if current_name.is_equal (Internal_properties_string)  then
 										create directory_item.make_with_name ("")
 										directory_item.modify_from_xml (window_element)
-										window_selector.add_directory_item (directory_item)
-									else
-										build_window (window_element, directory_item.text)
+										parent_node_list.extend (directory_item)			
 									end
 								end
 								current_element.forth
 							end
+							build_window_structure (current_element, directory_item)
 						elseif current_type.is_equal (Constants_string) then
-							constants_element := current_element
 							from
-								constants_element.start
+								current_element.start
 							until
-								constants_element.off
+								current_element.off
 							loop
-								constant_item_element ?= constants_element.item_for_iteration
+								constant_item_element ?= current_element.item_for_iteration
 								if constant_item_element /= Void then
 									constants.build_constant_from_xml (constant_item_element)	
 								end
-								constants_element.forth
+								current_element.forth
 							end
 						else
-							build_window (current_element, "")							
+							build_window (current_element, parent_node_list)							
 						end
 					end
 				end
-				application_element.forth
+				an_element.forth
 			end
-				-- Building the project causes the project to be marked as
-				-- modified. We do not want this, as it should only
-				-- be marked as so when the user does something.
-			system_status.disable_project_modified
-				-- Update all names in `window_selector' to ensure that
-				-- they are current after the load.
-			Window_selector.update_displayed_names
-				-- Now expand the layout selector item, so that the window is displayed as
-				-- it was when last edited.
-			Layout_constructor.update_expanded_state_from_root_object		
-			
-			constants.build_deferred_elements
 		end
+		
 
 	load_and_parse_xml_file (a_filename:STRING) is
 			-- Load file `a_filename' and parse.

@@ -60,17 +60,18 @@ feature {NEW_CONTEXT_TREE, CONTEXT_TREE, SELECTION_MANAGER}
 			a_group: LINKED_LIST  [CONTEXT]
 		do
 			if context.grouped then
-				a_group := context.group;
+				a_group := context.group
 				from
 					a_group.start
 				until
 					a_group.after
 				loop
-					a_group.item.set_x_y (a_group.item.x+d_x, a_group.item.y+d_y);
-					a_group.forth;
+					a_group.item.set_real_x_y (a_group.item.x + d_x,
+											   a_group.item.y + d_y)
+					a_group.forth
 				end;
 			else
-				context.set_x_y (context.x + d_x, context.y + d_y);
+				context.set_real_x_y (context.x + d_x, context.y + d_y)
 			end;
 		end;
 

@@ -1,10 +1,10 @@
 indexing
 	description: "[
-		Objects that provide formatting information for a range of characters in an EV_RICH_TEXT.
-		Information is a snapshot of the EV_RICH_TEXT at the time it was retrieved and does not
-		remain consistent as the contents of the EV_RICH_TEXT are subsequently changed.
+		Objects that provide information for a range of characters in an EV_RICH_TEXT.
+		Depending on the query applied to `Current', the values of all attributes are used in different
+		fashions, sometimes to indicate which fields of an EV_CHARACTER_FORMAT are valid, or have a paticular
+		property. The applicable features in EV_RICH_TEXT which use `Currrent' provide full descriptions.
 			]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,50 +20,42 @@ inherit
 create
 	make_with_values
 	
-feature {EV_ANY_I} -- Creation
+feature -- Creation
 
-	make_with_values (lower_index, upper_index: INTEGER; family, weight, shape, height, color, striked_out, underlined: BOOLEAN) is
+	make_with_values (family, weight, shape, height, a_color, striked_out, underlined: BOOLEAN) is
 			-- Create `Current' and apply all values to corresponding attributes.
 		do
-			lower := lower_index
-			upper := upper_index
-			font_family_contiguous := family
-			font_weight_contiguous := weight
-			font_shape_contiguous := shape
-			font_height_contiguous := height
-			color_contiguous := color
-			effects_striked_out_contiguous := striked_out
-			effects_underlined_contiguous := underlined
+			font_family := family
+			font_weight := weight
+			font_shape := shape
+			font_height := height
+			color := a_color
+			effects_striked_out := striked_out
+			effects_underlined := underlined
 		end
 
 feature -- Access
-
-	lower: INTEGER
-		-- One based index of caret position signifying range start.
 	
-	upper: INTEGER
-		-- One based index of caret position signifying range end.
+	Font_family: BOOLEAN
+		-- Is family of font applicable?
 	
-	Font_family_contiguous: BOOLEAN
-		-- Is family of font between `lower' and `upper' consistent?
+	Font_weight: BOOLEAN
+		-- Is weight of font applicable?
 	
-	Font_weight_contiguous: BOOLEAN
-		-- Is weight of font between `lower' and `upper' consistent?
+	Font_shape: BOOLEAN
+		-- Is shape of font applicable?
 	
-	Font_shape_contiguous: BOOLEAN
-		-- Is shape of font between `lower' and `upper' consistent?
-	
-	Font_height_contiguous: BOOLEAN
-		-- Is height of font between `lower' and `upper' consistent?
+	Font_height: BOOLEAN
+		-- Is height of font applicable?
 		
-	color_contiguous: BOOLEAN
-		-- Is color applied to font between `lower' and `upper' consistent?
+	color: BOOLEAN
+		-- Is color of font applicable?
 	
-	effects_striked_out_contiguous: BOOLEAN
-		-- Is striked out effect of font between `lower' and `upper' consistent?
+	effects_striked_out: BOOLEAN
+		-- Is striked out effect of font applicable?
 	
-	effects_underlined_contiguous: BOOLEAN
-		-- Is underlined effect of font between `lower' and `upper' consistent?
+	effects_underlined: BOOLEAN
+		-- Is underlined effect of font applicable?
 
 end -- class EV_CHARACTER_FORMAT_INFORMATION
 

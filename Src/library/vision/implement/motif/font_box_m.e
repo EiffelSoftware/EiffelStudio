@@ -226,7 +226,7 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	font_box_current_font (value: POINTER): ANY is
+	font_box_current_font (value: POINTER): POINTER is
 		external
 			"C"
 		end;

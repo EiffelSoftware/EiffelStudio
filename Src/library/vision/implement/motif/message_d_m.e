@@ -12,8 +12,11 @@ class MESSAGE_D_M
 inherit
 
 	MESSAGE_M
+		rename
+			x_lower_window as wx_lower_window,
+			x_raise_window as wx_raise_window
 		undefine
-			make
+			make, lower, raise, action_target
 		redefine
 			set_x, set_y, set_x_y,
 			define_cursor_if_shell,
@@ -58,7 +61,8 @@ feature -- Creation
 			screen_object := create_message_d ($ext_name,
 					a_message_dialog.parent.implementation.screen_object);
 			a_message_dialog.set_dialog_imp (Current);
-			forbid_resize
+			forbid_resize;
+			action_target := screen_object;
 		end;
 
 feature 

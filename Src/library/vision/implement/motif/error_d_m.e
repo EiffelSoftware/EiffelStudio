@@ -57,7 +57,8 @@ feature -- Creation
 			screen_object := create_error_d ($ext_name,
 					an_error_dialog.parent.implementation.screen_object);
 			an_error_dialog.set_dialog_imp (Current);
-			forbid_resize
+			forbid_resize;
+			action_target := screen_object;
 		end;
 
 feature {ALL_CURS_X}

@@ -15,6 +15,8 @@ inherit
 	BULLETIN
 		rename
 			make as bulletin_make
+		undefine
+			raise, lower
 		redefine
 			implementation
 		end;

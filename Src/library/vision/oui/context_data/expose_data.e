@@ -27,12 +27,15 @@ feature
 	clip: CLIP;
 			-- Exposed region
 
-	make (a_widget: WIDGET; a_clip: CLIP) is
+	make (a_widget: WIDGET; a_clip: CLIP; expose_count: INTEGER) is
 			-- Create a context_data for `Expose' event.
 		do
 			widget := a_widget;
-			clip := a_clip
+			clip := a_clip;
+			exposes_to_come := expose_count;
 		end
+
+	exposes_to_come: INTEGER
 
 end
 

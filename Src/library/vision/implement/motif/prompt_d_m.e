@@ -13,12 +13,14 @@ inherit
 
 	PROMPT_M
 		rename
-			xt_parent as p_xt_parent
+			xt_parent as p_xt_parent,
+			x_lower_window as wx_lower_window,
+			x_raise_window as wx_raise_window
 		undefine
-			make
-        redefine
-            define_cursor_if_shell, undefine_cursor_if_shell,
-            set_x, set_y, set_x_y, is_stackable
+			make, lower, raise, action_target
+		redefine
+			define_cursor_if_shell, undefine_cursor_if_shell,
+			set_x, set_y, set_x_y, is_stackable
 		end;
 
 	DIALOG_M
@@ -54,6 +56,7 @@ feature -- Creation
 				a_prompt_dialog.parent.implementation.screen_object);
 			a_prompt_dialog.set_dialog_imp (Current);
 			forbid_resize
+			action_target := screen_object;
 		end;
 
 feature

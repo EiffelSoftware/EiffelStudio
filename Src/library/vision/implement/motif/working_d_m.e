@@ -73,6 +73,7 @@ feature
 			screen_object := create_working_d ($ext_name, a_working_dialog.parent.implementation.screen_object);
 			a_working_dialog.set_dialog_imp (Current);
 			forbid_resize
+			action_target := screen_object;
 		end
 
 feature {NONE} -- External features

@@ -152,6 +152,13 @@ feature
 		deferred
 		end; -- insensitive
 
+	lower is
+		-- lower current to the bottom of its
+		-- peers stacking order
+		deferred
+		end;
+
+
 	managed: BOOLEAN is
 			-- Is there geometry managment on screen widget implementation
 			-- performed by window manager of parent widget?
@@ -165,6 +172,12 @@ feature
 			widget_realized: realized
 		deferred
 		end; -- propagate_event
+
+	raise is
+			--raise current to top of
+			-- peer stacking order
+		deferred
+		end;
 
 	real_x: INTEGER is
 			-- Vertical position relative to root window

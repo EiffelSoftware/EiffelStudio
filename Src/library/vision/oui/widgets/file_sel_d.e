@@ -13,6 +13,8 @@ inherit
 	FILE_SELEC
 		rename 
 			make as file_selec_make
+		undefine
+			raise, lower
 		redefine
 			implementation
 		end;

@@ -14,8 +14,11 @@ inherit
 	MESSAGE
 		rename
 			make as message_make
+		undefine
+			raise, lower
 		redefine
 			implementation
+	
 		end;
 
 	DIALOG

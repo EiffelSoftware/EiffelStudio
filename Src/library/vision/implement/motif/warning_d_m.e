@@ -72,7 +72,8 @@ feature
 			ext_name := a_warning_dialog.identifier.to_c;
 			screen_object := create_warning_d ($ext_name, a_warning_dialog.parent.implementation.screen_object);
 			a_warning_dialog.set_dialog_imp (Current);
-			forbid_resize
+			forbid_resize;
+			action_target := screen_object;
 		end;
 
 feature {NONE} -- External features

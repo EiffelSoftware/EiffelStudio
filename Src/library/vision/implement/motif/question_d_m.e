@@ -55,9 +55,10 @@ feature -- Creation
         do
             ext_name := a_question_dialog.identifier.to_c;
             screen_object := create_question_d ($ext_name,
-a_question_dialog.parent.implementation.screen_object);
+			a_question_dialog.parent.implementation.screen_object);
             a_question_dialog.set_dialog_imp (Current);
             forbid_resize
+			action_target := screen_object;
         end;
 
 feature {ALL_CURS_X}

@@ -478,6 +478,15 @@ feature -- Windowing
 			Managed: managed
 		end;
 
+	lower is
+			-- lower current to the bottom
+			-- of its peer stacking order
+		require
+			is_realized: realized;
+		do
+			implementation.raise;
+		end;
+
 	set_managed (b: BOOLEAN) is
 		do
 			if b then
@@ -500,6 +509,15 @@ feature -- Windowing
 			-- geometry managment?
 		do
 			Result := implementation.managed
+		end;
+
+	raise is
+			-- raise the Current widget to the top
+			-- of its peer stacking order
+		require
+			is_realized: realized;
+		do
+			implementation.raise;
 		end;
 
 	realize is

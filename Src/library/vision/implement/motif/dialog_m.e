@@ -191,6 +191,27 @@ feature
 			is_no_grab
 		end
 
+feature
+
+
+	dialog_command_target is
+		do
+			action_target := xt_parent (screen_object);
+		ensure then
+			target_correct: action_target = xt_parent (screen_object);
+		end;
+
+	widget_command_target is
+		do
+			action_target := screen_object;
+		ensure then
+			target_correct: action_target = screen_object;
+		end;
+
+	action_target: POINTER;
+
+
+
 feature {NONE} -- External features
 
 	set_boolean (value1: POINTER; value2: BOOLEAN; s_name: ANY) is

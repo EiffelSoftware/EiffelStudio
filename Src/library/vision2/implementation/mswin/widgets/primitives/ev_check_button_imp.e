@@ -1,75 +1,26 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision check button.%
-			% Mswindows implementation"
-	author: ""
-	date: "$$"
-	revision: "$$"
+	description: "Eiffel Vision check button. Mswindows implementation."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_CHECK_BUTTON_IMP
 
 inherit
 	EV_CHECK_BUTTON_I
-		select
+		redefine
 			interface
 		end
 		
 	EV_TOGGLE_BUTTON_IMP
-		rename
-			interface as toggle_button_imp_interface
-		undefine
-			default_process_message,
-			default_style,
-			wel_parent
 		redefine
-			make,
-			state,
-			set_state,
-			toggle
+			default_style,
+			interface,
+			make
 		end
 
-	WEL_CHECK_BOX
-		rename
-			make as wel_make,
-			parent as wel_window_parent,
-			set_parent as wel_set_parent,
-			font as wel_font,
-			set_font as wel_set_font,
-			shown as is_displayed,
-			destroy as wel_destroy,
-			width as wel_width,
-			height as wel_height,
-			text as wel_text,
-			item as wel_item,
-			move as move_to,
-			enabled as is_sensitive
-		undefine
-			window_process_message,
-			remove_command,
-			set_width,
-			set_height,
-			on_left_button_down,
-			on_right_button_down,
-			on_left_button_up,
-			on_right_button_up,
-			on_left_button_double_click,
-			on_right_button_double_click,
-			on_mouse_move,
-			on_key_down,
-			on_key_up,
-			on_set_focus,
-			on_kill_focus,
-			on_set_cursor,
-			on_bn_clicked,
-			set_text,
-			show,
-			hide
-		redefine
-			default_style
-		end	
-
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -82,46 +33,6 @@ feature {NONE} -- Initialization
 			extra_width := 20
 		end
 
-feature -- Status report
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--| Also remove the undefinition of wel_parent from EV_TOGGLE_BUTTON_IMP
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
-	
-	state: BOOLEAN is
-			-- Is checked?
-		do
-			Result := checked
-		end 
-
-feature -- Status setting
-
-	set_state (flag: BOOLEAN) is
-			-- Set checked state to `flag'.
-		do
-			if flag then
-				set_checked
-			else
-				set_unchecked
-			end
-		end
-
-	toggle is
-			-- NOT checked state.
-		do
-			set_state (not state)
-		end
-
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
@@ -130,6 +41,8 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_child + Ws_visible + Ws_group
 					+ Ws_tabstop + Bs_autocheckbox
 		end
+
+	interface: EV_CHECK_BUTTON
 
 end -- class EV_CHECK_BUTTON_IMP
 
@@ -154,6 +67,11 @@ end -- class EV_CHECK_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/24 20:38:33  brendel
+--| Revised.
+--| Does not inherit from WEL_CHECK_BOX anymore, but just redefines
+--| `default_style'. See class WEL_CHECK_BOX.
+--|
 --| Revision 1.23  2000/02/23 20:35:01  rogers
 --| improved comments. Added wel parenting compiler fix.
 --|

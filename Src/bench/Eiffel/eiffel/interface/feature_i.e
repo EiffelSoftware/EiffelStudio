@@ -2129,4 +2129,21 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 		end;
 
+feature -- Concurrent Eiffel
+
+	sep_process_pattern: BOOLEAN is
+			-- Process pattern of Current feature
+		do
+			Result := Pattern_table.sep_insert (generation_class_id, pattern);
+			pattern_id := Pattern_table.last_pattern_id;
+debug ("SEP_DEBUG")
+if Result then
+io.putstring ("* Inserted a new pattern whose id is: ")
+io.putstring (" it's pattern_id.id: ")
+io.putint (pattern_id.id);
+io.new_line
+end;
+end;
+		end;
+
 end

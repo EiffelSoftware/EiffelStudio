@@ -54,7 +54,6 @@ feature -- Removal
 	remove (widget: WIDGET_IMP; c: COMMAND; arg: ANY) is
 		local
 			e: WIDGET_ACTIONS
-			act: LINKED_LIST [ACTION_WINDOWS]
 		do
 			e := widget_actions (widget)
 			if e /= Void then

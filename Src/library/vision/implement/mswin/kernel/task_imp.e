@@ -82,7 +82,6 @@ feature -- Basic operations
 	execute is
 			-- Execute the command.
 		local
-			context_data_void: CONTEXT_DATA
 			c: CURSOR
 		do
 			if not actions.empty then

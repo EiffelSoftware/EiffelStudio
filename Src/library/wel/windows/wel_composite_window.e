@@ -836,7 +836,6 @@ feature {NONE} -- Implementation
 			control: WEL_COLOR_CONTROL
 			hwnd_control: POINTER
 			paint_dc: WEL_PAINT_DC
-			brush: WEL_BRUSH
 		do
 			hwnd_control := cwin_get_wm_command_hwnd (wparam, lparam)
 			if hwnd_control /= default_pointer then

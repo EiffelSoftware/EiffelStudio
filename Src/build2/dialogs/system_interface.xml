@@ -40,6 +40,13 @@
 		<Value >Constants</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
+		<Name >icon_component_viewer_color_png</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_viewer_color.png</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >icon_component_viewer_color.png</Filename>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
 		<Name >lightbulb_png</Name>
 		<Value >D:\Eiffel54\build\bitmaps\png\lightbulb.png</Value>
 		<is_absolute >False</is_absolute>
@@ -50,6 +57,13 @@
 		<Name >tip_of_day_dialog_title</Name>
 		<Value >Tip of the Day</Value>
 		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_component_build_view_color_png</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_build_view_color.png</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >icon_component_build_view_color.png</Filename>
+		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >negative</Name>
 		<Value >-100</Value>
@@ -57,6 +71,10 @@
 	<Constant ><type >STRING</type>
 		<Name >system_window_title</Name>
 		<Value >Project Configuration</Value>
+		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >small_padding</Name>
+		<Value >4</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >close_text</Name>
@@ -66,13 +84,16 @@
 		<Name >ok_button_text</Name>
 		<Value >OK</Value>
 		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >large_spacing_width</Name>
-		<Value >12</Value>
-		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >next_tip_text</Name>
 		<Value >Next tip</Value>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_component_display_view_color_png</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_display_view_color.png</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >png_location</Directory>
+		<Filename >icon_component_display_view_color.png</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >cancel_button_text</Name>
@@ -83,11 +104,11 @@
 		<Value >Pixmap Selection</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >small_padding</Name>
-		<Value >4</Value>
+		<Name >large_padding</Name>
+		<Value >12</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >large_padding</Name>
+		<Name >large_spacing_width</Name>
 		<Value >12</Value>
 		</Constant>
 	</item>
@@ -2930,6 +2951,137 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 					<Events ><Event >select_actions EV_BUTTON_ACTION_SEQUENCES close_button_selected</Event>
 						</Events>
 					</item>
+				</item>
+			</item>
+		</item>
+	</item>
+<item type="Directory"><Internal_properties ><name >component_viewer</name>
+		</Internal_properties>
+	<item type="EV_DIALOG"><Internal_properties ><id >219</id>
+			<name >gb_component_viewer</name>
+			<Expanded >1</Expanded>
+			</Internal_properties>
+		<EV_COLORIZABLE />
+		<EV_SENSITIVE />
+		<EV_WIDGET ><Minimum_width >300</Minimum_width>
+			<Minimum_height >400</Minimum_height>
+			</EV_WIDGET>
+		<EV_WINDOW ><Title ><![CDATA[Display window]]></Title>
+			</EV_WINDOW>
+		<EV_PIXMAPABLE />
+		<EV_CONTAINER />
+		<item type="EV_VERTICAL_BOX"><Internal_properties ><id >220</id>
+				<Expanded >1</Expanded>
+				</Internal_properties>
+			<EV_COLORIZABLE />
+			<EV_SENSITIVE />
+			<EV_WIDGET />
+			<EV_BOX ><Padding >2</Padding>
+				<Is_item_expanded >001</Is_item_expanded>
+				</EV_BOX>
+			<EV_PIXMAPABLE />
+			<EV_CONTAINER />
+			<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >221</id>
+					<Expanded >1</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_WIDGET />
+				<EV_BOX ><Is_item_expanded >01</Is_item_expanded>
+					</EV_BOX>
+				<EV_PIXMAPABLE />
+				<EV_CONTAINER />
+				<item type="EV_TOOL_BAR"><Internal_properties ><id >222</id>
+						<Expanded >1</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET />
+					<item type="EV_TOOL_BAR_BUTTON"><Internal_properties ><id >223</id>
+							<name >component_button</name>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_SENSITIVE />
+						<EV_TEXTABLE />
+						<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Target component into tool]]></Tooltip>
+							</EV_TOOLTIPABLE>
+						<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_component_viewer_color_png</Constant>
+								</Pixmap_path>
+							</EV_PIXMAPABLE>
+						<Events ><Event >select_actions EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES show_usage_dialog</Event>
+							</Events>
+						</item>
+					<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties ><id >224</id>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_PIXMAPABLE />
+						</item>
+					<item type="EV_TOOL_BAR_RADIO_BUTTON"><Internal_properties ><id >225</id>
+							<name >display_button</name>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_SENSITIVE />
+						<EV_TEXTABLE />
+						<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Display view]]></Tooltip>
+							</EV_TOOLTIPABLE>
+						<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_component_display_view_color_png</Constant>
+								</Pixmap_path>
+							</EV_PIXMAPABLE>
+						<Events ><Event >select_actions EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES set_display_view</Event>
+							</Events>
+						</item>
+					<item type="EV_TOOL_BAR_RADIO_BUTTON"><Internal_properties ><id >226</id>
+							<name >builder_button</name>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_SENSITIVE />
+						<EV_TEXTABLE />
+						<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Builder view]]></Tooltip>
+							</EV_TOOLTIPABLE>
+						<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_component_build_view_color_png</Constant>
+								</Pixmap_path>
+							</EV_PIXMAPABLE>
+						<Events ><Event >select_actions EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES set_build_view</Event>
+							</Events>
+						</item>
+					<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties ><id >227</id>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_PIXMAPABLE />
+						</item>
+					</item>
+				<item type="EV_LABEL"><Internal_properties ><id >228</id>
+						<name >type_display</name>
+						<Expanded >0</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_FONTABLE />
+					<EV_SENSITIVE />
+					<EV_TEXTABLE />
+					<EV_TOOLTIPABLE />
+					<EV_WIDGET />
+					<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
+						</EV_TEXT_ALIGNABLE>
+					</item>
+				</item>
+			<item type="EV_HORIZONTAL_SEPARATOR"><Internal_properties ><id >229</id>
+					<Expanded >0</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_TOOLTIPABLE />
+				<EV_WIDGET />
+				</item>
+			<item type="EV_CELL"><Internal_properties ><id >230</id>
+					<name >component_holder</name>
+					<Expanded >0</Expanded>
+					</Internal_properties>
+				<EV_COLORIZABLE />
+				<EV_SENSITIVE />
+				<EV_WIDGET />
+				<EV_PIXMAPABLE />
+				<EV_CONTAINER />
 				</item>
 			</item>
 		</item>

@@ -152,7 +152,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.index")
+			Result := parent_grid_i.grid_rows.index_of (Current, 1)
 		ensure
 			index_positive: Result > 0
 			index_less_than_row_count: Result <= parent.row_count
@@ -210,7 +210,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.set_item")
+			parent_grid_i.set_item (i, index, a_item)
 		ensure
 			item_set: item (i) = a_item
 		end

@@ -380,6 +380,32 @@ feature -- Redirection to feature of ANY class
 		return ANY.twin (Current);
 	}
 /*
+feature -- Object creation
+*/
+
+	public static object create_type (RT_CLASS_TYPE a_type)
+		// Create new instance of `a_type'.
+	{
+		RT_GENERIC_TYPE computed_type;
+		object Result;
+
+			// Create new object of type `a_type'.
+			// Note: We use the `Activator' class because it is much faster than
+			// creating an instance by getting the associated `ConstructorInfo'.
+		Result = Activator.CreateInstance (Type.GetTypeFromHandle (a_type.type));
+
+			// Properly initializes `Result'.
+		computed_type = a_type as RT_GENERIC_TYPE;
+		if (computed_type != null) {
+			#if ASSERTIONS
+				ASSERTIONS.CHECK ("Is Eiffel type", Result is EIFFEL_TYPE_INFO);
+			#endif
+			((EIFFEL_TYPE_INFO) Result).____set_type (computed_type);
+		}
+		return Result;
+	}
+
+/*
 feature -- Status report
 */
 	public static int generic_parameter_count (object o)
@@ -393,6 +419,60 @@ feature -- Status report
 		return Result;
 	}
 
+	public static Type interface_type (Type a_type)
+		// Given a type `a_type' retrieves its associated interface type if any (i.e. only
+		// it is an Eiffel type).
+		// Used for conformance because the .NET routine `GetType()' will always return
+		// the implementation type and it cannot be used for conformance because two implementation
+		// classes do not conform even if their interfaces do.
+	{
+		object [] l_attributes;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE ("a_type not null", a_type != null);
+		#endif
+
+		l_attributes = a_type.GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false);
+		if (l_attributes != null && l_attributes.Length > 0) {
+			return ((INTERFACE_TYPE_ATTRIBUTE) l_attributes [0]).class_type;
+		} else {
+			return a_type;
+		}
+	}
+
+	public static RT_GENERIC_TYPE generic_type (object an_obj)
+		// Given an Eiffel object `an_obj' retrieves its associated type if any.
+	{
+		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
+		
+		if (l_object != null) {
+			return l_object.____type ();
+		} else {
+			return null;
+		}
+	}
+
+	public static RT_CLASS_TYPE type_of_generic (object an_obj, int pos)
+		// Given an Eiffel object `an_obj', find the associated type of generic parameter
+		// at position `pos'.
+	{
+		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
+
+		if (l_object != null) {
+			#if ASSERTIONS
+				ASSERTIONS.REQUIRE ("Has  generic info", l_object.____type() != null);
+				ASSERTIONS.REQUIRE ("Valid position `pos'",
+					(pos > 0) && (pos <= l_object.____type().count));
+				ASSERTIONS.REQUIRE ("valid element type", l_object.____type().generics [pos - 1] is RT_CLASS_TYPE);
+			#endif
+
+			return (RT_CLASS_TYPE) (l_object.____type ().generics [pos - 1]);
+		} else {
+			return null;
+		}
+	}
+
+//FIXME: to remove when consumer is bootstrapped.
 	public static Type type_of_generic_parameter (object an_obj, int pos)
 		// Given an Eiffel object `an_obj', find the associated type of generic parameter
 		// at position `pos'.

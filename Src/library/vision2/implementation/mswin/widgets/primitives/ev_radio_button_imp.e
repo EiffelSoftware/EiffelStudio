@@ -23,7 +23,6 @@ inherit
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
-			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
 			window_process_message,

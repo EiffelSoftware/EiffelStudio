@@ -37,6 +37,10 @@ feature
 	lace_class: CLASS_I;
 			-- Lace class
 
+	obsolete_message: STRING;
+			-- Obsolete message 
+			-- (Void if Current is not obsolete)
+
 	parents: FIXED_LIST [CL_TYPE_A];
 			-- Parent classes
 
@@ -139,6 +143,12 @@ feature
 
 	skeleton: GENERIC_SKELETON;
 			-- Attributes skeleton
+
+	is_obsolete: BOOLEAN is
+			-- Is the class obsolete ?
+		do
+			Result := obsolete_message /= Void
+		end;
 
 	changed: BOOLEAN is
 			-- Is the class syntactically changed ?
@@ -1033,6 +1043,14 @@ feature -- Class initialization
 			ve04: VE04;
 			old_is_expanded: BOOLEAN;
 		do
+				-- Check if obsolete clause was present.
+				-- (Void if none was present)
+			if ast.obsolete_message /= Void then
+				obsolete_message := ast.obsolete_message.value;
+			else
+				obsolete_message := Void
+			end;
+
 			old_parents := parents;
 
 			if old_parents /= Void then

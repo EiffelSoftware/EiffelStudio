@@ -125,7 +125,6 @@ feature -- Access
 			end
 		end
 		
-		
 feature -- Basic operation
 
 	add_object (container, new_object: GB_OBJECT; position: INTEGER) is
@@ -354,11 +353,14 @@ feature -- Basic operation
 			window_object.set_as_root_window
 		end
 		
-	add_root_window: GB_TITLED_WINDOW_OBJECT is
-			-- Add a new root window and return the newly created object.
+	add_root_window (a_type: STRING): GB_TITLED_WINDOW_OBJECT is
+			-- Add a new root item and return the newly created object.
+			-- The only root item types that are currently supported
+			-- are GB_TITLED_WINDOW_OBJECT and GB_DIALOG which is a descendent
+			-- therefore, the result is always a window object.
 			--| FIXME, this is a function with a side effect.
 		do
-			Result ?= build_object_from_string_and_assign_id ("EV_TITLED_WINDOW")
+			Result ?= build_object_from_string_and_assign_id (a_type)
 			add_new_window (Result)
 			window_selector.set_item_for_prebuilt_window (Result)
 		ensure
@@ -427,6 +429,7 @@ feature -- Basic operation
 			combo_box_object: GB_COMBO_BOX_OBJECT
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			dialog_object: GB_DIALOG_OBJECT
 			menu_object: GB_MENU_OBJECT
 			menu_item_object: GB_MENU_ITEM_OBJECT
 			tree_item_object: GB_TREE_ITEM_OBJECT
@@ -437,7 +440,10 @@ feature -- Basic operation
 			text := a_text
 			current_type := dynamic_type_from_string (text)		
 			if type_conforms_to (current_type, dynamic_type_from_string (Ev_cell_string)) then
-				if type_conforms_to (current_type, dynamic_type_from_string (Ev_titled_window_string)) then
+				if type_conforms_to (current_type, dynamic_type_from_string (Ev_dialog_string)) then
+					create dialog_object.make_with_type (text)
+					Result ?= dialog_object
+				elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_titled_window_string)) then
 					create titled_window_object.make_with_type (text)
 					Result ?= titled_window_object
 				else

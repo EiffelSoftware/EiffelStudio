@@ -154,6 +154,7 @@ feature
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
+			Result.extend (create {EV_TREE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
@@ -334,6 +335,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/02 18:37:34  oconnor
+--| added tree
+--|
 --| Revision 1.9  2000/03/01 03:06:13  oconnor
 --| revised tests
 --|

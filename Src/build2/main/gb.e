@@ -10,23 +10,34 @@ class
 inherit
 
 	EV_APPLICATION
+		export
+			{NONE} all
 		redefine
 			initialize
 		end
 		
 	GB_SHARED_XML_HANDLER
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
@@ -34,6 +45,8 @@ inherit
 	EXECUTION_ENVIRONMENT
 		rename
 			launch as environment_launch
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end

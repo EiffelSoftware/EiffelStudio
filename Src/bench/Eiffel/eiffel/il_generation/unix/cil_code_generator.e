@@ -615,6 +615,14 @@ feature -- IL Generation
 		do
 		end
 
+	generate_external_il (feat: FEATURE_I) is
+			-- Generate call to external feature `feat'. Its token is `last_non_recorded_feature_token'.
+		require
+			feature_not_void: feat /= Void
+			feature_is_c_external: feat.is_c_external
+		do
+		end
+
 	generate_feature_il (feat: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
 			-- Specifies for which feature `feat' of `feat.feature_id' written in class of
 			-- `a_type_id' IL code will be generated. If `a_type_id' is different from current

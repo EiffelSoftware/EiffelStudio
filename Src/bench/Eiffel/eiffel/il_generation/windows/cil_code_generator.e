@@ -431,7 +431,7 @@ feature -- Generation Structure
 			create c_module_name.make ("lib" + assembly_name + ".dll")
 
 			entry_point_token := 0
-			last_override_token := 0
+			last_non_recorded_feature_token := 0
 			create override_counter
 
 			remap_external_token
@@ -1402,7 +1402,7 @@ feature -- Features info
 							end
 						end
 					else
-						last_override_token := l_meth_token
+						last_non_recorded_feature_token := l_meth_token
 					end
 				end
 			end
@@ -1434,16 +1434,16 @@ feature -- Features info
 			insert_signature (l_signature, a_type_id, a_feat.feature_id)
 		end
 	
-	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override: BOOLEAN) is
+	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override_or_c_external: BOOLEAN) is
 			-- Generate interface `feat' description.
 		require
 			feat_not_void: feat /= Void
 		do
-			implementation_generate_feature (feat, in_interface, is_static, is_override, False)
+			implementation_generate_feature (feat, in_interface, is_static, is_override_or_c_external, False)
 		end
 
 	implementation_generate_feature (
-			feat: FEATURE_I; in_interface, is_static, is_override, is_empty: BOOLEAN)
+			feat: FEATURE_I; in_interface, is_static, is_override_or_c_external, is_empty: BOOLEAN)
 		is
 			-- Generate interface `feat' description.
 		require
@@ -1571,7 +1571,7 @@ feature -- Features info
 							if feat.is_origin then
 								l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.New_slot
 							end
-							if feat.is_deferred and not is_empty and not is_override then
+							if feat.is_deferred and not is_empty and not is_override_or_c_external then
 								l_meth_attr := l_meth_attr |
 									feature {MD_METHOD_ATTRIBUTES}.Abstract
 							end
@@ -1597,7 +1597,7 @@ feature -- Features info
 							not_cls_compliant_ca)
 					end
 
-					if not is_static and l_is_attribute and not is_override then
+					if not is_static and l_is_attribute and not is_override_or_c_external then
 							-- Let's define attribute setter.
 						if in_interface then
 							l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
@@ -1654,7 +1654,7 @@ feature -- Features info
 						end
 					end
 
-					if not is_override then
+					if not is_override_or_c_external then
 						if is_single_class then
 							insert_implementation_feature (l_meth_token, current_type_id,
 								feat.feature_id)
@@ -1674,10 +1674,10 @@ feature -- Features info
 							end
 						end
 					else
-						last_override_token := l_meth_token
+						last_non_recorded_feature_token := l_meth_token
 					end
 				end
-				if not is_override and (not is_static or else l_is_attribute) then
+				if not is_override_or_c_external and (not is_static or else l_is_attribute) then
 					create l_ca_factory
 					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
 				end
@@ -2163,6 +2163,43 @@ feature -- IL Generation
 			end
 		end
 
+	generate_external_il (feat: FEATURE_I) is
+			-- Generate call to external feature `feat'. Its token is `last_non_recorded_feature_token'.
+		require
+			feature_not_void: feat /= Void
+			feature_is_c_external: feat.is_c_external
+		local
+			l_token: INTEGER
+			l_meth_token: INTEGER
+			i, nb: INTEGER
+		do
+			l_meth_token := feature_token (current_type_id, feat.feature_id)
+
+			l_token := last_non_recorded_feature_token
+
+			if is_debug_info_enabled then
+					-- Enable debugger to go through stub definition.
+				define_custom_attribute (l_meth_token, debugger_step_through_ctor_token,
+					debugger_step_through_ca)
+				define_custom_attribute (l_meth_token, debugger_hidden_ctor_token,
+					debugger_hidden_ca)
+			end
+
+			start_new_body (l_meth_token)
+			from
+				i := 1
+				nb := feat.argument_count
+			until
+				i > nb
+			loop
+				generate_argument (i)
+				i := i + 1
+			end
+			method_body.put_call (feature {MD_OPCODES}.Call, l_token, nb, feat.has_return_value)
+			generate_return
+			method_writer.write_current_body
+		end
+
 	generate_feature_code (feat: FEATURE_I) is
 			-- Generate IL code for feature `feat'.
 		require
@@ -2249,7 +2286,7 @@ feature -- IL Generation
 	last_external_signature: ARRAY [INTEGER]
 			-- Signature of last external processed through `external_token'.
 
-	last_override_token: INTEGER
+	last_non_recorded_feature_token: INTEGER
 			-- Token of last defined override feature.
 
 	override_counter: COUNTER
@@ -2303,7 +2340,7 @@ feature -- IL Generation
 				l_return_type := argument_actual_type (inh_feat.type.actual_type.type_i)
 				Byte_context.set_class_type (current_class_type)
 
-				start_new_body (last_override_token)
+				start_new_body (last_non_recorded_feature_token)
 				generate_current
 				from
 					i := 1
@@ -2330,7 +2367,7 @@ feature -- IL Generation
 				generate_return
 				method_writer.write_current_body
 
-				md_emit.define_method_impl (current_class_token, last_override_token,
+				md_emit.define_method_impl (current_class_token, last_non_recorded_feature_token,
 					feature_token (l_parent_type_id, inh_feat.feature_id))
 
 				if cur_feat.is_attribute and then inh_feat.is_attribute then

@@ -35,7 +35,7 @@ feature -- Processing
 			nb := count
 			Degree_output.put_start_degree (Degree_number, nb)
 			classes := System.classes.sorted_classes
-			if System.freeze then
+			if System.freeze or System.il_generation then
 				from i := 1 until nb = 0 loop
 					a_class := classes.item (i)
 					if a_class /= Void and then a_class.degree_2_needed then

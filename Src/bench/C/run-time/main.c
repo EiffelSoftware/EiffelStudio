@@ -54,10 +54,6 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #include "rt_boehm.h"
 #endif
 
-#ifdef EIF_ASSERTIONS
-#include <stdarg.h>
-#endif
-
 #ifdef WORKBENCH
 extern void dbreak_create_table(void); /* defined in debug.c */
 #else
@@ -343,21 +339,6 @@ rt_public char *starting_working_directory;
 
 #ifndef WORKBENCH
 rt_private void display_reminder (void);	/* display reminder of license */
-#endif
-
-#ifdef EIF_ASSERTIONS
-rt_shared int ise_printf (char *StrFmt, ...)
-	/* To put a breakpoint when an assertion violation occurs. */
-{
-	va_list ap;
-	int r;
-
-	va_start (ap, StrFmt);
-	r = vprintf (StrFmt, ap);
-	va_end (ap);
-
-	return r;
-}
 #endif
 
 rt_public void once_init (void)

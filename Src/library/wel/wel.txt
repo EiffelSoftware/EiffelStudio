@@ -31,10 +31,14 @@ components will show up quickly.
 What's new?
 -----------
 
-o New `Win32' cluster
-  WEL provides a new Win32-specific cluster which includes classes that work
-  only under Windows 95/NT. This cluster needs a recent common controls header
-  file (commctrl.h) provided with Microsoft Visual C++ 4.1 and Borland C++ 4.52.
+o WEL is not compatible with Windows 3.x any more. Only Windows 95 and
+  Windows NT are now supported. That's why the `Win32' cluster has been removed.
+  The Windows 95/NT controls are now merged in the `Controls' cluster.
+
+o New Windows 95/NT classes
+  WEL provides new Windows 95/NT-specific classes. To use them, you need a
+  recent common controls header file (commctrl.h) provided with Microsoft
+  Visual C++ 4.1 and Borland C++ 4.52.
   See example `Comctrls'.
 
 o New command model
@@ -62,8 +66,7 @@ What WEL does not include yet?
 
 o Some Windows 95 common controls: Animation Controls,
   Drag List Boxes, Header Controls, Hot-Key Controls, Image Lists,
-  List View Controls, Property Sheets, Tab Controls, Tree View Controls,
-  Up-Down Controls.
+  List View Controls, Property Sheets, Tab Controls.
 
 o Find and replace common dialog box.
 
@@ -134,7 +137,7 @@ o MDI: A basic Muliple Document Interface application.
 
 o Controls: This example demontrates several Windows controls.
 
-o Fun: Some funny stuff using the GDI classes of WEL. (*)
+o Fun: Some funny stuff using the GDI classes of WEL.
 
 o Pizza: Order your pizza with WEL.
 
@@ -146,7 +149,7 @@ o Windows: Shows the different kind of windows.
 
 o Printer: A simple example to print a page.
 
-o Xcell: A pretty nice card game. (*)
+o Xcell: A pretty nice card game.
 
 o Stddlgs: Shows all the standard dialog boxes available.
 
@@ -161,12 +164,6 @@ o Magnify: Tool to magnify a part of your screen.
 o Richedit: A small word processor based on the rich edit control.
 
 o Commands: Demonstrates the new command model of WEL.
-
-All the examples (except those marked by `(*)') are compatible with Windows 95,
-Windows NT and Windows 3.1 with Win32s 1.30 and above.
-The examples marked by `(*)' do not work under Win32s since Win32s has DC
-limitations.
-
 
 Enjoy!
 

@@ -25,6 +25,10 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_OBJECT_EDITORS
+	
+	GB_WIDGET_UTILITIES
 
 create
 	make
@@ -65,12 +69,23 @@ feature -- Execution
 			else
 				system_status.disable_tools_always_on_top
 			end
+				-- Firstly update all items in `All_floating_tools'.
 			from
 				counter := 1
 			until
 				counter > All_floating_tools.count
 			loop
 				update_tool (All_floating_tools @ counter)
+				counter := counter + 1
+			end
+				-- Now update all floating object editors as
+				-- they are not included in `All_floating_tools'.
+			from
+				counter := 1
+			until
+				counter > floating_object_editors.count
+			loop
+				update_tool (parent_dialog (floating_object_editors @ counter))
 				counter := counter + 1
 			end
 		end		

@@ -12,6 +12,7 @@ feature
 	analyze is
 			-- Mark we need the dynamic type of current
 		do
+			context.mark_current_used;
 			context.add_dt_current;
 		end;
 

@@ -48,6 +48,7 @@ feature
 			-- Analyze operator
 		do
 			context.add_dt_current;
+			context.mark_current_used;
 		end;
 
 	print_register is

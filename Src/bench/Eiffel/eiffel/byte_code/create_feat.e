@@ -53,9 +53,11 @@ feature
 			if context.final_mode then
 				entry := Eiffel_table.item_id (rout_id);
 				if not entry.has_one_type then
+					context.mark_current_used;
 					context.add_dt_current;
 				end;
 			else
+				context.mark_current_used;
 				context.add_dt_current;
 			end;
 		end;

@@ -122,7 +122,7 @@ feature {GB_XML_STORE} -- Output
 		
 feature {GB_CODE_GENERATOR} -- Output
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -142,20 +142,20 @@ feature {GB_CODE_GENERATOR} -- Output
 				end
 				lower := element_info2.data
 				upper := element_info.data
-				Result := a_name + ".value_range.adapt(create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
+				Result := info.name + ".value_range.adapt(create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))"
 			end
 			
 			element_info := full_information @ (Value_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_value (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_value (" + element_info.data + ")"
 			end
 			element_info := full_information @ (Step_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_step (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_step (" + element_info.data + ")"
 			end
 			element_info := full_information @ (Leap_string)
 			if element_info /= Void then
-				Result := Result + indent + a_name + ".set_leap (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_leap (" + element_info.data + ")"
 			end
 			Result := strip_leading_indent (Result)
 		end
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 	valid_value (a_value: INTEGER): BOOLEAN is
 			-- is `a_value' a valid value for items in `objects'?
 		do
-			Result := (a_value > 0 and first.value_range.has (a_value))
+			Result := (a_value >= 0 and first.value_range.has (a_value))
 		end
 		
 		

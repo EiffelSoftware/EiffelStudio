@@ -115,37 +115,6 @@ feature -- Access
 --			align_labels_left (Result)
 		end
 		
---	retrieve_pebble (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM; child_index: INTEGER): ANY is
---			-- Retrieve pebble for transport.
---			-- A convenient was of setting up the drop
---			-- actions for GB_OBJECT.
---		local
---			environment: EV_ENVIRONMENT
---			object: GB_OBJECT
---			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
---			shared_tools: GB_SHARED_TOOLS
---		do
---			layout_item ?= a_layout_item.i_th (child_index)
---			check
---				layout_item_not_void: layout_item /= Void
---			end
---			object := layout_item.object
---			
---			--| FIXME This is currently identical to version in 
---			--| GB_OBJECT
---			create environment
---				-- If the ctrl key is pressed, then we must
---				-- start a new object editor for `Current', instead
---				-- of beginning the pick and drop.
---			if environment.application.ctrl_pressed then
---				new_object_editor (object)
---			else
---				create shared_tools
---				shared_tools.type_selector.update_drop_actions_for_all_children (object)
---				Result := object
---			end
---		end
-		
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -380,80 +349,146 @@ feature {NONE} -- Implementation
 		local
 			horizontal_box, hb: EV_HORIZONTAL_BOX
 			vertical_box, vb: EV_VERTICAL_BOX
-			scrollable_area: EV_SCROLLABLE_AREA
 			ok_button: EV_BUTTON
 			list_item: EV_LIST_ITEM
 			frame: EV_FRAME
 		do
 			create Result
-			Result.set_minimum_size (400, 300)
 			create vertical_box
 			Result.extend (vertical_box)
 			create horizontal_box
 			vertical_box.extend (horizontal_box)
 			create drawing_area
-			drawing_area.set_minimum_size (1000, 1000)
+			
 			drawing_area.pointer_motion_actions.force_extend (agent track_movement (?, ?))
 			drawing_area.pointer_button_press_actions.force_extend (agent button_pressed (?, ?, ?))
 			drawing_area.pointer_button_release_actions.force_extend (agent button_released (?, ?, ?))
-			
 			create list
 			
 			create world
 			create pixmap
 			drawing_area.resize_actions.force_extend (agent update_pixmap_size)
+			drawing_area.resize_actions.force_extend (agent draw_widgets)
 			pixmap.set_size (250, 250)
-			create projector.make_with_buffer (world, pixmap, drawing_area)--make (world, drawing_area)--_with_buffer (world, pixmap, drawing_area)
-			draw_widgets
+			create projector.make_with_buffer (world, pixmap, drawing_area)
 			
 			create scrollable_area
+			scrollable_area.set_minimum_size (200, 200)
 			create ok_button.make_with_text ("OK")
 			ok_button.select_actions.extend (agent Result.destroy)
 			vertical_box.extend (ok_button)
 			vertical_box.disable_item_expand (ok_button)
 			horizontal_box.extend (scrollable_area)
 			scrollable_area.extend (drawing_area)
+			scrollable_area.resize_actions.force_extend (agent set_initial_area_size)
+			
 			create vertical_box
 			horizontal_box.extend (vertical_box)
 			horizontal_box.disable_item_expand (vertical_box)
-			create snap_button.make_with_text ("Snap to grid")
-			create hb
+				-- We do not build a new control if it already exists.
+			if snap_button = Void then
+				create snap_button.make_with_text ("Snap to grid")
+				snap_button.select_actions.extend (agent snap_button_selected)
+			else
+				snap_button.parent.prune_all (snap_button)
+			end
+			create grid_control_holder
+			grid_control_holder.disable_sensitive
 			vertical_box.extend (list)
 			vertical_box.extend (snap_button)
-			vertical_box.extend (hb)
-			vertical_box.disable_item_expand (hb)
+			vertical_box.extend (grid_control_holder)
+			vertical_box.disable_item_expand (grid_control_holder)
 			vertical_box.disable_item_expand (snap_button)
-			create grid_visible_control.make_with_text ("Visible")
-			grid_visible_control.enable_select
-			hb.extend (grid_visible_control)
-			create grid_size_control
-			hb.extend (grid_size_control)
+			if grid_visible_control = Void then
+				create grid_visible_control.make_with_text ("Visible")
+				grid_visible_control.enable_select
+				grid_visible_control.select_actions.force_extend (agent draw_widgets)
+			else
+				grid_visible_control.parent.prune_all (grid_visible_control)
+			end
+			grid_control_holder.extend (grid_visible_control)
+				-- We do not build a new control if it already exists.
+				-- This allows us to keep the previous value.
+			if (grid_size_control = Void) then
+				create grid_size_control.make_with_value_range (create {INTEGER_INTERVAL}.make (5, 500))
+				grid_size_control.change_actions.force_extend (agent draw_widgets)
+				grid_size_control.set_value (25)
+			else
+				grid_size_control.parent.prune_all (grid_size_control)
+			end
+			grid_control_holder.extend (grid_size_control)
 			from
 				first.start
 			until
 				first.off
 			loop
 				create list_item.make_with_text (class_name (first.item))
-				list_item.select_actions.extend (agent draw_widgets)--draw_items)
+				list_item.select_actions.extend (agent draw_widgets)
 				list_item.set_data (first.item)
 				list.extend (list_item)
 				first.forth
 			end
+			set_initial_area_size
+			snap_button_selected
 		end
+		
+	set_initial_area_size is
+			-- Set initial size of `drawing_area' relative to `scrollable_area'
+		local
+			biggest_x, biggest_y: INTEGER
+			widget: EV_WIDGET
+		do
+			from
+				first.start
+			until
+				first.off
+			loop
+				widget := first.item
+				if widget.x_position + widget.width > biggest_x then
+					biggest_x := widget.x_position + widget.width
+				end
+				if widget.y_position + widget.height > biggest_y then
+					biggest_y := widget.y_position + widget.height
+				end
+				first.forth
+			end
+			if biggest_x + scrolling_distance > scrollable_area.width then
+				drawing_area.set_minimum_width (biggest_x + scrolling_distance)
+			else
+				drawing_area.set_minimum_width (scrollable_area.width)
+			end
+			if biggest_y + scrolling_distance > scrollable_area.height then
+				drawing_area.set_minimum_height (biggest_y + scrolling_distance)
+			else
+				drawing_area.set_minimum_height (scrollable_area.height)
+			end
+		end
+		
 		
 	update_pixmap_size (x, y, width, height: INTEGER) is
-			--
+			-- Resize `pixmap' to `width', `height'.
 		do
-			pixmap.set_size (width, height)
+				-- A pixmap is 1x1 as default, 
+				-- and you can not set the size to 0x0.
+				-- Why is this?
+			if width >= 1 and height >=1 then
+				pixmap.set_size (width, height)	
+			end
 		end
 		
-		
 	draw_widgets is
-			--
+			-- Draw representation of all widgets and grid if shown.
 		local
 			listi: EV_LIST_ITEM
+			relative_pointa, relative_pointb: EV_RELATIVE_POINT
+			figure_rectangle: EV_FIGURE_RECTANGLE
 		do
+				-- Remove all previous figures from `world'.
 			world.wipe_out
+				-- We must  draw the grid if necessary.
+			if snap_button.is_selected and grid_visible_control.is_selected then
+				draw_grid	
+			end	
 			from
 				first.start
 			until
@@ -481,59 +516,113 @@ feature {NONE} -- Implementation
 						figure_rectangle.remove_background_color
 						figure_rectangle.set_foreground_color (red)
 						world.extend (figure_rectangle)
-						--drawing_area.set_foreground_color (red)
-						--drawing_area.draw_rectangle (first.item.x_position, first.item.y_position,
-						--first.item.width, first.item.height)				
 					end
-
+					
 			projector.project
 		end
+		
+	draw_grid is
+			-- Draw snap to grid in `world'.
+		local
+			counter, counter2: INTEGER
+			figure_line: EV_FIGURE_LINE
+			figure_dot: EV_FIGURE_DOT
+			color: EV_COLOR
+			relative_point: EV_RELATIVE_POINT
+		do
+			-- Create a light green for the grid color.
+			create color.make_with_8_bit_rgb (196, 244, 204)
+		from
+			counter := 0
+		until
+			counter > drawing_area.width
+		loop
+			create figure_line.make_with_positions (counter, 0, counter, drawing_area.height)
+			figure_line.set_foreground_color (color)
+			create relative_point.make_with_position (drawing_area.width, counter)
+			world.extend (figure_line)
+			counter := counter + grid_size	
+		end
+		from
+			counter := 0
+		until
+			counter > drawing_area.height
+		loop
+			create figure_line.make_with_positions (0, counter, drawing_area.width, counter)
+			figure_line.set_foreground_color (color)
+			figure_line.set_foreground_color (color)
+			world.extend (figure_line)
+			counter := counter + grid_size
+		end
+		end
+		
+	set_x_position (widget: EV_WIDGET; x_pos: INTEGER) is
+			-- Set x_position of `widget' in `first' to `x_pos'.
+		do
+			--| FIXME
+			first.set_item_x_position (widget, x_pos)
+			--second.set_item_x_position (widget, x_pos)
+		end
+		
+	set_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
+			-- Set y_position of `widget' in `first' to `y_pos'.
+		do
+			--| FIXME
+			first.set_item_y_position (widget, y_pos)										
+			--second.set_item_y_position (widget, y_pos)
+		end
+		
+	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
+			-- Set width of `widget' in `first' to `new_width'.
+		do
+			--| FIXME
+			first.set_item_width (widget, new_width)
+			--second.set_item_width (widget, new_width)
+		end
+		
+	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
+			-- Set height of `widget' in `first' to `new_height'.
+		do
+			--| FIXME
+			first.set_item_height (widget, new_height)
+			--second.set_item_height (widget, new_height)
+		end	
+		
 
 	track_movement (x, y: INTEGER) is
-			--
+			-- Track `x', `y' position of cursor, and 
 		local
 			widget: EV_WIDGET
 			old_width: INTEGER
 			temp: INTEGER
-		do
-			io.putstring ("Resizing widget in `track_movement': " + resizing_widget.out + "%N")
+			new_x, new_y: INTEGER
+		do	
 			if selected_item_index > 0  then
 				widget := first.i_th (selected_item_index)
-				io.putstring ("Width : " + widget.width.out + "%N")
-				io.putstring ("Height : " + widget.height.out + "%N")
-				io.putstring ("X position : " + widget.x_position.out + "%N")
-				io.putstring ("Y position : " + widget.y_position.out + "%N")
-				io.putstring ("X : " + x.out + "%N")
-				io.putstring ("Y : " + y.out + "%N")
 				if close_to (x, y, widget.x_position + widget.width, widget.y_position + widget.height) or
 					close_to (x, y, widget.x_position, widget.y_position) then
 					if not resizing_widget then
 						set_all_pointer_styles (sizenwse_cursor)	
 					end
-					io.putstring ("One%N")
 				elseif close_to (x, y, widget.x_position, widget.y_position + widget.height) or
 					close_to (x, y, widget.x_position + widget.width, widget.y_position) then
 					if not resizing_widget then
 						set_all_pointer_styles (sizenesw_cursor)	
 					end
-					io.putstring ("Two%N")
 				elseif close_to_line (x, y, widget.y_position + widget.height, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) or
 					close_to_line (x, y, widget.y_position, widget.x_position + accuracy_value, widget.x_position + widget.width - accuracy_value) then
 					if not resizing_widget then
 						set_all_pointer_styles (sizens_cursor)	
 					end
-					io.putstring ("Three%N")
 				elseif close_to_line (y, x, widget.x_position, widget.y_position + accuracy_value, widget.y_position + widget.height - accuracy_value) or
 					close_to_line (y, x, widget.x_position + widget.width, widget.y_position + accuracy_value, widget.y_position + widget.height - accuracy_value) then
 					if not resizing_widget then
 						set_all_pointer_styles (sizewe_cursor)	
 					end
-					io.putstring ("Four%N")
 				elseif x > widget.x_position and x < widget.x_position + widget.width and y > widget.y_position and y < widget.y_position + widget.height then
 					if not resizing_widget then
 						set_all_pointer_styles (sizeall_cursor)	
 					end
-					io.putstring ("Five%N")
 				else
 					if not resizing_widget or not moving_widget then
 						set_all_pointer_styles (standard_cursor)
@@ -541,63 +630,75 @@ feature {NONE} -- Implementation
 				end
 			end
 			if resizing_widget then
-				io.putstring ("Resizing widget")
+				if snap_button.is_selected then
+					new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
+					new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
+				else
+					new_x := x
+					new_y := y
+				end
 				widget := first.i_th (selected_item_index)
-				io.putstring ((x - widget.x_position + widget.width).out)
 
 				if x_scale /= 0 then
 				if x_offset = 0 then
-					if x < widget.x_position + widget.width - widget.minimum_width then
-						if widget.x_position + (x - widget.x_position) > 0 then
-							first.set_item_width (widget, (widget.width - (x - widget.x_position)).max (widget.minimum_width))
-							first.set_item_x_position (widget, (widget.x_position + (x - widget.x_position)))							
+					if new_x < widget.x_position + widget.width - widget.minimum_width then
+						if widget.x_position + (new_x - widget.x_position) > 0 then
+							set_item_width (widget, (widget.width - (new_x - widget.x_position)).max (widget.minimum_width))
+							set_x_position (widget, (widget.x_position + (new_x - widget.x_position)))							
 						else
 							temp := widget.x_position
-							first.set_item_width (widget, widget.width + temp)
-							first.set_item_x_position (widget, (0))							
+							set_item_width (widget, widget.width + temp)
+							set_x_position (widget, (0))							
 						end
 					else
 						temp := widget.width - widget.minimum_width
-						first.set_item_width (widget, widget.width - temp)
-						first.set_item_x_position (widget, widget.x_position + temp)
+						set_item_width (widget, widget.width - temp)
+						set_x_position (widget, widget.x_position + temp)
 						end
 				else
-					first.set_item_width (widget, (x - widget.x_position).max (widget.minimum_width))
+					set_item_width (widget, (new_x - widget.x_position).max (widget.minimum_width))
 				end
 				end
 				
 				if y_scale /= 0 then
 				if y_offset = 0 then
-					if y < widget.y_position + widget.height - widget.minimum_height then
-						if widget.y_position + (y - widget.y_position) > 0 then
-							first.set_item_height (widget, (widget.height - (y - widget.y_position)).max (widget.minimum_height))
-							first.set_item_y_position (widget, (widget.y_position + (y - widget.y_position)))
+					if new_y < widget.y_position + widget.height - widget.minimum_height then
+						if widget.y_position + (new_y - widget.y_position) > 0 then
+							set_item_height (widget, (widget.height - (new_y - widget.y_position)).max (widget.minimum_height))
+							set_y_position (widget, (widget.y_position + (new_y - widget.y_position)))
 						else
 							temp := widget.y_position
-							first.set_item_height (widget, widget.height + temp)
-							first.set_item_y_position (widget, (0))
+							set_item_height (widget, widget.height + temp)
+							set_y_position (widget, (0))
 						end
 					else
 						temp := widget.height - widget.minimum_height
-						first.set_item_height (widget, widget.height - temp)
-						first.set_item_y_position (widget, widget.y_position + temp)
+						set_item_height (widget, widget.height - temp)
+						set_y_position (widget, widget.y_position + temp)
 					end
 				else
-					first.set_item_height (widget, (y - widget.y_position).max (widget.minimum_height))
+					set_item_height (widget, (new_y - widget.y_position).max (widget.minimum_height))
 				end
 				end								
 				draw_widgets
 			end
 			if moving_widget then
-				if x - x_offset > 0 then	
-					first.set_item_x_position (widget, x - x_offset)
+				if snap_button.is_selected then
+					new_x := x - ((x - x_offset) \\ grid_size)
+					new_y := y - ((y - y_offset) \\ grid_size)	
 				else
-					first.set_item_x_position (widget, 0)
+					new_x := x
+					new_y := y
 				end
-				if y - y_offset > 0 then
-					first.set_item_y_position (widget,  y - y_offset)	
+				if new_x - x_offset > 0 then	
+					set_x_position (widget, new_x - x_offset)
 				else
-					first.set_item_y_position (widget, 0)
+					set_x_position (widget, 0)
+				end
+				if new_y - y_offset > 0 then
+					set_y_position (widget,  new_y - y_offset)	
+				else
+					set_y_position (widget, 0)
 				end
 				draw_widgets
 			end
@@ -614,19 +715,29 @@ feature {NONE} -- Implementation
 	close_to_line (coordinate_a, coordinate_b, line_offset, line_start, line_end: INTEGER): BOOLEAN is
 		do
 			if coordinate_a > line_start and coordinate_a < line_end and (coordinate_b - line_offset).abs < accuracy_value then
-				io.putstring ("Close to line%N")
 				Result := True
 			end
 		end
 		
+	grid_size: INTEGER is
+			-- Size of current grid from
+			-- `grid_size_control'
+		do
+			Result := grid_size_control.value
+		end
 		
-		
+	half_grid_size: INTEGER is
+			-- Half size of current grid.
+		do
+			Result := grid_size // 2
+		end
+	
 	button_pressed (x, y, a_button: INTEGER) is
-			--
+			-- A button has been pressed. If `a_button' = 1 then
+			-- check for movement/resizing.
 		local
 			widget: EV_WIDGET
 		do
-			io.putstring ("Button pressed%N")
 			if selected_item_index > 0 then
 				widget := first.i_th (selected_item_index)
 				if a_button = 1 and not resizing_widget and not moving_widget then
@@ -681,9 +792,9 @@ feature {NONE} -- Implementation
 		end
 		
 	button_released (x, y, a_button: INTEGER) is
-			--
+			-- A button has been released on `drawing_area'
+			-- If `a_button' = 1, check for end of resize/movement.
 		do
-			io.putstring ("Button released%N")
 			if a_button = 1 then
 				if resizing_widget then
 					resizing_widget := False
@@ -694,23 +805,13 @@ feature {NONE} -- Implementation
 					set_all_pointer_styles (standard_cursor)
 					drawing_area.disable_capture
 				end
+			set_initial_area_size
+			draw_widgets
 			end
 		end
 		
-	sizing_cursor: EV_CURSOR
-		
-	resizing_widget: BOOLEAN
-		-- Is a widget currently being resized?
-		
-	moving_widget: BOOLEAN
-		-- Is a widget currently being moved?
-	
-	x_offset, y_offset: INTEGER
-	
-	x_scale, y_scale: INTEGER
-		
 	show_layout_window is
-			--
+			-- Display window allowing placement of widgets.
 		do
 			layout_window.show_modal_to_window (parent_window (parent_editor))
 		end
@@ -729,77 +830,84 @@ feature {NONE} -- Implementation
 			end
 			drawing_area.set_pointer_style (cursor)
 		end
+		
+	snap_button_selected is
+			-- Enable/disable the grid option dependent on
+			-- state of `snap_button'.
+		do
+			if snap_button.is_selected then
+				grid_control_holder.enable_sensitive
+			else
+				grid_control_holder.disable_sensitive
+			end
+				-- Update the display.
+			draw_widgets
+		end
 
+feature {NONE} -- Attributes.
+
+	grid_control_holder: EV_HORIZONTAL_BOX
+		-- Holds `snap_button' and `grid_size_control'.
 
 	snap_button: EV_CHECK_BUTTON
+		-- Snap to grid enabled?
 	
 	grid_size_control: EV_SPIN_BUTTON
+		-- `value' is grid spacing.
 	
 	grid_visible_control: EV_CHECK_BUTTON
+		-- Is grid visible?
+	
+	grid_spacing: INTEGER
+		-- Spacing used for grid.
+	
+	resizing_widget: BOOLEAN
+		-- Is a widget currently being resized?
 		
+	moving_widget: BOOLEAN
+		-- Is a widget currently being moved?
+	
+	x_offset, y_offset: INTEGER
+		-- Offsets used to hold cursor distance from
+		-- point being targeted.
+
+	x_scale, y_scale: INTEGER
+		-- Amount to scale movement in the X or Y axis by.
+		-- Should be 1 or 0. 1 means full movement, 0 means
+		-- that axis is ignored.
 		
-	selected_item_index: INTEGER	
+	selected_item_index: INTEGER
+		-- Index of item currently selected in 
 		
 	drawing_area: EV_DRAWING_AREA
+		-- Drawing area used to represent `world'
+	
+	scrollable_area: EV_SCROLLABLE_AREA
+		-- A scrollable area which contains `drawing_area'.
+	
+	grid_color: EV_COLOR is
+			-- Color used for grid.
+		do
+			create Result.make_with_8_bit_rgb (196, 244, 204)
+		end
 	
 	accuracy_value: INTEGER is 3
 			-- Value which determines how close pointer must be
-			-- to lines for resizing.
-		
-	
+			-- to lines/points for resizing.
+			
+	scrolling_distance: INTEGER is 20
+		-- Distance from edge of area when scrolling begins.
+
 	list: EV_LIST
+		-- Contains all children of represented EV_FIXED.
 	
-			projector: EV_DRAWING_AREA_PROJECTOR
-			pixmap: EV_PIXMAP
-			world: EV_FIGURE_WORLD
-			relative_pointa, relative_pointb: EV_RELATIVE_POINT
-			figure_rectangle: EV_FIGURE_RECTANGLE
-
-
---	update_homogeneous is
---			-- Update homogeneous state of items in `objects' depending on
---			-- state of `is_homogeneous_check'.
---		do
---			if is_homogeneous_check.is_selected then
---				for_all_objects (agent {EV_BOX}.enable_homogeneous)
---			else
---				for_all_objects (agent {EV_BOX}.disable_homogeneous)
---			end
---		end
---
---	set_padding (value: INTEGER) is
---			-- Update property `padding' on all items in `objects'.
---		require
---			first_not_void: first /= Void
---		do
---			for_all_objects (agent {EV_BOX}.set_padding_width (value))
---		end
---		
---	valid_input (value: INTEGER): BOOLEAN is
---			-- Is `value' a valid padding?
---		do
---			Result := value >= 0
---		end
---		
---	set_border (value: INTEGER) is
---			-- Update property `border' on all items in `objects'.
---		require
---			first_not_void: first /= Void
---		do
---			for_all_objects (agent {EV_BOX}.set_border_width (value))
---		end
---		
---	is_homogeneous_check: EV_CHECK_BUTTON
---
---	border_entry, padding_entry: GB_INTEGER_INPUT_FIELD
---	
---	Is_homogeneous_string: STRING is "Is_homogeneous"
---	Padding_string: STRING is "Padding"
---	Border_string: STRING is "Border"
---	Is_item_expanded_string: STRING is "Is_item_expanded"
---	
---	check_buttons: ARRAYED_LIST [EV_CHECK_BUTTON]
---		-- All check buttons created to handle `disable_item_expand'.
+	projector: EV_DRAWING_AREA_PROJECTOR
+		-- Projector used for `world'
 	
-
+	pixmap: EV_PIXMAP
+		-- Pixmap for double buffering `world'.
+			
+	world: EV_FIGURE_WORLD
+		-- Figure world containg all widget representations.
+			
 end -- class GB_EV_BOX

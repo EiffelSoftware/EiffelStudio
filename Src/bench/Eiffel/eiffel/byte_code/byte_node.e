@@ -97,7 +97,7 @@ feature -- Eiffel source line information
 			lnr: INTEGER
 			l_buffer: like buffer
 		do
-			if not context.final_mode then
+			if not context.final_mode or else System.exception_stack_managed then
 				lnr := context.get_next_breakpoint_slot
 				check
 					lnr > 0
@@ -116,7 +116,7 @@ feature -- Eiffel source line information
 		local
 			l_buffer: like buffer
 		do
-			if not context.final_mode then
+			if not context.final_mode or else System.exception_stack_managed then
 				l_buffer := buffer
 				l_buffer.putstring("RTHOOK(")
 				l_buffer.putint(context.current_feature.number_of_breakpoint_slots)

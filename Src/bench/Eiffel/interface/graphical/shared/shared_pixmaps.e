@@ -149,6 +149,16 @@ feature {NONE}
 			Result := pixmap_file_content ("dshowhistory.bm");
 		end;
 
+	bm_Dark_showindexing: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowindexing.bm");
+		end;
+
+	bm_Dark_showmodifs: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowmodifs.bm");
+		end;
+
 	bm_Dark_showonces: PIXMAP is
 		do
 			Result := pixmap_file_content ("dshowonces.bm");
@@ -167,6 +177,11 @@ feature {NONE}
 	bm_Dark_showsuppliers: PIXMAP is
 		do
 			Result := pixmap_file_content ("dshowsuppliers.bm");
+		end;
+
+	bm_Dark_showsynonyms: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowsynonyms.bm");
 		end;
 
 	bm_Dark_showtext: PIXMAP is
@@ -384,6 +399,11 @@ feature {NONE}
 			Result := pixmap_file_content ("showhistory.bm");
 		end;
 
+	bm_Showindexing: PIXMAP is
+		do
+			Result := pixmap_file_content ("showindexing.bm");
+		end;
+
 	bm_Showattributes: PIXMAP is
 		do
 			Result := pixmap_file_content ("showattributes.bm");
@@ -439,6 +459,11 @@ feature {NONE}
 			Result := pixmap_file_content ("showfs.bm");
 		end;
 
+	bm_Showmodifs: PIXMAP is
+		do
+			Result := pixmap_file_content ("showmodifs.bm");
+		end;
+
 	bm_Showonces: PIXMAP is
 		do
 			Result := pixmap_file_content ("showonces.bm");
@@ -462,6 +487,11 @@ feature {NONE}
 	bm_Showsuppliers: PIXMAP is
 		do
 			Result := pixmap_file_content ("showsuppliers.bm");
+		end;
+
+	bm_Showsynonyms: PIXMAP is
+		do
+			Result := pixmap_file_content ("showsynonyms.bm");
 		end;
 
 	bm_Showtext: PIXMAP is

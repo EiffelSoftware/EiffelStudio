@@ -80,7 +80,7 @@ feature -- Eiffel source line information
 	get_current_frozen_debugger_hook: INTEGER is
 			-- Get the current hook number for the C debugger
 		require
-			workbench_mode: not context.final_mode
+			workbench_mode: not context.final_mode or else system.exception_stack_managed
 		do
 			Result := context.get_breakpoint_slot
 		end

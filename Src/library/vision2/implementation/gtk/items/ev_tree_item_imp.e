@@ -11,6 +11,9 @@ inherit
 	EV_TREE_ITEM_I
 	
 	EV_ITEM_IMP
+		undefine
+			show
+		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
 		rename
@@ -42,6 +45,16 @@ feature -- Status report
 			Result := c_gtk_tree_item_expanded (widget)
 		end
 
+feature -- Event : command association
+
+	add_subtree_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+		do
+			add_command ("expand", a_command, arguments)
+			add_command ("collapse", a_command, arguments)
+		end
+
 feature {EV_TREE_ITEM} -- Implementation
 
 	add_item (item: EV_TREE_ITEM) is
@@ -59,12 +72,7 @@ feature {EV_TREE_ITEM} -- Implementation
 				gtk_tree_item_set_subtree (widget, p)
 			end
 			gtk_tree_append (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
-
-	--		gtk_tree_item_collapse (GTK_TREE_ITEM (widget))
-	--		io.put_boolean (item_imp.is_expanded)
-	--		gtk_tree_item_expand (GTK_TREE_ITEM (widget))
-	--		gtk_tree_item_collapse (GTK_TREE_ITEM (widget))
-	--		gtk_tree_item_collapse (GTK_TREE_ITEM (item_imp.widget))
+			gtk_widget_show (item_imp.widget)
 		end
 
 end -- class EV_TREE_ITEM_IMP

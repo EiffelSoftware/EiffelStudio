@@ -21,24 +21,6 @@
 #define NEED_TIMER_H
 #endif
 
-#ifndef HAS_BCMP
-#ifndef bcmp
-#define bcmp(s,d,l) memcmp((s),(d),(l))
-#endif
-#endif
-
-#ifndef HAS_BCOPY
-#ifndef bcopy
-#define bcopy(s,d,l) memcpy((d),(s),(l))
-#endif
-#endif
-
-#ifndef HAS_BZERO
-#ifndef bzero
-#define bzero(s,l) memset((s),0,(l))
-#endif
-#endif
-
 #ifndef HAS_INDEX
 #ifndef index
 #define index strchr

@@ -304,7 +304,10 @@ feature -- Concrete evaluation
 
 			if not error_occurred then
 					-- Get real feature
-				realf := f.ancestor_version (f.written_class)
+				if application.is_dotnet then
+						-- We do this only for dotnet
+					realf := f.ancestor_version (f.written_class)
+				end
 				if realf = Void then
 						--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
 						--| occurred for EV_RICH_TEXT_IMP.line_index (...)

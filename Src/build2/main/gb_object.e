@@ -587,9 +587,6 @@ feature -- Access
 				instance_referers.off
 			loop
 				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
-				if current_object.id = 20 then
-					do_nothing
-				end
 				p.call ([current_object.object])
 				l_display ?= current_object.display_object
 				if l_display /= Void then
@@ -1077,7 +1074,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			Result := False
 		end
 		
-feature {GB_INPUT_FIELD, GB_EV_ANY} -- Basic operations
+feature {GB_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Basic operations
 
 	add_constant_context (context: GB_CONSTANT_CONTEXT) is
 			-- Add `context' to `constants'.

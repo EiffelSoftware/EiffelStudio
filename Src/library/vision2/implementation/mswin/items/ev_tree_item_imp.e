@@ -538,10 +538,6 @@ feature {NONE} -- Implementation
 				internal_children.go_i_th (pos)
 				internal_children.put_left (item_imp)
 			end
-				-- We now add the child directly into ev_children.
-			ev_children.go_i_th (pos - 1)
-			ev_children.put_right (item_imp)
-
 		end
 
 	remove_item (item_imp: EV_TREE_ITEM_IMP) is
@@ -549,7 +545,6 @@ feature {NONE} -- Implementation
 		do
 			if top_parent_imp /= Void then
 				top_parent_imp.general_remove_item (item_imp)
-				ev_children.remove
 			else
 				internal_children.prune_all (item_imp)
 			end
@@ -586,6 +581,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/04/11 19:04:02  rogers
+--| Insert_item and remove_item no longer modify ev_children.
+--|
 --| Revision 1.59  2000/04/11 17:10:03  rogers
 --| Removed pnd_press.
 --|

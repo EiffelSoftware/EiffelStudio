@@ -124,6 +124,9 @@ feature -- Access: IL code generation
 
 	il_quick_finalization: BOOLEAN
 			-- Should finalization skip generation of single class modules?
+			
+	msil_use_optimized_precompile: BOOLEAN
+			-- Should compiler take optimized precompile assembly?
 
 feature -- Update
 
@@ -472,6 +475,14 @@ feature -- Update
 			il_quick_finalization := True
 		ensure
 			il_quick_finalization_set: il_quick_finalization
+		end
+		
+	set_msil_use_optimized_precompile (b: BOOLEAN) is
+			-- Take optimized version of precompile assembly from F_code
+		do
+			msil_use_optimized_precompile := b
+		ensure
+			msil_use_optimized_precompile_set: msil_use_optimized_precompile = b
 		end
 		
 feature {SYSTEM_I} -- Implementation

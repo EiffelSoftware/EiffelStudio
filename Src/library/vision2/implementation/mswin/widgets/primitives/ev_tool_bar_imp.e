@@ -554,20 +554,22 @@ feature {NONE} -- WEL Implementation
 			dc: WEL_WINDOW_DC
 			color: WEL_COLOR_REF
 			pen: WEL_PEN
+			cur_width: INTEGER
 		do
+			cur_width := wel_width
 			create dc.make (Current)
 			dc.get
 
 			create color.make_system (Color_btnshadow)
 			create pen.make_solid (1, color)
 			dc.select_pen (pen)
-			dc.line (-1, y_position, width, y_position)
+			dc.line (-1, y_position, cur_width, y_position)
 			dc.unselect_pen
 
 			create color.make_system (Color_btnhighlight)
 			create pen.make_solid (1, color)
 			dc.select_pen (pen)
-			dc.line (-1, y_position + 1, width, y_position + 1)
+			dc.line (-1, y_position + 1, cur_width, y_position + 1)
 			dc.unselect_pen
 
 			dc.quick_release
@@ -786,6 +788,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/06/09 01:49:44  manus
+--| Merged version 1.24.4.8  from DEVEL branch to trunc
+--|
 --| Revision 1.66  2000/06/07 17:28:01  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

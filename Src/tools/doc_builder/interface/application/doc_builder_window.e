@@ -57,6 +57,8 @@ feature {NONE} -- Initialization
 			paste_menu_item.select_actions.extend 			(agent Shared_document_editor.paste_text)
 			search_menu_item.select_actions.extend 			(agent Shared_document_editor.open_search_dialog)
 			parser_menu_item.select_actions.extend 			(agent open_expression_dialog)
+			wrap_menu_item.select_actions.extend 			(agent shared_document_editor.toggle_word_wrap)
+			font_menu_item.select_actions.extend 			(agent (shared_document_editor.preferences).load_font_dialog)
 			
 					-- View Menu
 			element_selector_menu.set_data (element_area)
@@ -88,9 +90,7 @@ feature {NONE} -- Initialization
 			toolbar_save.select_actions.extend 				(agent Shared_document_editor.save_document)
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor.validate_document)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
-			toolbar_studio.select_actions.extend 			(agent update_output_filter)
-			toolbar_envision.select_actions.extend 			(agent update_output_filter)
-			toolbar_web.select_actions.extend 				(agent update_output_filter)
+			output_combo.select_actions.extend 				(agent update_output_filter)
 			
 					-- TOC Widget Events
 			toc_new_button.select_actions.extend 			(agent open_new_toc_dialog)
@@ -114,12 +114,12 @@ feature {NONE} -- Initialization
 			
 
 				-- Initial setup
+			output_combo.disable_edit
 			update_status_report (True, "No document loaded")			
 			initialize_path_constants
 			initialize_temp_directory
 			should_update := True
-			update
-			resize_actions.force_extend (agent on_resize)
+			update			
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
 
@@ -255,9 +255,7 @@ feature -- Interface Events
 				end					
 				
 						-- Filtering
-				toggle_sensitivity (toolbar_studio, True)
-				toggle_sensitivity (toolbar_envision, True)
-				toggle_sensitivity (toolbar_web, True)
+				output_combo.enable_sensitive
 			else
 						-- Save
 				toggle_sensitivity (toolbar_save, False)
@@ -276,9 +274,7 @@ feature -- Interface Events
 				toggle_sensitivity (toolbar_properties, False)
 				
 						-- Filtering
-				toggle_sensitivity (toolbar_studio, False)
-				toggle_sensitivity (toolbar_envision, False)
-				toggle_sensitivity (toolbar_web, False)
+				output_combo.disable_sensitive
 			end					
 		end
 		
@@ -378,6 +374,7 @@ feature -- GUI Updating
 			update_toolbar
 			update_menus
 			update_toc_toolbar
+			update_output_combo
 			update_status_report (False, "")
 		end		
 	
@@ -424,27 +421,43 @@ feature -- GUI Updating
 			end
 		end			
 		
-	update_status_line (a_line_no: INTEGER) is
-			-- Update status bar `line_pos_label' with `a_line_no'
+	update_status_line (a_line_no, a_caret_pos: INTEGER) is
+			-- Update status bar with cursor position information
 		require
 			a_line_no_valid: a_line_no > 0
+			a_caret_pos_valid: a_caret_pos > 0
 		do
-			line_pos_label.set_text ("line: " + a_line_no.out)	
+			line_pos_label.set_text (a_line_no.out + ":" + a_caret_pos.out)	
 		end		
 
 	update_output_filter is
 			-- Update the output filter type
 		local
-			l_name: STRING
+			l_filter: DOCUMENT_FILTER
 		do
-			if toolbar_studio.is_selected then
-				l_name := "EiffelStudio"
-			elseif toolbar_envision.is_selected then
-				l_name := "ENViSioN!"
-			elseif toolbar_web.is_selected then
-				l_name := "Web"
-			end
-			Shared_project.filter_manager.set_filter_by_description (l_name)
+			l_filter := Shared_project.filter_manager.filter_by_description (output_combo.selected_item.text)			
+			Shared_project.filter_manager.set_filter (l_filter)
+		end
+
+	update_output_combo is
+			-- Update the output combo box
+		local
+			l_filters: HASH_TABLE [DOCUMENT_FILTER, STRING]
+			l_list_item: EV_LIST_ITEM
+		do
+			if shared_project.filter_manager /= Void then
+				l_filters := shared_project.filter_manager.filters
+				output_combo.wipe_out
+				from
+					l_filters.start
+				until
+					l_filters.after
+				loop
+					create l_list_item.make_with_text (l_filters.key_for_iteration)
+					output_combo.extend (l_list_item)
+					l_filters.forth
+				end
+			end			
 		end
 
 feature -- Status Setting
@@ -527,21 +540,7 @@ feature {NONE} -- Implementation
 				a_item.select_actions.extend (agent render_factory.attribute_list_render (element, attribute_list))
 				a_item.set_tooltip (element.annotation)
 			end
-		end			
-
-	on_resize is
-			-- Window resized
-		local
-			document_widget: DOCUMENT_WIDGET
---			l_winform: EV_WINFORM_CONTAINER
-		do
---			document_widget := Shared_document_editor.current_widget
---			if document_widget /= Void then
---				l_winform := document_widget.internal_html_widget.browser_container
---				l_winform.set_minimum_width (l_winform.width + 1) --resize_widget_to (Shared_web_browser, Shared_web_browser.height)
---				l_winform.set_minimum_width (1)
---			end
-		end		
+		end				
 
 	render_factory: SCHEMA_RENDERING_FACTORY
 			-- Factory for rendering schema views
@@ -599,11 +598,7 @@ feature {NONE} -- Dialog
 	open_new_toc_dialog is
 			-- Open dialog for new TOC creation
 		do
-			if Shared_project.is_valid then
-				Shared_dialogs.new_toc_dialog.show_modal_to_window (Current)
-			else
-				Shared_toc_manager.new_toc	
-			end			
+			Shared_dialogs.new_toc_dialog.show_modal_to_window (Current)
 		end
 
 	open_toc_properties_dialog is

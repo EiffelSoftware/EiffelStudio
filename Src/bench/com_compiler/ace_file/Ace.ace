@@ -4,7 +4,7 @@ root
 	ECOM_EIF_COMPILER_REGISTRATION: "make"
 
 default
-	assertion (all)
+	assertion (no)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)

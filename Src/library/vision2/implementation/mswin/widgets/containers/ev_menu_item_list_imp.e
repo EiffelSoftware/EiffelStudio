@@ -264,15 +264,15 @@ feature {NONE} -- Implementation
 	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 
 	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
-			-- Get the impl. of last separator or `Void'.
+			-- Separator before item with `an_index'.
 		require
-			index_within_bounds: an_index > 0 and then an_index <= ev_children.count
+			an_index_within_bounds:
+				an_index > 0 and then an_index <= ev_children.count
 		local
 			cur: CURSOR
 			cur_item: INTEGER
 			sep_imp: EV_MENU_SEPARATOR_IMP
 		do
-			cur := ev_children.cursor
 			from
 				ev_children.start
 				cur_item := 1
@@ -286,7 +286,6 @@ feature {NONE} -- Implementation
 				ev_children.forth
 				cur_item := cur_item + 1
 			end
-			ev_children.go_to (cur)
 		end
 
 feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
@@ -344,6 +343,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/07 01:33:52  brendel
+--| Improved separator_imp_by_index.
+--|
 --| Revision 1.12  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

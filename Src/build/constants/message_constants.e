@@ -72,7 +72,8 @@ feature -- Question messages
 	Exit_qu: STRING is "Do you wish to exit?";
 	Internal_error_qu: STRING is 
 		"Internal Error: %%X!%NProject may be unstable.%NDo you wish to continue?";
-	Override_qu: STRING is "Directory %%X%Nalready exists. Override it ?";
+	Overwrite_qu: STRING is "Ok to discard existing project %N%%X%N(including generated Eiffel code)?";
+	Project_exists_qu: STRING is "An EiffelBuild project exists in %N%%X";
 	Retrieve_crash_qu: STRING is 
 			"Project saved from system crash. %N%
 			%Do you wish to retrieve backup files?%N";

@@ -1,4 +1,4 @@
-system EiffelBase
+system EiffelBase-MT
 
 root
 	ANY

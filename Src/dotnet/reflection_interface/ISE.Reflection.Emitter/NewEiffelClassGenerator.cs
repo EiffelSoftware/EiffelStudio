@@ -76,8 +76,8 @@ public class EiffelClassGenerator: Globals
 		String Path;
 		
 		emitter = new Emitter();
-		emitter.PrepareEmitFromAssembly( assembly );
 		Emitter.NameFormatter.EiffelFormatting = EiffelFormatting;
+		emitter.PrepareEmitFromAssembly( assembly );		
 		
 		if( PathName == null )
 		{

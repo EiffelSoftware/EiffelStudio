@@ -93,7 +93,7 @@ extern "C" {
 #define Size(type)			esize[type]	 	/* Object's size */
 #define Dispose(type)		edispose[type]	/* Dispose routine */
 #define Disp_rout(type) 	Dispose(type)	/* Does type have disp routine */
-#define Create(type)		ecreate[type]	/* Initialization routine */
+#define XCreate(type)	     ecreate[type]   /* Initialization routine */
 #else
 #define References(type)	esystem[type].nb_ref
 #define Size(type)			esystem[type].size
@@ -101,7 +101,7 @@ extern "C" {
 											/* Does type have disp routine ? */
 #define Dispose(type) ((void (*)()) wdisp(type));
 											/* Dispose routine */
-#define Create(type)		\
+#define XCreate(type)	     \
 	(esystem[type].cn_composite ? (char *(*)()) wstdinit : (char *(*)()) 0)
 #endif
 

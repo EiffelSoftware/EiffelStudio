@@ -19,6 +19,10 @@ inherit
 		end
 
 	EV_LIST_ITEM_HOLDER_IMP
+		redefine
+			list_widget
+		end
+		
 
 create
 	make
@@ -210,6 +214,16 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			ev_children.prune_all (item_imp)
 			gtk_container_remove (list_widget, item_imp.widget)
 		end
+
+
+feature {EV_LIST_ITEM_IMP} -- Implementation
+
+	list_widget: POINTER
+			-- Pointer to the gtk_list because the vision `EV_LIST'
+			-- is made of a gtk_scrolled_window (pointed by `widget')
+			-- and a gtk_list (pointed by `list_widget').
+			-- Exported to EV_LIST_ITEM_IMP. 
+
 
 end -- class EV_LIST_IMP
 

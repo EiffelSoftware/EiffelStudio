@@ -106,6 +106,8 @@ feature -- Extended window styles
 
 	Ws_ex_dlgmodalframe: INTEGER is 1
 			-- Declared in Windows as WS_EX_DLGMODALFRAME
+			
+	Ws_ex_appwindow: INTEGER is 262144
 
 	Ws_ex_left: INTEGER is 0
 			-- Declared in Windows as WS_EX_LEFT

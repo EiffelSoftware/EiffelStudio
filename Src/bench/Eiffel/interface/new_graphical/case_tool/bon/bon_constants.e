@@ -55,7 +55,7 @@ feature {NONE} -- Bon class
 
 	max_class_name_length: INTEGER is 15
 		
-	max_generics_name_length: INTEGER is 15
+	max_generics_name_length: INTEGER is 20
 	
 	bon_deferred_icon: EV_IDENTIFIED_PIXMAP is
 		local

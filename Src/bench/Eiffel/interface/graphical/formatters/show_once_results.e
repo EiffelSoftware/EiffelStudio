@@ -41,16 +41,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Oncefunc_of end;
 
-	dynamic_class: CLASS_C;
-			-- Class associated with dynamic type of object being inspected
-
 	display_info (object: OBJECT_STONE) is
 		local
-			feature_table: FEATURE_TABLE;
-			once_func_list: PART_SORTED_TWO_WAY_LIST [FEATURE_I];
+			once_func_list: SORTED_TWO_WAY_LIST [E_FEATURE];
 			once_request: ONCE_REQUEST;
-			arguments: FEAT_ARG;
-			feature_i: FEATURE_I;
+			arguments: E_FEATURE_ARGUMENTS;
+			e_feature: E_FEATURE;
+			dynamic_class: E_CLASS;
 			type_name: STRING
 		do
 			if not Run_info.is_running then
@@ -59,21 +56,9 @@ feature {NONE}
 				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
 				dynamic_class := object.dynamic_class;
-				feature_table := dynamic_class.feature_table;
-				!! once_func_list.make;
+				once_func_list := dynamic_class.once_functions;
 				!! once_request.make;
-				from
-					feature_table.start
-				until
-					feature_table.after
-				loop
-					feature_i := feature_table.item_for_iteration;
-					if criterium (feature_i) then
-						once_func_list.extend (feature_i)
-					end
-				feature_table.forth
-				end;
-				type_name := clone (dynamic_class.class_name);
+				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
 				text_window.put_clickable_string (dynamic_class.stone, type_name);
 				text_window.put_string (" [");
@@ -87,9 +72,9 @@ feature {NONE}
 					once_func_list.after
 				loop
 					text_window.put_string ("%T");
-					feature_i := once_func_list.item;
-					feature_i.append_clickable_name (text_window, dynamic_class);
-					arguments := feature_i.arguments;
+					e_feature := once_func_list.item;
+					e_feature.append_clickable_name (text_window, dynamic_class);
+					arguments := e_feature.arguments;
 					if arguments /= Void then
 						text_window.put_string (" (");
 						from
@@ -108,10 +93,10 @@ feature {NONE}
 						text_window.put_char (')')
 					end;
 					text_window.put_string (": ");
-					if once_request.already_called (feature_i) then
-						once_request.once_result (feature_i).append_value (text_window)
+					if once_request.already_called (e_feature) then
+						once_request.once_result (e_feature).append_type_and_value (text_window)
 					else
-						feature_i.type.append_clickable_signature (text_window);
+						e_feature.type.append_clickable_signature (text_window);
 						text_window.put_string ("%TNot yet called")
 					end;
 					text_window.new_line;
@@ -120,7 +105,7 @@ feature {NONE}
 			end
 		end;
 
-	criterium (f: FEATURE_I): BOOLEAN is
+	criterium (f: E_FEATURE): BOOLEAN is
 			-- `f' is a once function and `f' is written in a descendant of ANY
 			-- or the object is a direct instance of a parent of ANY
 		require

@@ -19,7 +19,8 @@ inherit
 			on_first_display,
 			set_insensitive,
 			set_default_minimum_size,
-			child_added
+			child_added,
+			on_key_down
 		end
 
 	EV_FONTABLE_IMP
@@ -30,6 +31,7 @@ inherit
 	WEL_TAB_CONTROL
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -45,7 +47,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
@@ -525,6 +526,7 @@ feature {NONE} -- WEL Implementation
 			hwnd: POINTER
 			window: WEL_WINDOW
 		do
+			{EV_CONTAINER_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_tab then
 				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
 				window := windows.item (hwnd)

@@ -20,6 +20,7 @@ inherit
 	WEL_MULTIPLE_LINE_EDIT
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -40,7 +41,6 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_set_focus,
 			on_kill_focus,
 			on_key_up,

@@ -33,6 +33,7 @@ inherit
 	WEL_STATIC
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -53,7 +54,6 @@ inherit
 			on_mouse_move,
 			on_set_focus,
 			on_kill_focus,
-			on_char,
 			on_key_up
 		redefine
 			default_style,

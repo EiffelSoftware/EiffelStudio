@@ -61,6 +61,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		end
 
 feature -- Basic operation
 
@@ -238,11 +243,13 @@ feature {NONE} -- Implementation
 			create all_ids.make (50)
 			event_connection_string := ""
 			create_string := ""
-			local_string := ""
+			local_string := Void
+			attribute_string := Void
 			build_string := ""
 			set_string := ""
 			event_implementation_string := ""
 			event_declaration_string := ""
+			Generated_names.wipe_out
 		end
 		
 
@@ -590,11 +597,11 @@ feature {NONE} -- Implementation
 					
 						-- Now remove the local declaration if necessary.
 					if document_info.fonts_set.is_empty and document_info.pixmaps_set.is_empty and
-					not project_settings.attributes_local then
+					local_string = Void then
 						remove_line_containing (local_tag, class_text)
 					end
 				
-					if not project_settings.attributes_local and (not document_info.fonts_set.is_empty
+					if local_string = Void and (not document_info.fonts_set.is_empty
 						or not document_info.pixmaps_set.is_empty) then
 						add_generated_string (class_text, "local", local_tag)
 					end
@@ -603,13 +610,15 @@ feature {NONE} -- Implementation
 						-- Add code for widget attribute settings to `class_text'.
 					add_generated_string (class_text, set_string, set_tag)
 	
-					if project_settings.attributes_local then
-						add_generated_string (class_text, "local" + local_string, local_tag)
-						class_text.replace_substring_all (attribute_tag + "%N", "")
-					else
-						add_generated_string (class_text, local_string, attribute_tag)
+					if local_string /= Void then
+						add_generated_string (class_text, local_string, local_tag)
 					end
-					
+					if attribute_string /= Void then
+						add_generated_string (class_text, attribute_string, attribute_tag)
+					else
+						class_text.replace_substring_all (attribute_tag + "%N", "")
+					end
+
 						-- Add code for inheritance structure to `class_text'.
 					if project_settings.client_of_window then
 						temp_string := clone (window_access)
@@ -779,6 +788,7 @@ feature {NONE} -- Implementation
 			element_info: ELEMENT_INFORMATION
 			current_data_element: XM_CHARACTER_DATA
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
+			new_name: STRING
 		do
 			info.set_element (element)
 			if element.has_attribute_by_name (type_string) then
@@ -800,10 +810,16 @@ feature {NONE} -- Implementation
 						if current_name.is_equal (Internal_properties_string) then
 							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ (name_string)
-							check
-								name_exists: element_info /= Void
-							end
-							info.set_name (element_info.data)
+							if element_info /= Void then
+								info.set_name (element_info.data)
+							else
+								-- We must now assign a name, as the current object was not named.
+								new_name := unique_name_from_array (generated_names, Local_object_name_prepend_string + info.type)
+								info.set_name (new_name)
+								info.enable_generated_name
+								generated_names.force (new_name)					
+							end	
+							
 							if current_type.is_equal (Ev_titled_window_string) or
 								current_type.is_equal (Ev_dialog_string) then
 								info.set_as_root_object	
@@ -1087,28 +1103,53 @@ feature {NONE} -- Implementation
 		local	
 			temp_string,local_string_start, indent_string: STRING
 			local_type, name: STRING
+			add_local: BOOLEAN
+			string_to_modify: STRING
 		do
 			if not generated_info.is_root_object then
 				local_type := generated_info.type
 				name := generated_info.name
 					-- Need to generate slightly different code dependent
 					-- on whether the atrributes are local or not.
-				if project_settings.attributes_local then
+				if project_settings.attributes_local.is_equal (True_string) or
+					(project_settings.attributes_local.is_equal (Optimal_string) and generated_info.generated_name = True) then
 					indent_string := indent
 					local_string_start := "local " + indent
-				else
+					add_local := True
+				elseif project_settings.attributes_local.is_equal (False_string) or
+					(project_settings.attributes_local.is_equal (Optimal_string) and generated_info.generated_name = False) then
 					indent_string := indent_less_two
 					local_string_start := "" + indent_less_two
+					add_local := False
+				else
+					check
+						invalid_logic: False
+					end
 				end
 				
-				if local_string = Void then
-					local_string := local_string_start
+					-- Assign the string to be modified to `local_string'
+					-- so that two identical sets of code do not need to be used.
+				if add_local then
+					string_to_modify := local_string
+				else
+					string_to_modify := attribute_string
+				end
+
+				if string_to_modify = Void then
+					string_to_modify := local_string_start
 					temp_string := name + ": " + local_type
 				else
 					temp_string := indent_string + name + ": " + local_type
 				end
 				
-				local_string := local_string + temp_string
+				string_to_modify := string_to_modify + temp_string
+				
+					-- Set the just modified string back to its original setter.
+				if add_local then
+					local_string := string_to_modify
+				else
+					attribute_string := string_to_modify
+				end
 			end
 		end
 		
@@ -1122,6 +1163,8 @@ feature {NONE} -- Implementation
 			index_of_type, search_counter: INTEGER
 			found_correctly: BOOLEAN
 			local_type, name: STRING
+			add_local: BOOLEAN
+			string_to_modify: STRING
 		do
 			if not generated_info.is_root_object then
 				local_type := generated_info.type
@@ -1129,31 +1172,47 @@ feature {NONE} -- Implementation
 				
 					-- Need to generate slightly different code dependent
 					-- on whether the atrributes are local or not.
-				if project_settings.attributes_local then
+				if project_settings.attributes_local.is_equal (True_string) or
+					(project_settings.attributes_local.is_equal (Optimal_string) and generated_info.generated_name = True) then
 					indent_string := indent
 					local_string_start := "local " + indent
-				else
+					add_local := True
+				elseif project_settings.attributes_local.is_equal (False_string) or
+					(project_settings.attributes_local.is_equal (Optimal_string) and generated_info.generated_name = False) then
 					indent_string := indent_less_two
-					local_string_start := "" + indent_less_two
+					local_string_start := "feature -- Access%N" + indent_less_two
+					add_local := False
+				else
+					check
+						invalid_logic: False
+					end
 				end
 				
-				if local_string = Void then
-					local_string := local_string_start + name + ": " + local_type
+					-- Assign the string to be modified to `local_string'
+					-- so that two identical sets of code do not need to be used.
+				if add_local then
+					string_to_modify := local_string
+				else
+					string_to_modify := attribute_string
+				end
+				
+				if string_to_modify = Void then
+					string_to_modify := local_string_start + name + ": " + local_type
 				else
 					from
 						search_counter := 1
 					until
-						found_correctly or search_counter > local_string.count or search_counter = 0
+						found_correctly or search_counter > string_to_modify.count or search_counter = 0
 					loop
-						index_of_type := local_string.substring_index (local_type, search_counter)
+						index_of_type := string_to_modify.substring_index (local_type, search_counter)
 						
 							-- Notes on the first `if'.
 							-- The first check checks that we have found the index, and that the folowing character is a new line character.
 							-- This handles the case where the string contains EV_MENU_ITEM and we are searching for EV_MENU, as this will fail on
 							-- the new line character check.
-							-- The second check ignores the new line character if we are at the last position in `local_string'.
-						if (index_of_type + local_type.count <= local_string.count and then local_string @ (index_of_type + local_type.count) = '%N') or
-							(index_of_type + local_type.count - 1  = local_string.count) then
+							-- The second check ignores the new line character if we are at the last position in `string_to_modify'.
+						if (index_of_type + local_type.count <= string_to_modify.count and then string_to_modify @ (index_of_type + local_type.count) = '%N') or
+							(index_of_type + local_type.count - 1  = string_to_modify.count) then
 							found_correctly := True
 							-- Otherwise, continue searching.
 						elseif index_of_type /= 0 then
@@ -1164,7 +1223,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if index_of_type > 0 then
-						local_string.insert_string (", " + name, index_of_type - 2)
+						string_to_modify.insert_string (", " + name, index_of_type - 2)
 						from
 							search_counter := index_of_type
 							found_correctly := False
@@ -1172,18 +1231,24 @@ feature {NONE} -- Implementation
 							search_counter = index_of_type - 80 or found_correctly or
 							search_counter = 0
 						loop
-							if (local_string @ search_counter) = '%N' then
+							if (string_to_modify @ search_counter) = '%N' then
 								found_correctly := True
 							end
 							search_counter := search_counter - 1
 						end
 						if not found_correctly then
-							local_string.insert_string (indent_string, index_of_type)
+							string_to_modify.insert_string (indent_string, index_of_type)
 						end
 					else
 						temp_string := indent_string + name + ": " + local_type
-						local_string := local_string + temp_string
+						string_to_modify := string_to_modify + temp_string
 					end
+				end
+					-- Set the just modified string back to its original setter.
+				if add_local then
+					local_string := string_to_modify
+				else
+					attribute_string := string_to_modify
 				end
 			end			
 		end
@@ -1362,6 +1427,9 @@ feature {NONE} -- Implementation
 	local_string: STRING
 		-- String representation of all local declarations built
 		-- by `Current'. This is inserted into the template when complete.
+		
+	attribute_string: STRING
+		-- String representation of all attribute declarations built by `Current'.
 	
 	create_string: STRING
 		-- String representation of all creation statements built by
@@ -1416,6 +1484,12 @@ feature {NONE} -- Implementation
 				end
 				missing_files.extend (file_name)
 			end
+		end
+		
+	generated_names: ARRAYED_LIST [STRING] is
+			-- All names generated automatically.
+		once
+			create Result.make (0)
 		end
 
 end -- class GB_CODE_GENERATOR

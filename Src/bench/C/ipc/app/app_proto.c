@@ -279,7 +279,7 @@ rt_public void send_packet(int s, Request *rqst)
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR unable to serialize request %d", rqst->rq_type);
 #endif
-		print_err_msg(stderr, "cannot serialize request, %d\n", rqst->rq_type);
+		print_err_msg(stderr, "Cannot serialize request, %d\n", rqst->rq_type);
 		esdie(1);
 	}
 

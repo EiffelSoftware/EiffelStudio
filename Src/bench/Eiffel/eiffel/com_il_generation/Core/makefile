@@ -1,6 +1,6 @@
-CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs ca.cs
+CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs ca.cs runtime_access.cs
 
-RUNTIME_SRC = run-time/*.cs run-time/types/*.cs
+RUNTIME_SRC = run-time/*.cs run-time/types/*.cs run-time/custom_attributes/*.cs
 
 CSFLAGS = -nologo -w:4 -optimize+
 #CSFLAGS = -nologo -w:4 -optimize+ -debug

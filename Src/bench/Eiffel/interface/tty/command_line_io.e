@@ -141,6 +141,35 @@ feature -- Input/output
 			get_last_input;
 		end;
 
+	get_prof_file_name is
+		do
+			if not more_arguments then
+				io.putstring ("--> Profile information file name (default: `profinfo'): ");
+				get_name
+			end;
+			get_last_input;
+		end;
+
+	get_compile_type is
+		do
+			if not more_arguments then
+				from
+					io.putstring ("--> Compile type (default: `workbench'): ");
+					get_name;
+					get_last_input
+				until
+					last_input.empty or else last_input.is_equal ("workbench") or else
+					last_input.is_equal ("final")
+				loop
+					io.putstring ("--> Compile type (default: `workbench'): ");
+					get_name;
+					get_last_input
+				end
+			else
+				get_last_input
+			end
+		end;
+
 	reset_abort is
 		do
 			abort := False

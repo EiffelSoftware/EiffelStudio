@@ -16,27 +16,50 @@ inherit
 	EV_MENU_I
 		
 	EV_MENU_ITEM_CONTAINER_IMP
-	
+		rename
+			make as widget_make
+		end
+
 creation
 	
-	make
+	make_with_text
 
 feature {NONE} -- Initialization
-	
-        make (par: EV_CONTAINER) is
-                        -- Create a fixed widget. 
+
+	make (par: EV_MENU_ITEM_CONTAINER) is
+			-- Create a menu
 		do
 			widget := gtk_menu_new ()
+		end
+	
+        make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+                        -- Create a menu with name. 
+		do
+			name := txt
+			make (par)
 		end	
 	
-feature {EV_MENU_ITEM_CONTAINER} -- Element change
-	
-	add_menu_item (child_imp: EV_MENU_ITEM_IMP) is
-			-- Add menu item into container
+
+feature {NONE} -- Implementation	
+
+	add_menu_item_pointer (item_p: POINTER) is
 		do
-			gtk_menu_append ( gtk_menu (widget), 
-					  child_imp.widget )
-		end		
+			gtk_menu_append (gtk_menu (widget), item_p)
+		end
+	
+feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
+
+	name: STRING
+
+	widget_make (par: EV_CONTAINER) is
+			-- Cannot be called
+		do
+			check
+				do_not_call: False
+			end
+		end
+
+
 end
 
 --|----------------------------------------------------------------

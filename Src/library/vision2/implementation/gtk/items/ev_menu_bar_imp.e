@@ -16,6 +16,8 @@ inherit
 	EV_MENU_BAR_I
 		
 	EV_MENU_ITEM_CONTAINER_IMP
+
+	EV_WIDGET_IMP
 	
 creation
 	
@@ -29,14 +31,13 @@ feature {NONE} -- Initialization
 			widget := gtk_menu_bar_new ()
 		end	
 	
-feature {EV_MENU_ITEM_CONTAINER} -- Element change
-	
-	add_menu_item (child_imp: EV_MENU_ITEM_IMP) is
-			-- Add menu item into container
+feature {NONE} -- Implementation	
+
+	add_menu_item_pointer (item_p: POINTER) is
 		do
-			gtk_menu_bar_append ( gtk_menu_bar (widget), 
-					      child_imp.widget)
-		end	
+			gtk_menu_bar_append (gtk_menu_bar (widget), item_p)
+		end
+
 end
 
 --|----------------------------------------------------------------

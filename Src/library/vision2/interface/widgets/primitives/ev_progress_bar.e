@@ -71,6 +71,7 @@ feature {NONE} -- Implementation
 
 invariant
 	proportion_within_range: proportion >= 0 and proportion <= 1
+	proportion_definition: maximum = minimum implies proportion = 1.0
 
 end -- class EV_PROGRESS_BAR
 
@@ -95,6 +96,10 @@ end -- class EV_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/16 03:53:07  brendel
+--| Added invariant for proportion, which states that whenever maximum
+--| = minimum, proportion should be 0.0.
+--|
 --| Revision 1.6  2000/02/14 11:40:53  oconnor
 --| merged changes from prerelease_20000214
 --|

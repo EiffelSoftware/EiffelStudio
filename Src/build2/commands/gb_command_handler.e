@@ -49,7 +49,8 @@ feature -- Access
 	show_hide_history_command: GB_SHOW_HIDE_HISTORY_COMMAND is
 			-- Command representing display history.
 		once
-			create Result.make
+			create Result
+			Result.make
 		end
 		
 	delete_object_command: GB_DELETE_OBJECT_COMMAND is
@@ -67,19 +68,22 @@ feature -- Access
 	show_hide_builder_window_command: GB_SHOW_HIDE_BUILDER_WINDOW_COMMAND is
 			-- Command representing a show/hide builder window request.
 		once
-			create Result.make
+			create Result
+			Result.make
 		end
 		
 	show_hide_display_window_command: GB_SHOW_HIDE_DISPLAY_WINDOW_COMMAND is
 			-- Command representing a show/hide display window request.
 		once
-			create Result.make
+			create Result
+			Result.make
 		end
 		
 	show_hide_component_viewer_command: GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND is
 			-- Command representing a show/hide component viewer request.
 		once
-			create Result.make
+			create Result
+			Result.make
 		end
 		
 	redo_command: GB_REDO_COMMAND is

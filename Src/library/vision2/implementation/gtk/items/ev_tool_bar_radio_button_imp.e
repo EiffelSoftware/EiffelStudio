@@ -75,9 +75,8 @@ feature {NONE} -- Implementation
 					end
 					a_peers.forth
 				end
-				interface.press_actions.call ([])
+				interface.select_actions.call ([])
 			end
-
 
 			if not avoid_reselection then
 				avoid_reselection := True
@@ -88,7 +87,6 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
-
 
 	disable_select is
 			-- Unselect the radio button.
@@ -135,6 +133,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/17 23:39:30  king
+--| Changed from press_actions -> select_actions
+--|
 --| Revision 1.19  2000/04/17 23:07:41  king
 --| Implemented radio grouping with the use of a flag
 --|

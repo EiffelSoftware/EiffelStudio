@@ -10,7 +10,7 @@ deferred class
 inherit
 	GB_OBJECT
 	
-feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Basic operation
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT} -- Basic operation
 
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to `Current' at position `position'.

@@ -57,12 +57,18 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 4)
+			!!Result.make (1, 6)
 
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 			
 			!EWB_CLUSTERS! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_INDEXING! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_MODIFIED! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_EDIT_ACE! ewb_cmd;
@@ -125,7 +131,7 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 6)
+			!!Result.make (1, 7)
 
 			!EWB_PAST! ewb_cmd.null;
 			Result.add_entry  (ewb_cmd);
@@ -140,6 +146,9 @@ feature -- Initialization
 			Result.add_entry  (ewb_cmd);
 
 			!EWB_HISTORY! ewb_cmd.null;
+			Result.add_entry  (ewb_cmd);
+
+			!EWB_HOMONYMS! ewb_cmd.null;
 			Result.add_entry  (ewb_cmd);
 
 			!EWB_R_TEXT! ewb_cmd.null;

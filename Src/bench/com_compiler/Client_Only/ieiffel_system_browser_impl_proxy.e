@@ -49,6 +49,12 @@ feature -- Access
 			Result := ccom_external_clusters (initializer)
 		end
 
+	assemblies: IENUM_ASSEMBLY_INTERFACE is
+			-- Returns all of the assemblies in an enumerator
+		do
+			Result := ccom_assemblies (initializer)
+		end
+
 	cluster_count: INTEGER is
 			-- Number of top-level clusters in system.
 		do
@@ -101,6 +107,23 @@ feature -- Basic Operations
 			Result := ccom_search_features (initializer, a_string, is_substring)
 		end
 
+	description_from_dotnet_type (a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+			-- Retrieve description from dotnet type
+			-- `a_assembly_name' [in].  
+			-- `a_full_dotnet_type' [in].  
+		do
+			Result := ccom_description_from_dotnet_type (initializer, a_assembly_name, a_full_dotnet_type)
+		end
+
+	description_from_dotnet_feature (a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+			-- Retrieve description from dotnet feature
+			-- `a_assembly_name' [in].  
+			-- `a_full_dotnet_type' [in].  
+			-- `a_feature_signature' [in].  
+		do
+			Result := ccom_description_from_dotnet_feature (initializer, a_assembly_name, a_full_dotnet_type, a_feature_signature)
+		end
+
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -131,6 +154,12 @@ feature {NONE}  -- Externals
 
 	ccom_external_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of system's external clusters.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_assemblies (cpp_obj: POINTER): IENUM_ASSEMBLY_INTERFACE is
+			-- Returns all of the assemblies in an enumerator
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](): EIF_REFERENCE"
 		end
@@ -175,6 +204,18 @@ feature {NONE}  -- Externals
 			-- Search feature with names matching `a_string'.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](EIF_OBJECT,EIF_BOOLEAN): EIF_REFERENCE"
+		end
+
+	ccom_description_from_dotnet_type (cpp_obj: POINTER; a_assembly_name: STRING; a_full_dotnet_type: STRING): STRING is
+			-- Retrieve description from dotnet type
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
+		end
+
+	ccom_description_from_dotnet_feature (cpp_obj: POINTER; a_assembly_name: STRING; a_full_dotnet_type: STRING; a_feature_signature: STRING): STRING is
+			-- Retrieve description from dotnet feature
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_system_browser_impl_proxy (a_pointer: POINTER) is

@@ -65,7 +65,7 @@ void ecom_eiffel_compiler::IEnumIncludePaths_impl_proxy::ccom_next(  /* [out] */
 	};
 	};
 	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_ISE_c.ccom_ec_pointed_cell_198 (eif_access (rgelt), NULL);
+	tmp_rgelt = (BSTR *)grt_ec_ISE_c.ccom_ec_pointed_cell_218 (eif_access (rgelt), NULL);
 	ULONG * tmp_pcelt_fetched = 0;
 	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
 	
@@ -76,11 +76,11 @@ void ecom_eiffel_compiler::IEnumIncludePaths_impl_proxy::ccom_next(  /* [out] */
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE_c.ccom_ce_pointed_cell_198 ((BSTR *)tmp_rgelt, rgelt);
+	grt_ce_ISE_c.ccom_ce_pointed_cell_218 ((BSTR *)tmp_rgelt, rgelt);
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
 	
-	grt_ce_ISE_c.ccom_free_memory_pointed_198 (tmp_rgelt);
-grt_ce_ISE_c.ccom_free_memory_pointed_199 (tmp_pcelt_fetched);
+	grt_ce_ISE_c.ccom_free_memory_pointed_218 (tmp_rgelt);
+grt_ce_ISE_c.ccom_free_memory_pointed_219 (tmp_pcelt_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ void ecom_eiffel_compiler::IEnumIncludePaths_impl_proxy::ccom_clone1(  /* [out] 
 	};
 	};
 	ecom_eiffel_compiler::IEnumIncludePaths * * tmp_ppenum = 0;
-	tmp_ppenum = (ecom_eiffel_compiler::IEnumIncludePaths * *)grt_ec_ISE_c.ccom_ec_pointed_cell_194 (eif_access (ppenum), NULL);
+	tmp_ppenum = (ecom_eiffel_compiler::IEnumIncludePaths * *)grt_ec_ISE_c.ccom_ec_pointed_cell_214 (eif_access (ppenum), NULL);
 	
 	hr = p_IEnumIncludePaths->Clone(tmp_ppenum);
 	if (FAILED (hr))
@@ -171,9 +171,9 @@ void ecom_eiffel_compiler::IEnumIncludePaths_impl_proxy::ccom_clone1(  /* [out] 
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE_c.ccom_ce_pointed_cell_194 ((ecom_eiffel_compiler::IEnumIncludePaths * *)tmp_ppenum, ppenum);
+	grt_ce_ISE_c.ccom_ce_pointed_cell_214 ((ecom_eiffel_compiler::IEnumIncludePaths * *)tmp_ppenum, ppenum);
 	
-	grt_ce_ISE_c.ccom_free_memory_pointed_194 (tmp_ppenum);
+	grt_ce_ISE_c.ccom_free_memory_pointed_214 (tmp_ppenum);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ void ecom_eiffel_compiler::IEnumIncludePaths_impl_proxy::ccom_ith_item(  /* [in]
 	ULONG tmp_an_index = 0;
 	tmp_an_index = (ULONG)an_index;
 	BSTR * tmp_rgelt = 0;
-	tmp_rgelt = (BSTR *)grt_ec_ISE_c.ccom_ec_pointed_cell_200 (eif_access (rgelt), NULL);
+	tmp_rgelt = (BSTR *)grt_ec_ISE_c.ccom_ec_pointed_cell_220 (eif_access (rgelt), NULL);
 	
 	hr = p_IEnumIncludePaths->ith_item(tmp_an_index,tmp_rgelt);
 	if (FAILED (hr))
@@ -207,9 +207,9 @@ void ecom_eiffel_compiler::IEnumIncludePaths_impl_proxy::ccom_ith_item(  /* [in]
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE_c.ccom_ce_pointed_cell_200 ((BSTR *)tmp_rgelt, rgelt);
+	grt_ce_ISE_c.ccom_ce_pointed_cell_220 ((BSTR *)tmp_rgelt, rgelt);
 	
-	grt_ce_ISE_c.ccom_free_memory_pointed_200 (tmp_rgelt);
+	grt_ce_ISE_c.ccom_free_memory_pointed_220 (tmp_rgelt);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

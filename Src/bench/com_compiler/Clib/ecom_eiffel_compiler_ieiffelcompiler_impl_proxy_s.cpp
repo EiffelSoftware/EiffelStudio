@@ -128,6 +128,87 @@ void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_precompile()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_compile_to_pipe()
+
+/*-----------------------------------------------------------
+	Compile with piped output.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_IEiffelCompiler->compile_to_pipe ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_finalize_to_pipe()
+
+/*-----------------------------------------------------------
+	Finalize with piped output.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_IEiffelCompiler->finalize_to_pipe ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_precompile_to_pipe()
+
+/*-----------------------------------------------------------
+	Precompile with piped output.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	hr = p_IEiffelCompiler->precompile_to_pipe ();
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_is_successful(  )
 
 /*-----------------------------------------------------------
@@ -457,6 +538,106 @@ void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_remove_file_locks()
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};	
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_output_pipe_name(  )
+
+/*-----------------------------------------------------------
+	Output pipe's name
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR ret_value = 0;
+	
+	hr = p_IEiffelCompiler->output_pipe_name( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	rt_ce.free_memory_bstr (ret_value);
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_set_output_pipe_name(  /* [in] */ EIF_OBJECT return_value )
+
+/*-----------------------------------------------------------
+	Set output pipe's name
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_return_value = 0;
+	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
+	
+	hr = p_IEiffelCompiler->set_output_pipe_name(tmp_return_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_return_value);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelCompiler_impl_proxy::ccom_is_output_piped(  )
+
+/*-----------------------------------------------------------
+	Is compiler output sent to pipe `output_pipe_name'
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelCompiler == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelCompiler_, (void **)&p_IEiffelCompiler);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL ret_value = 0;
+	
+	hr = p_IEiffelCompiler->is_output_piped( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

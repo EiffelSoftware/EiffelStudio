@@ -67,6 +67,18 @@ feature -- Access
 			Result := ccom_has_signable_generation (initializer)
 		end
 
+	output_pipe_name: STRING is
+			-- Output pipe's name
+		do
+			Result := ccom_output_pipe_name (initializer)
+		end
+
+	is_output_piped: BOOLEAN is
+			-- Is compiler output sent to pipe `output_pipe_name'
+		do
+			Result := ccom_is_output_piped (initializer)
+		end
+
 	call_back_on_ieiffel_compiler_events_enabled: BOOLEAN
 			-- Is call back enabled?
 
@@ -90,6 +102,24 @@ feature -- Basic Operations
 			ccom_precompile (initializer)
 		end
 
+	compile_to_pipe is
+			-- Compile with piped output.
+		do
+			ccom_compile_to_pipe (initializer)
+		end
+
+	finalize_to_pipe is
+			-- Finalize with piped output.
+		do
+			ccom_finalize_to_pipe (initializer)
+		end
+
+	precompile_to_pipe is
+			-- Precompile with piped output.
+		do
+			ccom_precompile_to_pipe (initializer)
+		end
+
 	expand_path (a_path: STRING): STRING is
 			-- Takes a path and expands it using the env vars.
 			-- `a_path' [in].  
@@ -108,6 +138,13 @@ feature -- Basic Operations
 			-- Remove file locks
 		do
 			ccom_remove_file_locks (initializer)
+		end
+
+	set_output_pipe_name (return_value: STRING) is
+			-- Set output pipe's name
+			-- `return_value' [in].  
+		do
+			ccom_set_output_pipe_name (initializer, return_value)
 		end
 
 	enable_call_back_on_ieiffel_compiler_events (some_events: IEIFFEL_COMPILER_EVENTS_IMPL_STUB) is
@@ -160,6 +197,24 @@ feature {NONE}  -- Externals
 
 	ccom_precompile (cpp_obj: POINTER) is
 			-- Precompile.
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"]()"
+		end
+
+	ccom_compile_to_pipe (cpp_obj: POINTER) is
+			-- Compile with piped output.
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"]()"
+		end
+
+	ccom_finalize_to_pipe (cpp_obj: POINTER) is
+			-- Finalize with piped output.
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"]()"
+		end
+
+	ccom_precompile_to_pipe (cpp_obj: POINTER) is
+			-- Precompile with piped output.
 		external
 			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"]()"
 		end
@@ -222,6 +277,24 @@ feature {NONE}  -- Externals
 			-- Remove file locks
 		external
 			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"]()"
+		end
+
+	ccom_output_pipe_name (cpp_obj: POINTER): STRING is
+			-- Output pipe's name
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_output_pipe_name (cpp_obj: POINTER; return_value: STRING) is
+			-- Set output pipe's name
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](EIF_OBJECT)"
+		end
+
+	ccom_is_output_piped (cpp_obj: POINTER): BOOLEAN is
+			-- Is compiler output sent to pipe `output_pipe_name'
+		external
+			"C++ [ecom_eiffel_compiler::CEiffelCompiler %"ecom_eiffel_compiler_CEiffelCompiler.h%"](): EIF_BOOLEAN"
 		end
 
 	ccom_enable_call_back_on_ieiffel_compiler_events (cpp_obj: POINTER; an_interface_pointer: POINTER) is

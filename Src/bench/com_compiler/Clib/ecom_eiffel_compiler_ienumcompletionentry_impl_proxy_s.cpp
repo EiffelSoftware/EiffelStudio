@@ -65,7 +65,7 @@ void ecom_eiffel_compiler::IEnumCompletionEntry_impl_proxy::ccom_next(  /* [out]
 	};
 	};
 	ecom_eiffel_compiler::IEiffelCompletionEntry * * tmp_rgelt = 0;
-	tmp_rgelt = (ecom_eiffel_compiler::IEiffelCompletionEntry * *)grt_ec_ISE.ccom_ec_pointed_cell_237 (eif_access (rgelt), NULL);
+	tmp_rgelt = (ecom_eiffel_compiler::IEiffelCompletionEntry * *)grt_ec_ISE.ccom_ec_pointed_cell_239 (eif_access (rgelt), NULL);
 	ULONG * tmp_pcelt_fetched = 0;
 	tmp_pcelt_fetched = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (pcelt_fetched), NULL);
 	
@@ -76,11 +76,11 @@ void ecom_eiffel_compiler::IEnumCompletionEntry_impl_proxy::ccom_next(  /* [out]
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_237 ((ecom_eiffel_compiler::IEiffelCompletionEntry * *)tmp_rgelt, rgelt);
+	grt_ce_ISE.ccom_ce_pointed_cell_239 ((ecom_eiffel_compiler::IEiffelCompletionEntry * *)tmp_rgelt, rgelt);
 	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_pcelt_fetched, pcelt_fetched);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_237 (tmp_rgelt);
-grt_ce_ISE.ccom_free_memory_pointed_238 (tmp_pcelt_fetched);
+	grt_ce_ISE.ccom_free_memory_pointed_239 (tmp_rgelt);
+grt_ce_ISE.ccom_free_memory_pointed_240 (tmp_pcelt_fetched);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -162,7 +162,7 @@ void ecom_eiffel_compiler::IEnumCompletionEntry_impl_proxy::ccom_clone1(  /* [ou
 	};
 	};
 	ecom_eiffel_compiler::IEnumCompletionEntry * * tmp_ppenum = 0;
-	tmp_ppenum = (ecom_eiffel_compiler::IEnumCompletionEntry * *)grt_ec_ISE.ccom_ec_pointed_cell_234 (eif_access (ppenum), NULL);
+	tmp_ppenum = (ecom_eiffel_compiler::IEnumCompletionEntry * *)grt_ec_ISE.ccom_ec_pointed_cell_236 (eif_access (ppenum), NULL);
 	
 	hr = p_IEnumCompletionEntry->Clone(tmp_ppenum);
 	if (FAILED (hr))
@@ -171,9 +171,9 @@ void ecom_eiffel_compiler::IEnumCompletionEntry_impl_proxy::ccom_clone1(  /* [ou
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_234 ((ecom_eiffel_compiler::IEnumCompletionEntry * *)tmp_ppenum, ppenum);
+	grt_ce_ISE.ccom_ce_pointed_cell_236 ((ecom_eiffel_compiler::IEnumCompletionEntry * *)tmp_ppenum, ppenum);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_234 (tmp_ppenum);
+	grt_ce_ISE.ccom_free_memory_pointed_236 (tmp_ppenum);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -198,7 +198,7 @@ void ecom_eiffel_compiler::IEnumCompletionEntry_impl_proxy::ccom_ith_item(  /* [
 	ULONG tmp_an_index = 0;
 	tmp_an_index = (ULONG)an_index;
 	ecom_eiffel_compiler::IEiffelCompletionEntry * * tmp_rgelt = 0;
-	tmp_rgelt = (ecom_eiffel_compiler::IEiffelCompletionEntry * *)grt_ec_ISE.ccom_ec_pointed_cell_237 (eif_access (rgelt), NULL);
+	tmp_rgelt = (ecom_eiffel_compiler::IEiffelCompletionEntry * *)grt_ec_ISE.ccom_ec_pointed_cell_239 (eif_access (rgelt), NULL);
 	
 	hr = p_IEnumCompletionEntry->ith_item(tmp_an_index,tmp_rgelt);
 	if (FAILED (hr))
@@ -207,9 +207,9 @@ void ecom_eiffel_compiler::IEnumCompletionEntry_impl_proxy::ccom_ith_item(  /* [
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	grt_ce_ISE.ccom_ce_pointed_cell_237 ((ecom_eiffel_compiler::IEiffelCompletionEntry * *)tmp_rgelt, rgelt);
+	grt_ce_ISE.ccom_ce_pointed_cell_239 ((ecom_eiffel_compiler::IEiffelCompletionEntry * *)tmp_rgelt, rgelt);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_237 (tmp_rgelt);
+	grt_ce_ISE.ccom_free_memory_pointed_239 (tmp_rgelt);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

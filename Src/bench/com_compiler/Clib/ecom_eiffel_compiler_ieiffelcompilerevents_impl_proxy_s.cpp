@@ -76,7 +76,7 @@ void ecom_eiffel_compiler::IEiffelCompilerEvents_impl_proxy::ccom_should_continu
 	};
 	rt_ce.ccom_ce_pointed_boolean ((VARIANT_BOOL *)tmp_a_boolean, a_boolean);
 	
-	grt_ce_ISE.ccom_free_memory_pointed_245 (tmp_a_boolean);
+	grt_ce_ISE.ccom_free_memory_pointed_247 (tmp_a_boolean);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

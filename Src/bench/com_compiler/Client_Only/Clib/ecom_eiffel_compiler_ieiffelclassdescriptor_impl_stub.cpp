@@ -222,7 +222,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::features(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE_c.ccom_ec_pointed_interface_49 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -275,7 +275,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE_c.ccom_ec_pointed_interface_49 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE_c.ccom_ec_pointed_interface_54 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -328,7 +328,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clients = grt_ec_ISE_c.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
+		*some_clients = grt_ec_ISE_c.ccom_ec_pointed_interface_34 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -381,7 +381,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_suppliers = grt_ec_ISE_c.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
+		*some_suppliers = grt_ec_ISE_c.ccom_ec_pointed_interface_34 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -434,7 +434,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_ancestors = grt_ec_ISE_c.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
+		*some_ancestors = grt_ec_ISE_c.ccom_ec_pointed_interface_34 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -487,7 +487,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_descendants = grt_ec_ISE_c.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
+		*some_descendants = grt_ec_ISE_c.ccom_ec_pointed_interface_34 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

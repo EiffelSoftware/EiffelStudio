@@ -2001,7 +2001,7 @@ feature -- IL Generation
 				l_cur_sig := signatures (current_type_id, feat.feature_id)
 				l_impl_sig := implementation_signatures (a_type_id, code_feature_id)
 
-				l_is_external := feat.is_external or (feat.extension /= Void and feat.extension.is_il)
+				l_is_external := feat.is_external or feat.is_il_external
 
 				l_class_type := class_types.item (a_type_id)
 

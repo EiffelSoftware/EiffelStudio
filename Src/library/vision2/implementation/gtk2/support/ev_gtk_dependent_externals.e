@@ -13,6 +13,11 @@ feature -- Externals
 --			"C signature (): GtkWidget* use <gtk/gtk.h>"
 --		end
 
+--	frozen gtk_event_box_set_visible_window (a_event_box: POINTER; a_visible: BOOLEAN) is
+--		external
+--			"C signature (GtkEventBox*, gboolean) use <gtk/gtk.h>"
+--		end
+
 	frozen gdk_window_get_frame_extents (a_window, a_rect: POINTER) is
 		external
 			"C signature (GdkWindow*, GdkRectangle*) use <gtk/gtk.h>"

@@ -21,7 +21,7 @@ inherit
 
 feature -- Initialization
 
-	adapt (other: ROUTINE [ANY, OPEN_ARGS]) is
+	adapt (other: like Current) is
 			-- Initialize from `other'.
 			-- Useful in descendants.
 		require

@@ -40,14 +40,9 @@ feature {NONE} -- GTK C functions for drawing area
 
 feature {NONE} -- code in the glue library
 
-	c_gtk_pixmap_create_empty (parent: POINTER): POINTER is
-		external "C | %"gtk_eiffel.h%""
-		end
-	
 	c_gtk_pixmap_create_from_xpm (parent: POINTER; file_name: POINTER): POINTER is
 		external "C | %"gtk_eiffel.h%""
-		end
-
+        end
 
 	c_gtk_pixmap_read_from_xpm (widget, parent: POINTER; file_name: POINTER) is
 		external "C | %"gtk_eiffel.h%""

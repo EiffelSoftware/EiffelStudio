@@ -646,7 +646,7 @@ feature {NONE} -- Basic operations for implementation
 					ev_set_minimum_size (columns_sum + border_width * 2, rows_sum + border_width * 2)
 				end
 			else
-				ev_set_minimum_size (0, 0)
+				ev_set_minimum_size (border_width * 2, border_width * 2)
 			end
 		end
 

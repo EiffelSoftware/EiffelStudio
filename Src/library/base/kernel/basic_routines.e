@@ -108,11 +108,7 @@ feature -- Basic operations
 			-- Minimum of `n1' and `n2'
 		obsolete "Replace min (a, b) with a.min (b)"
 		do
-			if n1 < n2 then
-				Result := n1
-			else
-				Result := n2
-			end
+			Result := n1.min (n2)
 		ensure
 			is_minimum: (n2 <= n1) = (Result = n2) or else (n1 < n2) = (Result = n1)
 		end;

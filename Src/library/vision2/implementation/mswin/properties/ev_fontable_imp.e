@@ -19,11 +19,14 @@ feature -- Access
 			-- Font of `Current'.
 		local
 			font_imp: EV_FONT_IMP
+			private_font_twin: WEL_FONT
 		do
 			if private_font = Void then
 				create Result
 				font_imp ?= Result.implementation
-				font_imp.set_by_wel_font (private_wel_font.twin)
+				create private_font_twin.make_indirect (private_wel_font.log_font)
+				font_imp.set_by_wel_font (private_font_twin)
+				private_font_twin := Void
 				private_font := Result
 				private_wel_font := Void
 			else

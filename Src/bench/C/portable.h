@@ -18,8 +18,11 @@
 #include "config.h"
 #endif
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 #include "confmagc.h"
+#ifdef EIF_WIN32
+#include <stdlib.h>
+#endif
 #else
 #include "confmagic.h"
 #endif

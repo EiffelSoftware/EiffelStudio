@@ -1,7 +1,9 @@
 indexing
 	description:
-		"Base class for interactive scrolling widgets.%N%
-		%See EV_HORIZONTAL_SCROLL_BAR and EV_VERTICAL_SCROLL_BAR"
+		"[
+			Base class for interactive scrolling widgets.
+			See EV_HORIZONTAL_SCROLL_BAR and EV_VERTICAL_SCROLL_BAR.
+		]"
 	status: "See notice at end of class."
 	keywords: "scroll, bar, horizontal, vertical, gauge, leap, step, page"
 	date: "$Date$"

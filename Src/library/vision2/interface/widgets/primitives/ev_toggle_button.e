@@ -1,10 +1,14 @@
 indexing
 	description: 
-		"Button that toggles between states each time it is pressed."
+		"[
+			Button that toggles between states each time it is pressed.
+		]"
 	appearance:
-		" ------------ %N%
-		%|   `text'   |%N%
-		% ============"
+		"[
+			-------------
+			|   text    |
+			-------------
+		]"
 	status: "See notice at end of class"
 	keywords: "toggle, button"
 	date: "$Date$"

@@ -1,8 +1,14 @@
 indexing
 	description:
-		"Toggle button with state displayed as a check box."
+		"[
+			Toggle button with state displayed as a check box.
+		]"
 	appearance:
-		" [X] `text' "
+		"[
+			--------------
+			|[X]  text   |
+			==============
+		]"
 	status: "See notice at end of class"
 	keywords: "toggle, check, tick, button, box"
 	date: "$Date$"

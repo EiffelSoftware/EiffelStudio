@@ -1,7 +1,9 @@
 indexing 
 	description:
-		"Base class for simple scored line separator widgets.%N%
-		%See EV_HORIZONTAL_SEPARATOR and EV_VERTICAL_SEPARATOR"
+		"[
+			Base class for simple scored line separator widgets.
+			See EV_HORIZONTAL_SEPARATOR and EV_VERTICAL_SEPARATOR.
+		]"
 	status: "See notice at end of class"
 	keywords: "separator, line, score"
 	date: "$Date$"

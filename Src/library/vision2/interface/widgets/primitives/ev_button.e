@@ -1,11 +1,15 @@
 indexing
 	description:
-		"Push button widget that displays text and/or a pixmap.%N%
-		%(Also base class for other button widgets)"
+		"[
+			Push button widget that displays text and/or a pixmap.
+			(Also base class for other button widgets)
+		]"
 	appearance:
-		" ------------ %N%
-		%|   `text'   |%N%
-		% ============"
+		"[
+ 			--------------
+			|    text    |
+			==============
+		]"
 	status: "See notice at end of class"
 	keywords: "press, push, label, pixmap"
 	date: "$Date$"

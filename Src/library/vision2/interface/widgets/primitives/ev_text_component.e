@@ -1,6 +1,8 @@
 indexing
 	description: 
-		"Eiffel Vision text component. Base class for text editing widgets."
+		"[
+			Eiffel Vision text component. Base class for text editing widgets.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

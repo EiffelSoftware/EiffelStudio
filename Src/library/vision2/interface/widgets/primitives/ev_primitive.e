@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Base class for simple, non container widgets."
+		"[
+			Base class for simple, non container widgets.
+		]"
 	status: "See notice at end of class"
 	keywords: "widget, primitive"
 	date: "$Date$"

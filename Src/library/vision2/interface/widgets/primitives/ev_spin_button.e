@@ -1,7 +1,9 @@
 indexing
 	description:
-		"Displays `value' and two buttons that allow it to be adjusted up and%
-		%down within `range'."
+		"[
+			Displays `value' and two buttons that allow it to be adjusted up and
+			down within `range'.
+		]"
 	status: "See notice at end of class"
 	keywords: "gauge, edit, text, number, up, down"
 	date: "$Date$"

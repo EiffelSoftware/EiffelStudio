@@ -1,8 +1,12 @@
 indexing 
 	description:
-		"Scored horizontal line."
+		"[
+			Scored horizontal line.
+		]"
 	appearance:
-		"---------------"
+		"[
+			---------------
+		]"
 	status: "See notice at end of class"
 	keywords: "seperator, horizontal, line, score"
 	date: "$Date$"

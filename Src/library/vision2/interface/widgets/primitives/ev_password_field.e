@@ -1,11 +1,15 @@
 indexing 
 	description:
-		"Input field for a single line of `text', displayed%N%
-		%as a sequence of `*'."
+		"[
+			Input field for a single line of `text', displayed
+			as a sequence of `*'.
+		]"
 	appearance:
-		"+-------------+%N%
-		%| ********    |%N%
-		%+-------------+"
+		"[
+			+-------------+
+			| ********    |
+			+-------------+
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,13 +1,17 @@
 indexing
 	description:
-		"Top level window. Contains a single widget.%N%
-		%`title' is not displayed."
+		"[
+			Top level window. Contains a single widget.
+			`title' is not displayed.
+		]"
 	appearance:
-		" _____________ %N%
-		%|____________X|%N%
-		%|             |%N%
-		%|   `item'    |%N%
-		%|_____________|"
+		"[
+			 _____________ 
+			|____________X|
+			|             |
+			|    item     |
+			|_____________|
+		]"
 	status: "See notice at end of class"
 	keywords: "toplevel, window, popup" 
 	date: "$Date$"

@@ -1,6 +1,8 @@
 indexing
 	description: 
-		"EiffelVision text area. To query multiple lines of text from the user."
+		"[
+			EiffelVision text area. To query multiple lines of text from the user.
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

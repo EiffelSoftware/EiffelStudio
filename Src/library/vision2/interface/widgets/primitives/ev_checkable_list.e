@@ -1,7 +1,11 @@
 indexing
-	description: "Displays a list of items from which the user may select.%
-		%Each item has an associated check box."
-	author: ""
+	description:
+		"[
+			Displays a list of items from which the user may select.
+			Each item has an associated check box.
+		]"
+	status: "See notice at end of class"
+	keywords: "list, check, checkable"
 	date: "$Date$"
 	revision: "$Revision$"
 

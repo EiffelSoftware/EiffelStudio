@@ -1,13 +1,17 @@
 indexing
 	description:
-		"Top level titled window. Contains a single widget."
+		"[
+			Top level titled window. Contains a single widget.
+		]"
 	appearance:
-		" __________________ %N%
-		%|`title'       _[]X|%N%
-		%|------------------|%N%
-		%|                  |%N%
-		%|      `item'      |%N%
-		%|__________________|"
+		"[
+			 __________________ 
+			|`title'       _[]X|
+			|------------------|
+			|                  |
+			|       item       |
+			|__________________|
+		]"
 	status: "See notice at end of class"
 	keywords: "window, title bar, title"
 	date: "$Date$"

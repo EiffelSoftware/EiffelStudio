@@ -1,13 +1,17 @@
 indexing
 	description:
-		"Displays a single widget that may be larger that the container.%
-		%Scroll bars allow the user to select the area displayed."
+		"[
+			Displays a single widget that may be larger that the container.
+			Scroll bars allow the user to select the area displayed.
+		]"
 	appearance:
-		"---------------%N%
-		%|           |^|%N%
-		%|   `item'  | |%N%
-		%|___________|v|%N%
-		%|<_________>|_|"
+		"[
+			---------------
+			|           |^|
+			|   `item'  | |
+			|___________|v|
+			|<_________>|_|
+		]"
 	status: "See notice at end of class"
 	keywords: "container, scroll, scrollbar, viewport"
 	date: "$Date$"

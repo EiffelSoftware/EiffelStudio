@@ -1,5 +1,8 @@
 indexing
-	description: "EiffelVision tree."
+	description:
+		"[
+			EiffelVision tree.
+		]"
 	status: "See notice at end of class"
 	keywords: "tree, container"
 	date: "$Date$"

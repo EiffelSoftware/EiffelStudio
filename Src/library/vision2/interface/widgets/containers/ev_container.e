@@ -1,7 +1,9 @@
 indexing
-	description: 
-		"Widget that contains other widgets.%N%
-		%Base class for all containers."
+	description:
+		"[
+			Widget that contains other widgets.
+			Base class for all containers.
+		]"
 	status: "See notice at end of class"
 	keywords: "container, pack"
 	date: "$Date$"

@@ -1,15 +1,19 @@
 indexing
-	description: 
-		"Multiple widget container. Each widget is displayed on an individual%
-		%page. A tab is displayed for each page allow its selection. Only the%
-		%selected page is visible."
+	description:
+		"[
+			Multiple widget container. Each widget is displayed on an individual
+			page. A tab is displayed for each page allow its selection. Only the
+			selected page is visible.
+		]"
 	appearance:
-		"  _______  _______  _______       %N%
-		%_/ tab_1 \/_tab_2_\/_tab_3_\______%N%
-		%|                                |%N%
-		%|        `selected_item'         |%N%
-		%|                                |%N%
-		%----------------------------------"
+		"[
+			  _______  _______  _______       
+			_/ tab_1 \/_tab_2_\/_tab_3_\______
+			|                                |
+			|         selected_item          |
+			|                                |
+			----------------------------------
+		]"
 	status: "See notice at end of class"
 	keywrods: "notebook, tab, page"
 	date: "$Date$"

@@ -1,12 +1,16 @@
 indexing
-	description: 
-		"Displays an optionally labeled border around a widget."
+	description:
+		"[
+			Displays an optionally labeled border around a widget.
+		]"
 	appearance:
-		"+<`text'>-----+%N%
-		%|             |%N%
-		%|   `item'    |%N%
-		%|             |%N%
-		%+-------------+"
+		"[
+			+<`text'>-----+
+			|             |
+			|   `item'    |
+			|             |
+			+-------------+
+		]"
 	status: "See notice at end of class"
 	keywords: "container, frame, box, border, bevel, outline, raised, lowered"
 	date: "$Date$"

@@ -1,6 +1,8 @@
 indexing
 	description:
-		"Contains two widgets, each on either side of an adjustable separator."
+		"[
+			Contains two widgets, each on either side of an adjustable separator.
+		]"
 	status: "See notice at end of class"
 	keywords: "container, split, devide"
 	date: "$Date$"

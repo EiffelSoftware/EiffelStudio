@@ -81,10 +81,10 @@ feature {GB_XML_STORE} -- Output
 				children.off
 			loop
 				current_table_widget ?= children.item.object
-				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (current_table_widget).out)
-				temp_row_positions_string := temp_row_positions_string + add_leading_zeros (first.item_row_position (current_table_widget).out)
-				temp_widths_string := temp_widths_string + add_leading_zeros (first.item_column_span (current_table_widget).out)
-				temp_heights_string := temp_heights_string + add_leading_zeros (first.item_row_span (current_table_widget).out)
+				temp_column_positions_string := temp_column_positions_string + add_leading_zeros (first.item_column_position (current_table_widget).out, 4)
+				temp_row_positions_string := temp_row_positions_string + add_leading_zeros (first.item_row_position (current_table_widget).out, 4)
+				temp_widths_string := temp_widths_string + add_leading_zeros (first.item_column_span (current_table_widget).out, 4)
+				temp_heights_string := temp_heights_string + add_leading_zeros (first.item_row_span (current_table_widget).out, 4)
 				children.forth
 			end
 			if not temp_column_positions_string.is_empty then
@@ -101,25 +101,6 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 	
-	add_leading_zeros (original_string: STRING): STRING is
-			-- Add leading zeros to `original_string',
-			-- so it is a valid 4 character, Integer representation.
-		require
-			original_string_length_ok: original_string.count >= 1 and original_string.count < 5
-		do
-			if original_string.count = 1 then
-				Result := "000" + original_string
-			elseif original_string.count = 2 then
-				Result := "00" + original_string
-			elseif original_string.count = 3 then
-				Result := "0" + original_string
-			end
-		ensure
-			Result_correct_length: Result.count = 4
-			Result_is_integer: Result.is_integer
-		end
-		
-		
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		do

@@ -19,6 +19,15 @@ feature -- Warning messages
 								%that is not optimal in speed and size.%N";
 	w_Beginning_of_history: STRING is "Beginning of history";
 	w_Cannot_compile: STRING is "Read-only project: cannot compile.";
+	w_Cannot_create_class (class_name: STRING): STRING is
+		require
+			class_name_not_void: class_name /= Void
+		do
+			!!Result.make (30);
+			Result.append ("Cannot create class: ");
+			Result.append (class_name)
+			Result.append ("%Nin precompiled system");
+		end;
 	w_Cannot_create_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -171,7 +180,7 @@ feature -- Warning messages
 		end;
 
 	w_Class_not_in_universe: STRING is "Class is not in the universe";
-	w_Clear_breakpoints: STRING is "Do you wish to clear the breakpoints?";
+	w_Clear_breakpoints: STRING is "Do you wish to clear the stop points?";
 
 	w_Default_ace_file_not_exist (f_name: STRING): STRING is
 		require
@@ -241,6 +250,8 @@ feature -- Warning messages
 									%Please check with your system %
 									%administrator whether your profiler is %
 									%supported.%N";
+
+	w_Ignoring_all_stop_points: STRING is "Application will ignore all stop points";
 
 	w_Invalid_cluster_name: STRING is "Invalid cluster name";
 
@@ -373,6 +384,38 @@ feature -- Warning messages
 			Result.append ("Project in: ");
 			Result.append (dir_name);
 			Result.append ("%Nis corrupted. Cannot continue")
+		end;
+		
+	w_Project_incompatible (dir_name: STRING; 
+			comp_version, incomp_version: STRING): STRING is
+		require
+			dir_name_not_void: dir_name /= Void
+			valid_version: comp_version /= Void and then incomp_version /= Void
+		do
+			if incomp_version.empty then
+				!! Result.make (30);
+				Result.append 
+					("File `project.txt' does not exist in the EIFGEN directory of project:%N")
+				Result.append (dir_name);
+			else
+				!! Result.make (30);
+				Result.append ("Incompatible version for project: ");
+				Result.append (dir_name);
+				Result.append ("%NEiffelBench version is ");
+				Result.append (comp_version);
+				Result.append ("%NProject was compiled with version ");
+				Result.append (incomp_version);
+			end
+		end;
+		
+	w_Project_interrupted (dir_name: STRING): STRING is
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			!!Result.make (30);
+			Result.append ("Retrieving project in: ");
+			Result.append (dir_name);
+			Result.append ("%Nwas interrupted. Cannot continue")
 		end;
 		
 	w_Project_may_be_corrupted: STRING is "Some files were made unwritable.%N%

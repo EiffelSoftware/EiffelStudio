@@ -261,7 +261,7 @@ rt_private long pst_store(EIF_REFERENCE object, long int a_object_count)
 	}
 
 	if (!is_expanded)
-		st_write(object);		/* Write the object on the disk */
+		st_write(object, HEADER(object)->ov_flags);		/* Write the object on the disk */
 
 	/* Call `make_index' on `server' with `object' */
     if (object_needs_index)

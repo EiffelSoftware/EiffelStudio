@@ -69,8 +69,10 @@ feature -- Basic operations
 			-- Does `an_implemented_interface' need to be removed from `system_descriptor.interfaces'?
 		do
 			if system_descriptor.interfaces.has (an_implemented_interface) then
-				system_descriptor.interfaces.prune (an_implemented_interface)
+				system_descriptor.interfaces.prune_all (an_implemented_interface)
 			end
+		ensure
+			system_does_not_have: not system_descriptor.interfaces.has (an_implemented_interface) 
 		end
 
 feature {NONE} -- Implementation

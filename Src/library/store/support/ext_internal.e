@@ -47,7 +47,11 @@ feature -- Basic operations
 					local_int := double_ref.item.truncated_to_integer
 				else
 					int_ref ?= value
-					local_int := int_ref.item
+					if int_ref /= Void then
+						local_int := int_ref.item
+					else
+						Result := False
+					end
 				end
 				set_integer_field (i, object, local_int)
 			elseif ftype = Real_type then

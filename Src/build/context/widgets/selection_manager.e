@@ -712,6 +712,9 @@ feature {PERM_WIND_C}
 					-- Enter event
 				selected := false;
 				abort_button_release := false;
+				if context /= Void then
+					context.widget.set_cursor (cursors.Arrow_cursor)
+				end
 				a_context ?= argument;
 				if not a_context.deleted then
 					context := a_context;

@@ -65,7 +65,7 @@ feature -- Removal
 			last_long_integer := 0
 			last_short_integer := 0
 			retry_position := 0
-			ca_zero ($area, size)
+			area.clear_all
 		end
 
 feature -- 
@@ -77,7 +77,7 @@ feature --
 		do
 			create Result.make (position)
 			other_area := Result.area
-			ca_copy ($area, $other_area, position, 0)
+			internal_copy (area, other_area, position, 0)
 		end
 
 	feature_table: MELTED_FEATURE_TABLE is
@@ -87,7 +87,7 @@ feature --
 		do
 			create Result.make (position)
 			other_area := Result.area
-			ca_copy ($area, $other_area, position, 0)
+			internal_copy (area, other_area, position, 0)
 		end
 
 	melted_feature: MELT_FEATURE is
@@ -97,7 +97,7 @@ feature --
 		do
 			create Result.make (position)
 			other_area := Result.area
-			ca_copy ($area, $other_area, position, 0)
+			internal_copy (area, other_area, position, 0)
 		end
 
 	melted_descriptor: MELTED_DESC is
@@ -107,7 +107,7 @@ feature --
 		do
 			create Result.make (position)
 			other_area := Result.area
-			ca_copy ($area, $other_area, position, 0)
+			internal_copy (area, other_area, position, 0)
 		end
 
 	melted_routine_table: MELTED_ROUT_TABLE is
@@ -117,7 +117,7 @@ feature --
 		do
 			create Result.make (position)
 			other_area := Result.area
-			ca_copy ($area, $other_area, position, 0)
+			internal_copy (area, other_area, position, 0)
 		end
 
 	melted_routid_array: MELTED_ROUTID_ARRAY is
@@ -127,7 +127,7 @@ feature --
 		do
 			create Result.make (position)
 			other_area := Result.area
-			ca_copy ($area, $other_area, position, 0)
+			internal_copy (area, other_area, position, 0)
 		end
 
 feature -- Element change
@@ -138,8 +138,8 @@ feature -- Element change
 			new_position: INTEGER
 		do
 			new_position := position + 1
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			put (c, position)
 			position := new_position
@@ -161,8 +161,8 @@ feature -- Element change
 			new_position: INTEGER
 		do
 			new_position := position + Int32_size
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			ca_wlong ($area, i, position)
 			position := new_position
@@ -174,8 +174,8 @@ feature -- Element change
 			new_position: INTEGER
 		do  
 			new_position := position + Short_size
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			ca_wshort ($area, i, position)
 			position := new_position
@@ -187,8 +187,8 @@ feature -- Element change
 			new_position: INTEGER
 		do 
 			new_position := position + Uint32_size
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			ca_wuint32 ($area, i, position)
 			position := new_position
@@ -201,8 +201,8 @@ feature -- Element change
 			new_position: INTEGER
 		do 
 			new_position := position + Int32_size
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			ca_wint32 ($area, i, position)
 			position := new_position
@@ -214,8 +214,8 @@ feature -- Element change
 			new_position: INTEGER
 		do
 			new_position := position + Int64_size
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			ca_int64 ($area, i, position)
 			position := new_position
@@ -227,8 +227,8 @@ feature -- Element change
 			new_position: INTEGER
 		do
 			new_position := position + Double_size
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			ca_wdouble ($area, r, position)
 			position := new_position
@@ -268,7 +268,7 @@ feature -- Element change
 				-- Resize if necessary
 			nb_uint32 := ca_bsize(bcount)
 			new_position := position + nb_uint32 * Uint32_size
-			if new_position > size then
+			if new_position >= count then
 				resize ((new_position \\ Chunk + 1) * Chunk)
 			end
 				
@@ -328,8 +328,8 @@ feature -- Element change
 					-- Void type
 				new_position := position
 			end
-			if new_position > size then
-				resize (size + Chunk)
+			if new_position >= count then
+				resize (count + Chunk)
 			end
 			position := new_position
 		end
@@ -463,20 +463,20 @@ feature -- Forward and backward jump managment
 		do
 			old_pos := position
 			other_position := other.position
-			if old_pos >= Buffer.size then
-				new_size := Chunk * (old_pos // Chunk)
+			if old_pos >= Buffer.count then
+				new_size := Chunk * (1 + (old_pos // Chunk))
 				Buffer.resize (new_size)
 			end
 			buffer_area := Buffer.area
-			ca_copy ($area, $buffer_area, old_pos, 0)
+			internal_copy (area, buffer_area, old_pos, 0)
 			new_pos := old_pos + other_position
-			if new_pos > size then
-				new_size := Chunk * (new_pos // Chunk)
+			if new_pos >= count then
+				new_size := Chunk * (1 + (new_pos // Chunk))
 				resize (new_size)
 			end
 			other_area := other.area
-			ca_copy ($other_area, $area, other_position, 0)
-			ca_copy ($buffer_area, $area, old_pos, other_position)
+			internal_copy (other_area, area, other_position, 0)
+			internal_copy (buffer_area, area, old_pos, other_position)
 			position := new_pos
 		end
 
@@ -528,13 +528,6 @@ feature {BYTE_ARRAY} -- Access
 			-- Posiiton of the cursor in the array
 
 feature {NONE} -- Externals
-
-	ca_zero (ptr: POINTER; siz: INTEGER) is
-		external
-			"C"
-		alias
-			"ca_zero"
-		end
 
 	Short_size: INTEGER is
 			-- Size of a short integer
@@ -599,6 +592,6 @@ feature {NONE} -- Externals
 invariant
 
 	position_greater_than_zero: position > 0
-	position_less_than_size: position <= size
+	position_less_than_size: position <= count
 
 end

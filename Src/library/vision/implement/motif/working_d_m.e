@@ -14,12 +14,12 @@ inherit
 	WORKING_D_I;
 
 	MESSAGE_D_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
-			clean_up, create_widget, shown
+			create_widget, shown
 		redefine
-			make, dialog_shell, screen_object
+			make, parent
 		end;
 
 	MEL_WORKING_DIALOG
@@ -38,7 +38,7 @@ inherit
 		undefine
 			raise, lower, show, hide
 		redefine
-			dialog_shell, screen_object
+			parent
 		select 
 			mel_work_make, mel_work_make_no_auto
 		end
@@ -51,22 +51,20 @@ feature {NONE} -- Initialization
 
 	make (a_working_dialog: WORKING_D; oui_parent: COMPOSITE) is
 			-- Create a motif working dialog.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_work_make_no_auto (a_working_dialog.identifier,
-				mel_parent (a_working_dialog, widget_index));
+			mel_work_make_no_auto (a_working_dialog.identifier, mc);
 			a_working_dialog.set_dialog_imp (Current);
-			action_target := screen_object;
-			initialize (dialog_shell)
+			initialize (parent)
 		end
 
 feature -- Access
 
-	dialog_shell: MEL_DIALOG_SHELL
+	parent: MEL_DIALOG_SHELL
 			-- Dialog shell of the working dialog
-
-	screen_object: POINTER
-			-- Associated widget C pointer
 
 end -- class WORKING_D_M
 

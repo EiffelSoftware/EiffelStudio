@@ -1990,14 +1990,22 @@ feature -- Byte code access
 			access_type_not_void: access_type /= Void
 		local
 			feature_b: FEATURE_B
+			l_any_feature: ANY_FEATURE_B
 		do
-			create feature_b
-			if static_type /= Void then
-				feature_b.set_precursor_type (static_type)
+			if System.il_generation and then written_in = System.any_id then
+					-- Feature written in ANY in IL code generation.
+				create l_any_feature.make (Current)
+				l_any_feature.set_type (access_type)
+				Result := l_any_feature
+			else
+				create feature_b
+				if static_type /= Void then
+					feature_b.set_precursor_type (static_type)
+				end
+				feature_b.init (Current)
+				feature_b.set_type (access_type)
+				Result := feature_b
 			end
-			feature_b.init (Current)
-			feature_b.set_type (access_type)
-			Result := feature_b
 		ensure
 			Result_exists: Result /= Void
 		end

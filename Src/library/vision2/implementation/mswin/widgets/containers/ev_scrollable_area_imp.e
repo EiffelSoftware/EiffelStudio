@@ -1,5 +1,5 @@
 indexing
-	description: "Eiffel Vision scrollable area, Mswindows implementation."
+	description: "Eiffel Vision scrollable area. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,23 +14,17 @@ inherit
 		end
 
 	EV_VIEWPORT_IMP
+		rename
+			show_horizontal_scroll_bar as show_horizontal_scrollbar,
+			show_vertical_scroll_bar as show_vertical_scrollbar,
+			hide_horizontal_scroll_bar as hide_horizontal_scrollbar,
+			hide_vertical_scroll_bar as hide_vertical_scrollbar
 		redefine
 			interface,	
-			default_ex_style,
-			move_and_resize,
-			top_level_window_imp,
-			make
-		select
-			move_to
-		end
-
-	EV_WEL_CONTROL_CONTAINER_IMP
-		rename
-			make as ev_wel_control_container_make
-		redefine
-			default_ex_style,
-			move_and_resize,
-			top_level_window_imp
+			make,
+			initialize,
+			default_style,
+			default_ex_style
 		end
 
 create
@@ -41,15 +35,13 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Initialize. 
 		do
-			base_make (an_interface)
+			Precursor (an_interface)
+		end
 
-			check
-				to_be_implemented: False
-			end
-
-			--{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
-			--set_text ("Scrollable Area")
-			--!! scroller.make_with_options (Current, 0, 10, 0, 10, 10, 30, 10, 30)
+	initialize is
+		do
+			Precursor
+			create scroller.make_with_options (Current, 0, 10, 0, 10, 10, 30, 10, 30)
 		end
 
 feature -- Access
@@ -58,38 +50,26 @@ feature -- Access
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scrollbar.
 		do
-			check
-				to_be_implemented: False
-			end
-			--Result := scroller.horizontal_line
+			Result := scroller.horizontal_line
 		end
 
 	vertical_step: INTEGER is
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on the vertical scrollbar.
 		do
-			check
-				to_be_implemented: False
-			end
-			--Result := scroller.vertical_line
+			Result := scroller.vertical_line
 		end
 
 	is_horizontal_scrollbar_visible: BOOLEAN is
 			-- Should horizontal scrollbar be displayed?
 		do
-			check
-				to_be_implemented: False
-			end
-			--Result := minimal_horizontal_position /= maximal_horizontal_position
+			Result := minimal_horizontal_position /= maximal_horizontal_position
 		end
 
 	is_vertical_scrollbar_visible: BOOLEAN is
 			-- Should vertical scrollbar be displayed?
 		do
-			check
-				to_be_implemented: False
-			end
-			--Result := minimal_vertical_position /= maximal_vertical_position
+			Result := minimal_vertical_position /= maximal_vertical_position
 		end
 
 feature -- Element change
@@ -97,51 +77,13 @@ feature -- Element change
 	set_horizontal_step (a_step: INTEGER) is
 			-- Set `horizontal_step' to `a_step'.
 		do
-			check
-				to_be_implemented: False
-			end
-			--scroller.set_horizontal_line (a_step)
+			scroller.set_horizontal_line (a_step)
 		end
 
 	set_vertical_step (a_step: INTEGER) is
 			-- Set `vertical_step' to `a_step'.
 		do
-			check
-				to_be_implemented: False
-			end
-			--scroller.set_vertical_line (a_step)
-		end
-
-	show_horizontal_scrollbar is
-			-- Display horizontal scrollbar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	hide_horizontal_scrollbar is
-			-- Do not display horizontal scrollbar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	show_vertical_scrollbar is
-			-- Display vertical scrollbar.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	hide_vertical_scrollbar is
-			-- Do not display vertical scrollbar.
-		do
-			check
-				to_be_implemented: False
-			end
+			scroller.set_vertical_line (a_step)
 		end
 
 feature -- Obsolete
@@ -170,106 +112,25 @@ feature -- Obsolete
 		--	end
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		local
-			cd: EV_WIDGET_IMP
+feature {NONE} -- Implementation
+
+	default_style: INTEGER is
 		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor (a_x, a_y, a_width, a_height, repaint)
-	
-			if child /= Void then
-				cd := child
-
-				-- If the container is bigger than the child, it simply resize it
-				if client_width >= cd.minimum_width and client_height >= cd.minimum_height then
-					set_vertical_range (0, 0)
-					set_horizontal_range (0, 0)
-					cd.set_move_and_size (0, 0, client_width, client_height)
-
-				-- Only a vertical scroll bar, we adapt it
-				elseif client_width >= cd.minimum_width then
-					set_horizontal_range (0, 0)
-					if cd.y < 0 then
-						-- If it grows, we need to move the child.
-						if client_height > cd.minimum_height + cd.y then
-							vertical_update (client_height - cd.minimum_height - cd.y, 0)
-						end
-						cd.set_move_and_size (0, cd.y, client_width, cd.minimum_height)
-						set_vertical_range (cd.y, (cd.minimum_height - client_height + cd.y).abs)
-						set_vertical_position (0)
-					else
-						cd.set_move_and_size (0, 0, client_width, cd.minimum_height)
-						set_vertical_range (0, cd.minimum_height - client_height)
-					end
-
-				-- Only an horizontal scroll bar, we adapt it
-				elseif client_height >= cd.minimum_height then
-					set_vertical_range (0, 0)
-					if cd.x < 0 then
-						-- If it grows, we need to move the child.
-						if client_width > cd.minimum_width + cd.x then
-							horizontal_update (client_width - cd.width - cd.x, 0)
-						end
-						cd.set_move_and_size (cd.x, 0, cd.minimum_width, client_height)
-						set_horizontal_range (cd.x, (cd.minimum_width - client_width + cd.x).abs)
-						set_horizontal_position (0)
-					else
-						cd.set_move_and_size (0, 0, cd.minimum_width, client_height)
-						set_horizontal_range (0, cd.minimum_width - client_width)
-					end
-
-				-- Both scroll bars are shown
-				else
-					if cd.x < 0 and cd.y < 0 then
-							-- If it grows, we need to move the child.
-						if client_width > cd.minimum_width + cd.x then
-							horizontal_update (client_width - cd.width - cd.x, 0)
-						end
-						if client_height > cd.minimum_height + cd.y then
-							vertical_update (client_height - cd.height - cd.y, 0)
-						end
-						cd.set_move_and_size (cd.x, cd.y, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (cd.x, (cd.minimum_width - client_width + cd.x).abs)
-						set_vertical_range (cd.y, (cd.minimum_height - client_height + cd.y).abs)
-						set_horizontal_position (0)
-						set_vertical_position (0)
-					elseif cd.x < 0 then
-						if client_width > cd.minimum_width + cd.x then
-							horizontal_update (client_width - cd.width - cd.x, 0)
-						end
-						cd.set_move_and_size (cd.x, 0, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (cd.x, (cd.minimum_width - client_width + cd.x).abs)
-						set_vertical_range (0, cd.minimum_height - client_height)
-						set_horizontal_position (0)
-					elseif cd.y <= 0 then
-						if client_height > cd.minimum_height + cd.y then
-							vertical_update (client_height - cd.height - cd.y, 0)
-						end
-						cd.set_move_and_size (0, cd.y, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (0, cd.minimum_width - client_width)
-						set_vertical_range (cd.y, (cd.minimum_height - client_height + cd.y).abs)
-						set_vertical_position (0)
-					else
-						cd.set_move_and_size (0, 0, cd.minimum_width, cd.minimum_height)
-						set_horizontal_range (0, cd.minimum_width - client_width)
-						set_vertical_range (0, cd.minimum_height - client_height)
-					end
-				end
-			end
+			Result := Ws_child +
+				Ws_clipchildren +
+				Ws_clipsiblings +
+				Ws_visible +
+				Ws_vscroll +
+				Ws_hscroll
 		end
 
 	default_ex_style: INTEGER is
 			-- The default ex-style of the window.
 		do
-			Result := {EV_WEL_CONTROL_CONTAINER_IMP} Precursor + Ws_ex_clientedge
+			Result := Ws_ex_controlparent + Ws_ex_clientedge + Ws_ex_rightscrollbar
 		end
 
-feature {NONE} -- Implementation
-
 	interface: EV_VIEWPORT
-
-	top_level_window_imp: EV_WINDOW_IMP
 
 end -- class EV_SCROLLABLE_AREA_IMP
 
@@ -294,6 +155,10 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/09 01:19:48  brendel
+--| Useable, but features are not yet implemented.
+--| Scrollbars (dis)appear dynamically.
+--|
 --| Revision 1.17  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -29,11 +29,6 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
-		
-	GB_PICK_AND_DROP_SHIFT_MODIFIER
-		undefine
-			default_create, is_equal, copy
-		end
 
 		-- We only inherit this to get access to the parent.
 		-- We could recursively find the tree containing `Current',
@@ -61,12 +56,11 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current' and initialize pick and drop transport.
+		local
+			last_generated_object: GB_OBJECT
 		do
 			Precursor {EV_TREE_ITEM}
 			set_pebble_function (agent generate_transportable)
-			pick_actions.force_extend (agent object_handler.set_up_drop_actions_for_all_objects)
-			pick_actions.force_extend (agent create_shift_timer)
-			pick_ended_actions.force_extend (agent destroy_shift_timer)
 		end
 
 feature -- Access
@@ -164,11 +158,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- `Result' is a GB_OBJECT matching `text' of `Current'.
 		do
 			Result := object_handler.build_object_from_string (type)
-				--| FIXME I believe this is no longer needed.
-				--| FIXME, Need to allow shift pick.
-			object_handler.for_all_objects_build_drop_actions_for_new_object
-			
-			type_selector.update_drop_actions_for_all_children (Result)
 		ensure
 			Result_not_void: Result /= Void
 		end

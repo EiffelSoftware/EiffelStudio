@@ -1542,10 +1542,13 @@ feature -- Features info
 					if is_static and not l_is_c_external then
 							-- Offset for static features as we generate one more argument.
 						j := 1
+							-- Current needs to be generated only for static wrapper of Eiffel
+							-- feature so that metadata consumer can pick the name (e.g. debugger)
+							-- but it is not needed when it is defined as an instance method.
+						uni_string.set_string ("Current")
+						l_param_token := md_emit.define_parameter (l_meth_token, uni_string, j,
+							feature {MD_PARAM_ATTRIBUTES}.In)
 					end
-					uni_string.set_string ("Current")
-					l_param_token := md_emit.define_parameter (l_meth_token, uni_string, j,
-						feature {MD_PARAM_ATTRIBUTES}.In)
 
 					if l_has_arguments then
 						from

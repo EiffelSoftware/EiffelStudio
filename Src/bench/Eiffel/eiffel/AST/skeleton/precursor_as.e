@@ -10,9 +10,7 @@ class PRECURSOR_AS
 inherit
 	ACCESS_AS
 		redefine
-			type_check, byte_node,
-			fill_calls_list, replicate,
-			is_equivalent
+			type_check, byte_node, is_equivalent
 		end
 
 	CLICKABLE_AST
@@ -225,7 +223,7 @@ feature -- Type check, byte code and dead code removal
 			context.supplier_ids.extend (depend_unit)
 
 				-- Create dependance on precursor
-			create depend_unit.make (p_type.base_class_id, a_feature)
+			create depend_unit.make (p_type.class_id, a_feature)
 			context.supplier_ids.extend (depend_unit)
 			
 				-- Attachments type check
@@ -425,34 +423,6 @@ feature -- Type check, byte code and dead code removal
 			-- Attachement types line
 		once
 			Result := Context.parameters
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
---		local
---			new_list: like l
-		do
---			if l.is_new then
---				l.add (feature_name)
---			end
-
---			if parameters /= void then
---				create new_list.make
---				parameters.fill_calls_list (new_list)
---				l.merge (new_list)
---			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			if parameters /= Void then
-				Result.set_parameters (
-					parameters.replicate (ctxt.new_ctxt))
-			end
 		end
 
 feature {NONE}  -- precursor table

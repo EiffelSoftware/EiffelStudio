@@ -14,9 +14,7 @@ inherit
 			is_equivalent, 
 			line_number,
 			type_check, 
-			byte_node,
-			fill_calls_list, 
-			replicate
+			byte_node
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -104,27 +102,6 @@ feature -- Type check, byte code and dead code removal
 				Result.set_compound (compound.byte_node)
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current
-		do
-			expr.fill_calls_list (l)
-			if compound /= Void then
-				compound.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result :=  clone (Current)
-			Result.set_expr (expr.replicate (ctxt))
-			if compound /= Void then
-				Result.set_compound (
-					compound.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

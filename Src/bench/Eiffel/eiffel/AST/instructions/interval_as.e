@@ -11,8 +11,7 @@ class INTERVAL_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent, byte_node, type_check, 
-			fill_calls_list, replicate
+			is_equivalent, byte_node, type_check
 		end
 
 	SHARED_INSPECT
@@ -171,33 +170,6 @@ feature -- Access
 		do
 			Result := lower.good_character
 						and then (upper = Void or else upper.good_character)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: like l
-		do
-			!!new_list.make
-			lower.fill_calls_list (new_list)
-			l.merge (new_list)
-			if upper /= Void then
-				new_list.make
-				upper.fill_calls_list (new_list)
-				l.merge (new_list)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to Replication
-		do
-			Result := clone (Current)
-			Result.set_lower (lower.replicate (ctxt))
-			if upper /= Void then
-				Result.set_upper (upper.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -11,9 +11,7 @@ class ACCESS_FEAT_AS
 inherit
 	ACCESS_AS
 		redefine
-			type_check, byte_node, format,
-			fill_calls_list, replicate,
-			is_equivalent
+			type_check, byte_node, format, is_equivalent
 		end
 
 	SHARED_CONFIGURE_RESOURCES
@@ -539,45 +537,6 @@ end
 				ctxt.commit
 			else
 				ctxt.rollback
-			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: like l
-		do
-			if l.is_new then
-				l.add (feature_name)
-			end
-			if parameters /= Void then
-			 	create new_list.make
-				parameters.fill_calls_list (new_list)
-				l.merge (new_list)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-debug ("REPLICATION")
-	io.error.putstring ("feature name before: ")
-	io.error.putstring (feature_name)
-	io.error.new_line
-end
-			ctxt.adapt_name (feature_name)
-			Result.set_feature_name (ctxt.adapted_name)
-debug ("REPLICATION")
-	io.error.putstring ("feature name after: ")
-	io.error.putstring (ctxt.adapted_name)
-	io.error.new_line
-end
-			if parameters /= Void then
-				Result.set_parameters (
-					parameters.replicate (ctxt.new_ctxt))
 			end
 		end
 

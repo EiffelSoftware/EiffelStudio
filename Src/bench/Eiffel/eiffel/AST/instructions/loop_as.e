@@ -9,10 +9,7 @@ class LOOP_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_breakpoint_slots,
-			byte_node, 
-			fill_calls_list, 
-			replicate
+			number_of_breakpoint_slots, byte_node
 		end
 	
 	SHARED_OPTIMIZATION_TABLES
@@ -176,53 +173,6 @@ end
 				Result.set_compound (compound.byte_node)
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: CALLS_LIST
-		do
-			if from_part /= Void then
-				from_part.fill_calls_list (l)
-			end
-			if invariant_part /= Void then
-				invariant_part.fill_calls_list (l)
-			end
-			if variant_part /= Void then
-				variant_part.fill_calls_list (l)
-			end
-			!!new_list.make
-			stop.fill_calls_list (new_list)
-			l.merge (new_list)
-			if compound /= Void then
-				compound.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			if from_part /= Void then
-				Result.set_from_part (
-					from_part.replicate (ctxt))
-			end
-			if invariant_part /= Void then
-				Result.set_invariant_part (
-					invariant_part.replicate (ctxt))
-			end
-			if variant_part /= Void then
-				Result.set_variant_part (
-					variant_part.replicate (ctxt))
-			end
-			Result.set_stop (stop.replicate (ctxt))
-			if compound /= Void then
-				Result.set_compound(
-					compound.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

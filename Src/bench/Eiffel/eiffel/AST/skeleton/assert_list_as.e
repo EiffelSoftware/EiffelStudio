@@ -10,7 +10,6 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node, format,
-			fill_calls_list, replicate,
 			number_of_breakpoint_slots
 		end
 
@@ -172,24 +171,6 @@ feature {NONE} -- Format
 				end
 			end
 		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			if assertions /= Void then
-				assertions.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is 
-		do
-			Result := clone (Current)
-			if assertions /= Void then
-				Result.set_assertions (assertions.replicate (ctxt))
-			end
-		end
-
 
 feature {NONE} -- Implementation
 	

@@ -9,8 +9,7 @@ class CHECK_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			byte_node, fill_calls_list, replicate,
-			number_of_breakpoint_slots
+			byte_node, number_of_breakpoint_slots
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -68,26 +67,6 @@ feature -- Type check, byte code and dead code removal
 				Result.set_check_list (check_list.byte_node)
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current
-		do
-			if check_list /= Void then
-				check_list.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			if check_list /= Void then
-				Result.set_check_list(
-					check_list.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -10,9 +10,7 @@ class NESTED_EXPR_AS
 inherit
 	CALL_AS
 		redefine
-			type_check, byte_node, format, 
-			fill_calls_list, replicate,
-			is_equivalent
+			type_check, byte_node, format, is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -111,22 +109,6 @@ feature -- Type check, byte code and dead code removal
 				ctxt.rollback
 			end
 		end
-
-    fill_calls_list (l: CALLS_LIST) is
-            -- find calls to Current
-        do
-            target.fill_calls_list (l)
-            l.stop_filling
-            message.fill_calls_list (l)
-        end
-
-    Replicate (ctxt: REP_CONTEXT): like Current is
-            -- Adapt to replication
-        do
-            Result := clone (Current)
-            Result.set_target (target.replicate (ctxt))
-            Result.set_message (message.replicate (ctxt))
-        end
 
 feature {AST_EIFFEL} -- Output
 

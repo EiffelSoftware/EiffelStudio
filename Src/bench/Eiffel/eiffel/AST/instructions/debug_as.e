@@ -8,10 +8,7 @@ class DEBUG_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_breakpoint_slots,
-			byte_node, 
-			fill_calls_list, 
-			replicate
+			number_of_breakpoint_slots, byte_node
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -106,26 +103,6 @@ feature -- Type check, byte code and dead code removal
 				end
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- Find calls to Current.
-		do
-			if compound /= Void then
-				compound.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replictation.
-		do
-			if compound /= Void then
-				Result := clone (Current)
-				Result.set_compound (
-					compound.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -12,9 +12,7 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			byte_node, type_check,
-			format,
-			fill_calls_list, replicate,
+			byte_node, type_check, format,
 			number_of_breakpoint_slots, is_equivalent
 		end
 
@@ -214,48 +212,6 @@ feature -- Formatter
 				ctxt.rollback
 			else
 				ctxt.commit
-			end
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		local
-			new_list: like l
-			i, nb: INTEGER
-			l_area: SPECIAL [T]
-		do
-			from
-				!! new_list.make
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_area.item (i).fill_calls_list (new_list)
-				l.merge (new_list)
-				new_list.make
-				i := i + 1
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		local
-			l_area, r_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			Result := clone (Current)
-			l_area := area
-			r_area := Result.area
-			from 
-				nb := count
-			until
-				i = nb
-			loop
-				r_area.put (l_area.item (i).replicate (ctxt.new_ctxt), i)
-				i := i + 1
 			end
 		end
 

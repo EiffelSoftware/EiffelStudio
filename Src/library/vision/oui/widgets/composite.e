@@ -36,13 +36,13 @@ feature -- Access
 			valid_result: Result /= Void
 		end;
 
-	descendents: ARRAYED_LIST [WIDGET] is
-			-- List of descendents for Current composite
+	descendants: ARRAYED_LIST [WIDGET] is
+			-- List of descendants for Current composite
 		require
 			exists: not destroyed
 		do
 			!! Result.make (10);
-			widget_manager.descendents_of (Current, Result);
+			widget_manager.descendants_of (Current, Result);
 		ensure
 			valid_result: Result /= Void
 		end;
@@ -68,7 +68,6 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 			-- Implementation of Current
 
 end -- class COMPOSITE
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

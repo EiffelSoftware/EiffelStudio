@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	make (a_parent: COMPOSITE) is
 			-- Create the dialog.
 		local	
-			sep: SEPARATOR;
+			sep: THREE_D_SEPARATOR;
 			rc, p_row, t_row: ROW_COLUMN;
 			p_label: LABEL;
 			form: FORM;

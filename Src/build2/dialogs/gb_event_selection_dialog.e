@@ -104,6 +104,7 @@ feature {NONE} -- Initialization
 			temp_box.extend (separator)
 			temp_box.disable_item_expand (separator)
 			create viewport
+			viewport.set_background_color (white)
 			create h_box
 			create scroll_bar
 			h_box.extend (viewport)
@@ -227,7 +228,7 @@ feature {NONE} -- Implementation
 			action_sequence_not_void: an_action_sequence /= Void
 		local
 			counter: INTEGER
-			label: EV_LABEL
+			label, start_label: EV_LABEL
 			frame: EV_FRAME
 			vertical_box: EV_VERTICAL_BOX
 			horizontal_box, horizontal_box2: EV_HORIZONTAL_BOX
@@ -237,6 +238,7 @@ feature {NONE} -- Implementation
 			info: GB_ACTION_SEQUENCE_INFO
 			feature_name: STRING
 			renamed_action_sequence_name: STRING
+			action_sequence_comment: STRING
 		do
 			from
 				counter := 1
@@ -247,18 +249,37 @@ feature {NONE} -- Implementation
 				create frame
 				create horizontal_box
 				create check_button
+				check_button.set_background_color (white)
 				create vertical_box
 				create text_field
-				text_field.set_minimum_width (200)
+				text_field.set_minimum_width (100)
+				
+					-- Add the start label.
+				create start_label
+				start_label.set_background_color (white)
+				create vertical_box
+				vertical_box.set_background_color (white)
+				horizontal_box.extend (vertical_box)
+				horizontal_box.disable_item_expand (vertical_box)
+				start_label.set_minimum_width (250)
+				start_label.align_text_left
+				vertical_box.extend (start_label)
+				vertical_box.disable_item_expand (start_label)
+				create cell
+				cell.set_background_color (white)
+				vertical_box.extend (cell)
 				
 					-- We must check to see whether `object' has an event linked to
 					-- the current action sequence.
 				create vertical_box
+				vertical_box.set_background_color (white)
+				
 				create cell
+				cell.set_background_color (white)
 				vertical_box.extend (check_button)
 				vertical_box.disable_item_expand (check_button)
 				vertical_box.extend (cell)
-				
+
 				horizontal_box.extend (vertical_box)
 				horizontal_box.disable_item_expand (vertical_box)
 				main_vertical_box.extend (horizontal_box)
@@ -268,19 +289,34 @@ feature {NONE} -- Implementation
 					-- Adjust event names that have been renamed in Vision2 interface
 				renamed_action_sequence_name := modified_action_sequence_name (object.type, info)
 				feature_name := feature_name_of_object_event (info)
+					-- Display text before the check button.
+					
+				action_sequence_comment := clone (an_action_sequence.comments @ counter)
+					-- We prune the `comment_start_string' from the start of the action sequence
+					-- for a description of what the action sequence does.
+					-- We check here, as if this is not the case, our output may not be correct
+					-- and will need special handling.
+				check
+					action_sequence_comment.substring_index (comment_start_string, 1) = 1
+				end
+				action_sequence_comment.keep_tail (action_sequence_comment.count - comment_start_string.count)
+				start_label.set_text (action_sequence_comment)
+
 				if feature_name = Void then
 						-- Build empty interface.
-					create label.make_with_text (renamed_action_sequence_name + " " + an_action_sequence.comments @ counter)
+					create label.make_with_text (renamed_action_sequence_name)
+					label.set_background_color (white)
 					label.align_text_left
 					horizontal_box.extend (label)
 				else
 						-- Build interface with feature name included and displayed.
 					check_button.enable_select
-					--vertical_box1.set_padding_width (10)
-					create frame.make_with_text (renamed_action_sequence_name + " " + an_action_sequence.comments @ counter)
+					create frame.make_with_text (renamed_action_sequence_name)
 					horizontal_box.extend (frame)
 					create label.make_with_text ("Generated feature name : ")
+					label.set_background_color (white)
 					create horizontal_box2
+					horizontal_box.set_background_color (white)
 					horizontal_box2.extend (label)
 					horizontal_box2.extend (text_field)
 					text_field.set_text (feature_name)
@@ -374,10 +410,12 @@ feature {NONE} -- Implementation
 			if (current_check_button).is_selected then
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
-				horizontal_box.prune (horizontal_box @ 2)
-				create frame.make_with_text (all_names @ index + " " + all_comments @ index)
+				horizontal_box.prune (horizontal_box @ 3)
+				create frame.make_with_text (all_names @ index)
+				frame.set_background_color (white)
 				horizontal_box.extend (frame)
 				create label.make_with_text ("Generated feature name : ")
+				label.set_background_color (white)
 				create horizontal_box
 				horizontal_box.extend (label)
 				current_text_field.set_text (current_text_field.text.as_lower)
@@ -387,9 +425,10 @@ feature {NONE} -- Implementation
 			else
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
-				horizontal_box.prune (horizontal_box @ 2)
+				horizontal_box.prune (horizontal_box @ 3)
 				
-				create label.make_with_text (all_names @ index + " " + all_comments @ index)
+				create label.make_with_text (all_names @ index)
+				label.set_background_color (white)
 				label.align_text_left
 				horizontal_box.extend (label)
 					-- Need to unparent the previous text field, as this object
@@ -419,6 +458,7 @@ feature {NONE} -- Implementation
 			create main_vertical_box
 			main_vertical_box.set_padding_width (10)
 			main_vertical_box.set_border_width (20)
+			main_vertical_box.set_background_color (white)
 		end
 		
 	update_scroll_bar is

@@ -2230,6 +2230,7 @@ void default_rescue() {
     RTSN;
 #ifdef WORKBENCH
     RTDA;
+    RTDT;
 #endif
     RTXD;
 	RTXI(0);
@@ -2416,6 +2417,7 @@ void release_system_lists_in_rescue() {
     RTSN;
 #ifdef WORKBENCH
     RTDA;
+	RTDT;
 #endif
     RTXD;
 	RTXI(0);
@@ -2513,6 +2515,7 @@ void release_child_list() {
     RTSN;
 #ifdef WORKBENCH
 	RTDA;
+	RTDT;
 #endif
     RTXD;
 	RTXI(0);

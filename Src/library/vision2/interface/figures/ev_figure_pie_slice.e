@@ -1,7 +1,7 @@
 indexing
 	description:
-		"Slices from a circle with `center_point'. Size is determined by%N%
-		%`aperture' [-2*Pi..2*Pi]."
+		"Slices from an ellipse with `center_point'. Size is determined by%N%
+		%`aperture' [0..2*Pi]."
 	status: "See notice at end of class"
 	keywords: "figure, slice, pizza, pie"
 	date: "$Date$"
@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	start_angle: DOUBLE
-			-- Angle that defines the start of the arc.
+			-- Angle that defines start of arc.
 
 	aperture: DOUBLE
-			-- Angle that defines the percentage of the arc.
+			-- Angle that defines percentage of arc.
 
 feature -- Status setting
 
@@ -72,10 +72,32 @@ feature -- Status setting
 feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
-			-- Is the point on (`x', `y') on this figure?
+			-- Is (`x', `y') on this figure?
+		local
+			ay, ax, bx, by, cx, cy, top, left: INTEGER
+			angle, end_angle: DOUBLE
+			angle_inside: BOOLEAN
 		do
-			--| FIXME To be implemented
-			Result := False
+			if aperture /= 0.0 then
+				ax := point_a.x_abs
+				ay := point_a.y_abs
+				bx := point_b.x_abs
+				by := point_b.y_abs
+				left := ax.min (bx)
+				top := ay.min (by)
+				cx := left + (bx - ax).abs // 2
+				cy := top + (by - ay).abs // 2
+				angle := line_angle (x, y, cx, cy)
+				end_angle := modulo (start_angle + aperture, 2 * Pi)
+				if start_angle < end_angle then
+					angle_inside := angle >= start_angle and angle <= end_angle
+				else
+					angle_inside := angle >= start_angle or angle <= end_angle
+				end
+				Result := point_on_ellipse (x, y, cx, cy, cx - left, cy - top) and angle_inside
+			else
+				Result := False
+			end	
 		end
 
 feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
@@ -89,7 +111,7 @@ feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 			ay := point_a.y_abs
 			bx := point_b.x_abs
 			by := point_b.y_abs
-			Result := [ax, ay, (bx - ax), (by - ay)]
+			Result := [ax.min (bx), ay.min (by), (bx - ax).abs, (by - ay).abs]	
 		end
 
 invariant

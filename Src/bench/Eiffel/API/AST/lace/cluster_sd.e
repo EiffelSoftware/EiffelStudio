@@ -250,8 +250,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 					Error_handler.insert_error (vd51)
 					Error_handler.raise_error
 				else
-					create real_path.make_from_string (cluster_i.dollar_path)
-					real_path.extend (directory_name)
+					create real_path.make_from_string (adapted_directory_name (cluster_i, directory_name))
 				end
 			else
 				create real_path.make_from_string (directory_name)
@@ -270,11 +269,8 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 	build is
 			-- Build the cluster. Also, update the `directory_name'.
 		local
-			d_name, full_d_name: ID_SD;
 			parent_cluster: CLUSTER_I;
 			vd51: VD51;
-			char: CHARACTER
-			dir_name: DIRECTORY_NAME
 		do
 			if parent_name /= Void then
 				parent_cluster := Universe.cluster_of_name (parent_name);
@@ -285,33 +281,8 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 					Error_handler.insert_error (vd51);
 					Error_handler.raise_error
 				else
-					d_name := directory_name;
-					if not is_directory_updated and then d_name.count > 1 then
-						char := d_name.item (2);
-						full_d_name := d_name
-						if d_name.item (1) = '$' then
-							if char = '|' and then d_name.count > 2 then
-									-- This comes from an automatic generated sub-clusters
-									-- because of the `all' or `library' qualification.
-								create dir_name.make_from_string (parent_cluster.dollar_path)
-								dir_name.extend (d_name.substring (3, d_name.count))
-								create full_d_name.initialize (dir_name)
-							elseif
-								not (char.is_alpha or else char.is_digit)
-								and then char /= '_' and then char /= '(' and then char /= '{'
-							then
-									-- Substitue $ with the parent directory path only if it is of
-									-- the form `$X' where X is not `(' or `{' or `_' and nor an
-									-- alphanumeric character.
-									-- Note: The first time it encounters $/ it is
-									-- replaced by the parent directory. Each subsequent
-									-- compilation it will skip this.
-								create full_d_name.initialize (d_name)
-								create d_name.initialize (parent_cluster.dollar_path)
-								full_d_name.replace_substring (d_name, 1, 1)
-							end
-						end
-						directory_name := full_d_name
+					if not is_directory_updated then
+						directory_name := adapted_directory_name (parent_cluster, directory_name)
 						is_directory_updated := True
 					end
 				end
@@ -592,6 +563,44 @@ feature {NONE} -- Implementation
 				Result := True
 				retry
 			end
+		end
+
+	adapted_directory_name (a_parent: CLUSTER_I; a_name: ID_SD): ID_SD is
+			-- Adapted directory name of `a_name' given a parent cluster `a_parent'.
+			-- If we found "$/", "$\" or "$|" then $ is subsitued by `a_parent.dollar_path'
+			-- Otherwise we do nothing.
+		require
+			a_parent_not_void: a_parent /= Void
+			a_name_not_void: a_name /= Void
+		local
+			char: CHARACTER
+			dir_name: DIRECTORY_NAME
+		do
+			Result := a_name
+			if a_name.count > 1 and then a_name.item (1) = '$' then
+				char := a_name.item (2)
+				if char = '|' and then a_name.count > 2 then
+						-- This comes from an automatic generated sub-clusters
+						-- because of the `all' or `library' qualification.
+					create dir_name.make_from_string (a_parent.dollar_path)
+					dir_name.extend (a_name.substring (3, a_name.count))
+					create Result.initialize (dir_name)
+				elseif
+					not (char.is_alpha or else char.is_digit)
+					and then char /= '_' and then char /= '(' and then char /= '{'
+				then
+						-- Substitue $ with the parent directory path only if it is of
+						-- the form `$X' where X is not `(' or `{' or `_' and nor an
+						-- alphanumeric character.
+						-- Note: The first time it encounters $/ it is
+						-- replaced by the parent directory. Each subsequent
+						-- compilation it will skip this.
+					Result := a_name.twin
+					Result.replace_substring (a_parent.dollar_path, 1, 1)
+				end
+			end
+		ensure
+			adapted_directory_name_not_void: Result /= Void
 		end
 
 	valid_class_file_extension (c: CHARACTER): BOOLEAN is

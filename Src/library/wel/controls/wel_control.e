@@ -47,7 +47,7 @@ feature -- Access
 			exists: exists
 		do
 			if has_system_font then
-				!WEL_SYSTEM_FONT! Result.make
+				Result := (create {WEL_SHARED_FONTS}).system_font
 			else
 				!! Result.make_by_pointer (cwel_integer_to_pointer (
 					cwin_send_message_result (item, Wm_getfont,

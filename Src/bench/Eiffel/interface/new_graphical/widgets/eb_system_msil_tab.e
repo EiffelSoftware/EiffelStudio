@@ -82,7 +82,6 @@ feature -- Store/Retrieve
 	store (root_ast: ACE_SD) is
 			-- Store content of widget into `root_ast'.
 		local
-			cl: LACE_LIST [LANG_TRIB_SD]
 			defaults: LACE_LIST [D_OPTION_SD]
 		do
 			defaults := root_ast.defaults
@@ -162,11 +161,6 @@ feature {NONE} -- Filling
 		require
 			root_ast_not_void: root_ast /= Void
 		local
-			cl: LACE_LIST [LANG_TRIB_SD]
-			lace_list: LACE_LIST [ID_SD]
-			list_item: EV_LIST_ITEM
-			list: EV_LIST
-			text_field: EV_TEXT_FIELD
 			defaults: LACE_LIST [D_OPTION_SD]
 			precomp_opt: D_PRECOMPILED_SD
 			opt: D_OPTION_SD

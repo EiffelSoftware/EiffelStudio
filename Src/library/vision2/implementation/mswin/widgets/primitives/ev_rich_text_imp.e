@@ -1510,7 +1510,6 @@ feature {NONE} -- Implementation
 			-- Number of characters comprising `text'. This is an optimized
 			-- version, which only recomputes the length if not `text_up_to_date'.
 		local
-			int: INTEGER
 			l_length: INTEGER
 		do
 			if has_word_wrapping then				

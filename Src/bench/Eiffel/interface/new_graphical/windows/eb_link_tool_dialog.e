@@ -53,9 +53,9 @@ feature {NONE} -- Initialization
 			cancelled := False
 			set_title (Interface_names.t_Diagram_link_tool)
 
-			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
-			create apply_button.make_with_text_and_action (Interface_names.b_Apply, agent apply_action)
-			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel_text, agent cancel_action)
+			create ok_button.make_with_text_and_action (Interface_names.b_ok, agent ok_action)
+			create apply_button.make_with_text_and_action (Interface_names.b_apply, agent apply_action)
+			create cancel_button.make_with_text_and_action (Interface_names.b_cancel, agent cancel_action)
 			create cb_left.make_with_text (" left")
 			cb_left.select_actions.extend (agent on_handle_left_selected)
 			create cb_right.make_with_text (" right")

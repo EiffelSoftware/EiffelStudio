@@ -13,6 +13,7 @@ inherit
 	EV_FIGURE_MATH
 		export
 			{NONE} all
+			{ANY} generating_type
 		redefine
 			default_create
 		end

@@ -23,14 +23,12 @@ inherit
 		rename
 			make as shell_make,
 			realize as shell_realize
-		redefine
-			delete_window_action
 		end;
 	TOP_SHELL
 		rename
 			make as shell_make
 		redefine
-			realize, delete_window_action
+			realize
 		select
 			realize
 		end
@@ -52,6 +50,7 @@ feature
 			end;
 			set_icon_name (tool_name);
 			set_action ("<Unmap>,<Prop>", Current, popdown);
+			set_delete_command (quit_command);
 			transporter_init
 		end;
 
@@ -134,7 +133,7 @@ feature
 			-- Close search window
 		do
 			search_command.close;
-			change_font_command.close (text_window)
+			change_font_command.close
 		end;
 
 	build_bar is
@@ -227,22 +226,10 @@ feature
 
 feature -- quit actions
 
-	task_end: TASK;
-
-	delete_window_action  is
-		do
-			!!task_end.make;
-			task_end.add_action (Current, task_end);
-			iterate;
-		end;
-	
 	execute (argument: ANY) is
 		do
 			if argument = popdown then
 				close_windows
-			elseif argument = task_end then
-				task_end.remove_action (Current, task_end);
-				quit_command.execute (Void);
 			else
 				tool_w_execute (argument)
 			end;

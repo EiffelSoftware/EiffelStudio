@@ -31,6 +31,30 @@ feature -- Access
 			create Result
 		end
 
+	uint8_c_type: NATURAL_I is
+			-- uint8 C type
+		once
+			create Result.make (8)
+		end
+
+	uint16_c_type: NATURAL_I is
+			-- uint16 C type
+		once
+			create Result.make (16)
+		end
+
+	uint32_c_type: NATURAL_I is
+			-- uint32 C type
+		once
+			create Result.make (32)
+		end
+
+	uint64_c_type: NATURAL_I is
+			-- uint64 C type
+		once
+			create Result.make (64)
+		end
+
 	int8_c_type: INTEGER_I is
 			-- int8 C type
 		once

@@ -5,29 +5,34 @@ class SHARED_HASH_CODE
 	
 feature {NONE}
 
-	Character_code: 	INTEGER is 1
+	Character_code: INTEGER is 1
 	Wide_char_code: INTEGER is 2
 
-	Boolean_code: 		INTEGER is 3
+	Boolean_code: INTEGER is 3
 
-	Integer8_code:		INTEGER is 4
-	Integer16_code:		INTEGER is 5
-	Integer32_code:		INTEGER is 6
-	Integer64_code:		INTEGER is 7
-
-	Real_32_code:		INTEGER is 8
-	Real_64_code:		INTEGER is 9
-
-	Pointer_code:		INTEGER is 10
+	Integer_8_code: INTEGER is 4
+	Integer_16_code: INTEGER is 5
+	Integer_32_code: INTEGER is 6
+	Integer_64_code: INTEGER is 7
 	
-	Typed_pointer_code: INTEGER is 11
+	natural_8_code: INTEGER is 8
+	natural_16_code: INTEGER is 9
+	natural_32_code: INTEGER is 10
+	natural_64_code: INTEGER is 11
 
-	Void_code:			INTEGER is 12
+	Real_32_code: INTEGER is 12
+	Real_64_code: INTEGER is 13
 
-	Reference_code:		INTEGER is 13
+	Pointer_code: INTEGER is 14
+	
+	Typed_pointer_code: INTEGER is 15
 
-	None_code:			INTEGER is 14
+	Void_code: INTEGER is 16
 
-	Other_code:			INTEGER is 15
+	Reference_code: INTEGER is 17
+
+	None_code: INTEGER is 18
+
+	Other_code: INTEGER is 19
 
 end

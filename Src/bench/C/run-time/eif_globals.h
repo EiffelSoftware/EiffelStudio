@@ -29,6 +29,7 @@ extern "C" {
 #include "eif_types.h"
 #include "eif_threads.h"
 #include "eif_main.h"
+#include "eif_urgent.h" /* URGENT_NBR */
 
 #define GTCX		EIF_GET_CONTEXT
 #define EDCX		EIF_END_GET_CONTEXT
@@ -129,6 +130,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	long th_alloc_cx;					/* Allocation threshold before calling GC */
 	int gc_monitor_cx;					/* Disable GC time-monitoring by default */
 	char *root_obj_cx;					/* Address of the 'root' object */
+
+		/* urgent.c */
+	char *urgent_mem_cx[URGENT_NBR];        /* Array holding urgent chunks */
+	int urgent_index_cx;				/* Last index with free chunk */
 
 		/* hector.c */
 	struct stack hec_stack_cx;			/* Indirection table "hectori stack" for references passed to C*/
@@ -276,6 +281,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define th_alloc		(eif_globals->th_alloc_cx)		/* rt_public */
 #define gc_monitor		(eif_globals->gc_monitor_cx)	/* rt_public */
 #define root_obj		(eif_globals->root_obj_cx)		/* rt_public */
+
+	/* urgent.c */
+#define urgent_mem		(eif_globals->urgent_mem_cx)	/* rt_shared */
+#define urgent_index	(eif_globals->urgent_index_cx)	/* rt_shared */
 
 	/* hector.c */
 #define hec_stack		(eif_globals->hec_stack_cx)	/* rt_public */

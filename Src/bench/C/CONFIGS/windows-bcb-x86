@@ -51,14 +51,6 @@ charsize='1'
 bitpbyte='8'
 lngpad_2='8'
 
-#Compiler/Preprocessor
-cpp_stuff='42'
-defvoidused='15'
-voidflags='15'
-add_log='undef'
-eif_win32='define'
-eif_windows='define'
-
 #Formatting
 inttypes_include=''
 eif_integer_64_display='"I64d"'
@@ -154,3 +146,12 @@ i_varargs='define'
 #Shell
 eunicefix=':'
 spitshell='cat'
+
+#Compiler/Preprocessor
+add_log='undef'
+cpp_stuff='42'
+defvoidused='15'
+eif_sgi='undef'
+eif_win32='define'
+eif_windows='define'
+voidflags='15'

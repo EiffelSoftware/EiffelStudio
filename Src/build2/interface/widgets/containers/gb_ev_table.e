@@ -609,6 +609,9 @@ feature {NONE} -- Implementation
 		do
 				-- Now we need to get the widget represented in objects at the
 				-- second place. We must do this before we move the first widget.
+			if a_column = 3 and a_row = 1 and columns = 1 and rows = 1 then
+				do_nothing
+			end
 			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
 
 			first.set_item_position_and_span (v, a_column, a_row, columns, rows)
@@ -677,12 +680,10 @@ feature {NONE} -- Implementation
 				temp_y := y - row_position
 				new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
 				new_y := temp_y + half_grid_size - ((temp_y + half_grid_size) \\ grid_size)	
-					
-					
 				
 				if x_scale /= 0 then
 					if x_offset = 0 then
-						end_position := ((first.item_column_position (selected_item) + first.item_column_span (selected_item)))
+						end_position := (original_column + original_column_span)
 						current_x_position := (((x + half_grid_size) // grid_size + 1).max (1)).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item)) then
 							--move_and_resize (selected_item, current_x_position, first.item_row_position (selected_item), end_position - current_x_position, first.item_row_span (selected_item))
@@ -704,7 +705,7 @@ feature {NONE} -- Implementation
 				
 				if y_scale /= 0 then
 					if y_offset = 0 then
-						end_position := ((first.item_row_position (selected_item) + first.item_row_span (selected_item)))
+						end_position := (original_row + original_row_span)
 						current_y_position := ((y + half_grid_size) // grid_size + 1).max (1).min (end_position - 1)
 						if first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position) then
 							--move_and_resize (selected_item, first.item_column_position (selected_item), current_y_position, first.item_column_span (selected_item), end_position - current_y_position)
@@ -720,7 +721,8 @@ feature {NONE} -- Implementation
 							set_item_span (selected_item, first.item_column_span (selected_item), new_row)	
 						end
 					end
-				end								
+				end				
+									
 				draw_widgets
 			end
 			if moving_widget then
@@ -788,185 +790,7 @@ feature {NONE} -- Implementation
 				row_counter := row_counter - 1
 			end
 		end
-		
-		
---	x_scrolling_velocity: INTEGER is
---			-- `Result' is desired x scrolling velocity based on the last known position
---			-- of the mouse pointer.
---		do
---			if last_x > drawing_area.width and scrolled_x_once and scrolling_x_start = x_right then
---				Result := (last_x - drawing_area.width) // 20 + 1
---			elseif last_x > scrollable_area.width + scrollable_area.x_offset and scrolling_x_start = x_center then
---				Result := (last_x - scrollable_area.width - scrollable_area.x_offset) // 20 + 1		
---			elseif last_x < scrollable_area.x_offset then
---				Result := - ((scrollable_area.x_offset - last_x) //20 + 1)
---			end
---		end
---		
---	y_scrolling_velocity: INTEGER is
---			-- `Result' is desired y scrolling velocity based on the last known position
---			-- of the mouse pointer.
---		do
---			if last_y > drawing_area.height and scrolled_y_once and scrolling_y_start = y_bottom then
---				Result := (last_y - drawing_area.height) // 20 + 1
---			elseif last_y > scrollable_area.height + scrollable_area.y_offset and scrolling_y_start = y_center then
---				Result := (last_y - scrollable_area.height - scrollable_area.y_offset) // 20 + 1		
---			elseif last_y < scrollable_area.y_offset then
---				Result := - ((scrollable_area.y_offset - last_y) //20 + 1)
---			end
---		end
---		
---		
---	update_scrolling (x, y: INTEGER) is
---			-- Update current scrolling to reflect mouse coordinates `x', `y'.
---		do
---				-- First deal with the x axis
---			if (x > drawing_area.width) and not scrolled_x_once then
---				scrolled_x_once := True
---				scrolling_x_start := x_right
---				start_x_scrolling
---			elseif (x > drawing_area.width) and scrolled_x_once and scrolling_x_start = x_right then
---				if not scrolling_x then
---					start_x_scrolling
---				end
---			elseif scrolling_x_start = x_right then
---				if scrolling_x then
---					end_x_scrolling
---				end
---			end
---			if (x > scrollable_area.width + scrollable_area.x_offset) and not scrolled_x_once then
---				scrolled_x_once := True
---				scrolling_x_start := x_center
---				start_x_scrolling
---			elseif (x > scrollable_area.width + scrollable_area.x_offset) and scrolled_x_once and scrolling_x_start = x_center then
---				if not scrolling_x then
---					start_x_scrolling
---				end
---			elseif scrolling_x_start = x_center then
---				if scrolling_x then
---					end_x_scrolling
---				end
---			end	
---			if x < scrollable_area.x_offset then
---				if not scrolling_x then
---					start_x_scrolling
---				end
---			end
---			
---				-- Then Y axis.
---			if (y > drawing_area.height) and not scrolled_y_once then
---				scrolled_y_once := True
---				scrolling_y_start := y_bottom
---				start_y_scrolling
---			elseif (y > drawing_area.height) and scrolled_y_once and scrolling_y_start = y_bottom then
---				if not scrolling_y then
---					start_y_scrolling
---				end
---			elseif scrolling_y_start = y_bottom then
---				if scrolling_y then
---					end_y_scrolling
---				end
---			end
---			if (y > scrollable_area.height + scrollable_area.y_offset) and not scrolled_y_once then
---				scrolled_y_once := True
---				scrolling_y_start := y_center
---				start_y_scrolling
---			elseif (y > scrollable_area.height + scrollable_area.y_offset) and scrolled_y_once and scrolling_y_start = y_center then
---				if not scrolling_y then
---					start_y_scrolling
---				end
---			elseif scrolling_y_start = y_center then
---				if scrolling_y then
---					end_y_scrolling
---				end
---			end	
---			if y < scrollable_area.y_offset then
---				if not scrolling_y then
---					start_y_scrolling
---				end
---			end
---		end
---		
---	start_x_scrolling is
---			-- Begin automatic scrolling on x axis.
---		do
---			if not scrolling_x then
---				if not scrolling_y then
---						-- Create a timeout which will repeatedly cause the scrolling to
---						-- take place.
---					create timeout.make_with_interval (25)
---					timeout.actions.extend (agent scroll)	
---				end
---				scrolling_x := True
---			end
---		end
---		
---	start_y_scrolling is
---			-- Begin automatic scrolling on y axis.
---		do
---			if not scrolling_y then
---				if not scrolling_x then
---						-- Create a timeout which will repeatedly cause the scrolling to
---						-- take place.
---					create timeout.make_with_interval (25)
---					timeout.actions.extend (agent scroll)	
---				end			
---				scrolling_y := True
---			end
---		end
---		
---	end_x_scrolling is
---			-- End scrolling on x axis.
---		do
---				-- Only destroy if not scrolling in either
---				-- direction. `timeout' controls scrolling in
---				-- both directions.
---			if not scrolling_y then
---				timeout.destroy
---			end
---			scrolling_x := False
---		end
---		
---	end_y_scrolling is
---			-- End scrolling on y axis.
---		do
---				-- Only destroy if not scrolling in either
---				-- direction. `timeout' controls scrolling in
---				-- both directions.
---			if not scrolling_x then
---				timeout.destroy
---			end
---			scrolling_y := False
---		end
---		
---		
---		
---	scroll is
---			--
---		local
---			current_velocity: INTEGER
---		do
---			current_velocity := x_scrolling_velocity
---			if current_velocity > 0 then
---				drawing_area.set_minimum_width (drawing_area.width + current_velocity)	
---			end
---				-- Max 0 ensures that if we are scrolling to the left, we do not
---				-- move to less than position 0.
---			scrollable_area.set_x_offset ((scrollable_area.x_offset + current_velocity).max (0))
---			
---			
---			current_velocity := y_scrolling_velocity
---			if current_velocity > 0 then
---				drawing_area.set_minimum_height (drawing_area.height + current_velocity)
---				
---			end
---				-- Max 0 ensures that if we are scrolling to the top, we do not
---				-- move to less than position 0.
---			scrollable_area.set_y_offset ((scrollable_area.y_offset + current_velocity).max (0))
---		end
---		
---		
---		
+
 	close_to (current_x, current_y, desired_x, desired_y: INTEGER): BOOLEAN is
 			-- Is position `current_x', `current_y' within `accuracy_value' of `desired_x', `desired_y'.
 		do
@@ -994,7 +818,10 @@ feature {NONE} -- Implementation
 		do
 			Result := grid_size // 2
 		end
-	
+
+original_column, original_row: INTEGER
+original_column_span, original_row_span: INTEGER
+
 	button_pressed (x, y, a_button: INTEGER) is
 			-- A button has been pressed. If `a_button' = 1 then
 			-- check for movement/resizing.
@@ -1008,6 +835,15 @@ feature {NONE} -- Implementation
 				
 			--end
 			if selected_item /= Void then
+					-- We must store the original size and position of `selected_item'.
+					-- This is necessary, as in `track_movement', we may move and re-size
+					-- `selected_item', although still need to perform the calculations on
+					-- the current cursor position against the position of `selected_item'
+					-- when the resizing began.
+				original_column := first.item_column_position (selected_item)
+				original_row := first.item_column_position (selected_item)	
+				original_column_span := first.item_column_span (selected_item)
+				original_row_span := first.item_row_span (selected_item)
 				column_position := (first.item_column_position (selected_item) - 1) * grid_size
 				row_position := (first.item_row_position (selected_item) - 1) * grid_size
 				end_column_position := column_position + first.item_column_span (selected_item) * grid_size
@@ -1094,11 +930,11 @@ feature {NONE} -- Implementation
 				if resizing_widget then
 					resizing_widget := False
 					set_all_pointer_styles (standard_cursor)
-	--				drawing_area.disable_capture
+--					drawing_area.disable_capture
 				elseif moving_widget then
 					moving_widget := False
 					set_all_pointer_styles (standard_cursor)
-	--				drawing_area.disable_capture
+--					drawing_area.disable_capture
 				end
 --			set_initial_area_size
 			draw_widgets

@@ -13,6 +13,7 @@ inherit
 	EV_SIZEABLE_IMP
 		redefine
 			internal_resize,
+			notify_change,
 			minimum_width,
 			minimum_height
 		end
@@ -26,7 +27,6 @@ feature -- Access
 			if bit_set (internal_changes, 1) then
 				compute_minimum_width
 				internal_changes := set_bit (internal_changes, 1, False)
-				internal_changes := set_bit (internal_changes, 4, True)
 			end
 			Result := internal_minimum_width
 		end
@@ -38,7 +38,6 @@ feature -- Access
 			if bit_set (internal_changes, 2) then
 				compute_minimum_height
 				internal_changes := set_bit (internal_changes, 2, False)
-				internal_changes := set_bit (internal_changes, 8, True)
 			end
 			Result := internal_minimum_height
 		end
@@ -46,59 +45,78 @@ feature -- Access
 feature -- Basic operations
 
 	internal_resize (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Make `x' and `y' the new position of the current object and
-			-- `w' and `h' the new width and height of it.
-			-- If there is any child, it also adapt them to fit to the given
-			-- value.
+			-- A function sometimes used (notebook) that update
+			-- and resize the current widget.
 		do
-			-- We recompute the minimum width if necessary.
-			if bit_set (internal_changes, 1) then
+			inspect internal_changes
+			when 1 then
 				compute_minimum_width
-				internal_changes := set_bit (internal_changes, 4, True)
-			end
-
-			-- We recompute then minimum height if necessary.
-			if bit_set (internal_changes, 2) then
+			when 2 then
 				compute_minimum_height
-				internal_changes := set_bit (internal_changes, 8, True)
-			end
-
-			-- Then, we resize from minimum or normally depending on what is necessary.
-			if bit_set (internal_changes, 4) or bit_set (internal_changes, 8) then
-				resize_from_minimum (a_x, a_y, a_width, a_height)
-				internal_changes := set_bit (internal_changes, 1, False)
-				internal_changes := set_bit (internal_changes, 2, False)
-				internal_changes := set_bit (internal_changes, 4, False)
-				internal_changes := set_bit (internal_changes, 8, False)
+			when 3 then
+				compute_minimum_size
 			else
-				resize_proportionnaly (a_x, a_y, a_width, a_height)
+
+			end
+			move_and_resize (a_x, a_y, a_width, a_height, True)
+		end
+
+	notify_change (type: INTEGER) is
+			-- Notify the current widget that the change identify by
+			-- type have been done. For types, see `internal_changes'
+			-- in class EV_SIZEABLE_IMP. If the container is shown, 
+			-- we integrate the changes immediatly, otherwise, we postpone
+			-- them.
+		local
+			mw, mh: INTEGER
+		do
+			inspect type
+			when 1 then
+				if displayed then
+					compute_minimum_width
+				elseif not bit_set (internal_changes, 1) then
+					internal_changes := set_bit (internal_changes, 1, True)
+					if parent_imp /= Void then
+						parent_imp.notify_change (1)
+					end
+				end
+			when 2 then
+				if displayed then
+					compute_minimum_height
+				elseif not bit_set (internal_changes, 2) then
+					internal_changes := set_bit (internal_changes, 2, True)
+					if parent_imp /= Void then
+						parent_imp.notify_change (2)
+					end
+				end
+			when 3 then
+				if displayed then
+					compute_minimum_size
+				elseif not (bit_set (internal_changes, 1) and bit_set (internal_changes, 2)) then
+					internal_changes := set_bit (internal_changes, 1, True)
+					internal_changes := set_bit (internal_changes, 2, True)
+					if parent_imp /= Void then
+						parent_imp.notify_change (3)
+					end
+				end
 			end
 		end
 
-	compute_minimum_width is
+	compute_minimum_width, compute_minimum_height, compute_minimum_size is
 			-- Recompute the minimum_width of the object.
 			-- Should call only set_internal_minimum_width.
 		do
-			-- Nothing by default
+			if displayed then
+				move_and_resize (x, y, width, height, True)
+			end
 		end
 
-	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
-			-- Should call only set_internal_minimum_height.
-		do
-			-- Nothing by default
-		end
+feature -- Deferred
 
-	resize_from_minimum (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Resize from the minimum size of the children
-		do
-			move_and_resize (a_x, a_y, a_width, a_height, True)
-		end
-
-	resize_proportionnaly (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Resize everything by difference with the current size.
-		do
-			move_and_resize (a_x, a_y, a_width, a_height, True)
+	displayed: BOOLEAN is
+			-- Is the window displayed on the screen?
+			-- ie : is parent and current widget shown.
+		deferred
 		end
 
 end -- class EV_CONTAINER_SIZEABLE_IMP

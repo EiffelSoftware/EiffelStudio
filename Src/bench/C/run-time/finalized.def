@@ -38,6 +38,11 @@ EXPORTS
 	egc_edispose
 	egc_ecreate
 	egc_ce_rname
+	egc_compiler_tag
+	egc_system_name
+	egc_partab_size
+	egc_partab
+	egc_routdisp
 	
 ;NOT IMPORTED
 	c_outb
@@ -148,7 +153,6 @@ EXPORTS
 	eadopt
 	eback
 	eclone
-	econfg
 	econfm
 	ecopy
 	edclone
@@ -252,7 +256,6 @@ EXPORTS
 	esint_size
 	esreal_size
 	estore
-	estypeg
 	ewean
 	exdata
 	exset
@@ -405,6 +408,25 @@ EXPORTS
 	str_take
 	str_upper
 	upintdiv
+
+;Generic conformance
+	eif_gen_conf_init
+	eif_gen_conf_init
+	eif_gen_conf
+	eif_gen_create
+	eif_cid_map
+	eif_compound_id
+	eif_gen_typecode
+	eif_gen_is_uniform
+	eif_gen_count
+	eif_gen_typename
+	eif_gen_typecode
+	eif_gen_typecode_str
+
+;Routine Object
+	rout_obj_call_function
+	rout_obj_new_args
+	rout_obj_free_args
 
 ;Cecil add-on
 	eifcid

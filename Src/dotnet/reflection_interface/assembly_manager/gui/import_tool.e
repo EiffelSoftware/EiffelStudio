@@ -524,7 +524,7 @@ feature -- Event handling
 				selected_row := data_grid.get_current_Row_Index
 				a_descriptor := current_assembly (selected_row)
 				if a_descriptor /= Void then
-					create support
+					create support.make
 					assembly_dependancies := support.dependancies_from_info (a_descriptor)
 					if assembly_dependancies = Void then
 						create assembly_dependancies.make (0)				
@@ -788,7 +788,7 @@ feature {NONE} -- Implementation
 					-- Check assembly is signed.
 				a_key := an_assembly_name.get_public_key
 				if a_key /= Void and then a_key.count > 0 then
-					create support
+					create support.make
 					create conversion_support.make_conversionsupport
 					a_descriptor := conversion_support.assembly_descriptor_from_name (an_assembly_name)
 					dependancies := support.dependancies_from_info (a_descriptor)

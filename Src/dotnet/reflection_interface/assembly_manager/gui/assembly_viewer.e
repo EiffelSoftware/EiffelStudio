@@ -965,7 +965,7 @@ feature -- Event handling
 --			support: SUPPORT
 --		do
 --			if dependancies_menu_item.checked then
---				create support
+--				create support.make
 --				selected_row := data_grid.CurrentRowIndex
 --				if selected_row /= -1 then
 --					if data_grid.CurrentCell /= Void and then data_grid.currentcell.columnnumber /= Void then
@@ -998,7 +998,7 @@ feature -- Event handling
 			dependancy_viewer: DEPENDANCY_VIEWER
 			support: SUPPORT
 		do
-			create support
+			create support.make
 			selected_row := data_grid.get_current_row_index
 			if selected_row /= -1 then
 				a_descriptor := current_assembly (selected_row)	
@@ -1231,7 +1231,7 @@ feature {NONE} -- Implementation
 			dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
 			support: SUPPORT
 		do
-			create support
+			create support.make
 			Result := data_table.New_Row
 			columns := data_table.get_columns			
 			Result.get_Table.get_Default_View.set_Allow_Edit (False)

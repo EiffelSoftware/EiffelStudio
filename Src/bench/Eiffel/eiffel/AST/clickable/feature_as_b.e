@@ -18,7 +18,7 @@ inherit
 
 	AST_EIFFEL_B
 		undefine
-			is_feature_obj, simple_format
+			is_feature_obj
 		redefine
 			type_check, byte_node, find_breakable, 
 			format, fill_calls_list, replicate
@@ -131,7 +131,7 @@ feature -- Stoning
 		do
 			a_feature_i := reference_class.feature_named 
 								(feature_names.first.internal_name);
-			!!Result.make (a_feature_i, reference_class, start_position, 
+			!!Result.make_with_positions (a_feature_i, reference_class, start_position, 
 											end_position)
 		end;
 
@@ -152,23 +152,26 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.begin;
-			ctxt.put_text_item (ti_Before_feature_declaration);
-			ctxt.next_line;
+			ctxt.new_line;
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
+			ctxt.set_space_between_tokens;
 			ctxt.abort_on_failure;
+			ctxt.put_text_item (ti_Before_feature_declaration);
 				--| Should only be one feature name
 			feature_names.first.main_feature_format (ctxt)
 			if not ctxt.last_was_printed then
 				ctxt.rollback;
-				ctxt.rollback;
 			else
-				ctxt.commit;
 				body.format (ctxt);
-				ctxt.commit;
+				if not ctxt.is_short then
+					ctxt.put_text_item (ti_Semi_colon)
+				end;
 				ctxt.put_text_item (ti_After_feature_declaration)
+				ctxt.new_line;
+				ctxt.commit;
 			end;
+			format_comment (ctxt);		
+			ctxt.end_feature;
 		end;
 
 	new_ast: FEATURE_AS_B is
@@ -216,20 +219,6 @@ feature -- Replication
 			Result.set_body (body.replicate (ctxt));
 		end;
 
-
-feature {ASSERT_SERVER, FEATURE_AS_B, NAMES_ADAPTER}	-- Replication
-
-	set_feature_assertions (feat: FEATURE_I; a: CHAINED_ASSERT) is
-		require
-			valid_feat: feat /= Void;
-			valid_arg2: a /= Void
-		local
-			rout_fsas: ROUTINE_FSAS
-		do
-			rout_fsas ?= body.content;	--| Cannot fail
-			rout_fsas.set_feature_assertions (feat, Current, a);
-		end;
-
 feature {FEATURE_CLAUSE_AS_B, FEATURE_CLAUSE_EXPORT} -- Case storage
 
 	storage_info: S_FEATURE_DATA is
@@ -239,9 +228,9 @@ feature {FEATURE_CLAUSE_AS_B, FEATURE_CLAUSE_EXPORT} -- Case storage
 		do
 		end;
 
-feature {FEATURE_AS_B, CASE_RECORD_INHERIT_INFO} -- Case storage
+feature {FEATURE_ADAPTER, CASE_RECORD_INHERIT_INFO} -- Case storage
 
-	store_information (classc: CLASS_C; f: S_FEATURE_DATA) is
+	store_information (f: S_FEATURE_DATA) is
 			-- Store current information into `f'.
 		require
 			valid_f: f /= Void
@@ -250,7 +239,7 @@ feature {FEATURE_AS_B, CASE_RECORD_INHERIT_INFO} -- Case storage
 		do
 			rout_as ?= body.content;
 			if rout_as /= Void then
-				rout_as.store_information (classc, f)
+				rout_as.store_information (f)
 			end
 		end;
 

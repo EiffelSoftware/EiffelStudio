@@ -329,7 +329,7 @@ feature -- Removal
 			application_context_is_valid: is_valid
 		do
 			xt_destroy_application_context (handle);
-			new_die (0)
+			die (0)
 		end;
 
 feature {NONE} -- Implementation

@@ -10,6 +10,8 @@ class
 inherit
 	PROJECT_SHARED
 
+	ARGUMENTS
+
 feature -- Access
 
 	first_window:  WIZARD_WINDOW is
@@ -26,6 +28,15 @@ feature -- Access
 			-- be displayed child of this box.
 		once
 			Result := first_window.wizard_page
+		ensure
+			exists: Result /= Void
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap on which can be displayed a picture which 
+			-- goes with the state.
+		do
+			Result := first_window.main_pixmap
 		ensure
 			exists: Result /= Void
 		end
@@ -60,6 +71,5 @@ feature -- Access
 		once
 			Result := wizard_source +"\resources"
 		end
-
 
 end -- class SHARED

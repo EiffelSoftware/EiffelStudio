@@ -111,4 +111,7 @@ feature -- Implementation
 
 	location,project_location: SMART_TEXT_FIELD
 
+	pixmap_location: STRING is "essai.bmp"
+			-- Pixmap location
+
 end -- class DB_GENERATION_LOCATION

@@ -123,4 +123,7 @@ feature -- Implementation
 
 	selected_items, unselected_items: EV_LIST
 
+	pixmap_location: STRING is "essai.bmp"
+			-- Pixmap location
+
 end -- class DB_TABLE_SELECTION

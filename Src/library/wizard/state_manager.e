@@ -21,6 +21,7 @@ feature {WIZARD_WINDOW} -- Basic Operations
 		do
 			history.back
 			history.item.clean_screen
+			history.item.display_pixmap
 			history.item.display
 		ensure
 			moved_back: history.index = old history.index - 1
@@ -41,6 +42,7 @@ feature {WIZARD_WINDOW} -- Basic Operations
 			if not history.islast and then not history.item.entries_changed then
 				history.forth
 				history.item.clean_screen
+				history.item.display_pixmap
 				history.item.display
 			else
 				history.item.proceed_with_current_info
@@ -79,6 +81,7 @@ feature {NONE} -- Internal Operations
 			history.extend(a_window)
 			history.go_i_th(history.count)
 			a_window.clean_screen
+			a_window.display_pixmap
 			a_window.display
 		ensure
 			new_state_accessed: history.count = old history.count + 1

@@ -98,4 +98,8 @@ feature -- Implementation
 
 	new_project_b,current_project_b: EV_RADIO_BUTTON
 
+	pixmap_location: STRING is "essai.bmp"
+			-- Pixmap location
+
+
 end -- class DB_GENERATION_TYPE

@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_APPLICATION
+		redefine
+			make_and_launch
+		end
 
 	SHARED
 		undefine
@@ -16,9 +19,19 @@ inherit
 		end
 
 Creation
-	make_and_launch
+	make_and_launch 
 
 feature -- Initialization
+
+	make_and_launch is
+			-- Initialize and launch application
+		do
+			if argument_count<1 then
+				io.put_string("wizard.exe -arg1 [resource_path]%N")
+			else
+				precursor
+			end
+		end
 
 	prepare is
 			-- Prepare the first window to be displayed.

@@ -113,6 +113,7 @@ feature -- Element change
 		do
 --			{EV_PIXMAPABLE_IMP} Precursor (pix)
 			pixmap_imp ?= pix.implementation
+			pixmap_imp.set_free_status (False)
 			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
 		end
 
@@ -120,6 +121,7 @@ feature -- Element change
 			-- Remove the pixmap from the container
 		do
 --			{EV_PIXMAPABLE_IMP} Precursor
+			pixmap_imp.set_free_status (True)
 			pixmap_imp := Void
 			set_minimum_size (0, 0)
 		end

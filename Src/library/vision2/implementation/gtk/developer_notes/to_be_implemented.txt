@@ -113,6 +113,7 @@ CLASS:  ev_font_imp
 DATE:	19990909
 WHO:	king
 maximum_width
+set_font
 =========================================================================
 CLASS:  ev_motion_event_data_imp
 DATE:	19990909

@@ -276,10 +276,10 @@ feature -- Clearing operations
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
-			clear_rect (0, 0, width, height)
+			clear_rectangle (0, 0, width, height)
 		end
 
-	clear_rect (x1, y1, x2, y2: INTEGER) is
+	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
 		local
 			tmp_fg_color: EV_COLOR
@@ -570,6 +570,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/16 23:01:21  king
+--| Corrected name of clear_rect 2 clear_rectangle
+--|
 --| Revision 1.8  2000/02/14 11:40:28  oconnor
 --| merged changes from prerelease_20000214
 --|

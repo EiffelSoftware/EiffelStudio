@@ -1,8 +1,13 @@
-RELEASE NOTE FOR SGI-6.2/SGI-6.3 VERSION.
+RELEASE NOTES FOR SGI-6.2/SGI-6.3/SGI-6.4 VERSION.
+
+This release has been compiled on IRIX64 sgi 6.4i with cc.
 
 Please your PLATFORM environment variable to sgi if you
-are running on sgi-6.3 or sgi 6.2. This release is not compatible
+are running on sgi 6.x.  This release is not compatible
 with sgi-5.x.
 
-Note about the profiler:
-The percentage output is not working on sgi 6.2 and 6.3.
+Reverse engineering is now possible.
+Memory mis-alignment in finalized mode has been corrected (reason why it
+crashed on sgi6.4 using cc).
+
+

@@ -1,5 +1,5 @@
 class
-	TEST
+	OLD_TEST
 
 inherit
 	EV_APPLICATION

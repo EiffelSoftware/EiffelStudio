@@ -8,6 +8,19 @@ class
 
 feature -- Externals
 
+	frozen gtk_widget_class_find_style_property (a_widget_class, a_property_name: POINTER): POINTER is
+		external
+			"C signature (GtkWidgetClass*, gchar*): GParamSpec* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_get_class (a_widget: POINTER): POINTER is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_WIDGET_GET_CLASS"
+		end
+		
+
 	frozen pango_tab_array_new (a_initial_size: INTEGER; a_position_in_pixels: BOOLEAN): POINTER is
 		external
 			"C signature (gint, gboolean): PangoTabArray* use <gtk/gtk.h>"
@@ -932,13 +945,62 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_view_column_set_alignment ((GtkTreeViewColumn*) $a_tree_view_column, (gfloat) $a_align)"
-		end	
+		end
+
+	frozen gtk_tree_view_column_set_fixed_width (a_tree_view_column: POINTER; a_width: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_set_fixed_width ((GtkTreeViewColumn*) $a_tree_view_column, (gint) $a_width)"
+		end
+
+	frozen gtk_tree_view_column_get_fixed_width (a_tree_view_column: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_get_fixed_width ((GtkTreeViewColumn*) $a_tree_view_column)"
+		end
+
+	frozen gtk_tree_view_column_set_sizing (a_tree_view_column: POINTER; a_size_mode: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_set_sizing ((GtkTreeViewColumn*) $a_tree_view_column, (GtkTreeViewColumnSizing) $a_size_mode)"
+		end
 
 	frozen gtk_tree_view_column_set_resizable (a_tree_view_column: POINTER; a_expand: BOOLEAN) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_view_column_set_resizable ((GtkTreeViewColumn*) $a_tree_view_column, (gboolean) $a_expand)"
+		end
+
+	frozen gtk_tree_view_column_set_clickable (a_tree_view_column: POINTER; a_clickable: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_set_clickable ((GtkTreeViewColumn*) $a_tree_view_column, (gboolean) $a_clickable)"
+		end
+
+	frozen gtk_tree_view_column_set_widget (a_tree_view_column: POINTER; a_widget: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_set_widget ((GtkTreeViewColumn*) $a_tree_view_column, (GtkWidget*) $a_widget)"
+		end
+
+	frozen gtk_tree_view_column_get_widget (a_tree_view_column: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_get_widget ((GtkTreeViewColumn*) $a_tree_view_column)"
+		end
+
+	frozen gtk_tree_view_column_get_width (a_tree_view_column: POINTER): INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_get_width ((GtkTreeViewColumn*) $a_tree_view_column)"
 		end
 
 	frozen gtk_tree_view_column_set_visible (a_tree_view_column: POINTER; a_visible: BOOLEAN) is

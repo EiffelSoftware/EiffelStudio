@@ -320,13 +320,13 @@ feature {NONE} -- Implementation
 				-- First replace the name of the class
 			set_class_name (system_status.current_project_settings.main_window_class_name)
 			
-			set_inherited_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
+			set_inherited_class_name (system_status.current_project_settings.main_window_class_name.as_lower + class_implementation_extension)
 			
 			add_generated_string (class_text, event_implementation_string, event_declaration_tag)
 			
 				-- Store `class_text'.				
 			window_file_name := clone (generated_path)
-			window_file_name.extend ("main_window.e")--system_status.current_project_settings.main_window_file_name)
+			window_file_name.extend (system_status.current_project_settings.main_window_class_name.as_lower + eiffel_class_extension)
 			create window_output_file.make_open_write (window_file_name)
 			window_output_file.start
 			window_output_file.putstring (class_text)

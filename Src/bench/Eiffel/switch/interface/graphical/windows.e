@@ -12,7 +12,7 @@ feature {NONE}
 	project_tool: PROJECT_W is
 			-- Main and unique control window
 		once
-			!!Result.make
+			!!Result
 		end;
 
 	focus_label: FOCUS_LABEL_I is
@@ -203,7 +203,27 @@ feature {NONE} -- Implementation
 
 	init_windowing is
 			-- Initialize the windowing environment.
+		local
+			new_resources: RESOURCES;
+            display_name: STRING;
+			exc: EXCEPTIONS;
+			exec_env: EXECUTION_ENVIRONMENT;
+			eb_display: SCREEN
 		do
+            !! eb_display.make ("");
+            if not eb_display.is_valid then
+                io.error.putstring ("Cannot open display %"");
+				!! exec_env;
+                display_name := exec_env.get ("DISPLAY");
+                if display_name /= Void then
+                    io.error.putstring (display_name);
+                end;
+                io.error.putstring ("%"%N%
+                    %Check that $DISPLAY is properly set and that you are%N%
+                    %authorized to connect to the corresponding server%N");
+				!! exc;
+                exc.raise ("Invalid display");
+            end;
 				--| First we put bench mode, for
 				--| `popup_file_selection' uses 
 				--| `error_window'.
@@ -214,8 +234,9 @@ feature {NONE} -- Implementation
 				--| Also note that `error_window' is a
 				--| once-function!!
 			mode.put (False);
-			if project_tool = Void then end;
-			project_tool.popup_file_selection
+			!! new_resources.initialize;
+			project_tool.make (eb_display);
+			project_tool.popup_file_selection;
 		end
 
 end -- class WINDOWS

@@ -904,12 +904,12 @@ feature -- Deferred features
 		deferred
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_UNTITLED_WINDOW_IMP is
 			-- Top level window that contains the current widget.
 		deferred
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_UNTITLED_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of the widget.
 		deferred

@@ -429,7 +429,7 @@ feature {EV_ANY_I} -- Implementation
 			set_pixmap (gdkpix, gdkmask)			
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_GTK_DEPENDENT_APPLICATION_IMP} -- Implementation
 
 	drawable: POINTER
 		-- Pointer to the GdkPixmap structure

@@ -1,6 +1,6 @@
 indexing
-	description: "AST structure in Lace file for setting system level options.";
-	date: "$Date$";
+	description: "AST structure in Lace file for setting options."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class FREE_OPTION_SD
@@ -11,12 +11,13 @@ inherit
 			initialize as initialize_option
 		redefine
 			process_system_level_options, is_system_level,
-			is_free_option, duplicate, is_valid
-		end;
+			is_system_level_only, is_free_option, duplicate,
+			is_valid
+		end
 
-	SHARED_RESCUE_STATUS;
+	SHARED_RESCUE_STATUS
 
-	EIFFEL_ENV;
+	EIFFEL_ENV
 
 	SHARED_BENCH_LICENSES
 
@@ -130,79 +131,99 @@ feature {COMPILER_EXPORTER}
 	is_system_level: BOOLEAN is
 			-- Is Current free option a system level one?
 		do
-			Result := code /= document and then code /= profile
-		end;
+			inspect code
+			when document, profile then
+				-- Nothing to do as Result is already False.
+			else
+				Result := True
+			end
+		end
 
+	is_system_level_only: BOOLEAN is
+			-- Is Current free option a system level only one?
+		do
+			inspect code
+			when document, profile, namespace then
+				-- Nothing to do as Result is already False.
+			else
+				Result := True
+			end
+		end
 feature {NONE} -- Codes and names.
 
 	option_codes: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			create Result.make (free_option_count);
-			Result.force (address_expression, "address_expression");
-			Result.force (arguments, "arguments");
-			Result.force (array_optimization, "array_optimization");
-			Result.force (check_vape, "check_vape");
+			create Result.make (free_option_count)
+			Result.force (address_expression, "address_expression")
+			Result.force (arguments, "arguments")
+			Result.force (array_optimization, "array_optimization")
+			Result.force (check_vape, "check_vape")
 			Result.force (console_application, "console_application")
 			Result.force (cls_compliant, "cls_compliant")
-			Result.force (dead_code, "dead_code_removal");
-			Result.force (document, "document");
+			Result.force (dead_code, "dead_code_removal")
+			Result.force (document, "document")
 			Result.force (dotnet_naming_convention, "dotnet_naming_convention")
 			Result.force (dynamic_runtime, "dynamic_runtime")
-			Result.force (exception_stack_managed, "exception_trace");
-			Result.force (force_recompile, "force_recompile");
-			Result.force (generate_eac_metadata, "generate_eac_metadata");
-			Result.force (il_verifiable, "il_verifiable");
-			Result.force (inlining, "inlining");
-			Result.force (inlining_size, "inlining_size");
-			Result.force (ise_gc_runtime, "ise_gc_runtime");
+			Result.force (exception_stack_managed, "exception_trace")
+			Result.force (force_recompile, "force_recompile")
+			Result.force (generate_eac_metadata, "generate_eac_metadata")
+			Result.force (il_verifiable, "il_verifiable")
+			Result.force (inlining, "inlining")
+			Result.force (inlining_size, "inlining_size")
+			Result.force (ise_gc_runtime, "ise_gc_runtime")
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
-			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility");
-			Result.force (msil_culture, "msil_culture");
-			Result.force (msil_full_name, "msil_full_name");
-			Result.force (msil_generation, "msil_generation");
-			Result.force (msil_generation_type, "msil_generation_type");
-			Result.force (msil_version, "msil_version");
+			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility")
+			Result.force (msil_culture, "msil_culture")
+			Result.force (msil_full_name, "msil_full_name")
+			Result.force (msil_generation, "msil_generation")
+			Result.force (msil_generation_type, "msil_generation_type")
+			Result.force (msil_version, "msil_version")
 			Result.force (multithreaded, "multithreaded")
 			Result.force (namespace, "namespace")
-			Result.force (override_cluster, "override_cluster");
-			Result.force (profile, "profile");
-			Result.force (server_file_size, "server_file_size");
+			Result.force (override_cluster, "override_cluster")
+			Result.force (profile, "profile")
+			Result.force (server_file_size, "server_file_size")
 			Result.force (shared_library_definition, "shared_library_definition")
-			Result.force (working_directory, "working_directory");
+			Result.force (working_directory, "working_directory")
 			Result.force (use_cluster_name_as_namespace, "use_cluster_name_as_namespace")
 			Result.force (use_all_cluster_name_as_namespace, "use_all_cluster_name_as_namespace") 
 		end
 
 feature {COMPILER_EXPORTER}
 
-	adapt ( value: OPT_VAL_SD;
-			classes:HASH_TABLE [CLASS_I, STRING];
-			list: LACE_LIST [ID_SD]) is
+	adapt (value: OPT_VAL_SD
+			classes:HASH_TABLE [CLASS_I, STRING]
+			list: LACE_LIST [ID_SD])
+		is
 			-- Adapt should not process the system level options
 		local
-			document_sd: DOCUMENT_SD;
-			profile_sd: PROFILE_SD;
-			opt: INTEGER
+			l_option_sd: OPTION_SD
 		do
-			opt := code
-			inspect opt
+			check
+				not_system_level: not is_system_level
+			end
+			inspect code
 			when document then
-				create document_sd
-				document_sd.adapt (value, classes, list)	
+				create {DOCUMENT_SD} l_option_sd
 			when profile then
-				create profile_sd
-				profile_sd.adapt (value, classes, list)
+				create {PROFILE_SD} l_option_sd
+			when namespace then
+				create {NAMESPACE_SD} l_option_sd
 			else
+			end
+			
+			if l_option_sd /= Void then
+				l_option_sd.adapt (value, classes, list)
 			end
 		end
 
 	process_system_level_options (value: OPT_VAL_SD) is
 		local
-			error_found: BOOLEAN;
-			i: INTEGER;
-			string_value: STRING;
+			error_found: BOOLEAN
+			i: INTEGER
+			string_value: STRING
 			path: DIRECTORY_NAME
 		do
 			if value = Void then
@@ -217,8 +238,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_remover_off (False)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when array_optimization then
 					if value.is_no then
@@ -227,8 +248,8 @@ feature {COMPILER_EXPORTER}
 							-- FIXME
 						System.set_array_optimization_on (False)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when inlining then
 					if value.is_no then
@@ -236,14 +257,14 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_inlining_on (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when inlining_size then
 					if value.is_name then
-						string_value := value.value;
+						string_value := value.value
 						if string_value.is_integer then
-							i := value.value.to_integer;
+							i := value.value.to_integer
 							if (i < 0 or else i > 100) then
 								error_found := True
 							else
@@ -253,14 +274,14 @@ feature {COMPILER_EXPORTER}
 							error_found := True
 						end
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when server_file_size then
 					if value.is_name then
-						string_value := value.value;
+						string_value := value.value
 						if string_value.is_integer then 
-							i := value.value.to_integer;
+							i := value.value.to_integer
 							if i <= 0 then
 								error_found := True
 							else
@@ -270,8 +291,8 @@ feature {COMPILER_EXPORTER}
 							error_found := True
 						end
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when check_vape then
 					if value.is_no then
@@ -279,8 +300,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_do_not_check_vape (False)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when exception_stack_managed then
 					if value.is_no then
@@ -288,8 +309,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_exception_stack_managed (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when override_cluster then
 					if not value.is_name then
@@ -310,8 +331,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.allow_address_expression (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when profile then
 					Lace.ace_options.set_has_external_profile (not (value.is_yes or value.is_no) and value.is_name)
@@ -324,8 +345,8 @@ feature {COMPILER_EXPORTER}
 						System.set_java_generation (True)
 						set_il_parsing (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when msil_generation then
 					if value.is_no then
@@ -335,8 +356,8 @@ feature {COMPILER_EXPORTER}
 						System.set_il_generation (True)
 						set_il_parsing (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when msil_generation_type then
 					if value.is_name then
@@ -388,8 +409,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes  or else value.is_all then
 						System.set_line_generation (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when cls_compliant then
 						-- CLS compliant implies that the generated
@@ -427,8 +448,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes or else value.is_all then
 						System.set_dynamic_runtime (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when ise_gc_runtime then
 					if value.is_no then
@@ -436,8 +457,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes or else value.is_all then
 						System.set_ise_gc_runtime (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when console_application then
 					if value.is_no then
@@ -445,8 +466,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes or else value.is_all then
 						System.set_console_application (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when multithreaded then
 					if value.is_no then
@@ -458,25 +479,25 @@ feature {COMPILER_EXPORTER}
 					end
 
 				when document then
-					string_value := value.value;
-					create path.make_from_string (string_value);
+					string_value := value.value
+					create path.make_from_string (string_value)
 					if path.is_valid then
 						System.set_document_path (path)
 					else
 						error_found := True
-					end;
+					end
 
 				when shared_library_definition then
 					if value.is_name then
 							-- If the release doesn't generate DLL's,
 							-- we do not take the option into account in the Ace.
 						if has_dll_generation then
-							string_value := value.value;
+							string_value := value.value
 							System.set_dynamic_def_file (string_value)
 						end
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when arguments then
 					if not value.is_name then
@@ -498,8 +519,8 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_il_verifiable (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
 				when generate_eac_metadata then
 					if value.is_no then
@@ -507,8 +528,26 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						System.set_generate_eac_metadata (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
+
+				when use_cluster_name_as_namespace then
+					if value.is_no then
+						System.set_use_cluster_as_namespace (False)
+					elseif value.is_yes then
+						System.set_use_cluster_as_namespace (True)
+					else
+						error_found := True
+					end
+
+				when use_all_cluster_name_as_namespace then
+					if value.is_no then
+						System.set_use_all_cluster_as_namespace (False)
+					elseif value.is_yes then
+						System.set_use_all_cluster_as_namespace (True)
+					else
+						error_found := True
+					end
 
 				when force_recompile then
 					if value.is_no then
@@ -516,16 +555,24 @@ feature {COMPILER_EXPORTER}
 					elseif value.is_yes then
 						Lace.set_full_degree_6_needed (True)
 					else
-						error_found := True;
-					end;
+						error_found := True
+					end
 
+				when namespace then
+					if value.is_name then
+							-- Set top namespace of all classes.
+						System.set_system_namespace (value.value)
+					else
+						error_found := True
+					end
+					
 				else
 					error_found := True
-				end;
+				end
 			end
 			if error_found then
-				error (value);
-			end;
-		end;
+				error (value)
+			end
+		end
 
 end -- class FREE_OPTION_SD

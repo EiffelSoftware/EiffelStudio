@@ -301,8 +301,13 @@ feature -- Analyzis
 			generate_profile_start
 
 				-- Generate GC synchronization macro
-			buf.putstring ("RTGC;")
-			buf.new_line
+			if not is_external then
+					-- No need to generate a synchronization point before
+					-- calling an external. If it is needed, then it is
+					-- using the `blocking' keyword in its specification.
+				buf.putstring ("RTGC;")
+				buf.new_line
+			end
 
 				-- Generate the saving of the workbench mode assertion level
 			if context.workbench_mode then

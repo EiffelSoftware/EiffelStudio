@@ -1,7 +1,9 @@
+--| FIXME Not for release
+--| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "Implementation of a pick and drop source for items."
+	description:
+		"Mswindows implementation of pick and dropable for items."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,20 +11,20 @@ deferred class
 	EV_PICK_AND_DROPABLE_ITEM_IMP
 
 inherit
-	
 	EV_PICK_AND_DROPABLE_IMP
 		undefine
 			set_pointer_style
 		redefine
 			pnd_press
 		end
+
 feature -- Access
 
-	parent_imp : EV_ITEM_LIST_IMP [EV_ITEM] is
+	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
 		deferred
-	end
+		end
 	
-pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
 				parent_not_void: parent_imp /= Void
@@ -56,39 +58,37 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			end
 		end
 
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
-
 end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.2  2000/04/12 18:56:20  brendel
+--| Unreleased.
+--| Cosmetics.
+--| Added copyright notice.
+--| Added CVS Log.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------
+

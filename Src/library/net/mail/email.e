@@ -96,6 +96,21 @@ feature -- Basic operations
 					not (headers.item (header_key)). entries.has (header_entry)
 		end
 
+	remove_header_entries (header_key: STRING) is
+		require
+			header_exists: headers.has (header_key)
+		local
+			a_header: HEADER
+		do
+			a_header:= headers.item (header_key)
+			a_header.entries.wipe_out
+		end
+
+	has_header_entry (header_key: STRING): BOOLEAN is
+		do
+			Result:= headers.has (header_key)
+		end
+
 	send is
 			-- Send email.
 		do

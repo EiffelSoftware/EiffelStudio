@@ -1,8 +1,8 @@
 indexing
-	description: "Text Paragraph"
-	author: "Christophe Bonnard"
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Text Paragraph"
+	author		: "Christophe Bonnard / Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	STRUCTURED_TEXT
@@ -21,21 +21,8 @@ feature -- Initialization
 		end
 
 	make_from_file (fn: STRING) is
-		local
---			file: PLAIN_TEXT_FILE
---			line: like first_displayed_line
 		do
---			create chapter.make
---			create file.make_open_read (fn)
---			from
---					
---			until
---				file.end_of_file
---			loop
---				file.read_line
---				create line.make_from_string (file.last_string)
---				append_line (line)
---			end
+			--| FIXME: Not yet implemented.
 		end	
 
 feature -- Access
@@ -49,6 +36,12 @@ feature -- Access
 	count: INTEGER is
 		do
 			Result := chapter.count
+		end
+
+	lexer: EIFFEL_SCANNER is
+			-- Eiffel Lexer
+		once
+			create Result.make
 		end
 
 feature -- test features
@@ -145,6 +138,38 @@ feature -- Basic Operations
 			line.make_from_lexer (lexer)
 		end
 
+	comment_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+			-- Comment all lines included in the selection with the string `symbol'.
+			-- Even If `start_selection' does not begin the line, the entire line
+			-- is commented. Same for the last line of the selection.
+		do
+			symbol_selection(start_selection, end_selection, "--")
+		end
+
+	uncomment_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+			-- Uncomment all lines included in the selection with the string `symbol'.
+			-- Even If `start_selection' does not begin the line, the entire line
+			-- is uncommented. Same for the last line of the selection.
+		do
+			symbol_selection(start_selection, end_selection, "--")
+		end
+
+	tabify_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+			-- Tabify all lines included in the selection with the string `symbol'.
+			-- Even If `start_selection' does not begin the line, the entire line
+			-- is commented. Same for the last line of the selection.
+		do
+			symbol_selection(start_selection, end_selection, "%T")
+		end
+
+	untabify_selection(start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR) is
+			-- Tabify all lines included in the selection with the string `symbol'.
+			-- Even If `start_selection' does not begin the line, the entire line
+			-- is commented. Same for the last line of the selection.
+		do
+			symbol_selection(start_selection, end_selection, "%T")
+		end
+
 	string_selected (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR): STRING is
 		require
 				right_order: start_selection < end_selection
@@ -234,12 +259,74 @@ feature {NONE} -- Private feature
 -- 			end
 -- 		end
 
-feature -- Implementation
+	symbol_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR; symbol: STRING) is
+			-- Prepend all lines included in the selection with the string `symbol'.
+			-- Even If `start_selection' does not begin the line, the entire line
+			-- is prepended with `symbol'. Same for the last line of the selection.
+		require
+				valid_selection: start_selection /= Void and end_selection /= Void
+				right_order: start_selection < end_selection
+				valid_symbol: symbol /= Void and then not symbol.empty
+		local
+			line_image	: STRING		-- String representation of the current line
+			line		: EDITOR_LINE	-- Current line
+		do
+			from
+				line := start_selection.line
+			until
+				line = end_selection.line.next or else line = Void
+			loop
+					-- Retrieve the string representation of the line
+				line_image := line.image
 
-	lexer: EIFFEL_SCANNER is
-			-- Eiffel Lexer
-		once
-			create Result.make
+					-- Add the commentary symbol in front of the line
+				line_image.prepend(symbol)
+
+					-- Rebuild line from the lexer.
+				lexer.execute (line_image)
+				line.make_from_lexer (lexer)
+
+					-- Prepare next iteration
+				line := line.next
+			end
+		end
+
+	unsymbol_selection (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR; symbol: STRING) is
+			-- Prepend all lines included in the selection with the string `symbol'.
+			-- Even If `start_selection' does not begin the line, the entire line
+			-- is prepended with `symbol'. Same for the last line of the selection.
+			-- A line is uncommented only if it begins with `symbol'.
+		require
+				valid_selection: start_selection /= Void and end_selection /= Void
+				right_order: start_selection < end_selection
+				valid_symbol: symbol /= Void and then not symbol.empty
+		local
+			line_image		: STRING		-- String representation of the current line
+			line			: EDITOR_LINE	-- Current line
+			symbol_length	: INTEGER		-- number of characters in `symbol'
+		do
+			symbol_length := symbol.count
+
+			from
+				line := start_selection.line
+			until
+				line = end_selection.line.next or else line = Void
+			loop
+					-- Retrieve the string representation of the line
+				line_image := line.image
+
+					-- Remove the commentary symbol in front of the line (if any)
+				if (line_image.count >= symbol_length) and then (line_image.substring(1, symbol_length).is_equal(symbol)) then
+					line_image := line_image.substring(symbol_length + 1, line_image.count)
+
+						-- Rebuild line from the lexer.
+					lexer.execute (line_image)
+					line.make_from_lexer (lexer)
+				end
+
+					-- Prepare next iteration
+				line := line.next
+			end
 		end
 
 feature {NONE} -- Implementation

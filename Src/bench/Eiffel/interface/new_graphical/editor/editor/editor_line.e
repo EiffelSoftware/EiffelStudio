@@ -181,7 +181,7 @@ feature -- Status Report
 		local
 			t: EDITOR_TOKEN
 		do
-			create Result.make (0)
+			create Result.make (50) -- 50 = average number of characters per line
 			from
 				t := first_token
 			until
@@ -190,6 +190,110 @@ feature -- Status Report
 				Result.append (t.image)
 				t := t.next
 			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	image_from_start_to_cursor(text_cursor: TEXT_CURSOR): STRING is
+			-- Substring of the line starting at the beggining of
+			-- the line and ending at the cursor position (not
+			-- included)
+		require
+			text_cursor.line = Current
+		local
+			local_token		: EDITOR_TOKEN
+			cursor_token	: EDITOR_TOKEN
+		do
+			cursor_token := text_cursor.token
+			create Result.make (50)
+
+				-- Retrieve the string in the token situated before
+				-- the cursor
+			from
+				local_token := first_token
+			until
+				local_token = cursor_token or else local_token = eol_token
+			loop
+				Result.append(local_token.image)
+				local_token := local_token.next
+			end
+
+				-- Append the current string with the portion of the current
+				-- token that is before the cursor.
+			Result.append(local_token.image.substring(1, text_cursor.pos_in_token - 1))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	image_from_cursor_to_end(text_cursor: TEXT_CURSOR): STRING is
+			-- Substring of the line starting at the cursor
+			-- position (included) and ending at the end of the line
+		require
+			text_cursor.line = Current
+		local
+			local_token		: EDITOR_TOKEN
+			cursor_token	: EDITOR_TOKEN
+		do
+			cursor_token := text_cursor.token
+			create Result.make (50)
+
+				-- Append the current string with the portion of the current
+				-- token that is after the cursor.
+			Result.append(cursor_token.image.substring(text_cursor.pos_in_token, cursor_token.length))
+
+				-- Retrieve the string in the token situated before
+				-- the cursor
+			from
+				local_token := cursor_token.next
+			until
+				local_token = eol_token or else local_token = Void
+			loop
+				Result.append(local_token.image)
+				local_token := local_token.next
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	substring_image_by_character(start_char, end_char: INTEGER): STRING is
+			-- Substring of the line starting at `start_char' and
+			-- ending at `end_char' - included
+		local
+			local_token		: EDITOR_TOKEN
+			local_char 		: INTEGER
+			next_local_char	: INTEGER
+			token_start_char: INTEGER
+			token_end_char	: INTEGER
+		do
+			if start_char <= end_char then
+				create Result.make (50)
+				from
+					local_token := first_token
+					local_char := 1
+				until
+					local_char > end_char or else local_token = eol_token
+				loop
+					next_local_char := local_char + local_token.length
+
+					if (local_char <= end_char) and then (next_local_char >= start_char) then
+						-- This token is part of the selection
+						token_start_char := local_char.max(start_char) - local_char + 1
+						token_end_char := next_local_char.min(end_char) - local_char  + 1
+						Result.append(local_token.image.substring(token_start_char, token_end_char))
+					else
+						-- This token is not part of the selection, we ignore it.
+					end
+
+						-- prepare next iteration
+					local_char := next_local_char
+					local_token := local_token.next
+				end
+			else
+				-- start_char > end_char so, we return an empty string.
+				Result := ""
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	width: INTEGER

@@ -172,7 +172,6 @@ EXPORTS
 	eadopt
 	eback
 	eclone
-	econfm
 	ecopy
 	edclone
 	ediso

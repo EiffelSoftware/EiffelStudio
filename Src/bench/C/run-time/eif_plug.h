@@ -107,7 +107,6 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 	(((EIF_REFERENCE) obj1 == (EIF_REFERENCE) 0) || ((EIF_REFERENCE) obj2 == (EIF_REFERENCE) 0))? EIF_FALSE: \
 		(Dtype(obj1) == Dtype(obj2))
 
-RT_LNK int econfm(int ancestor, int heir);	/* Conformance query for assignment attempt */
 RT_LNK long sp_count(EIF_REFERENCE spobject);		/* Count of a special object */
 RT_LNK void chkinv(EIF_REFERENCE obj, int where);	/* Invariant control call */
 

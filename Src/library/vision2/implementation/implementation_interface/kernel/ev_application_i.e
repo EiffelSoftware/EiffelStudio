@@ -76,8 +76,8 @@ feature -- Events
 			-- Call `once_idle_actions' then wipe it out.
 			-- Remove `do_once_idle_actions_agent' from `internal_idle_actions'.
 		do
-			once_idle_actions.call
-			once_idle_actions.wipeout
+			once_idle_actions.call ([])
+			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
 		end
 
@@ -182,6 +182,9 @@ end -- class EV_APPLICATION_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/23 19:04:31  brendel
+--| Fixed compiler errors.
+--|
 --| Revision 1.13  2000/03/23 18:54:26  oconnor
 --| added once idle actions implementation
 --|

@@ -2261,7 +2261,7 @@ struct ex_vect *vector;	/* The vector to be dumped */
 	if (!(DEBUG & 1))
 		return;
 	
-	printf("%s (at 0x%x):\n", msg, vector);
+	printf("%s (at 0x%lx):\n", msg, vector);
 	if (vector == (struct ex_vect *) 0)
 		return;
 	printf("\tex_type = %d\n", vector->ex_type);
@@ -2288,8 +2288,8 @@ struct ex_vect *vector;	/* The vector to be dumped */
 	case EX_CALL: case EN_FAIL:
 	case EX_RESC: case EN_RESC:
 	case EX_RETY: case EN_RES:
-		printf("\texur_jbuf = 0x%x\n", vector->ex_jbuf);
-		printf("\texur_id = 0x%x\n", vector->ex_id);
+		printf("\texur_jbuf = 0x%lx\n", vector->ex_jbuf);
+		printf("\texur_id = 0x%lx\n", vector->ex_id);
 		printf("\texur_rout = \"%s\"\n", vector->ex_rout);
 		printf("\texur_orig = %d\n", vector->ex_orig);
 		break;

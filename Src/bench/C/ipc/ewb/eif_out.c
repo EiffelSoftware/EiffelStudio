@@ -20,8 +20,13 @@ long code;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 	
+
+#ifdef USE_ADD_LOG
+    add_log(100, "sending request 0: %ld from es3", code);
+#endif
+
 	Request_Clean (rqst);
-	rqst.rq_type = code;
+	rqst.rq_type = (int) code;
 	send_packet(writefd(sp), &rqst);
 };
 
@@ -32,8 +37,12 @@ long info1;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+
+#ifdef USE_ADD_LOG
+    add_log(100, "sending request 1: %ld from es3", code);
+#endif
 	Request_Clean (rqst);
-	rqst.rq_type = code;
+	rqst.rq_type = (int) code;
 	rqst.rq_opaque.op_first = (int) info1;
 	send_packet(writefd(sp), &rqst);
 };
@@ -46,8 +55,12 @@ long info2;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+#ifdef USE_ADD_LOG
+    add_log(100, "sending request 2: %ld from es3", code);
+#endif
+
 	Request_Clean (rqst);
-	rqst.rq_type = code;
+	rqst.rq_type = (int) code;
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
 	send_packet(writefd(sp), &rqst);
@@ -62,8 +75,12 @@ long info3;
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
 
+#ifdef USE_ADD_LOG
+    add_log(100, "sending request 3: %ld from es3", code);
+#endif
+
 	Request_Clean (rqst);
-	rqst.rq_type = code;
+	rqst.rq_type = (int) code;
 	rqst.rq_opaque.op_first = (int) info1;
 	rqst.rq_opaque.op_second = (int) info2;
 	rqst.rq_opaque.op_third = (long) info3;
@@ -79,8 +96,17 @@ public EIF_BOOLEAN recv_ack ()
 	if (-1 == recv_packet(readfd(sp), &pack))
 		return (EIF_BOOLEAN) 0;
 
+
+#ifdef USE_ADD_LOG
+    add_log(100, "receiving request : %ld for es3", pack.rq_type);
+#endif
+
 	switch (pack.rq_type) {
 	case ACKNLGE:
+
+#ifdef USE_ADD_LOG
+	    add_log(100, "acknowledge request : %ld for es3", pack.rq_ack.ak_type);
+#endif
 		switch (pack.rq_ack.ak_type) {
 		case AK_OK:
 			return (EIF_BOOLEAN) 1;

@@ -58,6 +58,10 @@ int code;	/* The acknowledgment code */
 	Request_Clean (pack);
 	pack.rq_type = ACKNLGE;				/* We are sending an acknowledgment */
 	pack.rq_ack.ak_type = code;			/* Report code */
+
+#ifdef USE_ADD_LOG
+	add_log(100, "sending ack %d on pipe %d", code, s);
+#endif
 	send_packet(s, &pack);
 }
 
@@ -84,6 +88,11 @@ char *buffer;	/* Where the string is held */
 	size = strlen(buffer);			/* Length of string */
 	pack.rq_type = OPAQUE;
 	pack.rq_opaque.op_size = size;	/* Send length without final null */
+
+
+#ifdef USE_ADD_LOG
+        add_log(100, "sending string of size %d", size);
+#endif
 
 	send_packet(writefd(sp), &pack);	/* Send the length */
 

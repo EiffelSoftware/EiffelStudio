@@ -236,7 +236,7 @@ char *obj;
 			internal_error("Memory allocation failed\n");
 	}
 #ifdef DEBUG
-	printf("Pushing list item 0x%x at %d\n", obj, object_top);
+	printf("Pushing list item 0x%lx at %d\n", obj, object_top);
 #endif
 	object_stack[object_top++] = obj;
 	count_stack[count_top]++;

@@ -28,11 +28,11 @@
 #define OTHER(x)	\
 	((x) == readfd(d_data.d_cs) ? d_data.d_as : d_data.d_cs)
 
-public void rqsthandle();			/* General request processor */
+public void drqsthandle();			/* General request processor */
 public void send_packet();			/* Send an asnwer to client */
 public int recv_packet();			/* Request reception */
 
-private void process_request();		/* General processing of requests */
+private void dprocess_request();		/* General processing of requests */
 private void transfer();			/* Handle transfer requests */
 private void commute();				/* Commute data from one file to another */
 private void run_command();			/* Run specified command */
@@ -59,7 +59,7 @@ public void prt_init()
 	}
 }
 
-public void rqsthandle(s)
+public void drqsthandle(s)
 int s;
 {
 	/* Given a connected socket, wait for a request and process it */
@@ -71,10 +71,10 @@ int s;
 	if (-1 == recv_packet(s, &rqst))		/* Get request */
 		return;
 
-	process_request(s, &rqst);		/* Process the received request */
+	dprocess_request(s, &rqst);		/* Process the received request */
 }
 
-private void process_request(s, rqst)
+private void dprocess_request(s, rqst)
 int s;						/* The connected socket */
 Request *rqst;				/* The received request to be processed */
 {
@@ -429,19 +429,31 @@ int s;
 	
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
+#ifdef USE_ADD_LOG
+	add_log(12, "starting app  \n");
+#endif
 	cp = spawn_child(cmd, &pid);			/* Start up children */
 	if (cp != (STREAM *) 0) {
 		d_data.d_app = (int) pid;			/* Record its pid */
 		d_data.d_as = cp;					/* Set-up stream to talk to child */
-		if (-1 == add_input(readfd(cp), rqsthandle)) {
+		if (-1 == add_input(readfd(cp), drqsthandle)) {
 #ifdef USE_ADD_LOG
 			add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
 #endif
 			send_ack(writefd(sp), AK_ERROR);	/* Cannot record input */
-		} else
+		} else {
+
+#ifdef USE_ADD_LOG
+			add_log(100, "sending ak_ok");
+#endif
 			send_ack(writefd(sp), AK_OK);		/* Application started ok */
-	} else
+		}
+	} else {
+#ifdef USE_ADD_LOG
+		add_log(12, "stream from spawn invalid\n");
+#endif
 		send_ack(writefd(sp), AK_ERROR);	/* Could not start application */
+	}
 }
 
 private void kill_app () 

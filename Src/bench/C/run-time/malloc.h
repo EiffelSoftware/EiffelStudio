@@ -31,12 +31,14 @@ struct mallinfo {
  * in a double linked list.
  */
 struct chunk {
-	int32 ck_length;		/* Length of block (w/o size of this struct) */
 	int32 ck_type;			/* Chunk's type */
 	struct chunk *ck_next;	/* Next chunk in list */
 	struct chunk *ck_prev;	/* Previous chunk in list */
 	struct chunk *ck_lnext;	/* Next chunk of same type */
 	struct chunk *ck_lprev;	/* Previous chunk of same type */
+	int32 ck_length;		/* Length of block (w/o size of this struct) */
+							/* int's are split around the chunk pointers */
+							/*to provide correct padding for 64 bit machines*/
 #if ALIGNBYTES > 8
 	double ck_padding;		/* Alignment restrictions */
 #endif

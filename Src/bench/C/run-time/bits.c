@@ -993,7 +993,7 @@ char *bit;
 
 	printf("BIT %d", l);
 	for (i = 0;  i < u; i++)
-		printf(" 0x%x", a[i]);
+		printf(" 0x%lx", a[i]);
 	printf("\n");
 }
 

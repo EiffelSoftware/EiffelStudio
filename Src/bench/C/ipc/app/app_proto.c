@@ -54,7 +54,7 @@ public void prt_init()
  * Handling requests.
  */
 
-public void rqsthandle(s)
+public void arqsthandle(s)
 int s;
 {
 	/* Given a connected socket, wait for a request and process it. Since it

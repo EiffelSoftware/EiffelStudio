@@ -121,7 +121,7 @@ char **argv;
 	d_data.d_cs = sp;				/* Record workbench stream */
 	d_data.d_ewb = (int) pid;		/* And keep track of the child pid */
 	prt_init();						/* Initialize IDR filters */
-	wide_listen();					/* Enter server mode... */
+	dwide_listen();					/* Enter server mode... */
 
 	dexit(0);		/* Workbench died, so do we */
 }

@@ -346,7 +346,7 @@ private void cnode_updt()
 		for (i=0; i<nbattr; i++) {
 			types[i] = wuint32();
 #ifdef DEBUG
-	dprintf(4)("0x%x ", types[i]);
+	dprintf(4)("0x%lx ", types[i]);
 #endif
 		}
 		

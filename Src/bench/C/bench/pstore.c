@@ -128,7 +128,7 @@ long object_count;
 
 #ifdef DEBUG
 	if (st_counter == 1248)
-		printf("object 0x%x [%s %x]\n", object, System(flags & EO_TYPE).cn_generator,
+		printf("object 0x%lx [%s %lx]\n", object, System(flags & EO_TYPE).cn_generator,
 zone->ov_flags);
 #endif
 	/* Evaluation of the number of references of the object */

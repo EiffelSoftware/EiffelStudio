@@ -102,7 +102,7 @@ struct item* ext;
 		return 0;
 	switch (ext -> type & SK_HEAD) {
 	case SK_POINTER:
-		return idr_int(idrs, &ext->it_ptr);
+		return idr_long(idrs, &ext->it_ptr);
 	case SK_BOOL:
 	case SK_CHAR:
 		return idr_char (idrs, &ext->it_char);
@@ -111,9 +111,9 @@ struct item* ext;
 	case SK_DOUBLE:
 		return idr_double (idrs, &ext->it_double);
 	case SK_BIT:
-		return idr_int (idrs, &ext->it_bit);
+		return idr_long (idrs, &ext->it_bit);
 	default:
-		return idr_int (idrs, &ext->it_ref);
+		return idr_long (idrs, &ext->it_ref);
 	}
 }
 
@@ -144,14 +144,14 @@ struct item *exi;
 			return 0;
 		switch (exv->ex_type){
 		case EX_CALL:
-			return idr_int (idrs, &exv->exu.exur.exur_id)
+			return idr_long (idrs, &exv->exu.exur.exur_id)
 				&& idr_string (idrs, &exv->exu.exur.exur_rout, -MAX_STRLEN)
 				&& idr_int (idrs, &exv -> exu.exur.exur_orig);
 		default:
 			return idr_string (idrs, &exv->exu.exua.exua_name, -MAX_STRLEN)
 				&& idr_string (idrs, &exv->exu.exua.exua_where, -MAX_STRLEN)
 				&& idr_int (idrs, &exv->exu.exua.exua_from)
-				&& idr_int (idrs, &exv->exu.exua.exua_oid);
+				&& idr_long (idrs, &exv->exu.exua.exua_oid);
 		}
 	case DMP_ITEM:
 		exi = ext -> dmpu.dmpu_item;

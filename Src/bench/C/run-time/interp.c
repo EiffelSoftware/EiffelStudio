@@ -337,7 +337,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	for (;;) {
 	
 #ifdef DEBUG
-	dprintf(2)("0x%X: ", IC);
+	dprintf(2)("0x%lX: ", IC);
 #endif
 
 	switch (code = *IC++) {		/* Read current byte-code and advance IC */
@@ -348,7 +348,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	case BC_DEBUGABLE:
 #ifdef DEBUG
 		dprintf(2)("BC_DEBUGABLE\n");
-		dprintf(2)("0x%X: ", IC + sizeof(long) - 1);
+		dprintf(2)("0x%lX: ", IC + sizeof(long) - 1);
 #endif
 		offset = get_long();	/* Get the body ID */
 		drun(offset);			/* Initialize debugger for this feature */
@@ -481,7 +481,7 @@ int where;			/* Are we checking invariant before or after compound? */
 				icheck_inv(icurrent->it_ref, scur, stop, 0);	/* Invariant */
 
 #ifdef DEBUG
-			dprintf(1)("\tFeature %s written in %s on 0x%x [%s]\n",
+			dprintf(1)("\tFeature %s written in %s on 0x%lx [%s]\n",
 				string, System(code).cn_generator,
 				icurrent->it_ref, System(Dtype(icurrent->it_ref)).cn_generator);
 #endif
@@ -489,7 +489,7 @@ int where;			/* Are we checking invariant before or after compound? */
 
 		case INTERP_INVA:			/* An invariant */
 #ifdef DEBUG
-		dprintf(1)("\tInvariant on 0x%x [%s]\n",
+		dprintf(1)("\tInvariant on 0x%lx [%s]\n",
 			icurrent->it_ref, System(Dtype(icurrent->it_ref)).cn_generator);
 #endif
 			scur = op_stack.st_cur;		/* Save stack context */
@@ -3826,14 +3826,14 @@ private void dump_stack()
 		for (i = 0; i < roots; i++, last++) {
 			switch (last->type & SK_HEAD) {
 			case SK_EXP:
-				printf("	%d: expanded 0x%x DT = %d\n", i,
+				printf("	%d: expanded 0x%lx DT = %d\n", i,
 					last->it_ref, Dtype(last->it_ref));
 				break;
 			case SK_REF:
 				if (last->it_ref == (char *) 0)
-					printf("	%d: 0x%x\n", i, last->it_ref);
+					printf("	%d: 0x%lx\n", i, last->it_ref);
 				else
-					printf("	%d: 0x%x DT = %d\n", i,
+					printf("	%d: 0x%lx DT = %d\n", i,
 						last->it_ref, Dtype(last->it_ref));
 				break;
 			case SK_BOOL:
@@ -3856,13 +3856,13 @@ private void dump_stack()
 				printf("	%d: BITS\n", i);
 				break;
 			case SK_POINTER:
-				printf("	%d: pointer 0x%x\n", i, last->it_ref);
+				printf("	%d: pointer 0x%lx\n", i, last->it_ref);
 				break;
 			case SK_VOID:
 				printf("	%d: void\n", i);
 				break;
 			default:
-				printf("	%d: UNKNOWN TYPE 0x%x\n", i, last->type);
+				printf("	%d: UNKNOWN TYPE 0x%lx\n", i, last->type);
 			}
 		}
 	}
@@ -3981,7 +3981,7 @@ char *start;
 	 */
 	case BC_DEBUGABLE:
 		offset = get_long();
-		fprintf(fd, "0x%X %s%d\n", IC - 1 - sizeof(long), "BC_DEBUGABLE #",
+		fprintf(fd, "0x%lX %s%d\n", IC - 1 - sizeof(long), "BC_DEBUGABLE #",
 			offset);
 		/* Fall through */
 
@@ -3989,93 +3989,93 @@ char *start;
 	 * Start of routine byte code.
 	 */
 	case BC_START:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_START");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_START");
 		rout_id = get_long();
-		fprintf(fd, "0x%X rout_id = %ld\n", IC - sizeof(long), rout_id);
+		fprintf(fd, "0x%lX rout_id = %ld\n", IC - sizeof(long), rout_id);
 		offset = get_long();			/* Get the result type */
-		fprintf(fd, "0x%X %s 0x%x\n", IC - sizeof(long), "RESULT type", offset);
+		fprintf(fd, "0x%lX %s 0x%lx\n", IC - sizeof(long), "RESULT type", offset);
 		code = get_short();				/* Get the argument number */
-		fprintf(fd, "0x%X %s %d\n", IC - sizeof(short), "ARGS", code);
+		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(short), "ARGS", code);
 
 		if (*IC++) {				/* If it is a once */
-			fprintf(fd, "0x%X %s\n", IC - 1, "once flag");
-			fprintf(fd, "0x%X %s\n", IC++, "once done");
+			fprintf(fd, "0x%lX %s\n", IC - 1, "once flag");
+			fprintf(fd, "0x%lX %s\n", IC++, "once done");
 			if ((offset & SK_HEAD) != SK_VOID) {
 				switch (offset & SK_HEAD) {
 				case SK_BOOL:
-					fprintf(fd, "0x%X %s\n", IC++, "SK_BOOL");
+					fprintf(fd, "0x%lX %s\n", IC++, "SK_BOOL");
 					break;
 				case SK_CHAR:
-					fprintf(fd, "0x%X %s\n", IC++, "SK_CHAR");
+					fprintf(fd, "0x%lX %s\n", IC++, "SK_CHAR");
 					break;
 				case SK_INT:
-					fprintf(fd, "0x%X %s\n", IC, "SK_INT");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_INT");
 					IC += sizeof(long);
 					break;
 				case SK_FLOAT:
-					fprintf(fd, "0x%X %s\n", IC, "SK_FLOAT");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_FLOAT");
 					IC += sizeof(float);
 					break;
 				case SK_DOUBLE:
-					fprintf(fd, "0x%X %s\n", IC, "SK_DOUBLE");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_DOUBLE");
 					IC += sizeof(double);
 					break;
 				case SK_POINTER:
-					fprintf(fd, "0x%X %s\n", IC, "SK_POINTER");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_POINTER");
 					IC += sizeof(fnptr);
 					break;
 				case SK_REF:
-					fprintf(fd, "0x%X %s\n", IC, "SK_REF");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_REF");
 					IC += sizeof(char *);
 					break;
 				case SK_BIT:	
-					fprintf(fd, "0x%X %s\n", IC, "SK_BIT");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_BIT");
 					IC += sizeof(char *);
 					break;
 				case SK_EXP:
-					fprintf(fd, "0x%X %s\n", IC, "SK_EXP");
+					fprintf(fd, "0x%lX %s\n", IC, "SK_EXP");
 					IC += sizeof(char *);
 					break;
 				default:
-					fprintf(fd, "0x%X %s\n", IC++, "UNKNOWN");
+					fprintf(fd, "0x%lX %s\n", IC++, "UNKNOWN");
 				}
 			}
 		} else
-			fprintf(fd, "0x%X %s\n", IC - 1, "not once");
+			fprintf(fd, "0x%lX %s\n", IC - 1, "not once");
 
 		code = get_short();		/* Get the local number */
-		fprintf(fd, "0x%X %s %d\n", IC - sizeof(short), "LOCAL", code);
+		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(short), "LOCAL", code);
 		for(i = 0; i < code; i++) {
 			offset = get_long();
-			fprintf(fd, "0x%x loc(%d)->type = 0x%x\n", IC - sizeof(long),
+			fprintf(fd, "0x%lx loc(%d)->type = 0x%lx\n", IC - sizeof(long),
 				i, offset);
 		}
 		while (*IC++ != BC_NO_CLONE_ARG) {
 			if (*(IC - 1) != BC_CLONE_ARG) {
-				fprintf(fd, "WARNING: 0x%X should have been %d, was %d\n",
+				fprintf(fd, "WARNING: 0x%lX should have been %d, was %d\n",
 					IC - 1, BC_CLONE_ARG, (int) *(IC - 1));
 				continue;
 			}
 			code = get_short();
-			fprintf(fd, "0x%X %s%d\n", IC - 1 - sizeof(short),
+			fprintf(fd, "0x%lX %s%d\n", IC - 1 - sizeof(short),
 				"BC_CLONE_ARG #", code);
 		}
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_NO_CLONE_ARG");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_NO_CLONE_ARG");
 
 		if (rout_id != 0) {
 			string = IC;
 			IC += strlen(string) + 1;	/* Get the feature name */
-			fprintf(fd, "0x%X %s \"%s\"\n", string, "feature", string);
+			fprintf(fd, "0x%lX %s \"%s\"\n", string, "feature", string);
 			code = get_short();			/* Dyn. type where feature is written */
-			fprintf(fd, "0x%X %s %d (%s)\n", IC - sizeof(short), "WRITTEN", code, System(code).cn_generator);
+			fprintf(fd, "0x%lX %s %d (%s)\n", IC - sizeof(short), "WRITTEN", code, System(code).cn_generator);
 		}
 
 		has_rescue = (int) *IC++;
 		if (has_rescue) {
 			offset = get_long();			/* Compute the rescue offset */
-			fprintf(fd, "0x%X %s 0x%X\n", IC - 1, "RESCUE", IC + offset);
+			fprintf(fd, "0x%lX %s 0x%lX\n", IC - 1, "RESCUE", IC + offset);
 		} else
-			fprintf(fd, "0x%X %s\n", IC - 1, "no rescue");
+			fprintf(fd, "0x%lX %s\n", IC - 1, "no rescue");
 
 		break;
 	default:
@@ -4110,49 +4110,49 @@ char *start;
 	 * Start of precondition check
  	 */
 	case BC_PRECOND:
-		fprintf(fd, "0x%X %s, offset: %d\n", IC - 1, "BC_PRECOND", get_long());
+		fprintf(fd, "0x%lX %s, offset: %d\n", IC - 1, "BC_PRECOND", get_long());
 		break;
 
 	/*
 	 * Start of postcondition check.
 	 */
 	case BC_POSTCOND:
-		fprintf(fd, "0x%X %s, offset: %d\n", IC - 1, "BC_POSTCOND", get_long());
+		fprintf(fd, "0x%lX %s, offset: %d\n", IC - 1, "BC_POSTCOND", get_long());
 		break;
 
 	/*
  	 * End of rescue compound
  	 */
 	case BC_END_RESCUE:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_RECUE");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_RECUE");
 		return;
 
 	/*
 	 * Deferred compound mark.
 	 */
 	case BC_DEFERRED:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_DEFERRED");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_DEFERRED");
 		break;
 
 	/*
 	 * Rescue compound mark
 	 */
 	case BC_RESCUE:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_RESCUE");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_RESCUE");
 		break;
 
 	/*
 	 * Assignment to result.
 	 */
 	case BC_RASSIGN:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_RASSIGN");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_RASSIGN");
 		break;
 
 	/*
 	 * Assignment to an expanded result
 	 */
 	case BC_REXP_ASSIGN:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_REXP_ASSIGN");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_REXP_ASSIGN");
 		break;
 
 	/*
@@ -4160,7 +4160,7 @@ char *start;
 	 */
 	case BC_LASSIGN:
 		code = get_short();		/* Get the local number (from 1 to locnum) */
-		fprintf(fd, "0x%X %s #%d\n", 
+		fprintf(fd, "0x%lX %s #%d\n", 
 			IC - sizeof(short) - 1, "BC_LASSIGN", code);
 		break;
 
@@ -4169,7 +4169,7 @@ char *start;
 	 */
 	case BC_LEXP_ASSIGN:
 		code = get_short();		/* Get the local number (from 1 to locnum) */
-		fprintf(fd, "0x%X %s #%d\n", IC - sizeof(short) - 1,
+		fprintf(fd, "0x%lX %s #%d\n", IC - sizeof(short) - 1,
 			"BC_LEXP_ASSIGN", code);
 		break;
 
@@ -4183,7 +4183,7 @@ char *start;
 		offset = get_long();		/* Get the feature id */
 		code = get_short();			/* Get the static type */
 		type = get_uint32();		/* Get attribute meta-type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, meta-type=0x%x\n",
+		fprintf(fd, "0x%lX %s fid=%d, st=%d, meta-type=0x%lx\n",
 			IC - sizeof(short) - sizeof(long) -sizeof(uint32) - 1,
 			"BC_ASSIGN", offset, code, type);
 	}
@@ -4196,7 +4196,7 @@ char *start;
 		offset = get_long();		/* Get the feature id */
 		code = get_short();			/* Get the static type */
 		type = get_short();			/* Get attribute meta-type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
+		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
 			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
 			"BC_EXP_ASSIGN", offset, code);
 		break;
@@ -4205,7 +4205,7 @@ char *start;
 	 * Assignment to a NONE entity
 	 */
 	case BC_NONE_ASSIGN:
-		fprintf(fd, "0x%X BC_NONE_ASSIGN\n", IC - 1);
+		fprintf(fd, "0x%lX BC_NONE_ASSIGN\n", IC - 1);
 		break;
 
 	/*
@@ -4213,7 +4213,7 @@ char *start;
 	 */
 	case BC_RREVERSE:
 		type = get_short();			/* Get the reverse type */
-		fprintf(fd, "0x%X %s rt=%d\n", IC - sizeof(short) - 1,
+		fprintf(fd, "0x%lX %s rt=%d\n", IC - sizeof(short) - 1,
 			"BC_RREVERSE", type);
 		break;
 
@@ -4223,7 +4223,7 @@ char *start;
 	case BC_LREVERSE:
 		code = get_short();			/* Get local number */
 		type = get_short();			/* Get the reverse type */
-		fprintf(fd, "0x%X %s #%d, rt=%d\n", IC - 2 * sizeof(short) - 1,
+		fprintf(fd, "0x%lX %s #%d, rt=%d\n", IC - 2 * sizeof(short) - 1,
 			"BC_LREVERSE", code, type);
 		break;
 	
@@ -4237,7 +4237,7 @@ char *start;
 			code = get_short();			/* Get the static type */
 			meta = get_uint32();		/* Get the attribute meta-type */
 			type = get_short();			/* Get the reverse type */
-			fprintf(fd, "0x%X %s fid=%d, st=%d, rt=%d\n",
+			fprintf(fd, "0x%lX %s fid=%d, st=%d, rt=%d\n",
 				IC - 2 * sizeof(short) - sizeof(long) - 1,
 				"BC_REVERSE", offset, code, type);
 		}
@@ -4247,21 +4247,21 @@ char *start;
 	 * Clone of a reference
 	 */
 	case BC_CLONE:
-		fprintf(fd,"0x%X BC_CLONE\n", IC - 1);
+		fprintf(fd,"0x%lX BC_CLONE\n", IC - 1);
 		break;
 
 	/*
 	 * Exception "Void assigned to expanded"
 	 */
 	case BC_EXP_EXCEP:
-		fprintf(fd, "0x%X BC_EXP_EXCEP\n", IC - 1);
+		fprintf(fd, "0x%lX BC_EXP_EXCEP\n", IC - 1);
 		break;
 
 	/*
 	 * Void reference
 	 */
 	case BC_VOID:
-		fprintf(fd, "0x%X BC_VOID\n", IC - 1);
+		fprintf(fd, "0x%lX BC_VOID\n", IC - 1);
 		break;
 
 	/*
@@ -4269,7 +4269,7 @@ char *start;
 	 */
 	case BC_CHECK:
 		offset = get_long();	/* Jump offset in assertion is not checked */
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_CHECK", IC + offset);
 		break;
 
@@ -4278,7 +4278,7 @@ char *start;
 	 */
 	case BC_RETRY:
 		offset = get_long();	/* Retry offset */
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_RETRY", IC + offset);
 		break;
 
@@ -4287,7 +4287,7 @@ char *start;
 	 */
 	case BC_LOOP:
 		offset = get_long();	/* Jump offset if assertion is not checked */
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_LOOP", IC + offset);
 		break;
 
@@ -4323,7 +4323,7 @@ char *start;
 				tag = "UNKNOWN";
 				break;
 			}
-			fprintf(fd, "0x%X %s %s, \"%s\"\n", start,
+			fprintf(fd, "0x%lX %s %s, \"%s\"\n", start,
 				"BC_ASSERT", string, tag);
 		}
 		break;
@@ -4332,35 +4332,35 @@ char *start;
 	 * End of precondition in first block.
 	 */
 	case BC_END_FST_PRE:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_FST_PRE");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_FST_PRE");
 		break;
 
 	/*
 	 * End of precondition.
 	 */
 	case BC_END_PRE:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_PRE");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_PRE");
 		break;
 
 	/*
 	 * Raise precondition violation 
 	 */
 	case BC_RAISE_PREC:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_RAISE_PREC");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_RAISE_PREC");
 		break;
 
 	/*
 	 * Go to the body of the routine. 
 	 */
 	case BC_GOTO_BODY:
-		fprintf(fd, "0x%X %s, offset: %d\n", IC - 1, "BC_GOTO_BODY", get_long());
+		fprintf(fd, "0x%lX %s, offset: %d\n", IC - 1, "BC_GOTO_BODY", get_long());
 		break;
 
 	/*
 	 * End of assertion.
 	 */
 	case BC_END_ASSERT:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_ASSERT");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_ASSERT");
 		break;
 
 	/*
@@ -4368,7 +4368,7 @@ char *start;
 	 */
 	case BC_END_VARIANT:
 		code = get_short();
-		fprintf(fd, "0x%X %s %d\n", IC - 1, "BC_END_VARIANT", code);
+		fprintf(fd, "0x%lX %s %d\n", IC - 1, "BC_END_VARIANT", code);
 		break;
 
 	/*
@@ -4376,7 +4376,7 @@ char *start;
 	 */
 	case BC_INIT_VARIANT:
 		code = get_short();
-		fprintf(fd, "0x%X %s %d\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(long) - 1,
 			"BC_INIT_VARIANT", code);
 		break;
 
@@ -4385,18 +4385,18 @@ char *start;
 	 */
 	case BC_DEBUG:
 		offset = get_long();	/* Number of keys */
-		fprintf(fd, "0x%X %s %d\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(long) - 1,
 			"BC_DEBUG", offset);
 		if (offset > 0L) {
 			int i;
 			for (i = 0; i < offset; i++) {
 				string = IC;						/* Get a debug key */
 				IC += strlen(IC) + 1;
-				fprintf(fd, "0x%X DEBUG \"%s\"\n", string, string);
+				fprintf(fd, "0x%lX DEBUG \"%s\"\n", string, string);
 			}
 		}
 		offset = get_long();	/* Get the jump value */
-		fprintf(fd, "0x%X JUMP not debug 0x%X\n", IC - sizeof(long),
+		fprintf(fd, "0x%lX JUMP not debug 0x%lX\n", IC - sizeof(long),
 			IC + offset);
 		break;
 
@@ -4405,7 +4405,7 @@ char *start;
 	 */
 	case BC_CREAT_INV:
 #ifdef DEBUG
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_CREAT_INV");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_CREAT_INV");
 #endif
 		break;
 
@@ -4416,27 +4416,27 @@ char *start;
 		switch (*IC++) {
 		case BC_CTYPE:				/* Hardcoded creation type */
 			type = get_short();
-			fprintf(fd, "0x%X BC_CREATE dt=%d\n", IC - sizeof(short) - 2,
+			fprintf(fd, "0x%lX BC_CREATE dt=%d\n", IC - sizeof(short) - 2,
 				type);
 			break;
 		case BC_CARG:				/* Like argument creation type */
 			type = get_short();		/* Default creation type if void arg.  */
 			code = get_short();		/* Argument position */
-			fprintf(fd, "0x%X BC_CREATE dt=%d, arg=%d\n",
+			fprintf(fd, "0x%lX BC_CREATE dt=%d, arg=%d\n",
 				IC - 2 * sizeof(short) - 2,
 				type, code);
 			break;
 		case BC_CLIKE:				/* Like feature creation type */
 			type = get_short();
 			offset = get_long();	/* Get the routine id of the anchor */
-			fprintf(fd, "0x%X BC_CREATE fid=%d\n", 
+			fprintf(fd, "0x%lX BC_CREATE fid=%d\n", 
 				IC - sizeof(short) - sizeof(long) - 2, offset);
 			break;
 		case BC_CCUR:				/* Like Current creation type */
-			fprintf(fd, "0x%X BC_CREATE current\n", IC - 2);
+			fprintf(fd, "0x%lX BC_CREATE current\n", IC - 2);
 			break;
 		default:
-			fprintf(fd, "0x%X UNKNOWN\n", IC - 2);
+			fprintf(fd, "0x%lX UNKNOWN\n", IC - 2);
 		}	
 		break;
 
@@ -4445,7 +4445,7 @@ char *start;
 	 */
 	case BC_RANGE:
 		offset = get_long();		/* Get the jump value */
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_RANGE", IC + offset);
 		break;
 	
@@ -4453,21 +4453,21 @@ char *start;
 	 * End of multi-branch instruction.
 	 */
 	case BC_INSPECT:
-		fprintf(fd, "0x%X BC_INSPECT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_INSPECT\n", IC - 1);
 		break;
 
 	/*
 	 * Unmatched inspect value.
 	 */
 	case BC_INSPECT_EXCEP:
-		fprintf(fd, "0x%X BC_INSPECT_EXCEP\n", IC - 1);
+		fprintf(fd, "0x%lX BC_INSPECT_EXCEP\n", IC - 1);
 		break;
 
 	/*
 	 * Call on a simple type.
 	 */
 	case BC_METAMORPHOSE:
-		fprintf(fd, "0x%X %s\n", IC - 1,
+		fprintf(fd, "0x%lX %s\n", IC - 1,
 			"BC_METAMORPHOSE");
 		break;
 
@@ -4481,7 +4481,7 @@ char *start;
 			stype = get_short();		/* Get the static type*/
 			feat_id = get_short();		/* Get the feature id*/
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
-			fprintf(fd, "0x%X %s, st=%d dt=%d fid=%d nbr=%d\n",
+			fprintf(fd, "0x%lX %s, st=%d dt=%d fid=%d nbr=%d\n",
 				 	IC - (2*sizeof(short)) - sizeof(long) - 1, 
 					"BC_ARRAY", stype, feat_id, nbr_of_items);
 		}
@@ -4491,28 +4491,28 @@ char *start;
 	 * Retrieve Old expression from local register
 	 */
 	case BC_RETRIEVE_OLD:
-		fprintf(fd, "0x%X %s local #: %d\n", IC - 1, "BC_RETRIEVE_OLD", get_short());
+		fprintf(fd, "0x%lX %s local #: %d\n", IC - 1, "BC_RETRIEVE_OLD", get_short());
 		break;
 	
 	/* 
 	 * Save Old expression into local register
 	 */
 	case BC_OLD:
-		fprintf(fd, "0x%X %s local #: %d\n", IC - 1, "BC_OLD", get_short());
+		fprintf(fd, "0x%lX %s local #: %d\n", IC - 1, "BC_OLD", get_short());
 		break;
 
 	/*
 	 * Beginning of old evaluation
 	 */
 	case BC_START_EVAL_OLD:
-		fprintf(fd, "0x%X %s offset: %d\n", IC - 1, "BC_START_EVAL_OLD", get_long());
+		fprintf(fd, "0x%lX %s offset: %d\n", IC - 1, "BC_START_EVAL_OLD", get_long());
 		break;
 		
 	/*
 	 * End of old evaluation
 	 */
 	case BC_END_EVAL_OLD:
-		fprintf(fd, "0x%X %s\n", IC - 1, "BC_END_EVAL_OLD");
+		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_EVAL_OLD");
 		break;
 	
 	/* 
@@ -4521,7 +4521,7 @@ char *start;
 	case BC_ADD_STRIP:
 		string = IC;
 		IC += strlen(IC) + 1;
-		fprintf(fd, "0x%X %s \"%s\"\n", string - 1, "BC_ADD_STRIP", string);
+		fprintf(fd, "0x%lX %s \"%s\"\n", string - 1, "BC_ADD_STRIP", string);
 		break;
 	
 	/* 
@@ -4534,7 +4534,7 @@ char *start;
 			s_type = get_short();
 			d_type = get_short();
 			nbr = get_long();
-			fprintf(fd, "0x%X %s, nbr of items=%d, stype=%d, dtype=%d\n", 
+			fprintf(fd, "0x%lX %s, nbr of items=%d, stype=%d, dtype=%d\n", 
 				IC - sizeof(long) - (2*sizeof(short)) - 1, 
 				"BC_END_STRIP", nbr, s_type, d_type);
 			break;
@@ -4546,7 +4546,7 @@ char *start;
 	case BC_EXTERN:
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
+		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
 			IC - sizeof(short) - sizeof(long) - 1,
 			"BC_EXTERN", offset, code);
 		break;
@@ -4557,7 +4557,7 @@ char *start;
 	case BC_FEATURE:
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
+		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
 			IC - sizeof(short) - sizeof(long) - 1,
 			"BC_FEATURE", offset, code);
 		break;
@@ -4570,7 +4570,7 @@ char *start;
 		IC += strlen(IC) + 1;
 		offset = get_long();			/* Get the feature id */
 		code = get_short();				/* Get the static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, \"%s\"\n", string - 1,
+		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", string - 1,
 			"BC_EXTERN_INV", offset, code, string);
 		break;
 
@@ -4582,7 +4582,7 @@ char *start;
 		IC += strlen(IC) + 1;
 		offset = get_long();			/* Get the feature id */
 		code = get_short();				/* Get the static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, \"%s\"\n", string - 1,
+		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", string - 1,
 			"BC_FEATURE_INV", offset, code, string);
 		break;
 
@@ -4596,7 +4596,7 @@ char *start;
 		offset = get_long();				/* Get feature id */
 		code = get_short();					/* Get static type */
 		type = get_uint32();				/* Get attribute meta-type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, meta-type=0x%x\n",
+		fprintf(fd, "0x%lX %s fid=%d, st=%d, meta-type=0x%lx\n",
 			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
 			"BC_ATTRIBUTE", offset, code, type);
 		break;
@@ -4611,7 +4611,7 @@ char *start;
 		offset = get_long();				/* Get feature id */
 		code = get_short();					/* Get static type */
 		type = get_uint32();				/* Get attribute meta-type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d, \"%s\"\n", 
+		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", 
 			string - sizeof(long) - sizeof(short) - sizeof(uint32) - 1,
 			"BC_ATTRIBUTE_INV", offset, code, string);
 		break;
@@ -4621,7 +4621,7 @@ char *start;
 	 */
 	case BC_ROTATE:
 		code = get_short();
-		fprintf(fd, "0x%X BC_ROTATE %d\n",
+		fprintf(fd, "0x%lX BC_ROTATE %d\n",
 			IC - sizeof(short) - 1, code);
 		break;
 	
@@ -4629,7 +4629,7 @@ char *start;
 	 * Hector protection of an address
 	 */
 	case BC_PROTECT:
-		fprintf(fd, "0x%X BC_PROTECT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_PROTECT\n", IC - 1);
 		break;
 
 	/* 
@@ -4637,21 +4637,21 @@ char *start;
 	 */
 	case BC_RELEASE:
 		code = get_short();
-		fprintf(fd, "0x%X BC_RELEASE %d\n", IC - sizeof(short) - 1, code);
+		fprintf(fd, "0x%lX BC_RELEASE %d\n", IC - sizeof(short) - 1, code);
 		break;
 
 	/*
 	 * Access to Current.
 	 */
 	case BC_CURRENT:
-		fprintf(fd, "0x%X BC_CURRENT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_CURRENT\n", IC - 1);
 		break;
 	
 	/*
 	 * Character constant.
 	 */
 	case BC_CHAR:
-		fprintf(fd, "0x%X BC_CHAR '%c'\n", IC - 1, *IC);
+		fprintf(fd, "0x%lX BC_CHAR '%c'\n", IC - 1, *IC);
 		IC++;
 		break;
 
@@ -4659,7 +4659,7 @@ char *start;
 	 * Boolean constant.
 	 */
 	case BC_BOOL:
-		fprintf(fd, "0x%X BC_BOOL %s\n", IC - 1, *IC ? "true" : "false");
+		fprintf(fd, "0x%lX BC_BOOL %s\n", IC - 1, *IC ? "true" : "false");
 		IC++;
 		break;
 
@@ -4668,7 +4668,7 @@ char *start;
 	 */
 	case BC_INT:
 		offset = get_long();
-		fprintf(fd, "0x%X BC_INT %ld\n", IC - sizeof(long) - 1, offset);
+		fprintf(fd, "0x%lX BC_INT %ld\n", IC - sizeof(long) - 1, offset);
 		break;
 
 	/*
@@ -4676,7 +4676,7 @@ char *start;
 	 */
 	case BC_FLOAT:
 		d = get_double();
-		fprintf(fd, "0x%X BC_FLOAT %f\n", IC - sizeof(double) - 1, (float) d);
+		fprintf(fd, "0x%lX BC_FLOAT %f\n", IC - sizeof(double) - 1, (float) d);
 		break;
 
 	/*
@@ -4684,14 +4684,14 @@ char *start;
 	 */
 	case BC_DOUBLE:
 		d = get_double();
-		fprintf(fd, "0x%X BC_DOUBLE %f\n", IC - sizeof(double) - 1, d);
+		fprintf(fd, "0x%lX BC_DOUBLE %f\n", IC - sizeof(double) - 1, d);
 		break;
 
 	/*
 	 * Access to Result.
 	 */
 	case BC_RESULT:
-		fprintf(fd, "0x%X BC_RESULT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_RESULT\n", IC - 1);
 		break;
 		
 	/*
@@ -4699,7 +4699,7 @@ char *start;
 	 */
 	case BC_LOCAL:
 		code = get_short();				/* Get number (from 1 to locnum) */
-		fprintf(fd, "0x%X %s #%d\n", IC - sizeof(short) - 1,
+		fprintf(fd, "0x%lX %s #%d\n", IC - sizeof(short) - 1,
 			"BC_LOCAL", code);
 		break;
 
@@ -4708,7 +4708,7 @@ char *start;
 	 */
 	case BC_ARG:
 		code = get_short();				/* Get number (from 1 to argnum) */
-		fprintf(fd, "0x%X %s #%d\n", IC - sizeof(short) - 1,
+		fprintf(fd, "0x%lX %s #%d\n", IC - sizeof(short) - 1,
 			"BC_ARG", code);
 		break;
 
@@ -4717,7 +4717,7 @@ char *start;
 	 */
 	case BC_AND_THEN:
 		offset = get_long();
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_AND_THEN", IC + offset);
 		break;
 
@@ -4726,7 +4726,7 @@ char *start;
 	 */
 	case BC_OR_ELSE:
 		offset = get_long();
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_OR_ELSE", IC + offset);
 		break;
 
@@ -4734,72 +4734,72 @@ char *start;
 	 * Monadic operators.
 	 */
 	case BC_UPLUS:			/* Unary plus */
-		fprintf(fd, "0x%X BC_UPLUS\n", IC - 1);
+		fprintf(fd, "0x%lX BC_UPLUS\n", IC - 1);
 		break;
 	case BC_UMINUS:			/* Unary minus */
-		fprintf(fd, "0x%X BC_UMINUS\n", IC - 1);
+		fprintf(fd, "0x%lX BC_UMINUS\n", IC - 1);
 		break;
 	case BC_NOT:			/* Unary negation */
-		fprintf(fd, "0x%X BC_NOT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_NOT\n", IC - 1);
 		break;
 
 	/*
 	 * Diadic operators.
 	 */
 	case BC_LT:				/* Lesser than op */
-		fprintf(fd, "0x%X BC_LT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_LT\n", IC - 1);
 		break;
 	case BC_GT:				/* Greater than op */
-		fprintf(fd, "0x%X BC_GT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_GT\n", IC - 1);
 		break;
 	case BC_MINUS:			/* Minus op */
-		fprintf(fd, "0x%X BC_MINUS\n", IC - 1);
+		fprintf(fd, "0x%lX BC_MINUS\n", IC - 1);
 		break;
 	case BC_XOR:			/* Xor op */
-		fprintf(fd, "0x%X BC_XOR\n", IC - 1);
+		fprintf(fd, "0x%lX BC_XOR\n", IC - 1);
 		break;
 	case BC_GE:				/* Greater or equal op */
-		fprintf(fd, "0x%X BC_GE\n", IC - 1);
+		fprintf(fd, "0x%lX BC_GE\n", IC - 1);
 		break;
 	case BC_EQ:				/* Equality */
-		fprintf(fd, "0x%X BC_EQ\n", IC - 1);
+		fprintf(fd, "0x%lX BC_EQ\n", IC - 1);
 		break;
 	case BC_NE:				/* Not equal op */
-		fprintf(fd, "0x%X BC_NE\n", IC - 1);
+		fprintf(fd, "0x%lX BC_NE\n", IC - 1);
 		break;
 	case BC_STAR:			/* Multiplication op */
-		fprintf(fd, "0x%X BC_STAR\n", IC - 1);
+		fprintf(fd, "0x%lX BC_STAR\n", IC - 1);
 		break;
 	case BC_POWER:			/* Power op */
-		fprintf(fd, "0x%X BC_POWER\n", IC - 1);
+		fprintf(fd, "0x%lX BC_POWER\n", IC - 1);
 		break;
 	case BC_LE:				/* Less or equal op */
-		fprintf(fd, "0x%X BC_LE\n", IC - 1);
+		fprintf(fd, "0x%lX BC_LE\n", IC - 1);
 		break;
 	case BC_DIV:			/* Div op */
-		fprintf(fd, "0x%X BC_DIV\n", IC - 1);
+		fprintf(fd, "0x%lX BC_DIV\n", IC - 1);
 		break;
 	case BC_AND:			/* Logical conjuntion op */
-		fprintf(fd, "0x%X BC_AND\n", IC - 1);
+		fprintf(fd, "0x%lX BC_AND\n", IC - 1);
 		break;
 	case BC_SLASH:			/* Real division op */
-		fprintf(fd, "0x%X BC_SLASH\n", IC - 1);
+		fprintf(fd, "0x%lX BC_SLASH\n", IC - 1);
 		break;
 	case BC_MOD:			/* Integer remainder division op */
-		fprintf(fd, "0x%X BC_MOD\n", IC - 1);
+		fprintf(fd, "0x%lX BC_MOD\n", IC - 1);
 		break;
 	case BC_PLUS:			/* Addition op */
-		fprintf(fd, "0x%X BC_PLUS\n", IC - 1);
+		fprintf(fd, "0x%lX BC_PLUS\n", IC - 1);
 		break;
 	case BC_OR:				/* Logocal disjunction op */
-		fprintf(fd, "0x%X BC_OR\n", IC - 1);
+		fprintf(fd, "0x%lX BC_OR\n", IC - 1);
 		break;
 
 	/*
 	 * Expanded equality
  	 */
 	case BC_BIT_STD_EQUAL:
-		fprintf(fd, "0x%X BC_BIT_STD_EQUAL\n", IC - 1);
+		fprintf(fd, "0x%lX BC_BIT_STD_EQUAL\n", IC - 1);
 		break;
 
 	/*
@@ -4807,21 +4807,21 @@ char *start;
 	 * Expanded equality
  	 */
 	case BC_STANDARD_EQUAL:
-		fprintf(fd, "0x%X BC_STANDARD_EQUAL\n", IC - 1);
+		fprintf(fd, "0x%lX BC_STANDARD_EQUAL\n", IC - 1);
 		break;
 
 	/*
 	 * True comparison
 	 */
 	case BC_TRUE_COMPAR:
-		fprintf(fd, "0x%x BC_TRUE_COMPAR\n", IC - 1);
+		fprintf(fd, "0x%lx BC_TRUE_COMPAR\n", IC - 1);
 		break;
 
 	/*
 	 * False comparison
 	 */
 	case BC_FALSE_COMPAR:
-		fprintf(fd, "0x%X BC_FALSE_COMPAR\n", IC - 1);
+		fprintf(fd, "0x%lX BC_FALSE_COMPAR\n", IC - 1);
 		break;
 
 	/*
@@ -4830,7 +4830,7 @@ char *start;
 	case BC_ADDR:
 		offset = get_long();			/* Get the feature id */
 		code = get_short();				/* Get the static type */
-		fprintf(fd, "0x%X %s fid=%d, st=%d\n",
+		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
 			IC - sizeof(short) - sizeof(long) - 1,
 			"BC_ADDR", offset, code);
 		break;
@@ -4841,7 +4841,7 @@ char *start;
 	case BC_STRING:
 		string = IC;
 		IC += strlen(IC) + 1;
-		fprintf(fd, "0x%X BC_STRING \"%s\"\n", string - 1, string);
+		fprintf(fd, "0x%lX BC_STRING \"%s\"\n", string - 1, string);
 		break;
 
 	/*
@@ -4866,7 +4866,7 @@ char *start;
 	 */
 	case BC_JMP_F:				/* Jump if false */
 		offset = get_long();	/* Get jump offset */
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_JMP_F", IC + offset);
 		break;
 
@@ -4875,7 +4875,7 @@ char *start;
 	 */
 	case BC_JMP_T:				/* Jump if false */
 		offset = get_long();	/* Get jump offset */
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_JMP_T", IC + offset);
 		break;
 
@@ -4884,7 +4884,7 @@ char *start;
 	 */
 	case BC_JMP:
 		offset = get_long();
-		fprintf(fd, "0x%X %s 0x%X\n", IC - sizeof(long) - 1,
+		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
 			"BC_JMP", IC + offset);
 		break;
 
@@ -4892,28 +4892,28 @@ char *start;
 	 * Next debugging instruction.
 	 */
 	case BC_NEXT:
-		fprintf(fd, "0x%X BC_NEXT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_NEXT\n", IC - 1);
 		break;
 
 	/*
 	 * Active breakpoint.
 	 */
 	case BC_BREAK:
-		fprintf(fd, "0x%X BC_BREAK\n", IC - 1);
+		fprintf(fd, "0x%lX BC_BREAK\n", IC - 1);
 		break;
 
 	/*
 	 * End of current Eiffel routine.
 	 */
 	case BC_NULL:
-		fprintf(fd, "0x%X BC_NULL\n", IC - 1);
+		fprintf(fd, "0x%lX BC_NULL\n", IC - 1);
 		return;
 
 	/*
 	 * End of current Eiffel invariant.
 	 */
 	case BC_INV_NULL:
-		fprintf(fd, "0x%X BC_INV_NULL\n", IC - 1);
+		fprintf(fd, "0x%lX BC_INV_NULL\n", IC - 1);
 		return;
 
 	/*
@@ -4921,19 +4921,19 @@ char *start;
 	 */
 
 	case BC_CAST_LONG:
-		fprintf(fd, "0x%X BC_CAST_LONG\n", IC - 1);
+		fprintf(fd, "0x%lX BC_CAST_LONG\n", IC - 1);
 		break;
 
 	case BC_CAST_FLOAT:
-		fprintf(fd, "0x%X BC_CAST_FLOAT\n", IC - 1);
+		fprintf(fd, "0x%lX BC_CAST_FLOAT\n", IC - 1);
 		break;
 
 	case BC_CAST_DOUBLE:
-		fprintf(fd, "0x%X BC_CAST_DOUBLE\n", IC - 1);
+		fprintf(fd, "0x%lX BC_CAST_DOUBLE\n", IC - 1);
 		break;
 
 	default:
-		fprintf(fd, "0x%X UNKNOWN (opcode = %d)\n", IC - 1, code);
+		fprintf(fd, "0x%lX UNKNOWN (opcode = %d)\n", IC - 1, code);
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */

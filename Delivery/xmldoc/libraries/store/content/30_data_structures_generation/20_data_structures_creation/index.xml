@@ -114,6 +114,7 @@
 				</list>
 				<paragraph>Let us take an example:</paragraph>
 				<table>
+					<border>1</border>
 					<row>
 						<cell>template file extract</cell>
 						<cell>corresponding result file extract</cell>
@@ -126,6 +127,7 @@
 				<paragraph>This works for meta-data on the class or view. For meta-data on class (or view) attributes, a second tag type enables to specify text areas that are mapped to specific table (or view) attributes. </paragraph>
 				<paragraph>Let us take an example: </paragraph>
 				<table>
+					<border>1</border>
 					<row>
 						<cell>template file extract</cell>
 						<cell>corresponding result file extract</cell>
@@ -171,14 +173,16 @@
 					<size>5</size>2.3.1.1. Table meta-data tags
 				</heading>
 				<table>
+					<border>1</border>
 					<row>
-						<cell>
+						<cell rowspan="2">
+							
 							<bold>Tag name</bold>
 						</cell>
-						<cell>
+						<cell rowspan = "2">
 							<bold>Tag description</bold>
 						</cell>
-						<cell>
+						<cell columnspan = "2">
 							<bold>Options</bold>
 						</cell>
 					</row>
@@ -191,8 +195,8 @@
 						</cell>
 					</row>
 					<row>
-						<cell>&lt;CN:?&gt;</cell>
-						<cell>Table name</cell>
+						<cell rowspan = "3">&lt;CN:?&gt;</cell>
+						<cell rowspan = "3">Table name</cell>
 						<cell>U</cell>
 						<cell>in uppercase</cell>
 					</row>
@@ -205,7 +209,7 @@
 						<cell>in lowercase</cell>
 					</row>
 					<row>
-						<cell>&lt;ACNT&gt;</cell>
+						<cell columnspan = "2">&lt;ACNT&gt;</cell>
 						<cell>Attribute count</cell>
 						<cell>N/A</cell>
 					</row>
@@ -214,14 +218,15 @@
 					<size>5</size>2.3.1.2. Attribute meta-datatags
 				</heading>
 				<table>
+					<border>1</border>
 					<row>
-						<cell>
+						<cell rowspan = "2">
 							<bold>Tag name</bold>
 						</cell>
-						<cell>
+						<cell rowspan = "2">
 							<bold>Tag description</bold>
 						</cell>
-						<cell>
+						<cell columnspan = "2">
 							<bold>Options</bold>
 						</cell>
 					</row>
@@ -234,8 +239,8 @@
 						</cell>
 					</row>
 					<row>
-						<cell>&lt;AN:?&gt;</cell>
-						<cell>Attribute name</cell>
+						<cell rowspan = "3">&lt;AN:?&gt;</cell>
+						<cell rowspan = "3">Attribute name</cell>
 						<cell>U</cell>
 						<cell>in uppercase</cell>
 					</row>
@@ -250,11 +255,11 @@
 					<row>
 						<cell>&lt;IT&gt;</cell>
 						<cell>Attribute position in the table</cell>
-						<cell>N/A</cell>
+						<cell columnspan = "2">N/A</cell>
 					</row>
 					<row>
-						<cell>&lt;TN:?&gt;</cell>
-						<cell>Attribute type name</cell>
+						<cell rowspan = "3">&lt;TN:?&gt;</cell>
+						<cell rowspan = "3">Attribute type name</cell>
 						<cell>U</cell>
 						<cell>in uppercase</cell>
 					</row>
@@ -269,7 +274,7 @@
 					<row>
 						<cell>&lt;TDV&gt;</cell>
 						<cell>Attribute type default value</cell>
-						<cell>N/A</cell>
+						<cell columnspan = "2">N/A</cell>
 					</row>
 				</table>
 				<paragraph>
@@ -283,6 +288,7 @@
 					<item>First option: attribute type criterion</item>
 				</list>
 				<table>
+					<border>1</border>
 					<row>
 						<cell>
 							<bold>Option name</bold>
@@ -325,6 +331,7 @@
 				<item>Second option: attribute position criterion</item>
 			</list>
 			<table>
+				<border>1</border>
 				<row>
 					<cell>
 						<bold>Option name</bold>
@@ -395,6 +402,7 @@
 			<size>5</size>2.3.2.1. System meta-data tags
 		</heading>
 		<table>
+			<border>1</border>
 			<row>
 				<cell>
 					<bold>Tag name</bold>
@@ -412,14 +420,15 @@
 			<size>5</size>2.3.2.2.  Table meta-data tags
 		</heading>
 		<table>
+			<border>1</border>
 			<row>
-				<cell>
+				<cell rowspan = "2">
 					<bold>Tag name</bold>
 				</cell>
-				<cell>
+				<cell rowspan = "2">
 					<bold>Tag description</bold>
 				</cell>
-				<cell>
+				<cell columnspan = "2">
 					<bold>Options</bold>
 				</cell>
 			</row>
@@ -432,8 +441,8 @@
 				</cell>
 			</row>
 			<row>
-				<cell>&lt;CN:?&gt;</cell>
-				<cell>Table name</cell>
+				<cell rowspan = "3">&lt;CN:?&gt;</cell>
+				<cell rowspan = "3">Table name</cell>
 				<cell>U</cell>
 				<cell>in uppercase</cell>
 			</row>
@@ -448,7 +457,7 @@
 			<row>
 				<cell>&lt;IT&gt;</cell>
 				<cell>Table position in the database</cell>
-				<cell>N/A</cell>
+				<cell columnspan = "2">N/A</cell>
 			</row>
 		</table>
 		<heading>
@@ -456,6 +465,7 @@
 		</heading>
 		<paragraph>The tag &lt;A:A:?&gt; &lt;/A&gt; encloses text that will be mapped to tables matching a position criterion. This criterion is specified by the tag options:</paragraph>
 		<table>
+			<border>1</border>
 			<row>
 				<cell>
 					<bold>Option name</bold>

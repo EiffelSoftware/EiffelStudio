@@ -9,9 +9,22 @@ class
 
 inherit
 	OWNER_DRAW_BUTTON_WINDOWS
+		rename
+			realize as draw_realize
 		redefine
+			on_draw,
 			set_default_size,
 			set_background_pixmap
+		end
+
+	OWNER_DRAW_BUTTON_WINDOWS
+		redefine
+			on_draw,
+			set_default_size,
+			set_background_pixmap,
+			realize
+		select
+			realize
 		end
 		
 	PICT_COL_B_I
@@ -41,15 +54,27 @@ feature -- Access
 	pixmap: PIXMAP
 			-- Pixmap to be drawn on button
 
+	is_pressed: BOOLEAN
+			-- Is the button pressed?
+
 feature -- Status setting
+
+	set_pressed (b: boolean) is
+			-- Set `is_pressed' to `b'. 
+		do 
+			is_pressed := b;
+			if exists then
+				invalidate
+			end
+		end
 
 	set_pixmap, set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set the pixmap for the button
 		do
 			pixmap := a_pixmap
-			if (fixed_size_flag and (pixmap.height + off_set > height or pixmap.width + off_set > width)) or not fixed_size_flag then 
-				set_form_width (pixmap.width + off_set)
-				set_form_height (pixmap.height + off_set)
+			if (fixed_size_flag and (pixmap.height + off_set > height or pixmap.width + off_set > width)) or not fixed_size_flag then
+				set_form_width ((pixmap.width + off_set).min (maximal_width))
+				set_form_height ((pixmap.height + off_set).min (maximal_height))
 			end
 			if exists then
 				invalidate
@@ -73,6 +98,12 @@ feature -- Element change
 			draw_item_actions.add (Current, a_command, arg)
 		end
 
+	realize is
+		do
+			draw_realize;
+			invalidate
+		end
+
 feature -- Removal
 
 	remove_draw_item_action (a_command: COMMAND; arg: ANY) is
@@ -82,6 +113,28 @@ feature -- Removal
 		end
 
 feature {NONE} -- Implementation
+
+	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+			-- Respond to a draw_item message.
+		local
+			dc: WEL_DC
+			brush: WEL_BRUSH
+		do
+			dc := a_draw_item_struct.dc
+			!! brush.make_solid (wel_background_color)
+			dc.select_brush (brush)
+			dc.rectangle (0, 0, width, height)
+			dc.unselect_brush
+			if is_pressed then
+				draw_all_selected (dc)
+			else
+				if flag_set (a_draw_item_struct.item_state, Ods_selected) then
+					draw_all_selected (dc)	
+				else
+					draw_all_unselected (dc)
+				end
+			end	
+		end
 
 	draw_selected (a_dc: WEL_DC) is
 		local

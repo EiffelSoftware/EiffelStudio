@@ -82,6 +82,7 @@ feature
 					non_widgets.item.generating_type
 				)
 				object_menu.extend (menu_item)
+				menu_item.select_actions.extend (~display_test (non_widgets.item))
 				non_widgets.forth
 			end
 			create timer.make_with_interval (30*60*1000)
@@ -483,6 +484,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/26 20:37:57  brendel
+--| Added select actions in non-widget menu.
+--|
 --| Revision 1.30  2000/04/26 18:44:57  brendel
 --| Created arc and polyline with make_for_test.
 --|

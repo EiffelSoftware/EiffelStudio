@@ -9,7 +9,18 @@
 		<H1>EiffelBuild Notation</H1>
 		<P> This page contains descriptions of terms found within the EiffelBuild documentation.
 		<A NAME="object"></A><H2>Object</H2>
-		<P> An EiffelBuild object is a representation of a Vision2 component and its properties. When developing with EiffelBuild, you manipulate objects to build the desired interface.<br><br> Within EiffelBuild, there may be multiple views of a single object displayed simultaneously. Deleting or modifying an object will update all applicable views of that object.</P>
+		<P> An EiffelBuild object is a representation of a Vision2 component and its properties. When developing with EiffelBuild, you manipulate objects to build the desired interface.</P>
+<P>Each object type has a different set of properties that may be manipulated, and these correspond directly to
+the properties available within the <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A> type. There is property which is specific to an EiffelBuild object, <B>Name</B> which is used for your identification purposes and as the attribute name in the generated code.</P>
+<P>
+For more information on manipulating objects within EiffelBuild, see:
+	<UL>
+		<LI><A HREF="/tools/eiffelbuild/how_to_s/20_create_an_object/index.html">How to create an object</A></LI>
+		<LI><A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A> or <A HREF="/tools/eiffelbuild/reference/70_builder_window/index.html">builder window</A> for details on parenting objects</LI>
+		<LI><A HREF="/tools/eiffelbuild/reference/40_object_editor/index.html">object editor</A> for details on modifying object properties.</LI>
+	</UL>
+</P>
+<P> Within EiffelBuild, there may be multiple views of a single object displayed simultaneously. Any modifications to an object will immediately update all views.</P>
 		<A NAME="component"></A><H2>Component</H2>
 		<P>EiffelBuild components are templates representing user defined object structures.<br><br> You specify a new component by creating it from an existing object structure.</P>
 		<A NAME="pick_and_drop"></A><H2>Pick and Drop</H2>

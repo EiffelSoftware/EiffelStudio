@@ -21,11 +21,15 @@ inherit
 			on_wm_control_id_command,
 			class_name
 		redefine
+			set_x,
+			set_y,
+			set_x_y,
+			set_default_position,
 			realize_current,
 			wel_item,
 			wel_parent,
 			on_control_id_command,
-			popup
+			set_enclosing_size
 		end
 
 	WEL_MODELESS_DIALOG
@@ -35,7 +39,7 @@ inherit
 			parent as wel_parent,
 			set_y as wel_set_y,
 			set_x as wel_set_x,
-			set_width as wel_Set_width,
+			set_width as wel_set_width,
 			x as wel_x,
 			y as wel_y,
 			show as wel_show,
@@ -90,6 +94,7 @@ feature {NONE} -- Initialization
 	make (a_search_replace: SEARCH_REPLACE_DIALOG; oui_parent: COMPOSITE) is
 			-- Initilaize the search_replace_dialog
 		do
+			!! private_attributes
 			parent ?= oui_parent.implementation
 			a_search_replace.set_dialog_imp (Current)
 			set_defaults
@@ -125,19 +130,6 @@ feature {NONE} -- Initialization
 			!! find_static.make_by_id (wd, Id_findstatic)
 			!! replace_static.make_by_id (wd, Id_replacestatic)
 			activate
-		end
-
-feature -- Basic operations
-
-	popup is
-			-- Popup the widget.
-		do
-			if exists then
-				setup_dialog
-				show
-			else
-				dialog_realize
-			end
 		end
 
 feature -- Status report
@@ -189,6 +181,31 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_x (new_x: INTEGER) is
+			-- Set `x' to `new_x'.
+		do
+			private_attributes.set_x (new_x)
+		end
+
+	set_x_y (new_x, new_y: INTEGER) is
+			-- Set `x' to `new_x', `y' to `new_y'.
+		do
+			private_attributes.set_y (new_y)
+			private_attributes.set_x (new_x)
+		end
+
+	set_y (new_y: INTEGER) is
+			-- Set `y' to `new_y'.
+		do
+			private_attributes.set_y (new_y)
+
+		end
+
+	set_default_position (flag: BOOLEAN) is
+			-- Search dialogs do not have a default position.
+		do
+		end
 
 	show_direction_request is
 			-- Show the direction requestor
@@ -401,7 +418,7 @@ feature {NONE} -- Implementation
 				Id_replaceall then
 					replace_all_actions.execute (Current, Void)
 			when
-				Idc_findedit then
+				Id_findnext then
 					find_actions.execute (Current, Void)
 			when
 				Idc_casecheck then
@@ -577,11 +594,17 @@ feature {NONE} -- Inapplicable
 		do
 		end
 
-feature {NONE} -- FIXME FIXME BUG IN COMPILER FIXME FIXME
+feature {NONE}
 
 	wel_item: POINTER
 
 	wel_parent: WEL_COMPOSITE_WINDOW
+
+feature {NONE} -- Inapplicable
+
+	set_enclosing_size is
+		do
+		end
 
 end -- class SEARCH_REPLACE_DIALOG_WINDOWS
 

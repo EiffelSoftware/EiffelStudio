@@ -306,6 +306,18 @@ feature -- Element change
 			minimum_width_assigned: minimum_width = a_minimum_width
 			minimum_height_assigned: minimum_height = a_minimum_height
 		end
+		
+	reset_minimum_width is
+			--
+		do
+			minimum_width_set_by_user := False
+		end
+		
+	reset_minimum_height is
+			--
+		do
+			minimum_height_set_by_user := False
+		end
 
 feature -- Measurement 
 	

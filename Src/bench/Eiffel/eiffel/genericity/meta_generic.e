@@ -107,7 +107,7 @@ feature -- Byte code generation
 			until
 				i > upper
 			loop
-				ba.append_int32_integer (item (i).cecil_value)
+				ba.append_integer_32 (item (i).cecil_value)
 				i := i + 1
 			end
 		end

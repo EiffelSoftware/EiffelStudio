@@ -613,9 +613,9 @@ feature -- Event -- removing command association
 		deferred
 		end
 
-	remove_loose_focus_commands is
+	remove_lose_focus_commands is
 			-- Empty the list of commands to be executed when
-			-- the widget loose the focus.
+			-- the widget lose the focus.
 		require
 			exists: not destroyed
 		deferred

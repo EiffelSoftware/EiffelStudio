@@ -12,20 +12,21 @@ class
 
 inherit
 
-	MEL_GC_CONSTANTS;
+	MEL_GC_CONSTANTS
+		undefine
+			is_equal
+		end;
 
-	MEMORY
+	MEL_MEMORY
 		rename
-			free as gc_free
-		export
-			{NONE} all
-		redefine
-			dispose
+			make_from_existing as mem_make_from_existing
 		end;
 
 	BASIC_ROUTINES
 		export
 			{NONE} all
+		undefine
+			is_equal
 		end
 
 creation
@@ -48,7 +49,7 @@ feature {NONE} -- Initialization
 			set: equal (display, a_drawable.display)
 		end;
 
-	make_from_existing (a_gc: POINTER; a_display: MEL_DISPLAY) is
+	make_from_existing (a_display: MEL_DISPLAY; a_gc: POINTER) is
 			-- Encapsulate an already created graphic context.
 		require
 			a_gc_not_null: a_gc /= default_pointer;
@@ -62,24 +63,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	handle: POINTER;
-			-- Assocated C GC handle
-
 	display_handle: POINTER;
-			-- Display C handle on which the Pixmap is allocated
+			-- Display C handle on which resource is allocated
 
 	display: MEL_DISPLAY is
-			-- Mel display on which the Pixmap was allocated
+			-- Mel display on which resource was allocated
 		do
-			!! Result.make_from_existing (display_handle)
-		end;
-
-feature -- Status report
-
-	is_valid: BOOLEAN is
-			-- Is the current GC valid?
-		do
-			Result := handle /=  default_pointer
+			if display_handle /= default_pointer then
+				!! Result.make_from_existing (display_handle)
+			end
 		end;
 
 feature -- Status setting
@@ -282,13 +274,14 @@ feature -- Status setting
 
 feature -- Removal
 
-	free, dispose is
-			-- Free the Graphic Context
+	destroy is
+			-- Free the Graphic Context.
 		do
-			if handle /= default_pointer then
-				x_free_gc (display_handle, handle)
-				handle := default_pointer
-			end
+			check
+				valid_display: display_handle /= default_pointer
+			end;
+			x_free_gc (display_handle, handle);
+			handle := default_pointer
 		end;
 
 feature {NONE} -- External features

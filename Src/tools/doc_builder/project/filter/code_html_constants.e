@@ -6,7 +6,7 @@ indexing
 class
 	TEMPLATE_CONSTANTS
 
-feature -- File	Location
+feature -- HTML
 
 	code_template_file_name: STRING is 
 			-- Template file for code HTML
@@ -28,35 +28,7 @@ feature -- File	Location
 			Result := l_file_path.string
 		end	
 		
-	left_context_html_template_file_name: STRING is
-			-- HTML template file for left side context (TOC)
-		local
-			l_file_path: FILE_NAME
-		once
-			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
-			l_file_path.extend ("HTMLLeftContextTemplate.html")
-			Result := l_file_path.string
-		end	
-
-	filter_html_template_file_name: STRING is
-			-- HTML template file for left side filter code
-		local
-			l_file_path: FILE_NAME
-		once
-			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
-			l_file_path.extend ("HTMLFilterTemplate.html")
-			Result := l_file_path.string
-		end	
-		
-	web_help_project_template_file_name: STRING is
-			-- HTML template file for web based help project
-		local
-			l_file_path: FILE_NAME
-		once
-			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
-			l_file_path.extend ("WebHelpTemplateWithHeader.html")
-			Result := l_file_path.string
-		end	
+feature -- XML
 
 	header_xml_template_file_name: STRING is
 			-- Header XML template file
@@ -78,21 +50,57 @@ feature -- File	Location
 			Result := l_file_path.string
 		end	
 
-feature -- File Content
-
-	template_text (a_filename: STRING): STRING is
-			-- Template text
+feature -- Web Help Files
+	
+	html_tree_toc_template_file_name: STRING is
+			-- HTML template file for tree TOC
 		local
-			l_file: PLAIN_TEXT_FILE
-		do
-			create l_file.make (a_filename)
-			if l_file.exists then
-				l_file.open_read
-				l_file.read_stream (l_file.count)
-				Result := l_file.last_string
-				l_file.close
-			end
-		end
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLLeftContextTemplate.html")
+			Result := l_file_path.string
+		end	
+
+	html_simple_toc_template_file_name: STRING is
+			-- HTML template file for simple toc
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLSimpleTOCTemplate.html")
+			Result := l_file_path.string
+		end	
+
+	html_filter_template_file_name: STRING is
+			-- HTML template file for left side filter code
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLFilterTemplate.html")
+			Result := l_file_path.string
+		end	
+		
+	html_simple_filter_template_file_name: STRING is
+			-- HTML template file for left side filter code
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLSimpleFilterTemplate.html")
+			Result := l_file_path.string
+		end	
+		
+	web_help_project_template_file_name: STRING is
+			-- HTML template file for web based help project
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("WebHelpTemplateWithHeader.html")
+			Result := l_file_path.string
+		end	
 
 feature -- Access
 
@@ -120,14 +128,20 @@ feature -- Access
 	html_toc_token: STRING is "[!TOCHTML!]"
 			-- Token to replace with document HTML toc
 			
-	html_toc_script: STRING is "[!TOCScript!]"
+	html_toc_script_token: STRING is "[!TOCScript!]"
 			-- Token for location of toc javascript
 
-	html_toc_style: STRING is "[!TOCStyle!]"
+	html_toc_style_token: STRING is "[!TOCStyle!]"
 			-- Token for location of toc stylesheet
 	
-	html_default_toc: STRING is "[!DefaultTOC!]"
+	html_default_toc_token: STRING is "[!DefaultTOC!]"
 			-- Token to replace default document toc
+			
+	html_default_filter_token: STRING is "[!DefaultFilter!]"
+			-- Token to replace default document filter
+	
+	html_default_index_token: STRING is "[!DefaultIndex!]"
+			-- Token to replace default index document
 	
 	filter_frame_size_token: STRING is "[!FilterFrameSize!]"
 			-- Token to replace filter frame size

@@ -228,7 +228,9 @@ feature {EIFNET_EXPORTER} -- Current Breakpoint access
 										current_stack_info.current_feature_token,
 										current_stack_info.current_il_offset
 									)
-			Result := l_eifnet_breakpoint.breakpoint
+			if l_eifnet_breakpoint /= Void then
+				Result := l_eifnet_breakpoint.breakpoint				
+			end
 		end
 
 feature -- Evaluation
@@ -363,11 +365,14 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		local
 			n: INTEGER
 		do
+			if last_icd_controller /= Void then
+				last_icd_controller.clean_on_dispose
+				last_icd_controller := Void				
+			end
 			if last_p_icd_controller /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_controller)
 				last_p_icd_controller := Default_pointer
 			end
-			last_icd_controller := Void
 			last_icd_controller_updated := True
 		end
 		
@@ -393,11 +398,14 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		local
 			n: INTEGER
 		do
+			if last_icd_process /= Void then
+				last_icd_process.clean_on_dispose
+				last_icd_process := Void
+			end
 			if last_p_icd_process /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_process)
 				last_p_icd_process := Default_pointer
 			end
-			last_icd_process := Void
 			last_icd_process_updated := True
 		end		
 
@@ -424,11 +432,14 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		local
 			n: INTEGER
 		do
+			if last_icd_thread /= Void then
+				last_icd_thread.clean_on_dispose
+				last_icd_thread := Void
+			end
 			if last_p_icd_thread /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_thread)
 				last_p_icd_thread := Default_pointer
 			end
-			last_icd_thread := Void
 			last_icd_thread_updated := True
 		end
 
@@ -454,11 +465,14 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 		local
 			n: INTEGER
 		do
+			if last_icd_breakpoint /= Void then
+				last_icd_breakpoint.clean_on_dispose
+				last_icd_breakpoint := Void
+			end
 			if last_p_icd_breakpoint /= Default_pointer then
 				n := feature {CLI_COM}.release (last_p_icd_breakpoint)
 				last_p_icd_breakpoint := Default_pointer
 			end
-			last_icd_breakpoint := Void
 			last_icd_breakpoint_updated := True
 		end
 
@@ -514,7 +528,11 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_controller_updated then
-				if last_p_icd_controller = Default_pointer then
+				if 
+					last_p_icd_controller = Default_pointer 
+					and last_icd_controller /= Void 
+				then
+					last_icd_controller.clean_on_dispose
 					last_icd_controller := Void
 				else
 					create last_icd_controller.make_by_pointer (last_p_icd_controller)
@@ -530,7 +548,11 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_process_updated then
-				if last_p_icd_process = Default_pointer then
+				if 
+					last_p_icd_process = Default_pointer
+					and last_icd_process /= Void
+				then
+					last_icd_process.clean_on_dispose
 					last_icd_process := Void
 				else
 					create last_icd_process.make_by_pointer (last_p_icd_process)
@@ -546,7 +568,11 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_thread_updated then
-				if last_p_icd_thread = Default_pointer then
+				if 
+					last_p_icd_thread = Default_pointer
+					and last_icd_thread /= Void
+				then
+					last_icd_thread.clean_on_dispose
 					last_icd_thread := Void
 				else
 					create last_icd_thread.make_by_pointer (last_p_icd_thread)
@@ -562,7 +588,11 @@ feature {NONE} -- COM Object
 			n: INTEGER
 		do
 			if not last_icd_breakpoint_updated then
-				if last_p_icd_breakpoint = Default_pointer then
+				if 
+					last_p_icd_breakpoint = Default_pointer 
+					and last_icd_breakpoint /= Void
+				then
+					last_icd_breakpoint.clean_on_dispose
 					last_icd_breakpoint := Void
 				else
 					create last_icd_breakpoint.make_by_pointer (last_p_icd_breakpoint)
@@ -612,6 +642,11 @@ feature -- JIT notification
 			-- Notify new module loading.
 		do
 			notify_new_module_for_breakpoints (a_mod_key)
+		end
+		
+	refresh_breakpoints_on_module (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING) is
+		do
+			refresh_module_for_breakpoints (a_module, a_mod_key)
 		end
 
 feature -- JIT info
@@ -695,10 +730,12 @@ feature -- JIT info
 							io.error.put_string ("    name -> " + l_module_key_name + "%N")
 						end
 	
-						loaded_modules.force (a_module, l_module_key_name)
-						check
-							inserted: loaded_modules.inserted
-						end
+-- FIXME jfiat [2004/07/20] : if a new module is registered, we should keep a list of all modules
+--		for now, let's keep first one only
+--		we need to fix this issue for app_domain problem.
+--						loaded_modules.force (a_module, l_module_key_name)
+--						check inserted: loaded_modules.inserted end
+						refresh_breakpoints_on_module (a_module, l_module_key_name)
 					end
 				else
 					debug ("debugger_trace_eifnet")

@@ -884,6 +884,7 @@ feature -- Specific function evaluation
 					end
 					Result := l_icd_string_value.get_string (l_size)
 					Result := Result.substring ((min + 1).max (1), l_size)
+					l_icd_string_value.clean_on_dispose
 				end
 			end
 		end
@@ -893,7 +894,8 @@ feature -- Specific function evaluation
  				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING is
 			-- ANY.generating_)type: STRING evaluation result
 		local
-			l_icd: ICOR_DEBUG_VALUE		
+			l_icd: ICOR_DEBUG_VALUE
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_module_name: STRING
@@ -904,7 +906,8 @@ feature -- Specific function evaluation
 
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do	
-			l_icd := a_icd
+-- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
+--			l_icd := a_icd
 			l_class_type := a_class_type
 			
 			l_icd_class := a_icd_obj.get_class
@@ -913,10 +916,15 @@ feature -- Specific function evaluation
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
 			if l_func /= Void then
-				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
+				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
-					Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, 0, -1)							
+					l_icdov := l_value_info.interface_debug_object_value
+					Result := string_value_from_string_class_object_value (l_icdov, 0, -1)
+					l_icdov.clean_on_dispose
+					l_value_info.icd_prepared_value.clean_on_dispose					
+					l_value_info.clean
+					l_icd.clean_on_dispose
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
@@ -950,6 +958,7 @@ feature -- Specific function evaluation
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icd: ICOR_DEBUG_VALUE		
 			l_icd_object: ICOR_DEBUG_OBJECT_VALUE
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_feature_token: INTEGER
@@ -958,7 +967,8 @@ feature -- Specific function evaluation
 			l_func: ICOR_DEBUG_FUNCTION
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do	
-			l_icd := a_icd
+-- FIXME jfiat [2004/07/20] : Why do we set l_icd as a_icd ... this is not what we want, check it
+--			l_icd := a_icd
 			l_icd_object := a_icd_obj
 
 			l_class_type := a_class_type
@@ -993,7 +1003,11 @@ feature -- Specific function evaluation
 				l_icd_class.clean_on_dispose
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
-					Result := string_value_from_string_class_object_value (l_value_info.interface_debug_object_value, min, max)							
+					l_icdov := l_value_info.interface_debug_object_value
+					Result := string_value_from_string_class_object_value (l_icdov, min, max)
+					l_value_info.icd_prepared_value.clean_on_dispose
+					l_value_info.clean
+					l_icd.clean_on_dispose
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
@@ -1014,7 +1028,8 @@ feature -- Specific function evaluation
  	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
 			-- System.Exception.ToString value
 		local
-			l_icd: ICOR_DEBUG_VALUE		
+			l_icd: ICOR_DEBUG_VALUE
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_module_name: STRING
@@ -1022,7 +1037,8 @@ feature -- Specific function evaluation
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 		do	
-			l_icd := a_icd
+-- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
+--			l_icd := a_icd
 			l_icd_class := a_icd_obj.get_class
 			l_icd_module := l_icd_class.get_module
 			l_module_name := l_icd_module.get_name
@@ -1031,11 +1047,13 @@ feature -- Specific function evaluation
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 
 			if l_func /= Void then
-				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
+				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
 				if l_icd /= Void then
 						--| We should get a System.String
 					create l_debug_info.make (l_icd)
-					Result := Edv_external_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)
+					l_icdov := l_debug_info.interface_debug_object_value
+					Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
+					l_icdov.clean_on_dispose
 					l_debug_info.icd_prepared_value.clean_on_dispose
 					l_debug_info.clean
 					l_icd.clean_on_dispose
@@ -1057,17 +1075,24 @@ feature -- Specific function evaluation
 			l_feature_token: INTEGER
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE			
 		do	
-			l_icd := a_icd
+-- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
+--			l_icd := a_icd
 			l_icd_module := eifnet_debugger_info.icor_debug_module_for_mscorlib
 			l_feature_token := Edv_external_formatter.token_Exception_get_Message
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 			if l_func /= Void then
-				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<l_icd>>)
+				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
 				if l_icd /= Void then
 						--| We should get a System.String
 					create l_debug_info.make (l_icd)
-					Result := Edv_external_formatter.system_string_value_to_string (l_debug_info.interface_debug_object_value)							
+					l_icdov := l_debug_info.interface_debug_object_value
+					Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
+					l_icdov.clean_on_dispose
+					l_debug_info.icd_prepared_value.clean_on_dispose					
+					l_debug_info.clean
+					l_icd.clean_on_dispose
 				else
 					Result := Void -- "WARNING: Could not evaluate output"	
 				end
@@ -1122,7 +1147,9 @@ feature -- Specific function evaluation
 				if l_icd_debug_value /= Void then
 					l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
 					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_prepared_icd_debug_value)
-					l_prepared_icd_debug_value.clean_on_dispose
+					if l_prepared_icd_debug_value /= l_icd_debug_value then
+						l_prepared_icd_debug_value.clean_on_dispose						
+					end
 					l_icd_debug_value.clean_on_dispose
 				end
 			end

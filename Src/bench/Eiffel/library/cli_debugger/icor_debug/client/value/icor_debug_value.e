@@ -48,31 +48,32 @@ feature {ICOR_EXPORTER} -- References Properties
 			is_null_reference := v
 		end
 	
-feature -- helpers
-
-	is_valid_object: BOOLEAN is
-			-- Is current a valid object, ie not collected ?
-		local
-			ref_value: like query_interface_icor_debug_reference_value
-			deref_value: ICOR_DEBUG_VALUE
-			heap_value: like query_interface_icor_debug_heap_value
-		do
-			ref_value := query_interface_icor_debug_reference_value
-			if ref_value /= Void then
-				deref_value := ref_value.dereference
-				if deref_value /= Void then
-					heap_value := deref_value.query_interface_icor_debug_heap_value
-					if heap_value /= Void then
-						Result := heap_value.is_valid
-						heap_value.clean_on_dispose
-					end
-					deref_value.clean_on_dispose
-				else
-					Result := False
-				end
-				ref_value.clean_on_dispose
-			end
-		end
+--NOTA JFIAT: not used for now, let's keep it for later maybe
+--feature -- helpers
+--
+--	is_valid_object: BOOLEAN is
+--			-- Is current a valid object, ie not collected ?
+--		local
+--			ref_value: like query_interface_icor_debug_reference_value
+--			deref_value: ICOR_DEBUG_VALUE
+--			heap_value: like query_interface_icor_debug_heap_value
+--		do
+--			ref_value := query_interface_icor_debug_reference_value
+--			if ref_value /= Void then
+--				deref_value := ref_value.dereference
+--				if deref_value /= Void then
+--					heap_value := deref_value.query_interface_icor_debug_heap_value
+--					if heap_value /= Void then
+--						Result := heap_value.is_valid
+--						heap_value.clean_on_dispose
+--					end
+--					deref_value.clean_on_dispose
+--				else
+--					Result := False
+--				end
+--				ref_value.clean_on_dispose
+--			end
+--		end
 	
 feature {ICOR_EXPORTER} -- QueryInterface
 

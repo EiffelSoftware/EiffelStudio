@@ -71,6 +71,9 @@ feature -- Transforming
 			else
 				Result := prepared_icor_debug_value_to_string (l_data)
 			end
+			if l_data /= a_data then
+				l_data.clean_on_dispose
+			end
 		end
 		
 	icor_debug_value_to_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is
@@ -369,24 +372,24 @@ feature {NONE} -- preparing
 			loop
 				l_icor_ref := Result.query_interface_icor_debug_reference_value
 				if not Result.last_call_succeed then
-					last_strip_references_call_success := 0
+					last_strip_references_call_success := 0 --| return S_OK
 					debug ("debugger_icor_data")
 						io.error.put_string ("Not a ICorDebugReferenceValue %N")
 					end
 					do_break := True
-				end
-					--| IsNULL ?
-				if not do_break then
+				else --| IsNULL ?
 					l_is_null := l_icor_ref.is_null
 					if not l_icor_ref.last_call_succeed then
 						last_strip_references_call_success := l_icor_ref.last_call_success
 						debug ("debugger_icor_data")
 							io.error.put_string ("Failed on ICorDebugReferenceValue->IsNULL ()  %N")
 						end
+						l_icor_ref.clean_on_dispose
 						do_break := True
 					end
 				end
 				if not do_break and then l_is_null then
+					l_icor_ref.clean_on_dispose
 					do_break := True
 				end
 					--| GetValue
@@ -398,6 +401,7 @@ feature {NONE} -- preparing
 						debug ("debugger_icor_data")
 							io.error.put_string ("Failed on ICorDebugReferenceValue->GetValue (..)  %N")
 						end
+						l_icor_ref.clean_on_dispose
 						do_break := True
 					end
 				end
@@ -409,7 +413,7 @@ feature {NONE} -- preparing
 							--| FIXME jfiat [2003/10/10 - 14:51] DerefrenceStrong may not be implemented on 1.2
 							--| so let's use Derefrence as a patch
 						debug ("debugger_icor_data")
-							io.error.put_string ("Failed on ICorDebugReferenceValue->DereferenceStrong ()%N This may not be implemented on Whidtbey (1.2)%N")
+							io.error.put_string ("Failed on ICorDebugReferenceValue->DereferenceStrong ()%N This may not be implemented on Whidbey (>1.1)%N")
 						end
 						l_new_value := l_icor_ref.dereference					
 					end
@@ -427,6 +431,7 @@ feature {NONE} -- preparing
 							io.error.put_string ("Failed on ICorDebugReferenceValue->Dereference () error on 0x" 
 													+ l_real_value_mp.out +"%N")
 						end
+						l_icor_ref.clean_on_dispose
 						
 							-- FIXME JFIAT 2004-07-06: we set this as Void for now
 							-- maybe one day we should handle this a better way
@@ -437,6 +442,7 @@ feature {NONE} -- preparing
 						do_break := True
 					else
 						--| got a new real value, let's check if no dereferencing is needed anymore
+						l_icor_ref.clean_on_dispose
 						Result := l_new_value
 						debug ("debugger_icor_data")
 							io.error.put_string ("Got a sub reference !!%N")
@@ -445,9 +451,6 @@ feature {NONE} -- preparing
 				end
 					-- We keep trace of the is_null information
 				Result.set_is_null_reference (l_is_null)
-				if l_icor_ref /= Void then
-					l_icor_ref.clean_on_dispose
-				end
 			end
 		end
 

@@ -204,7 +204,6 @@ feature {NONE} -- Notification
 			l_bp_for_addition: ARRAYED_LIST [EIFNET_BREAKPOINT]
 		do
 			if is_module_waiting_for_addition (a_mod_key) then
-
 				l_bp_for_addition := breakpoints_for_addition_by_module.item (a_mod_key)
 				debug ("debugger_bp_trace")
 					io.error.put_string (" - EifnetBreakPoint: " + l_bp_for_addition.count.out + " to be added for this module.%N")
@@ -232,7 +231,30 @@ feature {NONE} -- Notification
 					debug_display_bp_list_status
 				end
 			end
-		end		
+		end	
+
+	refresh_module_for_breakpoints (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING) is
+			-- 
+		local
+			l_bp: EIFNET_BREAKPOINT
+			l_icd_module: ICOR_DEBUG_MODULE
+			l_success: BOOLEAN
+		do
+			from
+				breakpoints.start
+			until
+				breakpoints.after
+			loop
+				l_bp := breakpoints.item_for_iteration
+				if l_bp.module_key.is_equal (a_mod_key) then
+-- NOTA jfiat [2004/07/20] : check how we should handle (better) loaded modules
+--					l_icd_module := loaded_modules.item (a_mod_key)
+					l_icd_module := a_module
+					l_success := process_breakpoint_addition_on_module (l_bp, l_icd_module)
+				end
+				breakpoints.forth
+			end
+		end	
 		
 feature -- module utils
 
@@ -252,22 +274,13 @@ feature {NONE} -- Implementation
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_icd_class: ICOR_DEBUG_CLASS
-			l_icd_func: ICOR_DEBUG_FUNCTION
-			l_icd_code: ICOR_DEBUG_CODE
-			l_icd_bp: ICOR_DEBUG_BREAKPOINT
-
 			l_module_key_name: STRING
-			l_class_token: INTEGER
-			l_feat_token: INTEGER
 		do
-			l_class_token := a_bp.class_token
-			l_feat_token := a_bp.feature_token
 			l_module_key_name := a_bp.module_key
-
 				--| Get CLASS or MODULE info to manage the BreakPoint
 			if loaded_modules.has (l_module_key_name) then
 				l_icd_module := loaded_modules.item (l_module_key_name)
-				l_icd_class := l_icd_module.get_class_from_token (l_class_token)
+				l_icd_class := l_icd_module.get_class_from_token (a_bp.class_token)
 				if not l_icd_module.last_call_succeed or else l_icd_class = Void then
 					debug ("debugger_bp_trace")
 						io.error.put_string ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
@@ -280,43 +293,52 @@ feature {NONE} -- Implementation
 			
 				--| Let set the BP now we have all the information access we need
 			if l_icd_module /= Void then
-				l_icd_func := l_icd_module.get_function_from_token (l_feat_token)
-				if l_icd_func /= Void  and then l_icd_module.last_call_succeed then
-					l_icd_code := l_icd_func.get_il_code
-					if l_icd_code = Void then
-						l_icd_code := l_icd_func.get_native_code				
-					end
-					if l_icd_code /= Void then
-						--| Let create the BreakPoint with offset
-						l_icd_bp := l_icd_code.create_breakpoint (a_bp.break_index)
-						if l_icd_bp /= Void and then l_icd_code.last_call_succeed then
-							a_bp.set_icor_breakpoint (l_icd_bp)
-							l_icd_bp.activate (True) -- not useful ... by default, but .. just to be sure ;)
-							Result := True
-
-							debug ("debugger_bp_trace") io.error.put_string ("BreakPoint ADDED ! %N") end
-						else
-							debug ("debugger_bp_trace") 
-								io.error.put_string ("Error[" + l_icd_code.last_error_code_id 
-										+ "] in ICorDebugCode->CreateBreakpoint for (" 
-										+ l_feat_token.out + ")%N") 
-							end
-						end		
-					end
-				else
-					debug ("debugger_bp_trace") io.error.put_string ("Error while retrieving function_by_token (" + l_feat_token.out + ")%N") end
-				end
+				Result := process_breakpoint_addition_on_module (a_bp, l_icd_module)
 			else
 				debug ("debugger_bp_trace")
 					io.error.put_string ("Information not yet available, wait for class loading during JIT execution (" 
-							+ l_class_token.out 
+							+ a_bp.class_token.out 
 							+ "."
-							+ l_feat_token.out 
+							+ a_bp.feature_token.out 
 							+ " @ module "
 							+ l_module_key_name
 							+ ")%N"
 						)
 				end
+			end
+		end
+
+	process_breakpoint_addition_on_module (a_bp: EIFNET_BREAKPOINT; a_icd_module: ICOR_DEBUG_MODULE): BOOLEAN is
+		local
+			l_icd_func: ICOR_DEBUG_FUNCTION
+			l_icd_code: ICOR_DEBUG_CODE
+			l_icd_bp: ICOR_DEBUG_BREAKPOINT
+		do
+			l_icd_func := a_icd_module.get_function_from_token (a_bp.feature_token)
+			if l_icd_func /= Void  and then a_icd_module.last_call_succeed then
+				l_icd_code := l_icd_func.get_il_code
+				if l_icd_code = Void then
+					l_icd_code := l_icd_func.get_native_code				
+				end
+				if l_icd_code /= Void then
+					--| Let create the BreakPoint with offset
+					l_icd_bp := l_icd_code.create_breakpoint (a_bp.break_index)
+					if l_icd_bp /= Void and then l_icd_code.last_call_succeed then
+						a_bp.set_icor_breakpoint (l_icd_bp)
+						l_icd_bp.activate (True) -- not useful ... by default, but .. just to be sure ;)
+						Result := True
+
+						debug ("debugger_bp_trace") io.error.put_string ("BreakPoint ADDED ! %N") end
+					else
+						debug ("debugger_bp_trace") 
+							io.error.put_string ("Error[" + l_icd_code.last_error_code_id 
+									+ "] in ICorDebugCode->CreateBreakpoint for (" 
+									+ a_bp.feature_token.out + ")%N") 
+						end
+					end		
+				end
+			else
+				debug ("debugger_bp_trace") io.error.put_string ("Error while retrieving function_by_token (" + a_bp.feature_token.out + ")%N") end
 			end
 		end
 

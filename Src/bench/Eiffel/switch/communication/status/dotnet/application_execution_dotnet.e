@@ -225,15 +225,19 @@ feature -- Bridge to Debugger
 			retried: BOOLEAN
 			l_icd_exception: ICOR_DEBUG_VALUE
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			if not retried then
 				l_icd_exception := eifnet_debugger.new_active_exception_value
 				create l_exception_info.make (l_icd_exception)
-
-				Result := eifnet_debugger.to_string_value_from_exception_object_value (Void, 
-					l_icd_exception,
-					l_exception_info.interface_debug_object_value
-				)
+				l_icdov := l_exception_info.interface_debug_object_value
+				if l_icdov /= Void then
+					Result := eifnet_debugger.to_string_value_from_exception_object_value (Void, 
+						l_icd_exception,
+						l_icdov
+					)
+					l_icdov.clean_on_dispose
+				end
 				l_exception_info.icd_prepared_value.clean_on_dispose
 				l_exception_info.clean
 				l_icd_exception.clean_on_dispose
@@ -251,16 +255,20 @@ feature -- Bridge to Debugger
 			retried: BOOLEAN
 			l_icd_exception: ICOR_DEBUG_VALUE
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			if not retried then
 				l_icd_exception := eifnet_debugger.new_active_exception_value
 				if l_icd_exception /= Void then
 					create l_exception_info.make (l_icd_exception)
-
-					Result := eifnet_debugger.get_message_value_from_exception_object_value (Void, 
-						l_icd_exception,
-						l_exception_info.interface_debug_object_value
-					)
+					l_icdov := l_exception_info.interface_debug_object_value
+					if l_icdov /=Void then
+						Result := eifnet_debugger.get_message_value_from_exception_object_value (Void, 
+							l_icd_exception, 
+							l_icdov						
+						)
+						l_icdov.clean_on_dispose
+					end
 					if Result = Void then
 						--| This could means the prog did exit_process
 						--| or .. anything else

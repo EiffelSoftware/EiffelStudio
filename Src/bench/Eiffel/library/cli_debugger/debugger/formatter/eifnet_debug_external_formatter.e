@@ -101,7 +101,12 @@ feature {NONE} -- get member data
 				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
 				if l_icd_value /= Void then
 					Result := edv_formatter.icor_debug_string_value (l_icd_value)
+					if Result /= l_icd_value then
+						l_icd_value.clean_on_dispose
+					end
 				end
+				l_icd_obj_value.clean_on_dispose
+				l_value_info.clean
 			end	
 		end
 		
@@ -114,6 +119,7 @@ feature {NONE} -- get member data
 			l_icds_value := icor_debug_string_value_from (v, token)
 			if l_icds_value /= Void then
 				Result := edv_formatter.icor_debug_string_value_to_string (l_icds_value)
+				l_icds_value.clean_on_dispose
 			end
 		end
 
@@ -122,13 +128,21 @@ feature {NONE} -- get member data
 			l_icd_value: ICOR_DEBUG_VALUE
 			l_value_info: EIFNET_DEBUG_VALUE_INFO
 			l_icd_obj_value: ICOR_DEBUG_OBJECT_VALUE
+			l_icd_class: ICOR_DEBUG_CLASS
 		do
 			l_icd_value := v
 			create l_value_info.make (l_icd_value)
 			l_icd_obj_value := l_value_info.interface_debug_object_value
 			if l_icd_obj_value /= Void then
-				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
-				Result := Edv_formatter.icor_debug_value_to_integer (l_icd_value)
+				l_icd_class := l_icd_obj_value.get_class
+				l_icd_value := l_icd_obj_value.get_field_value (l_icd_class, token)
+				if l_icd_value /= Void then
+					Result := Edv_formatter.icor_debug_value_to_integer (l_icd_value)
+					l_icd_value.clean_on_dispose
+				end
+				l_icd_obj_value.clean_on_dispose
+				l_icd_class.clean_on_dispose
+				l_value_info.clean				
 			end	
 		end
 		

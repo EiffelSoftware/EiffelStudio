@@ -75,26 +75,6 @@ feature -- Dispose
 			icd_referenced_value := Void
 			icd_prepared_value := Void --| Nota: could be cleaned .. in certain context
 			
-				--| Array value
-			if once_interface_debug_array_value /= Void then
-				once_interface_debug_array_value.clean_on_dispose
-				once_interface_debug_array_value := Void
-			end
-				--| Object value
-			if once_interface_debug_object_value /= Void then
-				once_interface_debug_object_value.clean_on_dispose
-				once_interface_debug_object_value := Void
-			end
-				--| Reference value
-			if once_interface_debug_reference_value /= Void then
-				once_interface_debug_reference_value.clean_on_dispose
-				once_interface_debug_reference_value := Void
-			end
-				--| String value
-			if once_interface_debug_string_value /= Void then
-				once_interface_debug_string_value.clean_on_dispose
-				once_interface_debug_string_value := Void
-			end
 				--| ICorDebugClass value
 			if once_value_icd_class /= Void then
 				once_value_icd_class.clean_on_dispose
@@ -110,6 +90,7 @@ feature -- Dispose
 				
 				--|Eiffel world
 			once_value_class_type := Void
+			once_value_class_type_computed := False
 		end
 
 feature {NONE} -- Internal Initialisation
@@ -118,6 +99,7 @@ feature {NONE} -- Internal Initialisation
 			-- Set the main information
 		local
 			l_type: INTEGER
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			if not error_occurred then
 				referenced_address := icd_referenced_value.get_address
@@ -171,7 +153,11 @@ feature {NONE} -- Internal Initialisation
 				end
 
 				if is_reference_type or else is_class or else is_valuetype or else is_object then
-					has_object_interface := (interface_debug_object_value /= Void)
+					l_icdov := icd_prepared_value.query_interface_icor_debug_object_value
+					if icd_prepared_value.last_call_succeed then
+						has_object_interface := True
+						l_icdov.clean_on_dispose
+					end
 				end
 			end
 		rescue
@@ -260,8 +246,9 @@ feature -- Queries
 			value_module_file_name_valid: value_module_file_name /= Void
 			value_class_token_valid: value_class_token > 0			
 		do
-			Result := once_value_class_type
-			if Result = Void then
+			if once_value_class_type_computed then
+				Result := once_value_class_type			
+			else
 				if has_object_interface then
 					Result := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)
 				else
@@ -270,9 +257,9 @@ feature -- Queries
 						-- even in case of external type ?
 				end
 				once_value_class_type := Result
+				once_value_class_type_computed := True
 			end
---		ensure
---			result_not_void: Result /= Void
+				--| NOTA: Result can be void
 		end
 		
 	value_class_c: CLASS_C is
@@ -302,7 +289,12 @@ feature -- Queries
 					ci := Eiffel_system.System.system_object_class
 				end
 				Result := ci.compiled_class
+				if Result = Void then
+					Result := Eiffel_system.System.system_object_class.compiled_class
+				end
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	only_file_name_without_extension (f: STRING): STRING is
@@ -367,66 +359,47 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-feature -- Interface queries for feature
-		
-	feature_token_for_feature (a_feat_i: FEATURE_I): INTEGER is
-			-- feature token for `a_feat_i'
-		do
-			Result := il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat_i, value_class_type)
-		end	
-
 feature -- Interface Access
 
-	interface_debug_object_value: like once_interface_debug_object_value is
+	interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
 			-- ICorDebugObjectValue interface
 		require
 			valid_object_type: is_reference_type or else is_class or else is_object or else is_valuetype
 		do
-			Result := once_interface_debug_object_value
-			if Result = Void then
-				Result := icd_prepared_value.query_interface_icor_debug_object_value
-				once_interface_debug_object_value := Result
-			end
+			Result := icd_prepared_value.query_interface_icor_debug_object_value
 		end
 		
-	interface_debug_reference_value: like once_interface_debug_reference_value is
-			-- ICorDebugReferenceValue interface
-		require
-			is_reference_type 
-		do
-			Result := once_interface_debug_reference_value
-			if Result = Void then
-				Result := icd_prepared_value.query_interface_icor_debug_reference_value
-				once_interface_debug_reference_value := Result
-			end
-		end
+-- NOTA jfiat [2004/07/20] : not used for now
+--	interface_debug_reference_value: like once_interface_debug_reference_value is
+--			-- ICorDebugReferenceValue interface
+--		require
+--			is_reference_type 
+--		do
+--			Result := icd_prepared_value.query_interface_icor_debug_reference_value
+--		end
 
-	interface_debug_array_value: like once_interface_debug_array_value is
+	interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
 			-- ICorDebugArrayValue interface
 		require
 			is_array_type 
 		do
-			Result := once_interface_debug_array_value
-			if Result = Void then
-				Result := icd_prepared_value.query_interface_icor_debug_array_value
-				once_interface_debug_array_value := Result
-			end
+			Result := icd_prepared_value.query_interface_icor_debug_array_value
 		end
 
-	interface_debug_string_value: like once_interface_debug_string_value is
+	interface_debug_string_value: ICOR_DEBUG_STRING_VALUE is
 			-- ICorDebugStringValue interface
 		require
 			is_string_type 
 		do
-			Result := once_interface_debug_string_value
-			if Result = Void then
-				Result := icd_prepared_value.query_interface_icor_debug_string_value
-				once_interface_debug_string_value := Result
-			end
+			Result := icd_prepared_value.query_interface_icor_debug_string_value
 		end
 
 feature {NONE} -- Implementation
 
+	once_value_class_type_computed: BOOLEAN
+			-- is `once_value_class_type' already computed ?
+			-- in case `once_value_class_type' is Void, do not recompute it
+			
 	once_value_class_type: CLASS_TYPE
 			-- Once per instance for `value_class_type'
 
@@ -436,17 +409,6 @@ feature {NONE} -- Implementation
 	once_value_icd_module: ICOR_DEBUG_MODULE
 			-- Once per instance for `value_icd_module'			
 		
-	once_interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE
-			-- Once per instance for `interface_debug_object_value'
-
-	once_interface_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE
-			-- Once per instance for `interface_debug_reference_value'
-
-	once_interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE
-			-- Once per instance for `interface_debug_array_value'
-
-	once_interface_debug_string_value: ICOR_DEBUG_STRING_VALUE
-			-- Once per instance for `interface_debug_string_value'
 
 	error_occurred: BOOLEAN
 			-- Did an error occurred ?

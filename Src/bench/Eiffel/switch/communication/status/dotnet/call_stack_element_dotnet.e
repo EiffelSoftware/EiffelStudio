@@ -106,14 +106,9 @@ feature -- Cleaning
 		do
 -- FIXME jfiat 2004-07-07 : seems to cause issue regarding ref
 -- so for now we remove it, but please check deeper how to better handle ICorDebugFrame and so on
---			if icd_il_frame /= Void then
 --					--| FIXME JFIAT: please check if it is safe ...
---				icd_il_frame.clean_on_dispose
-				icd_il_frame := Void
-
---				icd_chain.clean_on_dispose
-				icd_chain := Void
---			end
+			icd_il_frame := Void
+			icd_chain := Void				
 		end
 
 feature -- Dotnet Properties
@@ -141,7 +136,7 @@ feature -- Properties
 
 feature -- Current object
 
-	current_object: ABSTRACT_DEBUG_VALUE is
+	current_object: EIFNET_ABSTRACT_DEBUG_VALUE is
 			-- Current object value
 		do
 			Result := private_current_object
@@ -211,7 +206,7 @@ feature {NONE} -- Implementation Dotnet Properties
 
 feature {NONE} -- Implementation Properties
 
-	private_current_object: ABSTRACT_DEBUG_VALUE
+	private_current_object: EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Current object value
 
 	display_object_address:like object_address
@@ -259,7 +254,7 @@ feature {NONE} -- Implementation
 			counter			: INTEGER
 			l_names_heap: like Names_heap
 
-			l_list: LIST [ABSTRACT_DEBUG_VALUE]
+			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
 			
 		do
@@ -282,7 +277,7 @@ feature {NONE} -- Implementation
 					--| Get Current Object
 					l_list.start
 					
-					set_private_current_object (l_list.first)				
+					set_private_current_object (l_list.first)
 					private_current_object.set_name ("Current")
 	
 					object_address := private_current_object.address
@@ -332,7 +327,9 @@ feature {NONE} -- Implementation
 							--| at this stæge, the private_current_object is known
 							l_dotnet_ref_value ?= private_current_object
 							if l_dotnet_ref_value /= Void then
+								l_dotnet_ref_value.get_object_value
 								private_result := l_dotnet_ref_value.once_function_value (rout)
+								l_dotnet_ref_value.release_object_value
 								if private_result /= Void then
 									private_result.set_name ("Result")
 								end
@@ -420,7 +417,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_arg_list: LIST [ABSTRACT_DEBUG_VALUE]  is
+	internal_arg_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
 		require
 			icd_il_frame /= Void
 		local
@@ -440,7 +437,7 @@ feature {NONE} -- Implementation
 			arg_list_not_empty: not Result.is_empty -- At list the current object -- FIXME: check this !
 		end
 
-	internal_local_list: LIST [ABSTRACT_DEBUG_VALUE]  is
+	internal_local_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
 			-- Return list of Value for local var, 
 			-- including the Result if there is one, in this case
 			-- this will be the first value
@@ -457,13 +454,13 @@ feature {NONE} -- Implementation
 				Result := debug_value_list_from_enum (l_enum_locals)
 				l_enum_locals.clean_on_dispose
 			else
-				create {LINKED_LIST[ABSTRACT_DEBUG_VALUE]} Result.make
+				create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
 			end
 --		ensure
 --			local_list_not_void: Result /= Void
 		end
 
-	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM): LIST [ABSTRACT_DEBUG_VALUE] is
+	debug_value_list_from_enum (a_enum: ICOR_DEBUG_VALUE_ENUM): LIST [EIFNET_ABSTRACT_DEBUG_VALUE] is
 		require
 			a_enum /= Void
 		local
@@ -471,11 +468,11 @@ feature {NONE} -- Implementation
 			l_array_objects: ARRAY [ICOR_DEBUG_VALUE]
 			l_object_index: INTEGER
 			l_icd_val: ICOR_DEBUG_VALUE
-			l_abstract_debug_value: ABSTRACT_DEBUG_VALUE
+			l_abstract_debug_value: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
 			l_objects_count := a_enum.get_count
 			if l_objects_count > 0 then
-				create {LINKED_LIST[ABSTRACT_DEBUG_VALUE]} Result.make
+				create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
 				l_array_objects := a_enum.next (l_objects_count)
 				if a_enum.last_call_succeed then
 					from

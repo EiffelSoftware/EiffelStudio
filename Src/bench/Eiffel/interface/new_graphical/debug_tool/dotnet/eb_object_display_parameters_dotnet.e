@@ -155,23 +155,27 @@ feature {NONE} -- Specific Implementation
 			end
 			
 			--| Eiffel dotnet |--
-			from
-				flist.start
-			until
-				flist.after
-			loop
-				l_feat := flist.item				
-				item_dv := l_dotnet_ref_value.once_function_value (l_feat)
-				if item_dv /= Void then
-					item := debug_value_to_item (item_dv)						
-				else
-					create item
-					item.set_pixmap (Pixmaps.Icon_void_object)
-					item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
-				end						
-				parent.extend (item)
-
-				flist.forth
+			if not flist.is_empty then
+				l_dotnet_ref_value.get_object_value
+				from
+					flist.start
+				until
+					flist.after
+				loop
+					l_feat := flist.item				
+					item_dv := l_dotnet_ref_value.once_function_value (l_feat)
+					if item_dv /= Void then
+						item := debug_value_to_item (item_dv)						
+					else
+						create item
+						item.set_pixmap (Pixmaps.Icon_void_object)
+						item.set_text (l_feat.name + Interface_names.l_Not_yet_called)
+					end						
+					parent.extend (item)
+	
+					flist.forth
+				end
+				l_dotnet_ref_value.release_object_value
 			end
 				-- We remove the dummy item.
 			parent.start

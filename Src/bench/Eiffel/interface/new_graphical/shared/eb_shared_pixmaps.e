@@ -899,6 +899,16 @@ feature -- Icons
 			Result.put (pixmap_file_content ("icon_pretty_print_8"), 2)
 		end
 
+	Icon_crop: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("crop")
+		end
+
+	Icon_restore_view: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("restore_view")
+		end
+
 	Icon_fill_cluster: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("fill_cluster")

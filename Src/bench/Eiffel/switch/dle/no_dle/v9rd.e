@@ -20,7 +20,7 @@ feature
 			is_directory := True
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 		end;
 

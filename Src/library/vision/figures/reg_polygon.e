@@ -3,7 +3,7 @@ indexing
 	description: "Description of a regular polygon (square, pentagon,...)";
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class REG_POLYGON 
 

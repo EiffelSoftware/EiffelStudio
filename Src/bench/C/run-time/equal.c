@@ -93,45 +93,44 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		 * not expanded all the time, we can test either the source or
 		 * the target.
 		 */
-		if (!(s_flags & EO_COMP))	/* Perform a block comparison */
-			return EIF_TEST(!bcmp(source, target, EIF_Size(s_type)));
-		else
-			return e_field_equal(target, source, s_type);
+		if (s_flags & EO_SPEC) {
+				/* Eiffel standard equality on special objects: type check assumes
+				* the comparison is on areas of the same type (containing the same
+				* thing). Called by the redefinition of feature `equal' of special
+				* class. `source' and/or `target' cannot be NULL.
+				* Return a boolean.
+				*/
+			register3 EIF_REFERENCE s_ref;
+			register4 EIF_REFERENCE t_ref;
+			uint32 s_size = (HEADER(source)->ov_size) & B_SIZE; /* Size of source special */
+			uint32 t_size = (HEADER(target)->ov_size) & B_SIZE; /* Size of target special */
+		
+				/* First condition: same count */
+			s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
+			t_ref = (EIF_REFERENCE) (target + t_size - LNGPAD_2);
+			if (*(EIF_INTEGER *) s_ref != *(EIF_INTEGER *) t_ref)
+				return EIF_FALSE;
+		
+			/* Since dynamic type of `source' conforms to dynamic type of
+			* `target', the element size must be the same. No need to test it.
+			*/
+		
+			/* Second condition: block equality */
+			return EIF_TEST(!bcmp(source, target, s_size * sizeof(char)));
+		} else if ((int16) (s_flags & EO_TYPE) == (int16) egc_bit_dtype) {
+				/* Eiffel standard equality on BIT objects */
+			b_equal (source, target);
+		} else {
+			if (!(s_flags & EO_COMP))	/* Perform a block comparison */
+				return EIF_TEST(!bcmp(source, target, EIF_Size(s_type)));
+			else
+				return e_field_equal(target, source, s_type);
+		}
 	}
 	
 	/* Field by field comparison */
 
 	return EIF_FALSE;
-}
-
-rt_public EIF_BOOLEAN spequal(register EIF_REFERENCE target, register EIF_REFERENCE source)
-{
-	/* Eiffel standard equality on special objects: type check assumes
-	 * the comparison is on areas of the same type (containing the same
-	 * thing). Called by the redefinition of feature `equal' of special
-	 * class. `source' and/or `target' cannot be NULL.
-	 * Return a boolean.
-	 */
-
-	uint32 s_size = (HEADER(source)->ov_size) & B_SIZE;
-										/* Size of source special */
-	uint32 t_size = (HEADER(target)->ov_size) & B_SIZE;
-										/* Size of target special */
-	register3 EIF_REFERENCE s_ref;
-	register4 EIF_REFERENCE t_ref;
-
-	/* First condition: same count */
-	s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
-	t_ref = (EIF_REFERENCE) (target + t_size - LNGPAD_2);
-	if (*(long *) s_ref != *(long *) t_ref)
-		return EIF_FALSE;
-
-	/* Since dynamic type of `source' conforms to dynamic type of
-	 * `target', the element size must be the same. No need to test it.
-	 */
-
-	/* Second condition: block equality */
-	return EIF_TEST(!bcmp(source, target, s_size * sizeof(char)));
 }
 
 rt_public EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source)
@@ -580,15 +579,15 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 				return EIF_FALSE;
 			break;
 		case SK_INT:
-			if (*(long *) t_ref != *(long *) s_ref)
+			if (*(EIF_INTEGER *) t_ref != *(EIF_INTEGER *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_FLOAT:
-				if (*(float *) t_ref != *(float *) s_ref)
+				if (*(EIF_REAL *) t_ref != *(EIF_REAL *) s_ref)
 					return EIF_FALSE;
 			break;
 		case SK_DOUBLE:
-			if (*(double *) t_ref != *(double *) s_ref)
+			if (*(EIF_DOUBLE *) t_ref != *(EIF_DOUBLE *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_POINTER:

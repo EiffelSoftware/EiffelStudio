@@ -23,8 +23,6 @@ inherit
 			{NONE} set_parent
 		undefine
 			set_default_colors,
-			show,
-			hide,
 			last_call_was_destroy
 		redefine
 			destroy,
@@ -47,7 +45,9 @@ inherit
 			interface,
 			notify_change,
 			initialize,
-			on_size
+			on_size,
+			show,
+			hide
 		end
 
 	WEL_FRAME_WINDOW
@@ -58,7 +58,7 @@ inherit
 			shown as is_displayed,
 			set_width as wel_set_width,
 			set_height as wel_set_height,
-			item as wel_item,
+			item as wel_window_item,
 			enabled as is_sensitive,
 			set_x as set_x_position,
 			set_y as set_y_position,
@@ -103,7 +103,9 @@ inherit
 			wel_move_and_resize,
 			on_menu_command,
 			on_wm_close,
-			on_accelerator_command
+			on_accelerator_command,
+			show,
+			hide
 		end
 
 	WEL_CONSTANTS
@@ -151,6 +153,19 @@ feature -- Access
 			--|---------------------------------------------------------------
 		do
 			Result := wel_window_parent
+		end
+
+	wel_item: POINTER is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOALATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_item
 		end
 
 	client_height: INTEGER is
@@ -217,24 +232,29 @@ feature -- Status setting
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		local
-			app_i: EV_APPLICATION_I
+			app_i: EV_APPLICATION_IMP
 		do
 			if not on_wm_close_executed then
 				interface.close_actions.prune_all (destroy_agent)
 				interface.close_actions.call ([])
 			end
-			app_i := (create {EV_ENVIRONMENT}).application.implementation
+			app_i ?= (create {EV_ENVIRONMENT}).application.implementation
 			app_i.remove_root_window (interface)
 			if parent_imp /= Void then
 				parent_imp.disable_sensitive
+			end
+
+				-- Remove the window from the list of blocking windows 
+				-- if it was a blocking window.
+			if app_i.has_blocking_window and then app_i.blocking_window = Current then
+				app_i.remove_blocking_window (Current)
 			end
 
 			--| Instead of calling {WEL_COMPOSITE_WINDOW} Precursor,
 			--| We do about the same except we do not quit the application
 			--| if `Current' is application main window, since Vision2
 			--| Does not have such a concept.
-			exists := False
-			unregister_window (Current)
+			interface.wipe_out
 			cwin_destroy_window (wel_item)
 
 			is_destroyed := True
@@ -413,6 +433,18 @@ feature -- Element change
 			compute_minimum_size
 		end
 
+	show is
+			-- Show the window
+		local
+			app_imp: EV_APPLICATION_IMP
+		do
+			{WEL_FRAME_WINDOW} Precursor
+			if is_modal then
+				app_imp ?= Environment.application.implementation
+				app_imp.set_blocking_window (Current)
+			end
+		end
+
 	enable_modal is
 			-- Set `is_modal' to `True', set the window to be
 			-- "Top most"
@@ -420,19 +452,35 @@ feature -- Element change
 			loc_ex_style: INTEGER
 			app_imp: EV_APPLICATION_IMP
 		do
-				-- Change the `ex_style' of the window to turn
-				-- it into top most.
-			loc_ex_style := ex_style
-			if not flag_set (loc_ex_style, Ws_ex_topmost) then
-				loc_ex_style := set_flag (loc_ex_style, Ws_ex_topmost)
-				set_ex_style (loc_ex_style)
+			if not is_modal then
+					-- Change the `ex_style' of the window to turn
+					-- it into top most.
+				loc_ex_style := ex_style
+				if not flag_set (loc_ex_style, Ws_ex_topmost) then
+					loc_ex_style := set_flag (loc_ex_style, Ws_ex_topmost)
+					set_ex_style (loc_ex_style)
+				end
+				set_ex_style (default_ex_style + Ws_ex_topmost)
+	
+					-- Set the window to be the blocking window
+				app_imp ?= Environment.application.implementation
+				if is_show_requested then
+					app_imp.set_blocking_window (Current)
+				end
+				is_modal := True
 			end
-			set_ex_style (default_ex_style + Ws_ex_topmost)
+		end
 
-				-- Set the window to be the blocking window
-			app_imp ?= Environment.application.implementation
-			app_imp.set_blocking_window (Current)
-			is_modal := True
+	hide is
+			-- Hide the window
+		local
+			app_imp: EV_APPLICATION_IMP
+		do
+			if is_modal and exists and then is_show_requested then 
+				app_imp ?= Environment.application.implementation
+				app_imp.remove_blocking_window (Current)
+			end
+			{WEL_FRAME_WINDOW} Precursor
 		end
 
 	disable_modal is
@@ -443,20 +491,26 @@ feature -- Element change
 			loc_ex_style: INTEGER
 			app_imp: EV_APPLICATION_IMP
 		do
-				-- Remove the TopMost flag only it is not part
-				-- of `default_ex_style'.
-			loc_ex_style := ex_style
-			if (not flag_set (Default_ex_style, Ws_ex_topmost)) and
-			   flag_set (loc_ex_style, Ws_ex_topmost)
-			then
-				loc_ex_style := clear_flag (loc_ex_style, Ws_ex_topmost)
-				set_ex_style (loc_ex_style)
-			end
+			if is_modal then
+				if exists then
+					-- Remove the TopMost flag only it is not part
+					-- of `default_ex_style'.
+					loc_ex_style := ex_style
+					if (not flag_set (Default_ex_style, Ws_ex_topmost)) and
+					   flag_set (loc_ex_style, Ws_ex_topmost)
+					then
+						loc_ex_style := clear_flag (loc_ex_style, Ws_ex_topmost)
+						set_ex_style (loc_ex_style)
+					end
 
-				-- Set the window not to be a blocking window anymore
-			app_imp ?= Environment.application.implementation
-			app_imp.remove_blocking_window (Current)
-			is_modal := False
+						-- Set the window not to be a blocking window anymore
+					app_imp ?= Environment.application.implementation
+					if is_show_requested then
+						app_imp.remove_blocking_window (Current)
+					end
+				end
+				is_modal := False
+			end
 		end
 
 feature -- Resizing
@@ -1063,6 +1117,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/05/13 01:10:09  pichery
+--| Improved enable/disable modal & blocking windows.
+--|
 --| Revision 1.47  2000/05/03 20:13:25  brendel
 --| Fixed resize_actions.
 --|

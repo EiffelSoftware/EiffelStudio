@@ -48,7 +48,7 @@
 			</item>
 			<item>
 				<bold>EV_SCREEN</bold> - Added `horizontal_resolution' and `vertical_resolution' which return the number of pixels per inch.
-			</item>
+			</item><item><bold>EV_FILE_DIALOG</bold> - Added support for multiple file extensions through the addition of `filters' which provides support for setting both a filter and an associated comment. The existing features `filter' and `set_filter' have been made obsolete.</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

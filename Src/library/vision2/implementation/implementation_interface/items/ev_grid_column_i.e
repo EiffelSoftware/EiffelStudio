@@ -75,7 +75,7 @@ feature -- Access
 			i_less_than_count: i <= count
 			is_parented: parent /= Void
 		do
-			Result := parent_grid_i.item (i, index)
+			Result := parent_grid_i.item (index, i)
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -104,7 +104,7 @@ feature -- Access
 			until
 				i > count
 			loop
-				a_item := parent_grid_i.item_internal (i, index, create_if_void)
+				a_item := parent_grid_i.item_internal (index, i, create_if_void)
 				if a_item /= Void and then a_item.is_selected then
 					Result.extend (a_item.interface)
 				end

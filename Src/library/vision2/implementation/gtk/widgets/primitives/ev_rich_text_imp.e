@@ -23,6 +23,24 @@ create
 
 feature -- Status Report
 
+ 	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+ 			-- Create a caret move action sequence.
+ 		do
+ 		end
+ 			
+ 	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+ 			-- Create a selection change action sequence.
+ 		do
+ 		end
+ 
+ 
+ 	set_current_format (format: EV_CHARACTER_FORMAT) is
+ 			-- apply `format' to current caret position, applicable
+ 			-- to next typed characters.
+ 		do
+ 		end
+
+
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
 			-- Index of character closest to position `x_position', `y_position'.
 		do

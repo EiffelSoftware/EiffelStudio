@@ -11,7 +11,7 @@ inherit
 
 	PROJECT_CONTEXT;
 	SHARED_APPLICATION_EXECUTION;
-	ICONED_COMMAND
+	PIXMAP_COMMAND
 		redefine
 			licence_checked
 		end;
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 					exit_anyway
 				elseif
 					(window_manager.class_win_mgr.changed or
-					system_tool.text_window.changed)
+					system_tool.changed)
 				then
 					do_exit := true;
 					warner (popup_parent).custom_call (Current,

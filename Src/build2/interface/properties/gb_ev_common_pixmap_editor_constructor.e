@@ -71,6 +71,7 @@ feature -- Access
 				constants_button.set_tooltip (Select_constant_tooltip)
 				constants_button.set_pixmap (Icon_format_onces @ 1)
 				constants_button.select_actions.extend (agent switch_constants_mode)
+				constants_button.select_actions.extend (agent update_editors)
 				horizontal_box.extend (constants_button)
 				horizontal_box.disable_item_expand (modify_button)
 				horizontal_box.disable_item_expand (constants_button)
@@ -208,9 +209,11 @@ feature {NONE} -- Implementation
 				modify_button.hide
 				constants_combo_box.show
 			else
+				remove_selected_constant
 				filler_label.show
 				modify_button.show
 				constants_combo_box.hide
+				constants_combo_box.first.enable_select
 				remove_selected_constant
 			end
 		end
@@ -310,10 +313,11 @@ feature {NONE} -- Implementation
 				end
 				create constant_context.make_with_context (constant, object, type, Pixmap_path_string)
 				constant.add_referer (constant_context)
-				object.add_constant_context (constant_context)
 				internal_remove_selected_constant
+				object.add_constant_context (constant_context)
 				last_selected_constant := constant
 				enable_project_modified
+				update_editors
 			end
 		end
 
@@ -343,9 +347,14 @@ feature {NONE} -- Implementation
 		do
 			if last_selected_constant /= Void then
 				constant_context := object.constants.item (type + Pixmap_path_string)
-				constant ?= constant_context.constant
-				last_selected_constant.remove_referer (constant_context)
-				object.constants.remove (type + Pixmap_path_string)
+					-- `constant_context' may be Void, as if there are multiple
+					-- object editors all referencing the same object, the first
+					-- that performed the update will unlink the constant context.
+				if constant_context /= Void then
+					constant ?= constant_context.constant
+					last_selected_constant.remove_referer (constant_context)
+					object.constants.remove (type + Pixmap_path_string)
+				end
 				last_selected_constant := Void
 			end
 		end		

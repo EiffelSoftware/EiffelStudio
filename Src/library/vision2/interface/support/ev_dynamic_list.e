@@ -23,6 +23,7 @@ inherit
 			prune as dl_prune,
 			extend as dl_extend,
 			replace as dl_replace,
+			force as dl_force,
 			put_front as dl_put_front,
 			put_right as dl_put_right,
 			put_i_th as dl_put_i_th,
@@ -210,7 +211,7 @@ feature -- Element change
 			cursor_not_moved: (index = old index) or (after and old after)
 		end
 
-	extend (v: like item) is
+	force, extend (v: like item) is
 			-- Add `v' to end. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed

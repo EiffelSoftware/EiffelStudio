@@ -46,6 +46,14 @@ feature -- Element change (box specific)
 		do
 			gtk_box_set_spacing (widget, value)
 		end	
+
+feature -- Access
+
+	border_width: INTEGER is
+			-- Border width around container
+		do
+			Result := c_gtk_container_border_width (widget)
+		end
 	
 feature {EV_WIDGET_IMP} -- Implementation
 

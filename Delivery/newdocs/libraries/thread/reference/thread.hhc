@@ -1,4 +1,4 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="EiffelThread Reference"><param name="Local" value="libraries\thread\reference\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="reference"><param name="Local" value="libraries\thread\reference\index.html"></OBJECT>
 	<UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="CONDITION_VARIABLE"><param name="Local" value="libraries\thread\reference\condition_variable_chart.html"></OBJECT>
 		<UL>
@@ -6,11 +6,8 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_c_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_eiffel_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_full_collector"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_has_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_incremental_collector"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_is_set"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_record_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_thread_is_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_total_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_gc_statistics"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\condition_variable.html#f_memory_statistics"></OBJECT>
@@ -48,15 +45,11 @@
 		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="MUTEX"><param name="Local" value="libraries\thread\reference\mutex_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\thread\reference\mutex.html#f_make"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\mutex.html#f_c_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\mutex.html#f_eiffel_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\mutex.html#f_full_collector"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\mutex.html#f_has_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\mutex.html#f_incremental_collector"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\mutex.html#f_is_set"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\mutex.html#f_record_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\mutex.html#f_thread_is_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\mutex.html#f_total_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\mutex.html#f_gc_statistics"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\mutex.html#f_memory_statistics"></OBJECT>
@@ -93,70 +86,12 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collect"><param name="Local" value="libraries\thread\reference\mutex.html#f_full_collect"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="mem_free"><param name="Local" value="libraries\thread\reference\mutex.html#f_mem_free"></OBJECT>
 		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="OBJECT_CONTROL"><param name="Local" value="libraries\thread\reference\object_control_chart.html"></OBJECT>
-		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="freeze"><param name="Local" value="libraries\thread\reference\object_control.html#f_freeze"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="unfreeze"><param name="Local" value="libraries\thread\reference\object_control.html#f_unfreeze"></OBJECT>
-		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="OBJECT_OWNER"><param name="Local" value="libraries\thread\reference\object_owner_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\object_owner.html#f_has_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\object_owner.html#f_record_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\object_owner.html#f_thread_is_owner"></OBJECT>
-		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="ONCE_CONTROL"><param name="Local" value="libraries\thread\reference\once_control_chart.html"></OBJECT>
-		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="global_once_function"><param name="Local" value="libraries\thread\reference\once_control.html#f_global_once_function"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="global_once_procedure"><param name="Local" value="libraries\thread\reference\once_control.html#f_global_once_procedure"></OBJECT>
-		</UL>
-<LI><OBJECT type="text/sitemap"><param name="Name" value="PRECOMP"><param name="Local" value="libraries\thread\reference\precomp_chart.html"></OBJECT>
-		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="string_proxy"><param name="Local" value="libraries\thread\reference\precomp.html#f_string_proxy"></OBJECT>
 		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="PROXY"><param name="Local" value="libraries\thread\reference\proxy_chart.html"></OBJECT>
 		<UL>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\proxy.html#f_c_memory"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\proxy.html#f_eiffel_memory"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\proxy.html#f_full_collector"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\proxy.html#f_has_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\proxy.html#f_incremental_collector"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\proxy.html#f_is_set"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="item"><param name="Local" value="libraries\thread\reference\proxy.html#f_item"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\proxy.html#f_record_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\proxy.html#f_thread_is_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\proxy.html#f_total_memory"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\proxy.html#f_gc_statistics"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\proxy.html#f_memory_statistics"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="chunk_size"><param name="Local" value="libraries\thread\reference\proxy.html#f_chunk_size"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="coalesce_period"><param name="Local" value="libraries\thread\reference\proxy.html#f_coalesce_period"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="collecting"><param name="Local" value="libraries\thread\reference\proxy.html#f_collecting"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_period"><param name="Local" value="libraries\thread\reference\proxy.html#f_collection_period"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="generation_object_limit"><param name="Local" value="libraries\thread\reference\proxy.html#f_generation_object_limit"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="largest_coalesced_block"><param name="Local" value="libraries\thread\reference\proxy.html#f_largest_coalesced_block"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="max_mem"><param name="Local" value="libraries\thread\reference\proxy.html#f_max_mem"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_threshold"><param name="Local" value="libraries\thread\reference\proxy.html#f_memory_threshold"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="referers"><param name="Local" value="libraries\thread\reference\proxy.html#f_referers"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="scavenge_zone_size"><param name="Local" value="libraries\thread\reference\proxy.html#f_scavenge_zone_size"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="tenure"><param name="Local" value="libraries\thread\reference\proxy.html#f_tenure"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="allocate_compact"><param name="Local" value="libraries\thread\reference\proxy.html#f_allocate_compact"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="allocate_fast"><param name="Local" value="libraries\thread\reference\proxy.html#f_allocate_fast"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="allocate_tiny"><param name="Local" value="libraries\thread\reference\proxy.html#f_allocate_tiny"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_off"><param name="Local" value="libraries\thread\reference\proxy.html#f_collection_off"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="collection_on"><param name="Local" value="libraries\thread\reference\proxy.html#f_collection_on"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="disable_time_accounting"><param name="Local" value="libraries\thread\reference\proxy.html#f_disable_time_accounting"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="enable_time_accounting"><param name="Local" value="libraries\thread\reference\proxy.html#f_enable_time_accounting"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_coalesce_period"><param name="Local" value="libraries\thread\reference\proxy.html#f_set_coalesce_period"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_collection_period"><param name="Local" value="libraries\thread\reference\proxy.html#f_set_collection_period"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_max_mem"><param name="Local" value="libraries\thread\reference\proxy.html#f_set_max_mem"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_memory_threshold"><param name="Local" value="libraries\thread\reference\proxy.html#f_set_memory_threshold"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="collect"><param name="Local" value="libraries\thread\reference\proxy.html#f_collect"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="dispose"><param name="Local" value="libraries\thread\reference\proxy.html#f_dispose"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="free"><param name="Local" value="libraries\thread\reference\proxy.html#f_free"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_coalesce"><param name="Local" value="libraries\thread\reference\proxy.html#f_full_coalesce"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collect"><param name="Local" value="libraries\thread\reference\proxy.html#f_full_collect"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="mem_free"><param name="Local" value="libraries\thread\reference\proxy.html#f_mem_free"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="freeze"><param name="Local" value="libraries\thread\reference\proxy.html#f_freeze"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="unfreeze"><param name="Local" value="libraries\thread\reference\proxy.html#f_unfreeze"></OBJECT>
 		</UL>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="SEMAPHORE"><param name="Local" value="libraries\thread\reference\semaphore_chart.html"></OBJECT>
 		<UL>
@@ -164,11 +99,8 @@
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="c_memory"><param name="Local" value="libraries\thread\reference\semaphore.html#f_c_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="eiffel_memory"><param name="Local" value="libraries\thread\reference\semaphore.html#f_eiffel_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="full_collector"><param name="Local" value="libraries\thread\reference\semaphore.html#f_full_collector"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="has_owner"><param name="Local" value="libraries\thread\reference\semaphore.html#f_has_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="incremental_collector"><param name="Local" value="libraries\thread\reference\semaphore.html#f_incremental_collector"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_set"><param name="Local" value="libraries\thread\reference\semaphore.html#f_is_set"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="record_owner"><param name="Local" value="libraries\thread\reference\semaphore.html#f_record_owner"></OBJECT>
-		<LI><OBJECT type="text/sitemap"><param name="Name" value="thread_is_owner"><param name="Local" value="libraries\thread\reference\semaphore.html#f_thread_is_owner"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="total_memory"><param name="Local" value="libraries\thread\reference\semaphore.html#f_total_memory"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="gc_statistics"><param name="Local" value="libraries\thread\reference\semaphore.html#f_gc_statistics"></OBJECT>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="memory_statistics"><param name="Local" value="libraries\thread\reference\semaphore.html#f_memory_statistics"></OBJECT>

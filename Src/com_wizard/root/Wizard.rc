@@ -161,6 +161,17 @@ BEGIN
                     Introduction3_Static,110,55,230,25
 END
 
+Progress_Dialog DIALOG DISCARDABLE  0, 0, 187, 90
+STYLE DS_MODALFRAME | DS_3DLOOK | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "EiffelCOM Wizard Progress"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,66,65,50,14
+    CONTROL         "Progress1",Progress_Bar,"msctls_progress32",PBS_SMOOTH | 
+                    WS_BORDER,5,40,175,15
+    LTEXT           "Static",Progress_Static,5,10,175,20
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -208,6 +219,14 @@ BEGIN
         RIGHTMARGIN, 340
         TOPMARGIN, 7
         BOTTOMMARGIN, 174
+    END
+
+    Progress_Dialog, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
     END
 END
 #endif    // APSTUDIO_INVOKED

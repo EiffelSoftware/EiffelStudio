@@ -59,6 +59,10 @@ feature -- Access
 	Clear_id: INTEGER is 4
 	Help_button_constant: INTEGER is 1018
 	Exit_id: INTEGER is 6
+	Progress_bar_constant: INTEGER is 1045
+	Progress_static_constant: INTEGER is 1046
+	Progress_dialog_constant: INTEGER is 121
+
 end -- class APPLICATION_IDS
 
 --|-------------------------------------------------------------------

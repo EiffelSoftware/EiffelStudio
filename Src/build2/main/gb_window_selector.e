@@ -380,6 +380,9 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					Command_handler.Delete_object_command.delete_object (window_item.object)
 				end
 				unparent_tree_node (a_directory)
+					-- Update project so it may be saved.
+				system_status.enable_project_modified
+				command_handler.update
 			end
 		end
 		

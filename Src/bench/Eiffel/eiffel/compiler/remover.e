@@ -81,7 +81,7 @@ feature {NONE}
 				traversal_unit := control.item;
 				next := traversal_unit.a_feature;
 				if not (next.is_attribute or else is_marked (next)) then
-					mark (next, traversal_unit.static_class)
+					mark (next, traversal_unit.static_class, next.rout_id_set.first)
 				end;
 				control.remove
 			end;
@@ -139,13 +139,13 @@ end;
 
 	features_per_dot: INTEGER is 100;
 
-	mark_alive (feat: FEATURE_I) is
+	mark_alive (feat: FEATURE_I; rout_id_val: INTEGER) is
 			-- Record feature `feat'
 		local
 			class_name: STRING;
 			temp: ROUT_ID_SET
 		do
-			old_mark_alive (feat);
+			old_mark_alive (feat, rout_id_val);
 
 			features := features + 1;
 			if features = features_per_dot then

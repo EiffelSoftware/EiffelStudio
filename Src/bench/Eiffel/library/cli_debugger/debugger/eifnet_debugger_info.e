@@ -622,6 +622,9 @@ feature -- JIT info
 			l_module_key_name_tail: STRING
 			l_module_stored: ICOR_DEBUG_MODULE
 		do
+			debug ("debugger_trace_callback_data")
+				print ("Registering new module : %N  [" + a_module.get_name + "]%N")
+			end
 			if optimized_jit_debugging_enabled then
 				a_module.enable_jit_debugging (True, True)			
 			else

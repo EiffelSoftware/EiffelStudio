@@ -21,6 +21,9 @@ elif [ "$ISE_PLATFORM" = "hpux-11" ]; then
 elif [ "$ISE_PLATFORM" = "alpha" ]; then
 	cp scripts/makefile.dec .
 	make -f makefile.dec
+elif [ "$ISE_PLATFORM" = "freebsd" ]; then
+	cp scripts/makefile.gcc .
+	make -f makefile.gcc
 elif [ "$ISE_PLATFORM" = "macosx" ]; then
 	cp scripts/makefile.gcc .
 	make -f makefile.gcc

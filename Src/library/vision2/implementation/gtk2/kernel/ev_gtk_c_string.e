@@ -57,9 +57,10 @@ feature -- Access
 			-- Locale string representation of the UTF8 string
 		local
 			str_ptr: POINTER
-			bytes_read, bytes_written, gerror: INTEGER
+			bytes_read, bytes_written: INTEGER
+			gerror: POINTER
 		do
-			str_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, -1, $bytes_read, $bytes_written, $gerror)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, -1, $bytes_read, $bytes_written, $gerror, $str_ptr)
 			if str_ptr /= default_pointer then
 				create Result.make_from_c (str_ptr)
 				feature {EV_GTK_EXTERNALS}.g_free (str_ptr)
@@ -78,13 +79,14 @@ feature {NONE} -- Implementation
 		local
 			utf8_ptr: POINTER
 			string_value: ANY
-			bytes_read, bytes_written, gerror: INTEGER
+			bytes_read, bytes_written: INTEGER
+			gerror: POINTER
 			i: INTEGER
 			a_str, temp_string: STRING
 			a_end: POINTER
 		do
 			string_value := a_string.to_c
-			utf8_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
 			if utf8_ptr = default_pointer then
 					-- An error has occurred, this is probably due to `a_string' containing invalid characters
 				from
@@ -102,7 +104,7 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				string_value := a_str.to_c
-				utf8_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
 			end
 				-- The value of bytes_written doesn't take the null character in to account
 			if a_shared then

@@ -39,6 +39,14 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/
 
+/* Structure used to give two arguments to a new thread,
+   with only one used -- the pointer on this structure. */
+ 
+typedef struct {
+	EIF_OBJ current;
+	EIF_PROC routine;
+} start_routine_ctxt_t;
+
 /* Exported functions */
 extern void eif_thr_init_root(void);
 extern void eif_thr_register(void);
@@ -69,22 +77,23 @@ extern void eif_thr_join_all(void);
 #define EIF_THR_TYPE				pthread_t
 #define EIF_THR_CREATE(entry,arg,tid,msg)	\
 	if (pthread_create(&(tid),NULL,(void (*)(void *))(entry), \
-	(EIF_THR_ENTRY_ARG_TYPE)(arg)))			\
+		(EIF_THR_ENTRY_ARG_TYPE)(arg)) \
+	   )			\
 	eif_thr_panic(msg)
 #define EIF_THR_EXIT(arg)			pthread_exit(NULL)
-#define EIF_THR_JOIN(which)			pthread_join(*(which),NULL)
+#define EIF_THR_JOIN(which)			pthread_join((which),NULL)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD				pthread_yield()
+#define EIF_THR_YIELD				sched_yield()
 
 #define EIF_MUTEX_TYPE				pthread_mutex_t *
 #define EIF_MUTEX_CREATE(m,msg)		\
 	m = (EIF_MUTEX_TYPE) malloc(sizeof(pthread_mutex_t)); \
 	if (!(m)) eif_thr_panic("cannot allocate memory for mutex creation\n"##msg); \
-	if (pthread_mutex_init((m),NULL)) eif_thr_panic(msg)
+	if (pthread_mutex_init(m,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg)       if (pthread_mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
-	r = pthread_mutex_trylock(m))	\
-	if (r && (r!=BUSY))				\
+	r = pthread_mutex_trylock(m)	\
+	if (r && (r!=EBUSY))				\
 		eif_thr_panic(msg)
 #define EIF_MUTEX_UNLOCK(m,msg)		if (pthread_mutex_unlock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_DESTROY(m,msg)	\
@@ -97,10 +106,10 @@ extern void eif_thr_join_all(void);
 	if (pthread_key_create(&(key),NULL))	\
 		eif_thr_panic(msg)
 #define EIF_TSD_SET(key,val,msg)			\
-	if (pthread_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) \
+	if (pthread_key_setspecific((key),(EIF_TSD_VAL_TYPE)(val))) \
 		eif_thr_panic(msg)
 #define EIF_TSD_GET0(val_type,key,val)		\
-	val=val_type pthread_getspecific((key))
+	pthread_key_getspecific((key),(EIF_TSD_VAL_TYPE *)(val))
 #define EIF_TSD_GET(val_type,key,val,msg)	\
 	if (EIF_TSD_GET0(val_type,key,val))  eif_thr_panic(msg)
 
@@ -224,17 +233,18 @@ extern void eif_thr_join_all(void);
 #include <taskLib.h>		/* 'thread' operations */
 #include <taskVarLib.h>		/* 'thread' 'specific data' */
 #include <semLib.h>			/* 'mutexes' and semaphores */
+#include <sched.h>			/* 'sched_yield' */
 
 
 #define EIF_THR_ENTRY_TYPE		void
 #define EIF_THR_ENTRY_ARG_TYPE	int
 
-#define EIF_THR_CREATION_FLAGS	0
-#define EIF_THR_DFLT_PRIORITY	10
+#define EIF_THR_CREATION_FLAGS	VX_FP_TASK
+#define EIF_THR_DFLT_PRIORITY	151
 
 #define EIF_THR_TYPE				int
 #define EIF_THR_CREATE(entry,arg,tid,msg)		\
-	if ( ERROR != (tid = taskSpawn(				\
+	if ( ERROR == (tid = taskSpawn(				\
 /* name */		NULL,							\
 				EIF_THR_DFLT_PRIORITY,			\
 				EIF_THR_CREATION_FLAGS,			\
@@ -243,12 +253,13 @@ extern void eif_thr_join_all(void);
 				(EIF_THR_ENTRY_ARG_TYPE)(arg),	\
 				0,0,0,0,0,0,0,0,0				\
 				))								\
-		)										\
-		eif_thr_panic(msg)
-#define EIF_THR_EXIT(arg)			exit(arg)
+		) {										\
+			eif_thr_panic(msg);					\
+		}
+#define EIF_THR_EXIT(arg)
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD				taskDelay(1000)
+#define EIF_THR_YIELD				sched_yield()
 
 #define EIF_MUTEX_TYPE				SEM_ID
 #define EIF_MUTEX_CREATE(m,msg)		\
@@ -274,9 +285,12 @@ extern void eif_thr_join_all(void);
 	EIF_TSD_GET0(val_type,key,val)
 
 #define EIF_TSD_DESTROY(key,msg)	\
-	if (taskVarDelete(0,key)) eif_thr_panic(msg)
+	if (taskVarDelete(0,(int *)&(key))) eif_thr_panic(msg)
 
 
+#else
+
+#error Sorry, this platform does not support multithreading
 
 #endif	/* end of POSIX, WIN32, SOLARIS_THREADS, VXWORKS... */
 

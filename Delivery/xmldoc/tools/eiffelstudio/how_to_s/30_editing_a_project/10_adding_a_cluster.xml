@@ -7,7 +7,8 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>It is possible to create new clusters from EiffelStudio. A dialog window has been designed to help you do so.
+	<paragraph>
+	It is possible to create new clusters from EiffelStudio. A dialog window has been designed to help you do so.
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/new_cluster_dialog.png</url>

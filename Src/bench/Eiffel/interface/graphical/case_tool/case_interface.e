@@ -87,6 +87,8 @@ feature
 			!! sep1.make ("ss", associated_form )
 			!! sep2.make ("ss", associated_form )
 
+			tooltip_initialize (Current)
+
 			initialize_lists
 			set_values
 			set_commands

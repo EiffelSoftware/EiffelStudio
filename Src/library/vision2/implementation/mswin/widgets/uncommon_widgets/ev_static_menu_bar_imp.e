@@ -13,6 +13,11 @@ inherit
 
 	EV_MENU_CONTAINER_IMP
 
+	WEL_MENU
+		rename
+			make as wel_make
+		end
+
 creation
 	make
 	
@@ -47,7 +52,16 @@ feature -- Status setting
 			parent_imp.unset_menu
 		end
 
-end -- class EV_STATIC_MENU_BAR_I
+feature {NONE} -- Implementation
+
+	menu_container: WEL_MENU is
+			-- Actual WEL container
+		do
+			Result := Current
+		end
+
+end -- class EV_STATIC_MENU_BAR_IMP
+
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.

@@ -161,6 +161,7 @@ struct gt_info {
 	int32 *gt_gen;		/* Generic parameters patterns */
 	int16 *gt_type;		/* Type ID associated with each meta-type */
 };
+
 /*
  * 	Obsolete Macros  
  */
@@ -177,18 +178,18 @@ struct gt_info {
 
 
 
-typedef void	(*EIF_PROC)(EIF_REFERENCE, ...);		/* Use EIF_PROCEDURE instead */
-typedef EIF_INTEGER	(*EIF_FN_INT)(EIF_REFERENCE, ...);		/* Use EIF_INTEGER_PROCEDURE instead */
-typedef EIF_BOOLEAN	(*EIF_FN_BOOL)(EIF_REFERENCE, ...);		/* EIF_BOOLEAN_PROCEDURE instead*/
-typedef EIF_CHARACTER	(*EIF_FN_CHAR)(EIF_REFERENCE, ...);		/* Use EIF_CHARACTER_FUNCTION instead  */
-typedef EIF_REAL	(*EIF_FN_FLOAT)(EIF_REFERENCE, ...);	/* Use EIF_REAL_FUNCTION instead */
-typedef EIF_DOUBLE	(*EIF_FN_DOUBLE)(EIF_REFERENCE, ...);	/* Use EIF_DOUBLE_FUNCTION instead */
-typedef EIF_REFERENCE (*EIF_FN_REF)(EIF_REFERENCE, ...);		/* use EIF_REFERENCE_FUNCTION instead */
-typedef EIF_POINTER	(*EIF_FN_POINTER)(EIF_REFERENCE, ...);	/* Use EIF_POINTER_FUNCTION instead */
-typedef EIF_BIT	(*EIF_FN_BIT)(EIF_REFERENCE, ...);	/*  Use EIF_BIT_FUNCTION instead */
+#define EIF_PROC EIF_PROCEDURE		/* Use EIF_PROCEDURE instead */
+#define EIF_FN_INT EIF_INTEGER_PROCEDURE		/* Use EIF_INTEGER_PROCEDURE instead */
+#define EIF_FN_BOOL EIF_BOOLEAN_FUNCTION		/* EIF_BOOLEAN_PROCEDURE instead*/
+#define EIF_FN_CHAR EIF_CHARACTER_FUNCTION		/* Use EIF_CHARACTER_FUNCTION instead  */
+#define EIF_FN_FLOAT EIF_REAL_FUNCTION	/* Use EIF_REAL_FUNCTION instead */
+#define EIF_FN_DOUBLE EIF_DOUBLE_FUNCTION	/* Use EIF_DOUBLE_FUNCTION instead */
+#define EIF_FN_REF EIF_REFERENCE_FUNCTION /* use EIF_REFERENCE_FUNCTION instead */
+#define EIF_FN_POINTER EIF_POINTER_FUNCTION	/* Use EIF_POINTER_FUNCTION instead */
+#define EIF_FN_BIT EIF_BIT_FUNCTION	/*  Use EIF_BIT_FUNCTION instead */
 
 
-#define	EIF_OBJ	char *						/* Use EIF_OBJECT instead */
+#define	EIF_OBJ	EIF_OBJECT						/* Use EIF_OBJECT instead */
 #define eif_bit_attr		eifgbit			/* Return EIF_BIT attribute */
 #define eif_bit_set_attr	eifsbit			/* Copy supplied bit into another */
 

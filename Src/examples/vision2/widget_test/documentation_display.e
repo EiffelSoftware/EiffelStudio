@@ -11,6 +11,8 @@ inherit
 	INTERNAL
 	
 	WIDGET_TEST_SHARED
+	
+	INSTALLATION_LOCATOR
 
 create
 	make_with_text
@@ -49,7 +51,7 @@ feature -- Status setting
 			file_name := class_name (widget)
 			file_name.to_lower
 			file_name.append ("_flatshort.txt")
-			create directory_name.make_from_string (".")
+			create directory_name.make_from_string (location)
 			directory_name.extend ("flatshort")
 			create full_filename.make_from_string (directory_name.out)
 			full_filename.extend (file_name)

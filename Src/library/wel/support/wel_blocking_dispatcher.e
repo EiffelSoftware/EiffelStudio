@@ -220,6 +220,7 @@ feature {NONE}
 			check
 				window_exists: window.exists
 			end
+
 			window.increment_level
 
 			Result := window.process_message (hwnd, msg, wparam, lparam)
@@ -231,7 +232,7 @@ feature {NONE}
 			end
 
 			if window.default_processing then
-				Result := window.call_default_window_procedure (msg, wparam, lparam)
+				Result := window.call_default_window_procedure (hwnd, msg, wparam, lparam)
 			end
 
 			if has_return_value then

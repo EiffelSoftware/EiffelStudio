@@ -136,7 +136,7 @@ feature -- IL code generation
 			il_generator.generate_inherited_invariants
 
 			il_generator.mark_label (end_of_invariant)
-			il_generator.generate_return
+			il_generator.generate_return (False)
 		end
 
 feature -- Byte code geenration

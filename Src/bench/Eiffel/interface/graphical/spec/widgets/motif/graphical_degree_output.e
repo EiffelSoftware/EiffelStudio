@@ -99,7 +99,7 @@ feature -- Start output features
 			current_entity_l.set_label_as_string (Empty_string);
 
 			percentage_l.set_label_as_string (Zero_percent);
-			if not managed then
+			if not is_managed then
 				popup_window;
 			end;
 			progress_bar.reset_percentage;
@@ -243,7 +243,7 @@ feature -- Output on per class
 			nbr_of_clusters: INTEGER
 		do
 			nbr_of_clusters := total_number - processed;
-			a_per := percentage_calcuation (nbr_of_clusters);
+			a_per := percentage_calculation (nbr_of_clusters);
 
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per);
@@ -258,7 +258,7 @@ feature -- Output on per class
 			a_per: INTEGER
 		do
 			total_number := nbr_to_go + processed;
-			a_per := percentage_calcuation (nbr_to_go);
+			a_per := percentage_calculation (nbr_to_go);
 			progress_bar.update_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 			processed := processed + 1;
@@ -275,7 +275,7 @@ feature -- Output on per class
 				-- Could not call put_degree_2 or other degrees even
 				-- though it is doing the same here because of
 				-- the precondition.
-			a_per := percentage_calcuation (nbr_to_go);
+			a_per := percentage_calculation (nbr_to_go);
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 		end;
@@ -293,7 +293,7 @@ feature -- Output on per class
 		local
 			a_per: INTEGER
 		do
-			a_per := percentage_calcuation (nbr_to_go);
+			a_per := percentage_calculation (nbr_to_go);
 			progress_bar.increase_percentage (a_per);
 			update_interface (a_class.name_in_upper, nbr_to_go, a_per);
 		end;

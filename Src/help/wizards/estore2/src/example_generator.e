@@ -1,6 +1,6 @@
 indexing
 	description: "Repository Example."
-	author: "pascalf"
+	author: "david s"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,11 +38,11 @@ feature -- Initialization
 					col := li.item.column_i_th(i)
 					if not f1 and then (col.eiffel_type=ty.integer_type_database) or else
 							col.eiffel_type=ty.Real_type_database then
-						qu1 := [li.item.repository_name,col.column_name,"13"]
+						qu1 := [li.item.repository_name,col.column_name,"Your_integer_paramater"]
 						f1 := TRUE
 					end
 					if not f2 and then col.eiffel_type = ty.string_type_database then
-						qu2 := [li.item.repository_name, col.column_name,"'washington'"]
+						qu2 := [li.item.repository_name, col.column_name,"'Your_string_parameter'"]
 						f2 := TRUE
 					end
 					i := i + 1
@@ -79,12 +79,12 @@ feature -- Initialization
 			s11.to_lower
 			s22.to_lower
 			a_request_name := "get_"+s11+"_with_"+s22
-			Result_string.append("%N%T"+a_request_name+": LINKED_LIST["+s4+"] is%N")
+			Result_string.append("%N%T"+a_request_name+": LINKED_LIST ["+s4+"] is%N")
 			Result_string.append("%T%T%T-- Request Example%N")
 			Result_string.append("%T%Tlocal%N")
 			Result_string.append("%T%T%Tobj:"+s4+"%N")
 			Result_string.append("%T%Tdo%N")
-			Result_string.append("%T%T%TCreate obj.make%N")
+			Result_string.append("%T%T%Tcreate obj.make%N")
 			a_request := "select * from "
 			if s1.has(' ') then
 				-- This is due to ODBC which accepts table name with spaces.
@@ -93,7 +93,7 @@ feature -- Initialization
 				a_request:=a_request +s1
 			end
 			a_request := a_request + " where "+s2+"="+s3
-			Result_string.append("%T%T%TResult := db_manager.load_list_from_select(%"")
+			Result_string.append("%T%T%TResult := db_manager.load_list_from_select (%"")
 			Result_string.append(a_request+"%", obj)%N")
 			Result_string.append("%T%Tensure%N")
 			Result_string.append("%T%T%Texists: Result /= Void%N")

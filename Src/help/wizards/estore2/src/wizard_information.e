@@ -20,14 +20,16 @@ feature {NONE} -- Initialization
 			data_source := ""
 			location := ""
 			project_location := ""
+			project_name := "sample"
 			Create table_list.make
 			is_oracle := FALSE
+			compile_project := TRUE
 			example := TRUE
 		end
 
 feature {WIZARD_STATE_WINDOW} -- Settings
 
-	set_database_info(s1,s2,s3: STRING;oracle_selected: BOOLEAN) is
+	set_database_info (s1,s2,s3: STRING; oracle_selected: BOOLEAN) is
 			-- Set the database information.
 		do
 			username := s1
@@ -36,17 +38,23 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			is_oracle := oracle_selected
 		end
 
-	set_generation_type(b1,b2: BOOLEAN) is
+	set_generation_type (b1,b2: BOOLEAN) is
 			-- Set generation type information.
 		do
 			generate_facade := b1
 			new_project := b2			
 		end
 
-	set_table_list(li: LINKED_LIST[CLASS_NAME]) is
+	set_table_list (li: LINKED_LIST [CLASS_NAME]) is
 			-- Set table to be generated.
 		do
 			table_list := li
+		end
+
+	set_unselected_table_list (li: LINKED_LIST [CLASS_NAME]) is
+			-- Table not to be generated
+		do
+			unselected_table_list := li
 		end
 
 	set_locations (loc,proj: STRING) is
@@ -57,9 +65,20 @@ feature {WIZARD_STATE_WINDOW} -- Settings
 			project_location := proj
 		end
 
-	set_generate_all_table(b: BOOLEAN) is
+	set_generate_all_table (b: BOOLEAN) is
 		do
 			generate_every_table := b
+		end
+
+	set_project_name (proj: STRING) is
+			-- Set the project Name
+		do
+			project_name := proj
+		end
+
+	set_compile_project (b: BOOLEAN) is
+		do
+			compile_project := b
 		end
 
 feature -- Access
@@ -71,6 +90,9 @@ feature -- Access
 
 	project_location: STRING
 		-- Project location.
+
+	project_name: STRING
+		-- Project Name
 
 	username: STRING
 		-- User Name.
@@ -93,7 +115,13 @@ feature -- Access
 	table_list: LINKED_LIST[CLASS_NAME]
 		-- List of the selected database tables.
 
+	unselected_table_list: LINKED_LIST [CLASS_NAME]
+		-- List of the unselected database tables.
+
 	generate_every_table: BOOLEAN
+
+	compile_project: BOOLEAN
+		-- Does the user want to compile the project ?
 
 invariant
 	default_exist :username /= Void

@@ -1,30 +1,35 @@
 indexing
-	description: "Root Class"
+	description: "Generated Root Class by The EiffelStore Wizard"
 
 class
 	ESTORE_ROOT
 
-Creation
+create
 	make
 
 feature -- Initialization
 
 	make is
-		-- Initialize
+			-- Initialize
 		local
-			li: LINKED_LIST[<FL1>]
+			li: LINKED_LIST [<FL1>]
 			s1,s2: STRING
 		do
-			io.put_string("%NConnecting with username '<FL4>', password '<FL5>' and data source '<FL6>'...")
-			Create estore_example.initialize("<FL4>","<FL5>","<FL6>")
-			io.put_string("%NProcessing Request ...")
-			io.put_string("%NQuery:<FL3>")
+			io.put_string ("%NConnecting with username '<FL4>', password '<FL5>' and data source '<FL6>'...")
+			create estore_example.initialize ("<FL4>","<FL5>","<FL6>")
+
+			io.put_string ("%NProcessing Request ...")
+			io.put_string ("%NQuery:<FL3>")
+
+				-- Retrieve the linked list of <FL1>, result of the generated request.
 			li := estore_example.<FL2>
-			if li.count>0 then
-				io.put_string("%NThere are "+li.count.out+" found items.")
-				io.put_string(li.first.out)
+
+			if li.count > 0 then
+				io.put_string ("%NThere are " + li.count.out + " found items.")
+					-- Display only the first Result of the request
+				io.put_string (li.first.out)
 			else
-				io.put_string("%NNo items found")
+				io.put_string ("%NNo items found")
 			end
 		end
 

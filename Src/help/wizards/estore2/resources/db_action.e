@@ -1,6 +1,6 @@
 indexing
-	description: "Class which is used to retrieve objects."
-	author: "pascalf"
+	description: "Generated Class which is used to retrieve objects."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,14 +18,14 @@ create
 
 feature -- Creation
 	
-	make (s: like selection;an_item: G) is
+	make (s: like selection; an_item: G) is
 			-- Initialize
 		require
 			not_void: s /= Void and an_item /= Void
 		do
 			selection := s
 			item := an_item
-			Create list.make
+			create list.make
 		ensure
 			set: selection = s and item = an_item
 		end
@@ -37,7 +37,7 @@ feature -- Actions
 			-- selected item in the container.
 		do
 			selection.cursor_to_object
-			list.extend(deep_clone(item))
+			list.extend (deep_clone (item))
 		end
 
 feature -- Access
@@ -48,7 +48,7 @@ feature -- Access
 	item: G
 		-- Current found item.
 
-	list: LINKED_LIST [ G ]
+	list: LINKED_LIST [G]
 		-- Result List.
 
 end -- class DB_ACTION

@@ -229,9 +229,9 @@ feature -- Implementation
 
 	example: BOOLEAN is TRUE
 
-	username: STRING is "manus@CLIENTSAP"
+--	username: STRING is "manus@CLIENTSAP"
 
-	password: STRING is "manus"
+--	password: STRING is "manus"
 
 invariant
 	path_exists: path /= Void

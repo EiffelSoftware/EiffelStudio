@@ -1,6 +1,6 @@
 indexing
 	description: "Generation Options page"
-	author: "pascalf"
+	author: "David S"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,10 +8,11 @@ class
 	DB_GENERATION
 
 inherit
-	WIZARD_STATE_WINDOW
-		redefine 
+	INTERMEDIARY_STATE_WINDOW
+		redefine
 			update_state_information,
-			proceed_with_current_info
+			proceed_with_current_info,
+			build
 		end
 
 	WIZARD_SHARED
@@ -19,34 +20,32 @@ inherit
 			default_create
 		end
 
-creation
+create
 	make
 
 feature -- basic Operations
-
-	display is 
-			-- Display user entries
-		do
-			build
-		end
 
 	build is 
 			-- Build Page entries.
 		do 
 			Create generate_all_tables.make_with_text("Generate All tables/views")
 			Create generate_specific_tables.make_with_text("Generate Specific tables/views")
-			if state_information.generate_every_table then
+			if wizard_information.generate_every_table then
 				generate_all_tables.enable_select
 			else
 				generate_specific_tables.enable_select
 			end
-			main_box.extend(Create {EV_HORIZONTAL_BOX})
-			main_box.extend(generate_all_tables)
-			main_box.extend(Create {EV_HORIZONTAL_BOX})
-			main_box.extend(generate_specific_tables)
+			choice_box.extend(Create {EV_CELL})
+			choice_box.extend(generate_all_tables)
+			generate_all_tables.set_minimum_height (20)
+			choice_box.disable_item_expand (generate_all_tables)
+			choice_box.extend(generate_specific_tables)
+			generate_specific_tables.set_minimum_height (20)
+			choice_box.disable_item_expand (generate_specific_tables)
+			choice_box.extend(Create {EV_CELL})
 
-			set_updatable_entries(<<generate_all_tables.press_actions,
-									generate_specific_tables.press_actions>>)
+			set_updatable_entries(<<generate_all_tables.select_actions,
+									generate_specific_tables.select_actions>>)
 		end
 
 	proceed_with_current_info is 
@@ -54,9 +53,9 @@ feature -- basic Operations
 		do
 			precursor
 			if generate_all_tables.is_selected then
-				proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(state_information))
+				proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(wizard_information))
 			else
-				proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(state_information))
+				proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(wizard_information))
 			end
 		end
 
@@ -67,15 +66,29 @@ feature -- basic Operations
 		do
 			Create cl_name.make
 			if is_oracle then
-				table_list := db_manager.load_list_from_select("select TABLE_NAME from USER_TABLES",cl_name)
+				unselected_table_list := db_manager.load_list_from_select ("select TABLE_NAME from USER_TABLES",cl_name)
 			elseif is_odbc then
-				table_list := db_manager.load_list_from_select("Sqltables()",cl_name)
+				unselected_table_list := db_manager.load_list_from_select ("Sqltables()",cl_name)
 			else
-				Create table_list.make
+				create unselected_table_list.make
 			end
-			state_information.set_generate_all_table(generate_all_tables.is_selected)
-			state_information.set_table_list(table_list)
+			create table_list.make
+			wizard_information.set_generate_all_table (generate_all_tables.is_selected)
+			wizard_information.set_unselected_table_list (unselected_table_list)
+			if generate_all_tables.is_selected then
+				wizard_information.set_table_list (unselected_table_list)
+				wizard_information.set_unselected_table_list (table_list)
+			else
+				wizard_information.set_table_list (table_list)
+			end
 			precursor
+		end
+
+	display_state_text is
+		do
+			title.set_text ("STEP 2: TABLE SELECTION")
+			message.set_text ("%NChoose if you want to automatically generate all the tables of your database%
+								%%Nor if you prefer to choose your own tables.")
 		end
 
 feature -- Implementation
@@ -85,10 +98,10 @@ feature -- Implementation
 		-- the user to choose which type of generation he	
 		-- wish to do.
 
-	table_list: LINKED_LIST[CLASS_NAME]
+	table_list: LINKED_LIST [CLASS_NAME]
 		-- List of all the system tables.
 
-	pixmap_location: STRING is "essai2.bmp"
-			-- Pixmap location
-	
+	unselected_table_list: LINKED_LIST [CLASS_NAME]
+		-- List of unselected tables.
+
 end -- class DB_GENERATION

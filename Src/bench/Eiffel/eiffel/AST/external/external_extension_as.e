@@ -27,23 +27,13 @@ feature -- Properties
 
 	header_files: ARRAY [INTEGER]
 			-- Header files to include
+			
+	is_blocking_call: BOOLEAN
+			-- May current external call block execution? If so, in multithreaded
+			-- mode we need to ensure that GC will not be blocked waiting for the
+			-- blocking call to resume.
 
 feature -- Conveniences
-
-	is_macro: BOOLEAN is
-			-- Is this a macro extension?
-		do
-		end
-
-	is_struct: BOOLEAN is
-			-- Is this a struct extension?
-		do
-		end
-
-	is_dll: BOOLEAN is
-			-- Is this a dll extension?
-		do
-		end
 
 	has_signature: BOOLEAN is
 			-- Does the extension define a c_signature?
@@ -81,12 +71,7 @@ feature -- Feature information
 			ext_i.set_argument_types (argument_types)
 			ext_i.set_header_files (header_files)
 			ext_i.set_return_type (return_type)
-		end
-
-	need_encapsulation: BOOLEAN is
-			-- Does this language extension need an encapsulation?
-		do
-			Result := True
+			ext_i.set_is_blocking_call (is_blocking_call)
 		end
 
 feature -- Type check
@@ -122,23 +107,6 @@ feature -- Type check
 			end
 		end
 
-feature -- Byte code
-
-	byte_node: EXT_BYTE_CODE is
-			-- Byte code for external extension
-		deferred
-		end
-
-	init_byte_node (b: EXT_BYTE_CODE) is
-			-- Initialize byte node.
-		require
-			b_not_void: b /= Void
-		do
-			b.set_argument_types (argument_types)
-			b.set_header_files (header_files)
-			b.set_return_type (return_type)
-		end
-
 feature -- Setting
 
 	set_include_files (s: STRING) is
@@ -159,6 +127,14 @@ feature -- Setting
 			special_part := s
 		end
 
+	set_is_blocking_call (v: like is_blocking_call) is
+			-- Assign `v' to `is_blocking_call'.
+		do
+			is_blocking_call := v
+		ensure
+			is_blocking_call_set: is_blocking_call = v
+		end
+		
 feature {NONE} -- Implementation
 
 	parse_special_part is

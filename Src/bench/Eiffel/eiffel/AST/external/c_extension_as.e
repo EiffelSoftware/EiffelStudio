@@ -8,7 +8,7 @@ class C_EXTENSION_AS
 inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
-			need_encapsulation, parse_special_part
+			parse_special_part
 		end
 
 create
@@ -38,22 +38,6 @@ feature -- Get the C extension
 		do
 			create Result
 			init_extension_i (Result)
-		end
-
-feature -- Encapsulation
-
-	need_encapsulation: BOOLEAN is False
-			-- Does a C external need an encapsulation?
-			--| We can use the new name of the redefinition
-			--| in the routine tables.
-
-feature -- Byte code
-
-	byte_node: C_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
 		end
 
 feature {NONE} -- Implementation

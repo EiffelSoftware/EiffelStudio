@@ -80,8 +80,6 @@ feature -- Byte code
 			-- Byte code for external feature
 		local
 			extern: EXTERNAL_I
-			extension: EXTERNAL_EXTENSION_AS
-			ext_byte_code: EXT_BYTE_CODE
 		do
 			extern ?= context.current_feature
 			if extern = Void then
@@ -91,18 +89,7 @@ feature -- Byte code
 					extern_exists: context.current_feature /= Void
 					is_extern: context.current_feature.is_external
 				end
-
-				extension := language_name.extension
-				ext_byte_code := extension.byte_node
-				extension.init_byte_node (ext_byte_code)
-
-				ext_byte_code.set_external_name_id (extern.external_name_id)
-				ext_byte_code.set_encapsulated (extern.encapsulated)
-
-				check
-					external_name_not_void: ext_byte_code.external_name /= Void
-				end
-				Result := ext_byte_code
+				create {EXT_BYTE_CODE} Result.make (extern.external_name_id)
 			end
 		end
 

@@ -7,9 +7,6 @@ class IL_EXTENSION_AS
 
 inherit
 	EXTERNAL_EXTENSION_AS
-		redefine
-			need_encapsulation
-		end
 
 	SHARED_IL_CONSTANTS
 
@@ -59,20 +56,6 @@ feature -- Get the C extension
 					Result.set_return_type (sig.return_type_id)
 				end
 			end
-		end
-
-feature -- Encapsulation
-
-	need_encapsulation: BOOLEAN is False
-			-- Does a IL external need an encapsulation?
-
-feature -- Byte code
-
-	byte_node: IL_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
 		end
 
 feature {NONE} -- Constants

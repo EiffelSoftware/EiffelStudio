@@ -8,8 +8,7 @@ class STRUCT_EXTENSION_AS
 inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
-			parse_special_part, is_struct, type_check,
-			byte_node
+			parse_special_part, type_check
 		end
 
 create
@@ -66,8 +65,6 @@ feature  -- Initialization
 
 feature -- Properties
 
-	is_struct: BOOLEAN is True
-
 	is_cpp: BOOLEAN
 			-- Is Current struct a C++ one?
 
@@ -80,9 +77,8 @@ feature -- Get the struct extension
 	extension_i: STRUCT_EXTENSION_I is
 			-- STRUCT_EXTENSION_I corresponding to current extension
 		do
-			create Result.make (is_cpp)
+			create Result.make (field_name_id, is_cpp)
 			init_extension_i (Result)
-			Result.set_field_name_id (field_name_id)
 		end
 
 feature -- Type check
@@ -153,17 +149,6 @@ feature -- Type check
 					type_check_signature
 				end
 			end
-		end
-
-feature -- Byte code
-
-	byte_node: STRUCT_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
-			Result.set_is_cpp_code (is_cpp)
-			Result.set_field_name_id (field_name_id)
 		end
 
 feature {NONE} -- Implementation

@@ -150,7 +150,12 @@ feature -- Event : command association
 		do
 			implementation.add_select_command (cmd, arg)
 		end
-
+--| FIXME
+--| Christophe, 3 nov 1999
+--| `cmd' is also executed when the item is deselected.
+--| This implies infinite loops in format change (in ebench),
+--| making any multiformat tool development impossible.
+  
 	add_button_press_command (mouse_button: INTEGER; 
 		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed

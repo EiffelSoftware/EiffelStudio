@@ -144,7 +144,7 @@ feature {NONE} -- Project
 					l_folder ?= create {DIRECTORY}.make (l_name)
 					if l_folder.exists and then not l_folder.is_empty then
 						if get_dirs then
-							l_url := l_util.toc_friendly_url (clone (a_dir.name))			
+							l_url := l_util.toc_friendly_url (a_dir.name.twin)			
 							Result.append ("<Dir ")
 							Result.append ("Url=%"" + l_url + "%"")
 							Result.append ("/>%N")

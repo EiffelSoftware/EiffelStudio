@@ -208,59 +208,64 @@ feature -- Access
 			class_file_name: STRING;
 			vd21: VD21;
 		do
-			!!file.make (file_name);
+			class_file_name := file_name
+			!!file.make (class_file_name)
+
 				-- Check if the file to parse is readable
 			if not file.exists or else not file.is_readable then
 					-- Need to check for existance for the quick melt operation
 					-- since it doesn't remove unused classes.
-				!!vd21;
-				vd21.set_cluster (cluster);
-				vd21.set_file_name (file_name);
-				Error_handler.insert_error (vd21);
+				!!vd21
+				vd21.set_cluster (cluster)
+				vd21.set_file_name (class_file_name)
+				Error_handler.insert_error (vd21)
 					-- Cannot go on here
-				Error_handler.raise_error;
+				Error_handler.raise_error
 					--
 					-- NOT REACHED
 					--
-				check False end;
-			end;
+				check
+					False
+				end
+			end
 			check
-				file.is_readable;
-			end;
-
-			file.open_read;
-			check
-				file.is_open_read;
-			end;
-				-- Save the source class in a Backup directory
-			if Workbench.automatic_backup then
-				!! f_name.make_from_string (cluster.backup_directory);
-				f_name.extend (lace_class.base_name);
-				!! copy_file.make (f_name);
-				if copy_file.is_creatable then
-					copy_file.open_write;
-					file.readstream (file.count);
-					file.start;
-					copy_file.putstring (file.laststring);
-					copy_file.close;
-				end;
+				file.is_readable
 			end
 
-			has_unique := False;
+			file.open_read
+			check
+				file.is_open_read
+			end
+
+				-- Save the source class in a Backup directory
+			if Workbench.automatic_backup then
+				!! f_name.make_from_string (cluster.backup_directory)
+				f_name.extend (lace_class.base_name)
+				!! copy_file.make (f_name)
+				if copy_file.is_creatable then
+					copy_file.open_write
+					file.readstream (file.count)
+					file.start
+					copy_file.putstring (file.laststring)
+					copy_file.close
+				end
+			end
+
+			has_unique := False
 
 				-- Call Yacc
-			class_file_name := file_name;
-			collection_off;
-			Result := c_parse (file.file_pointer, $class_file_name);
-			collection_on;
-			file.close;
-			Error_handler.checksum;
+			collection_off
+			Result := c_parse (file.file_pointer, $class_file_name)
+			collection_on
+
+			file.close
+			Error_handler.checksum
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Error happened
-				collection_on;
+				collection_on
 				if not (file = Void or else file.is_closed) then
-					file.close;
+					file.close
 				end;
 			end;
 		end;
@@ -364,7 +369,8 @@ feature -- Access
 					syntactical_suppliers.copy (old_syntactical_suppliers)
 				end;
 			end;
-		end;
+		end
+
 feature -- Conformance dependenies
 
 	conf_dep_classes : LINKED_LIST [CLASS_C]
@@ -394,7 +400,7 @@ feature -- Conformance dependenies
 			not_void : a_class /= Void
 			has      : has_dep_class (a_class)
 		local
-			found : BOOLEAN
+			found: BOOLEAN
 		do
 			from
 				conf_dep_classes.start
@@ -472,7 +478,6 @@ feature -- Expanded rues validity
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
 		local
-			generic_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_A;
 		do
 debug ("CHECK_EXPANDED");
@@ -487,16 +492,14 @@ end;
 				until
 					generics.after
 				loop
-					generic_dec := generics.item;
-					constraint_type := generic_dec.constraint_type;
+					constraint_type := generics.item.constraint_type;
 					if constraint_type /= Void and then constraint_type.has_generics then
-						System.expanded_checker.check_actual_type
-							(constraint_type)
+						System.expanded_checker.check_actual_type (constraint_type)
 					end;
-					generics.forth;
-				end;
-			end;
-		end;
+					generics.forth
+				end
+			end
+		end
 
 feature -- Third pass: byte code production and type check
 
@@ -1140,7 +1143,6 @@ end;
 		require
 			good_argument: new_suppliers /= Void;
 		local
-			supplier: E_CLASS;
 			supplier_clients: LINKED_LIST [E_CLASS]
 		do
 			from
@@ -1148,22 +1150,20 @@ end;
 			until
 				suppliers.after
 			loop
-				supplier := suppliers.item.supplier;
-				supplier_clients := supplier.clients;
+				supplier_clients := suppliers.item.supplier.clients;
 				supplier_clients.start;
 				supplier_clients.compare_references;
 				supplier_clients.search (Current);
 				supplier_clients.remove;
 				suppliers.forth
 			end;
+
 			from
 				new_suppliers.start
 			until
 				new_suppliers.after
 			loop
-				supplier := new_suppliers.item.supplier;
-				supplier_clients := supplier.clients;
-				supplier_clients.put_front (Current);
+				new_suppliers.item.supplier.clients.put_front (Current);
 				new_suppliers.forth
 			end;
 			set_suppliers (new_suppliers);
@@ -1192,8 +1192,6 @@ feature -- Generation
 	pass4 is
 			-- Generation of C files for each type associated to the current
 			-- class
-		local
-			temp_index:INTEGER
 		do
 			Inst_context.set_cluster (cluster);
 			from
@@ -1201,9 +1199,7 @@ feature -- Generation
 			until
 				types.after
 			loop
-				temp_index := types.index
 				types.item.pass4;
-				types.go_i_th (temp_index)
 				types.forth
 			end;
 		end;
@@ -1223,10 +1219,10 @@ feature -- Melting
 						melted_set.remove;
 					else
 						melted_set.forth
-					end;
-				end;
-			end;
-		end;
+					end
+				end
+			end
+		end
 
 	melt is
 			-- Melt changed features.
@@ -1240,14 +1236,14 @@ feature -- Melting
 				types.after
 			loop
 				if not types.item.is_precompiled then
-					types.item.melt;			
-				end;
+					types.item.melt
+				end
 				types.forth
-			end;
+			end
 
 				-- Forget melted list
-			melted_set := Void;
-		end;
+			melted_set := Void
+		end
 	
 	update_dispatch_table is
 			-- Update dispatch table.
@@ -1261,22 +1257,20 @@ feature -- Melting
 				types.after
 			loop
 				if not types.item.is_precompiled then
-					types.item.update_dispatch_table;			
+					types.item.update_dispatch_table
 				end;
 				types.forth
-			end;
+			end
 	
 				-- Forget melted list
-			melted_set := Void;
-		end;
+			melted_set := Void
+		end
 
 	has_features_to_melt: BOOLEAN is
 			-- Has the current class features to melt ?
 		do
-			Result := not (	melted_set = Void
-							or else
-							melted_set.empty);
-		end;
+			Result := not (melted_set = Void or else melted_set.empty)
+		end
 
 	melt_all is
 			-- Melt all the features written in the class
@@ -1289,37 +1283,37 @@ feature -- Melting
 		do
 			Inst_context.set_cluster (cluster);
 			if melted_set = Void then
-				!!melted_set.make;
+				!!melted_set.make
 				melted_set.compare_objects
-			end;
+			end
 
 				-- Melt feature written in the class
 			from
-				tbl := feature_table;
+				tbl := feature_table
 				tbl.start
 			until
 				tbl.after
 			loop
 				feature_i := tbl.item_for_iteration;
 				if feature_i.to_generate_in (Current) then
-					!!melted_info.make (feature_i);
+					!!melted_info.make (feature_i)
 					if not melted_set.has (melted_info) then
-						melted_set.put (melted_info);
-						feature_i.change_body_id;
-					end;
-				end;
+						melted_set.put (melted_info)
+						feature_i.change_body_id
+					end
+				end
 				tbl.forth
-			end;
+			end
+
 				-- Melt possible invariant clause
 			if invariant_feature /= Void then
-				!!inv_melted_info;
+				!!inv_melted_info
 				if not melted_set.has (inv_melted_info) then
-					melted_set.put (inv_melted_info);
-					new_body_id := Body_id_counter.next_id;
-					System.body_index_table.force
-									(new_body_id, invariant_feature.body_index);
-				end;
-			end;
+					melted_set.put (inv_melted_info)
+					new_body_id := Body_id_counter.next_id
+					System.body_index_table.force (new_body_id, invariant_feature.body_index)
+				end
+			end
 
 			if not Tmp_m_rout_id_server.has (id) then
 					-- If not already done, Melt routine id array
@@ -1355,11 +1349,8 @@ feature -- Melting
 
 	melt_descriptor_tables is
 			-- Melt descriptor tables of associated class types
-		local
-			sel_tbl: SELECT_TABLE
 		do
-			sel_tbl := feature_table.origin_table;
-			sel_tbl.melt (Current);
+			feature_table.origin_table.melt (Current);
 		end;
 
 feature -- Workbench feature and descriptor table generation
@@ -1377,9 +1368,7 @@ feature -- Workbench feature and descriptor table generation
 			table_file_name.append (Dot_c);
 			!!file.make (table_file_name);
 			file.open_write;
-			file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%N");
+			file.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N");
 			feature_table.generate (file);
 			file.close;
 		end;
@@ -1389,12 +1378,9 @@ feature -- Workbench feature and descriptor table generation
 			-- of associated class types.
 			--|Note: when precompiling a system a class might
 			--|have no generic derivations
-		local
-			sel_tbl: SELECT_TABLE
 		do
 			if has_types then
-				sel_tbl := feature_table.origin_table;
-				sel_tbl.generate (Current);
+				feature_table.origin_table.generate (Current);
 			end;
 		end;
 
@@ -2224,17 +2210,14 @@ feature -- Supplier checking
 		require
 			good_argument: not
 				(supplier_list = Void or else supplier_list.empty);
-		local
-			cl_name: STRING;
 		do
 			from
 				supplier_list.start
 			until
 				supplier_list.off
 			loop
-				cl_name := supplier_list.item;
-					-- Check supplier `cl_name' of the class
-				check_one_supplier (cl_name);
+					-- Check supplier class_name `supplier_list.item' of the class
+				check_one_supplier (supplier_list.item);
 				supplier_list.forth
 			end;
 		end;
@@ -2244,16 +2227,13 @@ feature -- Supplier checking
 			-- and add perhaps classes to the system.
 		require
 			good_argument: parent_list /= Void;
-		local
-			cl_name: STRING;
 		do
 			from
 				parent_list.start
 			until
 				parent_list.after
 			loop
-				cl_name := parent_list.item.type.class_name;
-				check_one_supplier (cl_name);
+				check_one_supplier (parent_list.item.type.class_name);
 				parent_list.forth
 			end;
 		end;
@@ -2317,44 +2297,44 @@ feature -- Supplier checking
 			vsrc1: VSRC1;
 			vsrc2: VSRC2;
 		do
-			if
-				generics /= Void
-			then
+			if generics /= Void then
 				!!vsrc1;
 				vsrc1.set_class (Current);
 				Error_handler.insert_error (vsrc1);
 				Error_handler.checksum;
-			end;
+			end
+
 			if is_deferred then
 				!!vsrc2;
 				vsrc2.set_class (Current);
 				Error_handler.insert_error (vsrc2);
 				Error_handler.checksum;
-			end;
-		end;
+			end
+		end
 
 	check_root_class_creators is
 			-- Check creation procedures of root class
 		require
 			is_root: Current = System.root_class.compiled_class;
 		local
-			feat_tbl: like feature_table;
 			creation_proc: FEATURE_I;
-			creation_name, system_creation: STRING;
+			system_creation: STRING;
 			error: BOOLEAN;
 			vsrc3: VSRC3;
 			arg_type: TYPE_A;
 			vd27: VD27;
+			feat_tbl: like feature_table;
 		do
-			feat_tbl := feature_table;
 			if creators /= Void then
+				feat_tbl := feature_table
 				from
 					creators.start
 				until
 					creators.after
 				loop
-					creation_name := creators.key_for_iteration;
-					creation_proc := feat_tbl.item (creation_name);
+						-- `creators.key_for_iteration' contains the creation_name
+					creation_proc := feat_tbl.item (creators.key_for_iteration);
+
 					inspect
 						creation_proc.argument_count
 					when 0 then
@@ -2364,39 +2344,38 @@ feature -- Supplier checking
 						error := not arg_type.is_deep_equal (Array_of_string);
 					else
 						error := True;
-					end;
+					end
+
 					if error then
 						!!vsrc3;
 						vsrc3.set_class (Current);
 						vsrc3.set_creation_feature (creation_proc);
 						Error_handler.insert_error (vsrc3);
 					end;
-					creators.forth;
-				end;
-			end;
+					creators.forth
+				end
+			end
+
 			system_creation := System.creation_name;
 			if 	system_creation /= Void
 				and then
-				(	creators = Void
-					or else
-					not creators.has (system_creation)
-				)
+				(creators = Void or else not creators.has (system_creation))
 			then
 				!!vd27;
 				vd27.set_creation_routine (system_creation);
 				vd27.set_root_class (Current);
 				Error_handler.insert_error (vd27);
-			end;
-			if (system_creation = Void)
-				and then (creators /= Void)
-			then
+			end
+
+			if (system_creation = Void) and then (creators /= Void) then
 				!!vd27;
 				vd27.set_creation_routine ("");
 				vd27.set_root_class (Current);
 				Error_handler.insert_error (vd27);
-			end;
-			Error_handler.checksum;
-		end;
+			end
+
+			Error_handler.checksum
+		end
 
 	Array_of_string: GEN_TYPE_A is
 			-- Type ARRAY [STRING]
@@ -2404,14 +2383,14 @@ feature -- Supplier checking
 			array_generics: ARRAY [TYPE_A];
 			string_type: CL_TYPE_A;
 		once
-			!!Result;
-			Result.set_base_class_id (System.array_id);
-			!!string_type;
-			string_type.set_base_class_id (System.string_id);
-			!!array_generics.make (1, 1);
-			array_generics.put (string_type, 1);
-			Result.set_generics (array_generics);
-		end;
+			!!Result
+			Result.set_base_class_id (System.array_id)
+			!!string_type
+			string_type.set_base_class_id (System.string_id)
+			!!array_generics.make (1, 1)
+			array_generics.put (string_type, 1)
+			Result.set_generics (array_generics)
+		end
 
 feature -- Order relation for inheritance and topological sort
 
@@ -2427,11 +2406,8 @@ feature -- Order relation for inheritance and topological sort
 			dep_class := System.current_class
 			must_add  := (dep_class /= Void) and then (dep_class /= Current)
 			must_add  := must_add and then (Current /= other)
-			must_add  := must_add and then 
-							not name_in_upper.is_equal ("NONE")
-			must_add  := must_add and then 
-							not other.name_in_upper.is_equal ("ANY")
-
+			must_add  := must_add and then not name_in_upper.is_equal ("NONE")
+			must_add  := must_add and then not other.name_in_upper.is_equal ("ANY")
 
 			if must_add then
 				add_dep_class (dep_class)
@@ -2637,12 +2613,12 @@ feature -- Actual class type
 				from
 					i := 1;
 					count := generics.count;
-					!!actual_generic.make (1, count);
+					!! actual_generic.make (1, count);
 					gen_type.set_generics (actual_generic);
 				until
 					i > count
 				loop
-					!!formal;
+					!! formal;
 					formal.set_position (i);
 					actual_generic.put (formal, i);
 					i := i + 1;
@@ -2725,7 +2701,6 @@ end;
 		local
 			filter: GEN_TYPE_I;
 			new_class_type: CLASS_TYPE;
-			base_c: CLASS_C;
 			melt_exp: MELT_EXP;
 		do
 			if not derivations.has_derivation (id, data) then
@@ -2737,68 +2712,68 @@ debug ("GENERICITY")
 	io.error.putstring (name);
 	data.dump (io.error);
 end;
-			if not types.has_type (data) then
+				if not types.has_type (data) then
 					-- Found a new type for the class
 debug ("GENERICITY")
 	io.error.putstring ("new type%N");
 end;
-				new_class_type := new_type (data);
-					-- If class is TO_SPECIAL or else SPECIAL
-					-- then freeze system.
-				if is_special then
-					if melt_only and then not Compilation_modes.is_precompiling then
-						!!melt_exp;
-						melt_exp.set_class (Current);
-						melt_exp.set_generic_type (data);
-						Error_handler.insert_error (melt_exp);
-						Error_handler.raise_error;
-					else
+					new_class_type := new_type (data);
+						-- If class is TO_SPECIAL or else SPECIAL
+						-- then freeze system.
+					if is_special then
+						if melt_only and then not Compilation_modes.is_precompiling then
+							!!melt_exp;
+							melt_exp.set_class (Current);
+							melt_exp.set_generic_type (data);
+							Error_handler.insert_error (melt_exp);
+							Error_handler.raise_error;
+						else
+							System.set_freeze (True);
+						end;
+					end;
+
+						-- If the $ operator is used in the class,
+						-- an encapsulation of the feature must be generated
+
+					if System.address_table.class_has_dollar_operator (id) then
 						System.set_freeze (True);
+					end
+
+						-- Mark the class `changed4' because there is a new
+						-- type
+					changed4 := True;
+					pass4_controler.insert_new_class (Current);
+						-- Insertion of the new class type
+					types.put_front (new_class_type);
+					System.insert_class_type (new_class_type);
+					if already_compiled then
+							-- Melt all the code written in the associated class of
+							-- the new class type
+						melt_all;
 					end;
 				end;
 
-					-- If the $ operator is used in the class,
-					-- an encapsulation of the feature must be generated
-
-				if System.address_table.class_has_dollar_operator (id) then
-					System.set_freeze (True);
-				end
-
-					-- Mark the class `changed4' because there is a new
-					-- type
-				changed4 := True;
-				pass4_controler.insert_new_class (Current);
-					-- Insertion of the new class type
-				types.put_front (new_class_type);
-				System.insert_class_type (new_class_type);
-				if already_compiled then
-						-- Melt all the code written in the associated class of
-						-- the new class type
-					melt_all;
-				end;
-			end;
 					-- Propagation along the filters since we have a new type
-				-- Clean the filters. Some of the filters can be obsolete
-				-- if the base class has been remove from the system
-			filters.clean;
-			from
-				filters.start
-			until
-				filters.after
-			loop
-					-- Instantiation of the filter with `data'
-				filter := filters.item.instantiation_in (data);
-				base_c := filter.base_class;
+					-- Clean the filters. Some of the filters can be obsolete
+					-- if the base class has been remove from the system
+				filters.clean;
+				from
+					filters.start
+				until
+					filters.after
+				loop
+						-- Instantiation of the filter with `data'
+					filter := filters.item.instantiation_in (data);
 debug ("GENERICITY")
 	io.error.putstring ("Propagation of ");
 	filter.dump (io.error);
 	io.error.putstring ("propagation to ");
-	io.error.putstring (base_c.name);
+	io.error.putstring (filter.base_class.name);
 	io.error.new_line;
 end;
-				base_c.update_types (filter);
-				filters.forth
-			end;
+					filter.base_class.update_types (filter);
+					filters.forth
+				end;
 			end;
 		end;
 
@@ -2879,8 +2854,7 @@ feature -- default_rescue routine
 				loop
 					item := ftab.item_for_iteration
 
-					if equal (item.rout_id_set.first,
-							  System.default_rescue_id) then
+					if equal (item.rout_id_set.first, System.default_rescue_id) then
 						Result := item
 					end
 
@@ -2901,8 +2875,8 @@ feature -- Dispose routine
 			item: FEATURE_I
 		do
 			if (System.memory_class /= Void) then
-				ftab := feature_table;
 				from
+					ftab := feature_table;
 					ftab.start
 				until
 					ftab.after or (Result /= Void)
@@ -2945,7 +2919,6 @@ feature -- Dead code removal
 		local
 			tbl: FEATURE_TABLE;
 			a_feature: FEATURE_I;
-			pos: INTEGER;
 		do
 			from
 				tbl := feature_table;
@@ -2954,11 +2927,9 @@ feature -- Dead code removal
 				tbl.after
 			loop
 				a_feature := tbl.item_for_iteration;
-				pos := tbl.pos_for_iter
 				if a_feature.written_class = Current then
 					remover.record (a_feature, Current)
 				end;
-				tbl.go (pos);
 				tbl.forth;
 			end;
 		end;
@@ -3026,21 +2997,14 @@ feature -- Cecil
 feature -- Conformance table generation
 
 	process_polymorphism is
-		local
-			ftab: FEATURE_TABLE;
-			stab: SELECT_TABLE;
 		do
-			ftab := feature_table;
-			stab := ftab.origin_table;
-			stab.add_units (id);
+			feature_table.origin_table.add_units (id);
 		end;
 
 	make_conformance_table (t: CONFORM_TABLE) is
 			-- Make final conformance table
 		require
 			good_argument: t /= Void;
-		local
-			desc: like descendants
 		do
 				-- Mark conformance table `t' first.
 			from
@@ -3052,14 +3016,13 @@ feature -- Conformance table generation
 				types.forth
 			end;
 				-- Recursion on descendants
-			desc := descendants;
 			from
-				desc.start
+				descendants.start
 			until
-				desc.after
+				descendants.after
 			loop
-				desc.item.make_conformance_table (t);
-				desc.forth
+				descendants.item.make_conformance_table (t);
+				descendants.forth
 			end;
 		end;
 
@@ -3100,13 +3063,6 @@ feature -- Process the creation feature
 			else
 				creation_feature := Void
 			end;
-		end;
-
-feature {NONE} -- External features
-
-	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
-		external
-			"C"
 		end;
 
 feature -- Replication
@@ -3280,28 +3236,31 @@ end;
 				-- and its corresponding read_info
 		local
 			index: EXTEND_TABLE [READ_INFO, FEATURE_AS_ID];
-			feature_as: FEATURE_AS_B;
 			read_info: READ_INFO;
 			rep_body_table: EXTEND_TABLE [READ_INFO, BODY_ID];
 		do
-			-- Clear index
+				-- Clear index
 			Tmp_rep_server.clear_index;
-			-- Put formulates read info index
+
+				-- Put formulates read info index
 			Tmp_rep_server.put (rep_table);
 			index := Tmp_rep_server.index;
 			-- Clear index for next class
+
 			from
 				!!rep_body_table.make (rep_table.count);
 				rep_table.start
 			until
 				rep_table.after
 			loop
-				feature_as := rep_table.item_for_iteration;
-				read_info := index.item (feature_as.id);
-				-- Place the read_info for the feature's body id
+					-- `rep_table.item_for_iteration' contains a FEATURE_AS_B
+				read_info := index.item (rep_table.item_for_iteration.id);
+
+					-- Place the read_info for the feature's body id
 				rep_body_table.force (read_info, rep_table.key_for_iteration);
 				rep_table.forth;
 			end;
+
 			-- Update read info in rep_feat servers
 			Tmp_rep_feat_server.merge (rep_body_table);
 			Tmp_rep_server.clear_index;
@@ -3337,10 +3296,10 @@ feature -- Precompilation
 			loop
 				if types.item.is_modifiable then
 					Result := Result + 1
-				end;
+				end
 				types.forth
 			end
-		end;
+		end
 
 feature -- DLE
 
@@ -3374,8 +3333,8 @@ feature -- DLE
 			loop
 				Result := types.item.is_dynamic;
 				types.forth
-			end;
-		end;
+			end
+		end
 
 	dle_generate_final_code: BOOLEAN is
 			-- Generation of C files for each type associated to the current
@@ -3383,8 +3342,6 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic;
 			final_mode: System.in_final_mode
-		local
-			temp_index: INTEGER
 		do
 			Inst_context.set_cluster (cluster);
 			from
@@ -3392,11 +3349,9 @@ feature -- DLE
 			until
 				types.after
 			loop
-				temp_index := types.index;
 				if types.item.dle_generate_final_code then
-					Result := true
+					Result := True
 				end;
-				types.go_i_th (temp_index);
 				types.forth
 			end
 		end;
@@ -3436,8 +3391,7 @@ feature -- DLE
 						if parent_class = dynamic_class then
 							Result := true
 						else
-							Result :=
-								parent_class.syntactical_inherits_from_dynamic
+							Result := parent_class.syntactical_inherits_from_dynamic
 						end
 					end;
 					parents.forth
@@ -3572,8 +3526,9 @@ feature -- Merging
 			is_used_as_separate :=
 				is_used_as_separate or other.is_used_as_separate;
 			filters.append (other.filters);
-			classes := other.clients;
+
 			from 
+				classes := other.clients
 				classes.start 
 			until 
 				classes.after 
@@ -3584,8 +3539,9 @@ feature -- Merging
 				end;
 				classes.forth
 			end;
-			classes := other.descendants;
+
 			from 
+				classes := other.descendants
 				classes.start 
 			until 
 				classes.after 
@@ -3595,12 +3551,20 @@ feature -- Merging
 					descendants.extend (class_c)
 				end;
 				classes.forth
-			end;
+			end
+
 			types.append (other.types)
 				--| `syntactical_clients' is used when removing classes.
 				--| Since a precompiled class cannot be removed, it
 				--| doesn't matter if `syntactical_clients' is out-of-date.
 		end
+
+feature {NONE} -- External features
+
+	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
+		external
+			"C"
+		end;
 
 invariant
 

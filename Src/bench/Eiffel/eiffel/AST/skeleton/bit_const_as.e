@@ -69,8 +69,7 @@ feature
 	value_i: BIT_VALUE_I is
 			-- Interface constant value
 		do
-			create Result
-			Result.set_bit_value (value)
+			create Result.make (value)
 		end
 
 feature -- Output

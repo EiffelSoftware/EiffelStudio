@@ -12,6 +12,23 @@ inherit
 			set_real_type
 		end
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (v: STRING) is
+			-- Create new instance from string representation `v'.
+		require
+			v_not_void: v /= Void
+		do
+			bit_value := v
+			bit_count := v.count
+		ensure
+			bit_value_set: bit_value = v
+			bit_coutn_set: bit_count = v.count
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -43,20 +60,10 @@ feature -- Status Report
 			check
 				class_type_not_void: class_type /= Void
 			end
-			Result := class_type /= Void and then bit_value.count <= class_type.bit_count 
+			Result := class_type /= Void and then bit_count <= class_type.bit_count 
 		end
 
 feature -- Settings
-
-	set_bit_value (v: STRING) is
-			-- Assign `v' to `bit_value'.
-		require
-			v_not_void: v /= Void
-		do
-			bit_value := v
-		ensure
-			bit_value_set: bit_value = v
-		end
 
 	set_real_type (t: TYPE_A) is
 			-- Set real number of bits.

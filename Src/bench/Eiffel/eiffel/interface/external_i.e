@@ -7,7 +7,8 @@ inherit
 	PROCEDURE_I
 		rename
 			transfer_to as procedure_transfer_to,
-			equiv as procedure_equiv
+			equiv as procedure_equiv,
+			update_api as old_update_api
 		redefine
 			melt, execution_unit, generate,
 			access, is_external, new_rout_unit, valid_body_id,
@@ -19,9 +20,9 @@ inherit
 			transfer_to, equiv,
 			melt, execution_unit, generate,
 			access, is_external, new_rout_unit, valid_body_id,
-			can_be_inlined
+			can_be_inlined, update_api
 		select
-			transfer_to, equiv
+			transfer_to, equiv, update_api
 		end;
 	
 feature -- Attributes for externals
@@ -324,5 +325,14 @@ feature
 feature -- Inlining
 
 	can_be_inlined: BOOLEAN is False
+
+feature {NONE} -- Api
+
+    update_api (f: E_ROUTINE) is
+            -- Update the attributes of api feature `f'.
+        do	
+			old_update_api (f);
+			f.set_external (True)
+		end;
 
 end

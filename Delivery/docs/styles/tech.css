@@ -2,14 +2,19 @@
 BODY {
   background: linen;
   font-family: arial, helvetica;
-  font-size: small
+  font-size: small;
   margin: 5%;
   }
 
+P,UL,OL,TABLE {
+    font-family: Arial, Helvetica;
+    font-size: x-small;
+    }
+
 PRE {
-  font-size: medium;
-  font-family: arial, helvetica;
-  }
+    font-family: Courrier;
+    font-size: x-small;
+    }
 
 H5 {
   font-size: x-large;
@@ -20,7 +25,7 @@ H5 {
 
 H1 {
   font-family: arial, helvetica;
-  font-size: large;
+  font-size: x-large;
   font-weight: bold;
   color: "AA0000";
   background-repeat: repeat-x, repeat-y;
@@ -28,24 +33,12 @@ H1 {
 
 H2 {
   font-family: arial, helvetica;
-  font-size: medium;
+  font-size: large;
   font-weight: bold;
   color: navy;
   }
 
 H3 {
   font-family: arial, helvetica;
-  }
-
-.series {
-  font-family: Arial, Helvetica;
-  color: white;
-  background: navy;
-
-  }
-
-.subsection {
-  font-family: Arial, Helvetica;
-  color: white;
-  background: red;
+  font-size: medium;
   }

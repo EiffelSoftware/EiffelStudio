@@ -17,21 +17,21 @@ inherit
 
 	FONTABLE_M;
 
-	 MEL_CASCADE_BUTTON
-		  rename
-				make as mel_cascade_make,
-				foreground_color as mel_foreground_color,
-				set_foreground_color as mel_set_foreground_color,
-				background_color as mel_background_color,
-				background_pixmap as mel_background_pixmap,
-				set_background_color as mel_set_background_color,
-				set_background_pixmap as mel_set_background_pixmap,
-				destroy as mel_destroy,
-				screen as mel_screen,
+	MEL_CASCADE_BUTTON
+		rename
+			make as mel_cascade_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
 			is_shown as shown
-		  select
-				mel_cascade_make
-		  end
+		select
+			mel_cascade_make
+		end
 
 
 creation
@@ -40,7 +40,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_menu_b: MENU_B; man: BOOLEAN) is
+	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif menu button.
 		do
 			widget_index := widget_manager.last_inserted_position;

@@ -4,7 +4,7 @@ inherit
 
 	EXPR_B
 		redefine
-			analyze, print_register, make_byte_code
+			print_register, make_byte_code
 		end;
 	SHARED_C_LEVEL;
 	SHARED_TABLE;
@@ -18,22 +18,30 @@ feature -- Attributes
 	rout_id: ROUTINE_ID;
 			-- Routine id of the feature
 
+	feature_type: TYPE_C
+			-- Address type
+
+	class_id: CLASS_ID
+			-- Id of class where addressed feature is written.
+
 feature  -- Initialization
 
-	init (class_id: CLASS_ID; f: FEATURE_I) is
+	init (cl_id: CLASS_ID; f: FEATURE_I) is
 			-- Initialization
 		require
 			good_argument: f /= Void;
 		do
-			feature_id := f.feature_id;
-			rout_id := f.rout_id_set.first;
+			feature_id := f.feature_id
+			rout_id := f.rout_id_set.first
+			feature_type := f.type.actual_type.type_i.c_type
+			class_id := f.written_in
 
-			record_feature (class_id, feature_id);
+			record_feature (cl_id, feature_id);
 		end; -- init
 
 feature -- Address table
 
-	record_feature (class_id: CLASS_ID; f_id: INTEGER) is
+	record_feature (cl_id: CLASS_ID; f_id: INTEGER) is
 			-- Record the feature in the address table if it is not there.
 			-- A refreezing will occur.
 		local
@@ -41,30 +49,23 @@ feature -- Address table
 		do
 			address_table := System.address_table
 
-			if not address_table.has (class_id, f_id) then
+			if not address_table.has (cl_id, f_id) then
 					-- Record the feature
-				address_table.record (class_id, f_id)
+				address_table.record (cl_id, f_id)
 			end
 		end
 
 feature
 
 	type: POINTER_I is
-			-- Address type
+			-- Expression type of $ operator.
 		once
-			!!Result;
-		end;
+			!! Result
+		end
 
 	used (r: REGISTRABLE): BOOLEAN is
 			-- False
 		do
-		end;
-
-	analyze is
-			-- Analyze operator
-		do
-			context.add_dt_current;
-			context.mark_current_used;
 		end;
 
 	print_register is
@@ -74,6 +75,8 @@ feature
 			internal_name, table_name: STRING;
 			rout_table: ROUT_TABLE;
 			buf: GENERATION_BUFFER
+			array_index: INTEGER
+			class_type: CL_TYPE_I
 		do
 			buf := buffer
 			if context.workbench_mode then
@@ -83,24 +86,42 @@ feature
 				buf.putint (feature_id);
 				buf.putchar (')');
 			else
-				entry := Eiffel_table.poly_table (rout_id);
-				if entry = Void then
+				class_type := context.current_type
+				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, True)
+				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
 					buf.putstring ("(char *(*)()) 0");
-				else
+				elseif array_index >= 0 then
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id);
 
 					table_name := "f";
-					table_name.append (context.current_type.
-						associated_class_type.id.address_table_name (feature_id))
+					table_name.append (class_type.associated_class_type.
+								id.address_table_name (feature_id))
 
 					buf.putstring ("(EIF_POINTER) ");
 					buf.putstring (table_name);
 
 						-- Remember extern declarations
-					Extern_declarations.add_routine (type, table_name);
+					Extern_declarations.add_routine (feature_type, table_name);
+				else
+					rout_table ?= Eiffel_table.poly_table (rout_id)
+					if rout_table.is_implemented (class_type.type_id) then
+						internal_name := clone (rout_table.feature_name (class_type.type_id))
+						buf.putstring ("(EIF_POINTER) ")
+						buf.putstring (internal_name)
+
+						if equal (class_id, type.base_id) then
+								-- Current addressed feature has not been generated in
+								-- current generated class, so we need to 
+								-- remember extern declarations
+							Extern_declarations.add_routine (feature_type, internal_name);
+						end
+					else
+							-- Call to a deferred feature without implementation
+						buf.putstring ("(char *(*)()) 0");
+					end
 				end;
 			end;
 		end;
@@ -116,4 +137,5 @@ feature -- Byte code generation
 				-- Use RTWPP
 			ba.append_short_integer (0)
 		end;
+
 end

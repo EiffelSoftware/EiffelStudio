@@ -23,7 +23,7 @@ inherit
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
 			x_position, y_position, disable_sensitive, enable_sensitive,
-			update_for_pick_and_drop, is_dockable_source
+			update_for_pick_and_drop, is_dockable_source, show, hide, is_show_requested
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -186,6 +186,12 @@ feature -- Access
 				Result := child_cell.x
 			end
 		end
+		
+	is_show_requested: BOOLEAN is
+			-- Is `Current' displayed in its parent?
+		do
+			Result := flag_set (bar.style, feature {WEL_WINDOW_CONSTANTS}.Ws_visible)
+		end
 
 feature -- Status report
 
@@ -210,6 +216,31 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	show is
+			-- Show `Current'.
+			-- Need to notify the parent.
+		local
+			p_imp: like parent_imp
+		do
+			show_window (bar.item, feature {WEL_WINDOW_CONSTANTS}.Sw_show)
+			p_imp := parent_imp
+			if p_imp /= Void then
+				p_imp.notify_change (Nc_minsize, Current)
+			end
+		end
+
+	hide is
+			-- Hide `Current'.
+		local
+			p_imp: like parent_imp
+		do
+			show_window (bar.item, feature {WEL_WINDOW_CONSTANTS}.Sw_hide)
+			p_imp := parent_imp
+			if p_imp /= Void then
+				p_imp.notify_change (Nc_minsize, Current)
+			end
+		end
 
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
@@ -324,6 +355,12 @@ feature -- Element change
 			if button.has_pixmap then
 				button.set_pixmap_in_parent
 				but.set_bitmap_index (button.image_index)
+			elseif separator_button = Void then	
+					-- Now special handling to ensure that the toolbar buttons are displayed
+					-- at the minimum size of their `text' by addition of an image list with
+					-- small pixmaps.
+				button.set_pixmap_in_parent
+				but.set_bitmap_index (-1)
 			end
 			
 				-- Also take care of toggled state if a toggle button.
@@ -679,6 +716,25 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 		ensure
 			imagelists_not_void: default_imagelist /= Void and hot_imagelist /= Void
 		end
+		
+	has_false_image_list: BOOLEAN
+		-- Is an image list associated with `Current' due to an item with a pixmap?
+		
+	enable_false_image_list is
+			-- Ensure `has_false_image_list' is `True'.
+		do
+			has_false_image_list := True
+		ensure
+			enabled: has_false_image_list = True
+		end
+		
+	disable_false_image_list is
+			-- Ensure `has_false_image_list' is `False'.
+		do
+			has_false_image_list := False
+		ensure
+			disabled: has_false_image_list = False
+		end
 
 	remove_image_list is
 			-- Destroy the image list and remove it
@@ -686,9 +742,6 @@ feature {EV_TOOL_BAR_BUTTON_IMP} -- Pixmap handling
 		require
 			imagelists_not_void: default_imagelist /= Void and hot_imagelist /= Void
 		do
-				-- Destroy the image list.
-			destroy_imagelist (default_imagelist)
-			destroy_imagelist (hot_imagelist)
 			default_imagelist := Void
 			hot_imagelist := Void
 

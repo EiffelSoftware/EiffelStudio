@@ -10,7 +10,8 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			make as structure_make
+			make as structure_make,
+			class_name as exception_class_name
 		end
 
 creation
@@ -52,8 +53,6 @@ feature -- Access
 
 	class_name: STRING is
 			-- Class name
-		require
-			exists: exists
 		do
 			!! Result.make (0)
 			Result.from_c (cwel_wnd_class_get_class_name (item))
@@ -65,7 +64,6 @@ feature -- Access
 	menu_name: STRING is
 			-- Menu name to load from the resource
 		require
-			exists: exists
 			menu_name_set: menu_name_set
 		do
 			!! Result.make (0)
@@ -76,8 +74,6 @@ feature -- Access
 
 	style: INTEGER is
 			-- Class style
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_style (item)
 		end
@@ -85,7 +81,6 @@ feature -- Access
 	window_procedure: POINTER is
 			-- Window procedure to call
 		require
-			exists: exists
 			window_procedure_set: window_procedure_set
 		do
 			Result := cwel_wnd_class_get_wnd_proc (item)
@@ -95,8 +90,6 @@ feature -- Access
 
 	class_extra: INTEGER is
 			-- Class extra information size
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_cls_extra (item)
 		ensure
@@ -105,8 +98,6 @@ feature -- Access
 
 	window_extra: INTEGER is
 			-- Window extra information size
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_wnd_extra (item)
 		ensure
@@ -116,7 +107,6 @@ feature -- Access
 	instance: WEL_INSTANCE is
 			-- Instance of the class.
 		require
-			exists: exists
 			instance_set: instance_set
 		do
 			!! Result.make (cwel_wnd_class_get_instance (item))
@@ -127,7 +117,6 @@ feature -- Access
 	icon: WEL_ICON is
 			-- Icon to draw when the window is minimized.
 		require
-			exists: exists
 			icon_set: icon_set
 		do
 			!! Result.make_by_pointer (
@@ -140,7 +129,6 @@ feature -- Access
 	cursor: WEL_CURSOR is
 			-- Cursor to use when the mouse is into the window.
 		require
-			exists: exists
 			cursor_set: cursor_set
 		do
 			!! Result.make_by_pointer (
@@ -153,7 +141,6 @@ feature -- Access
 	background: WEL_BRUSH is
 			-- Background color of the window
 		require
-			exists: exists
 			background_set: background_set
 		do
 			!! Result.make_by_pointer (
@@ -167,8 +154,6 @@ feature -- Element change
 
 	set_style (a_style: INTEGER) is
 			-- Set `style' with `a_style'.
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_style (item, a_style)
 		ensure
@@ -178,7 +163,6 @@ feature -- Element change
 	set_window_extra (a_window_extra: INTEGER) is
 			-- Set `window_extra' with `a_window_extra'.
 		require
-			exists: exists
 			positive_extra: a_window_extra >= 0
 		do
 			cwel_wnd_class_set_wnd_extra (item, a_window_extra)
@@ -189,7 +173,6 @@ feature -- Element change
 	set_instance (an_instance: WEL_INSTANCE) is
 			-- Set `instance' with `an_instance'.
 		require
-			exists: exists
 			an_instance_not_void: an_instance /= Void
 			an_instance_exists: an_instance.exists
 		do
@@ -201,7 +184,6 @@ feature -- Element change
 	set_class_extra (a_class_extra: INTEGER) is
 			-- Set `class_extra' with `a_class_extra'.
 		require
-			exists: exists
 			positive_extra: a_class_extra >= 0
 		do
 			cwel_wnd_class_set_cls_extra (item, a_class_extra)
@@ -211,8 +193,6 @@ feature -- Element change
 
 	set_window_procedure (a_window_procedure: POINTER) is
 			-- Set `window_procedure' with `a_window_procedure'.
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_wnd_proc (item,
 				a_window_procedure)
@@ -224,7 +204,6 @@ feature -- Element change
 	set_icon (an_icon: WEL_ICON) is
 			-- Set `icon' with `an_icon'.
 		require
-			exists: exists
 			an_icon_not_void: an_icon /= Void
 			an_icon_exists: an_icon.exists
 		do
@@ -240,7 +219,6 @@ feature -- Element change
 	set_cursor (a_cursor: WEL_CURSOR) is
 			-- Set `cursor' with `a_cursor'.
 		require
-			exists: exists
 			a_cursor_not_void: a_cursor /= Void
 			a_cursor_exists: a_cursor.exists
 		do
@@ -255,7 +233,6 @@ feature -- Element change
 	set_background (a_background: WEL_BRUSH) is
 			-- Set `background' with `a_background'.
 		require
-			exists: exists
 			a_background_not_void: a_background /= Void
 			a_background_exists: a_background.exists
 		do
@@ -267,7 +244,6 @@ feature -- Element change
 	set_class_name (a_class_name: STRING) is
 			-- Set `class_name' with `a_class_name'.
 		require
-			exists: exists
 			a_class_name_valid: a_class_name /= Void
 			a_class_name_not_empty: not a_class_name.empty
 		do
@@ -285,7 +261,6 @@ feature -- Element change
 	set_menu_name (a_menu_name: STRING) is
 			-- Set `menu_name' with `a_menu_name'.
 		require
-			exists: exists
 			a_menu_name_valid: a_menu_name /= Void
 		do
 			!! str_menu_name.make (a_menu_name)
@@ -301,8 +276,6 @@ feature -- Element change
 
 	unset_window_procedure is
 			-- Unset the window procedure (becomes null).
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_wnd_proc (item, default_pointer)
 		ensure
@@ -311,8 +284,6 @@ feature -- Element change
 
 	unset_icon is
 			-- Unset the icon (becomes null).
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_icon (item, default_pointer)
 		ensure
@@ -321,8 +292,6 @@ feature -- Element change
 
 	unset_cursor is
 			-- Unset the cursor (becomes null).
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_cursor (item, default_pointer)
 		ensure
@@ -331,8 +300,6 @@ feature -- Element change
 
 	unset_background is
 			-- Unset the background (becomes null).
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_background (item, default_pointer)
 		ensure
@@ -341,8 +308,6 @@ feature -- Element change
 
 	unset_menu_name is
 			-- Unset the menu (becomes null).
-		require
-			exists: exists
 		do
 			cwel_wnd_class_set_menu_name (item, default_pointer)
 		ensure
@@ -353,8 +318,6 @@ feature -- Status report
 
 	registered: BOOLEAN is
 			-- Is the class registered?
-		require
-			exists: exists
 		local
 			a: ANY
 			p: POINTER
@@ -373,8 +336,6 @@ feature -- Status report
 
 	icon_set: BOOLEAN is
 			-- Is the icon set?
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_icon (item) /=
 				default_pointer
@@ -382,8 +343,6 @@ feature -- Status report
 
 	cursor_set: BOOLEAN is
 			-- Is the cursor set?
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_cursor (item) /=
 				default_pointer
@@ -391,8 +350,6 @@ feature -- Status report
 
 	background_set: BOOLEAN is
 			-- Is the background set?
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_background (item) /=
 				default_pointer
@@ -400,8 +357,6 @@ feature -- Status report
 
 	menu_name_set: BOOLEAN is
 			-- Is the menu name set?
-		require
-			exists: exists
 		do
 			Result := cwel_wnd_class_get_menu_name (item) /=
 				default_pointer
@@ -409,8 +364,6 @@ feature -- Status report
 
 	window_procedure_set: BOOLEAN is
 			-- Is the window procedure set?
-		require
-			exists
 		do
 			Result := cwel_wnd_class_get_wnd_proc (item) /=
 				default_pointer
@@ -418,8 +371,6 @@ feature -- Status report
 
 	instance_set: BOOLEAN is
 			-- Is the instance set?
-		require
-			exists
 		do
 			Result := cwel_wnd_class_get_instance (item) /=
 				default_pointer
@@ -430,7 +381,6 @@ feature -- Basic operations
 	register is
 			-- Register the window class.
 		require
-			exists: exists
 			not_registered: not registered
 		do
 			cwin_register_class (item)
@@ -442,7 +392,6 @@ feature -- Basic operations
 			-- Unregister the window class.
 			-- All windows using this class must be destroyed.
 		require
-			exists: exists
 			registered: registered
 		local
 			a: ANY

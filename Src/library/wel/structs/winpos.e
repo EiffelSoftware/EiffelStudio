@@ -29,8 +29,6 @@ feature -- Access
 
 	window: WEL_WINDOW is
 			-- Identifies the window
-		require
-			exists: exists
 		do
 			Result := windows.item (cwel_windowpos_get_hwnd (item))
 		end
@@ -39,32 +37,24 @@ feature -- Access
 			-- Position of the window in Z order (front-to-back
 			-- position). This window can be the window behind
 			-- which this window is placed.
-		require
-			exists: exists
 		do
 			Result := windows.item (cwel_windowpos_get_hwndinsertafter (item))
 		end
 
 	x: INTEGER is
 			-- Position of the left edge of the window
-		require
-			exists: exists
 		do
 			Result := cwel_windowpos_get_x (item)
 		end
 
 	y: INTEGER is
 			-- Position of the top edge of the window
-		require
-			exists: exists
 		do
 			Result := cwel_windowpos_get_y (item)
 		end
 
 	width: INTEGER is
 			-- Window width
-		require
-			exists: exists
 		do
 			Result := cwel_windowpos_get_width (item)
 		ensure
@@ -73,8 +63,6 @@ feature -- Access
 
 	height: INTEGER is
 			-- Window height
-		require
-			exists: exists
 		do
 			Result := cwel_windowpos_get_height (item)
 		ensure
@@ -84,8 +72,6 @@ feature -- Access
 	flags: INTEGER is
 			-- Window position flags
 			-- See class WEL_SWP_CONSTANTS for values
-		require
-			exists: exists
 		do
 			Result := cwel_windowpos_get_flags (item)
 		ensure
@@ -96,8 +82,6 @@ feature -- Element change
 
 	set_x (a_x: INTEGER) is
 			-- Set `x' with `a_x'.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_x (item, a_x)
 		ensure
@@ -106,8 +90,6 @@ feature -- Element change
 
 	set_y (a_y: INTEGER) is
 			-- Set `y' with `a_y'.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_y (item, a_y)
 		ensure
@@ -116,8 +98,6 @@ feature -- Element change
 
 	set_width (a_width: INTEGER) is
 			-- Set `width' with `a_width'.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_width (item, a_width)
 		ensure
@@ -126,8 +106,6 @@ feature -- Element change
 
 	set_height (a_height: INTEGER) is
 			-- Set `height' with `a_height'.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_height (item, a_height)
 		ensure
@@ -137,8 +115,6 @@ feature -- Element change
 	set_flags (a_flags: INTEGER) is
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_SWP_CONSTANTS for `a_flags' values.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_flags (item, a_flags)
 		ensure
@@ -148,7 +124,6 @@ feature -- Element change
 	set_window (a_window: WEL_WINDOW) is
 			-- Set `window' with `a_window'.
 		require
-			exists: exists
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
 		do
@@ -160,7 +135,6 @@ feature -- Element change
 	set_window_insert_after (a_window: WEL_WINDOW) is
 			-- Set `window_insert_after' with `a_window'.
 		require
-			exists: exists
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
 		do
@@ -171,8 +145,6 @@ feature -- Element change
 
 	set_top is
 			-- Place the window at the top of the Z order.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_hwndinsertafter (item,
 				cwel_integer_to_pointer (Hwnd_top))
@@ -183,8 +155,6 @@ feature -- Element change
 			-- If `window' identifies a topmost window, the window
 			-- loses its topmost status and is placed at the bottom
 			-- of all other windows.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_hwndinsertafter (item,
 				cwel_integer_to_pointer (Hwnd_bottom))
@@ -194,8 +164,6 @@ feature -- Element change
 			-- Places the window above all non-topmost windows.
 			-- The window maintains its topmost position even when
 			-- it is deactivated.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_hwndinsertafter (item,
 				cwel_integer_to_pointer (Hwnd_topmost))
@@ -205,8 +173,6 @@ feature -- Element change
 			-- Places the window above all non-topmost windows
 			-- (that is, behind all topmost windows). No effect
 			-- if the window is already a non-topmost window.
-		require
-			exists: exists
 		do
 			cwel_windowpos_set_hwndinsertafter (item,
 				cwel_integer_to_pointer (Hwnd_notopmost))

@@ -44,9 +44,7 @@ feature -- Basic operations
 			-- `font_type' values.
 		require
 			elf_not_void: elf /= Void
-			elf_exists: elf.exists
 			tm_not_void: tm /= Void
-			tm_exists: tm.exists
 		deferred
 		end
 

@@ -10,6 +10,7 @@ using System.Reflection;
 
 namespace ISE.Runtime {
 
+[System.Runtime.InteropServices.ComVisibleAttribute (false)]
 public interface EIFFEL_TYPE_INFO {
 /*
 feature -- Assertion checking

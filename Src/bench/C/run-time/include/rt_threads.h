@@ -585,12 +585,25 @@ extern int eif_is_synchronized (void);
 
 /* Let's define low level efficient mutexes */
 #ifdef EIF_WIN32
+/* Although we support Win98/Me/NT/2k/XP this API is not defined
+ * by default since it requires _WIN32_WINNT >= 0x403 which we
+ * don't know how to get. So this code is taken from WinBase.h.
+ * Therefore when it becomes available we will get a C warning and 
+ * it will be time to remove this declaration. */
+WINBASEAPI BOOL WINAPI InitializeCriticalSectionAndSpinCount(
+	IN OUT LPCRITICAL_SECTION lpCriticalSection,
+	IN DWORD dwSpinCount
+    );
 
 	/* We use Windows Critical section here */
 #define EIF_LW_MUTEX_TYPE	CRITICAL_SECTION
-#define EIF_LW_MUTEX_CREATE(m,msg) \
+#define EIF_LW_MUTEX_CREATE(m,sc,msg) \
     	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE)); \
-		InitializeCriticalSection(m)
+		if (sc < 0) { \
+			InitializeCriticalSection(m); \
+		} else { \
+			InitializeCriticalSectionAndSpinCount(m, sc); \
+		}
 #define EIF_LW_MUTEX_LOCK(m,msg) \
 		EnterCriticalSection(m)
 #define EIF_LW_MUTEX_UNLOCK(m,msg) \
@@ -602,7 +615,7 @@ extern int eif_is_synchronized (void);
 #elif defined(SOLARIS_THREADS)
 	/* We use Solaris lwp_mutex hrere */
 #define EIF_LW_MUTEX_TYPE	lwp_mutex_t
-#define EIF_LW_MUTEX_CREATE(m,msg) \
+#define EIF_LW_MUTEX_CREATE(m,sc,msg) \
     	m = (EIF_LW_MUTEX_TYPE *) eif_malloc (sizeof(EIF_LW_MUTEX_TYPE)); \
 		memset(m, 0, sizeof(EIF_LW_MUTEX_TYPE));
 #define EIF_LW_MUTEX_LOCK(m,msg) \
@@ -615,7 +628,7 @@ extern int eif_is_synchronized (void);
 #else
 	/* We use default mutex implementation here */
 #define EIF_LW_MUTEX_TYPE EIF_MUTEX_TYPE
-#define EIF_LW_MUTEX_CREATE(m,msg)		EIF_MUTEX_CREATE(m,msg)
+#define EIF_LW_MUTEX_CREATE(m,sc,msg)	EIF_MUTEX_CREATE(m,msg)
 #define EIF_LW_MUTEX_LOCK(m,msg)		EIF_MUTEX_LOCK(m,msg)
 #define EIF_LW_MUTEX_UNLOCK(m,msg)		EIF_MUTEX_UNLOCK(m,msg)
 #define EIF_LW_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY(m,msg)

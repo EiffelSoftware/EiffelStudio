@@ -156,17 +156,17 @@ rt_public void eif_thr_init_root(void)
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
 	EIF_TSD_CREATE(rt_global_key,"Couldn't create private global key for root thread");
 #ifdef ISE_GC
-	EIF_LW_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
-	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, "Couldn't create GC set mutex");
-	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
-	EIF_LW_MUTEX_CREATE(eif_free_list_mutex, "Couldn't create free list mutex");
-	EIF_LW_MUTEX_CREATE(eiffel_usage_mutex, "Couldn't create eiffel_usage mutex");
-	EIF_LW_MUTEX_CREATE(trigger_gc_mutex, "Couldn't create trigger gc mutex");
+	EIF_LW_MUTEX_CREATE(eif_gc_mutex, 0, "Couldn't create GC mutex");
+	EIF_LW_MUTEX_CREATE(eif_gc_set_mutex, 4000, "Couldn't create GC set mutex");
+	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, 4000, "Couldn't create GSZ mutex");
+	EIF_LW_MUTEX_CREATE(eif_free_list_mutex, 4000, "Couldn't create free list mutex");
+	EIF_LW_MUTEX_CREATE(eiffel_usage_mutex, 4000, "Couldn't create eiffel_usage mutex");
+	EIF_LW_MUTEX_CREATE(trigger_gc_mutex, 4000, "Couldn't create trigger gc mutex");
 #endif
-	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
-	EIF_LW_MUTEX_CREATE(eif_except_lock, "Couldn't create exception lock");
-	EIF_LW_MUTEX_CREATE(eif_memory_mutex, "Couldn't create memory mutex");
-	EIF_LW_MUTEX_CREATE(eif_trace_mutex, "Couldn't create tracemutex");
+	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, -1, "Cannot create mutex for thread launcher\n");
+	EIF_LW_MUTEX_CREATE(eif_except_lock, -1, "Couldn't create exception lock");
+	EIF_LW_MUTEX_CREATE(eif_memory_mutex, -1, "Couldn't create memory mutex");
+	EIF_LW_MUTEX_CREATE(eif_trace_mutex, -1, "Couldn't create tracemutex");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 #ifdef ISE_GC

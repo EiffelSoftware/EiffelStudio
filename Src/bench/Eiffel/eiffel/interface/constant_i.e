@@ -28,12 +28,24 @@ inherit
 		end
 
 	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
 
 	SHARED_GENERATION
+		export
+			{NONE} all
+		end
 
 	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
 
 	BYTE_CONST
+		export
+			{NONE} all
+		end
 
 create
 	make

@@ -10,12 +10,14 @@ class
 inherit
 	ECOM_STRUCTURE
 		redefine
-			is_equal
+			is_equal,	
+			out
 		end
 
 	ECOM_ROUTINES
 		undefine
-			is_equal
+			is_equal,
+			out
 		end
 
 creation
@@ -94,6 +96,12 @@ feature -- Conversion
 			non_void_representation: Result /= Void
 		end
 	
+	out: STRING is
+			-- String representation
+		do
+			Result := to_string
+		end
+
 feature {NONE} -- Externals
 
 	c_size_of_guid: INTEGER is

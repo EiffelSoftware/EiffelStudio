@@ -6,7 +6,8 @@ inherit
 
 	BYTE_CODE
 		redefine
-			compound, analyze, generate, finish_compound, has_loop
+			compound, analyze, generate, finish_compound,
+			has_loop, assigns_to
 		end;
 
 feature 
@@ -979,6 +980,13 @@ feature -- Array optimization
 			Result := (compound /= Void and then compound.has_loop)
 				or else
 					(rescue_clause /= Void and then rescue_clause.has_loop)
+		end
+
+	assigns_to (i: INTEGER): BOOLEAN is
+		do
+			Result := (compound /= Void and then compound.assigns_to (i))
+				or else
+					(rescue_clause /= Void and then rescue_clause.assigns_to (i))
 		end
 
 end

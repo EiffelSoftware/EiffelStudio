@@ -232,9 +232,7 @@ feature -- Element change
 			-- Always applicable: resize the array if `i' falls out of
 			-- currently defined bounds; preserve existing items.
 		do
-			if upper < lower then
-				resize (i, i);
-			elseif i < lower then
+			if i < lower then
 				auto_resize (i, upper);
 			elseif i > upper then
 				auto_resize (lower, i);

@@ -16,7 +16,7 @@
 		<P>Much of the information needed by CGI applications is made
 available via environment variables. Program using EiffelWeb can access this
 information through the class
-        <a class="eclass" href="../../../../../../../../libraries/web/reference/environment/cgi_environment.html">CGI_ENVIRONMENT</a>.<br>
+        <a class="eclass" href="/libraries/web/reference/environment/cgi_environment.html">CGI_ENVIRONMENT</a>.<br>
 <br>
 These variables are usually used for the following purposes:</p>
 
@@ -32,9 +32,9 @@ These variables are usually used for the following purposes:</p>
 
 		<P>The browser sends in the <i>In</i> a stream containing the data relative to the user
 entry and selection at the applications starts. EiffelWeb stores each data element and
-its associated name within a Hash-Table, the feature <A CLASS="efeature" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_interface.html#form_data.html#f_form_data">form_data</A> of class
-        <a class="eclass" href="../../../../../../../../libraries/web/reference/cgi_handling/cgi_interface.html">CGI_INTERFACE</a>. You can access their values from your code with the interface
-defined in class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/forms/cgi_form.html">CGI_FORMS</A>, which allows you to retrieve text entries, to know
+its associated name within a Hash-Table, the feature <A CLASS="efeature" HREF="/libraries/web/reference/cgi_handling/cgi_interface.html#form_data.html#f_form_data">form_data</A> of class
+        <a class="eclass" href="/libraries/web/reference/cgi_handling/cgi_interface.html">CGI_INTERFACE</a>. You can access their values from your code with the interface
+defined in class <A CLASS="eclass" HREF="/libraries/web/reference/forms/cgi_form.html">CGI_FORMS</A>, which allows you to retrieve text entries, to know
 whether a button was pressed or not, etc …</p>
 
 		<h3>Sending answers to the browser</h3>
@@ -42,14 +42,14 @@ whether a button was pressed or not, etc …</p>
 		<P>The response has to contain an HTTP header in order to be understood by the
 browser. Depending on the nature of the reply, an HTML page, a simple
 re-direction, an error notification … you will select different features and
-options of class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/html/class_header.html">CLASS_HEADER</A>. Your application
+options of class <A CLASS="eclass" HREF="/libraries/web/reference/html/class_header.html">CLASS_HEADER</A>. Your application
         must send at least a response
 header, indicating the status of the request if known. You may want to attach to
 it the text you wish to send back to the user. This text is usually written in
 HTML, so that it will display nicely on the user’s browser; you can use for this
-purpose the class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/html/html_path.html">HTML_PAGE</A>.
+purpose the class <A CLASS="eclass" HREF="/libraries/web/reference/html/html_path.html">HTML_PAGE</A>.
         You may then send the header followed by your text  using the
-features <A CLASS="efeature" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html#f_send_to_browser">send_to_browser</A> of classes <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A> and <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/html/html_path.html">HTML_PAGE</A>.</p>
+features <A CLASS="efeature" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html#f_send_to_browser">send_to_browser</A> of classes <A CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A> and <A CLASS="eclass" HREF="/libraries/web/reference/html/html_path.html">HTML_PAGE</A>.</p>
 
 		<P class="note"><b>Note</b>: You may not write into a file before you
         have sent the answer to the browser.</p>
@@ -57,15 +57,15 @@ features <A CLASS="efeature" HREF="../../../../../../../../libraries/web/referen
 		<h3>Dealing with Cookies</h3>
 
 		<P>You can access the cookies corresponding to a specific URL/domain thanks to the
-feature <a class="efeature" href="../../../../../../../../libraries/web/reference/cgi_handling/cgi_environment.html#f_cookies">
+feature <a class="efeature" href="/libraries/web/reference/cgi_handling/cgi_environment.html#f_cookies">
         cookies</a>, of class
-        <a class="eclass" href="../../../../../../../../libraries/web/reference/environment/cgi_environment.html">CGI_ENVIRONMENT</a>. It is a
+        <a class="eclass" href="/libraries/web/reference/environment/cgi_environment.html">CGI_ENVIRONMENT</a>. It is a
         hash-table, in which all
 the data with associated names as keys are stored.</p>
 
 		<P>To store a cookie on a machine, you can use the feature
-        <a class="efeature" href="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html#f_set_cookies">
-        set_cookies</a>, of class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A>.</p>
+        <a class="efeature" href="/libraries/web/reference/cgi_handling/cgi_response_header.html#f_set_cookies">
+        set_cookies</a>, of class <A CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A>.</p>
 
 		<h2>Advanced Topics</h2>
 
@@ -75,20 +75,20 @@ the data with associated names as keys are stored.</p>
         these steps to protect the page content:</p>
 
         <ol>
-          <li>Create an HTML page, for example by using class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/html/html_path.html">HTML_PAGE</A>.
+          <li>Create an HTML page, for example by using class <A CLASS="eclass" HREF="/libraries/web/reference/html/html_path.html">HTML_PAGE</A>.
           </li>
           <li>Store this page somewhere, with a random name.</li>
-          <li>Create an instance of class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A>
-          and choose the secure redirect option. Then call <A CLASS="efeature" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html#f_send_to_browser">send_to_browser</A>.</li>
+          <li>Create an instance of class <A CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A>
+          and choose the secure redirect option. Then call <A CLASS="efeature" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html#f_send_to_browser">send_to_browser</A>.</li>
         </ol>
 
 		<h3>Complex Headers</h3>
 
 		<P>The Eiffel-Web application has the possibility to send a selection of different
-HTTP headers. They can be found in class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A>. In particular, it
+HTTP headers. They can be found in class <A CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html">CGI_RESPONSE_HEADER</A>. In particular, it
 is advised to generate a status for each request, the value of the most common
-ones may be found in class <A CLASS="eclass" HREF="../../../../../../../../libraries/web/reference/cgi_handling/cgi_response_header.html">
-        CGI_</A><a href="../../../../../../../../librariesweb/reference/cgi_facilities/cgi_common_status_type.html">COMMON_STATUS_TYPE</a>.</p>
+ones may be found in class <A CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_response_header.html">
+        CGI_</A><a href="/librariesweb/reference/cgi_facilities/cgi_common_status_type.html">COMMON_STATUS_TYPE</a>.</p>
 
 		<h3>Debugging facilities</h3>
 
@@ -101,9 +101,9 @@ However this cannot be applied to an EiffelWeb application, since it has to be
 <br>
 Therefore, EiffelWeb provides its own facilities for debugging. To test your
 classes at run-time, all you need to do is to set the Boolean feature
-        <a class="efeature" href="../../../../../../../../libraries/web/reference/cgi_handling/cgi_interface.html#f_is_debug_mode">is_debug_mode</a> to <SPAN CLASS="esymbol">
+        <a class="efeature" href="/libraries/web/reference/cgi_handling/cgi_interface.html#f_is_debug_mode">is_debug_mode</a> to <SPAN CLASS="esymbol">
         True</SPAN> in your root class (which should inherit from
-        <a class="eclass" href="../../../../../../../../libraries/web/reference/cgi_handling/cgi_interface.html">CGI_INTERFACE</a>). When your application crashes (because of an assertion or
+        <a class="eclass" href="/libraries/web/reference/cgi_handling/cgi_interface.html">CGI_INTERFACE</a>). When your application crashes (because of an assertion or
 a bug), the exception trace will be displayed on the screen.</p>
 
 </body>

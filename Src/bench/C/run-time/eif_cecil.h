@@ -48,8 +48,8 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 #define eif_integer_function	eiflong			/* Get an Eiffel function */
 #define eif_character_function	eifchar	/* Get an Eiffel function returning an Eiffel Character */
 #define eif_real_function	eifreal	/* Get an Eiffel function returning an Eiffel Real */
-#define eif_double_function	eifreal	/* Get an Eiffel function returning an Eiffel Double */
-#define eif_reference_function	eifreal	/* Get an Eiffel function returning an Eiffel Double */
+#define eif_double_function	eifdouble	/* Get an Eiffel function returning an Eiffel Double */
+#define eif_reference_function	eifref	/* Get an Eiffel function returning an Eiffel Double */
 #define eif_boolean_function	eifbool	/* Get an Eiffel function returning an Eiffel Boolean */
 #define eif_bit_function	eifbit	/* Get an Eiffel function returning an Eiffel Bit */
 #define eif_pointer_function	eifpointer	/* Get an Eiffel function returning an Eiffel Pointer */

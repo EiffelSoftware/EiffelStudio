@@ -75,9 +75,15 @@ feature -- Access
 		end
 
 	show_text_in_general_toolbar: BOOLEAN is
-			-- Show selected text in the general toolbar?
+			-- Show only selected text in the general toolbar?
 		do
 			Result := boolean_resource_value ("development_window__show_text_in_general_toolbar", False)
+		end
+
+	show_all_text_in_general_toolbar: BOOLEAN is
+			-- Show all text in the general toolbar?
+		do
+			Result := boolean_resource_value ("development_window__show_all_text_in_general_toolbar", False)
 		end
 
 	show_address_toolbar: BOOLEAN is

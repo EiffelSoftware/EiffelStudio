@@ -232,18 +232,27 @@ feature -- dragging
 			-- Check the validity of feature stone.
 		local
 			body_as: FEATURE_AS
+			retried: BOOLEAN
 		do
-			if internal_start_position = -1 and then e_feature /= Void then
-					-- Position has not been initialized
-				body_as := e_feature.ast
-				if body_as /= Void then
-					internal_start_position := body_as.start_position
-					internal_end_position := body_as.end_position
-				else
-					internal_start_position := 0
-					internal_end_position := 0
-				end	
+			if not retried then
+				if internal_start_position = -1 and then e_feature /= Void then
+						-- Position has not been initialized
+					body_as := e_feature.ast
+					if body_as /= Void then
+						internal_start_position := body_as.start_position
+						internal_end_position := body_as.end_position
+					else
+						internal_start_position := 0
+						internal_end_position := 0
+					end	
+				end
+			else
+				internal_start_position := 0
+				internal_end_position := 0
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	synchronized_stone: CLASSI_STONE is

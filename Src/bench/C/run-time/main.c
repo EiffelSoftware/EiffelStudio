@@ -140,6 +140,42 @@ rt_public void once_init (void)
 	EIF_END_GET_CONTEXT
 }
 
+rt_public void eif_alloc_init(void)
+{
+	/*
+	 * This function initializes the global variables holding the values
+	 * for memory allocation parameters (chunk and scavenge zone size) to
+	 * their default values (env. variable or macro).
+	 * The constant CHUNK has been replaced with eif_chunk_size everywhere.
+	 * The constant GS_ZONE_SZ has been replaced with eif_scavenge_size.
+	 */
+
+	EIF_GET_CONTEXT
+
+	char *env_var;
+	static int chunk_size = 0;
+	static int scavenge_size = 0;
+
+	if (!chunk_size) {
+		env_var = getenv ("EIF_MEMORY_CHUNK");
+		if (env_var != (char *) 0)
+			chunk_size = atoi(env_var);
+		else
+			chunk_size = CHUNK_DEFAULT;
+	}
+	eif_chunk_size = chunk_size;
+
+	if (!scavenge_size) {
+		env_var = getenv ("EIF_MEMORY_SCAVENGE");
+		if (env_var != (char *) 0)
+			scavenge_size = atoi(env_var);
+		else
+			scavenge_size = GS_ZONE_SZ_DEFAULT;
+	}
+	eif_scavenge_size = scavenge_size;
+
+	EIF_END_GET_CONTEXT
+}
 
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {

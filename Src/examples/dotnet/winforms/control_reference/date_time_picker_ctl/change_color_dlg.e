@@ -4,39 +4,42 @@ indexing
 class
 	CHANGE_COLOR_DLG
 
---inherit 
---	WINFORMS_FORM
---		redefine
---			make,
---			dispose
---		end
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
+		redefine
+			dispose_boolean
+		end
+
+	ANY
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
-		indexing
-			description: "Entry point."
+	make (a_dtp: WINFORMS_DATE_TIME_PICKER) is
+		require
+			non_void_a_dtp: a_dtp /= Void
 		local
 			dummy: SYSTEM_OBJECT
+			l_form: WINFORMS_FORM
+			dtp_form: DATE_TIME_PICKER_CTL
 		do
---			Precursor {WINFORMS_FORM}
+			make_form
 			initialize_components
 
---			dtp := my_window.get_parent.get_dtpicker
-			create dtp.make
+			dtp := a_dtp
 
 			synchronize_panel_colors
-
-			dummy := my_window.show_dialog
+		ensure
+			dtp_set: dtp = a_dtp implies dtp /= Void
 		end
 
 feature -- Access
-
-	my_window: WINFORMS_FORM
-			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container
@@ -63,14 +66,12 @@ feature -- Access
 feature -- Implementation
 
 	initialize_components is
-			--
+			-- Initialize all window components.
 		local
 			l_array: NATIVE_ARRAY [SYSTEM_STRING]
 			l_point: DRAWING_POINT
 			l_size: DRAWING_SIZE
 		do
-			create my_window.make
-			
 			create components.make
 			create btn_trailing_fore_color.make
 			create btn_OK.make
@@ -90,14 +91,14 @@ feature -- Implementation
 			create label_3.make
 			create label_1.make
 
-			my_window.set_text (("Change Color").to_cil)
-			my_window.set_maximize_box (False)
+			set_text (("Change Color").to_cil)
+			set_maximize_box (False)
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
-			my_window.set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
-			my_window.set_minimize_box (False)
+			set_auto_scale_base_size (l_size)
+			set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
+			set_minimize_box (False)
 			l_size.make_from_width_and_height (406, 194)
-			my_window.set_client_size_size (l_size)
+			set_client_size (l_size)
 
 			l_point.make_from_x_and_y (232, 112)
 			btn_trailing_fore_color.set_location (l_point)
@@ -222,116 +223,121 @@ feature -- Implementation
 			label_1.set_size (l_size)
 			label_1.set_tab_index (8)
 
-			my_window.get_controls.add (btn_trailing_fore_color)
-			my_window.get_controls.add (btn_title_fore_color)
-			my_window.get_controls.add (btn_title_back_color)
-			my_window.get_controls.add (btn_month_background)
-			my_window.get_controls.add (btn_fore_color)
-			my_window.get_controls.add (pnl_trailing_fore_color)
-			my_window.get_controls.add (pnl_title_fore_color)
-			my_window.get_controls.add (pnl_title_back_color)
-			my_window.get_controls.add (pnl_month_background)
-			my_window.get_controls.add (pnl_fore_color)
-			my_window.get_controls.add (btn_OK)
-			my_window.get_controls.add (label_5)
-			my_window.get_controls.add (label_4)
-			my_window.get_controls.add (label_3)
-			my_window.get_controls.add (label_2)
-			my_window.get_controls.add (label_1)
-
+			controls.add (btn_trailing_fore_color)
+			controls.add (btn_title_fore_color)
+			controls.add (btn_title_back_color)
+			controls.add (btn_month_background)
+			controls.add (btn_fore_color)
+			controls.add (pnl_trailing_fore_color)
+			controls.add (pnl_title_fore_color)
+			controls.add (pnl_title_back_color)
+			controls.add (pnl_month_background)
+			controls.add (pnl_fore_color)
+			controls.add (btn_OK)
+			controls.add (label_5)
+			controls.add (label_4)
+			controls.add (label_3)
+			controls.add (label_2)
+			controls.add (label_1)
 		end
 
 
 feature {NONE} -- Implementation
 
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
+		local
+			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
+		do
+			if not retried then
+				if components /= Void then
+					components.dispose	
+				end
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
+		end
+
         synchronize_panel_colors is
-        		-- 
+        		-- Synchronize panel control.
         	do
-	            pnl_fore_color.set_back_color (dtp.get_calendar_fore_color)
-	            pnl_month_background.set_back_color (dtp.get_calendar_month_background)
-	            pnl_title_back_color.set_back_color (dtp.get_calendar_title_back_color)
-	            pnl_title_fore_color.set_back_color (dtp.get_calendar_title_fore_color)
-	            pnl_trailing_fore_color.set_back_color (dtp.get_calendar_trailing_fore_color)
+	            pnl_fore_color.set_back_color (dtp.calendar_fore_color)
+	            pnl_month_background.set_back_color (dtp.calendar_month_background)
+	            pnl_title_back_color.set_back_color (dtp.calendar_title_back_color)
+	            pnl_title_fore_color.set_back_color (dtp.calendar_title_fore_color)
+	            pnl_trailing_fore_color.set_back_color (dtp.calendar_trailing_fore_color)
         	end
 
---		protected override void Dispose(bool disposing)
---				--      ChangeColorDlg overrides dispose so it can clean up the
---				--      component list.
---			do
---			{
---			   if (disposing) {
---					if (components != null) {
---						components.Dispose()
---					}
---			   }
---			   base.Dispose(disposing)
---			end
-
-		btn_fore_color_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				--
+		btn_fore_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+				-- feature performed whent `btn_fore_color' is clicked.
 			local
 				res: WINFORMS_DIALOG_RESULT
 			do
-				color_dialog.set_color (dtp.get_calendar_fore_color)
+				color_dialog.set_color (dtp.calendar_fore_color)
 				res := color_dialog.show_dialog
-				if res.equals (feature {WINFORMS_DIALOG_RESULT}.OK) then
-					dtp.set_calendar_fore_color (color_dialog.get_color)
+				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+					dtp.set_calendar_fore_color (color_dialog.color)
 					synchronize_panel_colors()
 				end
 			end
 
-		btn_month_background_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				--
+		btn_month_background_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+				-- feature performed whent `btn_month_background' is clicked.
 			local
 				res: WINFORMS_DIALOG_RESULT
 			do
-				color_dialog.set_color (dtp.get_calendar_month_background)
+				color_dialog.set_color (dtp.calendar_month_background)
 				res := color_dialog.show_dialog
-				if res.equals (feature {WINFORMS_DIALOG_RESULT}.OK) then
-					dtp.set_calendar_month_background (color_dialog.get_color)
+				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+					dtp.set_calendar_month_background (color_dialog.color)
 					synchronize_panel_colors()
 				end
 			end
 
-		btn_title_back_color_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				--
+		btn_title_back_color_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+				-- feature performed whent `btn_title_back_color' is clicked.
 			local
 				res: WINFORMS_DIALOG_RESULT
 			do
-				color_dialog.set_color (dtp.get_calendar_title_back_color)
+				color_dialog.set_color (dtp.calendar_title_back_color)
 				res := color_dialog.show_dialog
-				if res.equals (feature {WINFORMS_DIALOG_RESULT}.OK) then 
-					dtp.set_calendar_title_back_color (color_dialog.get_color)
+				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then 
+					dtp.set_calendar_title_back_color (color_dialog.color)
 					synchronize_panel_colors()
 				end
 			end
 
 		btn_title_fore_color_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				--
+				-- feature performed whent `btn_title_fore_color' is clicked.
 			local
 				res: WINFORMS_DIALOG_RESULT
 			do
-				color_dialog.set_color (dtp.get_calendar_title_fore_color)
+				color_dialog.set_color (dtp.calendar_title_fore_color)
 				res := color_dialog.show_dialog
-				if res.equals (feature {WINFORMS_DIALOG_RESULT}.OK) then
-					dtp.set_calendar_title_fore_color (color_dialog.get_color)
+				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+					dtp.set_calendar_title_fore_color (color_dialog.color)
 					synchronize_panel_colors
 				end
 			end
 
 		btn_trailing_fore_color_Click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-				--
+				-- feature performed whent `btn_trailing_fore_color' is clicked.
 			local
 				res: WINFORMS_DIALOG_RESULT
 			do
-				color_dialog.set_color (dtp.get_calendar_trailing_fore_color)
+				color_dialog.set_color (dtp.calendar_trailing_fore_color)
 				res := color_dialog.show_dialog
-				if res.equals (feature {WINFORMS_DIALOG_RESULT}.OK) then
-					dtp.set_calendar_trailing_fore_color (color_dialog.get_color)
+				if res.value_ = feature {WINFORMS_DIALOG_RESULT}.OK.value_ then
+					dtp.set_calendar_trailing_fore_color (color_dialog.color)
 					synchronize_panel_colors
 				end
 			end
 
+invariant
+	non_void_dtp: dtp /= Void
 
 end -- Class CHANGE_COLOR_DLG
 

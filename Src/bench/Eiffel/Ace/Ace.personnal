@@ -106,6 +106,7 @@ cluster
 		 formatters:		"$BENCH/Eiffel/interface/formatters";
 		 debugging:			"$BENCH/Eiffel/interface/debugging";
 		 archi_text:		"$BENCH/Eiffel/interface/archi_text";
+		 shared_interface:	"$BENCH/Eiffel/interface/shared";
 
 		 ipc:				"$BENCH/Eiffel/ipc";
 

@@ -1,5 +1,5 @@
 indexing
-	description: "This class represents a MS_IMPframe";
+	description: "This class represents a MS_WINDOWS frame";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -71,8 +71,11 @@ inherit
 			on_move,
 			on_key_down
 		redefine
-			class_name
+			class_name,
+			default_style
 		end
+
+	WEL_BS_CONSTANTS
 
 creation
 	make
@@ -118,37 +121,36 @@ feature -- Initialization
 			wc ?= parent
 			make_with_coordinates (wc, "", x, y, private_attributes.width,
 				 private_attributes.height)
-			!! private_box.make (Current, "", 0, 0, 0, 0, private_box_id)
 		end
 
 feature -- Status report
 
 	height: INTEGER is
 			-- Height of frame
-		do
-			Result := 2
+		once
+			Result := wel_height
 		end
 
 	width: INTEGER is
 			-- Width of frame
-		do
-			Result := 2
+		once
+			Result := wel_width
 		end
 
 feature -- Status setting
 
-	set_form_height (a_height: INTEGER) is
-			-- Set height to `new_height'.
+	set_form_height (new_height: INTEGER) is
+			-- Set height (including the frame) to `new_height'.
 		do
-			private_attributes.set_height (a_height)
+			private_attributes.set_height (new_height)
 			if exists then
-				wel_set_height (a_height)
+				wel_set_height (new_height)
 			end
 			set_child_size
 		end
 
 	set_form_width (new_width: INTEGER) is
-			-- Set width to `new_width'.
+			-- Set width (including the frame) to `new_width'.
 		do
 			private_attributes.set_width (new_width)
 			if exists then
@@ -157,13 +159,13 @@ feature -- Status setting
 			set_child_size
 		end
 
-	set_height (a_height: INTEGER) is
-			-- Set height to `new_height'.
+	set_height (new_height: INTEGER) is
+			-- Set inside height of frame to `new_height'.
 		do
-			if private_attributes.height /= a_height then
-				private_attributes.set_height (a_height)
+			if private_attributes.height /= new_height then
+				private_attributes.set_height (new_height + frame_height)
 				if exists then
-					wel_set_height (a_height)
+					wel_set_height (new_height + frame_height)
 				end
 				set_child_size
 				if parent /= Void then
@@ -173,12 +175,12 @@ feature -- Status setting
 		end
 
 	set_width (new_width: INTEGER) is
-			-- Set width to `new_width'.
+			-- Set inside width of frame to `new_width'.
 		do
 			if private_attributes.width /= new_width then
-				private_attributes.set_width (new_width)
+				private_attributes.set_width (new_width + frame_width)
 				if exists then
-					wel_set_width (new_width)
+					wel_set_width (new_width + frame_width)
 				end
 				set_child_size
 				if parent /= Void then
@@ -188,15 +190,15 @@ feature -- Status setting
 		end
 
 	set_size (new_width, new_height: INTEGER) is
-			-- Set the height to new_height,
+			-- Set the inside height of frame to new_height,
 			-- width to `new_width'.
 		do
-			if private_attributes.width /= new_width
-			or else private_attributes.height /= new_height then
-				private_attributes.set_width (new_width)
-				private_attributes.set_height (new_height)
+			if private_attributes.width /= new_width + frame_width
+			or else private_attributes.height /= new_height + frame_height then
+				private_attributes.set_width (new_width + frame_width)
+				private_attributes.set_height (new_height + frame_height)
 				if exists then
-					resize (new_width, new_height)
+					resize (new_width + frame_width, new_height + frame_height)
 				end
 				set_child_size
 				if parent /= Void then
@@ -217,15 +219,12 @@ feature {NONE} -- Implementation
 
 	box_text_height: INTEGER is
 			-- Text height of the box title
-		local
-			a_log_font: WEL_LOG_FONT
 		do
-			a_log_font := private_box.font.log_font
-			Result := a_log_font.height
+			-- Vision does not provide the setting of title yet.
 		end
 
 	set_child_size is
-			-- Set size of the child
+			-- Set size of the child to fit in the frame
 		local
 			l: LIST [WIDGET_IMP]
 			a: ANY
@@ -233,15 +232,15 @@ feature {NONE} -- Implementation
 			if realized then
 				l := children_list
 				if not l.empty then
-					l.first.set_form_width ((form_width - 2 * width).max (0))
-					l.first.set_form_height ((form_height - (box_text_height // 2) - 2 * height).max (0))
-					l.first.set_x_y (2, (box_text_height // 2) + 2)
+					l.first.set_form_width (form_width)
+					l.first.set_form_height (form_height)
+					l.first.set_x_y (0,0)
 				end
 			end
 		end
 
 	set_enclosing_size is
-			-- Set the enclosing size.
+			-- Set the size of frame to enclose the size of the child
 		local
 			l: LIST [WIDGET_IMP]
 			a_width: INTEGER
@@ -252,22 +251,17 @@ feature {NONE} -- Implementation
 				if not l.empty then
 					a_width := l.first.form_width
 					a_height := l.first.form_height
-					set_form_width (a_width + 2 * width)
-					set_form_height (a_height + (box_text_height // 2) + 2 * height)
+					set_size (a_width, a_height)
 				end
 			end
 		end
 
 	on_size (code, new_width, new_height: INTEGER) is
 			-- Resize the frame according to parent.
-		require else
-			box_not_void: private_box /= Void
-			box_exists: private_box.exists
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 		do
 			!! resize_data.make (owner, new_width, new_height, code)
-			private_box.resize ((new_width).max (0), (new_height).max (0))
 			resize_actions.execute (Current, resize_data)
 		end
 
@@ -276,11 +270,23 @@ feature {NONE} -- Implementation
 			Result := "EvisionFrame"
 		end
 
-	private_box: WEL_GROUP_BOX
-			-- Frame around the window
+	default_style: INTEGER is
+			-- Default style used to create the control
+		once
+			Result := Precursor + Ws_dlgframe
+		end
 
-	private_box_id: INTEGER is 1
-			-- Id for the private_box
+	frame_height: INTEGER is 
+			--Height of frame border
+		once
+			Result := 2 * dialog_window_frame_height
+		end
+
+	frame_width: INTEGER is 
+			--Width of frame border
+		once
+			Result := 2 * dialog_window_frame_width
+		end
 
 end -- class FRAME_IMP
 

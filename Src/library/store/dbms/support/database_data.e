@@ -134,6 +134,10 @@ feature -- Element change
 					f_string.wipe_out
 				end
 				database_string.get_select_name (no_descriptor, ind)
+					-- Due to a Problem with SQL Server through ODBC
+					-- we need to remove all the %U of the string.
+				
+
 				f_string.append (database_string)
 				f_any := value.item (ind)
 

@@ -33,7 +33,13 @@ feature -- Status setting
 	get_value (no_descriptor: INTEGER; index: INTEGER) is
 			-- Put in `Current' value of index-th column of selection.
 		do
-			count := db_spec.put_data (no_descriptor, index, area, capacity) 
+			count := db_spec.put_data (no_descriptor, index, area, capacity)
+
+				-- Due to a Problem with SQL Server through ODBC
+				-- we need to remove all the %U of the string.
+			if db_spec.database_handle_name.is_equal ("ODBC") then
+				prune_all('%U') 
+			end
 		ensure
 			capacity_unchanged: capacity = old capacity
 			not_change_area: area = old area

@@ -7,6 +7,12 @@ deferred class
 
 	DATABASE
 
+feature
+
+	database_handle_name : STRING is
+	deferred
+	end
+
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN is

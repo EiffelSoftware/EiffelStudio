@@ -100,7 +100,7 @@ without pressing any button</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-515360"></A>The cursor has changed into a new shape, a cross representing the type of development object that you have picked, a feature. For a class, as you may have guessed, it would be a small ellipse (&quot;bubble&quot;). Each kind of development object that you may create and manipulate during your work with EiffelStudio has its distinctive icon. 
+<A NAME="pgfId-515360"></A>The cursor has changed into a new shape, a cross representing the type of development object that you have picked, a feature. For a class, as you may have guessed, it would be a small ellipse (&quot;bubble&quot;). Each kind of development object that you may create and manipulate during your work with EiffelStudio has its distinctive icon.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515361"></A>The display reflects that you have &quot;<SPAN CLASS="ff-italics">
 picked</SPAN>
@@ -167,7 +167,7 @@ pebbles and holes</SPAN>
 &#8230; </SPAN>
 You may then drop it into a &quot;hole&quot;, which can be a window, a tree view entry, or a hole-shaped icon. This performs the appropriate action such as retargeting a tool.
 <P CLASS="nn-normal">
-<A NAME="pgfId-515392"></A>In the same way that Eiffel is a typed object-oriented language, the Pick-and-Drop mechanism is typed: you can only drop a pebble into a compatible hole. For example you may drop a class pebble into a Development Window, to retarget it to the chosen class. 
+<A NAME="pgfId-515392"></A>In the same way that Eiffel is a typed object-oriented language, the Pick-and-Drop mechanism is typed: you can only drop a pebble into a compatible hole. For example you may drop a class pebble into a Development Window, to retarget it to the chosen class.
 <P CLASS="nn-normal">
 <A NAME="pgfId-515487"></A>In Eiffel, type compatibility is not necessarily type identity, but is governed by <SPAN CLASS="ff-italics">
 conformance</SPAN>
@@ -256,14 +256,15 @@ not know</SPAN>
 <A NAME="pgfId-515549"></A>In all the examples so far, the Context Tool was targeted to the same target as the enclosing Development Window and its Editing Tool. You can retarget the Context Tool separately, for example by pick-and-dropping a class or feature into it; but the next time you retarget the Development Window as a whole the Context Tool will follow.
 <P CLASS="nn-normal">
 <A NAME="pgfId-520282"></A>This is called <SPAN CLASS="ff-italics">
-merged</SPAN>
- behavior, meaning that the target of the Context Tool is merged with the target of the enclosing Development Window and Editing Tool. It's the default behavior, appropriate for your first steps with EiffelStudio.
+linked</SPAN>
+ behavior, meaning that the target of the Context Tool is linked with the target of the enclosing Development Window and Editing Tool. By default the tools are not linked.
 <P CLASS="nn-normal">
-<A NAME="pgfId-515550"></A>As you become more proficient with the environment, you may not want this behavior any more: you might prefer the ability to retarget the window and its Editing Tool while keeping the Context targeted to its previous target. This enables you to see, in the same window, information on two different classes, and is called <SPAN CLASS="ff-italics">
-isolating</SPAN>
+<A NAME="pgfId-515550"></A>This enables you to see, in the same window, information on two different classes, and is called <SPAN CLASS="ff-italics">
+isolating,</SPAN> or <SPAN CLASS="ff-italics">
+unlinking</SPAN>
  the Context.
 <P CLASS="nn-normal">
-<A NAME="pgfId-555779"></A>The choice between merged and isolated behavior is a matter of taste; let's see how you can change it, so that you can set your own preference.
+<A NAME="pgfId-555779"></A>The choice between linked and isolated behavior is a matter of taste; let's see how you can change it, so that you can set your own preference.
 <P CLASS="nn-normal">
 <A NAME="pgfId-555783"></A>To change the behavior, choose the menu entry
 <p><ul><table width="79%">
@@ -275,7 +276,7 @@ View </SPAN>
 <SPAN CLASS="ee-symbol">
 --></SPAN>
 <SPAN CLASS="ee-keyword">
- Isolate context tool</SPAN>
+ Link context tool</SPAN>
 
 </TD>
 </TR>
@@ -286,15 +287,15 @@ View </SPAN>
 <SPAN CLASS="ee-symbol">
 --></SPAN>
 <SPAN CLASS="ee-keyword">
- Merge context tool</SPAN>
-, so that you can later revert to merged behavior. Under isolation behavior, try pick-and-dropping a class or feature into the top Editing Tool; then pick-and-drop a class or feature into the bottom Context Tool. You will notice that each of these operations retargets the affected tool, but not the other.
+ Unlink context tool</SPAN>
+, so that you can later revert to isolated behavior. Under isolation behavior, try pick-and-dropping a class or feature into the top Editing Tool; then pick-and-drop a class or feature into the bottom Context Tool. You will notice that each of these operations retargets the affected tool, but not the other.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">
 <A NAME="pgfId-555216"></A>Customizing the view</H2>
 <P CLASS="nn-first">
-<A NAME="pgfId-515581"></A>If you will often alternate between the merged and isolated behaviors, you can use the <SPAN CLASS="ee-keyword">
-Merge/Isolate</SPAN>
+<A NAME="pgfId-515581"></A>If you will often alternate between the linked and isolated behaviors, you can use the <SPAN CLASS="ee-keyword">
+Link/Isolate</SPAN>
  button of the top toolbar. This button is <SPAN CLASS="ff-italics">
 not </SPAN>
 present by default on the toolbar, so this is a good opportunity to take a quick look at the user interface customization mechanism, which you can use later to tailor the interface to the exact form you need. Select
@@ -329,10 +330,10 @@ Customize project toolbar</SPAN>
 </DIV>
 <P CLASS="nn-first">
 <A NAME="pgfId-515621"></A>The icons in the list on the right are currently displayed in the toolbar, but not those on the left. Among the latter you see (fourth from the bottom on the left-side list) <SPAN CLASS="ee-keyword">
-Isolate/merge the context tool</SPAN>
+Link or not the context tool to other components</SPAN>
 . Select it by clicking; this makes the <SPAN CLASS="ee-keyword">
 Add -&gt; </SPAN>
-button active. Click this button to move the Isolate/Merge icon to the list of displayed icons. It becomes the first item of the list, which is fine for the moment. (Later on you can change the order of buttons in the toolbar if you like, by using the <SPAN CLASS="ee-keyword">
+button active. Click this button to move the Link/Isolate icon to the list of displayed icons. It becomes the first item of the list, which is fine for the moment. (Later on you can change the order of buttons in the toolbar if you like, by using the <SPAN CLASS="ee-keyword">
 Up</SPAN>
  and <SPAN CLASS="ee-keyword">
 Down</SPAN>
@@ -347,7 +348,7 @@ OK</SPAN>
 <p>
 </DIV>
 <P CLASS="nn-first">
-<A NAME="pgfId-511447"></A>You can now use this button to switch, for the enclosing Development Window, between the isolated and merged behaviors of the Context Tool.
+<A NAME="pgfId-511447"></A>You can now use this button to switch, for the enclosing Development Window, between the isolated and linked behaviors of the Context Tool.
 </DIV>
 <DIV>
 <H2 CLASS="aa-sec3">

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 				code := -1
 			end
 		ensure
-			option_name_set: option_name.is_equal (on)
+			option_name_set: option_codes.has (on) implies option_name.is_equal (on)
 		end
 
 feature -- Properties

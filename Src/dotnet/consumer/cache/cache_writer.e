@@ -34,6 +34,7 @@ feature -- Basic Operations
 			assembly: ASSEMBLY
 			retried: BOOLEAN
 			l_string_tuple: TUPLE [STRING]
+			l_new_assembly: BOOLEAN
 		do
 			if not retried then
 				assembly := feature {ASSEMBLY}.load_assembly_name (aname)
@@ -44,10 +45,13 @@ feature -- Basic Operations
 				create dir.make (cr.absolute_assembly_path (aname))
 
 				create consumer
-				-- only consume the assembly if it has been modified
+					-- only consume the assembly if it has been modified or the
+					-- assembly is not already in the EAC.
 				if consumer.is_assembly_modified (assembly, dir.name) then
 					if dir.exists then
 						dir.recursive_delete
+					else
+						l_new_assembly := True
 					end
 					dir.create_dir
 					consumer.set_status_printer (status_printer)
@@ -58,7 +62,8 @@ feature -- Basic Operations
 					
 					if not consumer.successful then
 						set_error (Consume_error, create {STRING}.make_from_cil (aname.name))
-					else
+					elseif l_new_assembly then
+							-- Only add it in `info' if not yet added.
 						info := cr.info
 		 				info.add_assembly (Consumed_assembly_factory.consumed_assembly_from_name (aname))
 						update_info (info)

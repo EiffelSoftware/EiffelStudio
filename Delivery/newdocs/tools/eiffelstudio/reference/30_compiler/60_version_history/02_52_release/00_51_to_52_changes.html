@@ -22,19 +22,17 @@
 
         <H2>What's new</H2>
         
-        <p>&nbsp; </p>
-        
         <UL>
         
-        <LI>.NET generation now includes:<UL>
+        <LI>.NET generation now includes support for the following language 
+        features:<UL>
         
         <li>Support for multiple inheritance.</li>
         
         <li>Support for 
         generics.</li>
         
-        <li>Partial implementation of generic conformance (same as what was 
-        supported up to and including ISE Eiffel 4.2).</li>
+        <li>Partial implementation of generic conformance </li>
         
         <li>Support for tuples and 
         agents.</li>
@@ -42,25 +40,28 @@
         <li>Support for any existing Eiffel code that does not use C 
         externals.</li>
         
-        <li>Partial support for compiling Eiffel libraries using C 
-        externals (e.g. WEL)
-        </li>
+        <li>Support for compiling Eiffel libraries using C 
+        externals that are not related to the ISE C runtime.</li>
         </UL>
         
         <p>And the following limitations:<UL>
         
         <li>Eiffel classes cannot inherit from non-Eiffel .NET classes (but they 
         can be clients).</li>
+        
+        <li>No support for `expanded' keyword.</li>
         </UL>
         
         <li>.NET generation now supports assembly signing in enterprise edition.</li>
         <li>.NET generation now supports precompiled libraries.</li>
+        <li>Supports for manifest integer constants of different sizes, i.e. you 
+        can now assign for example the value `8' to a location of type INTEGER_8, 
+        INTEGER_16, INTEGER or INTEGER_64, however you can only assign the value 
+        `254' to a location of type INTEGER_16, INTEGER or INTEGER_64.</li>
         </UL>
         
         <H2>Improvements</H2>
         
-        
-        <p>&nbsp;</p>
         
         <UL>
         

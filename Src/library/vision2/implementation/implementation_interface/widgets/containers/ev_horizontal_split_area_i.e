@@ -45,50 +45,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_HORIZONTAL_SPLIT_AREA_I
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
-
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.11  2001/07/14 12:46:24  manus
---| Replace --! by --|
---|
---| Revision 1.10  2001/07/14 12:16:28  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.9  2001/06/07 23:08:10  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.5.4.7  2000/08/08 18:17:45  manus
---| Moved `first_visible' and `second_visible' to EV_SPLIT_AREA_I since it is needed for
---| `EV_HORIZONTAL_SPLIT_AREA_I' and `EV_VERTICAL_SPLIT_AREA_I' to compute a correct
---| `minimum_split_position' and `maximum_split_position'. This is only exported to
---| EV_SPLIT_AREA_I and descendants, not to the interface.
---|
---| Revision 1.5.4.6  2000/08/02 18:27:39  rogers
---| Comments, formatting, Added CVS log and copyright clause.
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
 --|----------------------------------------------------------------
 

@@ -32,21 +32,25 @@ feature -- Access
 	font: EV_FONT is
 			-- Font of the current format
 		do
+			create Result
 		end
 	
 	color: EV_COLOR is
 			-- Color of the current format
 		do
+			create Result
 		end
 
 	background_color: EV_COLOR is
 			-- Color of the current format
 		do
+			create Result
 		end
 		
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'
 		do
+			create Result
 		end
 
 feature -- Status setting

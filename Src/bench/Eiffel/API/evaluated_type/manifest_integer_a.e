@@ -5,15 +5,16 @@ indexing
 
 class
 	MANIFEST_INTEGER_A
-	
+
 inherit
 	INTEGER_A
 		redefine
-			convert_to
+			convert_to,
+			intrinsic_type
 		end
-		
+
 	SHARED_TYPES
-	
+
 create
 	make_for_constant
 
@@ -35,7 +36,7 @@ feature {NONE} -- Initialization
 			compatibility_size_set: compatibility_size = m
 			is_negative_set: is_negative = is_neg
 		end
-		
+
 feature -- Property
 
 	compatibility_size: INTEGER_8
@@ -47,7 +48,7 @@ feature -- Property
 	is_negative: BOOLEAN
 			-- Is current value negative?
 
-	real_integer_type: INTEGER_A is
+	intrinsic_type: INTEGER_A is
 			-- Real type of current manifest integer.
 			-- To preserve compatibility with ETL2, a manifest 
 			-- integer is always at least 32 bits wide.

@@ -21,20 +21,15 @@ feature -- Basic operations
 			valid_type_desc: a_type_desc /= Void
 			valid_type_desc_type: is_carray (a_type_desc.var_type)
 		local
-			descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
-			array_desc: ECOM_ARRAY_DESC
-			i, an_element: INTEGER
-			int_array: ARRAY [INTEGER]
+			l_array_desc: ECOM_ARRAY_DESC
+			i: INTEGER
+			l_array: ARRAY [INTEGER]
 		do
 			type := a_type_desc.var_type
-			descriptor := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, 
-						a_type_desc.array_desc.type_desc, a_system_description)
-			array_element_descriptor := descriptor
-
-			array_desc := a_type_desc.array_desc
-			dimension_count := array_desc.count_dimension
-
-			create int_array.make (1, dimension_count)
+			l_array_desc := a_type_desc.array_desc
+			array_element_descriptor := data_type_descriptor_factory.create_data_type_descriptor (a_type_info, l_array_desc.type_desc, a_system_description)
+			dimension_count := l_array_desc.count_dimension
+			create l_array.make (1, dimension_count)
 			from
 				i := 1
 			variant
@@ -42,13 +37,10 @@ feature -- Basic operations
 			until
 				i > dimension_count
 			loop
-				an_element := array_desc.bounds.item(i).element_count
-				int_array.put (an_element, i)
+				l_array.put (l_array_desc.bounds.item(i).element_count, i)
 				i := i + 1
-
 			end
-			array_size := int_array
-
+			array_size := l_array
 			create Result.make (Current)
 		ensure
 			non_void_descriptor: Result /= Void

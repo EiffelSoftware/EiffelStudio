@@ -107,9 +107,9 @@ feature -- Initialization
 			end
 			reset
 			realized := true
+			associated_root ?= current
 			realize_children
 			associated_shell.associate_bar (Current)
-			associated_root ?= current
 			parent.child_has_resized
 		end
 

@@ -13,14 +13,15 @@ inherit
 			make as form_make
 		redefine
 			associated_resource, validate
-		end
+		end;
+	COMMAND
 
 creation
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_resource: STRING_RESOURCE; new_parent: COMPOSITE) is
+	make (a_resource: like associated_resource; new_parent: COMPOSITE) is
 			-- Initialize Current with `a_resource' as `associated_resource',
 			-- and `new_parent' as `a_parent'.
 		require
@@ -54,12 +55,18 @@ feature {PREFERENCE_CATEGORY} -- User Interface
 
 	display is
 			-- Display Current
+		local
+			txt: STRING
 		do
 			init;
 			text.enable_resize_width;
-			text.set_text (associated_resource.value);
-			text.set_rows (5);
-			text.hide_horizontal_scrollbar
+			text.set_single_line_mode;
+			txt := associated_resource.value;
+			if txt /= Void then
+				text.set_text (txt);
+			end;
+			--text.set_rows (5);
+			--text.hide_horizontal_scrollbar
 		end
 
 feature {PREFERENCE_CATEGORY} -- Access
@@ -71,14 +78,18 @@ feature {PREFERENCE_CATEGORY} -- Access
 		do
 			ar := associated_resource
 			if text = Void or else ar.value.is_equal (text.text) then
-					--| text /= Void means: text has been displayed
+					--| text /= Void means text has been displayed
 					--| and thus the user could have changed the value.
-				if ar.value @ 1 /= '%"' then
-					file.putchar ('%"')
-				end
-				file.putstring (ar.value)
-				if ar.value @ ar.value.count /= '%"' then
-					file.putchar ('%"')
+				if ar.value /= Void then
+					file.putstring ("%"%"");
+				else
+					if ar.value @ 1 /= '%"' then
+						file.putchar ('%"')
+					end
+					file.putstring (ar.value)
+					if ar.value @ ar.value.count /= '%"' then
+						file.putchar ('%"')
+					end
 				end
 			else
 				if text.text @ 1 /= '%"' then
@@ -94,7 +105,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 	is_changed: BOOLEAN is
 			-- Is Current changed by the user?
 		do
-			if text /= Void and then not associated_resource.value.is_equal (text.text) then
+			if text /= Void and then not equal (associated_resource.value, text.text) then
 				Result := True
 			end
 		end;
@@ -133,7 +144,7 @@ feature {NONE} -- Properties
 	associated_resource: STRING_RESOURCE;
 			-- Resource Current represnts
 
-	text: SCROLLED_T
+	text: TEXT
 			-- Edit box to represent Current's value
 
 end -- class STRING_PREF_RES

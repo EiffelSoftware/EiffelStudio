@@ -62,20 +62,10 @@ feature -- Access
 	default_version: STRING is
 			-- Default runtime version if `version' was not specified.
 			-- Semantic is to take the most recent version of the run-time.
-		local
-			l_installed: like installed_runtimes
 		do
-			l_installed := installed_runtimes
-			if l_installed.has (v2_0) then
-				Result := v2_0.twin
-			elseif l_installed.has (v1_1) then
-				Result := v1_1.twin
-			elseif l_installed.has (v1_0) then
-				Result := v1_0.twin
-			else
-					-- Take the most recent version from `installed_runtimes'.
-				Result := l_installed.last.twin
-			end
+				-- Take the most recent version from `installed_runtimes' which is the
+				-- last one in the list since it is alphabetically sorted.
+			Result := installed_runtimes.last.twin
 		ensure
 			default_version_not_void: Result /= Void
 		end
@@ -154,13 +144,16 @@ feature -- Access
 			reg: WEL_REGISTRY
 			p: POINTER
 			key: WEL_REGISTRY_KEY_VALUE
+			l_major_version: STRING
 		do
 			create reg
 			p := reg.open_key_with_access ("hkey_local_machine\SOFTWARE\Microsoft\.NETFramework",
 				feature {WEL_REGISTRY_ACCESS_MODE}.Key_read)
 			if p /= default_pointer then
-				if sdk_keys.has (version) then
-					key := reg.key_value (p, sdk_keys.item (version))
+				l_major_version := version.twin
+				l_major_version.keep_head (4)
+				if sdk_keys.has (l_major_version) then
+					key := reg.key_value (p, sdk_keys.item (l_major_version))
 					if key /= Void then
 						Result := key.string_value
 					end
@@ -176,7 +169,10 @@ feature -- Access
 		do
 			l_path := Dotnet_framework_sdk_path
 			if l_path /= Void then
-				Result := Dotnet_framework_sdk_path + "bin\"
+				l_path := dotnet_framework_sdk_path
+				if l_path /= Void then
+					Result := l_path + "bin\"
+				end
 			end
 		end
 
@@ -262,14 +258,14 @@ feature {NONE} -- Implementation
 		
 feature -- Constants
 
-	v1_0: STRING is "v1.0.3705"
+	v1_0: STRING is "v1.0"
 			-- Version number of v1.0 of Microsoft .NET
 			
-	v1_1: STRING is "v1.1.4322"
+	v1_1: STRING is "v1.1"
 			-- Version number of v1.1 of Microsoft .NET
 			
-	v2_0: STRING is "v2.0.40607"
-			-- Temporary version number of the v2.0 of Microsoft .NET
+	v2_0: STRING is "v2.0"
+			-- Version number of v2.0 of Microsoft .NET
 
 feature {NONE} -- Constants
 

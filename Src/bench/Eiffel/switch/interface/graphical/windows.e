@@ -74,7 +74,7 @@ end;
 	debug_window: CLICK_WINDOW is
 			-- Debug window
 		once
-			Result := bench_error_window
+			Result := term_window
 		end;
 
 	explain_window: EXPLAIN_W is
@@ -83,16 +83,10 @@ end;
 			!!Result.make (project_tool.screen)
 		end;
 
-	font_window: FONT_W is
-			-- Font window for font changes
+	window_manager: WINDOW_MGR is
+			-- Window manager for ebench windows
 		once
-			!!Result.make (project_tool)
-		end;
-
-	search_window: SEARCH_W is
-			-- Search window for string searches
-		once
-			!!Result.make (project_tool)
+			!!Result.make (project_tool.screen, 2);
 		end;
 
 	custom_window: CUSTOM_W is

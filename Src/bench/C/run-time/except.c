@@ -2095,7 +2095,7 @@ rt_private void dump_stack(EIF_CONTEXT void (*append_trace)(char *))
 	sprintf(buffer, "%s\n", thr_enter);
 	append_trace(buffer);
 	
-	if (!eif_thr_is_root)
+	if (!(eif_thr_is_root()))
 		sprintf (buffer,"%-19.19s %-22.22s 0x%x %s\n", "In thread", 
 			"Child thread", eif_thr_context->tid, "(thread id)");
 	else

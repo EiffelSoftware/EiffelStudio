@@ -20,7 +20,11 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
-			make
+			make,
+			x_position,
+			y_position,
+			screen_x,
+			screen_y
 		end
 
 create
@@ -91,6 +95,36 @@ feature -- Status report
 			-- Is displayed at maximum size?
 		do
 			Result := old_geometry /= Void
+		end
+
+	screen_x, x_position: INTEGER is
+			-- Horizontal position of `Current' on screen.
+		local
+			a_x: INTEGER
+		do
+				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
+				--| It should be test with other window managers
+			C.gdk_window_get_root_origin (
+				C.gtk_widget_struct_window (c_object),
+				$a_x,
+				NULL
+			)
+			Result := a_x
+		end
+
+	screen_y, y_position: INTEGER is
+			-- Vertical position of `Current' on screen.
+		local
+			a_y: INTEGER
+		do
+				--| The following piece of code works fine with kwn (RH7.1 KDE2.1)
+				--| It should be test with other window managers
+			C.gdk_window_get_root_origin (
+				C.gtk_widget_struct_window (c_object),
+				NULL,
+				$a_y
+			)
+			Result := a_y
 		end
 
 feature -- Status setting

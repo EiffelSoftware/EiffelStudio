@@ -297,6 +297,7 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 		case INDEPENDENT_STORE_3_2:
 		case INDEPENDENT_STORE_4_0:
 		case INDEPENDENT_STORE_4_3:
+		case INDEPENDENT_STORE_4_4:
 			independent_retrieve_reset ();
 			break;
 	}

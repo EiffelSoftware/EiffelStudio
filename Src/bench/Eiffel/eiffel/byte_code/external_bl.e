@@ -259,10 +259,14 @@ feature
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; meta: BOOLEAN) is
 			-- Generate final portion of C code.
+		local
+			generate_parenthesis: BOOLEAN
 		do
 			generate_access_on_type (gen_reg, class_type);
 				-- Now generate the parameters of the call, if needed.
-			if not is_attribute and not (special_id = macro_id and parameters = Void) then
+			generate_parenthesis := not (is_attribute or
+					(context.final_mode and special_id = macro_id and parameters = Void));
+			if generate_parenthesis then
 				generated_file.putchar ('(');
 			end;
 			if is_feature_call then
@@ -271,7 +275,7 @@ feature
 			if parameters /= Void then
 				generate_parameters_list;
 			end;
-			if not is_attribute and not (special_id = macro_id and parameters = Void) then
+			if generate_parenthesis then
 				generated_file.putchar (')');
 			end;
 			if meta then
@@ -366,7 +370,6 @@ feature
 			include_list := e.include_list;
 			arg_list := e.arg_list;
 			return_type := e.return_type;
-			dll_arg := e.dll_arg;
 			if parameters /= Void then
 				from parameters.start;
 				until parameters.after

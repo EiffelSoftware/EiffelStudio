@@ -275,13 +275,19 @@ feature -- Conversion
 			Result := item.to_integer_16
 		end
 
-	to_integer: INTEGER is
+	to_integer, to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
 		require
 			not_too_small: item >= -2147483648
 			not_too_big: item <= 2147483647
 		do
 			Result := item.to_integer
+		end
+
+	to_integer_64: INTEGER_64 is
+			-- Return `item'.
+		do
+			Result := item
 		end
 
 feature -- Bit operations

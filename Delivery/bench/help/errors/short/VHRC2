@@ -1,0 +1,2 @@
+Error: conflicting renaming in the same Rename subclause.
+What to do: make sure that no two Rename_pair have the same first element. 

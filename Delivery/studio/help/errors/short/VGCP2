@@ -1,0 +1,3 @@
+Error: Creators part lists improper identifier.
+What to do: make sure that every identifier in the Creators part is
+  the final name of a procedure of the class. 

@@ -1,0 +1,3 @@
+Error: a DLL32 external feature must include an integer index.
+What to do: Include an alias clause specifying the index:
+  alias "Integer_index"

@@ -1,0 +1,2 @@
+Type error: non-conforming manifest array. 
+What to do: make sure that every element type conforms to desired type.  

@@ -1,0 +1,32 @@
+-- EFF (Eiffel Filter Format) - ISE Eiffel 4
+-- RTF filter (Rich Text Format)
+
+-- Suffix for RTF files
+
+Suffix              |rtf
+
+-- Major syntactical constructs
+
+Cluster_declaration, Class_declaration	|%
+%{\rtf1%N%
+%{\ansi%N%
+%{\i *}%N%
+%}%N%
+%}%N
+
+-- General specifications
+
+Keyword                 |{\b *} 
+Symbol                  |}{*}{\i 
+Comment                 |}{*}{\i 
+Tab                     |{\tab}
+New_line                |{\line}%N
+
+-- Symbols
+.                       |{\b .}
+
+-- Meta-characters
+
+Escape{                 |\{
+Escape}                 |\}
+Escape\                 |\\

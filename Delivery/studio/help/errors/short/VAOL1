@@ -1,0 +1,2 @@
+Error: Old expression appears outside of postcondition.
+What to do: make sure expression appears in `ensure' clause.

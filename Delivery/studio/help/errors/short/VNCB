@@ -1,0 +1,3 @@
+Type error: non-conforming use of Bit_type.
+What to do: use only the following conformance combinations for a type
+  BIT `N': conformance to ANY and to BIT `P' for `N' <= `P'.

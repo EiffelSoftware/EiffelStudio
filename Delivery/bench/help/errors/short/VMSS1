@@ -1,0 +1,3 @@
+Error: improper identifier in Select subclause.
+What to do: make sure that every element of subclause is the final name
+  of a  feature that has two or more repeatedly inherited versions.

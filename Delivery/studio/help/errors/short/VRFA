@@ -1,0 +1,2 @@
+Error: formal argument has same name as feature of the class. 
+What to do: change the name of the argument, or that of the feature.

@@ -1,0 +1,3 @@
+Error: invalid redeclaration.
+What to do: make sure that if a redeclaration is indeed desired
+  it follows the rules on redeclaration. 

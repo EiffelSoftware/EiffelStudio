@@ -1,0 +1,3 @@
+Lace error: adaptation clause lists unknown cluster.
+What to do: make sure that cluster name refers to a cluster described
+  in the same Ace file or a `use' file.

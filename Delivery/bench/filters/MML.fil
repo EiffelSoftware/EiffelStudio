@@ -1,0 +1,39 @@
+-- EFF (Eiffel Filter Format) for ebench and es4
+-- MML filter (Maker Markup Language)
+
+
+--  Construct			|Appearance
+
+-- Major syntactical constructs
+
+Cluster_declaration, Class_declaration		|%
+%<MML - MML filter from Eiffel 4>%N%
+%<TabStops%N%
+% <TabStop .5">%N%
+% <TabStop 1">%N%
+% <TabStop 1.5">%N%
+% <TabStop 2">%N%
+% <TabStop 2.5">%N%
+% <TabStop 3">%N%
+% <TabStop 3.5">%N%
+% <TabStop 4">%N%
+% <TabStop 4.5">%N%
+% <TabStop 5">%N%
+% <TabStop 5.5">%N%
+%>%N*<noitalic>
+
+-- General specifications
+
+Keyword					|<italic><bold>*<nobold>
+Symbol					|<italic>*
+Comment					|<noitalic>*<italic>
+Tab						|<Tab><italic>
+New_line				|<HardSpace><par>%N
+
+-- Symbols
+
+.						|<bold>.<nobold>
+Escape>					|\>
+Escape<					|\<
+Escape\					|\\
+

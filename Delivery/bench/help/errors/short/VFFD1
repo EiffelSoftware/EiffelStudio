@@ -1,0 +1,3 @@
+Error: cannot recognize feature declaration.
+What to do: make sure that Declaration_body describes one of: 
+  variable attribute, constant attribute, procedure, function.

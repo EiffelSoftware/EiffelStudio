@@ -1,0 +1,27 @@
+/* XPM */
+static char *noname[] = {
+/* width height ncolors chars_per_pixel */
+"16 16 4 1",
+/* colors */
+"` c #000000",
+"a c #C0C0C0",
+"b c #808080",
+"c c #FFFFFF",
+/* pixels */
+"aaaac``````baaaa",
+"aaac````````baaa",
+"aac```bbbbb``baa",
+"ac``baaaaaa```ba",
+"a``ba`b```baa`ba",
+"c``b``````baa`ba",
+"``ba```b``baa`ba",
+"``b```ba``baa`ba",
+"``b```ba``ba``ba",
+"``b```b```ba``ba",
+"``b```````b``baa",
+"``ba```b````baaa",
+"c``ba``b```ba``b",
+"ac``baaaaaaa``ba",
+"aac```````````ba",
+"aaaac```````bbaa"
+};

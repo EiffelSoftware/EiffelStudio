@@ -1,0 +1,3 @@
+Error: invalid renaming into Prefix
+What to do: use a non-Prefix new name, or make sure renamed feature is
+  a function with no argument.

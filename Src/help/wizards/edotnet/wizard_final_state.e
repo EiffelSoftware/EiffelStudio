@@ -146,45 +146,6 @@ feature {NONE} -- Constants
 	Space: STRING is " "
 			-- Space
 
---	Epr_extension: STRING is ".epr"
---			-- Eiffel projects extension
---
---	Eifgen: STRING is "EIFGEN"
---			-- EIFGEN directory
---
---	Comp: STRING is "COMP"
---			-- COMP directory
---
---	W_code: STRING is "W_code"
---			-- W_code directory
---
---	F_code: STRING is "F_code"
---			-- F_code directory
---
---	S1: STRING is "S1"
---			-- S1 directory
---
---	Back_slash: STRING is "\"
---			-- Back slash
-
---	Project_compilation_option: STRING is "-project"
---			-- ec option to specify an existing project
---
---	Ace_compilation_option: STRING is "-ace"
---			-- ec option to specify the project Ace file
---
---	Project_path_compilation_option: STRING is "-project_path"
---			-- ec option to specify the path to generate project into
---
---	Ace_extension: STRING is ".ace"
---			-- Ace files extension
---
---	l_External_assemblies: STRING is ".NET assemblies:"
---			-- Label before displaying the selected .NET assemblies
---	
---	l_Local_assemblies: STRING is "Local assemblies:"
---			-- Label before displaying the local assemblies.
-
 	Text_if_compile: STRING is "and compile"
 			-- Text appended to the current state text in case the user asked for project compilation
 

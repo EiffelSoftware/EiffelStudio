@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -86,6 +87,9 @@ end -- class EV_MENU_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/19 03:08:42  oconnor
+--| released
+--|
 --| Revision 1.5  2000/02/14 11:40:30  oconnor
 --| merged changes from prerelease_20000214
 --|

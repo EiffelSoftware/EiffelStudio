@@ -33,7 +33,7 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put, is_equal,
-			prune, occurrences, extendible 
+			prune, occurrences, extendible
 		redefine
 			extend, prune_all, full, wipe_out,
 			is_inserted, make_from_array
@@ -68,7 +68,7 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			index := 0
-			set_count (0)
+			count := 0
 			array_make (1, n)
 		ensure
 			correct_position: before
@@ -82,7 +82,7 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			index := 0
-			set_count (n)
+			count := n
 			array_make (1, n)
 		ensure
 			correct_position: before
@@ -94,10 +94,10 @@ feature -- Initialization
 		do
 			Precursor (a)
 			lower := 1
-			set_count (a.count)
+			count := a.count
 			upper := count
 			index := 0
-		end 
+		end
 
 feature -- Access
 
@@ -133,7 +133,7 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of items.
+		-- Number of items.
 
 feature -- Status report
 
@@ -261,7 +261,7 @@ feature -- Element change
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
-			set_count (count + 1)
+			count := count + 1
 			force_i_th (v, count)
 		end
 
@@ -314,11 +314,11 @@ feature -- Element change
 			if not other.is_empty then
 				resize (1, count + other.count)
 				if index < count then
-					subcopy (Current, index + 1, count, 
-						index + other.count + 1) 
+					subcopy (Current, index + 1, count,
+						index + other.count + 1)
 				end
-				subcopy (other, 1, other.count, index + 1) 
-				set_count (count + other.count)
+				subcopy (other, 1, other.count, index + 1)
+				count := count + other.count
 				other.wipe_out
 			end
 		end
@@ -362,7 +362,7 @@ feature -- Removal
 			if index < count then
 				subcopy (Current, index + 1, count, index)
 			end
-			set_count (count - 1)
+			count := count - 1
 			area.put (default_value, count)
 		ensure then
 			index: index = old index
@@ -380,21 +380,21 @@ feature -- Removal
 			default_val: like item
 		do
 			obj_cmp := object_comparison
-			from 
-				i := 1 
-			until 
-				i > count 
+			from
+				i := 1
+			until
+				i > count
 			loop
 				if i <= count - offset then
-					if offset > 0 then 
-						put_i_th (i_th (i + offset), i) 
+					if offset > 0 then
+						put_i_th (i_th (i + offset), i)
 					end
 					if obj_cmp then
 						res := equal (v, i_th (i))
 					else
 						res := (v = i_th (i))
 					end
-					if res then 
+					if res then
 						offset := offset + 1
 					else
 						i := i + 1
@@ -404,7 +404,7 @@ feature -- Removal
 					i := i + 1
 				end
 			end
-			set_count (count - offset)
+			count := count - offset
 			index := count + 1
 		ensure then
 			is_after: after
@@ -430,7 +430,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		do
-			set_count (0)
+			count := 0
 			index := 0
 			discard_items
 		end
@@ -484,19 +484,13 @@ feature {NONE} -- Implementation
 			if count + 1 > capacity then
 				auto_resize (lower, count + 1)
 			end
-			set_count (count + 1)
+			count := count + 1
 			subcopy (Current, pos , count - 1 , pos + 1)
 			enter (v, pos)
 		ensure
 			new_count: count = old count + 1
 			index_unchanged: index = old index
 			insertion_done: i_th (pos) = v
-		end
-		
-	set_count (new_count: INTEGER) is
-			-- Set `count' to `new_count'
-		do
-			count := new_count			
 		end
 
 invariant

@@ -148,7 +148,6 @@ feature -- Element change
 			end			
 			add_to_container (v)
 			reorder_child (v, 1)
-			index := index + 1
 		end
 
 	put_right (v: like item) is
@@ -290,6 +289,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/16 22:16:45  king
+--| Fixed prune, now passes all regression tests
+--|
 --| Revision 1.20  2000/03/16 21:09:24  king
 --| Corrected prune
 --|

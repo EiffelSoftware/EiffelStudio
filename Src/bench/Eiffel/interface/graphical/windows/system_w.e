@@ -11,7 +11,6 @@ class SYSTEM_W
 
 inherit
 
-	SHARED_WORKBENCH;
 	PROJECT_CONTEXT;
 	BAR_AND_TEXT
 		rename

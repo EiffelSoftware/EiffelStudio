@@ -9,7 +9,6 @@ inherit
 		end;
 	CUSTOM_CONST;
 	CUSTOM_INTERF;
-	SHARED_WORKBENCH;
 	TOP_SHELL
 		rename
 			make as shell_make

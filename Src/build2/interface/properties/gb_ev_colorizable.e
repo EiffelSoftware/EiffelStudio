@@ -62,10 +62,11 @@ feature -- Access
 			create frame
 			create b_area
 			b_area.set_minimum_size (32, 16)
-			create button.make_with_text ("Select")
+			create button.make_with_text ("Select...")
 			button.set_tooltip ("Select background color")
 			background_color := first_object.background_color	
 			frame.extend (b_area)
+			horizontal_box.set_padding (5)
 			horizontal_box.extend (frame)
 			horizontal_box.extend (button)
 			horizontal_box.disable_item_expand (frame)
@@ -81,10 +82,11 @@ feature -- Access
 			create frame
 			create f_area
 			f_area.set_minimum_size (32, 16)
-			create button.make_with_text ("Select")
+			create button.make_with_text ("Select...")
 			button.set_tooltip ("Select foreground color")
 			foreground_color := first_object.foreground_color	
 			frame.extend (f_area)
+			horizontal_box.set_padding (5)
 			horizontal_box.extend (frame)
 			horizontal_box.extend (button)
 			horizontal_box.disable_item_expand (frame)
@@ -190,14 +192,14 @@ feature {NONE} -- Implementation
 		end
 		
 	update_background_display is
-			-- Update area 
+			-- Update area displaying the background color of the EV_COLORIZABLE.
 		do
 			b_area.set_background_color (first.background_color)
 			b_area.clear
 		end
 		
 	update_foreground_display is
-			--
+			-- Update area displaying the background color of the EV_COLORIZABLE.
 		do
 			f_area.set_background_color (first.foreground_color)
 			f_area.clear

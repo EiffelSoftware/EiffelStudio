@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- Launch the application.
 		do
 			default_create
-			post_launch_actions.extend (~prepare)
+			post_launch_actions.extend (agent prepare)
 			launch
 		end
 

@@ -35,7 +35,7 @@ feature -- Initialization
 			name := fn
 			mode := Closed_file
 		ensure
-			file_named: name.is_equal (fn)
+			file_named: name = fn
 			file_closed: is_closed
 		end
 
@@ -49,6 +49,7 @@ feature -- Initialization
 			make (fn)
 			open_read
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 		end
@@ -64,6 +65,7 @@ feature -- Initialization
 			make (fn)
 			open_write
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_write: is_open_write
 		end
@@ -78,6 +80,7 @@ feature -- Initialization
 			make (fn)
 			open_append
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_append: is_open_append
 		end
@@ -92,6 +95,7 @@ feature -- Initialization
 			make (fn)
 			open_read_write
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
@@ -108,6 +112,7 @@ feature -- Initialization
 			make (fn)
 			create_read_write
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 			open_write: is_open_write
@@ -125,6 +130,7 @@ feature -- Initialization
 			make (fn)
 			open_read_append
 		ensure
+			file_named: name = fn
 			exists: exists
 			open_read: is_open_read
 			open_append: is_open_append

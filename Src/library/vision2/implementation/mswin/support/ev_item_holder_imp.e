@@ -24,7 +24,7 @@ feature -- Access
 			-- Current widget related to the container
 		local
 			cwidget: EV_WIDGET_IMP
-			citem: EV_ITEM_IMP
+			citem: EV_SIMPLE_ITEM_IMP
 		do
 			cwidget ?= Current
 			if cwidget /= Void then

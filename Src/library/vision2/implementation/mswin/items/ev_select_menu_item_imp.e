@@ -22,23 +22,21 @@ inherit
 	
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this menu item checked?
-		do
-			Result := parent_imp.item_checked (id)	
-		end
 
 feature -- Status setting
 
 	enable_select is
 			-- Select this menu item.
 		do
-			parent_imp.check_item (id)
+			is_selected := True
+			if has_parent then
+				parent_imp.check_item (id)
+			end
 		end
 
 feature {NONE} -- Implementation
-
-	--parent_imp: EV_MENU_ITEM_LIST_IMP
 
 	interface: EV_SELECT_MENU_ITEM
 
@@ -65,6 +63,11 @@ end -- class EV_SELECT_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 20:31:10  brendel
+--| Now defines is_selected as attribute, because before we were not able
+--| to call any of the *selected features when not parented without feature
+--| calls on Void targets and WEL precondition violations.
+--|
 --| Revision 1.1  2000/02/24 20:27:22  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

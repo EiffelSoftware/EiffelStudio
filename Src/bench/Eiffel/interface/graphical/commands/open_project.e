@@ -11,7 +11,10 @@ inherit
 
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND;
+	ICONED_COMMAND
+		redefine
+			is_sensitive
+		end;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_help as exit_bench,
@@ -42,6 +45,14 @@ feature -- Callbacks
 		do
 			name_chooser.set_window (text_window);
 			name_chooser.call (Current)
+		end;
+
+feature -- Status report
+
+	is_sensitive: BOOLEAN is
+			-- Can Current be executed?
+		do
+			Result := True
 		end;
 
 feature {NONE} -- Implementation

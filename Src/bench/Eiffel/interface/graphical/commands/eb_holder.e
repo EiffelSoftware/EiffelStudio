@@ -1,3 +1,11 @@
+indexing
+
+	description:
+		"Abstract notion of a command holder with a button and %
+		%a menu entry.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class HOLDER
 
 feature -- Initialization
@@ -14,10 +22,12 @@ feature -- Initialization
 			associated_button := a_button;
 			associated_menu_entry := a_menu_entry;
 			associated_command.set_holder (Current)
+			is_sensitive := True;
 		ensure
 			command_set: associated_command = a_command;
 			button_set: associated_button = a_button;
-			menu_entry_set: associated_menu_entry = a_menu_entry
+			menu_entry_set: associated_menu_entry = a_menu_entry;
+			sensitive: is_sensitive
 		end;
 
 	make_plain (a_command: like associated_command) is
@@ -26,9 +36,11 @@ feature -- Initialization
 			non_void_command: a_command /= Void;
 		do
 			associated_command := a_command;
-			associated_command.set_holder (Current)
+			associated_command.set_holder (Current);
+			is_sensitive := True
 		ensure
 			command_set: associated_command = a_command;
+			sensitive: is_sensitive
 		end;
 
 feature -- Setting
@@ -65,8 +77,22 @@ feature -- Setting
 
 	set_selected (selection: BOOLEAN) is
 			-- Set both the `associated_button' and `associated_menu_entry'
-			-- to be selected or not, according `selection'.
+			-- to be selected or not, according to `selection'.
 		do
+		end;
+
+	set_sensitive (sensitivity: BOOLEAN) is
+			-- Set both the `associated_button' and `associated_menu_entry'
+			-- to be sensitive or not, according to `sensitivity'.
+		do
+			if sensitivity then
+				associated_button.set_sensitive;
+				associated_menu_entry.set_sensitive
+			else
+				associated_button.set_insensitive;
+				associated_menu_entry.set_insensitive
+			end;
+			is_sensitive := sensitivity
 		end;
 
 feature -- Execution
@@ -87,6 +113,9 @@ feature -- Properties
 
 	associated_menu_entry: MENU_ENTRY;
 			-- Menu entry in the menus.
+
+	is_sensitive: BOOLEAN
+			-- Can `associated_command' be executed?
 
 invariant
 	command_known: associated_command /= Void

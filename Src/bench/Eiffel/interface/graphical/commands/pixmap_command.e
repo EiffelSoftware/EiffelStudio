@@ -77,16 +77,24 @@ feature -- Properties
 		deferred
 		end;
 
+	is_sensitive: BOOLEAN is
+			-- Can Current be executed?
+		do
+			Result := holder.is_sensitive
+		end;
+
 feature -- Execute
 
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into
 			-- watch shape.
 		do
-			if last_warner /= Void then
-				last_warner.popdown
-			end;
-			execute_licenced (argument)
+			if is_sensitive then
+				if last_warner /= Void then
+					last_warner.popdown
+				end;
+				execute_licenced (argument)
+			end
 		end;
 	
 feature -- Setting

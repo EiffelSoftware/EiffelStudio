@@ -34,6 +34,26 @@ feature -- Properties
 			Result := associated_command.name
 		end;
 
+	insensitive: BOOLEAN is
+			-- Is Current insensitive for input from
+			-- the user?
+		deferred
+		end;
+
+feature -- Status setting
+
+	set_sensitive is
+			-- Make Current sensitive for input from
+			-- the user.
+		deferred
+		end;
+
+	set_insensitive is
+			-- Make Current insensitive for input from
+			-- the user.
+		deferred
+		end;
+
 feature {NONE} -- Properties
 
 	menu_entry_name: STRING is "menu_entry"

@@ -78,7 +78,7 @@ public int r_fides;			/* File descriptor use for retrieve */
 extern void eio();			/* prototypes were missing TNH */
 extern void allocate_gen_buffer();
 extern int idr_read_line();
-extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
+extern long get_alpha_offset();
 
 public char *irt_make();			/* Do the independant retrieve */
 public char *grt_make();			/* Do the general retrieve (3.3 and later) */

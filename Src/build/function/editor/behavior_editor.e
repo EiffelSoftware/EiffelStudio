@@ -1,50 +1,40 @@
+indexing
+	description: "Behavior editor window."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class BEHAVIOR_EDITOR 
+class BEHAVIOR_EDITOR
 
 inherit
-
 	FUNC_EDITOR
 		rename
-			clear as func_clear
+			initialize as make
 		redefine
-			input_list, output_list,
 			input_hole, output_hole,
-			input_stone, output_stone,
-			menu_bar, edited_function
-		end
-	FUNC_EDITOR
-		redefine
-			input_list, output_list,
-			input_hole, output_hole,
-			input_stone, output_stone,
-			menu_bar, edited_function,
-			clear
-		select
+			edited_function,
+			edit_hole,
 			clear
 		end
 
 creation
-
 	make
-	
+
 feature -- Input/output
 
-	input_hole: EVENT_HOLE;
-	input_stone: FUNC_EV_STONE;
+	input_hole: EVENT_HOLE
+	output_hole: COMMAND_HOLE
 
-	output_hole: COMMAND_HOLE;
-	output_stone: FUNC_COM_STONE;
-	
-	input_list: EV_BOX;
-	output_list: COM_BOX;
-	
+--	input_stone: FUNC_EV_STONE
+--	output_stone: FUNC_COM_STONE
+
 feature -- Editing features
 
-	edited_function: BEHAVIOR;
+	edited_function: BEHAVIOR
 
-	current_state: BUILD_STATE;
+	current_state: BUILD_STATE
 
-	associated_context_editor: CONTEXT_EDITOR;
+	associated_context_editor: CONTEXT_EDITOR
 
 	edited_context: CONTEXT is
 			-- Context currently edited.
@@ -54,63 +44,77 @@ feature -- Editing features
 			Result := associated_context_editor.edited_context
 		ensure
 			valid_result: Result /= Void
-		end;
-
-	reset_stones is
-		do
-			input_stone.reset;
-			output_stone.reset
-		end;
+		end
 
 	set_current_state (s: BUILD_STATE) is
 			-- Set current_state to `s'. Also update
 			-- the label in the menu_bar.
 		do
-			current_state := s;
-			menu_bar.label1.set_text (s.label)
-		end;
+			current_state := s
+			state_label.set_text (s.label)
+		end
 
 	set_context_editor (ed: CONTEXT_EDITOR) is
 			-- Set associated_context_editor to `c'.
 		do
 			associated_context_editor := ed
-		end;
+		end
 
 	clear is
 		do
-			func_clear;
+			{FUNC_EDITOR} Precursor
 			current_state := Void
-		end;
+		end
+
+	update_behavior (s: BUILD_STATE) is
+			-- Update Current with state `s'.
+		local
+			prev_s: BUILD_STATE
+			prev_b, b: BEHAVIOR
+			c: CONTEXT
+		do
+			c := edited_context
+			s.find_input (c)
+			if not s.after then
+				b := s.output.data
+			else	
+				create b.make
+				b.set_internal_name ("")
+				b.set_context (c)
+				s.add (c, b)
+			end
+			set_edited_function (b)
+			set_current_state (s)
+		end
 
 feature {NONE} -- Interface
 
-	menu_bar: BEHAVIOR_BAR;
+	edit_hole: B_EDIT_HOLE
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	state_label: EV_LABEL
+
+	create_menu (par: EV_CONTAINER) is
+		local
+			hbox: EV_HORIZONTAL_BOX
+			tbar: EV_TOOL_BAR
+			state_h: STATE_HOLE
 		do
-			initialize (a_name, a_parent);
-			form.detach_top (button_form);
-				-- For some reason, motif attaches the left arrow
-				-- to the left side of the button form when Current
-				-- is placed in the context editor (the state editor
-				-- does not have this problem) - dinov.
-			button_form.detach_left (right_arrow);
-			button_form.detach_left (left_arrow);
-			button_form.detach_right (row_label);
-		end;
+			create hbox.make (par)
+			hbox.set_expand (False)
+			create tbar.make (hbox)
+			create edit_hole.make_with_editor (tbar, Current)
+			create state_label.make_with_text (hbox, Widget_names.behaviour_state_label)
+			create tbar.make (hbox)
+			create state_h.make (tbar)
+			state_h.set_update_procedure (~update_behavior)
+			create state_label.make (hbox)
+		end
 
-feature {NONE}
-
-	create_output_stone (a_parent: COMPOSITE) is
+	clear_menu is
 		do
-			!!output_stone.make (Current);
-			output_stone.make_visible (a_parent);
-		end;
+			edit_hole.set_empty_symbol
+			state_label.set_text ("")
+		end
 
-	create_input_stone (a_parent: COMPOSITE) is
-		do
-			!!input_stone.make (Current);
-			input_stone.make_visible (a_parent);
-		end;
+end -- class BEHAVIOR_EDITOR
 
-end

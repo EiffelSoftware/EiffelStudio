@@ -1,62 +1,67 @@
+indexing
+	description: "Behavior editor hole."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class B_EDIT_HOLE 
+class B_EDIT_HOLE
 
 inherit
-
 	FUNC_EDIT_HOLE
 		redefine
-			process_behavior, function_editor
-		end;
-	BEHAVIOR_STONE
+			function_editor
+		end
+
+	EV_COMMAND
 
 creation
+	make_with_editor
 
-	make
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
-	function_editor: BEHAVIOR_EDITOR;
+	function_editor: BEHAVIOR_EDITOR
 
-	set_widget_default is
-		do
-			initialize_transport
-		end;
-
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.behavior_pixmap
-		end;
+		end
 
-	full_symbol: PIXMAP is
+	full_symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.behavior_dot_pixmap
-		end;
+		end
 
-	create_focus_label is
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.behaviour_label)
+--		end
+
+	set_callbacks is
+			-- Initialize the pick and drop.
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			set_focus_string (Focus_labels.behaviour_label)
-		end;
+			activate_pick_and_drop (Current, Void)
+			create cmd.make (~process_behavior)
+			add_pnd_command (Pnd_types.behavior_type, cmd, Void)
+		end
 
-	source: WIDGET is
+feature {B_EDIT_HOLE} -- Drag and drop
+
+	execute (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
+			-- Prepare the transport.
 		do
-			Result := Current
-		end;
+			set_transported_data (function_editor.edited_function)
+			set_data_type (Pnd_types.behavior_type)
+		end
 
-	label: STRING is
+	process_behavior (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+		local
+			bh: BEHAVIOR
 		do
-			Result := data.label
-		end;
+			bh ?= ev_data.data
+			function_editor.edited_function.merge (bh)
+		end
 
-feature {NONE}
+end -- class B_EDIT_HOLE
 
-	data: BEHAVIOR is
-		do
-			Result := function_editor.edited_function;
-		end;
-
-	process_behavior (dropped: BEHAVIOR_STONE) is
-		do
-			data.merge (dropped.data)
-		end;
-
-end

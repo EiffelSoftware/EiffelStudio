@@ -8,98 +8,121 @@ class
 	STATE_HOLE
 
 inherit
-
-	EDIT_BUTTON
+ 	EB_BUTTON
 		redefine
-			make, execute, process_state
+			make
 		end
+
+	EV_COMMAND
 
 	SHARED_APPLICATION
 
-	COMMAND_ARGS
-
-
 creation
-
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (a_parent: COMPOSITE) is
-			-- Creation routine
+	make (par: EV_TOOL_BAR) is
+			-- Creation routine.
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			Precursor (a_parent)
-			add_button_press_action (3, Current, First)
+			Precursor (par)
+			add_button_press_command (1, Current, Void)
+
+			create cmd.make (~process_state)
+			add_pnd_command (Pnd_types.state_type, cmd, Void)
 		end
 
-feature 
+feature -- Access
 
-	symbol: PIXMAP is
+	set_update_procedure (pr: PROCEDURE [ANY, TUPLE [BUILD_STATE]]) is
+		do
+			update_procedure := pr
+		end
+
+--	set_state (s: STRING) is
+--			-- Set current state to `s'.
+--		local
+--			state: BUILD_STATE
+--		do
+--			state := Shared_app_graph.state (s)
+--			if state /= Void then
+--				update_main_panel (state)
+--			end
+--		end
+
+--	create_empty_editor is
+--		local
+--			editor: STATE_EDITOR
+--		do
+--			editor := Window_mgr.state_editor
+--			window_mgr.display (editor)
+--		end
+
+feature {NONE} -- Implementation
+
+	update_procedure: PROCEDURE [ANY, TUPLE [BUILD_STATE]]
+			-- Procedure called when the state is changed
+
+	symbol: EV_PIXMAP is
 			-- Pixmap appearing on the button.
 		do
 			Result := Pixmaps.state_pixmap
 		end
 
-	create_focus_label is
-			-- Create focus label.
-		do
-			set_focus_string (Focus_labels.current_state_label)
-		end
- 
-	set_state (s: STRING) is
-			-- Set current state to `s'.
-		local
-			state: BUILD_STATE
-		do
-			state := Shared_app_graph.state (s)
-			if state /= Void then
-				update_main_panel (state)
-			end
-		end
+--	create_focus_label is
+--			-- Create focus label.
+--		do
+--			set_focus_string (Focus_labels.current_state_label)
+--		end
 
-feature {NONE}
-
-	create_empty_editor is
-		local
-			editor: STATE_EDITOR
-		do
-			editor := Window_mgr.state_editor
-			window_mgr.display (editor)
-		end
-
-	states_wnd: MAIN_PANEL_STATES_WND is
-			-- List of available states that is displayed
-			-- when right-click on the button.
-		do
-			!! Result.make (main_panel.base, Current)
-		end
-
-	stone_type: INTEGER is
-			-- Stone type.
-		do
-			Result := Stone_types.state_type
-		end
-
-	process_state (dropped: STATE_STONE) is
+	process_state (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 			-- Process a states.
+		local
+			st: BUILD_STATE
 		do
-			update_main_panel (dropped.data)
+			st ?= ev_data.data
+			update_procedure.call ([st])
 		end
 
-	execute (argument: ANY) is
-			-- Display the list of available states.
+	execute (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
+			-- Update the list of available states.
+		local
+			menu: EV_POPUP_MENU
+			elmt: EV_MENU_ITEM
+			update_cmd: EV_ROUTINE_COMMAND
+			arg1: EV_ARGUMENT1 [EV_MENU_ITEM]
+			states: LINKED_LIST [BUILD_STATE]
 		do
-			if argument = First then
-				states_wnd.popup (Shared_app_graph.state_names)
-			else
-				Precursor (argument)
+			states := Shared_app_graph.states
+			if not states.empty then
+				create menu.make (parent.parent)
+				from
+					states.start
+				until
+					states.after
+				loop
+					create elmt.make (menu)
+					elmt.set_text (states.item.label)
+					elmt.set_data (states.item)
+					create update_cmd.make (~update_state)
+					create arg1.make (elmt)
+					elmt.add_select_command (update_cmd, arg1)
+					states.forth
+				end
+				menu.show_at_position (ev_data.x, ev_data.y)
 			end
 		end
 
-	update_main_panel (s: BUILD_STATE) is
-			-- Update the main panel.
+	update_state (arg: EV_ARGUMENT1 [EV_MENU_ITEM]; ev_data: EV_EVENT_DATA) is
+			-- Update the state in the `main_window'.
+		local
+			st: BUILD_STATE
 		do
-			main_panel.set_current_state (s)
+			st ?= arg.first.data
+			update_procedure.call ([st])
 		end
 
 end -- class STATE_HOLE
+

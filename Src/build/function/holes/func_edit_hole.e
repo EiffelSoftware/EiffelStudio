@@ -1,65 +1,60 @@
- 
+indexing
+	description: "General class for function editor hole."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
+
 deferred class FUNC_EDIT_HOLE 
 
 inherit
+	EB_BUTTON
 
-	HOLE
-		select
-			init_toolkit
+	REMOVABLE
+
+feature {NONE} -- Initialization
+
+	make_with_editor (par: EV_TOOL_BAR; ed: like function_editor) is
+		do
+			function_editor := ed
+			make (par)
+			set_callbacks
 		end
-	EB_BUTTON;
-	REMOVABLE;
-	DRAG_SOURCE
 
-feature 
+	function_editor: FUNC_EDITOR
+
+	set_callbacks is 
+		deferred
+		end
+
+	full_symbol: EV_PIXMAP is
+		deferred
+		end
+
+feature -- Access
 
 	remove_yourself is
 		local
-			wipe_out_command: FUNC_WIPE_OUT
+			wipe_out_cmd: FUNC_WIPE_OUT
+			arg: EV_ARGUMENT1 [BUILD_FUNCTION]
 		do
-			!!wipe_out_command;
-			wipe_out_command.execute (function_editor.edited_function)
-		end;
-
-feature {NONE}
-
-	function_editor: FUNC_EDITOR;
-
-	make (ed: like function_editor; a_parent: COMPOSITE) is
-		do
-			function_editor := ed;
-			make_visible (a_parent);
-			register;
-			set_widget_default
-		end;
-
-	target: WIDGET is
-		do
-			Result := Current
-		end;
-
-	set_widget_default is 
-		deferred
-		end;
-
-	full_symbol: PIXMAP is
-		deferred
-		end;
-
-feature 
+			create wipe_out_cmd
+			create arg.make (function_editor.edited_function)
+			wipe_out_cmd.execute (arg, Void)
+		end
 
 	set_empty_symbol is
 		do
 			if pixmap /= symbol then
-				set_symbol (symbol)
+				set_pixmap (symbol)
 			end
-		end;
+		end
 
 	set_full_symbol is
 		do
 			if pixmap /= full_symbol then
-				set_symbol (full_symbol)
+				set_pixmap (full_symbol)
 			end
 		end
 
-end
+end -- class FUNC_EDIT_HOLE
+

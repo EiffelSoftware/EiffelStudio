@@ -1,56 +1,61 @@
+indexing
+	description: "Wipe out a function from the list."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
 
 class FUNC_WIPE_OUT 
 
 inherit
-
 	FUNC_COMMAND
 		
 feature {NONE}
 
-	input_list, output_list: EB_LINKED_LIST [DATA];
+	input_list, output_list: EB_LINKED_LIST [PND_DATA]
 
-    c_name: STRING is
+    name: STRING is
         do
             Result := Command_names.func_wipe_out_cmd_name
-        end;
+        end
 	
 	redo_work is
 		do
 			edited_function.wipe_out
-		end; -- redo
+		end
 
 	undo_work is
 		do
 			edited_function.set (input_list,
-						output_list);
-			duplicate_lists (input_list, output_list);
-		end; -- undo
+						output_list)
+			duplicate_lists (input_list, output_list)
+		end
 
-	function_work is
+	work is
 		local
-			c: INTEGER;
+			c: INTEGER
 			il, ol: like input_list
 		do
 			if
 				not edited_function.empty
 			then
-				il := edited_function.input_list;
-				ol := edited_function.output_list;
-				duplicate_lists (il, ol);
-				edited_function.wipe_out;
-				update_interface;
+				il := edited_function.input_list
+				ol := edited_function.output_list
+				duplicate_lists (il, ol)
+				edited_function.wipe_out
+				update_interface
 				update_history
 			end
-		end; -- work
+		end
 
 	duplicate_lists (input_l, output_l: like input_list) is
 		do
-			input_list := input_l.duplicate;
-			output_list := output_l.duplicate;
-		end; -- duplicate_lists
+			input_list := input_l.duplicate
+			output_list := output_l.duplicate
+		end
 
 	worked_on: STRING is
 		do
-		end; -- worked_on
+		end
 
-end
+end -- class FUNC_WIPE_OUT
+

@@ -13,7 +13,7 @@ feature {NONE}
 
 	associated_editor: FUNC_EDITOR;
 
-	data: DATA is
+	data: HELPABLE is
 		deferred
 		end;
 

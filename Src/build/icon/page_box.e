@@ -1,5 +1,5 @@
 
-class PAGE_BOX [T -> DATA] 
+class PAGE_BOX [T -> HELPABLE] 
 
 inherit
 

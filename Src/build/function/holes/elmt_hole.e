@@ -1,62 +1,28 @@
+indexing
+	description: "General notion of function (input or output) hole."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
---=========================== class FUN_HOLE =======================
---
--- Author: Deramat
--- Last revision: 03/25/92
---
--- General notion of function (input or output) hole.
---
---===================================================================
-
-class ELMT_HOLE 
+class ELMT_HOLE
 
 inherit
-
-	ICON_HOLE
+	EB_BUTTON
 
 creation
+	make_with_editor
 
-	make
+feature {NONE} -- Initialization
 
-feature {NONE}
-
-	make (a_parent: COMPOSITE; func: FUNC_EDITOR) is
+	make_with_editor (par: EV_TOOL_BAR; func: FUNC_EDITOR) is
 		do
-			associated_function := func;
-			set_label (associated_label);
-			make_visible (a_parent);
-			set_symbol (associated_symbol);
-		end;
+			make (par)
+		end
 
-	associated_function: FUNC_EDITOR;
-			-- Function associated with current hole
-
-	associated_symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 			-- Symbol associated with current hole
 		do
-		end;
+		end
 
-	associated_label: STRING is
-			-- Label associated with current hole
-		do
-			Result := ""
-		end;
-	
-feature 
+end -- class ELMT_HOLE
 
-	reset is
-			-- Reset the symbol and label of 
-			-- current hole to their default
-			-- values.
-		do
-			set_label (associated_label);
-			set_symbol (associated_symbol);
-		end;
-	
-feature {NONE}
-
-	stone_type: INTEGER is 
-		do
-		end;
-
-end

@@ -49,21 +49,45 @@ feature -- C code generation
 			l_buffer: GENERATION_BUFFER
 			l_final_mode: BOOLEAN
 			l_cl_type: CL_TYPE_I
+			l_tuple_type: TUPLE_TYPE_I
+			l_is_tuple: BOOLEAN
 		do
 			l_buffer := context.buffer
 			l_final_mode := not context.workbench_mode
+			l_cl_type := type_to_create
+			l_tuple_type ?= l_cl_type
+			l_is_tuple := l_tuple_type /= Void
 			
-			if l_final_mode then
+			if l_final_mode and not l_is_tuple then
 				l_buffer.putstring ("RTLNS(")
 				generate_cid (l_buffer, l_final_mode)
 				l_buffer.putstring (", ")
-				l_cl_type ?= context.creation_type (type)
 				l_buffer.putint (l_cl_type.type_id - 1)
 				l_buffer.putstring (", ")
 				l_cl_type.associated_class_type.skeleton.generate_size (l_buffer)
 			else
-				l_buffer.putstring ("RTLN(")
+				if l_is_tuple then
+					l_buffer.putstring ("RTLNTS(")	
+				else
+					l_buffer.putstring ("RTLN(")
+				end
 				generate_cid (l_buffer, l_final_mode)
+			end
+			if l_is_tuple then
+					-- Add `count' parameter and if it is full of basic types.
+				check
+					l_tuple_type_not_void: l_tuple_type /= Void
+				end
+				l_buffer.putstring (", ")
+					-- We add `+1' so that we do not need to do `i - 1' each time
+					-- we want to access a tuple item in TUPLE class.
+				l_buffer.putint (l_tuple_type.true_generics.count + 1)
+				l_buffer.putstring (", ")
+				if l_tuple_type.is_basic_uniform then
+					l_buffer.putint (1)
+				else
+					l_buffer.putint (0)
+				end
 			end
 			l_buffer.putchar (')')
 		end

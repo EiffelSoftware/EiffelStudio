@@ -59,8 +59,8 @@ feature
 	sk_value: INTEGER is
 			-- Sk value
 		do
---			Result := Sk_bit + value
-			Result := 671088640 + value
+			Result := Sk_bit + value
+--			Result := 671088640 + value
 		end;
 
 	trace is

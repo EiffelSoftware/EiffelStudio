@@ -35,7 +35,7 @@ feature -- Interface
 			!!backgr_pixmap.make (Widget_names.textfield, Current, 
 					Bg_pixmap_cmd, editor);
 			!!pixmap_open_b.make (Widget_names.open_pixmap_name, Current);
-			!!color_set.make (Widget_names.color_form_name, Current);
+			!!color_set.make (Widget_names.color_form_name, Current, editor);
 
 			!!colors_stone;
 			!!bg_pixmap_stone;
@@ -51,6 +51,7 @@ feature -- Interface
 			attach_left (label_fg_color, 10);
 			attach_left (label_bg_color, 10);
 			attach_left (label_pixmap, 10);
+			attach_left (pixmap_open_b, 10);
 
 			attach_left_widget (fg_color_stone, fgr_color, 5);
 			attach_left_widget (bg_color_stone, backgr_color, 5);
@@ -128,17 +129,17 @@ feature {NONE}
 
 	reset is
 		do
-			if not (context.bg_pixmap_name = Void) then
+			if context.bg_pixmap_name /= Void then
 				backgr_pixmap.set_text (context.bg_pixmap_name)
 			else
 				backgr_pixmap.set_text ("")
 			end;
-			if not (context.bg_color_name = Void) then
+			if context.bg_color_name /= Void then
 				backgr_color.set_text (context.bg_color_name)
 			else
 				backgr_color.set_text ("")
 			end;
-			if not (context.fg_color_name = Void) then
+			if context.fg_color_name /= Void then
 				fgr_color.set_text (context.fg_color_name)
 			else
 				fgr_color.set_text ("")
@@ -147,19 +148,13 @@ feature {NONE}
 
 	apply is
 		do
-			if (not equal (backgr_pixmap.text, context.bg_pixmap_name) and
-				then not backgr_pixmap.text.empty) 
-			then
+			if not equal (backgr_pixmap.text, context.bg_pixmap_name) then
 				context.set_bg_pixmap_name (backgr_pixmap.text);
 			end;
-			if (not equal (backgr_color.text, context.bg_color_name) and 
-				then not backgr_color.text.empty) 
-			then
+			if not equal (backgr_color.text, context.bg_color_name) then
 				context.set_bg_color_name (backgr_color.text);
 			end;
-			if (not equal (fgr_color.text, context.fg_color_name) and then
-				not fgr_color.text.empty) 
-			then
+			if not equal (fgr_color.text, context.fg_color_name) then
 				context.set_fg_color_name (fgr_color.text);
 			end;
 		end;

@@ -15,7 +15,7 @@ inherit
 		end;
 	SHARED_APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -68,8 +68,8 @@ feature {NONE} -- Properties
 			elseif not status.is_stopped then
 				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
-				!! Result.make;
-				!! obj.make (object.object_address,
+				create Result.make;
+				create obj.make (object.object_address,
 					tool.sp_lower, tool.sp_upper);
 				attributes := obj.attributes;
 				is_special := obj.is_special;

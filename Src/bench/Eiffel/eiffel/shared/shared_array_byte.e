@@ -7,7 +7,7 @@ feature {NONE}
 	Byte_array: BYTE_ARRAY is
 			-- Byte code array
 		once
-			!!Result.make;
+			create Result.make;
 		end;
 
 end

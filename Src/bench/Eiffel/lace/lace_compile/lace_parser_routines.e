@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			-- Stored value of last generated syntax error generated calling
 			-- routine `parse_ast'
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	parse_lace (a_file: FILE) is

@@ -21,7 +21,7 @@ inherit
 			output_value
 		end
 
-creation {ATTR_REQUEST}
+create {ATTR_REQUEST}
 
 	make_attribute
 
@@ -38,7 +38,7 @@ feature {ATTR_REQUEST}
 				e_class := a_class;
 				is_attribute := True;
 			end;
-			!! attributes.make
+			create attributes.make
 		end;
 
 feature -- Property

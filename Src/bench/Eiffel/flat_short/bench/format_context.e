@@ -27,7 +27,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make, make_for_case, make_for_appending
 
 feature -- Initialization
@@ -82,9 +82,9 @@ feature -- Initialization
 			valid_source_class: source_class /= Void
 			valid_ast: feature_as /= Void
 		do
-			!! global_adapt.make_with_classes (source_class, class_c)
+			create global_adapt.make_with_classes (source_class, class_c)
 			global_adapt.set_locals (feature_as)
-			!! unnested_local_adapt
+			create unnested_local_adapt
 			unnested_local_adapt.update_from_global (global_adapt)
 			local_adapt := unnested_local_adapt
 		ensure
@@ -444,7 +444,7 @@ feature -- Setting
 		do
 			global_adapt := clone (global_adapt)
 			global_adapt.update_new_source_in_assertion (source)
-			!! unnested_local_adapt
+			create unnested_local_adapt
 			unnested_local_adapt.update_from_global (global_adapt)
 			local_adapt := unnested_local_adapt
 		end
@@ -824,7 +824,7 @@ feature -- Output
 	register_ancestors_invariants is
 			-- Register the invariants for target class.
 		do
-			!! format_registration.make (class_c, client)
+			create format_registration.make (class_c, client)
 			format_registration.register_ancestors_invariants
 		end
 
@@ -1071,9 +1071,9 @@ feature -- Implementation
 				feature_i := adapt.target_feature
 				f_name := adapt.final_name
 				if feature_i /= Void and then in_bench_mode then
-					!FEATURE_TEXT! item.make (feature_i.api_feature (adapt.target_class.class_id), f_name)
+					create {FEATURE_TEXT} item.make (feature_i.api_feature (adapt.target_class.class_id), f_name)
 				else			
-					!LOCAL_TEXT! item.make (f_name)
+					create {LOCAL_TEXT} item.make (f_name)
 				end
 				text.add (item)
 				args := arguments
@@ -1214,7 +1214,7 @@ feature {NONE} -- Implementation
 			positive_i: i > 0
 		do
 			if i > 5 then
-				!! Result.make (i)
+				create Result.make (i)
 			else
 				Result := tabs_array @ i
 			end

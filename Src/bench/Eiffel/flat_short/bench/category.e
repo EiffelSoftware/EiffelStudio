@@ -19,7 +19,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 
 	make
 
@@ -28,7 +28,7 @@ feature -- Initialization
 	make is
 			-- Initialize Current and set comments to `c'.
 		do
-			!! clauses.make;
+			create clauses.make;
 		end;
 
 feature -- Properties
@@ -158,7 +158,7 @@ feature -- Element change
 			if not clauses.off then
 				clauses.item.add (feat_adapter);
 			else
-				!! new_clause.make (feat_adapter);
+				create new_clause.make (feat_adapter);
 				clauses.finish;
 				clauses.put_right (new_clause)
 			end;
@@ -172,7 +172,7 @@ feature -- Element change
 			new_clause: FEATURE_CLAUSE_EXPORT;
 		do
 			if clauses.is_empty then
-				!! new_clause.make (feat_adapter);
+				create new_clause.make (feat_adapter);
 				clauses.finish;
 				clauses.put_right (new_clause)
 			else

@@ -9,7 +9,7 @@ class
 inherit
 	FEATURE_ADAPTATION
 
-creation
+create
 	make
 	
 feature -- Status Report

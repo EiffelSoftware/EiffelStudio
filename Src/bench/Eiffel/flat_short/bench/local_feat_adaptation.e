@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 			formal_type: FORMAL_A
 			l_type_feature: TYPE_FEATURE_I
 		do
-			!! Result;
+			create Result;
 			if already_evaluated_type then
 				Result.set_source_type (source_type);
 				Result.set_target_type (target_type);

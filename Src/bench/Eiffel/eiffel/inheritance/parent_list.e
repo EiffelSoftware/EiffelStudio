@@ -5,7 +5,7 @@ class PARENT_LIST
 inherit
 	FIXED_LIST [PARENT_C]
 
-creation
+create
 	make, make_filled
 
 feature -- Merging parents

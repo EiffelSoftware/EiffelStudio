@@ -10,7 +10,7 @@ inherit
 			{NONE} non_used_command_line
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

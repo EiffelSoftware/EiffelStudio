@@ -9,7 +9,7 @@ inherit
 	SHARED_DEBUG
 	EXEC_MODES
 
-creation
+create
 
 	make 
 

@@ -5,7 +5,7 @@ feature {NONE}
 	Visible_default: VISIBLE_I is
 			-- Default visible level for a class
 		once
-			!!Result;
+			create Result;
 		end;
 
 end

@@ -39,7 +39,7 @@ feature
 			debug ("debug_recv")
 				print ("DEBUGGED_OBJECT.make%N")
 			end
-			!! rqst.make (addr);
+			create rqst.make (addr);
 			rqst.set_sp_bounds (sp_lower, sp_upper);
 			rqst.send;
 			attributes := rqst.attributes;

@@ -27,7 +27,7 @@ inherit
 			is_equal
 		end;
 
-creation {ATTR_REQUEST}
+create {ATTR_REQUEST}
 
 	make_attribute
 
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			end;
 			address := addr;
 			capacity := cap;
-			!! items.make
+			create items.make
 		end;
 
 feature -- Properties

@@ -10,7 +10,7 @@ feature
 	Extern_declarations: EXTERN_DECLARATIONS is
 			-- C extern declarations generator
 		once
-			!! Result.make
+			create Result.make
 		end;
 
 end

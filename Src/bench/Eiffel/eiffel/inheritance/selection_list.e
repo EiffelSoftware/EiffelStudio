@@ -33,7 +33,7 @@ inherit
 			is_equal
 		end
 
-creation
+create
 	make
 	
 feature -- Access
@@ -126,7 +126,7 @@ end;
 				loop
 					feature_i := item.a_feature;
 					if parents.is_selecting (feature_i.feature_name) then
-						!!vmrc2;
+						create vmrc2;
 						vmrc2.set_class (System.current_class);
 						vmrc2.init (Result, feature_i);
 						Error_handler.insert_error (vmrc2);
@@ -231,7 +231,7 @@ end;
 			r_id_set := a_feature.rout_id_set;
 			a_feature := a_feature.unselected (id);
 				-- Process new routine id set
-			!!rout_id_set.make
+			create rout_id_set.make
 			feature_name_id := a_feature.feature_name_id;	
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("unselecting :");

@@ -6,7 +6,7 @@ feature {NONE}
 
 	Like_control: LIKE_CONTROLER is
 		once
-			!!Result.make;
+			create Result.make;
 		end;
 
 end

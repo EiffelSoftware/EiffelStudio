@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	server_mode_ref: BOOLEAN_REF is
 		once
-			!! Result
+			create Result
 		end
 
 end -- class SHARED_STATUS

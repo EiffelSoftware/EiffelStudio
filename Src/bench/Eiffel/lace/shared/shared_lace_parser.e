@@ -12,7 +12,7 @@ feature -- Access
 	Parser: LACE_PARSER is
 			-- Lace parser
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			lace_parser_not_void: Result /= Void
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Classname_finder: CLASSNAME_FINDER is
 			-- Classname finder
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			classname_finder_not_void: Result /= Void
 		end

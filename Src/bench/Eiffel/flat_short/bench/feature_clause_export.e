@@ -19,7 +19,7 @@ inherit
 	SHARED_TEXT_ITEMS;
 	COMPILER_EXPORTER
 
-creation
+create
 
 	make
 
@@ -31,11 +31,11 @@ feature -- Initialization
 			valid_feat_adapter: feat_adapter /= Void;
 		do
 			if feat_adapter.target_feature = Void then
-				! EXPORT_ALL_I ! export_status;
+				create { EXPORT_ALL_I } export_status;
 			else
 				export_status := feat_adapter.target_feature.export_status;
 			end;
-			!! features.make;
+			create features.make;
 			add (feat_adapter);
 		ensure
 			has_feat_adapter: features.has (feat_adapter);

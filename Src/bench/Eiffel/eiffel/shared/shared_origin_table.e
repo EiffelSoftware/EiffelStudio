@@ -10,7 +10,7 @@ feature {NONE}
 			-- of features sorted by origins: necessary for handling the
 			-- selections
 		once
-			!!Result.make (500);
+			create Result.make (500);
 		end;
 
 end

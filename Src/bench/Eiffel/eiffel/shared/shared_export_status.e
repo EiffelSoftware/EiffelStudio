@@ -4,12 +4,12 @@ feature {NONE}
 
 	Export_all: EXPORT_ALL_I is
 		once
-			!!Result;
+			create Result;
 		end;
 
 	Export_none: EXPORT_NONE_I is
 		once
-			!!Result;
+			create Result;
 		end;
 
 end

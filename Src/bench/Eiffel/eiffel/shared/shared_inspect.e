@@ -12,6 +12,6 @@ feature {NONE}
 
 	Inspect_controlers: LINKED_LIST [INSPECT_CONTROL] is
 		once
-			!!Result.make;
+			create Result.make;
 		end;
 end

@@ -5,7 +5,7 @@ class GENERIC_SKELETON
 inherit
 	LINKED_LIST [ATTR_DESC]
 
-creation
+create
 	make
 
 feature -- Creation of CLASS_TYPE skeleton
@@ -20,7 +20,7 @@ feature -- Creation of CLASS_TYPE skeleton
 			from
 				i := 0
 				nb := count
-				!! Result.make (nb)
+				create Result.make (nb)
 				start
 			until
 				after

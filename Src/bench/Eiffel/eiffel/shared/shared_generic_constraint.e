@@ -32,7 +32,7 @@ feature -- Delayed validity checking
 		local
 			t: CONSTRAINT_CHECKING_INFO
 		do
-			!! t.make (gen_type_a, formal_dec_as, constraint_type, context_class,
+			create t.make (gen_type_a, formal_dec_as, constraint_type, context_class,
 				to_check, i, formal_type)
 			remaining_validity_checking_list.extend (t)
 		end
@@ -62,7 +62,7 @@ feature {NONE} -- Shared object implementation
 	Constraint_error_list_cell: CELL [LINKED_LIST [CONSTRAINT_INFO]] is
 			-- Shared object which contains the `constraint_error_list'.
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	Remaining_validity_checking_list_cell: CELL [LINKED_LIST [CONSTRAINT_CHECKING_INFO]] is
@@ -70,8 +70,8 @@ feature {NONE} -- Shared object implementation
 		local
 			t: like remaining_validity_checking_list
 		once
-			!! t.make
-			!! Result.put (t)
+			create t.make
+			create Result.put (t)
 		end
 
 end -- class SHARED_GENERIC_CONSTRAINT

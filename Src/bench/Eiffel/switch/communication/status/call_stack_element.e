@@ -33,7 +33,7 @@ inherit
 			{NONE} all
 		end
 
-creation {EIFFEL_CALL_STACK}
+create {EIFFEL_CALL_STACK}
 	make
 create {STOPPED_HDLR}
 	dummy_make

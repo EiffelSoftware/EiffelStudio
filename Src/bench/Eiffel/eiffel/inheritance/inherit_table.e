@@ -139,7 +139,7 @@ feature
 	adaptations: LINKED_LIST [FEATURE_ADAPTATION] is
 			-- List of redefinitions and joins
 		once
-			!!Result.make
+			create Result.make
 		end;
 
 	pass2_control: PASS2_CONTROL
@@ -329,10 +329,10 @@ debug ("ACTIVITY")
 	end;
 end;
 					if a_class.is_used_as_expanded then
-						!!depend_unit.make_expanded_unit (a_class.class_id);
+						create depend_unit.make_expanded_unit (a_class.class_id);
 						pass2_control.propagators.extend (depend_unit)
 					end;
-					!!depend_unit.make_creation_unit (a_class.class_id);
+					create depend_unit.make_creation_unit (a_class.class_id);
 					pass2_control.propagators.extend (depend_unit)
 				end;
 			else
@@ -358,7 +358,7 @@ debug ("ACTIVITY")
 	io.error.putstring (creation_name);
 	io.error.putstring (" inserted in pass2_control.propagators%N");
 end;
-							!!depend_unit.make (a_class.class_id, resulting_table.found_item);
+							create depend_unit.make (a_class.class_id, resulting_table.found_item);
 							pass2_control.propagators.extend (depend_unit);
 						end;
 					end;
@@ -367,7 +367,7 @@ end;
 				if a_class.is_used_as_expanded and then
 					(new_creators  = Void or else new_creators.count > 1)
 				then
-					!!depend_unit.make_expanded_unit (a_class.class_id);
+					create depend_unit.make_expanded_unit (a_class.class_id);
 					pass2_control.propagators.extend (depend_unit)
 				end;
 				old_creators := Void
@@ -498,8 +498,8 @@ end;
 		local
 			select_table: SELECT_TABLE;
 		once
-			!!select_table.make (1);
-			!!Result.make (1);
+			create select_table.make (1);
+			create Result.make (1);
 			Result.set_origin_table (select_table);
 		end;
 
@@ -630,7 +630,7 @@ end;
 					then
 							-- Case of an implementation of inherited deferred
 							-- features by an inherited non-deferred feature
-						!!def.make (inherit_feat, feature_i);
+						create def.make (inherit_feat, feature_i);
 							-- Reset assertions of `feature_i'
 						adaptations.put_front (def);
 					else
@@ -789,7 +789,7 @@ end;
 					compute_new_rout_id := True;
 				end;
 				if compute_new_rout_id then
-					!!new_rout_id_set.make
+					create new_rout_id_set.make
 					new_rout_id := feature_i.new_rout_id;
 					new_rout_id_set.put (new_rout_id);
 					feature_i.set_rout_id_set (new_rout_id_set);
@@ -827,18 +827,18 @@ end;
 					create info.make (feature_i)
 					inherit_feat.set_inherited_info (info);
 						-- Store the redefintion for later
-					!!redef.make (inherit_feat, feature_i);
+					create redef.make (inherit_feat, feature_i);
 					adaptations.put_front (redef);
 				elseif inherited_info.parent = Void then
 						-- The feature has two implementations in the class
-					!!vmfn;
+					create vmfn;
 					vmfn.set_class (a_class);
 					vmfn.set_a_feature (feature_i);
 					vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id));
 					Error_handler.insert_error (vmfn);
 				else
 						-- Name clash: a non-deferred feature is inherited
-					!!vmfn1;
+					create vmfn1;
 					vmfn1.set_class (a_class);
 					vmfn1.set_a_feature (feature_i);
 					vmfn1.set_inherited_feature (inherited_info.a_feature);
@@ -979,7 +979,7 @@ debug ("ACTIVITY")
 end;
 					if not is_the_same then
 							-- assertions have changed
-						!!assert_prop_list.make;
+						create assert_prop_list.make;
 						assert_prop_list.compare_objects;
 						assert_prop_list.extend (feature_i.rout_id_set.first)
 					else
@@ -1140,7 +1140,7 @@ end;
 		local
 			redefined_features: REDEF_FEAT;
 		do
-			!!redefined_features;
+			create redefined_features;
 			redefined_features.process (adaptations);
 		end;
 
@@ -1246,7 +1246,7 @@ end;
 				if inherited_info = Void then
 					if inherit_feat.nb_features > 0 then
 							-- Cannot find a redefinition
-						!!vdrs4;
+						create vdrs4;
 						vdrs4.set_class (a_class);
 						vdrs4.set_feature_name (Names_heap.item (key_for_iteration))
 						Error_handler.insert_error (vdrs4);
@@ -1270,7 +1270,7 @@ end;
 								-- Keep track of the feature adaptation.
 								-- The deferred features must have the same
 								-- signature
-							!! join.make (inherit_feat, inherited_feature);
+							create join.make (inherit_feat, inherited_feature);
 							adaptations.put_front (join);
 debug ("ACTIVITY")
 	io.putstring ("joining feature: ");
@@ -1406,7 +1406,7 @@ end;
 			feature_name_id := f.feature_name_id;
 			inherited_features.put (f, feature_name_id);
 			if inherited_features.conflict then
-				!!vmfn;
+				create vmfn;
 				vmfn.set_class (a_class);
 				vmfn.set_a_feature (f);
 				vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id));

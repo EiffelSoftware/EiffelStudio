@@ -20,7 +20,7 @@ inherit
 
 	SHARED_ARG_TYPES
 
-creation
+create
 
 	make, make_with_classes
 

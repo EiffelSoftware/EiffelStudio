@@ -13,7 +13,7 @@ inherit
 			put_origin_comment, chained_assertion
 		end
 
-creation
+create
 	make
 
 feature -- Property
@@ -84,21 +84,21 @@ feature -- Execution
 						feature_comments := c_comments.item (start_pos)
 					end
 				else
-					!! file.make (written_in_class.file_name);
+					create file.make (written_in_class.file_name);
 					if file.exists then
 						if rout_as /= Void then
 							end_pos := rout_as.body_start_position;
-							!! eiffel_file.make_with_positions (file.name, start_pos, end_pos);
+							create eiffel_file.make_with_positions (file.name, start_pos, end_pos);
 							eiffel_file.set_current_feature (f_ast);
 							feature_comments := eiffel_file.current_feature_comments;
 						elseif f_ast.is_attribute then
-							!! eiffel_file.make_with_positions (file.name, f_ast.start_position, f_ast.end_position);
+							create eiffel_file.make_with_positions (file.name, f_ast.start_position, f_ast.end_position);
 							eiffel_file.set_current_feature (f_ast);
 							feature_comments := eiffel_file.current_feature_comments;
 						end
 					end;
 				end;
-				!! assert_server.make_for_feature (target_feat, f_ast);
+				create assert_server.make_for_feature (target_feat, f_ast);
 				init_feature_context (source_feat, target_feat, f_ast);
 				indent;
 				f_ast.format (Current);
@@ -124,7 +124,7 @@ feature -- Element change
 			-- Print the origin comment if necessary and
 			-- print the export status.
 		do
-			{FORMAT_CONTEXT} Precursor;
+			Precursor {FORMAT_CONTEXT};
 
 				--| Print export status.
 			if not export_status.is_all then

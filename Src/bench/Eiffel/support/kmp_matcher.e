@@ -8,7 +8,7 @@ class KMP_MATCHER
 inherit
 	MATCHER
 
-creation
+create
 	make, make_empty
 
 feature -- Access
@@ -185,7 +185,7 @@ feature {NONE} -- Initialization
 			from 
 				pattern_area := pattern.area
 				pattern_count := pattern.count
-				!! table.make (0, pattern_count)
+				create table.make (0, pattern_count)
 				table_area := table.area
 				l := 0
 				k := -1

@@ -8,7 +8,7 @@ feature {NONE}
 	Argument_types: ARG_TYPES is
 			-- Shared access to argument types container
 		once
-			!!Result;
+			create Result;
 		end;
 
 end

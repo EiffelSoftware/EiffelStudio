@@ -7,7 +7,7 @@ indexing
 
 class APPLICATION_EXECUTION
 
-creation
+create
 
 	make
 
@@ -83,7 +83,7 @@ feature
 
 	status: APPLICATION_STATUS is
 		once
-			!! Result
+			create Result
 		end
 
 	termination_command: E_CMD;

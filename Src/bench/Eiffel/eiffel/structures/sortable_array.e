@@ -9,6 +9,9 @@ class
 
 inherit
 	ARRAY [G]
+		redefine
+			subarray
+		end
 
 create 
 	make
@@ -214,5 +217,15 @@ feature -- Basic operations
 				end
 			end
 		end
-	
+
+feature -- Duplication
+
+	subarray (start_pos, end_pos: INTEGER): SORTABLE_ARRAY [G] is
+			-- Array made of items of current array within
+			-- bounds `start_pos' and `end_pos'.
+		do
+			create Result.make (start_pos, end_pos)
+			Result.subcopy (Current, start_pos, end_pos, start_pos)
+		end
+
 end -- class SORTABLE_ARRAY

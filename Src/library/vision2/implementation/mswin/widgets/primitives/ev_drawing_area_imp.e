@@ -10,8 +10,7 @@ class
 inherit
 	EV_DRAWING_AREA_I
 		redefine
-			interface,
-			draw_straight_line
+			interface
 		end
 
 	EV_DRAWABLE_IMP

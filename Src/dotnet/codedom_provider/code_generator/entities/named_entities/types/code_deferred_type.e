@@ -15,6 +15,21 @@ inherit
 create 
 	make
 
+feature -- Access
+
+	is_interface: BOOLEAN
+			-- Is generated type an interface?
+
+feature -- Element Settings
+
+	set_is_interface is
+			-- Set `is_interface' to `True'.
+		do
+			is_interface := True
+		ensure
+			is_interface_set: is_interface
+		end		
+
 feature {NONE} -- Code Generation
 
 	class_declaration: STRING is 

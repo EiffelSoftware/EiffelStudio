@@ -932,6 +932,16 @@ rt_public void reclaim(void)
 	g_data.status = 0;
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
+#ifdef EIF_THREADS
+		/* Call it once more:
+		 * the first `full_sweep' cannot call a dispose routine on
+		 * frozen objects. If the code is 	
+		 * correctly written, they must be ALL unfrozen at the end of the
+		 * first `full_sweep()', so that the run-time can call some dispose
+		 * routine on them without requiring another third call.
+		 */
+	full_sweep();				
+#endif
 
 #ifdef EIF_REM_SET_OPTIMIZATION
 	if (special_rem_set)
@@ -1058,6 +1068,7 @@ rt_private void run_collector(void)
 		full_mark(MTC_NOARG);		/* Mark phase */
 		full_update();		/* Update moved and remembered set (BEFORE sweep) */
 	}
+	full_sweep();			/* Sweep phase */
 	full_sweep();			/* Sweep phase */
 
 	/* After a full collection (this routine is only called for a full mark

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a gtk label.
-	   do
+		do
 			widget := gtk_text_new (Default_pointer, 
 				Default_pointer)
 			gtk_object_ref (widget)
@@ -50,6 +50,147 @@ feature -- Access
 			p := gtk_editable_get_chars (GTK_EDITABLE(widget), 0, -1)
 			!!Result.make (0)
 			Result.from_c (p)
+		end
+
+	line (i: INTEGER): STRING is
+			-- Returns the content of the `i'th line.
+		local
+			line_begin_pos, line_end_pos: INTEGER
+			counter : INTEGER
+			p: POINTER
+		do
+			from
+				counter := 1
+				line_begin_pos := 1
+				line_end_pos := 1
+			until
+				counter = i
+			loop
+				line_begin_pos := text.index_of ('%N', line_begin_pos)
+				counter := counter + 1
+				line_begin_pos := line_begin_pos + 1
+			end
+
+			-- We do not substract 1 to `line_end_pos' because of 
+			-- GTK function `gtk_editable_get_chars'.
+			line_end_pos := text.index_of ('%N', line_begin_pos)
+
+			if (line_end_pos = 0) and then (counter = line_count) then
+				-- the required line is the last line and there
+				-- is no return at the end of it.
+				line_end_pos := text.count + 1
+				-- The `+ 1' is due to GTK function `gtk_editable_get_chars'. 
+			end
+
+			p := gtk_editable_get_chars (widget, line_begin_pos - 1, line_end_pos - 1)
+
+			create Result.make (0)
+			Result.from_c (p)
+		end
+
+feature -- Status report
+
+	current_line_number: INTEGER is
+			-- Returns the number of the line the cursor currently
+			-- is on.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+	line_count: INTEGER is
+			-- Number of lines in widget.
+			-- Based on the number of '%N' in the text.
+			-- Should be replaced by a Gtk function as soon
+			-- as it exists.
+		local
+			count: INTEGER
+			pos: INTEGER
+		do
+			count := 1
+			if (text /= Void) and then (not text.empty) then
+				from
+					pos := 1
+				until
+					(pos > text.count) or (pos = 0)
+				loop
+					-- Look for 'Return' in the string.
+					-- Return is symbolized by '%N'
+					pos := text.index_of ('%N', pos)
+					if pos > 0 then
+						count := count + 1
+						-- increment the position of research of 1
+						pos := pos + 1
+					end
+				end
+			end
+			Result := count		
+		end 
+
+	first_position_from_line_number (i: INTEGER): INTEGER is
+			-- Position of the first character on the `i'-th line.
+		local
+			pos : INTEGER
+			count: INTEGER
+			start: INTEGER
+		do
+			if (i = 1) then
+				Result := 1
+			else
+				from
+					count := 1
+					pos := 1
+					start := 1
+				until
+					count = i
+				loop
+					-- Look for the ith'Return' in the string.
+					-- Return is symbolized by '%N'
+					pos := text.index_of ('%N', start)
+					count := count + 1
+					start := pos + 1
+				end
+				Result := pos + 1
+			end
+		end
+
+	last_position_from_line_number (i: INTEGER): INTEGER is
+			-- Position of the last character on the `i'-th line.
+		local
+			pos : INTEGER
+			count: INTEGER
+			start: INTEGER
+		do
+			if (i = line_count) then
+				Result := text.count
+			else
+				from
+					count := 1
+					pos := 1
+					start := 1
+				until
+					count = i + 1
+				loop
+					-- Look for the (i + 1)th `Return' in the string.
+					-- Return is symbolized by '%N'
+					pos := text.index_of ('%N', start)
+					count := count + 1
+					start := pos + 1
+				end
+				Result := pos
+			end
+		end
+
+	has_system_frozen_widget: BOOLEAN is
+			-- Is there any widget frozen?
+			-- If a widget is frozen any updates made to it
+			-- will not be shown until the widget is
+			-- thawn again.
+		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 feature -- Status setting
@@ -92,17 +233,48 @@ feature -- Status setting
 			gtk_text_forward_delete (widget, finish - start)
 		end
 
-feature -- Basic operation
-
-	search (str: STRING): INTEGER is
-			-- Search the string `str' in the text.
-			-- If `str' is find, it returns its start
-			-- index in the text, otherwise, it returns
-			-- `Void'
+	freeze is
+			-- Freeze the widget.
+			-- If the widget is frozen any updates made to the
+			-- window will not be shown until the widget is
+			-- thawn again.
+			-- Note: Only one window can be frozen at a time.
+			-- This is because of a limitation on Windows.
 		do
 			check
-				not_yet_implemented: False
+				To_be_implemented: False
 			end
+		end
+
+	thaw is
+			-- Thaw a frozen widget.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+feature -- Basic operation
+
+	put_new_line is
+			-- Go to the beginning of the following line.
+		do
+			insert_text ("%N")
+		end
+
+	search (str: STRING; start: INTEGER): INTEGER is
+			-- Position of first occurrence of `str' at or after `start';
+			-- 0 if none.
+		do
+			Result := text.substring_index (str, start)
+		end
+
+feature -- Assertions
+
+	last_line_not_empty: BOOLEAN is
+			-- Has the line at least one character?
+		do
+			Result := not ((text @ text.count) = '%N')
 		end
 
 end -- class EV_TEXT_IMP

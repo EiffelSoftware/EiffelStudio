@@ -10,7 +10,7 @@
 	<BODY>
 		<H1>Tutorial Step 2</H1>
 		<p>This sample shows you how to respond to an event occurring within
-        your application. It also demonstrates the use of a <A CLASS="eclass" HREF="/libraries/wel/support/wel_msg_box.html">WEL_MSG_BOX</A> and how to redefine
+        your application. It also demonstrates the use of a <A CLASS="eclass" HREF="/libraries/wel/support/wel_msg_box.html">WEL_MSG_BOX</A> control and a redefinition of 
 		<A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_composite_window.html#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window.html">WEL_COMPOSITE_WINDOW</A>.</p>
 		<CENTER><IMG SRC="step2.png" ALT="step2" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
@@ -36,7 +36,7 @@
 		</P>
 		<P>If you look at <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window#f_closeable">closeable</A> from <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window_chart.html">MAIN_WINDOW</A>, you will see
 		that it has been redefined to display a <A CLASS="eclass" HREF="/libraries/wel/reference/support/wel_msg_box_chart.html">WEL_MSG_BOX</A> and the result from this message box is used to generate the return value of <A CLASS="efeature" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/main_window#f_closeable">closeable</A>.
-		Only if this Result is True, then the user will be able to close the window.
+		If this Result is True, the window will be closed.
 		<P>This sample contains the following classes:
 			<UL>
 				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step2/root_cluster/tutorial_step2_chart.html">TUTORIAL_STEP2</A>

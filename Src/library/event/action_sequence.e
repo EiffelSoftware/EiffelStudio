@@ -44,7 +44,8 @@ inherit
 			new_cell,
 			merge_left,
 			merge_right,
-			cleanup_after_remove
+			cleanup_after_remove,
+			wipe_out
 		end
 
 creation
@@ -260,6 +261,13 @@ feature  -- Element Change
 			end
 		end
 
+	wipe_out is
+			-- Remove all items.
+		do
+			Precursor
+			call_action_list (empty_actions)
+		end
+
 	set_source_connection_agent
 				(a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
 			-- Set `a_source_connection_agent' that will connect sequence to an
@@ -411,6 +419,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.18  2000/06/26 19:00:23  oconnor
+--| call  call_action_list (empty_actions) on wipe_out
+--|
 --| Revision 1.17  2000/03/24 02:18:31  oconnor
 --| Make set_source_connection_agent obsolete
 --| added not_empty_actions and empty_actions instead.

@@ -9,5 +9,9 @@ class
 inherit
 	EB_SHARED_OUTPUT_TOOLS
 
+feature -- Access
+
+	has_modified_classes: BOOLEAN is False
+			-- For compatibility with new_graphical.
 
 end

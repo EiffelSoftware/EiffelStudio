@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_HELP_ENGINE
+	
+	EV_DIALOG_CONSTANTS
 
 create
 	default_create
@@ -27,8 +29,8 @@ feature -- Basic Operations
 			help_dialog: EV_INFORMATION_DIALOG
 		do
 			create help_dialog.make_with_text (a_help_context)
-			help_dialog.set_buttons (<<"OK">>)
-			help_dialog.set_default_push_button (help_dialog.button ("OK"))
+			help_dialog.set_buttons (<<ev_ok>>)
+			help_dialog.set_default_push_button (help_dialog.button (ev_ok))
 			help_dialog.set_title (Help_title)
 			help_dialog.disable_user_resize
 			help_dialog.show

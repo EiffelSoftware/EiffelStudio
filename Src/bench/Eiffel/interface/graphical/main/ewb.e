@@ -36,8 +36,9 @@ feature -- Initialization
 			new_resources: EB_RESOURCES
 			compiler: ES
 			eifgen_init: INIT_SERVERS
-			project_index: INTEGER
+			project_index, create_project_index: INTEGER
 			open_project: OPEN_PROJECT
+			new_project: NEW_PROJECT
 			memory: MEMORY
 		do
 			if not retried then
@@ -75,8 +76,15 @@ feature -- Initialization
 						memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))
 						project_index := index_of_word_option ("project")
 						if project_index /= 0 then
+								-- Project open by `ebench name_of_project.epr'
 							!! open_project.make_from_project_file (Project_tool, argument (project_index + 1))
 							open_project.open_from_ebench
+						else
+								-- Project create by `ebench -create my_path'
+							create_project_index := index_of_word_option ("create")
+							if create_project_index /= 0 then
+								!! new_project.make_from_ebench (Project_tool, argument (create_project_index + 1))
+							end
 						end
 						iterate
 					end

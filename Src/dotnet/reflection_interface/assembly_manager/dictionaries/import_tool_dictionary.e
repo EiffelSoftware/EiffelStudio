@@ -99,6 +99,44 @@ feature -- Toolbar icons filename
 			non_void_filename: Result /= Void
 			not_empty_filename: Result.get_length > 0
 		end
+
+feature -- Error messages
+
+	Open_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the open toolbar icon has not been found"
+			external_name: "OpenIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Open_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Import_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the import toolbar icon has not been found"
+			external_name: "ImportIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Import_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end		
+
+	Import_tool_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the import tool toolbar icon has not been found"
+			external_name: "ImportToolIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Import_tool_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
 		
 feature -- Other constants
 

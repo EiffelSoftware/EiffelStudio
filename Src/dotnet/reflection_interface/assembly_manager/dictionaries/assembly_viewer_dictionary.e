@@ -101,6 +101,12 @@ feature -- Error messages
 			description: "Error message when an imprecise error occurs in ISE assembly manager"
 			external_name: "ErrorMessage"
 		end
+
+	Toolbar_icon_not_found_error: STRING is "A toolbar icon was not found. Please reinstall your Eiffel delivery."
+		indexing
+			description: "Error message in case a toolbar icon has not been found"
+			external_name: "ToolbarIconNotFoundError"
+		end
 		
 feature -- Toolbar icons filename
 	
@@ -219,6 +225,92 @@ feature -- Columns names
 			description: "Dependancies column title"
 			external_name: "DependanciesColumnTitle"
 		end	
+
+feature -- Error messages
+
+	Name_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the name toolbar icon has not been found"
+			external_name: "NameIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Name_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Version_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the version toolbar icon has not been found"
+			external_name: "VersionIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Version_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Culture_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the culture toolbar icon has not been found"
+			external_name: "CultureIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Culture_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Public_key_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the public key toolbar icon has not been found"
+			external_name: "PublicKeyIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Public_key_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Dependencies_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the dependencies toolbar icon has not been found"
+			external_name: "DependenciesIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Dependancies_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Dependency_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the dependency toolbar icon has not been found"
+			external_name: "DependencyIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Dependancy_viewer_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
+
+	Help_icon_not_found_error: STRING is
+		indexing
+			description: "Error message in case the help toolbar icon has not been found"
+			external_name: "HelpIconNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Help_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
 		
 feature -- Other constants
 
@@ -240,7 +332,7 @@ feature -- Other constants
 			external_name: "EmptyString"
 		end		
 		
-	No_dependancy: STRING is "No dependancy"
+	No_dependancy: STRING is "No dependency"
 		indexing
 			description: "No dependancy message"
 			external_name: "NoDependancy"

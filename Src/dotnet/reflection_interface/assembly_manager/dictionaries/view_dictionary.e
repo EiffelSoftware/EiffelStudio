@@ -7,6 +7,9 @@ class
 	
 inherit
 	DIALOG_DICTIONARY
+		redefine
+			Pixmap_not_found_error
+		end
 
 feature -- Access
 
@@ -27,6 +30,15 @@ feature -- Access
 		once
 			Result := Base_filename
 			Result := Result.concat_string_string (Result, Edit_icon_relative_filename)
+		end
+
+	Pixmap_not_found_error: STRING is
+		indexing
+			description: "Error message in case the dialog pixmap has not been found"
+			external_name: "PixmapNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Edit_icon_filename, Pixmap_not_found_error_part_2)
 		end
 		
 	Window_height: INTEGER is 500

@@ -122,13 +122,38 @@ feature -- Access
 			description: "Margin"
 			external_name: "Margin"
 		end
+
+	
+	Pixmap_not_found_error: STRING is
+		indexing
+			description: "Error message in case the dialog pixmap has not been found"
+			external_name: "PixmapNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Assembly_manager_icon_filename, Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.get_length > 0
+		end
 			
 feature {NONE} -- Implementation
 
-	Assembly_manager_icon_relative_filename: STRING is "\icon_dotnet_wizard_color.ico"
+	Assembly_manager_icon_relative_filename: STRING is "icon_dotnet_wizard_color.ico"
 		indexing
 			description: "Filename of icon appearing in dialogs header"
 			external_name: "AssemblyManagerIconRelativeFilename"
 		end
+
+	Pixmap_not_found_error_part_1: STRING is "The pixmap "
+		indexing
+			description: "First part of the error message in case a pixmap has not been found"
+			external_name: "PixmapNotFoundErrorPart1"
+		end
+		
+	Pixmap_not_found_error_part_2: STRING is " was not found. Please reinstall the Eiffel delivery."
+		indexing
+			description: "Second part of the error message in case a pixmap has not been found"
+			external_name: "PixmapNotFoundErrorPart2"
+		end	
 		
 end -- class DICTIONARY

@@ -7,6 +7,9 @@ class
 
 inherit
 	DIALOG_DICTIONARY
+		redefine
+			Pixmap_not_found_error
+		end
 	
 feature -- Access
 	
@@ -50,6 +53,15 @@ feature -- Access
 		indexing
 			description: "Information message in case the user asks for removal of assembly dependancies and these cannot be removed from the Eiffel assembly cache"
 			external_name: "NonRemovableDependancies"
+		end
+
+	Pixmap_not_found_error: STRING is
+		indexing
+			description: "Error message in case the dialog pixmap has not been found"
+			external_name: "PixmapNotFoundError"
+		once
+			Result ?= Pixmap_not_found_error_part_1.clone
+			Result := Result.concat_string_string_string (Result, Remove_icon_filename, Pixmap_not_found_error_part_2)
 		end
 	
 	Question_label_text: STRING is "Are you sure you want to remove the selected .NET assembly?"

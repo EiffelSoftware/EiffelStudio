@@ -75,7 +75,7 @@ feature
 		do
 			scr_name := a_screen.screen_name;
 			if not scr_name.empty then
-				ext_name := a_screen.screen_name.to_c;
+				ext_name := scr_name.to_c;
 			end;
 			if (application_class = Void) then
 				display_pointer := xt_open_display ($ext_name, 0)

@@ -18,90 +18,33 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
-			create_action_sequences,
-			--make_with_index,
-			--make_with_all,
-			parent
+			create_action_sequences
+
 		end
 
-	EV_TREE_ITEM_HOLDER
+	EV_ITEM_LIST [EV_TREE_ITEM]
 		redefine
 			implementation,
 			create_action_sequences
 		end
+	
 
-	EV_PICK_AND_DROPABLE
-		redefine
-			implementation,
-			create_action_sequences
-		end
+	--EV_PICK_AND_DROPABLE
+	--	redefine
+	--		implementation,
+	--		create_action_sequences
+	--	end
 
 create
 	default_create
-	--make,
-	--make_with_text,
-	--make_with_index,
-	--make_with_all
 
-feature {NONE} -- Initialization
-
-	--make (par: like parent) is
-	--		-- Create the widget with `par' as parent.
-	--	do
-	--		!EV_TREE_ITEM_IMP! implementation.make
-	--		implementation.set_interface (Current)
-	--		set_parent (par)
-	--	end
-
-	--make_with_text (par: like parent; txt: STRING) is
-	--		-- Create an item with `par' as parent and `txt'
-	--		-- as text.
-	--	do
-	--		!EV_TREE_ITEM_IMP! implementation.make
-	--		implementation.set_interface (Current)
-	--		implementation.set_text (txt)
-	--		set_parent (par)
-	--	end
-
-	--make_with_index (par: like parent; value: INTEGER) is
-	--		-- Create a row at the given `value' index in the list.
-	--	do
-	--		create {EV_TREE_ITEM_IMP} implementation.make
-	--		{EV_SIMPLE_ITEM} Precursor (par, value)
-	--	end
-
-	--make_with_all (par: like parent; txt: STRING; value: INTEGER) is
-	--		-- Create a row with `txt' as text at the given
-	--		-- `value' index in the list.
-	--	do
-	--		create {EV_TREE_ITEM_IMP} implementation.make_with_text (txt)
-	--		{EV_SIMPLE_ITEM} Precursor (par, txt, value)
-	--	end
-
-	--make_with_parent_and_text (par: like parent; txt: STRING) is
-	--	do
-	--	end
-
-feature -- Access
-
-	parent: EV_TREE_ITEM_HOLDER is
-			-- Parent of the current item.
-		do
-			Result ?= {EV_SIMPLE_ITEM} Precursor
-		end
-
-	top_parent: EV_TREE_ITEM_HOLDER is
-			-- Top item holder that contains the current item.
-		do
-				Result := implementation.top_parent
-		end
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
 		require
-			in_widget: top_parent /= Void
+			in_tree: parent_tree /= Void
 		do
 			Result := implementation.is_selected
 		end
@@ -109,147 +52,69 @@ feature -- Status report
 	is_expanded: BOOLEAN is
 			-- is the item expanded?
 		require
-			in_widget: top_parent /= Void
+			in_tree: parent_tree /= Void
 		do
 			Result := implementation.is_expanded
 		end
 
-	is_parent: BOOLEAN is
-			-- is the item the parent of other items?
-		require
+	parent_tree: EV_TREE is
+			-- Tree widget that item is contained within.
 		do
-			Result := implementation.is_parent
+			Result := implementation.parent_tree
 		end
 
 feature -- Status setting
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
+	enable_select is
+			-- Select the item..
 		require
-			in_widget: top_parent /= Void
+			in_tree: parent_tree /= Void
 		do
-			implementation.set_selected (flag)
+			implementation.set_selected (True)
 		ensure
- 			state_set: is_selected = flag
+ 			selected: is_selected
+		end
+
+	disable_select is
+			-- Deselect the item..
+		require
+			in_tree: parent_tree /= Void
+		do
+			implementation.set_selected (False)
+		ensure
+ 			deselected: not is_selected
 		end
 
 	toggle is
 			-- Change the state of selection of the item.
 		require
-			in_widget: top_parent /= Void
+			in_tree: parent_tree /= Void
 		do
 			implementation.toggle
 		end
 
-	set_expand (flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
+	expand is
+			-- Expand the item.
 		require
-			in_widget: top_parent /= Void
-			is_parent: is_parent
+			in_tree: parent_tree /= Void
+			is_parent: count > 0
 		do
-			implementation.set_expand (flag)
+			implementation.set_expand (True)
 		ensure
-			state_set: is_expanded = flag
+			state_set: is_expanded
 		end
 
-feature -- Event : command association
-
-	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is selected.
+	collapse is
+			-- Collapse the item.
 		require
-			valid_command: cmd /= Void
+			in_tree: parent_tree /= Void
+			is_parent: count > 0
 		do
-			--FIXME implementation.add_select_command (cmd, arg)
+			implementation.set_expand (False)
+		ensure
+			state_set: not is_expanded
 		end
 
-	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the item is unselected.
-		require
-			valid_command: cmd /= Void
-		do
-			--FIXME implementation.add_unselect_command (cmd, arg)		
-		end
-
-	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when the selection subtree is expanded or collapsed.
-		require
-			valid_command: cmd /= Void
-		do
-			--FIXME implementation.add_subtree_command (cmd, arg)
-		end
-
-	add_button_press_command (mouse_button: INTEGER; 
-		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is pressed.
-		require
-			valid_command: cmd /= Void
-			button_large_enough: mouse_button > 0
-			button_small_enough: mouse_button < 4
-		do
-			--FIXME implementation.add_button_press_command (mouse_button, cmd, arg)
-		end
-
-	add_button_release_command (mouse_button: INTEGER;
-		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is released.
-		require
-			valid_command: cmd /= Void
-			button_large_enough: mouse_button > 0
-			button_small_enough: mouse_button < 4
-		do
-			--FIXME implementation.add_button_release_command (mouse_button, cmd, arg)
-		end
-
-feature -- Event -- removing command association
-
-	remove_select_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is selected.
-		require
-		do
-			--FIXME implementation.remove_unselect_commands			
-		end
-
-	remove_unselect_commands is
-			-- Empty the list of commands to be executed when
-			-- the item is unselected.
-		require
-		do
-			--FIXME implementation.remove_unselect_commands	
-		end
-
-	remove_subtree_commands is
-			-- Empty the list of commands to be executed when
-			-- the selection subtree is expanded or collapsed.
-		require
-		do
-			--FIXME implementation.remove_subtree_commands
-		end
-
-	remove_button_press_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is pressed.
-		require
-			button_large_enough: mouse_button > 0
-			button_small_enough: mouse_button < 4
-		do
-			--FIXME implementation.remove_button_press_commands (mouse_button)
-		end
-
-	remove_button_release_commands (mouse_button: INTEGER) is
-			-- Empty the list of commands to be executed when
-			-- button number 'mouse_button' is released.
-		require
-			button_large_enough: mouse_button > 0
-			button_small_enough: mouse_button < 4
-		do
-			--FIXME implementation.remove_button_release_commands (mouse_button)
-		end
 
 feature -- Implementation
 
@@ -258,11 +123,12 @@ feature -- Implementation
 
 	create_implementation is
 		do
+			create {EV_TREE_ITEM_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
 		do
-			{EV_TREE_ITEM_HOLDER} Precursor
+			{EV_SIMPLE_ITEM} Precursor
 		end
 
 end -- class EV_TREE_ITEM
@@ -289,6 +155,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/22 21:40:29  king
+--| Tidied up interface, now inherits from item_list
+--|
 --| Revision 1.27  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

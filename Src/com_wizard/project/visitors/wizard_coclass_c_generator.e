@@ -33,6 +33,7 @@ feature {NONE} -- Implementation
 			Result.append (Clsid_type)
 			Result.append ("_")
 			Result.append (a_name)
+			Result.append ("_")
 		ensure
 			non_void_declaration: Result /= Void
 			valid_declaration: not Result.empty

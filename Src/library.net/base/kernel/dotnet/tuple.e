@@ -8,6 +8,12 @@ indexing
 class
 	TUPLE
 
+inherit
+	ANY
+		redefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -30,6 +36,46 @@ feature -- Access
 			valid_index: valid_index (k)
 		do
 			Result ?= native_array.item (k - 1)
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		local
+			i, nb: INTEGER
+			l_cur, l_other: like native_array
+		do
+			l_cur := native_array
+			l_other := other.native_array
+			nb := l_cur.count
+			if nb = l_other.count then
+				from
+					Result := True
+				until
+					i > nb or not Result
+				loop
+					Result := l_cur.item (i) = l_other.item (i)
+					i := i + 1
+				end
+			end
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		local
+			nb: INTEGER
+		do
+			if other /= Current then
+				standard_copy (other)
+				nb := other.native_array.count
+				create native_array.make (nb)
+				feature {SYSTEM_ARRAY}.copy (other.native_array, native_array, nb)
+			end
 		end
 
 feature {ROUTINE} -- Fast access
@@ -630,10 +676,12 @@ feature {ROUTINE, TUPLE}
 			Result := code >= 0 and code <= 9
 		end
 		
-feature {NONE} -- Implementation
+feature {TUPLE} -- Implementation
 
 	native_array: NATIVE_ARRAY [SYSTEM_OBJECT]
 			-- Storage where values are kept.
+
+feature {NONE} -- Implementation
 
 	is_tuple_uniform (code: INTEGER_8): BOOLEAN is
 			-- Are all items of type `code'?

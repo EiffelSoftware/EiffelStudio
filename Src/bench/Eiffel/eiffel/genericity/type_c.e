@@ -88,9 +88,9 @@ feature
 			i, nb: INTEGER
 			arg_type: STRING
 		do
-			file.putchar ('(')
+			file.putstring ("FUNCTION_CAST(")
 			file.putstring (c_string)
-			file.putstring (" (*)(")
+			file.putstring (", (")
 			from
 				i := 1
 				nb := arg_types.count

@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			elseif switch.is_equal (fullname_short) or switch.is_equal (fullname_switch) then
 				path_is_full_name := True
 			elseif switch.is_equal (out_short) or switch.is_equal (out_switch) then
-				set_internal_eiffel_path (switch_value)
+				set_internal_eiffel_cache_path (switch_value)
 			elseif switch.is_equal (version_switch) or switch.is_equal (version_short) then
 				clr_version := switch_value
 			end
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			io.put_string ("  /a[dd] - Put assembly in Eiffel Assembly Cache.%N")
 			io.put_string ("  /r[emove] - Remove assembly from Eiffel Assembly Cache.%N")
 			io.put_string ("  /ver[sion]:<version> - Runtime version of the assembly being consumed.%N")
-			io.put_string ("  /o[ut]:<path> - Alternative path for Eiffel installation.%N")
+			io.put_string ("  /o[ut]:<path> - Alternative path for Eiffel assembly cache.%N")
 			io.put_string ("  /full[name] - Indicates that <assembly> is a full or part display name.%N")
 			io.put_string ("  /l[ist] - List assemblies in EAC.%N")
 			io.put_string ("  /n[ice] - Writes indented XML for each assemblies consumed metadata.%N")

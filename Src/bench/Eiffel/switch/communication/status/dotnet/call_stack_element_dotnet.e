@@ -64,10 +64,13 @@ feature {NONE} -- Initialization
 
 feature -- Filling
 
-	set_routine (a_frame_il: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; 
+	set_routine (a_chain: ICOR_DEBUG_CHAIN; a_frame_il: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; 
 			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
 			a_feature: FEATURE_I; a_line_number: INTEGER) is
 		do
+			icd_chain := a_chain
+			icd_chain.add_ref
+			
 			icd_il_frame := a_frame_il
 			icd_il_frame.add_ref
 			
@@ -106,13 +109,18 @@ feature -- Cleaning
 --			if icd_il_frame /= Void then
 --					--| FIXME JFIAT: please check if it is safe ...
 --				icd_il_frame.clean_on_dispose
---				icd_il_frame := Void
+				icd_il_frame := Void
+
+--				icd_chain.clean_on_dispose
+				icd_chain := Void
 --			end
 		end
 
 feature -- Dotnet Properties
 
 	icd_il_frame: ICOR_DEBUG_IL_FRAME
+	
+	icd_chain: ICOR_DEBUG_CHAIN
 	
 	il_offset: INTEGER
 
@@ -216,12 +224,14 @@ feature {NONE} -- Implementation
 			l_function: ICOR_DEBUG_FUNCTION
 			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
-		do			
+		do
+-- FIXME jfiat 2004-07-08: maybe optimize by calling directly external on pointer
 			l_function := icd_il_frame.get_function
 
 			private_dotnet_feature_token := l_function.get_token		
 			l_class := l_function.get_class
 			l_module := l_function.get_module
+			
 			private_dotnet_class_token := l_class.get_token
 			private_dotnet_module_name := l_module.module_name
 			private_dotnet_module_filename := l_module.get_name

@@ -185,8 +185,8 @@ feature {NONE} -- Initialization
 								l_frame := l_frames @ i
 								l_frame_il := l_frame.query_interface_icor_debug_il_frame
 								if l_frame.last_call_succeed and then l_frame_il /= Void then
-									l_frame.clean_on_dispose --| Not needed anymore
 
+-- FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
 									l_func := l_frame_il.get_function
 									l_feature_token := l_func.get_token
 									l_class         := l_func.get_class
@@ -196,6 +196,8 @@ feature {NONE} -- Initialization
 									l_class.clean_on_dispose
 									l_module.clean_on_dispose
 									l_func.clean_on_dispose
+
+									l_frame.clean_on_dispose --| Not needed anymore
 
 									if il_debug_info_recorder.has_info_about_module (l_module_name) then
 										l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
@@ -237,14 +239,15 @@ feature {NONE} -- Initialization
 
 											call.set_private_current_object (l_stack_adv)
 											call.set_routine (
-											l_frame_il,
-											False, 			-- is_melted (No since this is a dotnet system)
-											l_hexaddress,
-											l_class_type, 	-- dynmic class type
-											l_feature_i.written_class, 	-- origin class
-											l_feature_i, 	-- routine, routine_name ...
-											l_line_number 	-- break_index / line number
-											)
+												l_chain,
+												l_frame_il,
+												False, 			-- is_melted (No since this is a dotnet system)
+												l_hexaddress,
+												l_class_type, 	-- dynmic class type
+												l_feature_i.written_class, 	-- origin class
+												l_feature_i, 	-- routine, routine_name ...
+												l_line_number 	-- break_index / line number
+												)
 											extend (call)
 
 											level := level + 1
@@ -255,7 +258,6 @@ feature {NONE} -- Initialization
 							end
 							l_enum_frames.clean_on_dispose
 						end
-						l_chain.clean_on_dispose
 					end
 					c := c + 1
 				end

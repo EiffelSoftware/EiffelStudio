@@ -273,7 +273,7 @@ cluster
 
 		-- SWITCH clusters (chose one cluster per directory in switch directory)
 	switch:			"$EIFFEL_SRC/Eiffel/switch";
-	interface_switch(switch):	"$/interface/graphical";
+	interface_switch(switch):	"$/interface/new_graphical";
 	--dle_switch(switch):	"$/dle/no_dle";
 	license_switch(switch): "$/license/license";  	--unix
 	--license_switch(switch): "$/license/no_license";	--win
@@ -297,7 +297,10 @@ cluster
 		-- graphical interface (bench):
 	bench_common(interface):	"$/graphical/common";
 	case_tool(interface):		"$/graphical/case_tool";
-	commands(interface):		"$/graphical/commands";
+	commands(interface):		"$/graphical/commands"
+		exclude
+			"tools_management.e"
+		end;
 	debugging_tool (interface):	"$/graphical/debugging";
 	drag_and_drop(interface):	"$/graphical/drag_and_drop";
 	formatters(interface):		"$/graphical/formatters";
@@ -305,9 +308,15 @@ cluster
 	graphical_shared(interface):	"$/graphical/shared";
 	stones(interface):		"$/graphical/stones";
 	text_window(interface):		"$/graphical/text_window";
-	windows(interface):		"$/graphical/windows";
+	windows(interface):		"$/graphical/windows"
+		exclude
+			"bar_and_text.e","project_w.e"
+		end;
 	preference_tool(interface):	"$/graphical/preference_tool";
-	profile_tool(interface):	"$/graphical/profile_tool";
+	profile_tool(interface):	"$/graphical/profile_tool"
+		exclude
+			"profile_tool.e"
+		end;
 	wizard_common(interface):	"$/graphical/wizard/common";
 	wizard_bench(interface):	"$/graphical/wizard/bench";
 

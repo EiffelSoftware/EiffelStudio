@@ -64,7 +64,7 @@ feature {NONE}
 
 	melt_help: STRING is "melt the system";
 
-	modifs_help: STRING is "show classes modified since last compilation";
+	modified_help: STRING is "show classes modified since last compilation";
 
 	once_help: STRING is "show the once & constant features of a class";
 
@@ -90,7 +90,7 @@ feature {NONE}
 
 	suppliers_help: STRING is "show the suppliers of a class";
 
-	synonyms_help: STRING is "shown the synonyms of a feature";
+	homonyms_help: STRING is "shown the homonyms of a feature";
 
 	system_help: STRING is "Ace and cluster details";
 

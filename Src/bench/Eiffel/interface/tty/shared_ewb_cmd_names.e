@@ -63,7 +63,7 @@ feature {NONE}
 
 	main_cmd_name: STRING is "main"
 
-	modifs_cmd_name: STRING is "modifications"
+	modified_cmd_name: STRING is "modifications"
 
 	once_cmd_name: STRING is "once"
 
@@ -85,7 +85,7 @@ feature {NONE}
 
 	suppliers_cmd_name: STRING is "suppliers"
 
-	synonyms_cmd_name: STRING is "synonyms"
+	homonyms_cmd_name: STRING is "homonyms"
 
 	system_cmd_name: STRING is "system"
 

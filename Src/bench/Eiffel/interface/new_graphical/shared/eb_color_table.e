@@ -51,4 +51,5 @@ feature -- Constants
 				Result := deep_clone (c)
 			end
 		end
+
 end -- class EB_COLOR_TABLE

@@ -24,7 +24,6 @@ feature -- Initialization
 			-- Initialize `Current'.
 		do
 			create execute_agents.make
-			pixmap := Pixmaps.Icon_run
 			name := "Default_command_name_Please_change_it"
 		end
 

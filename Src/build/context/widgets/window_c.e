@@ -302,6 +302,8 @@ feature
 			Shared_window_list.prune (Current);
 			tree.cut (tree_element);
 			context_catalog.clear_editors (Current)
+			--added by samik
+			widget.set_managed(False)		
 		ensure then
 			not_in_window_list: not Shared_window_list.has (Current)
 		end

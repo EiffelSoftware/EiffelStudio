@@ -21,11 +21,13 @@ feature -- Access
 
 	directory: STRING is
 			-- Path of currently selected directory.
+			-- `Result' is empty if "OK" was not pressed.
 		require
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.directory
 		ensure
+			directory_not_void: Result /= Void
 			bridge_ok: Result /= Void implies
 				Result.is_equal (implementation.directory)
 		end

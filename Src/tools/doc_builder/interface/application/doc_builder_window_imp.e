@@ -424,7 +424,7 @@ feature {NONE}-- Initialization
 			toolbar_properties.set_pixmap (icon_info_ico)
 			toolbar_link_check.disable_sensitive
 			toolbar_link_check.set_tooltip ("Validate Document Links")
-			toolbar_link_check.set_pixmap (icon_link_check_ico)
+			toolbar_link_check.set_pixmap (icon_link_check_ico_ico)
 			l_ev_label_1.set_text ("Filter ")
 			l_ev_label_1.align_text_left
 			output_combo.set_tooltip ("Output filter transformation")

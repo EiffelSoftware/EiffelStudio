@@ -282,7 +282,7 @@ feature {NONE} -- Expressions Implementation
 							until
 								l_cnt = regexp.match_count
 							loop
-								l_substring := regexp.captured_substring (l_cnt)								
+								l_substring := regexp.captured_substring (l_cnt)
 								l_replacement.replace_substring_all ("\" + l_cnt.out + "\", l_substring)
 								l_cnt := l_cnt + 1
 							end

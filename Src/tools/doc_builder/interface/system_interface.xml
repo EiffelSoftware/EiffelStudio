@@ -11,13 +11,6 @@
 		<Filename>icon_undo.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_png_file_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_png_file.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_png_file.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
 		<Name>icon_html_file_ico</Name>
 		<Value>D:\Src\tools\doc_builder\resources\icons\icon_html_file.ico</Value>
 		<is_absolute>False</is_absolute>
@@ -68,20 +61,6 @@
 		<Filename>icon_new_doc.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_info_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_info.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_info.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_paste_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_paste.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_paste.ico</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
 		<Name>icon_search_ico_1</Name>
 		<Value>D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
 		<is_absolute>False</is_absolute>
@@ -95,13 +74,16 @@
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_maximize_color.png</Filename>
 		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_studio_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_studio.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_studio.ico</Filename>
+		</Constant>
 	<Constant><type>STRING</type>
 		<Name>button_cancel_text</Name>
 		<Value>Cancel</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>dialog_short_height</Name>
-		<Value>175</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_link_check_ico</Name>
@@ -270,6 +252,20 @@
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_file_close.ico</Filename>
 		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_png_file_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_png_file.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_png_file.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_format_text_color_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_format_text_color.ico</Filename>
+		</Constant>
 	<Constant><type>STRING</type>
 		<Name>button_back_text</Name>
 		<Value>Back</Value>
@@ -301,11 +297,11 @@
 		<Filename>icon_minimize_color.png</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_search_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
+		<Name>icon_paste_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_paste.ico</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_search.ico</Filename>
+		<Filename>icon_paste.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_jpeg_file_ico</Name>
@@ -336,11 +332,11 @@
 		<Filename>icon_properties_color.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>icon_format_text_color_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_format_text_color.ico</Value>
+		<Name>icon_info_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_info.ico</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
-		<Filename>icon_format_text_color.ico</Filename>
+		<Filename>icon_info.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_forth_color_ico</Name>
@@ -375,12 +371,9 @@
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_new_color.ico</Filename>
 		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_studio_ico</Name>
-		<Value>D:\Src\tools\doc_builder\resources\icons\icon_studio.ico</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_directory</Directory>
-		<Filename>icon_studio.ico</Filename>
+	<Constant><type>INTEGER</type>
+		<Name>dialog_short_height</Name>
+		<Value>175</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>unfiltered_text</Name>
@@ -403,6 +396,13 @@
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_merge.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_link_check_ico_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_link_check_ico.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_link_check_ico.ico</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>studio_filtered_text</Name>
@@ -432,6 +432,13 @@
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_directory</Directory>
 		<Filename>icon_new.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_search_ico</Name>
+		<Value>D:\Src\tools\doc_builder\resources\icons\icon_search.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_directory</Directory>
+		<Filename>icon_search.ico</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>icon_toc_folder_closed_ico</Name>
@@ -1021,7 +1028,7 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_LABEL"><Internal_properties>
-	<id>580</id>
+	<id>37</id>
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -5126,7 +5133,7 @@ loaded project:]]></Text>
 <EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE><Tooltip><![CDATA[Validate Document Links]]></Tooltip>
 	</EV_TOOLTIPABLE>
-<EV_PIXMAPABLE><Pixmap_path><Constant>icon_link_check_ico</Constant>
+<EV_PIXMAPABLE><Pixmap_path><Constant>icon_link_check_ico_ico</Constant>
 		</Pixmap_path>
 	</EV_PIXMAPABLE>
 </item>

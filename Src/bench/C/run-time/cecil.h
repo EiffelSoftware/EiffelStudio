@@ -150,7 +150,7 @@ extern EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel function
 extern EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
 extern EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
-extern int eiftype(EIF_OBJ *object);					/* Give dynamic type of EIF_OBJ */
+extern int eiftype(EIF_OBJ object);					/* Give dynamic type of EIF_OBJ */
 extern char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
 extern char *eifaddr(char *object, char *name);					/* Compute address of attribute */
 extern EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */

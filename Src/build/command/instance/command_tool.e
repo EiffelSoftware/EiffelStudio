@@ -68,13 +68,14 @@ feature -- Creation
 			!! exit_tool_entry.make (Menu_names.Exit_tool, file_category)
 			!! exit_entry.make (Menu_names.Exit, file_category)
 				--| Entries in the Actions category
+			!! new_command_entry.make (Menu_names.create_command, action_category)
+			!! separator_2.make ("", action_category)
 			!! add_formal_argument_entry.make (Menu_names.Add_formal_argument, action_category)
 			!! remove_formal_argument_entry.make (Menu_names.Remove_formal_argument, action_category)
 				--| Top form
-			!! separator_2.make ("", top_form)
+			!! separator_3.make ("", top_form)
 			!! command_hole.make (top_form)
 			!! trash_hole.make (top_form)
-			!! new_command_button.make ("New", top_form)
 			!! search_class_name_button.make (Current, top_form)
 			!! popup_instances_button.make (Current, top_form)
 			!! popup_contexts_button.make (Current, top_form)
@@ -118,7 +119,7 @@ feature {NONE} -- Initialization
 		do
 			command_editor.set_command_tool (Current)
 			command_editor.create_interface
-			new_command_button.set_command_editor (command_editor)
+			new_command_entry.set_command_editor (command_editor)
 			if Pixmaps.command_instance_pixmap.is_valid then
 				set_icon_pixmap (Pixmaps.command_instance_pixmap)
 			end
@@ -145,24 +146,21 @@ feature {NONE} -- Initialization
 			form.attach_right (split_window, 0)
 			form.attach_bottom (split_window, 0)
 				--| Top form
-			top_form.attach_top (separator_2, 1)
-			top_form.attach_left (separator_2, 0)
-			top_form.attach_right (separator_2, 0)	
-			top_form.attach_top_widget (separator_2, command_hole, 0)
-			top_form.attach_top_widget (separator_2, trash_hole, 0)
-			top_form.attach_top_widget (separator_2, new_command_button, 0)
-			top_form.attach_top_widget (separator_2, search_class_name_button, 0)
-			top_form.attach_top_widget (separator_2, popup_instances_button, 0)
-			top_form.attach_top_widget (separator_2, popup_contexts_button, 0)
+			top_form.attach_top (separator_3, 1)
+			top_form.attach_left (separator_3, 0)
+			top_form.attach_right (separator_3, 0)	
+			top_form.attach_top_widget (separator_3, command_hole, 0)
+			top_form.attach_top_widget (separator_3, trash_hole, 0)
+			top_form.attach_top_widget (separator_3, search_class_name_button, 0)
+			top_form.attach_top_widget (separator_3, popup_instances_button, 0)
+			top_form.attach_top_widget (separator_3, popup_contexts_button, 0)
 			top_form.attach_bottom (command_hole, 0)
 			top_form.attach_bottom (trash_hole, 0)
-			top_form.attach_bottom (new_command_button, 0)
 			top_form.attach_bottom (search_class_name_button, 0)
 			top_form.attach_bottom (popup_contexts_button, 0)
 			top_form.attach_bottom (popup_instances_button, 0)
 			top_form.attach_left (command_hole, 0)
 			top_form.attach_left_widget (command_hole, trash_hole, 0)
-			top_form.attach_left_widget (trash_hole, new_command_button, 0)
 			top_form.attach_right (popup_contexts_button, 0)
 			top_form.attach_right_widget (popup_contexts_button, popup_instances_button, 0)
 			top_form.attach_right_widget (popup_instances_button, search_class_name_button, 0)
@@ -247,10 +245,11 @@ feature {NONE} -- Graphical interface
 		--| Entries in the File category
 	generate_entry: PUSH_B
 	separator_1: SEPARATOR
-	separator_2: THREE_D_SEPARATOR
 	exit_tool_entry: PUSH_B
 	exit_entry: PUSH_B
 		--| Entries in the Action category
+	new_command_entry: NEW_COMMAND_BUTTON
+	separator_2: SEPARATOR
 	add_formal_argument_entry: PUSH_B
 	remove_formal_argument_entry: PUSH_B
 
@@ -259,8 +258,6 @@ feature {NONE} -- Graphical interface
 			-- Hole used to accept command instances
 	trash_hole: CUT_HOLE
 			-- Trash hole	
-	new_command_button: NEW_COMMAND_BUTTON
-			-- Button used to create a new command
 	search_class_name_button: CMD_ED_POPUP_CLASS_NAME
 			-- Button used to display a dialog in order to retarget the
 			-- current tool according to the name of the command
@@ -269,6 +266,8 @@ feature {NONE} -- Graphical interface
 	popup_contexts_button: CMD_ED_POPUP_CONTEXT
 			-- Button used to popup every context that could be used as
 			-- instances for the argument of this command
+
+	separator_3,
 
 	menu_separator: THREE_D_SEPARATOR
 			
@@ -316,7 +315,7 @@ feature
 	clear is
 			-- Clear current editor.
 		do
---			command_hole.set_empty_symbol
+			command_hole.set_empty_symbol
 			set_title (Widget_names.cmd_instance_editor)
 			set_icon_name (Widget_names.cmd_instance_editor)
 			save_previous_instance
@@ -348,7 +347,11 @@ feature
 	edited_command: CMD is
 			-- Currently edited command in the `command_editor'.
 		do
-			Result := command_instance.associated_command
+			if command_instance /= Void then
+				Result := command_instance.associated_command
+			else
+				Result := Void
+			end
 		end
 
 	current_command: CMD is
@@ -366,12 +369,12 @@ feature
 		do
 			if c /= command_instance then
 				set_instance_only (c)
-				if current_command /= c.associated_command then
-					command_editor.set_current_command (c.associated_command)
+--				if current_command /= c.associated_command then
+					command_editor.set_command (c.associated_command)
 					if realized and then command_editor_shown then
-						command_editor.set_command (c.associated_command)
+						command_editor.edit_command (c.associated_command)
 					end
-				end	
+--				end	
 			end
 		end
 
@@ -536,7 +539,8 @@ feature
 	display is
 			-- Raise current command tool
 		do
-			command_editor.set_current_command (command_instance.associated_command)
+--			hide_other_command_editor
+--			command_editor.set_command (command_instance.associated_command)
 			window_mgr.display (Current)
 		end
 
@@ -561,29 +565,28 @@ feature -- COMMAND features
 		local
 			an_arrow: ARROW_B
 		do
-			if command_instance /= Void then
-				an_arrow ?= arg
-				if an_arrow /= Void and then an_arrow = details_button then
-					details_action
+			an_arrow ?= arg
+			if an_arrow = details_button then 
+				if command_instance /= Void then
+					if command_editor_shown then
+						hide_command_editor
+					else
+						show_command_editor
+					end
 				end
-			end
-		end
-
-	details_action is
-			-- Display the command editor
-		do
-			if command_editor_shown then
-				details_button.set_right
-				hide_command_editor
 			else
-				details_button.set_down
-				show_command_editor
+				close
 			end
 		end
 
 	set_callbacks is
 			-- Add action on `details_button'.
+		local
+			exit_cmd: EXIT_EIFFEL_BUILD_CMD
 		do
+			exit_tool_entry.add_activate_action (Current, Void) 
+			!! exit_cmd
+			exit_entry.add_activate_action (exit_cmd, Void)
 			details_button.add_activate_action (Current, details_button)
 		end
 
@@ -596,22 +599,26 @@ feature -- COMMAND features
 	hide_command_editor is
 			-- Hide command editor.
 		do
+			details_button.set_right
 			command_editor.clear
 			if already_open then
 				set_height (height - bottom_split_form.height)
 			end
+			command_editor.hide
 			bottom_split_form.unmanage
 		end
 
 	show_command_editor is
 			-- Show command editor
 		do
+			details_button.set_down
 			hide_other_command_editor
 			split_window.set_proportion (100 * top_split_form.height // 
 						(top_split_form.height + Resources.cmd_ed_height))
 			set_height (height + Resources.cmd_ed_height)
+			command_editor.edit_command (command_instance.associated_command)
+			command_editor.show
 			bottom_split_form.manage
-			command_editor.set_command (command_instance.associated_command)
 		end
 
 	hide_other_command_editor is
@@ -628,8 +635,7 @@ feature -- COMMAND features
 	realize is
 		do
 			Precursor
-			hide_command_editor
---			bottom_split_form.unmanage
+			bottom_split_form.unmanage
 			already_open := true
 		end
 

@@ -257,16 +257,14 @@ feature -- Editing
 
 	clear is
 			-- Clear Current editor
-		local
-			void_command: CMD
 		do
-			save_previous_command
+			save_command
 			arguments.wipe_out
 			observed_commands.wipe_out
 			labels.wipe_out
 			text_editor.set_text ("")
-			current_command := Void
-			edited_command := Void
+--			current_command := Void
+--			edited_command := Void
 			update_parent_symbol;
 		end
 
@@ -310,7 +308,7 @@ feature -- Command tool access
 
 feature {COMMAND_TOOL}
 
-	set_command (cmd: CMD) is
+	edit_command (cmd: CMD) is
 			-- If `cmd' is a user defined command then
 			-- set the editable_command of the command_editor to the
 			-- stone dropped. Otherwise, set the command_editor to allow
@@ -321,29 +319,30 @@ feature {COMMAND_TOOL}
 			not_void_cmd: not (cmd = Void)
 			cmd_not_being_edited: not cmd.edited
 		local
-			ud_cmd: USER_CMD
 			pr_cmd: PREDEF_CMD
 		do
-			ud_cmd ?= cmd
+			current_command.set_editor (Current)
 			pr_cmd ?= cmd
-			save_previous_command
-			if ud_cmd /= Void then
-				set_editable_command (ud_cmd)
-			elseif not (pr_cmd = Void) then
+			if pr_cmd /= Void then
 				set_read_only_command (pr_cmd)
+			elseif edited_command /= Void then
+				set_editable_command (edited_command)
 			end
 			update_boxes
 			update_parent_symbol
 			update_title
 		end
 
-	set_current_command (cmd: CMD) is
+	set_command (cmd: CMD) is
 			-- Set the currently edited command.
 		require
 			not_void_cmd: not (cmd = Void)
 		do
-			save_previous_command
+			if current_command /= Void and then current_command /= cmd then
+				save_command
+			end
 			current_command := cmd
+			edited_command ?= cmd
 		end
 			
 feature
@@ -372,11 +371,11 @@ feature {NONE}
 		require
 			not_void_cmd: not (cmd = Void)
 		do
-			edited_command := cmd
-			current_command := cmd
+--			edited_command := cmd
+--			current_command := cmd
 			labels.set (cmd.labels)
 			update_user_eiffel_text_from_disk
-			current_command.set_editor (Current)
+--			current_command.set_editor (Current)
 			text_editor.set_text (current_command.eiffel_text)
 			text_editor.set_editable
 			undoable_toggle_b.set_sensitive
@@ -399,10 +398,10 @@ feature {NONE}
 			not_void_cmd: not (cmd = Void)
 		do
 			edited_command := Void
-			current_command := cmd
+--			current_command := cmd
 			labels.set (cmd.labels)
 			text_editor.set_text (cmd.eiffel_text)
-			current_command.set_editor (Current)
+--			current_command.set_editor (Current)
 			text_editor.set_read_only
 			undoable_toggle_b.set_insensitive
 			if add_ancestor_hole.realized and then 
@@ -412,15 +411,21 @@ feature {NONE}
 			end
 		end;
 
-	save_previous_command is
-			-- Save values of currently
-			-- edited command and reset the editor.
-		do
-			save_command
-			if current_command /= Void then
-				current_command.reset
-			end
-		end
+-- 	save_previous_command is
+-- 			-- Save values of currently
+-- 			-- edited command and reset the editor.
+-- 		local
+-- 			nb_tool: LINKED_LIST [COMMAND_TOOL]
+-- 		do
+-- 			save_command
+-- 			if current_command /= Void then
+-- 				nb_tool := current_command.associated_command_tools
+-- 				if nb_tool.count = 1 then
+-- 					current_command.reset
+-- 				end
+-- 			end
+-- 		end
+
 
 feature {COMMAND_TOOL}
 

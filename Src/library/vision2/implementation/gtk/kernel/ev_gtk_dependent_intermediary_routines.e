@@ -15,7 +15,7 @@ inherit
 		
 	ANY
 
-feature {EV_ANY_IMP} -- TextBuffer intermediary agent routine
+feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 
 	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Retrieve index of switched page.
@@ -24,6 +24,25 @@ feature {EV_ANY_IMP} -- TextBuffer intermediary agent routine
 		do
 			gtkarg2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (args, 1)
 			Result := [feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (gtkarg2)]
+		end
+
+	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tup_int: TUPLE [INTEGER]) is
+			-- Multi-column list event
+		local
+			a_mcl_imp: EV_MULTI_COLUMN_LIST_IMP
+		do
+			a_mcl_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			inspect
+				a_event_number
+			when 1 then		
+				a_mcl_imp.select_callback (a_tup_int)
+			when 2 then
+				a_mcl_imp.deselect_callback (a_tup_int)
+			when 3 then
+				a_mcl_imp.column_click_callback (a_tup_int)
+			when 4 then
+				a_mcl_imp.column_resize_callback (a_tup_int)
+			end
 		end
 	
 feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations

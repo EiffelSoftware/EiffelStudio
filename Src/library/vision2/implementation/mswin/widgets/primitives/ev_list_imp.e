@@ -40,7 +40,7 @@ inherit
  	WEL_LIST_VIEW
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
 			set_parent as wel_set_parent,
@@ -85,18 +85,6 @@ inherit
 			default_style
 		end
 
-	WEL_LVHT_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_LVS_EX_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_WINDOWS_VERSION
-
 creation
 	make
 	
@@ -124,19 +112,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
 
 	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
@@ -560,6 +535,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.76  2000/04/25 01:20:36  pichery
+--| Changed the inheritance for constants,
+--| Removed `wel_parent' hack.
+--|
 --| Revision 1.75  2000/04/21 01:22:16  pichery
 --| Added flag to EV_LIST_IMP in order
 --| to select the full row.

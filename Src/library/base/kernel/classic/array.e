@@ -474,7 +474,7 @@ feature {ARRAY} -- Implementation
 			-- from `oldarea'.
 			-- Old items are at position `s' in new area.
 		external
-			"C use %"eif_misc.h%""
+			"C signature (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_misc.h%""
 		end
 
 feature {NONE} -- Implementation
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 			-- Copy elements of `source' within bounds `s'
 			-- and `e' to `target' starting at index `i'.
 		external
-			"C use %"eif_copy.h%""
+			"C signature (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER) use %"eif_copy.h%""
 		end
 
 invariant

@@ -114,9 +114,6 @@ feature -- Conveniences
 					Result.set_base_type (a_class.id);
 						-- Base type class is expanded
 					Result.set_is_expanded (a_class.is_expanded);
-					if a_class.is_expanded then
-						record_exp_dependance (a_class);
-					end;
 				else
 					Result := Void
 				end
@@ -304,7 +301,7 @@ feature -- Conveniences
 
 feature -- Stoning
  
-	stone (reference_class: CLASS_C): CLASSC_STONE is
+	stone (reference_class: E_CLASS): CLASSC_STONE is
 		local
 			aclassi: CLASS_I
 		do
@@ -314,7 +311,7 @@ feature -- Stoning
 				-- valid (`is_valid' = false because `class_c' = Void).
 			aclassi := Universe.class_named (class_name, reference_class.cluster);
 			if aclassi /= Void then
-				!!Result.make (aclassi.compiled_class)
+				!!Result.make (aclassi.compiled_eclass)
 			else
 				!!Result.make (Void)
 			end

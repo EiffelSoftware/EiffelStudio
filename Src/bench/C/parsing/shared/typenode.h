@@ -125,7 +125,8 @@
 #define PRECURSOR_AS		164
 #define CREATION_EXPR_AS	165
 #define ROUTINE_CREATION_AS 166
-#define SIGNATURE_AS		167
+#define TUPLE_AS			167
+#define SIGNATURE_AS		168
 
 /* Lace nodes */ 
 
@@ -175,5 +176,5 @@
 #define D_PRECOMPILED_SD		162
 #define PRECOMPILED_SD			163
 
-#define MAX_CONSTRUCT_TYPE		168
+#define MAX_CONSTRUCT_TYPE		169
 

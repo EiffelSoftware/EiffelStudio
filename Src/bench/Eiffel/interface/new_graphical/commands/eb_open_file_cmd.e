@@ -56,11 +56,13 @@ feature -- Basic operation
 		local
 			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if target.changed then
-					-- Ask confirmation if content has changed.
-				create csd.make_and_launch (target, Current)
-			else
-				process
+			if is_sensitive then
+				if target.changed then
+						-- Ask confirmation if content has changed.
+					create csd.make_and_launch (target, Current)
+				else
+					process
+				end
 			end
 		end
 

@@ -24,7 +24,7 @@
 		</TOPIC>
 		<TOPIC TOPIC_ID="Context_tool" ICON="icon_preferences_folder">
 			<HEAD>Context tools</HEAD>
-			<TEXT DESCRIPTION="Share addresses between the editor and the context tool?">unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Merge the context tool with other components by default?">unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?">ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Names of classes that should not appear in generated diagrams">excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
 			<TEXT DESCRIPTION="Order used to sort feature clauses in formatted texts">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>

@@ -20,7 +20,7 @@ create
 feature -- Access
 
 	directory: STRING is
-			-- Path of the currently selected directory.
+			-- Path of currently selected directory.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -43,7 +43,7 @@ feature -- Access
 feature -- Element change
 
 	set_start_directory (a_path: STRING) is
-			-- Make `a_path' the base directory.
+			-- Assign `a_path' to `start_directory'.
 		require
 			not_destroyed: not is_destroyed
 			a_path_not_void: a_path /= Void

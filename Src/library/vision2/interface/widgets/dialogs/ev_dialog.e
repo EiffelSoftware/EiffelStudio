@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Initialize the dialog box.
+			-- Initialize `Current'.
 			-- Note that `dialog_key_press_action' is inserted into the
 			-- `key_press_actions'. This handles the default and cancel
 			-- button processing and can be removed if necessary.
@@ -66,15 +66,13 @@ feature -- Access
 feature -- Access
 
 	is_modal: BOOLEAN
-			-- Must the window be closed before application can
+			-- Must `Current' be closed before application can
 			-- receive user events again?
 
 feature -- Status Setting
 
 	set_default_push_button (a_button: EV_BUTTON) is
-			-- Set the default push button to `a_button'.
-			-- This is the button that is pushed if the user presses
-			-- the enter key.
+			-- Assign `a_button' to `default push button'.
 		require
 			not_destroyed: not is_destroyed
 			a_button_not_void: a_button /= Void
@@ -84,7 +82,7 @@ feature -- Status Setting
 		end
 
 	remove_default_push_button is
-			-- Remove the default push button of this dialog.
+			-- Remove `default_push_button'.
 		require
 			not_destroyed: not is_destroyed
 			has_default_push_button: default_push_button /= Void
@@ -95,11 +93,7 @@ feature -- Status Setting
 		end
 	
 	set_default_cancel_button (a_button: EV_BUTTON) is
-			-- Assign `a_button' to default_cancel_button.This is the button
-			-- that is pushed if the user press the escape key or
-			-- close the window using the close icon.
-			-- If there is no default cancel button, the close
-			-- icon is disabled.
+			-- Assign `a_button' to `default_cancel_button'.
 		require
 			not_destroyed: not is_destroyed
 			a_button_not_void: a_button /= Void
@@ -113,7 +107,7 @@ feature -- Status Setting
 	
 
 	remove_default_cancel_button is
-			-- Remove the default cancel button of this dialog.
+			-- Remove `default_cancel_button'.
 		require
 			not_destroyed: not is_destroyed
 			has_default_cancel_button: default_cancel_button /= Void
@@ -148,9 +142,9 @@ feature -- Basic operations
 		end
 		
 	dialog_key_press_action (a_key: EV_KEY) is
-			-- The action performed to process the default push and cancel
-			-- buttons. This is inserted in the `key_press_actions' and the
-			-- behviour is as follows:
+			-- The action performed to process default push and cancel
+			-- buttons. This is inserted in `key_press_actions' and
+			-- behaves is follows:
 			-- If escape is pressed at any time then
 				-- If there is a `default_cancel_button' then
 					-- If it is sensitive, call its `select_actions',
@@ -167,6 +161,7 @@ feature -- Basic operations
 feature {EV_DIALOG} -- Constants
 
 	Key_constants: EV_KEY_CONSTANTS is
+			-- Instance of `EV_KEY_CONSTANTS'.
 		once
 			create Result
 		end

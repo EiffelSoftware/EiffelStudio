@@ -112,6 +112,7 @@ feature -- Initialization
 --!! FIXME: check Concurrent_Eiffel license
 					Project_directory_name.make_from_string (project_directory.name)
 					system := e_project.system
+					dynamic_lib := e_project.dynamic_lib
 					Workbench.copy (e_project.saved_workbench)
 					Workbench.init
 					if Comp_system.is_precompiled then
@@ -155,6 +156,11 @@ feature -- Initialization
 								read_write_error
 		end
 
+	create_dynamic_lib is
+		do
+			!! dynamic_lib
+		end
+
 feature -- Properties
 
 	ace: E_ACE is
@@ -163,11 +169,8 @@ feature -- Properties
 			!! Result
 		end
 
-	dynamic_lib: E_DYNAMIC_LIB is
+	dynamic_lib: E_DYNAMIC_LIB
 			-- Eiffel Dynamic Lib
-		once
-			!! Result
-		end
 
 	project_directory: PROJECT_DIRECTORY
 			-- Information about the project files structures

@@ -14,6 +14,10 @@
 #ifndef _portable_h_
 #define _portable_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+ 
 #ifndef _config_h_
 #include "config.h"
 #endif
@@ -53,9 +57,9 @@ typedef unsigned int uint32;
 /*
  * Scope control pseudo-keywords
  */
-#define public				/* default C scope */
-#define private static		/* static outside a block means private */
-#define shared				/* data shared between modules, but not public */
+#define rt_public				/* default C scope */
+#define rt_private static		/* static outside a block means private */
+#define rt_shared				/* data shared between modules, but not public */
 
 /* Maps an Eiffel type on a C type */
 typedef long            EIF_INTEGER;
@@ -65,5 +69,9 @@ typedef double          EIF_DOUBLE;
 typedef char *          EIF_REFERENCE;
 typedef char *          EIF_POINTER;
 typedef unsigned char   EIF_BOOLEAN;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

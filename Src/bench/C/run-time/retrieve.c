@@ -87,6 +87,8 @@ int fd;
 
 	if (rt_kind)
 		xfree(dtypes);					/* Free the correspondance table */
+	if (rt_kind == '\02')
+		xfree(spec_elm_size);			/* Free the element size table */
 
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
@@ -186,7 +188,17 @@ long objectCount;
 
 	for (;objectCount > 0; objectCount--) {
 		/* Read object address */
+#if PTRSIZ > 4
+		unsigned int trunc_ptr;
+
+		if (rt_kind == '\02') {
+			buffer_read (&trunc_ptr, sizeof (unsigned int));
+			oldadd = (long) trunc_ptr;
+		} else
+			buffer_read(&oldadd, (sizeof(char *)));
+#else
 		buffer_read(&oldadd, (sizeof(char *)));
+#endif
 
 #ifdef DEBUG
 		printf ("\n  %lx", oldadd);
@@ -868,7 +880,14 @@ char * object, parent;
 					uint32  old_flags;
 					long size_count;
 
+#if PTRSIZ > 4
+					unsigned int trunc_ptr;
+
+					buffer_read (&trunc_ptr, sizeof (unsigned int));
+					*((long *) object + attrib_offset) = (long) trunc_ptr;
+#else
 					buffer_read (object + attrib_offset, sizeof(char *));
+#endif
 					buffer_read (&old_flags, sizeof(uint32));
 					size_count = get_expanded_pos (o_type, num_attrib);
 
@@ -974,12 +993,9 @@ char * object, parent;
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 								uint32  old_flags;
-								char * dummy;
 	
-								buffer_read (&dummy, sizeof(char *));
 								buffer_read (&old_flags, sizeof(uint32));
 #ifdef DEBUG
-								printf ("\n %lx", ((char *)(dummy)));
 								printf (" %x", old_flags);
 #endif
 								HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
@@ -1029,7 +1045,14 @@ char * object, parent;
 				if (!(flags & EO_COMP)) {		/* Special of references */
 					for (ref = object; count > 0; count--,
 							ref = (char *) ((char **) ref + 1)) {
+#if PTRSIZ > 4
+						unsigned int trunc_ptr;
+
+						buffer_read (&trunc_ptr, sizeof (unsigned int));
+						*(long *)ref = (long) trunc_ptr;
+#else
 						buffer_read (ref, sizeof(char *));
+#endif
 #ifdef DEBUG
 						printf (" %lx", *(char **)(ref));
 #endif
@@ -1039,12 +1062,9 @@ char * object, parent;
 					for (ref = object + OVERHEAD; count > 0;
 						count --, ref += elem_size) {
 							uint32  old_flags;
-							char * dummy;
 
-							buffer_read (&dummy, sizeof(char *));
 							buffer_read (&old_flags, sizeof(uint32));
 #ifdef DEBUG
-							printf ("\n %lx", ((char *)(dummy)));
 							printf (" %x", old_flags);
 #endif
 							HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));

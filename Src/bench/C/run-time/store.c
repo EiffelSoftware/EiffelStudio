@@ -241,6 +241,7 @@ public void st_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
+	 * Use for basic and general store
 	 */
 
 	register2 union overhead *zone;
@@ -290,16 +291,26 @@ private void ist_write(object)
 char *object;
 {
 	/* Write an object in file `fides'.
+	 * used for independent store
 	 */
 
 	register2 union overhead *zone;
 	uint32 flags;
 	register1 uint32 nb_char;
 
+#if PTRSIZ > 4
+	unsigned int trunc_ptr;
+#endif
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 	/* Write address */
+#if PTRSIZ > 4
+ 
+	trunc_ptr = object & 0xffff;
+	buffer_write (&trunc_ptr, sizeof (unsigned int));
+#else
 	buffer_write(&object, sizeof(char *));
+#endif
 	buffer_write(&flags, sizeof(uint32));
 
 #ifdef DEBUG
@@ -525,7 +536,8 @@ char * object;
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
-							ist_write(ref);
+							buffer_write (&(HEADER (ref)->ov_flags), sizeof (uint32));
+							object_write(ref);
 						}
 						break;
 					case SK_POINTER:
@@ -543,11 +555,17 @@ char * object;
 						break;
 				}
 			} else {
-	
 				if (!(flags & EO_COMP)) {		/* Special of references */
 					for (ref = object; count > 0; count--,
 							ref = (char *) ((char **) ref + 1)) {
+#if PTRSIZ > 4
+						unsigned int trunc_ptr;
+
+						trunc_ptr = (unsigned int)((*(long *)ref) & 0xffff);
+						buffer_write (&trunc_ptr, sizeof (unsigned int));
+#else
 						buffer_write(ref, sizeof(char *));
+#endif
 #ifdef DEBUG
 						printf (" %lx", *(long *)(ref));
 #endif
@@ -556,7 +574,8 @@ char * object;
 					elem_size = *(long *) (o_ptr + sizeof(long));
 					for (ref = object + OVERHEAD; count > 0;
 						count --, ref += elem_size) {
-						ist_write(ref);
+						buffer_write (&(HEADER (ref)->ov_flags), sizeof (uint32));
+						object_write(ref);
 					}
 				}
 			}

@@ -100,7 +100,7 @@ feature  -- Element change
 		ensure 
 			new_count: count = old count + old other.count;
 			new_index: index = old index + old other.count;
-			other_is_empty: other.empty
+			other_is_empty: other.is_empty
 		end;
 
 	merge_right (other: LIST [SCROLLABLE_LIST_ELEMENT]) is
@@ -114,7 +114,7 @@ feature  -- Element change
 		ensure
 			new_count: count = old count + old other.count;
 			same_index: index = old index;
-			other_is_empty: other.empty
+			other_is_empty: other.is_empty
 		end;
 
 	put (v: like item) is
@@ -214,7 +214,7 @@ feature  -- Removal
 			writable: writable
 		deferred
 		ensure
-			after_when_empty: empty implies after
+			after_when_empty: is_empty implies after
 		end;
 
 	remove_left is
@@ -247,7 +247,7 @@ feature  -- Removal
 		deferred
 		ensure
 			is_before: before
-			wiped_out: empty
+			wiped_out: is_empty
 		end;
 
 feature  -- Status report
@@ -405,17 +405,17 @@ invariant
 	non_negative_index: index >= 0;
 	index_small_enough: index <= count + 1;
 	off_definition: off = ((index = 0) or (index = count + 1));
-	isfirst_definition: isfirst = ((not empty) and (index = 1));
-	islast_definition: islast = ((not empty) and (index = count));
+	isfirst_definition: isfirst = ((not is_empty) and (index = 1));
+	islast_definition: islast = ((not is_empty) and (index = count));
 	item_corresponds_to_index: (not off) implies (item = i_th (index));
 	writable_constraint: writable implies readable;
-	empty_constraint: empty implies (not readable) and (not writable);
+	empty_constraint: is_empty implies (not readable) and (not writable);
 	not_both: not (after and before);
-	empty_property: empty implies (after or before);
+	empty_property: is_empty implies (after or before);
 	before_constraint: before implies off;
 	after_constraint: after implies off;
-	empty_constraint: empty implies off;
-	empty_definition: empty = (count = 0);
+	empty_constraint: is_empty implies off;
+	empty_definition: is_empty = (count = 0);
 	non_negative_count: count >= 0;
 	extendible: extendible;
 

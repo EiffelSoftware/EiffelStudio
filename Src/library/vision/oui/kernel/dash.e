@@ -48,7 +48,7 @@ feature -- Element change
 			-- Set `offset' to `new_offset'.
 		require
 			offset_large_enough: offset >= 0;
-			offset_small_enough: (not empty) implies (offset < max_offset)
+			offset_small_enough: (not is_empty) implies (offset < max_offset)
 		do
 			offset := new_offset
 		ensure
@@ -58,7 +58,7 @@ feature -- Element change
 invariant
 
 	non_negative_offset: offset >= 0;
-	not_empty_offset_in_bound: (not empty) implies (offset <= max_offset)
+	not_empty_offset_in_bound: (not is_empty) implies (offset <= max_offset)
 
 end -- class DASH
 

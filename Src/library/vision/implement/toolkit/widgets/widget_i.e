@@ -137,7 +137,7 @@ feature -- Status setting
 			-- contained in `wid_list;.
 		require
 			non_void_list: wid_list /= Void;
-			list_not_empty: not wid_list.empty
+			list_not_empty: not wid_list.is_empty
 		deferred
 		end;
 

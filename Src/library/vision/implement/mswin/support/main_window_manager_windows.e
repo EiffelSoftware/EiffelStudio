@@ -14,7 +14,7 @@ feature -- Implementation
 	add_main_window (tw: TOP_IMP) is
 			-- Add `tw' to the list of main windows.
 		do
-			if main_windows.empty then
+			if main_windows.is_empty then
 				main_windows.extend (tw)
 				set_main_window
 			else
@@ -37,7 +37,7 @@ feature -- Implementation
 		require else
 			no_precondition: true
 		do
-			if not main_windows.empty then
+			if not main_windows.is_empty then
 				Result := main_windows.first
 			end
 		end

@@ -19,7 +19,7 @@ feature
 	remove_task (a_task: TASK_IMP) is
 		do
 			tasks.prune_all (a_task)
-			if tasks.empty then
+			if tasks.is_empty then
 				application.disable_idle_action
 			end
 		end

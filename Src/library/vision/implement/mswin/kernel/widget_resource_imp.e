@@ -42,7 +42,7 @@ feature -- Status report
 			-- to form the resource string;
 		require else
 			resource_name_valid: resource_name /= Void and then not 
-				resource_name.empty;
+				resource_name.is_empty;
 		do
 		end;
 
@@ -51,7 +51,7 @@ feature -- Status setting
 	set_resource_name (a_name: STRING) is
 			-- Set the resource name 
 		require else
-			valid_name: a_name /= Void and then not a_name.empty;
+			valid_name: a_name /= Void and then not a_name.is_empty;
 		do
 		ensure then
 			resource_name_set: resource_name.is_equal (a_name);
@@ -60,7 +60,7 @@ feature -- Status setting
 	set_resource_value (a_value: STRING) is
 			-- set the resource value
 		require else
-			valid_name: a_value /= Void and then not a_value.empty;
+			valid_name: a_value /= Void and then not a_value.is_empty;
 		do
 		ensure then
 			resource_name_set: resource_value.is_equal (a_value);
@@ -69,7 +69,7 @@ feature -- Status setting
 	set_widget_name (a_name: STRING) is
 			-- Set the widget name
 		require else
-			valid_name: a_name /= Void and then not a_name.empty;
+			valid_name: a_name /= Void and then not a_name.is_empty;
 		do
 		ensure then
 			resource_name_set: widget_name.is_equal (a_name);

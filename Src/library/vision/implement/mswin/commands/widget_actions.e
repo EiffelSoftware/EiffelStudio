@@ -87,7 +87,7 @@ feature -- Element change
 					acts.forth
 				end
 			end
-			if translations /= Void and then not translations.empty then
+			if translations /= Void and then not translations.is_empty then
 				translations.first.set_no_execute_now
 			end
 		end

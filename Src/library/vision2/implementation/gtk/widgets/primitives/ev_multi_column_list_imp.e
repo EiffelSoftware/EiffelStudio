@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 				C.GTK_POLICY_AUTOMATIC_ENUM,
 				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			create ev_children.make (0)
+			create ev_children.make
 		end
 
 	create_list (a_columns: INTEGER) is
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			item_imp ?= interface.i_th (a_position).implementation
+			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
 			C.gtk_clist_remove (list_widget, a_position - 1)
 			-- remove the row from the `ev_children'
@@ -527,13 +527,42 @@ feature {NONE} -- Implementation
 			-- Move `v' to `a_position' in Current.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			temp_position: INTEGER
+			temp_list: like ev_children
+			a_counter: INTEGER
 		do
 			item_imp ?= v.implementation
 			C.gtk_clist_row_move (
 				list_widget,
 				item_imp.index - 1,
 				a_position - 1
-			)	
+			)
+			-- Insert `v' in to ev_children list.	
+
+			create temp_list.make
+			from
+				a_counter := 1
+			until
+				a_counter = a_position
+			loop
+				temp_list.extend (ev_children.i_th (a_counter))
+				a_counter := a_counter + 1
+			end
+			
+			-- Insert `v' at a_position
+			temp_list.extend (item_imp)
+
+			from
+				a_counter := a_position
+			until
+				a_counter = count
+				-- The child to be reordered is always at i_th (count)
+			loop
+				temp_list.extend (ev_children.i_th (a_counter))
+				a_counter := a_counter + 1
+			end
+
+			ev_children := temp_list	
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -578,6 +607,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/15 00:46:13  king
+--| Implemented insert_item at position
+--|
 --| Revision 1.40  2000/03/14 00:13:04  king
 --| Optimised item retrieval from position
 --|

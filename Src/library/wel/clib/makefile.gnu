@@ -1,9 +1,7 @@
 # wel.a - Makefile for Microsoft C
 
-EIFFEL_SRC=C:/Eiffel50
-EIFFEL_SRC2=C:/Eiffel50
 CC = gcc
-CFLAGS = -c -O2 -I$(EIFFEL_SRC)/library/wel/spec/windows/include -I$(EIFFEL_SRC2)/studio/spec/$(ISE_PLATFORM)/include
+CFLAGS = -c -O2 -I../spec/windows/include -I$(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/include
 RM = rm
 
 .c.o:
@@ -14,7 +12,7 @@ OBJ = disptchr.o choose_folder.o enumfont.o enum_child_windows.o estream.o msgbo
 wel.a: $(OBJ)
 	if [ -f $@ ] ; then $(RM) $@ ; fi
 	ld -r -o $@ $(OBJ)
-	if [ ! -d $(EIFFEL_SRC)/library/wel/spec/gnu ] ; then mkdir $(EIFFEL_SRC)/library/wel/spec/gnu ; fi
-	if [ ! -d $(EIFFEL_SRC)/library/wel/spec/gnu/lib ] ; then mkdir $(EIFFEL_SRC)/library/wel/spec/gnu/lib ; fi
-	cp $@ $(EIFFEL_SRC)/library/wel/spec/gnu/lib
+	if [ ! -d ../spec/gnu ] ; then mkdir ../spec/gnu ; fi
+	if [ ! -d ../spec/gnu/lib ] ; then mkdir ../spec/gnu/lib ; fi
+	cp $@ ../spec/gnu/lib
 	$(RM) $@

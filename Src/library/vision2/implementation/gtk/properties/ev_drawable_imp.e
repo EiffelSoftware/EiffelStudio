@@ -443,7 +443,7 @@ feature -- Drawing operations
 			-- with size `a_width' and `a_height'.
 		do
 			if drawable /= NULL then
-				C.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width, a_height)
+				C.gdk_draw_rectangle (drawable, gc, 0, x, y, a_width - 1, a_height - 1)
 			end
 		end
 

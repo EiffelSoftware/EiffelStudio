@@ -42,7 +42,8 @@ inherit
 			on_middle_button_down,
 			on_right_button_down,
 			on_key_down,
-			on_mouse_move
+			on_mouse_move,
+			pnd_press
 		end
 
  	WEL_LIST_BOX
@@ -135,7 +136,11 @@ feature -- Status report
 			-- True if the user can choose several items,
 			-- False otherwise
 		do
-			Result := flag_set (style, Lbs_multiplesel)
+			if parent_imp = Void then
+				Result := True
+			else
+				Result := flag_set (style, Lbs_multiplesel)
+			end
 		end
 
 feature -- Status setting
@@ -244,7 +249,42 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation : WEL features
+feature {EV_LIST_ITEM_IMP} -- implementation
+
+		list_is_pnd_source : BOOLEAN
+
+		child_source: EV_LIST_ITEM_IMP
+
+		set_child_source (c: EV_LIST_ITEM_IMP) is
+			do
+				child_source := c
+			end
+
+		set_source_true is
+			do
+				list_is_pnd_source := True
+			end
+		
+
+		set_source_false is
+			do
+				list_is_pnd_source := False
+			end
+
+		transport_started_in_list: BOOLEAN
+
+		transport_started_in_list_item: BOOLEAN
+
+		set_t_item_true is
+			do
+				transport_started_in_list_item := True
+			end
+
+		set_t_item_false is
+			do
+				transport_started_in_list_item := False
+			end
+feature {EV_ANY_I} -- Implementation : WEL features
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
@@ -253,8 +293,13 @@ feature {NONE} -- Implementation : WEL features
 			pt: WEL_POINT
 		do
 			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+				if it /= Void and it.is_transport_enabled and not list_is_pnd_source then
+					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				elseif child_source /= Void then 
+					child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				end
 			if it /= Void then
-				pt := client_to_screen (x_pos, y_pos)
 				it.interface.pointer_button_press_actions.call ([x_pos,y_pos - it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 		end
@@ -373,10 +418,47 @@ feature {NONE} -- Implementation : WEL features
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			pt: WEL_POINT
+			it: EV_LIST_ITEM_IMP
+			a: BOOLEAN
 		do
+
+			a:= transport_started_in_list_item
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			it := find_item_at_position (x_pos, y_pos)
+
+			if transport_started_in_list_item = a then
+				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			end
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])	
 		end
+
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		do
+			inspect
+				press_action
+			when
+				Ev_pnd_start_transport
+			then
+					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+					set_source_true
+					transport_started_in_list := True
+			when
+				Ev_pnd_end_transport
+			then
+				end_transport (a_x, a_y, a_button)
+				set_source_false
+				transport_started_in_list := False
+			else
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
+			end
+		end
+
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
@@ -400,13 +482,18 @@ feature {NONE} -- Implementation : WEL features
 			offets: TUPLE [INTEGER, INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				pt := client_to_screen (x_pos, y_pos)
+				--|FIXME May need to call the pnd cursor changing code in here.
+				--|SEE on_mouse_move from EV_WIDGET_IMP.
+				--|Julian Rogers
 				it.interface.pointer_motion_actions.call ([x_pos,y_pos - it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+			if child_source /= Void then
+				child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end 
-
 
 	wel_background_color: WEL_COLOR_REF is
 		do
@@ -554,7 +641,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST
 
@@ -581,6 +668,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/03/17 23:40:34  rogers
+--| Added the following features: list_is_pnd_source, child_source, set_child_Source, set_source_true, set_source_false. These fatures are now being reviewed and will be modified further. Implemented on_mouse_move and pnd_press.
+--|
 --| Revision 1.49  2000/03/15 17:06:36  rogers
 --| Removed commented code. Added internal_propagate_pointer_press, on_left_button_down, on_middle_button_down, on_right_button_down. Removed on_lbn_dblclick.
 --|

@@ -681,7 +681,7 @@ feature -- Removal
 		do
 			from
 			until
-				item (1) /= c
+				empty or else item (1) /= c
 			loop
 				remove (1)
 			end
@@ -692,7 +692,7 @@ feature -- Removal
 		do
 			from
 			until
-				item (count) /= c
+				empty or else item (count) /= c
 			loop
 				remove (count)
 			end

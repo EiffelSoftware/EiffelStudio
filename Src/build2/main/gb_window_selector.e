@@ -156,6 +156,9 @@ feature {NONE} -- Implementation
 			widget.drop_actions.extend (agent add_new_component (?, Current))
 			widget.key_press_actions.extend (agent check_for_object_delete)
 			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
+			widget.focus_in_actions.extend (agent command_handler.update)
+			widget.focus_out_actions.extend (agent command_handler.update)
+			widget.select_actions.extend (agent command_handler.update)
 		end
 
 feature -- Access
@@ -204,6 +207,12 @@ feature -- Access
 
 	name: STRING is "Window Selector"
 			-- Full name used to represent `Current'.
+			
+	has_focus: BOOLEAN is
+			-- Does `Current' have focus?
+		do
+			Result := widget.has_focus
+		end
 
 feature -- Status setting
 		

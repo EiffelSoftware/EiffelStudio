@@ -644,9 +644,9 @@ static char *no_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaaaaaaaaaabbbbbbbbaaaaaaaaaaaa",
 "aaaaaaaaabbb````````bbbaaaaaaaaa",
@@ -687,9 +687,9 @@ static char *sizeall_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaaaaaaaa``aaaaaaaaaaaaaaaaaaaa",
 "aaaaaaaaa`bb`aaaaaaaaaaaaaaaaaaa",
@@ -730,9 +730,9 @@ static char *sizenesw_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaaaaa````````aaaaaaaaaaaaaaaaa",
 "aaaaaaa`bbbbbb`aaaaaaaaaaaaaaaaa",
@@ -773,9 +773,9 @@ static char *sizens_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaa``aaaaaaaaaaaaaaaaaaaaaaaaaa",
 "aaa`bb`aaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -816,9 +816,9 @@ static char *sizenwse_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "````````aaaaaaaaaaaaaaaaaaaaaaaa",
 "`bbbbbb`aaaaaaaaaaaaaaaaaaaaaaaa",
@@ -859,9 +859,9 @@ static char *sizewe_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaa``aaaaaaa``aaaaaaaaaaaaaaaaa",
 "aaa`b`aaaaaaa`b`aaaaaaaaaaaaaaaa",
@@ -945,9 +945,9 @@ static char *uparrow_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaa``aaaaaaaaaaaaaaaaaaaaaaaaaa",
 "aaa`bb`aaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -988,9 +988,9 @@ static char *wait_cursor_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 3 1",
 /* colors */
-"` c #000000",
+"` c #FFFFFF",
 "a c None",
-"b c #FFFFFF",
+"b c #000000",
 /* pixels */
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -1000,13 +1000,13 @@ static char *wait_cursor_xpm[] = {
 "aaaaaaaaab`````````````baaaaaaaa",
 "aaaaaaaaab``bbb`b``````baaaaaaaa",
 "aaaaaaaaaab```````````baaaaaaaaa",
-"aaaaaaaaaab`bbbbbbbbb`baaaaaaaaa",
-"aaaaaaaaaab`bbbbbbbbb`baaaaaaaaa",
-"aaaaaaaaaab`bbbbbbbbb`baaaaaaaaa",
-"aaaaaaaaaab`bbbbbbbbb`baaaaaaaaa",
-"aaaaaaaaaaab`bbbbbbb`baaaaaaaaaa",
-"aaaaaaaaaaaab`bbbbb`baaaaaaaaaaa",
-"aaaaaaaaaaaaab`bbb`baaaaaaaaaaaa",
+"aaaaaaaaaab`b`b`b`b`b`baaaaaaaaa",
+"aaaaaaaaaab``b`b`b`b``baaaaaaaaa",
+"aaaaaaaaaab`b`b`b`b`b`baaaaaaaaa",
+"aaaaaaaaaab``b`b`b`b``baaaaaaaaa",
+"aaaaaaaaaaab``b`b`b``baaaaaaaaaa",
+"aaaaaaaaaaaab``b`b``baaaaaaaaaaa",
+"aaaaaaaaaaaaab``b``baaaaaaaaaaaa",
 "aaaaaaaaaaaaaab`b`baaaaaaaaaaaaa",
 "aaaaaaaaaaaaaab`b`baaaaaaaaaaaaa",
 "aaaaaaaaaaaaab`bbb`baaaaaaaaaaaa",
@@ -1049,6 +1049,9 @@ static char *wait_cursor_xpm[] = {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.12  2001/10/15 23:04:14  manus
+// Updated cursors
+//
 // Revision 1.11  2001/10/15 22:30:27  manus
 // Moved pixmap definitions from header to c file
 //

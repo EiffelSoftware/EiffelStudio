@@ -242,7 +242,7 @@ feature -- Element change
 			-- Add `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
-			a_mask: POINTER
+			a_mask: INTEGER
 		do
 			inspect number 
 			when 1 then
@@ -257,7 +257,7 @@ feature -- Element change
 				a_mask := Button5MotionMask
 			else
 			end
-			if a_mask /= default_pointer then
+			if a_mask /= 0 then
 				add_event_handler (a_mask, 
 					x_event_vision_callback (a_command), argument)
 			end
@@ -317,6 +317,16 @@ feature -- Removal
 			-- screen widget implementations of its children
 			-- contained in `wid_list;.
 		do
+			if not click_actions_table.empty then
+				from	
+					wid_list.start
+				until
+					wid_list.after
+				loop
+					click_actions_table.remove (wid_list.item.implementation.screen_object);
+					wid_list.forth
+				end
+			end;
 			mel_destroy
 		end; 
 
@@ -340,7 +350,7 @@ feature -- Removal
 			-- Remove `a_command' to the list of action to execute when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		local
-			a_mask: POINTER
+			a_mask: INTEGER
 		do
 			inspect number 
 			when 1 then
@@ -355,7 +365,7 @@ feature -- Removal
 				a_mask := Button5MotionMask
 			else
 			end
-			if a_mask /= default_pointer then
+			if a_mask /= 0 then
 				remove_event_handler (a_mask, 
 					x_event_vision_callback (a_command), argument)
 			end
@@ -547,7 +557,7 @@ feature {NONE} -- Implementation
 	click_actions_table: HASH_TABLE [BUTTON_CLICK_HAND_X, POINTER] is
 			-- Table of click actions for all widgets
 		once
-			!! Result.make (2)
+			!! Result.make (1)
 		end;
 
 	button_click_actions: BUTTON_CLICK_HAND_X is
@@ -556,7 +566,9 @@ feature {NONE} -- Implementation
 			Result := click_actions_table.item (screen_object);
 			if Result = Void then	
 				!! Result.make;
-				click_actions_table.put (Result, screen_object)
+				click_actions_table.put (Result, screen_object);
+				add_event_handler (ButtonPressMask, Result, Void)
+				add_event_handler (ButtonReleaseMask, Result, Void)
 			end;
 		ensure
 			non_void_result: Result /= Void

@@ -9,7 +9,8 @@ class
 inherit
 	EB_UNDO_REDO_COMMAND
 		redefine
-			executable
+			executable,
+			tooltext
 		end
 			
 
@@ -51,6 +52,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Undo
+		end
+
+	tooltext: STRING is
+			-- Text for the toolbar button.
+		do
+			Result := Interface_names.b_Undo
 		end
 
 	description: STRING is

@@ -9,7 +9,8 @@ class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			tooltext
 		end
 
 	EB_SHARED_INTERFACE_TOOLS
@@ -134,6 +135,12 @@ feature {NONE} -- Implementation
 			-- Tooltip for toolbar button
 		do
 			Result := Interface_names.e_Project_settings
+		end
+
+	tooltext: STRING is
+			-- Tooltip for toolbar button
+		do
+			Result := Interface_names.b_Project_settings
 		end
 
 	menu_name: STRING is

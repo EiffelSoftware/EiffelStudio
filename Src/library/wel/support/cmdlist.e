@@ -64,8 +64,8 @@ feature -- Execution
 end -- class WEL_COMMAND_LIST
 
 --|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

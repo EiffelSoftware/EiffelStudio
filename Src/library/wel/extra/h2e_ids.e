@@ -21,3 +21,14 @@ feature -- Access
 	Cmd_help_about: INTEGER is 108
 
 end -- class H2E_IDS
+
+--|---------------------------------------------------------------- 
+--| Copyright (C) 1995-1997, Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|----------------------------------------------------------------

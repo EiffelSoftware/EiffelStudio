@@ -28,6 +28,7 @@ cluster
 -- ES3 SPECIFIC CLUSTERS
 
 
+		limand:             "$BENCH/Eiffel/limand";
 		beurk:				"$BENCH/Eiffel/beurk";
 		dialog:				"$BENCH/Eiffel/dialog";
 		replication:		"$BENCH/Eiffel/eiffel/replication";

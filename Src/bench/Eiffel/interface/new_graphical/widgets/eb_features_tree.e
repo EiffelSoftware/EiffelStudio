@@ -1,7 +1,7 @@
 indexing
-	description	: "Tree representing the features of the class currently opened"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Tree representing the features of the class currently opened"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_FEATURES_TREE
@@ -90,6 +90,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					raise ("No feature table")
 				end
 				if class_text /= Void then
+					key_press_actions.extend (agent on_key_pushed)
 					from 
 						fcl.start
 					until
@@ -110,7 +111,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
 						end
 						if is_clickable then
-							tree_item.select_actions.extend (agent features_tool.go_to_clause (fcl.item))
+							tree_item.set_data (fcl.item)
+							tree_item.pointer_button_press_actions.extend (
+								agent button_go_to_clause (fcl.item, ?, ?, ?, ?, ?, ?, ?, ?))
 						end
 						extend (tree_item)
 						if
@@ -123,7 +126,8 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					end
 					if fcl.is_empty then
 							-- Display a message not to confuse the user.
-						extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.w_No_feature_to_display))
+						extend (create {EV_TREE_ITEM}.make_with_text (
+							Warning_messages.w_no_feature_to_display))
 					end
 				elseif features_tool.current_compiled_class.cluster.is_precompiled then
 					from 
@@ -144,7 +148,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 							tree_item.set_pixmap (Pixmaps.Icon_feature_clause_any)
 						end
 						if is_clickable then
-							tree_item.select_actions.extend (agent features_tool.go_to_clause (fcl.item))
+							tree_item.set_data (fcl.item)
+							tree_item.pointer_button_press_actions.extend (
+								agent button_go_to_clause (fcl.item, ?, ?, ?, ?, ?, ?, ?, ?))
 						end
 						extend (tree_item)
 						if
@@ -157,15 +163,18 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					end
 					if fcl.is_empty then
 							-- Display a message not to confuse the user.
-						extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.w_No_feature_to_display))
+						extend (create {EV_TREE_ITEM}.make_with_text (
+							Warning_messages.w_no_feature_to_display))
 					end
 				else
 					wipe_out
-					extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.w_Cannot_read_file (features_tool.current_compiled_class.file_name)))
+					extend (create {EV_TREE_ITEM}.make_with_text (
+						Warning_messages.w_cannot_read_file (
+							features_tool.current_compiled_class.file_name)))
 				end
 			else
 				wipe_out
-				extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Compile_first))
+				extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_compile_first))
 			end
 		rescue
 			retried := True
@@ -196,6 +205,7 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					raise ("No feature table.")
 				end
 				if class_text /= Void then
+					key_press_actions.extend (agent on_key_pushed)
 					from 
 						l_clauses.start
 					until
@@ -213,7 +223,9 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						end
 						if is_clickable then
 							--FIXME: NC 
-							--tree_item.select_actions.extend (agent features_tool.go_to_clause (l_clauses.item))
+							-- tree_item.set_data (l_clauses.item)
+							-- tree_item.pointer_button_press_actions.extend (
+							--	agent button_go_to_clause (l_clauses.item, ?, ?, ?, ?, ?, ?, ?, ?))
 						end
 						extend (tree_item)
 						if
@@ -226,15 +238,18 @@ feature {EB_FEATURES_TOOL} -- Implementation
 					end
 					if l_clauses.is_empty then
 							-- Display a message not to confuse the user.
-						extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.w_No_feature_to_display))
+						extend (create {EV_TREE_ITEM}.make_with_text (
+							Warning_messages.w_no_feature_to_display))
 					end
 				else
 					wipe_out
-					extend (create {EV_TREE_ITEM}.make_with_text (Warning_messages.w_Cannot_read_file (features_tool.current_compiled_class.file_name)))
+					extend (create {EV_TREE_ITEM}.make_with_text (
+						Warning_messages.w_cannot_read_file (
+							features_tool.current_compiled_class.file_name)))
 				end
 			else
 				wipe_out
-				extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_Compile_first))
+				extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_compile_first))
 			end
 		rescue
 			retried := True
@@ -242,6 +257,53 @@ feature {EB_FEATURES_TOOL} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	on_key_pushed (a_key: EV_KEY) is
+			-- If `a_key' is enter, set a stone in the development window.
+		require
+			a_key_not_void: a_key /= Void
+		local
+			l_data: ANY
+			l_feature: E_FEATURE
+			l_clause: FEATURE_CLAUSE_AS
+		do
+			l_data := selected_item.data
+			if a_key.code = feature {EV_KEY_CONSTANTS}.Key_enter and then l_data /= Void then
+				l_feature ?= l_data
+				if l_feature /= Void then
+					features_tool.go_to (l_feature)
+				else
+					l_clause ?= l_data
+					if l_clause /= Void then
+						features_tool.go_to_clause (l_clause)
+					end
+				end
+			end
+		end
+	
+	button_go_to (ef: E_FEATURE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
+						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
+						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Target `features_tool' to `ef'.
+		require
+			ef_not_void: ef /= Void
+		do
+			if a_button = 1 then
+				features_tool.go_to (ef)
+			end
+		end
+
+	button_go_to_clause (fclause: FEATURE_CLAUSE_AS; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER
+						 a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE
+						 a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Target `features_tool' to `fclause'.
+		require
+			fclause_not_void: fclause /= Void
+		do
+			if a_button = 1 then
+				features_tool.go_to_clause (fclause)
+			end
+		end
 
 	features_tool: EB_FEATURES_TOOL
 			-- Associated features tool.
@@ -260,7 +322,7 @@ feature {NONE} -- Implementation
 			then
 				Result.set_text (n)
 			else
-				Result.set_text (Interface_names.l_No_feature_group_clause)
+				Result.set_text (Interface_names.l_no_feature_group_clause)
 			end
 			from
 				fl.start
@@ -273,10 +335,16 @@ feature {NONE} -- Implementation
 				create tree_item
 				tree_item.set_text (fl.item.feature_name)
 				if is_clickable then
-					if features_tool.current_compiled_class /= Void and then features_tool.current_compiled_class.has_feature_table then
-						ef := features_tool.current_compiled_class.feature_with_name (fl.item.feature_name)
+					if
+						features_tool.current_compiled_class /= Void and then
+						features_tool.current_compiled_class.has_feature_table
+					then
+						ef := features_tool.current_compiled_class.feature_with_name (
+							fl.item.feature_name)
 						if ef /= Void then
-							tree_item.select_actions.extend (features_tool~go_to (ef))	
+							tree_item.set_data (ef)
+							tree_item.pointer_button_press_actions.extend (
+								agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
 						end
 					end
 				end
@@ -319,7 +387,7 @@ feature {NONE} -- Implementation
 			then
 				Result.set_text (n)
 			else
-				Result.set_text (Interface_names.l_No_feature_group_clause)
+				Result.set_text (Interface_names.l_no_feature_group_clause)
 			end
 			from
 				fl.start
@@ -336,17 +404,22 @@ feature {NONE} -- Implementation
 						features_tool.current_compiled_class /= Void and then 
 						features_tool.current_compiled_class.has_feature_table 
 					then
-						ef := features_tool.current_compiled_class.feature_with_name (fl.item.eiffel_name)
+						ef := features_tool.current_compiled_class.feature_with_name (
+							fl.item.eiffel_name)
 						if ef = Void then
 								-- Check for infix feature
-							ef := features_tool.current_compiled_class.feature_with_name ("infix %"" + fl.item.eiffel_name + "%"")
+							ef := features_tool.current_compiled_class.feature_with_name (
+								"infix %"" + fl.item.eiffel_name + "%"")
 							if ef = Void then
 									-- Check for prefix feature
-								ef := features_tool.current_compiled_class.feature_with_name ("prefix %"" + fl.item.eiffel_name + "%"")
+								ef := features_tool.current_compiled_class.feature_with_name (
+									"prefix %"" + fl.item.eiffel_name + "%"")
 							end
 						end
 						if ef /= Void then
-							tree_item.select_actions.extend (agent features_tool.go_to (ef))	
+							tree_item.set_data (ef)
+							tree_item.pointer_button_press_actions.extend (
+								agent button_go_to (ef, ?, ?, ?, ?, ?, ?, ?, ?))	
 						end
 					end
 				end

@@ -25,7 +25,7 @@ creation
 %token LAC_END LAC_ENSURE LAC_EXCLUDE LAC_DEPEND LAC_EXPORT LAC_EXTERNAL
 %token LAC_GENERATE LAC_IDENTIFIER LAC_IGNORE LAC_INCLUDE
 %token LAC_INVARIANT LAC_LEFT_PARAM LAC_LOOP LAC_NO
-%token LAC_OPTIMIZE LAC_OPTION LAC_PRECOMPILED LAC_RENAME LAC_REQUIRE
+%token LAC_OPTIMIZE LAC_OPTION LAC_PRECOMPILED LAC_PREFIX LAC_RENAME LAC_REQUIRE
 %token LAC_RIGHT_PARAM LAC_ROOT LAC_SEMICOLON LAC_STRING LAC_SYSTEM
 %token LAC_TRACE LAC_USE LAC_VISIBLE LAC_YES LAC_LIBRARY
 
@@ -37,7 +37,7 @@ creation
 %type <ASSEMBLY_SD>			Assembly
 %type <D_OPTION_SD>			D_option_clause
 %type <ID_SD>				Name External_name Use Use_opt Parent_tag System Cluster_mark
-							Creation_procedure
+							Creation_procedure Assembly_prefix
 --%type <LANG_GEN_SD>			Language_generation
 %type <LANG_TRIB_SD>		Language_contrib
 %type <LANGUAGE_NAME_SD>	Language_name
@@ -462,16 +462,22 @@ Assembly_list: Assembly ASemi
 			}
 	;
 
-Assembly: Name LAC_COLON Name
+Assembly: Name LAC_COLON Name Assembly_prefix
 			{
 					-- name: "assembly_name"
-				create $$.initialize ($1, $3, Void, Void, Void)
+				create $$.initialize ($1, $3, $4, Void, Void, Void)
 			}
-	|	Name LAC_COLON Name LAC_COMMA Name LAC_COMMA Name LAC_COMMA Name
+	|	Name LAC_COLON Name LAC_COMMA Name LAC_COMMA Name LAC_COMMA Name Assembly_prefix
 			{
 					-- name: "assembly_name", "version", "culture", "public_key_token"
-				create $$.initialize ($1, $3, $5, $7, $9)
+				create $$.initialize ($1, $3, $10, $5, $7, $9)
 			}
+	;
+
+Assembly_prefix: -- Empty
+			-- { $$ := Void }
+	|	LAC_PREFIX Name LAC_END
+		{ $$ := $2 }
 	;
 
 Externals: -- Empty

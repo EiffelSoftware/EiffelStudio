@@ -18,84 +18,70 @@ feature {NONE}
 
 	Freeze_command_name: STRING is
 		local
-			c: CHARACTER
+			file_name: FILE_NAME
 		once
-			c := Directory_separator;
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.extend (c);
-			Result.append ("bench");
-			Result.extend (c);
-			Result.append ("spec");
-			Result.extend (c);
-			Result.append ("$PLATFORM");
-			Result.extend (c);
-			Result.append ("bin");
-			Result.extend (c);
-			Result.append (Finish_freezing_script);
-		end;
+			!!file_name.make_from_string (Eiffel3_dir_name);
+			file_name.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
+			file_name.set_file_name (Finish_freezing_script);
+			Result := file_name.path
+		end
 
 	Prelink_command_name: STRING is
 		local
-			c: CHARACTER
+			file_name: FILE_NAME
 		once
-			c := Directory_separator;
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.extend (c);
-			Result.append ("bench");
-			Result.extend (c);
-			Result.append ("spec");
-			Result.extend (c);
-			Result.append ("$PLATFORM");
-			Result.extend (c);
-			Result.append ("bin");
-			Result.extend (c);
-			Result.append (Prelink_script);
+			!!file_name.make_from_string (Eiffel3_dir_name);
+			file_name.extend_from_array (<<"bench", "spec", Execution_environment.get ("PLATFORM") , "bin">>);
+			file_name.set_file_name (Prelink_script);
+			Result := file_name.path
 		end;
 
 	Default_ace_name: STRING is
+		local
+			file_name: FILE_NAME
 		once
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.extend (Directory_separator);
-			Result.append (Default_ace_file);
+			!!file_name.make_from_string (Eiffel3_dir_name);
+			file_name.extend_from_array (<<"bench", "help", "defaults">>);
+			file_name.set_file_name (Default_Ace_file);
+			Result := file_name.path
 		end;
 
 	help_path: STRING is
 		local
-			c: CHARACTER
+			file_name: FILE_NAME
 		once
-			c := Directory_separator;
-			!!Result.make (50); Result.append (Eiffel3_dir_name);
-			Result.extend (c);
-			Result.append ("bench");
-			Result.extend (c);
-			Result.append ("help");
-			Result.extend (c);
-			Result.append ("errors");
-			Result.extend (c);
+			!!file_name.make_from_string (Eiffel3_dir_name);
+			file_name.extend_from_array (<<"bench", "help", "errors">>);
+			Result := file_name.path
+		end;
+
+	Default_precompiled_location: STRING is
+			-- Default location for the precompiled base
+			-- $EIFFEL3/precomp/spec/$PLATFORM/base
+		local
+			dir_name: DIRECTORY_NAME
+		once
+			!!dir_name.make_from_string (Eiffel3_dir_name);
+			dir_name.extend_from_array (<<"precomp", "spec", Execution_environment.get ("PLATFORM"), "base">>);
+			Result := dir_name.path
 		end;
 
 	filter_path: STRING is
 		local
 			c: CHARACTER;
-			temp: STRING
+			temp: STRING;
+			file_name: FILE_NAME;
 		once
-			c := Directory_separator;
 			Result := Execution_environment.get ("EIF_FILTER_PATH");
 			if Result = Void or else Result.empty then
 					-- EIF_FILTER_PATH was not set.
-				!!temp.make (50); 
-				temp.append (Eiffel3_dir_name);
-				temp.extend (c);
-				temp.append ("bench");
-				temp.extend (c);
-				temp.append ("filters")
-				Result := resources.get_string (r_Filter_path, temp);
+				!!file_name.make_from_string (Eiffel3_dir_name);
+				file_name.extend_from_array (<<"bench", "filters">>);
+				Result := resources.get_string (r_Filter_path, file_name.path);
 				if Result.empty then
 					result := temp
 				end
 			end;
-			if Result.item (Result.count) /= c then
-				 Result.extend (c)
-			end
 		end;
+
 end

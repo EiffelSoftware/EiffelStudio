@@ -48,22 +48,30 @@ feature
 	new_file: INDENT_FILE is
 			-- New file for generation
 		local
-			file_name: STRING;
-			subdir_name: STRING;
+			dir_name: DIRECTORY_NAME;
+			file_name: FILE_NAME;
+			temp: STRING;
 			subdir: DIRECTORY
 		do
-			subdir_name := clone (System_object_prefix);
-			subdir_name.append_integer (1);
+			temp := clone (System_object_prefix);
+			temp.append_integer (1);
 			file_counter := file_counter + 1;
-			file_name := build_path (Final_generation_path, subdir_name);
-			!! subdir.make (file_name);
+
+			!!dir_name.make_from_string (Final_generation_path);
+			dir_name.extend (temp);
+
+			!! subdir.make (dir_name.path);
 			if not subdir.exists then
 				subdir.create
 			end;
-			file_name := build_path (file_name, infix_file_name);
-			file_name.append_integer (file_counter);
-			file_name.append (postfix_file_name);
-			!!Result.make (file_name);
+
+			!!file_name.make_from_string (dir_name.path);
+			temp := clone (infix_file_name);
+			temp.append_integer (file_counter);
+			temp.append (postfix_file_name);
+			file_name.set_file_name (temp);
+
+			!!Result.make (file_name.path);
 		end;
 
 	init_file is

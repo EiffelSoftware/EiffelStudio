@@ -12,30 +12,36 @@ feature {NONE}
 			--! we want different postfix for the
 			--! file name
 		local
-			file_name: STRING;
+			dir_name: DIRECTORY_NAME;
+			file_name: FILE_NAME;
 			subdir_name: STRING;
-			subdir: DIRECTORY
+			subdir: DIRECTORY;
+			temp: STRING
 		do
 			subdir_name := clone (System_object_prefix);
 			subdir_name.append_integer (1);
 			if final_mode then
-				file_name := build_path (Final_generation_path, subdir_name);
-				!! subdir.make (file_name);
+				!!dir_name.make_from_string (Final_generation_path);
+				dir_name.extend (subdir_name);
+				!!subdir.make (dir_name.path);
 				if not subdir.exists then
 					subdir.create
 				end;
-				file_name := build_path (file_name, Esize);
-				file_name.append (Dot_x);
+				temp := clone (Esize);
+				temp.append (Dot_x);
 			else
-				file_name := build_path (Workbench_generation_path, subdir_name);
-				!! subdir.make (file_name);
+				!!dir_name.make_from_string (Workbench_generation_path);
+				dir_name.extend (subdir_name);
+				!!subdir.make (dir_name.path);
 				if not subdir.exists then
 					subdir.create
 				end;
-				file_name := build_path (file_name, Esize);
-				file_name.append (Dot_c);
+				temp := clone (Esize);
+				temp.append (Dot_c);
 			end;
-			!!Result.make (file_name);
+			!!file_name.make_from_string (dir_name.path);
+			file_name.set_file_name (temp);
+			!!Result.make (file_name.path);
 		end;
 
 	History_file: INDENT_FILE is
@@ -121,14 +127,17 @@ feature {NONE}
 	Make_f (final_mode: BOOLEAN): INDENT_FILE is
 			-- Makefile for C compilation
 		local
-			p: STRING
+			p: STRING;
+			f_name: FILE_NAME
 		do
 			if final_mode then
 				p := Final_generation_path
 			else
 				p := Workbench_generation_path
 			end;
-			!!Result.make (build_path (p, Makefile_SH));
+			!!f_name.make_From_string (p);
+			f_name.set_file_name (Makefile_SH);
+			!!Result.make (f_name.path);
 		end;
 
 feature {NONE}
@@ -136,33 +145,49 @@ feature {NONE}
 	final_file_name (base_name: STRING): STRING is
 		local
 			subdir_name: STRING;
-			subdir: DIRECTORY
+			subdir: DIRECTORY;
+			dir_name: DIRECTORY_NAME;
+			file_name: FILE_NAME;
+			temp: STRING
 		do
 			subdir_name := clone (System_object_prefix);
 			subdir_name.append_integer (1);
-			Result := build_path (Final_generation_path, subdir_name);
-			!! subdir.make (Result);
+
+			!!dir_name.make_from_string (Final_generation_path);
+			dir_name.extend (subdir_name);
+			!! subdir.make (dir_name.path);
 			if not subdir.exists then
 				subdir.create
 			end;
-			Result := build_path (Result, base_name);
-			Result.append (Dot_c);
+			!!file_name.make_from_string (dir_name.path);
+			temp := clone (base_name);
+			temp.append (Dot_c);
+			file_name.set_file_name (temp);
+			Result := file_name.path
 		end;
 
 	workbench_file_name (base_name: STRING): STRING is
 		local
 			subdir_name: STRING;
-			subdir: DIRECTORY
+			subdir: DIRECTORY;
+			dir_name: DIRECTORY_NAME;
+			file_name: FILE_NAME;
+			temp: STRING
 		do
 			subdir_name := clone (System_object_prefix);
 			subdir_name.append_integer (1);
-			Result := build_path (Workbench_generation_path, subdir_name);
-			!! subdir.make (Result);
+
+			!!dir_name.make_from_string (Workbench_generation_path);
+			dir_name.extend (subdir_name);
+			!! subdir.make (dir_name.path);
 			if not subdir.exists then
 				subdir.create
 			end;
-			Result := build_path (Result, base_name);
-			Result.append (Dot_c);
+			!!file_name.make_from_string (dir_name.path);
+			temp := clone (base_name);
+			temp.append (Dot_c);
+			file_name.set_file_name (temp);
+			Result := file_name.path
 		end;
 
 	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING is

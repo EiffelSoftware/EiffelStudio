@@ -66,7 +66,8 @@ feature -- Initialization
 		local
 			project_dir: PROJECT_DIR;
 			workbench_file: RAW_FILE;
-			temp: STRING
+			temp: STRING;
+			fn: FILE_NAME
 		do
 
 	-- Do not do anything if already initialized.
@@ -80,10 +81,10 @@ if not initialized.item then
 				!! project_dir.make (project_name); 
 	
 					-- Workbench file
-				!! temp.make (0);
-				temp.append (project_dir.name);
-				temp.append (workb_rel_path);
-				!!workbench_file.make (temp);
+				!! fn.make_from_string (project_dir.name);
+				fn.extend (Eiffelgen);
+				fn.set_file_name (Dot_workbench);
+				!!workbench_file.make (fn.path);
 
 					-- Is the project new?
 				project_is_new := project_dir.is_new or else
@@ -95,11 +96,6 @@ if not initialized.item then
 						temp.append ("Directory: ");
 						temp.append (project_dir.name);
 						temp.append (" does not exist");
-						error_occurred := True;
-					elseif not project_dir.is_directory then
-						!! temp.make (0);
-						temp.append (project_dir.name);
-						temp.append (" is not a directory");
 						error_occurred := True;
 					elseif
 						not (project_dir.is_readable and then

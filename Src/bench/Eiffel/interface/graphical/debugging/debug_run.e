@@ -54,14 +54,15 @@ feature
 	work (argument: ANY) is
 			-- Re-run the application
 		local
-			application_name: STRING;
-			makefile_sh_name: STRING;
+			application_name: FILE_NAME;
+			makefile_sh_name: FILE_NAME;
 			status: BOOLEAN;
 			uf: RAW_FILE;
 			make_f: PLAIN_TEXT_FILE;
 			kept_objects: LINKED_SET [STRING];
 			debug_text: TEXT_WINDOW;
-			ready_to_run: BOOLEAN
+			ready_to_run: BOOLEAN;
+			temp: STRING
 		do
 			if argument = melt_and_run then
 				text_window.tool.update_command.execute (text_window);
@@ -121,19 +122,17 @@ end;
 					elseif last_warner /= Void and argument = last_warner then
 						project_tool.update_command.finish_freezing
 					else
-						!!application_name.make (50);
-						application_name.append (Workbench_generation_path);
-						application_name.extend (Directory_separator);
+						!!makefile_sh_name.make_from_string (Workbench_generation_path);
+						makefile_sh_name.set_file_name (Makefile_SH);
 
-						!!makefile_sh_name.make (50);
-						makefile_sh_name.append (application_name);
+						!!application_name.make_from_string (Workbench_generation_path);
+						!!temp.make (0);
+						temp.append (System.system_name);
+						temp.append (Executable_suffix);
+						application_name.set_file_name (temp);
 
-						makefile_sh_name.append (Makefile_SH);
-						application_name.append (System.system_name);
-						application_name.append (Executable_suffix);
-
-						!!uf.make (application_name);
-						!!make_f.make (makefile_sh_name);
+						!!uf.make (application_name.path);
+						!!make_f.make (makefile_sh_name.path);
 						if uf.exists then
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the application
@@ -141,9 +140,10 @@ end;
 										w_Makefile_more_recent (Makefile_SH), 
 										" OK ", Void, "Cancel")
 							else
-								application_name.extend (' ');
-								application_name.append (argument_window.argument_list);
-								run_request.set_application_name (application_name);
+								temp := clone (application_name.path);
+								temp.extend (' ');
+								temp.append (argument_window.argument_list);
+								run_request.set_application_name (temp);
 								run_request.send
 							end;
 						elseif make_f.exists then

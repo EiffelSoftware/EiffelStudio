@@ -35,10 +35,12 @@ feature
 
 	file_name: STRING is
 			-- Full file name of the class
+		local
+			fn: FILE_NAME
 		do
-			Result := clone (cluster.path)
-			Result.extend (Directory_separator);
-			Result.append (base_name)
+			!!fn.make_from_string (cluster.path);
+			fn.set_file_name (base_name);
+			Result := fn.path
 		end;
 
 	date: INTEGER;

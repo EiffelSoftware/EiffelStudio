@@ -77,13 +77,14 @@ feature
 			workbench_file: RAW_FILE;
 			ok: BOOLEAN;
 			temp: STRING;
+			fn: FILE_NAME
 		do
 			if not retried then
 				ok := True;
-					!! temp.make (0);
-					temp.append (project_dir.name);
-					temp.append (workb_rel_path);
-				!!workbench_file.make (temp);
+					!! fn.make_from_string (project_dir.name);
+					fn.extend (Eiffelgen);
+					fn.set_file_name (Dot_workbench);
+				!!workbench_file.make (fn.path);
 				if 
 					project_dir.is_new or else
 					(not workbench_file.exists)
@@ -91,9 +92,6 @@ feature
 						-- Create new project
 					if not project_dir.exists then
 						temp := w_Directory_not_exist (project_dir.name);
-						ok := False;
-					elseif not project_dir.is_directory then
-						temp := w_Not_a_directory (project_dir.name);
 						ok := False;
 					elseif 
 						not (project_dir.is_readable and then

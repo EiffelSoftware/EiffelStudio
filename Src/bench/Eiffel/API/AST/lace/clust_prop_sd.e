@@ -88,7 +88,8 @@ feature -- Lace compilation
 	adapt_use is
 			-- Adapt cluster `cluster' with the use file
 		local
-			path, use_file_path: STRING;
+			path: STRING;
+			use_file_path: FILE_NAME;
 			use_file: PLAIN_TEXT_FILE;
 			cluster_prop: like Current;
 			vd02: VD02;
@@ -99,28 +100,26 @@ feature -- Lace compilation
 			cluster := context.current_cluster;
 			if use_name /= Void then
 				path := Environ.interpret (use_name);
-				!!use_file_path.make (cluster.path.count + use_name.count + 1);
-				use_file_path.append (cluster.path);
-				use_file_path.extend (Directory_separator);
-				use_file_path.append (path);
-				!!use_file.make_open_read (use_file_path);
+				!!use_file_path.make_from_string (cluster.path);
+				use_file_path.set_file_name (path);
+				!!use_file.make_open_read (use_file_path.path);
 				if 
 					(not use_file.exists) or else
 					use_file.is_directory
 				then
 					!!vd02;
 					vd02.set_cluster (cluster);
-					vd02.set_use_name (use_file_path);
+					vd02.set_use_name (use_file_path.path);
 					Error_handler.insert_error (vd02);
 					Error_handler.raise_error;
 				elseif not use_file.readable then
 					!!vd21;
-					vd21.set_file_name (use_file_path);
+					vd21.set_file_name (use_file_path.path);
 					vd21.set_cluster (cluster);
 					Error_handler.insert_error (vd21);
 				else
 						-- Parse local ace file
-					Parser.parse_file (use_file_path);
+					Parser.parse_file (use_file_path.path);
 					cluster_prop ?= Parser.ast;
 					if cluster_prop /= Void then	
 							-- Local ace cannot have a use clause

@@ -216,7 +216,7 @@ feature -- Command line options
 			i: INTEGER
 		do
 					-- Default Project Options
-			Project_name := ".";
+			Project_name := clone (Operating_environment.Current_directory_name_representation);
 
 			from
 				current_option := 1

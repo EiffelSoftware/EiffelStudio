@@ -66,12 +66,13 @@ feature -- Debug pupose
 	print_short_help is
 		local
 			file_name: STRING;
+			f_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 		do
-			file_name := clone (help_path)
-			file_name.append ("short");
-			file_name.extend (Directory_separator);
-			file_name.append (help_file_name);
+			!!f_name.make_from_string (help_path);
+			f_name.extend ("short");
+			f_name.set_file_name (help_file_name);
+			file_name := f_name.path
 			if subcode /= 0 then
 				file_name.append_integer (subcode)
 			end;

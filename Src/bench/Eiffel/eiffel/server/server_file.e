@@ -47,22 +47,26 @@ feature
 		require
 			positive_argument: i > 0
 		local
-			f_name: STRING;
+			f_name: FILE_NAME;
+			d_name: DIRECTORY_NAME;
+			temp: STRING;
 			d: DIRECTORY
 		do
-			!!f_name.make (0);
-			f_name.append (Compilation_path);
-			f_name.extend (Directory_separator);
-			f_name.extend ('S');
-			f_name.append_integer ((i // packet_size) + 1);
-			!!d.make (f_name);
+			!!d_name.make_from_string (Compilation_path);
+			!!temp.make (5);
+			temp.extend ('S');
+			temp.append_integer ((i // packet_size) + 1);
+			d_name.extend (temp);
+			!!d.make (d_name.path);
 			if not d.exists then
 				d.create
 			end;
-			f_name.extend (Directory_separator);
-			f_name.extend ('E');
-			f_name.append_integer (i);
-			file_make (f_name);
+			!!f_name.make_from_string (d_name.path);
+			!!temp.make (5);
+			temp.extend ('E');
+			temp.append_integer (i);
+			f_name.set_file_name (temp);
+			file_make (f_name.path);
 			if not Project_read_only.item then
 					-- If the file exists, open_write + close
 					-- will delete the previous content
@@ -148,21 +152,24 @@ end;
 			-- server file. (It might have changed 
 			-- between compilations)
 		local
-			path: STRING;
+			fname: FILE_NAME;
+			temp: STRING;
 		do
 			if prec then
-				path := Precompilation_path
+				temp := Precompilation_path
 			else
-				path := Compilation_path;
+				temp := Compilation_path;
 			end;
-			!!name.make (path.count + 10);
-			name.append (path);
-			name.extend (Directory_separator);
-			name.extend ('S');
-			name.append_integer ((id // packet_size) + 1);
-			name.extend (Directory_separator);
-			name.extend ('E');
-			name.append_integer (id);
+			!!fname.make_from_string (temp);
+			!!temp.make (5);
+			temp.extend ('S');
+			temp.append_integer ((id // packet_size) + 1);
+			fname.extend (temp);
+			!!temp.make (5);
+			temp.extend ('E');
+			temp.append_integer (id);
+			fname.set_file_name (temp);
+			name := fname.path
 		end;
 
 	precompiled: BOOLEAN;

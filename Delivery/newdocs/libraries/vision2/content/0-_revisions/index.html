@@ -19,6 +19,7 @@
 		<p><b>Interface modifications</b></p>
 		<ul class="circle">
 			<li><b>EV_ITEM_PIXMAP_SCALER</b> - New class added which provides no new functionality, but is a clean abstraction of `pixmaps_width', `pixmaps_height' and `set_pixmaps_size' which were all defined independently in EV_TREE, EV_LIST, EV_MULTI_COLUMN_LIST and EV_COMBO_BOX. Your code will not be affected by this change.</li>
+			<li><b>EV_TOOL_BAR</b> - Added three new features `has_vertical_button_style', `enable_vertical_button_style' and `disable_vertical_button_style'. The default style for buttons is vertical and was the only style previously available, in which the `pixmap' is displayed above `text'. When vertical style is disabled, the `pixmap' of a button will be displayed to the left of its `text'.</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
 		<ul>

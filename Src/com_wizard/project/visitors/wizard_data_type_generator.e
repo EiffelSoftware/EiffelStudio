@@ -75,6 +75,9 @@ feature -- Access
 	is_basic_type: BOOLEAN
 			-- Is basic type?
 
+	is_pointed: BOOLEAN
+			-- Is pointed type?
+
 	is_basic_type_ref: BOOLEAN
 			-- Is type reference to basic type?
 

@@ -164,6 +164,9 @@ feature -- Access
 	is_basic_type: BOOLEAN
 			-- Is type structure?
 
+	is_pointed: BOOLEAN
+			-- Is pointed type?
+
 	is_array_basic_type: BOOLEAN
 			-- Is type array of basic type?
 

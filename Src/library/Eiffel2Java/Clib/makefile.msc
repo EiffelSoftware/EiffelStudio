@@ -15,4 +15,4 @@ all:	e2j.obj  ..\spec\msc\lib\e2j.obj
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy e2j.obj ..\spec\msc\lib
-	
+	-del e2j.obj

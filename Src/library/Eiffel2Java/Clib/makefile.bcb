@@ -1,0 +1,18 @@
+SHELL= \bin\sh
+CC= $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
+
+CFLAGS= -c -I$(ISE_EIFFEL)\bench\spec\windows\include -Id:\apps\jdk1.1.8\include -Id:\apps\jdk1.1.8\include\win32 -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+CFLAGSMT= -c -MTd -DEIF_THREADS  -DWORKBENCH -I$(ISE_EIFFEL)\bench\spec\windows\include -Id:\apps\jdk1.1.8\include -Id:\apps\jdk1.1.8\include\win32 -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
+
+all:	e2j.obj  ..\spec\bcb\lib\e2j.obj
+
+..\spec\bcb\lib\e2j.obj: e2j.obj
+	if not exist ..\spec mkdir ..\spec
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy e2j.obj ..\spec\bcb\lib
+	-del e2j.obj
+	

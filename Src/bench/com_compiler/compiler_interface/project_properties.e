@@ -12,6 +12,7 @@ inherit
 			system_name,
 			default_namespace,
 			root_class_name,
+			key_file_name,
 			creation_routine,
 			evaluate_require,
 			evaluate_ensure,
@@ -24,7 +25,15 @@ inherit
 			assemblies,
 			compilation_type,
 			console_application,
-			working_directory,
+			title,
+			description,
+			company,
+			product,
+			copyright,
+			trademark,
+			version,
+			culture,
+			--working_directory,
 			apply,
 			set_system_name,
 			set_default_namespace,
@@ -38,9 +47,18 @@ inherit
 			set_compilation_type,
 			set_console_application,
 			set_debug_info,
-			set_working_directory,
-			update_project_ace_file,
-			synchronize_with_project_ace_file
+			--set_working_directory,
+			set_key_file_name,
+			set_title,
+			set_description,
+			set_company,
+			set_product,
+			set_copyright,
+			set_trademark,
+			set_version,
+			set_culture
+			--update_project_ace_file,
+			--synchronize_with_project_ace_file
 		end
 	
 	SHARED_EIFFEL_PROJECT
@@ -166,6 +184,71 @@ feature -- Access
 			end
 		end
 		
+	title: STRING is
+			-- Title of the system
+		do
+			if is_valid then
+				Result := ace.title
+			end
+		end
+		
+	description: STRING is 
+			-- Description of the system
+		do
+			if is_valid then
+				Result := ace.description
+			end
+		end
+		
+	company: STRING is
+			-- Company that own the system
+		do
+			if is_valid then
+				Result := ace.company
+			end
+		end
+		
+	copyright: STRING is
+			-- Copyright information
+		do
+			if is_valid then
+				Result := ace.copyright
+			end
+		end
+		
+	trademark: STRING is
+			-- Trademark related information
+		do
+			if is_valid then
+				Result := ace.trademark
+			end	
+		end
+
+	product: STRING is
+			-- Product information
+		do
+			if is_valid then
+				Result := ace.product
+			end	
+		end
+		
+	version: STRING is
+			-- Four part version number for system
+		do
+			if is_valid then
+				Result := ace.version
+			end
+		end
+		
+	culture: STRING is
+			-- Assembly culture (short code - 'en-gb' etc.)
+		do
+			if is_valid then
+				Result := ace.msil_culture
+			end
+		end
+	
+		
 	clusters: SYSTEM_CLUSTERS is
 			-- List of clusters in current project (list of IEiffelClusterProperties*).
 		do
@@ -216,6 +299,14 @@ feature -- Access
 		do
 			if is_valid then 
 				Result := ace.working_directory
+			end
+		end
+		
+	key_file_name: STRING is
+			-- assembly sign key filename
+		do
+			if is_valid then 
+				Result := ace.msil_key_file_name
 			end
 		end
 		
@@ -353,6 +444,79 @@ feature -- Element change
 			end
 		end
 		
+	set_key_file_name (filename: STRING) is 
+			-- Set the assembly sign key file name
+		do
+			if is_valid then
+				ace.set_msil_key_file_name (filename)
+				dirty := true
+			end
+		end
+		
+	set_title(a_title: STRING) is
+			-- Set title of the system
+		do
+			if is_valid then
+				ace.set_title (a_title)
+			end
+		end
+		
+	set_description (a_description: STRING) is 
+			-- Set description of the system
+		do
+			if is_valid then
+				ace.set_description(a_description)
+			end
+		end
+		
+	set_company (a_company: STRING) is
+			-- Set company that own the system
+		do
+			if is_valid then
+				ace.set_company(a_company)
+			end
+		end
+		
+	set_copyright (a_copyright: STRING) is
+			-- Set copyright information
+		do
+			if is_valid then
+				ace.set_copyright(a_copyright)
+			end
+		end
+		
+	set_trademark (a_trademark: STRING) is
+			-- Set trademark related information
+		do
+			if is_valid then
+				ace.set_trademark(a_trademark)
+			end	
+		end
+
+	set_product (a_product: STRING) is
+			-- Set product information
+		do
+			if is_valid then
+				ace.set_product(a_product)
+			end	
+		end
+		
+	set_version (a_version: STRING) is
+			-- Set the four part version number for system
+		do
+			if is_valid then
+				ace.set_version(a_version)
+			end
+		end
+		
+	set_culture (a_culture: STRING) is
+			-- Set assembly culture (short code - 'en-gb' etc.)
+		do
+			if is_valid then
+				ace.set_msil_culture(a_culture)
+			end
+		end
+		
 feature -- Status report
 
 	is_valid: BOOLEAN is
@@ -367,7 +531,6 @@ feature -- Basic operations
 			-- Apply changes.
 		do
 			if is_valid then
-				-- TODO: check if clusters/externals/assemblies are dirty and then apply if so
 				clusters.store
 				externals.store
 				assemblies.store

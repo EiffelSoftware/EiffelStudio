@@ -566,9 +566,9 @@ feature -- Element change
 			-- If `type' is unknown or `Il_generation_no', remove IL generation.
 		do
 			if type = Il_generation_exe then
-				set_string_default(feature {FREE_OPTION_SD}.Msil_generation, "exe")
+				set_string_default(feature {FREE_OPTION_SD}.Msil_generation_type, "exe")
 			elseif type = Il_generation_dll then
-				set_string_default(feature {FREE_OPTION_SD}.Msil_generation, "exe")
+				set_string_default(feature {FREE_OPTION_SD}.Msil_generation_type, "exe")
 			end
 		end
 
@@ -632,7 +632,7 @@ feature -- Element change
 			set_string_default(feature {FREE_OPTION_SD}.copyright, new_value)
 		end
 		
-	set_trademar (new_value: STRING) is
+	set_trademark (new_value: STRING) is
 			-- Set the system trademark information
 		do
 			set_string_default(feature {FREE_OPTION_SD}.trademark, new_value)

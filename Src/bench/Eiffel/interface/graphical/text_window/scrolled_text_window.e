@@ -579,7 +579,7 @@ feature {OBJECT_W} -- Settings
 				found := matcher.search_for_pattern
 			else
 				matcher.start_at (implementation.actual_cursor_position)
-				if not is_replacing and then not matcher.search_for_pattern then
+				if not matcher.search_for_pattern and then not is_replacing then
 					-- ADD-ON: we should display a dialog which asks if the user wants
 					-- to do a search from the beginning.
 					-- %%Manu: 08/26/97

@@ -102,8 +102,7 @@ feature -- Update
 	process_feature (st: FEATURE_STONE) is
 		do
 			if not st.is_valid then
-				warner (Project_tool).gotcha_call
-								(Warning_messages.w_Feature_not_compiled);
+				warner (Project_tool).gotcha_call (Warning_messages.w_Feature_not_compiled);
 			else
 				create_class_tool (st)
 			end

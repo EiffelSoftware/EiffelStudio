@@ -807,7 +807,7 @@ feature {NONE} -- Implementation
 					!SYMBOL_TEXT! item.make (f_name)
 				end;
 			end;
-			text.insert_two (format.insertion_point, item, ti_Space)
+			text.add (item);
 			last_was_printed := True;
 		end;
 

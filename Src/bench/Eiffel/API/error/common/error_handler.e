@@ -69,6 +69,7 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 				error_displayer.trace_warnings (Current)
 				warning_list.wipe_out
 			end
+
 			if not error_list.empty then
 				error_displayer.trace_errors (Current)
 				error_position := 0
@@ -83,9 +84,8 @@ feature {COMPILER_EXPORTER, E_PROJECT} -- Output
 		do
 			if not warning_list.empty then
 				error_displayer.trace_warnings (Current)
+				warning_list.wipe_out
 			end
-
-			warning_list.wipe_out
 		end
 
 feature {COMPILER_EXPORTER} -- Error handling primitives

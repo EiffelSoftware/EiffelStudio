@@ -451,7 +451,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::excluded(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_200 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_201 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -586,7 +586,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::subcluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_179 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE_c.ccom_ec_pointed_interface_180 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -1113,7 +1113,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 23:
+		case 24:
 			{
 				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
@@ -1157,7 +1157,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_check_by_default (&result);
+				hr = evaluate_invariant_by_default (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1194,7 +1194,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_loop_by_default (&result);
+				hr = evaluate_check_by_default (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1231,7 +1231,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_ensure_by_default (&result);
+				hr = evaluate_loop_by_default (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1268,7 +1268,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 
 				VARIANT_BOOL result = 0;
 				
-				hr = evaluate_require_by_default (&result);
+				hr = evaluate_ensure_by_default (&result);
 				
 				if (FAILED (hr))
 				{
@@ -1298,6 +1298,43 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			break;
 
 		case 33:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				VARIANT_BOOL result = 0;
+				
+				hr = evaluate_require_by_default (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 11;
+					pVarResult->boolVal = result;
+				}
+					
+			}
+			break;
+
+		case 34:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1390,7 +1427,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 34:
+		case 35:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1483,7 +1520,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 35:
+		case 36:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1576,7 +1613,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 36:
+		case 37:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1706,7 +1743,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 19:
+		case 20:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1743,7 +1780,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 20:
+		case 21:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1836,7 +1873,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 21:
+		case 22:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1929,7 +1966,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 22:
+		case 23:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -1966,7 +2003,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 24:
+		case 25:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -2003,7 +2040,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 25:
+		case 26:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -2040,7 +2077,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 26:
+		case 27:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -2077,7 +2114,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 			}
 			break;
 
-		case 27:
+		case 28:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -2109,43 +2146,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClusterProperties_impl_stub::Invoke( D
 					VariantClear (pVarResult);
 					pVarResult->vt = 8;
 					pVarResult->bstrVal = result;
-				}
-					
-			}
-			break;
-
-		case 28:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				VARIANT_BOOL result = 0;
-				
-				hr = evaluate_invariant_by_default (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 11;
-					pVarResult->boolVal = result;
 				}
 					
 			}

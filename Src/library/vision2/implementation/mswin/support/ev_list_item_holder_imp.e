@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP] is
+	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP] is
 			-- List of the children
 			-- Deferred because it will be implemented in
 			-- the _I classes.
@@ -36,26 +36,99 @@ feature -- Access
 feature -- Element change
 
 	add_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Add `item_imp' to the list
+			-- Add `item_imp' to the list.
 		do
 			ev_children.extend (item_imp)
 			add_string (item_imp.text)
-			item_imp.set_id (ev_children.count - 1)
 		end
 
-	remove_item (an_id: INTEGER) is
-			-- Remove the child whose id is `id'.
+	insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
+			-- Insert `item_imp' at the `index' position.
 		do
-			delete_string (an_id)
-			ev_children.go_i_th (an_id + 1)
-			ev_children.remove
-			from
-			until
-				ev_children.after
-			loop
-				ev_children.item.set_id (ev_children.index - 1)
-				ev_children.forth
+			ev_children.go_i_th (index - 1)
+			ev_children.put_right (item_imp)
+			insert_string_at (item_imp.text, index - 1)
+		end
+
+	move_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
+			-- Move `item_imp' to the `index' position.
+		local
+			bool: BOOLEAN
+		do
+			bool := item_imp.is_selected
+			remove_item (item_imp)
+			insert_item (item_imp, index)
+			if bool then
+				item_imp.set_selected (True)
 			end
+		end
+
+	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Remove `itemm' from the list.
+		local
+			id: INTEGER
+		do
+			-- First, we remove the child from the graphical list
+			id := ev_children.index_of (item_imp, 1)
+			delete_string (id - 1)
+
+			-- Then, we update ev_children.
+			ev_children.go_i_th (id)
+			ev_children.remove
+		end
+
+feature -- Basic operations
+
+	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Make `item_imp' selected.
+		local
+			id: INTEGER
+		do
+			id := ev_children.index_of (item_imp, 1)
+			select_item (id)
+		end
+
+	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Make `item_imp' unselected.
+		local
+			id: INTEGER
+		do
+			id := ev_children.index_of (item_imp, 1)
+			deselect_item (id)
+		end
+
+	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+			-- Is `item_imp' selected?
+		local
+			id: INTEGER
+		do
+			id := ev_children.index_of (item_imp, 1) - 1
+			Result := is_selected (id)
+		end
+
+	internal_get_text (item_imp: EV_LIST_ITEM_IMP): STRING is
+			-- Return the text of `item_imp'.
+		local
+			id: INTEGER
+		do
+			id := ev_children.index_of (item_imp, 1) - 1
+			Result := i_th_text (id)
+		end
+
+	internal_set_text (item_imp: EV_LIST_ITEM_IMP; txt: STRING) is
+			-- Make `txt' the text of `item_imp'.
+		local
+			id: INTEGER
+		do
+			id := ev_children.index_of (item_imp, 1) - 1
+			delete_string (id)
+			insert_string_at (txt, id)
+		end
+
+	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
+			-- Return the index of `item_imp' in the list.
+		do
+			Result := ev_children.index_of (item_imp, 1)
 		end
 
 feature {NONE} -- Implementation

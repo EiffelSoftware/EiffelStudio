@@ -110,10 +110,13 @@ feature -- Initialization
 						-- Rename the old project to EIFGEN so that we can
 						-- delete it.
 					d.change_name (Eiffel_gen_path)
-					delete_f_code_content (deletion_agent, cancel_agent)
-					delete_w_code_content (deletion_agent, cancel_agent)
-					delete_comp_content (deletion_agent, cancel_agent)
-					delete_backup_content (deletion_agent, cancel_agent)
+					delete_generation_directory (Local_assembly_path, deletion_agent, cancel_agent)
+					delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
+					delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
+					delete_generation_directory (Final_generation_path, deletion_agent,
+						cancel_agent)
+					delete_generation_directory (Workbench_generation_path, deletion_agent,
+						cancel_agent)
 				end
 			end
 			if (cancel_agent = Void) or else (not cancel_agent.item ([])) then
@@ -624,40 +627,33 @@ feature -- Update
 			successful_implies_freezing_occurred: successful implies freezing_occurred 
 		end
 
-	delete_f_code_content (
-		deletion_agent: PROCEDURE [ANY, TUPLE]
-		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
-	) is
-			-- Delete the content of the F_code directory.
+	delete_generation_directory (
+			base_name: STRING; deletion_agent: PROCEDURE [ANY, TUPLE];
+			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
+		is
+			-- Delete then EIFFEL generated directory named `base_name'.
+			--
+			-- `deletion_agent' is called each time `Deletion_agent_efficiency'
+			-- files are deleted.
+			-- same for `cancel_agent'. Make it return `True' to cancel the operation.
+		local
+			generation_directory: DIRECTORY
+			retried: BOOLEAN
 		do
-			delete_generation_directory (Final_generation_path, deletion_agent, cancel_agent)
-		end
-
-	delete_w_code_content (
-		deletion_agent: PROCEDURE [ANY, TUPLE]
-		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
-	) is
-			-- Delete the content of the W_code directory.
-		do
-			delete_generation_directory (Workbench_generation_path, deletion_agent, cancel_agent)
-		end
-
-	delete_comp_content (
-		deletion_agent: PROCEDURE [ANY, TUPLE]
-		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
-	) is
-			-- Delete the content of the COMP directory.
-		do
-			delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
-		end
-
-	delete_backup_content (
-		deletion_agent: PROCEDURE [ANY, TUPLE]
-		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
-	) is
-			-- Delete the content of the COMP directory.
-		do
-			delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
+			if not retried then
+				create generation_directory.make (base_name)
+				if generation_directory.exists then
+					if (deletion_agent /= Void) or (cancel_agent /= Void) then
+						generation_directory.delete_content_with_action (deletion_agent,
+							cancel_agent, Deletion_agent_efficiency)
+					else
+						generation_directory.delete_content
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	stop_and_exit (ag: like exit_agent) is
@@ -918,37 +914,6 @@ feature {NONE} -- Implementation
 				set_error_status (file_error_status)
 			end
 		end
-
-	delete_generation_directory (
-		base_name: STRING
-		deletion_agent: PROCEDURE [ANY, TUPLE]
-		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
-	) is
-			-- Delete then EIFFEL generated directory named `base_name'.
-			--
-			-- `deletion_agent' is called each time `Deletion_agent_efficiency'
-			-- files are deleted.
-			-- same for `cancel_agent'. Make it return `True' to cancel the operation.
-		local
-			generation_directory: DIRECTORY
-			retried: BOOLEAN
-		do
-			if not retried then
-				create generation_directory.make (base_name)
-				if generation_directory.exists then
-					if (deletion_agent /= Void) or (cancel_agent /= Void) then
-						generation_directory.delete_content_with_action (deletion_agent, cancel_agent, Deletion_agent_efficiency)
-					else
-						generation_directory.delete_content
-					end
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	
 
 feature {NONE} -- Implementation
 

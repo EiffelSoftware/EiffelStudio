@@ -51,7 +51,7 @@ feature -- Element change
 		end
 
 	set_background_color (a_color: like background_color) is
-			-- Assign `a_color' to `foreground_color'.
+			-- Assign `a_color' to `background_color'.
 		require
 			not_destroyed: not is_destroyed
 			a_color_not_void: a_color /= Void

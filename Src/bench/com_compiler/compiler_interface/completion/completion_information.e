@@ -116,7 +116,7 @@ feature -- Access
 			l_overloads_count: INTEGER
 		do
 			target.to_lower
-			l_feature := internal_target_feature (target, location_name, file_name, use_overloading)
+			l_feature := internal_target_feature (target, location_name, file_name, use_overloading, False)
 			if l_feature /= Void then
 				l_overloads_count := l_feature.overloads_count + 1
 				create l_return_types.make (1, <<1>>, <<l_overloads_count>>)
@@ -174,7 +174,7 @@ feature -- Access
 				end
 			end
 			if l_lister /= Void and then l_lister.is_initialized then
-				l_lister.find (target, use_overloading)
+				l_lister.find (target, use_overloading, False)
 				if l_lister.found then
 					l_entries := l_lister.found_items
 					extract_variants_from_list (l_entries, return_names, return_image_indexes)
@@ -244,7 +244,7 @@ feature -- Access
                     create ecom_var.make
                     ecom_var.set_string_array (create {ECOM_ARRAY [STRING]}.make_empty)
                     initialize_feature (def_parsed_result.parsed_result_containing_feature, ecom_var, ecom_var, def_parsed_result.parsed_result_containing_feature_return_type, feature {ECOM_EIF_FEATURE_TYPES_ENUM}.eif_feature_types_function, target_file_name, def_parsed_result.parsed_result_containing_feature_row)
-                    cf := internal_target_feature (def_parsed_result.parsed_result_string, def_parsed_result.parsed_result_containing_feature, target_file_name, false)
+                    cf := internal_target_feature (def_parsed_result.parsed_result_string, def_parsed_result.parsed_result_containing_feature, target_file_name, False, False)
                     if cf /= Void then
                     	create class_file_name.make_from_string (cf.file_name)
 						class_i := eiffel_universe.class_with_file_name (class_file_name)
@@ -322,7 +322,7 @@ feature -- Access
 								classes := eiffel_universe.classes_with_name ("ANY")
 								if classes /= Void and classes.count >= 1 then
 									class_i := classes @ (1)
-									cf := internal_target_feature (feature_call, "default_create", class_i.file_name, False)
+									cf := internal_target_feature (feature_call, "default_create", class_i.file_name, False, True)
 									if cf /= Void then
 				                    	create class_file_name.make_from_string (cf.file_name)
 										class_i := eiffel_universe.class_with_file_name (class_file_name)
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 			non_void_lister: Result /= Void
 		end
 
-	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): COMPLETION_FEATURE is
+	internal_target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN; a_ignore_call_type: BOOLEAN): COMPLETION_FEATURE is
 			-- Feature information
 			-- `target' [in].
 			-- `feature_name' [in].
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 				l_retriever.set_arguments (arguments)
 				l_retriever.set_completion_features (completion_features)
 				l_retriever.set_feature_name (feature_name)
-				l_retriever.find (target.as_lower, use_overloading)
+				l_retriever.find (target.as_lower, use_overloading, a_ignore_call_type)
 				if l_retriever.found then
 					Result := l_retriever.found_item
 				end

@@ -170,34 +170,29 @@ feature {GB_CODE_GENERATOR} -- Output
 
 			Result := ""
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (columns_string)
-			if element_info /= Void then
-				columns := element_info.data
+			if attribute_set (columns_string) then
+				columns := retrieve_integer_setting (columns_string)
 			else
 				columns := "1"
 			end
-			element_info := full_information @ (rows_string)
-			if element_info /= Void then
-				rows := element_info.data
+			if attribute_set (rows_string) then
+				rows := retrieve_integer_setting (rows_string)
 			else
 				rows := "1"
 			end
 			
 			Result := info.name + ".resize (" + columns + ", " + rows + ")"
 			
-			element_info := full_information @ (row_spacing_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_row_spacing (" + element_info.data + ")"
+			if attribute_set (row_spacing_string) then
+				Result := Result + indent + info.name + ".set_row_spacing (" +  retrieve_integer_setting (row_spacing_string) + ")"
 			end
 			
-			element_info := full_information @ (column_spacing_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_column_spacing (" + element_info.data + ")"
+			if attribute_set (column_spacing_string) then
+				Result := Result + indent + info.name + ".set_column_spacing (" + retrieve_integer_setting (column_spacing_string) + ")"
 			end
 			
-			element_info := full_information @ (border_width_string)
-			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_border_width (" + element_info.data + ")"
+			if attribute_set (border_width_string) then
+				Result := Result + indent + info.name + ".set_border_width (" + retrieve_integer_setting (border_width_string) + ")"
 			end
 
 			element_info := full_information @ (column_positions_string)

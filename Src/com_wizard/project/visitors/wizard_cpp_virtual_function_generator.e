@@ -13,6 +13,13 @@ inherit
 			add_header_file
 		end
 
+feature -- Access
+
+	forward_declarations: LINKED_LIST [STRING]
+			-- Forward type declarations.
+
+	c_header_files_after: LINKED_LIST [STRING]
+
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
@@ -28,6 +35,8 @@ feature -- Basic operations
 
 			create ccom_feature_writer.make
 			create c_header_files.make
+			create forward_declarations.make
+			create c_header_files_after.make
 			ccom_feature_writer.set_pure_virtual
 
 			create signature.make (1000)
@@ -62,6 +71,8 @@ feature -- Basic operations
 
 			create ccom_feature_writer.make
 			create c_header_files.make
+			create forward_declarations.make
+			create c_header_files_after.make
 			ccom_feature_writer.set_pure_virtual
 
 			create signature.make (1000)
@@ -119,14 +130,64 @@ feature -- Basic operations
 			function_descriptor_exist: func_desc /= Void
 		end
 
-	add_header_file (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+	add_header_file (a_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR) is
 			-- Add header file to list of header files if needed.
+		local
+			a_visitor: WIZARD_DATA_TYPE_VISITOR
+			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
+			a_visitor := a_descriptor.visitor
 			if a_visitor.c_header_file /= Void and then not a_visitor.c_header_file.empty then
-				c_header_files.force (a_visitor.c_header_file)
+				if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
+						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
+				then
+					pointed_descriptor ?= a_descriptor
+					if pointed_descriptor /= Void then
+						interface_descriptor := pointed_descriptor.interface_descriptor
+						forward_declarations.force 
+							(forward_interface_declaration (interface_descriptor.c_type_name))
+							c_header_files_after.force (a_visitor.c_header_file)
+					else
+						c_header_files.force (a_visitor.c_header_file)
+					end
+				else
+					c_header_files.force (a_visitor.c_header_file)
+				end
 			end
 		end
 
+	forward_interface_declaration (a_name: STRING): STRING is
+			-- Forward declaration of interface.
+		local
+			class_protector: STRING
+		do
+			class_protector := clone (a_name)
+			class_protector.prepend ("__")
+			class_protector.append ("_FWD_DEFINED__")
+
+			create Result.make (500)
+			Result.append (Hash_if_ndef)
+			Result.append (Space)
+			Result.append (class_protector)
+			Result.append (New_line)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (class_protector)
+			Result.append (New_line)
+			
+			Result.append (C_class_keyword)
+			Result.append (Space)
+			Result.append (a_name)
+			Result.append (Semicolon)
+			Result.append (New_line)
+
+			Result.append (Hash_end_if)
+			Result.append (New_line)
+			Result.append (New_line)
+		end
+		
 end -- class WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR
 
 --|----------------------------------------------------------------

@@ -134,13 +134,15 @@ feature -- Conveniences
 
 	set_melted_file_name (update_file_name: like melted_file_name) is
 			-- Set `melted_file_name' to `upate_file_name'.
-		require
-			update_file_name_not_void: update_file_name /= Void
-			update_file_name_exists: update_file_name.count > 0
 		do
-			melted_file_name := clone (update_file_name)
+			if update_file_name /= Void and then not update_file_name.is_empty then
+				melted_file_name := clone (update_file_name)
+			else
+				melted_file_name := Void
+			end
 		ensure
-			assigned: melted_file_name.is_equal (update_file_name)
+			assigned: melted_file_name /= Void implies equal (melted_file_name, update_file_name)
+			reset: melted_file_name = Void implies (update_file_name = Void or else update_file_name.is_empty)
 		end
 
 	on_project_loaded is

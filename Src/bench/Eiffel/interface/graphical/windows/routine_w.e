@@ -14,24 +14,28 @@ inherit
 			reset as old_reset,
 			make_shell as bar_and_text_make_shell
 		redefine
-			hole, hole_button, build_format_bar, text_window,
+			hole, hole_button, build_format_bar, 
 			build_bar, tool_name, close_windows,
 			build_widgets, set_default_size, attach_all,
 			resize_action, stone, stone_type,
 			set_stone, synchronize, process_feature,
 			process_class, process_breakable, compatible,
-			close
+			close, set_font, editable_text_window,
+			set_editable_text_window, has_editable_text, 
+			read_only_text_window, set_read_only_text_window
 		end
 
 	BAR_AND_TEXT
 		redefine
-			hole, hole_button, build_format_bar, text_window,
+			hole, hole_button, build_format_bar, 
 			build_bar, tool_name, close_windows,
 			build_widgets, attach_all, reset,
 			set_default_size, resize_action,
 			stone, stone_type, set_stone, synchronize, process_feature,
 			process_class, process_breakable, compatible,
-			make_shell, close
+			make_shell, close, set_font, editable_text_window,
+			set_editable_text_window, has_editable_text,
+			read_only_text_window, set_read_only_text_window
 		select
 			reset, make_shell
 		end
@@ -47,7 +51,6 @@ feature -- Initialization
 		do
 			show_menus := True;
 			bar_and_text_make_shell (a_shell);
-			text_window.set_read_only
 		end;
 
 	form_create (a_form: FORM) is
@@ -59,8 +62,6 @@ feature -- Initialization
 
 feature -- Window Properties
 
-	text_window: ROUTINE_TEXT;
-
 	stone: FEATURE_STONE
 			-- Stone in tool
 
@@ -70,6 +71,12 @@ feature -- Window Properties
 			Result := Routine_type
 		end
 
+	editable_text_window: TEXT_WINDOW
+			-- Text window that can be edited
+
+	read_only_text_window: TEXT_WINDOW
+			-- Text window that only reads text
+
 feature -- Resetting
 
 	reset is
@@ -77,8 +84,8 @@ feature -- Resetting
 		do
 			old_reset;
 			-- class_hole.set_empty_symbol;
-			change_class_command.clear;
-			change_routine_command.clear;
+			class_text_field.clear;
+			routine_text_field.clear;
 		end;
 
 	close is
@@ -103,6 +110,20 @@ feature -- Access
 				a_stone.stone_type = Class_type
 		end;
 
+	in_debug_format: BOOLEAN is
+			-- Does window show breakable points of routine?
+		do
+			Result := last_format = showstop_frmt_holder
+		end;
+
+	has_editable_text: BOOLEAN is
+			-- Does Current tool have an editable text window?
+		do
+			Result := True
+		end;
+
+feature -- Update
+
 	close_windows is
 			-- Pop down the associated windows.
 		local
@@ -113,15 +134,80 @@ feature -- Access
 			ss.close;
 			cf ?= change_font_cmd_holder.associated_command;
 			cf.close;
-			if change_routine_command.choice.is_popped_up then
-				change_routine_command.choice.popdown
-			end;
-			if change_class_command.choice.is_popped_up then
-				change_class_command.choice.popdown
-			end
+			routine_text_field.close_choice_window
+			class_text_field.close_choice_window
 	   	 end;
 
-feature {TEXT_WINDOW} -- Update
+	highlight_breakable (index: INTEGER) is
+			-- Highlight the line containing the `index'-th breakable point.
+		require
+			positive_index: index >= 1
+		do
+			if in_debug_format then
+				text_window.highlight_breakable (stone.e_feature, index)
+			end
+		end
+
+    resynchronize_debugger (feat: E_FEATURE) is
+            -- Resynchronize debugged routine window with feature `feat'.
+        require
+            feat_non_void: feat /= Void
+		local
+			cur: CURSOR;
+			old_do_format: BOOLEAN;
+			f: FORMATTER
+        do
+			if in_debug_format and then stone /= Void and then
+				stone.e_feature /= Void and then
+				feat.body_id.is_equal (stone.e_feature.body_id)
+			then
+				cur := text_window.cursor;
+				f := showstop_frmt_holder.associated_command;
+                old_do_format := f.do_format;
+                f.set_do_format (true);
+				f.execute (stone);
+                f.set_do_format (old_do_format)
+				text_window.go_to (cur)
+			end
+		end;
+
+	show_stoppoint (f: E_FEATURE; index: INTEGER) is
+			-- If stone feature is equal to feature `f' and if in debug
+			-- mode then redisplay the sign of the `index'-th breakable point.
+			-- Otherwize, update the title of feature tool (to print `stop').
+		require
+			valid_feature: f /= Void and then f.body_id /= Void;
+			positive_index: index >= 1
+		do
+			if stone /= Void and then
+				stone.e_feature /= Void and then
+				f.body_id.is_equal (stone.e_feature.body_id)
+			then
+				if in_debug_format then
+					text_window.redisplay_breakable_mark (stone.e_feature,
+						index)
+				elseif last_format = showtext_frmt_holder then
+					-- Update the title bar of the feature tool.
+					-- "(stop)" if the routine has a stop point set.
+					showtext_frmt_holder.associated_command.display_header
+													(stone)
+				end
+			end
+		end;
+
+feature -- Status setting
+
+	set_editable_text_window (ed: like editable_text_window) is
+			-- Set `editable_text_window' to `ed'.
+		do
+			editable_text_window := ed
+		end;
+
+	set_read_only_text_window (ed: like read_only_text_window) is
+			-- Set `read_only_text_window' to `ed'.
+		do
+			read_only_text_window := ed
+		end;
 
 	set_stone (s: like stone) is
 			-- Update stone from `s'.
@@ -137,11 +223,18 @@ feature {TEXT_WINDOW} -- Update
 			end
 		end;
 
+	set_font (a_font: FONT) is
+			-- Set new font `a_font' to window
+		do
+			class_text_field.set_font (a_font);
+			routine_text_field.set_font (a_font)
+		end;
+
 feature -- Stone updating
 
 	process_feature (a_stone: FEATURE_STONE) is
 		do
-			text_window.last_format.execute (a_stone);
+			last_format.execute (a_stone);
 			history.extend (a_stone);
 			update_edit_bar
 		end;
@@ -184,7 +277,8 @@ feature -- Stone updating
 				!! text.make;
 				text.add_string ("No version of feature ");
 				text.add_feature (stone.e_feature, stone.e_feature.written_class, stone.e_feature.name);
-				text.add_string ("%N   for class ");
+				text.add_new_line;
+				text.add_string ("   for class ");
 				s := c.name_in_upper;
 				text.add_classi (stone.e_feature.written_class.lace_class, s);
 				error_window.process_text (text);
@@ -201,8 +295,8 @@ feature -- Graphical Interface
 			synchronise_stone;
 			if stone = Void then
 				-- class_hole.set_empty_symbol;
-				change_class_command.clear;
-				change_routine_command.clear
+				class_text_field.clear;
+				routine_text_field.clear
 			else
 				update_edit_bar
 			end
@@ -214,8 +308,8 @@ feature -- Graphical Interface
 			f_name: STRING
 		do
 			if stone /= Void then
-				change_class_command.update_class_name (stone.e_class.name);
-				change_routine_command.set_text (stone.e_feature.name);
+				class_text_field.update_class_name (stone.e_class.name);
+				routine_text_field.set_text (stone.e_feature.name);
 			end
 		end; 
 	
@@ -225,11 +319,7 @@ feature -- Graphical Interface
 			if is_a_shell then
 				set_default_size
 			end;
-			if tabs_disabled then
-				!! text_window.make (new_name, Current, Current)
-			else
-				!ROUTINE_TAB_TEXT! text_window.make (new_name, Current, Current)
-			end;
+			build_text_windows;
 			if show_menus then
 				build_menus
 			end;
@@ -242,7 +332,7 @@ feature -- Graphical Interface
 			if show_menus then
 				fill_menus
 			end;
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 			attach_all	
 		end;
 
@@ -263,28 +353,32 @@ feature -- Graphical Interface
 				global_form.attach_top (edit_bar, 0)
 			end
 
-			global_form.attach_left (text_window, 0);
-			global_form.attach_right (text_window, 0);
-			global_form.attach_bottom_widget (format_bar, text_window, 0);
-			global_form.attach_top_widget (edit_bar, text_window, 0);
+			global_form.attach_left (editable_text_window.widget, 0);
+			global_form.attach_right (editable_text_window.widget, 0);
+			global_form.attach_bottom_widget (format_bar, editable_text_window.widget, 0);
+			global_form.attach_top_widget (edit_bar, editable_text_window.widget, 0);
+			global_form.detach_right (editable_text_window.widget);
+			global_form.attach_right_widget (command_bar, editable_text_window.widget, 0);
+			if editable_text_window /= read_only_text_window then
+				global_form.attach_left (read_only_text_window.widget, 0);
+				global_form.attach_right (read_only_text_window.widget, 0);
+				global_form.attach_bottom_widget (format_bar, read_only_text_window.widget, 0);
+				global_form.attach_top_widget (edit_bar, read_only_text_window.widget, 0);
+				global_form.detach_right (read_only_text_window.widget);
+				global_form.attach_right_widget (command_bar, read_only_text_window.widget, 0);
+			end;
 
 			global_form.attach_left (format_bar, 0);
 			global_form.attach_right (format_bar, 0);
 			global_form.attach_bottom (format_bar, 0);
 
-			global_form.detach_right (text_window);
 			global_form.attach_right (command_bar, 0);
 			global_form.attach_bottom (command_bar, 0);
-			global_form.attach_right_widget (command_bar, text_window, 0);
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
 			global_form.attach_right_widget (command_bar, format_bar, 0);
 		end
 
-feature {ROUTINE_TEXT} -- Forms And Holes
-
-	change_class_form: FORM;
-
-	change_routine_form: FORM;
+feature {TEXT_WINDOW} -- Forms And Holes
 
 	hole: ROUTINE_CMD;
 			-- Hole charaterizing Current.
@@ -298,7 +392,7 @@ feature {ROUTINE_TEXT} -- Forms And Holes
 	stop_hole: DEBUG_STOPIN_CMD;
 			-- To set breakpoints
 
-feature {ROUTINE_TEXT, PROJECT_W} -- Formats
+feature {TEXT_WINDOW, PROJECT_W} -- Formats
 
 	showroutclients_frmt_holder: FORMAT_HOLDER;
 
@@ -324,9 +418,9 @@ feature -- Commands
 
 	next_target_cmd_holder: COMMAND_HOLDER;
 
-	change_routine_command: CHANGE_ROUTINE;
+	routine_text_field: ROUTINE_TEXT_FIELD;
 
-	change_class_command: CHANGE_CL_ROUT;
+	class_text_field: ROUTINE_CLASS_TEXT_FIELD;
 
 feature {NONE} -- Implementation; Window Settings
 
@@ -336,10 +430,10 @@ feature {NONE} -- Implementation; Window Settings
 			-- Move also the choice window and update the text field.
 		do
 			raise_grabbed_popup;
-			change_class_command.update_text;
-			change_routine_command.update_text;
-			change_class_command.choice.update_position;
-			change_routine_command.choice.update_position
+			class_text_field.update_text;
+			routine_text_field.update_text;
+			class_text_field.update_choice_position;
+			routine_text_field.update_choice_position
 		end;
 
 	set_default_size is
@@ -366,11 +460,11 @@ feature {NONE} -- Implementation; Graphical Interface
 			current_target_button: EB_BUTTON;
 			current_target_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
-			history_list_cmd: ROUTINE_HISTORY
+			history_list_cmd: LIST_HISTORY
 		do
 			!! shell_cmd.make (command_bar, text_window);
 			!! shell_button.make (shell_cmd, command_bar);
-			shell_button.add_button_click_action (3, shell_cmd, Void);
+			shell_button.add_button_press_action (3, shell_cmd, Void);
 			if show_menus then
 				!! shell_menu_entry.make (shell_cmd, special_menu);
 				!! shell.make (shell_cmd, shell_button, shell_menu_entry);
@@ -378,7 +472,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				!! shell.make_plain (shell_cmd);
 				shell.set_button (shell_button);
 			end;
-			!! current_target_cmd.make (text_window);
+			!! current_target_cmd.make (Current);
 			!! current_target_button.make (current_target_cmd, command_bar);
 			if show_menus then
 				!! sep.make (new_name, special_menu);
@@ -408,8 +502,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 
 			!! history_list_cmd.make (text_window);
-			next_target_button.add_button_click_action (3, history_list_cmd, next_target_button);
-			previous_target_button.add_button_click_action (3, history_list_cmd, previous_target_button);
+			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
+			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
 			command_bar.attach_left (shell_button, 0);
 			command_bar.attach_bottom (shell_button, 0);
@@ -581,11 +675,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! stop_hole_button.make (stop_hole, hole_form);
 			!! stop_hole_holder.make_plain (stop_hole);
 			stop_hole_holder.set_button (stop_hole_button);
-			!! change_routine_form.make (new_name, edit_bar);
-			!! change_routine_command.make (change_routine_form, text_window);
+			!! routine_text_field.make (edit_bar, Current);
 			!! label.make ("", edit_bar);
-			!! change_class_form.make (new_name, edit_bar);
-			!! change_class_command.make (change_class_form, text_window);
+			!! class_text_field.make (edit_bar, Current);
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
 			if show_menus then
@@ -603,7 +695,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			if show_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
@@ -612,7 +704,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				!! change_font_cmd_holder.make_plain (change_font_cmd);
 				change_font_cmd_holder.set_button (change_font_button)
 			end;
-			!! search_cmd.make (edit_bar, text_window);
+			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			if show_menus then
 				!! search_menu_entry.make (search_cmd, edit_menu);
@@ -632,36 +724,28 @@ feature {NONE} -- Implementation; Graphical Interface
 			hole_form.attach_top (class_hole_button, 0);
 			hole_form.attach_left_widget (class_hole_button, stop_hole_button, 0);
 			hole_form.attach_top (stop_hole_button, 0);
-			edit_bar.attach_left_position (change_routine_form, 11);
-			edit_bar.attach_top (change_routine_form, 0);
-			edit_bar.attach_bottom (change_routine_form, 0);
-			edit_bar.attach_right_position (change_routine_form, 17);
-			change_routine_command.set_width (80);
-			change_routine_form.attach_left (change_routine_command, 0);
-			change_routine_form.attach_top (change_routine_command, 0);
-			change_routine_form.attach_bottom (change_routine_command, 0);
-			change_routine_form.attach_right (change_routine_command, 0);
+			edit_bar.attach_left_position (routine_text_field, 11);
+			edit_bar.attach_top (routine_text_field, 0);
+			edit_bar.attach_bottom (routine_text_field, 0);
+			edit_bar.attach_right_position (routine_text_field, 17);
+			routine_text_field.set_width (80);
 			label.set_text ("from: ");
 			label.set_right_alignment;
 			edit_bar.attach_left_position (label, 17);
 			edit_bar.attach_top (label, 0);
 			edit_bar.attach_bottom (label, 0);
 			edit_bar.attach_right_position (label, 20);
-			edit_bar.attach_left_position (change_class_form, 20);
-			edit_bar.attach_top (change_class_form, 0);
-			edit_bar.attach_bottom (change_class_form, 0);
-			change_class_command.set_width (80);
-			change_class_form.attach_left (change_class_command, 0);
-			change_class_form.attach_top (change_class_command, 0);
-			change_class_form.attach_bottom (change_class_command, 0);
-			change_class_form.attach_right (change_class_command, 0);
+			edit_bar.attach_left_position (class_text_field, 20);
+			edit_bar.attach_top (class_text_field, 0);
+			edit_bar.attach_bottom (class_text_field, 0);
+			class_text_field.set_width (80);
 			edit_bar.attach_top (quit_button, 0);
 			edit_bar.attach_right (quit_button, 0);
 			edit_bar.attach_top (change_font_button, 0);
 			edit_bar.attach_right_widget (quit_button, change_font_button, 10);
 			edit_bar.attach_top (search_button, 0);
 			edit_bar.attach_right_widget (change_font_button, search_button, 0);
-			edit_bar.attach_right_widget (search_button, change_class_form, 2)
+			edit_bar.attach_right_widget (search_button, class_text_field, 2)
 		end;
 
 feature {NONE} -- Properties
@@ -672,7 +756,7 @@ feature {NONE} -- Properties
 	show_menus: BOOLEAN;
 			-- Should the menus be shown?
 
-feature {ROUTINE_TEXT} -- Properties
+feature {TEXT_WINDOW} -- Properties
 
 	tool_name: STRING is
 		do

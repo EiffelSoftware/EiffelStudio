@@ -38,7 +38,8 @@ inherit
 		rename
 			freeze_system as c_comp_actions_freeze_system
 		end;
-	SHARED_DLE
+	SHARED_DLE;
+	COMPILER_EXPORTER
 
 feature 
 
@@ -56,9 +57,6 @@ feature
 
 	class_counter: COUNTER;
 			-- Counter of classes
-
-	cluster_counter: COUNTER;
-			-- Counter of clusters
 
 	body_id_counter: BODY_ID_COUNTER;
 			-- Counter for body ids
@@ -142,8 +140,12 @@ feature
 	successfull: BOOLEAN;
 			-- Was the last recompilation successfull ?
 
-	freeze: BOOLEAN;
+	freeze: BOOLEAN is
 			-- Has the system to be frozen again ?
+		do
+			Result := private_freeze or else 
+				Compilation_modes.is_freezing
+		end;
 
 	freezing_occurred: BOOLEAN;
 			-- Did a freezing of the system occur ?
@@ -305,16 +307,8 @@ feature
 	current_class: CLASS_C;
 			-- Current processed class
 
-	is_precompiling: BOOLEAN;
-			-- Are we currently doing a precompilation?
-
-	precompilation: BOOLEAN is
-			-- Are we currently doing a precompilation?
-		obsolete
-			"Use ``is_precompiling''"
-		do
-			Result := is_precompiling
-		end;
+	is_precompiled: BOOLEAN;
+			-- Is the Current system from a precompilation
 
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
@@ -373,7 +367,6 @@ feature
 			!!m_desc_server.make;
 				-- Counter creation
 			!!class_counter;
-			!!cluster_counter;
 			!!body_id_counter.make;
 			!!routine_id_counter.make;
 			!!type_id_counter;
@@ -603,7 +596,7 @@ end;
 				Rep_depend_server.remove (id);
 				M_rout_id_server.remove (id);
 				M_desc_server.remove (id);
-				if is_precompiling then
+				if Compilation_modes.is_precompiling then
 						-- Do not need to remove id from
 						-- Class_comments_server since
 						-- we are not able to remove a
@@ -740,7 +733,7 @@ end;
 				Workbench.change_all_new_classes
 			end;
 
-			freeze := freeze or else frozen_level = 0;
+			private_freeze := private_freeze or else frozen_level = 0;
 
 				-- If status of compilation is successfull, copy
 				-- a duplication of the body index table in
@@ -783,7 +776,7 @@ feature -- Recompilation
 			root_class_c: CLASS_C;
 		do
 				-- Recompilation initialization
-			if precompilation then
+			if Compilation_modes.is_precompiling then
 				init_precompilation
 			else
 				init_recompilation;
@@ -834,7 +827,7 @@ end;
 			end;
 			new_class := False;
 
-			if not precompilation and not Lace.compile_all_classes then
+			if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
 					-- The root class is not generic
 				root_class_c := root_class.compiled_class;
 				current_class := root_class_c;
@@ -878,16 +871,16 @@ end;
 				-- heirs after
 			process_pass (pass2_controler);
 
-			if not precompilation and not Lace.compile_all_classes then
+			if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
 				root_class_c.check_root_class_creators;
 			end;
 
 				-- Byte code production and type checking
 			process_pass (pass3_controler);
 
-			if not precompilation and not Lace.compile_all_classes then
+			if not Compilation_modes.is_precompiling and not Lace.compile_all_classes then
 					-- Externals incrementality
-				freeze := freeze or else not externals.equiv;
+				private_freeze := private_freeze or else not externals.equiv;
 			end;
 
 				-- Process the type system
@@ -908,7 +901,7 @@ end;
 				io.error.putstring ("Freezing system%N");
 
 				c_comp_actions_freeze_system;
-				freeze := False;
+				private_freeze := False;
 
 			else
 					-- Verbose
@@ -1098,7 +1091,7 @@ io.error.putstring ("%N");
 end;
 					-- Process skeleton(s) for `a_class'.
 				if
-					(not (precompilation or else Lace.compile_all_classes))
+					(not (Compilation_modes.is_precompiling or else Lace.compile_all_classes))
 					or else a_class.has_types
 				then
 					a_class.process_skeleton;
@@ -1614,7 +1607,7 @@ feature -- Freeezing
 			dle_frozen_nobid_table.clear_all;
 			dle_frozen_nobid_table.set_threshold (body_id_counter.value);
 			freezing_occurred := True;
-			if precompilation then
+			if Compilation_modes.is_precompiling then
 				!PRECOMP_MAKER!makefile_generator.make
 			else
 				!WBENCH_MAKER!makefile_generator.make
@@ -1861,7 +1854,7 @@ end;
 			execution_table.shake;
 			dispatch_table.shake;
 
-			if precompilation then
+			if Compilation_modes.is_precompiling then
 				execution_table.set_precomp_level;
 				dispatch_table.set_precomp_level
 			end;
@@ -2848,8 +2841,8 @@ feature -- Dispose routine
 	formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
 			-- Formulate descendants of class MEMORY. 
 		local
-			descendants: LINKED_LIST [CLASS_C];
-			d: CLASS_C
+			descendants: LINKED_LIST [E_CLASS];
+			d: E_CLASS
 		do
 			from
 				descendants := c.descendants;
@@ -2858,8 +2851,8 @@ feature -- Dispose routine
 				descendants.after
 			loop
 				d := descendants.item;
-				desc.extend (d);
-				formulate_mem_descendants (d, desc);
+				desc.extend (d.compiled_info);
+				formulate_mem_descendants (d.compiled_info, desc);
 				descendants.forth;
 			end;
 		end;
@@ -3397,12 +3390,12 @@ feature --Workbench option file generation
 			Option_file.close;
 		end;
 
-feature -- Address table
+feature 
 
-	address_table: ADDRESS_TABLE
-			-- Generate encapsulation of function pointers
-
-feature
+	set_precompilation (b: BOOLEAN) is
+		do
+			is_precompiled := b
+		end;
 
 	set_code_replication_off (b: BOOLEAN) is
 			-- Assign `b' to `replication_off'
@@ -3517,7 +3510,7 @@ feature -- Conveniences
 			--| Set `freeze' flag if needed
 		do
 			if not deep_equal (l, c_file_names) then
-				freeze := True
+				private_freeze := True
 			end
 			c_file_names := l;
 		end;
@@ -3598,7 +3591,7 @@ feature -- Conveniences
 	set_freeze (b: BOOLEAN) is
 			-- Assign `b' to `freeze'.
 		do
-			freeze := b;
+			private_freeze := b;
 		end;
 
 	set_update_sort (b: BOOLEAN) is
@@ -3629,20 +3622,6 @@ feature -- Conveniences
 
 feature -- Precompilation
 
-	set_precompilation (b: BOOLEAN) is
-			-- Set `is_precompiling' to `b'
-		obsolete
-			"Use ``set_is_precompiling''"
-		do
-			set_is_precompiling (b)
-		end;
-
-	set_is_precompiling (b: BOOLEAN) is
-			-- Set `is_precompiling' to `b'
-		do
-			is_precompiling := b
-		end;
-
 	init_precompilation is
 			-- Initialization before a precompilation.
 		do
@@ -3650,13 +3629,14 @@ feature -- Precompilation
 				init;
 				Workbench.change_all
 			end;
-			freeze := True;
+			private_freeze := True;
 		end;
 
 	save_precompilation_info is
 			-- Save usefull values for inclusion of
 			-- precompiled code.
 		do
+			is_precompiled := True;
 			server_controler.save_precompiled_id;
 			max_precompiled_id := class_counter.value;
 			max_precompiled_type_id := static_type_id_counter.value;
@@ -3738,6 +3718,10 @@ feature -- Debug purpose
 
 feature {NONE} -- External features
 
+	private_freeze: BOOLEAN;
+			-- Freeze set if externals or new derivation
+			-- of special is generated
+
 	write_int (f: POINTER; v: INTEGER) is
 		external
 			"C"
@@ -3755,15 +3739,6 @@ feature -- DLE
 			-- Assign `b' to `extendible'.
 		do
 			extendible := b
-		end;
-
-	dle_finalize: BOOLEAN;
-			-- Has the user asked for a finalization?
-
-	set_dle_finalize (b: BOOLEAN) is
-			-- Assign `b' to `finalize'.
-		do
-			dle_finalize := b
 		end;
 
 	Table_prefix: STRING is
@@ -3878,6 +3853,10 @@ feature -- DLE
 			Result := dle_remover = Void or else dle_remover.was_alive (f)
 		end;
 
+	check_dle_finalize is
+		do
+		end;
+
 	clear_dle_finalization_data is
 			-- Get rid of the data stored during the last
 			-- final mode compilation normally used when finalizing
@@ -3893,13 +3872,6 @@ feature -- DLE
 				dle_static_calls.clear;
 				dle_static_calls := Void
 			end
-		end;
-
-	check_dle_finalize is
-			-- If the user asked for a finalization of a DC-set,
-			-- then check whether the static system has been finalized as well.
-		do
-			dle_finalize := false
 		end;
 
 	generate_static_log_file is

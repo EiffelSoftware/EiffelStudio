@@ -126,7 +126,7 @@ feature
 					error_found := True
 				elseif value.is_name then
 					i := value.value.to_integer
-					if i <= 0 then
+					if (i <= 0 or else i > 100) then
 						error_found := True;
 					else
 						System.set_inlining_size (i)

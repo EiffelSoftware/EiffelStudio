@@ -187,7 +187,6 @@ feature -- Status setting
 				-- Link with the manager and the explorer.
 			manager := a_manager
 			set_explorer_bar (an_explorer_bar)
-			build_explorer_bar
 		end
 
 feature -- Memory management

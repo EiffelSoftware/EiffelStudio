@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		do
 				-- Link with the manager and the explorer.
 			manager := a_manager
-			set_explorer_bar (an_explorer_bar)
+			explorer_bar := an_explorer_bar
 
 				-- Register and initialize
 			build_interface
@@ -145,6 +145,7 @@ feature {NONE} -- Implementation
 			-- Set `explorer_bar' to `a_bar'.
 		do
 			explorer_bar := a_bar
+			explorer_bar_item.set_parent (a_bar)
 		end
 
 feature -- Obsolete

@@ -275,7 +275,7 @@ feature {EV_ANY_I} -- Implementation
 feature {EV_WIDGET}
 
 	set_pointer_style (c: EV_CURSOR) is
-			deferred
+		deferred
 		end
 
     enable_capture is
@@ -325,6 +325,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/12 01:22:19  pichery
+--| cosmetics
+--|
 --| Revision 1.22  2000/03/27 19:47:17  oconnor
 --| added pebble_function support
 --|

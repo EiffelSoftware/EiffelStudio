@@ -420,6 +420,7 @@ feature -- Convenience
 		do			
 			if has_child then
 				create Result.make (children.count)
+				Result.compare_objects
 				from				
 					children.start
 				until
@@ -427,7 +428,7 @@ feature -- Convenience
 				loop
 					l_node := children.item
 					l_filename := l_node.url
-					if l_filename /= Void then
+					if l_filename /= Void and then not Result.has (l_filename) then
 						Result.extend (l_filename)
 					end					
 					if recursive and then l_node.has_child then

@@ -807,13 +807,10 @@ feature -- API
 			feat: FEATURE_I;
 			other_content: ARRAY [E_FEATURE];
 		do
-			!! Result;
-			c_id := feat_tbl_id;
-			Result.basic_copy_from (Current);
-			Result.set_class_id (c_id);
 			from
+				c_id := feat_tbl_id;
 				cont := content;
-				c := cont.count;
+				c := cont.upper;
 				!! other_content.make (0, c);
 				i := 0
 			until
@@ -825,6 +822,13 @@ feature -- API
 				end;
 				i := i + 1
 			end;
+
+			!! Result.make ((i * Low_ratio) // High_ratio);
+			Result.set_capacity (Current.capacity)
+
+			Result.basic_copy_from (Current);
+			Result.set_class_id (c_id);
+
 			Result.set_content (other_content);
 			Result.set_deleted_marks (clone (deleted_marks));
 			Result.set_keys (clone (keys));

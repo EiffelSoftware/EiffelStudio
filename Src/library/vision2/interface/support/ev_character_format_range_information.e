@@ -38,7 +38,7 @@ feature -- Creation
 			-- Create `Current' and apply `flags' to set attributes.
 			-- Valid flags are the corresponding flags from EV_CHARACTER_FORMAT_CONSTANTS.
 			-- Combine these in `flags' to set multiple attrbutes, e.g. to set the
-			-- font height and font color as applicable peform:
+			-- font height and font color as applicable perform:
 			-- "make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height | feature {EV_CHARACTER_FORMAT_CONSTANTS}.color)"
 		require
 			valid_flags: valid_character_format_flag (flags)

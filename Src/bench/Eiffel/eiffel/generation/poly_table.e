@@ -298,45 +298,16 @@ feature
 	generate_type_table (buffer: GENERATION_BUFFER) is
 			-- Generate the associated type table in final mode.
 		local
-			i, j, nb, index: INTEGER
+			i, j, k, nb, index: INTEGER
 			entry: T
-			c_name: STRING
+			l_table_name: STRING
+			l_entry_type_id, l_type_id: INTEGER
+			l_start, l_end: INTEGER
+			l_generate: BOOLEAN
 		do
+			l_table_name := Encoder.type_table_name (rout_id)
 
 				-- First generate type arrays for generic types.
-			c_name := Encoder.type_table_name (rout_id)
-
-			from
-				i := min_type_id;
-				nb := max_type_id;
-				index := lower
-				j := 0;
-			until
-				i > nb
-			loop
-				entry := array_item (index);
-				if i = entry.type_id then
-					if entry.is_generic then
-						buffer.putstring ("static int16 ");
-						buffer.putstring (c_name);
-						buffer.putstring ("_pgtype");
-						buffer.putint (j);
-						buffer.putstring (" [] = {0,");
-						entry.generate_cid (buffer, True);
-						buffer.putstring ("-1};");
-						buffer.new_line;
-						j := j + 1
-					end;
-					index := index + 1
-				end;
-				i := i + 1;
-			end;
-
-				-- Now generate pointer table
-			buffer.putstring ("int16 *");
-			buffer.putstring (c_name);
-			buffer.putstring ("_gen_type [] = {%N");
-
 			from
 				i := min_type_id;
 				nb := max_type_id;
@@ -348,45 +319,125 @@ feature
 				entry := array_item (index)
 				if i = entry.type_id then
 					if entry.is_generic then
-						buffer.putstring (c_name);
-						buffer.putstring ("_pgtype");
-						buffer.putint (j);
-						buffer.putchar (',');
-						j := j + 1;
-					else
-						buffer.putstring ("0,");
+						buffer.putstring ("static int16 ")
+						buffer.putstring (l_table_name)
+						buffer.putstring ("_pgtype")
+						buffer.putint (j)
+						buffer.putstring ("[] = {0, ")
+						entry.generate_cid (buffer, True);
+						buffer.putstring ("-1};");
+						buffer.new_line
+						j := j + 1
 					end
 					index := index + 1
-				else
-					buffer.putstring ("0,");
-				end;
-				buffer.new_line;
+				end
+				i := i + 1
+			end
 
-				i := i + 1;
-			end;
-			buffer.putstring ("0};%N%N");
+				-- Generate pointer table
+			nb := max_type_id - min_type_id + 1
+			buffer.putstring ("int16 *")
+			buffer.putstring (l_table_name)
+			buffer.putstring ("_gen_type [")
+			buffer.putint (nb)
+			buffer.putstring ("];");
+			buffer.new_line
 
-				-- Generate the old stuff
+			buffer.putstring ("int16 ")
+			buffer.putstring (l_table_name)
+			buffer.putstring (" [")
+			buffer.putint (nb)
+			buffer.putstring ("];")
+			buffer.new_line
+
+			buffer.putstring ("void ")
+			buffer.putstring (l_table_name)
+			buffer.putstring ("_init (void) {")
+			buffer.new_line
+			buffer.indent
+
+				-- Compact generation for `XXX_gen_type' table. No need to try to be
+				-- smart here, since occurrences of the type array occurs only once in
+				-- this table.
 			from
-				buffer.putstring ("int16 ")
-				buffer.putstring (c_name)
-				buffer.putstring ("[] = {%N")
-				i := min_type_id
-				nb := max_type_id
+				i := min_type_id;
+				nb := max_type_id;
 				index := lower
+				j := 0 
 			until
 				i > nb
 			loop
 				entry := array_item (index)
 				if i = entry.type_id then
-					buffer.putint (entry.feature_type_id - 1)
-					buffer.putstring (",%N")
+					if entry.is_generic then
+						buffer.putstring (l_table_name)
+						buffer.putstring ("_gen_type [")
+						buffer.putint (k)
+						buffer.putstring ("] = ")
+						buffer.putstring (l_table_name)
+						buffer.putstring ("_pgtype")
+						buffer.putint (j)
+						buffer.putstring (";");
+						buffer.new_line
+						j := j + 1
+					end
 					index := index + 1
-				else
-					buffer.putstring ("0,%N")
 				end
 				i := i + 1
+				k := k + 1
 			end
+
+				-- Generate the old stuff in a compact manner
+				-- We generate a compact table initialization, that is to say if two or more
+				-- consecutives rows are identical we will generate a loop to fill the rows
+			from
+				i := min_type_id
+				nb := max_type_id
+				index := lower
+				l_entry_type_id := -1
+				j := 0
+			until
+				i > nb
+			loop
+				entry := array_item (index)
+				if i = entry.type_id then
+					if l_entry_type_id = -1 then
+						l_entry_type_id := entry.feature_type_id - 1
+						l_start := j
+						l_end := j
+					else
+						l_type_id := entry.feature_type_id - 1
+						if l_entry_type_id = l_type_id then
+							l_end := j
+						else
+							l_generate := True
+						end
+					end
+					index := index + 1
+				else
+					l_generate := True
+					l_type_id := -1
+				end
+				if l_generate then
+					l_generate := False
+					if l_entry_type_id /= -1 then
+						generate_loop_type_id_initialization (buffer, l_table_name,
+							l_entry_type_id, l_start, l_end)
+						l_entry_type_id := l_type_id
+						l_start := j
+						l_end := j
+					end
+				end
+				i := i + 1
+				j := j + 1
+			end
+			if l_entry_type_id /= -1 then
+				generate_loop_type_id_initialization (buffer, l_table_name, l_entry_type_id,
+					l_start, l_end)
+			end
+
+			buffer.exdent
+			buffer.new_line
 			buffer.putstring ("};%N%N")
 		end
 
@@ -648,4 +699,42 @@ feature {POLY_TABLE} -- Special data
 
 	Block_size: INTEGER is 50
 			-- Size of a block of `Tmp_poly_table'.
+
+feature {NONE} -- Implementation
+
+	generate_loop_type_id_initialization (buffer: GENERATION_BUFFER; a_table_name: STRING; a_type_id, a_lower, a_upper: INTEGER) is
+			-- Generate code to initialize current array with `a_routine_name'. Generate a
+			-- loop if `a_lower' is different from `a_upper'.
+		require
+			buffer_not_void: buffer /= Void
+			a_table_name_not_void: a_table_name /= Void
+			a_type_id_non_negative: a_type_id >= 0
+			a_lower_non_negative: a_lower >= 0
+			a_upper_non_negative: a_upper >= 0
+			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
+		do
+			if a_lower = a_upper then
+				buffer.putstring (a_table_name)
+				buffer.putchar ('[')
+				buffer.putint (a_lower)
+				buffer.putstring ("] = ")
+				buffer.putint (a_type_id)
+				buffer.putchar (';')
+				buffer.new_line
+			else
+				buffer.putstring ("{long i; for (i = ")
+				buffer.putint (a_lower)
+				buffer.putstring ("; i < ")
+				buffer.putint (a_upper + 1)
+				buffer.putstring ("; i++) ")
+				buffer.putstring (a_table_name)
+				buffer.putstring ("[i] = ")
+				buffer.putint (a_type_id)
+				buffer.putchar (';')
+				buffer.putchar ('}')
+				buffer.putchar (';')
+				buffer.new_line
+			end
+		end
+
 end

@@ -1,5 +1,7 @@
--- Representation of a table of attribute offsets for the final Eiffel
--- executable
+indexing
+	description: "Representation of a table of attribute offsets for the final Eiffel executable."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ATTR_TABLE
 
@@ -46,7 +48,6 @@ feature
 			cl_type: CLASS_TYPE;
 			first_type: CLASS_TYPE
 			i, nb, old_position: INTEGER
-			local_copy: ATTR_TABLE
 			system_i: SYSTEM_I
 			offset: INTEGER
 		do
@@ -62,15 +63,14 @@ feature
 					goto_used (type_id);
 					i := position
 					if i <= nb then
-						local_copy := Current
 						from
 							first_type := system_i.class_type_of_id (type_id);
-							offset := first_type.skeleton.offset (local_copy.array_item (i).feature_id)
+							offset := first_type.skeleton.offset (array_item (i).feature_id)
 							i := i + 1
 						until
 							Result or else i > nb
 						loop
-							entry := local_copy.array_item (i)
+							entry := array_item (i)
 							cl_type := system_i.class_type_of_id (entry.type_id);
 							Result := cl_type.conform_to (first_type)
 									and then not (cl_type.skeleton.offset (entry.feature_id) = offset)
@@ -80,14 +80,13 @@ feature
 				else
 					from
 						goto_used (type_id)
-						local_copy := Current
 						i := lower
 						first_type := system_i.class_type_of_id (type_id);
-						offset := first_type.skeleton.offset (local_copy.array_item (position).feature_id)
+						offset := first_type.skeleton.offset (array_item (position).feature_id)
 					until
 						Result or else i > nb
 					loop
-						entry := local_copy.array_item (i)
+						entry := array_item (i)
 						current_type_id := entry.type_id;
 						if current_type_id /= type_id then
 							cl_type := system_i.class_type_of_id (current_type_id);
@@ -104,40 +103,126 @@ feature
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generation of the attribute table in buffer "eattr*.x".
 		local
-			class_type: CLASS_TYPE;
-			i, nb, index: INTEGER;
-			attr_entry: ATTR_ENTRY
-			local_copy: ATTR_TABLE
+			i, j, nb, index, l_start, l_end: INTEGER
+			entry: ATTR_ENTRY
+			l_offset, l_attr_offset: STRING
+			l_buf: GENERATION_BUFFER
+			l_table_name: STRING
+			l_generate_entry: BOOLEAN
+			l_class_type: CLASS_TYPE
 		do
+				-- We generate a compact table initialization, that is to say if two or more
+				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
 					-- Private table
-				buffer.putstring ("long ");
-				buffer.putstring (Encoder.table_name (rout_id));
-				buffer.putstring ("[] = {%N");
-				local_copy := Current
-				i := min_type_id;
-				nb := max_type_id;
-				goto (i);
+				buffer.putstring ("long ")
+				l_table_name := Encoder.table_name (rout_id)
+				buffer.putstring (l_table_name)
+				buffer.putstring ("[")
+				buffer.putint (final_table_size)
+				buffer.putstring ("];")
+				buffer.new_line
+				buffer.putstring ("void ")
+				buffer.putstring (l_table_name)
+				buffer.putstring ("_init () {")
+				buffer.new_line
+				buffer.indent
+
+				create l_buf.make (24)
+				i := min_type_id
+				nb := max_type_id
+				goto (i)
 				index := position
 			until
 				i > nb
 			loop
-				attr_entry := local_copy.array_item (index)
-				if i = attr_entry.type_id then
-					class_type := System.class_type_of_id (attr_entry.type_id);
-						--| In this instruction, we put `True' as second
-						--| arguments. This means we will generate something if there is nothing
-						--| to generate (ie `0'). Remember that `False' is used in all other case
-					class_type.skeleton.generate_offset (buffer, attr_entry.feature_id, True);
-					buffer.putchar (',');
-					buffer.new_line;
-					index := index + 1;
+				entry := array_item (index)
+				if i = entry.type_id then
+					l_class_type := System.class_type_of_id (entry.type_id)
+					if l_attr_offset = Void then
+						l_buf.clear_all 
+							--| In this instruction, we put `True' as second arguments.
+							--| This means we will generate something if there is nothing to
+							--| generate (ie `0'). Remember that `False' is used in all other case
+						l_class_type.skeleton.generate_offset (l_buf, entry.feature_id, True)
+						l_attr_offset := l_buf.as_string
+						l_start := j
+						l_end := j
+					else
+						l_buf.clear_all
+							--| In this instruction, we put `True' as second arguments.
+							--| This means we will generate something if there is nothing to
+							--| generate (ie `0'). Remember that `False' is used in all other case
+						l_class_type.skeleton.generate_offset (l_buf, entry.feature_id, True)
+						l_offset := l_buf.as_string
+						if l_attr_offset.is_equal (l_offset) then
+							l_end := j
+						else
+							l_generate_entry := True
+						end
+					end
+					index := index + 1
 				else
-					buffer.putstring ("0,%N");
-				end;
-				i := i + 1;
-			end;
-			buffer.putstring ("};%N%N");
-		end;
+					l_generate_entry := True
+					l_offset := Void
+				end
+
+				if l_generate_entry then
+					l_generate_entry := False
+					if l_attr_offset /= Void then
+						generate_loop_initialization (buffer, l_table_name, l_attr_offset,
+							l_start, l_end)
+						l_attr_offset := l_offset
+						l_start := j
+						l_end := j
+					end
+				end
+				i := i + 1
+				j := j + 1
+			end
+			if l_attr_offset /= Void then
+				generate_loop_initialization (buffer, l_table_name, l_attr_offset, l_start, l_end)
+			end
+
+			buffer.exdent
+			buffer.putstring ("};%N%N")
+		end
+
+feature {NONE} -- Implementation
+
+	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_offset: STRING; a_lower, a_upper: INTEGER) is
+			-- Generate code to initialize current array with `a_routine_name'. Generate a
+			-- loop if `a_lower' is different from `a_upper'.
+		require
+			buffer_not_void: buffer /= Void
+			a_table_name_not_void: a_table_name /= Void
+			a_offset_not_void: a_offset /= Void
+			a_lower_non_negative: a_lower >= 0
+			a_upper_non_negative: a_upper >= 0
+			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
+		do
+			if a_lower = a_upper then
+				buffer.putstring (a_table_name)
+				buffer.putchar ('[')
+				buffer.putint (a_lower)
+				buffer.putstring ("] = ")
+				buffer.putstring (a_offset)
+				buffer.putchar (';')
+				buffer.new_line
+			else
+				buffer.putstring ("{long i; for (i = ")
+				buffer.putint (a_lower)
+				buffer.putstring ("; i < ")
+				buffer.putint (a_upper + 1)
+				buffer.putstring ("; i++) ")
+				buffer.putstring (a_table_name)
+				buffer.putstring ("[i] = ")
+				buffer.putstring (a_offset)
+				buffer.putchar (';')
+				buffer.putchar ('}')
+				buffer.putchar (';')
+				buffer.new_line
+			end
+		end
 
 end

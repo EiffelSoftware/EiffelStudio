@@ -141,21 +141,46 @@ feature
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generation of the routine table in buffer "erout*.c".
 		local
-			entry: ROUT_ENTRY;
-			i, nb, index: INTEGER;
-			routine_name: STRING;
-			empty_function_ptr_string: STRING
-			function_ptr_cast_string: STRING
+			l_min_used: INTEGER
 		do
+			l_min_used := min_used
+			goto_used (l_min_used)
+			internal_generate (buffer, 0, final_table_size, l_min_used, max_used)
+		end
+
+	internal_generate (buffer: GENERATION_BUFFER; an_offset, a_table_size, a_min, a_max: INTEGER) is
+			-- Generate current routine table starting from index `a_min' to `a_max'.
+		require
+			buffer_not_void: buffer /= Void
+			a_min_positive: a_min > 0
+			a_max_positive: a_max > 0
+			a_max_greater_or_equal_than_a_min: a_max > a_min
+		local
+			entry, l_rout_entry: ROUT_ENTRY;
+			i, j, nb, index: INTEGER;
+			l_start, l_end: INTEGER
+			l_generate_entry: BOOLEAN
+			l_routine_name: STRING;
+			l_table_name: STRING
+		do
+				-- We generate a compact table initialization, that is to say if two or more
+				-- consecutives rows are identical we will generate a loop to fill the rows
 			from
-				empty_function_ptr_string := "(char *(*)()) 0,%N"
-				function_ptr_cast_string := "(char *(*)()) "
 				buffer.putstring ("char *(*");
-				buffer.putstring (Encoder.table_name (rout_id));
-				buffer.putstring ("[])() = {%N");
-				i := min_used;
-				nb := max_used;
-				goto_used (i);
+				l_table_name := Encoder.table_name (rout_id)
+				buffer.putstring (l_table_name);
+				buffer.putstring ("[")
+				buffer.putint (a_table_size)
+				buffer.putstring ("])();")
+				buffer.new_line
+				buffer.putstring ("void ")
+				buffer.putstring (l_table_name)
+				buffer.putstring ("_init () {")
+				buffer.new_line
+				buffer.indent
+				i := a_min;
+				j := an_offset
+				nb := a_max;
 				index := position
 			until
 				i > nb
@@ -163,68 +188,70 @@ feature
 				entry := array_item (index);
 				if i = entry.type_id then
 					if entry.used then
-						routine_name := entry.routine_name;
-						buffer.putstring (function_ptr_cast_string);
-						buffer.putstring (routine_name);
-						buffer.putstring (",%N");
-			
-							-- Remember external routine declaration
-						Extern_declarations.add_routine (entry.type.c_type, routine_name)
+						if l_rout_entry = Void then
+							l_rout_entry := entry
+							l_start := j
+							l_end := j
+						else
+							if l_rout_entry.same_as (entry) then
+								l_end := j
+							else
+								l_generate_entry := True
+							end
+						end
 					else
-						buffer.putstring (empty_function_ptr_string);
-					end;
+						l_generate_entry := True
+						entry := Void
+					end
 					index := index + 1
 				else
-					buffer.putstring (empty_function_ptr_string);
+					l_generate_entry := True
+					entry := Void
 				end;
-				i := i + 1;
+				if l_generate_entry then
+					l_generate_entry := False
+					if l_rout_entry /= Void then
+						l_routine_name := l_rout_entry.routine_name
+						generate_loop_initialization (buffer, l_table_name, l_routine_name,
+							l_start, l_end)
+				
+							-- Remember external routine declaration
+						Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+						l_rout_entry := entry
+						l_start := j
+						l_end := j
+					end
+				end
+				i := i + 1
+				j := j + 1
 			end;
-			buffer.putstring ("};%N%N");
-		end; -- generate
+			if l_rout_entry /= Void then
+				l_routine_name := l_rout_entry.routine_name
+				generate_loop_initialization (buffer, l_table_name, l_routine_name,
+					l_start, l_end)
+		
+					-- Remember external routine declaration
+				Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
+			end
+
+			buffer.exdent
+			buffer.putstring ("};")
+			buffer.new_line
+			buffer.new_line
+		end
 
 	generate_dispose_table (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generation of the dispose table in buffer "erout*.c".
 		local
-			entry: ROUT_ENTRY;
-			i, nb, index: INTEGER;
-			r_name: STRING;
-			empty_function_ptr_string: STRING
-			function_ptr_cast_string: STRING
-		do
-			empty_function_ptr_string := "(char *(*)()) 0,%N"
-			function_ptr_cast_string := "(char *(*)()) "
-
-			from
-				buffer.putstring ("char *(*");
-				buffer.putstring (Encoder.table_name (real_rout_id));
-				buffer.putstring ("[])() = {%N");
-				index := 1;
-				i := 1
-				nb := System.type_id_counter.value;
-			until
-				i > nb
-			loop
-				if index <= max_position then
-					entry := array_item (index)
-					if i = entry.type_id then
-						r_name := entry.routine_name
-						buffer.putstring (function_ptr_cast_string);
-						buffer.putstring (r_name);
-						buffer.putstring (",%N");
-	
-								-- Remember external declaration
-						Extern_declarations.add_routine (entry.type.c_type, r_name);
-						index := index + 1
-					else
-						buffer.putstring (empty_function_ptr_string);
-					end
-				else
-					buffer.putstring (empty_function_ptr_string);
-				end
-				i := i + 1;
-			end;
-
-			buffer.putstring ("};%N%N");
+			l_rout_id: INTEGER
+			l_min_used: INTEGER
+		do	
+			l_rout_id := rout_id
+			rout_id := real_rout_id
+			l_min_used := min_used
+			goto_used (l_min_used)
+			internal_generate (buffer, l_min_used, system.type_id_counter.value, l_min_used, max_used)
+			rout_id := l_rout_id
 		end
 
 	goto_implemented (type_id: INTEGER) is
@@ -305,5 +332,45 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
+
+	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: STRING; a_lower, a_upper: INTEGER) is
+			-- Generate code to initialize current array with `a_routine_name'. Generate a
+			-- loop if `a_lower' is different from `a_upper'.
+		require
+			buffer_not_void: buffer /= Void
+			a_table_name_not_void: a_table_name /= Void
+			a_routine_name_not_void: a_routine_name /= Void
+			a_lower_non_negative: a_lower >= 0
+			a_upper_non_negative: a_upper >= 0
+			a_upper_greater_or_equal_than_a_lower: a_upper >= a_lower
+		do
+			if a_lower = a_upper then
+				buffer.putstring (a_table_name)
+				buffer.putchar ('[')
+				buffer.putint (a_lower)
+				buffer.putstring ("] = ")
+				buffer.putstring (function_ptr_cast_string);
+				buffer.putstring (a_routine_name);
+				buffer.putchar (';')
+				buffer.new_line
+			else
+				buffer.putstring ("{long i; for (i = ")
+				buffer.putint (a_lower)
+				buffer.putstring ("; i < ")
+				buffer.putint (a_upper + 1)
+				buffer.putstring ("; i++) ")
+				buffer.putstring (a_table_name)
+				buffer.putstring ("[i] = ")
+				buffer.putstring (function_ptr_cast_string);
+				buffer.putstring (a_routine_name);
+				buffer.putchar (';')
+				buffer.putchar ('}')
+				buffer.putchar (';')
+				buffer.new_line
+			end
+		end
+
+	function_ptr_cast_string: STRING is "(char *(*)()) "
+			-- String representing cast to type of function pointer
 
 end

@@ -103,22 +103,22 @@ feature {NONE} -- GUI building
 			hbox.set_border_width (5)
 			hbox.extend (create {EV_CELL})
 			create button.make_with_text ("Add")
-			button.select_actions.extend (~add_item_in (list, text_field))
+			button.select_actions.extend (agent add_item_in (list, text_field))
 			button.disable_sensitive
-			text_field.change_actions.extend (~disable_non_applicable_buttons (text_field, button))
-			text_field.return_actions.extend (~add_item_in (list, text_field))
+			text_field.change_actions.extend (agent disable_non_applicable_buttons (text_field, button))
+			text_field.return_actions.extend (agent add_item_in (list, text_field))
 			button.set_minimum_width (80)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 			hbox.extend (create {EV_CELL})
 			create button.make_with_text ("Apply")
-			button.select_actions.extend (~modify_item_in (list, text_field))
+			button.select_actions.extend (agent modify_item_in (list, text_field))
 			button.set_minimum_width (80)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
 			hbox.extend (create {EV_CELL})
 			create button.make_with_text ("Remove")
-			button.select_actions.extend (~remove_item_in (list, text_field))
+			button.select_actions.extend (agent remove_item_in (list, text_field))
 			button.set_minimum_width (80)
 			hbox.extend (button)
 			hbox.disable_item_expand (button)
@@ -158,7 +158,7 @@ feature {NONE} -- Action
 			txt := text.text
 			if not txt.is_empty then
 				create list_item.make_with_text (txt)
-				list_item.select_actions.extend (text~set_text (txt))
+				list_item.select_actions.extend (agent text.set_text (txt))
 				l.extend (list_item)
 				l.i_th (l.count).enable_select
 				text.remove_text
@@ -209,7 +209,7 @@ feature {NONE} -- Action
 			if not txt.is_empty and then list_item /= Void then
 				list_item.set_text (txt)
 				list_item.select_actions.wipe_out
-				list_item.select_actions.extend (text~set_text (txt))
+				list_item.select_actions.extend (agent text.set_text (txt))
 			end
 			modify_actions.call ([])
 		end

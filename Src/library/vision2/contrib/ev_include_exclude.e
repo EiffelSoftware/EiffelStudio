@@ -48,11 +48,11 @@ feature {NONE} -- Initialization
 			create vb
 			vb.extend (create {EV_CELL})
 			create include_button.make_with_text ("->")
-			include_button.select_actions.extend (~on_include)
+			include_button.select_actions.extend (agent on_include)
 			vb.extend (include_button)
 			vb.disable_item_expand (include_button)
 			create exclude_button.make_with_text ("<-")
-			exclude_button.select_actions.extend (~on_exclude)
+			exclude_button.select_actions.extend (agent on_exclude)
 			vb.extend (exclude_button)
 			vb.disable_item_expand (exclude_button)
 			vb.extend (create {EV_CELL})

@@ -96,7 +96,6 @@ feature -- Initialization
 			set_action ("!c<Btn3Down>", Current, new_tooler_action)
 			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
 
-			!! matcher.make_empty;
 		end;
 
 	init_resource_values is
@@ -341,18 +340,6 @@ feature -- Tabulations
 
 feature -- Update
 
-	highlight_selected (a, b: INTEGER) is
-			-- Highlight between `a' and `b' using reverse video.
-		do
-			if b <= count then
-					-- Does not highlight if `b' is beyond the
-					-- bounds of the text.
-				if b > a then
-					set_selection (a,b)
-				end
-			end
-		end;
-
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position' if the new position
 			-- is not out of bounds.
@@ -507,12 +494,6 @@ feature -- Execution
 			end
 		end;
 
-feature {NONE} -- Properties
-
-	matcher: KMP_MATCHER;
-			-- Smart search algorithm in Eiffel.
-			-- In final mode as fast as the old one (hehe).
-	
 feature {TOOL_W} -- Objects in Current text area
 
 	kept_objects: LINKED_SET [STRING] is
@@ -575,16 +556,20 @@ feature {OBJECT_W} -- Settings
 			last_found_position := -1;
 			local_text := implementation.actual_text;
 
-			l_t := clone (local_text);
-			if not is_case_sensitive then
-				l_t.to_lower;
+			if is_case_sensitive then
+				l_t := local_text;
+			else
+				l_t := clone (local_text);
+				l_t.to_lower
 			end;
 			matcher.set_text (l_t)
 
 			if not equal (matcher.pattern, s) then
-				l_s := clone (s);
-				if not is_case_sensitive then
-					l_s.to_lower;
+				if is_case_sensitive then
+					l_s := s
+				else
+					l_s := clone (s);
+					l_s.to_lower
 				end;
 				matcher.set_pattern (l_s)
 			end;

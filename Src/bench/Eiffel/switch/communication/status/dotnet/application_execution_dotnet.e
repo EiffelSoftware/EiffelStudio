@@ -817,10 +817,10 @@ feature {NONE} -- Events on notification
 				print (" ########################################### %N")
 				print (" ### CallStack : Head level ## 0x"+Eifnet_debugger_info.last_step_complete_reason.to_hex_string +" ## %N")
 				print (" ########################################### %N")
-				io.put_new_line
-				print (frame_callstack_info (Eifnet_debugger.active_frame))
-				io.put_new_line
---				display_full_callstack_info
+--				io.put_new_line
+--				print (frame_callstack_info (Eifnet_debugger.active_frame))
+--				io.put_new_line
+				display_full_callstack_info
 			end
 
 
@@ -965,7 +965,7 @@ feature -- Call stack related
 		end
 
 	display_full_callstack_info is
-		obsolete "To remove soon or later, this is just a debug use for now"
+			-- obsolete "To remove soon or later, this is just a debug use for now"
 			-- Called by `select_actions' of `but_callstack_update'.
 		local
 			l_active_thread: ICOR_DEBUG_THREAD

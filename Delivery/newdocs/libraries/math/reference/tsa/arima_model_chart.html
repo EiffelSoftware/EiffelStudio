@@ -1,0 +1,101 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>ARIMA_MODEL Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/tsa/arima_model_chart.html">ARIMA_MODEL</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../math/reference/tsa/index.html">math.tsa</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"ARIMA model for time series modeling and forecasting"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`autoregressive_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_autoregressive_parameters">autoregressive_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`constant_term' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_constant_term">constant_term</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`moving_average_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_moving_average_parameters">moving_average_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`non_seasonal_differencing' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_non_seasonal_differencing">non_seasonal_differencing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_autoregressive_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_number_of_autoregressive_parameters">number_of_autoregressive_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_moving_average_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_number_of_moving_average_parameters">number_of_moving_average_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_seasonal_autoregressive_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_number_of_seasonal_autoregressive_parameters">number_of_seasonal_autoregressive_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`number_of_seasonal_moving_average_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_number_of_seasonal_moving_average_parameters">number_of_seasonal_moving_average_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`orders' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_orders">orders</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`seasonal_autoregressive_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_seasonal_autoregressive_parameters">seasonal_autoregressive_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`seasonal_differencing' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_seasonal_differencing">seasonal_differencing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`seasonal_moving_average_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_seasonal_moving_average_parameters">seasonal_moving_average_parameters</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`seasonal_period' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_seasonal_period">seasonal_period</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">phi</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">theta</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bigphi</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bigtheta</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bigd</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_autoregressive_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_autoregressive_parameters">set_autoregressive_parameters</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_constant_term' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_constant_term">set_constant_term</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_moving_average_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_moving_average_parameters">set_moving_average_parameters</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_non_seasonal_differencing' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_non_seasonal_differencing">set_non_seasonal_differencing</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_seasonal_autoregressive_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_seasonal_autoregressive_parameters">set_seasonal_autoregressive_parameters</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_seasonal_differencing' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_seasonal_differencing">set_seasonal_differencing</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_seasonal_moving_average_parameters' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_seasonal_moving_average_parameters">set_seasonal_moving_average_parameters</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_seasonal_period' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/tsa/arima_model.html#f_set_seasonal_period">set_seasonal_period</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">non seasonal differencing positive</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">seasonal differencing positive</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">seasonal period positive</SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

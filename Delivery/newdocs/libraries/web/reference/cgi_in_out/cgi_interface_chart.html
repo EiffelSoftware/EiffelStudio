@@ -1,0 +1,123 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>CGI_INTERFACE Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../web/reference/cgi_in_out/cgi_interface_chart.html">CGI_INTERFACE</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../web/reference/cgi_in_out/index.html">web.cgi_in_out</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Access to information provided by a user through an </SPAN><A CLASS="eclass" HREF="../../../web/reference/html/html_chart.html">HTML</A><SPAN CLASS="estring"> form. This class may be used as ancestor by classes needing its facilities."</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../base/reference/kernel/basic_routines_chart.html">BASIC_ROUTINES</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../web/reference/cgi_in_out/cgi_environment_chart.html">CGI_ENVIRONMENT</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../web/reference/cgi_facilities/cgi_error_handling_chart.html">CGI_ERROR_HANDLING</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../web/reference/cgi_in_out/cgi_forms_chart.html">CGI_FORMS</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`auth_type' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_auth_type">Auth_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`button_value' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_button_value">button_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">overriding_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`content_length' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_content_length">Content_length</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`content_type' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_content_type">Content_type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cookies' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_cookies">Cookies</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`field_defined' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_field_defined">field_defined</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`fields' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_fields">Fields</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array_chart.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`gateway_interface' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_gateway_interface">Gateway_interface</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`http_accept' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_http_accept">Http_accept</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`http_user_agent' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_http_user_agent">Http_user_agent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`menu_values' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_menu_values">menu_values</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`output' was declared in CGI_IN_AND_OUT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_in_and_out.html#f_output">Output</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../web/reference/cgi_in_out/stdout_chart.html">STDOUT</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`path_info' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_path_info">Path_info</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`path_translated' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_path_translated">Path_translated</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`query_string' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_query_string">Query_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remote_addr' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_remote_addr">Remote_addr</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remote_host' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_remote_host">Remote_host</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remote_ident' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_remote_ident">Remote_ident</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remote_user' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_remote_user">Remote_user</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`request_method' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_request_method">Request_method</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`response_header' was declared in CGI_IN_AND_OUT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_in_and_out.html#f_response_header">Response_header</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../web/reference/cgi_facilities/cgi_response_header_chart.html">CGI_RESPONSE_HEADER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`script_name' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_script_name">Script_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`server_name' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_server_name">Server_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`server_port' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_server_port">Server_port</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`server_protocol' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_server_protocol">Server_protocol</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`server_software' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_server_software">Server_software</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`stdin' was declared in CGI_IN_AND_OUT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_in_and_out.html#f_stdin">Stdin</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../web/reference/cgi_in_out/stdin_chart.html">STDIN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`text_field_value' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_text_field_value">text_field_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`value_count' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_value_count">value_count</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`value_list' was declared in CGI_FORMS"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_forms.html#f_value_list">value_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`execute' is declared in `Current'"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_interface.html#f_execute">execute</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`handle_exception' was declared in CGI_ERROR_HANDLING"><A CLASS="efeature" HREF="../../../web/reference/cgi_facilities/cgi_error_handling.html#f_handle_exception">handle_exception</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_interface.html#f_make">make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`raise_error' was declared in CGI_ERROR_HANDLING"><A CLASS="efeature" HREF="../../../web/reference/cgi_facilities/cgi_error_handling.html#f_raise_error">raise_error</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">msg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_environment' is declared in `Current'"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_interface.html#f_set_environment">set_environment</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_environment_variable' was declared in CGI_ENVIRONMENT"><A CLASS="efeature" HREF="../../../web/reference/cgi_in_out/cgi_environment.html#f_set_environment_variable">set_environment_variable</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">variable</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">val</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

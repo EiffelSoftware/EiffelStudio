@@ -1,0 +1,131 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>FUNCTION_ROOT_FINDER Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/roots/function_root_finder_chart.html">FUNCTION_ROOT_FINDER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../math/reference/roots/index.html">math.roots</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Zero of a continuous function on an interval using NAG c05adc."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/roots/external_root_finder_chart.html">EXTERNAL_ROOT_FINDER</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/eifmath/nag_exceptions_chart.html">NAG_EXCEPTIONS</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`a' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_a">a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`absolute_tolerance' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_absolute_tolerance">absolute_tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`b' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_b">b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`function_table' was declared in FUNCTION_TABLE"><A CLASS="efeature" HREF="../../../math/reference/eifmath/function_table.html#f_function_table">Function_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`last_root' was declared in ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/root_finder.html#f_last_root">last_root</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`method_ready' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_method_ready">method_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_error_history' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_error_history">Nag_error_history</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/nag_error_history_chart.html">NAG_ERROR_HISTORY</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_failed' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_failed">nag_failed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_ignoring_errors' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_ignoring_errors">nag_ignoring_errors</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_last_error_aux' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_last_error_aux">nag_last_error_aux</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_last_error_code' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_last_error_code">nag_last_error_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_last_error_message' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_last_error_message">nag_last_error_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_printing' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_printing">nag_printing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_recovery' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_recovery">nag_recovery</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ready' was declared in ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/root_finder.html#f_ready">ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`target' was declared in EXTERNAL_ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/external_root_finder.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_nag' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_to_nag">to_nag</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`value_tolerance' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_value_tolerance">value_tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`force_function' was declared in FEATURE_TABLE as `force_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_force_feature">force_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_make">make</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_target' was declared in EXTERNAL_ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/external_root_finder.html#f_make_target">make_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_target_by_key' was declared in EXTERNAL_ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/external_root_finder.html#f_make_target_by_key">make_target_by_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_target_by_name' was declared in EXTERNAL_ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/external_root_finder.html#f_make_target_by_name">make_target_by_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_check' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_check">nag_check</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_disable_error_printing' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_disable_error_printing">nag_disable_error_printing</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_disable_error_recovery' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_disable_error_recovery">nag_disable_error_recovery</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_do_not_ignore_errors' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_do_not_ignore_errors">nag_do_not_ignore_errors</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_enable_error_printing' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_enable_error_printing">nag_enable_error_printing</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_enable_error_recovery' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_enable_error_recovery">nag_enable_error_recovery</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_ignore_errors' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_ignore_errors">nag_ignore_errors</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_function' was declared in FEATURE_TABLE as `put_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_put_feature">put_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`register_function' was declared in FEATURE_TABLE as `register_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_register_feature">register_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_function' was declared in FEATURE_TABLE as `remove_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_remove_feature">remove_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace_function' was declared in FEATURE_TABLE as `replace_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_replace_feature">replace_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_absolute_tolerance' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_set_absolute_tolerance">set_absolute_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_defaults' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_set_defaults">set_defaults</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_function_target' was declared in EXTERNAL_ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/external_root_finder.html#f_set_function_target">set_function_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_interval' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_set_interval">set_interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_target' was declared in ROOT_FINDER"><A CLASS="efeature" HREF="../../../math/reference/roots/root_finder.html#f_set_target">set_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../math/reference/roots/root_finder.html#f_target">target</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_value_tolerance' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_set_value_tolerance">set_value_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`solve' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/roots/function_root_finder.html#f_solve">solve</A></SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

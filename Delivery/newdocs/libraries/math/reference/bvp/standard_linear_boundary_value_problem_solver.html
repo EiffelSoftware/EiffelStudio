@@ -1,0 +1,611 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>STANDARD_LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Standard solver of the boundary value problem for a system with linear coefficients and boundary value equation."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html">STANDARD_LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">x2</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">neq</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize solver for solving boundary</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value problems of neq equations on x1 to x2.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">x2_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x2</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">x1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">neq_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">neq</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">2</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">a_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">x1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">b_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">x2</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">tolerance_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_tolerance">default_tolerance</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">at_least_two_equations</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">2</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">maximum_mesh_size_default</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_maximum_mesh_size">default_maximum_mesh_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">default_mesh</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">default_mesh_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_initial_mesh_size">default_initial_mesh_size</A><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_a"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The lower end of the interval</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_b"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The upper end of the interval</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_number_of_equations"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The number of equations</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_target"><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem.html">LINEAR_BOUNDARY_VALUE_PROBLEM</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Contains the </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_f">f</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_g">g</A><SPAN CLASS="ecomment"> defining the problem.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_boundary_condition_value"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_boundary_condition_value">boundary_condition_value</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value of the boundary value equation</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Cy(a) + Dy(b) - gamma</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">problem_solved</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_default_initial_mesh_size"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_initial_mesh_size">Default_initial_mesh_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">32</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initial mesh size.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_default_maximum_mesh_size"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_maximum_mesh_size">Default_maximum_mesh_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">128</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum mesh size for answer.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_default_tolerance"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_default_tolerance">Default_tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1.0e-4</SPAN></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default value of </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_method_ready"><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_method_ready">method_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the method ready?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">basic_method_ready</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_method_ready">basic_method_ready</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_target">target</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_method_ready"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_method_ready">basic_method_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is the method ready?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_x"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The mesh on which the final solution y is</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> defined.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_y"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The solution, an neq by np matrix where</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> y (i, j) = solution(j) at x(i).</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_target"><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_set_target">set_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_target">target</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_target">target</A><SPAN CLASS="ecomment"> to 't'.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">t</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">size_correct</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">t</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem.html#f_number_of_equations">number_of_equations</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">target_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_target">target</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">t</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">size_correct</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_target">target</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem.html#f_number_of_equations">number_of_equations</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_f"><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_f">f</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The F defining the system y' = F(x)y + g(x)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_g"><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_g">g</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The g defining the system y' = F(x)y + g(x)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_rhs"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_rhs">rhs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> dy/dx = f (xx) * yy + g(xx)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Not used by the solver, just available as a</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> diagnostic. f and g define the system.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void_yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">real_yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_solve"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_solve">solve</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Solve the problem; answer is in </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="ecomment"> and </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">method_ready</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_method_ready">method_ready</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">y_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">x_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">y_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">x_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">mesh_size_match</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">equation_size_match</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_y">y</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">mesh_size_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">mesh_size_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">4</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">mesh_first_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">mesh_last_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_x">x</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_f_driver"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_f_driver">f_driver</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">zz</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Eiffel call-back from C, calls </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_f">f</A><SPAN CLASS="ecomment"> to do work.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copies function value back to C array </SPAN><SPAN CLASS="equoted">zz</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_g_driver"><SPAN CLASS="ekeyword">frozen</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_g_driver">g_driver</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">xx</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">zz</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Eiffel call-back from C, calls </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_f">f</A><SPAN CLASS="ecomment"> to do work.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copies function value back to C array </SPAN><SPAN CLASS="equoted">zz</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Parameters</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_acceptable_tolerance"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_acceptable_tolerance">acceptable_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">t</SPAN><SPAN CLASS="ecomment"> a legal tolerance for this method?</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_implies">implies</A> <SPAN CLASS="elocal">t</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0.0</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_c"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> C in Cy(a) + Dy(b) = gamma boundary condition</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_d"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> D in Cy(a) + Dy(b) = gamma boundary condition</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_gamma"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> gamma in Cy(a) + Dy(b) = gamma boundary condition</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_initial_mesh"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Optional initial mesh.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_maximum_mesh_size"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum size of the mesh on which the solution</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is to be defined.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_c"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_set_c">set_c</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">yy</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yy_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_d"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_set_d">set_d</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">yy</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yy_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">d_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">d_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_d">d</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">c_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_c">c</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_gamma"><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_set_gamma">set_gamma</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">yy</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_size</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">yy_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html">LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">gamma_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">gamma_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">yy</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correct_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_number_of_equations">number_of_equations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">gamma_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/linear_boundary_value_problem_solver.html#f_gamma">gamma</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_initial_mesh"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_set_initial_mesh">set_initial_mesh</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">g</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/standard_linear_boundary_value_problem_solver.html#f_g">g</A><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">g</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">g_long_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">g</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">4</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">g_short_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">g</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">g_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">g</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">first_point_a</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">g</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">last_point_b</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">g</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">g</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">initial_mesh_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">g</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_maximum_mesh_size"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_set_maximum_mesh_size">set_maximum_mesh_size</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">size</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">size</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">size_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">size</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">32</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">maximum_mesh_size_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">size</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_set_tolerance"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_set_tolerance">set_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A><SPAN CLASS="ecomment"> to 'v'.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">acceptable_tolerance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_acceptable_tolerance">acceptable_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">same_tolerance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN><BR>
+
+</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_tolerance"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Tolerance to be used in controlling integration error.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_uniform_initial_mesh"><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_uniform_initial_mesh">uniform_initial_mesh</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Specify an equispaced mesh of n points.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><SPAN CLASS="ecomment">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">n_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">4</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">n_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">initial_mesh_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">initial_mesh_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">right_size_mesh</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">n</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">first_point_a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">last_point_b</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real_item">real_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html">NAG_BOUNDARY_VALUE_PROBLEM_SOLVER</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">b_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_b">b</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_gt">&gt;</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_a">a</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">acceptable_tolerance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_acceptable_tolerance">acceptable_tolerance</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_tolerance">tolerance</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">maximum_mesh_size_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">32</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">initial_mesh_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">4</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">initial_mesh_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_initial_mesh">initial_mesh</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../../math/reference/bvp/nag_boundary_value_problem_solver.html#f_maximum_mesh_size">maximum_mesh_size</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>STANDARD_LINEAR_BOUNDARY_VALUE_PROBLEM_SOLVER<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

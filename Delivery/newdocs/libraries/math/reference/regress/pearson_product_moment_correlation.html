@@ -1,0 +1,211 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>PEARSON_PRODUCT_MOMENT_CORRELATION Flat contracts</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">indexing</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Pearson product-moment correlation"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html">PEARSON_PRODUCT_MOMENT_CORRELATION</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">create</SPAN> <BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/selectable_data.html">SELECTABLE_DATA</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create Pearson product moment correlations for set </SPAN><SPAN CLASS="equoted">x</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">x_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">enough_observations</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_observations">number_of_selected_observations</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">enough_variables</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_variables">number_of_selected_variables</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">observation_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_observations">number_of_selected_observations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">weight_check</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_weighted">weighted</A> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_observations">number_of_selected_observations</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">variable_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_variables">number_of_selected_variables</A><BR>
+
+</A><BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_make"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/selectable_data.html">SELECTABLE_DATA</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create Pearson product moment correlations for set </SPAN><SPAN CLASS="equoted">x</SPAN><SPAN CLASS="ecomment">.</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">x_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">enough_observations</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_observations">number_of_selected_observations</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">enough_variables</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_variables">number_of_selected_variables</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">observation_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_observations">number_of_selected_observations</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">weight_check</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_weighted">weighted</A> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_observations">number_of_selected_observations</A><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">variable_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">x</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_number_of_selected_variables">number_of_selected_variables</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_correlation_coefficients"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_correlation_coefficients">correlation_coefficients</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Matrix containing set of correlation coefficients.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_covariance"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_covariance">covariance</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_matrix.html">BASIC_MATRIX</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The variance-covariance matrix</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_means"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_means">means</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The means of the observations for each variable.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_selected_data"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_selected_data">selected_data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/selectable_data.html">SELECTABLE_DATA</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The data actually used in the correlation_coefficients</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_standard_deviations"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_standard_deviations">standard_deviations</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The standard deviations of the observations for each variable.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_sum_of_weights"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_sum_of_weights">sum_of_weights</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double.html">DOUBLE</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The sum of weights of the observations.</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_weights"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_weights">weights</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/basic_vector.html">BASIC_VECTOR</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The weights of each observation</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">result_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A><BR>
+
+</A> &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_number_of_observations"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of observations used in the correlation_coefficients</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<A NAME="f_number_of_variables"><A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A></A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of variables used in the correlation_coefficients</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<BR>
+
+<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+
+<BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">enough_variables</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">enough_observations</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A> <A CLASS="esymbol" HREF="../../../base/reference/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">selected_data_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_selected_data">selected_data</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_selected_data">selected_data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_data">data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_selected_data">selected_data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_data">data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">data_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_selected_data">selected_data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/selectable_data.html#f_data">data</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_observations">number_of_observations</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correlation_coefficients_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_correlation_coefficients">correlation_coefficients</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">covariance_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_covariance">covariance</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correlation_coefficients_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_correlation_coefficients">correlation_coefficients</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">covariance_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_covariance">covariance</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correlation_coefficients_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_correlation_coefficients">correlation_coefficients</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">correlation_coefficients_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_correlation_coefficients">correlation_coefficients</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">covariance_width</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_covariance">covariance</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">covariance_height</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_covariance">covariance</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_height">height</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">means_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_means">means</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">means_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_means">means</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">means_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_means">means</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">standard_deviations_exist</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_standard_deviations">standard_deviations</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">standard_deviations_real</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_standard_deviations">standard_deviations</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_real">real</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">standard_deviations_count</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_standard_deviations">standard_deviations</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../math/reference/eifmath/basic_matrix.html#f_count">count</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../math/reference/regress/pearson_product_moment_correlation.html#f_number_of_variables">number_of_variables</A><BR>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>PEARSON_PRODUCT_MOMENT_CORRELATION<BR>
+
+</BODY>
+
+</HTML>
+<BR>
+

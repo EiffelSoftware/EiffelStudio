@@ -1,0 +1,177 @@
+<HTML>
+	<HEAD>
+		
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+		
+<TITLE>RATIONAL_SEMI_INFINITE_FIXED_INTEGRATOR Chart</TITLE>
+		
+<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+
+	</HEAD>
+
+	<BODY>
+<SPAN CLASS="ekeyword">class</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator_chart.html">RATIONAL_SEMI_INFINITE_FIXED_INTEGRATOR</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">General</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../math/reference/integrat/index.html">math.integrat</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Gaussian quadrature on a semi-infinite interval, rational model."</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../math/reference/integrat/nag_fixed_integrator.html#f_make">make</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/eifmath/mathematician_chart.html">MATHEMATICIAN</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/integrat/nag_fixed_integrator_chart.html">NAG_FIXED_INTEGRATOR</A><BR>
+
+ &nbsp; &nbsp; &nbsp;<A CLASS="eclass" HREF="../../../math/reference/integrat/semi_infinite_integrator_chart.html">SEMI_INFINITE_INTEGRATOR</A><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Queries</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`abscissae_count' was declared in FIXED_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/fixed_integrator.html#f_abscissae_count">abscissae_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`arc_cosine' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_arc_cosine">arc_cosine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`arc_sine' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_arc_sine">arc_sine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`arc_tangent' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_arc_tangent">arc_tangent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`ceiling' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_ceiling">ceiling</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`cosine' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_cosine">cosine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`dabs' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_dabs">dabs</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`decay_rate' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator.html#f_decay_rate">decay_rate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`default_abscissae_count' was declared in FIXED_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/fixed_integrator.html#f_default_abscissae_count">Default_abscissae_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`exp' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_exp">exp</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">x</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`floor' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_floor">floor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`function_table' was declared in FUNCTION_TABLE"><A CLASS="efeature" HREF="../../../math/reference/eifmath/function_table.html#f_function_table">Function_table</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/table/hash_table_chart.html">HASH_TABLE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">]</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`infinity' was declared in MATHEMATICIAN"><A CLASS="efeature" HREF="../../../math/reference/eifmath/mathematician.html#f_infinity">Infinity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integral' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integral">integral</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integrand' was declared in EXTERNAL_FIXED_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_fixed_integrator.html#f_integrand">integrand</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integrand_ready' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integrand_ready">integrand_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integration_limit' was declared in SEMI_INFINITE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/semi_infinite_integrator.html#f_integration_limit">integration_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`log' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_log">log</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`log10' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_log10">log10</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`log_2' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_log_2">log_2</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`lower_limit' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator.html#f_lower_limit">lower_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`machine_precision' was declared in MATHEMATICIAN"><A CLASS="efeature" HREF="../../../math/reference/eifmath/mathematician.html#f_machine_precision">Machine_precision</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`method_ready' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator.html#f_method_ready">method_ready</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_error_history' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_error_history">Nag_error_history</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/nag_error_history_chart.html">NAG_ERROR_HISTORY</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_failed' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_failed">nag_failed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_ignoring_errors' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_ignoring_errors">nag_ignoring_errors</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_last_error_aux' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_last_error_aux">nag_last_error_aux</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_last_error_code' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_last_error_code">nag_last_error_code</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_last_error_message' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_last_error_message">nag_last_error_message</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_printing' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_printing">nag_printing</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_recovery' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_recovery">nag_recovery</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sine' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_sine">sine</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`smallest_number' was declared in MATHEMATICIAN"><A CLASS="efeature" HREF="../../../math/reference/eifmath/mathematician.html#f_smallest_number">Smallest_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sqrt' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_sqrt">sqrt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`sqrt_smallest_number' was declared in MATHEMATICIAN"><A CLASS="efeature" HREF="../../../math/reference/eifmath/mathematician.html#f_sqrt_smallest_number">Sqrt_smallest_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`tangent' was declared in DOUBLE_MATH"><A CLASS="efeature" HREF="../../../base/reference/support/double_math.html#f_tangent">tangent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`to_nag' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_to_nag">to_nag</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`upper_limit' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator.html#f_upper_limit">upper_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Commands</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`force_function' was declared in FEATURE_TABLE as `force_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_force_feature">force_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`integrate' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator.html#f_integrate">integrate</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_integrand' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_make_integrand">make_integrand</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_integrand_by_key' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_make_integrand_by_key">make_integrand_by_key</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`make_integrand_by_name' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_make_integrand_by_name">make_integrand_by_name</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c_name</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">f_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_check' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_check">nag_check</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_disable_error_printing' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_disable_error_printing">nag_disable_error_printing</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_disable_error_recovery' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_disable_error_recovery">nag_disable_error_recovery</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_do_not_ignore_errors' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_do_not_ignore_errors">nag_do_not_ignore_errors</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_enable_error_printing' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_enable_error_printing">nag_enable_error_printing</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_enable_error_recovery' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_enable_error_recovery">nag_enable_error_recovery</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`nag_ignore_errors' was declared in NAG_EXCEPTIONS"><A CLASS="efeature" HREF="../../../math/reference/eifmath/nag_exceptions.html#f_nag_ignore_errors">nag_ignore_errors</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`put_function' was declared in FEATURE_TABLE as `put_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_put_feature">put_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`register_function' was declared in FEATURE_TABLE as `register_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_register_feature">register_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`remove_function' was declared in FEATURE_TABLE as `remove_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_remove_feature">remove_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`replace_function' was declared in FEATURE_TABLE as `replace_feature'"><A CLASS="efeature" HREF="../../../math/reference/eifmath/feature_table.html#f_replace_feature">replace_function</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">key</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_abscissae_count' was declared in NAG_FIXED_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/nag_fixed_integrator.html#f_set_abscissae_count">set_abscissae_count</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_decay_rate' is declared in `Current'"><A CLASS="efeature" HREF="../../../math/reference/integrat/rational_semi_infinite_fixed_integrator.html#f_set_decay_rate">set_decay_rate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_defaults' was declared in FIXED_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/fixed_integrator.html#f_set_defaults">set_defaults</A></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_integrand' was declared in INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_set_integrand">set_integrand</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ff</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../math/reference/integrat/integrator.html#f_integrand">integrand</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../math/reference/eifmath/eiffel_function_chart.html">EIFFEL_FUNCTION</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_integration_limit' was declared in SEMI_INFINITE_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/semi_infinite_integrator.html#f_set_integration_limit">set_integration_limit</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/double_chart.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN TITLE="`set_target' was declared in EXTERNAL_INTEGRATOR"><A CLASS="efeature" HREF="../../../math/reference/integrat/external_integrator.html#f_set_target">set_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN><BR>
+
+<BR>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN><BR>
+
+ &nbsp; &nbsp; &nbsp;<SPAN CLASS="etag">rule</SPAN><BR>
+
+<BR>
+
+<BR>
+
+</BODY>
+
+</HTML>

@@ -12,8 +12,7 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
 			size, pre_inlined_code, inlined_byte_code,
-			has_separate_call, reset_added_gc_hooks,
-			make_end_byte_code, make_end_precomp_byte_code
+			has_separate_call, reset_added_gc_hooks
 		end;
 	SHARED_TABLE;
 	SHARED_SERVER
@@ -117,62 +116,26 @@ feature -- Byte code generation
 
 	code_first: CHARACTER is
 			-- Code when Eiffel call is first (no invariant)
-		local
-			class_type: CL_TYPE_I;
-		do
-			class_type ?= context_type;
-			if class_type /= Void and then class_type.is_separate then
-					-- It's only possible for creation feature call.  delete it later.
-				Result := Bc_sep_feature 
-			else
-				Result := Bc_feature
-			end
+		once
+			Result := Bc_feature
 		end;
 
 	code_next: CHARACTER is
 			-- Code when Eiffel call is nested (invariant)
-			-- Separate feature call can't be nested, so we don't consider
-			-- separate feature call here. The rule should be forced by
-			-- the type checking part.
-		local
-			class_type: CL_TYPE_I;
-		do
-			class_type ?= context_type;
-			if class_type /= Void and then class_type.is_separate then
-				Result := Bc_sep_feature_inv;
-			else
-				Result := Bc_feature_inv;
-			end;
+		once
+			Result := Bc_feature_inv;
 		end;
 
 	precomp_code_first: CHARACTER is
 			-- Code when Eiffel precompiled call is first (no invariant)
-		local
-			class_type: CL_TYPE_I;
-		do
-			class_type ?= context_type;
-			if class_type /= Void and then class_type.is_separate then
-					-- It's only possible for creation feature call. delete it later.
-				Result := Bc_sep_pfeature; 
-			else
-				Result := Bc_pfeature;
-			end
+		once
+			Result := Bc_pfeature;
 		end;
 
 	precomp_code_next: CHARACTER is
 			-- Code when Eiffel precompiled call is nested (invariant)
-			-- Separate feature call can't be nested, so we don't consider
-			-- separate feature call here. The rule should be forced by
-			-- the type checking part.
-		local
-			class_type: CL_TYPE_I;
-		do
-			class_type ?= context_type;
-			if class_type /= Void and then class_type.is_separate then
-				Result := Bc_sep_pfeature_inv;
-			else
-				Result := Bc_pfeature_inv;
-			end;
+		once
+			Result := Bc_pfeature_inv;
 		end;
 
 feature -- Array optimization
@@ -463,94 +426,5 @@ feature -- Concurrent Eiffel
 				end;
 			end
 		end
-
-		make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
-					real_feat_id: INTEGER; static_type: INTEGER) is
-			-- Make final portion of the standard byte code.
-		local
-			my_code: CHARACTER;
-			class_type: CL_TYPE_I;
-		do
-			if  is_first or flag then
-				my_code := code_first;
-			else
-				my_code := code_next;
-			end;
-			ba.append (my_code);
-			if my_code = Bc_sep_feature or my_code = Bc_sep_feature_inv then
-			-- "Bc_sep_feature" is only possible for creation feature call, delete it later.
-					-- keep parameter number
-				if parameters /= Void then
-					ba.append_short_integer (parameters.count);
-				else
-					ba.append_short_integer (0);
-				end;
-					-- keep the class name of the target of the feature call
-				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.name_in_upper);
-					-- keep the feature name of the feature call
-				ba.append_raw_string (feature_name);
-					-- keep the return value's type;
-				ba.append_uint32_integer (Context.real_type (type).sk_value)
-
-					-- keep if the acknowledgement for the proc. is necessary
-				if attach_loc_to_sep then
-					ba.append ('%/001/');
-				else
-					ba.append ('%/000/');
-				end;
-			end
-			if  my_code = Bc_feature_inv then
-					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name);
-			end;
-				-- Generate feature id
-			ba.append_integer (real_feat_id);
-			ba.append_short_integer (static_type);
-		end;
-
-	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
-					origin: INTEGER; offset: INTEGER) is
-			-- Make final portion of the standard byte code
-			-- for a precompiled call.
-		local
-			my_code: CHARACTER;
-			class_type: CL_TYPE_I;
-		do
-			if  is_first or flag then
-				my_code := precomp_code_first;
-			else
-				my_code := precomp_code_next;
-			end;
-			ba.append (my_code);
-			if my_code = Bc_sep_pfeature or my_code = Bc_sep_pfeature_inv then
-			-- "Bc_sep_pfeature" is only possible for creation feature call, delete it later.
-					-- keep parameter number
-				if parameters /= Void then
-					ba.append_short_integer (parameters.count);
-				else
-					ba.append_short_integer (0);
-				end;
-					-- keep the class name of the target of the feature call
-				class_type ?= context_type; -- Can't fail
-				ba.append_raw_string (class_type.base_class.name_in_upper);
-					-- keep the feature name of the feature call
-				ba.append_raw_string (feature_name);
-					-- keep the return value's type;
-				ba.append_uint32_integer (Context.real_type (type).sk_value);
-					-- keep if the acknowledgement for the proc. is necessary
-				if attach_loc_to_sep then
-					ba.append ('%/001/');
-				else
-					ba.append ('%/000/');
-				end;
-			end
-			if  my_code = Bc_pfeature_inv  then
-					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name);
-			end;
-			ba.append_integer (origin);
-			ba.append_integer (offset);
-		end;
 
 end

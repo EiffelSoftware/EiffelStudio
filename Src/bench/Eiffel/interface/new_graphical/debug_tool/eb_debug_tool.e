@@ -313,6 +313,14 @@ feature -- Information
 			end
 		end
 
+	display_string (s: STRING) is
+		do
+			text_window.clear_window
+			text_window.put_string (s)
+--			text_window.set_top_character_position (0)
+			text_window.show
+		end
+
 	display_welcome_info is
 		do
 			text_window.clear_window

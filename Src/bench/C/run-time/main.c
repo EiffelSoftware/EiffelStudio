@@ -31,10 +31,6 @@
 #endif /* EIF_WIN_31 */
 #endif /* WORKBENCH */
 
-#ifdef EIF_WINDOWS
-#include "econsole.h"					/* show_trace(), extra/win32/console */
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "err_msg.h"
@@ -257,10 +253,6 @@ rt_public void failure(void)
 	trapsig(emergency);					/* Weird signals are trapped */
 	esfail(MTC_NOARG);							/* Dump the execution stack trace */
 
-#ifdef EIF_WINDOWS
-	show_trace();
-#endif
-
 	reclaim();							/* Reclaim all the objects */
 	exit(1);							/* Abnormal termination */
 
@@ -276,10 +268,6 @@ rt_private Signal_t emergency(int sig)
 	
 	print_err_msg(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
 		ename, sig, signame(sig));
-
-#ifdef EIF_WINDOWS
-	show_trace();
-#endif
 
 	exit(2);							/* Really abnormal termination */
 

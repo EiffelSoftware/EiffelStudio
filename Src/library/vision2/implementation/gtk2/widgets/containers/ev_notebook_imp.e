@@ -293,7 +293,7 @@ feature -- Element change
 			-- Assign `a_pixmap' to the tab for `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_event_box, a_hbox, a_list, a_pix: POINTER
+			a_event_box, a_hbox, a_list, a_pix, a_pixbuf: POINTER
 			a_pix_imp: EV_PIXMAP_IMP
 		do
 			item_imp ?= an_item.implementation
@@ -305,7 +305,9 @@ feature -- Element change
 				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
 			end
 			a_pix_imp ?= a_pixmap.implementation
-			a_pix := feature {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height))
+			a_pixbuf := a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
+			a_pix := feature {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pixbuf)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
@@ -313,16 +315,13 @@ feature -- Element change
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	page_switch (a_page: TUPLE [INTEGER]) is
+	page_switch (a_page: INTEGER) is
 			-- Called when the page is switched.
-		local
-			temp_int_ref: INTEGER_REF
 		do
 			if not is_destroyed then
-				temp_int_ref ?= a_page.item (1)
-				selected_item_index_internal := temp_int_ref.item + 1
+				selected_item_index_internal := a_page + 1
 				if selection_actions_internal /= Void and count > 0 then
-					selection_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					selection_actions_internal.call (Void)
 				end
 			end
 		end

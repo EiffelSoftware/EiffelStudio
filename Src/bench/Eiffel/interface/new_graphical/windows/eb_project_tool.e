@@ -406,18 +406,12 @@ feature -- Progress Dialog
 			-- Set `progress_dialog' to `new_progress_dialog'.
 			-- Set also `Eiffel_project' progress_dialog which needs to know
 			-- that we changed the kind of `progress_dialog'.
-		local
---			graphical_version: GRAPHICAL_DEGREE_OUTPUT
 		do
 			progress_dialog := new_progress_dialog
 			Eiffel_project.set_degree_output (progress_dialog)
 
 				-- If `process_dialog' is a graphical dialog then
-				-- We need to give him its parent.
---			graphical_version ?= progress_dialog
---			if graphical_version /= Void then
---				graphical_version.set_parent (tool.parent_window)
---			end
+				-- Its parent has been specified.
 		end
 
 feature -- Execution Implementation

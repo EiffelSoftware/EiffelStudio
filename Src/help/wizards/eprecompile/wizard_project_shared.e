@@ -11,7 +11,7 @@ feature {NONE} -- Constants
 
 	Default_precompiled_location: DIRECTORY_NAME is
 			-- Default location for the precompiled base
-			-- $EIFFEL5/precomp/spec/$PLATFORM
+			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform>>)
@@ -31,7 +31,7 @@ feature {NONE} -- Constants
 		end
 
 	Eiffel_installation_dir_name: STRING is
-			-- EIFFEL5 name.
+			-- ISE_EIFFEL name.
 		once
 			Result := execution_environment.get ("ISE_EIFFEL")
 		end

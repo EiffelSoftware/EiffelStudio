@@ -18,6 +18,28 @@ inherit
 			interface
 		end
 
+feature -- Drawing operations
+
+	redraw is
+			-- Redraw the window without clearing it.
+		deferred
+		end
+
+	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+		deferred
+		end
+
+	clear_and_redraw is
+			-- Redraw the window after clearing it.
+		deferred
+		end
+
+	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Clear and Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	interface: EV_DRAWING_AREA
@@ -47,8 +69,8 @@ end -- class EV_DRAWING_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.12  2000/02/14 11:40:38  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.13  2000/02/16 18:08:52  pichery
+--| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
 --|
 --| Revision 1.11.6.10  2000/02/04 04:10:28  oconnor
 --| released

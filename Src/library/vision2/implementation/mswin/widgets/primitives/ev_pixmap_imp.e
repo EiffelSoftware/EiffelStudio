@@ -22,7 +22,7 @@ inherit
 			destroy
 		redefine
 			clear,
-			clear_rect,
+			clear_rectangle,
 			draw_point,
 			draw_text,
 			draw_segment,
@@ -188,7 +188,7 @@ feature -- Drawing primitives
 			apply_bitmap
 		end
 
-	clear_rect (x1, y1, x2, y2: INTEGER) is
+	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Call precursor and apply bitmap.
 		do
 			Precursor (x1, y1, x2, y2)
@@ -336,7 +336,7 @@ feature -- Obsolete
 			Result := bitmap_dc.di_bits (bmp, 0, height, info, Dib_rgb_colors)
 		end
 
-	redraw (left, top, right, bottom: INTEGER) is
+	redraw_pixmap (left, top, right, bottom: INTEGER) is
 			-- Redraw the area if necessary.
 		local
 			rect: WEL_RECT
@@ -389,8 +389,8 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.13  2000/02/14 11:40:45  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.14  2000/02/16 18:08:52  pichery
+--| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
 --|
 --| Revision 1.12.6.10  2000/01/29 01:05:04  brendel
 --| Tweaked inheritance clause.

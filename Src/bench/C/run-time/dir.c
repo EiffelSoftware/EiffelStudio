@@ -84,7 +84,6 @@ extern void		vmsreaddirversions();
 	Sorry! You have to find a PD implementation of readdir()...
 #endif
 
-extern int errno;				/* Kernel error report */
 extern int esys();				/* Raise 'Operating system error' exception */
 extern int eio();				/* Raise 'I/O error' exception */
 

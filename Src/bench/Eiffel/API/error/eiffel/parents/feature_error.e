@@ -61,9 +61,10 @@ feature {COMPILER_EXPORTER}
 	set_feature (f: FEATURE_I) is
 			-- Assign `f' to `feature'.
 		require
-			valid_f: f /= Void
+			valid_f: f /= Void;
+			non_void_e_class: e_class /= Void
 		do
-			e_feature := f.api_feature
+			e_feature := f.api_feature (e_class.id)
 		end;
 
 end -- class FEATURE_ERROR

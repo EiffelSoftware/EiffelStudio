@@ -63,7 +63,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			a_feature := f.api_feature;
+			a_feature := f.api_feature (f.written_in);
 		end;
 
 	set_other_feature (f: FEATURE_I) is
@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			other_feature := f.api_feature;
+			other_feature := f.api_feature (other_feature.written_in);
 		end;
 
 end -- class VMFN

@@ -66,7 +66,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_f: f /= Void
 		do
-			a_feature := f.api_feature;
+			a_feature := f.api_feature (f.written_in);
 		end;
 
 	set_postcondition is

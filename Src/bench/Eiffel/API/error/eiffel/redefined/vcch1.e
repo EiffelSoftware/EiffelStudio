@@ -58,7 +58,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		require
 			valid_f: f /= Void
 		do
-			deferred_feature := f.api_feature;
+			deferred_feature := f.api_feature (f.written_in);
 		end;
 
 end -- class VCCH1

@@ -505,7 +505,7 @@ feature {NONE} -- Graphical initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
 
-			create working_directory.make_with_text_and_parent ("Working direcgory: ", system_window.window)
+			create working_directory.make_with_text_and_parent ("Working directory: ", system_window.window)
 			vbox.extend (working_directory)
 
 			create label.make_with_text ("Program arguments: ")

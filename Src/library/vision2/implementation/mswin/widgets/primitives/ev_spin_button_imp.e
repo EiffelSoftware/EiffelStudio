@@ -102,13 +102,13 @@ inherit
 			set_height,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message
+			default_process_message,
+			text_length
 		redefine
 			on_char,
 			on_wm_vscroll,
 			class_name,
 			on_erase_background,
-			text_length,
 			set_focus,
 			default_style,
 			on_notify
@@ -194,12 +194,6 @@ feature {EV_ANY_I} -- Access
 
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
-
-	text_length: INTEGER is
-			-- Number of characters contained in `text'.
-		do
-			Result := internal_text_field.text_length
-		end
 
 	text: STRING is
 			-- Text of `Current'.

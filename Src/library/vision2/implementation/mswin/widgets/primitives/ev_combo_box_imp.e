@@ -113,7 +113,8 @@ inherit
 			y_position,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message
+			default_process_message,
+			text_length
 		redefine
 			on_cben_endedit_item,
 			on_cbn_editchange,

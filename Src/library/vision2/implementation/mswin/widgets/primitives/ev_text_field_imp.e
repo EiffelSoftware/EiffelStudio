@@ -78,7 +78,8 @@ inherit
 			select_all,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message
+			default_process_message,
+			text_length
 		redefine
 			on_key_down,
 			on_en_change,

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision text area. %
@@ -382,6 +381,9 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/04/13 23:07:05  brendel
+--| Unreleased.
+--|
 --| Revision 1.33  2000/04/04 17:50:37  rogers
 --| renamed
 --| 	x -> x_position,

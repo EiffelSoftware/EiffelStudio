@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
@@ -162,6 +161,9 @@ end -- class EV_TEXT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/13 23:07:05  brendel
+--| Unreleased.
+--|
 --| Revision 1.14  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

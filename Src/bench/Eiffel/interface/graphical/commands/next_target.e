@@ -47,13 +47,13 @@ feature -- Callbacks
 feature -- Properties
 
 	symbol: PIXMAP is
-			-- Symbol for the button.
+			-- Symbol for the button
 		once
 			Result := bm_Next_target
 		end;
 
 	name: STRING is
-			-- Name of the command.
+			-- Name of the command
 		do
 			Result := l_Next_target
 		end;

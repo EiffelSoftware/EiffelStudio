@@ -22,6 +22,7 @@ feature -- Access
 			en, dn: STRING
 			params: NATIVE_ARRAY [PARAMETER_INFO]
 			p: PARAMETER_INFO
+			t: TYPE
 		do
 			create Result.make (1, info.get_parameters.get_length)
 			params := info.get_parameters
@@ -34,7 +35,10 @@ feature -- Access
 				p := params.item (i)
 				create dn.make_from_cil (p.get_name)
 				en := formatted_variable_name (dn)				
-				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en, referenced_type_from_type (p.get_parameter_type), p.get_is_out), i + 1)
+				t := p.get_parameter_type
+				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
+					referenced_type_from_type (t),
+					p.get_is_out or t.get_is_by_ref), i + 1)
 				i := i + 1
 			end
 		ensure

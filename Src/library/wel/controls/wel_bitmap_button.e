@@ -9,6 +9,10 @@ class
 
 inherit
 	WEL_BUTTON
+		redefine
+			make, 
+			make_by_id
+		end
 
 	WEL_BM_CONSTANTS
 		export
@@ -25,16 +29,58 @@ inherit
 			{NONE} all
 		end
 
+	WEL_IMAGE_CONSTANTS
+
 creation
 	make,
 	make_by_id
 
+feature {NONE} -- Initialisation
+
+	make (a_parent: WEL_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			-- Make a button.
+		do
+			{WEL_BUTTON} Precursor (a_parent, a_name, a_x, a_y, a_width, a_height, an_id)
+			current_pixmap := -1
+		ensure then
+			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
+		end
+		
+	make_by_id (a_parent: WEL_DIALOG; an_id: INTEGER) is
+			-- Make a control identified by `an_id' with `a_parent'
+			-- as parent.
+		do
+			{WEL_BUTTON} Precursor (a_parent, an_id)
+			current_pixmap := -1
+		ensure then
+			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
+		end
+		
 feature -- Access
 
-	bitmap: WEL_BITMAP
+	bitmap: WEL_BITMAP is
 			-- Bitmap currently selected in the button.
 			-- A global variable is needed because windows
 			-- do not copy this object.
+		require
+			current_pixmap = Image_bitmap
+		do
+			Result := internal_bitmap
+		end
+
+	icon: WEL_ICON is
+			-- Icon currently selected in the button.
+			-- A global variable is needed because windows
+			-- do not copy this object.
+		require
+			current_pixmap = Image_icon
+		do
+			Result := internal_icon
+		end
+
+	current_pixmap: INTEGER
+			-- Value is Image_bitmap if a bitmap is set,
+			-- and Image_icon if an icon is set.
 
 feature -- Status setting
 
@@ -50,33 +96,50 @@ feature -- Status setting
 			-- Show the bitmap of the button and not the text.
 		require
 			exists: exists
-			valid_bitmap: bitmap /= Void
+			valid_bitmap : current_pixmap = Image_bitmap implies bitmap /= Void
+			valid_icon: current_pixmap = Image_icon implies icon /= Void
 		do
 			set_style (set_flag (style, Bs_bitmap))
 		end
 
 feature -- Element change
 
-	set_bitmap (bmp: WEL_BITMAP) is
+	set_bitmap (a_bitmap: WEL_BITMAP) is
 			-- Make `bmp' the new bitmap of the button.
 			-- Replace the old bitmap.
 		require
 			exists: exists
-			valid_bitmap: bmp /= Void
+			valid_bitmap: a_bitmap /= Void
 		do
-			bitmap := bmp
+			internal_bitmap := a_bitmap
 			show_bitmap
-			cwin_send_message (item, Bm_setimage, 0, bmp.to_integer)
+			cwin_send_message (item, Bm_setimage, Image_bitmap, a_bitmap.to_integer)
 		end
 
-	unset_bitmap is
-			-- Remove the bitmap from the button
+	set_icon (an_icon: WEL_ICON) is
+			-- Make `ico' the new icon of the button.
+			-- Replace the old icon.
+		require
+			exists: exists
+			valid_icon: an_icon /= Void
+		do
+			internal_icon := an_icon
+			show_bitmap
+			cwin_send_message (item, Bm_setimage, Image_icon, an_icon.to_integer)
+		end
+
+	unset_bitmap, unset_icon is
+			-- Remove the bitmap or the icon from the button
 		require
 			exists: exists
 			valid_bitmap: bitmap /= Void
 		do
 			show_text
-			bitmap := Void
+			internal_bitmap := Void
+			internal_icon := Void
+			current_pixmap := -1
+		ensure
+			pixmap_not_set: current_pixmap /= Image_icon and current_pixmap /= Image_bitmap
 		end
 
 feature {NONE} -- Implementation
@@ -88,11 +151,17 @@ feature {NONE} -- Implementation
 						+ Ws_tabstop
 		end
 
+	internal_bitmap: WEL_BITMAP
+			-- Bitmap currently selected in the button.
+	
+	internal_icon: WEL_ICON
+			-- Bitmap currently selected in the button.
+
 end -- class WEL_BITMAP_BUTTON
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

@@ -32,6 +32,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	CDATA_HANDLER
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -119,7 +124,7 @@ feature {GB_XML_STORE} -- Output
 				add_element_containing_integer (element, Maximum_height_string, first.maximum_height)
 			end
 			if window.title /= first.title and not objects.first.title.is_empty then
-				add_element_containing_string (element, Title_string, first.title)
+				add_element_containing_string (element, Title_string, enclose_in_cdata (first.title))
 			end
 		end
 		
@@ -128,6 +133,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			stripped_text: STRING
 		do
 			full_information := get_unique_full_info (element)
 			
@@ -152,7 +158,8 @@ feature {GB_XML_STORE} -- Output
 			
 			element_info := full_information @ (title_string)
 			if element_info /= Void and then element_info.data /= Void and then element_info.data.count /= 0 then
-				for_first_object (agent {EV_WINDOW}.set_title (element_info.data))
+				stripped_text := strip_cdata (element_info.data)
+				for_first_object (agent {EV_WINDOW}.set_title (stripped_text))
 			end
 		end
 		
@@ -188,7 +195,7 @@ feature {GB_XML_STORE} -- Output
 			
 			element_info := full_information @ (Title_string)
 			if element_info /= Void then
-				escaped_text := escape_special_characters (element_info.data)
+				escaped_text := escape_special_characters (strip_cdata (element_info.data))
 				Result := Result + indent + info.name + ".set_title (%"" + escaped_text + "%")"
 			end
 

@@ -38,6 +38,10 @@ feature -- Status report
 	is_selectable: BOOLEAN is
 			-- May `Current' be selected?
 		do
+				--| FIXME We check that `parent.is_sensitive' due to
+				--| implementation issues. If we find a way to
+				--| implement this correctly on both platforms then
+				--| this limitation can be removed.
 			Result := parent /= Void and then parent.is_sensitive
 		end
 

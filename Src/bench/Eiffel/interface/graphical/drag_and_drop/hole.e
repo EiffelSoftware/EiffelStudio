@@ -81,6 +81,12 @@ feature {TRANSPORTER} -- Implementation
 			end;
 		end;
 
+	set_button_data (b_data: like button_data) is
+			-- Set `button_data' to `b_data'.
+		do
+			button_data := b_data
+		end;
+
 feature -- Update
 
 	process_ace_syntax (syn: ACE_SYNTAX_STONE) is

@@ -87,6 +87,8 @@ feature -- Special simbols -- 1
 
 	Plus: STRING is "+"
 
+	Minus: STRING is "-"
+
 	Comma_space: STRING is ", "
 
 	Space_open_parenthesis: STRING is " ("
@@ -99,6 +101,8 @@ feature -- Special simbols -- 1
 	At_sign: STRING is "@"
 
 	C_or: STRING is "||"
+
+	C_and: STRING is "&&"
 
 	Registry_field_seperator: STRING is "\\"
 
@@ -788,6 +792,8 @@ feature -- Generator constants -- 8
 	Failed: STRING is "FAILED"
 
 	Hresult_code: STRING is "HRESULT_CODE"
+
+	Hresult_facility: STRING is "HRESULT_FACILITY"
 
 	Format_message: STRING is "c_format_message"
 

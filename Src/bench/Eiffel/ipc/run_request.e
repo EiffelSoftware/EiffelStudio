@@ -36,7 +36,8 @@ feature -- Update
 					!! status.do_nothing;
 					send_breakpoints;
 					debug_info.tenure;
-					send_rqst_1 (Rqst_resume, Resume_cont);
+					send_rqst_2 (Rqst_resume, Resume_cont, 
+						Application.interrupt_number);
 					status.set_is_stopped (False);
 					Application.set_status (status);
 				else

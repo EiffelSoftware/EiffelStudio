@@ -288,8 +288,7 @@ feature -- Access
 			useless_y: INTEGER 
 			success: BOOLEAN
 			gdk_window: POINTER
-		do
-				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_x wrong after resizing)			
+		do			
 			gdk_window := C.gtk_widget_struct_window (c_object)
 			if gdk_window /= NULL then
 				success := C.gdk_window_get_deskrelative_origin (
@@ -306,8 +305,7 @@ feature -- Access
 			useless_x: INTEGER
 			success: BOOLEAN
 			gdk_window: POINTER
-		do
-				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_y wrong after resizing)			
+		do			
 			gdk_window := C.gtk_widget_struct_window (c_object)
 			if gdk_window /= NULL then
 				success := C.gdk_window_get_deskrelative_origin (

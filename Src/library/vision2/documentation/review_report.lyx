@@ -1,4 +1,4 @@
-#This file was created by <oconnor> Wed Sep  8 09:15:02 1999
+#This file was created by <oconnor> Wed Sep  8 09:47:37 1999
 #LyX 1.0 (C) 1995-1999 Matthias Ettrich and the LyX Team
 \lyxformat 2.15
 \textclass article
@@ -97,6 +97,177 @@ The review only covered a handfull of classes but many important general
 \layout Section
 
 Report
+\layout Standard
+
+The report covers standards and actions decided on during the review as
+ well as the basic report of the classes reviwed.
+\layout Subsection
+
+Standards
+\layout Subsubsection
+
+Comments
+\layout Standard
+
+All comments must:
+\layout Enumerate
+
+start with a capital letter and end with a full stop,
+\layout Enumerate
+
+be worded as a question for boolean features (with a question mark),
+\layout Enumerate
+
+use 
+\begin_inset Quotes eld
+\end_inset 
+
+assign
+\begin_inset Quotes erd
+\end_inset 
+
+ instead of 
+\begin_inset Quotes eld
+\end_inset 
+
+set
+\begin_inset Quotes erd
+\end_inset 
+
+,
+\layout Enumerate
+
+not use `the' (Check this),
+\layout Enumerate
+
+quote Current as `Current',
+\layout Enumerate
+
+quote True and False as `True' and `False'.
+ (Check),
+\layout Enumerate
+
+read correctly from the `is'.
+ (Check the book for guidelines) and
+\layout Enumerate
+
+have a descriptions of the units that apply to its arguments,
+\layout Subsubsection
+
+Indentation
+\layout Enumerate
+
+Tab stops in editors must be set to eight spaces.
+\layout Enumerate
+
+Indentation must be done with tabs only, never spaces.
+\layout Subsubsection
+
+Indexing clauses
+\layout Standard
+
+\begin_float margin 
+\layout Standard
+
+needs more work when propper standard is defined
+\end_float 
+\layout Enumerate
+
+Always use the standard text provided for starting your class comments.
+\layout Enumerate
+
+No header should include author.
+\layout Enumerate
+
+A keywords field should be included even if empty.
+\layout Enumerate
+
+Use %N% to separate class description lines.
+ (See new style in compiler RSN)
+\layout Subsubsection
+
+Features which take a boolean
+\layout Enumerate
+
+No feature should take a single boolean, it must be split into two features.
+\layout Enumerate
+
+Such feature pairs must use the enable_x/disable_x naming pattern.
+\layout Subsubsection
+
+Boolean features
+\layout Enumerate
+
+Use 
+\family typewriter 
+is_
+\family default 
+ at the start where possible (or 
+\family typewriter 
+has_
+\family default 
+ check this).
+\layout Enumerate
+
+Use positive names i.e.
+ is_valid instead of is_invalid.
+\layout Enumerate
+
+Never include the reverse feature.
+\layout Subsubsection
+
+Creation style
+\layout Enumerate
+
+Replace !! with create.
+\layout Enumerate
+
+Replace creation with create.
+\layout Enumerate
+
+After create, each new valid routine must start on a new line.
+\layout Subsubsection
+
+Miscellaneous
+\layout Enumerate
+
+All magic numbers must be removed.
+ Never use `variable := 5', use a pre-defined constant instead.
+ (0 and 1 are somtimes magic numbers too so be careful)
+\layout Enumerate
+
+Only standard feature clauses should be used.
+ 
+\layout Enumerate
+
+\begin_float margin 
+\layout Standard
+
+we need a more detailed standard on contracts
+\end_float 
+Every feature should have a post condition, no matter how simple.
+\layout Enumerate
+
+Any inherited feature that are not used should be exported to none.
+\layout Enumerate
+
+All once functions should have a post condition of `ensure not Void'.
+\layout Enumerate
+
+Use --| for internal/sensitive comments.
+\layout Enumerate
+
+Use `fix me' in comments when required, along with date, author and problem
+ description.
+\layout Enumerate
+
+Implementation should never be exported.
+\layout Enumerate
+
+Property descriptions should have `able' on the end of the name if applicable.
+\layout Enumerate
+
+For commands binding features, group adds together, also group removes together.
 \layout Subsection
 
 General Tasks
@@ -263,4 +434,8 @@ When a window is set to modal and shown, implement a mechanism that greys
 
 Look for needed invariants in the class text (such as exists: not destroyed)
  in EV_UNTITLED_WINDOW (I think)
+\layout Enumerate
+
+Revise the standards section above to ensure is accuratly captures all informati
+on from the above tasks.
 \the_end

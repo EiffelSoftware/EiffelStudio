@@ -537,14 +537,12 @@ feature {NONE} -- Stepping
 						debug ("debugger_trace_stepping")
 							print (" ### Current IL OffSet = 0x"+l_current_il_offset.to_hex_string+" ~ "+l_current_il_offset.out+" %N")
 						end
+						l_ranges := Il_debug_info_recorder.next_feature_breakable_il_range_for (
+										l_call_stack_element.dynamic_type,
+										l_call_stack_element.routine.associated_feature_i,
+										l_current_il_offset
+										)
 					end
-
-					l_ranges := Il_debug_info_recorder.next_feature_breakable_il_range_for (
-									l_call_stack_element.dynamic_type,
-									l_call_stack_element.routine.associated_feature_i,
-									l_current_il_offset
-									)	
-									
 					if l_ranges /= Void then
 						debug ("debugger_trace_stepping")
 							print ("[>] Go for next point %N")
@@ -558,9 +556,8 @@ feature {NONE} -- Stepping
 --						eifnet_debugger.do_step_range (a_bstep_in, <<[0 , l_current_il_offset]>>)
 					end
 					status.set_is_stopped (False)
-				end				
+				end
 			end
-
 		end		
 
 feature {NONE} -- Entry Point
@@ -1126,7 +1123,6 @@ feature -- Call stack related
 		end
 
 feature -- Object Keeper
-
 
 	recycle_kept_object is
 			-- recycle the "keeper" container

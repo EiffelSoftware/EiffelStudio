@@ -37,14 +37,14 @@ EIF_INTEGER date;
 	/* Check to see if the directory `path' has changed after `date' */
 
 #if defined EIF_WINDOWS || defined EIF_OS2
-	return (EIF_BOOLEAN) 1;
+	return EIF_TRUE;
 #else
 	static struct stat info;
 
 	if (-1 == stat(path,&info))
-		return (EIF_BOOLEAN) 1;
+		return EIF_TRUE;
 	else
-		return (date == (EIF_INTEGER) info.st_mtime) ? (EIF_BOOLEAN) 0 : (EIF_BOOLEAN) 1;
+		return EIF_TEST(date != (EIF_INTEGER) info.st_mtime);
 #endif
 }
 

@@ -46,9 +46,15 @@ feature {NONE} -- Initialization
 		
 	make_with_name (a_name: STRING) is
 			-- Create a new component representation from `a_name'.
+		local
+			component: GB_COMPONENT
+			pixmaps: GB_SHARED_PIXMAPS
 		do
 			make_with_text (a_name)
-			set_pebble_function (agent generate_pebble)
+			set_pebble_function (agent generate_pebble)	
+			create component.make_with_name (a_name)
+			create pixmaps
+			set_pixmap (pixmaps.pixmap_by_name (component.root_element_type))
 		end
 
 feature {NONE} -- Implementation

@@ -51,6 +51,7 @@ feature -- Basic operations
 			valid_name: not a_name.empty
 		do
 			create Result.make (0)
+			Result.append ("static ")
 			Result.append (Const)
 			Result.append (Space)
 			Result.append (Iid_type)

@@ -64,26 +64,37 @@ feature
 			widget_not_destroyed: not widget.destroyed
 		do
 			if widget.managed then
-				if widget.managed then
-					widget.unmanage
-				end;
 				if is_width_resizeable then
+					if widget.managed then
+						widget.unmanage
+					end;
 					widget.set_width (
 						(parent_width * width_ratio).truncated_to_integer);
 				end;
 				if is_height_resizeable then
+					if widget.managed then
+						widget.unmanage
+					end;
 					widget.set_height (
 						(parent_height * height_ratio).truncated_to_integer);
 				end;
 				if to_follow_x then
+					if widget.managed then
+						widget.unmanage
+					end;
 					widget.set_x (
 						(parent_width * x_ratio).truncated_to_integer);
 				end;
 				if to_follow_y then
+					if widget.managed then
+						widget.unmanage
+					end;
 					widget.set_y (
 						(parent_height * y_ratio).truncated_to_integer);
 				end;
-				widget.manage
+				if not widget.managed then
+					widget.manage
+				end
 			end;
 		end;
 

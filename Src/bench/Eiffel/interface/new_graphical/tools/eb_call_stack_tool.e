@@ -67,11 +67,9 @@ feature {NONE} -- Initialization
 			development_window: EB_DEVELOPMENT_WINDOW
 			box: EV_VERTICAL_BOX
 			box2: EV_VERTICAL_BOX
-			box_extra: EV_VERTICAL_BOX
 			box_exception: EV_HORIZONTAL_BOX
 			tb_exception: EV_TOOL_BAR
 			tb_but_exception: EV_TOOL_BAR_BUTTON
-			box_thread: EV_HORIZONTAL_BOX
 			box_stop_cause: EV_HORIZONTAL_BOX
 			t_label: EV_LABEL
 			special_label_col: EV_COLOR
@@ -140,20 +138,9 @@ feature {NONE} -- Initialization
 			box_exception.extend (tb_exception)
 			box_exception.disable_item_expand (tb_exception)
 
-				--| Extra box
-			create box_extra
-			create extra_stack_info
-			extra_stack_info.align_text_left
-			extra_stack_info.set_foreground_color (special_label_col)
-
-			box_extra.extend (extra_stack_info)
-
 				--| Top box2
 			box2.extend (box_stop_cause)
 			box2.disable_item_expand (box_stop_cause)
-
-			box2.extend (box_extra)
-			box2.disable_item_expand (box_extra)
 
 			box2.extend (box_thread)
 			box2.disable_item_expand (box_thread)
@@ -210,12 +197,24 @@ feature {NONE} -- Initialization
 			explorer_bar.add (explorer_bar_item)
 		end
 
+feature -- Box management
+
+	box_thread: EV_HORIZONTAL_BOX
+	
+	display_box_thread (b: BOOLEAN) is
+			-- Show or hide box related to available Thread ids
+		do
+			if b then
+				box_thread.show
+			else
+				box_thread.hide
+			end
+		end
+
 feature -- Access
 
 	widget: EV_WIDGET
 			-- Widget representing Current.
-
-	extra_stack_info: EV_LABEL
 
 	thread_id: EV_LABEL
 			-- Thread Identifier
@@ -300,12 +299,12 @@ feature -- Status setting
 			cancel_process_real_update_on_idle
 			stack_list.wipe_out
 			l_status := application.status
-			if l_status /= Void then			
+			if l_status /= Void then
 				display_stop_cause
 				refresh_threads_info
-				extra_stack_info.remove_text
-
 				process_real_update_on_idle (l_status.is_stopped)
+			else
+				display_box_thread (False)
 			end
 		end
 
@@ -386,7 +385,6 @@ feature {NONE} -- Implementation
 				then
 					stack := l_status.current_call_stack					
 					if stack /= Void then
-						refresh_extra_stack_info
 						save_call_stack_cmd.enable_sensitive
 						from
 							stack.start
@@ -493,25 +491,13 @@ feature {NONE} -- Implementation
 		local
 			ctid: INTEGER
 		do
-			ctid := application.status.current_thread_id
-			thread_id.set_text ("0x" + ctid.to_hex_string)
-			thread_id.set_data (ctid)
-		end
-		
-	refresh_extra_stack_info is
-			-- Refresh data corresponding to any extra data
-			-- the debugger might have (ie module for dotnet debugging)
-		local
-			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
-		do
-				-- TO BE PERFORMED AFTER `current_execution_stack_number' is set
-				-- ie after STONE DROPPED ...
-			if application.is_dotnet then
-				extra_stack_info.remove_text
-				cse_dotnet ?= application.status.current_call_stack_element
-				if cse_dotnet /= Void then
-					extra_stack_info.set_text (" Module = " + cse_dotnet.dotnet_module_name)
-				end
+			if application.status.all_thread_ids_count > 1 then
+				ctid := application.status.current_thread_id
+				thread_id.set_text ("0x" + ctid.to_hex_string)
+				thread_id.set_data (ctid)
+				display_box_thread (True)
+			else
+				display_box_thread (False)				
 			end
 		end
 		
@@ -592,6 +578,7 @@ feature {NONE} -- Implementation
 			l_tooltip: STRING
 			l_nb_stack: INTEGER
 			e_cse: EIFFEL_CALL_STACK_ELEMENT
+			dotnet_cse: CALL_STACK_ELEMENT_DOTNET
 			l_feature_info: STRING
 			l_class_info: STRING
 			l_orig_class_info: STRING
@@ -633,6 +620,11 @@ feature {NONE} -- Implementation
 					l_tooltip.append_string ("%N   + compilation = melted")
 				end
 
+				dotnet_cse ?= e_cse
+				if dotnet_cse /= Void then
+					l_tooltip.append_string ("%N   + Module = " + dotnet_cse.dotnet_module_name)
+				end	
+			
 					--| Specific GUI behavior
 				Result.set_pebble_function (agent pebble_from_x_y (?, ?, level))
 				Result.set_accept_cursor (Cursors.cur_Setstop)
@@ -677,7 +669,6 @@ feature {NONE} -- Implementation
 			create st.make (level)
 			if st.is_valid then
 				debugger_manager.launch_stone (st)
-				refresh_extra_stack_info
 			end
 		end		
 

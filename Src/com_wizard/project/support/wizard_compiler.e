@@ -7,11 +7,8 @@ inherit
 	WIZARD_VARIABLE_NAME_MAPPER
 		export
 			{NONE} all
-		end
-
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
+			{ANY} client
+			{ANY} server
 		end
 
 	WIZARD_PROCESS_LAUNCHER

@@ -166,7 +166,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_ITEM} and Precursor {EV_TEXTABLE} and
 			Precursor {EV_DESELECTABLE} and Precursor {EV_TOOLTIPABLE} and
-			is_expanded = False
+			Precursor {EV_TREE_NODE_LIST} and is_expanded = False
 		end
 
 feature {EV_ANY_I}-- Implementation

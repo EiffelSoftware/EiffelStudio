@@ -477,11 +477,6 @@ feature {NONE} -- Implementation
 			until
 				first.off
 			loop
-				-- Containers have a default size of 0, 0.
-				-- This means they do not show up, which is very misleading.
-				-- Here, we force all widgets to a minimum size of 5x5.
-			--	set_item_width (first.item, 30)
-			--	set_item_height (first.item, 30)
 				listi := list.selected_item
 				if list.selected_item /= Void and then first.item = list.selected_item.data then
 					selected_item_index := first.index
@@ -549,7 +544,7 @@ feature {NONE} -- Implementation
 			second: like ev_type
 		do
 				-- Only set position if changed.
-			if first.x_position /= x_pos then
+			if widget.x_position /= x_pos then
 				first.set_item_x_position (widget, x_pos)
 				second := objects @ 2
 				second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
@@ -565,7 +560,7 @@ feature {NONE} -- Implementation
 			second: like ev_type
 		do
 				-- Only set position if changed.
-			if first.y_position /= y_pos then
+			if widget.y_position /= y_pos then
 				first.set_item_y_position (widget, y_pos)
 				second := objects @ 2
 				second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
@@ -667,7 +662,7 @@ feature {NONE} -- Implementation
 				temp_x := x				
 				if snap_button.is_selected then
 					new_x := temp_x + half_grid_size - ((temp_x + half_grid_size) \\ grid_size)
-					new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)	
+					new_y := y + half_grid_size - ((y + half_grid_size) \\ grid_size)
 				else
 					new_x := temp_x
 					new_y := y
@@ -721,13 +716,13 @@ feature {NONE} -- Implementation
 					-- Update scrolling status.
 				update_scrolling (x, y)
 				if snap_button.is_selected then
-					new_x := x - ((x - x_offset) \\ grid_size)
-					new_y := y - ((y - y_offset) \\ grid_size)	
+					new_x := x - (((x - x_offset))  \\ grid_size)
+					new_y := y - (((y - y_offset)) \\ grid_size)
 				else
 					new_x := x
 					new_y := y
 				end
-				if new_x - x_offset > 0 then	
+				if new_x - x_offset > 0 then
 					set_x_position (widget, new_x - x_offset)
 				else
 					set_x_position (widget, 0)
@@ -1054,7 +1049,7 @@ feature {NONE} -- Implementation
 		
 	update_status is
 			-- Display status message in `prompt_label'.
-			-- This behaves as instructions.
+			-- This prompts the user.
 		do
 			if list.selected_item = Void then
 				prompt_label.set_text (select_widget_prompt)

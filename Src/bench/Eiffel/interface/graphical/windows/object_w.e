@@ -340,17 +340,27 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_widgets is
+		local
+			popup_cmd: TOOLBAR_CMD
 		do
 			if eb_shell /= Void then
 				set_default_size
 			end;
+
+			!! toolbar_parent.make (new_name, global_form, Current);
+			toolbar_parent.set_column_layout;
+			toolbar_parent.set_free_size;
+			!! popup_cmd.make (Current);
+			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+
 			build_text_windows;
 			if show_menus then
 				build_menus
 			end
-			!! edit_bar.make (new_name, global_form);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
 			build_bar;
-			!! format_bar.make (new_name, global_form);
+			!! toolbar_separator.make (new_name, toolbar_parent);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
 			build_format_bar;
 			build_command_bar;
 			if show_menus then
@@ -361,8 +371,6 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	attach_all is
-		local
-			separator: SEPARATOR
 		do
 			if show_menus then
 				global_form.attach_left (menu_bar, 0);
@@ -370,27 +378,18 @@ feature {NONE} -- Implementation; Graphical Interface
 				global_form.attach_top (menu_bar, 0)
 			end;
 
-			global_form.attach_left (edit_bar, 0);
-			global_form.attach_right (edit_bar, 0);
+			global_form.attach_left (toolbar_parent, 0);
+			global_form.attach_right (toolbar_parent, 0);
 			if show_menus then
-				global_form.attach_top_widget (menu_bar, edit_bar, 0)
+				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
 			else
-				global_form.attach_top (edit_bar, 0)
+				global_form.attach_top (toolbar_parent, 0)
 			end
 
 			global_form.attach_left (text_window.widget, 0);
 			global_form.attach_right (text_window.widget, 0);
 			global_form.attach_bottom (text_window.widget, 0);
-			global_form.attach_top_widget (format_bar, text_window.widget, 0);
-
-			!! separator.make ("", global_form);
-			global_form.attach_left (separator, 0);
-			global_form.attach_right (separator, 0);
-			global_form.attach_top_widget (edit_bar, separator, 1);
-
-			global_form.attach_left (format_bar, 0);
-			global_form.attach_right (format_bar, 0);
-			global_form.attach_top_widget (separator, format_bar, 1)
+			global_form.attach_top_widget (toolbar_parent, text_window.widget, 0);
 		end;
 
 	build_command_bar is

@@ -131,7 +131,7 @@ feature -- Status report
 			-- Is `an_item' selected?
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			an_item.set_statemask (Tvis_selected)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -142,7 +142,7 @@ feature -- Status report
 			-- Is `an_item' expanded?
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			an_item.set_statemask (Tvis_expanded)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -154,7 +154,7 @@ feature -- Status report
 			-- operation?
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			an_item.set_statemask (Tvis_cut)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -165,7 +165,7 @@ feature -- Status report
 			-- Is `an_item' bold?
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			an_item.set_statemask (Tvis_bold)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -176,7 +176,7 @@ feature -- Status report
 			-- Is `an_item' selected as a drag ans drop target?
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			an_item.set_statemask (Tvis_drophilited)
 			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
@@ -189,7 +189,7 @@ feature -- Status setting
 			-- Set the selection to the given `an_item'.
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_caret, an_item.h_item)
@@ -200,7 +200,7 @@ feature -- Status setting
 			-- the given `an_item' is the first visible item.
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_firstvisible, an_item.h_item)
@@ -211,7 +211,7 @@ feature -- Status setting
 			-- indicate the target of a drag and drop operation.
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			valid_item: has_item (an_item)
 		do
 			cwin_send_message (item, Tvm_selectitem,
 				Tvgn_drophilite, an_item.h_item)
@@ -227,10 +227,12 @@ feature -- Status setting
 
 feature -- Status report
 
-	item_exists (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
-			-- Does `an_item' exists in the tree?
+	has_item (an_item: WEL_TREE_VIEW_ITEM): BOOLEAN is
+			-- Does `an_item' exist in the tree?
 		require
 			exists: exists
+			item_not_void: an_item /= Void
+			item_valid: an_item.exists
 		local
 			mask: INTEGER
 		do
@@ -238,6 +240,8 @@ feature -- Status report
 			an_item.set_mask (Tvif_handle)
 			Result := cwin_send_message_result (item, Tvm_getitem, 0, an_item.to_integer) /= 0
 			an_item.set_mask (mask)
+		ensure
+			mask_unchanged: an_item.mask = old an_item.mask
 		end
 
 feature -- Element change
@@ -258,11 +262,18 @@ feature -- Element change
 			-- Remove `an_item' from the tree.
 		require
 			exists: exists
-			valid_item: item_exists (an_item)
+			item_not_void: an_item /= Void
+			valid_item: has_item (an_item)
+			has_items: count > 0
+		local
+			msg_result: INTEGER
 		do
-			cwin_send_message (item, Tvm_deleteitem, 0, an_item.h_item)
+			msg_result := cwin_send_message_result (item, Tvm_deleteitem, 0, an_item.h_item)
+			check
+				item_deleted: msg_result /= 0
+			end
 		ensure
-			item_removed: not item_exists (an_item)
+			item_removed: count = old count - 1
 		end
 
 feature -- Notifications
@@ -417,12 +428,26 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
 			-- data valid
 		require
 			exists: exists
+			item_not_void: an_item /= Void
+			item_exists: an_item.exists
+			has_item: has_item (an_item)
+      local
+			buffer: STRING
+			item_found: BOOLEAN
+			state: INTEGER
 		do
 			an_item.set_mask (Tvif_text + Tvif_state + Tvif_param)
-			an_item.set_text ("")
-			an_item.set_cchtextmax (30)
-			cwin_send_message (item, Tvm_getitem, 0, an_item.to_integer)
-			Result := an_item
+			create buffer.make (Buffer_size)
+			buffer.fill_blank
+			an_item.set_text (buffer)
+			an_item.set_cchtextmax (Buffer_size)
+			item_found := cwin_send_message_result (item, Tvm_getitem, 0, an_item.to_integer) /= 0
+			if item_found then
+				Result := an_item
+			end
+		ensure
+			item_found: Result /= Void
+			item_valid: Result.exists
 		end
 
 feature {NONE} -- Implementation
@@ -441,6 +466,9 @@ feature {NONE} -- Implementation
 				Ws_tabstop + Ws_border + Tvs_haslines +
 				Tvs_hasbuttons + Tvs_linesatroot
 		end
+
+	Buffer_size: INTEGER is 30
+			-- Default buffer size for retrieving data from Windows APIs
 
 feature {NONE} -- Externals
 

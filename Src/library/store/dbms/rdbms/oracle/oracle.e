@@ -12,7 +12,8 @@ inherit
 			normal_parse,
 			parse,
 			update_map_table_error,
-			bind_parameter
+			bind_parameter,
+			convert_string_type
 		end
 
 feature -- For DATABASE_STATUS
@@ -165,6 +166,46 @@ feature -- LOGIN and DATABASE_APPL only for password_ok
 			Result := name.is_equal(uname) and passwd.is_equal(upasswd)
 		end
 
+feature -- For database types
+
+	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY is
+			-- Convert `r_any' to the expected object.
+			-- By default returns `r_any', redefined in ORACLE to return
+			-- an INTEGER_REF when `field_name' is "data_type".
+		local
+			data_type: INTEGER_REF
+		do
+			if field_name.is_equal ("data_type") then
+				if class_name.is_equal ("STRING") then
+					!! data_type
+					if r_any.is_equal ("VARCHAR2") then
+						data_type.set_item (ora_string_type)
+					elseif r_any.is_equal ("NUMBER") then
+						data_type.set_item (ora_number_type)
+					elseif r_any.is_equal ("DATE") then
+						data_type.set_item (ora_date_type)
+					end
+					Result := data_type
+				else
+					Result := r_any
+				end
+			elseif field_name.is_equal ("nullable") then
+				if class_name.is_equal ("STRING") then
+					!! data_type
+					if r_any.is_equal ("Y") then
+						data_type.set_item (1)
+					else
+						data_type.set_item (0)
+					end
+					Result := data_type
+				else
+					Result := r_any
+				end
+			else
+				Result := r_any
+			end
+		end
+
 feature -- For DATABASE_PROC
 
 	support_sql_of_proc: BOOLEAN is True
@@ -203,7 +244,6 @@ feature -- For DATABASE_PROC
 		end
 
 feature -- For DATABASE_REPOSITORY
-
 
 	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is 
 		do
@@ -265,7 +305,7 @@ feature -- External features
 			c_temp: ANY
 		do
 			c_temp := command.to_c
-			Result := ora_exec_immediate($c_temp)
+			Result := ora_exec_immediate(no_descriptor, $c_temp)
 		end
 
 	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: SPECIAL[CHARACTER]; max_len:INTEGER): INTEGER is
@@ -501,7 +541,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	ora_exec_immediate (command: POINTER): INTEGER is
+	ora_exec_immediate (no_descriptor: INTEGER; command: POINTER): INTEGER is
 		external
 			"C"
 		end
@@ -516,7 +556,7 @@ feature {NONE} -- External features
 			"C"
 		end
 
-	ora_conv_type (index: ANY): INTEGER is
+	ora_conv_type (index: INTEGER): INTEGER is
 		external
 			"C"
 		end
@@ -638,6 +678,27 @@ feature {NONE} -- External features
 	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER): INTEGER is
 		external
 			"C"
+		end
+
+	ora_string_type: INTEGER is
+		external
+			"C [macro %"oracle.h%"]"
+		alias
+			"VARCHAR2_TYPE"
+		end
+
+	ora_number_type: INTEGER is
+		external
+			"C [macro %"oracle.h%"]"
+		alias
+			"NUMBER_TYPE"
+		end
+
+	ora_date_type: INTEGER is
+		external
+			"C [macro %"oracle.h%"]"
+		alias
+			"DATE_TYPE"
 		end
 
 	ora_c_string_type: INTEGER is

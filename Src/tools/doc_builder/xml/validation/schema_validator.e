@@ -88,7 +88,7 @@ feature -- Schema and file validation
 			l_schema: XML_XML_SCHEMA
 			exception: XML_XML_SCHEMA_EXCEPTION
 			retried: BOOLEAN
-			l_actions: ERROR_ACTIONS
+			l_error: ERROR
 		do  
 			if not retried then
 				create schemas.make
@@ -111,10 +111,10 @@ feature -- Schema and file validation
            	else
            		exception ?= feature {ISE_RUNTIME}.last_exception
            		if exception /= Void then
-           			create error_report.make ("Invalid Schema Definition", exception.message,
-						exception.line_number, exception.line_position)
-					create l_actions
-					error_report.set_error_action (agent l_actions.highlight_error (?))
+           			create error_report.make ("Invalid Schema Definition")
+           			create l_error.make_with_line_information (exception.message, exception.line_number, exception.line_position)
+           			l_error.set_action (agent (error_report.actions).highlight_text_in_editor (l_error.line_number, l_error.line_position))
+           			error_report.append_error (l_error)
 					error_report.show
            		end
 			end	
@@ -128,19 +128,20 @@ feature {NONE} -- Implementation
 	validation_callback (object: SYSTEM_OBJECT ; args: XML_VALIDATION_EVENT_ARGS) is
 			-- Validation callback.
 		local
-			l_actions: ERROR_ACTIONS
+			l_no, l_pos: INTEGER
+			l_error: ERROR
 		do
+			if error_report = Void then				
+				create error_report.make ("Invalid Schema Definition")
+			end
+			l_no := args.exception.line_number
+			l_pos := args.exception.line_position
+			create l_error.make_with_line_information (args.message, l_no, l_pos)
+			l_error.set_action (agent (error_report.actions).highlight_text_in_editor (l_no, l_pos))
 			if args.severity = feature {XML_XML_SEVERITY_TYPE}.error then
 				is_valid := False
-			end
-			if error_report /= Void then
-				error_report.append_error (args.message, args.exception.line_number, args.exception.line_position)
-			else
-				create error_report.make ("Invalid Schema Definition", args.message,
-					args.exception.line_number, args.exception.line_position)
-				create l_actions
-				error_report.set_error_action (agent l_actions.highlight_error (?))
-			end
+			end			
+			error_report.append_error (l_error)
     	end
 
 end -- class SCHEMA_VALIDATOR

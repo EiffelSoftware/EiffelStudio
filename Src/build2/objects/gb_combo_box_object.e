@@ -12,8 +12,6 @@ inherit
 		redefine
 			object, display_object, accepts_child, is_full
 		end
-		
-	GB_PARENT_OBJECT
 
 create
 	make_with_type,

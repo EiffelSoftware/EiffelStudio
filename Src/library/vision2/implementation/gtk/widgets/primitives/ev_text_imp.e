@@ -285,7 +285,9 @@ feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
 		do
+			freeze
 			C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
+			thaw
 		end
 
 feature -- Assertions

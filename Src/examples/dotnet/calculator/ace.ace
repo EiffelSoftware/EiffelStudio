@@ -7,8 +7,10 @@ root
 default
 	assertion (require)
 	msil_generation (yes)
-	line_generation (no)
 	il_verifiable (yes)
+	cls_compliant (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
 	check_vape (yes)
 	console_application (yes)

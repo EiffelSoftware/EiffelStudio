@@ -31,15 +31,15 @@ feature {NONE} -- Initialization
 			
 feature -- Basic Operations
 	
-	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
+	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY) is--FACTORY) is
 			-- | Call `StoreAssembly' on `cache_handler'.
 		indexing
 			description: "Start assembly generation: create folder and assembly description file and set write lock."
 			external_name: "StartAssemblyGeneration"
 		require
 			non_void_eiffel_assembly: an_eiffel_assembly /= Void
-			non_void_eiffel_assembly_name: an_eiffel_assembly.get_Assembly_Name /= Void
-			not_empty_eiffel_assembly_name: an_eiffel_assembly.get_Assembly_Name.get_Length > 0
+			non_void_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name /= Void
+			not_empty_eiffel_assembly_name: an_eiffel_assembly.get_assembly_descriptor.get_name.get_Length > 0
 		do
 			type_storer := cache_handler.Store_Assembly (an_eiffel_assembly)
 		ensure

@@ -202,23 +202,23 @@ feature {GB_CODE_GENERATOR} -- Output
 						-- hence `first' will be Void.
 					--strings_correct_length: temp_x_position_string.count // 4 = first.count			
 				end
+				Result := Result + indent + "%T-- Size and position all children of `" + info.name + "'."
+				children_names := info.child_names
+				from
+					counter := 1
+				until
+					counter = temp_x_position_string.count // 4 + 1
+				loop
+					lower := (counter - 1) * 4 + 1
+					upper := (counter - 1) * 4 + 4
+					current_child_name := children_names @ counter
+					Result := Result + indent + info.name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
+					Result := Result + indent + info.name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
+					Result := Result + indent + info.name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
+					Result := Result + indent + info.name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
+					counter := counter + 1
+				end
 			end
-			Result := Result + indent + "%T-- Size and position all children of `" + info.name + "'."
-			children_names := info.child_names
-			from
-				counter := 1
-			until
-				counter = temp_x_position_string.count // 4 + 1
-			loop
-				lower := (counter - 1) * 4 + 1
-				upper := (counter - 1) * 4 + 4
-				current_child_name := children_names @ counter
-				Result := Result + indent + info.name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")"
-				Result := Result + indent + info.name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")"
-				Result := Result + indent + info.name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")"
-				Result := Result + indent + info.name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")"
-				counter := counter + 1
-			end			
 		end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting
@@ -255,51 +255,55 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 				temp_height_string := element_info.data				
 			end
 			
-			check
-				strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
-					temp_x_position_string.count = temp_width_string.count and
-					temp_x_position_string.count = temp_height_string.count
-				strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
-				strings_correct_length: temp_x_position_string.count // 4 = first.count
-			end
+			if temp_x_position_string /= Void then
+				-- Nothing to do now, if there are no children.
+				check
+					strings_equal_in_length: temp_x_position_string.count = temp_y_position_string.count and
+						temp_x_position_string.count = temp_width_string.count and
+						temp_x_position_string.count = temp_height_string.count
+					strings_divisible_by_4: temp_x_position_string.count \\ 4 = 0
+					strings_correct_length: temp_x_position_string.count // 4 = first.count
+				end
+
 			
-			from
-				first.start
-			until
-				first.off
-			loop
-				lower := (first.index - 1) * 4 + 1
-				upper := (first.index - 1) * 4 + 4
-					-- Read current x position data from `temp_x_position_string'.
-				extracted_string := temp_x_position_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_string.is_integer
-				end
-				set_x_position (first.item, extracted_string.to_integer)
+				from
+					first.start
+				until
+					first.off
+				loop
+					lower := (first.index - 1) * 4 + 1
+					upper := (first.index - 1) * 4 + 4
+						-- Read current x position data from `temp_x_position_string'.
+					extracted_string := temp_x_position_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_string.is_integer
+					end
+					set_x_position (first.item, extracted_string.to_integer)
+						
+						-- Read current y position data from `temp_y_position_string'.
+					extracted_string := temp_y_position_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_string.is_integer
+					end
+					set_y_position (first.item, extracted_string.to_integer)
 					
-					-- Read current y position data from `temp_y_position_string'.
-				extracted_string := temp_y_position_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_string.is_integer
-				end
-				set_y_position (first.item, extracted_string.to_integer)
-				
-					-- Read current width data from `temp_width_string'.
-				extracted_string := temp_width_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_string.is_integer
-				end
-				set_item_width (first.item, extracted_string.to_integer)
-				
-					-- Read current height data from `temp_height_string'.
-				extracted_string := temp_height_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_string.is_integer
-				end
-				set_item_height (first.item, extracted_string.to_integer)
-				
-				first.forth
-			end	
+						-- Read current width data from `temp_width_string'.
+					extracted_string := temp_width_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_string.is_integer
+					end
+					set_item_width (first.item, extracted_string.to_integer)
+					
+						-- Read current height data from `temp_height_string'.
+					extracted_string := temp_height_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_string.is_integer
+					end
+					set_item_height (first.item, extracted_string.to_integer)
+					
+					first.forth
+				end	
+			end
 		end
 
 feature {NONE} -- Implementation

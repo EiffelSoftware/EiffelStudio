@@ -82,13 +82,12 @@ feature -- Tool generation
 	generate_interface is
 			-- Generate the interface elements.
 		local
-			height, width: INTEGER
+			counter, width, height, max_height: INTEGER
 			a_query_editor_form: QUERY_EDITOR_FORM
 		do
 			generate_permanent_window
 			form_list := object_tool_generator.form_table.linear_representation
 			from
-				height := 0
 				width := 300
 				form_list.start
 			until
@@ -96,18 +95,24 @@ feature -- Tool generation
 			loop
 				a_query_editor_form := form_list.item
 				if a_query_editor_form.managed then
-					a_query_editor_form.generate_interface_elements (0, height, perm_wind)
+					if counter < (form_list.index // 20) then
+						counter := form_list.index // 20
+						max_height := max_height.max (height)
+						height := 0
+					end
+					a_query_editor_form.generate_interface_elements (width * counter, height, perm_wind)
 					height := height + a_query_editor_form.minimum_height
 					width := width.max (a_query_editor_form.minimum_width)
 				end
 				form_list.forth
 			end
+			counter := counter + 1
 			!! ok_push_b_c
 			ok_push_b_c := ok_push_b_c.create_context (perm_wind)
-			ok_push_b_c.set_x_y (0, height)
+			ok_push_b_c.set_x_y (width * counter - 100, height)
 			ok_push_b_c.set_visual_name ("OK")
 			height := height + ok_push_b_c.height
-			perm_wind.set_size (width, height)
+			perm_wind.set_size (width * counter, max_height)
 			perm_wind.set_x_y (0, 0)
 		end
 

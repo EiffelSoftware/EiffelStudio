@@ -43,6 +43,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GENERATING_TYPE_SYSTEM_I
+		export
+			{NONE} all
+		end
 
 	RECV_VALUE		
 		export
@@ -542,57 +547,15 @@ feature {DUMP_VALUE} -- string_representation Implementation
 	classic_debug_output_evaluated_string (min, max: INTEGER): STRING is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
 		local
-			l_dbg_val: ABSTRACT_DEBUG_VALUE
 			l_final_result_value: DUMP_VALUE
 			l_feat: FEATURE_I
-			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
-			par: INTEGER
-			rout_info: ROUT_INFO
-			l_error_message: STRING
-			l_dyntype: CLASS_TYPE
 		do
 			l_feat := debug_output_feature_i (dynamic_class)
-			if l_feat /= Void and  value_address /= Void then
-					-- Initialize the communication.
-
-				create l_dbg_obj.make_with_class (value_address, dynamic_class) -- debuggable_class
-				l_dyntype := l_dbg_obj.class_type
-
-				if l_feat.is_attribute then
-					l_dbg_val := l_dbg_obj.attribute_by_name (l_feat.feature_name)
-					if l_dbg_val /= Void then
-						l_final_result_value := l_dbg_val.dump_value
-					end
-				else
-					Init_recv_c
-					send_value
-					if l_feat.is_external then
-						par := par + 1
-					end
-
-					if l_feat.written_class.is_precompiled then
-						par := par + 2
-						rout_info := Eiffel_system.system.rout_info_table.item (l_feat.rout_id_set.first)
-						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
-					else
-						send_rqst_3 (Rqst_dynamic_eval, l_feat.feature_id, l_dyntype.static_type_id - 1, par)
-					end
-						-- Receive the Result.
-					c_recv_value (Current)
-
-					if item /= Void then
-						item.set_hector_addr
-						l_final_result_value := item.dump_value
-					end
-				end
-				if l_final_result_value = Void then
-					l_error_message := "Feature " + l_feat.feature_name + " raised an exception"
-				end
+			l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
 				
-				if l_error_message = Void and then not l_final_result_value.is_void then
-					Result := l_final_result_value.classic_string_representation (min, max)
-					last_string_representation_length := l_final_result_value.last_string_representation_length
-				end				
+			if l_final_result_value /= Void and then not l_final_result_value.is_void then
+				Result := l_final_result_value.classic_string_representation (min, max)
+				last_string_representation_length := l_final_result_value.last_string_representation_length
 			end
 		end
 
@@ -602,33 +565,77 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		require
 			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
 		local
-			expr: EB_EXPRESSION
-			evaluator: DBG_EXPRESSION_EVALUATOR
+			l_cl: CLASS_C
+			l_feat: FEATURE_I
+			l_final_result_value: DUMP_VALUE
+			l_rout_id: INTEGER
 		do
 			if generating_type_evaluation_enabled then
 				if application.is_dotnet then
 					if dynamic_class_type /= Void then
 						Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
 									value_frame_dotnet, 
-									value_dotnet, 
-									value_object_dotnet, 
+									value_dotnet,
+									value_object_dotnet,
 									dynamic_class_type
 								)
 					end
 				else
-					create expr.make_with_object (
-							create {DEBUGGED_OBJECT_CLASSIC}.make_with_class (value_address, eiffel_system.system.any_class.compiled_class),
-							"generating_type"
-						)
-					expr.evaluate			
-					evaluator := expr.expression_evaluator
-					if evaluator.error_message = Void and then not evaluator.final_result_value.is_void then
-						Result := evaluator.final_result_value.classic_string_representation (0, -1)
-					end				
+					l_feat := generating_type_feature_i (dynamic_class)
+					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
+
+					if l_final_result_value /= Void and then not l_final_result_value.is_void then
+						Result := l_final_result_value.classic_string_representation (0, -1)
+					end
 				end			
 			end
 			if Result /= Void then
 				Result.prune_all ('%U')
+			end
+		end
+
+	classic_feature_result_value_on_current (a_feat: FEATURE_I; a_compiled_class: CLASS_C): DUMP_VALUE is
+			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
+		local
+			l_dbg_val: ABSTRACT_DEBUG_VALUE
+			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
+			par: INTEGER
+			rout_info: ROUT_INFO
+			l_dyntype: CLASS_TYPE
+		do
+			if a_feat /= Void and  value_address /= Void then
+					-- Initialize the communication.
+
+				create l_dbg_obj.make_with_class (value_address, a_compiled_class)
+				l_dyntype := l_dbg_obj.class_type
+
+				if a_feat.is_attribute then
+					l_dbg_val := l_dbg_obj.attribute_by_name (a_feat.feature_name)
+					if l_dbg_val /= Void then
+						Result := l_dbg_val.dump_value
+					end
+				else
+					Init_recv_c
+					send_value
+					if a_feat.is_external then
+						par := par + 1
+					end
+
+					if a_feat.written_class.is_precompiled then
+						par := par + 2
+						rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
+						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+					else
+						send_rqst_3 (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
+					end
+						-- Receive the Result.
+					c_recv_value (Current)
+
+					if item /= Void then
+						item.set_hector_addr
+						Result := item.dump_value
+					end
+				end
 			end
 		end
 

@@ -394,12 +394,12 @@ feature {NONE} -- Implementation
 				Result.append (New_line)
 			end
 			from
-				system_descriptor.visible_classes.start
+				system_descriptor.visible_classes_component.start
 			until
-				system_descriptor.visible_classes.after
+				system_descriptor.visible_classes_component.after
 			loop
-				Result.append (system_descriptor.visible_classes.item.generated_code)
-				system_descriptor.visible_classes.forth
+				Result.append (system_descriptor.visible_classes_component.item.generated_code)
+				system_descriptor.visible_classes_component.forth
 			end
 			Result.append (New_line_tab_tab)
 			Result.append (End_keyword)
@@ -417,7 +417,22 @@ feature {NONE} -- Implementation
 			Result.append (Shared_wizard_environment.destination_folder)
 			Result.append (Common)
 			Result.append (Double_quote)
+			Result.append (New_line_tab_tab)
+			Result.append (Visible)
+			Result.append (New_line_tab_tab_tab)
+
+			from
+				system_descriptor.visible_classes_common.start
+			until
+				system_descriptor.visible_classes_common.after
+			loop
+				Result.append (system_descriptor.visible_classes_common.item.generated_code)
+				system_descriptor.visible_classes_common.forth
+			end
+			Result.append (New_line_tab_tab)
+			Result.append (End_keyword)
 			Result.append (New_line)
+			Result.append (New_line_tab)
 			Result.append (New_line)
 			Result.append (Partial_ace_file_part_two)
 			Result.append (Tab)

@@ -22,16 +22,16 @@ inherit
 		redefine
 			set_action, remove_action,
 			set_background_color,
-			set_foreground
+			set_foreground_color
 		end
 
 creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
-	make (a_label_gadget: LABEL_G) is
+	make (a_label_gadget: LABEL_G; man: BOOLEAN) is
 			-- Create a motif label gadget.
 		local
 			ext_name: ANY
@@ -39,9 +39,12 @@ feature
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_label_gadget.identifier.to_c;
 			screen_object := create_label_gadget ($ext_name, 
-					parent_screen_object (a_label_gadget, widget_index));
+					parent_screen_object (a_label_gadget, widget_index),
+					man);
 			a_label_gadget.set_font_imp (Current)
 		end;
+
+feature
 
 	remove_action (a_translation: STRING) is
 			-- Remove the command executed when `a_translation' occurs.
@@ -66,7 +69,7 @@ feature
 		do
 		end;
 
-	set_foreground (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require else
 			color_not_void: not (new_color = Void)
@@ -75,7 +78,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_label_gadget (l_name: ANY; scr_obj: POINTER): POINTER is
+	create_label_gadget (l_name: ANY; scr_obj: POINTER;
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

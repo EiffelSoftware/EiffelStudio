@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that allow access to the operating %N%
-	% system clipboard."
+		%system clipboard."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ feature {NONE}-- Initialization
 		end
 
 	initialize is
-			-- initialize `Current'.
+			-- Initialize `Current'.
 		do
 			is_initialized := True
 		end
@@ -40,8 +40,8 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	text:STRING is
-			-- `Result' is text of clipboard.
+	text: STRING is
+			-- Text content of clipboard.
 		local
 			window: EV_WINDOW
 			wel_window: WEL_WINDOW
@@ -49,7 +49,7 @@ feature -- Access
 			create window
 			wel_window ?= window.implementation
 			open_clipboard (wel_window)
-			if is_clipboard_format_available (Cf_text) then
+			if clipboard_open and then is_clipboard_format_available (Cf_text) then
 				retrieve_clipboard_text
 				Result := last_string
 				Result.prune_all ('%R')
@@ -69,13 +69,15 @@ feature -- Status Setting
 			create window
 			wel_window ?= window.implementation
 			open_clipboard (wel_window)
-			empty_clipboard
-			local_text := clone (a_text)
-			if local_text.substring_index ("%R%N", 1) = 0 then
-				local_text.replace_substring_all ("%N", "%R%N")
+			if clipboard_open then
+				empty_clipboard
+				local_text := clone (a_text)
+				if local_text.substring_index ("%R%N", 1) = 0 then
+					local_text.replace_substring_all ("%N", "%R%N")
+				end
+				set_clipboard_text (local_text)
+				close_clipboard
 			end
-			set_clipboard_text (local_text)
-			close_clipboard
 		end
 
 feature {EV_ANY_I}

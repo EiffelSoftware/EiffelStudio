@@ -96,13 +96,16 @@ set_pointer_style (curs: EV_CURSOR) is do end
 feature -- Element Change
 
 	set_pixmap (a_pix: EV_PIXMAP) is
+			-- Set the rows `pixmap' to `a_pix'.
 		do
-			pixmap := a_pix
+			pixmap.copy (a_pix)
 		end
 
 	pixmap: EV_PIXMAP
+			-- Pixmap used at the start of the row.
 
 	remove_pixmap is
+			-- Remove the rows pixmap.
 		do
 			pixmap := Void
 		end
@@ -110,11 +113,13 @@ feature -- Element Change
 feature {EV_ANY_I} -- Implementation
 
 	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
+			-- Set the rows parent to `par_imp'.
 		do
 			parent_imp := par_imp
 		end
 	
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+			-- Implementation of the rows parent.
 
 	index: INTEGER is
 			-- Index of the row in the list
@@ -157,6 +162,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/28 01:08:58  king
+--| Updated pixmap features
+--|
 --| Revision 1.40  2000/03/25 01:51:44  king
 --| Removed old implementation
 --|

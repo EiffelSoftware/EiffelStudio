@@ -46,17 +46,24 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (child: GB_OBJECT; new_name: STRING) is
-			-- Create `Current' with `child' to be inserted in `parent' at
-			-- position `position'.
+	make (child: GB_OBJECT; parent_directory: GB_WINDOW_SELECTOR_COMMON_ITEM; new_name: STRING) is
+			-- Create `Current' with `child' to be converted to a top level object named `new_name'
+			-- within `parent_directory'.
 		require
 			child_not_void: child /= Void
 			new_name_not_void: new_name /= Void
 			child_is_not_representation: not child.is_instance_of_top_level_object
 		local
+			l_parent_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			name := new_name
 			child_id := child.id
+			l_parent_directory ?= parent_directory
+			if l_parent_directory = Void then
+				create parent_directory_path.make (0)
+			else
+				parent_directory_path := l_parent_directory.path
+			end
 			history.cut_off_at_current_position
 		end
 
@@ -70,6 +77,7 @@ feature -- Basic Operation
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
 			all_children: ARRAYED_LIST [GB_OBJECT]
+			parent_directory_item: GB_WINDOW_SELECTOR_COMMON_ITEM
 		do
 			child_object := Object_handler.deep_object_from_id (child_id)
 
@@ -158,13 +166,23 @@ feature -- Basic Operation
 			end
 
 			new_object.set_name (name)
-			window_selector.add_alphabetically (new_object.window_selector_item)
+			if parent_directory_path.is_empty then
+				parent_directory_item := window_selector
+			else
+				parent_directory_item := window_selector.directory_object_from_name (parent_directory_path)
+			end
+			check
+				parent_directory_item_not_void: parent_directory_item /= Void
+			end
+			parent_directory_item.add_alphabetically (new_object.window_selector_item)
+			parent_directory_item.expand
 			
 			rebuild_associated_editors (child_object.object)
 
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
+			child_object.update_representations_for_name_or_type_change
 			command_handler.update
 			executed_once := True
 		end			
@@ -254,6 +272,8 @@ feature -- Basic Operation
 					-- Now must actually delete the object and its representations.
 					--| FIXME
 					
+			child_object.update_representations_for_name_or_type_change
+					
 			rebuild_associated_editors (child_object.object)
 
 			command_handler.update
@@ -300,8 +320,8 @@ feature {NONE} -- Implementation
 		-- As soon as there is a way to implement `Current' without re-building the structure each time,
 		-- this step should be no longer required.
 		
-	original_directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
-		-- Original directory item in which object represented by `new_object_id' was parented.
+	parent_directory_path: ARRAYED_LIST [STRING]
+		-- Parent directory path containing new conversion. If empty, the parent is the `window_selector'.
 		
 	name: STRING
 		-- Name used for the new object that is created.

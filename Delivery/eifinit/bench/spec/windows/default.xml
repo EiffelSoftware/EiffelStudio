@@ -101,6 +101,10 @@
 		<HEAD>Graphical Elements</HEAD>
 		<TOPIC TOPIC_ID="Editor_Preferences">
 			<HEAD>Editor specific preferences</HEAD>
+			<TEXT DESCRIPTION="Edition mode : True = Normal, False = Special">normal_editor_mode<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Color used to display normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>
 			<TEXT DESCRIPTION="Background color used to display normal text">normal_background_color<COLOR>255;255;255</COLOR></TEXT>
 			<TEXT DESCRIPTION="Color used to display selected text">selection_text_color<COLOR>255;255;128</COLOR></TEXT>

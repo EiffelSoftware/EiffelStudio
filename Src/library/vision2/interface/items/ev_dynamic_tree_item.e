@@ -12,7 +12,6 @@ class
 inherit
 	EV_TREE_NODE
 		redefine
-			initialize,
 			implementation
 		end
 		
@@ -26,19 +25,8 @@ feature {NONE} -- Initialization
 	make_with_function (a_subtree_function: like subtree_function) is
 			-- Create with `a_subtree_function'.
 		do
-			set_subtree_function (a_subtree_function)
 			default_create
-		end
-
-	initialize is
-			-- Set up expand action.
-		do
-			{EV_TREE_NODE} Precursor
-			if subtree_function /= void then
-				expand_actions.extend (~fill_from_subtree_function)
-				implementation.extend (create {EV_TREE_ITEM})
-				set_subtree_function_timeout (default_subtree_function_timeout)
-			end
+			set_subtree_function (a_subtree_function)
 		end
 
 feature -- Access
@@ -91,6 +79,11 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
+			if a_subtree_function /= Void then
+				expand_actions.extend (~fill_from_subtree_function)
+				implementation.extend (create {EV_TREE_ITEM})
+				set_subtree_function_timeout (default_subtree_function_timeout)
+			end
 			subtree_function := a_subtree_function
 		end
 
@@ -248,9 +241,11 @@ feature -- Cursor movement
 feature -- Contract support
 
 	is_expandable: BOOLEAN is
-			-- Is `Current' able to expand or collapse.
+			-- Is `Current' able to expand or collapse?
 		do
-			Result := True
+			if subtree_function /= Void then
+				Result := True	
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

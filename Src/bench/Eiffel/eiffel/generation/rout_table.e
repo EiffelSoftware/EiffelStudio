@@ -11,14 +11,22 @@ inherit
 		redefine
 			is_routine_table
 		end;
-	SHARED_GENERATOR;
-	SHARED_BODY_ID;
-	SHARED_DECLARATIONS;
 
-creation
+	SHARED_GENERATOR
+		undefine
+			setup, consistent, copy, is_equal
+		end
 
-	make
-	
+	SHARED_BODY_ID
+		undefine
+			setup, consistent, copy, is_equal
+		end
+
+	SHARED_DECLARATIONS
+		undefine
+			setup, consistent, copy, is_equal
+		end
+
 feature 
 
 	is_routine_table: BOOLEAN is True;
@@ -28,7 +36,6 @@ feature
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			old_cursor: CURSOR;
 			first_body_id: BODY_ID;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
@@ -36,25 +43,31 @@ feature
 			first_class: CLASS_C;
 			found: BOOLEAN;
 			is_deferred: BOOLEAN;
+			i, nb, old_position: INTEGER
 		do
-			old_cursor := cursor;
+			old_position := position
+
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
 			if not System.poofter_finalization then
 					-- Go to the entry of type id greater or equal than `type_id':
 					-- note than deferred feature have no entries in the tables
 				goto_used (type_id);
+				i := position
 			else
-				start
+				i := lower
 			end;
+
+			nb := upper
+
 			from
 				is_deferred := True;
 				cl_type := System.class_type_of_id (type_id);
 				first_class := cl_type.associated_class;
 			until
-				after or else Result
+				Result or else i > nb
 			loop
-				entry := item;
+				entry := array_item (i);
 				second_type_id := entry.type_id;
 				if second_type_id = type_id then
 					is_deferred := False
@@ -70,43 +83,42 @@ feature
 						end;
 					end;
 				end;
-				forth
+				i := i + 1
 			end;
+
 			if not Result then
 				Result := is_deferred and then found
 			end;
-			go_to (old_cursor);
+
+			position := old_position
 		end;
 
 	generate (file: INDENT_FILE) is
 			-- Generation of the routine table in file "erout*.c".
 		local
 			entry: ROUT_ENTRY;
-			i, nb, min_id, max_id: INTEGER;
-			routine_name, c_name: STRING;
+			i, nb, index: INTEGER;
+			routine_name: STRING;
 			empty_function_ptr_string: STRING
 			function_ptr_cast_string: STRING
 		do
-			c_name := rout_id.table_name;
-			min_id := min_used;
-			max_id := max_used;
-			empty_function_ptr_string := "(char *(*)()) 0,%N"
-			function_ptr_cast_string := "(char *(*)()) "
 			from
+				empty_function_ptr_string := "(char *(*)()) 0,%N"
+				function_ptr_cast_string := "(char *(*)()) "
 				file.putstring ("char *(*");
-				file.putstring (c_name);
+				file.putstring (rout_id.table_name);
 				file.putstring ("[])() = {%N");
-				i := min_id;
+				i := min_used;
+				nb := max_used;
 				goto_used (i);
-				nb := max_id;
+				index := position
 			until
 				i > nb
 			loop
-				entry := item;
+				entry := array_item (index);
 				if i = entry.type_id then
 					if entry.used then
 						routine_name := entry.routine_name;
-
 						file.putstring (function_ptr_cast_string);
 						file.putstring (routine_name);
 						file.putstring (",%N");
@@ -116,7 +128,7 @@ feature
 					else
 						file.putstring (empty_function_ptr_string);
 					end;
-					forth;
+					index := index + 1
 				else
 					file.putstring (empty_function_ptr_string);
 				end;
@@ -130,7 +142,7 @@ feature
 			-- in a static type greater than `type_id'.
 		do
 			goto_used (type_id);
-			if not after then
+			if position <= upper then
 				Result := item.routine_name
 			else
 				Result := "((void (*)()) RTNR)"
@@ -142,7 +154,7 @@ feature
 			-- in a static type greater than `type_id'.
 		do
 			goto_used (type_id);
-			Result := not after
+			Result := position <= upper 
 		end
 
 	workbench_c_type: STRING is "struct ca_info";

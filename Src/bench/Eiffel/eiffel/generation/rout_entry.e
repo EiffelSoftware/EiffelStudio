@@ -3,14 +3,18 @@
 class ROUT_ENTRY
 
 inherit
+	ENTRY
+		redefine
+			update
+		end
 
-	ENTRY;
-	SHARED_ID_TABLES;
-	SHARED_EXEC_TABLE;
-	SHARED_USED_TABLE;
+	SHARED_ID_TABLES
+	SHARED_EXEC_TABLE
+	SHARED_USED_TABLE
+	SHARED_PATTERN_TABLE
 	COMPILER_EXPORTER
 
-feature
+feature -- from ROUT_ENTRY
 
 	body_index: BODY_INDEX;
 			-- Body index
@@ -44,6 +48,64 @@ feature
 		do
 			Result := Body_index_table.item (body_index);
 		end;
+
+feature -- previously in ROUT_UNIT
+
+	written_in: CLASS_ID
+			-- Id of the class where the associated feature of the
+			-- unit is written in
+
+	set_written_in (i: CLASS_ID) is
+			-- Assign `i' to `written_in'.
+		do
+			written_in := i
+		end;
+
+	written_class: CLASS_C is
+			-- Class where the feature is written in
+		do
+			Result := System.class_of_id (written_in);
+		end;
+
+	new_poly_table: ROUT_TABLE is
+			-- New associated polymorhic table
+		do
+			!!Result;
+		end;
+
+	entry (class_type: CLASS_TYPE): ROUT_ENTRY is
+			-- Entry for a routine
+		local
+			written_type: CL_TYPE_I;
+		do
+			!!Result;
+			Result.set_type_id (class_type.type_id);
+			Result.set_type (feature_type (class_type));
+			Result.set_body_index (body_index);
+debug
+io.error.putstring ("arg = ");
+io.error.putstring (class_type.type.base_class.name);
+io.error.putstring ("   ");
+io.error.putstring ("cur = ");
+io.error.putstring (written_class.name);
+io.error.new_line;
+end;
+			written_type := written_class.meta_type (class_type.type);
+			Result.set_written_type_id (written_type.type_id);
+			-- Not necessary anymore
+			--Result.set_pattern_id
+			--	(Pattern_table.c_pattern_id (pattern_id, written_type) - 1);
+		end;
+
+feature -- update
+
+	update (class_type: CLASS_TYPE) is
+		do
+			{ENTRY} Precursor (class_type)
+			set_written_type_id (written_class.meta_type (class_type.type).type_id)
+		end
+
+feature -- from ROUT_ENTRY
 
 	used: BOOLEAN is
 			-- Is the entry used ?

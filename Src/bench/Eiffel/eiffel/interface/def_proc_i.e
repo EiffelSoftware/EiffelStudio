@@ -3,23 +3,14 @@ class DEF_PROC_I
 inherit
 
 	PROCEDURE_I			
-		rename
-			update_api as old_update_api
 		redefine
-			is_deferred, has_poly_unit, to_generate_in,
-			to_melt_in, can_be_inlined
-		end
-	PROCEDURE_I			
-		redefine
-			is_deferred, has_poly_unit, to_generate_in,
+			is_deferred, has_entry, to_generate_in,
 			to_melt_in, can_be_inlined, update_api
-		select
-			update_api
 		end
 	
 feature 
 
-	has_poly_unit: BOOLEAN is False;
+	has_entry: BOOLEAN is False;
 			-- No polymorphic unit for deferred features
 
 	is_deferred: BOOLEAN is
@@ -74,7 +65,7 @@ feature {NONE} -- Implementation
 
 	update_api (f: E_ROUTINE) is
 		do
-			old_update_api (f);
+			{PROCEDURE_I} Precursor (f);
 			f.set_deferred (True);
 		end;
 

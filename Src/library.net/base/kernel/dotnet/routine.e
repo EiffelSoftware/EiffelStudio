@@ -86,7 +86,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value.
 		do
-			Result := rout_disp.get_hash_code
+			Result := rout_disp.get_hash_code.hash_code
 		end
 
 	precondition (args: like operands): BOOLEAN is

@@ -38,7 +38,7 @@ feature -- Access
 			-- Hash code value
 		do
 			if item /= Void then
-				Result := item.get_hash_code
+				Result := item.get_hash_code.hash_code
 			end
 		end
 

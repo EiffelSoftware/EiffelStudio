@@ -1,8 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision dialog. Mswindows interface."
+	description: "Eiffel Vision dialog. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,9 +13,6 @@ inherit
 		undefine
 			propagate_background_color,
 			propagate_foreground_color,
-			--|FIXME See last_call_was_destroy from
-			--|EV_WINDOW_IMP to see why this is
-			--|undefined below.
 			last_call_was_destroy
 		redefine
 			interface
@@ -25,25 +21,23 @@ inherit
 	EV_TITLED_WINDOW_IMP
 		redefine
 			default_style,
-			interface,
-			initialize
+			interface
+		end
+
+	WEL_DS_CONSTANTS
+		export
+			{NONE} all
 		end
 
 create
 	make
 
-feature -- Basic operations
+feature {NONE} -- Initialization
 
-	initialize is
-		do
-			--|FIXME This has been added TEMPORARILY
-			--|To fix a sizing problem. The whole packing and
-			--| redrawing mechanism will be re-written.
-			--| This should cure the problem and remove the need
-			--| For this fix.
-			set_minimum_size (250, 140)
-			{EV_TITLED_WINDOW_IMP} Precursor
-		end
+	--| FIXME Default is_modal
+	--| FIXME replace destroy agent with "cancel" result agent.
+
+feature -- Basic operations
 
 	block is
 			-- Wait until window is closed by the user.
@@ -60,45 +54,57 @@ feature -- Basic operations
 	show_modal is
 			-- Show and wait until window is closed.
 		do
-			enable_modal
-			show
-			block
+			if is_modal then
+				show
+			--	block
+			else
+				enable_modal
+				show
+			--	block
+			--	disable_modal
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_border + Ws_dlgframe --+ Ws_sysmenu 
-					+ Ws_overlapped --+ Ws_clipchildren
-					--+ Ws_clipsiblings
+			Result := Ws_popup + Ws_sysmenu + Ws_caption + Ds_modalframe
+				+ Ds_setforeground
+				--+ Ws_dlgframe
+				--+ Ws_overlapped
+				+ Ws_clipchildren
+				--+ Ws_clipsiblings
 		end
 
 	interface: EV_DIALOG
 
 end -- class EV_DIALOG_IMP
 
---|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/19 00:40:52  brendel
+--| Revised. enable/disable modal are still to be implemented.
+--|
 --| Revision 1.10  2000/04/04 19:29:50  rogers
 --| Redefined initialize, to give the dialog a minimum size, to
 --| fix the packing problem. Only a temporary solution.

@@ -14,7 +14,9 @@ inherit
 	
 	EV_NOTEBOOK_I
 		
-	EV_INVISIBLE_CONTAINER_IMP
+	EV_CONTAINER_IMP
+		undefine
+			add_child_ok
 		redefine
 			add_child
 		end
@@ -30,6 +32,13 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_notebook_new ()
 		end	
+
+feature -- Status report
+
+	count: INTEGER is
+			-- Number of pages in the notebook
+		do
+		end
 	
 feature -- Status setting
 	
@@ -41,6 +50,12 @@ feature -- Status setting
 	
 	
 feature -- Element change
+
+	set_page_title (index: INTEGER; str: STRING) is
+			-- Set the label of the `index' page of the notebook.
+			-- The first page is the page number 1.
+		do
+		end
 	
 	append_page (c: EV_WIDGET_IMP; label: STRING) is
 		-- New page for notebook containing child 'c' with tab 
@@ -61,6 +76,7 @@ feature {EV_CONTAINER} -- Element change
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into container
 		do
+			child := child_imp
 			--gtk_container_add (widget, child_imp.widget)
 		end
 

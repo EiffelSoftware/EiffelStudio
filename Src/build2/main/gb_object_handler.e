@@ -46,6 +46,9 @@ feature -- Basic operation
 			tool_bar_object: GB_TOOL_BAR_OBJECT
 			list_object: GB_LIST_OBJECT
 			combo_box_object: GB_COMBO_BOX_OBJECT
+			menu_bar_object: GB_MENU_BAR_OBJECT
+			menu_object: GB_MENU_OBJECT
+			menu_item_object: GB_MENU_ITEM_OBJECT
 			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 				-- When we change the type of an object, we keep the
@@ -63,22 +66,29 @@ feature -- Basic operation
 					new_object.set_up_display_object_events (new_object.display_object, new_object.object)	
 				end
 			end
+				--| FIXME there should be a class in the object inheritence structure
+				--| which allows us to avoid all this.
 			container_object ?= container
 			cell_object ?= container
 			tool_bar_object ?= container
 			list_object ?= container
 			combo_box_object ?= container
+			menu_bar_object ?= container
+			menu_object ?= container
 			check
 				unsupported_item_type: container_object /= Void or cell_object /= Void or tool_bar_object /= Void
-				or list_object /= Void or combo_box_object /= Void
+				or list_object /= Void or combo_box_object /= Void or menu_bar_object /= Void or menu_object /= Void
 			end
 			if container_object /= Void then
 				container_object.add_child_object (new_object, position)
 			end
 			if cell_object /= Void then
-				check
-					position_is_one: position = 1
-				end
+		--| FIXME only applies if not a window, as a window may
+		--| have two items, one representing a menu, and the other
+		--| representing the contents.
+		--		check
+		--			position_is_one: position = 1
+		--		end
 				cell_object.add_child_object (new_object)
 			end
 			
@@ -92,6 +102,14 @@ feature -- Basic operation
 			
 			if combo_box_object /= Void then
 				combo_box_object.add_child_object (new_object, position)
+			end
+			
+			if menu_bar_object /= Void then
+				menu_bar_object.add_child_object (new_object, position)
+			end
+			
+			if menu_object /= Void then
+				menu_object.add_child_object (new_object, position)
 			end
 			
 				-- If we are moving an object within objects, then it will already
@@ -321,14 +339,23 @@ feature -- Basic operation
 			list_object: GB_LIST_OBJECT
 			list_item_object: GB_LIST_ITEM_OBJECT
 			combo_box_object: GB_COMBO_BOX_OBJECT
+			menu_bar_object: GB_MENU_BAR_OBJECT
+			titled_window_object: GB_TITLED_WINDOW_OBJECT
+			menu_object: GB_MENU_OBJECT
+			menu_item_object: GB_MENU_ITEM_OBJECT
 			current_type: INTEGER
 			text: STRING
 		do
 			text := a_text
 			current_type := dynamic_type_from_string (text)		
 			if type_conforms_to (current_type, dynamic_type_from_string ("EV_CELL")) then
-				create cell_object.make_with_type (text)
-				Result ?= cell_object
+				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TITLED_WINDOW")) then
+					create titled_window_object.make_with_type (text)
+					Result ?= titled_window_object
+				else
+					create cell_object.make_with_type (text)
+					Result ?= cell_object
+				end
 			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_CONTAINER")) then
 				if type_conforms_to (current_type, dynamic_type_from_string ("EV_WIDGET_LIST")) then
 					create widget_list_object.make_with_type (text)
@@ -358,6 +385,15 @@ feature -- Basic operation
 					create primitive_object.make_with_type (text)
 					Result ?= primitive_object
 				end
+			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_BAR")) then
+				create menu_bar_object.make_with_type (text)
+				Result ?= menu_bar_object
+			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU")) then
+				create menu_object.make_with_type (text)
+				Result ?= menu_object
+			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_ITEM")) then
+				create menu_item_object.make_with_type (text)
+				Result ?= menu_item_object
 			elseif type_conforms_to (current_type, dynamic_type_from_string ("EV_ITEM")) then
 				if type_conforms_to (current_type, dynamic_type_from_string ("EV_TOOL_BAR_ITEM")) then
 					create tool_bar_item_object.make_with_type (text)
@@ -369,8 +405,7 @@ feature -- Basic operation
 					check
 						invalid_type_conformance: False
 					end
-				end
-				
+				end	
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -384,21 +419,32 @@ feature -- Basic operation
 		local
 			window_object: GB_CELL_OBJECT
 			window_child: GB_OBJECT
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			menu_bar_object: GB_MENU_BAR_OBJECT
+			layout_item, temp_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			window_object ?= objects.first
 			check
 				window_found: window_object /= Void
 			end
+				-- A window may only have one child, but the layout item may have up to 2 items.
+				-- One to represent the child, and one to represent a menu bar.
 			if window_object.layout_item /= Void and then not window_object.layout_item.is_empty then
-				layout_item ?= window_object.layout_item.first
-				window_child ?= layout_item.object
-				check
-					window_child_not_void: window_child /= Void
+				layout_item ?= window_object.layout_item
+				
+				from
+					layout_item.start
+				until
+					layout_item.off
+				loop
+					
+					temp_layout_item ?= layout_item.item
+						window_child ?= temp_layout_item.object
+						check
+							window_child_not_void: window_child /= Void
+						end
+						window_child.unparent
+					layout_item.forth
 				end
-				window_child.unparent
-				objects.wipe_out
-				objects.extend (window_object)
 			end
 		end
 		
@@ -548,6 +594,16 @@ feature {GB_XML_OBJECT_BUILDER} -- Basic operations
 			new_object_layout_item_not_void: new_object.layout_item /= Void
 			new_object_display_object_not_void: new_object.display_object /= Void
 			new_object_object_not_void: new_object.object /= Void
+		end
+		
+feature {GB_TITLED_WINDOW_OBJECT} -- Implementation
+		
+	add_object_to_objects (an_object: GB_OBJECT) is
+			--
+		require
+			not_already_included: not objects.has (an_object)
+		do
+			objects.extend (an_object)
 		end
 
 feature -- Access

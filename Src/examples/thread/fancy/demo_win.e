@@ -4,7 +4,6 @@ deferred class
 inherit
 	WEL_FRAME_WINDOW
 		redefine	
-			on_wm_destroy,
 			on_wm_close,
 			closeable,
 			class_background,
@@ -80,16 +79,6 @@ feature -- Redefined features
 						a_width - 5, a_height -4, True)
 				end
 			end
-		end
-
-	on_wm_destroy is
-			-- Wm_destroy message.
-			-- Quit the application if `Current' is the
-			-- application's main window.
-		do
-			on_destroy
-			exists := False
-			unregister_window (Current)
 		end
 
 	on_wm_close is

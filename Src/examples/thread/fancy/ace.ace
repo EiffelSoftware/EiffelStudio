@@ -2,30 +2,53 @@ system
 	fancy
 
 root
-	APPLICATION (root_cluster): "make"
+	APPLICATION: make
 
 default
-	assertion (no);
-	multithreaded (yes);
---	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel");
+	assertion(no)
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("dlg_dispatcher")
+	disabled_debug("gdi_count")
+	disabled_debug("wel")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("win_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(no)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(no)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(no)
+	inlining(no)
+	multithreaded(yes)
 
 cluster
-	root_cluster:	".";
+	root_cluster:		"."
 
-		-- EiffelBase
-	all base:			"$ISE_EIFFEL\library\base"
+
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"
+			"table_eiffel3"; 
 		end
 
-		-- WEL
-	all wel:			"$ISE_EIFFEL\library\wel"
+	all wel:		"$ISE_EIFFEL\library\wel"
 
-		-- EiffelThread
-	thread: 		"$ISE_EIFFEL\library\thread"
+	thread:		"$ISE_EIFFEL\library\thread"
 
 external
-	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include";
-	object: 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\mtwel.lib";
+
+	include_path:
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+
+	object:
+		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\mtwel.lib"
 
 end

@@ -3107,21 +3107,21 @@ feature -- Plug and Makefile file
 			creation_feature := string_cl.feature_table.item
 											(creators.key_for_iteration);
 			set_count_feat := string_cl.feature_table.item ("set_count");
-			if Concurrent_eiffel then
-				to_c_feat := string_cl.feature_table.item ("to_c");
-			end
 			str_make_name := creation_feature.body_id.feature_name (id)
 			set_count_name := set_count_feat.body_id.feature_name (id)
-			to_c_name := to_c_feat.body_id.feature_name (id)
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring ("();%N");
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring ("();%N");
-			Plug_file.putstring ("extern void ");
-			Plug_file.putstring (to_c_name);
-			Plug_file.putstring ("();%N");
+			if Concurrent_eiffel then
+				to_c_feat := string_cl.feature_table.item ("to_c");
+				to_c_name := to_c_feat.body_id.feature_name (id)
+				Plug_file.putstring ("extern void ");
+				Plug_file.putstring (to_c_name);
+				Plug_file.putstring ("();%N");
+			end
 
 			--| make array declaration
 			--| Temporary solution. When a system uses precompiled information,

@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			background_unset: not background_set							
 			menu_nameunset: not menu_name_set
 			class_name_set: class_name.is_equal (a_class_name)
+			atom_set: atom = 0
 		end
 
 feature -- Access
@@ -58,6 +59,9 @@ feature -- Access
 			result_not_void: Result /= Void
 			result_not_empty: not Result.is_empty
 		end
+
+	atom: INTEGER
+			-- Class atom that uniquely identifies class being registered.
 
 	menu_name: STRING is
 			-- Menu name to load from the resource
@@ -315,18 +319,26 @@ feature -- Status report
 	registered: BOOLEAN is
 			-- Is the class registered?
 		local
-			a_wel_string: WEL_STRING
-			p: POINTER
+			p, null: POINTER
 		do
-			!! a_wel_string.make (class_name)
 			p := c_calloc (1, structure_size)
-			if p /= default_pointer then
-				Result := cwin_get_class_info (default_pointer,
-					a_wel_string.item, p) 
-				or else
-					cwin_get_class_info (
-						main_args.current_instance.item,
-						a_wel_string.item, p)
+			if p /= null then
+				if atom = 0 then
+						-- Not yet registered or already unregistered
+					Result := cwin_get_class_info (default_pointer,
+						cwel_wnd_class_get_class_name (item), p) 
+						or else  cwin_get_class_info (
+							main_args.current_instance.item,
+							cwel_wnd_class_get_class_name (item), p)
+				else
+						-- Already registered. Simply check that it is still
+						-- registered.
+					Result := cwin_get_class_info (default_pointer,
+						cwel_integer_to_pointer (atom), p) 
+						or else cwin_get_class_info (
+							main_args.current_instance.item,
+							cwel_integer_to_pointer (atom), p) 
+				end
 				c_free (p)
 			end
 		end
@@ -334,43 +346,37 @@ feature -- Status report
 	icon_set: BOOLEAN is
 			-- Is the icon set?
 		do
-			Result := cwel_wnd_class_get_icon (item) /=
-				default_pointer
+			Result := cwel_wnd_class_get_icon (item) /= default_pointer
 		end
 
 	cursor_set: BOOLEAN is
 			-- Is the cursor set?
 		do
-			Result := cwel_wnd_class_get_cursor (item) /=
-				default_pointer
+			Result := cwel_wnd_class_get_cursor (item) /= default_pointer
 		end
 
 	background_set: BOOLEAN is
 			-- Is the background set?
 		do
-			Result := cwel_wnd_class_get_background (item) /=
-				default_pointer
+			Result := cwel_wnd_class_get_background (item) /= default_pointer
 		end
 
 	menu_name_set: BOOLEAN is
 			-- Is the menu name set?
 		do
-			Result := cwel_wnd_class_get_menu_name (item) /=
-				default_pointer
+			Result := cwel_wnd_class_get_menu_name (item) /= default_pointer
 		end
 
 	window_procedure_set: BOOLEAN is
 			-- Is the window procedure set?
 		do
-			Result := cwel_wnd_class_get_wnd_proc (item) /=
-				default_pointer
+			Result := cwel_wnd_class_get_wnd_proc (item) /= default_pointer
 		end
 
 	instance_set: BOOLEAN is
 			-- Is the instance set?
 		do
-			Result := cwel_wnd_class_get_instance (item) /=
-				default_pointer
+			Result := cwel_wnd_class_get_instance (item) /= default_pointer
 		end
 
 feature -- Basic operations
@@ -378,7 +384,7 @@ feature -- Basic operations
 	register is
 			-- Register the window class.
 		do
-			cwin_register_class (item)
+			atom := cwin_register_class (item)
 		ensure
 			registered: registered
 		end
@@ -389,11 +395,18 @@ feature -- Basic operations
 		require
 			registered: registered
 		local
-			a_wel_string: WEL_STRING
+			success: BOOLEAN
 		do
-			!! a_wel_string.make(class_name)
-			cwin_unregister_class (a_wel_string.item,
-				main_args.current_instance.item)
+			if atom /= 0 then
+				success := cwin_unregister_class (cwel_integer_to_pointer (atom),
+					main_args.current_instance.item)
+			else
+				success := cwin_unregister_class (cwel_wnd_class_get_class_name (item),
+					main_args.current_instance.item)
+			end
+			if success then
+				atom := 0
+			end
 		ensure
 			no_registered: not registered
 		end
@@ -530,18 +543,18 @@ feature {NONE} -- Externals
 			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
-	cwin_register_class (ptr: POINTER) is
+	cwin_register_class (ptr: POINTER): INTEGER is
 			-- SDK RegisterClass
 		external
-			"C [macro <wel.h>] (WNDCLASS *)"
+			"C [macro <wel.h>] (WNDCLASS *): EIF_INTEGER"
 		alias
 			"RegisterClass"
 		end
 
-	cwin_unregister_class (cls_name, hinstance: POINTER) is
+	cwin_unregister_class (cls_name, hinstance: POINTER): BOOLEAN is
 			-- SDK UnregisterClass
 		external
-			"C [macro <wel.h>] (LPCSTR, HINSTANCE)"
+			"C [macro <wel.h>] (LPCSTR, HINSTANCE): EIF_BOOLEAN"
 		alias
 			"UnregisterClass"
 		end

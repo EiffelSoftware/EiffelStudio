@@ -2,7 +2,10 @@ class WIN_CONFIG_CMD
 
 inherit 
 
-	EB_UNDOABLE;
+	CONTEXT_CMD
+		redefine
+			context, work, redo, undo
+		end;
 	CONSTANTS
 
 creation
@@ -13,7 +16,9 @@ feature
 
 	context: WINDOW_C;
 
-	failed: BOOLEAN is do end;
+	context_work is do end;
+
+	associated_form: INTEGER is do end;
 
 	make (a_context: WINDOW_C) is
 		do
@@ -72,17 +77,12 @@ feature
 			undo 
 		end;
 
- 	name: STRING is
-  		do
-   			!!Result.make (0);
-   			Result.append (Command_names.cont_geometry_cmd_name);
-   			Result.append (" (");
-   			if context.label /= Void then
-				Result.append (context.label);
-   			else
-				Result.append (" ");
-   			end;
-   			Result.append (")");
- 	 	end;
+	c_name: STRING is
+		do
+			Result := Command_names.cont_geometry_cmd_name
+		end;
+
+
+	context_undo is do end;
 
 end

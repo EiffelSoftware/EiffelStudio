@@ -122,34 +122,34 @@ feature {NONE} -- Externals
 
 	c_size_of_guid: INTEGER is
 		external 
-			"C [macro %"E_guid.h%"]"
+			"C [macro %"ecom_guid.h%"]"
 		alias
 			"sizeof(GUID)"
 		end
 
 	ccom_string_to_guid (wide_str: POINTER; a_guid: POINTER) is
 		external
-			"C [macro %"E_guid.h%"]"
+			"C [macro %"ecom_guid.h%"]"
 		end
 
 	ccom_generate_guid (a_guid: POINTER) is
 		external
-			"C (GUID *)| %"E_guid.h%""
+			"C (GUID *)| %"ecom_guid.h%""
 		end
 
 	ccom_guid_to_wide_string (a_guid: POINTER): POINTER is
 		external
-			"C (GUID *): EIF_POINTER | %"E_guid.h%""
+			"C (GUID *): EIF_POINTER | %"ecom_guid.h%""
 		end
 
 	ccom_is_equal_guid (giud1, guid2: POINTER): BOOLEAN is
 		external
-			"C [macro %"E_guid.h%"]"
+			"C [macro %"ecom_guid.h%"]"
 		end
 
 	ccom_guid_to_defstring (a_guid: POINTER): STRING is
 		external
-			"C (GUID *): EIF_REFERENCE | %"E_guid.h%""
+			"C (GUID *): EIF_REFERENCE | %"ecom_guid.h%""
 		end
 
 end -- class ECOM_GUID

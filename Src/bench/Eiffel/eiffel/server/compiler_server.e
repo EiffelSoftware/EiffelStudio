@@ -53,7 +53,6 @@ end
 	put_precompiled (fid: FILE_ID; item_id: H; sinf: SERVER_INFO) is
 		local
 			server_file: SERVER_FILE
-			info: SERVER_INFO
 		do
 			file_ids.extend (fid)
 			force (sinf, updated_id (item_id))
@@ -190,14 +189,16 @@ end
 
 					-- Id not avaible in memory
 				info := tbl_item (real_id)
-				server_file := Server_controler.file_of_id (info.id)
-				if not server_file.is_open then
-					Server_controler.open_file (server_file)
+				if info /= Void then
+					server_file := Server_controler.file_of_id (info.id)
+					if not server_file.is_open then
+						Server_controler.open_file (server_file)
+					end
+					Result := retrieve_all (server_file.descriptor, info.position)
+						-- Insert it in the queue
+					Result.set_id (real_id)
+					cache.force (Result)
 				end
-				Result := retrieve_all (server_file.descriptor, info.position)
-					-- Insert it in the queue
-				Result.set_id (real_id)
-				cache.force (Result)
 			end
 		end
 
@@ -218,13 +219,15 @@ end
 
 			real_id := updated_id (an_id)
 			info := tbl_item (real_id)
-			server_file := Server_controler.file_of_id (info.id)
-			if not server_file.is_open then
-				Server_controler.open_file (server_file)
+			if info /= Void then
+				server_file := Server_controler.file_of_id (info.id)
+				if not server_file.is_open then
+					Server_controler.open_file (server_file)
+				end
+					-- Id not avaible in memory
+				Result := retrieve_all (server_file.descriptor, info.position)
+				Result.set_id (real_id)
 			end
-				-- Id not avaible in memory
-			Result := retrieve_all (server_file.descriptor, info.position)
-			Result.set_id (real_id)
 		end
 
 	clear is

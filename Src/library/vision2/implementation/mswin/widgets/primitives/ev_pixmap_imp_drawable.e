@@ -550,12 +550,11 @@ feature -- Delegated features
 			-- Check if the dimensions of the widget are set to 
 			-- the values given or the minimum values possible 
 			-- for that widget.
+		obsolete "don't use it"
 		do
-			promote_to_widget
-			Result := interface.implementation.dimensions_set (
-				new_width,
-				new_height
-				)
+			check
+				do_not_use: False
+			end
 		end
 
 	disable_sensitive is
@@ -814,6 +813,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/20 01:15:03  pichery
+--| Fixed call to an obsolete feature
+--|
 --| Revision 1.2  2000/04/12 17:01:57  brendel
 --| Added redefinition of on_parented.
 --|

@@ -31,6 +31,11 @@ inherit
 
 	LACE_AST_FACTORY
 		export {NONE} all end
+		
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -92,28 +97,6 @@ feature -- Removal
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting.)
 		do
-		end
-
-feature {NONE} -- Actions
-
-	new_clickable_id (an_id: ID_SD): PAIR [ID_SD, CLICK_AST] is
-			-- New clickable node for `an_id';
-			-- Register it in `click_list'
-		require
-			an_id_not_void: an_id /= Void
-		local
-			click_ast: CLICK_AST
-		do
-			create click_ast.initialize (Dummy_clickable_ast, current_position.line_number,
-				current_position.start_position, current_position.end_position)
-			click_list.extend (click_ast)
-			create Result
-			Result.set_first (an_id)
-			Result.set_second (click_ast)
-		ensure
-			clickable_id_not_void: Result /= Void
-			id_set: Result.first = an_id
-			click_ast_not_void: Result.second /= Void
 		end
 
 feature {NONE} -- Keywords
@@ -241,8 +224,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			create an_error.make (current_position.start_position, current_position.end_position,
-				filename, 0, "", is_in_use_file)
+			create an_error.make (line, column, filename, "", is_in_use_file)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialize object.
 		do
 			create in_types.make (10)
+			in_types.compare_objects
 
 			in_types.put (Com_date_type, Date_time)
 			in_types.put (Com_float_type, Real_type)
@@ -38,8 +39,10 @@ feature {NONE} -- Initialization
 			in_types.put (Com_decimal_type, Ecom_decimal)
 			in_types.put (Iunknown, Ecom_unknown_interface)
 			in_types.put (IDispatch, Ecom_automation_interface)
+			in_types.put ("VARIANT", "ECOM_VARIANT")
 
 			create inout_types.make (10)
+			inout_types.compare_objects
 
 			inout_types.put (Com_integer_pointer, Integer_ref_type)
 			inout_types.put (Variant_bool_pointer, Boolean_ref_type)
@@ -48,6 +51,8 @@ feature {NONE} -- Initialization
 			inout_types.put (Com_double_pointer, Double_ref_type)
 
 			create cell_types.make (3)
+			cell_types.compare_objects
+			
 			cell_types.put (Bstr, String_type)
 			cell_types.put (Com_date_type, Date_time)
 			cell_types.put (Iunknown, Ecom_unknown_interface)
@@ -81,7 +86,7 @@ feature -- Status report
 	inout_type: BOOLEAN
 			-- Is an [in, out] type?
 
-	support_eiffel_type (l_type: STRING): BOOLEAN is
+	supported_eiffel_type (l_type: STRING): BOOLEAN is
 			-- Whether Eiffel 'l_type' is supported?
 		require
 			non_void_type: l_type /= Void
@@ -89,9 +94,10 @@ feature -- Status report
 		do
 			if in_types.has (l_type) or inout_types.has (l_type) then
 				Result := True
-			elseif l_type.substring_index (Ecom_array_type, 1) > 0 or
-					 l_type.substring_index (Cell_type, 1) > 0 then
-				Result := True
+			elseif is_array (l_type) then 
+				Result := in_types.has (inner_type (l_type))
+			elseif is_cell (l_type) then
+				Result := supported_eiffel_type (inner_type (l_type))
 			else 
 				Result := False
 			end
@@ -104,7 +110,7 @@ feature -- Basic operations
 			-- Void if type not supported
 		require
 			non_void_type: l_type /= Void
-			support_type: support_eiffel_type (l_type)
+			supported_type: supported_eiffel_type (l_type)
 		local
 			tmp_string: STRING
 		do
@@ -169,7 +175,7 @@ feature {NONE} -- Implementation
 			Result := clone (Safearray)
 			Result.append ("(")
 
-			g_type := l_type.substring (l_type.index_of ('%(', 1) + 1, l_type.index_of ('%)', 1) -1 )
+			g_type := inner_type (l_type)
 
 			if in_types.has (g_type) then
 				Result.append (in_types.item (g_type))
@@ -184,6 +190,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	inner_type (l_type: STRING): STRING is
+			-- Inner type of CELL or ECOM_ARRAY
+		require
+			non_void_type: l_type /= Void
+			valid_type: not l_type.is_empty
+			generic_type: is_array (l_type) or is_cell (l_type)
+		do
+			Result := l_type.substring (l_type.index_of ('%(', 1) + 1, 
+										l_type.last_index_of ('%)', l_type.count) -1 )
+		end
+		
 	com_cell_type (l_type: STRING): STRING is
 			-- Com pointer type of Eiffel 'l_type'
 		require
@@ -192,7 +209,7 @@ feature {NONE} -- Implementation
 		local
 			g_type: STRING
 		do
-			g_type := l_type.substring (l_type.index_of ('%(', 1) + 1, l_type.index_of ('%)', 1) -1 )
+			g_type := inner_type (l_type)
 
 			if cell_types.has (g_type) then
 				Result := clone (cell_types.item (g_type))

@@ -1,0 +1,57 @@
+--!----------------------------------------------------------------
+--! EiffelVision2-application Ace-file for the Mswindows platform.
+--!
+--! See notice at end of file.
+--! date: "$Date$
+--!----------------------------------------------------------------
+
+system
+	fig -- Your executable.
+
+root
+	FIGURE_TEST (root_cluster): "make_and_launch"
+
+default
+	assertion (all)
+
+cluster
+
+	root_cluster:			"."
+	devel:					"c:\work"
+	all base (devel):		"$\base"
+		exclude
+			"table_eiffel3"
+		end
+
+	all wel (devel):		"$\wel"
+	event (devel):			"$\event"
+
+	all vision2 (devel):	"$\vision2"
+		exclude 
+			"gtk"
+			"EIFGEN"
+		end
+
+external
+        include_path:
+			"c:\work\wel\spec\windows\include"
+        object:
+			"c:\work\wel\spec\$(COMPILER)\lib\wel.lib"
+
+end
+
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------

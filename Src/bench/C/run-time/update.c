@@ -20,6 +20,7 @@
 #include "update.h"
 #include "cecil.h"
 #include "misc.h"
+#include "file.h"
 #include "err_msg.h"
 
 #ifdef __WATCOMC__
@@ -74,6 +75,9 @@ char ignore_updt;
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
+#ifdef __WATCOMC__
+		chdir ("..\\..");
+#endif
 		return;
 	}
 
@@ -113,13 +117,17 @@ strcat(filename, UPDT_NAME);
 #endif
 
 if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-	print_err_msg(stderr, "Error: could not open Eiffel update file\n");
+	print_err_msg(stderr, "Error: could not open Eiffel update file %s\n", filename);
+	print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
 	exit(1);
 }
 	xfree (filename);
 	wread(&c, 1);				/* Is there something to update ? */
 	if (c == '\0') {
 		init_desc();
+#ifdef __WATCOMC__
+		chdir ("..\\..");
+#endif
 		return;
 	}
 
@@ -242,6 +250,9 @@ if (body_id >= 0)
 
 /* TEMPORARY */
 fclose(fil);
+#ifdef __WATCOMC__
+chdir ("..\\..");
+#endif
 }
 
 /* TEMPORARY */

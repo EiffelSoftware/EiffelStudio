@@ -88,7 +88,7 @@ feature -- Access
 	Bc_and_then:		CHARACTER is '%/074/';
 	Bc_or_else:			CHARACTER is '%/075/';
 	Bc_protect:			CHARACTER is '%/076/';
-	Bc_release:			CHARACTER is '%/077/';
+	Bc_notused_77:		CHARACTER is '%/077/';
 	Bc_jmp_t:			CHARACTER is '%/078/';
 	Bc_rescue: 			CHARACTER is '%/080/';
 	Bc_end_rescue:		CHARACTER is '%/081/';
@@ -144,7 +144,7 @@ feature -- Access
 	Bc_ref_to_ptr:		CHARACTER is '%/132/';
 	Bc_rcreate:			CHARACTER is '%/133/';
 	Bc_gen_param_create:CHARACTER is '%/134/';
-	Bc_create_exp:		CHARACTER is '%/135/';
+	Bc_notused_135:		CHARACTER is '%/135/';
 	Bc_null_pointer:	CHARACTER is '%/136/';
 
 		-- Special instructions operation for basic type optimisations

@@ -740,7 +740,7 @@ feature -- IL Generation
 				-- Generate custom attributes if defined on Eiffel classes
 				-- to be generated.
 			if not class_c.is_external then
-				ast_context.set_a_class (class_c)
+				ast_context.set_current_class (class_c)
 				meta_data_generator.generate_class_custom_attribute (class_type)
 			end
 

@@ -31,6 +31,8 @@ inherit
 
 	MODE_CONSTANTS
 
+	SHARED_APPLICATION
+
 creation
 
 	make
@@ -82,7 +84,12 @@ feature -- Creation
 			!! executing_box.make ("executing box", button_form)
  			!! execute_b.make ("Execute", executing_box)
 			!! edit_b.make ("Edit", editing_box)
+			!! current_state_hole.make (button_form)
+			!! current_state_label.make ("", button_form)
 			!! save_b.make (button_form)
+			!! v_separator_1.make ("", button_form)
+			!! v_separator_2.make ("", button_form)
+			!! v_separator_3.make ("", button_form)
 				--| Split windows
 			!! main_split_window.make_horizontal ("Main split window", form)
 			!! top_split_form.make ("Top split form", main_split_window)
@@ -152,6 +159,10 @@ feature -- Creation
 			interface_entry.set_toggle_on
 			vertical_separator.set_horizontal (False)
 			command_editor.set_command_tool (command_tool)
+--			set_current_state (app_editor.initial_state_circle.data)
+			v_separator_1.set_horizontal (False)
+			v_separator_2.set_horizontal (False)
+			v_separator_3.set_horizontal (False)
 		end
 
 	attach_all is
@@ -169,6 +180,11 @@ feature -- Creation
 			button_form.attach_top (save_b, 0)
 			button_form.attach_top (executing_box, 0)
 			button_form.attach_top (editing_box, 0)
+			button_form.attach_top (current_state_hole, 0)
+			button_form.attach_top (current_state_label, 3)
+			button_form.attach_top (v_separator_1, 0)
+			button_form.attach_top (v_separator_2, 0)
+			button_form.attach_top (v_separator_3, 0)
 			button_form.attach_bottom (quit_b, 0)
 			button_form.attach_bottom (cut_b, 0)
 			button_form.attach_bottom (namer_b, 0)
@@ -181,16 +197,26 @@ feature -- Creation
 			button_form.attach_bottom (save_b, 0)
 			button_form.attach_bottom (executing_box, 0)
 			button_form.attach_bottom (editing_box, 0)
+			button_form.attach_bottom (current_state_hole, 0)
+			button_form.attach_bottom (current_state_label, 0)
+			button_form.attach_bottom (v_separator_1, 0)
+			button_form.attach_bottom (v_separator_2, 0)
+			button_form.attach_bottom (v_separator_3, 0)
 			button_form.attach_left (con_b, 0)
 			button_form.attach_left_widget (con_b, cmd_b, 0)
 			button_form.attach_left_widget (cmd_b, state_b, 0)
 			button_form.attach_left_widget (state_b, help_b, 0)
 			button_form.attach_left_widget (help_b, namer_b, 0)
 			button_form.attach_left_widget (namer_b, cut_b, 0)
-			button_form.attach_left_widget (cut_b, generate_b, 10)
+			button_form.attach_left_widget (cut_b, v_separator_1, 0)
+			button_form.attach_left_widget (v_separator_1, generate_b, 0)
 			button_form.attach_left_widget (generate_b, import_b, 0)
-			button_form.attach_left_widget (import_b, executing_box, 5)
+			button_form.attach_left_widget (import_b, v_separator_2, 0)
+			button_form.attach_left_widget (v_separator_2, executing_box, 0)
 			button_form.attach_left_widget (executing_box, editing_box, 0)
+			button_form.attach_left_widget (editing_box, v_separator_3, 0)
+			button_form.attach_left_widget (v_separator_3, current_state_hole, 0)
+			button_form.attach_left_widget (current_state_hole, current_state_label, 3)
 			button_form.attach_right (quit_b, 0)
 			button_form.attach_right_widget (quit_b, save_b, 0)
 
@@ -456,12 +482,16 @@ feature -- Graphical interface
 			-- `Import' button
 	execute_b: 	TOGGLE_B
 			-- Button to switch to Execution mode
-			-- TODO: Create an EXECUTION_BUTTON
 	edit_b: TOGGLE_B
 			-- Button to switch to Editing mode
-			-- TODO: Create an EDITING_BUTTON
+	current_state_hole: STATE_HOLE
+			-- Hole used to change current state.
+	current_state_label: LABEL
+			-- Label displaying the current state.
 	save_b: SAVE_BUTTON
 			-- Button to save current project
+	v_separator_1, v_separator_2, v_separator_3: THREE_D_SEPARATOR
+			-- Vertical separators between menu buttons
 
 		--| Split Window
 	vertical_separator: THREE_D_SEPARATOR
@@ -856,6 +886,18 @@ feature {NONE} -- Size attributes
 
 --	command_catalog_width: INTEGER
 			-- Backup of command catalog width
+
+feature -- Current state
+
+	current_state: STATE
+			-- Current state
+
+	set_current_state (s: STATE) is
+			-- Set `current_state' to `s'.
+		do
+			current_state := s
+			current_state_label.set_text (s.label)
+		end
 
 feature -- Enable/Disable EiffelBuild
 

@@ -75,7 +75,7 @@ feature -- Element change
 	include_all is
 			-- Include all clusters from the universe in the documentation.
 		local
-			cl: LINKED_LIST [CLUSTER_I]
+			cl: ARRAYED_LIST [CLUSTER_I]
 		do
 			cl := Universe.clusters
 			from cl.start until cl.after loop

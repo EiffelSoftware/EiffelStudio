@@ -452,7 +452,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- Re-insert the precompiled clusters into
 			-- universe.
 		local
-			old_clusters: LINKED_LIST [CLUSTER_I];
+			old_clusters: ARRAYED_LIST [CLUSTER_I];
 			old_cluster, cluster: CLUSTER_I;
 		do
 			from
@@ -497,7 +497,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	reset_options is
 			-- Reset the options of the CLASS_I in the system
 		local
-			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster_list: ARRAYED_LIST [CLUSTER_I];
 		do
 			from
 				cluster_list := Universe.clusters;
@@ -518,7 +518,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		require
 			is_precompiling: Compilation_modes.is_precompiling;
 		local
-			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster_list: ARRAYED_LIST [CLUSTER_I];
 		do
 			from
 				cluster_list := Universe.clusters;
@@ -534,7 +534,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	process_defaults is
 			-- Process System-level defaults
 		local
-			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster_list: ARRAYED_LIST [CLUSTER_I];
 		do
 			if defaults /= Void then
 				from
@@ -576,7 +576,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- from the system, examine the differences in the
 			-- ignore and rename clauses.
 		local
-			cluster_list: LINKED_LIST [CLUSTER_I];
+			cluster_list: ARRAYED_LIST [CLUSTER_I];
 			cluster: CLUSTER_I
 		do
 			from
@@ -597,7 +597,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			-- Remove the classes from the clusters removed from the system
 			-- Ignore precompiled clusters.
 		local
-			old_clusters: LINKED_LIST [CLUSTER_I];
+			old_clusters: ARRAYED_LIST [CLUSTER_I];
 			old_cluster: CLUSTER_I;
 		do
 

@@ -24,7 +24,7 @@ feature -- Execution
 	work is
 			-- Show indexing clauses of clases in universe.
 		local
-			clusters: LINKED_LIST [CLUSTER_I];
+			clusters: ARRAYED_LIST [CLUSTER_I];
 			cursor: CURSOR
 		do
 			clusters := Universe.clusters;

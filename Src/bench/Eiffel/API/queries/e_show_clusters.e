@@ -21,7 +21,7 @@ feature -- Execution
 	work is
 			-- Show universe: clusters in class lists.
 		local
-			clusters: LINKED_LIST [CLUSTER_I];
+			clusters: ARRAYED_LIST [CLUSTER_I];
 			cursor: CURSOR;
 			nb_of_classes: INTEGER;
 			nb_of_clusters: INTEGER;

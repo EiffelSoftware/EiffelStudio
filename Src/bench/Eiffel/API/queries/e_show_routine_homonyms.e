@@ -29,7 +29,7 @@ feature -- Execution
 	work is
 			-- Execute Current command.
 		local
-			clusters: LINKED_LIST [CLUSTER_I];
+			clusters: ARRAYED_LIST [CLUSTER_I];
 			classes: HASH_TABLE [CLASS_I, STRING];
 			e_class: CLASS_C;
 			feat: E_FEATURE;

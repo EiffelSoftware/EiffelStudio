@@ -20,7 +20,7 @@ feature -- Execution
 	work is
 			-- Show classes in universe
 		local
-			clusters: LINKED_LIST [CLUSTER_I];
+			clusters: ARRAYED_LIST [CLUSTER_I];
 			cursor: CURSOR;
 			classes: HASH_TABLE [CLASS_I, STRING];
 			sorted_classes: SORTED_TWO_WAY_LIST [CLASS_I];

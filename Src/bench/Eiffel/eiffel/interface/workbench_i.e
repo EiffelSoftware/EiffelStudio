@@ -504,7 +504,7 @@ feature -- Automatic backup
 			-- Save the information about this recompilation
 		local
 			file: PLAIN_TEXT_FILE
-			l: LINKED_LIST [CLUSTER_I]
+			l: ARRAYED_LIST [CLUSTER_I]
 			c: CLUSTER_I
 		do
 			!! file.make_open_write (backup_info_file_name)

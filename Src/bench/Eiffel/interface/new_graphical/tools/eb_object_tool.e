@@ -370,14 +370,13 @@ feature -- Status setting
 				conv_stack ?= a_stone
 				if conv_stack /= Void then
 					if Application.status.is_stopped then
-						stack_objects_tree.wipe_out
+						clean_stack_objects_tree						
 						build_stack_info (stack_objects_tree)
 						build_stack_objects (stack_objects_tree)
 						objects_tree.start
 						if not objects_tree.is_empty then
 							objects_tree.remove
 						end
-
 
 						if current_object /= Void then
 							display_first := current_object.display
@@ -426,7 +425,7 @@ feature -- Status setting
 	refresh is
 			-- Class has changed in `development_window'.
 		do
-			stack_objects_tree.wipe_out
+			clean_stack_objects_tree
 			build_stack_info (stack_objects_tree)
 			build_stack_objects (stack_objects_tree)
 			objects_tree.wipe_out
@@ -440,7 +439,7 @@ feature -- Status setting
 			l_status: APPLICATION_STATUS
 		do
 			cancel_process_real_update_on_idle
-			stack_objects_tree.wipe_out
+			clean_stack_objects_tree
 			objects_tree.wipe_out
 			l_status := application.status
 			if l_status /= Void then
@@ -544,6 +543,38 @@ feature {EB_SET_SLICE_SIZE_CMD, EB_OBJECT_DISPLAY_PARAMETERS}
 			end
 		end
 
+feature {NONE} -- Layout Implementation
+
+	clean_stack_objects_tree is
+		do
+			record_stack_expand_info			
+			stack_objects_tree.wipe_out
+		end
+
+	record_stack_expand_info is
+		do
+			if not stack_objects_tree.is_empty then
+				if internal_locals_tree_item /= Void then
+					expand_locals := internal_locals_tree_item.is_expanded
+				end
+				if internal_arguments_tree_item /= Void then
+					expand_args := internal_arguments_tree_item.is_expanded
+				end
+				if internal_result_tree_item /= Void then
+					expand_result := internal_result_tree_item.is_expanded
+				end
+			end
+		end
+			
+	expand_result: BOOLEAN
+			-- Should the "Result" tree item be expanded?
+
+	expand_args: BOOLEAN
+			-- Should the "Arguments" tree item be expanded?
+
+	expand_locals: BOOLEAN
+			-- Should the "Locals" tree item be expanded?
+
 feature {NONE} -- Implementation
 
 	current_stack_element: CALL_STACK_ELEMENT is
@@ -554,15 +585,6 @@ feature {NONE} -- Implementation
 
 	displayed_objects: LINKED_LIST [EB_OBJECT_DISPLAY_PARAMETERS]
 			-- All displayed objects, their addresses, types and display options.
-
-	expand_result: BOOLEAN
-			-- Should the "Result" tree item be expanded?
-
-	expand_args: BOOLEAN
-			-- Should the "Arguments" tree item be expanded?
-
-	expand_locals: BOOLEAN
-			-- Should the "Locals" tree item be expanded?
 
 	objects_tree: EV_TREE
 
@@ -593,7 +615,7 @@ feature {NONE} -- Implementation
 			l_status := application.status
 			if l_status /= Void then
 				pretty_print_cmd.refresh
-				stack_objects_tree.wipe_out
+				clean_stack_objects_tree
 				objects_tree.wipe_out
 
 				if l_status.is_stopped and dbg_was_stopped then
@@ -721,7 +743,7 @@ feature {NONE} -- Implementation
 					item := internal_locals_tree_item
 					if item /= Void then
 						a_target_container.extend (item)
-						if expand_args then
+						if expand_locals then
 							item.expand
 						end
 					end
@@ -731,7 +753,7 @@ feature {NONE} -- Implementation
 					item := internal_result_tree_item
 					if item /= Void then
 						a_target_container.extend (item)
-						if expand_args then
+						if expand_result then
 							item.expand
 						end
 					end

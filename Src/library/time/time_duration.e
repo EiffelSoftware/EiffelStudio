@@ -20,6 +20,13 @@ inherit
 			is_equal
 		end
 
+	DOUBLE_MATH
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+		
 creation
 
 	make,
@@ -79,7 +86,7 @@ feature -- Initialization
 			minute_small_enough: minute < Minutes_in_hour;
 			second_large_enough: second >= 0;
 			second_small_enough: second < Seconds_in_minute;
-			fine_seconds_set: fine_seconds_count = s
+			fine_seconds_set: dabs (fine_seconds_count - s) <= tolerance
 		end;
 
 feature -- Access 
@@ -285,6 +292,11 @@ feature -- Conversion
 			Result_positive: Result >= zero
 		end;
 
+feature {NONE} -- Constants
+
+	tolerance: DOUBLE is 1.0E-06
+			-- Tolerance for floating point errors
+			
 invariant
 	fractionals_large_enough: fractional_second > -1;
 	fractionals_small_enough: fractional_second < 1;

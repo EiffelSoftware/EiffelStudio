@@ -17,7 +17,7 @@ feature -- Yacc/Eiffel interface building primitives
 
 feature {NONE} -- Externals
 
-	c_get_address (dtype: INTEGER; obj: AST_YACC; pointer: POINTER) is
+	c_get_address (dtype: INTEGER; obj: POINTER; pointer: POINTER) is
 			-- Send function pointer `pointer' relative to the feature
 			-- of the class to which `obj' belongs to.
 		external

@@ -116,12 +116,12 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	is_invariant_as (o: ANY): BOOLEAN is
+	is_invariant_as (o: POINTER): BOOLEAN is
 		external
 			"C"
 		end;
 
-	is_feature_as (o: ANY): BOOLEAN is
+	is_feature_as (o: POINTER): BOOLEAN is
 		external
 			"C"
 		end;

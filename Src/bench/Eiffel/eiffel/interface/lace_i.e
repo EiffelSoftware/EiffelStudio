@@ -171,7 +171,7 @@ feature
 
 feature {NONE} -- Externals
 
-	eif_date (s: ANY): INTEGER is
+	eif_date (s: POINTER): INTEGER is
 			-- Time stamp primitive
 		external
 			"C"

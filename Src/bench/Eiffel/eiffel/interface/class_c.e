@@ -2972,7 +2972,7 @@ feature -- Process the creation feature
 
 feature {NONE} -- External features
 
-	c_parse (f: POINTER; s: STRING): CLASS_AS is
+	c_parse (f: POINTER; s: POINTER): CLASS_AS is
 		external
 			"C"
 		end;

@@ -44,12 +44,12 @@ feature
 			"C"
 		end;
 
-	c_twrite (data: ANY; size: INTEGER) is
+	c_twrite (data: POINTER; size: INTEGER) is
 		external
 			"C"
 		end;
 
-	c_send_str (str: ANY) is
+	c_send_str (str: POINTER) is
 		external
 			"C"
 		end;	

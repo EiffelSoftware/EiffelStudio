@@ -39,7 +39,7 @@ feature
 
 feature {NONE} -- External
 
-	async_shell (cmd: ANY): INTEGER is
+	async_shell (cmd: POINTER): INTEGER is
 		external
 			"C"
 		end;

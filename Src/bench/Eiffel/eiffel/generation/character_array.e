@@ -95,22 +95,22 @@ feature
 
 feature {NONE} -- External features
 
-	ca_store (ptr: ANY; siz: INTEGER; fil: POINTER) is
+	ca_store (ptr: POINTER; siz: INTEGER; fil: POINTER) is
 		external
 			"C"
 		end;
 
-	ca_item (ptr: like area; i: INTEGER): CHARACTER is
+	ca_item (ptr: POINTER; i: INTEGER): CHARACTER is
 		external
 			"C"
 		end;
 
-	ca_put (ptr: like area; val: CHARACTER; i: INTEGER) is
+	ca_put (ptr: POINTER; val: CHARACTER; i: INTEGER) is
 		external
 			"C"
 		end;
 
-	ca_copy (fr, to: like area; nb_items, at: INTEGER) is
+	ca_copy (fr, to: POINTER; nb_items, at: INTEGER) is
 		external
 			"C"
 		end;

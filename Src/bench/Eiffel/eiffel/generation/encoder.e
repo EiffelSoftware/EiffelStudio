@@ -50,17 +50,17 @@ feature {NONE}
 		end;
 feature {NONE} -- External features
 
-	eif000 (s: STRING; i,j: INTEGER) is
+	eif000 (s: POINTER; i,j: INTEGER) is
 		external
 			"C"
 		end;
 
-	eif101 (s: STRING; i: INTEGER) is
+	eif101 (s: POINTER; i: INTEGER) is
 		external
 			"C"
 		end;
 
-	eif011 (s: STRING; i: INTEGER) is
+	eif011 (s: POINTER; i: INTEGER) is
 		external
 			"C"
 		end;

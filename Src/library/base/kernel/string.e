@@ -1192,7 +1192,7 @@ feature {STRING} -- Implementation
 			"sprealloc"
 		end;
 
-	conv_pp (p: like area): POINTER is
+	conv_pp (p: POINTER): POINTER is
 			-- Return its argument
 		external
 			"C"

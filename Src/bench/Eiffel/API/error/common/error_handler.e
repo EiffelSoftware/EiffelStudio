@@ -303,7 +303,7 @@ end;
 
 feature {NONE} -- Externals
 
-	error_init (obj: ANY; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
+	error_init (obj: POINTER; ptr1, ptr2, ptr3, ptr4, ptr5, ptr6, ptr7, ptr8, ptr9: POINTER) is
 			-- Initialize syntac error handling C primitives.
 		external
 			"C"

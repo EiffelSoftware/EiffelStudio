@@ -415,7 +415,7 @@ feature -- Precompilation
 
 feature {NONE} -- Externals
 
-	eif_date (s: ANY): INTEGER is
+	eif_date (s: POINTER): INTEGER is
 			-- External time stamp primitive
 		external
 			"C"

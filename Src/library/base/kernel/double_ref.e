@@ -163,20 +163,20 @@ feature -- Conversion
 			-- Integer part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			Result := c_truncated_to_integer ($item)
+			Result := c_truncated_to_integer (item)
 		end;
 
 	truncated_to_real: REAL is
 			-- Real part (Same sign, largest absolute
 			-- value no greater than current object's)
 		do
-			Result := c_truncated_to_real ($item)
+			Result := c_truncated_to_real (item)
 		end;
 
 	ceiling: INTEGER is
 			-- Smallest integral value no smaller than current object
 		do
-			Result := c_ceiling ($item).truncated_to_integer
+			Result := c_ceiling (item).truncated_to_integer
 		ensure
 			result_no_smaller: Result >= item;
 			close_enough: Result - item < one
@@ -185,7 +185,7 @@ feature -- Conversion
 	floor: INTEGER is
 			-- Greatest integral value no greater than current object
 		do
-			Result := c_floor ($item).truncated_to_integer
+			Result := c_floor (item).truncated_to_integer
 		ensure
 			result_no_greater: Result <= item;
 			close_enough: item - Result < one

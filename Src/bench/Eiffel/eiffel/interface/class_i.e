@@ -300,7 +300,7 @@ end;
 
 feature {NONE} -- Externals
 
-	eif_date (s: ANY): INTEGER is
+	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.
 		external
 			"C"

@@ -1611,27 +1611,6 @@ feature {NONE} -- Externals
 			"C | %"load_pixmap.h%""
 		end
 
-feature -- Obsolete
-
-	read_from_file (a_file: IO_MEDIUM) is
-			-- Load the pixmap described in 'file_name'.
-		obsolete "Use `read_from_named_file' instead"
-		do
-			check
-				False
-			end
-		end
-
-	set_with_buffer (a_buffer: STRING) is
-			-- Load pixmap data from `a_buffer' into memory.
-		obsolete "Use `read_from_named_file' instead"
-		do
-			--|FIXME Implement
-			check
-				not_yet_implemented: False
-			end
-		end
-
 invariant
 	not_both_icon_and_cursor:
 		not (private_icon /= Void and private_cursor /= Void)
@@ -1679,6 +1658,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2001/06/08 21:59:32  rogers
+--| Removed obsolete features.
+--|
 --| Revision 1.39  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

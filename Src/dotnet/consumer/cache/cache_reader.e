@@ -100,7 +100,6 @@ feature -- Access
 		require
 			non_void_referenced_type: crt /= Void
 		local
-			crt_ca: CONSUMED_ASSEMBLY
 			ca_mapping: CONSUMED_ASSEMBLY_MAPPING
 		do
 			ca_mapping := assembly_mapping_from_consumed_assembly (ca)

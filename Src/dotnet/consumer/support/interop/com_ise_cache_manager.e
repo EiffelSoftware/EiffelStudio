@@ -104,7 +104,6 @@ feature -- Basic Exportations
 			dest_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil(adest))).exists
 		local
 			i, nb: INTEGER
-			path, dest: STRING
 			l_app_domain: APP_DOMAIN
 			l_impl: MARSHAL_ISE_CACHE_MANAGER
 			l_native_array: NATIVE_ARRAY [SYSTEM_STRING]

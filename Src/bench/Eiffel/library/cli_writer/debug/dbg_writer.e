@@ -20,6 +20,9 @@ feature {NONE} -- Initialization
 	make (emitter: MD_EMIT; name: UNI_STRING; full_build: BOOLEAN) is
 			-- Create a new SymUnmanagedWriter object using `emitter' in a file `name'.
 		do
+				-- Initialize COM.
+			(create {CLI_COM}).initialize_com
+
 			make_by_pointer (c_new_sym_writer)
 			last_call_success := c_initialize (item, emitter.item, name.item,
 				default_pointer, full_build)

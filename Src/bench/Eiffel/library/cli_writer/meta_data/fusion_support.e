@@ -18,6 +18,9 @@ feature {NONE} -- Initialization
 	make is
 			-- New instance of a IFusionSupport.
 		do
+				-- Initialize COM.
+			(create {CLI_COM}).initialize_com
+
 			item := new_fusion_support
 			if item = default_pointer then
 				exists := False

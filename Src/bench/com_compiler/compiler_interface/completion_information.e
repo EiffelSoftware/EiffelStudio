@@ -64,6 +64,7 @@ feature -- Access
 			if not retried then
 				ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (file_name))
 				if ci /= Void and then ci.compiled and then ci.compiled_class.has_feature_table then
+					qualified_call := False
 					class_i := ci
 					feature_table := ci.compiled_class.feature_table
 					fi := feature_table.item (feature_name)
@@ -163,6 +164,7 @@ feature -- Access
 							create arrayed_list.make_from_array (variable_list)
 							create Result.make (arrayed_list)
 						else
+							qualified_call := True
 							targets := target.split ('.')
 							if targets.last.is_empty then
 								targets.finish
@@ -184,10 +186,9 @@ feature -- Access
 							if target_type /= Void and then not target_type.is_void then
 								targets.start
 								targets.remove
-								if not targets.is_empty then
-									Result := target_features (targets.item, feature_name, file_name)
-								else
-									Result := features_from_table (recursive_lookup (target_type, targets))									
+								feature_table := recursive_lookup (target_type, targets)
+								if feature_table /= Void then
+									Result := features_from_table (feature_table)
 								end
 							end
 						end
@@ -242,15 +243,23 @@ feature {NONE} -- Implementation
 				if targets.is_empty then
 					Result := feature_table
 				else
-					set_standard_call -- Complete with all features
+					--set_standard_call -- Complete with all features
 					feature_table.search (targets.first)
 					if feature_table.found then
 						a_type := feature_table.found_item.type
 					end
-					if a_type /= Void and then not a_type.is_void then
-						targets.start
-						targets.remove
-						Result := recursive_lookup (a_type, targets)
+					if a_type /= Void then 
+						if not a_type.is_void then
+							targets.start
+							targets.remove
+							Result := recursive_lookup (a_type, targets)
+						else
+							if not qualified_call then
+								Result := feature_table
+							end
+						end
+					else
+						Result := feature_table
 					end					
 				end
 			end
@@ -286,7 +295,7 @@ feature {NONE} -- Implementation
 					table.after
 				loop
 					fi := table.item_for_iteration
-					if is_listed (fi) then
+					if is_listed (fi, ci) then
 						Result.put (create {FEATURE_DESCRIPTOR}.make_with_class_i_and_feature_i (ci, fi), i)
 						i := i + 1
 					end
@@ -299,7 +308,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	is_listed (fi: FEATURE_I): BOOLEAN is
+	is_listed (fi: FEATURE_I; context: CLASS_I): BOOLEAN is
 			-- Should `fi' be listed in member completion list?
 		require
 			non_void_class_i: class_i /= Void
@@ -316,7 +325,7 @@ feature {NONE} -- Implementation
 							fi.has_static_access and
 							fi.is_exported_for (class_i.compiled_class)
 			elseif call_type = Creation_call then
-				Result := class_i.compiled_class.creators.has (fi.feature_name)
+				Result := context.compiled_class.creators.has (fi.feature_name)
 			elseif call_type = Agent_call then
 				Result := not fi.is_infix and
 							not fi.is_prefix and
@@ -622,6 +631,9 @@ feature {NONE} -- Implementation
 
 	locals, arguments: HASH_TABLE [STRING, STRING]
 			-- Local variables and arguments used to solve member completion list.
+			
+	qualified_call: BOOLEAN
+			-- is current target a qualified call (with '.')
 
 invariant
 	valid_class_i: class_i /= Void implies class_i.compiled

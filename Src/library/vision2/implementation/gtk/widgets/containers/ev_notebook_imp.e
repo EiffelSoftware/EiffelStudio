@@ -108,26 +108,30 @@ feature -- Access
 			-- Label of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_tab_label, a_hbox, a_list, a_label: POINTER
+			a_tab_label: POINTER--, a_hbox, a_list, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
 			
-			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
-
-			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 1 then
-				-- We only have a label stored
-				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-			else
-				-- We have both a pixmap and a label
-				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 1)
-			end
-
 			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_label_struct_label (
-				a_label
-			))
-			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
+				a_tab_label
+			))			
+			
+--			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_tab_label)
+--
+--			a_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+--			if feature {EV_GTK_EXTERNALS}.g_list_length (a_list) = 1 then
+--				-- We only have a label stored
+--				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
+--			else
+--				-- We have both a pixmap and a label
+--				a_label := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 1)
+--			end
+--
+--			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_label_struct_label (
+--				a_label
+--			))
+--			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
 
 	item_pixmap (an_item: like item): EV_PIXMAP is
@@ -279,15 +283,17 @@ feature -- Element change
 			item_imp ?= an_item.implementation
 			create a_cs.make (a_text)
 			
-			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
-			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
-			a_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_event_box)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (visual_widget, item_imp.c_object, a_cs.item)
+			
+--			a_event_box := feature {EV_GTK_EXTERNALS}.gtk_event_box_new
+--			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
+--			a_hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+--			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)
+--			a_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
+--			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
+--			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_hbox)
+--			feature {EV_GTK_EXTERNALS}.gtk_container_add (a_hbox, a_label)
+--			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label (visual_widget, item_imp.c_object, a_event_box)
 		end
 
 	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is

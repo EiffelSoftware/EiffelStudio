@@ -8,17 +8,24 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_MENU_ITEM_IMP
 	
 inherit
-	
 	EV_MENU_ITEM_I
 
 	EV_ITEM_IMP
 		undefine
 			set_label_widget,
 			label_widget
+		redefine
+			add_activate_command
+		end
+
+	EV_MENU_ITEM_CONTAINER_IMP
+		rename
+			make as old_make,
+			interface as widget_interface,
+			set_interface as set_widget_interface
 		end
 
 	EV_PIXMAP_CONTAINER_IMP
@@ -55,7 +62,37 @@ feature {NONE} -- Initialization
 			gtk_container_add (GTK_CONTAINER (widget), box)
 		end
 
+feature -- Event : command association
+
+	add_activate_command ( command: EV_COMMAND; 
+			       arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+			-- The toggle event doesn't work on gtk, then
+			-- we add both event command.
+		do
+			add_command ("activate", command, arguments)
+		end
+
 feature {NONE} -- Implementation
+
+	add_item (item: EV_MENU_ITEM) is
+			-- Add an item to the current item. The current
+			-- item become then a sub-menu
+		local
+			item_imp: EV_MENU_ITEM_IMP
+			submenu: POINTER
+		do
+			item_imp ?= item.implementation
+			check
+				correct_imp: item_imp /= void
+			end
+			if C_GTK_MENU_ITEM_SUBMENU(widget) = default_pointer then
+				submenu := gtk_menu_new () 
+				gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), submenu)
+			end
+			gtk_menu_append (C_GTK_MENU_ITEM_SUBMENU(widget), item_imp.widget)
+		end		
 
 	add_pixmap (pixmap: EV_PIXMAP) is
 			-- Add a pixmap in the container

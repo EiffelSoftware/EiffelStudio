@@ -12,7 +12,8 @@ inherit
 	EV_PIXMAP_I
 		redefine
 			interface,
-			flush
+			flush,
+			save_to_named_file
 		end
 
 	EV_DRAWABLE_IMP
@@ -468,6 +469,35 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 			set_pixmap (gdkpix, gdkmask)
 		end
 
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+			-- Save `Current' to `a_filename' in `a_format' format.
+		local
+			png_format: EV_PNG_FORMAT
+			a_fn, char_array: ANY
+			a_width, a_height: INTEGER
+		do
+			png_format ?= a_format
+			if png_format /= Void then
+				a_fn := a_filename.to_c
+				char_array := raw_image_data.to_c
+				if png_format.scale_height /= 0 then
+					a_height := png_format.scale_height
+				else
+					a_height := raw_image_data.height
+				end
+	
+				if png_format.scale_width /= 0 then
+					a_width := png_format.scale_width
+				else
+					a_width := raw_image_data.width
+				end
+				c_ev_save_png ($char_array, $a_fn, raw_image_data.width, raw_image_data.height, a_width, a_height, png_format.color_mode)
+			end
+							
+			a_format.save (raw_image_data, a_filename)
+		end
+
+
 feature {NONE} -- Implementation
 
 	parent_widget: POINTER
@@ -561,6 +591,16 @@ feature -- Externals
 	c_ev_load_pixmap(curr_object: POINTER; file_name: POINTER; update_fields_routine: POINTER) is
 		external
 			"C | %"load_pixmap.h%""
+		end
+
+	c_ev_save_png (char_array, path: POINTER;
+			array_width,
+			array_height,
+			a_scale_width,
+			a_scale_height,
+			a_colormode: INTEGER) is
+		external
+			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
 		end
 
 feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation

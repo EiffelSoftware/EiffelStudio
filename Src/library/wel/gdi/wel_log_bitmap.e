@@ -28,7 +28,6 @@ feature {NONE} -- Initialization
 			positive_planes: a_planes >= 0
 			positive_bits_pixel: a_bits_pixel >= 0
 			count_width_bytes: (a_width_bytes \\ 2) = 0
-			bits_not_void: a_bits /= Void
 		do
 			structure_make
 			set_type (0)
@@ -110,8 +109,6 @@ feature -- Access
 			-- Bitmap bits
 		do
 			result := cwel_logbitmap_get_bits (item)
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature -- Element change
@@ -176,8 +173,6 @@ feature -- Element change
 
 	set_bits (a_bits: POINTER) is
 			-- Set `bits' with `a_bits'
-		require
-			bits_not_void: a_bits /= Void
 		do
 			cwel_logbitmap_set_bits (item, a_bits)
 		ensure

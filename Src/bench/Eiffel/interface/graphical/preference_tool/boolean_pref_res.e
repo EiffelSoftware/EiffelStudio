@@ -77,7 +77,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 			end
 		end;
 
-	modified_resource: MODIFIED_RESOURCE is
+	modified_resource: CELL2 [RESOURCE, RESOURCE] is
 			-- Modified resource
 		local
 			new_res: like associated_resource

@@ -16,7 +16,7 @@ inherit
 		redefine
 			make,
 			has_parent,
-			set_expand,
+--			set_expand,
 			set_pixmap,
 			unset_pixmap,
 			set_text,
@@ -151,8 +151,8 @@ feature -- Status setting
 				gtk_ctree_collapse (tree_parent_imp.tree_widget, widget)
 			end
 
-			-- We do this only to ensure the postcondition.
-			expandable := Flag								
+--			-- We do this only to ensure the postcondition.
+--			expandable := Flag								
 		end
 
 	set_index (value: INTEGER) is

@@ -111,12 +111,15 @@ feature -- Access
 		local
 			item_imp: EV_ITEM_IMP
 		do
-			item_imp ?= item_to_imp (item)
+			item_imp := item_to_imp (item)
 			check
 				item_implementation_not_void: item_imp /= Void
 			end
-			item_imp.set_parent (Void)
+			--| FIXME Switched bottom 2 statements.
+			--| The parent may not be Void before calling remove_item
+			--| because menu items cannot work without their parent.
 			remove_item (item_imp)
+			item_imp.set_parent (Void)
 		end
 	
 	prune (v: like item) is
@@ -202,6 +205,8 @@ feature -- Implementation
 
 	item_to_imp (an_item: EV_ITEM): EV_ITEM_IMP is
 			-- Get implementation from `an_item'.
+		require
+			an_item_not_void: an_item /= Void
 		do
 			Result ?= an_item.implementation
 			check
@@ -235,6 +240,10 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/24 01:30:05  brendel
+--| Switched 2 statemnts in `remove'.
+--| Added precondition on item_to_imp.
+--|
 --| Revision 1.19  2000/02/22 20:15:37  brendel
 --| Added postcondition for insert_item.
 --|

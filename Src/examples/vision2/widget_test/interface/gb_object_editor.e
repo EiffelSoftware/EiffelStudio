@@ -28,6 +28,11 @@ inherit
 			initialize
 		end
 		
+	GB_WIDGET_UTILITIES
+		undefine
+			copy, is_equal, default_create
+		end
+		
 feature {NONE} -- Initialization
 
 	initialize is
@@ -57,7 +62,13 @@ feature -- Status Setting
 			tool_bar_extendible_controls: TOOL_BAR_EXTENDIBLE_CONTROLS
 			container_extendible_controls: CONTAINER_EXTENDIBLE_CONTROLS
 			current_parent: EV_CONTAINER
+			was_locked_on_entry: BOOLEAN
 		do
+			if Application.locked_window /= Void then
+				was_locked_on_entry := True
+			else
+				parent_window (Current).lock_update
+			end
 			current_parent := parent
 			current_parent.prune (Current)
 			wipe_out
@@ -82,7 +93,7 @@ feature -- Status Setting
 				check
 					widget_is_list: list /= Void
 				end
-				create list_extendible_controls.make_with_text_control (list)
+				create list_extendible_controls.make_with_text_control (list, Current)
 				extend (list_extendible_controls)
 			end
 			if is_instance_of (widget, dynamic_type_from_string ("EV_COMBO_BOX")) then
@@ -90,7 +101,7 @@ feature -- Status Setting
 				check
 					widget_is_combo_box: combo_box /= Void
 				end
-				create combo_box_extendible_controls.make_with_text_control (combo_box)
+				create combo_box_extendible_controls.make_with_text_control (combo_box, Current)
 				extend (combo_box_extendible_controls)
 			end
 			if is_instance_of (widget, dynamic_type_from_string ("EV_TREE")) then
@@ -98,7 +109,7 @@ feature -- Status Setting
 				check
 					widget_is_tree: tree /= Void
 				end
-				create tree_extendible_controls.make_with_text_control (tree)
+				create tree_extendible_controls.make_with_text_control (tree, Current)
 				extend (tree_extendible_controls)
 			end
 			if is_instance_of (widget, dynamic_type_from_string ("EV_MULTI_COLUMN_LIST")) then
@@ -106,7 +117,7 @@ feature -- Status Setting
 				check
 					widget_is_multi_column_list: multi_column_list /= Void
 				end
-				create multi_column_list_extendible_controls.make_with_text_control (multi_column_list)
+				create multi_column_list_extendible_controls.make_with_text_control (multi_column_list, Current)
 				extend (multi_column_list_extendible_controls)
 			end
 			if is_instance_of (widget, dynamic_type_from_string ("EV_TOOL_BAR")) then
@@ -114,7 +125,7 @@ feature -- Status Setting
 				check
 					widget_is_tool_bar: tool_bar /= Void
 				end
-				create tool_bar_extendible_controls.make_with_combo_control (tool_bar,
+				create tool_bar_extendible_controls.make_with_combo_control (tool_bar, Current,
 					<<"BUTTON", "TOGGLE_BUTTON", "RADIO_BUTTON",
 					"SEPARATOR">>)
 				extend (tool_bar_extendible_controls)
@@ -124,11 +135,15 @@ feature -- Status Setting
 				check
 					widget_is_container: container /= Void
 				end
-				create container_extendible_controls.make_with_combo_control (container,
+				create container_extendible_controls.make_with_combo_control (container, Current,
 					<<"BUTTON", "FRAME", "TEXT">>)
 				extend (container_extendible_controls)
 			end
 			current_parent.extend (Current)
-		end		
+			
+			if not was_locked_on_entry then
+				parent_window (Current).unlock_update
+			end
+		end
 
 end -- class GB_OBJECT_EDITOR

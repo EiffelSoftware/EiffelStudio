@@ -2,47 +2,61 @@
  * Jmakefile for app (application)
  */
 
+#include "../../U/runtime.H"
+
+>JMTCFLAGS
+
+;# Where shared archive is located (path and name)
+LIB_RUNTIME = $(TOP)/run-time
+LIB_IDRS = $(TOP)/idrs
+LIB_IDRSNAME = libidr.a
+LIB_MTIDRSNAME = libmtidr.a
+LIB_IDRS_ARCH = $(LIB_IDRS)/$(LIB_IDRSNAME)
+LIB_MTIDRS_ARCH = $(LIB_IDRS)/$(LIB_MTIDRSNAME)
+LIB_SHARED = $(TOP)/ipc/shared
+LIB_IPCNAME = libipc.a
+LIB_MTIPCNAME = libmtipc.a
+LIB_IPC_ARCH = $(LIB_SHARED)/$(LIB_IPCNAME)
+LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
+
+/* The following are understood by jmake to alter built-in commands */
+DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
+CFLAGS = $(DPFLAGS) -DWORKBENCH 
+LDFLAGS = $(LIB_SHARED)/$(LIB_IPCNAME)
+
 /* We need to have the shared archive, which is in the shared/ dir. We have a
  * dependency which ensures it is up-to-date anyway.
  */
 
 ;# Files used to build the application
-LIB = app_listen.c app_proto.c app_server.c
+LSRC = app_listen.c app_proto.c app_server.c
 
 ;# Derived object file names
 OBJ = \
-|expand f!$(LIB)!
+|expand f!$(LSRC)!
 	!f:\.c=.o \
 -expand \\
 
 ;# Derived library object file names
-LOBJ = \
-|expand f!$(LIB)!
-	!f:\.c=.o \
+MT_OBJ = \
+|expand f!$(LSRC)!
+	MT!f:\.c=.o \
 -expand \\
 
-;# Where shared archive is located (path and name)
-LIBDIR = ../shared
-LIBRUN = ../../run-time
-LIBIDR = ../../idrs
-LIBIDRNAME = libidr.a
-LIBNAME = libipc.a
-LIBWKBENCH = libwkbench.a
-LIBARCH = $(LIBDIR)/$(LIBNAME)
-LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
+|expand f!$(LSRC)!
+MT!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
-/* The following are understood by jmake to alter built-in commands */
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
-CFLAGS = $(DPFLAGS) -DWORKBENCH
-;#LDFLAGS = $(LIBARCH)
-LDFLAGS = $(LIBDIR)/$(LIBNAME)
+-expand
+
+NormalObjectRule()
+RemoteTargetDependency(network.o,$(LIB_SHARED),$(LIB_IPCNAME))
+RemoteTargetDependency(network.o,$(LIB_IDRS),$(LIB_IDRSNAME))
+PrelinkedRelocatableTarget(network,$(OBJ),$(LIB_IPC_ARCH) $(LIB_IDRS_ARCH))
+
+RemoteTargetDependency(MTnetwork.o,$(LIB_SHARED),$(LIB_MTIPCNAME))
+RemoteTargetDependency(MTnetwork.o,$(LIB_IDRS),$(LIB_MTIDRSNAME))
+PrelinkedRelocatableTarget(MTnetwork,$(MT_OBJ),$(LIB_MTIPC_ARCH) $(LIB_MTIDRS_ARCH))
 
 DependTarget()
-AllTarget($(OBJ))
-++SOURCES $(LIB)
-
-NormalLibraryObjectRule()
-RemoteTargetDependency(network.o,$(LIBDIR),$(LIBNAME))
-RemoteTargetDependency(network.o,$(LIBIDR),$(LIBIDRNAME))
-PrelinkedRelocatableTarget(network,$(LOBJ),$(LIBARCH) $(LIBIDRARCH))
-
+LintTarget()

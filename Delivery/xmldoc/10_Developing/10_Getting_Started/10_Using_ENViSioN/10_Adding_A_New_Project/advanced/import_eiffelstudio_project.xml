@@ -1,86 +1,58 @@
-<document title="Import EiffelStudio Project Wizard" output="envision">
+<document title="Import From EiffelStudio Project Wizard" output="envision">
 	<meta_data>
 		<help/>
 	</meta_data>
 	<paragraph>
-		<paragraph>Availability: Enterprise and Free versions.</paragraph>
 		<paragraph>
-			<line_break/> This wizard enables you to import and EiffelStudio (version 5.2 or greater) project into Visual Studio.NET.
-			<line_break/>
-			<line_break/>
+			<bold>Availability</bold>: Enterprise and Free versions.
 		</paragraph>
+		<paragraph>This wizard enables you to import an EiffelStudio (version 5.2 or greater) project into a new Eiffel ENViSoion! project.</paragraph>
 		<heading>
 			<size>2</size>Page content
 		</heading>
-		<paragraph>
-			<line_break/> The wizard comprises of the following pages:
-		</paragraph>
+		<paragraph>The wizard comprises of the following pages:</paragraph>
 		<list ordered="false">
-			<item> Introduction Page - Introducing the wizard and its requirements </item>
-			<item> Original EiffelStudio Project - The source EiffelStudio project settings </item>
-			<item>  Summary - The summary of the wizard, and what happens next</item>
+			<item>
+				<bold>Introduction Page</bold>: Introducing the wizard and all of its requirements.
+			</item>
+			<item>
+				<bold>Original EiffelStudio Project Page</bold>: The source EiffelStudio project and its configuration.
+			</item>
+			<item>
+				<bold>Summary</bold>: The summary of the wizard and what is going to happens next.
+			</item>
 		</list>
 		<heading>
 			<size>2</size>Requirements
 		</heading>
-		<paragraph>
-			<line_break/> The Import EiffelStudio Project Wizard requires that the project's ace file used in importing a project from EiffelStudio into VisualStudio.NET was created for/inEiffelStudio version 5.2 or better. Failure to supply a correct ace file will result in the wizard displaying an error page not allowing you to continue until a correct ace file has been specified. The wizard alsorequires a valid project path to read the contents of the original EiffelStudio project from. Again failure to supply a correct path will result in an error.
-			<line_break/>
-			<line_break/>
-			<line_break/>
-		</paragraph>
+		<paragraph>The Import From EiffelStudio Project Wizard at a minimum requires the EiffelStudio project ace file, used in the importing into VisualStudio.NET, to have been created for EiffelStudio version 5.2 or better. Supplying an corrupt or incorrect ace file will result in the presentation of the project wizards error page. You cannot continue past this point until a correct ace file has been specified.</paragraph>
 		<heading>
-			<size>2</size>EiffelStudio52. Enterprise or Free Edition Project Selection
+			<size>2</size>EiffelStudio5.5 Enterprise or Free Edition Project Selection Page
 		</heading>
-		<paragraph>
-			<line_break/> The first page of the wizard is the only functioning page for this wizard. It asks for the EiffelStudio project Ace file (*.ace) to import the project setting from. Thismust be an ace file used for EiffelStudio5.2 Enterprise or Free edition, and must be a .NET ace file.
-		</paragraph>
+		<paragraph>The first page of the wizard is the only functioning page for this wizard. It asks for the EiffelStudio project Ace file (*.ace) to import the project setting from. This must be an ace file used for a EiffelStudio5.2 (or better) Enterprise or Free edition, and must be a valid Eiffel for .NET ace file.</paragraph>
+		<paragraph>You may optionally select to duplicate the project files (Eiffel classes, resources etc.) by checking the 'Duplicate project files' option. If you do not want to duplicate the exiting EiffelStudio project files then they will be shared between Eiffel ENViSioN! and EiffelStudio, however each will have their repective independent project configuration file(s). Upon checking the 'Duplicate project files' option the 'Project Root Cluster Path' becomes active to allow you to specify the root path to copy the project files from. If you have chosen to duplicate the project files then this path must point to a valid project path and cannot be left empty.</paragraph>
 		<paragraph>
 			<image>
 				<alt_text>Import EiffelStudio Wizard</alt_text>
-				<url>import_eiffel_studio_wizard.png</url>
+				<url>.\import_eiffelstudio_page1.png</url>
 			</image>
 		</paragraph>
+		<paragraph>Click next to continue.</paragraph>
 		<heading>
-			<size>2</size>Cluster Selection
+			<size>2</size>Summary Page
 		</heading>
-		<paragraph>
-			<line_break/> The next page of the wizard allows you to specify which classes you would like access to through the Solution Explorer. The classes are chosen on a clusterlevel, and all classes contain within those cluster will be visible in the Solution Explorer. By default all those clusters that are marked as library clusters or are clusters from the EiffelBase, WEL or EiffelVision areexcluded as there are many classes.
-			<line_break/>
-		</paragraph>
-		<paragraph>The 'Excluded Clusters' list is the list of clusters that will not have documentation generated for them and the 'Included Clusters' list will. You can include/exclude clustersusing one of the four selection buttons ' 
-			<bold>&lt;&lt;</bold>', ' 
-			<bold>&lt;</bold>', '&gt;' or '&gt;&gt;'.
-		</paragraph>
-		<list ordered="false">
-			<item> '&lt;&lt;' will exclude all of clusters. </item>
-			<item> '&lt;' will exclude only those selected clusters in the Included Clusters list. </item>
-			<item> '&gt;' will include only those selected clusters in the Excluded Clusters list. </item>
-			<item>  '&gt;&gt;' will include all of the clusters.</item>
-		</list>
-		<paragraph>
-			<image>
-				<alt_text>Import EiffelStudio Wizard</alt_text>
-				<url>import_eiffel_studio_wizard_clusters.png</url>
-			</image>
-			<line_break/>
-			<line_break/>
-			<line_break/>
-		</paragraph>
-		<heading>
-			<size>2</size>N.B.
-		</heading>
-		<paragraph>
-			<line_break/> When the finish button is clicked, the wizard will being to import the EiffelStudio project supplied into Visual Studio.NET. This may take some time depending onthe size of your project.
-			<line_break/>
-		</paragraph>
-		<bold>Caution</bold>: Please check that the paths to any references in your project are still valid. Such references are the cluster paths, include paths, object files and locallyreferenced assemblies. These can be verified using the ' 
-		<link>
-			<url>../ProjectConfiguration/GettingStarted/ProjectConfiguration.xml</url>
-			<label>Property  Pages</label>
-		</link>'
+		<paragraph>When the finish button is clicked the wizard will being to import the EiffelStudio project into Visual Studio.NET as a new Eiffel ENViSioN! project. This may take some time depending on the size of your project and whether or not you are duplicating any project files.</paragraph>
+		<note>
+			<bold>Note</bold>: Unlike other Eiffel ENViSioN! project the Import From EiffelStudio Project Wizard does not compile the project the first time it is opened. It is advisable to check that all cluster paths and assembly reference paths are correct before compiling for the first time.
+		</note>
+		<line_break/>
 		<seealso>
 			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>../ProjectConfiguration/GettingStarted/ProjectConfiguration.xml</url>
+				<label>Property  Pages</label>
+			</link>
 			<line_break/>
 			<link>
 				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>

@@ -89,7 +89,7 @@ feature {NONE}  -- File
 	create_stylesheet_file is
 			-- Create the stylesheet
 		do
-			copy_stylesheet (temporary_help_location (Shared_project.root_directory, True))
+			copy_stylesheet (temporary_help_location (Shared_project.root_directory, False))
 		end
 
 	project_file: PLAIN_TEXT_FILE
@@ -120,10 +120,6 @@ feature {NONE} -- Project
 	retrieve_files (a_dir: DIRECTORY; get_dirs, tags: BOOLEAN): STRING is
 			-- Retrieve the project files string or directories string if `get_dirs'
 		local
---			l_help_topic: TABLE_OF_CONTENTS_NODE
---			l_help_topics: ARRAYED_LIST [TABLE_OF_CONTENTS_NODE]
---			l_title, l_url: STRING
---			l_util: UTILITY_FUNCTIONS
 			l_cnt,
 			l_upper_count: INTEGER
 			l_file: RAW_FILE
@@ -132,53 +128,6 @@ feature {NONE} -- Project
 			l_url: STRING
 			l_util: UTILITY_FUNCTIONS
 		do		
---			create l_util
---			create Result.make_empty
---			from
---				l_help_topics := toc.nodes (True)
---				l_help_topics.start
---			until
---				l_help_topics.after
---			loop				
---				l_help_topic :=  l_help_topics.item
---				l_url := l_help_topic.url
---				l_title := l_help_topic.title
---				if get_dirs then
---					if l_help_topic.url_is_directory then
---						Result.append ("<Dir ")
---						if l_url /= Void then
---							l_url := l_util.toc_friendly_url (l_url)
---							l_url := l_util.directory_no_file_name (l_url)
---							Result.append ("Url=%"" + l_url + "%"")
---						end					
---						if tags and then l_title /= Void then
---							Result.append (" Title=%"" + l_title + "%"")
---						end
---						Result.append ("/>%N")
---					end
---				else
---					if l_help_topic.url_is_file then
---						Result.append ("%T<File ")
---						if l_url /= Void then
---							l_url := l_util.toc_friendly_url (l_url)
---							l_url := l_util.file_no_extension (l_url)
---							l_url.append (".html")
---							Result.append ("Url=%"" + l_url + "%"")
---						end
---						
---						if tags and then l_title /= Void then
---							Result.append (" Title=%"" + l_title + "%"")
---						end
---						Result.append ("/>%N")
---					end										
---				end
---				l_help_topics.forth
---			end
---			if not get_dirs then
---						-- Retrieve images
---				Result.append (retrieve_images (Shared_constants.Application_constants.Temporary_help_directory))
---			end			
-			--create l_dir.make (a_path)
 			create l_util
 			from
 				l_cnt := 0

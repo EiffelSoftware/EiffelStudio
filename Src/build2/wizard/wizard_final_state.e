@@ -20,6 +20,10 @@ inherit
 	GB_SHARED_SYSTEM_STATUS
 	
 	GB_SHARED_XML_HANDLER
+	
+	GB_CONSTANTS
+	
+	GB_SHARED_SYSTEM_STATUS
 
 creation
 	make
@@ -87,12 +91,20 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Completing the%Nmy_wizard_application Wizard")
-			message.set_text ("Summarize here what your wizard has done or will do.")
+			title.set_text ("Completing the%N" + wizard_title)
+			message.set_text (final_message)
 		end
 
 	final_message: STRING is
 		do
+			Result := "Clicking 'Finish' will generate a new Eiffel Vision2%
+			%%Nproject with the following information : %N%N" +
+			"Project location : " + system_status.current_project_settings.project_location +
+			"%N%NProject name : " + system_status.current_project_settings.project_name +
+			"%NApplication class name : " + system_status.current_project_settings.application_class_name +
+			"%NWindow class name : " + system_status.current_project_settings.main_window_class_name
+		ensure
+			Result /= Void
 		end
 
 	pixmap_icon_location: FILE_NAME is

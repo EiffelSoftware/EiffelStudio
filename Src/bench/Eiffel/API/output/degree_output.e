@@ -184,7 +184,7 @@ feature -- Output on per class
 			in_degree_5: current_degree = 5
 		do
 			total_number := nbr_to_go + processed
-			display_degree (degree_message(5), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message(5), nbr_to_go, a_class.name)
 			processed := processed + 1
 		end;
 
@@ -198,7 +198,7 @@ feature -- Output on per class
 			in_degree_4: current_degree = 4
 		do
 			total_number := nbr_to_go + processed
-			display_degree (degree_message(4), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message(4), nbr_to_go, a_class.name)
 			processed := processed + 1;
 		end
 
@@ -212,7 +212,7 @@ feature -- Output on per class
 			in_degree_3: current_degree = 3
 		do
 			processed := processed + 1 -- Used when error ocurrs
-			display_degree (degree_message(3), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message(3), nbr_to_go, a_class.name)
 		end
 
 	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -224,7 +224,7 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_2: current_degree = 2
 		do
-			display_degree (degree_message(2), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message(2), nbr_to_go, a_class.name)
 		end
 
 	put_degree_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -236,7 +236,7 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_1: current_degree = 1
 		do
-			display_degree (degree_message(1), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message(1), nbr_to_go, a_class.name)
 		end
 
 	put_degree_minus_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -248,7 +248,7 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0;
 			in_degree_minus_1: current_degree = -1
 		do
-			display_degree (degree_message(-1), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message(-1), nbr_to_go, a_class.name)
 		end
 
 	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -260,7 +260,7 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_minus_2: current_degree = -2
 		do
-			display_degree (degree_message (-2), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message (-2), nbr_to_go, a_class.name)
 		end
 
 	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
@@ -272,7 +272,7 @@ feature -- Output on per class
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_minus_3: current_degree = -3
 		do
-			display_degree (degree_message (-3), nbr_to_go, a_class.name_in_upper)
+			display_degree (degree_message (-3), nbr_to_go, a_class.name)
 		end
 
 	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
@@ -307,7 +307,7 @@ feature -- Output on per class
 			class_not_void: a_class /= Void
 		do
 			display_degree (case_class_message, 
-					total_number - processed, a_class.name_in_upper)
+					total_number - processed, a_class.name)
 			processed := processed + 1;
 		end
 
@@ -318,7 +318,7 @@ feature -- Output on per class
 			class_not_void: a_class /= Void
 		do
 			display_degree (document_class_message, 
-					total_number - processed, a_class.name_in_upper)
+					total_number - processed, a_class.name)
 			processed := processed + 1;
 		end
 

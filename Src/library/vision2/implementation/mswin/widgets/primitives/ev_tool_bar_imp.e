@@ -329,19 +329,11 @@ feature -- Basic operation
 	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Propagate the `event_id' to the good child.
 		local
-			index: INTEGER
-			point: WEL_POINT
-			button: WEL_TOOL_BAR_BUTTON
+			tbutton: EV_TOOL_BAR_BUTTON_IMP
 		do
-			create point.make (x_pos, y_pos)
---			index := cwin_send_message_result (item, Tb_hittest, 0, point.to_integer)
-			index := cwin_send_message_result (item, 1093, 0, point.to_integer)
-			create button.make
-			if index >= 0 then
-				cwin_send_message (item, Tb_getbutton, index, button.to_integer)
-				if ev_children.has (button.command_id) then
-					(ev_children @ button.command_id).execute_command (event_id, ev_data)
-				end
+			tbutton := find_item_at_position (x_pos, y_pos)
+			if tbutton /= Void and then not tbutton.is_insensitive then
+				tbutton.execute_command (event_id, ev_data)
 			end
 		end
 

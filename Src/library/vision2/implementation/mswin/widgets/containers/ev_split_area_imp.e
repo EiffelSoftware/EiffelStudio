@@ -19,9 +19,10 @@ inherit
 		redefine
 			wel_window,
 			set_insensitive,
-			set_size,
 			parent_ask_resize,
-			set_move_and_size
+			set_move_and_size,
+			set_width,
+			set_height
 		end
 
 feature -- Access
@@ -48,30 +49,29 @@ feature -- Status settings
 
 feature -- Resizing
 
-	set_size (new_width, new_height: INTEGER) is
-		-- Resize the box and all the children inside
+	set_width (new_width: INTEGER) is
 		do
-			parent_ask_resize (new_width, new_height)
-			notify_size_to_parent
+			set_local_width (new_width)
+			parent_imp.child_width_changed (width, Current)
+		end
+
+	set_height (new_height: INTEGER) is
+		do
+			set_local_height (new_height)
+			parent_imp.child_height_changed (height, Current)
+		end
+
+feature {NONE} -- Basic operation
+
+	set_local_width (new_width: INTEGER) is
+		deferred
+		end
+
+	set_local_height (new_height: INTEGER) is
+		deferred
 		end
 
 feature {NONE} -- Implementation
-
-	add_child1 (child_i: EV_WIDGET_I) is
-			-- Add the first child of the split.
-		do
-			child1 ?= child_i
-		ensure then
-			child1 /= Void
-		end
-	
-	add_child2 (child_i: EV_WIDGET_I) is
-			-- Add the second child.
-		do
-			child2 ?= child_i
-		ensure then
-			child2 /= Void
-		end
 
 	parent_ask_resize (new_width, new_height: INTEGER) is
 			-- Resize the box and all the children inside

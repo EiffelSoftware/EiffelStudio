@@ -217,7 +217,7 @@ rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE object) {
 	if (!frozen_obj) eif_thr_panic ("can not attach proxy to object\n");
 	return eif_access((EIF_OBJ)temp_obj);
 */
-	return eif_access((EIF_OBJ)object);
+	return eif_adopt((EIF_OBJ)object);
 }
 
 rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER proxy) {

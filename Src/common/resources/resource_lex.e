@@ -77,7 +77,7 @@ feature -- Parsing
 					stop or end_of_line
 				loop
 					inspect last_character
-					when 'a'..'z', 'A'..'Z', '0'..'9', '_' then
+					when 'a'..'z', 'A'..'Z', '0'..'9', '_', '.' then
 						last_token.extend (last_character);
 						read_character
 					else

@@ -46,7 +46,7 @@ feature -- Access
 		do
 			was_blocking := is_blocking
 			set_blocking
-			Result := c_retrieved (descriptor, 'S')
+			Result := eif_net_retrieved (descriptor)
 			if not was_blocking then
 				set_non_blocking
 			end
@@ -59,7 +59,7 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
 		do
-			c_basic_store (descriptor, $object, 'S')
+			eif_net_basic_store (descriptor, $object)
 		end;
  
 	general_store (object: ANY) is
@@ -71,7 +71,7 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		do
-			c_general_store (descriptor, $object, 'S')
+			eif_net_general_store (descriptor, $object)
 		end
  
 	independent_store (object: ANY) is
@@ -80,7 +80,7 @@ feature -- Element change
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
 		do
-			c_independent_store (descriptor, $object, 'S')
+			eif_net_independent_store (descriptor, $object)
 		end
 
 feature
@@ -955,40 +955,32 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_retrieved (file_handle: INTEGER; file_storage_type: CHARACTER): ANY is
+	eif_net_retrieved (file_handle: INTEGER): ANY is
 			-- Object structured retrieved from file of pointer
 			-- `file_handle'
 		external
 			"C"
-		alias
-			"eretrieve"
 		end;
 
-	c_basic_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
+	eif_net_basic_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C"
-		alias
-			"estore"
 		end;
  
-	c_general_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
+	eif_net_general_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C"
-		alias
-			"eestore"
 		end;
  
-	c_independent_store (file_handle: INTEGER; object: POINTER; file_storag_type: CHARACTER) is
+	eif_net_independent_store (file_handle: INTEGER; object: POINTER) is
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C"
-		alias
-			"sstore"
 		end;
  
 end -- Class SOCKET

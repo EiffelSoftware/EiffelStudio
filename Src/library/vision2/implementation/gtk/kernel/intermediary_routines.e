@@ -8,12 +8,7 @@ class
 	EV_INTERMEDIARY_ROUTINES
 
 inherit
-	IDENTIFIED
-		undefine
-			copy, is_equal
-		end
-		
-	ANY
+	EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
 	
 feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 
@@ -613,23 +608,6 @@ feature {EV_ANY_IMP} -- Accelerator intermediary agent routines
 		do
 			a_accelerator_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_accelerator_imp.actions_internal.call (empty_tuple)
-		end
-
-feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
-
-	empty_tuple: TUPLE is
-		once
-			Result := []
-		end
-
-feature {EV_ANY_I} -- Externals
-
-	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is
-			-- Get Eiffel object from `a_c_object'.
-		external
-			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
-		alias
-			"c_ev_any_imp_get_eif_reference_from_object_id"
 		end
 
 end -- class EV_INTERMEDIARY_ROUTINES

@@ -306,7 +306,7 @@ feature -- Element change
 		end
 
 	unset_menu_name is
-			-- Unset the menu (becomes null).
+ 			-- Unset the menu (becomes null).
 		do
 			cwel_wnd_class_set_menu_name (item, default_pointer)
 		ensure
@@ -325,7 +325,8 @@ feature -- Status report
 			p := c_calloc (1, structure_size)
 			if p /= default_pointer then
 				Result := cwin_get_class_info (default_pointer,
-					a_wel_string.item, p) or else
+					a_wel_string.item, p) 
+				or else
 					cwin_get_class_info (
 						main_args.current_instance.item,
 						a_wel_string.item, p)
@@ -379,11 +380,10 @@ feature -- Basic operations
 
 	register is
 			-- Register the window class.
-		require
-			not_registered: not registered
 		do
 			cwin_register_class (item)
 		ensure
+			registered: registered
 			registered: registered
 		end
 
@@ -558,6 +558,8 @@ feature {NONE} -- Externals
 		alias
 			"GetClassInfo"
 		end
+
+
 
 end -- class WEL_WND_CLASS
 

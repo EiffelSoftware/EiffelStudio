@@ -88,6 +88,12 @@ feature
 			implementation.set_write_call_back (a_file, a_command, an_argument)
 		ensure
 			is_call_back_set
+		end;
+
+	destroy is
+			-- Destroy Current.
+		do
+			implementation.destroy
 		end
 
 end

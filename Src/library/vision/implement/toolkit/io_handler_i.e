@@ -72,9 +72,13 @@ feature
 		deferred
 		ensure
 			is_call_back_set
-		end -- set_write_call_back
+		end;
 
-end -- class IO_HANDLER_M
+	destroy is
+		deferred
+		end;
+
+end 
 
 
 --|----------------------------------------------------------------

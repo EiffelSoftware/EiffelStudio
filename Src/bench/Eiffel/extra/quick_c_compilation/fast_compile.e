@@ -15,7 +15,7 @@ feature
 	make (a_arguments: ARRAY[STRING]) is
 		do
 			if a_arguments.count > 2 then
-				create top_directory.make(a_arguments.item(1), a_arguments.item (2))
+				create top_directory.make(a_arguments.item(1), a_arguments.item (2), True)
 				top_directory.convert
 				print_termination
 			else

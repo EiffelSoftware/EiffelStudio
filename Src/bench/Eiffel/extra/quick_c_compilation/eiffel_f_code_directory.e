@@ -20,7 +20,7 @@ creation
 
 feature
 
-	make (a_path: STRING; extension_type: STRING) is
+	make (a_path: STRING; extension_type: STRING; is_root: BOOLEAN) is
 		local
 			l_files: LINEAR[STRING]
 			l_file_name, tag: STRING
@@ -47,7 +47,7 @@ feature
 			has_finished_file := finished_file.exists
 
 				-- Clean up previous conversion
-			if has_entry ("Makefile.SHold") then
+			if not is_root and then has_entry ("Makefile.SHold") then
 				create makefile_sh.make (path ("Makefile.SH"))
 				makefile_sh.delete
 				makefile_sh.make (path("Makefile.SHold"))
@@ -80,7 +80,7 @@ feature
 					l_file_name := path (l_files.item)
 			   		create l_file.make (l_file_name)
 			   		if l_file.is_directory then
-						create l_directory.make (l_file_name, extension_type)
+						create l_directory.make (l_file_name, extension_type, False)
 						directories.extend (l_directory)
 						directories.forth
 			   		elseif not has_finished_file and then (l_files.item.substring_index (".c",1)) > 0 then

@@ -12,9 +12,10 @@ creation
 
 feature -- Initialization
 
-	make is
+	make (a_version: STRING) is
 		do
 			create xml_file_path.make_empty
+			runtime_version := a_version
 		ensure
 			non_void_xml_file_path: xml_file_path /= Void
 		end
@@ -60,7 +61,6 @@ feature -- Initialization
 			retry
 		end
 
-
 feature {NONE} -- Access
 	
 	initialized: BOOLEAN
@@ -80,6 +80,8 @@ feature {NONE} -- Access
 	xml_file_path: STRING
 			-- Path to current xml document.
 
+	runtime_version: STRING
+			-- Runtime version where we look for XML documentation associated to Microsoft assemblies.
 
 feature -- Basic Operations
 
@@ -142,14 +144,13 @@ feature -- Basic Operations
 		local
 			l_file_name: FILE_NAME
 		do
-			create l_file_name.make_from_string ((create {IL_ENVIRONMENT}).dotnet_framework_path)
+			create l_file_name.make_from_string ((create {IL_ENVIRONMENT}.make (runtime_version)).dotnet_framework_path)
 			l_file_name.set_file_name (an_assembly_name)
 			l_file_name.add_extension ("xml")
 			Result := l_file_name
 		ensure
 			non_void_result: Result /= Void
 		end
-		
 
 feature -- Status Setting
 

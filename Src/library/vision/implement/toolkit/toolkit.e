@@ -95,6 +95,14 @@ feature
 		deferred
 		end;
 
+	message (a_message: MESSAGE; managed: BOOLEAN;
+		oui_parent: COMPOSITE): MESSAGE_I is
+			-- Toolkit implementation of `a_message'
+		deferred
+		ensure
+			widget_exists: Result /= Void
+		end;
+
 	name: STRING is
 			-- Toolkit implementation name
 		deferred

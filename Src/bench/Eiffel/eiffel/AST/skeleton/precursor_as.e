@@ -84,9 +84,7 @@ feature -- Type check, byte code and dead code removal
 			vupr1: VUPR1
 			vupr2: VUPR2
 			vupr3: VUPR3
-			vupr4: VUPR4
-			vupr5: VUPR5
-			pre_table: EXTEND_TABLE [CL_TYPE_A, ROUTINE_ID]
+			pre_table: LINKED_LIST [PAIR[CL_TYPE_A, ROUTINE_ID]]
 			pname: STRING
 			feature_i: FEATURE_I
 			e_feature: E_FEATURE
@@ -107,14 +105,14 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error
 			end
 
-				--  Check that feature has a unique name (vupr2)
+				--  Check that feature has a unique name (vupr1)
 			feat_ast := context.a_class.feature_with_name (context.a_feature.feature_name).ast
 
 			if feat_ast.feature_names.count > 1 then
 					-- feature has multiple names.
-				!! vupr2
-				context.init_error (vupr2)
-				Error_handler.insert_error (vupr2)
+				!! vupr1
+				context.init_error (vupr1)
+				Error_handler.insert_error (vupr1)
 					-- Cannot go on here.
 				Error_handler.raise_error
 			end
@@ -128,9 +126,9 @@ feature -- Type check, byte code and dead code removal
 				if parent_name /= Void then
 						-- The specified parent does not have
 						-- an effective precursor.
-					!! vupr5
-					context.init_error (vupr5)
-					Error_handler.insert_error (vupr5)
+					!! vupr2
+					context.init_error (vupr2)
+					Error_handler.insert_error (vupr2)
 						-- Cannot go on here.
 					Error_handler.raise_error
 				else
@@ -146,20 +144,20 @@ feature -- Type check, byte code and dead code removal
 
 				-- Check that an unqualified precursor construct
 				-- is not ambiguous.
-			if parent_name = Void and then pre_table.count > 1 then
+			if pre_table.count > 1 then
 					-- Ambiguous construct
-				!! vupr4
-				context.init_error (vupr4)
-				Error_handler.insert_error (vupr4)
+				!! vupr3
+				context.init_error (vupr3)
+				Error_handler.insert_error (vupr3)
 					-- Cannot go on here.
 				Error_handler.raise_error
 			end
 
 				-- Table has exactly one entry.
 			pre_table.start
-			parent_type := pre_table.item_for_iteration
+			parent_type := pre_table.item.first
 			parent_c := parent_type.associated_class
-			e_feature := parent_c.feature_with_rout_id (pre_table.key_for_iteration)
+			e_feature := parent_c.feature_with_rout_id (pre_table.item.second)
 			feature_i := e_feature.associated_feature_i
 
 				-- Update type stack.
@@ -453,7 +451,7 @@ feature -- Replication
 
 feature {NONE}  -- precursor table
 
-	precursor_table : EXTEND_TABLE [CL_TYPE_A, ROUTINE_ID] is
+	precursor_table : LINKED_LIST [PAIR[CL_TYPE_A, ROUTINE_ID]] is
 				-- Table of parent types which have an effective
 				-- precursor of current feature. Indexed by
 				-- routine ids.
@@ -465,8 +463,9 @@ feature {NONE}  -- precursor table
 			a_feature: E_FEATURE
 			p_name: STRING
 			spec_p_name: STRING
-			p_list: HASH_TABLE [STRING, STRING]
+			p_list: HASH_TABLE [BOOLEAN, STRING]
 			i, rc: INTEGER
+			pair: PAIR [CL_TYPE_A, ROUTINE_ID]
 		do
 			rout_id_set := context.a_feature.rout_id_set
 			rc := rout_id_set.count
@@ -478,7 +477,7 @@ feature {NONE}  -- precursor table
 
 			from
 				parents := context.a_class.parents
-				!! Result.make (parents.count)
+				!! Result.make
 				!! p_list.make (parents.count)
 				parents.start
 			until
@@ -491,7 +490,7 @@ feature {NONE}  -- precursor table
 				-- If construct is qualified, check
 				-- specified parent only.
 
-				if not p_list.has (p_name) and then
+				if not (p_list.has (p_name) and then not p_list.found_item) and then
 					(spec_p_name = Void or else spec_p_name.is_equal (p_name)) then
 
 						-- Check if parent has an effective precursor
@@ -505,8 +504,11 @@ feature {NONE}  -- precursor table
 						   
 						if a_feature /= Void and then not a_feature.is_deferred then
 								-- Ok, add parent.
-							Result.put (parents.item, rout_id)
-							p_list.put (p_name, p_name)
+							!! pair
+							pair.set_first (parents.item)
+							pair.set_second (rout_id)
+							Result.extend (pair)
+							p_list.put (parents.item.has_generics, p_name)
 							i := rc -- terminate loop
 						end
 

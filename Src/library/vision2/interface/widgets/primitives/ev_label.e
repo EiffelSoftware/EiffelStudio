@@ -18,6 +18,9 @@ inherit
 		end
 	
 	EV_BAR_ITEM
+		redefine
+			make, implementation
+		end
 	
 	EV_TEXT_CONTAINER
 		redefine

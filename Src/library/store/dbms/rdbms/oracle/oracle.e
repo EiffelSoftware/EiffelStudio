@@ -60,15 +60,21 @@ feature -- For DATABASE_FORMAT
 		end
 	
 	string_format (object: STRING): STRING is
-			-- String representation in SQL of `object'
+			-- String representation in SQL of `object'.
+			-- WARNING: use "IS NULL" if object is empty instead of
+			-- "= NULL" which does not work.
 		do
-			if object.count > Max_char_size then
-				Result := break (object)
+			if object /= Void and then not object.is_empty then
+				Result := clone (object)
+				Result.replace_substring_all ("'", "''")
+				if Result.count > Max_char_size then
+					Result := break (Result)
+				end
+				Result.precede ('%'')
+				Result.extend ('%'')
 			else
-				Result := object
+				Result := "NULL"
 			end
-			Result.precede ('%'')
-			Result.extend ('%'')
 		end
 
 	True_representation: STRING is "'T'"

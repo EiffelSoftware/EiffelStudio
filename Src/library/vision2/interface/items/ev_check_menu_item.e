@@ -1,7 +1,7 @@
 indexing	
 	description: 
 		"EiffelVision check menu item. Item that must be put in%
-		% an EV_MENU_ITEM_CONTAINER. It has two states : check and%
+		% an EV_MENU_ITEM_HOLDER. It has two states : check and%
 		% unchecked."
 	status: "See notice at end of class"
 	id: "$Id$"
@@ -25,7 +25,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_CONTAINER) is
+	make (par: EV_MENU_ITEM_HOLDER) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_CHECK_MENU_ITEM_IMP! implementation.make
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+	make_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
---	make_with_pixmap (par: EV_MENU_ITEM_CONTAINER; pix: EV_PIXMAP) is
+--	make_with_pixmap (par: EV_MENU_ITEM_HOLDER; pix: EV_PIXMAP) is
 --			-- Create an item with `par' as parent and `pix'
 --			-- as pixmap.
 --		do
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 --			set_parent (par)
 --		end
 
---	make_with_all (par: EV_MENU_ITEM_CONTAINER; txt: STRING; pix: EV_PIXMAP) is
+--	make_with_all (par: EV_MENU_ITEM_HOLDER; txt: STRING; pix: EV_PIXMAP) is
 --			-- Create an item with `par' as parent, `txt' as text
 --			-- and `pix' as pixmap.
 --		do

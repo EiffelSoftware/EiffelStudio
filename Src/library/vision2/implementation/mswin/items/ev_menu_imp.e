@@ -12,7 +12,7 @@ class
 inherit
 	EV_MENU_I
 
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_ITEM_HOLDER_IMP
 
 	WEL_MENU
 
@@ -62,7 +62,7 @@ feature -- Element change
 			text := str
 		end
 
-	set_parent (par: EV_MENU_CONTAINER) is
+	set_parent (par: EV_MENU_HOLDER) is
 			-- Make `par' the new parent of the item.
 		do
 			if parent_imp /= Void then
@@ -84,7 +84,7 @@ feature -- Event association
 			parent_imp.on_selection_changed (sitem)
 		end
 
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
+feature {EV_MENU_ITEM_HOLDER_IMP} -- Implementation
 
 	submenu: WEL_MENU is
 			-- Wel menu used when the item is a sub-menu.
@@ -92,7 +92,7 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			Result := Current
 		end
 
-	parent_imp: EV_MENU_CONTAINER_IMP
+	parent_imp: EV_MENU_HOLDER_IMP
 			-- EV parent of the current menu
 
 end -- class EV_MENU_IMP

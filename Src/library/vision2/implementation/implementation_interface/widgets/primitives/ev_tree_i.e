@@ -10,7 +10,7 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 	
-	EV_TREE_ITEM_CONTAINER_I
+	EV_TREE_ITEM_HOLDER_I
 
 feature -- Event : command association
 

@@ -5,14 +5,14 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TREE_ITEM_CONTAINER_IMP
+	EV_TREE_ITEM_HOLDER_IMP
 
 inherit
-	EV_TREE_ITEM_CONTAINER_I
+	EV_TREE_ITEM_HOLDER_I
 
-	EV_ITEM_CONTAINER_IMP
+	EV_ITEM_HOLDER_IMP
 
-end -- class EV_TREE_ITEM_CONTAINER_IMP
+end -- class EV_TREE_ITEM_HOLDER_IMP
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

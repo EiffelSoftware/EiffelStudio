@@ -10,7 +10,7 @@ class
 	EV_STATIC_MENU_BAR
 
 inherit
-	EV_MENU_CONTAINER 
+	EV_MENU_HOLDER 
 		redefine
 			implementation
 		end

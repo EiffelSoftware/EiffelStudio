@@ -18,7 +18,7 @@ inherit
 			implementation
 		end
 
-	EV_TREE_ITEM_CONTAINER
+	EV_TREE_ITEM_HOLDER
 		redefine
 			implementation
 		end
@@ -31,7 +31,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TREE_ITEM_CONTAINER) is
+	make (par: EV_TREE_ITEM_HOLDER) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_TREE_ITEM_IMP! implementation.make
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
+	make_with_text (par: EV_TREE_ITEM_HOLDER; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_pixmap (par: EV_TREE_ITEM_CONTAINER; pix: EV_PIXMAP) is
+	make_with_pixmap (par: EV_TREE_ITEM_HOLDER; pix: EV_PIXMAP) is
 			-- Create an item with `par' as parent and `pix'
 			-- as pixmap.
 		do
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_all (par: EV_TREE_ITEM_CONTAINER; txt: STRING; pix: EV_PIXMAP) is
+	make_with_all (par: EV_TREE_ITEM_HOLDER; txt: STRING; pix: EV_PIXMAP) is
 			-- Create an item with `par' as parent, `txt' as text
 			-- and `pix' as pixmap.
 		do
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_TREE_ITEM_CONTAINER is
+	parent: EV_TREE_ITEM_HOLDER is
 			-- Parent of the current item.
 		require
 			exists: not destroyed
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (par: EV_TREE_ITEM_CONTAINER) is
+	set_parent (par: EV_TREE_ITEM_HOLDER) is
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the screen.
 		require
@@ -130,7 +130,7 @@ feature -- Event -- removing command association
 			implementation.remove_subtree_commands
 		end
 
-feature {EV_TREE_ITEM_CONTAINER, EV_TREE_ITEM_CONTAINER_I} -- Implementation
+feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation
 
 	implementation: EV_TREE_ITEM_I
 

@@ -83,15 +83,6 @@ feature -- Element change
 			end
 		end
 
---			{EV_WIDGET_IMP} Precursor (par)
---				if not already_displayed and parent_imp.already_displayed then
---					on_first_display
---				else
---					already_displayed := parent_imp.already_displayed
---				end
---			end
---		end
-
 feature -- Assertion test
 
 	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
@@ -116,7 +107,7 @@ feature {EV_SIZEABLE_IMP} -- Implementation for automatic size compute
 			set_minimum_height (value)
 		end
 
-feature {EV_MENU_CONTAINER_IMP} -- Implementation
+feature {EV_MENU_HOLDER_IMP} -- Implementation
 
 	menu_items: HASH_TABLE [EV_MENU_ITEM_IMP, INTEGER]
 			-- It can be only one list by container because
@@ -132,7 +123,7 @@ feature {NONE} -- WEL Implementation
 			-- of drawing required.
 		local
 			pixcon: EV_PIXMAPABLE_IMP
-			itemcon: EV_ITEM_CONTAINER_IMP
+			itemcon: EV_ITEM_HOLDER_IMP
 		do
 			pixcon ?= draw_item.window_item
 			if pixcon /= Void then

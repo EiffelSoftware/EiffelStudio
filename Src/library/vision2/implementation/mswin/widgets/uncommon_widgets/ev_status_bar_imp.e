@@ -18,7 +18,7 @@ inherit
 			set_parent
 		end
 
-	EV_ITEM_CONTAINER_IMP
+	EV_ITEM_HOLDER_IMP
 
 	WEL_STATUS_WINDOW
 		rename

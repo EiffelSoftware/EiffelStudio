@@ -11,7 +11,7 @@ class
 inherit
 	EV_STATIC_MENU_BAR_I
 
-	EV_MENU_CONTAINER_IMP
+	EV_MENU_HOLDER_IMP
 
 	WEL_MENU
 		rename

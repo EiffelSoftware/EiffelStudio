@@ -16,7 +16,7 @@ inherit
 			count
 		end
 
-	EV_LIST_ITEM_CONTAINER_IMP
+	EV_LIST_ITEM_HOLDER_IMP
 
 	EV_TEXT_COMPONENT_IMP
 		redefine

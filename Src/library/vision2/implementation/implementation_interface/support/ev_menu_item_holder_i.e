@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_ITEM_HOLDER_I
 
 inherit
 	EV_ANY_I
@@ -28,7 +28,7 @@ feature -- Element change
 		deferred
 		end
 
-end -- class EV_MENU_ITEM_CONTAINER_I
+end -- class EV_MENU_ITEM_HOLDER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

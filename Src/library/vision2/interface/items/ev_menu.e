@@ -11,7 +11,7 @@ class
 	EV_MENU
 
 inherit
-	EV_MENU_ITEM_CONTAINER 
+	EV_MENU_ITEM_HOLDER 
 		redefine
 			implementation
 		end
@@ -22,7 +22,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_CONTAINER) is
+	make (par: EV_MENU_HOLDER) is
 			-- Create an empty menu.
 		do
 			!EV_MENU_IMP!implementation.make
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MENU_CONTAINER; label: STRING) is         
+	make_with_text (par: EV_MENU_HOLDER; label: STRING) is         
 			-- Create a menu widget with `par' as
 			-- parent
 		do
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent (par: EV_MENU_CONTAINER) is
+	set_parent (par: EV_MENU_HOLDER) is
 			-- Make `par' the new parent of the item.
 		require
 			exists: not destroyed

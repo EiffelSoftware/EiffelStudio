@@ -12,7 +12,7 @@ deferred class
 	EV_STATIC_MENU_BAR_I
 
 inherit
-	EV_MENU_CONTAINER_I
+	EV_MENU_HOLDER_I
 	
 feature {NONE} -- Initialization
 	

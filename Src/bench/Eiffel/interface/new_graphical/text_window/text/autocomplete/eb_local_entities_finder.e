@@ -14,7 +14,17 @@ inherit
 		export
 			{NONE} All
 		end
-
+		
+	SHARED_EIFFEL_PARSER
+		export
+			{NONE} All
+		end
+		
+	SHARED_NAMES_HEAP
+		export
+			{NONE} All
+		end
+		
 create
 	make
 	
@@ -23,81 +33,124 @@ feature {NONE} -- Initialization
 	make is
 			-- initialize `Current'.
 		do
-				create found_names.make
-				create found_class_names.make
-				create name_list.make
-				create class_list.make
+			create found_entities.make (2)
+			create found_locals.make (2)
+			create found_arguments_list.make (2)
 		end
 
 feature -- Basic Operations
-
-	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN; build_classes_list:BOOLEAN) is
-			-- Build list of locals and arguments (`found_names') corresponding to a position 
-			-- in a text defined by `line' and `token'.
-			-- If `build_class_list', the list of class names that correspond to `found_names', 
-			--	`found_class_names' is generated too.
+		
+	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+			-- Build list of locals and argument types (`found_entities') corresponding to a position 
+			-- in a text defined by `line' and `token'.		
 		do
-			internal_token := token.previous
-			internal_line := line
-			create found_names.make
-			create found_class_names.make
-			search_for_local_clause
-			if found_local_keyword then
-				look_for_locals := True
-				build_lists (build_classes_list)
-				if not name_list.after then
-					found_names.merge_right (name_list)
-				end
-				if not class_list.after then
-					found_class_names.merge_right (class_list)
-				end
-			else
+			build_local_entities_list (line, token)
+			build_argument_entities_list (line, token)
+			found_entities := found_locals
+			found_entities.append (found_arguments_list)
+		end	
+		
+	build_local_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+			-- Build list of local types corresponding to a position a text defined by `line' and `token'.
+			-- Resulting local nodes will be put in `found_locals'.
+		local
+			l_local_string: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
 				internal_token := token.previous
 				internal_line := line
-			end
-			search_for_arguments
-			if found_arguments then
-				look_for_locals := False
-				build_lists (build_classes_list)
-				if not name_list.after then
-					found_names.merge_right (name_list)
+				create found_locals.make (2)
+				search_for_local_clause
+				if found_local_keyword then
+					look_for_locals := True
+					l_local_string := local_string
+					entity_declaration_parser.parse_from_string (l_local_string)
+					found_locals := entity_declaration_parser.entity_declaration_node
+				else
+					internal_token := token.previous
+					internal_line := line
 				end
-				if not class_list.after then
-					found_class_names.merge_right (class_list)
+			end
+		rescue
+			retried := True
+			retry
+		end	
+		
+	build_argument_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+			-- Build list of argument types corresponding to a position a text defined by `line' and `token'.
+			-- Resulting local nodes will be put in `found_locals'.
+		local
+			l_arguments_string: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				internal_token := token.previous
+				internal_line := line
+				create found_arguments_list.make (2)
+				search_for_arguments
+				if found_arguments then
+					look_for_locals := False
+					l_arguments_string := arguments_string
+					entity_declaration_parser.parse_from_string (l_arguments_string)
+					found_arguments_list := entity_declaration_parser.entity_declaration_node
+				else
+					internal_token := token.previous
+					internal_line := line
 				end
 			end
-			if name_list /= Void then
-				name_list.wipe_out
-				name_list := Void
-			end
-			if class_list /= Void then
-				class_list.wipe_out
-				class_list := Void
-			end
-		end
+		rescue
+			retried := True
+			retry
+		end	
 		
 	reset is
 			-- Wipe lists out .
 		do
-			found_names.wipe_out
-			found_class_names.wipe_out
+			found_entities.wipe_out
+			found_locals.wipe_out
+			found_arguments_list.wipe_out
 		end
-		
-	found_names: LINKED_LIST [STRING]
-			-- list of found entities.
+
+feature -- Access	
 			
-	found_class_names: LINKED_LIST [STRING]
-			-- list of class names that correspond to `found_names'.
+	found_entities: EIFFEL_LIST [TYPE_DEC_AS]	
+			
+	found_locals: EIFFEL_LIST [TYPE_DEC_AS]
+	
+	found_arguments_list: EIFFEL_LIST [TYPE_DEC_AS]
+			
+	found_names: LINKED_LIST [STRING] is
+			-- List of found entity names.
+		local
+			id_list: ARRAYED_LIST [INTEGER]
+		do
+			create Result.make
+			if found_entities /= Void and not found_entities.is_empty then
+				from
+					found_entities.start
+				until
+					found_entities.after
+				loop					
+					from
+						id_list := found_entities.item.id_list
+						id_list.start
+					until
+						id_list.after
+					loop
+						Result.extend (Names_heap.item (id_list.item))
+						id_list.forth
+					end					
+					found_entities.forth
+				end
+			end
+		end
 			
 feature {NONE} -- Implementation
 
 	internal_token: EDITOR_TOKEN
 
 	internal_line: EDITOR_LINE
-
-	name_list: LINKED_LIST [STRING]
-
-	class_list: LINKED_LIST [STRING]
 
 	found_local_keyword: BOOLEAN
 
@@ -245,85 +298,36 @@ feature {NONE} -- Implementation
 				end
 			end			
 		end
-	
-	build_lists (build_classes_list: BOOLEAN) is
-			-- Build a list of locals or arguments starting at `internal_line' and
-			-- `internal_token'. Results are stored in `name_list' and `class_list'.
+
+	local_string: STRING is
+			-- Build a string of locals starting at `internal_line' and `internal_token'. 
+			-- Results will be of form `local ...locals..'
 		local
 			stop: BOOLEAN
-			state, count: INTEGER
+			count: INTEGER
 		do
-			state := 1
-			create name_list.make
-			create class_list.make
+			create Result.make_from_string (local_word + "%N")
 			from
 				internal_token := internal_token.next.next
 			until
 				stop
 			loop
-				from
-				
+				from				
 				until
 					stop or else internal_token = internal_line.eol_token
 				loop
-					inspect state
-					when 1 then
 							-- expecting local name
-						if is_stopping (internal_token) then
-							stop := True
-						elseif not is_skippable (internal_token) then
-							state := 2
-							name_list.extend (internal_token.image)
-							count := count + 1
-						end
-						internal_token := internal_token.next
-					when 2 then
-							-- expecting comma or colon
-						if internal_token.image.is_equal (comma) then
-							state := 1
-						elseif internal_token.image.is_equal (colon) then
-							state := 3
-						elseif not is_skippable (internal_token) then
-							stop := True
-						end
-						internal_token := internal_token.next
-					when 3 then
-							-- expecting class name
-						if token_image_is_same_as_word (internal_token, like_word) then
-							-- FIXME
-							internal_token := internal_token.next
-						elseif is_stopping (internal_token) then
-							stop := True
-						elseif not is_skippable (internal_token) then
-							state := 4
-							from
-							until
-								count = 0 or else not build_classes_list
-							loop
-								count := count - 1
-								class_list.extend (internal_token.image.as_upper)
-							end
-							go_to_end_of_class_name
-							if found_end_of_class_name then
-								internal_token := internal_token.next
-							else
-								stop := True
-							end
-						else
-							internal_token := internal_token.next
-						end
-					when 4 then
-							-- expecting semi-colon or local name
-						if not is_skippable (internal_token) and then not internal_token.image.is_equal (semi_colon) then
-							state := 1
-						else
-							internal_token := internal_token.next
-						end
+					if is_stopping (internal_token) then
+						stop := True
 					else
-						-- Not reached
+						Result.append (internal_token.image)						
 					end
+					internal_token := internal_token.next
 				end
+				
 				if not stop then
+					Result.append ("%N")
+						-- Go to the next line
 					internal_line := internal_line.next
 					if internal_line /= Void then
 						internal_token := internal_line.first_token
@@ -332,10 +336,44 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			if state /= 1 then
-					-- Error state : reset lists
-				name_list.wipe_out
-				class_list.wipe_out
+		end
+
+	arguments_string: STRING is
+			-- Build a string of locals starting at `internal_line' and `internal_token'. 
+			-- Results will be of form `local ...locals..'
+		local
+			stop: BOOLEAN
+			count: INTEGER
+		do
+			create Result.make_from_string (local_word + "%N")
+			from
+				internal_token := internal_token.next.next
+			until
+				stop
+			loop
+				from				
+				until
+					stop or else internal_token = internal_line.eol_token
+				loop
+							-- expecting local name
+					if is_stopping (internal_token) then
+						stop := True
+					else
+						Result.append (internal_token.image)						
+					end
+					internal_token := internal_token.next
+				end
+				
+				if not stop then
+					Result.append ("%N")
+						-- Go to the next line
+					internal_line := internal_line.next
+					if internal_line /= Void then
+						internal_token := internal_line.first_token
+					else
+						stop := True
+					end
+				end
 			end
 		end
 
@@ -343,7 +381,7 @@ feature {NONE} -- Implementation
 			-- Should we stop list building if we encounter `tok'?
 		do
 			if look_for_locals then
-				Result := is_keyword (tok) and then not token_image_is_same_as_word (tok, current_word)
+				Result := is_keyword (tok) and then not token_image_is_same_as_word (tok, current_word) and then not token_image_is_same_as_word (tok, like_word)
 			else
 				Result := tok.image.is_equal (closing_parenthesis)
 			end

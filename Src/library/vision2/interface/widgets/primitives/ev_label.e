@@ -1,8 +1,14 @@
 indexing
 	description: 
-		"Displays a textual label."
+		"[
+			Displays a textual label.
+		]"
 	appearance:
-		" `text' "
+		"[
+			---------
+			|  text  |
+			---------
+		]"
 	status: "See notice at end of class"
 	keywords: "label, text"
 	date: "$Date$"

@@ -1,16 +1,20 @@
 indexing 
 	description:
-		"A text field with a button. When the button is pressed, a list of%
-		%text strings is displayed. Selecting one causes it to be copied into%
-		%the text field."
+		"[
+			A text field with a button. When the button is pressed, a list of
+			text strings is displayed. Selecting one causes it to be copied into
+			the text field.
+		]"
 	appearance:
-		"+-----------+-+%N%
-		%| `text'    |V|%N%
-		%+-----------+-+%N%
-		% |`first'     |%N%
-		% | ...        |%N%
-		% |`last'      |%N%
-		% +------------+"
+		"[
+			+-----------+-+
+			|  text     |V|
+			+-----------+-+
+			 | first      |
+			 | ...        |
+			 | last       |
+			 +------------+
+		]"
 	status: "See notice at end of class"
 	keywords: "combo, box, button, option, menu"
 	date: "$Date$"

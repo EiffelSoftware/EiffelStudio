@@ -1,16 +1,20 @@
 indexing 
 	description:
-		"Vertical bar graph gauge for displaying progress of a process."
+		"[
+			Vertical bar graph gauge for displaying progress of a process.
+		]"
 	appearance:
-		"+--+N%
-		%|  |%N%
-		%|  |%N%
-		%|  |%N%
-		%|25|%N%
-		%|  |%N%
-		%|##|%N%
-		%|##|%N%
-		%+--+"
+		"[
+			+--+
+			|  |
+			|  |
+			|  |
+			|25|
+			|  |
+			|##|
+			|##|
+			+--+
+		]"
 	status: "See notice at end of class"
  	keywords: "status, progress, bar, vertical"
 	date: "$Date$"

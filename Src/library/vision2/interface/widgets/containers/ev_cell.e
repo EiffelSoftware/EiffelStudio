@@ -1,12 +1,16 @@
 indexing
-	description: 
-		"Container that holds only one widget."
+	description:
+		"[
+			Container that holds only one widget.
+		"]
 	appearance:
-		"---------------%N%
-		%|             |%N%
-		%|   `item'    |%N%
-		%|             |%N%
-		%---------------"
+		"[
+			---------------
+			|             |
+			|    item     |
+			|             |
+			---------------
+		]"
 	status: "See notice at end of class"
 	keywords: "container"
 	date: "$Date$"

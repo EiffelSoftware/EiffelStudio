@@ -1,12 +1,16 @@
 indexing
-	description: 
-		"Horizontal linear widget container."
+	description:
+		"[
+			Horizontal linear widget container.
+		]"
 	appearance:
-		"---------------------------------------------%N%
-		%|             |              |              |%N%
-		%|   `first'   |     ....     |    `last'    |%N%
-		%|             |              |              |%N%
-		%---------------------------------------------"
+		"[
+			---------------------------------------------
+			|             |              |              |
+			|    first    |     ....     |     last     |
+			|             |              |              |
+			---------------------------------------------
+		]"
 	status: "See notice at end of class"
 	keywords: "container, horizontal, box"
 	date: "$Date$"

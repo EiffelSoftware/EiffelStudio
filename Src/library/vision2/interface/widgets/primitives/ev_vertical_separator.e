@@ -1,13 +1,16 @@
 indexing 
 	description:
-		"Scored vertical line."
+		"[
+			Scored vertical line.
+		]"
 	appearance:
-		"|%N%
-		%|%N%
-		%|%N%
-		%|%N%
-		%|%N%
-		%|"
+		"[
+			|
+			|
+			|
+			|
+			|
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,11 +1,15 @@
 indexing 
 	description:
-		"Interactive horizontal range widget. A sliding thumb displays the%N%
-		%current `value' and allows it to be adjusted"
+		"[
+			Interactive horizontal range widget. A sliding thumb displays the
+			current `value' and allows it to be adjusted.
+		]"
 	appearance:
-		"+-------------+%N%
-		%|  |#|        |%N%
-		%+-------------+"
+		"[
+			+-------------+
+			|  |#|        |
+			+-------------+
+		]"
 	status: "See notice at end of class"
 	keywords: "range, slide, adjust"
 	date: "$Date$"

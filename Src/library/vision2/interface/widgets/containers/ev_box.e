@@ -1,7 +1,9 @@
 indexing
-	description: 
-		"Linear widget container.%N%
-		%Base class for EV_HORIZONTAL_BOX and EV_VERTICAL_BOX"
+	description:
+		"[
+			Linear widget container.
+			Base class for EV_HORIZONTAL_BOX and EV_VERTICAL_BOX"
+		]"
 	status: "See notice at end of class"
 	keywords: "box, container, child"
 	date: "$Date$"

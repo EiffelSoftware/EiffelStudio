@@ -1,10 +1,16 @@
 indexing
 	description:
-		"Toggle button with state displayed as a circular check box.%N%
-		%`is_selected' is mutually exclusive with respect to other%
-		%radio buttons in `parent' container."
+		"[
+			Toggle button with state displayed as a circular check box.
+			`is_selected' is mutually exclusive with respect to other
+			radio buttons in `parent' container.
+		]"
 	appearance:
-		" (*) `text' "
+		"[
+			--------------
+			| (*)  text  |
+			--------------
+		]"
 	status: "See notice at end of class"
 	keywords: "toggle, radio, button"
 	date: "$Date$"

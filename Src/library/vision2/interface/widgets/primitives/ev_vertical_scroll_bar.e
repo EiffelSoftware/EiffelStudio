@@ -1,17 +1,21 @@
 indexing
 	description:
-		"Interactive vertical scrolling widget."
+		"[
+			Interactive vertical scrolling widget.
+		]"
 	appearance:
-		"+-+%N%
-		%|^|%N%
-		%|-|%N%
-		%| |%N%
-		%|_|%N%
-		%|#|%N%
-		%|-|%N%
-		%|_|%N%
-		%|V|%N%
-		%+-+"
+		"[
+			+-+
+			|^|
+			|-|
+			| |
+			|_|
+			|#|
+			|-|
+			|_|
+			|V|
+			+-+
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

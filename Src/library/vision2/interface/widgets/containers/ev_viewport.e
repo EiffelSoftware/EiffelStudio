@@ -1,18 +1,22 @@
 indexing
 	description:
-		"Displays a single widget that may be larger than the container.%
-		%Clipping may occur though item size is not effected by viewport"
+		"[
+			Displays a single widget that may be larger than the container.
+			Clipping may occur though item size is not effected by viewport.
+		]"
 	appearance:
-		" - - - - - - - - - - - - - - -  ^%N%
-		%|             `item'          |`y_offset'%N%
-		%                                v%N%
-		%|          ---------------    |%N%
-		%           |             |%N%
-		%|          |  viewport   |    |%N%
-		%           |             |%N%
-		%|          ---------------    |%N%
-		% - - - - - - - - - - - - - - -%N%
-		%<`x_offset'>"
+		"[
+		 - - - - - - - - - - - - - - -  ^
+		|             `item'          |`y_offset'
+		                                v
+		|          ---------------    |
+		           |             |
+		|          |  viewport   |    |
+		           |             |
+		|          ---------------    |
+		 - - - - - - - - - - - - - - -
+		<`x_offset'>
+		]"
 	status: "See notice at end of class"
 	keywords: "container, virtual, display"
 	date: "$Date$"

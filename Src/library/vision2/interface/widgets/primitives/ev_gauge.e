@@ -1,7 +1,9 @@
 indexing
 	description:
-		"Base class for widgets that display `value' within a `value_range'.%N%
-		%See EV_RANGE, EV_SCROLL_BAR, EV_SPIN_BUTTON and EV_PROGRESS_BAR."
+		"[
+			Base class for widgets that display `value' within a `value_range'.
+			See EV_RANGE, EV_SCROLL_BAR, EV_SPIN_BUTTON and EV_PROGRESS_BAR.
+		]"
 	status: "See notice at end of class."
 	keywords: "value, step, increment, range"
 	date: "$Date$"

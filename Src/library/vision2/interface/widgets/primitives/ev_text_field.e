@@ -1,10 +1,14 @@
 indexing
 	description: 
-		"Input field for a single line of `text'."
+		"[
+			Input field for a single line of `text'.
+		]"
 	appearance:
-		"+-------------+%N%
-		%| 'text'      |%N%
-		%+-------------+"
+		"[
+			+-------------+
+			|  text       |
+			+-------------+
+		]"
 	status: "See notice at end of class"
 	keywords: "input, text, field, query"
 	date: "$Date$"

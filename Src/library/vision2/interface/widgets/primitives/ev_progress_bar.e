@@ -1,7 +1,9 @@
 indexing 
 	description:
-		"Base class for bar graph gauges that display progress of a process.%N%
-		%See EV_HORIZONTAL_PROGRESS_BAR and EV_VERTICAL_PROGRESS_BAR"
+		"[
+			Base class for bar graph gauges that display progress of a process.
+			See EV_HORIZONTAL_PROGRESS_BAR and EV_VERTICAL_PROGRESS_BAR
+		]"
 	status: "See notice at end of class"
 	keywords: "status, progress, bar"
 	date: "$Date$"

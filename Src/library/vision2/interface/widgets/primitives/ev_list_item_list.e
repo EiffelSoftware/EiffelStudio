@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Common ancestor for EV_LIST and EV_COMBO_BOX."
 	status: "See notice at end of class"
 	keywords: "list, list_item"

@@ -1,10 +1,14 @@
 indexing
 	description:
-		"Interactive horizontal scrolling widget."
+		"[
+			Interactive horizontal scrolling widget.
+		]"
 	appearance:
-		"+-+---------+-+%N%
-		%|<| |#|     |>|%N%
-		%+-+---------+-+"
+		"[
+			+-+---------+-+
+			|<| |#|     |>|
+			+-+---------+-+
+		]"
 	status: "See notice at end of class."
 	keywords: "horizontal, scroll, bar, gauge"
 	date: "$Date$"

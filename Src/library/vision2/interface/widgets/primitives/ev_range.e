@@ -1,8 +1,10 @@
 indexing 
 	description:
-		"Interactive range widget. A sliding thumb displays the current `value'%
-		%and allows it to be adjusted%N%
-		%See EV_HORIZONTAL_RANGE and EV_VERTICAL_RANGE"
+		"[
+			Interactive range widget. A sliding thumb displays the current `value'
+			and allows it to be adjusted.
+			See EV_HORIZONTAL_RANGE and EV_VERTICAL_RANGE.
+		]"
 	status: "See notice at end of class"
 	keywords: "range, slide, adjust"
 	date: "$Date$"

@@ -1,17 +1,21 @@
 indexing
-	description: 
-		"Container that allows custom placement of widgets. Widgets are%N%
-		%placed relative to (`origin_x', `origin_y'). Clipping will be%N%
-		%applied. Items are ordered in z-order with the last item as the%N%
-		%topmost."
+	description:
+		"[
+			Container that allows custom placement of widgets. Widgets are
+			placed relative to (`origin_x', `origin_y'). Clipping will be
+			applied. Items are ordered in z-order with the last item as the
+			topmost."
+		]"
 	appearance:
-		"+---------------------+%N%
-		%|    +--------+       |%N%
-		%|    |        |       |%N%
-		%|  +-+ `last' +-------+%N%
-		%|  | |        |`first'|%N%
-		%|  +-+        +-------+%N%
-		%+----+--------+-------+"
+		"[
+			+---------------------+
+			|    +--------+       |
+			|    |        |       |
+			|  +-+ `last' +-------+
+			|  | |        |`first'|
+			|  +-+        +-------+
+			+----+--------+-------+
+		]"
 	status: "See notice at end of class"
 	keywords: "container, fixed, custom"
 	date: "$Date$"

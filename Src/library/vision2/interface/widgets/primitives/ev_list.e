@@ -1,12 +1,16 @@
 indexing
 	description: 
-		"Displays a list of items from which the user can select."
+		"[
+			Displays a list of items from which the user can select.
+		]"
 	appearance:
-		"+-------------+%N%
-		%| 'first'     |%N%
-		%|  ...        |%N%
-		%| `last'      |%N%
-		%+-------------+"
+		"[
+			+-------------+
+			|  first      |
+			|  ...        |
+			|  last       |
+			+-------------+
+		]"
 	status: "See notice at end of class"
 	keywords: "list, select, menu"
 	date: "$Date$"

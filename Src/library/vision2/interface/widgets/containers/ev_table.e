@@ -1,9 +1,11 @@
 indexing
 	description: 
-		"EiffelVision table. Invisible container that allows %N%
-		% unlimited number of other widgets to be packed inside it.%N%
-		% A table controls the children's location and size%N%
-		% automatically."
+		"[
+			EiffelVision table. Invisible container that allows
+			unlimited number of other widgets to be packed inside it.
+			A table controls the children's location and size
+			automatically."
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,6 +1,8 @@
 indexing
 	description:
-		"EiffelVision toolbar. Can only contain tool bar items."
+		"[
+			EiffelVision toolbar. Can only contain tool bar items.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,17 +1,21 @@
 indexing 
 	description:
-		"Interactive vertical range widget. A sliding thumb displays the%N%
-		%current `value' and allows it to be adjusted"
+		"[
+			Interactive vertical range widget. A sliding thumb displays the
+			current `value' and allows it to be adjusted.
+		]"
 	appearance:
-		"+-+%N%
-		%| |%N%
-		%| |%N%
-		%| |%N%
-		%|_|%N%
-		%|#|%N%
-		%|-|%N%
-		%| |%N%
-		%+-+"
+		"[
+			+-+
+			| |
+			| |
+			| |
+			|_|
+			|#|
+			|-|
+			| |
+			+-+
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,12 +1,16 @@
 indexing
-	description: 
-		"Displays two widgets side by side, seperated by an adjustable divider."
+	description:
+		"[
+			Displays two widgets side by side, seperated by an adjustable divider.
+		"]
 	apearance:
-		"------------------------------%N%
-		%|             ||             |%N%
-		%|   `first'   ||   `second'  |%N%
-		%|             ||             |%N%
-		%------------------------------"
+		"[
+			------------------------------
+			|             ||             |
+			|    first    ||   second    |
+			|             ||             |
+			------------------------------
+		]"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

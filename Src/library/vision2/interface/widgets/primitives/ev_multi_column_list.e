@@ -1,8 +1,13 @@
 indexing
 	description: 
-		"Displays a list of multi item rows from which the user can select."
-	note: "The list start at the index 1, the titles are not count among%
-		%the rows. The columns start also at the index 1."	
+		"[
+			Displays a list of multi item rows from which the user can select.
+		]"
+	note:
+		"[
+			The list start at the index 1, the titles are not count among
+			the rows. The columns start also at the index 1.
+		]"
 	status: "See notice at end of class"
 	keywords: "list, multi, column, row, table"
 	date: "$Date$"

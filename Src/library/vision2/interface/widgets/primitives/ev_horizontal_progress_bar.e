@@ -1,10 +1,14 @@
 indexing 
 	description:
-		"Horizontal bar graph gauge for displaying progress of a process."
+		"[
+			Horizontal bar graph gauge for displaying progress of a process.
+		]"
 	appearance:
-		"+-------------+%N%
-		%|###   25%%    |%N%
-		%+-------------+"
+		"[
+			+-------------+
+			|###   25%    |
+			+-------------+
+		]"
 	status: "See notice at end of class"
 	keywords: "status, progress, bar, horizontal"
 	date: "$Date$"

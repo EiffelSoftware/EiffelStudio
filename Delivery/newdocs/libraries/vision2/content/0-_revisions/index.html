@@ -82,7 +82,8 @@
 			<LI><B>EV_CHECK_BUTTON</B> - The default minimum height after `default_create' is now enough to display the widget correctly.</LI>
 			<LI><B>EV_NOTEBOOK</B> - When removing a widget from a notebook, it is now visible. Previously, the widget would be hidden.</LI>
 			<LI><B>EV_LIST, EV_MULTI_COLUMN_LIST, EV_TREE</B> - Fixed `set_foreground_color' and `set_background_color'. Previously, calling these features did nothing.</LI>
-			<LI><B>EV_BOX</B> - If a widget was not`is_item_expanded', then adding a new widget to the box before that widget would sometimes cause a different widget to become `is_item_expanded'.
+			<LI><B>EV_BOX</B> - If a widget was not`is_item_expanded', then adding a new widget to the box before that widget would sometimes cause a different widget to become `is_item_expanded'.</LI>
+			<LI><B>EV_TOOL_BAR_RADIO_BUTTON</B> - The currently selected button in `peers' was unselected when the button was pressed, and not when it was really selected. This bug made it possible to make `selected_peer' Void, which caused an invariant to fail.</LI>
 			</UL>
 		<LI><B>Gtk</B></LI>
 			<UL>

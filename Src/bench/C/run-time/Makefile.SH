@@ -71,10 +71,6 @@ LSCRIPTS =  eif_size.h
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
-.c.o:
-	\$(RM) \$@
-	\$(CC) -c \$(JCFLAGS) \$<
-
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
@@ -636,137 +632,137 @@ lint:
 	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
 
 weif_project.o: eif_project.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 woption.o: option.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmath.o: math.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmalloc.o: malloc.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wgarcol.o: garcol.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wlocal.o: local.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wstore.o: store.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wretrieve.o: retrieve.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 whash.o: hash.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wtraverse.o: traverse.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 whashin.o: hashin.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wtools.o: tools.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 winternal.o: internal.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wplug.o: plug.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wcopy.o: copy.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wequal.o: equal.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wlmalloc.o: lmalloc.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wout.o: out.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wtimer.o: timer.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wurgent.o: urgent.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wsig.o: sig.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 whector.o: hector.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wcecil.o: cecil.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wbits.o: bits.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wfile.o: file.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wdir.o: dir.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wstring.o: string.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmisc.o: misc.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 
 wpattern.o: pattern.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 werror.o: error.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wumain.o: umain.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmemory.o: memory.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wargv.o: argv.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wboolstr.o: boolstr.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wsearch.o: search.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wrun_idr.o: run_idr.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wpath_name.o: path_name.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wdle.o: dle.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wobject_id.o: object_id.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 weif_threads.o: eif_threads.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wgen_conf.o: gen_conf.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wrout_obj.o: rout_obj.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wmain.o: main.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 wexcept.o: except.c
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
 
 debug.o: debug.c
@@ -784,294 +780,294 @@ wbench.o: wbench.c
 #MT L
 
 MTeif_project.o: eif_project.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MToption.o: option.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTmath.o: math.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTmalloc.o: malloc.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTgarcol.o: garcol.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTlocal.o: local.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTstore.o: store.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTretrieve.o: retrieve.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MThash.o: hash.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTtraverse.o: traverse.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MThashin.o: hashin.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTtools.o: tools.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTinternal.o: internal.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTplug.o: plug.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTcopy.o: copy.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTequal.o: equal.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTlmalloc.o: lmalloc.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTout.o: out.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTtimer.o: timer.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTurgent.o: urgent.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTsig.o: sig.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MThector.o: hector.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTcecil.o: cecil.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTbits.o: bits.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTfile.o: file.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTdir.o: dir.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTstring.o: string.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTmisc.o: misc.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTpattern.o: pattern.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTerror.o: error.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTumain.o: umain.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTmemory.o: memory.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTargv.o: argv.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTboolstr.o: boolstr.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTsearch.o: search.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTrun_idr.o: run_idr.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTpath_name.o: path_name.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTdle.o: dle.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTobject_id.o: object_id.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTeif_rw_lock.o: eif_rw_lock.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTeif_threads.o: eif_threads.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTeif_once.o: eif_once.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTgen_conf.o: gen_conf.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTrout_obj.o: rout_obj.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTmain.o: main.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTexcept.o: except.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 
 MTweif_project.o: eif_project.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTconsole.o: console.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwoption.o: option.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTcompress.o: compress.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmath.o: math.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmalloc.o: malloc.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwgarcol.o: garcol.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwlocal.o: local.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwstore.o: store.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwretrieve.o: retrieve.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwhash.o: hash.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwtraverse.o: traverse.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwhashin.o: hashin.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwtools.o: tools.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwinternal.o: internal.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwplug.o: plug.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwcopy.o: copy.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwequal.o: equal.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwlmalloc.o: lmalloc.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwout.o: out.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwtimer.o: timer.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwurgent.o: urgent.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwsig.o: sig.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwhector.o: hector.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwcecil.o: cecil.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwbits.o: bits.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwfile.o: file.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwdir.o: dir.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwstring.o: string.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmisc.o: misc.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwpattern.o: pattern.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwerror.o: error.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwumain.o: umain.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmemory.o: memory.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwargv.o: argv.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwboolstr.o: boolstr.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwsearch.o: search.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwrun_idr.o: run_idr.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwpath_name.o: path_name.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwdle.o: dle.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwobject_id.o: object_id.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTweif_threads.o: eif_threads.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwgen_conf.o: gen_conf.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwrout_obj.o: rout_obj.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwmain.o: main.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwexcept.o: except.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
 MTdebug.o: debug.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTinterp.o: interp.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTupdate.o: update.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwbench.o: wbench.c
-	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $< -o $@
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 
 
@@ -1094,10 +1090,16 @@ mt: mtwork mtfinal
 
 
 link: 
+	$(RM) config.sh
 	$(LN) ../config.sh .
+	$(RM) eif_portable.h
 	$(LN) ../eif_portable.h .
+	$(RM) eif_config.h 
+	cd ..; $(SHELL) eif_config_h.SH; cd run-time 
 	$(LN) ../eif_config.h .
+	$(RM) eif_confmagic.h 
 	$(LN) ../eif_confmagic.h .
+
 
 .FORCE:
 
@@ -1119,7 +1121,7 @@ network.o:
 	cd ../ipc/app; $(MAKE) MTnetwork.o
 	@echo "Continuing in $(CURRENT)..."
 
-mTnetwork.o: ../ipc/app/MTnetwork.o
+MTnetwork.o: ../ipc/app/MTnetwork.o
 
 MTnetwork.o:
 	$(RM) MTnetwork.o

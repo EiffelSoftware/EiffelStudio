@@ -344,9 +344,7 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 				-- Should never happen!
 				true_gen.put (ref, 1);
 			end;
-			create Result.make (System.array_id)
-			Result.set_meta_generic (meta_gen);
-			Result.set_true_generics (true_gen);
+			create Result.make (System.array_id, meta_gen, true_gen)
 		end;
 
 	Tuple_type: TUPLE_TYPE_I is

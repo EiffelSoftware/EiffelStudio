@@ -9,7 +9,7 @@ class
 inherit
 	GEN_TYPE_I
 		redefine
-			same_as, il_type_name, duplicate, instantiation_in, copy,
+			same_as, il_type_name, duplicate, instantiation_in,
 			generic_derivation
 		end
 	
@@ -73,25 +73,20 @@ feature -- Duplication
 
 	duplicate: NATIVE_ARRAY_TYPE_I is
 			-- Duplicate current.
-		do
-			Result := twin
-		end
-
-	copy (other: like Current) is
-			-- Update current object using fields of object attached
-			-- to `other', so as to yield equal objects.
 		local
 			l_meta: like meta_generic
 		do
-			standard_copy (other)
+				-- It cannot be the inherited version, because
+				-- we want to alias `true_generics' with `meta_generic'.
+			Result := twin
 			l_meta := meta_generic.twin
-			meta_generic := l_meta
-			true_generics := l_meta
+			Result.set_meta_generic (l_meta)
+			Result.set_true_generics (l_meta)
 		end
 
 feature -- Status report
 
-	instantiation_in (other: GEN_TYPE_I): like Current is
+	instantiation_in (other: CLASS_TYPE): like Current is
 			-- Instantiation of Current in context of `other'
 		local
 			l_type: TYPE_I

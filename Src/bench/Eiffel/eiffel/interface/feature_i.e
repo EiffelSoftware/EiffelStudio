@@ -748,15 +748,26 @@ feature -- Conveniences
 			validity: Result implies (is_constant or is_attribute or is_function)
 		end
 
+	frozen is_il_external: BOOLEAN is
+			-- Is current feature a C external one?
+		local
+			ext: IL_EXTENSION_I
+		do
+			ext ?= extension
+			Result := ext /= Void
+		ensure
+			not_is_c_external: Result implies not is_c_external
+		end
+
 	frozen is_c_external: BOOLEAN is
 			-- Is current feature a C external one?
 		local
-			ext: EXTERNAL_I
+			ext: EXTERNAL_EXT_I
 		do
-			if is_external then
-				ext ?= Current
-				Result := not ext.extension.is_il
-			end
+			ext := extension
+			Result := ext /= Void and then not ext.is_il
+		ensure
+			not_is_il_external: Result implies not is_il_external
 		end
 
 	has_static_access: BOOLEAN is

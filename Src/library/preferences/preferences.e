@@ -2,7 +2,7 @@ indexing
 	description: "[
 			Preferences.  This class should be used for creating a preference system for an application.
 			Briefly, preferences and their related attributes and values are stored at run-time in an appropriate
-			RESOURCE object.  They must be created through the helper class RESOURCE_MANAGER.
+			RESOURCE object.  They must be created through the helper class PREFERENCE_RESOURCE_MANAGER.
 			
 			In between sessions
 			the preference will be saved in an underlying data store.  To such data store implementation are provided by default,
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Manager
 
-	new_manager (a_namespace: STRING): RESOURCE_MANAGER is
+	new_manager (a_namespace: STRING): PREFERENCE_RESOURCE_MANAGER is
 			-- Create a new resource manager with namespace `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
@@ -127,7 +127,7 @@ feature -- Manager
 			manager_added: managers.has (a_namespace)
 		end
 		
-	manager (a_namespace: STRING): RESOURCE_MANAGER is
+	manager (a_namespace: STRING): PREFERENCE_RESOURCE_MANAGER is
 			-- Associated manager to `a_namespace'.
 		require
 			namespace_not_void: a_namespace /= Void
@@ -148,9 +148,9 @@ feature -- Manager
 			Result := managers.has (a_namespace)
 		end		
 
-feature {RESOURCE_MANAGER} -- Element change
+feature {PREFERENCE_RESOURCE_MANAGER} -- Element change
 
-	add_manager (a_manager: RESOURCE_MANAGER) is
+	add_manager (a_manager: PREFERENCE_RESOURCE_MANAGER) is
 			-- Add manager.
 		require
 			manager_not_void: a_manager /= Void
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 	defaults_file_name: STRING
 			-- File containing default values, if any.
 
-	managers: HASH_TABLE [RESOURCE_MANAGER, STRING] is
+	managers: HASH_TABLE [PREFERENCE_RESOURCE_MANAGER, STRING] is
 			-- Managers.
 		once
 			create Result.make (2)

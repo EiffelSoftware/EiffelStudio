@@ -124,8 +124,6 @@ feature -- Element change
 
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
-		local
-			local_font_windows: EV_FONT_IMP
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			update_text_size
@@ -158,7 +156,6 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			t: TUPLE [INTEGER, INTEGER]
-			font_imp: EV_FONT_IMP
 		do
 			if a_text.is_empty then
 				text_width := 0

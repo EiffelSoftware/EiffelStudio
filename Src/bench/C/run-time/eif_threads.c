@@ -512,7 +512,7 @@ rt_public void eif_thr_register(void)
 	   * because we do not have the number of onces yet
 	   */
 
-		EIF_once_values = (char **) cmalloc (EIF_once_count * sizeof (char *));
+		EIF_once_values = (char **) malloc (EIF_once_count * sizeof (char *));
 		if (EIF_once_values == (char **) 0) /* Out of memory */
 			enomem();
 		bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));

@@ -15,7 +15,7 @@ class
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
 			-- Creates a special object for `n' entries.
@@ -23,6 +23,9 @@ feature -- Initialization
 			non_negative_argument: n >= 0
 		do
 			-- Built-in
+			check
+				not_implemented_yet: False
+			end
 		ensure
 			area_allocated: count = n
 		end
@@ -37,6 +40,29 @@ feature -- Access
 			index_small_enough: i < count
 		do
 			-- Built-in
+		end
+
+	index_of (v: T; start_position: INTEGER): INTEGER is
+			-- Index of first occurrence of item identical to `v'.
+			-- -1 if none.
+		require
+			valid_start_position: start_position >= 0
+		local
+			nb: INTEGER
+		do
+			from
+				Result := start_position
+				nb := count
+			until
+				Result = nb or else equal (item (Result), v)
+			loop
+				Result := Result + 1
+			end
+			if Result = nb then
+				Result := -1
+			end
+		ensure
+			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
 
 feature -- Measurement
@@ -61,7 +87,6 @@ feature -- Status report
 		do
 			from
 				Result := True
-				i := 0
 			until
 				i > upper or else not Result
 			loop
@@ -85,7 +110,6 @@ feature -- Status report
 		do
 			from
 				Result := True
-				i := 0
 			until
 				i > upper or else not Result
 			loop
@@ -108,6 +132,36 @@ feature -- Element change
 			-- Built-in
 		end
 
+feature -- Resizing
+
+	resized_area (n: INTEGER): like Current is
+			-- Create a copy of Current with a count of `n'.
+		require
+			valid_new_count: n > count
+		local
+			i, nb: INTEGER
+			to: TO_SPECIAL [T]
+		do
+			create to.make_area (n)
+			Result := to.area
+			from
+				nb := count
+			invariant
+				i >= 0 and i <= nb
+			variant
+				nb - i
+			until
+				i = nb
+			loop
+				Result.put (item (i), i)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+			Result_different_from_current: Result /= Current
+			new_count: Result.count = n
+		end
+		
 feature -- Removal
 
 	clear_all is

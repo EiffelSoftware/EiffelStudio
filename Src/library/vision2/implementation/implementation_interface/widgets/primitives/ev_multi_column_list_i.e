@@ -77,7 +77,7 @@ feature -- Status report
 			a_column_positive: a_column > 0
 		do
 			if a_column <= column_titles.count then
-				Result := column_titles @ a_column
+				Result := clone (column_titles @ a_column)
 			else
 				Result := ""
 			end

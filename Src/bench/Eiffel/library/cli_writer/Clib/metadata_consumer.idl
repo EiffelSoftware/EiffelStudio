@@ -5,7 +5,6 @@
 [
   uuid(A2D37C7B-B9C0-31A5-914A-698D8267D9A2),
   version(5.5)
-
 ]
 library EiffelSoftware_MetadataConsumer
 {
@@ -24,55 +23,60 @@ library EiffelSoftware_MetadataConsumer
       version(1.0),
       dual,
       oleautomation
-
     ]
     interface EiffelSoftware_MetadataConsumer_COM_CACHE_MANAGER : IDispatch {
-        [id(0x60020000)]
+        [restricted] void Missing7();
+        [restricted] void Missing8();
+        [id(0x60020002)]
         HRESULT assembly_info_from_assembly(
                         [in] BSTR a_path, 
                         [out, retval] EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION** pRetVal);
-        [restricted] void Missing8();
-        [restricted] void Missing9();
-        [id(0x60020003)]
+        [restricted] void Missing10();
+        [restricted] void Missing11();
+        [id(0x60020005)]
         HRESULT consume_assembly(
                         [in] BSTR a_name, 
                         [in] BSTR a_version, 
                         [in] BSTR a_culture, 
                         [in] BSTR a_key);
-        [id(0x60020004)]
+        [id(0x60020006)]
         HRESULT consume_assembly_from_path([in] BSTR a_path);
-        [restricted] void Missing12();
-        [restricted] void Missing13();
-        [id(0x60020007)]
+        [restricted] void Missing14();
+        [restricted] void Missing15();
+        [id(0x60020009)]
         HRESULT initialize([in] BSTR a_clr_version);
-        [id(0x60020008)]
+        [id(0x6002000a)]
         HRESULT initialize_with_path(
                         [in] BSTR a_path, 
                         [in] BSTR a_clr_version);
-        [id(0x60020009)]
-        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
-        [id(0x6002000a)]
-        HRESULT _set_is_initialized([in] VARIANT_BOOL p1);
-        [id(0x6002000b)]
-        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
-        [id(0x6002000c)]
-        HRESULT _set_is_successful([in] VARIANT_BOOL p1);
+        [restricted] void Missing18();
+        [restricted] void Missing19();
         [id(0x6002000d)]
-        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        HRESULT is_initialized([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x6002000e)]
-        HRESULT _set_last_error_message([in] BSTR p1);
-        [restricted] void Missing22();
+        HRESULT _set_is_initialized([in] VARIANT_BOOL p1);
+        [id(0x6002000f)]
+        HRESULT is_successful([out, retval] VARIANT_BOOL* pRetVal);
         [id(0x60020010)]
+        HRESULT _set_is_successful([in] VARIANT_BOOL p1);
+        [id(0x60020011)]
+        HRESULT last_error_message([out, retval] BSTR* pRetVal);
+        [id(0x60020012)]
+        HRESULT _set_last_error_message([in] BSTR p1);
+        [restricted] void Missing26();
+        [id(0x60020014)]
         HRESULT relative_folder_name(
                         [in] BSTR a_name, 
                         [in] BSTR a_version, 
                         [in] BSTR a_culture, 
                         [in] BSTR a_key, 
                         [out, retval] BSTR* pRetVal);
-        [id(0x60020011)]
+        [id(0x60020015)]
         HRESULT relative_folder_name_from_path(
                         [in] BSTR a_path, 
                         [out, retval] BSTR* pRetVal);
+        [id(0x60020016)]
+        HRESULT unload();
     };
 
     [
@@ -81,7 +85,6 @@ library EiffelSoftware_MetadataConsumer
       version(1.0),
       dual,
       oleautomation
-
     ]
     interface EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION : IDispatch {
         [id(0x60020000)]

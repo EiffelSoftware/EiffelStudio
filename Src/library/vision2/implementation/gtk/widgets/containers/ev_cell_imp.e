@@ -71,7 +71,9 @@ feature -- Element change
 			if i /= Void then
 				on_removed_item (i)
 				imp ?= i.implementation
+				C.gtk_object_ref (imp.c_object)
 				C.gtk_container_remove (container_widget, imp.c_object)
+				C.gtk_object_unref (imp.c_object)
 			end
 			if v /= Void then
 				imp ?= v.implementation

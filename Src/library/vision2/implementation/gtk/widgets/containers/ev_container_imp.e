@@ -69,7 +69,9 @@ feature -- Element change
 			if not interface.is_empty then
 				on_removed_item (interface.item)
 				w ?= interface.item.implementation
+				C.gtk_object_ref (w.c_object)
 				C.gtk_container_remove (container_widget, w.c_object)
+				C.gtk_object_unref (w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation

@@ -8,7 +8,6 @@ indexing
 class FEATURE_ERROR_TEXT
 
 inherit
-
 	FEATURE_TEXT
 		rename
 			make as feat_make
@@ -22,21 +21,21 @@ create
 
 feature -- Initialization
 
-    make (f: like e_feature; a_pos: like position; t: like image) is
+    make (f: like e_feature; a_line: like line; t: like image) is
             -- Initialize Current with feat `f', position `p'
             -- and image `t'.
         do
 			feat_make (f, t);
-			position := a_pos
+			line := a_line
         ensure
             set: image = t and then
 				e_feature = f and then
-				position = a_pos
+				line = a_line
         end;
 
 feature -- Access
 
-	position: INTEGER
+	line: INTEGER
 			-- Position of error in feature
 
 feature {TEXT_FORMATTER} -- Implementation

@@ -487,15 +487,15 @@ feature -- Element change
 			add (cs)
 		end
 
-	add_feature_error (feat: E_FEATURE; str: STRING; pos: INTEGER) is
+	add_feature_error (feat: E_FEATURE; str: STRING; a_line: INTEGER) is
 			-- Put `address' for `e_class'.
 		require
 			valid_str: str /= Void
-			positive_pos: pos > 0
+			positive_line: a_line > 0
 		local
 			l_item: like item
 		do
-			create {FEATURE_ERROR_TEXT} l_item.make (feat, pos, str)
+			create {FEATURE_ERROR_TEXT} l_item.make (feat, a_line, str)
 			add (l_item)
 		end
 

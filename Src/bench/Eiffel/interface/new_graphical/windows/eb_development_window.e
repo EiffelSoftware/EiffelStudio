@@ -1653,13 +1653,6 @@ feature {NONE} -- Menu Building
 				tools_menu.extend (command_menu_item)
 			end
 
-			if preferences.debugger_data.display_dotnet_cmd then
-					-- Import .Net Assembly
-				command_menu_item := eac_browser_cmd.new_menu_item
-				add_recyclable (command_menu_item)
-				tools_menu.extend (command_menu_item)
-			end 
-
 				-- Separator -------------------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
 

@@ -10,6 +10,11 @@ class
 inherit
 	EV_APPLICATION
 
+	EV_FONT_CONSTANTS
+		undefine
+			default_create
+		end
+
 create
 	make_and_launch
 
@@ -21,13 +26,168 @@ feature -- Initialization
 --			io.put_string ("prepared!%N")
 --			projector.project
 --			io.put_string ("projected!%N")
-			test_drawing_area
+--			test_drawing_area
+--			test_figures
+			test_font
+		end
+
+	my_device: EV_DRAWING_AREA
+	p: EV_RELATIVE_POINT
+	font: EV_FONT
+
+	test_font is
+				-- Attempt at exhaustive testing of new EV_FONT.
+		local
+			i: INTEGER
+		do
+			create my_device
+			first_window.extend (my_device)
+			my_device.set_minimum_size (300, 300)
+
+			create font
+
+			create p.make_with_position (2, 10)
+			create text
+			text.set_text ("Default")
+			text.set_font (font)
+			text.set_point (p)
+			my_device.draw_figure_text (text)
+	
+			font.set_height (32)
+			font.set_weight (Ev_font_weight_regular)
+
+			from i := 0 until i > 4 loop
+				font.set_family (i)
+				text.set_text (font.name)
+				p.set_y (i * 24 + 30)
+				p.invalidate_absolute_position
+				my_device.draw_figure_text (text)
+				i := i + 1
+			end
+
+			font.set_height (16)
+
+			show_font_weights
+			font.set_shape (Ev_font_shape_italic)
+			p.set_x (70)
+			show_font_weights
+			font.set_shape (Ev_font_shape_regular)
+			font.set_family (Ev_font_family_sans)
+			text.set_text ("Sans")
+			p.set_x (140)
+			show_font_weights
+			font.set_shape (Ev_font_shape_italic)
+			p.set_x (210)
+			show_font_weights
+						
+		end
+
+	show_font_weights is
+		local
+			i: INTEGER
+		do		
+			from i := 0 until i > 3 loop
+				font.set_weight (i)
+				p.set_y (150 + i * 20)
+				p.invalidate_absolute_position
+				my_device.draw_figure_text (text)
+				i := i + 1
+			end
+		end
+
+	test_figures is
+				-- Calls all figure drawing routines.
+		local
+			p1, p2, p3: EV_RELATIVE_POINT
+		do
+			create my_device
+			first_window.extend (my_device)
+			my_device.set_minimum_size (300, 300)
+
+			create p.make_with_position (10, 10)
+			create dot.make_with_point (p)
+			my_device.draw_figure_dot (dot)
+
+			create p1.make_with_position (20, 30)
+			create p2.make_with_position (100, 100)
+			create line.make_with_points (p1, p2)
+			my_device.draw_figure_line (line)
+
+			create p1.make_with_position (40,50)
+			create p2.make_with_position (90,90)
+			create arrow.make_with_points (p1, p2)
+			my_device.draw_figure_arrow (arrow)
+
+			create p1.make_with_position (70,20)
+			create p2.make_with_position (130,90)
+			create p3.make_with_position (120,50)
+			create arc.make_with_points (p1, p2, p3)
+			my_device.draw_figure_arc (arc)
+
+			create polyline
+			create p.make_with_position (200, 10)
+			polyline.add_point (p)
+			create p.make_with_position (210, 20)
+			polyline.add_point (p)
+			create p.make_with_position (230, 10)
+			polyline.add_point (p)
+			create p.make_with_position (250, 65)
+			polyline.add_point (p)
+			create p.make_with_position (240, 40)
+			polyline.add_point (p)
+			polyline.set_closed (True)
+			my_device.draw_figure_polyline (polyline)
+
+			create polygon
+			create p.make_with_position (200, 110)
+			polygon.add_point (p)
+			create p.make_with_position (210, 120)
+			polygon.add_point (p)
+			create p.make_with_position (230, 110)
+			polygon.add_point (p)
+			create p.make_with_position (250, 165)
+			polygon.add_point (p)
+			create p.make_with_position (240, 140)
+			polygon.add_point (p)
+			polygon.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 0, 1))
+			my_device.draw_figure_polygon (polygon)
+
+			create p1.make_with_position (70,120)
+			create p2.make_with_position (130,190)
+			create p3.make_with_position (120,150)
+			create triangle.make_with_points (p1, p2, p3)
+			triangle.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
+			my_device.draw_figure_triangle (triangle)
+
+			create p.make_with_position (150, 150)
+			create text.make_with_point_and_text (p, "EV_FIGURE_TEXT")
+			my_device.draw_figure_text (text)
+
+			create p1.make_with_position (140,50)
+			create p2.make_with_position (190,90)
+			create rectangle.make_with_points (p1, p2)
+			rectangle.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 1, 0))
+			my_device.draw_figure_rectangle (rectangle)
+
+			create p1.make_with_position (40,150)
+			create p2.make_with_position (90,190)
+			create ellipse.make_with_points (p1, p2)
+			ellipse.set_fill_color (create {EV_COLOR}.make_with_rgb (0, 1, 1))
+			my_device.draw_figure_ellipse (ellipse)
+
+			create p1.make_with_position (140,150)
+			create p2.make_with_position (190,190)
+			create eql.make_with_points (p1, p2)
+			eql.set_side_count (7)
+			eql.set_fill_color (create {EV_COLOR}.make_with_rgb (1, 0, 1))
+			my_device.draw_figure_equilateral (eql)
+
+			--picture
+			--pie
 		end
 
 	test_drawing_area is
 			-- Calls all drawing primitives.
-		local
-			my_device: EV_DRAWING_AREA
 		do
 			create my_device
 			first_window.extend (my_device)
@@ -37,7 +197,7 @@ feature -- Initialization
 
 			my_device.clear
 
-			my_device.enable_dashed_line_style
+			--my_device.enable_dashed_line_style
 
 			my_device.set_line_color (create {EV_COLOR}.make_with_rgb (0, 1, 0))
 
@@ -68,7 +228,6 @@ feature -- Initialization
 	make_world is
 			-- Initialize world.
 		local
-			my_device: EV_DRAWING_AREA
 			pos: EV_RELATIVE_POINT
 			cmd: EV_ROUTINE_COMMAND
 		do
@@ -240,6 +399,7 @@ feature -- Access
 
 	my_world: EV_FIGURE_WORLD
 
+	dot: EV_FIGURE_DOT
 	ellipse: EV_FIGURE_ELLIPSE
 	rectangle: EV_FIGURE_RECTANGLE
 	line: EV_FIGURE_LINE
@@ -250,6 +410,7 @@ feature -- Access
 	arrow: EV_FIGURE_ARROW
 	polygon: EV_FIGURE_POLYGON
 	eql: EV_FIGURE_EQUILATERAL
+	triangle: EV_FIGURE_TRIANGLE
 
 	controlled_position: EV_RELATIVE_POINT
 			-- By moving this position, we move the rectangle

@@ -2,7 +2,7 @@ class REP_NAME_LIST
 
 inherit
 
-	LINKED_LIST [REP_NAME]
+	SORTED_TWO_WAY_LIST [REP_NAME]
 		rename
 			make as old_make
 		end;
@@ -192,13 +192,13 @@ end;
 		do
 			cur := cursor;
 debug ("REPLICATION")
-	--io.error.putstring ("update old features%N");
-	--io.error.putstring ("feature name: ");
-	--io.error.putstring (item.rep_feature.feature_name);
-	--io.error.putstring (item.rep_feature.generator);
-	--io.error.putstring ("written in: ");
-	--io.error.putstring (item.rep_feature.written_class.class_name);
-	--io.error.new_line;
+	io.error.putstring ("update old features%N");
+	io.error.putstring ("feature name: ");
+	io.error.putstring (item.rep_feature.feature_name);
+	io.error.putstring (item.rep_feature.generator);
+	io.error.putstring ("written in: ");
+	io.error.putstring (item.rep_feature.written_class.class_name);
+	io.error.new_line;
 end;
 			from
 				start
@@ -209,16 +209,16 @@ end;
 				old_feat := old_feature_from_table (item.rep_feature,
 									orig_written_in);
 debug ("REPLICATION")
-	--io.error.putstring ("rep feat: ");
-	--io.error.putstring (item.rep_feature.feature_name);
-	--io.error.putstring (" ");
-	--io.error.putstring ("old feat: ");
-				--if old_feat = Void then
-	--io.error.putstring (" Void" );
-				--else
-	--io.error.putstring (old_feat.feature_name);
-				--end;
-	--io.error.new_line;
+	io.error.putstring ("rep feat: ");
+	io.error.putstring (item.rep_feature.feature_name);
+	io.error.putstring (" ");
+	io.error.putstring ("old feat: ");
+				if old_feat = Void then
+	io.error.putstring (" Void" );
+				else
+	io.error.putstring (old_feat.feature_name);
+				end;
+	io.error.new_line;
 end;
 				item.set_old_feature (old_feat);
 				forth

@@ -78,14 +78,18 @@ feature
 			changed = b
 		end;
 
+	display_header (s: STRING) is
+		do
+			tool.set_title (s);
+		end;
+
 	file_name: STRING;
 			-- Name of the file being displayed
 
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name' and to the title of the tool.
+	set_file_name (f: STRING) is
+			-- Assign `f' to file_name.
 		do
-			file_name := s;
-			tool.set_title (s);
+			file_name := f;
 		end;
 
 	root_stone: like focus;
@@ -125,7 +129,7 @@ feature
 				changed := true;
 				set_text (a_file.laststring);
 				set_changed (false);
-				set_file_name (a_file_name);
+				file_name := a_file_name;
 --			else
 --				changed := true;
 --				set_text (a_file.last_error_message);
@@ -175,13 +179,14 @@ feature
 			-- Erase internal structures of current, but keep root_stone.
 		do
 			image.clear;
-			wipe_out;
 			clickable_count := 0;
 			position := 0;
 			text_position := 0;
 			focus_start := 0;
 			focus_end := 0;
-			set_changed (false)
+			root_stone := Void;
+			set_changed (false);
+			clean_more;
 		ensure
 			image.empty;
 			position = 0;
@@ -191,9 +196,15 @@ feature
 			not changed
 		end;
 
+	clean_more is
+		do
+			-- Do nothing
+		end;
+
 	clear_window is
 		do
 			clean;
+			clear;
 			show_image;
 			set_changed (False);
 		end;

@@ -20,14 +20,18 @@ feature
 			elseif argument = get_out then
 				text_window.tool.clean_type
 			elseif argument = warner then
-				format (formatted)
+				set_global_cursor (watch_cursor);
+				format (formatted);
+				restore_cursors;
 			elseif not text_window.changed then
 				if argument = text_window then
 					formatted ?= text_window.root_stone
 				else
 					formatted ?= argument
 				end;
-				format (formatted)
+				set_global_cursor (watch_cursor);
+				format (formatted);
+				restore_cursors;
 			else
 				warner.call (Current, l_File_changed)
 			end
@@ -63,6 +67,19 @@ feature
 	
 feature {NONE}
 
+	post_fix: STRING is
+			-- Postfix name of current format which generated
+			-- from the dynamic value of object (minus the show_)
+			-- so it is very important to name the format as
+			-- SHOW_<type of format>
+		do
+			!!Result.make(0);
+			Result.append (generator);
+			Result.to_lower;
+				--| remove the SHOW_
+			Result := Result.substring (6, Result.count);
+		end;
+
 	title_part: STRING is deferred end;
 
 	display_header (stone: STONE) is
@@ -73,7 +90,22 @@ feature {NONE}
 			!!new_title.make (50);
 			new_title.append (title_part);
 			new_title.append (stone.signature);
-			text_window.set_file_name (new_title);
+			text_window.display_header (new_title);
+			text_window.set_file_name (file_name (stone));
+		end;
+
+	file_name (stone: STONE): STRING is
+		local
+			filed_stone: FILED_STONE
+		do
+			filed_stone ?= stone;
+			!!Result.make (0);
+			if filed_stone /= Void then
+				Result.append (filed_stone.file_name);
+					--| remove "e"
+				Result.remove (Result.count);	
+				Result.append (post_fix);
+			end;
 		end;
 
 	display_info (i: INTEGER; d: STONE) is

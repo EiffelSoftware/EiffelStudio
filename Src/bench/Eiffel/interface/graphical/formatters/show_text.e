@@ -7,8 +7,8 @@ inherit
 
 	FORMATTER
 		redefine
-			display_header,
-			format
+			format, display_header,
+			file_name
 		end
 
 creation
@@ -28,6 +28,25 @@ feature
 		end;
 	
 feature {NONE}
+
+	display_header (stone: STONE) is
+		local
+			new_title: STRING;
+			filed_stone: FILED_STONE;
+		do
+			!!new_title.make (0);
+			new_title.append (stone.header);
+			text_window.display_header (new_title);
+			filed_stone ?= stone;
+			if filed_stone /= Void then
+				text_window.set_file_name (file_name (filed_stone));
+			end;
+		end;
+
+	file_name (s: FILED_STONE): STRING is
+		do
+			Result := s.file_name
+		end;
 
 	command_name: STRING is do Result := l_Showtext end;
 
@@ -57,20 +76,6 @@ feature
 
 	
 feature {NONE}
-
-	display_header (stone: STONE) is
-			-- Show header for 'stone': file name for a filed dragable,
-			-- signature otherwise.
-		local
-			filed_stone: FILED_STONE
-		do
-			filed_stone ?= stone;
-			if filed_stone /= Void then
-				text_window.set_file_name (filed_stone.file_name)
-			else
-				text_window.set_file_name (stone.signature)
-			end
-		end;
 
 	title_part: STRING is do Result := "" end;
 	display_info (i: INTEGER; d: STONE) is do end

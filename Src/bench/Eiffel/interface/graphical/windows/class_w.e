@@ -78,6 +78,15 @@ feature
 			--end
 		end;
 
+	change_class_command: CHANGE_CLASS;
+
+	update_class_name (s: STRING) is
+		require
+			valid_arg: s /= Void
+		do
+			change_class_command.set_text (s);
+		end;
+
 feature {NONE}
 
 	editable: BOOLEAN is True;
@@ -95,6 +104,7 @@ feature {NONE}
 
 	create_edit_buttons is
 		do
+			!!change_class_command.make (edit_bar, text_window);
 			!!open_command.make (edit_bar, text_window);
 			!!save_command.make (edit_bar, text_window);
 			!!save_as_command.make (edit_bar, text_window);
@@ -105,7 +115,6 @@ feature {NONE}
 			-- Build formatting buttons in `format_bar'.
 		do
 			!!showtext_command.make (format_bar, text_window);
-			text_window.set_show_text_format (showtext_command);
 			!!showflat_command.make (format_bar, text_window);
 			!!showflatshort_command.make (format_bar, text_window);
 			!!showancestors_command.make (format_bar, text_window);
@@ -134,7 +143,7 @@ feature {NONE}
 				format_bar.attach_top (showsuppliers_command, 0);
 				format_bar.attach_left_widget (showclients_command, showsuppliers_command, 0);
 				format_bar.attach_top (showattributes_command, 0);
-				format_bar.attach_right_widget (showroutines_command, showattributes_command, 15);
+				format_bar.attach_right_widget (showroutines_command, showattributes_command, 0);
 				format_bar.attach_top (showroutines_command, 0);
 				format_bar.attach_right_widget (showdeferreds_command, showroutines_command, 0);
 				format_bar.attach_top (showdeferreds_command, 0);
@@ -142,11 +151,8 @@ feature {NONE}
 				format_bar.attach_top (showonces_command, 0);
 				format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
 				format_bar.attach_top (showexternals_command, 0);
-				--format_bar.attach_right_widget (showcustom_command, showexternals_command, 15);
-				format_bar.attach_right_widget (shell_command, showexternals_command, 15);
-				--format_bar.attach_top (showcustom_command, 0);
+				format_bar.attach_right_widget (shell_command, showexternals_command, 10);
 				format_bar.attach_top (shell_command, 0);
-				--format_bar.attach_right (showcustom_command, 0);
 				format_bar.attach_right (shell_command, 0);
 		end;
  
@@ -155,10 +161,12 @@ feature {NONE}
 
 	build_edit_bar is
 			-- Build top bar: editing commands
-		local
-			change_class_command: CHANGE_CLASS
 		do
 			old_build_edit_bar;
+			edit_bar.detach_right (type_teller);
+			edit_bar.attach_left (change_class_command, 140);
+			edit_bar.attach_right_widget (change_class_command, type_teller, 0);
+			edit_bar.attach_right_widget (open_command, change_class_command, 0);
 			--format_label.make ("Format", text_window);	
 			--class_name_tf.make ("Class_name", text_window);	
 			--change_class_command.make (Current);	

@@ -25,9 +25,13 @@ feature
 		do
 			text_window := t_w;
 			prompt_dialog_create (l_Search, a_composite);
+			set_title (l_Search);
+			set_selection_label ("search for...");
 			hide_apply_button;
+			hide_help_button;
 			!!ok_it;
 			!!cancel_it;
+			set_width (200);
 			set_ok_label ("next");
 			add_ok_action (Current, ok_it);
 			text_window.set_action ("Ctrl<Key>d", Current, ok_it);
@@ -56,7 +60,7 @@ feature {NONE}
 			if argument = ok_it then
 				text_window.search (selection_text);
 				if text_window.found then
-					popdown
+					--popdown
 				end
 			elseif argument = cancel_it then
 				popdown

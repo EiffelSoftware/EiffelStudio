@@ -19,7 +19,7 @@ inherit
 		end;
 	BASE
 		rename
-			make as base_create
+			make as base_make
 		end
 
 creation
@@ -32,19 +32,26 @@ feature
 			-- Create a project application.
 		local
 			void_reference: ANY;
+			a_screen: SCREEN;
 --xterm_name: STRING
 		do
 --xterm_name := "Tregastel vaincra";
-			!!screen.make ("");
-			base_create (tool_name, screen);
+			!!a_screen.make ("");
+			base_make (tool_name, a_screen);
 			forbid_resize;
 			build_widgets;
 			set_title (l_New_project);
+			set_x_y (0,0);
 			realize;
 			transporter_init;
 			set_icon_pixmap (eiffel_symbol);
 			set_icon_name (tool_name);
 --get_xterm_in_xterminal (xterm_name);
+		end;
+
+	popup_file_selection is
+		do
+			open_command.execute (text_window);
 		end;
 
 	eiffel_symbol: PIXMAP is
@@ -133,8 +140,8 @@ feature -- rest
 			shell_hole: SHELL_HOLE;
 			dummy_rc: ROW_COLUMN;
 		do
+			!!open_command.make (text_window);
 			!!classic_bar.make (new_name, form_manager);
-				!!open_command.make (classic_bar, text_window);
 				!!quit_command.make (classic_bar, text_window);
 				!!type_teller.make (new_name, classic_bar);
 					type_teller.set_center_alignment;
@@ -143,28 +150,28 @@ feature -- rest
 				!!class_hole.make (classic_bar, Current);
 				!!routine_hole.make (classic_bar, Current);
 				!!object_hole.make (classic_bar, Current);
-				!!shell_hole.make (classic_bar, Current);
-					classic_bar.attach_left (open_command, 0);
-					classic_bar.attach_top (open_command, 0);
-					classic_bar.attach_left_widget (open_command, quit_command, 0);
+				--!!shell_hole.make (classic_bar, Current);
 					classic_bar.attach_top (quit_command, 0);
-					clean_type;
-					classic_bar.attach_left_widget (quit_command, type_teller, 0);
 					classic_bar.attach_top (type_teller, 0);
-					classic_bar.attach_right_widget (explain_hole, type_teller, 0);
-					classic_bar.attach_bottom (type_teller, 0);
 					classic_bar.attach_top (explain_hole, 0);
-					classic_bar.attach_right_widget (system_hole, explain_hole, 0);
 					classic_bar.attach_top (system_hole, 0);
-					classic_bar.attach_right_widget (class_hole, system_hole, 0);
 					classic_bar.attach_top (class_hole, 0);
-					classic_bar.attach_right_widget (routine_hole, class_hole, 0);
 					classic_bar.attach_top (routine_hole, 0);
-					classic_bar.attach_right_widget (object_hole, routine_hole, 0);
 					classic_bar.attach_top (object_hole, 0);
-					classic_bar.attach_right_widget (shell_hole, object_hole, 0);
-					classic_bar.attach_top (shell_hole, 0);
-					classic_bar.attach_right (shell_hole, 23);
+					classic_bar.attach_left (explain_hole, 0);
+					classic_bar.attach_left_widget (explain_hole, system_hole,0);
+					classic_bar.attach_left_widget (system_hole, class_hole,0);
+					classic_bar.attach_left_widget (class_hole, routine_hole, 0);
+					classic_bar.attach_left_widget (routine_hole, object_hole, 0);
+					classic_bar.attach_left_widget (object_hole, type_teller,
+0);
+					classic_bar.attach_right_widget (quit_command, type_teller, 0);
+					classic_bar.attach_right (quit_command, 23);
+					classic_bar.attach_bottom (type_teller, 0);
+					--classic_bar.attach_right_widget (shell_hole, object_hole, 0);
+					--classic_bar.attach_top (shell_hole, 0);
+					--classic_bar.attach_right (shell_hole, 23);
+					clean_type;
 		end;
 
 	build_text is
@@ -179,7 +186,7 @@ feature -- rest
 
 	update_command: UPDATE_PROJECT;
 	run_command: RUN;
-	ice: ICE;
+	special_command: SPECIAL_COMMAND;
 	freeze_command: FREEZE_PROJECT;
 	finalize_command: FINALIZE_PROJECT;
 
@@ -189,19 +196,19 @@ feature -- rest
 			!!icing.make (new_name, form_manager);
 				!!update_command.make (icing, text_window);
 				!!run_command.make (icing, text_window);
-				!!ice.make (icing, text_window);
+				!!special_command.make (icing, text_window);
 				!!freeze_command.make (icing, text_window);
 				!!finalize_command.make (icing, text_window);
 			icing.attach_top (update_command, 0);
 			icing.attach_top_widget (update_command, run_command, 0);
-			icing.attach_top_widget (run_command, ice, 0);
-			icing.attach_bottom_widget (freeze_command, ice, 0);
+			icing.attach_top_widget (run_command, special_command, 0);
+			icing.attach_bottom_widget (freeze_command, special_command, 0);
 			icing.attach_bottom_widget (finalize_command, freeze_command, 0);
 			icing.attach_bottom (finalize_command, 0);
 			icing.attach_left (update_command, 0);
 			icing.attach_right (update_command, 0);
-			icing.attach_left (ice, 0);
-			icing.attach_right (ice, 0);
+			icing.attach_left (special_command, 0);
+			icing.attach_right (special_command, 0);
 			icing.attach_left (freeze_command, 0);
 			icing.attach_left (finalize_command, 0);
 		end;

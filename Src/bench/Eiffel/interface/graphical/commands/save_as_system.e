@@ -34,10 +34,12 @@ feature {NONE}
 				!!new_file.make (name_chooser.selected_file);
 				new_file.open_write;
 				to_write := text_window.text;
-				new_file.putstring (to_write);
-				if to_write.item (to_write.count) /= '%N' then
-					-- Add a carriage return like vi if there's none at the end
-					new_file.putchar ('%N')
+				if not to_write.empty then
+					new_file.putstring (to_write);
+					if to_write.item (to_write.count) /= '%N' then
+						-- Add a carriage return like vi if there's none at the end
+						new_file.putchar ('%N')
+					end;
 				end;
 				new_file.close;
                 		if Lace.file_name = Void then

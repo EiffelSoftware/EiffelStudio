@@ -15,7 +15,7 @@ inherit
 
 creation
 
-	make
+	make, do_nothing
 
 	
 feature 

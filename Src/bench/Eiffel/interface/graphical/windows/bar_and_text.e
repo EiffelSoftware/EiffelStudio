@@ -7,7 +7,7 @@ inherit
 
 	TOOL_W
 		redefine
-			save_command
+			save_command, set_default_format
 		end;
 	TOP_SHELL
 		rename
@@ -30,6 +30,12 @@ feature
 			set_icon_name (tool_name);
 			--realize;
 			transporter_init
+		end;
+
+	set_default_format is
+			-- Default format of windows
+		do
+			text_window.set_last_format (default_format);		
 		end;
 
 	global_form: FORM;
@@ -102,16 +108,16 @@ feature
 			!!quit_cmd.make (edit_bar, text_window);
 				edit_bar.attach_left (hole, 0);
 				edit_bar.attach_top (hole, 0);
+				edit_bar.attach_top (type_teller, 0);
+				edit_bar.attach_top (search_command, 0);
+				edit_bar.attach_top (change_font_command, 0);
+				edit_bar.attach_top (quit_cmd, 0);
 				clean_type;
 				edit_bar.attach_left_widget (hole, type_teller, 0);
-				edit_bar.attach_top (type_teller, 0);
 				edit_bar.attach_right_widget (search_command, type_teller, 0);
 				edit_bar.attach_bottom (type_teller, 0);
-				edit_bar.attach_top (search_command, 0);
-				edit_bar.attach_right_widget (change_font_command, search_command, 25);
-				edit_bar.attach_top (change_font_command, 0);
-				edit_bar.attach_right_widget (quit_cmd, change_font_command, 25);
-				edit_bar.attach_top (quit_cmd, 0);
+				edit_bar.attach_right_widget (change_font_command, search_command, 0);
+				edit_bar.attach_right_widget (quit_cmd, change_font_command, 5);
 				edit_bar.attach_right (quit_cmd, 0);
 		end;
 
@@ -135,23 +141,24 @@ feature
 			!!change_font_command.make (edit_bar, text_window);
 				edit_bar.attach_left (hole, 0);
 				edit_bar.attach_top (hole, 0);
-				edit_bar.attach_left_widget (hole, open_command, 25);
 				edit_bar.attach_top (open_command, 0);
-				edit_bar.attach_left_widget (open_command, save_command, 0);
 				edit_bar.attach_top (save_command, 0);
-				edit_bar.attach_left_widget (save_command, save_as_command, 0);
 				edit_bar.attach_top (save_as_command, 0);
-				clean_type;
-				edit_bar.attach_left_widget (save_as_command, type_teller, 0);
 				edit_bar.attach_top (type_teller, 0);
-				edit_bar.attach_right_widget (search_command, type_teller, 0);
-				edit_bar.attach_bottom (type_teller, 0);
 				edit_bar.attach_top (search_command, 0);
-				edit_bar.attach_right_widget (change_font_command, search_command, 25);
 				edit_bar.attach_top (change_font_command, 0);
-				edit_bar.attach_right_widget (quit_command, change_font_command, 25);
 				edit_bar.attach_top (quit_command, 0);
+				edit_bar.attach_left (hole, 0);
+				edit_bar.attach_left_widget (hole, type_teller, 0);
+				edit_bar.attach_right_widget (open_command, type_teller, 0);
+				edit_bar.attach_right_widget (save_command, open_command, 0);
+				edit_bar.attach_right_widget (save_as_command, save_command, 0);
+				edit_bar.attach_right_widget (search_command, save_as_command, 0);
+				edit_bar.attach_bottom (type_teller, 0);
+				edit_bar.attach_right_widget (change_font_command, search_command, 0);
+				edit_bar.attach_right_widget (quit_command, change_font_command, 5);
 				edit_bar.attach_right (quit_command, 0);
+				clean_type;
 		end;
 
 	build_format_bar is

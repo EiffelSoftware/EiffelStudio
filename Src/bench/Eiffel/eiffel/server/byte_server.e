@@ -82,6 +82,8 @@ feature
 		end;
 
     change_id (new_value, old_value: INTEGER) is
+		require else
+			True
         do
             if server_has (old_value) then
                 server_change_id (new_value, old_value)

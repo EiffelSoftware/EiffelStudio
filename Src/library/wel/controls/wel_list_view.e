@@ -91,10 +91,10 @@ feature -- Status report
 			exists
 		do
 			Result := cwin_send_message_result (item, 
-						Lvm_gettopindex, 0, 0)
+						Lvm_gettopindex, 0, 0).max(0)
 		ensure
 			result_large_enough: Result >= 0
-			result_small_enough: Result < count
+			result_small_enough: Result <= count
 		end
 
 	focus_item: INTEGER is

@@ -17,8 +17,7 @@ inherit
 			process_classi, compatible, process_feature,
 			process_class_syntax, process_ace_syntax, display,
 			process_call_stack, force_raise,
-			update_graphical_resources, help_index, icon_id,
-			create_toolbar
+			update_graphical_resources, help_index, icon_id
 		select
 			resources
 		end
@@ -889,17 +888,6 @@ feature -- Graphical Interface
 			end
 		end
 
-	create_toolbar (a_parent: COMPOSITE) is
-			-- Create a toolbar_parent with parent `a_parent'
-		local
-			sep: THREE_D_SEPARATOR
-		do
-			{TOOL_W} Precursor (a_parent)
-			if Platform_constants.is_windows then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
-			end
-		end
-
 	build_menu is
 			-- Build the menu bar
 		local
@@ -1423,6 +1411,8 @@ feature -- Graphical Interface
 
 	attach_all is
 			-- Adjust and attach main widgets together.
+		local
+			sep: THREE_D_SEPARATOR
 		do
 			global_form.attach_left (menu_bar, 0)
 			global_form.attach_right (menu_bar, 0)
@@ -1432,8 +1422,18 @@ feature -- Graphical Interface
 			global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
 			global_form.attach_right (toolbar_parent, 0)
 
+			if Platform_constants.is_windows then
+				!! sep.make (Interface_names.t_Empty, global_form)
+				global_form.attach_top_widget (toolbar_parent, sep, 0)
+				global_form.attach_left (sep, 0)
+				global_form.attach_right (sep, 0)
+				
+				global_form.attach_top_widget (sep, global_verti_split_window, 0)
+			else
+				global_form.attach_top_widget (toolbar_parent, global_verti_split_window, 0)
+			end
+
 			global_form.attach_left (global_verti_split_window, 0)
-			global_form.attach_top_widget (toolbar_parent, global_verti_split_window, 0)
 			global_form.attach_right (global_verti_split_window, 0)
 			global_form.attach_bottom (global_verti_split_window, 0)
 

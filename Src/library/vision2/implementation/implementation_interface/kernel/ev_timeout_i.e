@@ -55,7 +55,8 @@ feature -- Implementation
 			interface.actions.call ([])
 			count := count + 1
 		ensure
-			count_incremented: count = old count + 1
+			count_incremented_or_reset:
+				count = old count + 1 or else count = 1
 		end
 
 feature {EV_ANY_I} --Implementation
@@ -91,6 +92,9 @@ end -- class EV_TIMEOUT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/07 00:18:57  brendel
+--| Improved postcondition on on_timeout.
+--|
 --| Revision 1.4  2000/02/22 18:39:41  oconnor
 --| updated copyright date and formatting
 --|

@@ -10,8 +10,6 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -27,7 +25,6 @@ feature {NONE} -- Initialization
 		local
 			dob_binding: WINFORMS_BINDING
 			return: WINFORMS_BINDING
-			l_text: STRING
 		do
 			initialize_components
 
@@ -270,7 +267,6 @@ feature {NONE} -- Implementation
 	dispose_boolean (a_disposing: BOOLEAN) is
 			-- method called when form is disposed.
 		local
-			dummy: WINFORMS_DIALOG_RESULT
 			retried: BOOLEAN
 		do
 			if not retried then

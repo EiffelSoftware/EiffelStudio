@@ -9,8 +9,6 @@ inherit
 		rename
 			make as make_form,
 			refresh as refresh_winform
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -283,16 +281,18 @@ feature -- Implementation
 			l_int_math: INTEGER_MATH
 		do
 			if not retried then
-				if not txt_formula.text.equals ("") then
+				if not txt_formula.text.equals (feature {SYSTEM_STRING}.empty) then
 						-- parse the formula and get the arguments
 					create my_parse.make
 					l_args := my_parse.parse (txt_formula.text)
 					create l_int_math.make
-					txt_formula.set_text (l_int_math.get_result (feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_1),
-											l_args.op, feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_2)))
+					txt_formula.set_text (l_int_math.get_result (
+						feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_1),
+						l_args.op, feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_2)))
 				end
 			else
-				res := feature {WINFORMS_MESSAGE_BOX}.show ("Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N")
+				res := feature {WINFORMS_MESSAGE_BOX}.show (
+					"Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N")
 			end
 		rescue
 			retried := True

@@ -7,6 +7,8 @@ class
 inherit
 	COLLECTION_BASE
 
+	ANY
+
 feature -- Initialization
 		
 	initialize is

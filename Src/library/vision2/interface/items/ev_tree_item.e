@@ -42,8 +42,9 @@ feature {NONE} -- Initialization
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
-			!EV_TREE_ITEM_IMP! implementation.make_with_text (txt)
+			!EV_TREE_ITEM_IMP! implementation.make
 			implementation.set_interface (Current)
+			implementation.set_text (txt)
 			set_parent (par)
 		end
 

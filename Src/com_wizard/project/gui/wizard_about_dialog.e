@@ -45,12 +45,12 @@ feature -- Behaviour
 
 feature {NONE} -- Implementation
 
-	About_eiffelcom: STRING is "EiffelCOM 4.5 Build 6%N%
-						%March 30, 2001%N%N%
-						%Copyright (C) 1999-2000%N%
+	About_eiffelcom: STRING is "EiffelCOM 5 Build 1%N%
+						%July 5, 2001%N%N%
+						%Copyright (C) 1999-2001%N%
 						%Interactive Software Engineering Inc. %N%N%
-						%ISE Building, 2nd floor %N%
-						%270 Storke Road, Goleta, %N%
+						%ISE Building %N%
+						%360 Storke Road, Goleta, %N%
 						%CA 93117 USA %N%N%
 						%Tel: (805)685-1006   Fax: (805)695-6869 %N%
 						%Email: <info@eiffel.com> %N%

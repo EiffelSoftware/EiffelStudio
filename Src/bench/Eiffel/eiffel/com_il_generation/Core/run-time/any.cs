@@ -439,11 +439,27 @@ feature -- Duplication
 		// New object structure recursively duplicated from Current.
 	{
 		object Result = null;
+		Hashtable traversed_objects;
+
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
 		} else {
-			Result = RUN_TIME.deep_clone (Current);
+				// `traversed_objects' is a correspondance between processed
+				// objects reachable from `obj' and newly created one that
+				// are reachable from `Result'.
+			traversed_objects = new Hashtable (100);
+			
+				// Create an empty copy of `Current'.
+			Result = GENERIC_CONFORMANCE.create_like_object(Current);
+
+				// Add `Current' and associates it with `Result' to
+				// resolve future references to `Current' into `Result'.
+			traversed_objects.Add (Result, Current);
+
+				// Performs deep traversal.
+			internal_deep_twin (Result, Current, traversed_objects);
 		}
+
 		#if ASSERTIONS
 			ASSERTIONS.ENSURE ("deep_equal", deep_equal (Current, Result, Current));
 		#endif
@@ -675,6 +691,111 @@ feature {NONE} -- Implementation: Deep equality
 
 		return Result;
 	}
+
+/*
+feature {NONE} -- Implementation: deep cloning
+*/
+
+	private static void internal_deep_twin (Object target, Object source, Hashtable traversed_objects)
+		// Given a target and a source, copy content of source into
+	{
+		FieldInfo [] attributes;
+		Object obj;
+		Array target_array, source_array;
+		int i;
+
+		attributes = source.GetType().GetFields (
+			BindingFlags.Instance | BindingFlags.Public |
+			BindingFlags.NonPublic);
+
+		foreach (FieldInfo attribute in attributes) {
+			obj = attribute.GetValue (source);
+			if (obj != null) {
+				if (obj is EIFFEL_TYPE_INFO) {
+						// Object is an Eiffel object we can continue our recursion.
+					sub_internal_deep_twin (target, attribute, (EIFFEL_TYPE_INFO) obj,
+						traversed_objects);
+				} else {
+					if (obj is StringBuilder) {
+						attribute.SetValue (target, new StringBuilder (obj.ToString()));
+					} else if (obj is Array) {
+						source_array = (Array) obj;
+						if (source_array.Rank == 1) {
+							target_array = (Array) source_array.Clone();
+							Array.Clear(target_array, target_array.GetLowerBound (0),
+								target_array.GetUpperBound (0));
+							attribute.SetValue (target, target_array);
+							i = target_array.GetLowerBound (0);
+							foreach (Object o in source_array) {
+								if (o != null) {
+									if (o is EIFFEL_TYPE_INFO) {
+										sub_internal_native_array_deep_twin ( target_array,
+											i, (EIFFEL_TYPE_INFO) o, traversed_objects);
+									} else {
+										target_array.SetValue (o, i);
+									}
+								}
+								i = i + 1;
+							}
+						}
+					} else {
+						attribute.SetValue (target, obj);
+					}
+				}
+			}
+		}
+	}
+
+	private static void sub_internal_deep_twin (
+		Object target,
+		FieldInfo attribute,
+		EIFFEL_TYPE_INFO source_attribute,
+		Hashtable traversed_objects
+	)
+		// Helper feature that given a `target' object and its associated `attribute'
+		// perform a deep copy of `source_attribute' and assign it back to `target'.
+		// Assume arguments are not Void.
+	{
+		EIFFEL_TYPE_INFO target_attribute;
+
+		if (traversed_objects.Contains (source_attribute)) {
+				// We already processed `obj', we simply assign current
+				// attribute to computed value.
+			attribute.SetValue (target, traversed_objects [source_attribute]);
+		} else {
+				// Ojbect was not yet duplicated.
+			target_attribute = GENERIC_CONFORMANCE.create_like_object (source_attribute);
+			traversed_objects.Add (source_attribute, target_attribute);
+			internal_deep_twin (target_attribute, source_attribute, traversed_objects);
+			attribute.SetValue (target, target_attribute);
+		}
+	}
+
+	private static void sub_internal_native_array_deep_twin (
+		Array target_array,
+		int i,
+		EIFFEL_TYPE_INFO source_attribute,
+		Hashtable traversed_objects
+	)
+		// Helper feature that given a `target' object and its associated `attribute'
+		// perform a deep copy of `source_attribute' and assign it back to `target'.
+		// Assume arguments are not Void.
+	{
+		EIFFEL_TYPE_INFO target_attribute;
+
+		if (traversed_objects.Contains (source_attribute)) {
+				// We already processed `obj', we simply assign current
+				// attribute to computed value.
+			target_array.SetValue (traversed_objects [source_attribute], i);
+		} else {
+				// Ojbect was not yet duplicated.
+			target_attribute = GENERIC_CONFORMANCE.create_like_object (source_attribute);
+			traversed_objects.Add (source_attribute, target_attribute);
+			internal_deep_twin (target_attribute, source_attribute, traversed_objects);
+			target_array.SetValue (target_attribute, i);
+		}
+	}
+
 
 }
 

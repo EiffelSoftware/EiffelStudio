@@ -7,7 +7,8 @@ inherit
 	BASIC_A
 		redefine
 			is_none, dump, type_i, associated_class, same_as,
-			internal_conform_to, append_clickable_signature
+			internal_conform_to, append_clickable_signature,
+			storage_info, storage_info_with_name
 		end
 
 feature
@@ -50,5 +51,12 @@ feature
 		do
 			Result := True;
 		end;
+
+    storage_info, storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
+            -- Storage info for Current type in class `classc'
+            -- and store the name of the class for Current
+        do
+            !! Result.make ("NONE", 0)
+        end;
 
 end

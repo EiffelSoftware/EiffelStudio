@@ -11,18 +11,6 @@ inherit
 
 	G_ANY_IMP
 
-	
-	WEL_APPLICATION
-		rename
-			make as wel_make,
-			main_window as wel_main_window
-		undefine
-			accelerators
-		redefine
-			idle_action,
-			message_loop
-		end
-
 	MAIN_WINDOW_MANAGER_WINDOWS
 		rename
 			make as wel_make
@@ -31,8 +19,6 @@ inherit
 		redefine
 			idle_action,
 			message_loop
-		select
-			main_window
 		end
 
 	TASK_MANAGER_WINDOWS
@@ -54,8 +40,6 @@ feature {NONE} -- Initialization
 			set_application (Current)
 			if application_class /= Void then
 				app_class := clone (application_class)
-			end
-			if application = Void then
 			end
 			create_dispatcher
 			init_instance
@@ -156,12 +140,6 @@ feature
 -- 		do
 -- 			!! Result.make (a_timer)
 -- 		end;
-
-	wel_main_window: WEL_FRAME_WINDOW is
-			-- Main window for WEL
-		once
-			Result := main_window
-		end
 
 	widget_resource: WIDGET_RESOURCE_I is
 			-- Resource not used under Windows

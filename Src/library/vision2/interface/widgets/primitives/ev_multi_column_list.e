@@ -136,7 +136,6 @@ feature -- Status report
 			bridge_ok: Result.is_equal (implementation.column_alignment (a_column))
 		end
 
-
 	pixmaps_width: INTEGER is
 			-- Width of displayed pixmaps in `Current'.
 		require
@@ -158,6 +157,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Ensure `an_item' is visible in `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+			an_item_contained: has (an_item)
+		do
+			implementation.ensure_item_visible (an_item)
+		end
 
 	clear_selection is
 			-- Make `selected_items' empty.

@@ -125,6 +125,11 @@ feature -- Status report
 
 feature -- Status setting
 
+	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Ensure `an_item' is visible in `Current'.
+		deferred
+		end
+
 	select_item (an_index: INTEGER) is
 			-- Select item at `an_index'.
 		require
@@ -639,6 +644,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.57  2001/06/25 19:03:04  rogers
+--| Added `ensure_item_visible'.
+--|
 --| Revision 1.56  2001/06/07 23:08:10  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

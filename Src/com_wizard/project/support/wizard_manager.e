@@ -46,18 +46,20 @@ feature -- Basic Operations
 			l_retried: BOOLEAN
 			l_vs_setup: VS_SETUP
 			l_tasks: ARRAYED_LIST [WIZARD_PROGRESS_REPORTING_TASK]
-			l_message: STRING
 		do
 			if not l_retried then
-				create l_vs_setup.make
 				message_output.clear
-				if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
-					message_output.add_error (Current, "Environment variable ISE_EIFFEL not set correctly.")
-					Environment.set_abort (1)
-				end
-				
+				environment.set_error_data (Void)
+				create l_vs_setup.make
+				if not l_vs_setup.valid_vcvars then
+					Environment.set_abort (No_c_compiler)					
+				else
+					if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
+						Environment.set_abort (No_ise_eiffel)
+					end
+				end			
 				if not environment.abort then
-					message_output.add_title (Current, "Processing  %"" + environment.project_name + "%"")
+					message_output.add_title ("Processing  %"" + environment.project_name + "%"")
 	
 					create l_tasks.make (7)
 					if environment.is_eiffel_interface then
@@ -67,45 +69,40 @@ feature -- Basic Operations
 						l_tasks.extend (create {WIZARD_IDL_COMPILATION_TASK})
 					end
 					l_tasks.extend (create {WIZARD_DIRECTORY_INITIALIZATION_TASK})
-					l_tasks.extend (create {WIZARD_TYPE_LIBRARY_ANALYSIS_TASK})
-					run_tasks (l_tasks, "Analysis Total Progress:")
-
-					l_tasks.wipe_out
-					l_tasks.extend (create {WIZARD_CODE_GENERATION_TASK})
-					if environment.compile_c then
-						l_tasks.extend (create {WIZARD_CODE_COMPILATION_TASK})
+					run_tasks (l_tasks)
+					
+					if not environment.abort then
+						l_tasks.wipe_out
+						l_tasks.extend (create {WIZARD_TYPE_LIBRARY_ANALYSIS_TASK})
+						run_tasks (l_tasks)
+					
+						if not environment.abort then
+							l_tasks.wipe_out
+							l_tasks.extend (create {WIZARD_CODE_GENERATION_TASK})
+							if environment.compile_c then
+								l_tasks.extend (create {WIZARD_CODE_COMPILATION_TASK})
+							end
+							run_tasks (l_tasks)
+						end	
 					end
-					run_tasks (l_tasks, "Generation Total Progress:")
-		
 					clean_all
 					set_system_descriptor (Void)
-					if environment.abort then
-						inspect
-							environment.return_code
-						when Standard_abort_value then
-							l_message := "Failed"
-						else
-							l_message := "Failed with return code "
-							l_message.append_integer (environment.return_code)
-						end
-						message_output.add_error (Current, l_message)
-						progress_report.finish
-					end
-
-					progress_report.finish
 				end
 			end
+			if environment.abort then
+				message_output.display_error
+			end
+			progress_report.finish
 		rescue
-			if not failed_on_rescue then
-				environment.set_abort (Standard_abort_value)
-				message_output.add_error ("Unknown", "The following exception occurred:%N" + tag_name + ": " + recipient_name)
-				progress_report.finish
+			if not l_retried then
+				environment.set_abort (Exception_raised)
+				environment.set_error_data (tag_name + ":%N" + exception_trace)
 				l_retried := True
 				retry
 			end
 		end
 
-	run_tasks (a_tasks: LIST [WIZARD_PROGRESS_REPORTING_TASK]; a_title: STRING) is
+	run_tasks (a_tasks: LIST [WIZARD_PROGRESS_REPORTING_TASK]) is
 			-- Run tasks in list `a_tasks'.
 		require
 			non_void_tasks: a_tasks /= Void
@@ -114,7 +111,6 @@ feature -- Basic Operations
 			l_task: WIZARD_PROGRESS_REPORTING_TASK
 			l_total, i, l_count: INTEGER
 		do
-			progress_report.set_title (a_title)
 			from
 				a_tasks.start
 				create l_ranges.make (1, a_tasks.count)
@@ -128,18 +124,19 @@ feature -- Basic Operations
 				i := i + 1
 				a_tasks.forth
 			end
-			progress_report.set_range (l_total)
-			progress_report.start
-			from
-				a_tasks.start
-			until
-				a_tasks.after or environment.abort
-			loop
-				progress_report.set_task_range (l_ranges.item (a_tasks.index))
-				l_task := a_tasks.item
-				progress_report.set_task_title (l_task.title)
-				l_task.execute
-				a_tasks.forth
+			if not environment.abort then
+				progress_report.set_range (l_total)
+				progress_report.start
+				from
+					a_tasks.start
+				until
+					a_tasks.after or environment.abort
+				loop
+					l_task := a_tasks.item
+					progress_report.set_title (l_task.title)
+					l_task.execute
+					a_tasks.forth
+				end
 			end
 		end
 		

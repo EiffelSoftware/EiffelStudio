@@ -33,7 +33,7 @@ feature -- Tool management
 	show_tool (t: EB_TOOL) is
 			-- shows the tool.
 		require
-			t_valid: t /= void and not t.destroyed
+			t_valid: t /= void and then not t.destroyed
 		deferred
 		ensure
 			shown: t.shown
@@ -42,7 +42,7 @@ feature -- Tool management
 	raise_tool (t: EB_TOOL) is
 			-- destroys the tool.
 		require
-			t_valid: t /= void and not t.destroyed
+			t_valid: t /= void and then not t.destroyed
 		deferred
 		ensure
 			shown: t.shown
@@ -51,7 +51,7 @@ feature -- Tool management
 	hide_tool (t: EB_TOOL) is
 			-- destroys the tool.
 		require
-			t_valid: t /= void and not t.destroyed
+			t_valid: t /= void and then not t.destroyed
 		deferred
 		ensure
 			hidden: not t.shown
@@ -60,7 +60,7 @@ feature -- Tool management
 	destroy_tool (t: EB_TOOL) is
 			-- destroys the tool.
 		require
-			t_valid: t /= void and not t.destroyed
+			t_valid: t /= void and then not t.destroyed
 		deferred
 		ensure
 			destroyed: t.destroyed

@@ -425,13 +425,19 @@ feature -- Status setting
 	enable_row_height_fixed is
 			-- Ensure all rows have the same height.
 		do
-			to_implement ("EV_GRID_I.enable_row_height_fixed")
+			is_row_height_fixed := True
+			recompute_vertical_scroll_bar
+			row_offsets := Void
+			drawable.redraw
 		end
 		
 	disable_row_height_fixed is
 			-- Permit rows to have varying heights.
 		do
-			to_implement ("EV_GRID_I.disable_row_height_fixed")
+			is_row_height_fixed := False
+			recompute_row_offsets (0)
+			recompute_vertical_scroll_bar
+			drawable.redraw
 		end
 		
 	set_column_count_to (a_column_count: INTEGER) is
@@ -795,33 +801,49 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implem
 		local
 			i: INTEGER
 		do
-			if row_offsets = Void then
-				create row_offsets.make (row_count)
-				row_offsets.extend (0)
-				grid_rows.start
-			else
-				i := row_offsets @ (an_index)
-				grid_rows.go_i_th (an_index)
-			end
-			
-			from
-			until
-				grid_rows.off
-			loop
-				if grid_rows.item /= Void then
-					i := i + grid_rows.item.height
+			if not is_row_height_fixed then
+					-- Only perform recomputation if the rows do not all have the same height.
+					-- If they do, we do not need to use `row_offsets'.
+				if row_offsets = Void then
+					create row_offsets.make (row_count)
+					row_offsets.extend (0)
+					grid_rows.start
 				else
-					i := i + 16
+					i := row_offsets @ (an_index)
+					grid_rows.go_i_th (an_index)
 				end
-				if grid_rows.index < row_offsets.count then
-					row_offsets.put_i_th (i, grid_rows.index + 1)
-				else
-					row_offsets.extend (i)
+				
+				from
+				until
+					grid_rows.off
+				loop
+					if grid_rows.item /= Void then
+						i := i + grid_rows.item.height
+					else
+						i := i + 16
+					end
+					if grid_rows.index < row_offsets.count then
+						row_offsets.put_i_th (i, grid_rows.index + 1)
+					else
+						row_offsets.extend (i)
+					end
+					grid_rows.forth
 				end
-				grid_rows.forth
 			end
 		ensure
-			offsets_consistent: row_offsets.count = grid_rows.count + 1
+			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = grid_rows.count + 1
+		end
+		
+	total_row_height: INTEGER is
+			-- `Result' is total height of all rows contained in `Current'.
+		do
+			if is_row_height_fixed then
+				Result := row_count * row_height
+			else
+				Result := row_offsets.last
+			end
+		ensure
+			result_positive: result >= 0
 		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITEM_I} -- Implementation
@@ -867,6 +889,7 @@ feature {NONE} -- Drawing implementation
 			is_vertical_scrolling_per_item := True
 			is_header_displayed := True
 			row_height := 16
+			is_row_height_fixed := True
 			
 			create internal_row_data.make
 			create grid_columns.make
@@ -957,7 +980,9 @@ feature {NONE} -- Drawing implementation
 	total_header_width: INTEGER is
 			-- `Result' is total width of all header items contained within `header'.
 		do
-			Result := header.item_x_offset (header.last) + header.last.width
+			if column_count >= 1 then
+				Result := header.item_x_offset (header.last) + header.last.width
+			end
 		ensure
 			result_non_negative: Result >= 0
 		end
@@ -1088,7 +1113,7 @@ feature {NONE} -- Drawing implementation
 					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
 					-- so that they do reach the very left-hand edge of `viewport'
 				horizontal_scroll_bar.change_actions.block
-				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+--				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
 				header_viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
 				
 				horizontal_scroll_bar.change_actions.resume
@@ -1110,7 +1135,7 @@ feature {NONE} -- Drawing implementation
 				fixme ("Ensure that `row_offsets' does not need special `Void' handling.")
 				l_total_row_height := 0
 			else
-				l_total_row_height := row_offsets.last
+				l_total_row_height := total_row_height
 			end
 			if l_total_row_height /= last_computed_row_height or has_vertical_scrolling_per_item_just_changed then
 				l_client_height := viewport.height
@@ -1183,7 +1208,11 @@ feature {NONE} -- Drawing implementation
 			current_buffer_position: INTEGER
 		do
 			if is_vertical_scrolling_per_item then
-				virtual_y_position := row_offsets.i_th (a_value + 1)
+				if is_row_height_fixed then
+					virtual_y_position := row_height * a_value
+				else
+					virtual_y_position := row_offsets.i_th (a_value + 1)
+				end
 			else
 				virtual_y_position := a_value
 			end
@@ -1222,7 +1251,7 @@ feature {NONE} -- Drawing implementation
 			if (virtual_x_position > last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
 				viewport.set_x_offset (0)
 				drawable.redraw
-			elseif (virtual_x_position < last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) <= 0 then
+			elseif (virtual_x_position < last_horizontal_scroll_bar_value) and ((virtual_x_position - last_horizontal_scroll_bar_value) + (current_buffer_position)) < 0 then
 				viewport.set_x_offset (buffer_space)
 				drawable.redraw
 			else
@@ -1474,6 +1503,7 @@ invariant
 	virtual_x_position_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies virtual_x_position >= 0
 	virtual_y_position_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies virtual_y_position = 0
 	virtual_y_position_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies virtual_y_position >= 0
+	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
 	
 end
 

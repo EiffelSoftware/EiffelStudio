@@ -8,12 +8,28 @@ class
 
 inherit
 	PROJECT_MANAGER
+		redefine
+			compiler
+		end
 	
 	COMPILER_TESTER_SHARED
 
 		
 create
 	make
+	
+feature -- Access
+
+	compiler: IEIFFEL_COMPILER_INTERFACE is
+			-- retrieve compiler
+		local
+			l_compiler: COMPILER
+		do
+			l_compiler ?= Precursor {PROJECT_MANAGER}
+			l_compiler.set_output_to_console
+			Result := l_compiler
+		end
+		
 	
 feature -- Basic Operations
 

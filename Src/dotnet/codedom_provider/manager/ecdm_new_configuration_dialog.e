@@ -179,6 +179,7 @@ feature {NONE} -- Implementation
 		local
 			l_enable_sensitive: BOOLEAN
 			l_folder_path: STRING
+			l_configs: LIST [ECDM_CONFIGURATION]
 		do
 			l_folder_path := configuration_folder_text_field.text
 			if l_folder_path /= Void then
@@ -186,6 +187,17 @@ feature {NONE} -- Implementation
 			end
 			if l_enable_sensitive then
 				l_enable_sensitive := not applications_list.is_empty and config_name_text_field.text /= Void and then not config_name_text_field.text.is_empty
+				if l_enable_sensitive then
+					from
+						l_configs := manager.all_configurations
+						l_configs.start
+					until
+						l_configs.after or not l_enable_sensitive
+					loop
+						l_enable_sensitive := not l_configs.item.name.is_equal (config_name_text_field.text)
+						l_configs.forth
+					end
+				end
 			end
 			if l_enable_sensitive and not ok_button.is_sensitive then
 				ok_button.enable_sensitive

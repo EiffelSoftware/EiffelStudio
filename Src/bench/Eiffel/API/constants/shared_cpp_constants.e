@@ -9,7 +9,7 @@ class SHARED_CPP_CONSTANTS
 
 feature {NONE} -- Constants
 
-    normal, new , delete, static, data_member, static_data_member: INTEGER is unique
+    standard, new , delete, static, data_member, static_data_member: INTEGER is unique
  
     data_member_keyword: STRING is "data_member"
  

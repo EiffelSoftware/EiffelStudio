@@ -90,7 +90,6 @@ feature {NONE} -- Implementation
 			-- Create TOC file
 		local
 			contents_file: PLAIN_TEXT_FILE
-			l_filename: FILE_NAME
 		do			
 			create contents_file.make_create_read_write (toc_file_name)
 			contents_file.putstring (full_toc_text)

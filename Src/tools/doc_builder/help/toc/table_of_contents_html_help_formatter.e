@@ -63,8 +63,6 @@ feature {NONE} -- Status setting
 
 	add_node_item (e: XM_ELEMENT) is
 			-- Add new node item based on `e'
-		local
-			l_node_text: STRING
 		do	
 		 	if not e.is_root_node then
 		 		html_help_text.append (node_text (e))	

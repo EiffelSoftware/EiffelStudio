@@ -61,8 +61,6 @@ feature -- Commands
 	
 	show is
 			-- Show dialog
-		local
-			l_dir_name: DIRECTORY_NAME
 		do			
 			if Shared_toc_manager.is_empty then
 				toc_header_box.hide

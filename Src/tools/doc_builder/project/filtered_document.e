@@ -120,8 +120,6 @@ feature {NONE} -- Implementation
 			-- For filter `tag_name' retrieve tag content
 		local
 			l_element, l_toc_element: XM_ELEMENT
-			l_att: XM_ATTRIBUTE
-			l_curr_filter_name: STRING	
 		do
 			l_element ?= xml.root_element.element_by_name ("meta_data")
 			if l_element /= Void then

@@ -36,21 +36,21 @@ feature -- Schema
 			schema_is_file: (create {PLAIN_TEXT_FILE}.make (schema_filename)).exists
 		do
 			create schema.make_from_schema_file (schema_filename)
-			if schema.is_valid_xml then
+--			if schema.is_valid_xml then
 				if not schema.is_valid then
 					schema.validator.error_report.show
 					set_schema (Void)
+				else
+					schema.validator.error_report.show
+					set_schema (Void)
 				end
-			else
-				schema.validator.error_report.show
-				set_schema (Void)
-			end
+--			else
+--				set_schema (Void)
+--			end
 		end
 		
 	set_schema (a_schema: DOCUMENT_SCHEMA) is
 			-- Set `schema' to 'a_name'
-		require
-			schema_not_void: a_schema /= Void
 		do
 			schema := a_schema
 		ensure

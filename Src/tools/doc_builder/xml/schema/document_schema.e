@@ -30,8 +30,8 @@ feature -- Initialization
 		do
 			create validator			
 			name := a_filename
-			document := deserialize_document (name)
-			if is_valid_xml then
+--			document := deserialize_document (name)
+--			if is_valid_xml then
 				create reader.make_from_url (name)
 				create event_handler.make (Current, $validation_callback)
 				internal_schema := internal_schema.read_xml_reader_validation_event_handler (reader, event_handler)
@@ -42,7 +42,7 @@ feature -- Initialization
 					initialize
 				end
 				Shared_document_manager.set_schema (Current)
-			end
+--			end
 		ensure
 			internal_schema_set: is_valid_xml implies internal_schema /= Void
 			elements_set: validator.is_valid implies elements /= Void
@@ -149,8 +149,6 @@ feature -- Query
 
 	is_valid: BOOLEAN is
 			-- Is Current valid schema definition according to W3C?
-		require
-			valid_xml: is_valid_xml
 		do
 			create validator
 			validator.validate_by_filename (name)

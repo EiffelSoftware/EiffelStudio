@@ -93,10 +93,9 @@ feature {NONE} -- Implementation
 			cnt: INTEGER
 			sub_dir, src_sub_dir: DIRECTORY
 			bin_file, target_bin_file: RAW_FILE
-			doc_file, target_file: PLAIN_TEXT_FILE
+			doc_file: PLAIN_TEXT_FILE
 			path: STRING
 			l_doc: DOCUMENT
-			l_is_index: BOOLEAN
 			l_filename: FILE_NAME
 		do
 			path := a_dir.name

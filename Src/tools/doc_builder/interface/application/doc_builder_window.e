@@ -378,9 +378,6 @@ feature -- GUI Updating
 			name_not_empty: not a_el_name.is_empty
 		local
 			l_row: EV_LIST_ITEM
-			schema_element: DOCUMENT_SCHEMA_ELEMENT
-			children: LINKED_LIST [DOCUMENT_SCHEMA_ELEMENT]
-			l_sorted_list: SORTED_TWO_WAY_LIST [STRING]
 		do
 			sub_elements_list.wipe_out
 			title_label.set_text (" Sub Elements <" + a_el_name + ">")

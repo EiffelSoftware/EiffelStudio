@@ -300,9 +300,7 @@ feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
 			valid_xml: is_valid_xml
 			is_persisted: is_persisted
 		local
-			l_doc: XM_DOCUMENT
 			l_formatter: XM_DOCUMENT_FORMATTER
-			l_link: DOCUMENT_LINK
 		do
 			if invalid_links /= Void then
 				invalid_links.clear	
@@ -333,7 +331,6 @@ feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
 		local
 			l_doc: XM_DOCUMENT
 			l_formatter: XM_DOCUMENT_FORMATTER
-			l_link: DOCUMENT_LINK
 		do
 			do_update_link := True
 			l_doc := deserialize_document (create {FILE_NAME}.make_from_string (name))
@@ -389,8 +386,6 @@ feature {NONE} -- Implementation
 
 	write_to_disk is
 			-- Write Current text to disk
-		local
-			line_cnt: INTEGER
 		do			
 			if file /= Void and then not file.is_closed then
 				file.close

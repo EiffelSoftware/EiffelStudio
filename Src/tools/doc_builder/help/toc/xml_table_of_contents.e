@@ -277,7 +277,6 @@ feature {NONE} -- Initialization
 			l_dir: DIRECTORY
 			cnt, l_id: INTEGER
 			l_item, l_extension: STRING
-			l_file: PLAIN_TEXT_FILE
 			l_url: FILE_NAME
 			l_make_node: BOOLEAN
 		do			
@@ -438,10 +437,8 @@ feature {NONE} -- Sorting
 			-- 		b) a file which is relevant to the chosen output filter type
 		local
 			l_doc: DOCUMENT
-			l_filtered_doc: FILTERED_DOCUMENT
-			l_url, l_new_location: STRING	
+			l_url: STRING	
 			l_file: PLAIN_TEXT_FILE
-			l_src, l_target: XML_TABLE_OF_CONTENTS_NODE
 		do			
 			if a_el.name.is_equal (File_string) then
 				if a_el.has_attribute_by_name (Url_string) then
@@ -498,7 +495,7 @@ feature {NONE} -- Element Change
 			-- Filter element based on output type.  Once filtered we can confidently call `sort_element'
 			-- to produce the expected sorting result.
 		local
-			l_el, l_par_el: XML_TABLE_OF_CONTENTS_NODE
+			l_el: XML_TABLE_OF_CONTENTS_NODE
 			l_remove: BOOLEAN
 			l_elements: DS_LIST [XM_ELEMENT]
 			l_doc: DOCUMENT

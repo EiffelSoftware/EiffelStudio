@@ -132,15 +132,15 @@ feature {NONE} -- Implementation
 		do
 			if args.severity = feature {XML_XML_SEVERITY_TYPE}.error then
 				is_valid := False
-				if error_report /= Void then
-					error_report.append_error (args.message, args.exception.line_number, args.exception.line_position)
-				else
-					create error_report.make ("Invalid Schema Definition", args.message,
-						args.exception.line_number, args.exception.line_position)
-					create l_actions
-					error_report.set_error_action (agent l_actions.highlight_error (?))
-				end
-			end	
+			end
+			if error_report /= Void then
+				error_report.append_error (args.message, args.exception.line_number, args.exception.line_position)
+			else
+				create error_report.make ("Invalid Schema Definition", args.message,
+					args.exception.line_number, args.exception.line_position)
+				create l_actions
+				error_report.set_error_action (agent l_actions.highlight_error (?))
+			end
     	end
 
 end -- class SCHEMA_VALIDATOR

@@ -125,8 +125,6 @@ feature -- Commands
 		
 	sort_toc (index_root, empty_elements, no_index, sub_elements, alpha: BOOLEAN) is
 			-- Sort `loaded toc'
-		local
-			l_open_dialog: EV_FILE_OPEN_DIALOG
 		do				
 			report_status ("Sorting", "Sorting Table of Contents, please wait..")
 			loaded_toc := clone (loaded_toc)

@@ -52,7 +52,7 @@ YACC = $yacc
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(LSRCS) \$(LSRCS) lexic.l parser.y
+SOURCES =  \$(LSRCS) \$(LSRCS) parser.y
 OBJECTS =  \$(OBJS) \$(WOBJS) lexic.o parser.o
 
 ########################################################################
@@ -97,7 +97,7 @@ CFLAGS = $(DPFLAGS)
 YFLAGS = -d
 
 SRCS = eiffel_c.c eif_err.c encode.c pretrieve.c date.c keyword.c \
-	byte.c offset.c parser.y lexic.l infix.c prefix.c
+	byte.c offset.c parser.y lexic.c infix.c prefix.c
 
 SMODE = pstore.c
 
@@ -170,9 +170,6 @@ libweiffel.a: $(WOBJS)
 lexic.o: parser.h
 
 libeiffel.a: lexic.c
-
-local_realclean::
-	$(RM) lexic.c
 
 libeiffel.a: parser.c
 

@@ -147,6 +147,10 @@ feature -- Access
 --| To be done.
 --			Result := Pixmaps.Icon_expression_evaluator
 		end
+		
+	can_refresh: BOOLEAN
+			-- Should we display data when a stone is set?
+			--| For optimization purposes.		
 
 feature -- Status setting
 
@@ -155,12 +159,26 @@ feature -- Status setting
 		local
 			cst: CALL_STACK_STONE
 		do
-			cst ?= a_stone
-			if cst /= Void and then application.is_stopped then
-				if not application.is_dotnet or else not application.imp_dotnet.callback_notification_processing then
-					refresh_context_expressions
-				end
+			if can_refresh then
+				cst ?= a_stone
+				if cst /= Void and then application.is_stopped then
+					if not application.is_dotnet or else not application.imp_dotnet.callback_notification_processing then
+						refresh_context_expressions
+					end
+				end				
 			end
+		end
+		
+	enable_refresh is
+			-- Set `can_refresh' to `True'.
+		do
+			can_refresh := True
+		end
+
+	disable_refresh is
+			-- Set `can_refresh' to `False'.
+		do
+			can_refresh := False
 		end
 
 	refresh is

@@ -15,12 +15,6 @@ feature {NONE} -- Resources
 			!! Result.make
 		end;
 
-	Class_resources: CLASS_CATEGORY is
-			-- Resources for the class tool
-		once
-			!! Result.make
-		end;
-
 	Project_resources: PROJECT_CATEGORY is
 			-- Resources for the project tool
 		once
@@ -29,6 +23,30 @@ feature {NONE} -- Resources
 
 	System_tool_resources: SYSTEM_W_CATEGORY is
 			-- Resources for the system tool
+		once
+			!! Result.make
+		end;
+
+	Class_tool_resources: CLASS_W_CATEGORY is
+			-- Resources for the class tool
+		once
+			!! Result.make
+		end
+
+	Feature_tool_resources: ROUTINE_W_CATEGORY is
+			-- Resources for the feature tool
+		once
+			!! Result.make
+		end
+
+	Object_tool_resources: OBJECT_W_CATEGORY is
+			-- Resources for the feature tool
+		once
+			!! Result.make
+		end
+
+	Explain_tool_resources: EXPLAIN_W_CATEGORY is
+			-- Resources for the feature tool
 		once
 			!! Result.make
 		end

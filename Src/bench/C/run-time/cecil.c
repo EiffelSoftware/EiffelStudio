@@ -29,8 +29,9 @@
 #include "eif_eiffel.h"				/* Need string header */
 #include "eif_macros.h"
 #include "eif_lmalloc.h"
-#include <assert.h>
-
+#ifdef EIF_THREADS
+#include "eif_threads.h"
+#endif
 #ifdef I_STDARG
 #include <stdarg.h>
 #else
@@ -38,8 +39,29 @@
 #include <varargs.h>
 #endif
 #endif
+#include <assert.h>
 
 #define GEN_MAX	8				/* Maximum number of generic parameters */
+
+/* 
+ * Cecil mutex in MT mode. 
+ */
+
+#ifdef EIF_THREADS
+
+rt_private EIF_MUTEX_TYPE *cecil_lock = (EIF_MUTEX_TYPE *) 0; 
+rt_shared  void eif_cecil_init (); 
+#define EIF_CECIL_LOCK	\
+	EIF_MUTEX_LOCK (cecil_lock, "Couldn't lock cecil mutex");
+#define EIF_CECIL_UNLOCK	\
+	EIF_MUTEX_UNLOCK (cecil_lock, "Couldn't unlock cecil mutex");
+
+#else	/* EIF_THREADS */
+
+#define EIF_CECIL_LOCK
+#define EIF_CECIL_UNLOCK
+
+#endif	/* EIF_THREADS */
 
 /* Null pointer */
 rt_private	const void *eif_default_pointer = NULL;
@@ -53,13 +75,7 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-#ifndef EIF_THREADS
-/* If this variable is non-null, cecil will raise an exception when trying
- * to get the address of a routine of an invisible class.
- */
-
 rt_shared unsigned char eif_visible_is_off = (unsigned char) 0;
-#endif
 
 /* 
  * `visible' exception handling
@@ -69,7 +85,10 @@ rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
     EIF_GET_CONTEXT
+	assert (cecil_lock);
+	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 0;
+	EIF_CECIL_UNLOCK;
     EIF_END_GET_CONTEXT
 }
 
@@ -77,7 +96,10 @@ rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
     EIF_GET_CONTEXT
+	assert (cecil_lock);
+	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 1;
+	EIF_CECIL_UNLOCK;
     EIF_END_GET_CONTEXT
 }
 
@@ -682,6 +704,22 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 /*----------------------------------------*/
 
 #ifdef EIF_THREADS
+rt_shared void eif_cecil_init () {
+	/* Initialize cecil lock for concurrent access. */
+	assert (eif_thr_is_root ());
+	assert (!cecil_lock);
+
+	EIF_MUTEX_CREATE (cecil_lock, "Couldn't create cecil lock");
+}
+
+rt_shared void eif_cecil_reclaim () {
+	/* Reclaim cecil lock. */
+	assert (eif_thr_is_root ());
+	assert (cecil_lock);
+
+	EIF_MUTEX_DESTROY (cecil_lock, "Couldn't destroy cecil mutex");
+}
+
 rt_shared void eif_set_thr_context () {
 	/* Initialize thread context for non Eiffel Threads.
      * There is not much to initialize, but this is necessary

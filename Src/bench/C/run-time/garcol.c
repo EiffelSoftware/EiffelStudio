@@ -35,6 +35,7 @@ extern "C" {
 #include "eif_urgent.h"
 #include "eif_search.h"
 #include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
+#include "eif_cecil.h"
 #include "x2c.header"		/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <string.h>
@@ -1000,6 +1001,7 @@ rt_public void reclaim(void)
 	 */
 
 	if (eif_thr_is_root ())	{	/* Is this the root thread */
+		eif_cecil_reclaim ();
 		eif_free (eif_globals);			
 						/* Global variables specific to the current thread */
 		assert (!eif_thr_context);

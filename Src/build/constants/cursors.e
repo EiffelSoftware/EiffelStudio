@@ -29,7 +29,7 @@ feature
 
 	Command_instance_cursor: SCREEN_CURSOR is
 		once
-			Result := cursor_file_content ("command_instance.curs")
+			Result := cursor_file_content ("cmd_instance.curs")
 		end;
 
 	Context_cursor: SCREEN_CURSOR is
@@ -127,11 +127,10 @@ feature {NONE}
 	cursor_file_content (fn: STRING): SCREEN_CURSOR is
 		local
 			p: PIXMAP;
-			full_name: STRING
+			full_name: FILE_NAME
 		do
-			full_name := clone (Environment.bitmaps_directory);
-			full_name.extend (Environment.directory_separator);
-			full_name.append (fn);
+			!! full_name.make_from_string (Environment.bitmaps_directory);
+			full_name.set_file_name (fn);
 			!! p.make;
 			p.read_from_file (full_name);
 			!! Result.make;

@@ -11,6 +11,11 @@ class
 
 inherit
 	MAIN_WINDOW_IMP
+	
+	PROFILING_SETTING
+		undefine
+			copy, is_equal, default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -40,6 +45,7 @@ feature {NONE} -- Initialization
 				-- Connect events.
 			rich_text.caret_move_actions.extend (agent caret_moved)
 			rich_text.selection_change_actions.extend (agent selection_changed)
+			rich_text.file_access_actions.extend (agent update_progress_on_save)
 			close_request_actions.extend (agent exit)
 			
 					-- Now load all available fonts into `font_selection' combo box.
@@ -94,6 +100,9 @@ feature {NONE} -- Initialization
 				font.preferred_families.extend (font_selection.item.text)
 				font.set_height (16)
 				format.set_font (font)
+				if font.name.is_equal ("Wingdings 3") then
+					do_nothing
+				end
 				rich_text.buffered_append (font_selection.item.text, format)
 				font_selection.forth
 				if not font_selection.off then
@@ -108,8 +117,8 @@ feature {NONE} -- Initialization
 
 			
 				-- Initialize a test that checks the contents of each line.
-			create timer.make_with_interval (2000)
-			timer.actions.extend (agent check_line_positions)
+	--		create timer.make_with_interval (2000)
+	--		timer.actions.extend (agent check_line_positions)
 			show_actions.extend (agent window_shown)
 		end
 		
@@ -246,7 +255,6 @@ feature {NONE} -- Event handling
 					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
 				end
 				format.set_font (font)
-				format.set_background_color ((create {EV_STOCK_COLORS}).green)
 				rich_text.set_current_format (format)
 			end
 		end
@@ -1069,9 +1077,13 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
+	current_file_name: STRING
+		-- File name currently used for Loading and saving files.
+
 	exit is
 			-- Exit the application
 		do
+			rich_text.destroy;
 			((create {EV_ENVIRONMENT}).application).destroy
 		end
 
@@ -1158,6 +1170,97 @@ feature {NONE} -- To be removed
 ----			end
 --		--	format := rich_text.paragraph_format (10)
 		end
+		
+	open_file is
+			-- Called by `select_actions' of `open_menu_item'.
+		do
+			get_file_name (opening_file)
+			if not file_dialog_cancelled then
+				rich_text.set_with_named_file (create {FILE_NAME}.make_from_string (current_file_name))
+			end
+		end
+		
+	save_file is
+			-- Called by `select_actions' of `s'.
+		do
+			if current_file_name = Void then
+				get_file_name (saving_file)
+			end
+			if not file_dialog_cancelled then
+				start_profiling
+				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
+				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
+				real_save_file
+				stop_profiling
+				general_label.hide
+				save_progress.show
+				start_profiling
+				rich_text.save_to_named_file (create {FILE_NAME}.make_from_string (current_file_name))
+				stop_profiling
+				save_progress.hide
+				general_label.show
+			end
+		end
+		
+	save_file_as is
+			-- Called by `select_actions' of `save_as_menu_item'.
+		do
+			get_file_name (saving_file)
+			save_file
+		end
+		
+	get_file_name (file_operation: INTEGER) is
+			--
+		require
+			opening_or_saving_file: file_operation = opening_file or file_operation = saving_file
+		local
+			file_dialog: EV_FILE_DIALOG
+		do
+			if file_operation = saving_file then
+				create {EV_FILE_SAVE_DIALOG} file_dialog
+			else
+				create {EV_FILE_OPEN_DIALOG} file_dialog
+			end
+			file_dialog.set_filter ("*.rtf")
+			file_dialog.show_modal_to_window (Current)
+			if file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_open) or
+				file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_save) then
+					
+				current_file_name := file_dialog.file_name
+				file_dialog_cancelled := False
+			else
+				file_dialog_cancelled := True
+			end
+		end
+		
+	opening_file: INTEGER is 1
+	saving_file: INTEGER is 2
+		-- Constants used to determine which type of file dialog 
+		-- to display within `get_file_name'.
+		
+	file_dialog_cancelled: BOOLEAN
+		-- Was dialog shown by last call to `get_file_name' cancelled?
+		
+	load_file is
+			-- Called by `select_actions' of `l'.
+		do
+			rich_text.set_with_named_file (create {FILE_NAME}.make_from_string ("C:\Documents and Settings\rogers\Desktop\test.rtf"))
+		end
+		
+	real_save_file is
+			--
+		do
+			rich_text.save_to_named_file (create {FILE_NAME}.make_from_string ("C:\Documents and Settings\rogers\Desktop\test.rtf"))
+		end
+		
+
+	update_progress_on_save (pos: INTEGER) is
+			-- 
+		do
+			save_progress.set_value (pos.max (1).min (rich_text.text_length))			
+			(create {EV_ENVIRONMENT}).application.process_events
+		end
+		
 	
 	offset: INTEGER
 	

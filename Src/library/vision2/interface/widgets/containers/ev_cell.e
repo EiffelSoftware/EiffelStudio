@@ -24,7 +24,7 @@ feature -- Access
 	has (v: like item): BOOLEAN is
 			-- Does structure include `v'?
 		do
-			Result := item = v	
+			Result := implementation.item = v	
 		end
 
 feature -- Status report
@@ -32,13 +32,13 @@ feature -- Status report
 	empty, extendible: BOOLEAN is
 			-- Is there no element?
 		do
-			Result := item = Void
+			Result := implementation.item = Void
 		end
 
 	full: BOOLEAN is
 			-- Is structure filled to capacity?
 		do
-			Result := item /= Void
+			Result := implementation.item /= Void
 		end
 
 	prunable: BOOLEAN is True
@@ -77,7 +77,7 @@ feature -- Conversion
 			l: LINKED_LIST [like item]
 		do
 			create l.make
-			l.extend (item)
+			l.extend (implementation.item)
 			Result := l
 		end
 
@@ -116,6 +116,9 @@ end -- class EV_CELL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/01 19:54:17  brendel
+--| Replaced occurences of item with implementation.item.
+--|
 --| Revision 1.7  2000/03/01 18:55:24  brendel
 --| Added feature `readable'.
 --|

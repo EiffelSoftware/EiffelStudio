@@ -97,14 +97,13 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for Eiffel loop.
 		local
-			test_label, end_label: IL_LABEL
+			test_label, end_label, l_label: IL_LABEL
 			local_list: LINKED_LIST [TYPE_I]
 			variant_local_number: INTEGER
 			check_assertion: BOOLEAN
 		do
-			check_assertion := Context.class_type.associated_class.assertion_level.check_loop
-				-- FIXME: invariant and variants are not correctly generated
-			check_assertion := False
+			check_assertion := context.workbench_mode or
+				Context.class_type.associated_class.assertion_level.check_loop
 			
 			if from_part /= Void then
 					-- Generate IL code for the from part
@@ -120,9 +119,11 @@ feature -- IL code generation
 			end
 
 			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
-					-- Set the assertion type
-				context.set_assertion_type (In_loop_invariant)
-
+				l_label := il_label_factory.new_label
+				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_loop)
+				il_generator.branch_on_false (l_label)
+				il_generator.put_boolean_constant (True)
+				il_generator.generate_set_assertion_status					
 				if invariant_part /= Void then
 					context.set_assertion_type (In_loop_invariant)
 					invariant_part.generate_il
@@ -130,9 +131,11 @@ feature -- IL code generation
 					-- Variant loop byte code
 				if variant_part /= Void then
 					context.set_assertion_type (In_loop_variant)
-					variant_part.generate_il
-					il_generator.generate_local_assignment (variant_local_number)
+					variant_part.generate_il_variant_init (variant_local_number)
 				end
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
+				il_generator.mark_label (l_label)					
 			end
 
 				-- Loop labels
@@ -154,11 +157,12 @@ feature -- IL code generation
 				compound.generate_il
 			end
 
-			il_generator.branch_to (test_label)
-
 			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
-					-- Set the assertion type
-				context.set_assertion_type (In_loop_invariant)
+				l_label := il_label_factory.new_label
+				il_generator.generate_is_assertion_checked (feature {ASSERTION_I}.Ck_loop)
+				il_generator.branch_on_false (l_label)
+				il_generator.put_boolean_constant (True)
+				il_generator.generate_set_assertion_status					
 
 					-- Invariant loop byte code
 				if invariant_part /= Void then
@@ -169,10 +173,14 @@ feature -- IL code generation
 					-- Variant loop byte code
 				if variant_part /= Void then
 					context.set_assertion_type (In_loop_variant)
-					variant_part.generate_il -- variant_local_number
+					variant_part.generate_il_variant_check (variant_local_number)
 				end
-
+				il_generator.put_boolean_constant (False)
+				il_generator.generate_set_assertion_status
+				il_generator.mark_label (l_label)					
 			end
+
+			il_generator.branch_to (test_label)
 
 			il_generator.mark_label (end_label)
 			check

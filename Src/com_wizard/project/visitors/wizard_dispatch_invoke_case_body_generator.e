@@ -290,60 +290,13 @@ feature -- Basic operations
 			loop
 				visitor := func_desc.arguments.item.type.visitor
 
-				body.append (If_keyword)
-				body.append (Space_open_parenthesis)
-				if 
-					visitor.is_interface_pointer or
-					visitor.is_coclass_pointer
-				then
-					body.append ("(tmp_value [" + counter.out +"].vt != VT_UNKNOWN) && (tmp_value [" + counter.out +"].vt != VT_DISPATCH)")
-				elseif
-					visitor.is_interface_pointer_pointer or
-					visitor.is_coclass_pointer_pointer
-				then
-					body.append ("(tmp_value [" + counter.out +"].vt != (VT_UNKNOWN | VT_BYREF)) && (tmp_value [" + counter.out +"].vt != (VT_DISPATCH | VT_BYREF))")
-				else
-					body.append (Tmp_variable_name)
-					body.append (Space)
-					body.append (Open_bracket)
-					body.append_integer (counter)
-					body.append (Close_bracket)
-					body.append (Dot)
-					body.append ("vt")
-					body.append (Space)
-					body.append (C_not_equal)
-					body.append_integer (visitor.vt_type)
-				end
-				body.append (Close_parenthesis)
 				body.append (New_line_tab_tab_tab)
 				body.append (Tab)
-				body.append (Open_curly_brace)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab)
-				body.append (Tab)
-				body.append (Co_task_mem_free)
-				body.append (Space_open_parenthesis)
-				body.append (Tmp_variable_name)
-				body.append (Close_parenthesis)
-				body.append (Semicolon)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab_tab)
-
-				body.append (Return)
-				body.append (Space)
-				body.append ("DISP_E_BADVARTYPE")
-				body.append (Semicolon)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab)
-				body.append (Close_curly_brace)
-				body.append (New_line_tab_tab_tab)
-				body.append (Tab)
-
 				body.append (get_argument_from_variant 
-						(func_desc.arguments.item.type, 
-						"arg_" + counter.out, 
-						Tmp_variable_name + " %(" + counter.out +"%)", 
-						counter, has_arguments))
+					(func_desc.arguments.item.type, 
+					"arg_" + counter.out, 
+					"tmp_value %(" + counter.out +"%)", 
+					counter, argument_count))
 				
 				if 
 					(visitor.is_interface_pointer or
@@ -392,8 +345,10 @@ feature -- Basic operations
 					end
 					local_buffer.append (Space_equal_space)
 					if 
-						(visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
-						visitor.is_interface_pointer or visitor.is_coclass_pointer) and
+						(visitor.is_interface_pointer_pointer or 
+						visitor.is_coclass_pointer_pointer or
+						visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer) and
 						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
 						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 					then
@@ -405,14 +360,19 @@ feature -- Basic operations
 						end
 						local_buffer.append (">(")
 					end
-					if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
+					if 
+						visitor.is_interface_pointer_pointer or 
+						visitor.is_coclass_pointer_pointer 
+					then
 						local_buffer.append (Asterisk)
 					end
 					local_buffer.append ("arg_")
 					local_buffer.append_integer (counter)
 					if 
-						(visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer or
-						visitor.is_interface_pointer or visitor.is_coclass_pointer) and
+						(visitor.is_interface_pointer_pointer or 
+						visitor.is_coclass_pointer_pointer or
+						visitor.is_interface_pointer or 
+						visitor.is_coclass_pointer) and
 						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
 						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 					then
@@ -599,7 +559,7 @@ feature -- Basic operations
 			body.append (Tab)
 			
 			if return_hresult then
-				body.append (check_failer (not has_arguments, excepinfo_setting, "DISP_E_EXCEPTION"))
+				body.append (check_failer (argument_count, excepinfo_setting, "DISP_E_EXCEPTION"))
 			end
 
 			if not local_buffer.is_empty then
@@ -715,6 +675,7 @@ feature -- Basic operations
 				body.append (Tab)
 
 				body.append (release_interfaces)
+
 				body.append (Co_task_mem_free)
 				body.append (Space_open_parenthesis)
 				body.append (Tmp_variable_name)

@@ -131,7 +131,7 @@ feature -- Basic operations
 			valid_name: not Result.is_empty
 		end
 
-	check_failer  (is_arguments_empty: BOOLEAN; an_additional_string, a_return_code: STRING): STRING is
+	check_failer  (an_argument_count: INTEGER; an_additional_string, a_return_code: STRING): STRING is
 			-- Case statement for function descriptor
 		require
 			non_void_additional_string: an_additional_string /= Void
@@ -152,14 +152,14 @@ feature -- Basic operations
 			Result.append (Open_curly_brace)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Tab_tab)
-			if not is_arguments_empty then
-				Result.append (Co_task_mem_free)
-				Result.append (Space_open_parenthesis)
-				Result.append (Tmp_variable_name)
-				Result.append (Close_parenthesis)
-				Result.append (Semicolon)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab_tab)
+			if an_argument_count > 0 then
+				Result.append ("CoTaskMemFree (tmp_value);%N%T%T%T%T%T")
+				Result.append ("for (i = 0; i < " + 
+								an_argument_count.out + "; i++)%N%T%T%T%T%T%
+								%{%N%T%T%T%T%T%T%
+									%VariantClear (&(tmp2_value [i]));%N%T%T%T%T%T%
+								%}%N%T%T%T%T%T")
+				Result.append ("CoTaskMemFree (tmp2_value);%N%T%T%T%T%T")
 			end
 			Result.append (an_additional_string)
 			Result.append (New_line_tab_tab_tab)
@@ -344,7 +344,7 @@ feature -- Basic operations
 		
 	get_argument_from_variant (a_data_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR;
 				a_variable_name, a_variant_name: STRING;
-				counter: INTEGER; is_arguments_empty: BOOLEAN): STRING is
+				counter: INTEGER; an_argument_count: INTEGER): STRING is
 			-- Extract data from VARIANT structure.
 		require
 			non_void_data_descriptor: a_data_descriptor /= Void
@@ -357,6 +357,24 @@ feature -- Basic operations
 		do
 			visitor := a_data_descriptor.visitor
 			create Result.make (1000)
+
+			Result.append ("if (" + a_variant_name + 
+						".vt != " + visitor.vt_type.out + ")%N%T%T%T%T{%N%T%T%T%T%T")
+			
+			Result.append ("hr = VariantChangeType (&(" + 
+							a_variant_name +"), " +
+							"&(" + a_variant_name + "), " +
+							"VARIANT_NOUSEROVERRIDE, " + 
+							visitor.vt_type.out + ");%N%T%T%T%T%T")
+
+			Result.append (check_failer (an_argument_count, 
+							"*puArgErr = " + counter.out + ";", 
+							"DISP_E_TYPEMISMATCH"))
+
+			Result.append ("%N%T%T%T%T}")
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
+
 			
 			if 
 				(visitor.is_interface_pointer or 
@@ -393,7 +411,7 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				Result.append (check_failer (is_arguments_empty, "", "DISP_E_BADVARTYPE"))
+				Result.append (check_failer (an_argument_count, "", "DISP_E_TYPEMISMATCH"))
 				Result.append (Tab)
 
 			elseif 
@@ -439,7 +457,7 @@ feature -- Basic operations
 				Result.append (get_interface_pointer_pointer 
 					(Idispatch, a_variable_name, a_variant_name, Variant_ppdispval, counter))
 				
-				Result.append (check_failer (is_arguments_empty, "", "DISP_E_BADVARTYPE"))
+				Result.append (check_failer (an_argument_count, "", "DISP_E_TYPEMISMATCH"))
 
 				Result.append (Tab)
 				Result.append (a_variable_name)

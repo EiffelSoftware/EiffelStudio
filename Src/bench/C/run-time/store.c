@@ -388,6 +388,7 @@ rt_public char **stream_malloc (int stream_size)	/*08/04/98*/
 			*real_buffer = buffer;
 			return real_buffer;
 	}
+	return (char **) 0;		/* NOTREACHED */
 }
 
 rt_public void allocate_gen_buffer (void)
@@ -1328,7 +1329,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	}
 	widr_multi_char (s_buffer, (strlen (s_buffer)));
 	
-	if (0 > sprintf(s_buffer,"%d\n", OVERHEAD)) {
+	if (0 > sprintf(s_buffer,"%d\n", (int) OVERHEAD)) {
 		eise_io("Independent store: unable to write OVERHEAD size.");
 	}
 	widr_multi_char (s_buffer, (strlen (s_buffer)));
@@ -1408,7 +1409,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 		}
 		widr_multi_char (s_buffer, (strlen (s_buffer)));
 		for (; num_attrib-- > 0;) {
-			if (0 > sprintf(s_buffer, "\n%lu %s", (*(System(i).cn_types + num_attrib) & SK_HEAD), 
+			if (0 > sprintf(s_buffer, "\n%lu %s", (unsigned long) (*(System(i).cn_types + num_attrib) & SK_HEAD), 
 					*(System(i).cn_names + num_attrib))) {
 				eise_io("Independent store: unable to write attribute description.");
 			}

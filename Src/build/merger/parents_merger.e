@@ -127,7 +127,7 @@ feature
 						user.forth
 					end
 
-					!! merge_result.make (temp_parents.count + new_tmp.count)
+					!! merge_result.make_filled (temp_parents.count + new_tmp.count)
 
 					-- First template parents
 
@@ -242,7 +242,7 @@ feature {NONE} -- Diffs
 					user_list.forth
 				end;
 				if not temp_list.empty then
-					!! Result.make (temp_list.count)
+					!! Result.make_filled (temp_list.count)
 					Result.merge_after_position (0, temp_list);
 				end;
 			end
@@ -258,7 +258,7 @@ feature {NONE} -- Diffs
 			elseif diff_l.empty then
 				Result := list
 			else
-				!! Result.make (diff_l.count + list.count)
+				!! Result.make_filled (diff_l.count + list.count)
 				Result.merge_after_position (0, list);
 				Result.merge_after_position (list.count, diff_l);
 			end

@@ -41,7 +41,7 @@ feature
 						user.forth
 					end
 
-					!! new_indexes.make (temp_indexes.count + new_tmp.count)
+					!! new_indexes.make_filled (temp_indexes.count + new_tmp.count)
 				
 					-- First indexes of `new_tmp'
 					new_indexes.merge_after_position (0, new_tmp)
@@ -62,7 +62,7 @@ feature
 				end
 			else
 				if new_tmp /= Void then
-					!! merge_result.make (new_tmp.count)
+					!! merge_result.make_filled (new_tmp.count)
 					merge_result.merge_after_position (0, user)
 				else
 					merge_result := Void

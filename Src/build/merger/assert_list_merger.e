@@ -44,7 +44,7 @@ feature
 				user.forth
 			end
 
-			!! merge_result.make (new_tmp.count + temp_assertions.count)
+			!! merge_result.make_filled (new_tmp.count + temp_assertions.count)
 
 			-- First the assertions of `new_tmp' will be put
 			-- in the merge result.

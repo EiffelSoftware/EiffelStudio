@@ -145,7 +145,7 @@ feature -- Initialization
 			as1.pass_address(class_as);
 			!!as2.make (0);
 			as2.pass_address(id_as);
-			!!as3.make (0);
+			!!as3.make_filled (0);
 			as3.pass_address(construct_list_as);
 			!!as4;
 			as4.pass_address(string_as);

@@ -64,13 +64,18 @@ feature {NONE} -- status setting
 
 	remove_command (event_id: INTEGER) is
 			-- Remove all the commands associated with
-			-- the event `event_id. If there is no command
-			-- associated with 'command_id', nothing
-			-- happens.
-		do	
-			if (command_list @ event_id) /= Void then
-				command_list.force (Void, event_id)
-				argument_list.force (Void, event_id)
+			-- the event `event_id. If the array of command
+			-- is then empty, we set it to Void.
+		do
+			if command_list /= Void then
+				if (command_list @ event_id) /= Void then
+					command_list.force (Void, event_id)
+					argument_list.force (Void, event_id)
+				end
+				if command_list.all_cleared then
+					command_list := Void
+					argument_list := Void
+				end
 			end
 		end
 

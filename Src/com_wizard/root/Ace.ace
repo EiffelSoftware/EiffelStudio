@@ -60,8 +60,8 @@ external
 					"$LIBRARY\com\library\include",
 					"$LIBRARY\com\runtime\include";
 
-	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
-					"$(EIFFEL4)\library\time\spec\msc\lib\datetime.lib",
+	object: 		"$(LIBRARY)\wel\spec\$(COMPILER)\lib\wel.lib",
+					"$(LIBRARY)\time\spec\msc\lib\datetime.lib",
 					"$(LIBRARY)\com\Library\lib\com.lib",
 					"$(LIBRARY)\com\Runtime\lib\com_runtime.lib";
 end

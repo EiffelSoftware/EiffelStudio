@@ -24,11 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_ROUTINES
-		export
-			{NONE} all
-		end
-
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
@@ -284,7 +279,6 @@ feature {NONE} -- State management
 				create wizard_manager.make (Current)
 				wizard_manager.run
 			end
-			clean
 		end
 
 	change_state (move_to_next: BOOLEAN) is
@@ -324,38 +318,6 @@ feature {NONE} -- Implementation
 
 	wizard_manager: WIZARD_MANAGER
 			-- Code generation manager
-
-	clean is
-			-- Delete temporary generated files.
-		do
-			delete_file (Generated_iid_file_name)
-			delete_file (Generated_header_file_name)
-			delete_file (Generated_dlldata_file_name)
-			delete_file (Generated_ps_file_name)
-			delete_file (shared_wizard_environment.type_library_file_name)
-			delete_file (c_to_obj (Generated_iid_file_name))
-			delete_file (c_to_obj (Generated_dlldata_file_name))
-			delete_file (c_to_obj (Generated_ps_file_name))
-			delete_file (Temporary_input_file_name)
-			delete_file (Def_file_name)
-		end
-
-	delete_file (a_file_name: STRING) is
-			-- Delete file `a_file_name' from Wizard destination folder.
-		local
-			a_string: STRING
-			a_file: RAW_FILE
-		do
-			if (a_file_name /= Void and then not a_file_name.empty) and
-				Shared_wizard_environment.destination_folder /= Void then
-				a_string := clone (shared_wizard_environment.destination_folder)
-				a_string.append (a_file_name)
-				create a_file.make (a_string)
-				if a_file.exists then
-					a_file.delete
-				end
-			end
-		end
 
 	open_project (a_project: STRING) is
 			-- Open previous project saved in `a_project'.

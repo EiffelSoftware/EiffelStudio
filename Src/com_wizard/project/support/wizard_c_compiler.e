@@ -7,6 +7,8 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_ROUTINES
+
 	WIZARD_PROCESS_LAUNCHER
 		export
 			{NONE} all
@@ -41,30 +43,6 @@ inherit
 
 create
 	make
-
-feature -- Access
-
-	is_c_file (a_file_name: STRING): BOOLEAN is
-			-- Is `a_file_name' a valid c/c++ file name?
-		do
-			Result := a_file_name.substring (a_file_name.count - 1, a_file_name.count).is_equal (C_file_extension) or
-						a_file_name.substring (a_file_name.count - 3, a_file_name.count).is_equal (Cpp_file_extension)
-		end
-
-	is_object_file (a_file: STRING): BOOLEAN is
-			-- Is `a_file' an object (.obj) file?
-		do
-			Result := a_file.substring (a_file.count - 3, a_file.count).is_equal (Object_file_extension)
-		end
-
-	is_valid_folder_name (a_folder_name: STRING): BOOLEAN is
-			-- Is `a_folder_name' a valid folder name?
-		local
-			a_directory: DIRECTORY
-		do
-			create a_directory.make (a_folder_name)
-			Result := a_directory.exists
-		end
 
 feature -- Basic Operations
 

@@ -1,0 +1,120 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>eiffel_scan console output</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+<PRE>Scanning file `eiffel_scan.e'.
+
+
+--------------- LEXICAL ANALYSIS: ----
+
+Token type 11: -- Example of a lexical analyzer based on the Eiffel syntax.
+-- The analyzer itself is found in the file ``eiffel_lex'', which
+-- is created according to the file  ``eiffel_token'' if not
+-- previously built and stored.
+
+Keyword:  class Code: 1819086195
+Token type 32: EIFFEL_SCAN
+Keyword:  inherit Code: 1080299636
+Token type 32: SCANNING
+Keyword:  rename Code: 2076787557
+Token type 32: make
+Keyword:  as Code: 24947
+Token type 32: scanning_make
+Keyword:  end Code: 6647396
+Token type 15: ;
+Token type 32: ARGUMENTS
+Keyword:  undefine Code: 1472863845
+Token type 32: copy
+Token type 17: ,
+Token type 32: consistent
+Token type 17: ,
+Token type 32: is_equal
+Token type 17: ,
+Token type 32: setup
+Keyword:  end Code: 6647396
+Token type 32: create
+Token type 32: make
+Keyword:  feature Code: 1951938661
+Token type 32: make
+Keyword:  is Code: 26995
+Token type 11: -- Create a lexical analyser for Eiffel if none,
+                        -- then use it to analyze the file of name
+
+Token type 11: -- `file_name'.
+
+Keyword:  local Code: 1869613420
+Token type 32: file_name
+Token type 16: :
+Token type 32: STRING
+Token type 15: ;
+Keyword:  do Code: 25711
+Keyword:  if Code: 26982
+Token type 32: argument_count
+Token type 10: &lt;
+Token type 2: 1
+Keyword:  then Code: 1952998766
+Token type 32: io
+Token type 13: .
+Token type 32: error
+Token type 13: .
+Token type 32: putstring
+Token type 20: (
+Token type 3: "Usage: eiffel_scan eiffel_class_file.e%N"
+Token type 21: )
+Keyword:  else Code: 1701606245
+Token type 32: file_name
+Token type 18: :=
+Token type 32: argument
+Token type 20: (
+Token type 2: 1
+Token type 21: )
+Token type 15: ;
+Token type 32: scanning_make
+Token type 15: ;
+Token type 32: build
+Token type 20: (
+Token type 3: "eiffel_lex"
+Token type 17: ,
+Token type 3: "eiffel_regular"
+Token type 21: )
+Token type 15: ;
+Token type 32: io
+Token type 13: .
+Token type 32: putstring
+Token type 20: (
+Token type 3: "Scanning file `"
+Token type 21: )
+Token type 15: ;
+Token type 32: io
+Token type 13: .
+Token type 32: putstring
+Token type 20: (
+Token type 32: file_name
+Token type 21: )
+Token type 15: ;
+Token type 32: io
+Token type 13: .
+Token type 32: putstring
+Token type 20: (
+Token type 3: "'.%N"
+Token type 21: )
+Token type 15: ;
+Token type 32: analyze
+Token type 20: (
+Token type 32: file_name
+Token type 21: )
+Keyword:  end Code: 6647396
+Keyword:  end Code: 6647396
+Token type 11: -- make
+
+Keyword:  end Code: 6647396
+Token type 11: -- class EIFFEL_SCAN
+
+Token type -1:</PRE>
+	</BODY>
+</HTML>

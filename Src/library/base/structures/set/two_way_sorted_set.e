@@ -112,8 +112,11 @@ feature -- Element change
 
 	merge (other: like Current) is
 			-- Add all items of `other'.
+		local
+			mode: BOOLEAN
 		do
 			from
+				mode := object_comparison
 				start;
 				other.start
 			until
@@ -122,16 +125,22 @@ feature -- Element change
 				if item < other.item then
 					search_after (other.item)
 				end;
-				if not after and then item = other.item then
-					forth;
+				if not after then
+					if
+						(not mode and then item = other.item) 
+					or else
+						(mode and then item.is_equal (other.item))
+					then
+						forth;
 					other.forth
-				elseif not after then
-					from
-					until
-						other.after or else other.item >= item
-					loop
-						put_left (other.item);
-						other.forth
+					else
+						from
+						until
+							other.after or else other.item >= item
+						loop
+							put_left (other.item);
+							other.forth
+						end
 					end
 				end
 			end;

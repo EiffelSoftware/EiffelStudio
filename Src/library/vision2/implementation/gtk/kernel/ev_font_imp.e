@@ -217,21 +217,33 @@ feature -- Element change
 	set_name (str: STRING) is
 			-- Make `str' the new name of the string.
 		do
+			check 
+				to_be_implemented: False
+			end
 		end
 
 	set_width (value: INTEGER) is
 			-- Make `value' the new width.
 		do
+			check 
+				to_be_implemented: False
+			end
 		end
 
 	set_height (value: INTEGER) is
 			-- Make `value' the new height.
 		do
+			check 
+				to_be_implemented: False
+			end
 		end
 
 	set_weight (value: INTEGER) is
 			-- Make `str' the new weight.
 		do
+			check 
+				to_be_implemented: False
+			end
 		end
 
 feature -- Implementation

@@ -308,7 +308,7 @@ feature {NONE} -- Externals
 	c_str_set_count (a_string: POINTER; n: INTEGER) is
 			-- Call `set_count' from STRING
 		external
-			"C [macro <eif_project.h>]"
+			"C [macro <eif_project.h>] (EIF_REFERENCE, EIF_INTEGER)"
 		alias
 			"(egc_strset)"
 		end

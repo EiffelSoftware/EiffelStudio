@@ -40,7 +40,7 @@ feature -- Access
 	assembly_id: INTEGER
 			-- Assembly containing type
 
-feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER, CONSUMED_REFERENCED_TYPE} -- Comparison
+feature {CONSUMED_ARGUMENT, OVERLOAD_SOLVER, CONSUMED_REFERENCED_TYPE, CONSUMED_TYPE} -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Only compare referenced types from same assembly as ids may change for other assemblies!

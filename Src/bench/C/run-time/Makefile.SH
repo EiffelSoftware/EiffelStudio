@@ -194,6 +194,7 @@ ESRC = \
 	bexcept.c 
 
 LOBJ = \
+	eif_once.o \
 	compress.o \
 	console.o \
 	option.o \
@@ -240,6 +241,7 @@ LOBJ = \
 
 WOBJ = \
 	$(NETWORK) \
+	eif_once.o \
 	compress.o \
 	console.o \
 	woption.o \
@@ -290,6 +292,7 @@ WOBJ = \
 
 EOBJ = \
 	woption.o \
+	eif_once.o \
 	compress.o \
 	console.o \
 	wmath.o \

@@ -22,8 +22,7 @@ inherit
 			reorder_child,
 			i_th,
 			count,
-			list_widget,
-			dispose
+			list_widget
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -35,8 +34,6 @@ inherit
 	EV_TEXTABLE_IMP
 		rename
 			interface as textable_imp_interface
-		redefine
-			dispose
 		end
 
 	--EV_TOOLTIPABLE_IMP
@@ -46,8 +43,7 @@ inherit
 			interface as pixmapable_imp_interface
 		redefine
 			set_pixmap,
-			remove_pixmap,
-			dispose
+			remove_pixmap
 		end
 
 create
@@ -63,8 +59,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 
 			-- The following is a hack to ensure destruction of gtkobjects.
-			dummy_hbox := C.gtk_hbox_new (False, 0)
-			set_c_object (dummy_hbox)
+			set_c_object (C.gtk_hbox_new (False, 0))
 			create ev_children.make (0)
 		end
 
@@ -72,12 +67,10 @@ feature {NONE} -- Initialization
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create item box to hold label and pixmap.
 		do
-			C.gtk_container_add (dummy_hbox, pixmap_box)
-			C.gtk_container_add (dummy_hbox, text_label)
+			C.gtk_container_add (c_object, pixmap_box)
+			C.gtk_container_add (c_object, text_label)
 			is_initialized := True
 		end
-		
-	dummy_hbox: POINTER
 
 feature -- Status report
 
@@ -361,13 +354,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	dispose is
-			-- 
-		do
-			gtk_object_unref (dummy_hbox)
-			Precursor
-		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 		do

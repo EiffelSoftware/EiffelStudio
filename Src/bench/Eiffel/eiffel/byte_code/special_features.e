@@ -102,7 +102,7 @@ feature -- Byte code special generation
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_one)
 			when default_type then
-				make_default_code (ba, type_of (basic_type))
+				basic_type.make_default_byte_code (ba)
 			when bit_and_type..bit_test_type then
 				check integer_type: type_of (basic_type) = integer_type end
 				make_bit_operation_code (ba, function_type)
@@ -159,7 +159,7 @@ feature -- C special code generation
 			when generator_type then
 				generate_generator (buffer, type_of (basic_type))
 			when default_type then
-				generate_default (buffer, type_of (basic_type))
+				basic_type.generate_default_value (buffer)
 			when bit_and_type..bit_test_type then
 				check
 					integer_type: type_of (basic_type) = integer_type
@@ -312,48 +312,6 @@ feature {NONE} -- Fast access to feature name
 	max_type_id: INTEGER is 33
 
 feature {NONE} -- Byte code generation
-
-	make_default_code (ba: BYTE_ARRAY; type_of_basic: INTEGER) is
-			-- Make byte code for call on `default' where target is a basic type.
-		require
-			ba_not_void: ba /= Void
-		do
-			inspect
-				type_of_basic
-			when boolean_type then
-				ba.append (Bc_bool)
-				ba.append ('%U')
-			when character_type then
-				if is_wide then
-					ba.append (Bc_wchar)
-					ba.append_integer (0)
-				else
-					ba.append (Bc_char)
-					ba.append ('%U')
-				end
-			when integer_type then
-				inspect
-					integer_size
-				when 8 then
-					ba.append (Bc_int8)
-					ba.append ('%U')
-				when 16 then
-					ba.append (Bc_int16)
-					ba.append_short_integer (0)
-				when 32 then
-					ba.append (Bc_int32)
-					ba.append_integer (0)
-				when 64 then
-					ba.append (Bc_int64)
-					ba.append_integer (0)
-				end
-			when pointer_type then
-				ba.append (Bc_null_pointer)
-			when real_type, double_type then
-				ba.append (Bc_double)
-				ba.append_real (0.0)
-			end
-		end
 
 	make_bit_operation_code (ba: BYTE_ARRAY; op: INTEGER) is
 			-- Make byte code for call on bit operations from INTEGER.
@@ -730,39 +688,6 @@ feature {NONE} -- C code generation
 			end
 
 			buffer.putstring (")")
-		end
-
-	generate_default (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
-			-- Generate fast wrapper for call on `default' where target
-			-- is a basic type.
-		require
-			buffer_not_void: buffer /= Void
-		do
-			inspect
-				type_of_basic
-			when boolean_type then
-				buffer.putstring ("(EIF_BOOLEAN) 0")
-			when character_type then
-				if is_wide then
-					buffer.putstring ("(EIF_WIDE_CHAR) 0")
-				else
-					buffer.putstring ("(EIF_CHARACTER) 0")
-				end
-			when integer_type then
-				inspect
-					integer_size
-				when 8 then buffer.putstring ("(EIF_INTEGER_8) 0")
-				when 16 then buffer.putstring ("(EIF_INTEGER_16) 0")
-				when 32 then buffer.putstring ("(EIF_INTEGER_32) 0")
-				when 64 then buffer.putstring ("(EIF_INTEGER_64) 0")
-				end
-			when pointer_type then
-				buffer.putstring ("(EIF_POINTER) 0")
-			when real_type then
-				buffer.putstring ("(EIF_REAL) 0")
-			when double_type then
-				buffer.putstring ("(EIF_DOUBLE) 0")
-			end
 		end
 
 	generate_bit_operation (buffer: GENERATION_BUFFER; op: INTEGER; target, parameter: REGISTRABLE) is

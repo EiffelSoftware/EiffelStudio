@@ -23,6 +23,7 @@ cluster
 	balanced_tree	(root_cluster)	:	"$\struct"
 	lexer			(root_cluster)	:	"$\lexer"
 	editor			(root_cluster)	:	"$\editor"
+	tokens			(root_cluster)	:	"$\tokens"
 
 		-- EiffelBase
 	all base: 		"$EIFFEL4\library\base"

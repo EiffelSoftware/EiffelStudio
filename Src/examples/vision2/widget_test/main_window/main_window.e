@@ -53,7 +53,6 @@ feature {NONE} -- Initialization
 			widget_selector_parent.extend (type_selector)
 			
 				-- Create the test controller.
-			--create controller
 			test_controller.set_class_output (test_class_display)
 			controller_parent.extend (test_controller)
 			
@@ -83,6 +82,9 @@ feature {NONE} -- Initialization
 			
 				-- Initialize button pixmaps.
 			initialize_pixmaps
+			
+				-- Set up search tool
+			search_tool.associate_text_entry (search_field)
 			
 				-- Connect events to `generation_button'
 			generate_button.select_actions.extend (agent perform_generation)
@@ -167,6 +169,7 @@ feature {NONE} -- Implementation
 			label: EV_LABEL
 		do
 			test_class_display.set_background_color ((create {EV_STOCK_COLORS}).white)
+			flat_short_display.set_background_color ((create {EV_STOCK_COLORS}).white)
 			main_split_area.prune (main_box)
 			create label.make_with_text ("Please select a widget to begin exploration")
 			main_split_area.extend (label)
@@ -234,7 +237,7 @@ feature {NONE} -- Implementation
 				documentation_button.disable_select
 				documentation_button.select_actions.resume
 			else
-				main_notebook.select_item (flat_short_display)
+				main_notebook.select_item (flat_short_display_parent)
 				generate_button.disable_sensitive
 				file_generate.disable_sensitive
 			end
@@ -294,6 +297,32 @@ feature {NONE} -- Implementation
 		do
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
+
+	update_case_matching is
+			-- User has selected `match_case_button' so update
+			-- search tool.
+		do
+			if match_case_button.is_selected then
+				search_tool.enable_case_matching
+			else
+				search_tool.disable_case_matching
+			end
+		end
+		
+	start_search is
+			-- User has selected `search_button' so start
+			-- a search
+		do
+			search_tool.search (search_field.text)
+		end
+		
+	search_tool: SEARCH_TOOL is
+			-- Once access to a SEARCH_TOOL which allows
+			-- an EV_TEXT to be searched.
+		once
+			Create Result.make_with_ev_text (flat_short_display)
+		end
+		
 		
 	
 end -- class MAIN_WINDOW

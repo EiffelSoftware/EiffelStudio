@@ -32,6 +32,11 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_ACCESSIBLE_SYSTEM_STATUS
+		undefine
+			default_create, copy
+		end
+		
 feature -- Initialization
 
 	initialize is
@@ -49,8 +54,16 @@ feature {NONE} -- Implementation
 	show_generation_dialog is
 			-- Display a dialog to receive the code generation options
 			-- from the user.
+		local
+			dialog: EV_INFORMATION_DIALOG
+			code_generator: GB_CODE_GENERATOR
 		do
-			code_generation_dialog.show_modal_to_window (parent_window (parent))
+			create dialog.make_with_text ("Generating.....")
+			dialog.show_relative_to_window (system_status.main_window)
+			create code_generator
+			code_generator.generate
+			--code_generation_dialog.show_modal_to_window (parent_window (parent))
+			dialog.destroy
 		end
 		
 		

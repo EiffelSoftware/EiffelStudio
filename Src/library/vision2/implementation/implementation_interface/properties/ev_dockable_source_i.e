@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 				-- step.
 			widget_i ?= source_being_docked.interface
 			if widget_i /= Void then
-				Result ?= widget_i	
+				Result ?= source_being_docked	
 			end
 		end
 		

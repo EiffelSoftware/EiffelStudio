@@ -52,6 +52,30 @@ inherit
 			set_extend
 		end
 
+feature {NONE} -- Initialization
+
+	make_for_test is
+			-- Instance of `Current' for testing purposes.
+		local
+			radio: EV_RADIO_BUTTON
+			i: INTEGER
+		do
+			default_create
+			from i := 1 until i = 6 or container.full
+			loop
+				create radio.make_with_text ("radio item " + i.out)
+				container.extend (radio)
+				inspect i
+					when 1 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
+					when 2 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
+					when 3 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
+					when 4 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
+					when 5 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
+				end
+				i := i + 1
+			end
+		end
+
 feature -- Access
 
 	index: INTEGER is
@@ -351,6 +375,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/07 02:43:59  brendel
+--| Added `make_for_test'.
+--|
 --| Revision 1.12  2000/03/03 19:41:04  brendel
 --| Removed feature `put_left'.
 --|

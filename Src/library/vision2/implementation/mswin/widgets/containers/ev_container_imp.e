@@ -100,7 +100,6 @@ feature -- Element change
 		do
 			if pix /= Void then
 				background_pixmap_imp ?= pix.implementation
-	--			background_pixmap_imp.reference
 			end
 			if exists then
 				invalidate
@@ -227,9 +226,6 @@ feature {NONE} -- WEL Implementation
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
 		do
-			if background_pixmap_imp /= Void then
-	--			background_pixmap_imp.unreference
-			end
 		end
 
 feature {NONE} -- Implementation : deferred features
@@ -443,6 +439,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/04/29 03:22:39  pichery
+--| Cosmetics
+--|
 --| Revision 1.51  2000/04/26 22:18:10  rogers
 --| Set parent no longer calls par_imp.add_child as the child is already added.
 --|

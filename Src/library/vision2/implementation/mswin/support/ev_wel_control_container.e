@@ -42,7 +42,6 @@ inherit
 			on_set_cursor,
 			on_draw_item,
 			background_brush,
-			on_menu_command,
 			on_accelerator_command,
 			on_color_control,
  			on_wm_vscroll,
@@ -190,6 +189,9 @@ end -- class EV_WEL_CONTROL_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/23 02:21:29  brendel
+--| Removed `on_menu_command' from inh. clause.
+--|
 --| Revision 1.15  2000/02/22 18:21:01  pichery
 --| added 4 times the same small hack with `wel_parent' in order to
 --| avoid a Segmentation Violation with EiffelBench 4.6.008

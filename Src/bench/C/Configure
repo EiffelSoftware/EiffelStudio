@@ -6518,6 +6518,7 @@ uidtype='$uidtype'
 d_chown='$d_chown'
 d_dup2='$d_dup2'
 d_dirnamlen='$d_dirnamlen'
+#Check value for next 1 on 64 bits platform.
 d_eofpipe='$d_eofpipe'
 d_fcntl='$d_fcntl'
 d_geteuid='$d_geteuid'

@@ -28,22 +28,24 @@ feature
 
 	restore_cursors is
 			-- Restore the cursors as they were before `set_global_cursors'.
-		require
---			a_global_cursor_set_before: not (global_cursor = Void)
 		local
-			widget_x: WIDGET_X
+			widget_x: WIDGET_X;
+			area: SPECIAL [WIDGET];
+			count, i: INTEGER
 		do
+			area := widget_manager.area;
+			count := widget_manager.count
 			from
-				widget_manager.start
+				i := 0
 			until
-				widget_manager.after
+				i >= count
 			loop
-				widget_x ?= widget_manager.item.implementation;
+				widget_x ?= area.item (i).implementation;
 				widget_x.undefine_cursor_if_shell;
 				if widget_x.cursor /= Void then
 					widget_x.update_cursor
 				end;
-				widget_manager.forth
+				i := i + 1
 			end;
 			global_cursor := Void
 		ensure
@@ -56,19 +58,22 @@ feature
 			-- `set_global_cursors' and `restore_global_cursors' is not defined.
 			-- It depends on the specific implementation.
 		require
-			a_cursor_exists: not (cursor = Void);
-			--no_global_cursor_already_set: (global_cursor = Void)
+			a_cursor_exists: cursor /= Void;
 		local
-			widget_x: WIDGET_X	
+			widget_x: WIDGET_X;
+			area: SPECIAL [WIDGET];
+			count, i: INTEGER
 		do
+			area := widget_manager.area;
+			count := widget_manager.count
 			from
-				widget_manager.start
+				i := 0
 			until
-				widget_manager.after
+				i >= count
 			loop
-				widget_x ?= widget_manager.item.implementation;
+				widget_x ?= area.item (i).implementation;
 				widget_x.define_cursor_if_shell (cursor);
-				widget_manager.forth
+				i := i + 1
 			end;
 			global_cursor := cursor
 		ensure

@@ -996,13 +996,6 @@ feature -- Assignments
 		do
 		end
 
-	generate_cast_to_implementation (target_type: TYPE_I) is
-			-- Generate `cast' to implementation of `target_type'.
-		require
-			target_type_not_void: target_type /= Void
-		do
-		end
-
 	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class.
 		require

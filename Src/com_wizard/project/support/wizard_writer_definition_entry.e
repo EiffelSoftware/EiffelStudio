@@ -44,9 +44,14 @@ feature -- Access
 				Result.append_integer (feature_index)
 			end
 
-			if not feature_alias.empty then
-				Result.append (" Alias ")
+			if feature_alias /= Void and then not feature_alias.empty then
+				Result.append (" alias ")
 				Result.append (feature_alias)
+			end
+
+			if call_type /= Void and then not call_type.empty then
+				Result.append (" call_type ")
+				Result.append (call_type)
 			end
 		end
 
@@ -64,6 +69,9 @@ feature -- Access
 
 	feature_alias: STRING
 			-- Feature alias
+
+	call_type: STRING
+			-- Exported function call type
 
 feature -- Status
 
@@ -130,6 +138,16 @@ feature -- Element Change
 			feature_alias := clone (an_alias)
 		ensure
 			alias_set: feature_alias.is_equal (an_alias)
+		end
+
+	set_call_type (a_call_type: like call_type) is
+			-- Set `call_type' with `a_call_type'.
+		require
+			non_void_call_type: a_call_type /= Void
+		do
+			call_type := a_call_type
+		ensure
+			call_type_set: call_type.is_equal (a_call_type)
 		end
 
 end -- class WIZARD_WRITER_FEATURE

@@ -78,10 +78,10 @@ feature {GB_XML_STORE} -- Output
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			if objects.first.minimum_width_set_by_user then
-				add_element_containing_integer (element, Minimum_width_string, objects.first.minimum_width)	
+				add_integer_element (element, Minimum_width_string, objects.first.minimum_width)	
 			end
 			if objects.first.minimum_height_set_by_user then
-				add_element_containing_integer (element, Minimum_height_string, objects.first.minimum_height)
+				add_integer_element (element, Minimum_height_string, objects.first.minimum_height)
 			end
 		end
 		
@@ -91,14 +91,12 @@ feature {GB_XML_STORE} -- Output
 			element_info: ELEMENT_INFORMATION
 		do
 			full_information := get_unique_full_info (element)
-			element_info := full_information @ (Minimum_width_string)
-			if element_info /= Void then
-				for_first_object (agent {EV_WIDGET}.set_minimum_width (element_info.data.to_integer))
+			if full_information @ (Minimum_width_string) /= Void then
+				for_first_object (agent {EV_WIDGET}.set_minimum_width (retrieve_and_set_integer_value (Minimum_width_string)))
 			end
 			
-			element_info := full_information @ (Minimum_height_string)
-			if element_info /= Void then
-				for_first_object (agent {EV_WIDGET}.set_minimum_height (element_info.data.to_integer))
+			if full_information @ (Minimum_height_string) /= Void then
+				for_first_object (agent {EV_WIDGET}.set_minimum_height (retrieve_and_set_integer_value (Minimum_height_string)))
 			end
 		end
 

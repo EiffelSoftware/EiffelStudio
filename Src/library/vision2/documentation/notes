@@ -160,7 +160,7 @@ X   complete but found to have bugs
 
   Containers:
     widgets/containers/ev_container.e                   *    *     o     .
-    widgets/containers/ev_cell.e                        *    o .5  *     .
+    widgets/containers/ev_cell.e                        *    *     *     .
     widgets/containers/ev_aggregate_cell.e              o    *     *     .
     widgets/containers/ev_frame.e                       *    o 1   *     .
     widgets/containers/ev_window.e                      *    o 2   o     .

@@ -26,6 +26,7 @@ feature -- Access
 	type_handle_class_name: STRING is "System.RuntimeTypeHandle"
 	eiffel_class_name_attribute: STRING is "ISE.Runtime.CA.EIFFEL_CLASS_NAME_ATTRIBUTE"
 	assertion_level_class_name_attribute: STRING is "ISE.Runtime.CA.ASSERTION_LEVEL_ATTRIBUTE"
+	interface_type_class_name_attribute: STRING is "ISE.Runtime.CA.INTERFACE_TYPE_ATTRIBUTE"
 	assertion_level_enum_class_name: STRING is "ISE.Runtime.Enums.ASSERTION_LEVEL_ENUM"
 	eiffel_derivation_class_name: STRING is "ISE.Runtime.EIFFEL_DERIVATION"
 	eiffel_exception_class_name: STRING is "ISE.Runtime.EIFFEL_EXCEPTION"

@@ -26,6 +26,10 @@
 
 #include <ctype.h>					/* For isspace() */
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 #ifdef I_STRING
 #include <string.h>
 #else

@@ -204,7 +204,7 @@ feature
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
 		require
-			has: has_associated_class_type
+		--	has: has_associated_class_type
 		local
 			types: TYPE_LIST
 		do

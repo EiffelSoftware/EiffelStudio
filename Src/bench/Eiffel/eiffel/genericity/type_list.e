@@ -59,7 +59,12 @@ feature -- Search
 				forth
 			end
 
-			Result := item
+				-- FIXME: the following code should make sure that we have an item
+				-- but some time we don't therefore we need to take the last item
+				-- but `item' has a precondition `not off' and we have to use 
+				-- `active.item' to get the last item of the list. We could have used
+				-- `last_element' but it adds a function call overhead.
+			Result := active.item
 			
 			go_to (old_cursor)
 		end

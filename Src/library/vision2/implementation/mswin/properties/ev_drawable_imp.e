@@ -466,14 +466,9 @@ feature -- Drawing operations
 			source_height := area.height
 			get_dc
 			if
-				pixmap_imp.icon /= Void 
-			and then
-				source_x = 0
-			and then
-				source_y = 0
-			and then
-				source_width = pixmap_width
-			and then
+				pixmap_imp.icon /= Void and then
+				source_x = 0 and then source_y = 0 and then
+				source_width = pixmap_width and then
 				source_height = pixmap_height
 			then
 				dc.draw_icon_ex (

@@ -52,7 +52,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	chdir(eif_access(c_code_dir));
 
 	eiffel_dir = (char *) eif_getenv("EIFFEL3");
-	cmd = cmalloc (40 + strlen (eiffel_dir),1);
+	cmd = cmalloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);

@@ -9,7 +9,8 @@ class
 feature -- Element Rendering
 
 	element_tree_render (schema: DOCUMENT_SCHEMA; tree: EV_TREE) is
-			-- Render elements from `schema' in `tree'
+			-- Render elements from `schema' in `tree'.  If `type_info' write type names next to 
+			-- tree elements
 		require
 			schema_not_void: schema /= Void
 			tree_not_void: tree /= Void
@@ -83,15 +84,14 @@ feature {NONE} -- Element Rendering
 			element_not_void: elem /= Void
 		local
 			item: EV_TREE_ITEM
+			l_string: STRING
 		do
-			create item.make_with_text (elem.name)
+			create item. make_with_text (elem.name)			
+			item.set_data (elem)
+			
 			if (elem.type_name /= Void and then not elem.type_name.is_empty) then
 				item.set_text (elem.name + " (" + elem.type_name + ")")
-			else
-				item.set_text (elem.name)
-			end
-			
-			item.set_data (elem)
+			end			
 			
 			if parent = Void then
 				tree.extend (item)

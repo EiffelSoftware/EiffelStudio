@@ -142,7 +142,7 @@ feature {NONE} -- Translation
 			open_files
 
 			check
-				makefile_sh /= Void
+				makefile_sh_exists: makefile_sh /= Void
 				makefile /= Void
 			end
 

@@ -14,6 +14,9 @@ class
 
 inherit
 	EV_LIST_I
+		redefine
+			ev_children
+		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
@@ -37,7 +40,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			-- The signatures are differents in WEL and Vision.
-			selected_item as single_selected_item
+			selected_item as single_selected_item,
+			select_item as single_select_item
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
@@ -57,10 +61,11 @@ inherit
 			foreground_color
 		redefine
 			selected,
-			select_item,
 			on_lbn_dblclk,
 			on_lbn_selchange,
 			default_style
+		select
+			single_select_item
 		end
 
 	WEL_MULTIPLE_SELECTION_LIST_BOX
@@ -71,7 +76,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			-- The signatures are differents in WEL and Vision.
-			selected_items as multiple_selected_items
+			selected_items as multiple_selected_items,
+			select_item as multiple_select_item
 		undefine
 			-- We undefine the features redefined by EV_WIDGET_IMP,
 			-- and EV_PRIMITIVE_IMP
@@ -91,7 +97,6 @@ inherit
 			foreground_color
 		redefine
 			selected,
-			select_item,
 			on_lbn_dblclk,
 			on_lbn_selchange,
 			default_style
@@ -123,19 +128,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	get_item (index: INTEGER): EV_LIST_ITEM is
-			-- Give the item of the list at the zero-base
-			-- `index'.
-		do
-			Result ?= (ev_children.i_th (index)).interface
-		end
-
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
-			-- selection, it gives the item which has the focus.
+			-- selection, it gives the last selected item.
 		do
 			if is_multiple_selection then
-				Result ?= (ev_children.i_th (caret_index + 1)).interface
+				if last_selected_item /= Void then
+					Result ?= last_selected_item.interface
+				else
+					Result := Void
+				end
 			else
 				Result ?= (ev_children.i_th (single_selected_item + 1)).interface
 			end
@@ -186,12 +188,14 @@ feature -- Status report
 feature -- Status setting
 
 	select_item (index: INTEGER) is
-			   -- Select item at the zero-based `index'.
+			-- Select item at the one-based `index'.
+			-- We cannot redefine this feature because 
+			-- of the postconditions.
 		do
 			if is_multiple_selection then
-				{WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor (index)
+				multiple_select_item (index - 1)
 			else
-				{WEL_SINGLE_SELECTION_LIST_BOX} Precursor (index)
+				single_select_item (index - 1)
 			end
 		end
 
@@ -203,6 +207,7 @@ feature -- Status setting
 		do
 			if not is_multiple_selection then
 				is_multiple_selection := True
+--				set_style (default_style)
 				wel_imp ?= parent_imp
 				wel_destroy
 				wel_make (wel_imp, 0, 0, 0, 0, 0)
@@ -218,13 +223,13 @@ feature -- Status setting
 		do
 			if is_multiple_selection then
 				is_multiple_selection := False
+--				set_style (default_style)
 				wel_imp ?= parent_imp
 				wel_destroy
 				wel_make (wel_imp, 0, 0, 0, 0, 0)
 				copy_list
 			end
 		end
-
 
 feature -- Element change
 
@@ -249,17 +254,10 @@ feature -- Element change
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when an item is
-			-- selected.
+			-- Make `command' executed when the selection has
+			-- changed.
 		do
 			add_command (Cmd_selection, a_command, arguments)
-		end
-
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Make `command' executed when an item is
-			-- selected.
-		do
-			add_command (Cmd_dblclk, a_command, arguments)
 		end
 
 feature {NONE} -- Implementation
@@ -272,7 +270,7 @@ feature {NONE} -- Implementation
 				from
 					ev_children.start
 				until
-					ev_children.after
+				ev_children.after
 				loop
 					add_string (ev_children.item.text)
 					ev_children.forth
@@ -313,25 +311,50 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	last_selected_item: EV_LIST_ITEM_IMP
+
 	on_lbn_selchange is
-			-- The selection is about to change
+			-- The selection has changed.
+			-- We call the selection command of the list and the select
+			-- command of the item if necessary.
 		local
 			item_imp: EV_LIST_ITEM_IMP
 		do
-			execute_command (Cmd_selection, Void)
-			item_imp ?= selected_item.implementation
-			if item_imp /= Void then
-				item_imp.execute_command (Cmd_item_activate, Void)
+			if selected then
+				if is_multiple_selection then
+					item_imp := ev_children @ (caret_index + 1)
+					if item_imp.is_selected then
+						item_imp.execute_command (Cmd_item_activate, Void)
+						last_selected_item := item_imp
+					else
+						item_imp.execute_command (Cmd_item_deactivate, Void)
+					end
+				else
+					item_imp := ev_children @ (single_selected_item + 1)
+					item_imp.execute_command (Cmd_item_activate, Void)
+					if last_selected_item /= Void then
+						last_selected_item.execute_command (Cmd_item_deactivate, Void)
+					end
+					last_selected_item := item_imp
+				end
+			else
+				last_selected_item := Void
 			end
+			execute_command (Cmd_selection, Void)
 		end
 
 	on_lbn_dblclk is
-			-- Double click on a string
+			-- Double click on a string.
+			-- Send the event to the current selected item or to the one
+			-- that has the focus.
 		local
 			item_imp: EV_LIST_ITEM_IMP
 		do
-			execute_command (Cmd_dblclk, Void)
-			item_imp ?= selected_item.implementation
+			if is_multiple_selection then
+				item_imp := ev_children @ (caret_index + 1)
+			else
+				item_imp := ev_children @ (single_selected_item + 1)
+			end
 			if item_imp /= Void then
 				item_imp.execute_command (Cmd_item_dblclk, Void)
 			end

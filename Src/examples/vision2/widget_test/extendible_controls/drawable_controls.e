@@ -60,6 +60,8 @@ feature {NONE} -- Initialization
 			clear_button: EV_BUTTON
 			main_vertical_box: EV_VERTICAL_BOX
 			list_item: EV_LIST_ITEM
+			label: EV_LABEL
+			cell: EV_CELL
 		do	
 			set_text ("Drawing operations")
 			create main_vertical_box
@@ -101,9 +103,26 @@ feature {NONE} -- Initialization
 			mode_combo.first.enable_select
 			create horizontal_box
 			main_vertical_box.extend (horizontal_box)
-			horizontal_box.extend (create {EV_LABEL}.make_with_text ("Drawing mode  "))
+			horizontal_box.extend (create {EV_LABEL}.make_with_text ("Drawing mode :"))
+			horizontal_box.set_padding (5)
 			horizontal_box.disable_item_expand (horizontal_box.i_th (1))
 			horizontal_box.extend (mode_combo)
+			
+				-- Add control for line width
+			create line_width.make_with_value_range (create {INTEGER_INTERVAL}.make (1, 40))
+			create horizontal_box
+			create label.make_with_text ("Line width :")
+			label.align_text_left
+			horizontal_box.extend (label)
+			create cell
+			cell.extend (line_width)
+			horizontal_box.extend (cell)
+			horizontal_box.set_padding (5)
+			horizontal_box.disable_item_expand (horizontal_box.first)
+			line_width.change_actions.force_extend (agent update_line_width)
+			main_vertical_box.extend (horizontal_box)
+			
+			update_labels_minimum_width (main_vertical_box)
 			
 			
 				-- Add drawing operation controls.
@@ -199,7 +218,7 @@ feature {NONE} -- Implementation
 			a_parent: EV_VERTICAL_BOX
 			original_index: INTEGER
 		do
-			update_labels_minimum_width
+			update_labels_minimum_width (argument_holder)
 			a_parent ?= a_radio_button.parent
 			check
 				parent_is_vertical_box: a_parent /= Void
@@ -210,8 +229,8 @@ feature {NONE} -- Implementation
 			parent_window (Current).unlock_update
 		end
 		
-	update_labels_minimum_width is
-			-- Update all labels parented at the second level in `argument_holder'.
+	update_labels_minimum_width (vertical_box: EV_VERTICAL_BOX )is
+			-- Update all labels parented at the second level in `box'.
 		local
 			label_width: INTEGER
 			box: EV_HORIZONTAL_BOX
@@ -219,32 +238,32 @@ feature {NONE} -- Implementation
 		do
 				-- Update widths of all labels
 			from
-				argument_holder.start
+				vertical_box.start
 			until
-				argument_holder.off
+				vertical_box.off
 			loop
-				box ?= argument_holder.item
+				box ?= vertical_box.item
 				if box /= Void then
 					label ?= box.first
 					if label /= Void and then label.minimum_width > label_width then
 						label_width := label.minimum_width
 					end
 				end
-				argument_holder.forth
+				vertical_box.forth
 			end
-				from
-				argument_holder.start
+			from
+				vertical_box.start
 			until
-				argument_holder.off
+				vertical_box.off
 			loop
-				box ?= argument_holder.item
+				box ?= vertical_box.item
 				if box /= Void then
 					label ?= box.first
 					if label /= Void then
 						label.set_minimum_width (label_width)
 					end
 				end
-				argument_holder.forth
+				vertical_box.forth
 			end	
 		end
 		
@@ -497,6 +516,13 @@ feature {NONE} -- Implementation
 			create information_dialog.make_with_text (help)
 			information_dialog.show_modal_to_window (parent_window (Current))
 		end
+		
+	update_line_width is
+			-- Update width of line used on `drawable' to value of `line_width'.
+		do
+			drawable.set_line_width (line_width.value)
+		end
+		
 
 	update_tiled_status is
 			-- Update `drawable' to use tiling dependent on state
@@ -638,6 +664,9 @@ feature {NONE} -- Implementation
 	radio_parent: EV_VERTICAL_BOX
 	
 	mode_combo: EV_COMBO_BOX
+	
+	line_width: EV_SPIN_BUTTON
+		-- A control to determine the width of lines used on `drawable'.
 
 	drawable: EV_DRAWABLE
 		-- The item on which operations must take place.

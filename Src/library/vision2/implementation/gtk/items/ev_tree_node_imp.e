@@ -307,7 +307,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		local
 			gdkpix, gdkmask, text_ptr: POINTER
 			is_leaf, is_expded: INTEGER
-			success: INTEGER
 		do
 			C.gtk_label_get (text_label, $text_ptr)
 			if gtk_pixmap /= NULL and then parent_tree_imp /= Void then

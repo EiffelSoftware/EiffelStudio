@@ -16,7 +16,8 @@ inherit
 	EB_MENUABLE_COMMAND
 		redefine
 			disable_sensitive,
-			enable_sensitive
+			enable_sensitive,
+			new_menu_item
 		end
 
 feature -- Status setting
@@ -91,6 +92,38 @@ feature -- Status setting
 					end
 				end
 				is_sensitive := False
+			end
+		end
+		
+	new_menu_item: EB_COMMAND_MENU_ITEM is
+			-- Create a new menu entry for this command.
+		local
+			mname: STRING
+		do
+				-- Add it to the managed menu items
+			if managed_menu_items = Void then
+				create managed_menu_items.make (1)
+			end
+				-- Create the menu item
+			create Result.make (Current)
+			mname := menu_name.twin
+			if accelerator /= Void then
+				mname.append (Tabulation)
+				mname.append (accelerator.out)
+			end
+			if pixmap /= Void then
+				if pixmap.count >= 2 then
+					Result.set_pixmap (pixmap @ 2)
+				else
+					Result.set_pixmap (pixmap @ 1)
+				end
+			end
+			Result.set_text (mname)
+			Result.select_actions.extend (~execute)
+			if is_sensitive then
+				Result.enable_sensitive
+			else
+				Result.disable_sensitive
 			end
 		end
 

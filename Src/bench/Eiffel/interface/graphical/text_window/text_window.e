@@ -44,7 +44,6 @@ feature
 			set_mode_for_editing;
 			add_callbacks;
 			upper := -1 			-- Init clickable array.
-			set_font_to_default;
 			set_accelerators
 		end;
 

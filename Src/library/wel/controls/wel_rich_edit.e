@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	WEL_RICH_EDIT
+	WEL_RICH_EDIT 
 
 inherit
 	WEL_MULTIPLE_LINE_EDIT
@@ -241,6 +241,7 @@ feature -- Status report
 			!! stream.make
 			text_stream_out (stream)
 			Result := stream.text
+			stream.release_stream
 		end
 
 	count: INTEGER is
@@ -341,6 +342,7 @@ feature -- Status setting
 		do
 			!! stream.make (a_text)
 			text_stream_in (stream)
+			stream.release_stream
 		end
 
 	set_background_color (color: WEL_COLOR_REF) is
@@ -395,6 +397,7 @@ feature -- Basic operations
 		do
 			!! stream.make (file)
 			text_stream_in (stream)
+			stream.release_stream
 		ensure
 			file_closed: file.is_closed
 		end
@@ -411,6 +414,7 @@ feature -- Basic operations
 		do
 			!! stream.make (file)
 			rtf_stream_in (stream)
+			stream.release_stream
 		ensure
 			file_closed: file.is_closed
 		end
@@ -428,6 +432,7 @@ feature -- Basic operations
 		do
 			!! stream.make (file)
 			text_stream_out (stream)
+			stream.release_stream
 		ensure
 			file_closed: file.is_closed
 		end
@@ -445,6 +450,7 @@ feature -- Basic operations
 		do
 			!! stream.make (file)
 			rtf_stream_out (stream)
+			stream.release_stream
 		ensure
 			file_closed: file.is_closed
 		end

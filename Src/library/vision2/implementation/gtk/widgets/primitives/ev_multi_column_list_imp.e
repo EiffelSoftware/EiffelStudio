@@ -582,7 +582,7 @@ feature -- Status setting
 		do
 			if list_widget /= NULL then
 				column_width_changed (
-					feature {EV_GTK_EXTERNALS}.gtk_clist_optimal_column_width (list_widget, a_column - 1),
+					feature {EV_GTK_EXTERNALS}.gtk_clist_optimal_column_width (list_widget, a_column - 1).max (column_width (a_column)),
 					a_column
 				)
 			end

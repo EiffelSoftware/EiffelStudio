@@ -64,6 +64,7 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Removed <code><feature_name>make_sublist</feature_name></code> from <code><class_name>TWO_WAY_LIST</class_name></code> public creation procedures.</item>
 			<item>Made <code><feature_name>file_prunable</feature_name></code> from <code><class_name>FILE</class_name></code> obsolete. Use <code><feature_name>prunable</feature_name></code> instead.</item>
 			<item>Implemented features <code><feature_name>collect</feature_name></code> and <code><feature_name>full_collect</feature_name></code> of class <code><class_name>MEMORY</class_name> for .NET.</code></item>
+			<item>Changed type of feature <code><feature_name>sign</feature_name></code> in classes <code><class_name>INTEGER_8</class_name></code> and <code><class_name>INTEGER_16</class_name></code> to <code><class_name>INTEGER_8</class_name></code> and <code><class_name>INTEGER_16</class_name></code> respectively.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">

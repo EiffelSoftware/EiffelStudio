@@ -329,9 +329,9 @@ feature {NONE} -- Implementation
 			!! ofn
 			!! Result.make
 			Result.set_default_extension ("txt")
-			Result.set_filter (<<"Text file (*.txt)",
-				"Rich Text Format file (*.rtf)">>,
-				<<"*.txt", "*.rtf">>)
+			Result.set_filter (<<"Rich Text file (*.rtf)",
+				"Text file (*.txt)">>,
+				<<"*.rtf", "*.txt">>)
 			Result.add_flag (ofn.Ofn_filemustexist)
 		ensure
 			result_not_void: Result /= Void
@@ -342,9 +342,9 @@ feature {NONE} -- Implementation
 		once
 			!! Result.make
 			Result.set_default_extension ("txt")
-			Result.set_filter (<<"Text file (*.txt)",
-				"Rich Text Format file (*.rtf)">>,
-				<<"*.txt", "*.rtf">>)
+			Result.set_filter (<<"Rich Text file (*.rtf)",
+				"Text file (*.txt)">>,
+				<<"*.rtf", "*.txt">>)
 		ensure
 			result_not_void: Result /= Void
 		end

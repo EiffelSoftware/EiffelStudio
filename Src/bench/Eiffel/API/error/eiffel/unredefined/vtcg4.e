@@ -1,29 +1,27 @@
 indexing
-
-	description: 
-		"Error for violation of the constrained genericity %
-		%rule by a parent type.";
-	date: "$Date$";
+	description: "Error for violation of the constrained genericity %
+				%rule by a parent type."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class VTGG4 
+class
+	VTCG4 
 
 inherit
-
 	EIFFEL_ERROR
 		redefine
 			build_explain
-		end;
+		end
 
 feature -- Properties
 
-	parent_type: CL_TYPE_A;
+	parent_type: CL_TYPE_A
 			-- Parent type involved in the error
 
-	error_list: LINKED_LIST [CONSTRAINT_INFO];
+	error_list: LINKED_LIST [CONSTRAINT_INFO]
 			-- Error description list
 
-	code: STRING is "VTCG";
+	code: STRING is "VTCG"
 			-- Error code
 
 feature -- Output
@@ -32,31 +30,31 @@ feature -- Output
 			-- Build specific explanation explain for current error
 			-- in `st'.
 		do
-			st.add_string ("In parent clause: ");
-			parent_type.append_to (st);
-			st.add_new_line;
+			st.add_string ("In parent clause: ")
+			parent_type.append_to (st)
+			st.add_new_line
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (st);
-				error_list.forth;
-			end;
-		end;
+				error_list.item.build_explain (st)
+				error_list.forth
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_error_list (e: like error_list) is
 			-- Assign `e' to `error_list'.
 		do
-			error_list := e;
-		end;
+			error_list := e
+		end
 
 	set_parent_type (p: CL_TYPE_A) is
 			-- Assign `p' to `parent_type'.
 		do
-			parent_type := p;
-		end;
+			parent_type := p
+		end
 
-end -- class VTGG4
+end -- class VTCG4

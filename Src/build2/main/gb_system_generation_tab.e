@@ -27,8 +27,6 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current' and build widget structure.
-		local
-			label: EV_LABEL
 		do
 			create local_check_button.make_with_text ("attribute declarations grouped?")
 			extend (local_check_button)

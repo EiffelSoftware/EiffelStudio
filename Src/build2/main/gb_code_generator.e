@@ -604,13 +604,7 @@ feature {NONE} -- Implementation
 			-- With information in `element', generate code which will
 			-- set_all_objects.
 		local
-			current_element: XML_ELEMENT
-			current_name: STRING
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
-			current_type: STRING
 			gb_ev_any: GB_EV_ANY
-			current_iterative_name: STRING
 			generated_info: GB_GENERATED_INFO
 			supported_types: ARRAYED_LIST [STRING]
 		do

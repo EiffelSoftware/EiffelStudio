@@ -80,14 +80,14 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the item is activated.
 		do
-			check False end		
+			remove_commands (select_id)
 		end	
 
 	remove_deactivate_commands is
 			-- Empty the list of commands to be executed when
 			-- the item is deactivated.
 		do	
-			check False end
+			remove_commands (deselect_id)
 		end
 
 end -- class EV_ITEM_IMP

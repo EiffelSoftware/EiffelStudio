@@ -761,6 +761,12 @@ jintArray c_new_int_array (JNIEnv *env,jsize len) {
 	return ja;
 }
 
+jlongArray c_new_long_array (JNIEnv *env,jsize len) {
+	jlongArray ja = (*env)->NewLongArray (env,len);
+	c_check_for_exceptions (env);
+	return ja;
+}
+
 void c_set_int_array_element (JNIEnv *env, jintArray array, int indx, jint jc) {
 	jint *c;
 	jboolean copy;

@@ -43,17 +43,9 @@ feature {JAVA_ARGS}
 	jarray: POINTER
 
 invariant
-
 	jarray /= default_pointer
 
 end  --class
-
-
-
-
-
-
-
 
 --|----------------------------------------------------------------
 --| Eiffel2Java: library of reusable components for ISE Eiffel.

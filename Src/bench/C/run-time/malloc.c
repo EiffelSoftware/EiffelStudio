@@ -3845,7 +3845,7 @@ rt_public void eif_trace_types(FILE *f)
 		usage = use * (Size(i) + OVERHEAD);
 		fprintf(f, "\t%s: %d (%d bytes)\n", System(i).cn_generator, use, usage);
 	}
-	fprintf(f, "C memory usage (bytes): %ld\n", c_mem);
+	fprintf(f, "C memory usage (bytes): %ld\n", (long) c_mem);
 	fflush(f);
 
 	EIF_END_GET_CONTEXT

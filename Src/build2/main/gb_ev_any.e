@@ -203,12 +203,7 @@ feature {NONE} -- Implementation
 				p.call ([objects.item])
 				objects.forth
 			end
-				-- We update the system settings to reflect
-				-- the fact that a user modification has taken place.
-				-- This enables us to do things such as enable the save
-				-- options.
-			system_status.enable_project_modified
-			command_handler.update
+			enable_project_modified
 		end
 		
 	for_first_object (p: Procedure [EV_ANY, TUPLE]) is
@@ -216,9 +211,7 @@ feature {NONE} -- Implementation
 		do
 			objects.start
 			p.call ([objects.item])
-				-- See comment in `for_all_obejcts'.
-			system_status.enable_project_modified
-			command_handler.update
+			enable_project_modified
 		end
 		
 		
@@ -237,6 +230,19 @@ feature {NONE} -- Implementation
 			else
 				Result := s
 			end
+		end
+		
+		
+	enable_project_modified is
+			-- Call enable_project_modified on `system_status' and
+			-- update commands to reflect this.
+		do	
+			-- We update the system settings to reflect
+			-- the fact that a user modification has taken place.
+			-- This enables us to do things such as enable the save
+			-- options.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 
 invariant

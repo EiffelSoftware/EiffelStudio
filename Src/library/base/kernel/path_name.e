@@ -36,8 +36,7 @@ feature -- Initialization
 			-- Create path name object and initialize it with the
 			-- path name `p'
 		do
-			count := 0
-			string_make (0)
+			string_make (p.count)
 			append (p)
 		ensure
 			valid_file_name: is_valid

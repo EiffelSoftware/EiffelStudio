@@ -41,7 +41,9 @@ inherit
 		redefine
 			search,
 			set_background_color,
-			set_position
+			set_position,
+			append_text,
+			prepend_text
 		end
 
 	WEL_RICH_EDIT
@@ -116,7 +118,7 @@ feature -- Status setting
 			format: EV_CHARACTER_FORMAT
 		do
 			format := character_format
-			set_caret_position (pos)
+			set_caret_position (pos - 1)
 			set_character_format (format)
 		end
 
@@ -137,6 +139,20 @@ feature -- Element change
 		do
 			wel ?= format.implementation
 			set_character_format_selection (wel)
+		end
+
+	append_text (txt:STRING) is
+			-- append 'txt' into component
+		do
+			set_position (text.count + 1)
+			insert_text (txt)
+		end
+
+	prepend_text (txt: STRING) is
+			-- prepend 'txt' into component
+		do
+			set_position (1)
+			insert_text (txt)
 		end
 
 feature -- Basic operation

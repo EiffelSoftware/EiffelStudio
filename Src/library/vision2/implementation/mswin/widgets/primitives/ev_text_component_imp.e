@@ -49,7 +49,7 @@ feature -- Status report
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := wel_selection_end + 1
+			Result := wel_selection_end
 		end
 
 feature -- Status setting
@@ -92,21 +92,27 @@ feature -- element change
 		do
 			temp_text := text
 			temp_text.insert (txt, position)
-			set_text (temp_text)		
+			set_text (temp_text)
 		end
 
 	append_text (txt:STRING) is
 			-- append 'txt' into component
+		local
+			temp_text: STRING
 		do
-			set_position (text.count + 1)
-			insert_text (txt)
+			temp_text := text
+			temp_text.append (txt)
+			set_text (temp_text)
 		end
 
 	prepend_text (txt: STRING) is
 			-- prepend 'txt' into component
+		local
+			temp_text: STRING
 		do
-			set_position (1)
-			insert_text (txt)	
+			temp_text := text
+			temp_text.prepend (txt)
+			set_text (temp_text)
 		end
 
 feature -- Resizing
@@ -124,7 +130,7 @@ feature -- Basic operation
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
 		do
-			set_selection (start_pos - 1, end_pos - 1)
+			set_selection (start_pos - 1, end_pos)
 		end
 
 	paste (index: INTEGER) is

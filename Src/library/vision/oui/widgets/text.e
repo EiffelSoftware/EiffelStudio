@@ -45,7 +45,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.text (Current, man);
+			implementation := toolkit.text (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -88,7 +88,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.text_word_wrapped (Current, man);
+			implementation := toolkit.text_word_wrapped (Current, man, a_parent);
 			set_default
 		end;
 
@@ -104,7 +104,7 @@ feature -- Callbacks (adding)
 			Valid_command: a_command /= Void
 		do
 			implementation.add_modify_action (a_command, argument)
-		end; -- add_modify_action
+		end;
 
 	add_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to be executed before insert
@@ -116,7 +116,7 @@ feature -- Callbacks (adding)
 			Valid_command: a_command /= Void
 		do
 			implementation.add_motion_action (a_command, argument)
-		end; -- add_motion_action
+		end;
 
 feature -- Callbacks (removing)
 
@@ -128,7 +128,7 @@ feature -- Callbacks (removing)
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_modify_action (a_command, argument)
-		end; -- remove_modify_action
+		end;
 
 	remove_motion_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to be executed before
@@ -138,7 +138,7 @@ feature -- Callbacks (removing)
 			not_a_command_void: a_command /= Void
 		do
 			implementation.remove_motion_action (a_command, argument)
-		end; -- remove_motion_action
+		end;
 
 
 feature -- Text selection
@@ -154,7 +154,7 @@ feature -- Text selection
 		ensure
 			Result >= 0;
 			Result < count
-		end; -- begin_of_selection
+		end;
 
 	clear_selection is
 			-- Clear a selection
@@ -166,7 +166,7 @@ feature -- Text selection
 			implementation.clear_selection
 		ensure
 			not is_selection_active
-		end; -- clear_selection
+		end;
 
 	is_selection_active: BOOLEAN is
 			-- Is there a selection currently active ?
@@ -175,7 +175,7 @@ feature -- Text selection
 			realized: realized
 		do
 			Result := implementation.is_selection_active
-		end; -- is_selection_active
+		end;
 
 	set_selection (first, last: INTEGER) is
 			-- Select the text between `first' and `last'.
@@ -192,7 +192,7 @@ feature -- Text selection
 			is_selection_active;
 			begin_of_selection = first;
 			end_of_selection = last
-		end -- set_selection
+		end
 
 	x_coordinate (char_pos: INTEGER): INTEGER is
 			-- X coordinate relative to the upper left corner
@@ -255,7 +255,7 @@ feature -- Text cursor position
 		ensure
 			Result >= 0;
 			Result <= count
-		end; -- cursor_position
+		end;
 
 	end_of_selection: INTEGER is
 			-- Position of the end of the current selection highlightened
@@ -268,7 +268,7 @@ feature -- Text cursor position
 		ensure
 			Result > 0;
 			Result <= count
-		end; -- end_of_selection
+		end;
 
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position'.
@@ -280,7 +280,7 @@ feature -- Text cursor position
 			implementation.set_cursor_position (a_position)
 		ensure
 			cursor_position = a_position
-		end; -- set_cursor_position
+		end;
 
 feature -- Text margin
 
@@ -291,7 +291,7 @@ feature -- Text margin
 			exists: not destroyed
 		do
 			Result := implementation.margin_height
-		end; -- margin_height
+		end;
 
 	margin_width: INTEGER is
 			-- Distance between left edge of text window and current text,
@@ -300,7 +300,7 @@ feature -- Text margin
 			exists: not destroyed
 		do
 			Result := implementation.margin_width
-		end; -- margin_width
+		end;
 
 	set_margin_height (new_height: INTEGER) is
 			-- Set `margin_height' to `new_height'.
@@ -309,7 +309,7 @@ feature -- Text margin
 			new_height_large_enough: new_height >= 0
 		do
 			implementation.set_margin_height (new_height)
-		end; -- set_margin_height
+		end;
 
 	set_margin_width (new_width: INTEGER) is
 			-- Set `margin_width' to `new_width'.
@@ -318,7 +318,7 @@ feature -- Text margin
 			new_width_large_enough: new_width >= 0
 		do
 			implementation.set_margin_width (new_width)
-		end; -- set_margin_width
+		end;
 
 feature -- Text mode
 
@@ -328,7 +328,7 @@ feature -- Text mode
 			exists: not destroyed
 		do
 			Result := implementation.is_read_only
-		end; -- is_read_only
+		end;
 
 	is_word_wrap_mode: BOOLEAN is
 			-- Is specified that lines are to be broken at word breaks?
@@ -336,7 +336,7 @@ feature -- Text mode
 			exists: not destroyed
 		do
 			Result := implementation.is_word_wrap_mode
-		end; -- is_word_wrap_mode
+		end;
 
 	is_bell_enabled: BOOLEAN is
 			-- Is the bell enabled when an action is forbidden
@@ -353,7 +353,7 @@ feature -- Text mode
 			exists: not destroyed
 		do
 			implementation.allow_action
-		end; -- allow_action
+		end;
 
 	forbid_action is
 			-- Forbid the cursor to move or the text to be modified
@@ -362,7 +362,7 @@ feature -- Text mode
 			exists: not destroyed
 		do
 			implementation.forbid_action
-		end; -- forbid_action
+		end;
 
 	set_read_only is
 			-- Set current text to be read only.
@@ -370,7 +370,7 @@ feature -- Text mode
 			exists: not destroyed
 		do
 			implementation.set_read_only
-		end; -- set_read_only
+		end;
 
 	set_editable is
 			-- Set current text to be editable.
@@ -378,21 +378,7 @@ feature -- Text mode
 			exists: not destroyed
 		do
 			implementation.set_editable
-		end; -- set_editable
-
-	disable_word_wrap is
-				obsolete "Use ``make'' instead (cannot be called after creation)"
-			-- Specify that lines are free to go off the right edge
-			-- of the window.
-		do
-		end; -- disable_word_wrap
-
-	enable_word_wrap is
-			-- Specify that lines are to be broken at word breaks.
-			-- The text does not go off the right edge of the window.
-				obsolete "Use ``make_with_word_wrap'' instead  (cannot be called after creation)"
-		do
-		end; -- disable_word_wrap
+		end;
 
 	disable_verify_bell is
 			-- Disable the bell when an action is forbidden
@@ -484,7 +470,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			implementation.disable_resize
-		end; -- disable_resize
+		end;
  
 	disable_resize_height is
 			-- Disable that current text widget attempts to resize its height
@@ -493,7 +479,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			implementation.disable_resize_height
-		end; -- disable_resize_height
+		end;
  
 	disable_resize_width is
 			-- Disable that current text widget attempts to resize its width
@@ -502,7 +488,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			implementation.disable_resize_width
-		end; -- disable_resize_width
+		end;
 
  	enable_resize is
 			-- Enable that current text widget attempts to resize its width and
@@ -511,7 +497,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			implementation.enable_resize
-		end; -- enable_resize
+		end;
  
 	enable_resize_height is
 			-- Enable that current text widget attempts to resize its height to
@@ -520,7 +506,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			implementation.enable_resize_height
-		end; -- enable_resize_height
+		end;
  
 	enable_resize_width is
 			-- Enable that current text widget attempts to resize its width to
@@ -529,7 +515,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			implementation.enable_resize_width
-		end; -- enable_resize_width
+		end;
 
 	is_height_resizable: BOOLEAN is
 			-- Is height of current text resizable?
@@ -537,7 +523,7 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			Result := implementation.is_height_resizable
-		end; -- is_height_resizable
+		end;
 
 	is_width_resizable: BOOLEAN is
 			-- Is width of current text resizable?
@@ -545,15 +531,15 @@ feature -- Resize policies
 			exists: not destroyed
 		do
 			Result := implementation.is_width_resizable
-		end; -- is_width_resizable
+		end;
 
 	is_any_resizable: BOOLEAN is
-            -- Is width and height of current text resizable?
+			-- Is width and height of current text resizable?
 		require
 			exists: not destroyed
-        do
+		do
 			Result := implementation.is_any_resizable 
-        end;
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 

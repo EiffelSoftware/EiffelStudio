@@ -17,10 +17,11 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Make a printer dc
+			-- Make a dc associated to the default printer.
 		local
 			loc_driver, loc_device, loc_output: ANY
 		do
+			retrieve_default_printer
 			loc_device := device.to_c
 			loc_driver := driver.to_c
 			loc_output := output.to_c
@@ -34,7 +35,7 @@ feature -- Basic operations
 			-- Start the job `title' on the printer
 		require
 			exists: exists
-			title_not_void: title /= Void		
+			title_not_void: title /= Void
 		local
 			a: ANY
 		do
@@ -61,85 +62,47 @@ feature -- Basic operations
 				default_pointer)
 		end
 
-feature -- Status report
-
-	device: STRING is 
-			-- Default printer device installed
-		local
-			a, c: ANY
-			pointer_result: POINTER
-		once
-			!! Result.make (0)
-			a := printer.to_c
-			c := Comma_const.to_c
-			pointer_result := c_strtok ($a, $c)
-			check
-				pointer_result_not_null:
-					pointer_result /= default_pointer
-			end
-			Result.from_c (pointer_result)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	driver: STRING is
-			-- Default printer driver installed
-		local
-			c: ANY
-			pointer_result: POINTER
-		once
-			!! Result.make (0)
-			c := Comma_const2.to_c
-			pointer_result := c_strtok (default_pointer, $c)
-			check
-				pointer_result_not_null:
-					pointer_result /= default_pointer
-			end
-			Result.from_c (pointer_result)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	output: STRING is
-			-- Device name for the physical output medium
-		local
-			c: ANY
-			pointer_result: POINTER
-		once
-			!! Result.make (0)
-			c := Comma_const2.to_c
-			pointer_result := c_strtok (default_pointer, $c)
-			check
-				pointer_result_not_null:
-					pointer_result /= default_pointer
-			end
-			Result.from_c (pointer_result)
-		ensure
-			result_not_void: Result /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	printer: STRING is
-			-- Default printer installed
+	retrieve_default_printer is
+			-- Retrieve the default printer installed and set
+			-- `device', `driver', `output'.
 		local
 			windows: ANY
 			a_device: ANY
 			a_printer: ANY
 			options: ANY
+			printer: STRING
+			device_count: INTEGER
 		do
 			windows := Windows_const.to_c
 			a_device := Device_const.to_c
 			options := Options_const.to_c
-			!! Result.make (Max_printer_name)
-			Result.fill_blank
-			a_printer := Result.to_c
-			Result.head (cwin_get_profile_string ($windows,
+			!! printer.make (Max_printer_name)
+			printer.fill_blank
+			a_printer := printer.to_c
+			printer.head (cwin_get_profile_string ($windows,
 				$a_device, $options, $a_printer,
 				Max_printer_name))
-		ensure
-			result_not_void: Result /= Void
+			device := printer.substring (1,
+				printer.index_of (Comma_const, 1) - 1)
+			device_count := device.count
+			driver := printer.substring (device_count + 2,
+				printer.index_of (Comma_const, device_count + 2) - 1)
+			output := printer.substring (device_count + driver.count + 3,
+				printer.count)
 		end
+
+feature -- Access
+
+	device: STRING
+			-- Default printer device installed
+
+	driver: STRING
+			-- Default printer driver installed
+
+	output: STRING
+			-- Device name for the physical output medium
+
+feature {NONE} -- Implementation
 
 	destroy_item is
 		do
@@ -151,11 +114,9 @@ feature {NONE} -- Implementation
 
 	Device_const: STRING is "device"
 
+	Comma_const: CHARACTER is ','
+
 	Options_const: STRING is ",,,"
-
-	Comma_const: STRING is ","
-
-	Comma_const2: STRING is ", "
 
 	Max_printer_name: INTEGER is 255
 
@@ -181,14 +142,6 @@ feature {NONE} -- Externals
 			"Escape"
 		end
 
-	c_strtok (arg1, arg2: POINTER): POINTER is
-			-- strtok C function
-		external
-			"C [macro <string.h>] (char *, char *): char *"
-		alias
-			"strtok"
-		end	
-
 	Startdoc: INTEGER is
 		external
 			"C [macro <wel.h>]"
@@ -209,6 +162,12 @@ feature {NONE} -- Externals
 		alias
 			"NEWFRAME"
 		end
+
+invariant
+
+	device_not_void: device /= Void
+	driver_not_void: driver /= Void
+	output_not_void: output /= Void
 
 end -- class WEL_DEFAULT_PRINTER_DC
 

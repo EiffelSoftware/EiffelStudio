@@ -12,7 +12,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} first, parent, is_destroyed, is_displayed,
-				has_recursively
+				has_recursively, selected_item
 		undefine
 			is_in_default_state
 		redefine

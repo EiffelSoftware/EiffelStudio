@@ -195,10 +195,7 @@ feature {NONE} -- Implementation
 
 	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>"
 		-- XML format type, included at start of `document'.
-
-	filename: STRING is "D:\work\build2\xml_output.xml"
-		-- File to be generated.
-		
+			
 	generated_names: ARRAYED_LIST [STRING] is
 			-- All names generated automatically.
 		once

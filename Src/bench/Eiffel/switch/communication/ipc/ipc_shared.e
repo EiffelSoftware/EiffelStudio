@@ -87,8 +87,8 @@ feature {NONE} -- Request constants
 	Rqst_application_cwd: INTEGER is 38
 			-- Set current directory for application.
 
-	Rqst_create_ref: INTEGER is 39
-			-- Create a reference based on a basic type (INTEGER => INTEGER_REF...)
+	Rqst_overflow_detection: INTEGER is 39
+			-- Set the call stack depth at which we warn the user.
 
 feature {NONE} -- Resume
 
@@ -155,6 +155,9 @@ feature {NONE} -- Implementation
 
 	Pg_step: INTEGER is 6
 			-- The application completed a step operation.
+
+	Pg_overflow: INTEGER is 7
+			-- The application might run into a stack overflow.
 
 		-- stack request code: same as in ipc/shared/stack.h
 --	Exceptions_stack: INTEGER is 0

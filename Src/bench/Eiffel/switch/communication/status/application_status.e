@@ -72,7 +72,7 @@ feature {STOPPED_HDLR} -- Initialization
 				cont_request := Application.cont_request
 				cont_request.send_breakpoints
 				set_is_stopped (False)
-				cont_request.send_rqst_2 (Rqst_resume, Resume_cont, Application.interrupt_number)
+				cont_request.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 			end
 
 		ensure

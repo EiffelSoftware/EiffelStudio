@@ -426,14 +426,6 @@ feature -- Debug warnings
 			Result := "Could not launch system in %"" + wd + "%"."
 		end
 
-	w_Syntax_error_in_expression (expr: STRING): STRING is
-			-- Message when an expression has an invalid syntax.
-		require
-			expr_not_void: expr /= Void
-		do
-			Result := "%'" + expr + "%' is an invalid or not supported syntax."
-		end
-
 	w_Not_a_condition (expr: STRING): STRING is
 			-- Message when an expression is not a condition.
 		require
@@ -453,6 +445,18 @@ feature -- Debug warnings
 				Result := "%'" + addr + "%' is not a valid address.%N%
 					%Addresses only make sense while an application is stopped."
 			end
+		end
+
+	w_Overflow_detected: STRING is	"Possible stack overflow detected.%N%
+									%The application was paused to let you%N%
+									%examine its current status."
+
+	w_Syntax_error_in_expression (expr: STRING): STRING is
+			-- Message when an expression has an invalid syntax.
+		require
+			expr_not_void: expr /= Void
+		do
+			Result := "%'" + expr + "%' is an invalid or not supported syntax."
 		end
 
 feature -- Cluster tree warnings

@@ -43,13 +43,13 @@ feature
 			elseif is_new_expression then
 				parent_clause_adaptation (name);
 				if not adaptation_from_clause then
-					current_adapter := 
-						current_adapter.new_adapt_feat (name)
+				--	current_adapter := 
+						--current_adapter.adapt_feature (name)
 				end;
-				new_name := current_adapter.internal_name
+				--new_name := current_adapter.internal_name
 			else
-				current_adapter := current_adapter.new_adapt_feat (name);
-				new_name := current_adapter.internal_name;
+				--current_adapter := current_adapter.adapt_feature (name);
+				--new_name := current_adapter.internal_name;
 			end;
 			if new_name = Void then
 				new_name := name
@@ -76,9 +76,9 @@ feature
 
 feature
 
-	starting_adapter: FEAT_ADAPTATION;
+	starting_adapter: LOCAL_FEAT_ADAPTATION;
 
-	current_adapter: FEAT_ADAPTATION;
+	current_adapter: LOCAL_FEAT_ADAPTATION;
 
 	conversion_list: S_REP_NAME_LIST;
 
@@ -102,7 +102,7 @@ feature
 				pair := conversion_list.item;
 				old_feat := pair.old_feature;
 				if old_feat /= Void and then old_feat.feature_name.is_equal (name) then
-					current_adapter.set_new_base (pair.old_feature, pair.new_feature);
+					--current_adapter.set_new_base (pair.old_feature, pair.new_feature);
 					adaptation_from_clause := true;
 				end;
 				conversion_list.forth

@@ -45,6 +45,20 @@ feature -- Initialization
 			create fd.make_with_drawable (my_device)
 		end
 
+	on_repaint_font2 (x, y, w, h: INTEGER) is
+			-- Do the projection
+		local
+			size_test: INTEGER
+		do
+			from size_test := 5 until size_test = 100 loop
+				my_device.font.set_height (size_test)
+				io.put_string (my_device.font.system_name + "%N")
+				my_device.clear
+				my_device.draw_text (20, 20 + size_test, "Bigger " + size_test.out)
+				size_test := size_test + 1
+			end
+		end
+
 	on_repaint_font (x, y, w, h: INTEGER) is
 			-- Do the projection
 		local
@@ -97,6 +111,7 @@ feature -- Initialization
 				p.set_y (150 + i * 20)
 				p.invalidate_absolute_position
 				fd.draw_figure_text (text)
+				io.put_string (text.font.system_name + "%N")
 				i := i + 1
 			end
 		end

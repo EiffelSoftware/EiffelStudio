@@ -354,6 +354,12 @@ feature -- Basic operations
 				new_pos := min
 			elseif scroll_code = Sb_bottom then
 				new_pos := max - p + 1
+			else
+				check
+					code_is_sb_endscroll: scroll_code = Sb_endscroll
+				end
+					-- End of scrolling, keep the previous position
+				new_pos := old_pos
 			end
 			if new_pos > max - p + 1 then
 				new_pos := max - p + 1
@@ -403,6 +409,12 @@ feature -- Basic operations
 				new_pos := min
 			elseif scroll_code = Sb_bottom then
 				new_pos := max - p + 1
+			else
+				check
+					code_is_sb_endscroll: scroll_code = Sb_endscroll
+				end
+					-- End of scrolling, keep the previous position
+				new_pos := old_pos
 			end
 			if new_pos > max - p + 1 then
 				new_pos := max - p + 1

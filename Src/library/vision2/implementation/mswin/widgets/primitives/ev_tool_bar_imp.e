@@ -238,13 +238,25 @@ feature -- Element change
 
 				gray_pixmap := button.gray_pixmap_imp
 				if gray_pixmap /= Void then
-					add_masked_bitmap (gray_pixmap.bitmap, gray_pixmap.mask_bitmap)
-					add_hot_masked_bitmap(pixmap.bitmap, pixmap.mask_bitmap)
+					add_masked_bitmap (
+						gray_pixmap.bitmap,
+						gray_pixmap.mask_bitmap
+					)
+					add_hot_masked_bitmap(
+						pixmap.bitmap,
+						pixmap.mask_bitmap
+					)
 				else
 						-- No gray pixmap, so both normal and hot state will
 						-- have the same bitmap.
-					add_masked_bitmap (pixmap.bitmap, pixmap.mask_bitmap)
-					add_hot_masked_bitmap(pixmap.bitmap, pixmap.mask_bitmap)
+					add_masked_bitmap (
+						pixmap.bitmap,
+						pixmap.mask_bitmap
+					)
+					add_hot_masked_bitmap(
+						pixmap.bitmap,
+						pixmap.mask_bitmap
+					)
 				end
 				but.set_bitmap_index (last_bitmap_index)
 			end
@@ -284,7 +296,8 @@ feature -- Basic operation
 			-- Retrieve the current index of the button with
 			-- `command_id' as id.
 		do
-			Result := cwin_send_message_result (wel_item, Tb_commandtoindex, button.id, 0)
+			Result := cwin_send_message_result (
+				wel_item, Tb_commandtoindex, button.id, 0)
 		end
 
 	compute_minimum_width is
@@ -316,11 +329,12 @@ feature -- Basic operation
 
 	internal_reset_button (but: EV_TOOL_BAR_BUTTON_IMP) is
 			-- XX To update XX
-			-- This function is used each time we change an attribute of a button as the
-			-- text or the pixmap. Yet, it should only be a Temporary implementation.
-			-- For now, no message is available to change the text of a button.
-			-- But this implementation should be changes as soon as windows allow
-			-- a more direct way to change an attribute.
+			-- This function is used each time we change an attribute of a 
+			-- button as the text or the pixmap. Yet, it should only be a 
+			-- Temporary implementation. For now, no message is available to 
+			-- change the text of a button. But this implementation should
+			-- be changes as soon as windows allow a more direct way to 
+			-- change an attribute.
 		local
 			an_index: INTEGER
 		do
@@ -334,53 +348,21 @@ feature -- Basic operation
 			-- Position is relative to the toolbar.
 			-- If there is no button at (`x_pos',`y_pox'), the result is Void.
 		local
-			item_found:BOOLEAN
-			tempx_counter, original_index: INTEGER
-			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
-			found_item: EV_TOOL_BAR_BUTTON_IMP
 			item_index: INTEGER
 		do
-			--| FIXME ARNAUD
-			--| Refactoring 
-			--|----------------------------------------------------
-			--| New code
-			--|----------------------------------------------------
 			item_index := find_button(x_pos, y_pos)
 			if item_index >= 0 then
-				 Result := ev_children.i_th(item_index)
-			end
-			--|----------------------------------------------------
-			--| Old code, used for validing the new one
-			--|----------------------------------------------------
-			list := ev_children
-			original_index := ev_children.index
-			from
-				list.start
-			until
-				list.off or item_found
-			loop
-				if list.item.type = 5 then
-					tempx_counter := tempx_counter + separator_width
-				else
-					tempx_counter := tempx_counter + buttons_width
-				end
-				if tempx_counter > x_pos then
-					found_item := list.item
-					item_found := True
-				end
-				list.forth
-			end
-			ev_children.go_i_th (original_index)
-			--|----------------------------------------------------
-			--| Validing new code
-			--|----------------------------------------------------
-			check
-				result_ok: Result /= Void implies Result = found_item
+				 Result := ev_children.i_th(item_index + 1)
 			end
 		end
 
---	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
-			-- Propagate the `event_id' to the good child.
+--	internal_propagate_event (
+--		event_id: INTEGER;
+--		x_pos: INTEGER;
+--		y_pos: INTEGER; 
+--		ev_data: EV_BUTTON_EVENT_DATA
+--	) is
+--			-- Propagate the `event_id' to the good child.
 --		local
 --			tbutton: EV_TOOL_BAR_BUTTON_IMP
 --		do
@@ -402,7 +384,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (
+		a_x: INTEGER;
+		a_y: INTEGER;
+		a_width: INTEGER;
+		a_height: INTEGER;
+		repaint: BOOLEAN
+	) is
 			-- We must not resize the height of the tool-bar.
 		do
 			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
@@ -473,7 +461,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_one_press) then
 --				execute_command (Cmd_button_one_press, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_button_one_press, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -486,7 +475,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_two_press) then
 --				execute_command (Cmd_button_two_press, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_button_two_press, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -499,7 +489,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_three_press) then
 --				execute_command (Cmd_button_three_press, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_button_three_press, x_pos, y_pos, ev_data)
 --			disable_default_processing
 		end
 
@@ -513,7 +504,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_one_release) then
 --				execute_command (Cmd_button_one_release, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_button_one_release, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -526,7 +518,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_two_release) then
 --				execute_command (Cmd_button_two_release, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_button_two_release, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -539,7 +532,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_three_release) then
 --				execute_command (Cmd_button_three_release, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_button_three_release, x_pos, y_pos, ev_data)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -551,7 +545,8 @@ feature {NONE} -- WEL Implementation
 		do
 --			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 --			ev_data := get_button_data (2, keys, x_pos, y_pos)
---			internal_propagate_event (Cmd_motion_notify, x_pos, y_pos, ev_data)
+--			internal_propagate_event (
+--				Cmd_motion_notify, x_pos, y_pos, ev_data)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -586,7 +581,8 @@ feature {EV_PND_TRANSPORTER_IMP}
 			button_rectangle := button_rect (internal_get_index (but))
 			window_rectangle := window_rect
 			b := bar
-			Result := b.window_rect.top + ((window_rect.height - button_rectangle.height)//2) - 1
+			Result := b.window_rect.top + 
+				((window_rect.height - button_rectangle.height)//2) - 1
 			
 		end
 
@@ -664,6 +660,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/22 03:01:39  pichery
+--| Changed the implementation of `find_item_at_position'. The new
+--| implementation has been valided.
+--|
 --| Revision 1.31  2000/03/22 01:24:40  pichery
 --| Fixed bug with the minimum size (bug also corrected in WEL)
 --|
@@ -699,10 +699,12 @@ end -- class EV_TOOL_BAR_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.24.4.1.2.9  2000/02/01 23:59:34  rogers
---| Changed the type of EV_HASH_TABLE_ITEM_HOLDER_IMP items from EV_TOOL_BAR_BUTTON to EV_TOOL_BAR_ITEM where it is inherited.
+--| Changed the type of EV_HASH_TABLE_ITEM_HOLDER_IMP items 
+--| from EV_TOOL_BAR_BUTTON to EV_TOOL_BAR_ITEM where it is inherited.
 --|
 --| Revision 1.24.4.1.2.8  2000/01/31 18:14:28  rogers
---| Tooltip and set_tooltip inherited from wel_tool_bar have been renamed as wel_tooltip and wel_set_tooltip.
+--| Tooltip and set_tooltip inherited from wel_tool_bar have been 
+--| renamed as wel_tooltip and wel_set_tooltip.
 --|
 --| Revision 1.24.4.1.2.7  2000/01/29 01:05:03  brendel
 --| Tweaked inheritance clause.
@@ -715,13 +717,18 @@ end -- class EV_TOOL_BAR_IMP
 --| Implementation and more removal is needed.
 --|
 --| Revision 1.24.4.1.2.4  2000/01/24 21:21:15  rogers
---| Removed children which was the list of children stored in a hash table. removed clear_items, remove_all_items and reset_contents. find_item_at_position now searches ev_children for the item.
+--| Removed children which was the list of children stored in a hash table. 
+--| removed clear_items, remove_all_items and reset_contents. 
+--| find_item_at_position now searches ev_children for the item.
 --|
 --| Revision 1.24.4.1.2.3  2000/01/21 20:45:21  rogers
---| ev_childen is longer children.linear_representation, and is maintained as well as children. Find item at position has been re-implemented, albeit in a rather slow fashion.
+--| ev_childen is longer children.linear_representation, and is maintained 
+--| as well as children. Find item at position has been re-implemented, 
+--| albeit in a rather slow fashion.
 --|
 --| Revision 1.24.4.1.2.2  1999/12/17 00:32:23  rogers
---| Altered to fit in with the review branch. Make now takes an interface. Swapped children with ev_children for consistancy with other classes.
+--| Altered to fit in with the review branch. Make now takes an interface.
+--| Swapped children with ev_children for consistancy with other classes.
 --|
 --| Revision 1.24.4.1.2.1  1999/11/24 17:30:35  oconnor
 --| merged with DEVEL branch

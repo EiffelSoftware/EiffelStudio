@@ -29,31 +29,31 @@ feature
 			create Result
 		end
 
+--	prepare is
+--		do
+--			post_launch_actions.extend (~show_splash_screen)
+--			post_launch_actions.extend (~prepare_main_window)
+--			post_launch_actions.extend (~remove_splash_screen)
+--		end
+
+--	splash_screen: EV_WINDOW
+--			-- Application logo window.
+
+--	show_splash_screen is
+--			-- Display application logo window.
+--		do
+--			create splash_screen
+--			splash_screen.extend (create {EV_PIXMAP}.make_for_test)
+--			splash_screen.show
+--		end
+
+--	remove_splash_screen is
+--			-- Hide application logo window.
+--		do
+--			splash_screen.destroy
+--		end
+
 	prepare is
-		do
-			post_launch_actions.extend (~show_splash_screen)
-			post_launch_actions.extend (~prepare_main_window)
-			post_launch_actions.extend (~remove_splash_screen)
-		end
-
-	splash_screen: EV_WINDOW
-			-- Application logo window.
-
-	show_splash_screen is
-			-- Display application logo window.
-		do
-			create splash_screen
-			splash_screen.extend (create {EV_PIXMAP}.make_for_test)
-			splash_screen.show
-		end
-
-	remove_splash_screen is
-			-- Hide application logo window.
-		do
-			splash_screen.destroy
-		end
-
-	prepare_main_window is
 			-- Pre launch preperation.
 			--  Create some procedure widgets in a notebook.
 			--  Create one of each Vision widget in a notebook.
@@ -171,6 +171,7 @@ feature
 			nw_combo: EV_COMBO_BOX
 			client_area: EV_CELL
 			combo_item: EV_LIST_ITEM
+			testable: EV_TESTABLE_NON_WIDGET
 		do
 			create Result.make_with_text ("Non-widget tests")
 			create vb
@@ -185,9 +186,12 @@ feature
 			until
 				non_widgets.after
 			loop
-				create combo_item.make_with_text (non_widgets.item.generating_type)
-				nw_combo.extend (combo_item)
-				combo_item.select_actions.extend (~display_test (client_area, non_widgets.item))
+				testable ?= non_widgets.item
+				if testable /= Void then
+					create combo_item.make_with_text (testable.generating_type)
+					nw_combo.extend (combo_item)
+					combo_item.select_actions.extend (~display_test (client_area, testable))
+				end
 				non_widgets.forth
 			end
 		end
@@ -429,6 +433,10 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/26 16:20:54  brendel
+--| Commented out splash screen experiment.
+--| Non-widgets combo now only displays the ones that have a test.
+--|
 --| Revision 1.23  2000/04/26 00:50:01  brendel
 --| Some none widgets are now created with make_for_test.
 --|

@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Status report
 
-	referers (an_object: ANY): ARRAY [ANY] is
+	referers (an_object: ANY): SPECIAL [ANY] is
 			-- Objects that refer to `an_object'.
 		do
 			check

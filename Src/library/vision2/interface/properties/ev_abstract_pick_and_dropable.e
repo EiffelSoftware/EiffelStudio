@@ -88,7 +88,7 @@ feature -- Status setting
 		require
 			a_name_not_void: a_name /= Void
 		do
-			target_name := clone (a_name)
+			target_name := a_name.twin
 		ensure
 			target_name_assigned:
 				a_name /= target_name and a_name.is_equal (target_name)

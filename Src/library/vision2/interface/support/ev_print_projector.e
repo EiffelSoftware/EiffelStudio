@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 						not (create {RAW_FILE}.make (a_context.file_name)).exists
 		do
 			world := a_world
-			context := clone (a_context)
+			context := a_context.twin
 			default_create
 		end
 

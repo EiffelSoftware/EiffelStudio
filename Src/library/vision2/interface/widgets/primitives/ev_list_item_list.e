@@ -73,7 +73,7 @@ feature -- Access
 			create Result.make
 			c := cursor
 			from start until after loop
-				Result.extend (clone (item.text))
+				Result.extend (item.text.twin)
 				forth
 			end
 			go_to (c)

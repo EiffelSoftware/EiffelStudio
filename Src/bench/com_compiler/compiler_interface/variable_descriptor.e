@@ -21,10 +21,13 @@ feature {NONE} -- Initialization
 			non_void_name: n /= Void
 			non_void_signature: s /= Void
 		do
-			name := n
+			name := clone (n)
+			check
+				name_set: n = name
+			end
+			name.to_lower
 			signature := s
 		ensure
-			name_set: n = name
 			signature_set: signature = s
 		end
 

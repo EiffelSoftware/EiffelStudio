@@ -63,60 +63,88 @@ feature -- Access
 
 	Generated_ce_mapper_writer: WIZARD_WRITER_CPP_CLASS is
 			-- Writer for generated C to Eiffel mappers class
+		do
+			Result := Generated_ce_mapper_writer_cell.item
+		end
+
+	set_generated_ce_mapper (a_mapper: WIZARD_WRITER_CPP_CLASS) is
+			-- Set generated CE mapper.
+		do
+			Generated_ce_mapper_writer_cell.put (a_mapper)
+		end
+
+	create_generated_ce_mapper is
+			-- Create generated CE mapper.
 		local
 			a_header_file_name: STRING
 			a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 			empty_string: STRING
 			an_other_source: STRING
-		once
-			create Result.make
-			Result.set_header ("Writer for generated C to Eiffel mappers class")
+			mapper: WIZARD_WRITER_CPP_CLASS
+		do
+			create mapper.make
+			mapper.set_header ("Writer for generated C to Eiffel mappers class")
 			a_header_file_name := clone (Generated_ce_class_name)
-			Result.set_name (clone (a_header_file_name))
+			mapper.set_name (clone (a_header_file_name))
 			a_header_file_name.append (Header_file_extension)
-			Result.set_header_file_name (a_header_file_name)
+			mapper.set_header_file_name (a_header_file_name)
 			create a_constructor.make
 			create empty_string.make (0)
 			a_constructor.set_signature (empty_string)
 			a_constructor.set_body (empty_string)
-			Result.add_constructor (a_constructor)
-			Result.add_import (Ecom_rt_globals_header_file_name)
-			Result.add_import_after (Ecom_generated_rt_globals_header_file_name)
+			mapper.add_constructor (a_constructor)
+			mapper.add_import (Ecom_rt_globals_header_file_name)
+			mapper.add_import_after (Ecom_generated_rt_globals_header_file_name)
 			create an_other_source.make (100)
 			an_other_source.append (Generated_ce_class_name)
 			an_other_source.append (Space)
 			an_other_source.append (Generated_ce_mapper)
 			an_other_source.append (Semicolon)
-			Result.add_other_source (an_other_source)
+			mapper.add_other_source (an_other_source)
+			set_generated_ce_mapper (mapper)
 		end
 
 	Generated_ec_mapper_writer: WIZARD_WRITER_CPP_CLASS is
+			-- Writer for generated Eiffel to C mappers class
+		do
+			Result := Generated_ec_mapper_writer_cell.item
+		end
+
+	set_generated_ec_mapper (a_mapper: WIZARD_WRITER_CPP_CLASS) is
+			-- Set generated Eiffel to C mapper.
+		do
+			Generated_ec_mapper_writer_cell.put (a_mapper)
+		end
+
+	create_generated_ec_mapper is
 			-- Writer for generated Eiffel to C mappers class
 		local
 			a_header_file_name: STRING
 			a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 			empty_string: STRING
 			an_other_source: STRING
-		once
-			create Result.make
-			Result.set_header ("Writer for generated Eiffel to C mappers class")
+			mapper: WIZARD_WRITER_CPP_CLASS
+		do
+			create mapper.make
+			mapper.set_header ("Writer for generated Eiffel to C mappers class")
 			a_header_file_name := clone (Generated_ec_class_name)
-			Result.set_name (clone (a_header_file_name))
+			mapper.set_name (clone (a_header_file_name))
 			a_header_file_name.append (Header_file_extension)
-			Result.set_header_file_name (a_header_file_name)
+			mapper.set_header_file_name (a_header_file_name)
 			create a_constructor.make
 			create empty_string.make (0)
 			a_constructor.set_signature (empty_string)
 			a_constructor.set_body (empty_string)
-			Result.add_constructor (a_constructor)
-			Result.add_import (Ecom_rt_globals_header_file_name)
-			Result.add_import_after (Ecom_generated_rt_globals_header_file_name)
+			mapper.add_constructor (a_constructor)
+			mapper.add_import (Ecom_rt_globals_header_file_name)
+			mapper.add_import_after (Ecom_generated_rt_globals_header_file_name)
 			create an_other_source.make (100)
 			an_other_source.append (Generated_ec_class_name)
 			an_other_source.append (Space)
 			an_other_source.append (Generated_ec_mapper)
 			an_other_source.append (Semicolon)
-			Result.add_other_source (an_other_source)
+			mapper.add_other_source (an_other_source)
+			set_generated_ec_mapper (mapper)
 		end
 
 	Ecom_rt_globals_header_file_name: STRING is "ecom_rt_globals.h"
@@ -140,10 +168,25 @@ feature -- Access
 
 	Alias_c_writer: WIZARD_WRITER_C_FILE is
 			-- Shared alias C writer.
-		once
-			create Result.make
-			Result.set_header_file_name (Alias_header_file_name)
-			Result.set_header ("System's aliases")
+		do
+			Result := Alias_c_writer_cell.item
+		end
+
+	set_alias_c_writer (a_writer: WIZARD_WRITER_C_FILE) is
+			-- Set `Alias_c_writer).
+		do
+			Alias_c_writer_cell.put (a_writer)
+		end
+
+	create_alias_c_writer is
+			--
+		local
+			a_writer: WIZARD_WRITER_C_FILE
+		do
+			create a_writer.make
+			a_writer.set_header_file_name (Alias_header_file_name)
+			a_writer.set_header ("System's aliases")
+			set_alias_c_writer (a_writer)
 		end
 
 	Iunknown_guid: ECOM_GUID is
@@ -873,8 +916,6 @@ feature {WIZARD_MANAGER} -- Element Change
 
 	set_system_descriptor (a_descriptor: like system_descriptor) is
 			-- Set `system_descriptor' with `a_descriptor'.
-		require
-			non_void_descriptor: a_descriptor /= Void
 		do
 			System_descriptor_cell.replace (a_descriptor)
 		ensure
@@ -923,6 +964,24 @@ feature {NONE} -- Implementation
 
 	browse_directory_cell: CELL [STRING] is
 			-- Browse directory shell
+		once
+			create Result.put (Void)
+		end
+
+	Generated_ce_mapper_writer_cell: CELL [WIZARD_WRITER_CPP_CLASS] is
+			-- Generated CE mapper shell.
+		once
+			create Result.put (Void)
+		end
+
+	Generated_ec_mapper_writer_cell: CELL [WIZARD_WRITER_CPP_CLASS] is
+			-- Generated EC mapper shell.
+		once
+			create Result.put (Void)
+		end
+
+	Alias_c_writer_cell: CELL [WIZARD_WRITER_C_FILE] is
+			-- C writer of Alias.
 		once
 			create Result.put (Void)
 		end

@@ -580,11 +580,7 @@ rt_private void display_non_commercial(void)
 	InvalidateRect (NULL, NULL, TRUE); // Wipe the splash out.
 
 #else
-	char *msg;
-
-	msg = "This program has been produced with a demo or non-commercial version\nof ISE EiffelStudio, the full lifecycle object-oriented development\nenvironment from Interactive Software Engineering (ISE).\nThis version is reserved for non-production use of Eiffel. Any other\nuse requires purchase of a license.\n\nISE offers commercial and academic licenses and\nsupport/maintenance contracts covering diverse needs.\n\nFor more information please contact\nISE at the address below or consult the Eiffel products page\nat http://www.eiffel.com/products/.\n\n\tInteractive Software Engineering\n\tISE Building, 360 Storke Road\n\tGoleta CA 93117 USA \n\tTelephone 805-685-1006, Fax 805-685-6869\n\tE-mail sales@eiffel.com\n\thttp://www.eiffel.com\n";
-
-	printf ("%s", msg);
+	display_reminder ();
 #endif // EIF_WIN32
 }
 #endif // NON_COMMERCIAL && WORKBENCH

@@ -15,7 +15,8 @@ inherit
 			set_pointer_style
 		redefine
 			pnd_press,
-			interface
+			interface,
+			escape_pnd
 		end
 
 feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
@@ -56,6 +57,24 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				end
 			end
 		end
+		
+	escape_pnd is
+			-- Escape the pick and drop.
+		do
+				--| This is redefined so that when escape has been pressed, we
+				--| can reset the attributes help in `Current' which relate to
+				--| the current state of a pick and drop.
+			item_is_pnd_source:= False
+			parent_is_pnd_source := False
+			pnd_item_source := Void
+			application_imp.clear_transport_just_ended
+				-- If we are executing a pick and drop
+			if application_imp.pick_and_drop_source /= Void then
+					-- We use default values which cause pick and drop to end.
+				application_imp.pick_and_drop_source.end_transport (0, 0, 2, 0, 0, 0,
+					0, 0)
+			end
+		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttondown message
@@ -85,7 +104,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				end
 				if pnd_item_source.is_dnd_in_transport then
 					Result := True
-				end
+				end								
 			end
 		end
 
@@ -346,6 +365,12 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/06/14 00:12:23  rogers
+--| Redefined escape_pnd, as there were certain state variables for pick and
+--| dropable item holders that were not being reset correctly when escape was
+--| used to cancel a pick and drop. This meant that a pick and drop could then
+--| be started again, when it should not have been.
+--|
 --| Revision 1.11  2001/06/07 23:08:12  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

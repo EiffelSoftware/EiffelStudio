@@ -498,7 +498,8 @@ feature -- Code generation
 		end
 
 	define_entry_point
-			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER)
+			(creation_type_id: INTEGER; a_class_type: CLASS_TYPE; a_feature_id: INTEGER;
+			a_has_arguments: BOOLEAN)
 		is
 			-- Define entry point for IL component from `a_feature_id' in
 			-- class `a_class_type'.
@@ -552,6 +553,13 @@ feature -- Code generation
 				-- Create root object and call creation procedure.
 			il_code_generator.method_body.put_call (feature {MD_OPCODES}.Newobj,
 				constructor_token (creation_type_id), 0, True)
+
+			if a_has_arguments then
+					-- Generate conversion from the command line arguments
+					-- from .NET to an Eiffel array.
+				generate_argument_array
+			end
+
 			if
 				a_class_type.associated_class.is_frozen or 
 				a_class_type.associated_class.is_single
@@ -2070,6 +2078,35 @@ feature {NONE} -- Once per modules being generated.
 				l_ise_assertion_level_attr_token, l_meth_sig)
 		end
 
+feature {NONE} -- Implementation
+
+	generate_argument_array is
+			-- Generate a new argument array for system procedure creation that takes
+			-- an ARRAY [STRING] as argument.
+			-- Note: Maybe we do not need to rely on ARGUMENTS being in the system
+			-- but for the moment it is much easier to call a library function than
+			-- emitting the IL in Eiffel code.
+		require
+			has_arguments_class: system.arguments_class /= Void
+			has_arguments_class_in_system: system.arguments_class.is_compiled
+		local
+			l_arg_type: CLASS_TYPE
+			l_root: FEATURE_I
+		do
+			l_arg_type := system.arguments_class.compiled_class.types.first
+			l_root := system.arguments_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.internal_argument_array_name_id)
+
+			check
+				has_routine: l_root /= Void
+			end
+			
+			il_code_generator.create_object (l_arg_type.implementation_id)
+			il_code_generator.generate_feature_access (
+				il_code_generator.implemented_type (l_root.origin_class_id, l_arg_type.type),
+				l_root.origin_feature_id, 0, True, True)
+		end
+		
 feature {NONE} -- Convenience
 
 	is_by_ref_type (a_type: TYPE_I): BOOLEAN is

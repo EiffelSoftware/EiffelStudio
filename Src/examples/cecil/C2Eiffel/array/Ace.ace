@@ -1,0 +1,44 @@
+system
+	tst 
+
+root
+
+	ROOT_CLASS (ROOT_CLUSTER): "make"
+
+default
+
+	assertion (all);
+	console_application (yes);
+	-- Uncomment the next line on Windows, with ISE Compiler 4.3
+	-- console_application (yes);
+	-- Comment the next line if you do not want to use
+	-- a precompiled EiffelBase library
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base");
+
+cluster
+
+	ROOT_CLUSTER: 		"."
+		visible
+			MY_ARRAY
+		end
+	end;
+
+
+-- EiffelBase
+
+    access:             "$EIFFEL4/library/base/structures/access";
+    cursors:            "$EIFFEL4/library/base/structures/cursors";
+    cursor_tree:        "$EIFFEL4/library/base/structures/cursor_tree";
+    dispenser:          "$EIFFEL4/library/base/structures/dispenser";
+    iteration:          "$EIFFEL4/library/base/structures/iteration";
+    kernel:             "$EIFFEL4/library/base/kernel";
+    list:               "$EIFFEL4/library/base/structures/list";
+    set:                "$EIFFEL4/library/base/structures/set";
+    sort:               "$EIFFEL4/library/base/structures/sort";
+    storage:            "$EIFFEL4/library/base/structures/storage";
+    support:            "$EIFFEL4/library/base/support";
+    table:              "$EIFFEL4/library/base/structures/table";
+    traversing:         "$EIFFEL4/library/base/structures/traversing";
+    tree:               "$EIFFEL4/library/base/structures/tree";
+
+end

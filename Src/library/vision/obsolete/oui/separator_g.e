@@ -7,6 +7,9 @@ indexing
 
 class SEPARATOR_G 
 
+obsolete
+		"Use SEPARATOR instead."
+
 inherit
 
 	SEPARATOR
@@ -46,7 +49,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.separator_g (Current, man);
+			implementation := toolkit.separator_g (Current, man, a_parent);
 			set_default
 		end;
 

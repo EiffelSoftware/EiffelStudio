@@ -57,6 +57,19 @@ feature -- Basic operations
 			interface_generator.generate_functions_and_properties (an_interface)
 		end
 
+	generate_source_interface_features (an_interface: WIZARD_INTERFACE_DESCRIPTOR) is
+			-- Generate source interface features.
+		local
+			c_server_visitor: WIZARD_C_SERVER_VISITOR
+			source_generator: WIZARD_SOURCE_INTERFACE_C_CLIENT_GENERATOR
+		do
+			if need_source_generation (an_interface.implemented_interface) then
+				create c_server_visitor
+				c_server_visitor.visit (an_interface.implemented_interface)
+			end
+			create source_generator.generate (an_interface, coclass_generator.cpp_class_writer)
+		end
+
 end -- class WIZARD_COCLASS_INTERFACE_C_CLIENT_PROCESSOR
 
 --|----------------------------------------------------------------

@@ -197,7 +197,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- Note: Free operators are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				token_buffer.to_lower
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
 				current_position.go_to (token_buffer.count)
 				last_token := TE_FREE
 			}
@@ -497,7 +499,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				token_buffer.to_lower
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
 				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
 			}
@@ -548,7 +552,9 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 ({D}*\.{D}+{E})|({D}+\.{D}*{E})|(({U}(_{T})*)?\.({T}_)*{U}{E})|({U}(_{T})*\.(({T}_)*{U})?{E}) {
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				token_buffer.to_lower
+				if not Case_sensitive then
+					token_buffer.to_lower
+				end
 				current_position.go_to (text_count)
 				last_token := TE_REAL
 			}

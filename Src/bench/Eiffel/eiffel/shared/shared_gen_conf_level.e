@@ -12,8 +12,8 @@ feature -- Generic conformance access
 	None_type: INTEGER_16 is 0xFFFE
 	Like_arg_type: INTEGER_16 is 0xFFFD
 	Like_current_type: INTEGER_16 is 0xFFFC
-	Like_pfeature_type: INTEGER is 0xFFFB
-	Like_feature_type: INTEGER is 0xFFFA
+	Like_pfeature_type: INTEGER_16 is 0xFFFB
+	Like_feature_type: INTEGER_16 is 0xFFFA
 	Tuple_type: INTEGER_16 is 0xFFF9
 	Formal_type: INTEGER_16 is 0xFFF8
 	

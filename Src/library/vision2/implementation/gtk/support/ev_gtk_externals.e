@@ -572,6 +572,10 @@ feature {NONE} -- GTK C functions for progress bar
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_progress_bar_set_orientation (progressbar: POINTER; orientation: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	gtk_progress_bar_update (progressbar: POINTER; percentage: REAL) is
 		external "C | <gtk/gtk.h>"
 		end
@@ -580,12 +584,50 @@ feature {NONE} -- GTK C functions for progress bar
 		external "C | %"gtk_eiffel.h%""
 		end
 
+feature {NONE} -- GTK C functions for file selection
+
+	gtk_file_selection_new (name: POINTER): POINTER is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
+	gtk_file_selection_hide_fileop_buttons (dialog: POINTER) is
+		external
+			"C | <gtk/gtk.h>"
+		end
+
+	gtk_file_selection_get_filename (dialog: POINTER): POINTER is
+		external
+			"C (GtkFileSelection *): EIF_POINTER | <gtk/gtk.h>"
+		end
+
+	gtk_file_selection_set_filename (dialog: POINTER; file: POINTER) is
+		external
+			"C (GtkFileSelection *, gchar*) | <gtk/gtk.h>"
+		end
+
+	c_gtk_file_selection_get_ok_button (dialog: POINTER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"] (GtkFileSelection *): EIF_POINTER"
+		end
+
+	c_gtk_file_selection_get_cancel_button (dialog: POINTER): POINTER is
+		external
+			"C [macro %"gtk_eiffel.h%"] (GtkFileSelection *): EIF_POINTER"
+		end
+
+	c_gtk_file_selection_get_file_name (dialog: POINTER): POINTER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_toolbar_append_item (t: POINTER; text, tip, private_tip,
 							   icon: POINTER; func: POINTER;
 							   object: ANY; p: POINTER) is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 	
 	-- message_d
@@ -633,6 +675,11 @@ feature {NONE} -- GtkWindow function
 	c_gtk_window_set_modal (window: POINTER; state: BOOLEAN) is
 		external
 			"C | %"gtk_eiffel.h%""
+		end
+
+	gtk_window_set_modal (window: POINTER; state: BOOLEAN) is
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- Key Event function

@@ -227,6 +227,16 @@ feature -- Basic operations
 			manager_ready: manager_built
 		end
 
+	transfer is
+			-- Start transfer.
+		require
+			manager_built: manager_built
+		do
+			manager.transfer
+		ensure
+			transfer_finished: transfer_finished
+		end
+
 feature {NONE} -- Implementation
 
 	transactions: ARRAYED_LIST [TRANSACTION]

@@ -454,8 +454,7 @@ EXPORTS
 	eifbcln
 	eifvisex
 	eifuvisex
-	eifreturntype
-	eifrout
+	eifattrtype
 	eiflocate
 
 ;eif_str.h

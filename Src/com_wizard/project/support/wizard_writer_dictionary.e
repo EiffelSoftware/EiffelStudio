@@ -701,7 +701,7 @@ feature -- Generator constants -- 8
 
 	Register: STRING is "Register"
 
-	Get_class_object_function_name: STRING is "get_class_object"
+	Get_class_object_function_name: STRING is "class_object"
 
 	Export_dll_class_name: STRING is "EXPORT_DLL_FEATURES"
 

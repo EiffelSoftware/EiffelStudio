@@ -207,5 +207,21 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 				end
 			end
 		end
+		
+feature {NONE} -- Implementation
+
+	update_object_expansion (is_expanded: BOOLEAN; index: INTEGER) is
+			-- Modify expanded state of `index' child of `object', based on
+			-- `is_expanded'.
+		local
+			child_object: GB_OBJECT
+		do
+			child_object := object.children.i_th (index)
+			if is_expanded then
+				child_object.enable_expanded_in_box
+			else
+				child_object.disable_expanded_in_box
+			end
+		end
 
 end -- class GB_EV_BOX

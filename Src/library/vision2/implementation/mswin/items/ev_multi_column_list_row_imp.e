@@ -181,8 +181,8 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 			-- Position relative to `Parent'.
 		do
 			create Result.make
-			Result.put (parent_imp.child_x, 1)
-			Result.put (parent_imp.child_y (Current), 2)
+			Result.put (parent_imp.get_item_position (index - 1).x, 1)
+			Result.put (parent_imp.get_item_position (index - 1).y, 2)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -212,6 +212,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/04/20 19:54:32  rogers
+--| Relative_postion now uses parent_imp.get_item_position.
+--|
 --| Revision 1.36  2000/04/20 16:38:00  rogers
 --| Removed commented inheritance, Removed redefinition of
 --| destroy.

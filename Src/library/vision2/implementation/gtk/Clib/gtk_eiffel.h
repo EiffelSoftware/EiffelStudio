@@ -74,55 +74,43 @@ void c_gtk_widget_set_flags (GtkWidget *widget, int flags);
 
 EIF_BOOLEAN c_gtk_widget_visible (GtkWidget *w);
 
-/*  
-    c_gtk_widget_realized  (GtkWidget *w) 
-
-    Is widget realised
-    Author: samik
-*/
+/*  c_gtk_widget_realized  (GtkWidget *w) : Is widget realised */
 EIF_BOOLEAN c_gtk_widget_realized (GtkWidget *w); 
 
 /*  
     c_gtk_widget_sensitive  (GtkWidget *w) 
 
    Is widget sensitive
-    Author: samik
 */
 EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w); 
 
 /*  
     the x coordinate of widget
-    Author: leila
 */
 EIF_INTEGER c_gtk_widget_x (GtkWidget *w);
 
 /*  
     the y coordinate of widget
-    Author: leila
 */
 EIF_INTEGER c_gtk_widget_y (GtkWidget *w);
 
 /*  
     the width of widget
-    Author: samik
 */
 EIF_INTEGER c_gtk_widget_width (GtkWidget *w);
 
 /*  
     the height of widget
-    Author: samik
 */
 EIF_INTEGER c_gtk_widget_height (GtkWidget *w);
 
 /*  
     the minimum width of widget
-    Author: samik
 */
 EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w); 
 
 /*  
     the mimimum height of widget
-    Author: samik
 */
 EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w); 
 
@@ -144,9 +132,6 @@ void c_gtk_toolbar_append_item (GtkToolbar *toolbar,
 				GtkWidget *icon,
 				EIF_PROC func, EIF_OBJ object,
 				callback_data_t **p);
-
-
-/*samik*/
 
 				/* return widget name */
 EIF_REFERENCE c_gtk_widget_get_name (GtkWidget *widget);
@@ -212,7 +197,10 @@ void c_gtk_pixmap_read_from_xpm ( GtkPixmap *pixmap,
 				  GtkWidget *pixmap_parent,
 				  char *file_name );
 
-/* List : add a listItem to a list
- * 
- * Author : Leila. */
+/* List : add a listItem to a list */
 void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item);
+
+
+/* Routines to get and set the number of rows and columns of a table. */
+EIF_INTEGER c_gtk_table_rows        (GtkWidget *widget            );
+EIF_INTEGER c_gtk_table_columns     (GtkWidget *widget            );

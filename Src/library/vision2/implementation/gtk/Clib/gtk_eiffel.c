@@ -707,3 +707,25 @@ static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
     c_gtk_widget_show_children (widget);
 }
 
+/*********************************
+ *
+ * Function : `c_gtk_table_rows'
+ *            `c_gtk_table_columns'
+ *
+ * Note : Give the number of rows and columns of
+ *        a table.
+ *
+ * Author : Leila
+ *
+ *********************************/
+
+EIF_INTEGER c_gtk_table_rows (GtkWidget *widget)
+{
+  return (GTK_TABLE(widget)->nrows);
+}
+
+EIF_INTEGER c_gtk_table_columns (GtkWidget *widget)
+{
+  return (GTK_TABLE(widget)->ncols);
+}
+

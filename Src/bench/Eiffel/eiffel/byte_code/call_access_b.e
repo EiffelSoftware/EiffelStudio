@@ -302,34 +302,36 @@ end
 			gen: GEN_TYPE_I
 		do
 			Result := feature_id
-			instant_context_type := context_type
-			if
-				instant_context_type.is_basic
-				and then not instant_context_type.is_bit
-			then
-					-- We perform a non-optimized call on a basic type
-				basic_type ?= instant_context_type
-					-- Process the feature id of `feature_name' in the
-					-- associated reference type
-				associated_class := basic_type.reference_type.base_class
-				feat_tbl := associated_class.feature_table
-				Result := feat_tbl.item_id (feature_name_id).feature_id
-			else
-					-- A generic parameter of current class has been derived
-					-- into an expanded type, so we need to find the `feature_id'
-					-- of the feature we want to call in the context of the 
-					-- expanded class.
-					-- FIXME: Manu 01/24/2000
-					-- We do the search even for a generic class which do not
-					-- have a generic parameter who has been derived into an expanded type
-					-- We could maybe find a way for not performing the check in the
-					-- above case.
-				gen ?= context.current_type
-				if gen /= Void and then instant_context_type.is_true_expanded then
-					cl_type ?= instant_context_type
-					associated_class := cl_type.base_class
+			if precursor_type = Void then
+				instant_context_type := context_type
+				if
+					instant_context_type.is_basic
+					and then not instant_context_type.is_bit
+				then
+						-- We perform a non-optimized call on a basic type
+					basic_type ?= instant_context_type
+						-- Process the feature id of `feature_name' in the
+						-- associated reference type
+					associated_class := basic_type.reference_type.base_class
 					feat_tbl := associated_class.feature_table
 					Result := feat_tbl.item_id (feature_name_id).feature_id
+				else
+						-- A generic parameter of current class has been derived
+						-- into an expanded type, so we need to find the `feature_id'
+						-- of the feature we want to call in the context of the 
+						-- expanded class.
+						-- FIXME: Manu 01/24/2000
+						-- We do the search even for a generic class which do not
+						-- have a generic parameter who has been derived into an expanded type
+						-- We could maybe find a way for not performing the check in the
+						-- above case.
+					gen ?= context.current_type
+					if gen /= Void and then instant_context_type.is_true_expanded then
+						cl_type ?= instant_context_type
+						associated_class := cl_type.base_class
+						feat_tbl := associated_class.feature_table
+						Result := feat_tbl.item_id (feature_name_id).feature_id
+					end
 				end
 			end
 		end

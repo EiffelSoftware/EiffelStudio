@@ -65,7 +65,8 @@ feature -- Start output features
 			i_name.append (Interface_names.d_Degree);
 			i_name.append (current_degree.out);
 			set_project_icon_name (i_name);
-			process_events;
+			update_display;
+			process_events
 		end;
 
 	put_end_degree_6 is
@@ -73,8 +74,6 @@ feature -- Start output features
 		do
 			progress_bar.increase_percentage (100);
 			update_interface (Empty_string, 0, 100);
-			entity_l.set_label_as_string (Interface_names.d_Compilation_class);
-			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
 			degree_l.set_label_as_string (Interface_names.d_Degree);
 		end;
 
@@ -88,6 +87,19 @@ feature -- Start output features
 			total_number := total_nbr;
 			current_degree := degree_nbr;
 			processed := 0;
+
+			tmp := Interface_names.d_Degree;
+			if not tmp.is_equal (degree_l.label_as_string) then
+				degree_l.set_label_as_string (tmp)
+			end;
+			tmp := Interface_names.d_Compilation_class;
+			if not tmp.is_equal (entity_l.label_as_string) then
+				entity_l.set_label_as_string (tmp)
+			end;
+			tmp := Interface_names.d_Classes_to_go;
+			if not tmp.is_equal (nbr_to_go_l.label_as_string) then
+				nbr_to_go_l.set_label_as_string (tmp);
+			end
 
 			current_nbr_to_go_l.set_label_as_string (total_nbr.out);
 			current_degree_l.set_label_as_string (degree_nbr.out)
@@ -173,6 +185,7 @@ feature -- Start output features
 			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go);
 			current_nbr_to_go_l.set_label_as_string (total_num.out);
 			current_entity_l.set_label_as_string (Empty_string);
+			set_project_icon_name (Interface_names.d_Reverse_engineering)
 		end;
 
 	put_start_documentation (total_num: INTEGER; type: STRING) is
@@ -198,6 +211,7 @@ feature -- Start output features
 			end;
 			cancel_b.set_insensitive;
 			progress_bar.reset_percentage
+			set_project_icon_name (Interface_names.d_Documentation)
 		end;
 
 	put_case_message (a_message: STRING) is

@@ -1,8 +1,5 @@
 indexing
-
-	description:
-		"Hash tables, used to store items identified by hashable keys"
-
+	description: "Hash tables, used to store items identified by hashable keys"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +23,6 @@ class HASH_TABLE [G, H -> HASHABLE] inherit
 		end
 
 create
-
 	make
 
 feature -- Initialization
@@ -474,7 +470,7 @@ feature -- Element change
 				other.forth
 			end
 		ensure
-			inserted: other.current_keys.linear_representation.for_all (~has)
+			inserted: other.current_keys.linear_representation.for_all (agent has)
 		end
 		
 feature -- Removal

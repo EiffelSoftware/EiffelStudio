@@ -403,7 +403,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("button_press_event", cmd, arg, ev_data, mouse_button, False)
+			add_command_with_event_data (widget, "button_press_event", cmd, arg, ev_data, mouse_button, False)
 		end
 	
 	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
@@ -414,7 +414,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("button_release_event", cmd, arg, ev_data, mouse_button, False)
+			add_command_with_event_data (widget, "button_release_event", cmd, arg, ev_data, mouse_button, False)
 		end
 	
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
@@ -425,7 +425,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("button_press_event", cmd, arg, ev_data, mouse_button, True)
+			add_command_with_event_data (widget, "button_press_event", cmd, arg, ev_data, mouse_button, True)
 		end		
 	
 	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -433,12 +433,12 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_MOTION_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("motion_notify_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "motion_notify_event", cmd, arg, ev_data, 0, False)
 		end
 	
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		do
-			add_command ("destroy_event", cmd, arg)
+			add_command (widget, "destroy_event", cmd, arg)
 		end
 	
 	add_expose_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -446,7 +446,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_EXPOSE_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("expose_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "expose_event", cmd, arg, ev_data, 0, False)
 		end
 	
 	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -454,7 +454,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("key_press_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "key_press_event", cmd, arg, ev_data, 0, False)
 		end
 			
 	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -462,7 +462,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command_with_event_data ("key_release_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "key_release_event", cmd, arg, ev_data, 0, False)
 		end	
 	
 	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -470,7 +470,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, create a correct object here XX
-			add_command_with_event_data ("enter_notify_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "enter_notify_event", cmd, arg, ev_data, 0, False)
 		end
 	
 	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -478,7 +478,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("leave_notify_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "leave_notify_event", cmd, arg, ev_data, 0, False)
 		end
 
 	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -488,7 +488,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("focus_in_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "focus_in_event", cmd, arg, ev_data, 0, False)
 		end
 
 	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -498,7 +498,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("focus_out_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "focus_out_event", cmd, arg, ev_data, 0, False)
 		end
 
 feature -- Event -- removing command association
@@ -512,11 +512,11 @@ feature -- Event -- removing command association
 			inspect
 				mouse_button
 			when 1 then
-				remove_commands (button_one_press_event_id)
+				remove_commands (widget, button_one_press_event_id)
 			when 2 then
-				remove_commands (button_two_press_event_id)
+				remove_commands (widget, button_two_press_event_id)
 			when 3 then
-				remove_commands (button_three_press_event_id)
+				remove_commands (widget, button_three_press_event_id)
 			end
 		end
 
@@ -529,11 +529,11 @@ feature -- Event -- removing command association
 			inspect
 				mouse_button
 			when 1 then
-				remove_commands (button_one_release_event_id)
+				remove_commands (widget, button_one_release_event_id)
 			when 2 then
-				remove_commands (button_two_release_event_id)
+				remove_commands (widget, button_two_release_event_id)
 			when 3 then
-				remove_commands (button_three_release_event_id)
+				remove_commands (widget, button_three_release_event_id)
 			end
 		end
 
@@ -546,11 +546,11 @@ feature -- Event -- removing command association
 			inspect
 				mouse_button
 			when 1 then
-				remove_commands (button_one_double_click_event_id)
+				remove_commands (widget, button_one_double_click_event_id)
 			when 2 then
-				remove_commands (button_two_double_click_event_id)
+				remove_commands (widget, button_two_double_click_event_id)
 			when 3 then
-				remove_commands (button_three_double_click_event_id)
+				remove_commands (widget, button_three_double_click_event_id)
 			end
 		end
 
@@ -558,14 +558,14 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the mouse move.
 		do
-			remove_commands (motion_notify_event_id)
+			remove_commands (widget, motion_notify_event_id)
 		end
 
 	remove_destroy_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget is destroyed.
 		do
-			remove_commands (destroy_event_id)
+			remove_commands (widget, destroy_event_id)
 		end
 
 	remove_expose_commands is
@@ -573,7 +573,7 @@ feature -- Event -- removing command association
 			-- the widget has to be redrawn because it was exposed from
 			-- behind another widget.
 		do
-			remove_commands (expose_event_id)
+			remove_commands (widget, expose_event_id)
 		end
 
 	remove_key_press_commands is
@@ -582,7 +582,7 @@ feature -- Event -- removing command association
 			-- focus.
 		do
 			
-			remove_commands (key_press_event_id)
+			remove_commands (widget, key_press_event_id)
 		end
 
 	remove_key_release_commands is
@@ -590,35 +590,35 @@ feature -- Event -- removing command association
 			-- a key is released on the keyboard while the widget has the
 			-- focus.
 		do
-			remove_commands (key_release_event_id)
+			remove_commands (widget, key_release_event_id)
 		end
 
 	remove_enter_notify_commands is
 			-- Empty the list of commands to be executed when
 			-- the cursor of the mouse enter the widget.
 		do
-			remove_commands (enter_notify_event_id)
+			remove_commands (widget, enter_notify_event_id)
 		end
 
 	remove_leave_notify_commands is
 			-- Empty the list of commands to be executed when
 			-- the cursor of the mouse leave the widget.
 		do
-			remove_commands (leave_notify_event_id)
+			remove_commands (widget, leave_notify_event_id)
 		end
 
 	remove_get_focus_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget get the focus.
 		do
-			remove_commands (focus_in_event_id)
+			remove_commands (widget, focus_in_event_id)
 		end
 
 	remove_lose_focus_commands is
 			-- Empty the list of commands to be executed when
 			-- the widget lose the focus.
 		do
-			remove_commands (focus_out_event_id)
+			remove_commands (widget, focus_out_event_id)
 		end
 
 feature -- Postconditions

@@ -166,6 +166,15 @@ feature {VALIDATOR_TOOL_DIALOG} -- Validation
 			show_error_report
 		end
 
+	spell_check is
+			-- Spell check all documents in the project
+		local
+			spell_checker: SPELL_CHECKER
+		do			
+			create spell_checker
+			spell_checker.spell_check_documents (documents)
+		end		
+
 feature -- Links
 
 	update_links (a_old, a_new: DOCUMENT_LINK) is

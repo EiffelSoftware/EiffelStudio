@@ -95,6 +95,7 @@ struct utimbuf {
 #include "eif_dir.h"
 
 #include "eif_file.h"
+#include "eif_lmalloc.h"
 
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
@@ -1492,7 +1493,7 @@ rt_public EIF_INTEGER stat_size(void)
 	return (EIF_INTEGER) sizeof(struct stat);
 }
 
-rt_public EIF_BOOLEAN file_creatable(char *path)
+rt_public EIF_BOOLEAN file_creatable(char *path, EIF_INTEGER length)
 {
 	/* Check whether the file `path' may be created: we need write permissions
 	 * in the parent directory and there must not be any file bearing that name
@@ -1501,7 +1502,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	 */
 
 	struct stat buf;			/* Buffer to get parent directory statistics */
-	char temp [PATH_MAX];
+	char *temp = NULL;
 	char *ptr;
 
 #ifdef EIF_VMS
@@ -1510,13 +1511,16 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	 */
 	return (EIF_BOOLEAN) '\1';
 
-	ptr = rindex(temp, ']') + 1;	/* locate the end of the dir path */
-	if (ptr != (char *) 0)
-		*ptr = '\0';		/* now truncate the file name */
-	else
-	/* should use a function like dir_current() here? */
-		strcpy (temp, "[]");
+/* Manu: 09/10/2001: commented out non-executed code */
+/*	ptr = rindex(temp, ']') + 1;	locate the end of the dir path */
+/*	if (ptr != (char *) 0)
+		*ptr = '\0';		now truncate the file name */
+/*	else
+	should use a function like dir_current() here? */
+/*		strcpy (temp, "[]"); */
 #else	/* vms */
+
+	temp = (char *) eif_malloc (length + 1);
 	strcpy (temp, path);
 #if defined EIF_WINDOWS || defined EIF_OS2
 	ptr = rindex(temp, '\\');
@@ -1535,31 +1539,16 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 		strcpy (temp, ".");
 
 		/* Does the parent exist? */
-	if (!file_exists(temp))
+	if (!file_exists(temp)) {
+		eif_free (temp);
 		return (EIF_BOOLEAN) '\0';
+	}
 
 	file_stat(temp, &buf);
-#ifdef EIF_WIN32
-	if (buf.st_mode & S_IFDIR)
-		{
-		if (file_exists(path))
-/* FIXME: check I'm not a directory */
-			return (EIF_BOOLEAN) (access (path, 02) == 0);
-		return (EIF_BOOLEAN) '\01';
-		}
-#else
-	if (buf.st_mode & S_IFDIR)	/* Is parent a directory? */
-		if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
-				/* Check if a non writable file `path' exists */
-			if (file_exists(path)) {
-				file_stat(path, &buf);
-				if (buf.st_mode & S_IFDIR) return (EIF_BOOLEAN) '\0';	/* is a directory */
-				return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
-			}
+	eif_free (temp);
 
-			return (EIF_BOOLEAN) '\01';
-		}
-#endif
+	if (buf.st_mode & S_IFDIR)
+		return (EIF_BOOLEAN) (access (path, W_OK) == 0);
 
 	return (EIF_BOOLEAN) '\0';
 #endif	/* vms */

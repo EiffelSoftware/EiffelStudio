@@ -7,54 +7,47 @@ inherit
 	SHARED_WORKBENCH
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
+
 	SHARED_CONSTRAINT_ERROR
 		undefine
 			copy, setup, consistent, is_equal
-		end;
+		end
+
 	SHARED_EVALUATOR
 		undefine
 			copy, setup, consistent, is_equal
-		end;
-	EIFFEL_LIST_B [TYPE_B]
-		rename
-			make as basic_make,
-			copy as basic_copy
 		end
 
 	EIFFEL_LIST_B [TYPE_B]
 		rename
-			make as basic_make
+			make as old_make
 		redefine
 			copy
-		select
-			copy
 		end
 
-	
 creation
 	make
-
 	
 feature 
 
 -- FIXME: redefine is_equivalent
 
-	argument_names: EIFFEL_LIST_B [ID_AS_B];
+	argument_names: EIFFEL_LIST_B [ID_AS_B]
 			-- Argument names
 
 	make (n: INTEGER) is
 			-- Arrays creation
 		do
-			basic_make (n);
-			!!argument_names.make (n);
+			make_filled (n)
+			!!argument_names.make_filled (n)
 		end;
 
 	copy (other: like Current) is
 			-- Clone
 		do
-			basic_copy (other)
-			set_argument_names (clone (argument_names));
+			{EIFFEL_LIST_B} precursor (other)
+			set_argument_names (clone (argument_names))
 		end;
 
 	set_argument_names (n: like argument_names) is

@@ -63,7 +63,7 @@ feature -- Execution
 					prev_class := System.current_class;
 					prev_cluster := Inst_context.cluster;
 					output_window.clear_window;
-					if workbench.successfull then
+					if workbench.successful then
 						Create_case_storage_directory;
 						!! d.make (Case_storage_path);
 						if not d.exists or else not d.is_readable then

@@ -220,7 +220,7 @@ feature
 		do
 			if bound.is_integer then
 				int_bound ?= bound
-				int_value := int_bound.value
+				int_value := int_bound.integer_32_value
 				Result := int_bound.make_integer
 				if int_value > 0 then
 					positive_value_found := True
@@ -236,7 +236,7 @@ feature
 					constant_i := static.associated_constant
 				end
 				integer_value ?= constant_i.value
-				int_value := integer_value.value
+				int_value := integer_value.integer_32_value
 				Result := bound.make_integer
 				constant_name := constant_i.feature_name
 				if constant_i.is_unique then

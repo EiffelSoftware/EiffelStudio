@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Completing the%N" + Build_wizard_title)
+			title.set_text ("Completing the%N" + Envision_build_wizard_title)
 			message.set_text (final_message)
 		end
 		
@@ -165,8 +165,8 @@ feature {NONE} -- Implementation
 			%%Nproject corresponding to the following information : %N%N" +
 			"Project location : " + project_location_wrapped +
 			"%N%NProject name : " + system_status.current_project_settings.project_name +
-			"%NApplication class name : " + system_status.current_project_settings.application_class_name +
-			"%NWindow class name : " + system_status.current_project_settings.main_window_class_name
+			"%NApplication class : " + system_status.current_project_settings.application_class_name +
+			"%NWindow class : " + system_status.current_project_settings.main_window_class_name
 		ensure
 			Result /= Void
 		end

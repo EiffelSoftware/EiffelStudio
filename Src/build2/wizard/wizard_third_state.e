@@ -41,32 +41,32 @@ feature -- Basic Operation
 			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			first_window.disable_user_resize
 			first_window.disable_maximize
-			create locals_grouped.make_with_text ("Group attribute declarations? e.g. button1, button2: EV_BUTTON")
+			create locals_grouped.make_with_text ("Group attribute declarations e.g. button1, button2: EV_BUTTON")
 			if project_settings.grouped_locals then
 				locals_grouped.enable_select
 			end
 			locals_grouped.select_actions.extend (agent update_locals_grouped)
 			
-			create attributes_local.make_with_text ("Generate attributes as locals?")
+			create attributes_local.make_with_text ("Generate attributes as locals")
 			if project_settings.attributes_local then
 				attributes_local.enable_select
 			end
 			attributes_local.select_actions.extend (agent update_attributes_local)
 			
-			create debugging_information.make_with_text ("Build debugging information in generated features?")
+			create debugging_information.make_with_text ("Build debugging information in generated features")
 			if project_settings.debugging_output then
 				debugging_information.enable_select
 			end
 			debugging_information.select_actions.extend (agent update_debugging_information)
 			
-			create client_of_window.make_with_text ("Generated code is client of EV_TITLED_WINDOW?")
+			create client_of_window.make_with_text ("Generated code is client of EV_TITLED_WINDOW")
 			if project_settings.client_of_window then
 				client_of_window.enable_select
 			end
 			client_of_window.select_actions.extend (agent update_client_information)
 			
 			-- Effectively removed from wizard, as it is not very important.
-			-- For now, it can jsut stay here, but if it is really going to be
+			-- For now, it can just stay here, but if it is really going to be
 			-- removed for good, then just take it out.
 			--choice_box.extend (locals_grouped)
 			choice_box.extend (attributes_local)
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 		do
 			title.set_text ("Code generation")
 			subtitle.set_text ("Select generation options.")
-			message.set_text ("Please select desired code generation options.")
+			message.set_text ("Select desired code generation options:")
 		end
 		
 	update_locals_grouped is

@@ -35,7 +35,7 @@ feature -- Basic Operation
 				--create project_name.make (Current)
 				--project_name.set_label_string_and_size ("Project name", 50)
 				create application_class_name.make (Current)
-				application_class_name.set_label_string_and_size ("Application class name", 50)
+				application_class_name.set_label_string_and_size ("Application class", 50)
 			--	project_name.set_text (project_settings.project_name)
 				application_class_name.set_text (project_settings.application_class_name)
 			--	project_name.generate
@@ -45,7 +45,7 @@ feature -- Basic Operation
 				choice_box.extend (application_class_name.widget)
 			end
 			create window_class_name.make (Current)
-			window_class_name.set_label_string_and_size ("Window class name", 50)
+			window_class_name.set_label_string_and_size ("Window class", 50)
 			window_class_name.set_text (project_settings.main_window_class_name)
 			window_class_name.generate
 			choice_box.extend (window_class_name.widget)
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 		do
 			title.set_text ("System information")
 			subtitle.set_text ("Enter system information.")
-			message.set_text ("Please enter the following system information.")
+			message.set_text ("Enter the following system information:")
 		end
 		
 	project_name: WIZARD_SMART_TEXT_FIELD

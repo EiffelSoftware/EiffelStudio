@@ -81,7 +81,7 @@ Ace_or_Properties: Ace
 	;
 
 Ace: System Root Defaults_opt Clusters Assemblies Externals Generation LAC_END
-			{ create $$.initialize ($1, $2, $3, $4, $6, click_list) }
+			{ create $$.initialize ($1, $2, $3, $4, $5, $6, click_list) }
 	;
 
 System: LAC_SYSTEM Name
@@ -462,10 +462,10 @@ Assembly_list: Assembly ASemi
 			}
 	;
 
-Assembly: Name LAC_COLON Name LAC_COMMA Name LAC_COMMA Name
+Assembly: Name LAC_COLON Name
 			{
-					-- name: "assembly_name", "version", "culture"
-				create $$.initialize ($1, $3, $5, $7, Void)
+					-- name: "assembly_name"
+				create $$.initialize ($1, $3, Void, Void, Void)
 			}
 	|	Name LAC_COLON Name LAC_COMMA Name LAC_COMMA Name LAC_COMMA Name
 			{

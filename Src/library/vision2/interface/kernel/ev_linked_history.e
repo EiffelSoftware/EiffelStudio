@@ -36,9 +36,6 @@ feature -- Basic operations
 
 	undo is
 			-- Undo the last recorded command
-		local
-			t: EV_TEXT_EDITOR_COMMAND
-			i: INTEGER
 		do
 			list.item.undo
 			list.back

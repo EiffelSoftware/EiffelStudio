@@ -110,14 +110,20 @@ inherit
 creation
 	make,
 	make_with_text,
-	my_make
+	work_around_make
 
 feature {NONE} -- Initialization
 
-	my_make (par: WEL_WINDOW) is
+	work_around_make (par: EV_CONTAINER) is
+			-- Because of a bug in the Rich Edit Control (Version 1)
+			-- we need to create the control with the real parent.
+		local
+			ww: WEL_WINDOW
 		do
-			wel_make (par, "this is not nice", 100, 100, 400, 400, 0)
+			ww ?= par.implementation
+			wel_make (ww, "", 0, 0, 0, 0, 0)
 		end
+
 	make_with_text (txt: STRING) is
 		do
 			{EV_TEXT_IMP} Precursor (txt)

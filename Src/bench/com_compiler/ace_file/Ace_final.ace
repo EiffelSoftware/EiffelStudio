@@ -2,7 +2,7 @@ system
 	"ISE.Compiler.exe"
 
 root
-	ECOM_EIF_COMPILER_REGISTRATION: make
+	ECOM_ISE_REGISTRATION: make
 
 default
 	assertion (no)

@@ -339,93 +339,97 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			first_items, second_items, temp_item_list: ARRAYED_LIST [EV_WIDGET]
 			lower, upper: INTEGER
 		do
+				-- Only perfrom subsequent processing of children
+				-- if there is one or more children.
+			if first.widget_count > 0 then
 				
-			full_information := get_unique_full_info (element)
+				full_information := get_unique_full_info (element)
 
-			element_info := full_information @ (column_positions_string)
-			if element_info /= Void then
-				temp_column_positions_string := element_info.data				
-			end
-			
-			element_info := full_information @ (row_positions_string)
-			if element_info /= Void then
-				temp_row_positions_string := element_info.data				
-			end
-			
-			element_info := full_information @ (column_spans_string)
-			if element_info /= Void then
-				temp_column_spans_string := element_info.data				
-			end
-			
-			element_info := full_information @ (row_spans_string)
-			if element_info /= Void then
-				temp_row_spans_string := element_info.data			
-			end
-			
-			check
-				strings_equal_in_length: temp_column_positions_string.count = temp_row_positions_string.count and
-					temp_column_positions_string.count = temp_row_spans_string.count and
-					temp_column_positions_string.count = temp_column_spans_string.count
-				strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
-				strings_correct_length: temp_column_positions_string.count // 4 = first.widget_count
-			end
-			
-				-- We must now remove all the widgets contained in the tables.
-				-- We store them, so they can be replaced, in the correct positions.
-				-- It is not possible to move them, as any existing widgets that have not yet been
-				-- moved to their correct positions may block the desired positions of the current
-				-- widgets. It does not work, just to disable assertion checking here, as I already tried this.
-				-- Julian.
-			first_items := clone (first.item_list)
-			second_items := clone ((objects @ 2).item_list)
-			temp_item_list := first.item_list
-			from
-				temp_item_list.start
-			until
-				temp_item_list.off
-			loop
-				first.prune (temp_item_list.item)
-				temp_item_list.forth
-			end
-			temp_item_list := (objects @ 2).item_list
-			from
-				temp_item_list.start
-			until
-				temp_item_list.off
-			loop
-				(objects @ 2).prune (temp_item_list.item)
-				temp_item_list.forth
-			end
-			
-			from
-				first_items.start
-			until
-				first_items.off
-			loop
-					-- We now read all information from the strings retrieved form the XML.
-				lower := (first_items.index - 1) * 4 + 1
-				upper := (first_items.index - 1) * 4 + 4
-				extracted_column := temp_column_positions_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_column.is_integer
+				element_info := full_information @ (column_positions_string)
+				if element_info /= Void then
+					temp_column_positions_string := element_info.data				
 				end
-				extracted_row := temp_row_positions_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_row.is_integer
-				end
-				extracted_column_span := temp_column_spans_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_column_span.is_integer
-				end
-				extracted_row_span := temp_row_spans_string.substring (lower, upper)
-				check
-					value_is_integer: extracted_row_span.is_integer
-				end
-				first.put (first_items.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
-				(objects @ 2).put (second_items @ first_items.index, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
 				
-				first_items.forth
-			end	
+				element_info := full_information @ (row_positions_string)
+				if element_info /= Void then
+					temp_row_positions_string := element_info.data				
+				end
+				
+				element_info := full_information @ (column_spans_string)
+				if element_info /= Void then
+					temp_column_spans_string := element_info.data				
+				end
+				
+				element_info := full_information @ (row_spans_string)
+				if element_info /= Void then
+					temp_row_spans_string := element_info.data			
+				end
+	
+				check
+					strings_equal_in_length: temp_column_positions_string.count = temp_row_positions_string.count and
+						temp_column_positions_string.count = temp_row_spans_string.count and
+						temp_column_positions_string.count = temp_column_spans_string.count
+					strings_divisible_by_4: temp_column_positions_string.count \\ 4 = 0
+					strings_correct_length: temp_column_positions_string.count // 4 = first.widget_count
+				end
+				
+					-- We must now remove all the widgets contained in the tables.
+					-- We store them, so they can be replaced, in the correct positions.
+					-- It is not possible to move them, as any existing widgets that have not yet been
+					-- moved to their correct positions may block the desired positions of the current
+					-- widgets. It does not work, just to disable assertion checking here, as I already tried this.
+					-- Julian.
+				first_items := clone (first.item_list)
+				second_items := clone ((objects @ 2).item_list)
+				temp_item_list := first.item_list
+				from
+					temp_item_list.start
+				until
+					temp_item_list.off
+				loop
+					first.prune (temp_item_list.item)
+					temp_item_list.forth
+				end
+				temp_item_list := (objects @ 2).item_list
+				from
+					temp_item_list.start
+				until
+					temp_item_list.off
+				loop
+					(objects @ 2).prune (temp_item_list.item)
+					temp_item_list.forth
+				end
+				
+				from
+					first_items.start
+				until
+					first_items.off
+				loop
+						-- We now read all information from the strings retrieved form the XML.
+					lower := (first_items.index - 1) * 4 + 1
+					upper := (first_items.index - 1) * 4 + 4
+					extracted_column := temp_column_positions_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_column.is_integer
+					end
+					extracted_row := temp_row_positions_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_row.is_integer
+					end
+					extracted_column_span := temp_column_spans_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_column_span.is_integer
+					end
+					extracted_row_span := temp_row_spans_string.substring (lower, upper)
+					check
+						value_is_integer: extracted_row_span.is_integer
+					end
+					first.put (first_items.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+					(objects @ 2).put (second_items @ first_items.index, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+					
+					first_items.forth
+				end
+			end
 		end
 
 

@@ -18,6 +18,6 @@ cluster
 		end
 		
 		-- EiffelThread
-	thread:			"$ISE_EIFFEL\library\thread"
+	all thread:			"$ISE_EIFFEL\library\thread"
 
 end -- system base

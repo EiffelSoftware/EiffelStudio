@@ -196,8 +196,6 @@ feature -- Access
 --| 3) edit feature, feature evaluation
 		end
 
-feature -- Measurement
-
 feature -- Status report
 
 	debugging_window: EB_DEVELOPMENT_WINDOW
@@ -276,10 +274,12 @@ feature -- Status setting
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
+			if not Eiffel_system.System.il_generation then
+				step_cmd.enable_sensitive
+				into_cmd.enable_sensitive
+			end
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
-			step_cmd.enable_sensitive
-			into_cmd.enable_sensitive
 			enable_debug
 		end
 
@@ -498,20 +498,6 @@ feature -- Status setting
 			save_resources
 		end
 
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
 feature -- Debugging events
 
 	launch_stone (st: STONE) is
@@ -690,12 +676,6 @@ feature -- Debugging events
 			end
 		end
 
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
 feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
 	system_info_cmd: EB_STANDARD_CMD
@@ -706,6 +686,9 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
 	dotnet_import_cmd: EB_DOTNET_IMPORT_CMD
 			-- Manage .Net assemblies.
+			
+	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD
+			-- Command that displays the EAC browser tool.
 
 feature {EB_DEBUGGER_OBSERVER} -- Manager implementation
 
@@ -793,6 +776,12 @@ feature {NONE} -- Implementation
 			bkpt_info_cmd.enable_sensitive
 			toolbarable_commands.extend (bkpt_info_cmd)
 
+			if display_dotnet_cmd then
+				create eac_browser_cmd.make
+				eac_browser_cmd.disable_sensitive
+				toolbarable_commands.extend (eac_browser_cmd)
+			end
+
 			create system_info_cmd.make
 			system_info_cmd.set_pixmaps (Pixmaps.Icon_system_info)
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
@@ -847,11 +836,6 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (Wizard_precompile_cmd)
 			run_finalized_cmd.enable_sensitive
 			toolbarable_commands.extend (run_finalized_cmd)
-			if display_dotnet_cmd then
-				create dotnet_import_cmd.make
-				dotnet_import_cmd.disable_sensitive
-				toolbarable_commands.extend (dotnet_import_cmd)
-			end
 
 				-- Disable commands if no project is loaded
 			if not Eiffel_project.manager.is_project_loaded then
@@ -879,20 +863,30 @@ feature {NONE} -- Implementation
 	enable_commands_on_project_loaded is
 			-- Enable commands when a new project has been created and compiled
 		do
-			clear_bkpt.enable_sensitive
-			enable_bkpt.enable_sensitive
-			disable_bkpt.enable_sensitive
-			bkpt_info_cmd.enable_sensitive
+			display_error_help_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
 			no_stop_cmd.enable_sensitive
-			step_cmd.enable_sensitive
-			into_cmd.enable_sensitive
-			display_error_help_cmd.enable_sensitive
 			if
 				display_dotnet_cmd and then
 				Eiffel_system.System.il_generation
 			then
-				dotnet_import_cmd.enable_sensitive
+				eac_browser_cmd.enable_sensitive
+				enable_bkpt.disable_sensitive
+				clear_bkpt.disable_sensitive
+				disable_bkpt.disable_sensitive
+				bkpt_info_cmd.disable_sensitive
+				step_cmd.disable_sensitive
+				out_cmd.disable_sensitive
+				into_cmd.disable_sensitive
+			else
+				clear_bkpt.enable_sensitive
+				enable_bkpt.enable_sensitive
+				disable_bkpt.enable_sensitive
+				bkpt_info_cmd.enable_sensitive
+				debug_cmd.enable_sensitive
+				no_stop_cmd.enable_sensitive
+				step_cmd.enable_sensitive
+				into_cmd.enable_sensitive
 			end
 		end
 
@@ -910,7 +904,7 @@ feature {NONE} -- Implementation
 			out_cmd.disable_sensitive
 			display_error_help_cmd.disable_sensitive
 			if display_dotnet_cmd then
-				dotnet_import_cmd.disable_sensitive
+				eac_browser_cmd.disable_sensitive
 			end
 		end
 

@@ -65,6 +65,8 @@ feature -- Menu texts.
 	
 	Show_hide_history_window_menu_text: STRING is "History window"
 	
+	Show_hide_constants_window_menu_text: STRING is "Constants"
+	
 	Show_tool_windows_modeless_text: STRING is "Tools always on top?%TCtrl+T"
 	
 feature -- String representations of class names.

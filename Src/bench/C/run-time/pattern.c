@@ -20,11 +20,12 @@
 #include "malloc.h"
 #include "hector.h"
 #include "except.h"
+#include "eif_globals.h"
 
-#define ASIZE	256		/* The alphabet's size */
+/* #define ASIZE	256 *//* The alphabet's size */ /* %%ss moved to eif_contants.h */
 
-rt_private uint32 delta[ASIZE];	/* Records shifting deltas */
-rt_private uint32 **darray;		/* Pointer to array recording shifting tables */
+rt_private uint32 delta[ASIZE];	/* Records shifting deltas */ /* %%ss mt */
+rt_private uint32 **darray;		/* Pointer to array recording shifting tables */ /* %%ss mt */
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable);			/* Regular pattern compilation */
 rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */
@@ -32,7 +33,7 @@ rt_private void free_structures(int n);	/* Free fuzzy shifting tables */
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen);		/* Sunday's Quick Search algorithm */
 rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy);	/* Fuzzy version of Quick Search */
 
-rt_public int str_str(EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int start, int fuzzy)
+rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int start, int fuzzy)
              		/* The text string */
                 	/* The pattern we are looking for */
          			/* Length of the text */
@@ -120,7 +121,7 @@ rt_private void compile(char *pattern, register int plen, uint32 *dtable)
 		dtable[*p] = plen - i;
 }
 
-rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy)
+rt_private void fuz_compile(EIF_CONTEXT EIF_OBJ pattern, register int plen, int fuzzy)
                 	/* The pattern we want to look at */
                    	/* The length of the pattern */
           			/* Fuzzy control */
@@ -159,7 +160,7 @@ rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy)
 		compile(eif_access(pattern), plen - i, darray[i]);
 }
 
-rt_private void free_structures(int n)
+rt_private void free_structures(EIF_CONTEXT int n)
 {
 	/* Free fuzzy delta shift tables from 0 to 'n' */
 
@@ -168,7 +169,7 @@ rt_private void free_structures(int n)
 	xfree((char *) darray);					/* Free main table */
 }
 
-rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
+rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int plen)
            		/* The text we are searching through */
          		/* Length of the text */
               	/* The pattern string */
@@ -207,7 +208,7 @@ rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
 	return (char *) 0;		/* No substring found */
 }
 
-rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy)
+rt_private char *fuz_qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int plen, int fuzzy)
            		/* The text we are searching through */
          		/* Length of the text */
               	/* The pattern string */

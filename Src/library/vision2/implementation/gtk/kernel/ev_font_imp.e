@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY 
 		do
-			create system_name.make_default
+			create internal_system_name.make_default
 			a := full_name.to_c
 			widget := gdk_font_load ($a)	
  		end
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			create system_name.make_by_name (str)
+			create internal_system_name.make_by_name (str)
 			a := full_name.to_c
 			widget := gdk_font_load ($a)
 		end
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			create system_name.make_by_system_name (str)
+			create internal_system_name.make_by_system_name (str)
 			a := full_name.to_c
 			widget := gdk_font_load ($a)
 		end
@@ -61,7 +61,19 @@ feature -- Access
 	name: STRING is
 			-- Name of the font
 		do
-			Result := system_name.family
+--			Result := internal_system_name.family
+			check
+				To_be_tested: False
+			end
+		end
+
+	system_name: STRING is
+			-- Name of the font
+		do
+--			Result := internal_system_name.family
+			check
+				To_be_tested: False
+			end
 		end
 
 	ascent: INTEGER is
@@ -82,13 +94,13 @@ feature -- Measurement
 			-- Height of the font
 			-- In points.
 		do
-			Result := (system_name.point_size).to_integer
+			Result := (internal_system_name.point_size).to_integer
 		end
 
 	width: INTEGER is
 			-- Average width of the current font
 		do
-			Result := (system_name.average_width).to_integer
+			Result := (internal_system_name.average_width).to_integer
 		end
 
 	maximum_width: INTEGER is
@@ -112,14 +124,14 @@ feature -- Measurement
 			-- Horizontal resolution of screen for which the font
 			-- is designed`
 		do
-			Result := (system_name.resolution_x).to_integer
+			Result := (internal_system_name.resolution_x).to_integer
 		end
 
 	vertical_resolution: INTEGER is
 			-- Vertical resolution of screen for which the font
 			-- is designed
 		do
-			Result := (system_name.resolution_y).to_integer
+			Result := (internal_system_name.resolution_y).to_integer
 		end
 
 feature -- Status report
@@ -133,20 +145,20 @@ feature -- Status report
 	is_bold: BOOLEAN is
 			-- Is the font bold?
 		do
-			Result := system_name.weight = "bold" or
-				system_name.weight = "demibold"
+			Result := internal_system_name.weight = "bold" or
+				internal_system_name.weight = "demibold"
 		end
 
 	is_italic: BOOLEAN is
 			-- Is the font italic?
 		do
-			Result := system_name.slant = "I"
+			Result := internal_system_name.slant = "I"
 		end
 
 	is_proportional: BOOLEAN is
 			-- Is the font proportional?
 		do
-			Result := system_name.spacing = "P"
+			Result := internal_system_name.spacing = "P"
 		end
 
  	is_standard: BOOLEAN is
@@ -157,7 +169,7 @@ feature -- Status report
 	weight: STRING is
 			-- Weight of font (Bold, Medium...)
 		do
-			Result := system_name.weight
+			Result := internal_system_name.weight
 		end
 
 feature -- Status setting
@@ -174,17 +186,17 @@ feature -- Status setting
 			old_weight: STRING
 			a: ANY
 		do
-			old_weight := system_name.weight
+			old_weight := internal_system_name.weight
 			if flag then
-				system_name.set_weight ("Bold")
+				internal_system_name.set_weight ("Bold")
 			else
-				system_name.set_weight ("Medium")
+				internal_system_name.set_weight ("Medium")
 			end
-			a := system_name.basic_name.to_c
+			a := internal_system_name.basic_name.to_c
 			widget := gdk_font_load ($a)
 			if widget = default_pointer then
 				io.put_string ("The bold format is not availbale for this font.%N")
-				system_name.set_weight (old_weight)
+				internal_system_name.set_weight (old_weight)
 				a := full_name.to_c
 				widget := gdk_font_load ($a)
 			end
@@ -196,17 +208,17 @@ feature -- Status setting
 			old_slant: STRING
 			a: ANY
 		do
-			old_slant := system_name.slant
+			old_slant := internal_system_name.slant
 			if flag then
-				system_name.set_slant ("I")
+				internal_system_name.set_slant ("I")
 			else
-				system_name.set_slant ("R")
+				internal_system_name.set_slant ("R")
 			end
-			a := system_name.basic_name.to_c
+			a := internal_system_name.basic_name.to_c
 			widget := gdk_font_load ($a)
 			if widget = default_pointer then
 				io.put_string ("The italic format is not available for this font.%N")
-				system_name.set_slant (old_slant)
+				internal_system_name.set_slant (old_slant)
 				a := full_name.to_c
 				widget := gdk_font_load ($a)
 			end
@@ -253,13 +265,13 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	system_name: EV_FONT_NAME_IMP
+	internal_system_name: EV_FONT_NAME_IMP
 		-- System name of the font
 
 	full_name: STRING is
 			-- The full name of the string.
 		do
-			Result := system_name.system_name
+			Result := internal_system_name.system_name
 		end
 	
 end -- class EV_FONT_IMP

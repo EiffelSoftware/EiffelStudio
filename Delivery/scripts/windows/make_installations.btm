@@ -5,10 +5,6 @@ endiff
 iff not defined INIT_DIR then
 	set INIT_DIR=%@EXECSTR[cd]
 endiff
-iff "%@SEARCH[WfWI.exe]" == "" then
-	echo Cannot find a version of WISE Installer. Cannot continue
-	CANCEL
-endiff
 iff "%@SEARCH[candle.exe]" == "" then
 	echo Cannot find a version of Wix compiler. Cannot continue
 	CANCEL
@@ -20,15 +16,7 @@ endiff
 
 cdd %INIT_DIR\install
 
-remtrace Clean previous installs
-fullrd "*.msi"
-fullrd "*.exe"
-fullrd "*.ini"
-fullrd "*.msm"
-
-dir MSMs
-
-rem In order to work INSTALL_DIR needs to be properly defined (see above checks)
+remtrace In order to work INSTALL_DIR needs to be properly defined (see above checks)
 call build.btm base_libraries
 call build.btm borland
 call build.btm c_library
@@ -39,74 +27,52 @@ call build.btm graphical_libraries
 call build.btm studio_core
 call build.btm vision2_tour
 
-rem EiffelBuild Enterprise
+remtrace EiffelBuild Enterprise
 candle -dISE_RELEASE=enterprise -dISE_MODULE_NAME=build_enterprise -dISE_PRODUCT_NAME="EiffelBuild Enterprise Edition" build.wxs
 light /b %INSTALL_DIR build.wixobj -out MSMs\build_enterprise.msm
 del build.wixobj
 
-rem EiffelBuild Free version
+remtrace EiffelBuild Free version
 candle -dISE_RELEASE=free_version -dISE_MODULE_NAME=build_free -dISE_PRODUCT_NAME="EiffelBuild Evaluation Edition" build.wxs
 light /b %INSTALL_DIR build.wixobj -out MSMs\build_free.msm
 del build.wixobj
 
-rem EiffelStudio Enterprise
+remtrace EiffelStudio Enterprise
 candle -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
 light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_enterprise.msm
 del ec.wixobj
 
-rem EiffelStudio University
+remtrace EiffelStudio University
 candle -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
 light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_university.msm
 del ec.wixobj
 
-
-rem EiffelStudio Free version
+remtrace EiffelStudio Free version
 candle -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
 light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_free.msm
 del ec.wixobj
 
 cdd %INSTALL_DIR
-mkdir setups
-mkdir setups\University
-mkdir setups\Enterprise
-mkdir setups\Enterprise\setup
-mkdir setups\Free
+if not exist setups mkdir setups
+if not exist setups\University mkdir setups\University
+if not exist setups\Enterprise mkdir setups\Enterprise
+if not exist setups\Free mkdir setups\Free
+
+cdd %INIT_DIR\install
 
 remtrace Preparing Free edition
-copy %INIT_DIR\install\Eiffel55.wsi %INIT_DIR\install\Eiffel56_install.wsi
-WfWI %INIT_DIR\install\Eiffel56_install.wsi /c /p FREEVERSION="TRUE" /p EDITIONNAME="Free Edition"
-move %INIT_DIR\install\Eiffel56.msi %INSTALL_DIR\setups\Free\
-del %INIT_DIR\install\Eiffel56_university.msi
-del %INIT_DIR\install\Eiffel56_university.exe
-del %INIT_DIR\install\Eiffel56_university.ini
-del %INIT_DIR\install\Eiffel56_enterprise.msi
-del %INIT_DIR\install\Eiffel56_enterprise.exe
-del %INIT_DIR\install\Eiffel56_enterprise.ini
+candle -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
+light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel56.msi
+del Eiffel.wixobj
 
 remtrace Preparing University edition
-copy %INIT_DIR\install\Eiffel55.wsi %INIT_DIR\install\Eiffel56_install.wsi
-WfWI %INIT_DIR\install\Eiffel56_install.wsi /c /p FREEVERSION="TRUE" /p EDITIONNAME="University Edition"
-move %INIT_DIR\install\Eiffel56_university.exe %INSTALL_DIR\setups\University\install.exe
-move %INIT_DIR\install\Eiffel56_university.ini %INSTALL_DIR\setups\University\install.ini
-move %INIT_DIR\install\Eiffel56_university.msi %INSTALL_DIR\setups\University\
-del %INIT_DIR\install\Eiffel56.msi
-del %INIT_DIR\install\Eiffel56_enterprise.msi
-del %INIT_DIR\install\Eiffel56_enterprise.exe
-del %INIT_DIR\install\Eiffel56_enterprise.ini
+candle -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
+light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel56.msi
+del Eiffel.wixobj
 
 remtrace Preparing Enterprise edition
-copy %INIT_DIR\install\Eiffel55.wsi %INIT_DIR\install\Eiffel56_install.wsi
-WfWI %INIT_DIR\install\Eiffel56_install.wsi /c /p FREEVERSION="FALSE" /p EDITIONNAME="Enterprise Edition"
-copy setup.exe %INSTALL_DIR\setups\Enterprise
-copy %INSTALL_DIR\studio\bitmaps\png\logo.png %INSTALL_DIR\setups\Enterprise\setup\install_logo.png
-copy %INSTALL_DIR\studio\bitmaps\png\activation.png %INSTALL_DIR\setups\Enterprise\setup\install_left.png
-move %INIT_DIR\install\Eiffel56_enterprise.exe %INSTALL_DIR\setups\Enterprise\setup\install.exe
-move %INIT_DIR\install\Eiffel56_enterprise.ini %INSTALL_DIR\setups\Enterprise\setup\install.ini
-move %INIT_DIR\install\Eiffel56_enterprise.msi %INSTALL_DIR\setups\Enterprise\setup\
-del %INIT_DIR\install\Eiffel56.msi
-del %INIT_DIR\install\Eiffel56_university.msi
-del %INIT_DIR\install\Eiffel56_university.exe
-del %INIT_DIR\install\Eiffel56_university.ini
+candle -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
+light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel56.msi
+del Eiffel.wixobj
 
-del %INIT_DIR\install\Eiffel56_install.wsi
 remtrace Your deliveries are now ready

@@ -11,37 +11,44 @@ class SEPARATOR_G
 inherit
 
 	SEPARATOR
-		rename
-			make as separator_make
 		redefine
+			make, make_unmanaged, create_ev_widget,
 			set_action, remove_action,
 			background_color, set_background_color,
 			background_pixmap, set_background_pixmap,
-			foreground, set_foreground,
+			foreground_color, set_foreground_color,
 			implementation
 		end
 
 creation
 
-	make
+	make, make_unmanaged
 	
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a separator gadget with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
-		require
-			Valid_name: a_name /= Void;
-			Valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, True)
+		end;
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged separator gadget with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		do
+			create_ev_widget (a_name, a_parent, False)
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a separator gadget with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.separator_g (Current);
+			implementation := toolkit.separator_g (Current, man);
 			set_default
-		ensure
-			Parent_set: parent = a_parent;
-			Identifier_set: identifier.is_equal (a_name)
 		end;
 
 feature -- Callback (adding and removing)
@@ -69,7 +76,7 @@ feature -- Color
 		do
 		end;
 
-	foreground: COLOR is
+	foreground_color: COLOR is
 			-- Foreground color of primitive widget
 		do
 		end; 
@@ -81,7 +88,7 @@ feature -- Color
 		do
 		end;
 
-	set_foreground (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require else
 			color_not_void: not (new_color = Void)

@@ -68,7 +68,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 			--| as the notification we use, is received by the parent window.
 		do
 			if show_actions_internal /= Void then
-				show_actions_internal.call ([])
+				show_actions_internal.call (Void)
 			end
 				-- We assign `False' to `call_show_actions' so they
 				-- will not be called again unless it is first set to `True'.

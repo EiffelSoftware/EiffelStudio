@@ -522,7 +522,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 					wel_menu ?= sub_menu
 					if wel_menu.item = a_menu.item then
 						if sub_menu.select_actions_internal /= Void then
-							sub_menu.select_actions_internal.call ([])
+							sub_menu.select_actions_internal.call (Void)
 						end
 					else
 						sub_menu.menu_opened (a_menu)

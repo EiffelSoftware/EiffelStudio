@@ -57,7 +57,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble
 		end
 
-	pebble_function: FUNCTION [ANY, TUPLE [], ANY] is
+	pebble_function: FUNCTION [ANY, TUPLE, ANY] is
 			-- Returns data to be transported by pick and drop mechanism.
 		do
 			check
@@ -150,7 +150,7 @@ feature -- Status setting
 			implementation.remove_pebble
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [], ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.

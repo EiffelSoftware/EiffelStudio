@@ -31,7 +31,7 @@ feature -- Status setting
 				parent_imp.check_button (id)
 			end
 			if select_actions_internal /= Void then
-				select_actions_internal.call ([])
+				select_actions_internal.call (Void)
 			end
 		end
 
@@ -43,7 +43,7 @@ feature -- Status setting
 				parent_imp.uncheck_button (id)
 			end
 			if select_actions_internal /= Void then	
-				select_actions_internal.call ([])
+				select_actions_internal.call (Void)
 			end
 		end
 

@@ -639,7 +639,7 @@ feature {EV_ANY_I} -- Implementation
 					-- We call show actions
 				if call_show_actions then
 					if show_actions_internal /= Void then
-						show_actions_internal.call ([])
+						show_actions_internal.call (Void)
 					end
 					call_show_actions := False
 				end
@@ -765,7 +765,7 @@ feature {EV_ANY_I} -- Implementation
 			-- User clicked on "close" ('X').
 		do
 			if close_request_actions_internal /= Void then
-				close_request_actions_internal.call ([])
+				close_request_actions_internal.call (Void)
 			end
 				-- Do not actually close the window.
 			set_default_processing (False)
@@ -993,7 +993,7 @@ feature {EV_ANY_I} -- Implementation
 					--| as a child. This message is only sent once, and not repeatedly as
 					--| we require for the idle actions.
 				if application_imp.idle_actions /= Void then
-					application_imp.idle_actions.call ([])	
+					application_imp.idle_actions.call (Void)	
 				end
 				fire_dialog_show_actions (cwel_integer_to_pointer (lparam))
 			else
@@ -1021,7 +1021,7 @@ feature {EV_ANY_I} -- Implementation
 						application_imp.set_window_with_focus (titled_window.interface)
 					end
 					if focus_in_actions_internal /= Void then
-						focus_in_actions_internal.call ([])
+						focus_in_actions_internal.call (Void)
 					end
 				end
 			end

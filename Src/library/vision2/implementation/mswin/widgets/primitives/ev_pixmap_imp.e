@@ -332,7 +332,7 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.set_pebble (a_pebble)
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [], ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
 			-- Set `a_function' to compute `pebble'.
 		do
 			promote_to_widget

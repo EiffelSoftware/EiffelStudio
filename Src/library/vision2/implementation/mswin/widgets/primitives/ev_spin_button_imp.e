@@ -584,7 +584,7 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 			if virtual_key = Vk_return then
 				internal_text_field.set_caret_position (1)
 				translate_text
-				interface.return_actions.call ([])
+				interface.return_actions.call (Void)
 				if last_change_value /= value then
 					if change_actions_internal /= Void then
 						last_change_value := value

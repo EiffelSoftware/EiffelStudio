@@ -502,7 +502,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 				--| multiple times due to this propagation.
 			if focus_on_widget.item /= Current then
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ([])
+					focus_in_actions_internal.call (Void)
 				end
 			end
 			focus_on_widget.put (Current)
@@ -730,7 +730,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			
 					-- Call the return actions
 				if return_actions_internal /= Void then
-					return_actions_internal.call ([])
+					return_actions_internal.call (Void)
 				end
 			end
 		end
@@ -789,7 +789,7 @@ feature {NONE} -- WEL Implementation
 					-- to the combo box.
 				if old_selected_item /= Void then
 					if old_selected_item.deselect_actions_internal /= Void then
-						old_selected_item.deselect_actions_internal.call ([])
+						old_selected_item.deselect_actions_internal.call (Void)
 					end
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call
@@ -800,7 +800,7 @@ feature {NONE} -- WEL Implementation
 					-- to the combo box.
 				if new_selected_item /= Void then
 					if new_selected_item.select_actions_internal /= Void then
-						new_selected_item.select_actions_internal.call ([])
+						new_selected_item.select_actions_internal.call (Void)
 					end
 					if select_actions_internal /= Void then
 						select_actions_internal.call
@@ -818,7 +818,7 @@ feature {NONE} -- WEL Implementation
 		do
 			if not equal (text, last_edit_change) then
 				if change_actions_internal /= Void then
-					change_actions_internal.call ([])
+					change_actions_internal.call (Void)
 				end
 			end
 			last_edit_change := text

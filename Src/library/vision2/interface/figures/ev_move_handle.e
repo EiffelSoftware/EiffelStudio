@@ -180,10 +180,10 @@ feature {NONE} -- Events
 	Min_integer: INTEGER is -100000
 			-- Lowest possible integer value.
 
-	show_agent: PROCEDURE [ANY, TUPLE []]
+	show_agent: PROCEDURE [ANY, TUPLE]
 			-- Connected to `enter_actions'.
 
-	hide_agent: PROCEDURE [ANY, TUPLE []]
+	hide_agent: PROCEDURE [ANY, TUPLE]
 			-- Connected to `leave_actions'.
 
 	on_enter is
@@ -226,7 +226,7 @@ feature {NONE} -- Events
 			-- User pressed pointer button on `Current'.
 		do
 			if b = 1 then
-				start_actions.call ([])
+				start_actions.call (Void)
 				enable_capture
 				rel_x := (x / point.origin.scale_x_abs).rounded - point.x
 				rel_y := (y / point.origin.scale_y_abs).rounded - point.y
@@ -278,7 +278,7 @@ feature {NONE} -- Events
 		do
 			if has_capture then
 				disable_capture
-				end_actions.call ([])
+				end_actions.call (Void)
 			end
 		end
 

@@ -334,7 +334,7 @@ feature {EV_ANY, EV_ANY_I} -- Accelerators
 			check
 				accel_list_has_an_accel_id: accel_list.has (an_accel_id)
 			end
-			accel_list.item (an_accel_id).actions.call ([])
+			accel_list.item (an_accel_id).actions.call (Void)
 		end
 
 	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
@@ -463,11 +463,11 @@ feature {NONE} -- WEL Implementation
 					set_text (icon_name)
 				end
 				if minimize_actions_internal /= Void then
-					minimize_actions_internal.call ([])
+					minimize_actions_internal.call (Void)
 				end
 			elseif size_type = Wel_window_constants.Size_maximized then
 				if maximize_actions_internal /= Void then
-					maximize_actions_internal.call ([])
+					maximize_actions_internal.call (Void)
 				end
 					-- We must now override restore_actions if we are changing state
 					-- from minimimzed to maximized. This is not considered a restore.
@@ -502,7 +502,7 @@ feature {NONE} -- WEL Implementation
 				-- `fire_restore_actions'.
 			if fire_restore_actions then
 				if restore_actions_internal /= Void then
-					restore_actions_internal.call ([])
+					restore_actions_internal.call (Void)
 				end
 				fire_restore_actions := False
 			end

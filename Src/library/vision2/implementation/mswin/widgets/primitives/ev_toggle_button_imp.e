@@ -50,7 +50,7 @@ feature -- Status setting
 			-- Ensure `is_selected' is True.
 		do
 			is_selected := True
-			select_actions.call ([])
+			select_actions.call (Void)
 			invalidate
 		ensure then
 			is_selected = True
@@ -60,7 +60,7 @@ feature -- Status setting
 			-- Ensure `is_selected' is False.
 		do
 			is_selected := False
-			select_actions.call ([])
+			select_actions.call (Void)
 			invalidate
 		ensure then
 			is_selected = False
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation, focus event
 		do
 			is_selected := not is_selected
 			invalidate
-			select_actions.call ([])
+			select_actions.call (Void)
 		ensure then
 			state_changed: old is_selected = not is_selected
 		end
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation, focus event
 		do
 			is_selected := not is_selected
 			invalidate
-			select_actions.call ([])
+			select_actions.call (Void)
 		ensure
 			state_changed: old is_selected = not is_selected
 		end

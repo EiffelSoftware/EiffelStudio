@@ -600,7 +600,7 @@ feature {EV_INTERNAL_TOOL_BAR_IMP} -- Click action event
 			end
 
 				-- Call the actions.
-			but.interface.select_actions.call ([])
+			but.interface.select_actions.call (Void)
 		end
 
 	button_tooltip_text (command_id: INTEGER): STRING is

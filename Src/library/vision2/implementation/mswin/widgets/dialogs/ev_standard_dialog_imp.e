@@ -37,12 +37,12 @@ feature -- Status setting
 			if selected then
 				selected_button := internal_accept
 				if ok_actions_internal /= Void then
-					ok_actions_internal.call ([])
+					ok_actions_internal.call (Void)
 				end
 			else
 				selected_button := ev_cancel
 				if cancel_actions_internal /= Void then
-					cancel_actions_internal.call ([])
+					cancel_actions_internal.call (Void)
 				end
 			end
 		end

@@ -528,7 +528,7 @@ feature -- IL code generation
 			class_c := context.class_type.associated_class
 			local_list := context.local_list
 			local_list.wipe_out
-			feat := Context.associated_class.feature_table.item_id (feature_name_id)
+			feat := Context.current_feature
 			inh_assert := Context.inherited_assertion
 			inh_assert.init
 			Context.set_origin_has_precondition (True)
@@ -778,7 +778,7 @@ feature -- Byte code generation
 		do
 			local_list := context.local_list
 			local_list.wipe_out
-			feat := Context.associated_class.feature_table.item_id (feature_name_id)
+			feat := Context.current_feature
 			inh_assert := Context.inherited_assertion
 			inh_assert.init
 			Context.set_origin_has_precondition (True)

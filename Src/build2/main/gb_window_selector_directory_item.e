@@ -55,10 +55,9 @@ feature {NONE} -- Initialization
 			common_make
 			set_name (a_name)
 			tree_item.set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
-			tree_item.drop_actions.extend (agent add_object)
-			tree_item.drop_actions.extend (agent add_component)
+			tree_item.drop_actions.extend (agent handle_object_drop)
 			tree_item.drop_actions.extend (agent add_new_directory_via_pick_and_drop)
-			tree_item.drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
+			tree_item.drop_actions.set_veto_pebble_function (agent veto_object_drop)
 			tree_item.set_pebble (Current)
 			is_grayed_out := True
 		ensure
@@ -122,13 +121,12 @@ feature {GB_WINDOW_SELECTOR, GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 
 feature -- Implementation
 
-	add_component (a_component: GB_COMPONENT) is
-			-- Add representation of `a_component to `Current'.
+	handle_object_drop (object_pebble: GB_OBJECT_STONE) is
+			-- Respond to the dropping of `object_pebble' onto `selector_item'.
 		require
-			a_component_not_void: a_component /= Void
+			object_pebble_not_void: object_pebble /= Void
 		do
-			add_object (a_component.object)
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			add_object (object_pebble.object)
 		end
 
 	add_object (an_object: GB_OBJECT) is
@@ -140,12 +138,12 @@ feature -- Implementation
 			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
-	restrict_drop_to_valid_types (an_object: GB_OBJECT): BOOLEAN is
-			-- Return `True' if `an_object' is a top level object.
+	veto_object_drop (object_stone: GB_OBJECT_STONE): BOOLEAN is
+			-- Return `True' if `object_stone' is a top level object.
 		require
-			an_object_not_void: an_object /= Void
+			object_stone_not_void: object_stone /= Void
 		do
-			Result := not an_object.is_instance_of_top_level_object
+			Result := not object_stone.is_instance_of_top_level_object
 		ensure
 		-- | FIXME Crashes transport. No idea why.
 		--	Result = (an_object.object /= Void) implies an_object.is_top_level_object

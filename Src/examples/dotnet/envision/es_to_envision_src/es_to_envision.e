@@ -111,7 +111,7 @@ feature -- File management
 			ace_file: PLAIN_TEXT_FILE
 			path: STRING
 		do
-			path := src_path + "examples\dotnet\envision\samples"
+			path := src_path + "examples\dotnet\envision"
 			if (create {DIRECTORY}.make (path)).exists then
 				create ace_file.make_open_write (path + "\envision.ace")
 				ace_file.put_string (ace_file_content)
@@ -121,7 +121,7 @@ feature -- File management
 			end
 		end
 
-	Relative_ace_file_path: STRING is "examples\dotnet\envision\samples\envision.ace"
+	Relative_ace_file_path: STRING is "examples\dotnet\envision\envision.ace"
 			-- Path to ace file from sanmples delivery root
 
 	Ise_src_key: STRING is "EIFFEL_SRC"

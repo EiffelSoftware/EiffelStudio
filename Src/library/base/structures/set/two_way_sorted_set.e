@@ -178,6 +178,7 @@ feature -- Duplication
 			pos := cursor;
 			Result := new_chain;
 			Result.finish;
+			Result.forth;
 			from
 			until
 				(counter = n) or else after

@@ -12,7 +12,6 @@ inherit
 			make as entity_make
 		redefine
 			eiffelized_consumed_entities,
-			dotnet_name,
 			is_property,
 			is_property_or_event,
 			is_public,
@@ -32,19 +31,27 @@ feature {NONE} -- Initialization
 			non_void_declaring_type: decl_type /= Void
 			getter_or_setter: cp_getter = Void implies cp_setter /= Void
 			getter_or_setter: cp_setter = Void implies cp_getter /= Void
+		local
+			l_name: like dotnet_eiffel_name
 		do
 			n := dn
 			p := pub
 			t := stat
 			entity_make (dn, pub, decl_type)
 			g := cp_getter
+				-- Remove `get_' from property name.
+			if g /= Void then
+				l_name := g.dotnet_eiffel_name
+				if l_name.count > 4 and then l_name.substring (1, 4).is_equal ("get_") then
+					l_name.remove_head (4)
+				end
+			end
 			s := cp_setter
 		ensure
 			dotnet_name_set: dotnet_name = dn
 			getter_set: getter = cp_getter
 			setter_set: setter = cp_setter
 		end
-
 	
 feature -- ConsumerWrapper functions
 
@@ -86,12 +93,6 @@ feature -- Access
 			end
 		end
 
-	dotnet_name: STRING is
-			-- .NET property name
-		do
-			Result := n
-		end
-
 	getter: CONSUMED_FUNCTION is
 			-- Property getter function
 		do
@@ -106,9 +107,6 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	n: like dotnet_name
-			-- Internal data for `dotnet_name'.
-	
 	g: like getter
 			-- Internal data for `getter'.
 	

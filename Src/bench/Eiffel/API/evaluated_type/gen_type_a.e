@@ -10,7 +10,7 @@ inherit
 		redefine
 			generics, valid_generic, parent_type, dump, append_to,
 			has_like, duplicate, solved_type, type_i, good_generics,
-			error_generics, check_generics, has_formal_generic, instantiated_in,
+			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, same_class_type, format, is_equivalent,
 			storage_info, storage_info_with_name
@@ -370,7 +370,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i := 1
 				count := generics.count
 				!!duplicate_generics.make (1, count)
-				Result := clone (current)
+				Result := clone (Current)
 				Result.set_generics (duplicate_generics)
 			until
 				i > count
@@ -434,7 +434,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	check_generics (context_class: CLASS_C) is
+	check_constraints (context_class: CLASS_C): LINKED_LIST [CONSTRAINT_INFO] is
 			-- Check the constrained genericity validity rule
 		local
 			i, count: INTEGER
@@ -475,11 +475,17 @@ feature {COMPILER_EXPORTER} -- Primitives
 					pos := other_formal_type.position
 					if formal_type /= Void then
 						if not formal_type.same_as (generics.item (pos)) then
-							generate_constraint_error (formal_type, constraint_type, i)
+							if Result = Void then
+								!! Result.make
+							end
+							generate_constraint_error (Result, formal_type, constraint_type, i)
 						end
 					else
 						if not to_check.conform_to (generics.item (pos)) then
-							generate_constraint_error (to_check, constraint_type, i)
+							if Result = Void then
+								!! Result.make
+							end
+							generate_constraint_error (Result, to_check, constraint_type, i)
 						end
 					end
 				elseif constraint_type.generics /= Void then
@@ -490,11 +496,16 @@ feature {COMPILER_EXPORTER} -- Primitives
 				
 				if not conformance_on_formal and then not to_check.conform_to (constraint_type) then
 						-- Error
-					generate_constraint_error (to_check, constraint_type, i)
+					if Result = Void then
+						!! Result.make
+					end
+					generate_constraint_error (Result, to_check, constraint_type, i)
 				end
 
 					-- Recursion
-				gen_param.check_generics (context_class)
+					-- FIXME: We need to append the list coming from the recursive
+					-- call to the parent one
+				Result := gen_param.check_constraints (context_class)
 
 				i := i + 1
 			end
@@ -680,7 +691,8 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 feature {NONE} -- Error generation
 
-	generate_constraint_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
+	generate_constraint_error (error_list: LINKED_LIST [CONSTRAINT_INFO];
+		current_type, constraint_type: TYPE_A; position: INTEGER) is
 			-- Build the error corresponding to the VTCG error
 		local
 			constraint_info: CONSTRAINT_INFO
@@ -690,7 +702,14 @@ feature {NONE} -- Error generation
 			constraint_info.set_actual_type (current_type)
 			constraint_info.set_formal_number (position)
 			constraint_info.set_constraint_type (constraint_type)
-			Constraint_error_list.extend (constraint_info)
+			error_list.extend (constraint_info)
+		end
+
+	generate_constraint_creation_routine_error (current_type, constraint_type: TYPE_A; position: INTEGER) is
+			-- Build the error corresponding to the VTCG error
+		local
+			constraint_info: CONSTRAINT_INFO
+		do
 		end
 
 invariant

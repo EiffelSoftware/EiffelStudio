@@ -25,8 +25,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_CONSTRAINT_ERROR
-
 	SHARED_TYPE_I
 
 feature -- Properties
@@ -340,19 +338,9 @@ feature {COMPILER_EXPORTER} -- Access
 		do
 		end
 
-	check_constraints (context_class: CLASS_C) is
+	check_constraints (context_class: CLASS_C): LINKED_LIST [CONSTRAINT_INFO] is
 			-- Check the constained genericity validity rule and leave
 			-- error info in `Constraint_error_list'
-		require
-			good_argument: context_class /= Void
-			good_generic_count: good_generics
-		do
-			Constraint_error_list.wipe_out
-			check_generics (context_class)
-		end
-
-	check_generics (context_class: CLASS_C) is
-			-- Check the constained genericity validity rule
 		require
 			good_argument: context_class /= Void
 			good_generic_count: good_generics

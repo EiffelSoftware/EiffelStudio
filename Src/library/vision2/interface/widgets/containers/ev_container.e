@@ -223,15 +223,15 @@ feature -- Contract support
 	all_radio_buttons_connected: BOOLEAN is
 			-- Are all radio buttons in this container connected?
 		local
-			cur: CURSOR
+			l: LINEAR [EV_WIDGET]
 			peer: EV_RADIO_PEER
-			peers: LINKED_LIST [like peer]
+			peers: LINKED_LIST [EV_RADIO_PEER]
 		do
-			cur := cursor
+			l := linear_representation
 			from
-				start
+				l.start
 			until
-				off or else not Result
+				l.off or else not Result
 			loop
 				peer ?= item
 				if peer /= Void then
@@ -241,9 +241,8 @@ feature -- Contract support
 						Result := peers.has (peer)
 					end
 				end
-				forth
+				l.forth
 			end
-			go_to (cur)
 			if peers = Void then
 				Result := True
 			end
@@ -289,6 +288,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/25 22:45:15  brendel
+--| Fixed compiler errors in all_radio_buttons_connected.
+--|
 --| Revision 1.17  2000/02/25 22:34:51  brendel
 --| Added invariant all_radio_buttons_connected.
 --| No actions have been taken to satisfy it yet!

@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
 						if is_paramflag_fout (func_desc.arguments.item.flags) then
 							
-							variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
+							variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 							variables.append (New_line_tab)
 							return_value.append (out_value_set_up (func_desc.arguments.item.name, visitor))
 							return_value.append (New_line_tab)
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 							arguments.append (func_desc.arguments.item.name)
 							arguments.append (Close_parenthesis)
 						else
-							variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
+							variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 							variables.append (New_line_tab)
 							if visitor.is_basic_type or visitor.is_enumeration then
 								arguments.append (Comma_space)
@@ -247,8 +247,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	in_variable_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
-			-- Code to set in variable
+	variable_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+			-- Code to set variable.
 		require
 			non_void_visitor: visitor /= Void
 			non_void_arg_name: arg_name /= Void
@@ -302,6 +302,10 @@ feature {NONE} -- Implementation
 				Result.append (Dot)
 				Result.append (visitor.ce_function_name)
 				Result.append (Space_open_parenthesis)
+				if is_void (visitor.vt_type) and visitor.eiffel_type.is_equal ("CELL [POINTER]") then
+					Result.append ("(void **)")
+				end
+
 				Result.append (arg_name)
 
 				if visitor.writable then
@@ -314,47 +318,6 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		end
 
-	out_variable_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
-			-- Code to set inout variable
-		require
-			non_void_visitor: visitor /= Void
-			non_void_string: arg_name /= Void
-			valid_arg_name: not arg_name.empty
-		do
-			create Result.make (1000)
-
-			Result.append (Eif_object)
-			Result.append (Space)
-			Result.append (Tmp_clause)
-			Result.append (arg_name)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-			Result.append (Tmp_clause)
-			Result.append (arg_name)
-			Result.append (Space_equal_space)
-			Result.append (Eif_protect)
-			Result.append (Space_open_parenthesis)
-			if visitor.need_generate_ce then
-				Result.append (Generated_ce_mapper)
-			else
-				Result.append (Ce_mapper)
-			end
-
-			Result.append (Dot)
-			Result.append (visitor.ce_function_name)
-			Result.append (Space_open_parenthesis)
-
-			Result.append (arg_name)
-
-			if visitor.writable then
-				Result.append (Comma_space)
-				Result.append (Null)
-			end
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-		end
-
 	out_value_set_up (arg_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to return out value
 		require
@@ -363,8 +326,13 @@ feature {NONE} -- Implementation
 			valid_arg_name: not arg_name.empty
 		do
 			create Result.make (1000)
-
-			if not visitor.is_array_basic_type and not visitor.is_structure_pointer then
+				
+			if 
+				not visitor.is_array_basic_type and 
+				not visitor.is_structure_pointer and 
+				not visitor.is_interface_pointer and
+				not (is_void (visitor.vt_type) and is_byref (visitor.vt_type))
+			then
 				if visitor.need_generate_ec then
 					Result.append (Generated_ec_mapper)
 				else

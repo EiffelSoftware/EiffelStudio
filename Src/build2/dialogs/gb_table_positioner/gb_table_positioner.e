@@ -234,13 +234,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	set_item_span (v: EV_WIDGET; columns, rows: INTEGER) is
-			-- Adjust `v' so that it spans `columns', `rows' within
-			-- objects.
-		do
-			editor.set_item_span (v, columns, rows)
-		end
-		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
 			-- Move `v' to `a_column', `a_row' and resize to `columns', `rows'.
 		do

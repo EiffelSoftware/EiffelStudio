@@ -131,7 +131,7 @@ rt_private void fuz_compile(char *pattern, register int plen, int fuzzy)
 	fuzzy++;		/* Number of delta tables to build */
 
 	/* First dynamically allocate the array of delta shift tables */
-	darray = (uint32 **) malloc(fuzzy * sizeof(uint32 *));
+	darray = (uint32 **) eif_malloc (fuzzy * sizeof(uint32 *));
 	if (darray == (uint32 **) 0) {
 		xraise(EN_MEM);
 		return;					/* Exception ignored */
@@ -139,7 +139,7 @@ rt_private void fuz_compile(char *pattern, register int plen, int fuzzy)
 
 	/* Now allocate each of the delta tables */
 	for (i = 0; i < fuzzy; i++) {
-		new = (uint32 *) malloc(ASIZE * sizeof(uint32));
+		new = (uint32 *) eif_malloc (ASIZE * sizeof(uint32));
 		if (new == (uint32 *) 0) {			/* No more memory */
 			free_structures(i - 1);			/* Free already allocated tables */
 			xraise(EN_MEM);					/* No more memory */
@@ -161,8 +161,8 @@ rt_private void free_structures(int n)
 
 	/* Free fuzzy delta shift tables from 0 to 'n' */
 	for (i = 0; i < n; i++)
-		free((char *) (darray[i]));	/* Free allocated delta tables */
-	free((char *) darray);					/* Free main table */
+		eif_free (darray[i]);	/* Free allocated delta tables */
+	eif_free (darray);					/* Free main table */
 
 	EIF_END_GET_CONTEXT
 }

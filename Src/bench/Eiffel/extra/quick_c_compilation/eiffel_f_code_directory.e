@@ -127,7 +127,7 @@ feature
 			end
 		end
 
-	convert is
+	concat is
 			-- Concatene all the x/c files and modify the Makefile.
 		local
 			l_files: ARRAYED_LIST [C_FILE]
@@ -230,7 +230,7 @@ feature
 						print (l_directories.item.name)
 						io.new_line
 					end
-					l_directories.item.convert
+					l_directories.item.concat
 					l_directories.forth
 				end
 				debug ("OUTPUT")

@@ -16,7 +16,7 @@ feature
 		do
 			if a_arguments.count > 2 then
 				create top_directory.make(a_arguments.item(1), a_arguments.item (2), True)
-				top_directory.convert
+				top_directory.concat
 			else
 				print_usage
 			end

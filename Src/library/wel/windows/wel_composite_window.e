@@ -806,7 +806,7 @@ feature {NONE} -- Implementation
 			on_window_pos_changing (wp)
 		end
 
-	on_wm_color (wparam, lparam: INTEGER): INTEGER is
+	on_wm_color (wparam, lparam: INTEGER) is
 			-- Common routine for Wm_ctlcolor messages.
 		require
 			exists: exists
@@ -819,16 +819,13 @@ feature {NONE} -- Implementation
 			hwnd_control := cwin_get_wm_command_hwnd (wparam, lparam)
 			if hwnd_control /= default_pointer then
 				control ?= windows.item (hwnd_control)
-				if control /= Void then
-					if control.exists then
-						!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
-						paint_dc.set_text_color (control.foreground_color)
-						paint_dc.set_background_color (control.background_color)
-						!! brush.make_solid (control.background_color)
-						Result := brush.to_integer
-						disable_default_processing
-						paint_dc.release
-					end
+				if control /= Void and then control.exists then
+					!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+					paint_dc.set_text_color (control.foreground_color)
+					paint_dc.set_background_color (control.background_color)
+					!! brush.make_solid (control.background_color)
+					set_message_return_value (brush.to_integer)
+					disable_default_processing
 				end
 			end
 		end
@@ -876,15 +873,15 @@ feature {WEL_DISPATCHER}
 			if msg = Wm_paint then
 				on_wm_paint (wparam)
 			elseif msg = Wm_ctlcolorstatic then
-				Result := on_wm_color (wparam, lparam)
+				on_wm_color (wparam, lparam)
 			elseif msg = Wm_ctlcolorbtn then
-				Result := on_wm_color (wparam, lparam)
+				on_wm_color (wparam, lparam)
 			elseif msg = Wm_ctlcoloredit then
-				Result := on_wm_color (wparam, lparam)
+				on_wm_color (wparam, lparam)
 			elseif msg = Wm_ctlcolorlistbox then
-				Result := on_wm_color (wparam, lparam)
+				on_wm_color (wparam, lparam)
 			elseif msg = Wm_ctlcolorscrollbar then
-				Result := on_wm_color (wparam, lparam)
+				on_wm_color (wparam, lparam)
 			elseif msg = Wm_command then
 				on_wm_command (wparam, lparam)
 			elseif msg = Wm_syscommand then

@@ -196,6 +196,10 @@ feature -- Messages
 		do
 			if background_brush /= Void then
 				paint_dc.fill_rect (invalid_rect, background_brush)
+					--| Disable the default windows processing and return correct
+					--| value to Windows, i.e. nonzero value.
+				disable_default_processing
+				set_message_return_value (1)
 			end
 		end
 
@@ -244,8 +248,6 @@ feature {NONE} -- Implementation
 						-scroller.vertical_position)
 				end
 				on_erase_background (paint_dc, client_rect )
-					--| Disable the default windows processing
-				disable_default_processing
 			end
 		end
 

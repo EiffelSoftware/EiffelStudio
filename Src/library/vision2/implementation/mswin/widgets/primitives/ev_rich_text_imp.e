@@ -37,17 +37,23 @@ inherit
 			set_selection,
 			has_selection,
 			set_text_limit,
-			insert_text
+			insert_text,
+			process_notification_info,
+			caret_position
 		redefine
 			search,
 			set_background_color,
 			set_position,
 			append_text,
 			prepend_text,
-			make_with_text
+			make_with_text,
+			make,
+			on_char,
+			on_key_down,
+			on_key_up
 		end
 
-	WEL_RICH_EDIT
+	WEL_RICH_EDIT_IMPROVED
 		rename
 			make as wel_make,
 			parent as wel_parent,
@@ -63,7 +69,10 @@ inherit
 			clip_copy as copy_selection,
 			unselect as deselect_all,
 			selection_start as wel_selection_start,
-			selection_end as wel_selection_end
+			selection_end as wel_selection_end,
+			line_number_from_position as wel_line_number_from_position,
+			line as wel_line,
+			line_index as wel_line_index
 		undefine
 			window_process_message,
 			remove_command,
@@ -87,20 +96,39 @@ inherit
 			on_en_change,
 			enable,
 			disable,
+			line_count,
 			show,
 			hide
+		redefine
+			on_char,
+			on_key_down,
+			on_key_up
 		end
+
+	WEL_CLIPBOARD
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	my_make
 
 feature {NONE} -- Initialization
 
+	my_make (par: WEL_WINDOW) is
+		do
+			wel_make (par, "this is not nice", 100, 100, 400, 400, 0)
+		end
 	make_with_text (txt: STRING) is
 		do
 			{EV_TEXT_IMP} Precursor (txt)
-			enable_all_notifications
+			--enable_all_notifications
+		end
+	
+	make is
+		do
+			{EV_TEXT_IMP} Precursor
+			--enable_all_notifications
+			set_event_mask (enm_keyevents)
 		end
 
 feature -- Access
@@ -138,6 +166,13 @@ feature -- Status setting
 			set_character_format (format)
 		end
 
+feature -- Status Report
+
+	line_number_from_position (a_pos: INTEGER): INTEGER is
+		do
+			Result := wel_line_number_from_position (a_pos - 1) + 1
+		end
+
 feature -- Element change
 
 	set_background_color (color: EV_COLOR) is
@@ -169,6 +204,16 @@ feature -- Element change
 		do
 			set_position (1)
 			insert_text (txt)
+		end
+
+
+	remove_text (start_pos, end_pos: INTEGER) is
+			-- Remove the text between `start_pos' and `end_pos'.
+		do
+			hide_selection
+			select_region (start_pos, end_pos)
+			delete_selection
+			show_selection
 		end
 
 feature -- Basic operation
@@ -210,6 +255,304 @@ feature -- Basic operation
 		do
 			wel := position_from_character_index (value - 1)
 			!! Result.set (wel.x, wel.y)
+		end
+
+feature {NONE}
+
+	on_char (character_code, key_data: INTEGER) is
+		do
+			{WEL_RICH_EDIT_IMPROVED} Precursor (character_code, key_data)
+			--{EV_TEXT_IMP} Precursor (character_code, key_data)
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Wm_keydown message
+		do
+			{WEL_RICH_EDIT_IMPROVED} Precursor (virtual_key, key_data)
+			{EV_TEXT_IMP} Precursor (virtual_key, key_data)
+		end
+
+	on_key_up (virtual_key, key_data: INTEGER) is
+			-- Wm_keydown message
+		do
+			{WEL_RICH_EDIT_IMPROVED} Precursor (virtual_key, key_data)
+			-- {EV_TEXT_IMP} Precursor (virtual_key, key_data)
+		end
+
+	get_insert_character_data (chr: CHARACTER): EV_INSERT_TEXT_EVENT_DATA is
+		local
+			rich_text: EV_RICH_TEXT
+			a_text: STRING
+		do
+			create Result.make
+			rich_text ?= interface
+			check
+				valid_cast: rich_text /= Void
+			end
+			if
+				chr = '%R'
+			then
+				a_text := clone ("%R%N")
+			else
+				a_text := chr.out
+			end
+			Result.implementation.set_all (rich_text, rich_text.position, a_text)
+		end
+
+	get_paste_data: EV_INSERT_TEXT_EVENT_DATA is
+		require
+			exists: exists
+		local
+			rich_text: EV_RICH_TEXT
+		do
+			create Result.make
+			rich_text ?= interface
+			check
+				valid_cast: rich_text /= Void
+			end
+			open_clipboard (Current)
+
+			check
+				success: clipboard_open
+			end
+			
+			retrieve_clipboard_text
+			print (last_string)
+			close_clipboard
+			Result.implementation.set_all (rich_text, rich_text.position, last_string)
+		end
+
+	get_delete_left_character_data: EV_DELETE_TEXT_EVENT_DATA is
+		require
+			has_character_at_position: text.valid_index (position - 1)
+		local
+			rich_text: EV_RICH_TEXT
+		do
+			create Result.make
+			rich_text ?= interface
+			check
+				valid_cast: rich_text /= Void
+			end
+			
+			check
+				don_t_know_yet_what_todo: rich_text.valid_position (rich_text.position - 1)
+			end
+			Result.implementation.set_all (rich_text, rich_text.position, rich_text.position - 1, rich_text.position - 1, rich_text.text.item (position - 1).out)
+		end
+
+	get_delete_right_character_data: EV_DELETE_TEXT_EVENT_DATA is
+		require
+			has_character_at_position: text.valid_index (position)
+		local
+			rich_text: EV_RICH_TEXT
+		do
+			create Result.make
+			rich_text ?= interface
+			check
+				valid_cast: rich_text /= Void
+			end
+			
+			check
+				don_t_know_yet_what_todo: rich_text.valid_position (rich_text.position)
+			end
+			
+			Result.implementation.set_all (rich_text, rich_text.position, rich_text.position, rich_text.position, rich_text.text.item (position).out)
+		end
+		
+
+		get_delete_selection_data: EV_DELETE_TEXT_EVENT_DATA is
+			local
+				rich_text: EV_RICH_TEXT
+			do
+				create Result.make
+				rich_text ?= interface
+				check
+					valid_cast: rich_text /= Void
+				end
+				
+				Result.implementation.set_all (rich_text, rich_text.position, rich_text.selection_start, rich_text.selection_end, rich_text.selected_text)
+			end
+
+feature		
+
+	on_insert_character (chr: CHARACTER) is
+			-- Execute whenever the user inserts a character
+			-- into the text
+		local
+			data: EV_INSERT_TEXT_EVENT_DATA
+		do
+			if 
+				has_command (Cmd_insert_text) 
+			then
+				data := get_insert_character_data (chr)
+				execute_command (Cmd_insert_text, data)
+			end
+		end
+
+	on_delete_left_character is
+			-- Execute whenever the user deletes the left character
+		local
+			data: EV_DELETE_TEXT_EVENT_DATA
+		do
+			if
+				text.valid_index (position - 1)
+			then
+				if 
+					has_command (Cmd_delete_text) 
+				then
+					data := get_delete_left_character_data
+					execute_command (Cmd_delete_text, data)
+				end
+			end
+		end
+
+	on_delete_right_character is
+			-- Execute whenever the user deletes the right character
+		local
+			data: EV_DELETE_TEXT_EVENT_DATA
+		do
+			if
+				text.valid_index (position)
+			then
+				if 
+					has_command (Cmd_delete_text) 
+				then
+					data := get_delete_right_character_data
+					execute_command (Cmd_delete_text, data)
+				end
+			end
+		end
+
+	on_undo is
+			-- Execute whenever the user inserts a character
+			-- into the text
+		do
+			if 
+				has_command (Cmd_undo) 
+			then
+				execute_command (Cmd_undo, Void)
+			end
+		end
+
+	on_redo is
+			-- Execute whenever the user inserts a character
+			-- into the text
+		do
+			if 
+				has_command (Cmd_redo) 
+			then
+				execute_command (Cmd_redo, Void)
+			end
+		end
+
+	on_paste_clipboard is
+			-- Execute whenever the user pastes the clipborad
+			-- into the control
+		local
+			data: EV_INSERT_TEXT_EVENT_DATA
+		do
+			if 
+				has_command (Cmd_insert_text) 
+			then
+				data := get_paste_data
+				execute_command (Cmd_insert_text, data)
+			end
+		end
+
+
+	on_delete_selection is
+		local
+			data: EV_DELETE_TEXT_EVENT_DATA
+		do
+			if
+				has_selection
+			then
+				if 
+					has_command (Cmd_delete_text) 
+				then
+					data := get_delete_selection_data
+					execute_command (Cmd_delete_text, data)
+				end
+			end
+		end
+		
+	on_cut_selection is
+		do
+			on_delete_selection
+		end
+
+feature -- Event - command association
+
+	add_insert_text_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user inputs a text.
+		do
+			add_command (Cmd_insert_text, cmd, arg)
+		end
+
+	add_delete_text_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user deletes a text.
+		do
+			add_command (Cmd_delete_text, cmd, arg)
+		end
+
+	add_delete_right_character_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user deletes the right character.
+		do
+			add_command (Cmd_delete_right_character, cmd, arg)
+		end
+
+	add_undo_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user wants to undo a command.
+		do
+			add_command (Cmd_undo, cmd, arg)
+		end
+
+	add_redo_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user wants to redo a command.
+		do
+			add_command (Cmd_redo, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_insert_text_commands is
+			-- Empty the list of commands to be executed when
+			-- the user inputs a text.
+		do
+			remove_command (cmd_insert_text)			
+		end
+
+	remove_delete_text_commands is
+			-- Empty the list of commands to be executed when
+			-- when the user deletes a text.
+		do
+			remove_command (cmd_delete_text)			
+		end
+
+	remove_delete_right_character_commands is
+			-- Empty the list of commands to be executed when
+			-- when the user wants to delete the left character.
+		do
+			remove_command (cmd_delete_right_character)			
+		end
+
+	remove_undo_commands is
+			-- Empty the list of commands to be executed when
+			-- when the user wants to undo a command.
+		do
+			remove_command (cmd_undo)			
+		end
+
+	remove_redo_commands is
+			-- Empty the list of commands to be executed when
+			-- when the user wants to redo a command.
+		do
+			remove_command (cmd_redo)			
 		end
 
 end -- class EV_RICH_TEXT

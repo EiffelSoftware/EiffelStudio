@@ -31,7 +31,9 @@ inherit
 			clip_copy as copy_selection,
 			unselect as deselect_all,
 			selection_start as wel_selection_start,
-			selection_end as wel_selection_end
+			selection_end as wel_selection_end,
+			line as wel_line,
+			line_index as wel_line_index
 		undefine
 			window_process_message,
 			remove_command,
@@ -58,7 +60,8 @@ inherit
 			default_ex_style,
 			on_en_change,
 			enable,
-			disable
+			disable,
+			line_count
 		end
 
 creation
@@ -79,6 +82,38 @@ feature -- Initialization
 			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 		end
 
+feature -- Access
+
+	line (i: INTEGER): STRING is
+			-- Returns the content of the `i'th line.
+		do
+			Result := wel_line (i - 1)
+		end
+
+
+feature -- Status Report
+	
+	line_count: INTEGER is
+		do
+			Result := ({WEL_MULTIPLE_LINE_EDIT} Precursor  ) + 1
+		end
+
+	first_character_from_line_number (a_line: INTEGER): INTEGER is	
+		do
+			Result := wel_line_index (a_line - 1) + 1
+		end
+
+	last_character_from_line_number (a_line: INTEGER): INTEGER is	
+		do
+			if
+				valid_line_index (a_line + 1)
+			then
+				Result := first_character_from_line_number (a_line + 1) - 1
+			else
+				Result := text_length
+			end
+		end
+	
 feature -- Basic operation
 
 	put_new_line is

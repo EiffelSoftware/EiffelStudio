@@ -102,9 +102,43 @@ feature -- Event for notebook
 	Cmd_switch: INTEGER is 18
 			-- The user has switch between two pages of a notebook.
 
+feature -- Event for rich text
+
+	Cmd_insert_text: INTEGER is 21
+			-- The user inserts a character
+
+	Cmd_delete_text: INTEGER is 22
+			-- The user deletes a character to the left of the current position
+
+	Cmd_delete_right_character: INTEGER is 23
+			-- The user deletes a character to the right of the current position
+
+	Cmd_undo: INTEGER is 24
+			-- The user wants to undo a command
+
+	Cmd_redo: INTEGER is 25
+			-- The user wants to redo a command
+
+	Cmd_paste: INTEGER is 26
+			-- The user wants to redo a command
+
+feature -- Event for text editor
+
+	Cmd_indent_lines: INTEGER is 27
+			-- The user wants to indent the selected lines
+
+	Cmd_deindent_lines: INTEGER is 28
+			-- The user wants to deindent the selected lines
+
+	Cmd_comment_lines: INTEGER is 29
+			-- The user wants to comment the selected lines
+
+	Cmd_decomment_lines: INTEGER is 30
+			-- The user wants to decomment the selected lines
+	
 feature -- Upper constants value
 
-	command_count: INTEGER is 21
+	command_count: INTEGER is 30
 			-- Number of different events.
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

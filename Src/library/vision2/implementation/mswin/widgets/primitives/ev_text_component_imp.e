@@ -57,21 +57,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
-		local
-			default_colors: EV_DEFAULT_COLORS
-		do
-			!! default_colors
-			if flag then
-				set_read_write
-				set_background_color (default_colors.Color_read_write)
-			else
-				set_read_only
-				set_background_color (default_colors.Color_read_only)
+		set_editable (flag: BOOLEAN) is
+				-- `flag' true make the component read-write and
+				-- `flag' false make the component read-only.
+			local
+				default_colors: EV_DEFAULT_COLORS
+			do
+				!! default_colors
+				if flag then
+					set_read_write
+					set_background_color (default_colors.Color_read_write)
+				else
+					set_read_only
+					set_background_color (default_colors.Color_read_only)
+				end
 			end
-		end
 
 	set_position (pos: INTEGER) is
 			-- set current insertion position

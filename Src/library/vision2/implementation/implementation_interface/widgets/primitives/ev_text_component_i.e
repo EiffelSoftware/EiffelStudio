@@ -42,6 +42,15 @@ feature -- Access
 			Result := text.substring (selection_start, selection_end)
 		end
 
+	line (i: INTEGER): STRING is
+			-- Returns the content of the `i'th line.
+		require
+			valid_line_index: valid_line_index (i)
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	is_editable: BOOLEAN is
@@ -85,6 +94,50 @@ feature -- Status report
 		ensure
 			result_large_enough: Result >= 1
 			result_small_enough: Result <= text_length
+		end
+
+	line_count: INTEGER is
+			-- Number of lines in widget
+		require
+			exist: not destroyed
+		deferred
+		ensure
+			result_greater_zero: Result > 0
+		end 
+
+	first_character_from_line_number (i: INTEGER): INTEGER is
+			-- Position of the first character on the `i'-th line.
+		require
+			exist: not destroyed
+			valid_line: valid_line_index (i)
+		deferred
+		ensure
+			valid_character_position: valid_character_position (i)
+		end
+
+	last_character_from_line_number (i: INTEGER): INTEGER is
+			-- Position of the last character on the `i'-th line.
+		require
+			exist: not destroyed
+			valid_line: valid_line_index (i)
+		deferred
+		ensure
+			valid_character_position: valid_character_position (i)
+		end
+
+	valid_line_index (i: INTEGER): BOOLEAN is
+			-- Is `i' a valid line index?
+		require
+			exist: not destroyed
+		do
+			Result := i > 0 and i < line_count
+		end
+
+	valid_character_position (pos: INTEGER): BOOLEAN is
+		require
+			exist: not destroyed
+		do
+			Result := pos > 0 and pos < text_length			
 		end
 
 feature -- Status setting

@@ -20,7 +20,8 @@ inherit
 		redefine
 			on_wm_vscroll,
 			on_wm_hscroll,
-			default_style
+			default_style,
+			on_wm_notify
 		end
 
 	WEL_SB_CONSTANTS
@@ -97,6 +98,30 @@ feature {NONE} -- Implementation
 			end
  		end
 
+	on_wm_notify (wparam, lparam: INTEGER) is
+			-- Wm_notify message
+		local
+			info: WEL_NMHDR
+			i_result: INTEGER
+		do
+			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			if
+				children.has (info.window_from)
+			then
+				{WEL_FRAME_WINDOW} Precursor (wparam, lparam)
+			else
+				-- message has been sent to the wrong window (the old parent)
+				-- this is a win32 bug
+				-- see: MSDN Article Article ID: Q104069
+				-- http://support.microsoft.com/support/kb/articles/Q104/0/69.asp
+				-- we simply forward the message to the new parent
+
+				info.window_from.parent.on_wm_notify (wparam, lparam)
+				set_message_return_value (info.window_from.parent.message_return_value)
+				
+			end
+		end
+		 		
 end -- class EV_INTERNAL_SILLY_WINDOW_IMP
 
 --|----------------------------------------------------------------

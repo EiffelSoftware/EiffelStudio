@@ -25,9 +25,6 @@ feature -- Status report
 			-- Position of the screen pointer.
 		do
 			Result := implementation.pointer_position
-		ensure
-			--bridge_ok: Result = implementation.pointer_position
-			--| FIXME IEK Doesn't hold due to reference comparison
 		end 
 
 feature -- Basic operation
@@ -36,52 +33,30 @@ feature -- Basic operation
 			-- Set `pointer_position' to (`x',`y`).		
 		do
 			implementation.set_pointer_position (x, y)
-		ensure
-			--pointer_position_set:
-			--	pointer_position.x = x and pointer_position.y = y
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
 			-- Simulate the user pressing a `a_button' on the pointing device.
 		do
 			implementation.fake_pointer_button_press (a_button)
-			--|	for X do somthing like
-			--| XTestFakeButtonEvent (display, a_button, True, 0)
-			--| For windows use SendInput
-			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
 	fake_pointer_button_release (a_button: INTEGER) is
 			-- Simulate the user releasing a `a_button' on the pointing device.
 		do
 			implementation.fake_pointer_button_release (a_button)
-			--| FIXME implementation.
-			--|	for X do somthing like
-			--| XTestFakeButtonEvent (display, a_button, False, 0)
-			--| For windows use SendInput
-			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
 		do
 			implementation.fake_key_press (a_key)
-			--| FIXME implementation.
-			--|	for X do somthing like
-			--| XTestFakeKeyvent (display, gtk_code (key), True, 0)
-			--| For windows use SendInput
-			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
 	fake_key_release (a_key: EV_KEY) is
 			-- Simulate the user releasing a `key'.
 		do
 			implementation.fake_key_release (a_key)
-			--| FIXME implementation.
-			--|	for X do somthing like
-			--| XTestFakeKeyvent (display, gtk_code (key), False, 0)
-			--| For windows use SendInput
-			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
 feature -- Measurement
@@ -117,10 +92,9 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_SCREEN_I
 			-- Responsible for interaction with the native graphics toolkit.
 
---| FIXME turn back on when pointer_position is implemented
---| invariant
---|	pointer_position_not_negative:
---|		pointer_position.x >= 0 and pointer_position.y >= 0
+invariant
+	pointer_position_not_negative:
+		pointer_position.x >= 0 and pointer_position.y >= 0
 
 end -- class EV_SCREEN
 
@@ -145,6 +119,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/25 22:56:34  king
+--| Removed invalid comments and pointer_position
+--|
 --| Revision 1.12  2000/04/25 21:38:58  king
 --| Commented out invalid bridge_ok post-cond which doesn't hold
 --|

@@ -705,19 +705,12 @@ feature -- creation of default rescue clause
 
 feature -- Type id
 
-	written_type_id (class_type: CL_TYPE_I): INTEGER is
-			-- Written type id of feature in context of
-			-- type `class_type'.
-		do
-			Result := written_type (class_type).type_id
-		end
-
-	written_type (class_type: CL_TYPE_I): CL_TYPE_I is
+	written_type (class_type: CLASS_TYPE): CLASS_TYPE is
 			-- Written type of feature in context of 
 			-- type `class_type'.
 		require
 			good_argument: class_type /= Void
-			conformance: class_type.base_class.conform_to (written_class)
+			conformance: class_type.associated_class.conform_to (written_class)
 		do
 			Result := written_class.meta_type (class_type)
 		end

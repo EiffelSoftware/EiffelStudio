@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			-- Set Debug mode from environment variable.
 			temp_string := get ("ISE_GTK_DEBUG")
 			if temp_string /= Void then
-				temp_int := 2--temp_string.to_integer
+				temp_int := temp_string.to_integer
 			end
 			
 			--| FIXME IEK Do not continue running system if gtk version is less than 1.2.8

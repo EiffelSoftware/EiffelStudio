@@ -75,6 +75,8 @@ feature -- Generation
 			if Compilation_modes.is_precompiling then
 				Real_body_index_counter.generate_extern_offsets (buffer);
 				buffer.new_line
+				buffer.putstring ("%Textern char desc_fill;")
+				buffer.new_line
 				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<"void">>);
 				buffer.new_line
 				descriptor_generate_generic (buffer, class_id_string)
@@ -224,8 +226,7 @@ feature -- Generation
 			buffer.putstring (init_name);
 			buffer.putstring ("(void)%N{%N");
 			if Compilation_modes.is_precompiling then
-				buffer.putstring ("%Textern char desc_fill;%N%
-								%%Tif (desc_fill != 0)%N%T%Tbuild_desc")
+				buffer.putstring ("%Tif (desc_fill != 0)%N%T%Tbuild_desc")
 				buffer.putstring (id_string)
 				buffer.putstring ("();%N")
 			end;

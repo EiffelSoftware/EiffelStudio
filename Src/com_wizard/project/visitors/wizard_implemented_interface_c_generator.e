@@ -12,15 +12,6 @@ inherit
 
 	WIZARD_CPP_WRITER_GENERATOR
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			cpp_class_writer := Void
-		ensure
-			void_atributes: cpp_class_writer = Void 
-		end
 
 
 end -- class WIZARD_IMPLEMENTED_INTERFACE_C_GENERATOR

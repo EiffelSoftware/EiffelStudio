@@ -1,6 +1,6 @@
 indexing 
-	description: "Most general notion of widget %
-				% (i.e. user interface object)"
+	description: "EiffelVision widget. Most general notion of%
+				% widget (i.e. user interface object)."
 	status: "See notice at end of class"
 	names: widget
 	date: "$Date$"
@@ -9,12 +9,18 @@ indexing
 deferred class 
 	EV_WIDGET
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
+
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
 		require
-			parent_not_void: par /= Void
+			valid_parent: par.is_valid
 		deferred
 		end
 		
@@ -23,7 +29,7 @@ feature {NONE} -- Initialization
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
 		require
-			valid_parent: par /= Void
+			valid_parent: par.is_valid
 		do
 			managed := par.manager
 			implementation.set_interface (Current)
@@ -49,13 +55,6 @@ feature -- Access
 		end
 	
 feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is Current widget destroyed?  
-			-- (= implementation does not exist)
-		do
-			Result := (implementation = Void)
-		end
 
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive to
@@ -117,7 +116,7 @@ feature -- Status report
 		do
 			Result := implementation.background_color.interface
 		ensure
---			result_not_void: Result /= Void
+			valid_result: Result /= Void
 		end
 
 	foreground_color: EV_COLOR is
@@ -128,22 +127,10 @@ feature -- Status report
 		do
 			Result := implementation.foreground_color.interface
 		ensure
---			result_not_void: Result /= Void
+			valid_result: Result /= Void
 		end
 
 feature -- Status setting
-
-	destroy is
-			-- Destroy actual screen object of Current
-			-- widget and of all children.
-		do
-			if not destroyed then
-				implementation.destroy
-				remove_implementation
-			end
-		ensure
-			destroyed: destroyed
-		end
 
 --	set_parent (par: EV_CONTAINER) is
 --			-- Make `par' the new parent of the widget.
@@ -225,7 +212,7 @@ feature -- Status setting
 			-- Make `color' the new `background_color'
 		require
 			exists: not destroyed
---			color_not_void: color /= Void
+			valid_color: color.is_valid
 		do
 			implementation.set_background_color (color)
 		ensure
@@ -236,7 +223,7 @@ feature -- Status setting
 			-- Make `color' the new `foreground_color'
 		require
 			exists: not destroyed
---			color_not_void: color /= Void
+			valid_color: color.is_valid
 		do
 			implementation.set_foreground_color (color)
 		ensure
@@ -267,10 +254,6 @@ feature -- Status setting
 
 feature -- Measurement 
 	
-	-- The coordinates are effective only if widget is inside a
-	-- fixed container. Otherwise they are calculated 
-	-- automatically by the container widget.
-
 	x: INTEGER is
 			-- Horizontal position relative to parent
 		require
@@ -418,7 +401,7 @@ feature -- Resizing
 		end
         
 	set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum__height'.
+			-- Make `value' the new `minimum_height'.
 		require
 			exists: not destroyed
 			large_enough: value >= 0
@@ -462,17 +445,6 @@ feature -- Resizing
 			implementation.set_y (value)
 		ensure
 			y_set: implementation.y_set (x)		
-		end
-
-feature -- Comparison
-
-	same (other: like Current): BOOLEAN is
-			-- Does Current widget and `other' correspond
-			-- to the same screen object?
-		require
-			other_exists: other /= Void
-		do
-			Result := other.implementation = implementation
 		end
 
 feature -- Event - command association
@@ -608,14 +580,6 @@ feature {EV_WIDGET_I, EV_WIDGET} -- Implementation
 
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget
-	
-	remove_implementation is
-			-- Remove implementation of Current widget.
-		do
-			implementation := Void
-		ensure
-			void_implementation: implementation = Void
-		end
 
 invariant
 

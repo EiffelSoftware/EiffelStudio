@@ -414,7 +414,6 @@ feature -- Basic operation
 			titled_window: EV_TITLED_WINDOW
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
-			widget: EV_WIDGET
 		do
 			create layout_item.make (an_object)
 				-- We must only add the layout item if there is
@@ -430,17 +429,9 @@ feature -- Basic operation
 			an_object.create_object_from_type
 			an_object.build_display_object
 			create display_win
-			widget ?= an_object.object
-			check
-				object_was_widget: widget /= Void
-			end
-			display_win.extend (widget)
+			insert_into_window (an_object.object, display_win)
 			create builder_win
-			widget ?= an_object.display_object
-			check
-				display_object_was_widget: widget /= Void
-			end
-			builder_win.extend (widget)
+			insert_into_window (an_object.display_object, builder_win)
 		end
 
 	remove_object (an_object: GB_OBJECT) is

@@ -8,6 +8,7 @@ default
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
+	arguments ("-g")
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("refactor_fixme")
@@ -31,7 +32,6 @@ default
 	exception_trace (yes)
 	inlining (no)
 	multithreaded (yes)
-	arguments ("-g")
 
 
 -------------------------------------------------
@@ -45,6 +45,7 @@ default
 
 cluster
 	root_cluster:		"$EIFFEL_SRC\com_wizard\root"
+
 
 	all new_gui:		"$EIFFEL_SRC\com_wizard\project\new_gui"
 		exclude
@@ -124,7 +125,8 @@ cluster
 
 	vs_setup:		"$EIFFEL_SRC\Eiffel\extra\finish_freezing\main"
 
-	library eclop:		"$EIFFEL_SRC\free_add_ons\eclop"
+	library eclop:		"$ECLOP\eclop"
+
 
 external
 

@@ -86,7 +86,7 @@ feature -- Access
 	written_class: STRING is
 			-- Name of the class where the feature is written in.
 		do
-			Result := compiler_feature.e_feature.associated_class.lace_class.name
+			Result := compiler_feature.e_feature.associated_class.lace_class.name_in_upper
 		ensure then
 			result_exists: Result /= void			
 		end
@@ -94,7 +94,7 @@ feature -- Access
 	evaluated_class: STRING is
 			-- Name of the class where the feature was evaluated in.
 		do
-			Result := compiler_class.name
+			Result := compiler_class.name_in_upper
 		ensure then
 			result_exists: Result /= void			
 		end

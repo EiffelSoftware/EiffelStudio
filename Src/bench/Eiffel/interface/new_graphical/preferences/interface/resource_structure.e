@@ -4,8 +4,22 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	RESOURCE_STRUCTURE
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+		local
+			imp: RESOURCE_STRUCTURE_IMP
+		do
+			create imp.make (Current)
+			implementation := imp
+			imp.initialize ("D:\46dev\bench.xml")
+		end
 
 feature  -- Access
 
@@ -14,60 +28,80 @@ feature  -- Access
 			-- Name includes path.
 		require
 			resource_name_valid: resource_name /= Void
-		deferred		
+		do
+			Result := implementation.resource (resource_name)		
 		end
 
-	child_list (path: STRING): LINKED_LIST [RESOURCE_FOLDER] is
+	child_list (path: STRING): LINKED_LIST [like folder] is
 			-- List of children of `path' folder.
-		deferred
+		local
+			child_list_i: LINKED_LIST [RESOURCE_FOLDER_I]
+		do
+			Result := implementation.child_list (path)
 		end
 
 	resource_list (path: STRING): LINKED_LIST [RESOURCE] is
 			-- List of resources of `path' folder.
-		deferred
+		do
+			Result := implementation.resource_list (path)
 		end
+
+	folder (path: STRING): like root_folder is
+			-- Find the category corresponding to 's'.
+			-- return Void if not found.
+		require
+			path_not_void: path /= Void
+		do
+			Result := implementation.folder (path)
+		end
+
+feature -- Status Report
 
 	has_folder (s: STRING): BOOLEAN is
 			-- Does Current has category pointed by 's'.
 		require
 			s_not_void: s /= Void
-		deferred
+		do
+			Result := implementation.has_folder (s)
 		end
-
-	folder (path: STRING): RESOURCE_FOLDER is
-			-- Find the category corresponding to 's'.
-			-- return Void if not found.
-		require
-			path_not_void: path /= Void
-		deferred
-		end
-
-	location: STRING
 
 feature -- Modification
 
-	put (res : RESOURCE) is
+	put_resource (res : RESOURCE) is
 			-- Put `res' in Current.
 		do
+			implementation.put_resource (res)
+		end
+
+	replace_resource (res : RESOURCE) is
+			-- Put `res' in Current.
+		do
+			implementation.replace_resource (res)
 		end
 
 feature -- Saving
 
 	save is
 			-- Save all changes in appropriate storing device
-		deferred
+		do
+			implementation.save
+		end
+
+	save_resource (res: RESOURCE) is
+			-- Save all changes in appropriate storing device
+		do
+			implementation.save_resource (res)
 		end
 
 feature -- Implementation
 
-	table: RESOURCES_TABLE
-		-- Hash Table of Resources.
-		-- The key used is their "long" name.
+	root_folder: RESOURCE_FOLDER is
+		do
+			Result := implementation.root_folder
+		end
 
-	root_folder: RESOURCE_FOLDER
+feature {NONE} -- Implementation
 
-	error_message: STRING
-		-- Message containing possibly the error(s) encountered during the 
-		-- parsing.
+	implementation: RESOURCE_STRUCTURE_I
 
 end -- class RESOURCE_STRUCTURE

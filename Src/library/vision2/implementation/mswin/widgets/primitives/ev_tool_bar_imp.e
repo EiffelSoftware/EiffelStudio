@@ -658,7 +658,6 @@ feature {EV_PND_TRANSPORTER_IMP}
 			b := bar
 			Result := b.window_rect.top + 
 			((window_rect.height - button_rectangle.height)//2) - 1
-			io.putstring ("child_y_absolute" + Result.out + "%N")
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -735,9 +734,8 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.46  2000/04/06 17:04:31  rogers
---| Previous comment should have read: "Undefined count from
---| WEL_DROP_DOWN_COMBO_BOX_EX.". Removed child_y.
+--| Revision 1.47  2000/04/06 17:05:57  rogers
+--| Removed debugging information from child_absolute_y.
 --|
 --| Revision 1.44  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.

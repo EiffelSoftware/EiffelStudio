@@ -268,19 +268,19 @@ feature -- IL code generation
 						-- to a constructor.
 					if is_static_call or else precursor_type /= Void then
 							-- A call to precursor or a static call is never polymorphic.
-						il_ext.generate_call (external_name, False)
+						il_ext.generate_call (False)
 					else
 							-- Standard call to an external feature.
 							-- Call will be polymorphic if it target of call is a reference
 							-- or if target has been boxed, or if type of external
 							-- forces a static binding (eg static features).
-						il_ext.generate_call (external_name, cl_type.is_reference or else real_metamorphose)
+						il_ext.generate_call (cl_type.is_reference or else real_metamorphose)
 					end
 				else
 						-- Current external is a creation, we perform a slightly different
 						-- call to constructor, but basically it is very close to `generate_call'
 						-- but doing a static binding.
-					il_ext.generate_creation_call (external_name)
+					il_ext.generate_creation_call
 				end
 			end
 		end

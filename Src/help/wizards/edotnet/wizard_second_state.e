@@ -34,9 +34,46 @@ feature -- Basic Operation
 
 	build is 
 			-- Build entries.
+		local
+			l_horiz_box: EV_HORIZONTAL_BOX
+			l_vert: EV_VERTICAL_BOX
+			l_lab: EV_LABEL
+			l_il_env: IL_ENVIRONMENT
+			l_runtimes: ARRAY [STRING]
 		do 
 			create rb_project_type_exe.make_with_text (Exe_type)
+			rb_project_type_exe.select_actions.extend (agent on_change_generation_type)
 			create rb_project_type_dll.make_with_text (Dll_type)
+			rb_project_type_dll.select_actions.extend (agent on_change_generation_type)
+
+			create l_horiz_box
+			l_horiz_box.set_padding (dialog_unit_to_pixels(20))
+			create l_vert
+			create console_app_b.make_with_text (l_Console_application)
+			if wizard_information.console_application then
+				console_app_b.enable_select
+			else
+				console_app_b.disable_select
+			end
+			l_vert.extend (rb_project_type_exe)
+			l_vert.disable_item_expand (rb_project_type_exe)
+			l_vert.extend (rb_project_type_dll)
+			l_vert.disable_item_expand (rb_project_type_dll)
+			
+			l_horiz_box.extend (l_vert)
+			l_horiz_box.disable_item_expand (l_vert)
+			
+			create l_vert
+			l_vert.extend (console_app_b)
+			l_vert.disable_item_expand (console_app_b)
+			l_vert.extend (create {EV_CELL})
+			l_horiz_box.extend (l_vert)
+
+			choice_box.set_padding (dialog_unit_to_pixels(10))
+			choice_box.extend (l_horiz_box)
+			choice_box.disable_item_expand (l_horiz_box)
+			
+			choice_box.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 			create root_class_name.make (Current)
 			root_class_name.set_label_string_and_size (interface_names.l_Root_class_name, 10)
@@ -49,35 +86,47 @@ feature -- Basic Operation
 			creation_routine_name.set_textfield_string (wizard_information.creation_routine_name)
 			creation_routine_name.generate
 
-			choice_box.set_padding (dialog_unit_to_pixels(1))
-			choice_box.extend (rb_project_type_exe)
-			choice_box.disable_item_expand (rb_project_type_exe)
-			choice_box.extend (rb_project_type_dll)
-			choice_box.disable_item_expand (rb_project_type_dll)
-			choice_box.extend (create {EV_CELL}) -- expandable item
+			create l_vert
+			l_vert.set_padding (dialog_unit_to_pixels (5))
+			l_vert.set_minimum_width (choice_box.width)
+			l_vert.extend (root_class_name.widget)
+			l_vert.disable_item_expand (root_class_name.widget)
+			l_vert.extend (creation_routine_name.widget)
+			l_vert.disable_item_expand (creation_routine_name.widget)
 
-			choice_box.extend (create {EV_LABEL})
-			choice_box.extend (create {EV_HORIZONTAL_SEPARATOR})
-			choice_box.extend (create {EV_LABEL})
-
-			choice_box.set_padding (dialog_unit_to_pixels(1))
-			choice_box.set_minimum_width (choice_box.width)
-			choice_box.extend (root_class_name.widget)
-			choice_box.disable_item_expand (root_class_name.widget)
-
-			choice_box.extend (creation_routine_name.widget)
-			choice_box.disable_item_expand (creation_routine_name.widget)
-			choice_box.extend (create {EV_CELL}) -- expandable item
-
-			choice_box.extend (create {EV_LABEL})
-			create console_app_b.make_with_text (l_Console_application)
-			if wizard_information.console_application then
-				console_app_b.enable_select
-			else
-				console_app_b.disable_select
+			choice_box.extend (l_vert)
+			choice_box.extend (create {EV_CELL})
+			
+			create l_il_env
+			l_runtimes ?= l_il_env.installed_runtimes
+			
+			if l_runtimes /= Void then
+				create clr_version_cb.make_with_strings (l_runtimes)
+				clr_version_cb.set_minimum_width (80)				
 			end
-			choice_box.extend (console_app_b)
-
+			
+			from
+				clr_version_cb.start
+			until
+				clr_version_cb.after
+			loop
+				if clr_version_cb.item.text.is_equal (wizard_information.clr_version) then
+					clr_version_cb.item.enable_select
+				end
+				clr_version_cb.forth
+			end
+			
+			create l_lab.make_with_text (interface_names.l_clr_version)
+			create l_horiz_box
+			l_horiz_box.set_padding (dialog_unit_to_pixels (10))
+			l_horiz_box.extend (l_lab)
+			l_horiz_box.disable_item_expand (l_lab)
+			l_horiz_box.extend (clr_version_cb)
+			l_horiz_box.disable_item_expand (clr_version_cb)
+			l_horiz_box.extend (create {EV_CELL})
+			choice_box.extend (l_horiz_box)
+			choice_box.disable_item_expand (l_horiz_box)
+			
 			if wizard_information.generate_dll then
 				rb_project_type_dll.enable_select
 			else
@@ -89,7 +138,8 @@ feature -- Basic Operation
 				rb_project_type_dll.select_actions,
 				root_class_name.change_actions,
 				creation_routine_name.change_actions,
-				console_app_b.select_actions
+				console_app_b.select_actions,
+				clr_version_cb.select_actions
 				>>)
 		end
 
@@ -149,7 +199,12 @@ feature -- Basic Operation
 			wizard_information.set_generate_dll (rb_project_type_dll.is_selected)
 			wizard_information.set_root_class_name (root_class_name.text)
 			wizard_information.set_creation_routine_name (creation_routine_name.text)
-			wizard_information.set_console_application (console_app_b.is_selected)
+			if rb_project_type_dll.is_selected then
+				wizard_information.set_console_application (False)
+			else
+				wizard_information.set_console_application (console_app_b.is_selected)
+			end
+			wizard_information.set_clr_version (clr_version_cb.text)
 			Precursor
 		end
 
@@ -213,6 +268,16 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	on_change_generation_type is
+			-- action performed when user changes generation type of application
+		do
+			if rb_project_type_exe.is_selected then
+				console_app_b.enable_sensitive
+			else
+				console_app_b.disable_sensitive
+			end
+		end
 
 feature {NONE} -- Constants
 
@@ -233,5 +298,8 @@ feature {NONE} -- Constants
 
 	console_app_b: EV_CHECK_BUTTON
 			-- Console application check box.
+			
+	clr_version_cb: EV_COMBO_BOX
+			-- Clr versions selection combo box
 
 end -- class WIZARD_SECOND_STATE

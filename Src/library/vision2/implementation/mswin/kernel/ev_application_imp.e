@@ -49,10 +49,7 @@ feature {NONE} -- Initialization
 	launch  is
 			-- Start the event loop.
 		do
-			add_root_window (interface.first_window)
-			--root_window)
-			--|FIXME
-			set_root_window
+			set_root_window (main_window)
 			run
 			destroy_application
 		end
@@ -103,10 +100,9 @@ feature -- Status setting
 		do
 		end
 
-	set_root_window is
+	set_root_window (a_window: EV_WINDOW_IMP)is
 		do
-			main_window.application.put (Current)
-			set_application_main_window (main_window)
+			set_application_main_window (a_window)--(main_window)
 		end
 
 feature -- Element change
@@ -120,19 +116,27 @@ feature -- Element change
 
 	remove_root_window (w: EV_WINDOW) is
 			-- Remove `w' from the root windows list.
+		local
+			r: ARRAYED_LIST [EV_WINDOW]
+			window_imp: EV_WINDOW_IMP
 		do
+			r := root_windows
 			if root_windows.count /= 1 then
 				root_windows.start
 				if root_windows.item = w then
 					--.implementation then
 					--|FIXME
 					root_windows.remove
-					set_root_window
+					window_imp ?= root_windows.item.implementation
+					set_root_window (window_imp)
 				else
 					root_windows.prune (w)
 					--.implementation)
 					--|FIXME
 				end
+			else
+				root_windows.start
+				root_windows.remove
 			end
 		end
 
@@ -161,7 +165,8 @@ feature -- Basic operation
 	destroy is
 			-- End the application.
 		do
-			main_window.destroy
+			destroy_just_called := True
+			is_destroyed := True
 		end
 
 feature {NONE} -- WEL Implemenation
@@ -319,6 +324,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/29 18:13:18  rogers
+--| Launch now sets the root_window to the main_window. Set root_window no sets the application main_window. Remove window has been altered, see diffs, and destroy now sets destroy just called to True and is_destroyed to True.
+--|
 --| Revision 1.18  2000/02/19 05:44:59  oconnor
 --| released
 --|

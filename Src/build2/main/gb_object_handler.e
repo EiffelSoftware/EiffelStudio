@@ -937,7 +937,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 			-- and the contents are transferred across.
 		local
 			store: GB_XML_STORE
-			element: XML_ELEMENT
+			element: XM_ELEMENT
 			load: GB_XML_LOAD
 			new_object: GB_OBJECT
 			parent_object: GB_OBJECT
@@ -997,7 +997,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				
 				create store
 				create load
-				element := new_root_element ("item", "prefix")
+				create element.make_root ("item", create {XM_NAMESPACE}.make ("", ""))
 				add_attribute_to_element (element, "type", "xsi", an_object.type)
 				
 				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
@@ -1066,7 +1066,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 
 				create store
 				create load
-				element := new_root_element ("item", "prefix")
+				create element.make_root ("item", create {XM_NAMESPACE}.make ("", ""))
 				add_attribute_to_element (element, "type", "xsi", an_object.type)
 				store.output_attributes (an_object, element, create {GB_GENERATION_SETTINGS})
 				

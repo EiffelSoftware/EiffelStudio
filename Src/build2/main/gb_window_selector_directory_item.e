@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature {GB_XML_STORE} -- Implementation
 
-	generate_xml (element: XML_ELEMENT) is
+	generate_xml (element: XM_ELEMENT) is
 			-- Generate properties of `Current' into `element'.
 		require
 			element_not_void: element /= Void
@@ -69,7 +69,7 @@ feature {GB_XML_STORE} -- Implementation
 
 feature {GB_XML_LOAD} -- Implementation
 
-	modify_from_xml (element: XML_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT) is
 			-- Update `Current' based on information in `element'
 		require
 			element_not_void: element /= Void

@@ -191,7 +191,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 
-	generate_xml (element: XML_ELEMENT) is
+	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of sepecific attributes of `Current'
 			-- in `element'.
 		require
@@ -204,7 +204,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER}
 			add_element_containing_integer (element, "Expanded", is_expanded.to_integer)
 		end
 		
-	modify_from_xml (element: XML_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT) is
 			-- Update `Current' based on information held in `element'.
 		require
 			element_not_void: element /= Void

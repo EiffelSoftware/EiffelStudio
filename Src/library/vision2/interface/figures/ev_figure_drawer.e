@@ -291,7 +291,6 @@ feature -- Figure drawing
 	draw_figure_polyline (line: EV_FIGURE_POLYLINE) is
 			-- Draw standard representation of `polyline' to canvas.
 		local
-			s, t: EV_RELATIVE_POINT
 			p: EV_FIGURE_POLYGON
 			d: like drawable
 		do
@@ -309,22 +308,15 @@ feature -- Figure drawing
 						p.i_th_point (2).set_angle (
 							line.start_angle)
 						d.fill_polygon (p.point_array)
-						s := line.start_draw_point
-					else
-						s := line.start_point
 					end
 					if line.is_end_arrow then
 						p := line.end_arrow
 						p.i_th_point (2).set_angle (
 							line.end_angle)
 						d.fill_polygon (p.point_array)
-						s := line.end_draw_point
-					else
-						t := line.end_point
 					end
 				end
 			end
-			--| FIXME Take `s' and `t' into account.
 			if line.dashed_line_style then
 				d.enable_dashed_line_style
 			end

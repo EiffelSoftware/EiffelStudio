@@ -56,10 +56,9 @@ feature -- Basic Operations
 			a_directory: DIRECTORY
 			a_file_list: LIST [STRING]
 			a_file: RAW_FILE
-			a_file_name: STRING
-			a_working_directory: STRING
+			a_file_name, a_working_directory: STRING
 		do
-			a_working_directory := current_working_directory
+			a_working_directory := clone (current_working_directory)
 			create a_directory.make_open_read (a_folder_name)
 			a_file_list := a_directory.linear_representation
 			if a_progress_report /= Void then

@@ -14,9 +14,6 @@ feature -- Access
 	Set_range: INTEGER is 2
 			-- Set progress range
 	
-	Set_task_range: INTEGER is 3
-			-- Set progress range
-	
 	Start: INTEGER is 4
 			-- Start progress update
 
@@ -26,9 +23,6 @@ feature -- Access
 	Title: INTEGER is 6
 			-- Set total progress title
 
-	Task_title: INTEGER is 7
-			-- Set task title
-
 feature -- Status Report
 
 	is_valid_progress_event_id (a_id: INTEGER): BOOLEAN is
@@ -36,13 +30,11 @@ feature -- Status Report
 		do
 			Result := a_id = Step or a_id = Set_range or
 				a_id = Start or a_id = Finish or
-				a_id = Title or a_id = Set_task_range or
-				a_id = Task_title
+				a_id = Title
 		ensure
 			definition: Result = (a_id = Step or a_id = Set_range or
 				a_id = Start or a_id = Finish or
-				a_id = Title or a_id = Set_task_range or
-				a_id = Task_title)
+				a_id = Title)
 		end
 
 invariant
@@ -50,8 +42,6 @@ invariant
 	set_range_is_valid: is_valid_progress_event_id (Set_range)
 	start_is_valid: is_valid_progress_event_id (Start)
 	finish_is_valid: is_valid_progress_event_id (Finish)
-	set_task_range_is_valid: is_valid_progress_event_id (Set_task_range)
 	title_is_valid: is_valid_progress_event_id (Title)
-	task_title_is_valid: is_valid_progress_event_id (Task_title)
 
 end -- class WIZARD_PROGRESS_EVENT_ID

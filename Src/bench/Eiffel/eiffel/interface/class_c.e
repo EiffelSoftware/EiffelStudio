@@ -2485,6 +2485,14 @@ feature -- Convenience features
 			end
 		end;
 
+	hidden: BOOLEAN is
+			-- Is the class hidden in the precompilation sets?
+		do
+			Result := lace_class.hidden
+		ensure
+			hide_only_when_precompiled: Result implies is_precompiled
+		end;
+
 	trace_level: TRACE_I is
 			-- Trace level of the class
 		do

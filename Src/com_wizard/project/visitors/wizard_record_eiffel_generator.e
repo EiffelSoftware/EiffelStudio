@@ -24,7 +24,6 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate eiffel client for record.
 		local
-			writer_feature: WIZARD_WRITER_FEATURE
 			a_macro_accesser_name, a_macro_setter_name: STRING
 			writer_inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 			an_external_size_name: STRING
@@ -70,9 +69,11 @@ feature -- Access
 				eiffel_writer.add_feature (access_feature (a_macro_accesser_name, a_field_descriptor), Access)
 				eiffel_writer.add_feature (set_feature (a_macro_setter_name, a_field_descriptor), Basic_operations)
 				eiffel_writer.add_feature (access_external_feature 
-						(a_macro_accesser_name, a_header_file_name, a_descriptor.c_type_name, a_field_descriptor), Externals)
+						(a_macro_accesser_name, a_header_file_name, 
+						a_descriptor.namespace + "::" + a_descriptor.c_type_name, a_field_descriptor), Externals)
 				eiffel_writer.add_feature (set_external_feature 
-						(a_macro_setter_name, a_header_file_name, a_descriptor.c_type_name, a_field_descriptor), Externals)
+						(a_macro_setter_name, a_header_file_name, 
+						a_descriptor.namespace + "::" + a_descriptor.c_type_name, a_field_descriptor), Externals)
 
 				a_descriptor.fields.forth
 			end
@@ -467,7 +468,6 @@ feature {NONE} -- Implementation
 			non_void_descriptor: a_descriptor /= Void
 		local
 			body: STRING
-			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make
 			Result.set_external
@@ -494,6 +494,8 @@ feature {NONE} -- Implementation
 			body.append (Double_quote)
 			body.append (Sizeof)
 			body.append (Open_parenthesis)
+			body.append (a_descriptor.namespace)
+			body.append (colon + colon)
 			body.append (a_descriptor.c_type_name)
 			body.append (Close_parenthesis)
 			body.append (Double_quote)

@@ -35,6 +35,7 @@ feature -- Basic operations
 			create cpp_class_writer.make
 			a_descriptor.set_impl_names (True)
 			cpp_class_writer.set_name (a_descriptor.impl_c_type_name (True))
+			cpp_class_writer.set_namespace (a_descriptor.namespace)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.impl_c_header_file_name (True))
 

@@ -195,6 +195,10 @@ feature -- Basic operations
 			a_body.append (Tab_tab_tab)
 			a_body.append (Double_quote)
 			a_body.append (Cpp_clause)
+			if a_coclass.namespace /= Void and then not a_coclass.namespace.empty then
+				a_body.append (a_coclass.namespace)
+				a_body.append ("::")
+			end
 			a_body.append (a_coclass.c_type_name)
 			a_body.append (Space)
 			a_body.append (Percent_double_quote)
@@ -238,6 +242,10 @@ feature -- Basic operations
 			a_body.append (Tab_tab_tab)
 			a_body.append (Double_quote)
 			a_body.append (Cpp_clause)
+			if a_coclass.namespace /= Void and then not a_coclass.namespace.empty then
+				a_body.append (a_coclass.namespace)
+				a_body.append ("::")
+			end
 			a_body.append (a_coclass.c_type_name)
 			a_body.append (Space)
 			a_body.append (Percent_double_quote)

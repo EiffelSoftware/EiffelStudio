@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [STRING]} import_files_after.make
 			import_files_after.compare_objects
 			create {LINKED_LIST [STRING]} others.make
+			others.compare_objects
 			create {LINKED_LIST [STRING]} others_source.make
 			create {LINKED_LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]} constructors.make
 			create {LINKED_LIST [WIZARD_WRITER]} ordered_elements.make
@@ -104,6 +105,11 @@ feature -- Access
 			until
 				constructors.after
 			loop
+				if namespace /= Void and then not namespace.empty then
+					Result.append (namespace)
+					Result.append (Colon)
+					Result.append (Colon)
+				end
 				Result.append (name)
 				Result.append (Colon)
 				Result.append (Colon)
@@ -117,6 +123,11 @@ feature -- Access
 				constructors.forth
 			end
 			if destructor_body /= Void and then not destructor_body.empty then
+				if namespace /= Void and then not namespace.empty then
+					Result.append (namespace)
+					Result.append (Colon)
+					Result.append (Colon)
+				end
 				Result.append (name)
 				Result.append (Colon)
 				Result.append (Colon)
@@ -168,6 +179,7 @@ feature -- Access
 			ready: can_generate
 		local
 			class_protector: STRING
+			class_declaration: WIZARD_WRITER_FORWARD_CLASS_DECLARATION
 		do
 			if not abstract then
 				conversion_include
@@ -197,34 +209,8 @@ feature -- Access
 			Result.append (New_line)
 			Result.append (New_line)
 
-			if abstract then
-				class_protector := clone (name)
-				class_protector.prepend ("__")
-				class_protector.append ("_FWD_DEFINED__")
-
-				Result.append (Hash_if_ndef)
-				Result.append (Space)
-				Result.append (class_protector)
-				Result.append (New_line)
-
-				Result.append (Hash_define)
-				Result.append (Space)
-				Result.append (class_protector)
-				Result.append (New_line)
-			end
-
-			
-			Result.append (C_class_keyword)
-			Result.append (Space)
-			Result.append (name)
-			Result.append (Semicolon)
-			Result.append (New_line)
-
-			if abstract then
-				Result.append (Hash_end_if)
-				Result.append (New_line)
-			end
-			Result.append (New_line)
+			create class_declaration.make (name, namespace, abstract)
+			Result.append (class_declaration.generated_code)
 
 			Result.append (cpp_protector_end1)
 			Result.append (New_line)
@@ -288,9 +274,13 @@ feature -- Access
 			end
 
 			Result.append (cpp_protector_start1)
+
 			if abstract then
-				class_protector := clone (name)
-				class_protector.prepend ("__")
+				create class_protector.make (50)
+				class_protector.append ("__")
+				class_protector.append (namespace)
+				class_protector.append ("_")
+				class_protector.append (name)
 				class_protector.append ("_INTERFACE_DEFINED__")
 
 				Result.append (Hash_if_ndef)
@@ -303,6 +293,15 @@ feature -- Access
 				Result.append (class_protector)
 				Result.append (New_line)
 			end
+
+			if namespace /= Void and then not namespace.empty then
+				Result.append ("namespace ")
+				Result.append (namespace)
+				Result.append (New_line)
+				Result.append (Open_curly_brace)
+				Result.append (New_line)
+			end
+
 			Result.append (C_class_keyword)
 			Result.append (Space)
 			Result.append (name)
@@ -314,6 +313,10 @@ feature -- Access
 					parents.start
 					Result.append (cpp_status_keywords.item (parents.item.export_status))
 					Result.append (Space)
+					if parents.item.namespace /= Void and then not parents.item.namespace.empty then
+						Result.append (parents.item.namespace)
+						Result.append ("::")
+					end
 					Result.append (parents.item.name)
 					parents.forth
 				until
@@ -397,6 +400,12 @@ feature -- Access
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
 			Result.append (New_line)
+
+			if namespace /= Void and then not namespace.empty then
+				Result.append (Close_curly_brace)
+				Result.append (New_line)
+			end
+
 			if abstract then
 				Result.append (Hash_end_if)
 				Result.append (New_line)
@@ -437,7 +446,10 @@ feature -- Access
 
 	name: STRING
 			-- C++ class name
-			
+
+	namespace: STRING
+			-- Namespace.
+		
 	members: HASH_TABLE [LIST [WIZARD_WRITER_C_MEMBER], INTEGER]  
 			-- C++ class members
 	
@@ -478,6 +490,17 @@ feature -- Element Change
 			name := a_name
 		ensure
 			name_set: name.is_equal (a_name)
+		end
+
+	set_namespace (a_name: like name) is
+			-- Set `namespace' with `a_name'.
+		require
+			non_void_name: a_name /= Void
+			valid_syntax: a_name.item (1) /= '%N' and a_name.item (a_name.count) /= '%N'
+		do
+			namespace := a_name
+		ensure
+			namespace_set: namespace.is_equal (a_name)
 		end
 
 	add_constructor (a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR) is
@@ -547,7 +570,7 @@ feature -- Element Change
 			header_set: header.is_equal (a_header)
 		end
 
-	add_parent (a_name: STRING; an_export_status: INTEGER) is
+	add_parent (a_name: STRING; a_namespace: STRING; an_export_status: INTEGER) is
 			-- Add `a_parent' to `parents'.
 		require
 			non_void_parent: a_name /= Void
@@ -556,7 +579,7 @@ feature -- Element Change
 		local
 			a_parent: WIZARD_PARENT_CPP_CLASS
 		do
-			create a_parent.make (a_name, an_export_status)
+			create a_parent.make (a_name, a_namespace, an_export_status)
 			parents.extend (a_parent)
 		ensure
 			added: parents.last.name.is_equal (a_name)
@@ -643,6 +666,11 @@ feature {NONE} -- Implementation
 			create Result.make (10000)
 			Result.append (a_function.result_type)
 			Result.append (Space)
+			if namespace /= Void and then not namespace.empty then
+				Result.append (namespace)
+				Result.append (Colon)
+				Result.append (Colon)
+			end
 			Result.append (name)
 			Result.append (Colon)
 			Result.append (Colon)

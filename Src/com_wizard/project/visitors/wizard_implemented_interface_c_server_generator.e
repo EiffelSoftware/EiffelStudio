@@ -20,11 +20,7 @@ feature -- Access
 	default_dispinterface (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Default dispinterface.
 		do
-	--		if an_interface.interface_descriptor.dual then
-	--			Result := an_interface.interface_descriptor.dispinterface_descriptor
-	--		else
-				Result := an_interface.interface_descriptor
-	--		end
+			Result := an_interface.interface_descriptor
 		end
 
 feature -- Basic operations
@@ -32,16 +28,17 @@ feature -- Basic operations
 	generate (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Generate C server for implemented interface.
 		local
-			member_writer: WIZARD_WRITER_C_MEMBER
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 		do
 			Precursor {WIZARD_COMPONENT_C_SERVER_GENERATOR} (an_interface)
 			cpp_class_writer.set_name (an_interface.impl_c_type_name (False))
+			cpp_class_writer.set_namespace (an_interface.namespace)
 			cpp_class_writer.set_header_file_name (an_interface.impl_c_header_file_name (False))
 
 			an_interface.set_impl_names (False)
 
-			cpp_class_writer.add_parent (an_interface.interface_descriptor.c_type_name, Public)
+			cpp_class_writer.add_parent (an_interface.interface_descriptor.c_type_name,
+					an_interface.interface_descriptor.namespace, Public)
 			cpp_class_writer.add_import (an_interface.interface_descriptor.c_header_file_name)
 			cpp_class_writer.add_other_source (iid_definition (an_interface.interface_descriptor.name, an_interface.interface_descriptor.guid))
 

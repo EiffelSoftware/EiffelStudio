@@ -72,6 +72,9 @@ feature {NONE} -- Initialization
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 			-- Connect action sequences to GTK signals.
+		local
+			on_key_event_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE [EV_KEY, STRING, BOOLEAN]]
+			connect_button_press_switch_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE[]]
 		do
 			if not C.gtk_is_widget (c_object) then
 				print ("not widget!! " + generating_type)
@@ -89,15 +92,18 @@ feature {NONE} -- Initialization
 			if C.gtk_is_window (c_object) then
 				real_signal_connect (c_object, "configure-event", agent on_size_allocate, Default_translate)
 			else
-				real_signal_connect (c_object, "size-allocate", agent on_size_allocate, agent size_allocate_translate)
+				real_signal_connect (c_object, "size-allocate", agent on_size_allocate, size_allocate_translate_agent)
 			end
-
-			real_signal_connect (visual_widget, "key_press_event", agent on_key_event, agent key_event_translate)
-			real_signal_connect (visual_widget, "key_release_event", agent on_key_event, agent key_event_translate)
+			on_key_event_agent := agent on_key_event
+			real_signal_connect (visual_widget, "key_press_event", on_key_event_agent, key_event_translate_agent)
+			real_signal_connect (visual_widget, "key_release_event", on_key_event_agent, key_event_translate_agent)
 
 				--| "button-press-event" is a special case, see below.
-			pointer_button_press_actions.not_empty_actions.extend (agent connect_button_press_switch)
-			pointer_double_press_actions.not_empty_actions.extend (agent connect_button_press_switch)
+				
+			connect_button_press_switch_agent := agent connect_button_press_switch
+			button_press_switch_agent := agent button_press_switch
+			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
+			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
 				connect_button_press_switch
 			end
@@ -108,6 +114,9 @@ feature {NONE} -- Initialization
 
 	Signal_map_actions: INTEGER is 2
 
+
+	button_press_switch_agent: PROCEDURE [EV_WIDGET_IMP, TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
+	
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -119,7 +128,7 @@ feature {NONE} -- Initialization
 			--| GTK sends both GDK_BUTTON_PRESS and GDK_2BUTTON_PRESS events
 			--| when a handler is attached to "button-press-event".
 			--| We attach the signal to this switching feature to look at the
-			--| event type and pass the event data to the approptiate action
+			--| event type and pass the event data to the appropriate action
 			--| sequence.
 		require
 			button_or_2button_event:
@@ -150,7 +159,7 @@ feature {NONE} -- Initialization
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				signal_connect ("button-press-event", agent button_press_switch, default_translate)
+				signal_connect ("button-press-event", button_press_switch_agent, default_translate)
 				button_press_switch_is_connected := True
 			end
 		end
@@ -567,7 +576,7 @@ feature {NONE} -- Implementation
 				eiffel_to_c ("gtk-aux-info")
 			)
 		end
-
+		
 	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Convert GtkAllocation to tuple.
 		local
@@ -622,7 +631,22 @@ feature {NONE} -- Implementation
 			
 			Result := [key, a_key_string, a_key_press]
 		end
+		
 
+feature {NONE} -- Agent functions.
+
+	key_event_translate_agent: FUNCTION [EV_WIDGET_IMP, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- 
+		once
+			Result := agent key_event_translate
+		end
+		
+	size_allocate_translate_agent: FUNCTION [EV_WIDGET_IMP, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- 
+		once
+			Result := agent size_allocate_translate
+		end
+		
 feature {EV_WINDOW_IMP} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is

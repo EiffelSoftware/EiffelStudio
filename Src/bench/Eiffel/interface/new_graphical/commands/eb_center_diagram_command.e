@@ -55,7 +55,7 @@ feature -- Basic operations
 	execute_with_stone (a_stone: STONE) is
 			-- Create a development window and process `a_stone'.
 		do
-			tool.tool.set_stone (a_stone)
+			tool.tool.launch_stone (a_stone)
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is

@@ -9,7 +9,6 @@
 #include "eif_except.h"		/* eraise */
 #include "eif_store.h"
 #include "eif_retrieve.h"
-#include "rt_compress.h"
 #include "eif_error.h"    	/* for eio() */
 #include "eif_traverse.h"
 #include "eif_lmalloc.h"
@@ -27,8 +26,6 @@
 
 #define SOCKET_UNAVAILABLE_FOR_WRITING "Socket unavailable for writing"
 #define SOCKET_UNAVAILABLE_FOR_READING "Socket unavailable for reading"
-
-#define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
 
 rt_private int socket_fides;
 extern void idr_flush (void);
@@ -150,43 +147,6 @@ retry:
 	return i;
 }
 
-void net_store_write(void)
-{
-	char* cmps_in_ptr = (char *)0;
-	char* cmps_out_ptr = (char *)0;
-	int cmps_in_size = 0;
-	int cmps_out_size = 0;
-	register char * ptr = (char *)0;
-	register int number_left = 0;
-	int number_writen = 0;
-
-	cmps_in_ptr = general_buffer;
-	cmps_in_size = current_position;
-	cmps_out_ptr = cmps_general_buffer;
- 
-	eif_compress ((unsigned char*)cmps_in_ptr,
-					(unsigned long)cmps_in_size,
-					(unsigned char*)cmps_out_ptr,
-					(unsigned long*)&cmps_out_size);
- 
-	ptr = cmps_general_buffer;
-	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
-
-	while (number_left > 0) {
-		number_writen = net_char_write (ptr, number_left);
-
-		if (number_writen <= 0)
-			eio();
-		number_left -= number_writen;
-		ptr += number_writen;
-	}
-
-	if (ptr - cmps_general_buffer == cmps_out_size + EIF_CMPS_HEAD_SIZE)
-		current_position = 0;
-	else
-		eio();
-}
-
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
 	GTCX
@@ -200,13 +160,12 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 	socket_fides = file_desc;
 
 	rt_init_store(
-			net_store_write,
+			store_write,
 			net_char_write,
 			flush_st_buffer,
 			st_write,
 			make_header,
-			0,
-			EIF_BUFFER_SIZE);
+			0);
 
 	basic_general_free_store(object);
 
@@ -218,13 +177,12 @@ rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 	socket_fides = file_desc;
 
 	rt_init_store(
-			net_store_write,
+			store_write,
 			net_char_write,
 			flush_st_buffer,
 			gst_write,
 			make_header,
-			TR_ACCOUNT,
-			EIF_BUFFER_SIZE); 
+			TR_ACCOUNT);
 
 	basic_general_free_store(object);
 
@@ -236,13 +194,12 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 	socket_fides = file_desc;
 
 	rt_init_store(
-			net_store_write,
+			store_write,
 		   	net_char_write,
 			idr_flush,
 			ist_write,
 			imake_header,
-			INDEPEND_ACCOUNT,
-			EIF_BUFFER_SIZE); 
+			INDEPEND_ACCOUNT);
 
 	independent_free_store (object);
 	rt_reset_store();

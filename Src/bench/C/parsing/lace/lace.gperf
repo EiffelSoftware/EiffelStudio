@@ -49,3 +49,4 @@ trace,			LAC_TRACE
 use,			LAC_USE
 visible,		LAC_VISIBLE
 yes,			LAC_YES
+executable,		LAC_EXECUTABLE

@@ -112,6 +112,32 @@ feature {NONE}
 			Result := xm_option_button_gadget (screen_object)
 		end;
 
+feature
+
+	add_activate_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	add_release_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	add_arm_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	remove_release_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
+	remove_arm_action (a_command: COMMAND; argument: ANY) is
+		do
+		end
+
 feature 
 
 	text: STRING is

@@ -135,6 +135,16 @@ feature
 			value_changed_actions.add (a_command, argument)
 		end;
 
+feature
+
+	add_activate_action (a_command: COMMAND; argument: ANY) is
+		do
+		end;
+
+	remove_activate_action (a_command: COMMAND; argument: ANY) is
+		do
+		end;
+
 feature {NONE}
 
 	arm_actions: EVENT_HAND_M;

@@ -26,9 +26,9 @@ creation
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a text field with, `par' as
-                        -- parent
+	make (par: EV_CONTAINER) is
+			-- Create a text field with, `par' as
+			-- parent
 		do
 			!EV_TEXT_FIELD_IMP!implementation.make (par)
 			widget_make (par)

@@ -399,7 +399,6 @@ feature -- View management
 		local
 			diagram_output: XM_DOCUMENT
 			node: XM_ELEMENT
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 		do
 			diagram_output := Xml_routines.deserialize_document (ptf.name)
 			if diagram_output /= Void then

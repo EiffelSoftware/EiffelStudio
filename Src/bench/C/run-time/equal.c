@@ -499,6 +499,8 @@ uint32 s_flags;
 		CAttrOffs(offset,attr_key,s_type);
 		s_ref = source + offset;
 
+
+		
 		for (s_index = 0; scn_attr[s_index] != attr_key; s_index++)
 			;
 #endif
@@ -535,7 +537,7 @@ uint32 s_flags;
 				 */
 				if (!eequal(t_ref, s_ref))
 					return FALSE;
-			} else if (*t_ref != *s_ref)
+			} else if (*(char **)t_ref != *(char **)s_ref)
 				/* Check equality of references */
 				return FALSE;
 		}
@@ -579,7 +581,7 @@ uint32 s_flags;
 	t_type = t_flags & EO_TYPE;
 	t_skeleton = &System(t_type);
 	s_skeleton = &System(s_type);
-	t_types = s_skeleton->cn_types;
+	t_types = t_skeleton->cn_types;
 	s_types = s_skeleton->cn_types;
 #ifndef WORKBENCH
 	t_offsets = t_skeleton->cn_offsets;

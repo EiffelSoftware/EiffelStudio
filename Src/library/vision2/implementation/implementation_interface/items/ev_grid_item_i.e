@@ -58,7 +58,9 @@ feature -- Access
 
 	parent: EV_GRID is
 		do
-			to_implement ("EV_GRID_ITEM_I.grid")
+			if parent_grid_i /= Void then
+				Result := parent_grid_i.interface
+			end
 		end
 
 	row: EV_GRID_ROW is
@@ -90,7 +92,7 @@ feature -- Status report
 	is_parented: BOOLEAN is
 			-- Does current item belongs to an EV_GRID?
 		do
-			to_implement ("EV_GRID_ITEM_I.is_parented")
+			Result := parent_grid_i /= Void
 		end
 		
 	is_selected: BOOLEAN is
@@ -112,6 +114,19 @@ feature -- Element change
 		end
 		
 feature {NONE} -- Implementation
+
+	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
+			-- Set `parent_grid_i' to `a_parent_grid_i'
+		require
+			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+		do
+			parent_grid_i := a_parent_grid_i
+		ensure
+			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+		end
+
+	parent_grid_i: EV_GRID_I
+		-- Grid that `Current' resides in if any.
 
 	destroy is
 			-- Destroy `Current'.

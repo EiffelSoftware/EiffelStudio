@@ -80,6 +80,23 @@ feature -- Status setting
 		do
 		end
 
+	set_tab_width (a_width: INTEGER) is
+			-- Assign `a_width' to `tab_width'.
+		do
+		end
+
+	tab_width: INTEGER is
+			-- Default width in pixels of each tab in `Current'.
+		do
+		end
+		
+feature {NONE} -- Implementation
+
+	update_tab_positions (value: INTEGER) is
+			-- Update tab widths based on contents of `tab_positions'.
+		do
+		end
+
 feature {EV_ANY_I} -- Implementation
 	
 	interface: EV_RICH_TEXT

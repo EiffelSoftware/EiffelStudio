@@ -113,6 +113,26 @@ feature -- Element change
 		do
 			managed_data.put_integer_16 (n.to_integer_16, 0)
 		end
+		
+	initialize is
+			-- Fill Current with zeros.
+		obsolete
+			"Use `fill_blank' instead."
+		do
+			fill_blank
+		ensure
+			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
+		end
+
+	initialize_with_character (a_character: CHARACTER) is
+			-- Fill current with `a_character'.
+		obsolete
+			"Use `fill_value (a_character.code.to_integer_8)' instead"
+		do
+			fill_value (a_character.code.to_integer_8)
+		ensure
+			-- all_values: For every `i' in 1..`count', `item' (`i') = `a_value'			
+		end
 
 feature {NONE} -- Implementation
 

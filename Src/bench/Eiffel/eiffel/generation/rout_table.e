@@ -41,10 +41,30 @@ inherit
 create
 	make
 
-feature 
+feature -- Status report
 
 	is_routine_table: BOOLEAN is True;
 			-- Is the table a routine table ?
+
+	is_implemented: BOOLEAN is
+			-- Is implemented
+			-- in a static type greater than `type_id'.
+		require
+			--| goto_implemented (type_id) called before
+		do
+			Result := position <= max_position 
+		end
+
+	feature_name: STRING is
+			-- Feature name of the first implemented feature available
+			-- in a static type greater than `type_id' found by last
+			-- call to `goto_implemented (type_id)'.
+		require
+			--| goto_implemented (type_id) called before
+			is_implemented: is_implemented
+		do
+			Result := array_item (position).routine_name
+		end
 
 	is_polymorphic (type_id: INTEGER): BOOLEAN is
 			-- Is the table polymorphic from entry indexed by `type_id' to
@@ -138,6 +158,8 @@ feature
 			end
 		end
 
+feature -- Code generation
+
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generation of the routine table in buffer "erout*.c".
 		local
@@ -146,6 +168,80 @@ feature
 			l_min_used := min_used
 			goto_used (l_min_used)
 			internal_generate (buffer, 0, final_table_size, l_min_used, max_used)
+		end
+
+	generate_dispose_table (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
+			-- Generation of the dispose table in buffer "erout*.c".
+		local
+			l_rout_id: INTEGER
+			l_min_used: INTEGER
+		do	
+			l_rout_id := rout_id
+			rout_id := real_rout_id
+			l_min_used := min_used
+			goto_used (l_min_used)
+			internal_generate (buffer, l_min_used, system.type_id_counter.value, l_min_used,
+				max_used)
+			rout_id := l_rout_id
+		end
+
+	goto_implemented (type_id: INTEGER) is
+			-- Go to first implemented feature available in
+			-- a static type greater than `type_id'.
+		require
+			positive: type_id > 0
+		local
+			i, nb: INTEGER
+			first_type, cl_type: CLASS_TYPE
+			l_done: BOOLEAN
+			entry: ENTRY
+			system_i: like system
+		do
+			goto_used (type_id)
+			system_i := System
+			from
+				i := position
+				first_type := system_i.class_type_of_id (type_id)
+				nb := max_position
+			until
+				i > nb or l_done
+			loop
+				entry := array_item (i)
+				if entry.used then
+					cl_type := system_i.class_type_of_id (entry.type_id)
+					l_done := cl_type.conform_to (first_type)
+				end
+				i := i + 1
+			end
+			if l_done then
+				position := i - 1
+			else
+				position := i
+			end
+		ensure
+			is_implemented: position <= max_position implies is_implemented
+		end
+
+feature {NONE} -- Implementation
+
+	add_header_files (include_list: ARRAY [INTEGER]) is
+			-- Add `include_list' in header files of the `erout' files.
+		require
+			include_list_not_void: include_list /= Void
+		local
+			queue: like shared_include_queue
+			i, nb: INTEGER
+		do
+			from
+				i := include_list.lower
+				nb := include_list.upper
+				queue := shared_include_queue
+			until
+				i > nb
+			loop
+				queue.put (include_list.item (i))
+				i := i + 1
+			end
 		end
 
 	internal_generate (buffer: GENERATION_BUFFER; an_offset, a_table_size, a_min, a_max: INTEGER) is
@@ -238,99 +334,6 @@ feature
 			buffer.putstring ("};")
 			buffer.new_line
 			buffer.new_line
-		end
-
-	generate_dispose_table (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
-			-- Generation of the dispose table in buffer "erout*.c".
-		local
-			l_rout_id: INTEGER
-			l_min_used: INTEGER
-		do	
-			l_rout_id := rout_id
-			rout_id := real_rout_id
-			l_min_used := min_used
-			goto_used (l_min_used)
-			internal_generate (buffer, l_min_used, system.type_id_counter.value, l_min_used, max_used)
-			rout_id := l_rout_id
-		end
-
-	goto_implemented (type_id: INTEGER) is
-			-- Go to first implemented feature available in
-			-- a static type greater than `type_id'.
-		require
-			positive: type_id > 0
-		local
-			i, nb: INTEGER
-			first_type, cl_type: CLASS_TYPE
-			l_done: BOOLEAN
-			entry: ENTRY
-			system_i: like system
-		do
-			goto_used (type_id)
-			system_i := System
-			from
-				i := position
-				first_type := system_i.class_type_of_id (type_id)
-				nb := max_position
-			until
-				i > nb or l_done
-			loop
-				entry := array_item (i)
-				if entry.used then
-					cl_type := system_i.class_type_of_id (entry.type_id)
-					l_done := cl_type.conform_to (first_type)
-				end
-				i := i + 1
-			end
-			if l_done then
-				position := i - 1
-			else
-				position := i
-			end
-		ensure
-			is_implemented: position <= max_position implies is_implemented
-		end
-
-	is_implemented: BOOLEAN is
-			-- Is implemented
-			-- in a static type greater than `type_id'.
-		require
-			--| goto_implemented (type_id) called before
-		do
-			Result := position <= max_position 
-		end
-
-	feature_name: STRING is
-			-- Feature name of the first implemented feature available
-			-- in a static type greater than `type_id' found by last
-			-- call to `goto_implemented (type_id)'.
-		require
-			--| goto_implemented (type_id) called before
-			is_implemented: is_implemented
-		do
-			Result := array_item (position).routine_name
-		end
-
-feature {NONE} -- Implementation
-
-	add_header_files (include_list: ARRAY [INTEGER]) is
-			-- Add `include_list' in header files of the `erout' files.
-		require
-			include_list_not_void: include_list /= Void
-		local
-			queue: like shared_include_queue
-			i, nb: INTEGER
-		do
-			from
-				i := include_list.lower
-				nb := include_list.upper
-				queue := shared_include_queue
-			until
-				i > nb
-			loop
-				queue.put (include_list.item (i))
-				i := i + 1
-			end
 		end
 
 	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: STRING; a_lower, a_upper: INTEGER) is

@@ -88,12 +88,9 @@ feature {IL_CODE_GENERATOR} -- Generation
 			count: INTEGER
 			param: BYTE_LIST [EXPR_B]
 			param_b: PARAMETER_B
-			exp: CREATION_EXPR_AS
-			l_tuple: TUPLE_AS
 			l_tuple_const, l_sub_tuple_const: TUPLE_CONST_B
 			l_ca: MD_CUSTOM_ATTRIBUTE
 			l_ctor_token: INTEGER
-			l_class_c: CLASS_C
 			l_creation_class: CLASS_C
 			l_type: CL_TYPE_I
 		do

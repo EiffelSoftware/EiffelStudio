@@ -12,7 +12,8 @@ inherit
 	EOLE_UNKNOWN
 		redefine
 			interface_identifier,
-			interface_identifier_list
+			interface_identifier_list,
+			on_release
 		end
 
 creation
@@ -29,7 +30,7 @@ feature -- Access
 	interface_identifier_list: LINKED_LIST [STRING] is
 			-- List of supported interfaces
 		once
-			Result := precursor
+			Result := Precursor
 			Result.extend (interface_identifier)
 		end
 
@@ -94,12 +95,26 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			positive_locks: server_locks >= 0
 		end
 	
+	on_release: INTEGER is
+			-- By default: Decrement counter.
+			-- Destroy associated C++ interface
+			-- if reference counter = 0 and server lock counter = 0.
+			-- Redefine in descendant if needed.
+		do
+			reference_counter := reference_counter - 1
+			if reference_counter = 0  and server_locks = 0 then
+				detach_ole_interface_ptr
+			end
+			Result := reference_counter
+		end
+
 feature {NONE} -- Implementation
 
 	terminate is
 			-- End server.
 			-- redefine in descendant if needed.
 		do
+			detach_ole_interface_ptr
 		end
 
 	server_locked: BOOLEAN

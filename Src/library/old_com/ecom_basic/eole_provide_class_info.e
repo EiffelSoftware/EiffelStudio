@@ -29,7 +29,7 @@ feature -- Access
 	interface_identifier_list: LINKED_LIST [STRING] is
 			-- List of supported interfaces
 		once
-			Result := precursor
+			Result := Precursor
 			Result.extend (interface_identifier)
 		end
 

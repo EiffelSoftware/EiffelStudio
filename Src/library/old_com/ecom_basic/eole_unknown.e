@@ -33,7 +33,7 @@ feature -- Initialization
 		
 feature -- Element change
 		
-	create_ole_interface_ptr is
+	create_ole_interface_ptr is 
 			-- Initialize associated OLE pointer.
 		require
 			initializable_from_eiffel: is_initializable_from_eiffel
@@ -44,6 +44,16 @@ feature -- Element change
 			ole_interface_ptr := ole2_create_interface_pointer ($Current, wel_string.item)
 		ensure
 			is_valid_interface: is_valid_interface
+		end
+
+	frozen link_ole_interface_ptr (ptr: POINTER) is
+			-- Set `ole_interface_ptr' with `ptr'.
+		require
+			valid_pointer: ptr /= default_pointer
+		do
+			ole_interface_ptr := ptr
+		ensure
+			is_attached: ole_interface_ptr /= default_pointer
 		end
 
 	frozen attach_ole_interface_ptr (ptr: POINTER) is
@@ -183,7 +193,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			until
 				interface_identifier_list.after or Result /= default_pointer
 			loop
-				if iid.is_equal (interface_identifier_list.item) then
+					if iid.is_equal (interface_identifier_list.item) then
 					add_ref
 					Result := ole_interface_ptr
 					set_last_hresult (S_ok)

@@ -44,9 +44,9 @@ EIF_POINTER screen_pointer;
 	return root_y;
 }
 
-EIF_INTEGER x_query_window_pointer (display_pointer, window)
+EIF_POINTER x_query_window_pointer (display_pointer, window)
 EIF_POINTER display_pointer;
-EIF_INTEGER window;
+EIF_POINTER window;
 {
 	/* Get the window currently pointed  
 	 */	
@@ -58,7 +58,7 @@ EIF_INTEGER window;
 	XQueryPointer ((Display *) display_pointer, (Window) window, 
 					&root, &child, &root_x, &root_y, 
 					&win_x, &win_y, &keys_buttons);
-	return (EIF_INTEGER) child;
+	return (EIF_POINTER) child;
 }
 
 EIF_BOOLEAN x_query_button_pointer (display_pointer, button)

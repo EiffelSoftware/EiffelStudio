@@ -18,8 +18,6 @@ inherit
 
 	EV_COMMAND
 
---	WINDOW_ATTRIBUTES
-
 creation
 	make_default
 

@@ -14,42 +14,42 @@ inherit
 
 creation
 
-	make
+	make_with_command
 	
 feature -- Initialization
 
-	make (cmd: TOOL_COMMAND) is
+	make_with_command (cmd: EB_TOOL_COMMAND) is
 			-- Create a filter window.
 		local
-			button_form: FORM
-			display_button, execute_button, cancel_button: PUSH_B
-			filter_label, shell_label: LABEL
+			display_button, execute_button, cancel_button: EV_BUTTON
+			filter_label, shell_label: EV_LABEL
 		do
-			form_dialog_create (Interface_names.n_X_resource_name, cmd.popup_parent)
+			make (cmd.tool.parent_window)
 			set_title (Interface_names.t_Filter_w)
 
-			create filter_label.make_with_text (display_area, new_name)
-			filter_label.set_text ("Select a filter")
+			associated_command := cmd
+
+			create filter_label.make_with_text (display_area, "Select a filter")
 			filter_label.set_left_alignment
 
-			create list.make_with_text (display_area, new_name)
-			list.compare_objects
-			list.set_visible_item_count (9)
-			list.add_click_command (Current, list)
+			create list.make (display_area)
+--			list.compare_objects
+--			list.set_visible_item_count (9)
+			list.add_selection_command (Current, list_it)
 
 			filter_command ?= cmd
 			if filter_command /= Void then
-				create shell_label.make_with_text (Current, "Command to be executed")
+				create shell_label.make_with_text (display_area, "Command to be executed")
 				shell_label.set_left_alignment
-				create text_field.make (new_name, Current)
-				create display_button.make (action_area, Interface_names.b_Display)
-				display_button.add_activate_action (Current, display_it)
+				create text_field.make (display_area)
+				create display_button.make_with_text (action_area, Interface_names.b_Display)
+				display_button.add_click_command (Current, display_it)
 			end
-			create execute_button.make (action_area, Interface_names.b_Execute)
-			execute_button.add_activate_command (Current, execute_it)
+			create execute_button.make_with_text (action_area, Interface_names.b_Execute)
+			execute_button.add_click_command (Current, execute_it)
 
-			create cancel_button.make (action_area, Interface_names.b_Cancel)			
-			cancel_button.add_activate_command (Current, cancel_it)
+			create cancel_button.make_with_text (action_area, Interface_names.b_Cancel)			
+			cancel_button.add_click_command (Current, cancel_it)
 --			set_composite_attributes (Current)
 		end
 
@@ -64,106 +64,108 @@ feature -- Execution Implementation
 	call (cmd: like associated_command) is
 		local
 			index: INTEGER
-			str_element: SCROLLABLE_LIST_STRING_ELEMENT
+			str_element: EV_LIST_ITEM
+			wd: EV_WARNING_DIALOG
 		do
 			associated_command := cmd
 			warning_message := Void
 			fill_list
 			if filter_command = Void then
-				!! str_element.make (0)
-				str_element.append (filter_name)
-				index := list.index_of (str_element, 1)
+				create str_element.make_with_text (list, filter_name)
+				index := str_element.index
 			else
-				!! str_element.make (0)
-				str_element.append (filter_command.filter_name)
-				index := list.index_of (str_element, 1)
+				create str_element.make_with_text (list, filter_command.filter_name)
+				index := str_element.index
 				text_field.set_text (General_resources.filter_command.value)
 			end
 			if index = 0 then index := 1 end
-			list.go_i_th (index)
-			list.select_item
-			list.scroll_to_current
-			display
+			list.select_item (index)
+			last_selected_item := list.get_item (index)
+			show
 			if warning_message /= Void then
-				warner (associated_command.popup_parent). gotcha_call (warning_message)
+				create wd.make_default (associated_command.tool.parent,
+					Interface_names.t_Warning, warning_message)
 			end
 		end
 	
 	selected_filter: STRING is
 			-- Selected filter item
 		do
-			if not list.off then
-				Result := list.selected_item.value
-			end
+			Result := last_selected_item.text
 		end
 
 feature {NONE} -- Properties
 
-	display_it: ANY is
+	display_it: EV_ARGUMENT1 [ANY] is
 			-- Argument for the command.
 		once
-			!!Result
+			create Result.make (Void)
 		end
 
-	execute_it: ANY is
+	execute_it: EV_ARGUMENT1 [ANY] is
 			-- Argument for the command.
 		once
-			!!Result
+			create Result.make (Void)
 		end
 
-	cancel_it: ANY is
+	cancel_it: EV_ARGUMENT1 [ANY] is
 			-- Argument for the command.
 		once
-			!!Result
+			create Result.make (Void)
 		end
 
-	filter_command: FILTER_COMMAND
+	list_it: EV_ARGUMENT1 [ANY] is
+			-- Argument for the command.
+		once
+			create Result.make (Void)
+		end
 
-	associated_command: TOOL_COMMAND
+	filter_command: EB_FILTER_CMD
 
-	list: SCROLLABLE_LIST
+	associated_command: EB_TOOL_COMMAND
 
-	text_field: TEXT_FIELD
+	list: EV_LIST
+
+	last_selected_item: EV_LIST_ITEM
+
+	text_field: EV_TEXT_FIELD
 
 	warning_message: STRING
 
 feature {NONE} -- Implementation
 
-	work (argument: ANY) is
+	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 		local
 			tmp_name: STRING
 		do
-			if last_warner /= Void then
-				last_warner.popdown
-			end
-			if argument = list then
+			if argument = list_it then
 				if list.selected_item = Void then
 						-- The user tried to deselect the current filter
 						-- name by clicking twice on it. No way!!
-					list.select_item
+					last_selected_item.set_selected (True)
 				else
-					list.go_i_th (list.selected_position)
+					last_selected_item := list.selected_item
 				end
 			elseif argument = cancel_it then
 				popdown
 			elseif argument = display_it or argument = execute_it then
 				if filter_command = Void then
 					filter_name.wipe_out
-					filter_name.append (list.selected_item.value)
+					filter_name.append (list.selected_item.text)
 				else
 					tmp_name := filter_command.filter_name
 					tmp_name.wipe_out
 					if list.selected_item /= Void then
-						tmp_name.append (list.selected_item.value)
+						tmp_name.append (list.selected_item.text)
 					end
 					tmp_name := General_resources.filter_command.value
 					tmp_name.wipe_out
 					tmp_name.append (text_field.text)
 				end
 				if argument = display_it then
-					filter_command.execute (Current)
+					filter_command.execute (filter_command.filter_it, data)
 				elseif argument = execute_it then
-					associated_command.execute (associated_command)
+					associated_command.execute (execute_it, data)
 					popdown
 				end
 			end
@@ -177,23 +179,19 @@ feature {NONE} -- Implementation
 			file_name, file_suffix: STRING
 			name_count: INTEGER
 			filter_names: SORTED_TWO_WAY_LIST [STRING]
-			str_element: SCROLLABLE_LIST_STRING_ELEMENT
+			str_element: EV_LIST_ITEM
 		do
 			!!filter_dir.make (filter_path)
 			if not filter_dir.exists then
 				warning_message := Warning_messages.w_Directory_not_exist (filter_path)
-				list.wipe_out
-				!! str_element.make (0)
-				str_element.append ("")
-				list.put_right (str_element)
+				list.clear_items
+				create str_element.make (list)
 			elseif not filter_dir.is_readable then
 				warning_message := Warning_messages.w_Cannot_read_directory (filter_path)
-				list.wipe_out
-				!! str_element.make (0)
-				str_element.append ("")
-				list.put_right (str_element)
+				list.clear_items
+				create str_element.make (list)
 			else
-				!!filter_names.make
+				!! filter_names.make
 				filter_dir.open_read
 				from
 					filter_dir.start
@@ -215,25 +213,27 @@ feature {NONE} -- Implementation
 					file_name := filter_dir.lastentry
 				end
 				filter_dir.close
-				list.wipe_out
+				list.clear_items
 				if filter_names.empty then
-					!! str_element.make (0)
-					str_element.append ("")
-					list.put_right (str_element)
+					create str_element.make (list)
 				else
 					from
 						filter_names.start
 					until
 						filter_names.after
 					loop
-						!! str_element.make (0)
-						str_element.append (filter_names.item)
-						list.extend (str_element)
-						list.forth
+						create str_element.make_with_text (list, filter_names.item)
 						filter_names.forth
 					end
 				end
 			end
+		end
+
+	popdown is
+		-- destroy the dialog without calling a "selection changed" event
+		do
+			list.remove_selection_commands
+			destroy
 		end
 
 invariant

@@ -1,41 +1,112 @@
 <!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
 <HTML>
 	<HEAD>
-		<TITLE></TITLE>
-		<META NAME="MS-HKWD" CONTENT="">
+		<TITLE>EiffelStudio window overview</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Overview">
+		<META NAME="MS-HKWD" CONTENT="Context tool">
 		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
 	</HEAD>
 
 	<BODY>
-		<H1></H1>
-		<P></P>
+		<H1>EiffelStudio window overview</H1>
+        <H2>Window layout</H2>
 
-		<P></P>
+        <P>Unlike its predecessor EiffelBench, in EiffelStudio all windows have
+        the same components. However, components to be displayed are chosen by
+        the user. Moreover, windows have two modes: the edition mode and the
+        debug mode. Basically, a standard window looks like this:</P>
 
-		<P></P>
+		<P>SCREENSHOT(Development window mode edition)</P>
+
+		<P>As you can see, it is divided in several parts: a top section, a left
+        panel and a right panel.</P>
+
+        <P>The top part is rather not surprising. It first contains a menu bar,
+        which adapts itself to the context of the current project. It also
+        contains two toolbars (the main toolbar and the project toolbar).
+        Between the toolbars is located the main address bar.</P>
+
+        <P>The left panel contains various <i> tools</i> that help the navigation in the
+        system.</P>
+
+		<P>The right panel contains two major tools: the editor and the context
+        tool.</P>
+
+        <P>In debug mode, a window looks like this:</P>
+
+        <P>SCREENSHOT(Development window debug mode)</P>
+
+        <P>In debug mode, the same tools are present, but there are two extra
+        tools, one in the left panel that can display the current call stack and
+        one for viewing the state of objects while debugging.</P>
+
+        <h2>Layout configuration</h2>
+
+        <h3>Tool configuration</h3>
+
+        <P>All tools have similar controls to give their display options. It is
+        possible to minimize, restore and maximize all tools by using the proper
+        button in their top right-hand corner. Most tools can also be closed. These tools have a close button in the
+        corner.</P>
 
 		<UL>
-			<LI>First item of bulleted list with a <A HREF="overview.html">link</A> in it.
-			<LI>Second item in bulleted list.
-			<LI>Third item in bulleted list.
+            <li>The minimize button <IMG SRC="/images/eiffelstudio/icon_minimize_color.gif"></li>
+            <li>The maximize button <IMG SRC="/images/eiffelstudio/icon_maximize_color.gif"></li>
+            <li>The restore button <IMG SRC="/images/eiffelstudio/icon_restore_color.gif"></li>
+            <li>The close button <IMG SRC="/images/eiffelstudio/icon_close_color.gif"></li>
 		</UL>
 
-		<P CLASS="Note">
-		<B>Note</B>: Did you know?<BR>
-		</P>
-		<P CLASS="tip">
-		<B>Tip</B>: Cool trick<BR>
-		</P>
-		<P CLASS="warning">
-		<B>Caution</B>: Be careful<BR>
-		</P>
-		<P CLASS="seealso">
+<p class="note"><b>Note</b>: No more than three tools can be displayed at the
+same time in the left panel. Trying to add more will automatically minimize one
+of the displayed tools, in order to make room for the new tool.</p>
+
+        <P>Tools that can be closed have a corresponding entry in the <b>View/Explorer
+        Bar</b> menu. They also have a corresponding button in the main toolbar.</P>
+
+        <P>The only tools that cannot be closed are the editor, and when in
+        debug mode the two debug tools.</P>
+
+        <h3>Toolbar configuration</h3>
+
+        <P>Main toolbars can be customized. This allows to select buttons that
+        should be displayed in the toolbars, as well as whether an explanatory
+        text should be displayed next to icons.</P>
+
+        <h2>Context tool</h2>
+
+        <P>The context tool, located in the right panel, is a major part of
+        EiffelStudio. It itself contains several tabs that each correspond to
+        powerful functionalities.</P>
+
+		<UL>
+			<LI>The <b>Output</b> tab is where general information and error
+              messages are displayed
+            <li>The <b>Diagram</b> tab uses the BON notation to analyze and
+              design a project</li>
+            <li>The <b>Class</b> tab gives advanced information concerning a
+              class</li>
+            <li>The <b>Feature</b> tab gives advanced information concerning a
+              feature</li>
+			<LI>The <b>Metrics</b> tab provides quantitative information
+              concerning a system or some of its components
+		</UL>
+
+        <P>By default, all tools refer to the same object. This object can for
+        example be a class, a feature or a cluster. However, it is possible to
+        separate the context tool from the rest of the window. In this case, all
+        left tools refer to the object that is in the editor and the main
+        toolbar, while the context tool displays information concerning a
+        different object.</P>
+
+        <P CLASS="seealso">
 		<B>See Also</B><BR>
-					<A HREF="Decision.html">Related Topic</A><BR>
-		</P>
-		<P CLASS="sample">
-		<B>Samples</B><BR>
-					<A HREF="sourcecode.html">Sample</A><BR>
+        <A HREF="HYPERLINK(Guided Tour)">EiffelStudio Guided Tour</A><br>
+        <A HREF="../10_browsing_tools/00_introduction.html">Browsing tools</A><br>
+        <A HREF="30_main_toolbars.html">Toolbar customization</A><br>
+        <A HREF="../20_editor/00_introduction.html">Editor reference</A><br>
+        <A HREF="../80_formatters/00_introduction.html">Formats</A><br>
+        <A HREF="../50_diagram_tool/00_introduction.html">Diagram reference</A><br>
+        <A HREF="../60_metric_tool/00_introduction.html">Metrics reference</A>
 		</P>
 	</BODY>
 </HTML>

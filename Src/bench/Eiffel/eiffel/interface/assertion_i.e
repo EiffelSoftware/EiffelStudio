@@ -41,7 +41,7 @@ feature
 			-- Do nothing
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate assertion value in `file'.
 		require
 			good_argument: file /= Void;

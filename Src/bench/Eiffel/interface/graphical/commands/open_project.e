@@ -43,7 +43,7 @@ feature {NONE}
 				name_chooser.hide_file_selection_list;
 				name_chooser.hide_file_selection_label;
 				if argument = name_chooser then
-					dir_name := name_chooser.selected_file.duplicate;
+					dir_name := clone (name_chooser.selected_file);
 					last_char := dir_name.item (dir_name.count); 
 					if last_char = Directory_separator then
 						dir_name.remove (dir_name.count)
@@ -73,7 +73,7 @@ feature
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
-			workbench_file: UNIX_FILE;
+			workbench_file: RAW_FILE;
 			ok: BOOLEAN;
 			temp: STRING;
 		do
@@ -160,7 +160,7 @@ feature
 
 	retried: BOOLEAN;
 
-	retrieve_project (project_dir: PROJECT_DIR; workbench_file: UNIX_FILE) is
+	retrieve_project (project_dir: PROJECT_DIR; workbench_file: RAW_FILE) is
 		local
 			init_work: INIT_WORKBENCH;
 			precomp_r: PRECOMP_R;
@@ -171,7 +171,7 @@ feature
 				init_project_directory := project_dir;
 				if project_dir /= Project_directory then end;
 				!!workb;
-				workbench_file.open_binary_read;
+				workbench_file.open_read;
 				workb ?= workb.retrieved (workbench_file);
 				if workb = Void then
 					retried := True

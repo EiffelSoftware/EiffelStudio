@@ -316,7 +316,7 @@ feature -- Generation
 			!!Result.make (file_name);
 		end;
 
-	descriptor_file: UNIX_FILE is
+	descriptor_file: INDENT_FILE is
 			-- File for generating descriptor table
 		require
 			Workbench_mode: not byte_context.final_mode
@@ -604,7 +604,7 @@ feature -- Byte code generation
 
 feature -- Skeleton generation
 
-	Skeleton_file: UNIX_FILE is
+	Skeleton_file: INDENT_FILE is
 		do
 			Result := System.Skeleton_file
 		end;

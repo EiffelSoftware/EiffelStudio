@@ -61,7 +61,7 @@ feature
 			Result := Formal_level;
 		end;
 
-	generate_code (file: UNIX_FILE) is
+	generate_code (file: INDENT_FILE) is
 			-- Useless
 		do
 		end;

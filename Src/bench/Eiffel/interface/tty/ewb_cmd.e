@@ -60,7 +60,7 @@ feature -- Initialization
 			-- Initialize the project, i.e.
 		local
 			project_dir: PROJECT_DIR;
-			workbench_file: UNIX_FILE;
+			workbench_file: RAW_FILE;
 			temp: STRING
 		do
 
@@ -157,7 +157,7 @@ end;
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
-			workbench_file: UNIX_FILE;
+			workbench_file: RAW_FILE;
 			precomp_r: PRECOMP_R;
 			temp: STRING
 		do
@@ -168,7 +168,7 @@ if not initialized.item then
 
 			if not retried then
 				!!workb;
-				!!workbench_file.make_open_binary_read (Project_file_name);
+				!!workbench_file.make_open_read (Project_file_name);
 				workb ?= workb.retrieved (workbench_file);
 				if workb = Void then
 					retried := True;
@@ -407,13 +407,13 @@ feature -- Termination
 			-- Clear the servers and save the system structures
 			-- to disk.
 		local
-			file: UNIX_FILE;
+			file: RAW_FILE;
 			temp: STRING
 		do
 			if not retried then
 				System.server_controler.wipe_out;
 				!!file.make (Project_file_name);
-				file.open_binary_write;
+				file.open_write;
 				Workbench.basic_store (file);
 				file.close;
 			else
@@ -493,7 +493,7 @@ feature {NONE} -- Check Ace file
 	check_ace_file (fn: STRING) is
 			-- Check that the Ace file exists and is readable and plain
 		local
-			f: UNIX_FILE
+			f: PLAIN_TEXT_FILE
 		do
 			!! f.make (fn);
 			if

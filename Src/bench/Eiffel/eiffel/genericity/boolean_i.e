@@ -48,7 +48,7 @@ feature
 			Result := system.boolean_ref_class.compiled_class.types.first;
 		end;
 
-	generate_cecil_value (file: UNIX_FILE) is
+	generate_cecil_value (file: INDENT_FILE) is
 			-- Generate cecil type value
 		do
 			file.putstring ("SK_BOOL");
@@ -60,7 +60,7 @@ feature
 			Result := Sk_bool;
 		end;
 
-	generate_sk_value (file: UNIX_FILE) is
+	generate_sk_value (file: INDENT_FILE) is
 			-- Generate SK value associated to current C type in `file'.
 		do
 			file.putstring ("SK_BOOL");

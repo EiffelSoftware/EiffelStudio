@@ -89,7 +89,7 @@ feature -- Lace compilation
 			-- Adapt cluster `cluster' with the use file
 		local
 			path, use_file_path: STRING;
-			use_file: UNIX_FILE;
+			use_file: PLAIN_TEXT_FILE;
 			cluster_prop: like Current;
 			vd02: VD02;
 			vduc: VDUC;

@@ -18,7 +18,7 @@ feature
 	file_counter: INTEGER;
 			-- Count of generated files
 
-	current_file: UNIX_FILE;
+	current_file: INDENT_FILE;
 			-- Current generate file
 
 	infix_file_name: STRING is
@@ -45,7 +45,7 @@ feature
 			init_file;
 		end;
 
-	new_file: UNIX_FILE is
+	new_file: INDENT_FILE is
 			-- New file for generation
 		local
 			file_name: STRING;

@@ -24,7 +24,7 @@ feature
 			Result := System.type_id_counter.value;
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generation of the routine table in file "_rout.c".
 		local
 			entry: ROUT_ENTRY;

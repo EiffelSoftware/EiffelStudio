@@ -31,8 +31,10 @@ feature
 		end;
 
 	wipe_out is
+		require else
+			True
 		do
-			array_wipe_out;
+			make (lower, upper);
 			argument_position := 1;
 			argument_count := 1;
 		end;

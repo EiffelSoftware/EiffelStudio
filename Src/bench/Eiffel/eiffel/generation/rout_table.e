@@ -77,7 +77,7 @@ feature
 			go_i_th (pos);
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generation of the routine table in file "_rout.c".
 		local
 			entry: ROUT_ENTRY;

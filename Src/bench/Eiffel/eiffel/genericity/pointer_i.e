@@ -39,37 +39,37 @@ feature
 			!!Result
 		end;
 
-	generate_cecil_value (f: UNIX_FILE) is
+	generate_cecil_value (f: INDENT_FILE) is
 			-- Generate Cecil type value.
 		do
 			f.putstring ("SK_POINTER");
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
 			file.putstring ("fnptr ");
 		end;
 
-	generate_cast (file: UNIX_FILE) is
+	generate_cast (file: INDENT_FILE) is
 			-- Generate C cast in file `file'.
 		do
 			file.putstring ("(fnptr) ");
 		end;
 
-	generate_access_cast (file: UNIX_FILE) is
+	generate_access_cast (file: INDENT_FILE) is
 			-- Generate access C cast in file `file'.
 		do
 			file.putstring ("(fnptr *) ");
 		end;
 
-	generate_function_cast (file: UNIX_FILE) is
+	generate_function_cast (file: INDENT_FILE) is
 			-- Generate C function cast in file `file'.
 		do
 			file.putstring ("(fnptr (*)()) ");
 		end;
 
-	generate_size (file: UNIX_FILE) is
+	generate_size (file: INDENT_FILE) is
 			-- Generate size of C type
 		do
 			file.putstring ("sizeof(fnptr)");
@@ -93,14 +93,14 @@ feature
 			Result := Sk_pointer;
 		end;
 
-	generate_union (file: UNIX_FILE) is
+	generate_union (file: INDENT_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.
 		do
 			file.putstring ("it_ptr");
 		end;
 
-	generate_sk_value (file: UNIX_FILE) is
+	generate_sk_value (file: INDENT_FILE) is
 			-- Generate SK value associated to current C type in `file'.
 		do
 			file.putstring ("SK_POINTER");

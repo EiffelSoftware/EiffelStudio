@@ -103,7 +103,7 @@ feature
 
 -- Pattern generation
 
-	generate_hooks (file: UNIX_FILE) is
+	generate_hooks (file: INDENT_FILE) is
 			-- Generate garbage collector hooks
 		local
 			i, nb: INTEGER;
@@ -179,7 +179,7 @@ feature
 			Result > 0
 		end;
 		
-	generate_argument_names (file: UNIX_FILE) is
+	generate_argument_names (file: INDENT_FILE) is
 			-- Generate argument name list
 		local
 			i, nb: INTEGER;
@@ -197,7 +197,7 @@ feature
 			end;
 		end;
 
-	generate_argument_declaration (nbtab: INTEGER; file: UNIX_FILE) is
+	generate_argument_declaration (nbtab: INTEGER; file: INDENT_FILE) is
 			-- Generate argument declarations
 		local
 			i, j, nb: INTEGER;
@@ -226,7 +226,7 @@ feature
 			
 		end;
 
-	generate_arguments_in_call (file: UNIX_FILE) is
+	generate_arguments_in_call (file: INDENT_FILE) is
 			-- Generate arguments in call
 		local
 			i, nb: INTEGER;
@@ -249,7 +249,7 @@ feature
 			end;
 		end;
 
-	generate_pattern (id: INTEGER; file: UNIX_FILE) is
+	generate_pattern (id: INTEGER; file: INDENT_FILE) is
 			-- Generate pattern
 		local
 			arg: TYPE_C;
@@ -263,7 +263,7 @@ feature
 
 		end;
 
-	generate_toc_compound (id: INTEGER; file: UNIX_FILE) is
+	generate_toc_compound (id: INTEGER; file: INDENT_FILE) is
 			-- Generate compound pattern from interpreter to C code
 		do	
 			file.putstring ("static void toc");
@@ -296,7 +296,7 @@ feature
 			file.putstring ("}%N%N");
 		end;
 
-	generate_toi_compound (id: INTEGER; file: UNIX_FILE) is
+	generate_toi_compound (id: INTEGER; file: INDENT_FILE) is
 			-- Generate compound pattern from C code to the interpreter
 		do
 			file.putstring ("static ");
@@ -320,7 +320,7 @@ feature
 			file.putstring ("}%N%N");
 		end;
 
-	generate_toi_push (file: UNIX_FILE) is
+	generate_toi_push (file: INDENT_FILE) is
 			-- Generates stack pushing instruction for the patterns
 			-- going from C to the interpreter
 		local
@@ -350,7 +350,7 @@ feature
 				%%Tit->it_ref = Current;%N");
 		end;
 
-	generate_toc_pop (file: UNIX_FILE) is
+	generate_toc_pop (file: INDENT_FILE) is
 			-- Generate poping instructions for pattern from interpreter
 			-- to C code
 		local
@@ -371,7 +371,7 @@ feature
 			end;
 		end;
 
-	generate_routine_call (is_extern: BOOLEAN; file: UNIX_FILE) is
+	generate_routine_call (is_extern: BOOLEAN; file: INDENT_FILE) is
 			-- Generate C routine call
 		local
 			i, nb: INTEGER;

@@ -137,9 +137,4 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	fpos1: INTEGER is
-		external
-			"C"
-		end;
-
 end

@@ -29,7 +29,7 @@ feature -- C code generation
 		local
 			type_i: TYPE_I;
 			cl_type_i: CL_TYPE_I;
-			gen_file: UNIX_FILE;
+			gen_file: INDENT_FILE;
 		do
 			type_i := context.constrained_type (type);
 			type_i := context.instantiation_of (type_i);

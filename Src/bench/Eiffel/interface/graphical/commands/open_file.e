@@ -22,14 +22,14 @@ feature {NONE}
 			-- Open a file.
 		local
 			fn: STRING;
-			f: UNIX_FILE;
+			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
 			if argument = warner then
 				-- The user has eventually been warned that he will lose his stuff
 				name_chooser.call (Current) 
 			elseif argument = name_chooser then
-				fn := name_chooser.selected_file.duplicate;
+				fn := clone (name_chooser.selected_file);
 				!! f.make (fn);
 				if
 					f.exists and then f.is_readable and then f.is_plain

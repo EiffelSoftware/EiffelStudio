@@ -74,7 +74,7 @@ feature
 			Result := used;
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generation of the table for final Eiffel executable.
 		deferred
 		end;
@@ -255,7 +255,7 @@ feature
 			end;
 		end;
 
-	generate_type_table (file: UNIX_FILE; final_mode: BOOLEAN) is
+	generate_type_table (file: INDENT_FILE; final_mode: BOOLEAN) is
 			-- Generate the associated type table
 		local
 			i, nb: INTEGER;
@@ -295,7 +295,7 @@ feature
 
 		end;
 
-	generate_workbench (file: UNIX_FILE) is
+	generate_workbench (file: INDENT_FILE) is
 			-- Generate workbench table
 		require
 			good_argument: file /= Void;

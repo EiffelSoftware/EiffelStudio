@@ -34,6 +34,8 @@ feature
 
 	clear is
 			-- Clear deletes the files in tmp_poly_server
+		local
+			server_file: SERVER_FILE
 		do
 				-- Nothing is stored after a finalization
 				-- so we do NOT have to update all the objects
@@ -45,7 +47,9 @@ feature
 			until
 				file_ids.after
 			loop
-				Server_controler.file_of_id (file_ids.item).delete;
+				server_file := Server_controler.file_of_id (file_ids.item);
+				Server_controler.forget_file (server_file);
+				server_file.delete;
 				file_ids.forth
 			end;
 			clear_all;

@@ -98,7 +98,7 @@ feature {NONE}
 			-- Recompile the project.
 		local
 			fn: STRING;
-			f: UNIX_FILE;
+			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
 			reset_debugger;
@@ -113,7 +113,7 @@ feature {NONE}
 					system_tool.display;	
 					load_default_ace;	
 				elseif argument = name_chooser then
-					fn := name_chooser.selected_file.duplicate;
+					fn := clone (name_chooser.selected_file);
 					!! f.make (fn);
 					if
 						f.exists and then f.is_readable and then f.is_plain
@@ -139,7 +139,7 @@ feature {NONE}
 		local
 			arg2: STRING;
 			cmd_string: STRING;
-			uf: UNIX_FILE;
+			uf: RAW_FILE;
 		do
 			if System.uses_precompiled then
 					-- Target
@@ -166,12 +166,12 @@ feature {NONE}
 	save_workbench_file is
 			-- Save the `.workbench' file.
 		local
-			file: UNIX_FILE
+			file: RAW_FILE
 		do
 			if not retried then
 				System.server_controler.wipe_out;
 				!!file.make (Project_file_name);
-				file.open_binary_write;
+				file.open_write;
 				workbench.basic_store (file);
 				file.close;
 			else

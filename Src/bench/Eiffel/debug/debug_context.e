@@ -24,7 +24,7 @@ feature
 		local
 			first_format: LOCAL_FORMAT;
 			start_pos, end_pos: INTEGER;
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 			assert_server: ASSERT_SERVER;
 			ast: FEATURE_AS;
 			target_feat: FEATURE_I;

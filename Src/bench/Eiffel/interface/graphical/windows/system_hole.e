@@ -39,7 +39,7 @@ feature {NONE}
 			void_text: TEXT_WINDOW;
 			system_stone: SYSTEM_STONE;
 			fn: STRING;
-			f: UNIX_FILE;
+			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
 			if project_tool.initialized then
@@ -50,7 +50,7 @@ feature {NONE}
 					elseif argument = warner then
 						name_chooser.call (Current);
 					elseif argument = name_chooser then
-						fn := name_chooser.selected_file.duplicate;
+						fn := clone (name_chooser.selected_file);
 						!! f.make (fn);
 						if 
 							f.exists and then f.is_readable and then f.is_plain

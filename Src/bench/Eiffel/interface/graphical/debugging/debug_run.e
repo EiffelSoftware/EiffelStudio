@@ -53,8 +53,8 @@ feature
 			application_name: STRING;
 			makefile_sh_name: STRING;
 			status: BOOLEAN;
-			uf: UNIX_FILE;
-			make_f: UNIX_FILE;
+			uf: RAW_FILE;
+			make_f: PLAIN_TEXT_FILE;
 			message: STRING
 		do
 			if Run_info.is_running then

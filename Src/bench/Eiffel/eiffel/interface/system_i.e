@@ -304,13 +304,13 @@ feature
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
 
-	cecil_file: UNIX_FILE;
+	cecil_file: INDENT_FILE;
 
-	skeleton_file: UNIX_FILE;
+	skeleton_file: INDENT_FILE;
 
-	conformance_file: UNIX_FILE;
+	conformance_file: INDENT_FILE;
 
-	make_file: UNIX_FILE;
+	make_file: INDENT_FILE;
 
 	array_make_name: STRING;
 			-- Name of the C routine corresponding to the
@@ -1207,7 +1207,7 @@ end;
 debug ("ACTIVITY")
 	io.error.putstring ("Updating .UPDT%N");
 end;
-			Update_file.open_binary_write;
+			Update_file.open_write;
 			file_pointer := Update_file.file_pointer;
 
 				-- There is something to update
@@ -1745,7 +1745,7 @@ end;
 
 	generate_empty_update_file is
 		do
-			Update_file.open_binary_write;
+			Update_file.open_write;
 				-- Nothing to update
 			Update_file.putchar ('%U');
 			Update_file.close;
@@ -2224,7 +2224,7 @@ end;
 		local
 			i, nb: INTEGER;
 			class_type: CLASS_TYPE;
-			file: UNIX_FILE
+			file: INDENT_FILE
 		do
 			file := Size_file (byte_context.final_mode);
 			from
@@ -2957,7 +2957,7 @@ feature -- Main file generation
 
 	generate_main_file is
 		local
-			Main_file: UNIX_FILE;
+			Main_file: INDENT_FILE;
 		do
 			Main_file := Main_f (byte_context.final_mode);
 			Main_file.open_write;
@@ -3006,7 +3006,7 @@ feature -- Main file generation
 			feature_id: INTEGER;
 			has_argument: BOOLEAN;
 			i, nb: INTEGER;
-			Initialization_file: UNIX_FILE
+			Initialization_file: INDENT_FILE
 
 			rout_id: INTEGER;
 			rout_table: ROUT_TABLE
@@ -3153,7 +3153,7 @@ feature -- Workbench routine info table file generation
 
 	generate_rout_info_table is
 		local
-			f: UNIX_FILE
+			f: INDENT_FILE
 		do
 			if not byte_context.final_mode then
 				f := Rout_info_file;
@@ -3421,7 +3421,7 @@ feature -- Conveniences
 			max_class_id := i;
 		end;
 
-	set_make_file (f: UNIX_FILE) is
+	set_make_file (f: INDENT_FILE) is
 		do
 			make_file := f;
 		end;

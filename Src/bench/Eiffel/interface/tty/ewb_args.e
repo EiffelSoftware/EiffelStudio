@@ -31,7 +31,7 @@ feature
 				-- Get the arguments
 			io.putstring ("--> Arguments: ");
 			wait_for_return;
-			new_args := io.laststring.duplicate;
+			new_args := clone (io.laststring);
 			if new_args.empty then
 				if not args.empty then
 					io.putstring ("No value entered. Do you want to: %N%

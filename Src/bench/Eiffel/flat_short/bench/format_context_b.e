@@ -69,7 +69,6 @@ feature
 			first_format: LOCAL_FORMAT;
 			ast: CLASS_AS;
 			name: STRING;
-			file: UNIX_FILE;
 		do
 			if not rescued then
 				Error_handler.wipe_out;

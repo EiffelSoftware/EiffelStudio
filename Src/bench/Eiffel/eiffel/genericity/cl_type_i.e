@@ -168,7 +168,7 @@ feature
 			Result := associated_expanded_class_type.type_id
 		end;
 
-	generate_cecil_value (file: UNIX_FILE) is
+	generate_cecil_value (file: INDENT_FILE) is
 			-- Generate cecil value
 		do
 			if not is_expanded then

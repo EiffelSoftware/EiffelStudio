@@ -68,7 +68,7 @@ feature
 			False
 		end;
 
-	generate_cecil_value (f: UNIX_FILE) is
+	generate_cecil_value (f: INDENT_FILE) is
 		do
 		ensure then
 			False

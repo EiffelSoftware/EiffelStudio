@@ -90,7 +90,7 @@ feature
 			go_i_th (pos);
 		end;
 
-	generate (file: UNIX_FILE) is
+	generate (file: INDENT_FILE) is
 			-- Generation of the attribute table in file "_attr.c".
 		local
 			class_type: CLASS_TYPE;

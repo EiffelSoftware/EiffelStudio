@@ -9,7 +9,7 @@ feature
 			temp: STRING;
 			c: CHARACTER
 		do
-			temp := s.duplicate; temp.to_lower;
+			temp := clone (s); temp.to_lower;
 			if temp.count >= 2 and then temp.item (2) = 'x' then
 				i := 3
 			else

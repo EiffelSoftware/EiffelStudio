@@ -8,7 +8,7 @@ inherit
 	
 feature 
 
-	plug_file: UNIX_FILE;
+	plug_file: INDENT_FILE;
 
 	general_class: CLASS_I;
 			-- Class GENERAL

@@ -2,7 +2,7 @@ class EXTEND_FILE
 
 inherit
 
-	UNIX_FILE;
+	PLAIN_TEXT_FILE;
 	SHARED_RESCUE_STATUS
 
 creation

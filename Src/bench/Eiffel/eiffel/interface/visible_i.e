@@ -52,7 +52,7 @@ feature {NONE}
 			Result := primes.higher_prime ((5 * i) // 4);
 		end;
 
-	cecil_file: UNIX_FILE is
+	cecil_file: INDENT_FILE is
 		do
 			Result := System.cecil_file
 		end;

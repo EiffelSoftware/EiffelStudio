@@ -205,7 +205,7 @@ feature
 	build_ast: CLASS_AS is
 			-- Parse the file and generate the AST
 		local
-			file: UNIX_FILE;
+			file: PLAIN_TEXT_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
 		do
@@ -261,8 +261,6 @@ feature
 			parent_list: EIFFEL_LIST [PARENT_AS];
 			invariant_info: READ_INFO;
 			old_syntactical_suppliers: like syntactical_suppliers;
-			file: UNIX_FILE;
-			class_file_name: STRING;
 			vd22: VD22;
 		do
 				-- Check suppliers of parsed class represented by `ast'.
@@ -1293,7 +1291,7 @@ feature -- Workbench feature and descriptor table generation
 		local
 			table_file_name: STRING;
 			feat_tbl: FEATURE_TABLE;
-			file: UNIX_FILE;
+			file: INDENT_FILE;
 		do
 			feat_tbl := feature_table;
 			table_file_name := full_file_name;
@@ -2824,7 +2822,7 @@ feature -- Cecil
 			no_generics: generics = Void;
 			System.Cecil_file.is_open_write;
 		local
-			cecil_file: UNIX_FILE;
+			cecil_file: INDENT_FILE;
 		do
 			cecil_file := System.cecil_file;
 			if is_expanded then

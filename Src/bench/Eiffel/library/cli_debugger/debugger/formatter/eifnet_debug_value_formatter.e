@@ -102,6 +102,11 @@ feature -- Transforming
 
 feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_VALUE_EXPORTER} -- Dereferenced to Specialized Value
 
+	prepared_icor_debug_value_is_null (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
+		do
+			Result := a_data.is_null_reference
+		end
+
 	prepared_icor_debug_value_as_truncated_string (a_data: ICOR_DEBUG_VALUE; a_size: INTEGER): STRING is
 		local
 			l_string: ICOR_DEBUG_STRING_VALUE

@@ -21,15 +21,15 @@ create
 
 feature {NONE} -- Implementation
 
-	implementation: EV_HORIZONTAL_SEPARATOR_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-
 	create_implementation is
 			-- Create implementation of horizontal separator.
 		do
 			create {EV_HORIZONTAL_SEPARATOR_IMP} implementation.make (Current)
 		end
+
+	implementation: EV_HORIZONTAL_SEPARATOR_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 end -- class EV_HORIZONTAL_SEPARATOR
 
@@ -54,6 +54,9 @@ end -- class EV_HORIZONTAL_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/01 20:28:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.8  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

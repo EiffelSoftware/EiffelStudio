@@ -69,7 +69,16 @@ feature -- Events
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed on expose.
 
-feature {EV_DRAWING_AREA_IMP} -- Implementation
+feature {EV_ANY} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := {EV_PRIMITIVE} Precursor and then
+				{EV_DRAWABLE} Precursor
+		end
+
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of drawing area.
@@ -89,15 +98,6 @@ feature {EV_DRAWING_AREA_I} -- Implementation
 	implementation: EV_DRAWING_AREA_I
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
-
-feature {EV_ANY} -- Contract support
-
-	is_in_default_state: BOOLEAN is
-			-- Is `Current' in its default state.
-		do
-			Result := {EV_PRIMITIVE} Precursor and then
-				{EV_DRAWABLE} Precursor
-		end
 
 invariant
 	expose_actions_not_void: expose_actions /= Void
@@ -125,6 +125,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/01 20:28:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.14  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

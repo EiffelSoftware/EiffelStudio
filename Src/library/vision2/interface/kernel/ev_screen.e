@@ -40,10 +40,6 @@ feature -- Measurement
 			positive: Result > 0
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_SCREEN_I
-
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -51,6 +47,10 @@ feature {NONE} -- Implementation
 		do
 			create {EV_SCREEN_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_SCREEN_I
 
 end -- class EV_SCREEN
 
@@ -75,6 +75,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 20:28:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.6  2000/02/22 18:39:52  oconnor
 --| updated copyright date and formatting
 --|

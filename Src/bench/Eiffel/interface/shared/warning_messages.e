@@ -1145,7 +1145,13 @@ feature -- Warning messages
 
 	w_Stop_compilation: STRING is "This command will stop the compilation."
 
+	w_Exiting_stops_compilation: STRING is "Exiting will stop the compilation."
+
 	w_Stop_debugger: STRING is "This command will stop the debugger."
+
+	w_Exiting_stops_debugger: STRING is "Exiting will stop the debugger."
+
+	w_Closing_stops_debugger: STRING is "Closing the window will stop the debugger."
 
 	w_System_not_running: STRING is "System is not running."
 

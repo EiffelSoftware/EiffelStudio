@@ -14,6 +14,7 @@
 #include "eif_portable.h"
 #include "request.h"
 #include "rqst_idrs.h"
+#include "idrs_helpers.h"
 #include <string.h>
 #include "rt_assert.h"
 

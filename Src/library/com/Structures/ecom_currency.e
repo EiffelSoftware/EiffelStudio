@@ -10,6 +10,8 @@ class
 inherit
 
 	ECOM_STRUCTURE
+		rename
+			make as structure_make
 		undefine
 			is_equal
 		end
@@ -26,11 +28,17 @@ creation
 
 feature -- Initialization
 
+	make is
+		do
+			structure_make
+			ccom_currency_value_zero (item)
+		end
+
 	make_from_decimal (dec_value: ECOM_DECIMAL) is
 			-- Create with value 'dec_value'
 		do
 			make
-			ccom_currency_from_decimal (dec_value.item, item)
+		--	ccom_currency_from_decimal (dec_value.item, item)
 		end
 
 feature  -- Access

@@ -299,7 +299,7 @@ feature -- Access
 		require
 			is_variant: is_variant (variable_type)
 		do
-			Result := ccom_variant (initializer)
+			create Result.make_from_pointer (ccom_variant (initializer))
 		end
 
 	unknown_interface: ECOM_UNKNOWN_INTERFACE is
@@ -307,15 +307,18 @@ feature -- Access
 		require
 			is_unknown_ref: is_unknown (variable_type)
 		do
-			Result := ccom_unknown_interface (initializer)
+			create Result.make_from_pointer( ccom_unknown_interface (initializer))
 		end
 
 	unknown_interface_reference: CELL[ECOM_UNKNOWN_INTERFACE] is
 			-- IUnknown interface reference value
 		require
 			is_unknown_ref: is_unknown (variable_type) and is_byref (variable_type)
+		local
+			unk_interface: ECOM_UNKNOWN_INTERFACE
 		do
-			Result := ccom_unknown_interface_reference (initializer)
+			create unk_interface.make_from_pointer (ccom_unknown_interface_reference (initializer))
+			create Result.put (unk_interface)
 		end
 
 	dispatch_interface: ECOM_AUTOMATION_INTERFACE is
@@ -323,15 +326,18 @@ feature -- Access
 		require
 			is_dispatch_ref: is_dispatch (variable_type)
 		do
-			Result := ccom_dispatch_interface (initializer)
+			create Result.make_from_pointer (ccom_dispatch_interface (initializer))
 		end
 
 	dispatch_interface_reference: CELL[ECOM_AUTOMATION_INTERFACE] is
 			-- IDispatch interface reference value
 		require
 			is_dispatch_ref: is_dispatch (variable_type) and is_byref (variable_type)
+		local
+			disp_interface: ECOM_AUTOMATION_INTERFACE
 		do
-			Result := ccom_dispatch_interface_reference (initializer)
+			create disp_interface.make_from_pointer (ccom_dispatch_interface_reference (initializer))
+			create Result.put (disp_interface)
 		end
 
 	integer4_array: ECOM_ARRAY [INTEGER] is
@@ -878,7 +884,7 @@ feature -- Element change
 			non_void: a_value /= Void
 			valid_value: a_value.item /= Void
 		do
-			ccom_set_date_reference (initializer, a_value.item)
+			ccom_set_date_reference (initializer, a_value)
 		end
 
 	set_error (a_value: ECOM_HRESULT) is
@@ -1604,7 +1610,7 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_date_reference (a_ptr: POINTER; a: DATE_TIME) is
+	ccom_set_date_reference (a_ptr: POINTER; a: CELL[DATE_TIME]) is
 		external
 			"C++ [ecom_variant %"E_variant.h%"](EIF_OBJECT)"
 		end
@@ -1689,9 +1695,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](EIF_OBJECT)"
 		end
 
-	ccom_variant (a_ptr: POINTER): ECOM_VARIANT is
+	ccom_variant (a_ptr: POINTER): POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_variant (a_ptr: POINTER; a: POINTER) is
@@ -1699,9 +1705,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](VARIANT *)"
 		end
 
-	ccom_unknown_interface (a_ptr: POINTER):  ECOM_UNKNOWN_INTERFACE is
+	ccom_unknown_interface (a_ptr: POINTER):  POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_unknown_interface (a_ptr: POINTER; a: POINTER) is
@@ -1709,9 +1715,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](IUnknown *)"
 		end
 
-	ccom_unknown_interface_reference (a_ptr: POINTER):  CELL[ECOM_UNKNOWN_INTERFACE] is
+	ccom_unknown_interface_reference (a_ptr: POINTER):  POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_unknown_interface_reference (a_ptr: POINTER; a: POINTER) is
@@ -1719,9 +1725,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](IUnknown *)"
 		end
 
-	ccom_dispatch_interface (a_ptr: POINTER):  ECOM_AUTOMATION_INTERFACE is
+	ccom_dispatch_interface (a_ptr: POINTER):  POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_dispatch_interface (a_ptr: POINTER; a_value: POINTER) is
@@ -1729,9 +1735,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](IDispatch *)"
 		end
 
-	ccom_dispatch_interface_reference (a_ptr: POINTER):  CELL[ECOM_AUTOMATION_INTERFACE] is
+	ccom_dispatch_interface_reference (a_ptr: POINTER):  POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_dispatch_interface_reference (a_ptr: POINTER; a_value: POINTER) is

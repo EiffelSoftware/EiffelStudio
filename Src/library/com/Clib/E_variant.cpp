@@ -347,7 +347,7 @@ void ecom_variant::ccom_set_decimal_reference (DECIMAL *a_value)
 
 EIF_REFERENCE ecom_variant::ccom_currency ()
 {
-	return rt_ce.ccom_ce_currency (V_CY(variant));
+	return rt_ce.ccom_ce_currency(V_CY(variant));
 }
 
 EIF_POINTER ecom_variant::ccom_currency_reference ()
@@ -389,9 +389,9 @@ void ecom_variant::ccom_set_bstr_reference (EIF_OBJECT a_value)
 	V_BSTRREF(variant) = (BSTR *) rt_ec.ccom_ec_pointed_c_pointer((void *) rt_ec.ccom_ec_bstr (eif_access(a_value)));
 }
 
-EIF_REFERENCE ecom_variant::ccom_variant ()
+EIF_POINTER ecom_variant::ccom_variant ()
 {
-	return rt_ce.ccom_ce_pointed_variant(V_VARIANTREF(variant));
+	return (EIF_POINTER)V_VARIANTREF(variant);
 }
 
 void ecom_variant::ccom_set_variant (VARIANT *a_value)
@@ -400,14 +400,14 @@ void ecom_variant::ccom_set_variant (VARIANT *a_value)
 	V_VARIANTREF(variant) = a_value;
 }
 
-EIF_REFERENCE ecom_variant::ccom_unknown_interface ()
+EIF_POINTER ecom_variant::ccom_unknown_interface ()
 {
-	return rt_ce.ccom_ce_pointed_unknown(V_UNKNOWN(variant));
+	return (EIF_POINTER)V_UNKNOWN(variant);
 }
 
-EIF_REFERENCE ecom_variant::ccom_unknown_interface_reference ()
+EIF_POINTER ecom_variant::ccom_unknown_interface_reference ()
 {
-	return rt_ce.ccom_ce_pointed_unknown(*(V_UNKNOWNREF(variant)));
+	return (EIF_POINTER)*(V_UNKNOWNREF(variant));
 }
 
 void ecom_variant::ccom_set_unknown_interface (IUnknown *a_value)
@@ -422,14 +422,14 @@ void ecom_variant::ccom_set_unknown_interface_reference (IUnknown *a_value)
 	V_UNKNOWNREF(variant) = (IUnknown **)rt_ec.ccom_ec_pointed_c_pointer((void *)a_value);
 }
 
-EIF_REFERENCE ecom_variant::ccom_dispatch_interface ()
+EIF_POINTER ecom_variant::ccom_dispatch_interface ()
 {
-	return rt_ce.ccom_ce_pointed_dispatch(V_DISPATCH(variant));
+	return (EIF_POINTER) V_DISPATCH(variant);
 }
 
-EIF_REFERENCE ecom_variant::ccom_dispatch_interface_reference ()
+EIF_POINTER ecom_variant::ccom_dispatch_interface_reference ()
 {
-	return rt_ce.ccom_ce_pointed_dispatch(*(V_DISPATCHREF(variant)));
+	return (EIF_POINTER)*(V_DISPATCHREF(variant));
 }
 
 void ecom_variant::ccom_set_dispatch_interface (IDispatch * a_value)

@@ -22,8 +22,8 @@ creation
 
 feature -- Initialization
 
-    make (t: like image; f: like e_feature) is
-            -- Initialize Current with class_i `e'
+    make (f: like e_feature; t: like image) is
+            -- Initialize Current with feature `f'
             -- and image `t'.
         do
             image := t;

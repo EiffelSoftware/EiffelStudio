@@ -131,7 +131,6 @@ feature {NONE} -- Implementation
 			element_type_is_item: element.name.to_utf8.is_equal (Item_string)
 		local
 			new_object: GB_OBJECT
-			widget: EV_WIDGET
 			current_element: XML_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING

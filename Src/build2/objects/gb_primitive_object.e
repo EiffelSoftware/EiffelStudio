@@ -44,8 +44,6 @@ feature {NONE} -- Implementation
 	build_display_object is
 			-- Build `display_object' from type of `Current'
 			-- and hence `object'.
-		local
-			pick_and_dropable: EV_PICK_AND_DROPABLE
 		do
 			display_object ?= vision2_object_from_type (type)
 			display_object.set_pebble_function (agent retrieve_pebble)

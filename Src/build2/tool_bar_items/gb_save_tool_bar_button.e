@@ -38,8 +38,6 @@ feature {NONE} -- Implementation
 
 	save_object is
 			-- Save representation of window to XML.
-		local
-			node: XML_NODE
 		do
 			--| FIXME need to add a file save dialog box, and get
 			--| the location for the save.

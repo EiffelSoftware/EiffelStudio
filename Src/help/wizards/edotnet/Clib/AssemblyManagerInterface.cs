@@ -15,6 +15,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 	{
 		RInterface = new ReflectionInterface();
 		RInterface.MakeReflectionInterface();
+		Done = new ArrayList();
 	}
 	
 	// Assemblies in the Eiffel assembly cache
@@ -85,17 +86,27 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 	// Dependencies of local assemblies with filename `Filename'
 	public String [] LocalAssemblyDependencies( String Filename )
 	{
-		AssemblyName AName;
-		ConversionSupport convert;
-		AssemblyDescriptor descriptor;
+		Assembly assembly;
+		ArrayList dependencies;
+		int i;
+		String [] localDependencies;
 		
-		AName = AssemblyName.GetAssemblyName( Filename );
-		convert = new ConversionSupport();
-		descriptor = convert.AssemblyDescriptorFromName( AName );
-		if( descriptor != null )
-			return AssemblyDependencies( descriptor.Name, descriptor.Version, descriptor.Culture, descriptor.PublicKey );
+		assembly = Assembly.LoadFrom( Filename );
+		if( assembly != null )
+		{
+			dependencies = InternLocalAssemblyDependencies( assembly );
+			if( dependencies != null )
+			{
+				localDependencies = new String [dependencies.Count];
+				for( i = 0; i < dependencies.Count; i++ )
+					localDependencies [i] = ( ( Assembly )dependencies [i] ).Location;
+				return localDependencies;
+			}
+			else
+				return null;
+		}
 		else
-			return new String [0];
+			return null;
 	}
 	
 	// Dependencies of the assembly with `Name', `Version', `Culture' and `PublicKey'
@@ -195,10 +206,40 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		return Assemblies;
 	}
 
+	protected ArrayList InternLocalAssemblyDependencies( Assembly assembly )
+	{
+		ArrayList dependencies;
+		AssemblyName [] references;
+		int i, Added;
+		AssemblyName aDependency;
+		Assembly newAssembly;
+		
+		dependencies = new ArrayList();
+		references = assembly.GetReferencedAssemblies();
+		if( references != null )
+		{			
+			for( i = 0; i < references.Length; i ++ )
+			{
+				aDependency = references [i];
+				if( !( Done.Contains( aDependency.FullName ) )&& !( aDependency.FullName.Equals( "Microsoft.VisualC, Version=7.0.9249.59748, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" ) ) )
+				{
+					newAssembly = Assembly.Load( aDependency );
+					Added = Done.Add( aDependency.FullName );
+					dependencies.AddRange( InternLocalAssemblyDependencies( newAssembly ) );
+					Added = dependencies.Add( newAssembly );
+				}
+			}
+		}
+		return dependencies;
+	}
+	
 	// Was last importation successful?
 	private bool PrivateLastImportationSuccessful;
 	
 	// Reflection interface	
 	protected ReflectionInterface RInterface;
+	
+	// Loaded assemblies, used in `InternLocalAssemblyDependencies'
+	protected ArrayList Done;
 }
 

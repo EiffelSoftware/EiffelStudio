@@ -257,7 +257,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of double value
 		do
-			Result := c_outd (item)
+			Result := c_outr64 (item)
 		end
 
 feature {NONE} -- Implementation
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
 		end
 
-	c_outd (d: DOUBLE): STRING is
+	c_outr64 (d: DOUBLE): STRING is
 			-- Printable representation of double value
 		external
 			"C | %"eif_out.h%""
@@ -285,33 +285,33 @@ feature {NONE} -- Implementation
 			-- Integer part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"conv_di"
+			"((EIF_INTEGER) ($d))"
 		end
 
 	c_truncated_to_integer_64 (d: DOUBLE): INTEGER_64 is
 			-- Integer part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C macro use %"eif_misc.h%""
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"conv_di64"
+			"((EIF_INTEGER_64) ($d))"
 		end
 
 	c_truncated_to_real (d: DOUBLE): REAL is
 			-- Real part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"conv_dr"
+			"((EIF_REAL) ($d))"
 		end
 
 	c_ceiling (d: DOUBLE): DOUBLE is
 			-- Smallest integral value no smaller than `d'
 		external
-			"C | <math.h>"
+			"C signature (double): double use <math.h>"
 		alias
 			"ceil"
 		end
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 	c_floor (d: DOUBLE): DOUBLE is
 			-- Greatest integral value no greater than `d'
 		external
-			"C | <math.h>"
+			"C signature (double): double use <math.h>"
 		alias
 			"floor"
 		end

@@ -42,6 +42,17 @@ feature -- Access
 	found_type: CODE_GENERATED_TYPE
 			-- Last type found with `search'
 
+	Generated_types: HASH_TABLE [CODE_GENERATED_TYPE, STRING] is
+			-- Types declared in Codedom tree
+			-- Value: `CODE_GENERATED_TYPE'
+			-- Key: .NET full type name
+		once
+			create Result.make (128)
+			Result.compare_objects
+		ensure
+			non_void_generated_types: Result /= Void
+		end
+
 feature -- Status Repport
 
 	is_generated (a_type: CODE_TYPE_REFERENCE): BOOLEAN is
@@ -90,19 +101,6 @@ feature -- Element Settings
 			-- Reset content of `Generated_types'.
 		do
 			Generated_types.clear_all
-		end
-		
-feature {NONE} -- Private access
-
-	Generated_types: HASH_TABLE [CODE_GENERATED_TYPE, STRING] is
-			-- Types declared in Codedom tree
-			-- Value: `CODE_GENERATED_TYPE'
-			-- Key: .NET full type name
-		once
-			create Result.make (128)
-			Result.compare_objects
-		ensure
-			non_void_generated_types: Result /= Void
 		end
 
 invariant

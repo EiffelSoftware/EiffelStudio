@@ -70,7 +70,7 @@ pause
 echo @echo off > make.w32
 echo $make %%1>> make.w32
 rt_converter.exe make.w32 make.w32
-del run-time\eif_config.h
+if exist run-time\eif_config.h del run-time\eif_config.h
 rem
 rem Copy the config 
 rem
@@ -104,8 +104,8 @@ rem
 rem Create OBJDIR and LIB in run-time
 rem
 cd run-time
-mkdir OBJDIR
-mkdir LIB
+if not exist OBJDIR mkdir OBJDIR
+if not exist LIB mkdir LIB
 cd ..
 rem
 rem Call the converter tranforming the makefile-win.sh to makefile
@@ -138,7 +138,7 @@ cd ..
 rem
 rem Call make
 rem
-del make.bat
+if exist make.bat del make.bat
 echo cd console>> make.bat
 echo call make>> make.bat
 echo cd ..\idrs>> make.bat

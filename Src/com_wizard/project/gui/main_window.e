@@ -357,7 +357,7 @@ feature {NONE} -- State management
 			from
 				previous_states.extend (Abort_state)
 				state := First_state
-				shared_wizard_environment.set_no_abort
+				environment.set_no_abort
 			until
 				state = Finished_state or 
 				state = Abort_state or
@@ -380,7 +380,7 @@ feature {NONE} -- State management
 	change_state (move_to_next: BOOLEAN) is
 			-- Set `state' to next state according to `move_to_next'.
 		do
-			if shared_wizard_environment.abort then
+			if environment.abort then
 				state := Abort_state
 			elseif move_to_next then
 				previous_states.extend (state)
@@ -388,23 +388,23 @@ feature {NONE} -- State management
 					state	
 					
 				when First_state then
-					if shared_wizard_environment.new_project then
+					if environment.new_project then
 						state := Introduction_state
 					else
 						state := Open_state
 					end
 					
 				when Introduction_state then
-					if shared_wizard_environment.new_eiffel_project then
+					if environment.new_eiffel_project then
 						state := Initial_eiffel_state
 					else
 						state := Initial_state
 					end
 
 				when Initial_state then
-					if not shared_wizard_environment.server then
+					if not environment.server then
 						state := Final_state
-					elseif shared_wizard_environment.idl then
+					elseif environment.idl then
 						state := Idl_state
 					else
 						state := Ps_state
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 			end
 			if not retried then
 				create f.make_open_write (a_project)
-				f.independent_store (shared_wizard_environment)
+				f.independent_store (environment)
 				f.close
 				add_message (Save_message)
 			else
@@ -533,7 +533,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				start
 			when Generate_string_constant then
 				clear
-				shared_wizard_environment.set_no_abort
+				environment.set_no_abort
 				set_message_output_and_progress_report
 				run_wizard_manager
 			when Exit_string_constant then
@@ -558,7 +558,7 @@ feature {WIZARD_FIRST_CHOICE_DIALOG} -- Behavior
 				set_shared_wizard_environment (create {WIZARD_ENVIRONMENT}.make)
 				tool_bar.disable_button (Save_string_constant)
 				tool_bar.disable_button (Generate_string_constant)
-				shared_wizard_environment.set_new_project (True)
+				environment.set_new_project (True)
 				start
 
 			when About_string_constant then

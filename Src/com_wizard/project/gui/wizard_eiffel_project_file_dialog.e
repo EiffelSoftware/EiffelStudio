@@ -97,17 +97,17 @@ feature -- Behavior
 			elseif cluster_name = Void or else cluster_name.is_empty then
 				msg_box.error_message_box (Current, Empty_cluster_name, Initialization_error)
 			else
-				shared_wizard_environment.set_project_name (project_name)
-				shared_wizard_environment.set_ace_file_name (ace_file_name)
-				shared_wizard_environment.set_class_cluster_name (cluster_name)
+				environment.set_project_name (project_name)
+				environment.set_ace_file_name (ace_file_name)
+				environment.set_class_cluster_name (cluster_name)
 
 				create a_file.make (project_file_name)
 				if not a_file.exists then
 					msg_box.warning_message_box (Current, Invalid_project_file, Wizard_error)
 				else
-					shared_wizard_environment.set_eiffel_project_name (project_file_name)
+					environment.set_eiffel_project_name (project_file_name)
 
-					shared_wizard_environment.set_eiffel_class_name (eiffel_class_name)
+					environment.set_eiffel_class_name (eiffel_class_name)
 					Precursor {WIZARD_DIALOG}
 				end
 			end
@@ -239,22 +239,22 @@ feature {NONE} -- Implementation
 			-- IDL file extension
 
 	setup_text_fields is
-			-- Initialize edits according to `shared_wizard_environment'.
+			-- Initialize edits according to `environment'.
 		do
-			if shared_wizard_environment.eiffel_project_name /= Void then
-				project_file_edit.set_text (shared_wizard_environment.eiffel_project_name)
+			if environment.eiffel_project_name /= Void then
+				project_file_edit.set_text (environment.eiffel_project_name)
 			end
 
-			if shared_wizard_environment.eiffel_class_name /= Void then
-				class_name_edit.set_text (shared_wizard_environment.eiffel_class_name)
+			if environment.eiffel_class_name /= Void then
+				class_name_edit.set_text (environment.eiffel_class_name)
 			end
 
-			if shared_wizard_environment.ace_file_name /= Void then
-				ace_file_name_edit.set_text (shared_wizard_environment.ace_file_name)
+			if environment.ace_file_name /= Void then
+				ace_file_name_edit.set_text (environment.ace_file_name)
 			end
 
-			if shared_wizard_environment.class_cluster_name /= Void then
-				cluster_edit.set_text (shared_wizard_environment.class_cluster_name)
+			if environment.class_cluster_name /= Void then
+				cluster_edit.set_text (environment.class_cluster_name)
 			end
 		end
 

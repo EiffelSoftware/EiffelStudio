@@ -44,13 +44,13 @@ feature -- Behavior
 			-- Initialize dialog.
 		do
 			Precursor {WIZARD_DIALOG}
-			if Shared_wizard_environment.no_backup then
+			if environment.no_backup then
 				no_buckup_check.set_checked
 			else
 				no_buckup_check.set_unchecked
 			end
 			
-			if Shared_wizard_environment.clean_destination_folder then
+			if environment.clean_destination_folder then
 				clean_check.set_checked
 			else
 				clean_check.set_unchecked
@@ -60,8 +60,8 @@ feature -- Behavior
 	on_ok is
 			-- Finish button was clicked.
 		do
-			Shared_wizard_environment.set_no_backup (no_buckup_check.checked)
-			Shared_wizard_environment.set_clean_destination_folder (clean_check.checked)
+			environment.set_no_backup (no_buckup_check.checked)
+			environment.set_clean_destination_folder (clean_check.checked)
 			Precursor {WIZARD_DIALOG}
 		end
 

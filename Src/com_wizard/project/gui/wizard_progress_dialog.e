@@ -61,7 +61,7 @@ feature {NONE} -- Behavior
 	on_cancel is
 			-- Cancel generation.
 		do
-			Shared_wizard_environment.set_abort (Standard_abort_value)
+			environment.set_abort (Standard_abort_value)
 			Precursor
 		end
 

@@ -3,13 +3,33 @@ class BIT_I
 inherit
 	BASIC_I
 		redefine
-			dump, is_bit, same_as,
+			is_bit, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
 			is_pointer, 
-			metamorphose, append_signature,
-			generate_cid, generated_id, make_gen_type_byte_code,
+			metamorphose,
+			generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init,
-			generate_default_value, generate_expanded_creation
+			generate_default_value, generate_expanded_creation, default_create,
+			tuple_code, name
+		end
+
+create
+	default_create
+
+feature {NONE} -- Initialization
+
+	default_create is
+			-- Initialize new instance of BOOLEAN_I
+		do
+			make (system.bit_class.compiled_class.class_id)
+		end
+
+feature -- Status report
+
+	tuple_code: INTEGER_8 is
+			-- Tuple code for class type
+		do
+			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 
 feature
@@ -35,17 +55,12 @@ feature
 	is_pointer: BOOLEAN is True
 			-- Is the type a pointer type ?
 
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			st.add_string ("BIT ")
-			st.add_int (size)
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
+	name: STRING is
 			-- Debug purpose
 		do
-			buffer.putstring ("BIT ")
-			buffer.putint (size)
+			create Result.make (25)
+			Result.append ("expanded BIT ")
+			Result.append_integer (size)
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -75,12 +90,6 @@ feature
 
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
-	
-	c_string_id: INTEGER is
-			-- String ID generated for Current
-		once
-			Result := Names_heap.eif_reference_name_id
-		end
 		
 	union_tag : STRING is "rarg"
 
@@ -88,12 +97,6 @@ feature
 			-- Hash code for current type
 		do
 			Result := Other_code + size
-		end
-
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		do
-			Result := system.bit_class.compiled_class.types.first
 		end
 
 	sk_value: INTEGER is
@@ -133,11 +136,6 @@ feature
 		end
 
 feature -- Generic conformance
-
-	generated_id (final_mode : BOOLEAN) : INTEGER is
-		do
-			Result := Bit_type
-		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 
@@ -193,9 +191,9 @@ feature
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.
 		do
+			ba.append (Bc_create)
 			ba.append (Bc_bit)
 			ba.append_integer (size)
-			ba.append_bit (create {STRING}.make_filled ('0', size))
 		end 
 
 	generate_expanded_creation (byte_code: BYTE_CODE; reg: REGISTRABLE; workbench_mode: BOOLEAN) is

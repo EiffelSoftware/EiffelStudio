@@ -60,7 +60,6 @@ feature -- Directories
 
 	gb_ev_directory: FILE_NAME is
 		do
-			--create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
 			create Result.make_from_string ("D:\work")
 			Result.extend ("build2")
 			Result.extend ("interface")
@@ -140,12 +139,7 @@ feature -- XML saving
 		do
 			create accessible_status
 			create Result.make_from_string (accessible_status.system_status.current_project_settings.project_location)
-			Result.extend ("interface.xml")			
-			--| FIXME
-		--	create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-		--	Result.extend ("build")
-		--	Result.extend ("temp")
-		--	Result.extend ("xml_output.xml")
+			Result.extend ("system_interface.xml")
 		end		
 		
 	component_filename: FILE_NAME is
@@ -156,6 +150,13 @@ feature -- XML saving
 			Result.extend ("temp")
 			Result.extend ("xml_components.xml")
 		end
+		
+	project_filename: STRING is "project.bpr"
+		-- File name for project settings.
+		
+	project_file_filter: STRING is "*.bpr"
+		-- Filter to be used for file dialogs searching
+		-- for build projects.
 		
 	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>"
 		-- XML format type, included at start of `document'.

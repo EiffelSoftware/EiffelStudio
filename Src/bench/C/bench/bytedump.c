@@ -406,14 +406,12 @@ static  void    print_byte_code ()
 
 	NEWL;
 
-	fprintf (ofp,"Body Id      : %ld\n", body_id);
-
 	rid = blong ();
 	fprintf (ofp,"Routine Id   : %ld\n", rid);
 
-	rid = blong ();
-	fprintf (ofp,"Real body Id : %ld\n", rid);
-	
+	body_id = blong ();
+	fprintf (ofp,"Body Id      : %ld\n", body_id);
+
 	fprintf (ofp,"Result Type  : ");
 	rtype = buint32 ();
 
@@ -430,7 +428,6 @@ static  void    print_byte_code ()
 		/* A once routine */
 
 		fprintf (ofp,"Once routine : YES\n");
-		fprintf (ofp,"Body Id      : %ld\n", blong ());
 	}
 
 	i = (int) bshort ();

@@ -47,7 +47,7 @@ feature -- Access
 		deferred
 		end
 
-	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
 			-- Currently selected items.
 		deferred
 		end
@@ -622,6 +622,10 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/04/27 17:48:57  pichery
+--| changed the type of `selected_items' from
+--| LINKED_LIST to DYNAMIC_LIST.
+--|
 --| Revision 1.52  2000/04/26 00:02:44  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

@@ -1181,12 +1181,7 @@ end
 				end
 	
 				buf.putstring ("RTJB;")
-				buf.new_line
-				buf.exdent
-				Context.print_current_label
-				buf.putchar (':')
-				buf.new_line
-				buf.indent
+				Context.generate_current_label_definition
 
 				if has_separate_call_in_precondition then
 					buf.putstring ("if (!CURSFC) {")

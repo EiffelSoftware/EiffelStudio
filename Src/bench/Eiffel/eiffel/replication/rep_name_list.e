@@ -119,8 +119,10 @@ debug ("REPLICATION")
 	--io.error.putstring ("in update new features%N");
 end;
 			written_in := f_table.feat_tbl_id;
-			if Rep_depend_server.has (orig_written_in) then
-				dependencies := Rep_depend_server.item (orig_written_in);
+			if Tmp_rep_depend_server.has (orig_written_in) then
+				dependencies := Tmp_rep_depend_server.item (orig_written_in);
+			elseif Rep_depend_server.server_has (orig_written_in) then
+				dependencies := Rep_depend_server.server_item (orig_written_in);
 			else
 				!!dependencies.make (2);
 				dependencies.set_id (orig_written_in);

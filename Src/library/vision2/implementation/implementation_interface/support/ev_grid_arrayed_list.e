@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 		do
 			if i > count then
 				conservative_resize (lower, upper + i - capacity)
-				set_count (capacity - 1)
+				set_count (capacity)
 			end
 		end
 

@@ -188,7 +188,10 @@ feature {COMPILER_EXPORTER}
 
 feature {NONE} -- Implementation
 
-	sc: EIFFEL_SYNTAX_CHECKER
+	sc: EIFFEL_SYNTAX_CHECKER is
 			-- Tool that checks the validity of feature names.
+		once
+			create Result
+		end
 
 end -- class INFIX_AS

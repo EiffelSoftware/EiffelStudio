@@ -108,7 +108,8 @@ feature -- Access
 			-- `Result' is pixmap used for background.
 		do
 			if background_pixmap_imp /= Void then
-				Result := background_pixmap_imp.interface	
+				create Result
+				Result.copy (background_pixmap_imp.interface)
 			end
 		end
 

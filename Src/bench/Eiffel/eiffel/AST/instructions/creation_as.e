@@ -132,25 +132,6 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error
 			end
 
-			if creation_type.is_formal then
-					-- Cannot be Void
-				formal_type ?= creation_type
-					-- Get the corresponding constraint type of the current class
-				formal_dec := context.current_class.generics.i_th (formal_type.position)
-				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
-					is_formal_creation := True
-				else
-						-- An entity of type a formal generic parameter cannot be
-						-- created here because there is no creation routine constraints
-					create vgcc1
-					context.init_error (vgcc1)
-					vgcc1.set_target_name (target.access_name)
-					Error_handler.insert_error (vgcc1);					
-				end
-			end
-
-			Error_handler.checksum
-
 			if creation_type.is_none then
 					-- An entity of type NONE cannot be created
 				create vgcc3
@@ -240,6 +221,25 @@ feature -- Type check, byte code and dead code removal
 						Error_handler.insert_error (vgcc3)
 					end
 				end
+				Error_handler.checksum
+
+				if creation_type.is_formal then
+						-- Cannot be Void
+					formal_type ?= creation_type
+						-- Get the corresponding constraint type of the current class
+					formal_dec := context.current_class.generics.i_th (formal_type.position)
+					if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
+						is_formal_creation := True
+					else
+							-- An entity of type a formal generic parameter cannot be
+							-- created here because there is no creation routine constraints
+						create vgcc1
+						context.init_error (vgcc1)
+						vgcc1.set_target_name (target.access_name)
+						Error_handler.insert_error (vgcc1);					
+					end
+				end
+
 				Error_handler.checksum
 
 				if is_formal_creation then

@@ -53,8 +53,10 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Free `item'
 		do
-			c_free (item)
-			item := default_pointer
+			if item /= default_pointer then
+				c_free (item)
+				item := default_pointer
+			end
 		end
 
 feature {NONE} -- Externals
@@ -62,7 +64,7 @@ feature {NONE} -- Externals
 	c_calloc (a_num, a_size: INTEGER): POINTER is
 			-- C calloc
 		external
-			"C [macro <malloc.h>] (size_t, size_t): EIF_POINTER"
+			"C (size_t, size_t): EIF_POINTER | <malloc.h>"
 		alias
 			"calloc"
 		end
@@ -70,7 +72,7 @@ feature {NONE} -- Externals
 	c_free (ptr: POINTER) is
 			-- C free
 		external
-			"C [macro <malloc.h>] (void *)"
+			"C (void *) | <malloc.h>"
 		alias
 			"free"
 		end
@@ -78,7 +80,7 @@ feature {NONE} -- Externals
 	c_memcpy (destination, source: POINTER; count: INTEGER) is
 			-- C memcpy
 		external
-			"C [macro <memory.h>] (void *, void *, size_t)"
+			"C (void *, void *, size_t) | <memory.h>"
 		alias
 			"memcpy"
 		end

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			rich_edit_stream_make
 			cwel_set_editstream_procedure_address ($internal_callback)
-			cwel_set_editstream_object (ceif_adopt (Current))
+			cwel_set_editstream_object (Current)
 			cwel_set_editstream_in (True)
 		end
 

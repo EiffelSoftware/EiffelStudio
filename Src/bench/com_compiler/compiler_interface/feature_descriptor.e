@@ -15,8 +15,8 @@ inherit
 			external_name,
 			written_class,
 			evaluated_class,
-			description,
 			signature,
+			description,
 			all_callers,
 			all_callers_count,
 			local_callers,
@@ -45,19 +45,11 @@ inherit
 			has_precondition,
 			has_postcondition,
 			feature_location,
-			is_feature,
 			parameters,
 			return_type
-		select
-			create_item
 		end
 
 	COMPLETION_ENTRY
-		rename
-			ccom_create_item as completion_ccom_create_item,
-			create_item as completion_create_item
-		end
-
 
 	SHARED_EIFFEL_PROJECT
 		export {NONE}

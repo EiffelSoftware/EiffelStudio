@@ -105,12 +105,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN) is
+	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN; proport:INTEGER) is
 			-- Create a Windows specific horizontal split window.
 		require
 			a_window_not_void: a_window /= Void
 			oui_parent_not_void: oui_parent /= Void
 		do
+			proportion:= proport
 			!! private_attributes
 			parent ?= oui_parent.implementation
 			split_visible := True
@@ -138,7 +139,7 @@ feature {NONE} -- Initialization
 				split_size := pi.height
 			end
 
-			split_position := split_size // 2
+			split_position := split_size // 100 * proportion
 		end
 
 	set_default_split_size is
@@ -155,7 +156,8 @@ feature {NONE} -- Initialization
 			else
 				split_size := pi.height
 			end
-			split_position := split_size // 2
+
+			split_position := split_size // 100 * proportion
 			resize_children
 		end
 
@@ -260,7 +262,7 @@ feature -- Element change
 		do
 			if a_window = second_child then
 				if first_child.managed then
-					split_position := split_size // 2
+					split_position := split_size // 100 * proportion
 					split_visible := True
 				else
 					split_position := 0
@@ -268,7 +270,7 @@ feature -- Element change
 				end
 			else
 				if second_child.managed then
-					split_position := split_size // 2
+					split_position := split_size // 100 * proportion
 					split_visible := True
 				else
 					split_position := split_size

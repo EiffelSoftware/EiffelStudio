@@ -107,6 +107,8 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 		string_type = (char *) memcpy (string_type, type_string + i - l, l);
 		string_type [l] = (char) 0;
 		type_array [0].type_name = string_type;
+		type_array[0].is_expanded = 0;
+		type_array[0].is_reference = 0;
 		n = 1;
 	}
 	result = compute_eif_type_id (n, type_array);

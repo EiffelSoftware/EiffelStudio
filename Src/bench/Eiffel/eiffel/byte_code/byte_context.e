@@ -58,6 +58,9 @@ feature
 	generated_file: INDENT_FILE;
 			-- File used for code generation
 
+	extern_declaration_file: INDENT_FILE;
+			-- File used for extern declaration generation
+
 	inherited_assertion: INHERITED_ASSERTION;
 			-- Used to record inherited assertions
 
@@ -83,6 +86,12 @@ feature
 			-- Assign `f' to `generated_file'.
 		do
 			generated_file := f;
+		end;
+
+	set_extern_declaration_file (f: like generated_file) is
+			-- Assign `f' to `extern_declaration_file'.
+		do
+			extern_declaration_file := f;
 		end;
 
 	non_gc_tmp_vars: INTEGER;

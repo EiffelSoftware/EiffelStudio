@@ -75,8 +75,8 @@ feature
 				generated_file.putstring ("EIF_TEST((");
 			else
 				generated_file.putchar ('(');
-				real_type (type).c_type.generate_function_cast (generated_file);
 			end;
+			real_type (type).c_type.generate_function_cast (generated_file, argument_types);
 			if	
 				Compilation_modes.is_precompiling or
 				typ.base_class.is_precompiled

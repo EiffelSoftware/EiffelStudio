@@ -60,6 +60,9 @@ feature
 			file.putstring ("SK_INT");
 		end;
 
+	c_string: STRING is "EIF_INTEGER"
+			-- String generated for the type.
+
 	generate (file: INDENT_FILE) is
 			-- Generate C type in file `file'.
 		do
@@ -76,12 +79,6 @@ feature
 			-- Generate access C cast in file `file'.
 		do
 			file.putstring ("(EIF_INTEGER *) ");
-		end;
-
-	generate_function_cast (file: INDENT_FILE) is
-			-- Generate C function cast in file `file'.
-		do
-			file.putstring ("(EIF_INTEGER (*)()) ");
 		end;
 
 	generate_size (file: INDENT_FILE) is

@@ -189,14 +189,12 @@ feature
 				gen_type ?= class_type.type;
 				result_type := result_type.instantiation_in (gen_type);
 			end;
-			result_type.c_type.generate (file);
 			internal_name := body_id.feature_name (class_type.id);
 			add_in_log (class_type, internal_name);
-			file.putstring (internal_name);
-			file.putstring ("(Current)");
-			file.new_line;
-			file.putstring ("char *Current;");
-			file.new_line;
+
+			file.generate_function_signature (result_type.c_type.c_string,
+				internal_name, "", Byte_context.extern_declaration_file,
+				<<"Current">>, <<"EIF_REFERENCE">>);
 			file.putchar ('{');
 			file.new_line;
 			file.indent;

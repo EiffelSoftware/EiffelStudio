@@ -136,12 +136,10 @@ feature -- C code generation
 				internal_name := body_id.feature_name (class_type.id);
 				add_in_log (class_type, internal_name);
 					-- Generation of function's header
-				type_i.c_type.generate (file);
-				file.putstring (internal_name);
-				file.putstring ("(Current)");
-				file.new_line;
-				file.putstring ("char *Current;");
-				file.new_line;
+				file.generate_function_signature ( type_i.c_type.c_string,
+						internal_name, "", byte_context.extern_declaration_file,
+						<<"Current">>, <<"EIF_REFERENCE">>)
+
 					-- Function's body
 				file.putchar ('{');
 				file.new_line;

@@ -59,7 +59,6 @@ feature
 			context.mark_current_used;
 
 				-- Routine's name				
-			generated_file.putstring ("void ");
 			if context.final_mode then	
 				body_id := Invariant_body_id;
 			else
@@ -67,15 +66,11 @@ feature
 			end;
 			internal_name := body_id.feature_name
 				(System.class_type_of_id (context.current_type.type_id).id);
-			generated_file.putstring (internal_name);
-				-- Arguments
-			generated_file.putstring ("(Current,where)");
-			generated_file.new_line;
-				-- Arguments declarations
-			generated_file.putstring ("char *Current;");
-			generated_file.new_line;
-			generated_file.putstring ("int where;");
-			generated_file.new_line;
+
+			generated_file.generate_function_signature ("void", internal_name,
+					"", Context.extern_declaration_file,
+					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
+
 			generated_file.putchar ('{');
 			generated_file.new_line;
 			generated_file.indent;

@@ -181,23 +181,51 @@ feature -- Pattern generation
 			Result > 0
 		end;
 
-	generate_argument_names (file: INDENT_FILE) is
-			-- Generate argument name list
+	argument_name_array: ARRAY [STRING] is
+			-- Argument names for code generation
 		local
 			i, nb: INTEGER;
+			temp: STRING
 		do
+			!! Result.make (1, argument_count + 1)
+			Result.put ("Current", 1)
 			from
 				i := 1;
 				nb := argument_count
 			until
 				i > nb
 			loop
-				file.putstring (", ");
-				file.putstring ("arg");
-				file.putint (i);
+				temp := "arg"
+				temp.append_integer (i)
+				Result.put (temp, i+1)
 				i := i + 1;
 			end;
 		end;
+
+	argument_type_array (include_current: BOOLEAN): ARRAY [STRING] is
+			-- Argument types for code generation
+		local
+			i, j, nb: INTEGER
+		do
+			nb := argument_count
+			if include_current then
+				!! Result.make (1, nb + 1)
+				Result.put ("EIF_REFERENCE", 1)
+				j := 2
+			else
+				!! Result.make (1, nb)
+				j := 1
+			end
+			from
+				i := 1;
+			until
+				i > nb
+			loop
+				Result.put (argument_types.item (i).c_string, j)
+				i := i + 1;
+				j := j + 1;
+			end;
+		end
 
 	generate_argument_declaration (nbtab: INTEGER; file: INDENT_FILE) is
 			-- Generate argument declarations
@@ -272,7 +300,7 @@ feature -- Pattern generation
 				%fnptr ptr;%N%
 				%int is_extern;%N%
 				%{%N");
-			file.putstring ("%Tchar *Current;%N");
+			file.putstring ("%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
 				file.putchar ('%T');
 				result_type.generate (file);
@@ -297,15 +325,18 @@ feature -- Pattern generation
 
 	generate_toc_compound (id: INTEGER; file: INDENT_FILE) is
 			-- Generate compound pattern from interpreter to C code
+		local
+			f_name: STRING
 		do
-			file.putstring ("static void toc");
-			file.putint (id);
+			f_name := "toc";
+			f_name.append_integer (id);
+
+			file.generate_function_signature ("void", f_name, "static", file,
+					<<"ptr", "is_extern">>,
+					toc_arg_types);
 			file.putstring ("%
-				%(ptr, is_extern)%N%
-				%fnptr ptr;%N%
-				%int is_extern;%N%
-				%{%N");
-			file.putstring ("%Tchar *Current;%N");
+				%{%N%
+				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
 				file.putchar ('%T');
 				result_type.generate (file);
@@ -330,15 +361,22 @@ feature -- Pattern generation
 
 	generate_toi_compound (id: INTEGER; file: INDENT_FILE) is
 			-- Generate compound pattern from C code to the interpreter
+		local
+			f_name: STRING
+			result_string: STRING
+			arg_types: ARRAY [STRING]
 		do
-			file.putstring ("static ");
-			result_type.generate (file);
-			file.putstring ("toi");
-			file.putint (id);
-			file.putstring ("(Current");
-			generate_argument_names (file);
-			file.putstring (")%Nchar *Current;%N");
-			generate_argument_declaration (0, file);
+			f_name := "toi";
+			f_name.append_integer (id);
+
+			result_string := result_type.c_string;
+
+			arg_types := argument_type_array (True);
+
+			file.generate_function_signature
+				(result_string, f_name, "static", file,
+				 argument_name_array, arg_types);
+
 			file.putstring ("{%N%Tstruct item *it;%N");
 			generate_toi_push (file);
 			file.putstring ("%Txinterp(IC);%N");
@@ -417,8 +455,9 @@ feature -- Pattern generation
 				file.putstring ("EIF_TEST((");
 			else
 				file.putchar ('(');
-				result_type.generate_function_cast (file);
 			end;
+			result_type.generate_function_cast (file,
+				argument_type_array (not is_extern));
 			file.putstring ("ptr)(");
 			nb := argument_count;
 			if not is_extern then
@@ -463,6 +502,15 @@ feature -- Pattern generation
 			result_type.trace;
 			io.error.putstring ("|");
 		end;
+
+feature {NONE} -- Implemantation
+
+	 toc_arg_types: ARRAY [STRING] is
+			-- Types of the toc functions
+
+		once
+			Result := <<"fnptr", "int">>
+		end
 
 invariant
 

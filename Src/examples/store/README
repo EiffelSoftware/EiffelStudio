@@ -22,10 +22,10 @@ the following:
 	An Example of Nested queries.
 
 4) rm2oom
-	From an Relationnal Model to an Object Oriented Model.
+	From a Relationnal Model to an Object Oriented Model.
 
 5) oom2rm
-	From an Object Oriente Model to an Relationnal Model.
+	From an Object Oriented Model to a Relationnal Model.
 
 6) st_proc
 	Deals with stored procedures.

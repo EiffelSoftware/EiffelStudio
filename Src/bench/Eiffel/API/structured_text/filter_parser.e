@@ -10,7 +10,7 @@ feature {NONE} -- Formats
 	format_table: HASH_TABLE [CELL2 [STRING, STRING], STRING];
 			-- User-specified formats
 
-	escape_characters: LINKED_LIST [CELL2 [CHARACTER, STRING]];
+	escape_characters: HASH_TABLE [STRING, CHARACTER];
 			-- User-specified escape characters
 
 	read_formats (filename: STRING) is
@@ -24,8 +24,7 @@ feature {NONE} -- Formats
 			in_construct, in_before: BOOLEAN;
 			new_format: CELL2 [STRING, STRING];
 			normal_format: BOOLEAN;
-			escape: STRING;
-			new_escape: CELL2 [CHARACTER, STRING]
+			escape: STRING
 		do
 			!!filter_file.make (filename);
 			if filter_file.exists and then filter_file.is_readable then
@@ -89,11 +88,11 @@ feature {NONE} -- Formats
 								if escape.is_equal ("escape") then
 									normal_format := false;
 									if before /= Void and after = Void then
-										!!new_escape.make (construct.item (7),
-															before);
-										escape_characters.extend (new_escape)
+										escape_characters.force 
+												(before, construct.item (7))
 									else
-										syntax_error ("Escape character expected")
+										syntax_error 
+												("Escape character expected")
 									end
 								end
 							end;

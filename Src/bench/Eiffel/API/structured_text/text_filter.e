@@ -29,7 +29,7 @@ feature -- Initialization
 			full_pathname: STRING
 		do
 			!!format_table.make (50);
-			!!escape_characters.make;
+			!!escape_characters.make (5);
 			full_pathname := clone (filter_path);
 			full_pathname.append (filtername);
 			full_pathname.append (".fil");
@@ -44,7 +44,7 @@ feature -- Initialization
 			not_filename_empty: not filename.empty
 		do
 			!!format_table.make (50);
-			!!escape_characters.make;
+			!!escape_characters.make (5);
 			read_formats (filename);
 			!!image.make (2000)
 		end;
@@ -207,8 +207,7 @@ feature {NONE} -- Text processing
 			str_not_void: str /= Void
 		local
 			i, str_count: INTEGER;
-			char: CHARACTER;
-			found: BOOLEAN
+			char: CHARACTER
 		do
 			if escape_characters.empty then
 				image.append (str)
@@ -219,20 +218,10 @@ feature {NONE} -- Text processing
 				until
 					i > str_count
 				loop
-					from
-						escape_characters.start;
-						char := str.item (i);
-						found := false
-					until
-						found or escape_characters.after
-					loop
-						if escape_characters.item.item1 = char then
-							image.append (escape_characters.item.item2);
-							found := true
-						end;
-						escape_characters.forth
-					end;
-					if not found then
+					char := str.item (i);
+					if escape_characters.has (char) then
+						image.append (escape_characters.item (char))
+					else
 						image.extend (char)
 					end;
 					i := i + 1

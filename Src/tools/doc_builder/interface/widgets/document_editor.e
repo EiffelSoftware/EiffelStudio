@@ -23,6 +23,7 @@ feature -- Initialization
 			notebook := widget
 			parent_window := window
 			initialize_accelerators
+			set_split_position (300)
 		end
 		
 	initialize_accelerators is
@@ -56,6 +57,36 @@ feature -- Initialization
 			create key.make_with_code (key_constants.Key_f)
 			create accelerator.make_with_key_combination (key, True, False, False)
 			accelerator.actions.extend (agent open_search_dialog)
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Ctrl-B
+			create key.make_with_code (key_constants.Key_b)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent tag_selection ("bold"))
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Ctrl-I
+			create key.make_with_code (key_constants.Key_i)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent tag_selection ("italic"))
+			Application_window.accelerators.extend (accelerator)	
+			
+				-- Ctrl-S
+			create key.make_with_code (key_constants.Key_s)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent save_document)
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Tab
+			create key.make_with_code (key_constants.key_tab)
+			create accelerator.make_with_key_combination (key, True, False, False)
+			accelerator.actions.extend (agent indent_selection (True))
+			Application_window.accelerators.extend (accelerator)
+			
+				-- Shift-Tab
+			create key.make_with_code (key_constants.Key_tab)
+			create accelerator.make_with_key_combination (key, True, False, True)
+			accelerator.actions.extend (agent indent_selection (False))
 			Application_window.accelerators.extend (accelerator)
 		end
 		
@@ -153,6 +184,12 @@ feature -- Editing
 			current_widget.internal_edit_widget.set_font (preferences.font)
 		end		
 
+	indent_selection (is_shift: BOOLEAN) is
+			-- Indent selection by tab
+		do
+			-- TO DO		
+		end		
+
 feature -- GUI Commands			
 		
 	display_document is
@@ -161,7 +198,9 @@ feature -- GUI Commands
 			has_open_document: has_open_document
 		do			
 			if not notebook.has (current_widget) then
+				current_widget.internal_edit_widget.resize_actions.block			
 				notebook.extend (current_widget)
+				current_widget.internal_edit_widget.resize_actions.resume
 			end			
 			notebook.set_item_text (current_widget, current_widget.title)
 			notebook.select_item (current_widget)			
@@ -184,6 +223,7 @@ feature -- Commands
 			set_current_document (a_doc)
 			display_document
 			Application_window.update
+			refresh
 		end
 		
 	close_documents is
@@ -396,5 +436,13 @@ feature {NONE} -- Implementation
 				documents.extend (a_doc)
 			end			
 		end		
+
+	tag_selection (a_tag: STRING) is
+			-- Enclose `selected_text' in XML `a_tag'.  Eg, `some_text'
+			-- becomes '<a_tag>some_text</a_tag>'.  If there is no selection
+			-- just insert '<a_tag></a_tag>'.		
+		do
+			current_widget.internal_edit_widget.tag_selection (a_tag)
+		end	
 
 end -- class DOCUMENT_EDITOR

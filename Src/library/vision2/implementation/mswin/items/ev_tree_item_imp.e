@@ -131,38 +131,53 @@ feature -- {EV_TREE_IMP}
 			-- Assign `p' to the displayed pixmap.
 		local
 			p_imp: EV_PIXMAP_IMP
-			w: WEL_TREE_VIEW_ITEM
 			loc_image_list: WEL_IMAGE_LIST
-			loc_image_index: INTEGER
-			loc_top_parent_imp: EV_TREE_IMP
+			loc_top_parent_imp :EV_TREE_IMP
+			current_images: HASH_TABLE [INTEGER, INTEGER]
+			item_value: INTEGER
 		do
 			create pixmap
 			pixmap.copy (p)
 				-- We copy `p' into pixmap.
 			p_imp := pixmap_imp
-			w ?= Current
 			loc_top_parent_imp := top_parent_imp
 			loc_image_list := loc_top_parent_imp.image_list
+			current_images := loc_top_parent_imp.current_image_list_images
 				-- Assign values to local variables for speed.
 
 			if p_imp.icon /= Void then
 				-- If the pixmap is an icon.
-				loc_image_list.add_icon (p_imp.icon)
-				loc_image_index := loc_image_list.last_position
-					-- Add the icon to `top_parent_imp' image_list.	
+				item_value := cwel_pointer_to_integer (p_imp.icon.item)
+					-- Assign `icon.item' to `item_value'
+				If not current_images.has (item_value) then
+					-- If `p_imp.icon' is not already in image_list then
+					loc_image_list.add_icon (p_imp.icon)
+					image_index := loc_image_list.last_position
+						-- Add the icon to image_list and set image_index.
+					current_images.extend (image_index, item_value)	
+				else
+					image_index := current_images.item (item_value)
+						-- `p_imp.icon' already in image list so set `image_index' to this.
+				end
 			elseif p_imp.mask_bitmap /= Void and p_imp.bitmap /= Void then
+				--|FIXME This does not work correctly yet.
 				-- If the pixmap has a bitmap mask and a bitmap.
-				loc_image_list.add_masked_bitmap (p_imp.bitmap, p_imp.mask_bitmap)
-				loc_image_index := loc_image_list.last_position
-					-- Add a bitmap and a bitmap mask to `top_parent_imp' image_list.
+				if p_imp.bitmap.height > tree_view_pixmap_height or
+					p_imp.bitmap.height > tree_view_pixmap_width then
+					p_imp.set_size (16, 16)
+					loc_image_list.add_masked_bitmap (p_imp.bitmap, p_imp.mask_bitmap)
+					image_index := loc_image_list.last_position
+						-- Add a bitmap and a bitmap mask image_list.
+				end
 			else
 				check
 					-- If we reach here something is wrong with the pixmap.
 					False
 				end
 			end
-			set_image (loc_image_index, loc_image_index)
-			loc_top_parent_imp.set_tree_item (w)
+			io.put_string (image_index.out)
+			set_image (image_index, image_index)
+			loc_top_parent_imp.set_tree_item (Current)
 		end
 
 	image_index: INTEGER
@@ -170,6 +185,12 @@ feature -- {EV_TREE_IMP}
 	
 	selected_image_index: INTEGER 
 		-- The index into `image_list' of `top_parent_imp' for the selected displayed image.
+
+	tree_view_pixmap_height: INTEGER is 16
+		-- The height of a pixmap in a windows tree view.
+	
+	tree_view_pixmap_width: INTEGER is 16
+		-- The width of a pixmap in a windows tree view.
 
 feature -- Access
 
@@ -410,6 +431,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/24 17:15:36  rogers
+--| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed set_pixmap so that repeated icons are shared internally in the image list.
+--|
 --| Revision 1.39  2000/03/24 00:18:01  rogers
 --| Implemented set_pixmap.
 --|

@@ -171,7 +171,7 @@ feature -- Element change
 			-- Add a child to the box.
 		do
 			ev_children.extend (child_imp)
-			notify_change (2 + 1)
+			notify_change (Nc_minsize)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
@@ -180,7 +180,7 @@ feature -- Element change
 		do
 			ev_children.prune_all (child_imp)
 			if not ev_children.empty then
-				notify_change (2 + 1)
+				notify_change (Nc_minsize)
 			end
 		end
 
@@ -209,16 +209,6 @@ feature {NONE} -- Basic operation
 			else
 				Result := 0
 			end
-		end
-
-feature {NONE} -- Deferred features
-
-	set_local_width (new_width: INTEGER) is
-		deferred
-		end
-
-	set_local_height (new_height: INTEGER) is
-		deferred
 		end
 
 end -- class EV_BOX_IMP

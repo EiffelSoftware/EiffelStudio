@@ -564,7 +564,7 @@ feature -- Generation
 				file.putstring ("*(char **) (l[0] ")
 				value := nb_ref + i
 				if value /= 0 then
-					file.putstring (" + REFACS(")
+					file.putstring (" + @REFACS(")
 					file.putint (value)
 					file.putstring (")) =")
 				else

@@ -9,9 +9,6 @@ class
 
 inherit
 	WEL_COMPOSITE_WINDOW
-		redefine
-			process_message
-		end
 
 	WEL_CS_CONSTANTS
 		export
@@ -169,37 +166,6 @@ feature -- Default creation values
 			Result := 0
 		end
 
-feature -- Background color
-
-	background_brush: WEL_BRUSH is
-			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-			-- By default there is no background
-		do
-		end
-
-feature -- Messages
-
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Wm_erasebkgnd message.
-			-- May be redefined to paint something on
-			-- the `paint_dc'. `invalid_rect' defines
-			-- the invalid rectangle of the client area that
-			-- needs to be repainted.
-		require
-			paint_dc_not_void: paint_dc /= Void
-			paint_dc_exists: paint_dc.exists
-			invalid_rect_not_void: invalid_rect /= Void
-		do
-			if background_brush /= Void then
-				paint_dc.fill_rect (invalid_rect, background_brush)
-					--| Disable the default windows processing and return correct
-					--| value to Windows, i.e. nonzero value.
-				disable_default_processing
-				set_message_return_value (1)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	register_class is
@@ -218,7 +184,10 @@ feature {NONE} -- Implementation
 				wnd_class.set_window_procedure (class_window_procedure)
 				wnd_class.set_icon (class_icon)
 				wnd_class.set_cursor (class_cursor)
-				if background_brush = Void then
+				if
+					background_brush = Void and then
+					class_background /= Void
+				then
 						--| If class_background attribute is not
 						--| Void, we do not use the class_background
 						--| once function.
@@ -228,33 +197,6 @@ feature {NONE} -- Implementation
 				wnd_class.register
 			end
 		end
-
-	on_wm_erase_background (wparam: INTEGER) is
-			-- Wm_erasebkgnd message.
-			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
-			-- `on_erase_background' routine.
-		require
-			exists: exists
-		local
-			paint_dc: WEL_PAINT_DC
-		do
-			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
-			if scroller /= Void then
-				paint_dc.set_viewport_origin (-scroller.horizontal_position,
-					-scroller.vertical_position)
-			end
-			on_erase_background (paint_dc, client_rect )
-		end
-
-feature {WEL_DISPATCHER} -- Message handling
-
-	process_message (hwnd: POINTER;	msg, wparam, lparam: INTEGER): INTEGER is
-		do 
-			Result := {WEL_COMPOSITE_WINDOW} Precursor (hwnd, msg, wparam, lparam)
-			if msg = Wm_erasebkgnd then
-				on_wm_erase_background (wparam)
-			end
-		end	
 
 end -- class FRAME_WINDOW
 

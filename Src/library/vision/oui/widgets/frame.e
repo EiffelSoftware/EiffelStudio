@@ -52,10 +52,11 @@ feature {NONE} -- Creation
 			-- Create a frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
-            depth := a_parent.depth+1;
-            widget_manager.new (Current, a_parent);
+			depth := a_parent.depth+1;
+			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.frame (Current, man);
+			implementation := toolkit.frame (Current, man);
+			implementation.set_widget_default;
 			set_default
 		end;
 	

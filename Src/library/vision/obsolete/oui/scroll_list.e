@@ -105,6 +105,7 @@ feature {NONE} -- Creation
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
 			implementation := toolkit.scroll_list (Current, man, is_fixed);
+			implementation.set_widget_default;
 			list_imp.set_single_selection;
 		end;
 

@@ -54,8 +54,9 @@ feature {NONE} -- Creation
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
-			identifier:= clone (a_name);
-			implementation:= toolkit.check_box (Current, man);
+			identifier := clone (a_name);
+			implementation := toolkit.check_box (Current, man);
+			implementation.set_widget_default;
 			set_default
 		end;
 

@@ -63,6 +63,7 @@ feature {NONE} -- Creation
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
 			implementation := toolkit.scale (Current, man);
+			implementation.set_widget_default;
 			set_default
 		end;
 

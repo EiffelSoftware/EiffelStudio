@@ -55,10 +55,11 @@ feature {NONE} -- Creation
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
-     		depth := a_parent.depth+1;
+			depth := a_parent.depth+1;
 			identifier:= clone (a_name);
-           	widget_manager.new (Current, a_parent);
+			widget_manager.new (Current, a_parent);
 			implementation := toolkit.opt_pull (Current, man);
+			implementation.set_widget_default;
 			set_default
 		end;
 	

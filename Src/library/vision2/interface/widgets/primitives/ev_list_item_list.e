@@ -23,6 +23,14 @@ inherit
 			implementation,
 			is_in_default_state
 		end
+		
+	EV_ITEM_PIXMAP_SCALER
+		undefine
+			is_equal
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES
 		undefine

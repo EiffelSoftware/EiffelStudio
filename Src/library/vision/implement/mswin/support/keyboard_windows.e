@@ -42,10 +42,10 @@ feature -- Initialization
 			-- a keyboard button is pressed.
 		do
 			make (1)
-			set_shift_pressed (key_state (Vk_shift))
-			set_lock_pressed (key_state (Vk_capital))
-			set_control_pressed (key_state (Vk_control))
-			modifiers.put (key_state (Vk_menu), 1)
+			set_shift_pressed (key_down (Vk_shift))
+			set_lock_pressed (key_locked (Vk_capital))
+			set_control_pressed (key_down (Vk_control))
+			modifiers.put (key_down (Vk_menu), 1)
 		end
 
 	make_from_mouse_state (flags: INTEGER) is

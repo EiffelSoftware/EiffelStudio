@@ -32,7 +32,7 @@ feature -- Access
 feature -- Status report
 
 	consistent (other: like Current): BOOLEAN is
-			-- Is object in a consistent state so that `other'
+			-- Is current object in a consistent state so that `other'
 			-- may be copied onto it? (Default answer: yes).
 		do
 			Result := true
@@ -68,7 +68,7 @@ feature -- Comparison
 	frozen standard_equal (some: GENERAL; other: like some): BOOLEAN is
 			-- Are `some' and `other' either both void or attached to
 			-- field-by-field identical objects?
-			-- Always uses the default object comparison criterion.
+			-- Always uses default object comparison criterion.
 		do
 			Result := (some = Void and other = Void) or else
 						((some /= Void and other /= Void) and then
@@ -116,8 +116,8 @@ feature -- Duplication
 
 	frozen clone (other: GENERAL): like other is
 			-- Void if `other' is void; otherwise new object
-			-- field-by-field identical to `other'.
-			--
+			-- with contents copied from `other'.
+			--			
 			-- For non-void `other', `clone' calls `copy';
 		 	-- to change copying/cloning semantics, redefine `copy'.
 		local
@@ -137,7 +137,7 @@ feature -- Duplication
 	frozen standard_clone (other: GENERAL): like other is
 			-- Void if `other' is void; otherwise new object
 			-- field-by-field identical to `other'.
-			-- Always uses the default copying semantics.
+			-- Always uses default copying semantics.
 		do
 			if other /= Void then
 				Result := other.c_standard_clone ($other);
@@ -174,8 +174,9 @@ feature -- Duplication
 		end; 
 
 	setup (other: like Current) is
-			-- Perform actions on a freshly created object so that
-			-- the contents of `other' can be safely copied onto it.
+			-- Assuming current object has just been created, perform
+			-- actions necessary to ensure that contents of `other'
+			-- can be safely copied onto it.
 		do
 		ensure
 			consistent (other)
@@ -184,22 +185,23 @@ feature -- Duplication
 feature -- Output
 	
 	io: STD_FILES is
-			-- Standard files access
+			-- Object providing access to standard files
+			-- (input, output, error)
 		once
 			!! Result;
 			Result.set_output_default;
 		end;
 
 	out, frozen tagged_out: STRING is
-			-- New string containing a terse printable representation
-			-- of `some' field-by-field (empty string if void.)
+			-- New string containing a terse, printable, field-by-field
+			-- representation of current object.
 		do
 				Result := c_tagged_out (Current)
 		end;
 
 	print (some: GENERAL) is
-			-- Write terse external representation of Current on
-			-- standard input.
+			-- Write terse external representation of current object
+			-- on standard output.
 		do
 			if some /= Void then
 				io.putstring (some.out)
@@ -214,7 +216,7 @@ feature -- Basic operations
 		end;
 
 	frozen default: like Current is
-			-- Default value of current type.
+			-- Default value of object's type.
 		do
 		end;
 
@@ -285,13 +287,13 @@ feature {NONE} -- Implementation
 		end;
 
 	frozen c_tagged_out (some: GENERAL): STRING is
-			-- Printable representation of `some'
+			-- Printable representation of current object
 		external
 			"C"
 		end;
 
 	frozen c_generator (some: GENERAL): STRING is
-			-- Name of the generating class of `some'
+			-- Name of the generating class of current object
 		external
 			"C"
 		end;

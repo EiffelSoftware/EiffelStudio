@@ -418,7 +418,7 @@ feature -- Element change
 		end;
 
 	fill (other: CURSOR_TREE [G]) is
-			-- Fill with as many elements of `other'
+			-- Fill with as many items of `other'
 			-- as possible.
 			-- The representations of `other' and current structure
 			-- need not be the same.
@@ -459,7 +459,7 @@ feature -- Element change
 		end;
 
 	merge_right (other: CURSOR_TREE [G]) is
-			-- Merge the elements of `other' into current structure to
+			-- Merge the items of `other' into current structure to
 			-- the right of cursor position.
 		require
 			other_exists: other /= Void;
@@ -491,7 +491,7 @@ feature -- Element change
 		end;
 
 	merge_left (other: CURSOR_TREE [G]) is
-			-- Merge the elements of `other' into current structure to
+			-- Merge the items of `other' into current structure to
 			-- the left of cursor position.
 		require
 			other_exists: other /= Void;

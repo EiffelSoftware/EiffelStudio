@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Sets of integers with a finite number of elements";
+		"Sets of integers with a finite number of items";
 
 	status: "See notice at end of class";
 	date: "$Date$";

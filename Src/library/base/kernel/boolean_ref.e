@@ -19,8 +19,6 @@ feature -- Access
 	item: BOOLEAN;
 			-- Boolean value
 
-
-
 feature -- Element change
 
 	set_item (b: BOOLEAN) is
@@ -28,7 +26,6 @@ feature -- Element change
 		do
 			item := b;
 		end;
-
 
 feature -- Basic operations
 

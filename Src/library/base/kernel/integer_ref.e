@@ -27,7 +27,7 @@ class INTEGER_REF inherit
 feature -- Access
 
 	item: INTEGER;
-			-- Numeric double value
+			-- Integer value
 
 	hash_code: INTEGER is
 			-- Hash code value
@@ -84,7 +84,7 @@ feature -- Basic operations
 	infix "/" (other: INTEGER_REF): REAL_REF is
 			-- Division by `other'
 		require else
-			good_divisor: other.item /= 0.0
+			good_divisor: other.item /= 0
 		do
 			!! Result;
 			Result.set_item (item / other.item)

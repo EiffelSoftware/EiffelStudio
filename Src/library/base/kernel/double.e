@@ -24,7 +24,7 @@ expanded class DOUBLE inherit
 feature -- Comparison
 
 	infix "<" (other: DOUBLE): BOOLEAN is
-			-- Is `other' greater than Current ?
+			-- Is `other' greater than current double?
 		do
 			-- Built-in
 		end;

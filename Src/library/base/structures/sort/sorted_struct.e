@@ -33,38 +33,39 @@ deferred class SORTED_STRUCT [G -> COMPARABLE] inherit
 feature -- Measurement
 
 	min: like item is
-			-- Minimum element
+			-- Minimum item
 		require else
 			is_sorted: sorted
 		do
 			start;
 			Result := item
 		ensure then
-		--	is_minimum:
-		--		 for all i in first_position .. last_position:
+		--	smallest:
+		--		 For every `i' in `first_position' .. `last_position':
 		--				`Result <= i_th (i)';
-		--		 `Result = i_th (first_position)'
+		--		 `Result' = `i_th' (`first_position')
 		end;
 
 	max: like item is
-			-- Maximum element
+			-- Maximum item
 		require else
 			is_sorted: sorted
 		do
 			finish;
 			Result := item
 		ensure then
-		--	is_maximum:
-		--		 for all i in first_position .. last_position:
-		--				`i_th (i) <= Result';
-		--		 Result = i_th (last_position)
+		--	largest:
+		--		 For every `i' in `first_position' .. `last_position':
+		--				`i_th (`i') <= `Result';
+		--		 `Result' = `i_th' (`last_position')
 		end;
 
 	median: like item is
 			-- Median element
 		deferred
 		ensure
-		--	is_median:
+			median_present: has (Result)
+		--	median_definition:
 		--		Result = i_th (first_position +
 		--			(last_position - first_position) // 2)
 		end;

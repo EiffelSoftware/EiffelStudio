@@ -406,7 +406,7 @@ feature -- Element change
 feature -- Removal
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			count := 0;
 			index := 0;

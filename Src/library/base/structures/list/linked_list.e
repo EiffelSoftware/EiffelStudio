@@ -523,7 +523,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			active := Void;
 			first_element := Void;

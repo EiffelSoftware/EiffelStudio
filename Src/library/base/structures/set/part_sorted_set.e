@@ -173,7 +173,8 @@ feature -- Basic operations
 		end;
 
 	disjoint (other: like Current): BOOLEAN is
-			-- are `Current' and `other' distinct ?
+			-- Do current set and `other' have no
+			-- items in common?
 		do
 			from
 				start

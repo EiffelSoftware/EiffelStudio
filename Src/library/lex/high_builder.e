@@ -78,7 +78,7 @@ feature -- Element change
 
 	build_dollar_z is
 			-- Build $Z, matching possibly signed integer constants.
-			-- ['+'|'-'] +('0'..'9')
+			-- ['+' | '-'] +('0'..'9')
 		do
 			if dollar_n = 0 then
 				build_dollar_n
@@ -92,7 +92,7 @@ feature -- Element change
 
 	build_dollar_r is
 			-- Build $R, matching floating point constants.
-			-- ['+'|'-'] +('0'..'9') '.' *('0'..'9') ['e'|'E' ['+'|'-']
+			-- ['+' | '-'] +('0'..'9') '.' *('0'..'9') ['e' | 'E' ['+' | '-']
 			-- +('0'..'9')]
 		do
 			if dollar_z = 0 then

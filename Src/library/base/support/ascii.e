@@ -19,7 +19,7 @@ feature -- Access
 	Last_printable: INTEGER is 126;
 	Letter_layout: INTEGER is 70;
 	Case_diff: INTEGER is 32;
-			-- Lower_a - Upper_a
+			-- `Lower_a' - `Upper_a'
 
 	Buf_overflow: INTEGER is -9;
 	Overflow: INTEGER is -8;

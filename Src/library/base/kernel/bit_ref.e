@@ -44,7 +44,7 @@ feature -- Access
 
 	conforms_to (other: BIT_REF): BOOLEAN is
 			-- Is dynamic type of current object a descendant of
-			-- dynamic type of `other' ?
+			-- dynamic type of `other'?
 		do
 			Result := count <= other.count
 		end;

@@ -26,7 +26,7 @@ expanded class INTEGER inherit
 feature -- Comparison
 
 	infix "<" (other: INTEGER): BOOLEAN is
-			-- Is `other' greater than Current ?
+			-- Is `other' greater than current integer?
 		do
 			-- Built-in
 		end;

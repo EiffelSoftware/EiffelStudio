@@ -1,7 +1,7 @@
 indexing
 
 	description:
-		"Sets whose elements may be compared according to a total order relation; %
+		"Sets whose items may be compared according to a total order relation; %
 		%implemented as sorted two-way lists."; 
 
 	status: "See notice at end of class";
@@ -51,7 +51,7 @@ feature -- Comparison
 	
 	disjoint (other: like Current): BOOLEAN is
 			-- Do current set and `other' have no
-			-- elements in common?
+			-- items in common?
 		do
 			from
 				start;
@@ -245,7 +245,7 @@ feature -- Basic operations
 		end;
 			
 	symdif (other: like Current) is
-			-- Remove all elements also in `other', and add all elements
+			-- Remove all items also in `other', and add all items
 			-- of `other' not already present.
 		do
 			from

@@ -36,7 +36,7 @@ feature -- Comparison
 
 	disjoint (other: like Current): BOOLEAN is
 			-- Do current set and `other' have no
-			-- elements in common?
+			-- items in common?
 		require
 			set_exists: other /= Void;
 			same_rule: object_comparison = other.object_comparison
@@ -95,8 +95,8 @@ feature -- Basic operations
 		end;
 
 	symdif (other: like Current) is
-			-- Remove all elements also in `other', and add all
-			-- elements of `other' not already present.
+			-- Remove all items also in `other', and add all
+			-- items of `other' not already present.
 		require
 			set_exists: other /= Void;
 			same_rule: object_comparison = other.object_comparison

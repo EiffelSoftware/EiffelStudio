@@ -34,7 +34,7 @@ feature -- Initialization
 feature -- Access
 
 	has (v: like item): BOOLEAN is
-			-- Is there a node with item `v' in subtree?
+			-- Is there a node with item `v' in tree?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		do
@@ -51,7 +51,7 @@ feature -- Access
 feature -- Measurement
 
 	count: INTEGER is
-			-- Number of elements in subtree.
+			-- Number of items in tree
 		do
 			if tree /= Void then
 				Result := tree.count
@@ -59,13 +59,13 @@ feature -- Measurement
 		end;
 
 	min: like item is
-			-- Minimum element in subtree
+			-- Minimum item in tree
 		do
 			Result := tree.min
 		end;
 
 	max: like item is
-			-- Maximum element in subtree
+			-- Maximum item in tree
 		do
 			Result := tree.max
 		end;
@@ -212,7 +212,7 @@ feature -- Element change
 feature -- Removal
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			tree := Void;
 		end;
@@ -298,7 +298,7 @@ feature -- Basic operations
 
 
 	merge (other: like Current) is
-			-- Add all elements of other to Current
+			-- Add all items of `other'.
 		do
 			if other.tree /= Void then
 				if tree = Void then

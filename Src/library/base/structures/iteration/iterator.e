@@ -79,7 +79,7 @@ feature -- Cursor movement
 
 	do_until is
 			-- Apply `action' to every item of `target' up to 
-			-- and including the first one satisfying `test'.
+			-- and including first one satisfying `test'.
 			-- (Apply to full list if no item satisfies `test').
 		require
 			traversable_exists: target /= Void
@@ -88,14 +88,14 @@ feature -- Cursor movement
 
 	do_while is
 			-- Apply `action' to every item of `target' up to 
-			-- and including the first one not satisfying `test'.
+			-- and including first one not satisfying `test'.
 			-- (Apply to full list if all items satisfy `test').
 		deferred
 		end;
 
 	until_do is
 			-- Apply `action' to every item of `target' up to 
-			-- but excluding the first one satisfying `test'.
+			-- but excluding first one satisfying `test'.
 			-- (Apply to full list if no items satisfy `test'.)
 		require
 			traversable_exists: target /= Void
@@ -104,7 +104,7 @@ feature -- Cursor movement
 
 	while_do is
 			-- Apply `action' to every item of `target' up to 
-			-- but excluding the first one satisfying not `test'.
+			-- but excluding first one satisfying not `test'.
 			-- (Apply to full list if all items satisfy `test'.)
 		require
 			traversable_exists: target /= Void
@@ -128,8 +128,8 @@ feature -- Cursor movement
 feature -- Element change
 
 	action is
-			-- Action to be applied to item at current position in `target'.
-			-- (default: `item_action' on item at current position.)
+			-- Action to be applied to item at current position
+			-- in `target' (default: `item_action' on that item).
 			-- For iterators to work properly, redefined versions of
 			-- this feature should not change the traversable's
 			-- structure.
@@ -140,7 +140,7 @@ feature -- Element change
 		do
 			item_action (target.item)
 		ensure
-			not target.off;
+			not_off: not target.off;
 			invariant_satisfied: invariant_value
 		end;
 

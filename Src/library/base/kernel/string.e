@@ -221,7 +221,7 @@ feature -- Status report
 		end;
 
 	extendible: BOOLEAN is true;
-			-- May new items be added? (Answer yes.)
+			-- May new items be added? (Answer: yes.)
 
 
 	prunable: BOOLEAN is
@@ -241,8 +241,8 @@ feature -- Status report
 feature -- Element change
 
 	set (t: like Current; n1, n2: INTEGER) is
-			-- Set current string to substring of `t' from indices `n1' to `n2'.
-			-- If no such substring, set to empty string.
+			-- Set current string to substring of `t' from indices `n1'
+			-- to `n2', or to empty string if no such substring.
 		require
 			argument_not_void: t /= Void;
 		local
@@ -270,7 +270,7 @@ feature -- Element change
 			count := other.count
 		ensure then
 			new_result_count: count = other.count;
-			-- for all `i: 1..count, item (i) = other.item (i)'
+			-- same_characters: For every `i' in 1..`count', `item' (`i') = `other'.`item' (`i')
 		end;
 
 
@@ -304,7 +304,7 @@ feature -- Element change
 			str_blank ($area, capacity);
 			count := capacity
 		ensure
-			-- for all `i: 1..capacity, item (i)' = `Blank'
+			-- all_blank: For every `i' in 1..`count', `item' (`i') = `Blank'
 		end;
 
 	head (n: INTEGER) is
@@ -317,7 +317,8 @@ feature -- Element change
 				count := n
 			end
 		ensure
-			count = min (n, old count)
+			new_count: count = min (n, old count)
+			-- first_kept: For every `i' in 1..`n', `item' (`i') = old `item' (`i')
 		end;
 
 	tail (n: INTEGER) is
@@ -354,16 +355,16 @@ feature -- Element change
 
 	share (other: like Current) is
 			-- Make current string share the text of `other'.
+			-- Subsequent changes to the characters of current string
+			-- will also affect `other', and conversely.
 		require
 			argument_not_void: other /= Void
 		do
 			area := other.area;
 			count := other.count;
 		ensure
-			Shared_count: other.count = count;
-			-- for all `i: 1..count, Result.item (i) = item (i)';
-			-- Subsequent changes to the characters of current string will
-			-- also affect `other', and conversely
+			sHAred_count: other.count = count;
+			-- sharing: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`i')
 		end;
 
 
@@ -422,6 +423,7 @@ feature -- Element change
 			count := new_size
  		ensure then
 			new_count: count = old count + s.count
+			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end;
 
 	append_integer (i: INTEGER) is
@@ -525,8 +527,8 @@ feature -- Removal
 		do
 			count := str_rmall ($area, $c, count)
 		ensure then
-			-- `for all i: 1..count, item (i) /= c'
 			changed_count: count = (old count) - (old occurrences (c))
+			-- removed: For every `i' in 1..`count', `item' (`i') /= `c'
 		end;
 
 	wipe_out is
@@ -657,8 +659,7 @@ feature -- Conversion
 			end;
 		ensure
 			same_count: Result.count = count;
-		--  reverse_entries:
-		--	  for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
+			-- reversed: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`count'+1-`i')
 		end;
 
 	mirror is
@@ -668,8 +669,7 @@ feature -- Conversion
 			str_reverse ($area, count);
 		ensure
 			same_count: count = old count;
-		--  	reverse_entries:
-		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
+			-- reversed: For every `i' in 1..`count', `item' (`i') = old `item' (`count'+1-`i')
 		end;
 
 feature -- Duplication
@@ -690,7 +690,7 @@ feature -- Duplication
 			Result.set_count (n2 - n1 + 1)
 		ensure
 			new_result_count: Result.count = n2 - n1 + 1
-			-- for all `i: 1..n2-n1, Result.item (i) = item (n1 + i - 1)'
+			-- original_characters: For every `i' in 1..`n2'-`n1', `Result'.`item' (`i') = `item' (`n1'+`i'-1)
 		end;
 
 feature -- Output	

@@ -36,7 +36,7 @@ feature -- Element change
 		end;
 
 	fill (other: LINEAR [G]) is
-			-- Fill with as many elements of `other' as possible.
+			-- Fill with as many items of `other' as possible.
 			-- Fill items with greatest index from `other' first.
 			-- Items inserted with lowest index (from `other') will
 			-- always be on the top of stack.

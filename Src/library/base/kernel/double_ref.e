@@ -69,7 +69,7 @@ feature -- Basic operations
 	infix "/" (other: DOUBLE_REF): DOUBLE_REF is
 			-- Division by `other'
 		require else
-			good_divisor: other.item /= 0.0
+			good_divisor: other /= 0.0
 		do
 			!! Result;
 			Result.set_item (item / other.item)

@@ -21,7 +21,7 @@ deferred class SET [G] inherit
 feature -- Measurement
 
 	count: INTEGER is
-		-- Number of elements
+		-- Number of items
 		deferred
 		end
 
@@ -48,8 +48,8 @@ feature -- Removal
 
 	changeable_comparison_criterion: BOOLEAN is
 		-- May `object_comparison' be changed?
-		-- (Answer: only if set empty; otherwise insertions
-		-- might introduce duplicates, negating the set property.)
+		-- (Answer: only if set empty; otherwise insertions might
+		-- introduce duplicates, destroying the set property.)
 	do
 		Result := empty
 	ensure then

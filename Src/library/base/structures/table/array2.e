@@ -144,7 +144,7 @@ feature -- Element change
 feature -- Removal
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			height := 0;
 			width := 0;

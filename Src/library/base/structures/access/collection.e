@@ -39,8 +39,8 @@ feature -- Element change
 		end;
 
 	fill (other: CONTAINER [G]) is
-			-- Fill with as many elements of `other' as possible.
-			-- The representations of `other' and `Current'
+			-- Fill with as many items of `other' as possible.
+			-- The representations of `other' and current structure
 			-- need not be the same.
 		require
 				  other_not_void: other /= Void;
@@ -87,7 +87,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		require
 			prunable
 		deferred

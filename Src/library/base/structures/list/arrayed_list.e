@@ -94,10 +94,10 @@ creation
 feature -- Initialization
 
 	make (n: INTEGER) is
-			-- Allocate list with `n' elements.
+			-- Allocate list with `n' items.
 			-- (`n' may be zero for empty list.)
 		require
-			valid_number_of_elements: n >= 0
+			valid_number_of_items: n >= 0
 		do
 			array_make (1, n)
 		ensure
@@ -480,7 +480,7 @@ feature -- Removal
 		end;			
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			count := 0;
 			index := 0;
@@ -543,7 +543,7 @@ feature -- Duplication
 feature {NONE} --Internal
 
 	insert (v: like item; pos: INTEGER) is
-			-- Add `v' at `pos', moving subsequent elements
+			-- Add `v' at `pos', moving subsequent items
 			-- to the right.
 		require
 			index_small_enough: pos <= count;

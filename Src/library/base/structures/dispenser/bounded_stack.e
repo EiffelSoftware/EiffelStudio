@@ -114,7 +114,7 @@ feature -- Removal
 		end;
 
 	wipe_out is
-			-- Remove all elements.
+			-- Remove all items.
 		do
 			fl.clear_all;
 			count := 0

@@ -22,7 +22,7 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		deferred
 		ensure then
-			smallest: Result implies not (Current >= other)
+			smaller: Result implies not (Current >= other)
 		end;
 
 	infix "<=" (other: like Current): BOOLEAN is
@@ -30,7 +30,7 @@ feature -- Comparison
 		do
 			Result := not (other < Current)
 		ensure then
-			equal_smallest: Result implies not (Current > other)
+			equals_smaller: Result implies not (Current > other)
 		end;
 
 	infix ">" (other: like Current): BOOLEAN is
@@ -38,7 +38,7 @@ feature -- Comparison
 		do
 			Result := other < Current
 		ensure then
-			largest: Result implies not (Current <= other)
+			larger: Result implies not (Current <= other)
 		end;
 
 	infix ">=" (other: like Current): BOOLEAN is
@@ -46,7 +46,7 @@ feature -- Comparison
 		do
 			Result := not (Current < other)
  		ensure then
-			equal_largest: Result implies not (Current < other)
+			equals_larger: Result implies not (Current < other)
 		end;
 
 end -- class COMPARABLE

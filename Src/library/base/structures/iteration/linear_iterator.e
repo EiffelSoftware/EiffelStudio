@@ -41,7 +41,7 @@ feature -- Cursor movement
 
 	do_while is
 			-- Apply `action' to every item of `target' up to 
-			-- and including the first one not satisfying `test'.
+			-- and including first one not satisfying `test'.
 			-- (from the `start' of `target')
 		do
 			start;
@@ -52,7 +52,7 @@ feature -- Cursor movement
 
 	continue_while is
 			-- Apply `action' to every item of `target' up to
-			-- and including the first one not satisfying `test'
+			-- and including first one not satisfying `test'
 			-- (from the current position of `target').
 		require else
 			traversable_exists: target /= Void;
@@ -74,7 +74,7 @@ feature -- Cursor movement
 
 	while_do is
 			-- Apply `action' to every item of `target' up to
-			-- but excluding the first one not satisfying `test'.
+			-- but excluding first one not satisfying `test'.
 			-- (Apply to full list if all items satisfy `test'.)
 		do
 			start
@@ -85,7 +85,7 @@ feature -- Cursor movement
 
 	while_continue is
 			-- Apply `action' to every item of `target' up to
-			-- but excluding the first one not satisfying `test'.
+			-- but excluding first one not satisfying `test'.
 		do
 			from
 			invariant
@@ -101,8 +101,8 @@ feature -- Cursor movement
 		end
 	
 	until_do is
-		   -- Apply `action' to every item of `target' up to
-			-- but excluding the first one satisfying `test'.
+		-- Apply `action' to every item of `target' up to
+		-- but excluding first one satisfying `test'.
 			-- (Apply to full list if no item satisfies `test'.)
 		do
 			start;
@@ -112,8 +112,8 @@ feature -- Cursor movement
 		end;
 
 	until_continue is
-			-- Apply `action' to every item of `target' from current position
-			-- up to but excluding the first one satisfying `test'.
+			-- Apply `action' to every item of `target' from current
+			-- position, up to but excluding first one satisfying `test'.
 		require
 			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
@@ -134,7 +134,7 @@ feature -- Cursor movement
 
 	do_until is
 			-- Apply `action' to every item of `target' up to 
-			-- and including the first one satisfying `test'.
+			-- and including first one satisfying `test'.
 		do
 			start ;
 			continue_until;
@@ -142,9 +142,9 @@ feature -- Cursor movement
 			achieved: not exhausted implies test 
 		end;
 
-	 continue_until is
+	continue_until is
 			-- Apply `action' to every item of `target' up to
-			-- and including the first one satisfying `test'
+			-- and including first one satisfying `test'.
 			-- (from the current position of `target').
 		require
 			traversable_exists: target /= Void;
@@ -213,7 +213,7 @@ feature -- Cursor movement
 
 	do_for (i, n, k: INTEGER) is
 			-- Apply `action' to every `k'-th item,
-			-- `n' times if possible, starting from `i'th.
+			-- `n' times if possible, starting from `i'-th.
 		require
 			traversable_exists: target /= Void
 			valid_start : i >= 1
@@ -306,7 +306,7 @@ feature -- Cursor movement
 		end;
 
 	off: BOOLEAN is
-			 -- Is position of `target' off?
+			-- Is position of `target' off?
 		require
 			traversable_exists: target /= Void
 		do

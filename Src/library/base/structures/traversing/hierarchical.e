@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Hierarchical structures in which each item has zero or %
-		%one immediate predecessor, and zero or more successor.";
+		%one immediate predecessor, and zero or more successors.";
 
 	status: "See notice at end of class";
 	names: hierarchical, traversing;

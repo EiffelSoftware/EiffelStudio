@@ -15,14 +15,14 @@ deferred class FINITE [G] inherit
 feature -- Measurement
 
 	count: INTEGER is
-			-- Number of elements
+			-- Number of items
 		deferred
 		end;
 
 feature -- Status report
 
 	empty: BOOLEAN is
-			-- Is structure empty ?
+			-- Is structure empty?
 		do
 			Result := (count = 0)
 		end;

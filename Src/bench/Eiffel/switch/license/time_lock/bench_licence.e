@@ -22,8 +22,6 @@ feature -- Initialization
 	make is
 			-- Initialization.
 		do
---			version := 4.3
---			application_name := "EiffelBench"
 			has_been_launched := False
 		end
 

@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 		local
 			wnd_class: WEL_WND_CLASS
 		do
-			!! wnd_class.make (class_name)
+			create wnd_class.make (class_name)
 			if not wnd_class.registered then
 				wnd_class.set_style (class_style)
 				wnd_class.set_window_procedure (class_window_procedure)
@@ -234,20 +234,17 @@ feature {NONE} -- Implementation
 			-- Wm_erasebkgnd message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
 			-- `on_erase_background' routine.
-			-- Does nothing when `background_brush' is not set
 		require
 			exists: exists
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			if background_brush /= Void then
-				!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
-				if scroller /= Void then
-					paint_dc.set_viewport_origin (-scroller.horizontal_position,
-						-scroller.vertical_position)
-				end
-				on_erase_background (paint_dc, client_rect )
+			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			if scroller /= Void then
+				paint_dc.set_viewport_origin (-scroller.horizontal_position,
+					-scroller.vertical_position)
 			end
+			on_erase_background (paint_dc, client_rect )
 		end
 
 feature {WEL_DISPATCHER} -- Message handling

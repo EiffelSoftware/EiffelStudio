@@ -284,25 +284,31 @@ feature {NONE} -- Implementation
 			create Result.make (message_output)
 		end
 
-	initialize_clib_component_include_directory_structure (a_path: STRING) is
-			-- Initialize directory structore for Cilent and Server folders.
+	initialize_subdirectory (a_path, a_subdirectory: STRING) is
+			-- Initialize `a_subdirectory' folder relative to `a_path'.
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.empty
+			non_void_subdirectory: a_subdirectory /= Void
+			valid_subdirectory: not a_subdirectory.empty
+		local
+			a_path2: STRING
+		do
+			a_path2 := clone (a_path)
+			a_path2.append (a_subdirectory)
+			initialize_directory (a_path2)
+		end
+		
+	initialize_clib_include (a_path: STRING) is
+			-- Initialize Clib and Include folders relative to `a_path'.
 		require
 			non_void_path: a_path /= Void
 			valid_path: not a_path.empty
 		local
 			a_path2: STRING
 		do
-			initialize_directory (a_path)
-			a_path.append_character (Directory_separator)
-			a_path2 := clone (a_path)
-			a_path2.append (Clib)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Include)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Component)
-			initialize_directory (a_path2)
+			initialize_subdirectory (a_path, Clib)
+			initialize_subdirectory (a_path, Include)
 		end
 
 	intialize_file_directories is
@@ -312,31 +318,37 @@ feature {NONE} -- Implementation
 		do
 			-- Initialize Common subdirectory
 			a_path := clone (shared_wizard_environment.destination_folder)
-			a_path.append (Common)
-			initialize_directory (a_path)
-			a_path.append_character (Directory_separator)
+			initialize_subdirectory (a_path, Common)
+
 			a_path2 := clone (a_path)
-			a_path2.append (Clib)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Include)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Interfaces)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Structures)
-			initialize_directory (a_path2)
+			a_path2.append (Common)
+			a_path2.append_character (Directory_separator)
+			initialize_clib_include (a_path2)
+			
+			initialize_subdirectory (a_path2, Interfaces)
+			initialize_subdirectory (a_path2, Structures)
 
 			-- Initialize Client subdirectory
-			a_path := clone (Shared_wizard_environment.destination_folder)
-			a_path.append (Client)
-			initialize_clib_component_include_directory_structure (a_path)
-	
+			initialize_subdirectory (a_path, Client)
+			
+			a_path2 := clone (a_path)
+			a_path2.append (Client)
+			a_path2.append_character (Directory_separator)
+			initialize_clib_include (a_path2)
+
+			initialize_subdirectory (a_path2, Component)
+			initialize_subdirectory (a_path2, Interface_proxy)
+
 			-- Initialize Server subdirectory
-			a_path := clone (Shared_wizard_environment.destination_folder)
-			a_path.append (Server)
-			initialize_clib_component_include_directory_structure (a_path)
+			initialize_subdirectory (a_path, Server)
+			
+			a_path2 := clone (a_path)
+			a_path2.append (Server)
+			a_path2.append_character (Directory_separator)
+			initialize_clib_include (a_path2)
+
+			initialize_subdirectory (a_path2, Component)
+			initialize_subdirectory (a_path2, Interface_stub)
 
 			directories_initialized := True
 		end

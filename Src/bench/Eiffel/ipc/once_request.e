@@ -30,7 +30,7 @@ feature
 		local
 			real_body_id: INTEGER
 		do
-			if not Run_info.is_running then
+			if not Application.is_running then
 				Result := False
 			else
 				real_body_id := Debug_info.real_body_id (once_routine);
@@ -67,6 +67,7 @@ end
 						once_function.argument_count, real_body_id - 1);
 			c_recv_value (Current);
 			Result := item;
+			Result.set_name (once_function.name);
 				-- Convert the physical addresses received from 
 				-- the application to hector addresses.
 			Result.set_hector_addr

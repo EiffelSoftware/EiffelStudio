@@ -8,7 +8,6 @@ inherit
 		redefine
 			send
 		end;
-	WINDOWS
 
 creation
 
@@ -25,22 +24,19 @@ feature
 
 	send is
 			-- Send `Current' request to ised, which may relay it to the application.
+		local
+			status: APPLICATION_STATUS
 		do
-			if not run_info.is_running then
+			if not Application.is_running then
 				if start_application (application_name) and then send_byte_code then
+					!! status.do_nothing;
 					send_breakpoints;
 					debug_info.tenure;
 					send_rqst_1 (Rqst_resume, Resume_cont);
-					debug_window.clear_window;
-					debug_window.put_string ("System is running%N");
-					run_info.set_is_running (True);
-					run_info.set_is_stopped (False);
-					debug_window.display					
+					status.set_is_stopped (False);
+					Application.set_status (status);
 				else
 					debug_info.tenure;
-					debug_window.clear_window;
-					debug_window.put_string (eif_timeout_msg);
-					debug_window.display					
 				end
 			end
 		end; -- send

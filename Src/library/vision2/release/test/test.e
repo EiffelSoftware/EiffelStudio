@@ -330,7 +330,6 @@ feature
 			Result.extend (create {EV_FIGURE_POLYLINE})
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
-			Result.extend (create {EV_FIGURE_TRIANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_WORLD})
 --|FIXME		Result.extend (create {EV_PROJECTION})
 --|FIXME		Result.extend (create {EV_RELATIVE_POINT})
@@ -461,6 +460,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/26 17:06:42  oconnor
+--| removed EV_TRIANGLE
+--|
 --| Revision 1.25  2000/04/26 16:58:30  oconnor
 --| added PND tests
 --|

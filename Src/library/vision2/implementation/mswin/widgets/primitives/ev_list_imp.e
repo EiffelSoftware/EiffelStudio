@@ -385,7 +385,8 @@ feature {NONE} -- Implementation : WEL features
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			if it /= Void then
-				it.interface.pointer_motion_actions.call ([0,0, 0.0, 0.0, 0.0, 0, 0])
+				pt := client_to_screen (x_pos, y_pos)
+				it.interface.pointer_motion_actions.call ([x_pos,y_pos - it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end 
@@ -564,6 +565,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/15 16:50:34  rogers
+--| Finished implementing on_mouse_move. Correct coordinates are now passed to the item.
+--|
 --| Revision 1.47  2000/03/14 23:53:09  rogers
 --| Redefined on_mouse_move from EV_PRIMITIVE_IMP so items events can be called. Added find_item_at_position.
 --|

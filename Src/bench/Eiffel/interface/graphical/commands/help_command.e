@@ -12,7 +12,23 @@ inherit
 	ISE_COMMAND;
 	EB_CONSTANTS
 
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_helpable: like helpable) is
+			-- Set `a_helpable' to `helpable'
+		require
+			valid_arg: a_helpable /= Void
+		do
+			helpable := a_helpable
+		end
+
 feature -- Access
+
+	helpable: HELPABLE
+			-- Associated helpable object
 
 	name: STRING is
 			-- Name of the command.
@@ -29,20 +45,14 @@ feature -- Access
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_Help
 		end;
 
 feature -- Execution
 
 	work (argument: ANY) is
 			-- Popup the help window.
-		local
-			req: EXTERNAL_COMMAND_EXECUTOR;
-			acrobat_reader: STRING
 		do
-			acrobat_reader := General_resources.acrobat_reader.value;
-			!! req;
-			req.execute (acrobat_reader)
+			helpable.invoke_help
 		end;
 
 end -- class HELP_COMMAND

@@ -32,12 +32,6 @@ feature
 				text_window.tool.tell_type (command_name)
 			elseif argument = get_out then
 				text_window.tool.clean_type
-			elseif license_problem then
-				license_problem := False;
-				if (argument = Void) then
-					license_window.set_exclusive_grab;
-					license_window.popup
-				end
 			else
 				format (Void);
 				if argument = Format_and_run then

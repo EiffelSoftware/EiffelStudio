@@ -10,12 +10,7 @@ inherit
 		end;
 	SHARED_WORKBENCH;
 	SHARED_RESCUE_STATUS;
-	EXCEPTIONS
-		rename
-			raise as excep_raise,
-			class_name as excep_class_name
-		end
-	
+
 feature 
 
 	formatted: STONE;
@@ -38,12 +33,6 @@ feature
 				text_window.tool.tell_type (command_name)
 			elseif argument = get_out then
 				text_window.tool.clean_type
-			elseif license_problem then
-				license_problem := False;
-				if (argument = Void) then
-					license_window.set_exclusive_grab;
-					license_window.popup
-				end
 			elseif last_warner /= Void and argument = last_warner then
 					--| If it comes here this means ok has
 					--| been pressed in the warner window

@@ -92,23 +92,15 @@ feature {NONE} -- Initialization
 					eiffel_to_c ("button-press-event"),
 					~on_list_clicked
 			)
-			selection_mode_is_single := True
 		end
-		
+
 	select_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is selected.
 		require
 			one_arg: n_args = 1
-		local
-			l_item: EV_LIST_ITEM_IMP
-		do
-			switch_to_browse_mode_if_necessary		
-		 	l_item ?= eif_object_from_c (
-				gtk_value_pointer (args)
-			)
-			call_select_actions (l_item)
+		deferred
 		end
-
+		
 	deselect_callback (n_args: INTEGER; args: POINTER) is
 			-- Called when a list item is deselected.
 		require
@@ -161,24 +153,20 @@ feature -- Status report
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
-			-- Select the item of the list at the one-based
-			-- `index'.
+			-- Give the item of the list at the one-base index.
 		do
-			switch_to_browse_mode_if_necessary
 			C.gtk_list_select_item (list_widget, an_index - 1)
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
-			switch_to_single_mode_if_necessary
 			C.gtk_list_unselect_item (list_widget, an_index - 1)
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
 		do
-			switch_to_single_mode_if_necessary
 			C.gtk_list_unselect_all (list_widget)
 		end
 
@@ -217,16 +205,6 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 	list_widget: POINTER
 	
 feature {NONE} -- Implementation
-
-	switch_to_single_mode_if_necessary is
-			-- 
-		deferred
-		end
-	
-	switch_to_browse_mode_if_necessary is
-			-- 
-		deferred
-		end
 
 	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP) is
 			-- Call `select_actions'.
@@ -337,7 +315,6 @@ feature {NONE} -- Implementation
 				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the 
 				-- `focus_out_actions' from being called.
 			list_has_been_clicked := True
-			switch_to_browse_mode_if_necessary
 		end
 	
 	on_list_clicked is
@@ -395,8 +372,6 @@ feature {NONE} -- Implementation
 		-- Has the user just used up or down arrows
 		-- to change the focused item?
 		
-	selection_mode_is_single:BOOLEAN
-
 	list_has_been_clicked: BOOLEAN
 		-- Are we between "item_clicked" and "list_clicked" event.
 	
@@ -423,6 +398,9 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/07/05 21:26:11  etienne
+--| Fixed problem in combo boxes `select_actions' and made combo boxes expandable by using the keyboard.
+--|
 --| Revision 1.8  2001/06/29 22:33:34  king
 --| Removed scrollable code
 --|

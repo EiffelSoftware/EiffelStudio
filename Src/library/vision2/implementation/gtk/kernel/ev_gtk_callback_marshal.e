@@ -67,18 +67,23 @@ feature {EV_ANY_IMP} -- Access
 			t: TUPLE
 			gdk_event: POINTER
 		do
-			integer_pointer_tuple.put (n_args, 1)
-			integer_pointer_tuple.put (args, 2)
+			-- integer_pointer_tuple has been already correctly set by `marshal'.
+			--integer_pointer_tuple.put (n_args, 1)
+			--integer_pointer_tuple.put (args, 2)
+
 			t := translate.item (integer_pointer_tuple)
-			--FIXME
+
 			if t /= Void then
 				if
+					--| FIXME IEK This needs to be optimized.
 					type_conforms_to (
 						dynamic_type (an_agent),
 						f_of_tuple_type_id
 					)
 				then
-					an_agent.call ([t])
+					-- This is a call to {ACTION_SEQUENCE}.call ([])
+					tuple_tuple.put (t, 1)
+					an_agent.call (tuple_tuple)
 				else	
 					an_agent.call (t)
 				end
@@ -92,6 +97,24 @@ feature {EV_ANY_IMP} -- Access
 				end
 			end
 		end
+		
+	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
+			-- 
+		once
+			Result := [0, 0, 0, 0, 0, 0, 0]
+		end
+		
+	set_motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER) is
+		do
+			motion_tuple.put (a_1, 1)
+			motion_tuple.put (a_2, 2)
+			motion_tuple.put (a_3, 3)
+			motion_tuple.put (a_4, 4)
+			motion_tuple.put (a_5, 5)
+			motion_tuple.put (a_6, 6)
+			motion_tuple.put (a_7, 7)
+		end
+		
 		
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
 			-- A TUPLE containing `args' data from a GdkEvent.
@@ -114,8 +137,7 @@ feature {EV_ANY_IMP} -- Access
 			when
 				Gdk_motion_notify_enum
 			then
-					-- gdk_event type GdkEventMotion
-				Result := [
+				set_motion_tuple (
 					local_C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_xtilt (gdk_event),
@@ -123,22 +145,25 @@ feature {EV_ANY_IMP} -- Access
 					local_C.gdk_event_motion_struct_pressure (gdk_event),
 					local_C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 					local_C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
-				]
+				)
+				Result := motion_tuple
 			when
 				Gdk_nothing_enum,
 				Gdk_delete_enum,
 				Gdk_destroy_enum,
 				Gdk_focus_change_enum,
 				Gdk_map_enum,
-				Gdk_unmap_enum
+				Gdk_unmap_enum,
+				Gdk_enter_notify_enum,
+				Gdk_leave_notify_enum,
+				Gdk_proximity_in_enum,
+				Gdk_proximity_out_enum
 			then
-					-- gdk_event type GdkEventAny
-				Result := []
+				Result := empty_tuple
 
 			when
 				Gdk_expose_enum
 			then
-					-- gdk_event type GdkEventExpose
 				p := local_C.gdk_event_expose_struct_area (gdk_event)
 				Result := [
 					local_C.gdk_rectangle_struct_x (p),
@@ -150,7 +175,6 @@ feature {EV_ANY_IMP} -- Access
 				Gdk_button_press_enum,
 				Gdk_2button_press_enum
 			then
-					-- gdk_event type GdkEventButton
 				Result := [
 					local_C.gdk_event_button_struct_type (gdk_event),
 					local_C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
@@ -183,95 +207,24 @@ feature {EV_ANY_IMP} -- Access
 			then
 					-- gdk_event type GdkEventButton
 					-- Ignored
-
 			when
 				Gdk_key_press_enum,
 				Gdk_key_release_enum
 			then
-					-- gdk_event type GdkEventKey
 				keyval := local_C.gdk_event_key_struct_keyval (gdk_event)
 				if valid_gtk_code (keyval) then
 					create key.make_with_code (key_code_from_gtk (keyval))
 				end
-				Result := [ key ]
-			when
-				Gdk_enter_notify_enum,
-				Gdk_leave_notify_enum
-			then
-					-- gdk_event type GdkEventCrossing
-				Result := []
-
+				Result := [key]
 			when
 				Gdk_configure_enum
 			then
-					-- gdk_event type GdkEventConfigure
 				Result := [
 					local_C.gdk_event_configure_struct_x (gdk_event),
 					local_C.gdk_event_configure_struct_y (gdk_event),
 					local_C.gdk_event_configure_struct_width (gdk_event),
 					local_C.gdk_event_configure_struct_height (gdk_event)
 				]
-
-			when
-				Gdk_property_notify_enum
-			then
-					-- gdk_event type GdkEventProperty
-				check
-					gdk_property_event_not_handled: False
-				end
-
-			when
-				Gdk_selection_clear_enum,
-				Gdk_selection_request_enum,
-				Gdk_selection_notify_enum
-			then
-					-- gdk_event type GdkEventSelection
-				check
-					gdk_selection_event_not_handled: False
-				end
-
-			when
-				Gdk_proximity_in_enum,
-				Gdk_proximity_out_enum
-			then
-					-- gdk_event type GdkEventProximity
-				Result := []
-					
-			when
-				Gdk_drag_enter_enum,
-				Gdk_drag_leave_enum,
-				Gdk_drag_motion_enum,
-				Gdk_drag_status_enum,
-				Gdk_drop_start_enum,
-				Gdk_drop_finished_enum
-			then
-				check
-					gdk_drag_and_drop_event_not_handled: False
-				end
-
-			when
-				Gdk_client_event_enum
-			then
-					-- gdk_event type GdkEventSelection
-				check	
-					gdk_client_event_not_handled: False
-				end
-			when	
-				Gdk_visibility_notify_enum
-			then
-					-- gdk_event type GdkEventAny
-				check
-					gdk_visibility_event_not_handled: False
-				end
-
-			when
-				Gdk_no_expose_enum
-			then
-					-- gdk_event type GdkEventNoExpose
-				check
-					gdk_no_expose_event_not_handled: False
-				end
-
 			end
 			end
 		end
@@ -347,9 +300,9 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			a_screen_x, a_screen_y: INTEGER
 		) is
 				-- 
-			do
-				c_get_eif_reference_from_object_id (a_c_object).button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			end
+		do
+			c_get_eif_reference_from_object_id (a_c_object).button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
 			
 	on_size_allocate_intermediate (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
 			--
@@ -403,8 +356,12 @@ feature {NONE} -- Implementation
 			args_not_null: n_args > 0 implies args /= NULL
 		do
 			if type_conforms_to (dynamic_type (action), f_of_tuple_type_id) then
+				-- `action' isn't a translation agent and the open operands are TUPLE [TUPLE]
+				-- Direct call of ACTION_SEQUENCE.call (?).
 				action.call (empty_tuple_tuple)
 			else
+				-- `action' is a translation agent, call with TUPLE [INTEGER, POINTER].
+				-- In most cases, translate_and_call (an_agent, translate, ?, ?)
 				check
 					not_for_empty_tuple: not type_conforms_to (dynamic_type (action), f_of_tuple_type_id)
 				end
@@ -412,18 +369,46 @@ feature {NONE} -- Implementation
 				integer_pointer_tuple.put (args, 2)
 				action.call (integer_pointer_tuple)
 			end
-
 		end
 
 	f_of_tuple_type_id: INTEGER is
 		once
 			Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
 		end
+	
+feature {EV_ANY_IMP} -- Tuple optimizations.
+		
+	empty_tuple: TUPLE is
+		once
+			Result := []
+		end
 		
 	empty_tuple_tuple: TUPLE is
 		once
 			Result := [[]]
 		end
+		
+	tuple_tuple: TUPLE [TUPLE] is
+		once
+			Result := [[]]
+		end
+		
+	tuple: TUPLE is
+		once
+			Result := []
+		end
+		
+	pointer_tuple: TUPLE [POINTER] is
+			-- 
+		once
+			Result := [Default_pointer]
+		end
+	
+	integer_tuple: TUPLE [INTEGER] is
+		once
+			Result := [0]
+		end
+		
 
 	integer_pointer_tuple: TUPLE [INTEGER, POINTER] is
 		once

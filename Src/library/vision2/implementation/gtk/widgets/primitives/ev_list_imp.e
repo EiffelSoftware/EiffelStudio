@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				has_focus := True
 				top_level_window_imp.set_focus_widget (Current)
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ([])				
+					focus_in_actions_internal.call (empty_tuple)				
 				end
 			end
 		end
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 				has_focus := False
 				top_level_window_imp.set_focus_widget (Void)
 				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call ([])
+					focus_out_actions_internal.call (empty_tuple)
 				end
 			end
 			arrow_used := False

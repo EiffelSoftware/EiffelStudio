@@ -24,75 +24,94 @@ feature -- Basic Operation
 			-- Build interface 
 		local
 			h1: EV_HORIZONTAL_BOX
-			v1: EV_VERTICAL_BOX
 			lab: EV_LABEL
 			cell: EV_CELL
+			buttons_box: EV_VERTICAL_BOX
+			compilable_box: EV_VERTICAL_BOX
+			to_compile_box: EV_VERTICAL_BOX
 		do 
 			create to_precompile_libraries
 			create precompilable_libraries
-			to_precompile_libraries.set_column_titles (<<"Library name", "Done ?" >>)
-			to_precompile_libraries.set_column_widths (<<90, 50>>)
-			precompilable_libraries.set_column_titles (<<"Library name", "Done ?" >>)
-			precompilable_libraries.set_column_widths (<<90, 50>>)
+			to_precompile_libraries.set_column_titles (<<Interface_names.l_Library_name, Interface_names.l_Done>>)
+			to_precompile_libraries.set_column_widths (<<96, 40>>)
+			precompilable_libraries.set_column_titles (<<Interface_names.l_Library_name, Interface_names.l_Done>>)
+			precompilable_libraries.set_column_widths (<<96, 40>>)
+
+			create add_all_b.make_with_text (Interface_names.b_Add_all)
+			add_all_b.select_actions.extend (~add_all_items)
+			add_all_b.set_minimum_size (Default_button_width, Default_button_height)
+
+			create add_b.make_with_text (Interface_names.b_Add)
+			add_b.select_actions.extend (~add_items)
+			add_b.set_minimum_size (Default_button_width, Default_button_height)
+
+			create remove_b.make_with_text (Interface_names.b_Remove)
+			remove_b.select_actions.extend (~remove_items)
+			remove_b.set_minimum_size (Default_button_width, Default_button_height)
+
+			create remove_all_b.make_with_text (Interface_names.b_Remove_all)
+			remove_all_b.select_actions.extend (~remove_all_items)
+			remove_all_b.set_minimum_size (Default_button_width, Default_button_height)
+
+			create buttons_box
+			create lab.make_with_text (" ")
+			buttons_box.extend (lab)
+			buttons_box.disable_item_expand (lab)
+			buttons_box.extend (add_all_b)
+			buttons_box.disable_item_expand (add_all_b)
+			buttons_box.extend (add_b)
+			buttons_box.disable_item_expand (add_b)
+			buttons_box.extend (remove_b)
+			buttons_box.disable_item_expand (remove_b)
+			buttons_box.extend (remove_all_b)
+			buttons_box.disable_item_expand (remove_all_b)
+			buttons_box.extend (create {EV_CELL})
+			buttons_box.set_padding (Small_padding_size)
+			buttons_box.set_border_width (Small_border_size)
+
+			create compilable_box
+			compilable_box.set_padding (Dialog_unit_to_pixels(3))
+			create lab.make_with_text (Interface_names.l_Compilable_libraries)
+			lab.align_text_left
+			compilable_box.extend (lab)
+			compilable_box.disable_item_expand(lab)
+			compilable_box.extend (precompilable_libraries)
+
+			create to_compile_box
+			to_compile_box.set_padding (Dialog_unit_to_pixels(3))
+			create lab.make_with_text (Interface_names.l_Libraries_to_compile)
+			lab.align_text_left
+			to_compile_box.extend(lab)
+			to_compile_box.disable_item_expand(lab)
+			to_compile_box.extend (to_precompile_libraries)		
 
 			create h1
+			h1.extend (compilable_box)
+			h1.extend (buttons_box)
+			h1.disable_item_expand (buttons_box)
+			h1.extend (to_compile_box)
+			h1.set_border_width (1)
+			choice_box.extend (h1)
 
-			create v1
-			create lab.make_with_text("Compilable libraries")
-			v1.extend(lab)
-			v1.disable_item_expand(lab)
-			v1.extend(precompilable_libraries)
-			h1.extend(v1)
+				-- Add your library box.
+			create add_your_own_b.make_with_text_and_action (Interface_names.b_Add_your_own_library, ~browse)
+			create h1
+			h1.set_border_width (Small_border_size)
+			create cell
+			cell.set_minimum_width (Dialog_unit_to_pixels(70))
+			h1.extend (cell)
+			h1.extend (add_your_own_b)
+			h1.disable_item_expand (add_your_own_b)
+			choice_box.extend (h1)			
 
-		
-			create v1
+				-- Fill lists.
+			if wizard_information.l_to_precompile /= Void then
+				fill_lists_from_previous_state
+			else
+				fill_lists
+			end
 
-			create add_all_b.make_with_text ("Add all ->")
-			add_all_b.select_actions.extend (~add_all_items)
-			v1.extend (add_all_b)
-			add_all_b.set_minimum_width (25)
-			add_all_b.set_minimum_height (23)
-			add_all_b.align_text_center
-			v1.disable_item_expand (add_all_b)
-			v1.extend (create {EV_CELL})
-
-			create add_b.make_with_text ("Add->")
-			add_b.select_actions.extend (~add_items)
-			v1.extend (add_b)
-			add_b.set_minimum_width (15)
-			add_b.set_minimum_height (23)
-			add_b.align_text_center
-			v1.disable_item_expand (add_b)
-
-			create remove_b.make_with_text ("<-Remove")
-			remove_b.select_actions.extend (~remove_items)
-			v1.extend (remove_b)
-			remove_b.set_minimum_width (15)
-			remove_b.set_minimum_height (23)
-			remove_b.align_text_center
-			v1.disable_item_expand (remove_b)
-			v1.extend (create {EV_CELL})
-
-			create remove_all_b.make_with_text ("<- Remove all")
-			remove_all_b.select_actions.extend (~remove_all_items)
-			v1.extend (remove_all_b)
-			remove_all_b.set_minimum_width (25)
-			remove_all_b.set_minimum_height (23)
-			remove_all_b.align_text_center
-			v1.disable_item_expand (remove_all_b)
-
-			v1.set_padding (5)
-			v1.set_border_width (5)
-			h1.extend(v1)
-
-
-			create v1
-			create lab.make_with_text ("Libraries to compile")
-			v1.extend(lab)
-			v1.disable_item_expand(lab)
-			v1.extend(to_precompile_libraries)		
-			h1.extend(v1)
-
+				-- Update state
 			precompilable_libraries.enable_multiple_selection
 			to_precompile_libraries.enable_multiple_selection
 			precompilable_libraries.select_actions.extend (~enable_add_b)
@@ -103,25 +122,6 @@ feature -- Basic Operation
 			add_b.disable_sensitive
 			remove_b.disable_sensitive
 
-			choice_box.extend(h1)
-
-			create add_your_own_b.make_with_text_and_action ("Add your own library...", ~browse)
-			create h1
-			h1.set_border_width (5)
-			create cell
-			cell.set_minimum_width (70)
-			h1.extend (cell)
-			h1.extend (add_your_own_b)
-			h1.disable_item_expand (add_your_own_b)
-
-			choice_box.extend (h1)			
-
-			if wizard_information.l_to_precompile /= Void then
-				fill_lists_from_previous_state
-			else
-				fill_lists
-			end
-
 			set_updatable_entries(<<precompilable_libraries.select_actions,
 									to_precompile_libraries.select_actions>>)
 
@@ -130,10 +130,10 @@ feature -- Basic Operation
 	proceed_with_current_info is 
 		do
 			Precursor
-			if no_lib_selected then
---				proceed_with_new_state(Create {WIZARD_NO_LIB_STATE}.make(wizard_information))
+			if to_precompile_libraries.is_empty then
+				proceed_with_new_state (create {WIZARD_CHOOSE_ONE_ERROR_STATE}.make (wizard_information))
 			else
-				proceed_with_new_state(Create {WIZARD_FINAL_STATE}.make(wizard_information))
+				proceed_with_new_state (create {WIZARD_FINAL_STATE}.make (wizard_information))
 			end
 		end
 
@@ -145,8 +145,8 @@ feature -- Basic Operation
 			lin_list, lin_list_2: LINEAR [EV_MULTI_COLUMN_LIST_ROW]
 			list: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		do
-			lin_list:= to_precompile_libraries.linear_representation
-			lin_list_2:= precompilable_libraries.linear_representation
+			lin_list := to_precompile_libraries.linear_representation
+			lin_list_2 := precompilable_libraries.linear_representation
 			from 
 				lin_list.start
 				create list.make
@@ -161,7 +161,6 @@ feature -- Basic Operation
 			else
 				create list.make
 				wizard_information.set_l_to_precompile (list)
-				no_lib_selected:= TRUE
 			end
 
 			from 
@@ -271,11 +270,11 @@ feature -- Tools
 					if list_of_file.has ("EIFGEN") then
 						info_lib.put (True, 2)
 						it.extend (sys_name)
-						it.extend ("Already")
+						it.extend (Interface_names.l_Yes)
 					else
 						info_lib.put (False, 2)
 						it.extend (sys_name)
-						it.extend ("No")
+						it.extend (Interface_names.l_No)
 					end
 					it.set_data (info_lib)	
 				else
@@ -440,9 +439,6 @@ feature -- Tools
 
 
 feature -- Implementation
-
-	no_lib_selected: BOOLEAN
-			-- Is at least a library has been selected by the user
 
 	error_no_ace: BOOLEAN
 			-- Is there an ace file "ace.ace" in the library directory

@@ -54,4 +54,10 @@ feature {NONE} -- Constants
 			Result_not_void: Result /= Void
 		end
 
+	Interface_names: INTERFACE_NAMES is
+			-- Interface names for buttons, label, ...
+		once
+			create Result
+		end
+
 end -- class PROJECT_WIZARD_SHARED

@@ -300,7 +300,6 @@ feature -- Basic operation
 			tree_object: GB_TREE_OBJECT
 			current_type: INTEGER
 			text: STRING
-			an_object: GB_OBJECT
 		do	
 			text := a_text
 			current_type := dynamic_type_from_string (text)		

@@ -220,7 +220,7 @@ feature -- Access (table row values)
 
 	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING] is
 			-- Feature list mapped with `action'.
-			-- This can be useful to create tags.
+			-- This can be useful to create tags or parameter names.
 		local
 			tmp: STRING
 		do

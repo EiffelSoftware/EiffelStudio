@@ -391,8 +391,7 @@ feature -- Basic operation
 					radio_button.update_radio_states
 				end
 				it.interface.pointer_button_press_actions.call
-				([x_pos - child_x (it.interface),
-				child_y_absolute (it.interface) - y_pos, button, 0.0, 0.0, 0.0,
+				([x_pos - child_x (it.interface), y_pos, button, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
 				it.interface.press_actions.call ([])
 			end
@@ -562,7 +561,7 @@ feature {NONE} -- WEL Implementation
 			if it /= Void then
 				it.interface.pointer_motion_actions.call
 				([x_pos - child_x (it.interface),
-				y_pos - child_y_absolute (it.interface), 0.0, 0.0, 0.0,
+				y_pos, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
@@ -657,7 +656,7 @@ feature {EV_PND_TRANSPORTER_IMP}
 			window_rectangle := window_rect
 			b := bar
 			Result := b.window_rect.top + 
-			((window_rect.height - button_rectangle.height)//2) - 1
+			((b.window_rect.height - button_rectangle.height)//2) - 1
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -734,6 +733,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/04/06 18:42:46  rogers
+--| Internal_propagate_pointer_press, and on_mouse move now pass the
+--| correct y_position within the child.
+--|
 --| Revision 1.47  2000/04/06 17:05:57  rogers
 --| Removed debugging information from child_absolute_y.
 --|

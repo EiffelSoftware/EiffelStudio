@@ -33,11 +33,13 @@ feature {AST_FACTORY} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
-		r: like rescue_clause; p: INTEGER; end_pos: like location) is
+		r: like rescue_clause; p: INTEGER; end_pos: like location;
+		oms_count: like once_manifest_string_count) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
 			end_pos_not_void: end_pos /= Void
+			valid_oms_count: oms_count >= 0
 		do
 			obsolete_message := o
 			precondition := pr
@@ -47,6 +49,7 @@ feature {AST_FACTORY} -- Initialization
 			rescue_clause := r
 			body_start_position := p
 			end_location := end_pos.twin
+			once_manifest_string_count := oms_count
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -56,6 +59,7 @@ feature {AST_FACTORY} -- Initialization
 			rescue_clause_set: rescue_clause = r
 			body_start_position_set: body_start_position = p
 			body_end_location_set: end_location.is_equal (end_pos)
+			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
 
 feature -- Visitor
@@ -92,6 +96,10 @@ feature -- Attributes
 
 	rescue_clause: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Rescue compound
+
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings in precondition,
+			-- body, postcondition and rescue clause
 
 feature -- Properties
 
@@ -342,6 +350,8 @@ feature -- Type check, byte code and dead code removal
 			
 			Result.set_start_line_number (Context.current_feature.body.location.line_number)
 			Result.set_end_location (end_location)
+
+			Result.set_once_manifest_string_count (once_manifest_string_count)
 		end
 
 	check_local_names is

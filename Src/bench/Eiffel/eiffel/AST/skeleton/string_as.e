@@ -12,8 +12,6 @@ inherit
 			type_check, byte_node, value_i, is_equivalent
 		end
 	
-	PART_COMPARABLE
-
 	CHARACTER_ROUTINES
 
 feature {AST_FACTORY} -- Initialization
@@ -56,16 +54,11 @@ feature -- Settings
 		
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
-		do
-			Result := value < other.value
-		end
-
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
 				-- `value' cannot be Void
-			Result := value.is_equal (other.value)
+			Result := is_once_string = other.is_once_string and then value.is_equal (other.value)
 		end
 
 feature -- Type check and byte code
@@ -90,10 +83,15 @@ feature -- Type check and byte code
 			Result := System.string_class.compiled_class.actual_type
 		end
 
-	byte_node: STRING_B is
+	byte_node: EXPR_B is
 			-- Associated byte code
 		do
-			create Result.make (value)
+			if is_once_string then
+				context.add_once_manifest_string
+				create {ONCE_STRING_B} Result.make (value, context.once_manifest_string_number)
+			else
+				create {STRING_B} Result.make (value)
+			end
 		end
 
 feature -- Output

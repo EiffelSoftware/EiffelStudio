@@ -57,6 +57,9 @@ feature -- Access
 	current_feature: FEATURE_I
 			-- Current feature being processed.
 
+	original_body_index: INTEGER
+			-- Original body index of the current feature or class invariant
+
 	current_type: CL_TYPE_I
 			-- Current class type in which byte code is processed
 
@@ -445,8 +448,18 @@ feature -- Access
 			valid_f: f /= Void
 		do
 			current_feature := f
+			original_body_index := f.body_index
 		ensure
 			current_feature_set: current_feature = f
+			original_body_index_set: original_body_index = f.body_index
+		end
+		
+	set_original_body_index (new_original_body_index: like original_body_index) is
+			-- Set `original_body_index' to `new_original_body_index'.
+		do
+			original_body_index := new_original_body_index
+		ensure
+			original_body_index_set: original_body_index = new_original_body_index
 		end
 
 	add_non_gc_vars is
@@ -796,6 +809,7 @@ feature -- Access
 			is_new_precondition_block := False
 			result_used := False
 			current_feature := Void
+			original_body_index := 0
 			current_used := False
 			current_used_count := 0
 			need_gc_hook := False

@@ -183,7 +183,10 @@ feature {NONE} -- Access
 
 	local_sig: MD_LOCAL_SIGNATURE
 			-- Permanent signature for locals.
-			
+
+	type_sig: MD_TYPE_SIGNATURE
+			-- Permanent signature for types.
+
 	boolean_native_signature: MD_NATIVE_TYPE_SIGNATURE is
 			-- Marshaller signature for converting IL boolean to Eiffel C boolean
 		once
@@ -519,6 +522,7 @@ feature -- Generation Structure
 			create method_sig.make
 			create field_sig.make
 			create local_sig.make
+			create type_sig.make
 			create local_types.make (5)
 
 			last_non_recorded_feature_token := 0
@@ -592,6 +596,138 @@ feature -- Generation Structure
 			main_module.define_entry_point (creation_type_id, a_class_type,
 				a_feature_id, a_has_arguments)
 			current_module := l_cur_mod
+		end
+
+	generate_runtime_helper is
+			-- Generate a class for run-time needs.
+		local
+			l_cur_mod: like current_module
+			helper_emit: MD_EMIT
+			oms_field_cil_token: INTEGER
+			oms_field_eiffel_token: INTEGER
+			oms_method_token: INTEGER
+			oms_array_type_cil_token: INTEGER
+			oms_array_type_eiffel_token: INTEGER
+			array_type_token: INTEGER
+			array_copy_method_token: INTEGER
+			check_body_index_range_label: IL_LABEL
+			allocate_for_body_index_label: IL_LABEL
+		do
+			if workbench.precompilation_directories = Void or else workbench.precompilation_directories.is_empty then
+					-- Generate code to handle once manifest strings.
+				l_cur_mod := current_module
+				current_module := main_module
+				helper_emit := main_module.md_emit
+
+					-- Define fields and methods to deal with once manifest strings.
+				current_module.define_once_string_tokens
+				oms_field_cil_token := current_module.once_string_field_token (true)
+				oms_field_eiffel_token := current_module.once_string_field_token (false)
+				oms_method_token := current_module.once_string_allocation_routine_token
+
+					-- Generate allocation routine.
+
+					-- Check if fields were initialized.
+				start_new_body (oms_method_token)
+				local_sig.reset
+				local_sig.set_local_count (1)
+				local_sig.add_local_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				method_body.set_local_token (helper_emit.define_signature (local_sig))
+				check_body_index_range_label := create_label
+				allocate_for_body_index_label := create_label
+				array_type_token := helper_emit.define_type_ref (create {UNI_STRING}.make ("System.Array"), current_module.mscorlib_token)
+				method_sig.reset
+				method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+				method_sig.set_parameter_count (3)
+				method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
+				method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
+				method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				array_copy_method_token := helper_emit.define_member_ref (create {UNI_STRING}.make ("Copy"), array_type_token, method_sig)
+				
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, oms_field_cil_token)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				branch_on_true (check_body_index_range_label)
+
+					-- Create array(s) indexed by body index.
+					-- Remove null from stack top.
+				method_body.put_opcode (feature {MD_OPCODES}.pop)
+					-- Create "STRING[][]" and assign it to "oms_eiffel".
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode (feature {MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (string_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, oms_field_eiffel_token)
+					-- Create "string[][]" and assign it to "oms_cil".
+					-- Leave "string[][]" at stack top.
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode (feature {MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+				oms_array_type_cil_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newarr, oms_array_type_cil_token)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, oms_field_cil_token)
+				branch_to (allocate_for_body_index_label)
+
+				mark_label (check_body_index_range_label)
+					-- Check whether body index fits current body index range.
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				method_body.put_opcode (feature {MD_OPCODES}.ldlen)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				method_body.put_opcode (feature {MD_OPCODES}.stloc_0)
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				method_body.put_opcode_label (feature {MD_OPCODES}.bgt, allocate_for_body_index_label.id)
+
+					-- Body index is too large. Reallocate array(s).
+					-- All previously stored data have to be preserved.
+					-- Reallocate "string[][]".
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode (feature {MD_OPCODES}.add)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newarr, oms_array_type_cil_token)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, oms_field_cil_token)
+				method_body.put_opcode (feature {MD_OPCODES}.ldloc_0)
+				method_body.put_static_call (array_copy_method_token, 3, false)
+					-- Reallocate "STRING[][]".
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, oms_field_eiffel_token)
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode (feature {MD_OPCODES}.add)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode (feature {MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, oms_field_eiffel_token)
+				method_body.put_opcode (feature {MD_OPCODES}.ldloc_0)
+				method_body.put_static_call (array_copy_method_token, 3, false)
+					-- Leave "string[][]" on stack top.
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, oms_field_cil_token)
+
+				mark_label (allocate_for_body_index_label)
+					-- Create array(s) indexed by manifest string number.
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_1)
+				type_sig.reset
+				type_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newarr, helper_emit.define_type_spec (type_sig))
+				method_body.put_opcode (feature {MD_OPCODES}.stelem_ref)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, oms_field_eiffel_token)
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_0)
+				method_body.put_opcode (feature {MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newarr, current_module.actual_class_type_token (string_type_id))
+				method_body.put_opcode (feature {MD_OPCODES}.stelem_ref)
+					-- Done.
+				generate_return (false)
+				method_writer.write_current_body
+
+				current_module := l_cur_mod
+			end
 		end
 
 	end_assembly_generation is
@@ -3931,6 +4067,90 @@ feature -- Once management
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, result_token)
 		end
 
+feature -- Once manifest string manipulation
+
+	generate_once_string_allocation (count: INTEGER) is
+			-- Generate code that allocates memory required for `count'
+			-- once manifest strings of the current routine.
+		require
+			valid_count: count >= 0
+		local
+			allocate_array_label: IL_LABEL
+			done_label: IL_LABEL
+		do
+			allocate_array_label := create_label
+			done_label := create_label
+				-- Check if the array is already allocated.
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, current_module.once_string_field_token (true))
+			method_body.put_opcode (feature {MD_OPCODES}.dup)
+			branch_on_false (allocate_array_label)
+			method_body.put_opcode (feature {MD_OPCODES}.dup)
+			method_body.put_opcode (feature {MD_OPCODES}.ldlen)
+			put_integer_32_constant (byte_context.original_body_index)
+			method_body.put_opcode_label (feature {MD_OPCODES}.blt, allocate_array_label.id)
+			put_integer_32_constant (byte_context.original_body_index)
+			method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode (feature {MD_OPCODES}.dup)
+			branch_on_true (done_label)
+			mark_label (allocate_array_label)
+				-- Array is not allocated.
+				-- Call allocation routine.
+			put_integer_32_constant (byte_context.original_body_index)
+			put_integer_32_constant (count)
+			method_body.put_static_call (current_module.once_string_allocation_routine_token, 2, false)
+				-- Done.
+			mark_label (done_label)
+				-- Remove null from stack top.
+			method_body.put_opcode (feature {MD_OPCODES}.pop)
+		end
+
+	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
+			-- Generate code for once string in a current routine with the given
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- or Eiffel string type otherwise.
+		require
+			valid_number: number >= 0
+			non_void_value: value /= Void
+			non_empty_value: not value.is_empty
+		local
+			once_string_field_token: INTEGER
+			assign_string_label: IL_LABEL
+			done_label: IL_LABEL
+		do
+			once_string_field_token := current_module.once_string_field_token (is_cil_string)
+			assign_string_label := create_label
+			done_label := create_label
+				-- Check if the string is already created.
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, once_string_field_token)
+			put_integer_32_constant (byte_context.original_body_index)
+			method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
+			put_integer_32_constant (number)
+			method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode (feature {MD_OPCODES}.dup)
+				-- String is already created.
+			branch_on_true (done_label)
+				-- Remove null from stack top.
+			method_body.put_opcode (feature {MD_OPCODES}.pop)
+			mark_label (assign_string_label)
+				-- String is not stored in array.
+				-- Let's create it and store.
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, once_string_field_token)
+			put_integer_32_constant (byte_context.original_body_index)
+			method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
+			method_body.put_opcode (feature {MD_OPCODES}.dup)
+			put_integer_32_constant (number)
+			if is_cil_string then
+				put_system_string (value)
+			else
+				put_manifest_string (value)
+			end
+			method_body.put_opcode (feature {MD_OPCODES}.stelem_ref)
+			put_integer_32_constant (number)
+			method_body.put_opcode (feature {MD_OPCODES}.ldelem_ref)
+				-- Done.
+			mark_label (done_label)
+		end
+
 feature -- Array manipulation
 
 	generate_array_access (kind: INTEGER; a_type_id: INTEGER) is
@@ -5268,7 +5488,7 @@ feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attri
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is
 			-- Define a custom attribute on `token' using constructor `ctor_token' with
 			-- arguments `data'.
-			-- Same as `md_emit.define_custom_attribuyte' but we do not care about return type.
+			-- Same as `md_emit.define_custom_attribute' but we do not care about return type.
 		local
 			l_ca_token: INTEGER
 		do

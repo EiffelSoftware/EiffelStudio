@@ -18,24 +18,41 @@ inherit
 
 	SHARED_BODY_ID
 
-feature 
+feature -- Access
 
-	byte_list: BYTE_LIST [BYTE_NODE];
+	byte_list: BYTE_LIST [BYTE_NODE]
 			-- Invariant byte code list
 
-feature 
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings in class invariant
 
-	associated_class: CLASS_C is
-			-- Associated class
-		do
-			Result := System.class_of_id (class_id);
-		end;
+feature -- Settings
 
 	set_byte_list (b: like byte_list) is
 			-- Assign `b' to `byte_list'.
 		do
-			byte_list := b;
-		end; -- set_byte_list
+			byte_list := b
+		ensure
+			byte_list_set: byte_list = b
+		end
+
+	set_once_manifest_string_count (oms_count: like once_manifest_string_count) is
+			-- Set `once_manifest_string_count' to `oms_count'.
+		require
+			valid_oms_count: oms_count >= 0
+		do
+			once_manifest_string_count := oms_count
+		ensure
+			once_manifest_string_count_set: once_manifest_string_count = oms_count
+		end
+
+feature
+
+	associated_class: CLASS_C is
+			-- Associated class
+		do
+			Result := System.class_of_id (class_id)
+		end
 
 	generate_invariant_routine is
 			-- Generate invariant routine
@@ -66,6 +83,7 @@ feature
 			else
 				body_index := associated_class.invariant_feature.body_index;
 			end;
+			context.set_original_body_index (body_index)
 
 			internal_name := Encoder.feature_name (
 				System.class_type_of_id (context.current_type.type_id).static_type_id,
@@ -107,6 +125,17 @@ feature
 				-- Generate GC hooks
 			context.generate_gc_hooks (True);
 
+				-- Allocate memory for once manifest strings if required
+			if once_manifest_string_count > 0 then
+				buf.put_string ("RTAOMS(")
+				buf.put_integer (body_index - 1)
+				buf.put_character (',')
+				buf.put_integer (once_manifest_string_count)
+				buf.put_character (')')
+				buf.put_character (';')
+				buf.put_new_line
+			end
+
 			byte_list.generate;
 		
 				-- Remove gc hooks
@@ -125,9 +154,18 @@ feature -- IL code generation
 			-- Generate IL code for a class invariant clause.
 		local
 			end_of_invariant: IL_LABEL
+			body_index: INTEGER
 		do
 			context.local_list.wipe_out
-			context.set_assertion_type (In_invariant);
+			context.set_assertion_type (In_invariant)
+
+			body_index := associated_class.invariant_feature.body_index
+			context.set_original_body_index (body_index)
+
+				-- Allocate memory for once manifest strings if required
+			if once_manifest_string_count > 0 then
+				il_generator.generate_once_string_allocation (once_manifest_string_count)
+			end
 
 			end_of_invariant := il_label_factory.new_label
 
@@ -145,6 +183,7 @@ feature -- Byte code geenration
 			-- Generate byte code for a class invariant clause.
 		local
 			local_list: LINKED_LIST [TYPE_I];
+			body_index: INTEGER
 		do
 			local_list := context.local_list;
 			local_list.wipe_out;
@@ -152,7 +191,10 @@ feature -- Byte code geenration
 				-- Default precond- and postcondition offsets
 			--Temp_byte_code_array.append_integer (0);
 			--Temp_byte_code_array.append_integer (0);
-		
+
+				-- This is not once routine.		
+			Temp_byte_code_array.append ('%U')
+
 			Temp_byte_code_array.append (Bc_start);
 
 				-- no Routine id
@@ -164,12 +206,21 @@ feature -- Byte code geenration
 			Temp_byte_code_array.append_integer (Void_c_type.sk_value);
 				-- No arguments
 			Temp_byte_code_array.append_short_integer (0);
-				-- No name
-			Temp_byte_code_array.append ('%U');
 
 				-- No rescue
 			ba.append ('%U');
 			context.set_assertion_type (In_invariant);
+
+			body_index := associated_class.invariant_feature.body_index
+			context.set_original_body_index (body_index)
+
+				-- Allocate memory for once manifest strings if required
+			if once_manifest_string_count > 0 then
+				ba.append (Bc_allocate_once_strings)
+				ba.append_integer (body_index - 1)
+				ba.append_integer (once_manifest_string_count)
+			end
+
 			byte_list.make_byte_code (ba);
 			ba.append (Bc_inv_null);
 
@@ -192,7 +243,11 @@ feature -- Byte code geenration
 	Temp_byte_code_array: BYTE_ARRAY is
 			-- Temporary byte code array
 		once
-			create Result.make;
-		end;
+			create Result.make
+		end
+
+invariant
+
+	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 end

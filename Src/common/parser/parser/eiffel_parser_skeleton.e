@@ -85,6 +85,7 @@ feature -- Initialization
 			id_level := Normal_level
 			real_class_end_position := 0
 			has_externals := False
+			once_manifest_string_count := 0
 		end
 
 feature -- Status report
@@ -177,6 +178,10 @@ feature -- Access
 
 	formal_generics_end_position: INTEGER
 			-- End of formal generics, if present.
+
+	once_manifest_string_count: INTEGER
+			-- Number of once manifest strings in current feature declaration
+			-- or in an invariant
 
 feature -- Setting
 

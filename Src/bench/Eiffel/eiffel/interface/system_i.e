@@ -1499,6 +1499,8 @@ end
 				write_int (file_pointer, type_id_counter.value)
 					-- Write the number of classes now available
 				write_int (file_pointer, class_counter.count)
+					-- Write the number of original routine bodies
+				write_int (file_pointer, body_index_counter.count)
 					-- Write the profiler status
 				if Lace.ace_options.has_profile then
 					write_int (file_pointer, 3)
@@ -3786,6 +3788,9 @@ feature -- Pattern table generation
 					-- Set C variable `ccount'.
 				buffer.put_string ("%Tccount = ")
 				buffer.put_integer (class_counter.count)
+					-- Set maximum routine body index
+				buffer.put_string (";%N%Teif_nb_org_routines = ")
+				buffer.put_integer (body_index_counter.count)
 					-- Set the frozen level
 				buffer.put_string (";%N%Teif_nb_features = ")
 				buffer.put_integer (nb_frozen_features)
@@ -3830,6 +3835,14 @@ feature -- Pattern table generation
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
 				buffer.put_string ("%N%Tegc_type_of_gc = 123174;%N")
+			end
+
+			if final_mode then
+					-- Set maximum routine body index
+				buffer.put_string ("%Teif_nb_org_routines = ")
+				buffer.put_integer (body_index_counter.count)
+				buffer.put_character (';')
+				buffer.put_character ('%N')
 			end
 
 			from

@@ -161,6 +161,10 @@ feature -- Access
 	last_conversion_info: CONVERSION_INFO
 			-- Information about last conversion
 
+	once_manifest_string_number: INTEGER
+			-- Total number of once manifest strings from the beginning
+			-- of the current routine or of the current class invariant
+
 feature -- Setting
 
 	set_current_class (cl: CLASS_C) is
@@ -181,8 +185,10 @@ feature -- Setting
 			f_not_void: f /= Void
 		do
 			current_feature := f
+			once_manifest_string_number := 0
 		ensure
 			current_feature_set: current_feature = f
+			no_once_manifest_strings: once_manifest_string_number = 0
 		end
 
 	set_is_checking_postcondition (b: BOOLEAN) is
@@ -293,6 +299,14 @@ feature -- Setting
 			last_conversion_info := l
 		ensure
 			last_conversion_info_set: last_conversion_info = l
+		end
+		
+	add_once_manifest_string is
+			-- Register a once manifest string
+		do
+			once_manifest_string_number := once_manifest_string_number + 1
+		ensure
+			added_once_manifest_string: once_manifest_string_number = old once_manifest_string_number + 1
 		end
 
 	feature_name_id: INTEGER is

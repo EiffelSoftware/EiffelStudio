@@ -102,6 +102,10 @@ feature {NONE} -- Initialization
 			assembly_info_set: assembly_info = a_assembly_info
 			is_debug_info_enabled_set: is_debug_info_enabled = a_is_debug_mode
 			is_assembly_module_set: is_assembly_module = a_is_main_module
+			helper_class_not_defined: not is_once_string_class_defined
+			once_string_field_cil_not_defined: not is_once_string_field_cil_defined
+			once_string_field_eiffel_not_defined: not is_once_string_field_eiffel_defined
+			once_string_allocation_routine_not_defined: not is_once_string_allocation_routine_defined
 		end
 
 feature -- Access
@@ -258,6 +262,273 @@ feature -- Access: tokens
 	type_handle_class_token,
 	ise_assertion_level_enum_token: INTEGER
 			-- Token for run-time types used in code generation.
+
+feature {IL_CODE_GENERATOR} -- Once manifest strings: access
+
+	once_string_field_token (is_cil_string: BOOLEAN): INTEGER is
+			-- Token of a field that is used to store values of once manifest strings
+			-- if CIL type "string" if `is_cil_string' is `true' or of Eiffel type "STRING" otherwise
+		local
+			once_string_field_name: UNI_STRING
+			l_field_sig: like field_sig
+		do
+			if is_cil_string then
+				Result := once_string_field_cil_token
+				once_string_field_name := once_string_field_cil_name
+			else
+				Result := once_string_field_eiffel_token
+				once_string_field_name := once_string_field_eiffel_name
+			end
+			if Result = 0 then
+					-- Get token of the field that keeps once manifest strings.
+					-- Define field signature.
+				l_field_sig := field_sig
+				l_field_sig.reset
+				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				if is_cil_string then
+					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+				else
+					l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_class,
+						actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
+				end
+					-- Define field token.
+				Result := md_emit.define_member_ref (once_string_field_name, once_string_class_token, l_field_sig)
+				if is_cil_string then
+					once_string_field_cil_token := Result
+				else
+					once_string_field_eiffel_token := Result
+				end
+			end
+		ensure
+			valid_result: Result /= 0
+			cil_token_defined: is_cil_string implies is_once_string_field_cil_defined
+			eiffel_token_defined: not is_cil_string implies is_once_string_field_eiffel_defined
+			consistent_cil_result: is_cil_string implies Result = once_string_field_cil_token
+			consistent_eiffel_result: not is_cil_string implies Result = once_string_field_eiffel_token
+			old_cil_token_preserved: (old is_once_string_field_cil_defined) implies once_string_field_cil_token = old once_string_field_cil_token
+			old_eiffel_token_preserved: (old is_once_string_field_eiffel_defined) implies once_string_field_eiffel_token = old once_string_field_eiffel_token
+		end
+
+	once_string_allocation_routine_token: INTEGER is
+			-- Token of a routine that allocates array to store once manifest string values
+		local
+			l_method_sig: like method_sig
+		do
+			Result := once_string_allocation_routine_token_value
+			if Result = 0 then
+					-- Get token of the routine that allocates arrays for once manifest strings.
+					-- Define method signature.
+				l_method_sig := method_sig
+				l_method_sig.reset
+				l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+				l_method_sig.set_parameter_count (2)
+				l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+				l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+					-- Define method token.
+				Result := md_emit.define_member_ref (once_string_allocation_routine_name, once_string_class_token, l_method_sig)
+				once_string_allocation_routine_token_value := Result
+			end
+		ensure
+			valid_result: Result /= 0
+			token_defined: is_once_string_allocation_routine_defined
+			consistent_result: Result = once_string_allocation_routine_token_value
+			old_token_preserved: (old is_once_string_allocation_routine_defined) implies Result = old once_string_allocation_routine_token_value
+		end
+
+feature {IL_CODE_GENERATOR} -- Once manifest strings: status report
+
+	is_once_string_class_defined: BOOLEAN is
+			-- Is token of a run-time helper class to manage once strings defined?
+		do
+			Result := once_string_class_token_value /= 0
+		ensure
+			definition: Result implies once_string_class_token_value /= 0
+		end
+
+	is_once_string_field_cil_defined: BOOLEAN is
+			-- Is token of a field that is used to store values of CIL once manifest strings defined?
+		do
+			Result := once_string_field_cil_token /= 0
+		ensure
+			definition: Result implies once_string_field_cil_token /= 0
+		end
+
+	is_once_string_field_eiffel_defined: BOOLEAN is
+			-- Is token of a field that is used to store values of Eiffel once manifest strings defined?
+		do
+			Result := once_string_field_eiffel_token /= 0
+		ensure
+			definition: Result implies once_string_field_eiffel_token /= 0
+		end
+
+	is_once_string_allocation_routine_defined: BOOLEAN is
+			-- Is token of a routine that allocates array to store once manifest string values defined?
+		do
+			Result := once_string_allocation_routine_token_value /= 0
+		ensure
+			definition: Result implies once_string_allocation_routine_token_value /= 0
+		end
+
+feature {IL_CODE_GENERATOR} -- Once manifest strings: management
+
+	define_once_string_tokens is
+			-- Define tokens to work with once manifest strings:
+			--    helper class
+			--    field for CIL strings array
+			--    field for Eiffel strings array
+			--    method to allocate array
+		require
+			helper_class_not_defined: not is_once_string_class_defined
+			once_string_field_cil_not_defined: not is_once_string_field_cil_defined
+			once_string_field_eiffel_not_defined: not is_once_string_field_eiffel_defined
+			once_string_allocation_routine_not_defined: not is_once_string_allocation_routine_defined
+		local
+			helper_class_token: like once_string_class_token_value
+			l_field_sig: like field_sig
+			l_method_sig: like method_sig
+			attribute_class_token: INTEGER
+			attribute_ctor_signature: MD_METHOD_SIGNATURE
+			attribute_ctor_token: INTEGER
+			ca: MD_CUSTOM_ATTRIBUTE
+		do
+				-- Define helper class.
+			helper_class_token := md_emit.define_type (
+				runtime_helper_class_name,
+				feature {MD_TYPE_ATTRIBUTES}.Auto_class | feature {MD_TYPE_ATTRIBUTES}.Auto_layout | feature {MD_TYPE_ATTRIBUTES}.Public,
+				object_type_token,
+				Void)
+			once_string_class_token_value := helper_class_token
+
+				-- Emit field for CIL strings.
+			l_field_sig := field_sig
+			l_field_sig.reset
+			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			once_string_field_cil_token := md_emit.define_field (
+				once_string_field_cil_name,
+				helper_class_token,
+				feature {MD_FIELD_ATTRIBUTES}.public | feature {MD_FIELD_ATTRIBUTES}.static,
+				l_field_sig)
+			create ca.make
+			attribute_class_token := md_emit.define_type_ref (create {UNI_STRING}.make ("System.ThreadStaticAttribute"), mscorlib_token)
+			create {MD_METHOD_SIGNATURE} attribute_ctor_signature.make
+			attribute_ctor_signature.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current | feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+			attribute_ctor_signature.set_parameter_count (0)
+			attribute_ctor_signature.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			attribute_ctor_token := md_emit.define_member_ref (create {UNI_STRING}.make (".ctor"), attribute_class_token, attribute_ctor_signature)
+			md_emit.define_custom_attribute (once_string_field_cil_token, attribute_ctor_token, ca).do_nothing
+
+				-- Emit field for Eiffel strings.
+			l_field_sig.reset
+			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.string_class.compiled_class.types.first.type.static_type_id))
+			once_string_field_eiffel_token := md_emit.define_field (
+				once_string_field_eiffel_name,
+				helper_class_token,
+				feature {MD_FIELD_ATTRIBUTES}.public | feature {MD_FIELD_ATTRIBUTES}.static,
+				l_field_sig)
+			md_emit.define_custom_attribute (once_string_field_eiffel_token, attribute_ctor_token, ca).do_nothing
+
+				-- Emit method to allocate storage for strings.
+			l_method_sig := method_sig
+			l_method_sig.reset
+			l_method_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.default_sig)
+			l_method_sig.set_parameter_count (2)
+			l_method_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+			l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+			l_method_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+			once_string_allocation_routine_token_value := md_emit.define_method (
+				once_string_allocation_routine_name, 
+				helper_class_token,
+				feature {MD_METHOD_ATTRIBUTES}.public |
+				feature {MD_METHOD_ATTRIBUTES}.static |
+				feature {MD_METHOD_ATTRIBUTES}.hide_by_signature,
+				l_method_sig,
+				feature {MD_METHOD_ATTRIBUTES}.il | feature {MD_METHOD_ATTRIBUTES}.managed)
+		ensure
+			helper_class_defined: is_once_string_class_defined
+			once_string_field_cil_defined: is_once_string_field_cil_defined
+			once_string_field_eiffel_defined: is_once_string_field_eiffel_defined
+			once_string_allocation_routine_defined: is_once_string_allocation_routine_defined
+		end
+
+feature {NONE} -- Once manifest strings: names
+
+	runtime_helper_class_name: UNI_STRING is
+			-- Name of the helper run-time class.
+		once
+			create Result.make ("EiffelSoftware.Runtime.Data")
+		end
+
+	once_string_field_cil_name: UNI_STRING is
+			-- Name of the once manifest string field to store CIL strings
+		once
+			create Result.make ("oms_cil")
+		end
+
+	once_string_field_eiffel_name: UNI_STRING is
+			-- Name of the once manifest string field to store Eiffel strings
+		once
+			create Result.make ("oms_eiffel")
+		end
+
+	once_string_allocation_routine_name: UNI_STRING is
+			-- Name of the routine that allocates storage for once manifest strings
+		once
+			create Result.make ("allocate_oms")
+		end
+
+feature {NONE} -- Once manifest strings: tokens
+
+	once_string_field_cil_token: INTEGER
+			-- Token of a field that is used to store values of once manifest strings
+			-- of CIL type "string" or 0 if it is not computed yet
+
+	once_string_field_eiffel_token: INTEGER
+			-- Token of a field that is used to store values of once manifest strings 
+			-- of Eiffel type "STRING" or 0 if it is not computed yet
+
+	once_string_allocation_routine_token_value: INTEGER
+			-- Token of a routine that performs allocation of arrays for once manifest strings
+
+	once_string_class_token_value: INTEGER
+			-- Token of a run-time helper class that keeps values of once manifest strings
+
+	once_string_class_token: INTEGER is
+			-- Token of a run-time helper class that keeps values of once manifest strings
+		local
+			once_string_resolution_token: INTEGER
+			anchor_class_type: CLASS_TYPE
+		do
+			Result := once_string_class_token_value
+			if Result = 0 then
+					-- Define type reference.
+					-- This code is a hack, because it assumes that the run-time
+					-- class is generated in the assembly with class ANY.
+				anchor_class_type := system.any_class.compiled_class.types.first
+				if anchor_class_type.is_precompiled then
+						-- Take token of precompiled assembly.
+					once_string_resolution_token := assembly_token (anchor_class_type)
+				elseif is_assembly_module then
+						-- Take token of current module.
+					once_string_resolution_token := 1
+				else
+						-- Take token of main (assembly) module.
+					once_string_resolution_token := 0
+				end
+				Result := md_emit.define_type_ref (runtime_helper_class_name, once_string_resolution_token)
+				once_string_class_token_value := Result
+			end
+		ensure
+			valid_result: Result /= 0
+			token_defined: is_once_string_class_defined
+			consistent_result: Result = once_string_class_token_value
+			old_token_preserved: (old is_once_string_class_defined) implies once_string_class_token_value = old once_string_class_token_value
+		end
 
 feature -- Access: types
 
@@ -1786,6 +2057,11 @@ feature {NONE} -- Once per modules being generated.
 			compute_mscorlib_method_tokens
 			compute_ise_runtime_tokens
 			compute_c_module_token
+				-- Clear once string tokens.
+			once_string_field_cil_token := 0
+			once_string_field_eiffel_token := 0
+			once_string_allocation_routine_token_value := 0
+			once_string_class_token_value := 0
 		end
 
 	compute_c_module_token is

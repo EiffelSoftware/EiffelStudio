@@ -33,9 +33,11 @@
 
 #define cwel_menu_item_not_found 0xFFFFFFFF
 
-#ifndef _WINNT_
-
+#ifndef LANG_NEUTRAL
 #define LANG_NEUTRAL                     0x00
+#endif
+
+#ifndef LANG_AFRIKAANS
 
 #define LANG_AFRIKAANS                   0x36
 #define LANG_ALBANIAN                    0x1c
@@ -169,7 +171,7 @@
 #define SUBLANG_SWEDISH                  0x01    // Swedish
 #define SUBLANG_SWEDISH_FINLAND          0x02    // Swedish (Finland)
 
-#endif /* _WINNT_ */
+#endif /* LANG_AFRIKAANS */
 
 #endif /* __WEL__ */
 

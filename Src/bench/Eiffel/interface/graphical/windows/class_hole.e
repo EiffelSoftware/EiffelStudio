@@ -12,7 +12,7 @@ inherit
 
 	EB_BUTTON_HOLE
 		redefine
-			compatible, symbol, stone_type, command_name, icon_symbol,
+			compatible, symbol, stone_type, name, icon_symbol,
 			full_symbol
 		end
 

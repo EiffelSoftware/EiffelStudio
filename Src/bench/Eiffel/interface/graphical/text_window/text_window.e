@@ -81,16 +81,16 @@ feature -- Status setting
 		require
 			format_exists: f /= Void
 		do
-			if last_format_2 /= f then
-				if not history.islast then
-					history.extend (root_stone)
-				end;
-				if last_format_2 /= Void then
-					last_format_2.associated_button.darken (False)
-				end;
-				last_format_2 := f;
-				last_format_2.associated_button.darken (True)
-			end
+			--if last_format_2 /= f then
+				--if not history.islast then
+					--history.extend (root_stone)
+				--end;
+				--if last_format_2 /= Void then
+					--last_format_2.associated_button.darken (False)
+				--end;
+				--last_format_2 := f;
+				--last_format_2.associated_button.darken (True)
+			--end
 		ensure
 			last_format_2 = f
 		end;

@@ -11,7 +11,7 @@ inherit
 
 	TOOL_W
 		redefine
-			save_command, set_default_format, hole
+			save_cmd_holder, set_default_format, hole
 		end;
 	COMMAND;
 	TOP_SHELL

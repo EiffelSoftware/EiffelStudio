@@ -40,6 +40,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	name: STRING is do end
+
 	target: WIDGET is
 			-- Target of hole
 		do

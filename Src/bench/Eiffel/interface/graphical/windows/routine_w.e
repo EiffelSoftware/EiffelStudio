@@ -115,48 +115,48 @@ feature -- Stone updating
 
 	process_class (a_stone: CLASSC_STONE) is
 		local
-			c: E_CLASS;
-			ris: ROUT_ID_SET;
-			i: INTEGER;
-			rout_id: INTEGER;
-			fi: E_FEATURE;
-			fs: FEATURE_STONE;
-			temp: STRING
+			--c: E_CLASS;
+			--ris: ROUT_ID_SET;
+			--i: INTEGER;
+			--rout_id: INTEGER;
+			--fi: E_FEATURE;
+			--fs: FEATURE_STONE;
+			--temp: STRING
 		do
-			ris := stone.e_feature.rout_id_set;
-			c := a_stone.e_class;
-			from
-				i := 1
-			until
-				i > ris.count
-			loop
-				rout_id := ris.item (i);
-				if rout_id < 0 then
-					rout_id := - rout_id
-				end;
-				fi := c.feature_with_rout_id (rout_id);
-				if (fi /= Void) then
-					i := ris.count
-				end
-				i := i + 1
-			end
-			if (fi /= Void) then
-				!! fs.make (fi, a_stone.e_class);
-				process_feature (fs);
-			else
-				temp := a_stone.e_class.name_in_upper;
-				temp.prepend ("No version of current feature for class ");
-				error_window.clear_window;
-				error_window.put_string ("No version of feature ")
-				stone.e_feature.append_name
-							(error_window,
-							stone.e_feature.written_class);
-				error_window.put_string ("%N   for class ");
-				a_stone.e_class.append_name (error_window);
-				error_window.new_line;
-				error_window.display;
-				project_tool.raise;
-			end;
+			--ris := stone.e_feature.rout_id_set;
+			--c := a_stone.e_class;
+			--from
+				--i := 1
+			--until
+				--i > ris.count
+			--loop
+				--rout_id := ris.item (i);
+				--if rout_id < 0 then
+					--rout_id := - rout_id
+				--end;
+				--fi := c.feature_with_rout_id (rout_id);
+				--if (fi /= Void) then
+					--i := ris.count
+				--end
+				--i := i + 1
+			--end
+			--if (fi /= Void) then
+				--!! fs.make (fi, a_stone.e_class);
+				--process_feature (fs);
+			--else
+				--temp := a_stone.e_class.name_in_upper;
+				--temp.prepend ("No version of current feature for class ");
+				--error_window.clear_window;
+				--error_window.put_string ("No version of feature ")
+				--stone.e_feature.append_name
+							--(error_window,
+							--stone.e_feature.written_class);
+				--error_window.put_string ("%N   for class ");
+				--a_stone.e_class.append_name (error_window);
+				--error_window.new_line;
+				--error_window.display;
+				--project_tool.raise;
+			--end;
 		end;
 	
 feature -- Graphical Interface

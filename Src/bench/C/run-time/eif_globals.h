@@ -21,7 +21,7 @@
 #include "eif_constants.h"
 
 
-#ifdef EIF_REENTRANT
+#ifdef EIF_THREADS
 
 /****************************************
  *                                      *
@@ -30,7 +30,6 @@
  ****************************************/
 
 
-#define EIF_DECL_GLOBAL(x)
 #define MTC_NOARG			/* eif_globals */
 #define MTC					/* MTC_NOARG, */
 #define EIF_CONTEXT_NOARG	/* eif_global_context_t	*MTC_NOARG */
@@ -44,7 +43,7 @@ extern EIF_TSD_TYPE eif_global_key
 	EIF_ERRCODE_TYPE tsd_key_err;
 	EIF_TSD_GET(eif_global_key,eif_globals,tsd_key_err);
 	if (EIF_TSD_INVALID_ERRCODE(tsd_key_err)) {
-		panic();
+		panic("Thread data not available");
 	else {
 #define EIF_END_GET_CONTEXT }
 
@@ -65,6 +64,24 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct gacinfo g_data;			/* Global status */
 	struct gacstat g_stat[GST_NBR];	/* Run-time statistics */
 	struct stack loc_stack;			/* Local indirection stack */
+	struct stack loc_set;			/* Local variable stack */
+	struct stack rem_set;			/* Remembered set */
+	struct stack moved_set;			/* Moved objects set */
+	struct stack once_set;			/* Once functions */
+	uint32 age_table[TENURE_MAX];	/* Number of objects/age */
+	uint32 size_table[TENURE_MAX];	/* Amount of bytes/age */
+	uint32 tenure;					/* Hector needs to see that */
+	long plsc_per;					/* Period of plsc in acollect */
+	int gc_running;					/* Is the GC running */
+	double last_gc_time;			/* The time spent on the last collect, sweep or whatever the GC did */
+	int gc_ran;						/* Has the GC been running */
+	struct s_table *spoilt_tbl;
+	struct sc_zone ps_from;			/* From zone */
+	struct sc_zone ps_to;			/* To zone */
+	struct chunk *last_from;		/* Last 'from' used by partial scavenging */
+	long th_alloc;					/* Allocation threshold before calling GC */
+	int gc_monitor;					/* Disable GC time-monitoring by default */
+	char *root_obj;					/* Address of the 'root' object */
 
 		/* interp.c */
 	struct opstack op_stack;		/* Operational stack */
@@ -137,6 +154,12 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack parent_expanded_stack;		/* Records expanded parents */
 #endif
 
+#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+		/* garcol.c and retrieve.c */
+	int r_fides;					/* File descriptor use for retrieve */
+	char r_fstoretype;				/* File storage type used for retrieve */
+#endif
+
 } eif_global_context_t;
 
 
@@ -157,13 +180,35 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #endif
 
 	/* garcol.c */
-#define g_data		(eif_globals->g_data)			/* rt_shared */
-#define g_stat		(eif_globals->g_stat)			/* rt_shared */
-#define loc_stack	(eif_globals->loc_stack)		/* rt_shared */
 #ifdef ITERATIVE_MARKING
 #define path_stack	(eif_globals->path_stack)		/* rt_private */
 #define parent_expanded_stack (eif_globals->parent_expanded_stack)	/* rt_private */
 #endif
+#define g_data		(eif_globals->g_data)			/* rt_shared */
+#define g_stat		(eif_globals->g_stat)			/* rt_shared */
+#define loc_stack	(eif_globals->loc_stack)		/* rt_shared */
+#define loc_set		(eif_globals->loc_set)			/* rt_public */
+#define rem_set		(eif_globals->rem_set)			/* rt_private */
+#define moved_set	(eif_globals->moved_set)		/* rt_shared */
+#define once_set	(eif_globals->once_set)			/* rt_public */
+#define age_table	(eif_globals->age_table)		/* rt_private */
+#define size_table	(eif_globals->size_table)		/* rt_private */
+#define tenure		(eif_globals->tenure)			/* rt_shared */
+#define plsc_per	(eif_globals->plsc_per)			/* rt_public */
+#define gc_running	(eif_globals->gc_running)		/* rt_public */
+#define last_gc_time	(eif_globals->last_gc_time)	/* rt_public */
+#define gc_ran		(eif_globals->gc_ran)			/* rt_public */
+#if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
+#define r_fides		(eif_globals->r_fides)			/* rt_public */
+#define r_fstoretype (eif_globals->r_fstoretype)	/* rt_public */
+#endif
+#define spoilt_tbl	(eif_globals->spoilt_tbl)		/* rt_private */
+#define ps_from		(eif_globals->ps_from)			/* rt_shared */
+#define ps_to		(eif_globals->ps_to)			/* rt_shared */
+#define last_from	(eif_globals->last_from)		/* rt_shared */
+#define th_alloc	(eif_globals->th_alloc)			/* rt_public */
+#define gc_monitor	(eif_globals->gc_monitor)		/* rt_public */
+#define root_obj	(eif_globals->root_obj)			/* rt_public */
 
 	/* interp.c */
 #define op_stack	(eif_globals->op_stack)         /* rt_shared */
@@ -227,7 +272,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
  ******************************************/
 
 
-#define EIF_DECL_GLOBAL(x) x
 #define MTC_NOARG
 #define MTC
 #define EIF_CONTEXT_NOARG void
@@ -238,25 +282,47 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define EIF_END_GET_CONTEXT
 
 
+
 	/* err_msg.h */
 #ifdef EIF_WINDOWS
 extern char *exception_trace_string;
 #endif
 
-	/* except.c */
+
+	/* except.h */
 /* Exported data structures (used by the generated C code) */
 extern struct xstack eif_stack;	/* Stack of all the Eiffel calls */
 extern struct xstack eif_trace;	/* Unsolved exception trace */
 extern struct eif_except exdata;	/* Exception handling global flags */
 
-	/* garcol.c */
+
+	/* garcol.h */
 extern struct gacinfo g_data;			/* Garbage collection status */
 extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
+/* Exported data-structure declarations */
 extern struct stack loc_stack;			/* Local indirection stack */
+extern struct stack loc_set;	/* Local variable stack */
+extern struct stack moved_set;	/* Describes the new generation */
+extern struct stack once_set;	/* Once functions */
+extern uint32 tenure;			/* Tenure value for next generation cycle */
+extern long plsc_per;			/* Period of plsc() in acollect() */
+/* To start timing or not for GC-profiling */
+extern int gc_running;			/* Is the GC currently running */
+extern double last_gc_time;		/* Time spent during the last run */
+extern int gc_ran;				/* Has the GC been running */
+/* Exported variables */
+extern struct sc_zone ps_from;	/* Partial scavenging 'from' zone */
+extern struct sc_zone ps_to;	/* Partial scavenging 'to' zone */
+extern struct chunk *last_from;	/* Last 'from' chunk used by plsc() */
+extern long th_alloc;			/* Allocation threshold (in bytes) */
+extern int gc_monitor;			/* GC monitoring flag */
+extern char *root_obj;			/* Address of the 'root' object */
+
 
 	/* interp.h */
 extern struct opstack op_stack;	/* Operational stack */
 extern char *IC;				/* Interpreter Counter (like PC on a CPU) */
+
 
 	/* malloc.h */
 extern struct emallinfo m_data;		/* Accounting info from malloc */

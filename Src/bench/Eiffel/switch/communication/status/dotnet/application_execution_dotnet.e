@@ -871,8 +871,8 @@ feature {NONE} -- Events on notification
 feature -- Call stack related
 
 	frame_callstack_info (a_frame: ICOR_DEBUG_FRAME): STRING is
-		obsolete "To remove soon or later, this is just a debug use for now"
-		-- Called by `select_actions' of `but_callstack_update'.
+			-- obsolete "To remove soon or later, this is just a debug use for now"
+			-- Called by `select_actions' of `but_callstack_update'.
 		local
 			l_frame_il: ICOR_DEBUG_IL_FRAME
 			l_output: STRING

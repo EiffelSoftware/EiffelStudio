@@ -3282,7 +3282,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	 */
 
 	EIF_GET_CONTEXT
-	register2 std_size = eif_chunk_size - sizeof(struct chunk);
+	register2 int std_size = eif_chunk_size - sizeof(struct chunk);
 
 	for (/* empty */; start != (struct chunk *) 0; start = start->ck_lprev) {
 
@@ -3323,7 +3323,7 @@ rt_private void find_to_space(struct sc_zone *to)
 	 * block coalescing.
 	 */
 	EIF_GET_CONTEXT
-	register1 std_size = eif_chunk_size - sizeof(struct chunk);
+	register1 int std_size = eif_chunk_size - sizeof(struct chunk);
 	register2 struct chunk *cur;	/* Current chunk we are considering */
 	register3 uint32 flags;			/* Malloc info flags */
 	register4 char *arena;			/* Where chunk's arena starts */

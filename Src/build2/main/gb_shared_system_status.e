@@ -11,8 +11,10 @@ feature -- Access
 
 	system_status: GB_SYSTEM_STATUS is
 			-- `Result' is instance of GB_SYSTEM_STATUS.
+			-- Set default values here.
 		once
 			create Result
+			Result.enable_tools_always_on_top
 		end
 		
 

@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision menu item container. %
-		% Ms windows implementation"
+				% Ms windows implementation"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,16 +13,14 @@ inherit
 
 	EV_MENU_ITEM_CONTAINER_I
 
-	WEL_MENU
-
-feature -- Initialization
-
-	initialize is
-			-- Initilize all the parameters of the container.
-		do
-			!! children.make
+	EV_ITEM_CONTAINER_IMP
+		export {EV_MENU_ITEM_IMP}
+			set_name
+		redefine
+			children
 		end
 
+	WEL_MENU
 
 feature {EV_MENU_IMP} -- Status report
 
@@ -47,7 +45,7 @@ feature -- Implementation
 		do
 			item_imp ?= an_item.implementation
 			check
-				item_imp /= Void
+				valid_item: item_imp /= Void
 			end
 			children.extend (item_imp)
 			append_string (name_item, children.count)
@@ -67,19 +65,30 @@ feature -- Implementation
 			append_popup (menu_imp, menu_imp.text)
 		end
 
-feature -- Implementation
-
-	name_item: STRING
-
-	set_name (new_name: STRING) is
-			-- Set `name_item' to `new_name'. This string corresponds
-			-- to the name of the item that will be added next.
-			-- This feature avoid to have a name feature on each
-			-- menu item.
-		require
-			new_name /= Void
+	remove_item (id: INTEGER) is
+			-- Remove the item with `id' as identification
 		do
-			name_item := new_name
+			delete_item (id)
+			children.go_i_th (id)
+			children.remove
+			from
+			until
+				children.after
+			loop
+				children.item.set_id (children.index)
+				children.forth
+			end
+		end
+
+	remove_menu (menu: EV_MENU_IMP) is
+			-- Remove `menu' from the container.
+			-- In fact, the destroy fonction destroy the wel_item
+			-- then here, we must only remove the menu and its
+			-- item from `children'.
+--require
+--	menu_exists: not menu.destroyed
+		do
+			-- Pas forcement vrai tout ca, a faire.
 		end
 
 end -- class EV_MENU_ITEM_CONTAINER_IMP

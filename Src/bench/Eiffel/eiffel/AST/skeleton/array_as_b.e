@@ -82,12 +82,8 @@ feature -- Type check, byte code, dead code removal and formatter
 			ctxt.abort_on_failure;
 			ctxt.space_between_tokens;
 			expressions.format (ctxt);
-			if ctxt.last_was_printed then
-				ctxt.put_text_item (ti_R_array);
-				ctxt.commit
-			else
-				ctxt.rollback;
-			end;
+			ctxt.put_text_item (ti_R_array);
+			ctxt.commit
 		end;	
 
 feature	-- Replication

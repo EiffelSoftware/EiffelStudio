@@ -1,6 +1,6 @@
 -- A file with primitives for indenting
 
-class INDENT_FILE 
+class INDENT_FILE
 
 inherit
 
@@ -402,9 +402,9 @@ feature -- prototype code generation
 			end
 			putstring (")%N%
 					%#else%N")
-            if not extern then
-                putstring ("static ")
-            end
+			if not extern then
+				putstring ("static ")
+			end
 			putstring (type)
 			putchar (' ')
 			putstring (f_name)
@@ -449,12 +449,12 @@ feature -- prototype code generation
 
 				-- Reassign REAL arguments to REAL locals
 			from
-                i := 1
-            until
-                i > nb
-            loop
-                arg_type := arg_types @ i
-                if arg_type.is_equal ("EIF_REAL") then
+				i := 1
+			until
+				i > nb
+			loop
+				arg_type := arg_types @ i
+				if arg_type.is_equal ("EIF_REAL") then
 					putstring ("%TEIF_REAL arg")
 					putint (i-1)
 					putstring (" = (EIF_REAL) argd")
@@ -463,6 +463,10 @@ feature -- prototype code generation
 				end
 				i := i + 1
 			end
+
+			putstring ("%N%TGTCX") -- ss MT: GET CONTEXT
+			-- ss MT: the pattern 'GTCX%N' will be removed in emain.c
+			new_line
 		end
 
-end
+end -- class INDENT_FILE

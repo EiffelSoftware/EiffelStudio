@@ -984,11 +984,9 @@ feature {NONE} -- GTK C functions for spin buttons
 			"C (GtkSpinButton *, gfloat) | <gtk/gtk.h>"
 		end
 
-	c_gtk_spin_button_adjustment (spinButton: POINTER): POINTER is
+	gtk_spin_button_get_adjustment (spinButton: POINTER): POINTER is
 		external
-			"C [struct <gtk/gtkspinbutton.h>] (GtkSpinButton) : EIF_POINTER"
-		alias
-			"adjustment"
+			"C (GtkSpinButton *): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	c_gtk_spin_button_step (spinButton: POINTER): INTEGER is
@@ -1048,12 +1046,11 @@ feature {NONE} -- GTK C functions for gtk_range (EV_RANGE or EV_SCROLL_BAR)
 		external "C [macro %"gtk_eiffel.h%"]"
 		end
 
-	c_gtk_range_adjustment (p: POINTER): POINTER is
+	gtk_range_get_adjustment (range: POINTER): POINTER is
 		external
-			"C [struct <gtk/gtkrange.h>] (GtkRange) : EIF_POINTER"
-		alias
-			"adjustment"
+			"C (GtkRange *): EIF_POINTER | <gtk/gtk.h>"
 		end
+
 
 feature {NONE} -- GTK C functions for gtk_scale (EV_RANGE)
 

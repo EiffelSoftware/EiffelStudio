@@ -71,11 +71,9 @@ feature
 	
 	unanalyze is
 			-- Undo the analysis of the expression
-		local
-			void_register: REGISTER;
 		do
 			expression.unanalyze;
-			register := void_register;
+			register := Void;
 		end;
 	
 	generate is

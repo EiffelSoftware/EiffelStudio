@@ -67,11 +67,9 @@ feature
 	enlarged: NESTED_BL is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
-		local
-			void_parent: NESTED_BL;
 		do
 				-- This is the root of the call tree
-			Result := sub_enlarged (void_parent);
+			Result := sub_enlarged (Void);
 		end;
 
 	sub_enlarged (p: NESTED_BL): NESTED_BL is

@@ -10,7 +10,8 @@ deferred class
 inherit
 	WEL_RESOURCE
 		undefine
-			make_by_pointer
+			make_by_pointer,
+			dispose
 		redefine
 			make_by_id,
 			make_by_name,

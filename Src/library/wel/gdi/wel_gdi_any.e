@@ -9,6 +9,8 @@ class
 
 inherit
 	WEL_ANY
+		undefine
+			dispose
 		redefine
 			make_by_pointer
 		end

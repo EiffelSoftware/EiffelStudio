@@ -66,11 +66,11 @@ feature
 			other_cl_type ?= other;
 			Result := 	other_cl_type /= Void 
 						and then
-						other_cl_type.meta_generic = Void
-						and then
 						other_cl_type.base_id = base_id
 						and then
-						other_cl_type.is_expanded = is_expanded;
+						other_cl_type.is_expanded = is_expanded
+						and then
+						other_cl_type.meta_generic = Void
 		end;
 
 	instantiation_in (other: GEN_TYPE_I): CL_TYPE_I is

@@ -38,6 +38,10 @@ void ev_gtk_log (
 	int fatal = FALSE;
 	int a_debug_mode;
 	a_debug_mode = (int) user_data;
+
+	if (a_debug_mode > 0)
+	{
+	// If no debugging is set then everything is left to DBC
 	switch (log_level) {
 	case G_LOG_LEVEL_ERROR:
 		level = "ERROR";
@@ -62,7 +66,6 @@ void ev_gtk_log (
 		level = "UNKNOWN";
 		fatal = TRUE;
 	}
-	if (a_debug_mode > 0){
 	if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 ) {
 		if ( strlen (log_domain) + strlen (level) > 999 ) {
 			sprintf (buf, "%s-%s\n", log_domain, level);
@@ -72,7 +75,7 @@ void ev_gtk_log (
 	} else {
 		sprintf (buf, "%s-%s %s", log_domain, level, message);
 	}
-	printf ("%S\n", buf);
+	printf ("%s\n", buf);
 	if (fatal && a_debug_mode > 1) {
 		eraise (buf, EN_EXT);
 	}
@@ -117,6 +120,9 @@ void enable_ev_gtk_log (int a_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.7  2001/07/24 19:00:30  king
+// Corrected debugging output, slight optimization of logging
+//
 // Revision 1.6  2001/06/07 23:07:59  rogers
 // Merged DEVEL branch into Main trunc.
 //

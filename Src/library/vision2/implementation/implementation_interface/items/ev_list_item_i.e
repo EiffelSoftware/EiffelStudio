@@ -19,14 +19,14 @@ feature {NONE} -- Initialization
 
 	make (par: EV_LIST) is
 		require
-			parent_not_void: par /= Void
+			valid_parent: par.is_valid
 		deferred
 		end
 	
 	make_with_text (par: EV_LIST; txt: STRING) is
 		require
-			parent_not_void: par /= Void
-			txt_not_void: txt /= Void
+			valid_parent: par.is_valid
+			valid_string: txt /= Void
 		deferred
 		end
 

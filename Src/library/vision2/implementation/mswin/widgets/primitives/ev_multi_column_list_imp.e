@@ -42,7 +42,8 @@ inherit
 			initialize,
 			on_size,
 			enable_sensitive, disable_sensitive,
-			background_color
+			background_color,
+			destroy
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW, EV_MULTI_COLUMN_LIST_ROW_IMP]
@@ -1241,8 +1242,12 @@ feature {NONE} -- WEL Implementation
 						-- Item is being selected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
-					item_imp.interface.select_actions.call (Void)
-					interface.select_actions.call ([item_imp.interface])
+					if item_imp.select_actions_internal /= Void then
+						item_imp.select_actions_internal.call (Void)
+					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call ([item_imp.interface])
+					end
 
 				elseif flag_set(info.uoldstate, Lvis_selected) and
 					not flag_set(info.unewstate, Lvis_selected)
@@ -1250,8 +1255,12 @@ feature {NONE} -- WEL Implementation
 						-- Item is being deselected
 					internal_selected_items_uptodate := False
 					item_imp := ev_children @ (info.iitem + 1)
-					item_imp.interface.deselect_actions.call (Void)
-					interface.deselect_actions.call ([item_imp.interface])
+					if item_imp.deselect_actions_internal /= Void then
+						item_imp.deselect_actions_internal.call (Void)
+					end
+					if deselect_actions_internal /= Void then
+						deselect_actions_internal.call ([item_imp.interface])
+					end
 				end
 			end
 		end
@@ -1291,6 +1300,13 @@ feature {NONE} -- WEL Implementation
 
 	default_row_height: INTEGER
 			-- Default height of each row
+			
+	destroy is
+			-- Destroy `Current'.
+		do
+			wipe_out
+			Precursor {EV_PRIMITIVE_IMP}
+		end
 	
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 

@@ -77,19 +77,25 @@ feature {NONE} -- Recording information for eiffelcase
 					end
 					features.forth
 				end;
-				record_supplier_labels (c_l);
+				record_remaining_suppliers (c_l, s_class_data.public_features, False);
+				record_remaining_suppliers (c_l, s_class_data.private_features, True);
 				if not c_l.empty then
 					s_class_data.set_client_links (c_l);
 				end;
 			end
-		end
+		end;
 
-	record_supplier_labels (c_l: ARRAYED_LIST [S_CLI_SUP_DATA]) is
+	record_remaining_suppliers (c_l: ARRAYED_LIST [S_CLI_SUP_DATA]; 
+				features: ARRAYED_LIST [S_FEATURE_DATA]; is_hidden: BOOLEAN) is
+			-- Record remaining supplies that are not detected by the compiler.
+			--| Generics are not recorded - Eg LINKED_LIST [FOO] will produce
+			--| a relation from class to LINKED_LIST and not FOO.
+			-- Set the labels for the suppliers `c_l' for routines that are not
+			-- hidden (`is_hidden').
 		require
 			valid_cl: c_l /= Void
 		local
 			sup_class_id: INTEGER;
-			features: ARRAYED_LIST [S_FEATURE_DATA];
 			feature_data: S_FEATURE_DATA;
 			result_type: S_CLASS_TYPE_INFO;
 			feat_arg: FIXED_LIST [S_ARGUMENT_DATA];
@@ -99,7 +105,6 @@ feature {NONE} -- Recording information for eiffelcase
 			gen_type: S_GEN_TYPE_INFO;
 			type_a: TYPE_A
 		do
-			features := s_class_data.public_features;
 			from
 				features.start
 			until
@@ -145,27 +150,29 @@ end;
 							if sup_class_id = classc.id then
 								cli_sup_data.set_reflexive (True)
 							end;
-							label := cli_sup_data.label;
-							if label = Void then
-								!! label.make (0);
-								label.append (feature_data.name);
-								cli_sup_data.set_label (label);
-							else
-								label.append (", ");	
-								label.append (feature_data.name);
+							if not is_hidden then
+								label := cli_sup_data.label;
+								if label = Void then
+									!! label.make (0);
+									label.append (feature_data.name);
+									cli_sup_data.set_label (label);
+								else
+									label.append (", ");	
+									label.append (feature_data.name);
 debug ("CASE_FEATURE")
 	io.error.putstring ("%T%T%TResult: ");
 	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
 	io.error.new_line;
 end
+								end;
+								if result_type.has_generics then
+									gen_type ?= result_type;
+									label.append (": ");	
+									label.append (gen_type.string_value_minus_id 
+											(sup_class_id))
+								end
 							end;
-							if result_type.has_generics then
-								gen_type ?= result_type;
-								label.append (": ");	
-								label.append (gen_type.string_value_minus_id 
-										(sup_class_id))
-							end
-							cli_sup_data.set_implementation (False);
+							cli_sup_data.set_implementation (is_hidden);
 							real_class_ids.forth
 						end
 					end;
@@ -203,7 +210,7 @@ debug ("CASE_FEATURE")
 	io.error.new_line;
 end
 								if c_l.after then
-										-- Supplier hasn't been record 
+										-- Supplier hasn't been recorded.
 									!! cli_sup_data;
 									cli_sup_data.set_class_links (classc.id,
 											sup_class_id);

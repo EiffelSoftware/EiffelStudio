@@ -111,6 +111,15 @@ feature -- Access
 		once
 			create Result.make
 		end
+		
+	tools_always_on_top_command: GB_TOOLS_ALWAYS_ON_TOP_COMMAND is
+			-- Command representing whether windows should be modeless or independent.
+			-- Modeless by default.
+		once
+			create Result.make
+			Result.enable_selected
+		end
+		
 
 feature -- Basic operation
 

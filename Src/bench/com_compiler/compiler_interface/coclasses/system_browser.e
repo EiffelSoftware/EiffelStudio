@@ -303,8 +303,7 @@ feature -- Basic Operations
 		do
 			if Eiffel_project.initialized and then a_string /= Void then
 				-- Retrieve a list of all the CLASS_I objects in the Eiffel Universe.
-					string_to_match := clone (a_string)
-					string_to_match.to_lower
+					string_to_match := a_string.as_lower
 					create matcher.make_empty
 					matcher.disable_case_sensitive
 					matcher.set_pattern (string_to_match)
@@ -342,8 +341,7 @@ feature -- Basic Operations
 								end
 							end		
 						else
-							class_name_string := clone (eiffel_class.name)
-							class_name_string.to_lower
+							class_name_string := eiffel_class.name.as_lower
 							if class_name_string.is_equal (string_to_match) then
 								create class_desc.make_with_class_i (eiffel_class)
 								res.extend (class_desc)
@@ -351,15 +349,13 @@ feature -- Basic Operations
 								dotnet_class ?= eiffel_class
 								if dotnet_class /= Void then
 									if dotnet_class.is_compiled then
-										class_name_string := clone (dotnet_class.compiled_class.name)
-										class_name_string.to_lower
+										class_name_string := dotnet_class.compiled_class.name.as_lower
 										if class_name_string.is_equal (string_to_match) then
 											create class_desc.make_with_class_i (eiffel_class)
 											res.extend (class_desc)
 										end -- if
 									else
-										class_name_string := clone (dotnet_class.external_name)
-										class_name_string.to_lower
+										class_name_string := dotnet_class.external_name.as_lower
 										if class_name_string.is_equal (string_to_match) then
 											create class_desc.make_with_class_i (eiffel_class)
 											res.extend (class_desc)

@@ -87,7 +87,7 @@ feature -- Status setting
    		do
  			implementation.set_selected (flag)
  		ensure
-   			is_now_selected: is_selected
+   			flag_set: is_selected = flag
    		end
 
 feature -- Assertion

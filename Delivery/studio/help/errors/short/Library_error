@@ -1,0 +1,3 @@
+Error: Particular class content does not match what compiler is expecting.
+What to do: Make sure you haven't modified one of the kernel classes on which
+  compiler relies.

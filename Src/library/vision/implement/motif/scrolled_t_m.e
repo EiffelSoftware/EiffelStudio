@@ -13,8 +13,10 @@ inherit
 			make, make_word_wrapped
 		redefine
 			action_target, 
-			set_foreground_color, set_background_color,
-			update_foreground_color, update_background_color,
+			set_background_color,
+			update_background_color,
+			set_foreground_color,
+			update_foreground_color,
 			set_managed, managed, set_size, set_height,
 			set_width
 		end;
@@ -188,7 +190,6 @@ feature -- Color
 		local
 			pixmap_implementation: PIXMAP_X;
 			color_implementation: COLOR_X;
-			ext_name: ANY;
 			pix: POINTER
 		do
 			if not (bg_pixmap = Void) then
@@ -204,67 +205,62 @@ feature -- Color
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
 			pix := color_implementation.pixel (screen);
-			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (action_target, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
+			xm_change_bg_color (screen_object, pix);
+			xm_change_bg_color (action_target, pix);
+			xm_change_bg_color (vertical_widget, pix);
+			xm_change_bg_color (horizontal_widget, pix);
+			if fg_color /= Void then
+				update_foreground_color
+			end
 		end;
 
 	set_foreground_color (a_color: COLOR) is
 			-- Set `foreground_color' to `a_color'.
 		local
 			color_implementation: COLOR_X;
-			ext_name: ANY;
-			pix: POINTER
+			ext_name: ANY
 		do
-			if not (foreground_color = Void) then
-				color_implementation ?= foreground_color.implementation;
+			if fg_color /= Void then
+				color_implementation ?= fg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			fg_color := a_color;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			pix := color_implementation.pixel (screen);
 			ext_name := Mforeground_color.to_c;
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (action_target, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
+			c_set_color (action_target, color_implementation.pixel (screen), $ext_name)
 		end;
 
+
 feature {COLOR_X}
+
+	update_background_color is
+			-- Update the X color after a change inside the Eiffel color.
+		local
+			color_implementation: COLOR_X;
+			pix: POINTER
+		do
+			color_implementation ?= background_color.implementation;
+			pix := color_implementation.pixel (screen);
+			xm_change_bg_color (screen_object, pix);
+			xm_change_bg_color (action_target, pix);
+			xm_change_bg_color (horizontal_widget, pix);
+			xm_change_bg_color (vertical_widget, pix);
+			if fg_color /= Void then
+				update_foreground_color
+			end
+		end;
 
 	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			ext_name: ANY;
-			color_implementation: COLOR_X;
-			pix: POINTER
+			color_implementation: COLOR_X
 		do
 			ext_name := Mforeground_color.to_c;
 			color_implementation ?= foreground_color.implementation;
-			pix := color_implementation.pixel (screen);
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (action_target, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
-		end;
-
-	update_background_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			ext_name: ANY;
-			color_implementation: COLOR_X;
-			pix: POINTER
-		do
-			ext_name := Mbackground.to_c;
-			color_implementation ?= background_color.implementation;
-			pix := color_implementation.pixel (screen);
-			c_set_color (screen_object, pix, $ext_name);
-			c_set_color (action_target, pix, $ext_name);
-			c_set_color (horizontal_widget, pix, $ext_name);
-			c_set_color (vertical_widget, pix, $ext_name);
+			c_set_color (action_target,
+				color_implementation.pixel (screen), $ext_name)
 		end;
 
 feature

@@ -9,12 +9,20 @@ class PRIMITIVE_M
 
 inherit
 
-	PRIMITIVE_R_M
-		export
-			{NONE} all
+	PRIMITIVE_R_M;
+
+	WIDGET_M
+		rename
+			set_background_color as widget_set_background_color,
+			update_background_color as widget_update_background_color
 		end;
 
 	WIDGET_M
+		redefine
+			set_background_color, update_background_color
+		select
+			set_background_color, update_background_color
+		end;
 
 feature 
 
@@ -54,12 +62,34 @@ feature
 			foreground_color_set: foreground_color = a_color
 		end;
 
+	set_background_color (a_color: COLOR) is
+			-- Set background_color to `a_color'.
+			--| Make sure to reset the foreground color
+			--| if it has been set.
+		local
+			color_implementation: COLOR_X;
+			ext_name: ANY
+		do
+			widget_set_background_color (a_color);
+			if fg_color /= Void then
+				update_foreground_color	
+			end;	
+		end;
+
 feature {NONE} 
 
 	fg_color: COLOR;
 			-- foreground_color colour
 
 feature {COLOR_X}
+
+	update_background_color is
+		do
+			widget_update_background_color;
+			if fg_color /= Void then
+				update_foreground_color
+			end
+		end;
 
 	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.

@@ -12,36 +12,38 @@ class
 inherit
 	
 	EV_CONTAINER
-		rename
-			make as old_make
-		export
-			{NONE} old_make
 		redefine
-			implementation
+			implementation,
+			parent
 		end
 	
 	
 creation
 	
-	make
+	make, make_top_level
 	
 feature {NONE} -- Initialization
-	
-	old_make (par: EV_CONTAINER) is
-		do
-		end
 
-        make is
-                        -- Create a window. Window does not have any
+    make (par: EV_WINDOW) is
+			-- Create a window. The parent of window is a window
+		do
+			parent := par
+			!EV_WINDOW_IMP!implementation.make (par, Current)
+		end
+	
+    make_top_level is
+                        -- Create a top level window. Window does not have any
                         -- parents
 		require
 			-- toolkit initialized
 		do
-			!EV_WINDOW_IMP!implementation.make (Current)
+			!EV_WINDOW_IMP!implementation.make_top_level (Current)
 		end
 	
 		
 feature  -- Access
+
+		parent: EV_WINDOW
 
         icon_name: STRING is
                         -- Short form of application name to be
@@ -197,7 +199,7 @@ feature -- Removal
                         delete_command := c
                 end
 
-feature {NONE} -- Implementation
+feature -- {NONE} -- Implementation
 
         delete_command: EV_COMMAND
 

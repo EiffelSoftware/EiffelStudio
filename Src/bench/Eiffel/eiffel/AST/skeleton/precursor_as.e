@@ -200,9 +200,12 @@ feature -- Type check, byte code and dead code removal
 			gen_type: GEN_TYPE_A
 		do
 			last_type := context.item
-			if last_type.is_multi_type then
-				last_type := System.instantiator.array_type_a
-				context.replace (last_type)
+
+			check
+					-- No way we can have a precursor call in the
+					-- context of a manifest arrays. It is always
+					-- a CL_TYPE_A.
+				not_multi_type: not last_type.is_multi_type
 			end
 
 			last_constrained := context.last_constrained_type

@@ -602,6 +602,8 @@ feature {NONE} -- Implementation
 			-- The `vbox' will be able to contain the menu bar, the `hbox'
 			-- and the status bar.
 			-- The `hbox' will contain the child of the window.
+		local
+			a_decor: INTEGER
 		do
 			Precursor
 			is_initialized := False
@@ -617,8 +619,14 @@ feature {NONE} -- Implementation
 			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
 
-					-- If our window doesn't have WM decorations then unset them.
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), has_wm_decorations.to_integer)	
+					-- Set appropriate WM decorations
+			if has_wm_decorations then
+				a_decor := feature {EV_GTK_EXTERNALS}.Gdk_decor_all_enum
+			else
+				a_decor := feature {EV_GTK_EXTERNALS}.Gdk_decor_border_enum
+			end	
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_decor)
+			
 			enable_user_resize
 			default_height := -1
 			default_width := -1

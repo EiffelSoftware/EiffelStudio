@@ -29,6 +29,10 @@
  *    for Eiffel use.
  *    First initialization of the run-time, use this only once, at startup.
  *    fail_func() is called when an uncatched exception happens.
+ * NB: Except if you are using VxWorks, the function that calls this macro
+ * should have these three variables defined: argc, argv, envp. Typically:
+ *
+ *     int main(int argc, char **argv, char ** envp) { ...
  *
  * EIF_REGISTER_THREAD(fail_func)
  *    'Registers' a thread spawned outside Eiffel in order to enable
@@ -96,12 +100,19 @@
  * --    Definition of the macros in a MT context    --
  * ---------------------------------------------------- */
 
+#ifdef VXWORKS
 #define EIF_INITIALIZE(fail_func) \
 	eif_thr_init_root(); \
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
 	eif_rtinit(0, NULL, NULL);
-
+#else
+#define EIF_INITIALIZE(fail_func) \
+	eif_thr_init_root(); \
+{ \
+	EIF_RT_BASIC_SETUP(fail_func) \
+	eif_rtinit(argc, argv, envp);
+#endif
 
 #ifdef WORKBENCH
 #define EIF_REGISTER_THREAD(fail_func) \
@@ -136,7 +147,7 @@
 
 #define EIF_INITIALIZE(fail_func) \
 	EIF_RT_BASIC_SETUP(fail_func) \
-	eif_rtinit(0, NULL, NULL);
+	eif_rtinit(argc, argv, envp);
 
 #define EIF_REGISTER_THREAD(fail_func) \
 	Oops, trying to use multithreading facilities without proper flags

@@ -79,7 +79,7 @@ feature -- Initialization
 			s11.to_lower
 			s22.to_lower
 			a_request_name := "get_"+s11+"_with_"+s22
-			Result_string.append("%N%T"+a_request_name+": LINKED_LIST ["+s4+"] is%N")
+			Result_string.append("%N%T"+a_request_name+": ARRAYED_LIST ["+s4+"] is%N")
 			Result_string.append("%T%T%T-- Request Example%N")
 			Result_string.append("%T%Tlocal%N")
 			Result_string.append("%T%T%Tobj:"+s4+"%N")
@@ -93,7 +93,7 @@ feature -- Initialization
 				a_request:=a_request +s1
 			end
 			a_request := a_request + " where "+s2+"="+s3
-			Result_string.append("%T%T%TResult := db_manager.load_list_from_select (%"")
+			Result_string.append("%T%T%TResult := db_manager.load_list_with_select (%"")
 			Result_string.append(a_request+"%", obj)%N")
 			Result_string.append("%T%Tensure%N")
 			Result_string.append("%T%T%Texists: Result /= Void%N")

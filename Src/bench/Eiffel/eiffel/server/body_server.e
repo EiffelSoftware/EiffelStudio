@@ -1,28 +1,19 @@
 -- Server for routine tables
 
-class BODY_SERVER 
+class
+	BODY_SERVER 
 
 inherit
-
 	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		rename
-			item as server_item,
-			change_id as server_change_id
+			ast_server as offsets
 		export
-			{ANY} server_item, merge
-		redefine
-			ontable, updated_id, trace
-		end
-
-	READ_SERVER [FEATURE_AS_B, BODY_ID]
+			{ANY} merge, Tmp_body_server
 		redefine
 			item, ontable, updated_id, change_id, trace
-		select
-			item, change_id
 		end
 
 creation
-
 	make
 	
 feature 
@@ -56,18 +47,12 @@ end;
 			!!Result.make;
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
-			-- Class offsets
-		do
-			Result := Ast_server;
-		end;
-
 	item (an_id: BODY_ID): FEATURE_AS_B is
 			-- Body of id `an_id'. Look first in the temporary
 			-- body server. It not present, look in itself.
 		require else
-			has_an_id: Tmp_body_server.has (an_id) or else has (an_id);
-	   do
+			has_an_id: Tmp_body_server.has (an_id) or else has (an_id)
+		do
 debug
 io.error.putstring ("item ");
 an_id.trace
@@ -112,7 +97,7 @@ end;
 debug
 io.error.putstring ("Changed in BODY_SERVER%N");
 end;
-				server_change_id (new_value, old_value)
+				{READ_SERVER} Precursor (new_value, old_value)
 			end;
 			if Tmp_body_server.has (old_value) then
 debug

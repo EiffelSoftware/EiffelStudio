@@ -4,16 +4,10 @@
 class TMP_INV_AST_SERVER 
 
 inherit
-
 	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
 		rename
-			clear as old_clear,
-			make as basic_make
-		end;
-	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
+			tmp_ast_server as offsets
 		redefine
-			clear, make
-		select
 			clear, make
 		end
 
@@ -30,7 +24,7 @@ feature
 	make is
 			-- Hash table creation
 		do
-			basic_make;
+			{READ_SERVER} Precursor;
 			!!to_remove.make;
 			to_remove.compare_objects
 		end;
@@ -50,13 +44,6 @@ feature
 			remove (i);
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
-			-- Class offsets in the temporary AST class server
-		do
-			Result := Tmp_ast_server;
-		end; -- offsets
-
-	
 	finalize is
 			-- Finalization after a successful recompilation.
 		do
@@ -82,8 +69,7 @@ feature
 	clear is
 			-- Clear the structure
 		do
-			old_clear;
-			
+			{READ_SERVER} Precursor
 			to_remove.wipe_out;
 		end;
 

@@ -6,19 +6,11 @@ class TMP_INV_BYTE_SERVER
 
 inherit
 	DELAY_SERVER [INVARIANT_B, CLASS_ID]
-		rename
-			make as basic_make,
-			flush as basic_flush
-		end;
-	DELAY_SERVER [INVARIANT_B, CLASS_ID]
 		redefine
-			flush, make
-		select
 			flush, make
 		end
 
 creation
-
 	make
 
 feature
@@ -35,7 +27,7 @@ feature
 	make is
 			-- Hash table creation
 		do
-			basic_make;
+			{DELAY_SERVER} Precursor;
 			!!to_remove.make;
 			to_remove.compare_objects
 		end;
@@ -63,7 +55,7 @@ feature
 	flush is
 			-- Finalization after a successful recompilation.
 		do
-			basic_flush;
+			{DELAY_SERVER} Precursor;
 			from
 				to_remove.start;
 			until
@@ -73,6 +65,8 @@ feature
 				to_remove.forth;
 			end;
 		end;
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 40
 			-- Size of the TMP_INV_BYTE_SERVER file (40 Ko)

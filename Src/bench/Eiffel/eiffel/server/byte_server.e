@@ -1,32 +1,18 @@
 -- Server for routine tables
 
-class BYTE_SERVER 
+class
+	BYTE_SERVER 
 
 inherit
-
-	COMPILER_SERVER [BYTE_CODE, BODY_ID]
-		rename
-			item as server_item,
-			has as server_has,
-			disk_item as disk_server_item,
-			change_id as server_change_id
-		export
-			{ANY} server_item
-		redefine
-			ontable, updated_id
-		end;
 	COMPILER_SERVER [BYTE_CODE, BODY_ID]
 		redefine
 			disk_item, has, item, ontable, updated_id, change_id
-		select
-			has, item, disk_item, change_id
 		end
 
 creation
-
 	make
 
-feature 
+feature -- Update
 
 	ontable: O_N_TABLE [BODY_ID] is
 			-- Mapping table between old id s and new ids.
@@ -54,11 +40,11 @@ feature
 			!!Result.make;
 		end;
 
+feature -- Access
+
 	item (an_id: BODY_ID): BYTE_CODE is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
-		require else
-			has_an_id: has (an_id);
 		do
 			if Tmp_byte_server.has (an_id) then
 				Result := Tmp_byte_server.item (an_id);
@@ -74,7 +60,7 @@ feature
 			if Tmp_byte_server.has (an_id) then
 				Result := Tmp_byte_server.disk_item (an_id);
 			else
-				Result := disk_server_item (an_id);
+				Result := {COMPILER_SERVER} Precursor (an_id);
 			end;
 		end;
 
@@ -87,17 +73,21 @@ feature
 			Result := server_has (an_id) or else Tmp_byte_server.has (an_id);
 		end;
 
+feature -- Update
+
 	change_id (new_value, old_value: BODY_ID) is
 		require else
 			True
 		do
 			if server_has (old_value) then
-				server_change_id (new_value, old_value)
+				{COMPILER_SERVER} Precursor (new_value, old_value)
 			end;
 			if Tmp_byte_server.has (old_value) then
 				Tmp_byte_server.change_id (new_value, old_value)
 			end;
 		end;
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 150
 			-- Size of the BYTE_SERVER file (150 Ko)

@@ -1,30 +1,18 @@
 -- Server for invariants byte code
 
-class INV_BYTE_SERVER 
+class
+	INV_BYTE_SERVER 
 
 inherit
-
-	COMPILER_SERVER [INVARIANT_B, CLASS_ID]
-		rename
-			item as server_item,
-			has as server_has,
-			disk_item as disk_server_item
-		export
-			{ANY} server_item
-		end;
-
 	COMPILER_SERVER [INVARIANT_B, CLASS_ID]
 		redefine
-			has, item, disk_item
-		select
 			has, item, disk_item
 		end
 
 creation
-
 	make
 
-feature 
+feature -- Access
 
 	Cache: INV_BYTE_CACHE is
 			-- Cache for routine tables
@@ -58,7 +46,7 @@ feature
 			if Tmp_inv_byte_server.has (an_id) then
 				Result := Tmp_inv_byte_server.disk_item (an_id);
 			else
-				Result := disk_server_item (an_id);
+				Result := {COMPILER_SERVER} Precursor (an_id);
 			end;
 		end;
 
@@ -68,6 +56,8 @@ feature
 		do
 			Result := server_has (an_id) or else Tmp_inv_byte_server.has (an_id);
 		end;
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 40
 			-- Size of the INV_BYTE_SERVER file (40 Ko)

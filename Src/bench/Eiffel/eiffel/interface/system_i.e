@@ -1578,11 +1578,14 @@ feature -- IL code generation
 			il_generation: il_generation
 		local
 			il_generator: IL_GENERATOR
+			old_remover_off: BOOLEAN
 		do
 			create il_generator.make (Degree_output)
 			il_generator.generate 
 			il_generator.deploy
 			if il_c_externals.count > 0 then
+				old_remover_off := remover_off
+				remover_off := True
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
 				else
@@ -1594,6 +1597,7 @@ feature -- IL code generation
 				close_log_files
 
 				makefile_generator.generate_il
+				remover_off := old_remover_off
 			end
 		end
 

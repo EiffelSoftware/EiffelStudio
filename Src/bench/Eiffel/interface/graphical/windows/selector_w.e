@@ -15,12 +15,8 @@ inherit
 
 	HOLE 
 		redefine
-			compatible
-			, process_class
-			, process_classi
-			, process_feature
+			compatible, process_class, process_classi, process_feature
 		end
-
 
 	WINDOWS
 	WINDOW_ATTRIBUTES

@@ -1,13 +1,18 @@
 indexing
-
-	description: "Widget which can change its font";
+	description: "EiffelVision fontable, an object which can%
+				% change its font";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 deferred class
+	EV_FONTABLE
 
-	EV_FONTABLE 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 
 feature -- Access
 
@@ -17,13 +22,6 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.font
-		end
-
-feature -- Status report
-
-	destroyed: BOOLEAN is
-			-- Is current object destroyed
-		deferred
 		end
 
 feature -- Element change
@@ -53,11 +51,6 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	implementation: EV_FONTABLE_I
-			-- Implementation of widget
-
-feature {NONE} -- Implementation
-
 	set_font_imp (an_implementation: EV_FONTABLE_I) is
 			-- Set `implementation' to `an_implementation'.
 		require
@@ -65,6 +58,10 @@ feature {NONE} -- Implementation
 		do
 			implementation := an_implementation
 		end
+
+	implementation: EV_FONTABLE_I
+			-- Implementation of widget
+
 
 end -- class EV_FONTABLE
 

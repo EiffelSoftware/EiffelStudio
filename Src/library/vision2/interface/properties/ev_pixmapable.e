@@ -1,16 +1,21 @@
 indexing
-
 	description: 
-		"EiffelVision pixmap container. Pixmap container is used internally in EiffelVision (by EV_BUTTON and EV_MENU_ITEM to allow a EV_PIXMAP to be put inside it)."
+		"EiffelVision pixmap container. Pixmap container is used%
+		% internally in EiffelVision to allow an EV_PIXMAP to be%
+		% put inside a widget."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class 
-
 	EV_PIXMAP_CONTAINER
 
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 	
 feature -- Implementation
 	

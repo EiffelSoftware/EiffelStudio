@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			debug ("GDI_COUNT")
 				io.putstring ("Creating WEL_BITMAP")
 			end
-			Precursor (id)
+			Precursor {WEL_RESOURCE} (id)
 			gdi_make
 		end
 

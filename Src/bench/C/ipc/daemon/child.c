@@ -252,6 +252,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		strcat (error_msg, "\"\nMake sure you have correctly set up your installation.");
 		MessageBox (NULL, error_msg, "Execution terminated",
 					MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		InvalidateRect (NULL, NULL, FALSE);
 	}
 
 #ifdef USE_ADD_LOG

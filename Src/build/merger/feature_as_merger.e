@@ -59,8 +59,6 @@ feature
 				-- Copying user feature
 				merge_result.set_feature_names (user.feature_names)
 				merge_result.set_body (user.body)
---samik				merge_result.set_body_id (user.body_id)
---samik				merge_result.set_id (user.id)
 			end
 
 			if u_fas_ebuild /= Void and n_fas_ebuild /= Void then
@@ -81,7 +79,6 @@ feature
 					comment_merger.merge3 (o_comment,
 										u_fas_ebuild.comment, 
 										n_fas_ebuild.comment)
-		--samik			merge_result.set_comment (comment_merger.merge_result)
 				end
 			end
 		end;

@@ -4,17 +4,6 @@ inherit
 
 	EB_BUTTON_COM
 
-feature {NONE} -- focus
-
--- samik	focus_string: STRING is
--- samik		deferred
--- samik		end;
-
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := editor.focus_label
--- samik		end
-
 feature
 
 	editor: CONTEXT_EDITOR;

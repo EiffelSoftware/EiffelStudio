@@ -23,11 +23,6 @@ feature {NONE}
 			add_activate_action (Current, Void)
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := command_editor.focus_label
--- samik		end;
-
 	create_focus_label is
 		do
 			set_focus_string (Focus_labels.generate_code_label)

@@ -24,11 +24,6 @@ feature {NONE}
 			Result := Current
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := associated_editor.focus_label
--- samik		end;
-
 	create_focus_label is
 		do
 			set_focus_string (Focus_labels.context_label)

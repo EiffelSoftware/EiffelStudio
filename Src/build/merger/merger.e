@@ -201,11 +201,6 @@ feature
 			ctxt: FORMAT_CONTEXT
 		do
                        !! ctxt.make (ast, file_name)
- --samik                       ctxt.set_ast (ast)
-       --samik         ctxt.execute
-
-	--samik		ast.simple_format (ctxt)
-
 			Result := ctxt.text.image
 		end;
 

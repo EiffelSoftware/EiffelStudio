@@ -222,7 +222,6 @@ feature
 			!!button_rc.make (Widget_names.row_column, Current);
 			button_rc.set_preferred_count (1);
 			button_rc.set_row_layout;
---samik			!!focus_label.initialize (top_form);
 			!!trash_hole.make (top_form);
 			!!type_button.make (top_form); 
 			!!inst_button.make (top_form);
@@ -233,16 +232,12 @@ feature
 			top_form.attach_left_widget (type_button, inst_button, 0);
 			top_form.attach_left_widget (inst_button, create_inst_b, 0);
 			top_form.attach_left_widget (create_inst_b, trash_hole, 0);
---samik			top_form.attach_left_widget (trash_hole, focus_label, 0);
---samik			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_right (close_b, 0);
 			top_form.attach_top (type_button, 0);
 			top_form.attach_top (inst_button, 0);
 			top_form.attach_top (trash_hole, 0);
 			top_form.attach_top (create_inst_b, 0);
 			top_form.attach_top (close_b, 0);
---samik			top_form.attach_top (focus_label, 0);
---samik			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (create_inst_b, 0);
 			top_form.attach_bottom (type_button, 0);
 			top_form.attach_bottom (inst_button, 0);

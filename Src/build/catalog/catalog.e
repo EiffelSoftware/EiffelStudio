@@ -41,10 +41,6 @@ feature
                         Result := ti.label
                 end	
 	
--- samik	focus_label: FOCUS_LABEL is
--- samik		deferred
--- samik		end;
-
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create the catalog interface with `a_screen' 
 			-- as the parent.

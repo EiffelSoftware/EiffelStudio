@@ -68,11 +68,6 @@ feature {NONE} -- Focus label
 		deferred
 		end
 	
---end of samik
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := associated_catalog.focus_label
--- samik		end;
 
 feature {NONE}
 

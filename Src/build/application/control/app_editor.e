@@ -440,10 +440,6 @@ feature -- EiffelVision Section
 
 	state_list: STATE_SCR_L;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := menu_bar.focus_label
--- samik		end
 
 feature {NONE} -- EiffelVision Section
 
@@ -470,7 +466,6 @@ feature
 		do
 			!! mp;
 			mp.set_watch_shape;
-		--samik	make_visible;
 			figures.attach_to_drawing_area;
 			lines.attach_to_drawing_area;
 			set_default_selected;
@@ -502,14 +497,13 @@ feature
 
 	is_initialized: BOOLEAN is
 		do
---samik			Result := implementation /= Void
-			Result := realized --samik
+			Result := realized
 		end;
 
 feature {NONE}
 
 	make is
-			-- The meaning of this wss not clear. I changed this to call make_visible
+			-- The meaning of this was not clear. I changed this to call make_visible
 			-- samik
 		do
 			make_visible		

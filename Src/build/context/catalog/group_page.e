@@ -69,9 +69,5 @@ feature {NONE}
 			Result := Pixmaps.selected_groups_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.groups_label
--- samik		end;
 
 end

@@ -195,11 +195,8 @@ feature
 			top_form.attach_left_widget (exp_parent_hole, raise_widget_hole, 0);
 			top_form.attach_left_widget (raise_widget_hole, show_window_hole, 0);
 			top_form.attach_left_widget (show_window_hole, cut_hole, 0);
-		--samik	top_form.attach_left_widget (cut_hole, focus_label, 0);
-		--samik	top_form.attach_right_widget (close_button, focus_label, 0);
 			top_form.attach_right (close_button, 0);
 
-	    --samik		top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (cut_hole, 0);
 			top_form.attach_bottom (close_button, 0);
 			top_form.attach_bottom (con_ed_hole, 0);

@@ -71,9 +71,5 @@ feature {NONE}
 			Result := Pixmaps.selected_sets_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.sets_label
--- samik		end;
 
 end

@@ -41,7 +41,6 @@ inherit
 		select
 			reset_modified_flags, undo_cut, title_label, hide, show
 		end;
--- samik	G_ANY
 	
 feature -- Specification
 

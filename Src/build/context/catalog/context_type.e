@@ -21,7 +21,6 @@ feature  {NONE}
 			-- create a context type associated with `a_context'
 		do
 			dummy_context := a_context;
-		-- samik    	focus_string := a_name;
 			int_generator.next;
 			identifier := int_generator.value;
 			context_type_table.put (Current, identifier);
@@ -52,13 +51,6 @@ feature {NONE}
 			!!Result
 		end;
 
--- samik	focus_string: STRING;
-
---	focus_label: LABEL is
-	--	do
-		--	Result := context_catalog.focus_label
---		end;
-
 	focus_source: WIDGET;
 
 	
@@ -69,7 +61,6 @@ feature
 			-- the context_type
 		do
 			focus_source := a_source;
-			-- samik initialize_focus;
 			initialize_transport;
 		end;
 

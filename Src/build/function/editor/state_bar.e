@@ -34,7 +34,6 @@ feature {NONE}
 			close_button: CLOSE_WINDOW_BUTTON;
 		do
 			form_create (a_name, a_parent);
---samik			!! focus_label.initialize (Current);
 			!! trash_hole.make (Current);
 			!! edit_hole.make (ed, Current);
 			!! merge_hole.make (ed, Current);
@@ -42,23 +41,15 @@ feature {NONE}
 			attach_top (edit_hole, 0);
 			attach_top (close_button, 0);
 			attach_top (merge_hole, 0);
-			--samikattach_top (focus_label, 0);
 			attach_top (trash_hole, 0);
 			attach_left (edit_hole, 0);
 			attach_right (close_button, 0);
 			attach_left_widget (edit_hole, merge_hole, 0);
 			attach_left_widget (merge_hole, trash_hole, 0);
-			--samikattach_left_widget (trash_hole, focus_label, 0);
-			--samikattach_right_widget (close_button, focus_label, 0);
-		--samik	attach_bottom (focus_label, 0);
 			attach_bottom (edit_hole, 0);
 			attach_bottom (close_button, 0);
 			attach_bottom (merge_hole, 0);
 			attach_bottom (trash_hole, 0);
 		end;
-
-feature
-
--- samik	focus_label: FOCUS_LABEL;
 
 end

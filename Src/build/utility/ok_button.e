@@ -15,11 +15,6 @@ feature {NONE} -- focus label
 			set_focus_string (Focus_labels.accept_change_label)
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := namer_window.focus_label
--- samik		end
-	
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.ok_pixmap

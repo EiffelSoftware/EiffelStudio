@@ -28,11 +28,6 @@ feature {NONE}
 			add_activate_action (Current, Void)
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.command_instance_label
--- samik		end;
-
 	source: WIDGET is
 		do
 			Result := Current

@@ -62,10 +62,6 @@ feature {NONE}
 			make_page (cat);
 			extend (text_modify_ev)
 			extend (text_motion_ev)
-			-- added by samik
-		--	set_focus_string (Focus_labels.text_label)
-		--	initialize_focus
-			-- end of samik
 		end
 
 end

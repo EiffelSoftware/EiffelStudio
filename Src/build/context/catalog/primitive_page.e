@@ -218,9 +218,5 @@ feature {NONE}
 			Result := Pixmaps.Selected_primitives_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.primitives_label
--- samik		end;
 
 end

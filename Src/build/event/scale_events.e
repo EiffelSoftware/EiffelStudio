@@ -62,9 +62,6 @@ feature {NONE}
 			make_page (cat);
 			extend (move_ev);
 			extend (value_changed_ev)
-			-- added by samik
-	--		set_focus_string (Focus_labels.scale_label)
-			-- end of samik	
 		end
 
 end -- class SCALE_EVENTS   

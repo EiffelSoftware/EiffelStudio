@@ -31,11 +31,6 @@ feature {NONE}
 			set_focus_string (Focus_labels.generate_code_label)
 		end;
 
--- samik	focus_label: LABEL is
--- samik		do
--- samik			Result := main_panel.focus_label
--- samik		end
-
 feature {NONE}
 
 	symbol: PIXMAP is

@@ -49,9 +49,5 @@ feature {NONE}
 			Result := Pixmaps.selected_windows_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.windows_label
--- samik		end;
 
 end

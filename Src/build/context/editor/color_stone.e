@@ -100,15 +100,6 @@ feature
                         Result := ti.label
                 end
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := editor.focus_label
--- samik		end;
-
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := color_name
--- samik		end;
 
 	focus_source: WIDGET is
 		do

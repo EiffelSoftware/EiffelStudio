@@ -16,7 +16,6 @@ creation
 	
 feature 
 
--- samik	focus_label: FOCUS_LABEL;
 
 feature {NONE}
 
@@ -34,7 +33,6 @@ feature {NONE}
 			close_b: CLOSE_WINDOW_BUTTON
 		do
             form_create (a_name, a_parent);
---samik			!! focus_label.initialize (Current);
 			!! close_b.make (app_editor, Current);
 			!! new_state_b.make (Current);
 			!! self_hole.make (Current);
@@ -52,7 +50,6 @@ feature {NONE}
 			attach_top (close_b, 0);
 			attach_top (tran_hole, 0);
 			attach_top (cut_hole, 0);
-	--samik		attach_top (focus_label, 0);
 			attach_left (new_state_b, 0);
 			attach_left_widget (new_state_b, init_state_hole, 0);
 			attach_left_widget (init_state_hole, return_hole, 0);
@@ -60,10 +57,7 @@ feature {NONE}
 			attach_left_widget (self_hole, exit_hole, 0);
 			attach_left_widget (exit_hole, tran_hole, 0);
 			attach_left_widget (tran_hole, cut_hole, 0);
-	--samik		attach_left_widget (cut_hole, focus_label, 0);
-	--samik		attach_right_widget (close_b, focus_label, 0);
 			attach_right (close_b, 0);
---samik			attach_bottom (focus_label, 0);
 			attach_bottom (new_state_b, 0);
 			attach_bottom (init_state_hole, 0);
 			attach_bottom (return_hole, 0);

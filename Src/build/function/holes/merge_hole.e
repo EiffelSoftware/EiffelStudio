@@ -21,11 +21,6 @@ feature {NONE}
 			set_focus_string (Focus_labels.merge_label)
 		end;
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := associated_function.focus_label
--- samik		end;
-
 	make (func: FUNC_EDITOR; a_parent: COMPOSITE) is
 		do
 			associated_function := func;

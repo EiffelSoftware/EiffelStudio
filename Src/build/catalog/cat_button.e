@@ -2,7 +2,6 @@ class CAT_BUTTON
 
 inherit
 
---samik	CONSTANTS;
 	COMMAND
 	EB_BUTTON
 		export {CAT_PAGE}

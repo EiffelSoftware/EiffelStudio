@@ -27,7 +27,6 @@ feature
 	
 	namable: NAMABLE
 
---samik	focus_label: FOCUS_LABEL
 
 feature {NONE}
 
@@ -45,7 +44,6 @@ feature {NONE}
 			shell_make (Widget_names.namer_window, a_screen)
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form, form);
---samik			!! focus_label.initialize (top_form);
 			!! close_b.make (Current, top_form);
 			!! namer_hole.make (top_form);
 			!! ok_b.make (Current, top_form);
@@ -53,13 +51,9 @@ feature {NONE}
 
 			top_form.attach_top (namer_hole, 0)
 			top_form.attach_top (ok_b, 0)
---samik			top_form.attach_top (focus_label, 0)
 			top_form.attach_left (namer_hole, 0)
---samik			top_form.attach_right_widget (ok_b, focus_label, 0)
---samik			top_form.attach_left_widget (namer_hole, focus_label, 0)
 			top_form.attach_right_widget (close_b, ok_b, 0)
 			top_form.attach_right (close_b, 0);
---samik			top_form.attach_bottom (focus_label, 0)
 			top_form.attach_bottom (namer_hole, 0)
 			top_form.attach_bottom (ok_b, 0)
 			top_form.attach_bottom (close_b, 0)

@@ -140,9 +140,5 @@ feature {NONE}
 			Result := Pixmaps.selected_scrolled_w_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.scroll_label
--- samik		end;
 
 end

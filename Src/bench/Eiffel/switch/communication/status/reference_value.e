@@ -91,6 +91,16 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
+			debug ("debug_recv")
+				print ("Dumping value ")
+				print (address)
+				print (dynamic_class /= Void)
+				if dynamic_class /= Void then
+					print (" ")
+					print (dynamic_class.name_in_upper)
+				end
+				print ("%N")
+			end
 			create Result.make_object (address, dynamic_class)
 		end
 
@@ -210,6 +220,9 @@ feature -- Output
 		local
 			obj: DEBUGGED_OBJECT
 		do
+			debug ("debug_recv")
+				print ("REFERENCE_VALUE.children%N")
+			end
 			create obj.make (address, min_slice, max_slice)
 			Result := obj.attributes
 		end

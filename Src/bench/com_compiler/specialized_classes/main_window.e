@@ -25,8 +25,6 @@ feature {WEL_DISPATCHER}
 
 	process_message (hwnd: POINTER; msg, wparam, lparam: INTEGER): INTEGER is
 			-- Was declared in WEL_COMPOSITE_WINDOW as synonym of `composite_process_message'.
-		local
-			called: BOOLEAN
 		do
 			inspect msg
 			when generate_html_docs_msg then
@@ -62,8 +60,6 @@ feature {HTML_DOC_GENERATOR}
 
 	process_generate_message is
 			-- process the generate HTML docs message
-		local
-			l_res: INTEGER
 		do
 			cwin_post_message (item, generate_html_docs_msg, 0, 0)
 		end

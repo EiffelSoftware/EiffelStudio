@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Command names for menu entries.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class SHARED_EWB_CMD_NAMES
 

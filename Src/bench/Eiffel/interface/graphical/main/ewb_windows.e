@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Root cluster for eiffelbench under Windows.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_WINDOWS
 

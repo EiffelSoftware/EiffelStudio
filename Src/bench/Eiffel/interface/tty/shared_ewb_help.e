@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Help constants for menu entries.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class SHARED_EWB_HELP
 
 feature {NONE}

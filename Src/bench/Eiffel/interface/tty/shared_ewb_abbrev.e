@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Abbreviation constants for menu entries.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class SHARED_EWB_ABBREV
 
 feature

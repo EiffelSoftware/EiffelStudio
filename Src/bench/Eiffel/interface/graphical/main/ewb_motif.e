@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Root cluster for eiffelbench under motif.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class EWB_MOTIF
 
 inherit
@@ -13,4 +20,4 @@ feature {NONE}
 
 	init_toolkit: MOTIF is once !!Result.make ("ebench") end;
 
-end
+end -- class EWB_MOTIF

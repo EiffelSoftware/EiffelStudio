@@ -53,6 +53,7 @@ To do:
 - Look into destroyed tree item problem.
 - Test all state variables in non-parented widgets.
 - Rename titled_window_imp.e <-> window_imp.e
+- Added EV_SELECTABLE AND EV_DESELECTABLE where deselect inherits select.
 
 
 Feature/Bug requests:

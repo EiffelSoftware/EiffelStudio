@@ -135,26 +135,27 @@ feature {NONE} -- Internal Results
 		require
 			path_possible: path /= Void
 		local
-			i,j: INTEGER
-			s: STRING
+			i, j, nb: INTEGER
 		do
 			create Result.make (10)
 			from
-				i :=1
+				i := 1
 				j := 1
-				s := path.twin
+				nb := path.count
 			until
-				j < 1
+				j < 1 or i >= nb
 			loop
-				j := s.index_of ('\', i + 1)
+				j := path.index_of ('\', i + 1)
 				if j > i then
-					Result.extend (s.substring (i, j - 1))
+					Result.extend (path.substring (i, j - 1))
 					i := j + 1
 				end
 			end
-			if j = 0 and then i + 1 <= s.count then
-				Result.extend (s.substring (i, s.count))
+			if j = 0 and then i + 1 <= nb then
+				Result.extend (path.substring (i, nb))
 			end
+		ensure
+			value_keys_list_not_void: Result /= Void
 		end
 	
 feature -- Access

@@ -337,6 +337,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				System.set_freeze
 			end
 		end
+
 	process_defaults_and_options is
 		do
 			process_defaults;
@@ -414,7 +415,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_assembly: ASSEMBLY_SD
 			l_compiled_assembly, l_old_assembly: ASSEMBLY_I
 			l_precomp_assembly: ASSEMBLY_I
+			l_cluster_of_name, l_cluster_of_path: CLUSTER_I
 			l_new_assemblies: ARRAYED_LIST [ASSEMBLY_I]
+			vdcn: VDCN
+			vd28: VD28
 		do
 				-- FIXME: Manu we should raise an error before processing
 				-- assemblies, if we are not in a  .NET code generation
@@ -427,22 +431,54 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					assemblies.after
 				loop
 					l_assembly := assemblies.item
+					Degree_output.put_degree_6 (l_assembly.cluster_name,
+						assemblies.count - assemblies.index + 1)
 					create l_compiled_assembly.make_from_ast (l_assembly)
 					Error_handler.checksum
 					
 					l_old_assembly ?= Lace.old_universe.
 						cluster_of_name (l_compiled_assembly.cluster_name)
-						
-					l_precomp_assembly ?= Lace.Universe.cluster_of_name
-						(l_compiled_assembly.cluster_name)
-						
-						-- Add it to top cluster list of system and to universe.
-					if l_old_assembly = Void then
+					
+					l_cluster_of_name := lace.Universe.cluster_of_name (
+						l_compiled_assembly.cluster_name)
+					
+					l_cluster_of_path := lace.Universe.cluster_of_path (
+						l_compiled_assembly.path)
+	
+					if l_cluster_of_name /= Void then
+						if l_cluster_of_name.is_precompiled then
+							if 
+								(l_cluster_of_path /= Void) and then
+								l_cluster_of_path /= l_cluster_of_name
+							then
+								create vd28
+								vd28.set_cluster (l_cluster_of_name)
+								vd28.set_second_cluster_name (l_cluster_of_path.cluster_name)
+								Error_handler.insert_error (vd28)
+								Error_handler.raise_error
+							end
+						else
+							create vdcn
+							vdcn.set_cluster (l_compiled_assembly)
+							Error_handler.insert_error (vdcn)
+							Error_handler.raise_error
+						end
+					elseif l_cluster_of_path /= Void then
+						create vd28
+						vd28.set_cluster (l_cluster_of_path)
+						vd28.set_second_cluster_name (l_compiled_assembly.cluster_name)
+						Error_handler.insert_error (vd28)
+						Error_handler.raise_error
+					elseif l_old_assembly = Void then
+							-- Add it to top cluster list of system and to universe.
 						l_new_assemblies.extend (l_compiled_assembly)
 						Eiffel_system.add_sub_cluster (l_compiled_assembly)
 						Universe.insert_cluster (l_compiled_assembly)
 					else
-						if l_precomp_assembly = Void or else not l_precomp_assembly.is_precompiled then
+						l_precomp_assembly ?= l_cluster_of_name
+						if
+							l_precomp_assembly = Void or else not l_precomp_assembly.is_precompiled
+						then
 							Eiffel_system.add_sub_cluster (l_old_assembly)
 							Universe.insert_cluster (l_old_assembly)
 						end
@@ -484,7 +520,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- has been created with only one override_cluster in mind. As a consequence
 					-- I (Manu) kept the previous implementation of `all' specification in
 					-- CLUSTER_I, where all classes belong to the top cluster.
-				Degree_output.put_start_degree_6 (clusters.count);
+				Degree_output.put_start_degree_6 (clusters.count + assemblies.count);
 				from
 					clusters.start
 					override_name := Universe.override_cluster_name
@@ -499,7 +535,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					then
 						clus.expand_recursive_clusters (clusters)
 					end
-					Degree_output.put_degree_6 (clus, clusters.count - clusters.index + 1)
+					Degree_output.put_degree_6 (clus.cluster_name,
+						clusters.count + assemblies.count - clusters.index + 1)
 					clus.build
 					clusters.forth
 				end
@@ -791,6 +828,7 @@ feature {NONE} -- Incrementality
 			System.set_il_verifiable (True)
 			System.set_system_namespace (Void)
 			System.set_msil_key_file_name (Void)
+			System.set_msil_generation_type ("exe")
 		end
 
 end -- class ACE_SD

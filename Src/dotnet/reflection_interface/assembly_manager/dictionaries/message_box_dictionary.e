@@ -39,11 +39,12 @@ feature -- Access
 			description: "Error message in case the watch pixmap was not found"
 			external_name: "WatchPixmapNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Watch_icon_filename, Pixmap_not_found_error_part_2)			
+			Result := Pixmap_not_found_error_part_1.clone(Pixmap_not_found_error_part_1)
+			Result.append (Watch_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)			
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 	
 	Window_height: INTEGER is 120
@@ -63,11 +64,11 @@ feature -- Access
 			description: "Filename of icon on the right side of the message box"
 			external_name: "WatchIconFilename"
 		once
-			Result := Base_filename
-			Result := Result.concat_string_string (Result, Watch_icon_relative_filename)
+			Result := Base_filename.clone(Base_filename)
+			Result.append (Watch_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 feature {NONE} -- Implementation

@@ -69,11 +69,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on open toolbar button"
 			external_name: "ShowOpenIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result,Open_icon_relative_filename)
+			Result := base_filename.clone (Base_filename)
+			Result.append (Open_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0			
+			not_empty_filename: Result.count > 0			
 		end
 		
 	Import_icon_filename: STRING is 
@@ -81,11 +81,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
+			Result := base_filename.clone (Base_filename)
+			Result.append (Import_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0			
+			not_empty_filename: Result.count > 0			
 		end
 
 	Import_tool_icon_filename: STRING is 
@@ -93,11 +93,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon appearing in import tool header"
 			external_name: "ImportToolIconFilename"
 		once
-			Result := Base_filename
-			Result := Result.concat_string_string (Result, Import_tool_icon_relative_filename)
+			Result := Base_filename.clone (Base_filename)
+			Result.append (Import_tool_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 feature -- Error messages
@@ -107,11 +107,12 @@ feature -- Error messages
 			description: "Error message in case the open toolbar icon has not been found"
 			external_name: "OpenIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Open_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Open_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Import_icon_not_found_error: STRING is
@@ -119,11 +120,12 @@ feature -- Error messages
 			description: "Error message in case the import toolbar icon has not been found"
 			external_name: "ImportIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Import_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Import_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end		
 
 	Import_tool_icon_not_found_error: STRING is
@@ -131,11 +133,12 @@ feature -- Error messages
 			description: "Error message in case the import tool toolbar icon has not been found"
 			external_name: "ImportToolIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Import_tool_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Import_tool_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count> 0
 		end
 		
 feature -- Other constants
@@ -146,12 +149,12 @@ feature -- Other constants
 			external_name: "CaptionText"
 		end
 
-	Import_tool_icon: SYSTEM_DRAWING_ICON is
+	Import_tool_icon: DRAWING_ICON is
 		indexing
 			description: "Icon appearing in import tool header"
 			external_name: "ImportToolIcon"
 		once
-			create Result.make_icon (Import_tool_icon_filename)
+			create Result.make_drawing_icon (Import_tool_icon_filename.to_cil)
 		ensure
 			icon_created: Result /= Void
 		end

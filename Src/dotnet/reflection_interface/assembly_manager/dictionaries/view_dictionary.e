@@ -13,12 +13,12 @@ inherit
 
 feature -- Access
 
-	Edit_icon: SYSTEM_DRAWING_ICON is
+	Edit_icon: DRAWING_ICON is
 		indexing
 			description: "Icon appearing in assembly view and type view header"
 			external_name: "EditIcon"
 		once
-			create Result.make_icon (Edit_icon_filename)
+			create Result.make_drawing_icon (Edit_icon_filename.to_cil)
 		ensure
 			icon_created: Result /= Void
 		end
@@ -28,8 +28,11 @@ feature -- Access
 			description: "Filename of icon appearing in assembly view and type view header"
 			external_name: "EditIconFilename"
 		once
-			Result := Base_filename
-			Result := Result.concat_string_string (Result, Edit_icon_relative_filename)
+			Result := Base_filename.clone (Base_filename)
+			Result.append (Edit_icon_relative_filename)
+		ensure
+			non_void_filename: Result /= Void
+			not_empty_filename: Result.count > 0
 		end
 
 	Pixmap_not_found_error: STRING is
@@ -37,8 +40,12 @@ feature -- Access
 			description: "Error message in case the dialog pixmap has not been found"
 			external_name: "PixmapNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Edit_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Edit_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
+		ensure
+			non_void_message: Result /= Void
+			not_empty_message: Result.count > 0
 		end
 		
 	Window_height: INTEGER is 500

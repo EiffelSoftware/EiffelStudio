@@ -33,11 +33,11 @@ feature -- Access
 			description: "Image on the left side of the dialog"
 			external_name: "ImageFilename"
 		once
-			Result := Base_filename
-			Result := Result.concat_string_string (Result, Image_relative_filename)
+			Result := Base_filename.clone (base_filename)
+			Result.append (Image_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Powered_by_eiffel_dotnet: STRING is "Powered by Eiffel.NET"
@@ -82,7 +82,7 @@ feature -- Access
 			external_name: "Title"
 		end
 		
-	White_color: SYSTEM_DRAWING_COLOR is
+	White_color: DRAWING_COLOR is
 		indexing
 			description: "White color"
 			external_name: "WhiteColor"

@@ -6,7 +6,7 @@ class
 	ASSEMBLY_VIEWER_DICTIONARY
 
 inherit
-	DICTIONARY
+	ASSEMBLY_MANAGER_DICTIONARY
 
 feature -- Menu items
 
@@ -115,11 +115,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on name toolbar button"
 			external_name: "NameIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Name_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Name_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Version_icon_filename: STRING is 
@@ -127,11 +127,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on version toolbar button"
 			external_name: "VersionIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Version_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Version_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 	Culture_icon_filename: STRING is 
@@ -139,11 +139,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on culture toolbar button"
 			external_name: "CultureIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Culture_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Culture_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Public_key_icon_filename: STRING is 
@@ -151,11 +151,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on public key toolbar button"
 			external_name: "PublicKeyIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Public_key_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Public_key_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Dependancies_icon_filename: STRING is 
@@ -163,11 +163,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on dependancies toolbar button"
 			external_name: "DependanciesIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Dependancies_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Dependancies_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 	Dependancy_viewer_icon_filename: STRING is 
@@ -175,11 +175,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on dependancy viewer toolbar button"
 			external_name: "DependancyViewerIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Dependancy_viewer_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Dependancy_viewer_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 						
 	Help_icon_filename: STRING is 
@@ -187,11 +187,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on help toolbar button"
 			external_name: "HelpIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Help_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Help_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 feature -- Columns names
@@ -233,11 +233,12 @@ feature -- Error messages
 			description: "Error message in case the name toolbar icon has not been found"
 			external_name: "NameIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Name_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Name_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Version_icon_not_found_error: STRING is
@@ -245,11 +246,12 @@ feature -- Error messages
 			description: "Error message in case the version toolbar icon has not been found"
 			external_name: "VersionIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Version_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Version_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Culture_icon_not_found_error: STRING is
@@ -257,11 +259,12 @@ feature -- Error messages
 			description: "Error message in case the culture toolbar icon has not been found"
 			external_name: "CultureIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Culture_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Culture_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Public_key_icon_not_found_error: STRING is
@@ -269,11 +272,12 @@ feature -- Error messages
 			description: "Error message in case the public key toolbar icon has not been found"
 			external_name: "PublicKeyIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Public_key_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Public_key_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Dependencies_icon_not_found_error: STRING is
@@ -281,11 +285,12 @@ feature -- Error messages
 			description: "Error message in case the dependencies toolbar icon has not been found"
 			external_name: "DependenciesIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Dependancies_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Dependancies_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Dependency_icon_not_found_error: STRING is
@@ -293,11 +298,12 @@ feature -- Error messages
 			description: "Error message in case the dependency toolbar icon has not been found"
 			external_name: "DependencyIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Dependancy_viewer_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Dependancy_viewer_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 
 	Help_icon_not_found_error: STRING is
@@ -305,11 +311,12 @@ feature -- Error messages
 			description: "Error message in case the help toolbar icon has not been found"
 			external_name: "HelpIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Help_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Help_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 		
 feature -- Other constants
@@ -368,7 +375,7 @@ feature -- Other constants
 			external_name: "Title"
 		end
 
-	White_color: SYSTEM_DRAWING_COLOR is
+	White_color: DRAWING_COLOR is
 		indexing
 			description: "White color"
 			external_name: "WhiteColor"

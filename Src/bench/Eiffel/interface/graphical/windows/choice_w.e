@@ -80,9 +80,13 @@ feature
 			Result := list.selected_item.value
 		end;
 
-	popup (command: COMMAND; name_list: LIST [STRING]) is
+	popup (command: COMMAND; name_list: LIST [STRING]; a_title: STRING) is
 			-- Fill the choice window with `name_list' and
 			-- pop it up at the pointer position.
+		require
+			valid_args: command /= Void and then 
+					name_list /= Void and then
+					a_title /= Void
 		local
 			str: SCROLLABLE_LIST_STRING_ELEMENT
 		do
@@ -104,6 +108,7 @@ feature
 			elseif list.count > 0 then
 				list.set_visible_item_count (list.count);
 			end;
+			set_title (a_title);
 			display
 		end;
 
@@ -129,6 +134,7 @@ feature
 					list.deselect_all;
 				end;
 				caller.execute (Current);
+				popdown
 			end
 		end;
 

@@ -13,6 +13,8 @@ feature {NONE} -- Implementation
 	f_Class_end: STRING is				"class_end";
 	f_Class_header: STRING is			"class_header";
 	f_Class_name: STRING is				"class_name";
+	f_Cluster_declaration: STRING is	"cluster_declaration";
+	f_Cluster_header: STRING is			"cluster_header";
 	f_Comment: STRING is				"comment";
 	f_Creators: STRING is				"creators";
 	f_Feature_clause: STRING is			"feature_clause";

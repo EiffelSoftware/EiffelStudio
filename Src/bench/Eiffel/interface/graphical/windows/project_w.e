@@ -103,6 +103,8 @@ feature -- Resource Update
 	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
 		local
 			rout_cli_cmd: SHOW_ROUTCLIENTS
+			display_routine_cmd: DISPLAY_ROUTINE_PORTION
+			display_object_cmd: DISPLAY_OBJECT_PORTION
 			stop_cmd: SHOW_BREAKPOINTS
 			pr: like Project_resources
 			progress_output: DEGREE_OUTPUT
@@ -132,6 +134,20 @@ feature -- Resource Update
 					selector_part.show_selector
 				else
 					selector_part.hide_selector
+				end
+			elseif old_res = pr.feature_window then
+				display_routine_cmd ?= display_feature_cmd_holder.associated_command
+				if new_res.actual_value then
+					display_routine_cmd.show
+				else
+					display_routine_cmd.hide
+				end
+			elseif old_res = pr.object_window then
+				display_object_cmd ?= display_object_cmd_holder.associated_command
+				if new_res.actual_value then
+					display_object_cmd.show
+				else
+					display_object_cmd.hide
 				end
 			elseif old_res = pr.debugger_show_all_callers then
 				if feature_part /= Void then
@@ -826,14 +842,6 @@ feature -- Graphical Interface
 			build_compile_menu
 			build_format_bar
 			build_toolbar_menu
---			exec_stop_frmt_holder.execute (Void)
-
---			!! class_part.form_create (class_form,
---					menus @ open_feature_menu,
---					menus @ edit_feature_menu,
---					menus @ format_feature_menu,
---					menus @ special_feature_menu)
-
 
  			!! feature_part.form_create (feature_form, 
  					menus @ special_feature_menu, 
@@ -859,11 +867,16 @@ feature -- Graphical Interface
 
 			display_routine_cmd ?= display_feature_cmd_holder.associated_command
 			display_object_cmd ?= display_object_cmd_holder.associated_command
-			if hide_split_windows then
+
+			if hide_split_windows or else not Project_resources.feature_window.actual_value then
 				display_routine_cmd.hide
-				display_object_cmd.hide
 			else
 				display_routine_cmd.show
+			end
+
+			if hide_split_windows or else not Project_resources.object_window.actual_value then
+				display_object_cmd.hide
+			else
 				display_object_cmd.show
 			end
 		end
@@ -1239,8 +1252,6 @@ feature -- Graphical Interface
 			step_out_cmd: EXEC_LAST
 			step_out_button: EB_BUTTON
 			step_out_menu_entry: EB_MENU_ENTRY
-			stop_cmd: EXEC_STOP
-			stop_button: EB_BUTTON
 			stop_menu_entry: EB_MENU_ENTRY
 			step_cmd: EXEC_STEP
 			step_button: EB_BUTTON
@@ -1300,11 +1311,6 @@ feature -- Graphical Interface
 
 			!! sep.make (new_name, menus @ debug_menu)
 
-			!! stop_cmd.make (Current)
-			!! stop_button.make (stop_cmd, format_bar)
-			!! stop_menu_entry.make (stop_cmd, menus @ debug_menu)
-			!! exec_stop_frmt_holder.make (stop_cmd, stop_button, stop_menu_entry)
-
 			!! step_cmd.make (Current)
 			!! step_button.make (step_cmd, format_bar)
 			!! step_menu_entry.make (step_cmd, menus @ debug_menu)
@@ -1346,12 +1352,10 @@ feature -- Graphical Interface
 			format_bar.attach_right_widget (nostop_button, step_out_button, 0)
 			format_bar.attach_top (step_button, 0)
 			format_bar.attach_right_widget (step_out_button, step_button, 0)
-			format_bar.attach_top (stop_button, 0)
-			format_bar.attach_right_widget (step_button, stop_button, 0)
 
 			format_bar.attach_top (sep2, 0)
 			format_bar.attach_bottom (sep2, 0)
-			format_bar.attach_right_widget (stop_button, sep2, 5)
+			format_bar.attach_right_widget (step_button, sep2, 5)
 
 			format_bar.attach_top (debug_quit_button, 0)
 			format_bar.attach_right_widget (sep2, debug_quit_button, 5)
@@ -1558,9 +1562,6 @@ feature {NONE} -- Properties
 
 	selector_part: SELECTOR_W
 			-- Selector part
-
-	class_part: CLASS_W
-			-- Class part of Current for debugging
 
 feature -- System Execution Modes
 

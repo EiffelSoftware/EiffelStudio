@@ -217,7 +217,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			non_void_source: a_source /= Void
 		local
 			l_routine: CODE_ROUTINE
-			l_locals: LIST [CODE_VARIABLE_DECLARATION_STATEMENT]
+			l_locals: LIST [CODE_VARIABLE]
 			l_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]
 			l_variable: CODE_VARIABLE_REFERENCE
 			l_name: STRING

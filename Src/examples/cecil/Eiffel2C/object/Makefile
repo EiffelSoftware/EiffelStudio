@@ -4,7 +4,7 @@ FINISH_FREEZING = $(EIFFEL4)/bench/spec/$(PLATFORM)/bin/finish_freezing
 INCLUDE_PATH = $(EIFFEL4)/bench/spec/$(PLATFORM)/include
 CFLAGS = 
 LN = /bin/ln
-RM = /bin/rm
+RM = /bin/rm -f
 DELDIR = /bin/rm -rf
 .c.o: 
 	$(CC) -I$(INCLUDE_PATH) $(CFLAGS) -c $<
@@ -13,8 +13,9 @@ all: str_conv mklink
 
 clean:
 	$(DELDIR) EIFGEN
-	$(RM) tst t.melted
+	$(RM) tst tst.melted
 	$(RM) tst.epr
+	$(RM) core
 	$(RM) fext.o
 
 mklink:

@@ -62,8 +62,8 @@ void c_ev_gtk_callback_marshal (
             (int) agent,
             n_args,
             (int) args
-		*/
         );
+		*/
 		
     // require
             // `object' == NULL on idle callback.
@@ -383,6 +383,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.9  2000/04/04 20:33:51  oconnor
+// syntax
+//
 // Revision 1.8  2000/04/04 20:28:13  oconnor
 // made log in marshal NULL object safe
 //

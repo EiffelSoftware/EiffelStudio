@@ -14,8 +14,8 @@ class
 
 inherit
 	EV_LIST_I
-		rename
-			rows as count
+		undefine
+			count
 		end
 
 	EV_LIST_ITEM_CONTAINER_IMP
@@ -31,7 +31,9 @@ inherit
 		rename
 			make as wel_make,
 			destroy as wel_desroy,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
 			-- The signatures are differents in WEL and Vision.
@@ -52,8 +54,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
-			background_color,
-			foreground_color,
+			wel_background_color,
+			wel_foreground_color,
 			default_process_message
 		redefine
 			selected,
@@ -69,7 +71,9 @@ inherit
 		rename
 			make as wel_make,
 			destroy as wel_destroy,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
 			-- The signatures are differents in WEL and Vision.
@@ -90,8 +94,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
-			background_color,
-			foreground_color,
+			wel_background_color,
+			wel_foreground_color,
 			default_process_message
 		redefine
 			selected,
@@ -323,6 +327,16 @@ feature {NONE} -- Implementation : WEL features
 				disable_default_processing
 			end
  		end
+
+	wel_background_color: WEL_COLOR_REF is
+		do
+			Result := background_color_imp
+		end
+
+	wel_foreground_color: WEL_COLOR_REF is
+		do
+			Result := foreground_color_imp
+		end
 
 end -- class EV_LIST_IMP
 

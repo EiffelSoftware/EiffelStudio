@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_ITEM_HOLDER [G -> EV_ITEM]
+	EV_ITEM_HOLDER
 
 inherit
 	EV_ANY
@@ -26,15 +26,14 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
---	get_item (index: INTEGER): G is
-	get_item (index: INTEGER): EV_ITEM is
+	get_item (index: INTEGER): like item_type is
 			-- Give the item of the list at the zero-base
 			-- `index'.
 		require
 			exists: not destroyed
 			item_exists: (index <= count) and (index >= 0)
 		do
-			Result := implementation.get_item (index)
+			Result ?= implementation.get_item (index)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -51,20 +50,28 @@ feature -- Element change
 
 feature -- Basic operations
 
---	find_item_by_data (data: ANY): G is
-	find_item_by_data (data: ANY): EV_ITEM is
+	find_item_by_data (data: ANY): like item_type is
 			-- Find a child with data equal to `data'.
 		require
 			exists: not destroyed
 			valid_data: data /= Void
 		do
-			Result := implementation.find_item_by_data (data)
+			Result ?= implementation.find_item_by_data (data)
 		end
 
 feature -- Implementation
 
 	implementation: EV_ITEM_HOLDER_I
 			-- Platform specific access.
+
+feature {NONE} -- Implementation
+
+	item_type: EV_ITEM is
+			-- Give the type of the item inside the holder.
+			-- Genericity won't work with the multiplatform
+			-- hierarchy.
+		do
+		end
 
 end -- class EV_ITEM_HOLDER
 

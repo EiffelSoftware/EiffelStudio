@@ -14,9 +14,10 @@ inherit
 			implementation
 		end
 
-	EV_ITEM_HOLDER [EV_TOOL_BAR_BUTTON]
+	EV_ITEM_HOLDER
 		redefine
-			implementation
+			implementation,
+			item_type
 		end
 
 creation
@@ -49,6 +50,14 @@ feature -- Initialization
 feature -- Implementation
 
 	implementation: EV_TOOL_BAR_I
+			-- Platform dependent access.
+
+feature {NONE} -- Implementation
+
+	item_type: EV_TOOL_BAR_BUTTON is
+			-- Gives a type.
+		do
+		end
 
 end -- class EV_TOOL_BAR
 

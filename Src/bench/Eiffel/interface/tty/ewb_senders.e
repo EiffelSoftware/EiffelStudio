@@ -60,7 +60,7 @@ feature
 								output_window.new_line;
 							end;
 							first_time := False;
-							output_window.put_string ("   ");
+							output_window.put_char ('%T');
 debug
 	io.error.putstring ("Feature name: ");
 	io.error.putstring (cfeat);

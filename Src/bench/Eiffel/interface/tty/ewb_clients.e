@@ -32,7 +32,7 @@ feature
 			loop
 				a_client := clients.item;
 				if (c /= a_client) then
-					output_window.put_string ("    ");
+					output_window.put_char ('%T');
 					a_client.append_clickable_signature (output_window);
 					output_window.new_line;
 				end;

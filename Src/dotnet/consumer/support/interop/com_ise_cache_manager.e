@@ -53,48 +53,52 @@ feature -- Basic Oprtations
 			current_initialized: is_initialized
 		end
 
-	initialize_with_path (a_path: SYSTEM_STRING) is
-			-- initialize object with path to specific EAC and initializes it if not already done.
+	start_assembly_enumeration is
+			-- Notify that we are about to receive an iteration of assembly path.
 		require
-			not_already_initialized: not is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
-			path_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil (a_path))).exists
-		local
-			cr: CACHE_READER
+			initialized: is_initialized
 		do
-			create impl.make_with_path (create {STRING}.make_from_cil (a_path))
-			create cr
-			if not cr.is_initialized then
-				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path)
-			end
-			is_initialized := True
-		ensure
-			current_initialized: is_initialized
+			impl.Assembly_locations.wipe_out
 		end
 
-	consume_gac_assembly (aname, aversion, aculture, akey: SYSTEM_STRING) is
-			-- consume an assembly from the gac defined by
-			-- "'aname', Version='aversion', Culture='aculture', PublicKeyToken='akey'"
+	add_assembly (an_assembly_path: SYSTEM_STRING) is
+			-- Add `an_assembly_path' to the list of assemblies to be consumed `Assembly_locations'.
 		require
-			current_initialized: is_initialized
-			non_void_name: aname /= Void
-			non_void_version: aversion /= Void
-			non_void_culture: aculture /= Void
-			non_void_key: akey /= Void
-			non_empty_name: aname.length > 0
-			non_empty_version: aversion.length > 0
-			non_empty_culture: aculture.length > 0
-			non_empty_key: akey.length > 0
+			initialized: is_initialized
+			valid_assembly_path: an_assembly_path /= Void and then an_assembly_path.length > 4 
+						and then an_assembly_path.chars (an_assembly_path.length - 3 ) = '.'
+						and then an_assembly_path.chars (an_assembly_path.length - 2 ) = 'd'
+						and then an_assembly_path.chars (an_assembly_path.length - 1 ) = 'l'
+						and then an_assembly_path.chars (an_assembly_path.length - 0 ) = 'l'
+			assembly_exists: feature {SYSTEM_FILE}.exists (an_assembly_path) 
+		do
+			impl.Assembly_locations.extend (create {STRING}.make_from_cil (an_assembly_path))
+		ensure
+			impl.Assembly_locations.has (create {STRING}.make_from_cil (an_assembly_path))
+		end
+
+	consume_assemblies is
+			-- Consumed the entire list of assemblies.
+		require
+			initialized: is_initialized
 		local
-			name, version, culture, key: STRING
-		do	
-			create name.make_from_cil (aname)
-			create version.make_from_cil (aversion)
-			create culture.make_from_cil (aculture)
-			create key.make_from_cil (akey)
-			
-			impl.consume_gac_assembly (name, version, culture, key)
+			l_assembly: ASSEMBLY
+		do
+			from
+				impl.Assembly_locations.start
+			until
+				impl.Assembly_locations.after
+			loop
+				l_assembly := feature {ASSEMBLY}.load_from (impl.Assembly_locations.item.to_cil)
+				if l_assembly /= Void then
+					impl.consume_in_eac (l_assembly)
+				else
+					check
+						error: False
+					end
+				end
+				impl.Assembly_locations.forth
+			end
 		end
 
 	relative_folder_name (aname, aversion, aculture, akey: SYSTEM_STRING): SYSTEM_STRING is

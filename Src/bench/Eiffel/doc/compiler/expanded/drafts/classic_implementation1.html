@@ -1,0 +1,159 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Efficient C implementation of expanded (Draft 1)</title>
+<link rel="stylesheet" type="text/css" href="../../../default.css">
+</head>
+
+<body>
+
+<h1>Efficient C implementation of expanded (Draft 1)</h1>
+
+<h2>Structure</h2>
+
+<h3>Expanded structure</h3>
+
+<p>We generate for every expanded types two structures. For example if you have:</p>
+
+<pre>expanded class A
+feature
+	i: INTEGER
+	s: STRING
+	b: expanded class B
+end
+
+expanded class B
+feature
+	i: INTEGER
+end</pre>
+
+<p>For class A we generate two structures:
+</p>
+
+<pre>struct ex_A {
+	EIF_INTEGER i;
+	EIF_REFERENCE s;
+	struct ex_B b;
+}</pre>
+
+<pre>struct Tex_A {
+&nbsp;&nbsp;&nbsp; EIF_TYPE_ID type_id;
+&nbsp;&nbsp;&nbsp; struct ex_A item;
+}</pre>
+
+<p>The first structure `ex_A' describes object content. It is used when A is 
+used as an attribute (or if you have a SPECIAL [A]). The second `Tex_A' is a 
+typed version of the first one. It is used for declaring the types for locals or 
+arguments of type A.</p>
+
+<p>This comes from the fact that an expanded object exists only by itself if and 
+only if it is declared as a local, otherwise it always included in a normal 
+object. So when it is a local, then the GC is not smart enough to find out which 
+expanded we are storing, therefore the added `type_id' to help the GC to mark 
+the structure.</p>
+
+<p>When A does not contain any references, and recursively no expanded with 
+references, then we only need one structure as the GC does not need to keep 
+track of those structure.</p>
+
+<h3>Composite structure</h3>
+
+<p>For a composite object, we first put the normal attributes of the current 
+object at the top, then we add the expanded attributes. Because it does not map 
+nicely with our generated code for struct `cnode' there is an initialization 
+phase to find out how big are our expanded and where exactly they are located:
+</p>
+
+<pre>class C
+feature
+	b: expanded class B
+end
+
+expanded class B
+feature
+	i: INTEGER
+end</pre>
+
+<p>For class C we generate the following cnode struct like we did before except 
+that the following fields will be updated as</p>
+
+<pre>struct cnode * cnode_of_C;
+
+#ifdef WORKBENCH
+cnode_of_c-&gt;size = normal_size + sizeof (struct ex_B);
+#else
+cnode_of_c-&gt;cn_offsets
+#endif</pre>
+
+<h2>Updating a reference from an expanded object</h2>
+
+<p>Let's say we have in class A (above) the following code:</p>
+
+<pre>set_s (a_s: like s) is
+	do
+		s := a_s
+	end</pre>
+
+<p>And somewhere we have:</p>
+<pre>a: A
+a.set_s (&quot;Fdsfds&quot;)</pre>
+
+<p>Here is what would be generated:</p>
+<pre>set_s (EIF_REFERENCE parent, struct ex_A * Current, EIF_REFERENCE a_s) {
+	Current-&gt;s = a_s;
+	RTAR(parent, a_s);
+} </pre>
+<p>As you notice we generate an extra argument compared to the usual case. This 
+is the reference to the object, if any. that contains Current. When `Current' is 
+actually a local variable, then it is NULL, otherwise it is a reference to the 
+parent object.</p>
+
+<h2>Calling feature on expanded object</h2>
+
+<p>When you do:</p>
+
+<pre>a: A
+...
+a.f (x)</pre>
+
+<h3>If a is a local</h3>
+<pre>struct Tex_A a;
+struct ex_A *a_call;
+
+a_call = &amp;(a.item)
+f(NULL, a_call, x);</pre>
+
+<h3>If a is an attribute</h3>
+<pre>EIF_REFERENCE Current;
+struct ex_A *a_call;
+
+a_call = (struct ex_A *) (Current + offsets (Current, a));
+f(Current, a_call, x);</pre>
+
+<p class="note">Note that when `a' is an attribute of an object, we pass this 
+object as first argument of `f'.</p>
+
+<h2>Assigning expanded attributes or locals</h2>
+<h3>From a local to an attribute</h3>
+
+<pre>struct Tex_A a;
+EIF_REFERENCE obj;
+
+(memcpy (obj + offset_to_attribute, &(a.item), sizeof(struct ex_A));
+</pre>
+
+<h3>From an attribute to a local</h3>
+
+<pre>struct Tex_A a;
+EIF_REFERENCE obj;
+
+(memcpy (&(a.item), obj + offset_to_attribute, sizeof(struct ex_A));
+</pre>
+
+</body>
+
+</html>

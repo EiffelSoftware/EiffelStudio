@@ -85,7 +85,7 @@ feature -- Basic Operations
 				if l_target_type /= Void and then not l_target_type.is_void then
 					l_targets.start
 					l_targets.remove
-					l_feature_table := recursive_lookup (l_target_type, l_targets, feature_table)
+					l_feature_table := recursive_lookup (l_target_type, l_targets, feature_table, False)
 					if l_feature_table /= Void then
 						l_variables_list := features_list_from_table (l_feature_table, class_i, use_overloading)
 						l_variables_list.sort

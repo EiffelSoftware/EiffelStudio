@@ -11,7 +11,7 @@ struct token {
 	int yaccval;	/* Value returned to yacc */
 };
 
-#define TOTAL_KEYWORDS 59
+#define TOTAL_KEYWORDS 60
 #define MIN_WORD_LENGTH 2
 #define MAX_WORD_LENGTH 9
 #define MIN_HASH_VALUE 2
@@ -60,7 +60,7 @@ in_word_set (register const char *str, register int len)
     {
       0,  0,  2,  0,  4,  0,  6,  0,  0,  0,  0,  0,  0,  0,
       4,  0,  0,  2,  0,  0,  0,  6,  0,  0,  0,  5,  0,  0,
-      0,  0,  0,  6,  0,  8,  0,  5,  6,  7,  0,  0,  5,  6,
+      0,  9,  0,  6,  0,  8,  0,  5,  6,  7,  0,  0,  5,  6,
       0,  0,  4,  0,  0,  2,  0,  4,  5,  0,  0,  0,  4,  0,
       0,  2,  3,  0,  5,  0,  7,  0,  9,  0,  6,  7,  8,  7,
       8,  0,  0,  8,  0,  5,  6,  7,  0,  0,  0,  0,  2,  8,
@@ -88,7 +88,9 @@ in_word_set (register const char *str, register int len)
       {"elseif", 			TE_ELSEIF},
       {"",}, {"",}, {"",}, 
       {"false", 			TE_FALSE},
-      {"",}, {"",}, {"",}, {"",}, {"",}, 
+      {"",}, {"",}, {"",}, 
+      {"signature", 		TE_SIGNATURE},
+      {"",}, 
       {"create", 			TE_CREATION},
       {"",}, 
       {"obsolete", 		TE_OBSOLETE},

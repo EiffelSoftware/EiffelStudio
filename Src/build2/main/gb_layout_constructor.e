@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_TREE
+		export
+			{NONE} all
+			{ANY} first
 		undefine
 			is_in_default_state
 		redefine
@@ -20,14 +23,21 @@ inherit
 	GB_LAYOUT_NODE
 		rename
 			implementation as old_imp
+		export
+			{NONE} all
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
+		export {NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 
 create
 	default_create

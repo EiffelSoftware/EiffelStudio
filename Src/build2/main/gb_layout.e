@@ -14,10 +14,15 @@ inherit
 			is_in_default_state,
 			initialize
 		end
-			
+
 	GB_DEFAULT_STATE
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end

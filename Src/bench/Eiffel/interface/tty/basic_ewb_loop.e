@@ -245,7 +245,7 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd);
 			!EWB_SELF_SEC! ewb_cmd;
 			Result.add_entry (ewb_cmd);
-			!EWB_DESCENDENTS_SEC! ewb_cmd;
+			!EWB_DESCENDANTS_SEC! ewb_cmd;
 			Result.add_entry (ewb_cmd);
 			!EWB_PERCENTAGE! ewb_cmd;
 			Result.add_entry (ewb_cmd);

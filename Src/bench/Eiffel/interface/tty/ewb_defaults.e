@@ -52,7 +52,7 @@ feature {NONE} -- Execute
 			main_menu.switches_menu.force (ewb_cmd, 3);
 			!EWB_SELF_SEC! ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 4);
-			!EWB_DESCENDENTS_SEC! ewb_cmd;
+			!EWB_DESCENDANTS_SEC! ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 5);
 			!EWB_PERCENTAGE! ewb_cmd;
 			main_menu.switches_menu.force (ewb_cmd, 6);

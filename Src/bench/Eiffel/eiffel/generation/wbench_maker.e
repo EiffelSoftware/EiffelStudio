@@ -159,26 +159,35 @@ feature
 	generate_other_objects is
 		local
 			precomp: like Precompilation_directories
+			dir: REMOTE_PROJECT_DIRECTORY
 		do
 			if System.uses_precompiled then
-				Make_file.putstring ("%T%T");
-				Make_file.putstring
-					(Precompilation_descobj);
-				Make_file.putchar (' ');
-				Make_file.putchar (Continuation);
-				Make_file.new_line;
+				if
+					not Compilation_modes.is_precompiling or
+					Desc_generator.file_counter = 0
+				then
+						-- Uses precompilations but is not the result
+						-- of the merging of precompilations.
+					Make_file.putstring ("%T%T");
+					Make_file.putstring (Precompilation_descobj);
+					Make_file.putchar (' ');
+					Make_file.putchar (Continuation);
+					Make_file.new_line
+				end;
 				from
 					precomp := Precompilation_directories;
 					precomp.start 
 				until
 					precomp.after
 				loop
-					Make_file.putstring ("%T%T");
-					Make_file.putstring
-						(precomp.item_for_iteration.precompiled_preobj);
-					Make_file.putchar (' ');
-					Make_file.putchar (Continuation);
-					Make_file.new_line;
+					dir := precomp.item_for_iteration;
+					if dir.has_precompiled_preobj then
+						Make_file.putstring ("%T%T");
+						Make_file.putstring (dir.precompiled_preobj);
+						Make_file.putchar (' ');
+						Make_file.putchar (Continuation);
+						Make_file.new_line
+					end;
 					precomp.forth
 				end
 			end;

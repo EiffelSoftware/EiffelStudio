@@ -179,6 +179,13 @@ feature -- Cecil
 			Make_file.putstring (libname);
 			Make_file.putstring (": ");
 			generate_objects_macros;
+			if
+				not Compilation_modes.is_precompiling and
+				Desc_generator.file_counter > 0
+			then
+				Make_file.putchar (' ');
+				Make_file.putstring (Precompilation_descobj)
+			end;
 			Make_file.putchar (' ');
 			generate_system_objects_macros;
 			Make_file.putstring (" Makefile%N%Tar x ");
@@ -337,7 +344,7 @@ feature -- Sub makefile generation
 			-- Create makefile to build system objects.
 		local
 			new_makefile, old_makefile: INDENT_FILE;
-			baskets_count, i: INTEGER;
+			baskets_count, i, nb: INTEGER;
 			f_name: FILE_NAME
 			subdir_name: STRING
 		do
@@ -364,6 +371,15 @@ feature -- Sub makefile generation
 			generate_system_objects_lists;
 				-- Generate partial object.
 			Make_file.putstring ("all: emain.o")
+				-- Add merged descriptors, if any.
+			nb :=  Desc_generator.file_counter;
+			from i := 1 until i > nb loop
+				make_file.putchar (' ');
+				make_file.putstring (Edescriptor);
+				make_file.putint (i);
+				make_file.putstring (".o");
+				i := i + 1
+			end;
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putchar (' ');
 				Make_file.putstring (System_object_prefix);
@@ -651,6 +667,13 @@ feature -- Generation (Linking rules)
 			generate_objects_macros;
 			Make_file.putchar (' ');
 			generate_system_objects_macros;
+			if
+				not Compilation_modes.is_precompiling and
+				Desc_generator.file_counter > 0
+			then
+				Make_file.putchar (' ');
+				Make_file.putstring (Precompilation_descobj)
+			end;
 			Make_file.putchar (' ');
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
@@ -778,6 +801,24 @@ feature -- Generation (Linking rules)
 					Make_file.putint (i);
 					Make_file.putstring (".o");
 				end;
+				i := i + 1
+			end
+		end
+
+	generate_merged_descriptors (suffix: STRING) is
+			-- Generate merged descriptor file names.
+		local
+			i, nb: INTEGER
+		do
+			nb := Desc_generator.file_counter;
+			from i := 1 until i > nb loop
+				make_file.putchar (' ');
+				make_file.putstring (System_object_prefix);
+				make_file.putint (1);
+				make_file.putchar ('/');
+				make_file.putstring (Edescriptor);
+				make_file.putint (i);
+				make_file.putstring (suffix);
 				i := i + 1
 			end
 		end
@@ -935,7 +976,7 @@ feature -- Generation (Linking rules)
 	generate_partial_system_objects_dependencies is
 			-- Depencies to update partial system objects in subdirectories.
 		local
-			i: INTEGER
+			i, nb: INTEGER
 		do
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
@@ -945,6 +986,38 @@ feature -- Generation (Linking rules)
 			Make_file.putint (1);
 			Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
 			Make_file.putstring ("$(MAKE) emain.o%N%N")
+				-- Add merged descriptors, if any.
+			nb :=  Desc_generator.file_counter;
+			from i := 1 until i > nb loop
+				Make_file.putstring (System_object_prefix);
+				Make_file.putint (1);
+				Make_file.putchar ('/');
+				make_file.putstring (Edescriptor);
+				make_file.putint (i);
+				make_file.putstring (".o: Makefile%N%T cd ");
+				Make_file.putstring (System_object_prefix);
+				Make_file.putint (1);
+				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
+				make_file.putstring (Edescriptor);
+				make_file.putint (i);
+				make_file.putstring (".o%N%N");
+				i := i + 1
+			end;
+			if not Compilation_modes.is_precompiling and nb > 0 then
+				Make_file.putstring ("descobj.o: Makefile");
+				generate_merged_descriptors (".o");
+				Make_file.new_line;
+				Make_file.putstring ("%Tld -r -o descobj.o");
+				generate_merged_descriptors (".o");
+				Make_file.new_line;
+				Make_file.putstring ("%T$(RM)");
+				generate_merged_descriptors (".o");
+				Make_file.new_line;
+				Make_file.putstring ("%T$(RM)");
+				generate_merged_descriptors (".c");
+				make_file.putstring ("%N%N")
+			end
+
 			from i := 1 until i > partial_system_objects loop
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);

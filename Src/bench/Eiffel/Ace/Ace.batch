@@ -4,6 +4,10 @@ root
 
 	es: "make"
 
+default
+
+	--debug ("ACTIVITY")
+
 cluster
 
 	-- EiffelBase
@@ -135,6 +139,7 @@ cluster
 -- INTERFACE CLUSTERS
 
 		interface_shared:	"$BENCH/Eiffel/interface/shared";
+		interface_gr:	"$BENCH/Eiffel/interface/graphical/preference_tool";
 
 	-- tty interface
 

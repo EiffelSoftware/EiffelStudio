@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Action sequence for docking events."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

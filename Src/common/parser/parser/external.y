@@ -352,6 +352,11 @@ File_identifier:
 		{
 			$$ := new_double_quote_id_as (token_buffer)
 		}
+	|	TE_DQUOTE TE_INCLUDE_ID TE_DQUOTE
+		{
+			$$ := new_double_quote_id_as (token_buffer)
+		}
+
 	|	TE_LT TE_ID TE_GT
 		{
 			$$ := new_system_id_as (token_buffer)

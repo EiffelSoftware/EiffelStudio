@@ -80,19 +80,19 @@ feature -- Access
 			if item_parent_imp /= Void then
 				Result := item_parent_imp
 			else
-			from
-				c_parent := c_object
-			until
-				Result /= Void or c_parent = Default_pointer
-			loop
-				c_parent := C.gtk_widget_struct_parent (c_parent)
-				if c_parent /= Default_pointer then
-					Result_imp ?= eif_object_from_c (c_parent)
-					if Result_imp /= Void then
-						Result := Result_imp
+				from
+					c_parent := c_object
+				until
+					Result /= Void or c_parent = Default_pointer
+				loop
+					c_parent := C.gtk_widget_struct_parent (c_parent)
+					if c_parent /= Default_pointer then
+						Result_imp ?= eif_object_from_c (c_parent)
+						if Result_imp /= Void then
+							Result := Result_imp
+						end
 					end
 				end
-			end
 			end
 		end
 
@@ -141,6 +141,9 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/19 20:42:39  oconnor
+--| formatting
+--|
 --| Revision 1.26  2000/04/07 22:35:53  brendel
 --| Removed EV_SIMPLE_ITEM_IMP from inheritance.
 --|

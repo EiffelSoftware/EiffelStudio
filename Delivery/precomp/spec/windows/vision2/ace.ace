@@ -27,7 +27,7 @@ default
 	exception_trace(no)
 	inlining(no)
 	multithreaded(no)
-	precompiled("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
+--	precompiled("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster
 	all base:		"$ISE_EIFFEL\library\base"

@@ -45,14 +45,11 @@ feature -- Execution
 			start_pos, end_pos: INTEGER;
 			file: RAW_FILE;
 			f_ast: FEATURE_AS_B;
-			source_feat: FEATURE_I;
-			s_table: SELECT_TABLE;
 			rout_as: ROUTINE_AS;
-			rout_id_set: ROUT_ID_SET;
 			comment: EIFFEL_COMMENTS;
-			nbr, i, rout_id: INTEGER;
 			written_in_class: CLASS_C;
 			c_comments: CLASS_COMMENTS;
+			source_feat: FEATURE_I;
 			target_feat: FEATURE_I;
 			f_table: FEATURE_TABLE
 		do
@@ -79,23 +76,13 @@ feature -- Execution
 						-- feature table of written_in_class
 						-- (the evaluation of args and result in the 
 						-- written_in class of feature_).
-					s_table := f_table.origin_table;
-					rout_id_set := target_feat.rout_id_set;
-					nbr := rout_id_set.count;
-					from
-						i := 1
-					until
-						i > nbr or else source_feat /= Void
-					loop
-							-- Find until routine is found.
-						rout_id := rout_id_set.item (1);
-						if rout_id < 0 then
-							rout_id := - rout_id
-						end;
-						source_feat := s_table.item (rout_id);
-						i := i + 1;
-					end;
+						-- The feature name of the ast structure where
+						-- it was defined can be used to retrieve
+						-- the source_feat.
+					source_feat := written_in_class.feature_named 
+							(f_ast.feature_names.first.internal_name)			
 					if source_feat = Void then
+						-- Shouldn't happen - but just in case
 						source_feat := target_feat
 					end
 				else

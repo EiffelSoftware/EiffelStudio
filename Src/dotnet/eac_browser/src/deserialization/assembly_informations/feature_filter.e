@@ -12,7 +12,7 @@ inherit
 
 	TAG_FLAGS
 
-creation
+create
 	make
 	
 feature -- Initialization

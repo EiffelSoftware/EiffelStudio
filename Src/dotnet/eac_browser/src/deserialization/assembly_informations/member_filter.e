@@ -9,7 +9,7 @@ inherit
 			on_end_tag
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
 
 case $CONFIG in
 '')
@@ -40,6 +40,7 @@ CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
+JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
 LD = ld
 LINT = lint
 MAKE = make
@@ -63,7 +64,7 @@ USRINC = $usrinc
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -89,7 +90,6 @@ LIB_MTIPC_ARCH = $(LIB_SHARED)/$(LIB_MTIPCNAME)
 
 DPFLAGS = -I$(TOP) -I$(LIB_SHARED) -I$(LIB_RUNTIME) -I$(LIB_IDRS) -I$(LIB_RUNTIME)/include
 CFLAGS = $(DPFLAGS) -DWORKBENCH
-LDFLAGS = $(LIB_SHARED)/$(LIB_IPCNAME)
 
 # Files used to build the application
 LSRC = app_listen.c app_proto.c app_server.c
@@ -139,7 +139,7 @@ local_realclean::
 
 network.o: $(OBJ)
 	$(RM) $@
-	$(LD) $(JLKFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH) $(LIB_IDRS_ARCH)
+	$(LD) $(JLDFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH) $(LIB_IDRS_ARCH)
 
 $(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
 	@echo "Checking "$(LIB_MTIPCNAME)" in "$(LIB_SHARED)"..."
@@ -162,7 +162,7 @@ local_realclean::
 
 MTnetwork.o: $(MT_OBJ)
 	$(RM) $@
-	$(LD) $(JLKFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH) $(LIB_MTIDRS_ARCH)
+	$(LD) $(JLDFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH) $(LIB_MTIDRS_ARCH)
 
 depend:: ../../mkdep
 

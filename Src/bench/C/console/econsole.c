@@ -34,7 +34,7 @@ rt_private EIF_MUTEX_TYPE *eif_exception_trace_mutex = (EIF_MUTEX_TYPE *) 0;
 rt_private void eif_show_console(void);					/* Show the DOS console if needed */
 rt_private void safe_readconsole (char **buffer, DWORD *size);	/* Read console entry and remove all nasty characters such as KEY_CR and KEY_LF */
 
-rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped); /* Call ReadConsole, if no success call ReadFile */
+rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPVOID lpOverlapped); /* Call ReadConsole, if no success call ReadFile */
 
 rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpOverlapped); /* Call WriteConsole and if it does not succeed call WriteFile */
 
@@ -474,19 +474,19 @@ rt_private void safe_readconsole (char **buffer, DWORD *size)
 	}
 }
 
-rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)
+rt_private void readconsole (HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPVOID lpOverlapped)
 	/* Call ReadConsole and if it does not succeed call ReadFile */
 {
 	if (!ReadConsole(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped))
-		if (!ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, lpOverlapped))
+		if (!ReadFile(hFile, lpBuffer, nNumberOfBytesToRead, lpNumberOfBytesRead, (LPOVERLAPPED) lpOverlapped))
 			eio();
 }
 
-rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPOVERLAPPED lpOverlapped)
+rt_private void writeconsole(HANDLE hConsoleOutput, CONST VOID *lpBuffer, DWORD nNumberOfCharsToWrite, LPDWORD lpNumberOfCharsWritten, LPVOID lpOverlapped)
 	/* Call WriteConsole and if it does not succeed call WriteFile */
 {
 	if (!WriteConsole(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, lpOverlapped))
-		if (!WriteFile(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, lpOverlapped))
+		if (!WriteFile(hConsoleOutput, lpBuffer, nNumberOfCharsToWrite, lpNumberOfCharsWritten, (LPOVERLAPPED) lpOverlapped))
 			eio ();
 }
  

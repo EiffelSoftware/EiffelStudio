@@ -36,5 +36,8 @@ clean:
 	$(RM) main.obj 
 	$(RM) core 
 	$(RM) cecil.epr
+	$(RM) cecil.rc
+	$(RM) cecil.melted
+	$(RM) cecil.exe
 	$(DELDIR) EIFGEN
 	

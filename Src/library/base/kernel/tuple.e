@@ -27,7 +27,7 @@ feature -- Creation
 feature -- Type queries
 
 	is_boolean_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a BOOLEAN?
+			-- Is item at index `idx' a BOOLEAN?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -35,7 +35,7 @@ feature -- Type queries
 		end
 
 	is_character_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a CHARACTER?
+			-- Is item at index `idx' a CHARACTER?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -43,7 +43,7 @@ feature -- Type queries
 		end
 
 	is_double_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a DOUBLE?
+			-- Is item at index `idx' a DOUBLE?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -51,7 +51,7 @@ feature -- Type queries
 		end
 
 	is_integer_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' an INTEGER?
+			-- Is item at index `idx' an INTEGER?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -59,7 +59,7 @@ feature -- Type queries
 		end
 
 	is_pointer_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a POINTER?
+			-- Is item at index `idx' a POINTER?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -67,7 +67,7 @@ feature -- Type queries
 		end
 
 	is_real_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a REAL?
+			-- Is item at index `idx' a REAL?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -75,7 +75,7 @@ feature -- Type queries
 		end
 
 	is_reference_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a REFERENCE?
+			-- Is item at index `idx' a REFERENCE?
 		require
 			valid_index: valid_index (idx)
 		do
@@ -83,7 +83,7 @@ feature -- Type queries
 		end
 
 	is_numeric_item (idx: INTEGER): BOOLEAN is
-		-- Is item at index `idx' a number?
+			-- Is item at index `idx' a number?
 		require
 			valid_index: valid_index (idx)
 		local
@@ -96,7 +96,7 @@ feature -- Type queries
 		end
 
 	is_uniform: BOOLEAN is
-		-- Are all items of the same basic type or all of reference type?
+			-- Are all items of the same basic type or all of reference type?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, '?')
@@ -108,7 +108,7 @@ feature -- Type queries
 		end
 
 	is_uniform_boolean: BOOLEAN is
-		-- Are all items of type BOOLEAN?
+			-- Are all items of type BOOLEAN?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'b')
@@ -120,7 +120,7 @@ feature -- Type queries
 		end
 
 	is_uniform_character: BOOLEAN is
-		-- Are all items of type CHARACTER?
+			-- Are all items of type CHARACTER?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'c')
@@ -132,7 +132,7 @@ feature -- Type queries
 		end
 
 	is_uniform_double: BOOLEAN is
-		-- Are all items of type DOUBLE?
+			-- Are all items of type DOUBLE?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'd')
@@ -144,7 +144,7 @@ feature -- Type queries
 		end
 
 	is_uniform_integer: BOOLEAN is
-		-- Are all items of type INTEGER?
+			-- Are all items of type INTEGER?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'i')
@@ -156,7 +156,7 @@ feature -- Type queries
 		end
 
 	is_uniform_pointer: BOOLEAN is
-		-- Are all items of type POINTER?
+			-- Are all items of type POINTER?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'p')
@@ -168,7 +168,7 @@ feature -- Type queries
 		end
 
 	is_uniform_real: BOOLEAN is
-		-- Are all items of type REAL?
+			-- Are all items of type REAL?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'f')
@@ -180,7 +180,7 @@ feature -- Type queries
 		end
 
 	is_uniform_reference: BOOLEAN is
-		-- Are all items of reference type?
+			-- Are all items of reference type?
 		do
 			if count > 0 then
 				Result := eif_gen_is_uniform ($Current, 'r')
@@ -194,7 +194,7 @@ feature -- Type queries
 feature -- Type conversion queries
 
 	convertible_to_double: BOOLEAN is
-		-- Is current convertible to an array of doubles?
+			-- Is current convertible to an array of doubles?
 		local
 			i, cnt: INTEGER
 			tcode: CHARACTER
@@ -217,7 +217,7 @@ feature -- Type conversion queries
 		end
 
 	convertible_to_real: BOOLEAN is
-		-- Is current convertible to an array of reals?
+			-- Is current convertible to an array of reals?
 		local
 			i, cnt: INTEGER
 			tcode: CHARACTER
@@ -240,7 +240,7 @@ feature -- Type conversion queries
 feature -- Access
 
 	boolean_item (idx: INTEGER): BOOLEAN is
-		-- Boolean item at index `idx'.
+			-- Boolean item at index `idx'.
 		require
 			valid_index: valid_index (idx);
 			is_boolean: is_boolean_item (idx)
@@ -254,7 +254,7 @@ feature -- Access
 		end
 
 	character_item (idx: INTEGER): CHARACTER is
-		-- Character item at index `idx'.
+			-- Character item at index `idx'.
 		require
 			valid_index: valid_index (idx);
 			is_character: is_character_item (idx)
@@ -268,7 +268,7 @@ feature -- Access
 		end
 
 	double_item (idx: INTEGER): DOUBLE is
-		-- Double item at index `idx'.
+			-- Double item at index `idx'.
 		require
 			valid_index: valid_index (idx);
 			is_numeric: is_numeric_item (idx)
@@ -294,7 +294,7 @@ feature -- Access
 		end
 
 	integer_item (idx: INTEGER): INTEGER is
-		-- Integer item at index `idx'.
+			-- Integer item at index `idx'.
 		require
 			valid_index: valid_index (idx);
 			is_integer: is_integer_item (idx)
@@ -308,7 +308,7 @@ feature -- Access
 		end
 
 	pointer_item (idx: INTEGER): POINTER is
-		-- Pointer item at index `idx'.
+			-- Pointer item at index `idx'.
 		require
 			valid_index: valid_index (idx);
 			is_pointer: is_pointer_item (idx)
@@ -322,7 +322,7 @@ feature -- Access
 		end
 
 	real_item (idx: INTEGER): REAL is
-		-- real item at index `idx'.
+			-- real item at index `idx'.
 		require
 			valid_index: valid_index (idx);
 			is_real_or_integer: is_real_item (idx) or else is_integer_item (idx)
@@ -351,7 +351,7 @@ feature -- Access
 feature -- Conversion
 
 	arrayed: ARRAY [ANY] is
-		-- Items of Current as array
+			-- Items of Current as array
 		local
 			i, cnt: INTEGER
 		do
@@ -372,7 +372,7 @@ feature -- Conversion
 		end
 
 	boolean_arrayed: ARRAY [BOOLEAN] is
-		-- Items of Current as array
+			-- Items of Current as array
 		require
 			is_uniform_boolean: is_uniform_boolean
 		local
@@ -395,7 +395,7 @@ feature -- Conversion
 		end
 
 	character_arrayed: ARRAY [CHARACTER] is
-		-- Items of Current as array
+			-- Items of Current as array
 		require
 			is_uniform_character: is_uniform_character
 		local
@@ -418,7 +418,7 @@ feature -- Conversion
 		end
 
 	double_arrayed: ARRAY [DOUBLE] is
-		-- Items of Current as array
+			-- Items of Current as array
 		require
 			convertible: convertible_to_double
 		local
@@ -441,7 +441,7 @@ feature -- Conversion
 		end
 
 	integer_arrayed: ARRAY [INTEGER] is
-		-- Items of Current as array
+			-- Items of Current as array
 		require
 			is_uniform_integer: is_uniform_integer
 		local
@@ -464,7 +464,7 @@ feature -- Conversion
 		end
 
 	pointer_arrayed: ARRAY [POINTER] is
-		-- Items of Current as array
+			-- Items of Current as array
 		require
 			is_uniform_pointer: is_uniform_pointer
 		local
@@ -487,7 +487,7 @@ feature -- Conversion
 		end
 
 	real_arrayed: ARRAY [REAL] is
-		-- Items of Current as array
+			-- Items of Current as array
 		require
 			convertible: convertible_to_real
 		local
@@ -510,9 +510,9 @@ feature -- Conversion
 		end
 
 	string_arrayed: ARRAY [STRING] is
-		-- Items of Current as array
-		-- NOTE: Items with a type not cconforming to
-		--       type STRING are set to Void.
+			-- Items of Current as array
+			-- NOTE: Items with a type not cconforming to
+			--       type STRING are set to Void.
 		local
 			i, cnt: INTEGER
 			s: STRING
@@ -536,8 +536,8 @@ feature -- Conversion
 feature {ROUTINE}
 
 	arg_item_code (idx: INTEGER): CHARACTER is
-		-- Type code of item at `index'. Used for argument
-		-- argument processing in ROUTINE
+			-- Type code of item at `index'. Used for
+			-- argument processing in ROUTINE
 		require
 			valid_index: valid_index (idx)
 		do
@@ -547,19 +547,19 @@ feature {ROUTINE}
 feature {NONE} -- Implementation
 
 	eif_gen_is_uniform (obj: POINTER; code: CHARACTER): BOOLEAN is
-		-- Are all items in `obj' of type `code'?
+			-- Are all items in `obj' of type `code'?
 		external
 			"C | %"eif_gen_conf.h%""
 		end
 
 	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
-		-- Code for generic parameter `pos' in `obj'.
+			-- Code for generic parameter `pos' in `obj'.
 		external
 			"C | %"eif_gen_conf.h%""
 		end
 
 	eif_gen_count (obj: POINTER): INTEGER is
-		-- Number of generic parameters of `obj'.
+			-- Number of generic parameters of `obj'.
 		external
 			"C | %"eif_gen_conf.h%""
 		end

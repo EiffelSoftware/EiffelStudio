@@ -10,6 +10,29 @@ deferred class
 inherit
 	EV_CONTAINER_I
 
+feature -- Access
+
+	text: STRING is
+			-- Current text of the frame.
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Make `txt' the new text of the frame.
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		deferred
+		ensure
+			text_set: text.is_equal (txt)
+		end
+
 end -- class EV_FRAME_I
 
 --|----------------------------------------------------------------

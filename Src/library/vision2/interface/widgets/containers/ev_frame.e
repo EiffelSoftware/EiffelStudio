@@ -39,6 +39,31 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Access
+
+	text: STRING is
+			-- Current text of the frame.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature -- Element change
+
+	set_text (txt: STRING) is
+			-- Make `txt' the new text of the frame.
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		do
+			implementation.set_text (txt)
+		ensure
+			text_set: text.is_equal (txt)
+		end
+
 feature {NONE} -- Implementation
 
 	implementation: EV_FRAME_I

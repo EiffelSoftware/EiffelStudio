@@ -164,17 +164,13 @@ feature {NONE} -- Implementation
 
 	header: STRING is
 			-- Header displayed when current formatter is selected.
-		local
-			class_name: STRING
 		do
 			if associated_feature /= Void then
 				Result := clone (capital_command_name)
 				Result.append (Interface_names.l_Of_feature)
 				Result.append (associated_feature.name)
 				Result.append (Interface_names.l_Of_class)
-				class_name := clone (associated_feature.associated_class.name)
-				class_name.to_upper
-				Result.append (class_name)
+				Result.append (associated_feature.associated_class.name_in_upper)
 			else
 				Result := Interface_names.l_No_feature
 			end

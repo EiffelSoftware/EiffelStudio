@@ -547,15 +547,13 @@ feature {NONE} -- Implementation
 	rows_height: INTEGER
 		-- Value used to store row height if list isn't yet created.
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_MULTI_COLUMN_LIST
-
-
-
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	list_widget: POINTER
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_MULTI_COLUMN_LIST
 
 end -- class EV_MULTI_COLUMN_LIST_IMP
 
@@ -580,6 +578,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/09 01:17:59  king
+--| Corrected spacing of interface attribute in class
+--|
 --| Revision 1.38  2000/03/06 20:12:29  king
 --| Made compatible with new action sequence
 --|

@@ -1,5 +1,5 @@
 indexing
-	description	: "Template for the last state of a wizard for EiffelBench"
+	description	: "Template for the last state of a wizard"
 	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"

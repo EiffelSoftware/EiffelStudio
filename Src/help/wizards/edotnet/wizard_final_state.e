@@ -7,12 +7,22 @@ class
 inherit
 	BENCH_WIZARD_FINAL_STATE_WINDOW
 		redefine
-			proceed_with_current_info
+			proceed_with_current_info,
+			make
 		end
 	
 create
 	make
 
+feature {NONE} -- Implementation
+
+	make (an_info: like wizard_information) is
+			-- Set `help_filename' with `h_filename'.
+		do
+			set_help_filename (h_filename)
+			Precursor {BENCH_WIZARD_FINAL_STATE_WINDOW} (an_info) 
+		end
+		
 feature -- Basic Operations
 
 	proceed_with_current_info is
@@ -52,8 +62,6 @@ feature -- Access
 			if not wizard_information.selected_assemblies.is_empty then
 				message.set_text (Common_message +
 					"External assemblies: %N" + selected_assemblies_string + "%N%
-					%%N%
-					%%N%				
 					%%N%	
 					%Click Finish to generate" + word + "this project")
 			else
@@ -66,6 +74,9 @@ feature -- Access
 		do
 		end
 
+	h_filename: STRING is "reference\40_settings_summary\index.html"
+			-- Path to HTML help file
+			
 feature {NONE} -- Implementation
 
 	pixmap_icon_location: FILE_NAME is
@@ -85,19 +96,15 @@ feature {NONE} -- Implementation
 			an_assembly: ASSEMBLY_INFORMATION
 		do
 			selected_assemblies := wizard_information.selected_assemblies
-			if selected_assemblies.count > 0 then
-				from
-					create Result.make (1024)
-					selected_assemblies.start
-				until
-					selected_assemblies.after
-				loop
-					an_assembly := selected_assemblies.item
-					Result.append ("%T" + an_assembly.name + ", " + an_assembly.version + "%N")
-					selected_assemblies.forth
-				end
-			else
-				Result.append ("%TOnly kernel assembly (in `base.net')")
+			from
+				create Result.make (1024)
+				selected_assemblies.start
+			until
+				selected_assemblies.after
+			loop
+				an_assembly := selected_assemblies.item
+				Result.append ("%T" + an_assembly.name + ", " + an_assembly.version + "%N")
+				selected_assemblies.forth
 			end
 		ensure
 			non_void_text: Result /= Void
@@ -121,7 +128,7 @@ feature {NONE} -- Implementation
 					%Project name: %T" + wizard_information.project_name + "%N%
 					%Location:     %T" + wizard_information.project_location + "%N%N%
 					%Root class name: %T" + wizard_information.root_class_name + "%N%
-					%Creation routine name: %T" + wizard_information.creation_routine_name + "%N%N%N"	
+					%Creation routine name: %T" + wizard_information.creation_routine_name + "%N%N"	
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty

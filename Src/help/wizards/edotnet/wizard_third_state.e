@@ -9,7 +9,8 @@ inherit
 		redefine
 			update_state_information,
 			proceed_with_current_info,
-			build
+			build,
+			make
 		end
 
 	WEL_PROCESS_CREATION_CONSTANTS
@@ -30,6 +31,20 @@ inherit
 create
 	make
 
+feature {NONE} -- Implementation
+
+	make (an_info: like wizard_information) is
+			-- Set `help_filename' with `h_filename.
+		do
+			set_help_filename (h_filename)
+			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info) 
+		end
+		
+feature -- Access
+
+	h_filename: STRING is "reference\30_assembly_selection\index.html"
+			-- Path to HTML help file
+			
 feature -- Basic Operation
 
 	build is 
@@ -53,14 +68,14 @@ feature -- Basic Operation
 			create references_to_add
 			references_to_add.set_column_titles (<< "Name", "Version", "Culture", "Public Key" >>)
 			references_to_add.set_column_widths (<<135, 70, 70, 122>>)
-			references_to_add.set_minimum_height (120)
+			references_to_add.set_minimum_height (110)
 			references_to_add.select_actions.extend (agent update_buttons_state)
 			references_to_add.deselect_actions.extend (agent update_buttons_state)
 			
 			create added_references
 			added_references.set_column_titles (<< "Name", "Version", "Culture", "Public Key" >>)
 			added_references.set_column_widths (<<135, 70, 70, 122>>)
-			added_references.set_minimum_height (120)
+			added_references.set_minimum_height (80)
 			added_references.select_actions.extend (agent update_buttons_state)
 			added_references.deselect_actions.extend (agent update_buttons_state)
 			fill_lists

@@ -136,7 +136,7 @@ feature -- Basic operation
 				a_culture := imported_assemblies.array_item (i + 2)
 				a_public_key := imported_assemblies.array_item (i + 3)
 				a_path := imported_assemblies.array_item (i + 4)
-				if a_path.substring_index ("$ISE_EIFFEL", 1) > 0 then
+				if a_path /= Void and then not a_path.is_empty and then a_path.substring_index ("$ISE_EIFFEL", 1) > 0 then
 					a_path.replace_substring_all ("$ISE_EIFFEL", Eiffel_installation_dir_name)
 				end
 				create an_assembly_info.make_from_info (a_name, a_version, a_culture, a_public_key, a_path)

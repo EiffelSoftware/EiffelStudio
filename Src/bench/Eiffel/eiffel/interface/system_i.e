@@ -1292,6 +1292,12 @@ end;
 			write_int (file_pointer, type_id_counter.value);
 				-- Write the number of classes now available
 			write_int (file_pointer, class_counter.value);
+				-- Write the profiler status
+			if Lace.ace_options.has_profile then
+				write_int (file_pointer, 1)
+			else
+				write_int (file_pointer, 0)
+			end
 				-- Write the new `dle_level' 
 				-- (`dle_frozen_level' has the same value).
 			write_int (file_pointer, dle_level);
@@ -2995,6 +3001,14 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
+
+				-- Do we need to collect GC data for the profiler?
+			Plug_file.putstring ("EIF_BOOLEAN eif_profiler_on = (EIF_BOOLEAN) ");
+			if Lace.ace_options.has_profile then
+				Plug_file.putstring ("1;%N")
+			else
+				Plug_file.putstring ("0;%N")
+			end
 
 			if final_mode then
 

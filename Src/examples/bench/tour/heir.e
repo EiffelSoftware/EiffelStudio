@@ -27,7 +27,7 @@ feature
 
 	an_attribute: STRING is 
 		do 
-			!! Result.make (0);	
+			create Result.make (0);	
 			Result.append ("Showing an attribute of class HEIR");
 		end;
 

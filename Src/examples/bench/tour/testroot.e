@@ -1,4 +1,4 @@
-class TESTROOT creation
+class TESTROOT create
 
 	make
 
@@ -9,8 +9,8 @@ feature
 	make is
 		do
 			display_demonstration_message
-			!HEIR! o1
-			!! o2
+			create {HEIR} o1
+			create o2
 			o1.display
 			o2.display
 		end

@@ -21,11 +21,9 @@ feature -- Event handling
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			--real_connect_signal_to_actions (button_widget, Gtk_signal_clicked, Result, Void)
-			real_connect_signal_to_actions (button_widget, "clicked", Result, Void)
+			--real_connect_signal_to_actions (visual_widget, Gtk_signal_clicked, Result, Void)
+			real_connect_signal_to_actions (visual_widget, "clicked", Result, Void)
 		end
-	
-	button_widget: POINTER is deferred end
 
 --	Gtk_signal_clicked: INTEGER is
 --		once

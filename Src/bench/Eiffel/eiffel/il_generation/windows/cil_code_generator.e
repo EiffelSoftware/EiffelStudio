@@ -1297,8 +1297,34 @@ feature {NONE} -- SYSTEM_OBJECT features
 		require
 			class_type_not_void: class_type /= Void
 			not_external_class_type: not class_type.is_external
+		local
+			l_meth_token: INTEGER
+			l_sig: like method_sig
+			l_class_token: INTEGER
+			l_meth_attr: INTEGER
 		do
-			-- FIXME: Manu 07/04/2004
+			l_class_token := actual_class_type_token (class_type.implementation_id)
+			l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.public |
+				feature {MD_METHOD_ATTRIBUTES}.hide_by_signature |
+				feature {MD_METHOD_ATTRIBUTES}.virtual
+			
+			l_sig := method_sig
+			l_sig.reset
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current)
+			l_sig.set_parameter_count (1)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_boolean, 0)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_object, 0)
+			
+			uni_string.set_string ("Equals")
+			l_meth_token := md_emit.define_method (uni_string, l_class_token,
+				l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.managed)
+
+			start_new_body (l_meth_token)
+			generate_current
+			generate_argument (1)
+			internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
+			generate_return (True)
+			method_writer.write_current_body
 		end
 
 	define_finalize_routine (class_type: CLASS_TYPE) is
@@ -1330,7 +1356,8 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
 					l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.managed)
 				
-				l_feat := system.disposable_class.compiled_class.feature_table.item_id (feature {PREDEFINED_NAMES}.dispose_name_id)
+				l_feat := system.disposable_class.compiled_class.feature_table.
+					item_id (feature {PREDEFINED_NAMES}.dispose_name_id)
 				l_code ?= l_feat.access (void_c_type)
 				check
 					l_code_not_void: l_code /= Void
@@ -1348,8 +1375,38 @@ feature {NONE} -- SYSTEM_OBJECT features
 		require
 			class_type_not_void: class_type /= Void
 			not_external_class_type: not class_type.is_external
+		local
+			l_hashable_class_id: INTEGER
+			l_meth_token: INTEGER
+			l_sig: like method_sig
+			l_class_token: INTEGER
+			l_meth_attr: INTEGER
 		do
-			-- FIXME: Manu 07/04/2004
+			l_hashable_class_id := hashable_class_id
+			if l_hashable_class_id > 0 then
+				if class_type.associated_class.feature_table.origin_table.has (hash_code_rout_id) then
+					l_class_token := actual_class_type_token (class_type.implementation_id)
+					l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.public |
+						feature {MD_METHOD_ATTRIBUTES}.hide_by_signature |
+						feature {MD_METHOD_ATTRIBUTES}.virtual
+					
+					l_sig := method_sig
+					l_sig.reset
+					l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current)
+					l_sig.set_parameter_count (0)
+					l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
+					
+					uni_string.set_string ("GetHashCode")
+					l_meth_token := md_emit.define_method (uni_string, l_class_token,
+						l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.managed)
+		
+					start_new_body (l_meth_token)
+					generate_current
+					internal_generate_feature_access (hashable_type.static_type_id, hash_code_feat_id, 0, True, True)
+					generate_return (True)
+					method_writer.write_current_body
+				end
+			end
 		end
 
 	define_to_string_routine (class_type: CLASS_TYPE) is
@@ -1357,8 +1414,33 @@ feature {NONE} -- SYSTEM_OBJECT features
 		require
 			class_type_not_void: class_type /= Void
 			not_external_class_type: not class_type.is_external
+		local
+			l_meth_token: INTEGER
+			l_sig: like method_sig
+			l_class_token: INTEGER
+			l_meth_attr: INTEGER
 		do
-			-- FIXME: Manu 07/04/2004
+			l_class_token := actual_class_type_token (class_type.implementation_id)
+			l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.public |
+				feature {MD_METHOD_ATTRIBUTES}.hide_by_signature |
+				feature {MD_METHOD_ATTRIBUTES}.virtual
+			
+			l_sig := method_sig
+			l_sig.reset
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current)
+			l_sig.set_parameter_count (0)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
+			
+			uni_string.set_string ("ToString")
+			l_meth_token := md_emit.define_method (uni_string, l_class_token,
+				l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.managed)
+
+			start_new_body (l_meth_token)
+			generate_current
+			internal_generate_feature_access (any_type_id, out_feat_id, 0, True, True)
+			internal_generate_feature_access (string_type_id, to_cil_feat_id, 0, True, True)
+			generate_return (True)
+			method_writer.write_current_body
 		end
 
 feature {NONE} -- Class info
@@ -5099,6 +5181,88 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 			to_string_rout_id_positive: Result > 0
 		end
 
+	out_feat_id: INTEGER is
+			-- Feature ID of `out' of ANY.
+		once
+			Result := system.any_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.out_name_id).feature_id
+		ensure
+			out_feat_id_positive: Result > 0
+		end
+		
+	to_cil_feat_id: INTEGER is
+			-- Feature ID of `to_cil' of STRING.
+		once
+			Result := system.string_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.to_cil_name_id).feature_id
+		ensure
+			to_cil_feat_id_positive: Result > 0
+		end
+
+	hashable_class_id: INTEGER is
+			-- Class ID of `HASHABLE' if present, `0' otherwise.
+		local
+			l_hash_classes: LIST [CLASS_I]
+			l_hash_class: CLASS_I
+		once
+			l_hash_classes := universe.classes_with_name ("HASHABLE")
+			if l_hash_classes.count = 1 then
+				l_hash_class := l_hash_classes.first
+				if l_hash_class.is_compiled then
+					Result := l_hash_class.compiled_class.class_id
+				end
+			end
+		ensure
+			hashable_class_id_non_negative: Result >= 0
+		end
+
+	hashable_type: CL_TYPE_I is
+			-- Type `HASHABLE', Void otherwise.
+		local
+			l_hash_classes: LIST [CLASS_I]
+			l_hash_class: CLASS_I
+		once
+			if hashable_class_id > 0 then
+				create Result.make (hashable_class_id)
+			end
+		end
+		
+	hash_code_rout_id: INTEGER is
+			-- Routine ID of `hash_code' from HASHABLE if found,
+			-- otherwise `0'.
+		local
+			l_hash_class: CLASS_C
+		once
+			if hashable_class_id > 0 then
+				l_hash_class := system.class_of_id (hashable_class_id)
+				check
+					has_feature_table: l_hash_class.has_feature_table
+				end
+				Result := l_hash_class.feature_table.
+					item_id (feature {PREDEFINED_NAMES}.hash_code_name_id).rout_id_set.first
+			end
+		ensure
+			hash_code_rout_id_non_negative: Result >= 0
+		end
+
+	hash_code_feat_id: INTEGER is
+			-- Feature ID of `hash_code' from HASHABLE if found,
+			-- otherwise `0'.
+		local
+			l_hash_class: CLASS_C
+		once
+			if hashable_class_id > 0 then
+				l_hash_class := system.class_of_id (hashable_class_id)
+				check
+					has_feature_table: l_hash_class.has_feature_table
+				end
+				Result := l_hash_class.feature_table.
+					item_id (feature {PREDEFINED_NAMES}.hash_code_name_id).feature_id
+			end
+		ensure
+			hash_code_feat_id_non_negative: Result >= 0
+		end
+		
 feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is

@@ -50,7 +50,7 @@ feature -- Access
 		end
 
 	assembly_path: STRING is
-			-- Assembly public key token
+			-- Assembly path
 		do
 			Result := ccom_assembly_path (initializer)
 		end
@@ -61,10 +61,22 @@ feature -- Access
 			Result := ccom_is_local (initializer)
 		end
 
+	is_signed: BOOLEAN is
+			-- Is the assembly local
+		do
+			Result := ccom_is_signed (initializer)
+		end
+
 	assembly_identifier: STRING is
 			-- Assembly identifier.
 		do
 			Result := ccom_assembly_identifier (initializer)
+		end
+
+	assembly_prefix: STRING is
+			-- Prefix.
+		do
+			Result := ccom_assembly_prefix (initializer)
 		end
 
 feature -- Status Report
@@ -91,6 +103,22 @@ feature -- Status Report
 			-- Last source of exception.
 		do
 			Result := ccom_last_source_of_exception (initializer)
+		end
+
+feature -- Basic Operations
+
+	set_assembly_path (return_value: STRING) is
+			-- Assembly path
+			-- `return_value' [in].  
+		do
+			ccom_set_assembly_path (initializer, return_value)
+		end
+
+	set_assembly_prefix (return_value: STRING) is
+			-- Prefix.
+			-- `return_value' [in].  
+		do
+			ccom_set_assembly_prefix (initializer, return_value)
 		end
 
 feature {NONE}  -- Implementation
@@ -128,12 +156,24 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_assembly_path (cpp_obj: POINTER): STRING is
-			-- Assembly public key token
+			-- Assembly path
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
+	ccom_set_assembly_path (cpp_obj: POINTER; return_value: STRING) is
+			-- Assembly path
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
 	ccom_is_local (cpp_obj: POINTER): BOOLEAN is
+			-- Is the assembly local
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_is_signed (cpp_obj: POINTER): BOOLEAN is
 			-- Is the assembly local
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
@@ -143,6 +183,18 @@ feature {NONE}  -- Externals
 			-- Assembly identifier.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_assembly_prefix (cpp_obj: POINTER): STRING is
+			-- Prefix.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_assembly_prefix (cpp_obj: POINTER; return_value: STRING) is
+			-- Prefix.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelAssemblyProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_delete_ieiffel_assembly_properties_impl_proxy (a_pointer: POINTER) is

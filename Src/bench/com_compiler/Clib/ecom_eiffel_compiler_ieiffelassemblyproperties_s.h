@@ -64,9 +64,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Assembly public key token
+	Assembly path
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP assembly_path(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Assembly path
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_assembly_path(  /* [in] */ BSTR return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -76,9 +82,27 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Is the assembly local
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP is_signed(  /* [out, retval] */ VARIANT_BOOL * a_bool ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Assembly identifier.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP assembly_identifier(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Prefix.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP assembly_prefix(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Prefix.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_assembly_prefix(  /* [in] */ BSTR return_value ) = 0;
 
 
 

@@ -37,12 +37,18 @@ feature -- Access
 		end
 
 	assembly_path: STRING is
-			-- Assembly public key token
+			-- Assembly path
 		do
 			-- Put Implementation here.
 		end
 
 	is_local: BOOLEAN is
+			-- Is the assembly local
+		do
+			-- Put Implementation here.
+		end
+
+	is_signed: BOOLEAN is
 			-- Is the assembly local
 		do
 			-- Put Implementation here.
@@ -54,7 +60,27 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	assembly_prefix: STRING is
+			-- Prefix.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
+
+	set_assembly_path (return_value: STRING) is
+			-- Assembly path
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_assembly_prefix (return_value: STRING) is
+			-- Prefix.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
 
 	create_item is
 			-- Initialize `item'

@@ -232,6 +232,18 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Project working directory.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Project working directory.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_working_directory(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Update the project Ace file according to the current settings.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP update_project_ace_file(  /* [in] */ BSTR project_ace_file_name ) = 0;

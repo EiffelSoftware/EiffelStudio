@@ -45,6 +45,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	set_assembly_path_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_assembly_path'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	is_local_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `is_local'.
 			-- Redefine in descendants if needed.
@@ -52,8 +59,29 @@ feature -- Status Report
 			Result := True
 		end
 
+	is_signed_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `is_signed'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	assembly_identifier_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `assembly_identifier'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	assembly_prefix_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `assembly_prefix'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_assembly_prefix_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_assembly_prefix'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -94,9 +122,18 @@ feature -- Basic Operations
 		end
 
 	assembly_path: STRING is
-			-- Assembly public key token
+			-- Assembly path
 		require
 			assembly_path_user_precondition: assembly_path_user_precondition
+		deferred
+
+		end
+
+	set_assembly_path (return_value: STRING) is
+			-- Assembly path
+			-- `return_value' [in].  
+		require
+			set_assembly_path_user_precondition: set_assembly_path_user_precondition (return_value)
 		deferred
 
 		end
@@ -109,10 +146,35 @@ feature -- Basic Operations
 
 		end
 
+	is_signed: BOOLEAN is
+			-- Is the assembly local
+		require
+			is_signed_user_precondition: is_signed_user_precondition
+		deferred
+
+		end
+
 	assembly_identifier: STRING is
 			-- Assembly identifier.
 		require
 			assembly_identifier_user_precondition: assembly_identifier_user_precondition
+		deferred
+
+		end
+
+	assembly_prefix: STRING is
+			-- Prefix.
+		require
+			assembly_prefix_user_precondition: assembly_prefix_user_precondition
+		deferred
+
+		end
+
+	set_assembly_prefix (return_value: STRING) is
+			-- Prefix.
+			-- `return_value' [in].  
+		require
+			set_assembly_prefix_user_precondition: set_assembly_prefix_user_precondition (return_value)
 		deferred
 
 		end

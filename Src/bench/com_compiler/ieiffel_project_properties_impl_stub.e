@@ -102,6 +102,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	working_directory: STRING is
+			-- Project working directory.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	set_system_name (return_value: STRING) is
@@ -183,6 +189,13 @@ feature -- Basic Operations
 
 	set_default_namespace (return_value: STRING) is
 			-- Default namespace.
+			-- `return_value' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	set_working_directory (return_value: STRING) is
+			-- Project working directory.
 			-- `return_value' [in].  
 		do
 			-- Put Implementation here.

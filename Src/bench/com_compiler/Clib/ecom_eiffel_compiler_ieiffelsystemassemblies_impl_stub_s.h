@@ -49,13 +49,13 @@ public:
 	/*-----------------------------------------------------------
 	Add a signed assembly to the project.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_signed_assembly(  /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey );
+	STDMETHODIMP add_signed_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey );
 
 
 	/*-----------------------------------------------------------
 	Add a unsigned (local) assembly to the project.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_unsigned_assembly(  /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_path );
+	STDMETHODIMP add_unsigned_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_path );
 
 
 	/*-----------------------------------------------------------
@@ -107,7 +107,25 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Return all of the assemblies in an enumerator
+	Is 'prefix' a valid assembly prefix
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_valid_prefix(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Has the 'prefix' already been allocated to another assembly
+	-----------------------------------------------------------*/
+	STDMETHODIMP is_prefix_allocated(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
+	Rename the assembly identifier
+	-----------------------------------------------------------*/
+	STDMETHODIMP rename_assembly(  /* [in] */ BSTR assembly_new_identifier, /* [in] */ BSTR assembly_old_identifier );
+
+
+	/*-----------------------------------------------------------
+	Returns all of the assemblies in an enumerator
 	-----------------------------------------------------------*/
 	STDMETHODIMP assemblies(  /* [out, retval] */ ecom_eiffel_compiler::IEnumAssembly * * return_value );
 

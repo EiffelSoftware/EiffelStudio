@@ -231,7 +231,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_a
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_path(  )
 
 /*-----------------------------------------------------------
-	Assembly public key token
+	Assembly path
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -262,6 +262,39 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_a
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+void ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_assembly_path(  /* [in] */ EIF_OBJECT return_value )
+
+/*-----------------------------------------------------------
+	Assembly path
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelAssemblyProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelAssemblyProperties_, (void **)&p_IEiffelAssemblyProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_return_value = 0;
+	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
+	
+	hr = p_IEiffelAssemblyProperties->set_assembly_path(tmp_return_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_return_value);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_is_local(  )
 
 /*-----------------------------------------------------------
@@ -282,6 +315,39 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_is_
 	VARIANT_BOOL ret_value = 0;
 	
 	hr = p_IEiffelAssemblyProperties->is_local( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_is_signed(  )
+
+/*-----------------------------------------------------------
+	Is the assembly local
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelAssemblyProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelAssemblyProperties_, (void **)&p_IEiffelAssemblyProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL ret_value = 0;
+	
+	hr = p_IEiffelAssemblyProperties->is_signed( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -326,6 +392,73 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_a
 	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
 	rt_ce.free_memory_bstr (ret_value);
 	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_assembly_prefix(  )
+
+/*-----------------------------------------------------------
+	Prefix.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelAssemblyProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelAssemblyProperties_, (void **)&p_IEiffelAssemblyProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR ret_value = 0;
+	
+	hr = p_IEiffelAssemblyProperties->assembly_prefix( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	rt_ce.free_memory_bstr (ret_value);
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_proxy::ccom_set_assembly_prefix(  /* [in] */ EIF_OBJECT return_value )
+
+/*-----------------------------------------------------------
+	Prefix.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelAssemblyProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelAssemblyProperties_, (void **)&p_IEiffelAssemblyProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_return_value = 0;
+	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
+	
+	hr = p_IEiffelAssemblyProperties->set_assembly_prefix(tmp_return_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_return_value);
+
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

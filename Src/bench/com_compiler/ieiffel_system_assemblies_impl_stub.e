@@ -13,7 +13,7 @@ inherit
 feature -- Access
 
 	assemblies: IENUM_ASSEMBLY_INTERFACE is
-			-- Return all of the assemblies in an enumerator
+			-- Returns all of the assemblies in an enumerator
 		do
 			-- Put Implementation here.
 		end
@@ -26,8 +26,9 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	add_signed_assembly (assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
+	add_signed_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
 			-- Add a signed assembly to the project.
+			-- `assembly_prefix' [in].  
 			-- `assembly_identifier' [in].  
 			-- `a_name' [in].  
 			-- `a_version' [in].  
@@ -37,8 +38,9 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	add_unsigned_assembly (assembly_identifier: STRING; a_path: STRING) is
+	add_unsigned_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING) is
 			-- Add a unsigned (local) assembly to the project.
+			-- `assembly_prefix' [in].  
 			-- `assembly_identifier' [in].  
 			-- `a_path' [in].  
 		do
@@ -103,6 +105,28 @@ feature -- Basic Operations
 	identifier_from_unsigned_assembly (a_path: STRING): STRING is
 			-- Retrieves the identifier for a unsigned assembly in the project
 			-- `a_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	is_valid_prefix (assembly_prefix: STRING): BOOLEAN is
+			-- Is 'prefix' a valid assembly prefix
+			-- `assembly_prefix' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	is_prefix_allocated (assembly_prefix: STRING): BOOLEAN is
+			-- Has the 'prefix' already been allocated to another assembly
+			-- `assembly_prefix' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	rename_assembly (assembly_new_identifier: STRING; assembly_old_identifier: STRING) is
+			-- Rename the assembly identifier
+			-- `assembly_new_identifier' [in].  
+			-- `assembly_old_identifier' [in].  
 		do
 			-- Put Implementation here.
 		end

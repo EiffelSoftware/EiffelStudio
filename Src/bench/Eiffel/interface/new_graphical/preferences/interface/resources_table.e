@@ -142,10 +142,17 @@ feature -- Setting
 
 feature -- Element Change
 
-	add_resource (r: RESOURCE) is
-			-- adds `r' in Current
+	put_resource (r: RESOURCE) is
+			-- adds `r' in Current.
 		do
 			put (r, r.name)
+		end
+
+	replace_resource (r: RESOURCE) is
+			-- replace resource `r.name' by `r'.
+			-- do nothing if there is no resource calles `r.name'.
+		do
+			replace (r, r.name)
 		end
 
 end -- class RESOURCES_TABLE

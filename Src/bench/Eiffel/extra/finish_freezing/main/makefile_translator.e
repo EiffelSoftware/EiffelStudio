@@ -1346,6 +1346,7 @@ feature {NONE} -- Translation
 
 -- $(RM) "$(SYSTEM_IN_DYNAMIC_LIB)"
 			read_next
+			makefile.putstring ("%T$(FILE_EXIST) $(SYSTEM_IN_DYNAMIC_LIB) ")
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 

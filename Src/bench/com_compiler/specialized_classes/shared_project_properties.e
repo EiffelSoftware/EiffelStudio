@@ -29,14 +29,8 @@ feature -- Access
 	generate_html_docs_msg: INTEGER is 0x500
 			-- generate html docs message
 			
-	compile_melt_msg: INTEGER is 0x501
-			-- melt compile system message
-
-	compile_finalize_msg: INTEGER is 0x502
-			-- finalize compile system message
-			
-	compile_precompile_msg: INTEGER is 0x503
-			-- precompile compile system message
+	compile_msg: INTEGER is 0x501
+			-- compile system message
 		
 feature -- Status Setting
 

@@ -33,23 +33,11 @@ feature {WEL_DISPATCHER}
 				end
 				html_document_generator.item.generate_docs
 				Result := 0
-			when compile_melt_msg then
+			when compile_msg then
 				check
 					non_void_compiler: compiler /= Void
 				end
-				compiler.item.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_workbench)
-				Result := 0
-			when compile_finalize_msg then
-				check
-					non_void_compiler: compiler /= Void
-				end
-				compiler.item.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_finalize)
-				Result := 0
-			when compile_precompile_msg then
-				check
-					non_void_compiler: compiler /= Void
-				end
-				compiler.item.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile)
+				compiler.item.compile (lparam)
 				Result := 0
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)
@@ -66,22 +54,10 @@ feature {HTML_DOC_GENERATOR}
 
 feature {COMPILER}
 		
-	process_compile is
+	process_compile (mode: INTEGER) is
 			-- process melt compile system message
 		do
-			cwin_post_message (item, compile_melt_msg, 0, 0)
+			cwin_post_message (item, compile_msg, 0, mode)
 		end
 		
-	process_finalize is
-			-- process finalize compile system message
-		do
-			cwin_post_message (item, compile_finalize_msg, 0, 0)
-		end
-		
-	process_precompile is
-			-- process precompile compile system message
-		do
-			cwin_post_message (item, compile_precompile_msg, 0, 0)
-		end
-
 end -- class MAIN_WINDOW

@@ -876,7 +876,7 @@ feature {COMPILER_EXPORTER} -- Element change
 						a_class.set_cluster (Current)
 						a_class.set_read_only (is_library)
 						str := class_path.to_c
-						if eif_file_has_changed ($str, a_class.date) then
+						if eif_date ($str) /= a_class.date then
 							if a_class.is_compiled then
 									-- The class has changed
 								Workbench.change_class (a_class)
@@ -1230,7 +1230,7 @@ feature {COMPILER_EXPORTER} -- Element change
 			ptr: ANY
 		do
 			ptr := path.to_c
-			Result := eif_file_has_changed ($ptr, date) or else Lace.need_directory_lookup
+			Result := date /= eif_date ($ptr) or else Lace.need_directory_lookup
 			
 --			if not Result and then not Has_smart_file_system then
 					-- New Note: this comment has been previously done for Windows OS,
@@ -1782,12 +1782,6 @@ feature {NONE} -- Externals
 
 	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.
-		external
-			"C"
-		end
-
-	eif_file_has_changed (cluster_path: POINTER; old_date: INTEGER): BOOLEAN is
-			-- Does the directory have new entries?
 		external
 			"C"
 		end

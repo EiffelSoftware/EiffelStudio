@@ -41,6 +41,7 @@ feature -- Status setting
 			info_cmd: MESSAGE_DIALOG_COMMAND
 			error_cmd: ERROR_DIALOG_COMMAND
 			question_cmd: QUESTION_DIALOG_COMMAND
+			warning_cmd: WARNING_DIALOG_COMMAND
 			arg: EV_ARGUMENT1 [EV_WIDGET]
 		do
 			!! arg.make(Current)
@@ -53,6 +54,9 @@ feature -- Status setting
 			!! button.make_with_text (main_widget, "EV_QUESTION_DIALOG")
 			!! question_cmd
 			button.add_click_command (question_cmd, arg)
+			!! button.make_with_text (main_widget, "EV_WARNING_DIALOG")
+			!! warning_cmd
+			button.add_click_command (warning_cmd, arg)
 		end
 		
 	set_values is

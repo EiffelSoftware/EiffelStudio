@@ -429,18 +429,15 @@ feature {NONE} -- Implementation
 			-- the invalid rectangle of the client area that
 			-- needs to be repainted.
 		do
-				-- Call registered onPaint actions if any
-			if expose_actions_internal /= Void then
-					-- Switch the dc from screen_dc to paint_dc.
-				display_dc := paint_dc
+				-- Switch the dc from screen_dc to paint_dc.
+			display_dc := paint_dc
 
-					-- Call actions
-				call_expose_actions (invalid_rect)
+				-- Call actions
+			call_expose_actions (invalid_rect)
 
-					-- Switch back the dc fron paint_dc to Void.
-					-- (To avoid using the DC outside paint msg)
-				display_dc := Void
-			end
+				-- Switch back the dc fron paint_dc to Void.
+				-- (To avoid using the DC outside paint msg)
+			display_dc := Void
 		end
 		
 	call_expose_actions (invalid_rect: WEL_RECT) is
@@ -455,11 +452,13 @@ feature {NONE} -- Implementation
 				paint_bitmap (invalid_rect.x, invalid_rect.y,
 					invalid_rect.width, invalid_rect.height)
 			end
-				-- Actually call the expose actions.
-			expose_actions_internal.call ([
-				invalid_rect.x, invalid_rect.y,
-				invalid_rect.width, invalid_rect.height
-				])
+			if expose_actions_internal /= Void then
+					-- Actually call the expose actions.
+				expose_actions_internal.call ([
+					invalid_rect.x, invalid_rect.y,
+					invalid_rect.width, invalid_rect.height
+					])
+			end
 		end
 		
 

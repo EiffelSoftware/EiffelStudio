@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			l_array_creation_feature_name: STRING
 			l_feature_impl: STRING
 		do
-			if not a_array_type.full_name.is_equal ("System.Object") then
+			if not a_array_type.name.is_equal ("System.Object") then
 				create l_array_creation_feature_name.make (10 + a_array_type.eiffel_name.count)
 				l_array_creation_feature_name.append ("new_array_")
 				l_array_creation_feature_name.append (a_array_type.eiffel_name.as_lower)

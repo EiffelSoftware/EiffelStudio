@@ -30,7 +30,8 @@ inherit
 			count as rows,
 			column_count as columns,
 			selected_items as wel_selected_items,
-			get_item as wel_get_item
+			get_item as wel_get_item,
+			insert_item as wel_insert_item
 		undefine
 			remove_command,
 			set_width,
@@ -99,14 +100,18 @@ feature -- Access
 			-- `selected_items' for a single selection list
 		local
 			index: INTEGER
+			interf: EV_MULTI_COLUMN_LIST_ROW
+			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 		do
 			from
+				c := ev_children
 				!! Result.make
 				index := 0
 			until
 				index = selected_count
 			loop
-				Result.extend (ev_children @ (wel_selected_items @ (index) + 1))
+				interf ?= (c @ (wel_selected_items @ (index) + 1)).interface
+				Result.extend (interf)
 				index := index + 1
 			end			
 		end
@@ -257,17 +262,20 @@ feature -- Element change
 
 	clear_items is
 			-- Clear all the items of the list.
+		local
+			c: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 		do
 			from
-				ev_children.start
+				c := ev_children
+				c.start
 			until
-				ev_children.after
+				c.after
 			loop
-				ev_children.item.remove_implementation
-				ev_children.forth
+				c.item.interface.remove_implementation
+				c.forth
 			end
 			reset_content
-			ev_children.wipe_out
+			c.wipe_out
 		end
 
 feature -- Event : command association
@@ -304,25 +312,13 @@ feature -- Event -- removing command association
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
-	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Remove `item' from the list
-		local
-			interf: EV_MULTI_COLUMN_LIST_ROW
-		do
-			interf ?= item_imp.interface
-			ev_children.prune_all (interf)
-			delete_item (item_imp.iitem)
-		end
-
 	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Add `item' to the list
+			-- Add `item_imp' at the end of the list
 		local
-			interf: EV_MULTI_COLUMN_LIST_ROW
 			i: INTEGER
 		do
-			interf ?= item_imp.interface
 			item_imp.set_rows (rows)
-			insert_item (item_imp)
+			wel_insert_item (item_imp)
 			from
 				i := 2
 			until
@@ -331,7 +327,34 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 				cwin_send_message (item, Lvm_setitem, 0, (item_imp.subitems @ i).to_integer)
 				i := i + 1
 			end
-			ev_children.force (interf)
+			ev_children.force (item_imp)
+		end
+
+	insert_item (index: INTEGER; item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Insert `item_imp' in the list at the index `index'.
+		local
+
+		do
+
+		end
+
+	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Remove `item' from the list
+		do
+			ev_children.prune_all (item_imp)
+			delete_item (item_imp.iitem)
+		end
+
+	move_item (index: INTEGER; item_imp: WEL_LIST_VIEW_ITEM) is
+			-- Move the given item to the given position.
+		local
+			success: INTEGER
+		do
+			success := cwin_send_message_result (item, 
+					Lvm_setitemposition, index - 1, 0)
+			check
+				succesfullcommand: success /= 0
+			end
 		end
 
 	update_state (index: INTEGER; an_item: WEL_LIST_VIEW_ITEM) is
@@ -366,12 +389,12 @@ feature {NONE} -- WEL Implementation
 			if info.uchanged = Lvif_state and info.isubitem = 0 then
 				if flag_set(info.unewstate, Lvis_selected) and
 						not flag_set(info.uoldstate, Lvis_selected) then
-					item_imp ?= (ev_children @ (info.iitem + 1)).implementation
+					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.execute_command (Cmd_item_activate, Void)
 					execute_command (Cmd_selection, Void)
 				elseif flag_set(info.uoldstate, Lvis_selected) and
 						not flag_set(info.unewstate, Lvis_selected) then
-					item_imp ?= (ev_children @ (info.iitem + 1)).implementation
+					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.execute_command (Cmd_item_deactivate, Void)
 				end
 			end

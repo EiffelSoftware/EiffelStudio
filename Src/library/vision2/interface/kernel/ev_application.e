@@ -5,6 +5,9 @@ indexing
 		%first_window. Creating an application with `make_and_launch' will%
 		%construct the application object, call `prepare' then start%
 		%proccessing events."
+	note:
+		"`destroy' causes all windows to be destroyed,%N%
+		%and the application to quit."
 	status: "See notice at end of class"
 	keywords: "application, accelerator, event loop"
 	date: "$Date$"
@@ -204,6 +207,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/20 18:20:42  brendel
+--| Added note.
+--|
 --| Revision 1.25  2000/04/05 17:45:46  brendel
 --| Reverted to old destroy.
 --|

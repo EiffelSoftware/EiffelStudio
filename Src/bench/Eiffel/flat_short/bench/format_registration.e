@@ -35,7 +35,6 @@ feature -- Initialization
 			target_class := target;
 			client := cl;	
 			initialize;
-			ancestors.extend (System.any_class.compiled_class);
 		end;
 
 	initialize_creators is
@@ -186,7 +185,6 @@ feature -- Element change
 		require
 			valid_target_class: target_class /= Void
 		local
-			l: LINKED_LIST [CLASS_C]
 			class_id: INTEGER
 		do
 			class_id := target_class.class_id
@@ -207,9 +205,6 @@ feature -- Element change
 				create assert_server.make_for_class_only
 			else
 				create assert_server.make (target_feature_table.count);
-				create l.make;
-				l.extend (System.any_class.compiled_class);
-				register_skipped_classes_assertions (l);
 			end;
 			current_class := target_class;
 			System.set_current_class (current_class);

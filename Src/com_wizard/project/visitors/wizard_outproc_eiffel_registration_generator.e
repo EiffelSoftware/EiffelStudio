@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (End_keyword)
 			tmp_body.append (New_line_tab_tab_tab)
 
-			-- if local_string /= Void and then local_string.is_equal ("-regserver") or local_string.is_equal ("/regserver") then
+			-- if local_string /= Void and (local_string.is_equal ("-regserver") or local_string.is_equal ("/regserver")) then
 
 			tmp_body.append (If_keyword)
 			tmp_body.append (Space)
@@ -200,9 +200,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Void_type)
 			tmp_body.append (Space)
 			tmp_body.append (And_keyword)
-			tmp_body.append (Space)
-			tmp_body.append (Then_keyword)
-			tmp_body.append (Space)
+			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Local_string_var)
 			tmp_body.append (Dot)
 			tmp_body.append ("is_equal")
@@ -224,6 +222,7 @@ feature {NONE} -- Implementation
 			tmp_body.append ("/regserver")
 			tmp_body.append (Double_quote)
 			tmp_body.append (Close_parenthesis)
+			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Space)
 			tmp_body.append (Then_keyword)
 			tmp_body.append (New_line_tab_tab_tab)
@@ -234,7 +233,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Register_server)
 			tmp_body.append (New_line_tab_tab_tab)
 
-			-- elseif local_string /= Void and then local_string.is_equal ("-unregserver") or local_string.is_equal ("/unregserver") then
+			-- elseif local_string.is_equal ("-unregserver") or local_string.is_equal ("/unregserver") then
 
 			tmp_body.append (Elseif_keyword)
 			tmp_body.append (Space)
@@ -245,9 +244,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Void_type)
 			tmp_body.append (Space)
 			tmp_body.append (And_keyword)
-			tmp_body.append (Space)
-			tmp_body.append (Then_keyword)
-			tmp_body.append (Space)
+			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Local_string_var)
 			tmp_body.append (Dot)
 			tmp_body.append ("is_equal")
@@ -268,6 +265,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Double_quote)
 			tmp_body.append ("/unregserver")
 			tmp_body.append (Double_quote)
+			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Space)
 			tmp_body.append (Then_keyword)
@@ -296,9 +294,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Void_type)
 			tmp_body.append (Space)
 			tmp_body.append (And_keyword)
-			tmp_body.append (Space)
-			tmp_body.append (Then_keyword)
-			tmp_body.append (Space)
+			tmp_body.append (Space_open_parenthesis)
 			tmp_body.append (Local_string_var)
 			tmp_body.append (Dot)
 			tmp_body.append ("is_equal")
@@ -320,12 +316,13 @@ feature {NONE} -- Implementation
 			tmp_body.append ("/embedding")
 			tmp_body.append (Double_quote)
 			tmp_body.append (Close_parenthesis)
+			tmp_body.append (Close_parenthesis)
 			tmp_body.append (Space)
 			tmp_body.append (Then_keyword)
 			tmp_body.append (New_line_tab_tab_tab)
 			tmp_body.append (Tab_tab)
 
-			-- 		default_show_cmd := Sw_hide
+			-- default_show_cmd := Sw_hide
 
 			tmp_body.append (default_show_cmd)
 			tmp_body.append (Space)
@@ -390,7 +387,9 @@ feature {NONE} -- Implementation
 			tmp_body.append ("make_top")
 			tmp_body.append (Space)
 			tmp_body.append (Open_parenthesis)
+			tmp_body.append (Double_quote)
 			tmp_body.append (shared_wizard_environment.project_name)
+			tmp_body.append (Double_quote)
 			tmp_body.append (Close_parenthesis)
 
 			Result.set_body (tmp_body)

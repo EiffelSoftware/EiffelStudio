@@ -50,10 +50,59 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			if is_once_string then
+				ctxt.put_text_item (ti_once_keyword)
+				ctxt.put_space
+			end
 			ctxt.put_string_item ("%"" + verbatim_marker + "[")
 			append_format_multilined (value.twin, ctxt.text, ctxt.in_indexing_clause)
 			ctxt.new_line
 			ctxt.put_string_item ("]" + verbatim_marker + "%"")
+		end
+
+feature {NONE} -- Implementation
+
+	append_format_multilined (s: STRING; st: STRUCTURED_TEXT; in_index: BOOLEAN) is
+			-- Format on a new line, breaking at every newline.
+			-- Do not indent.
+			-- If `in_index', try to find meaningful substrings (URLs, ...).
+			-- Display %N... characters as they were typed.
+		require
+			valid_string: s /= Void
+			valid_text: st /= Void
+		local
+			sb: STRING
+			n: INTEGER
+		do
+				-- Forget differences between platforms.
+			s.prune_all ('%R')
+			from
+				n := s.index_of (carriage_return_char, 1)
+				if not s.is_empty then
+					st.add_new_line
+				end
+			until
+				n = 0
+			loop
+				sb := s.substring (1, n - 1)
+				s.remove_head (n)
+				if not sb.is_empty then
+					if in_index then
+						st.add_indexing_string (sb)
+					else
+						st.add_string (sb)
+					end
+				end
+				st.add_new_line
+				n := s.index_of (carriage_return_char, 1)
+			end
+			if not s.is_empty then
+				if in_index then
+					st.add_indexing_string (s)
+				else
+					st.add_string (s)
+				end
+			end
 		end
 
 end -- class VERBATIM_STRING_AS

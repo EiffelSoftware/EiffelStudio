@@ -21,10 +21,4 @@ inherit
 
 	PLATFORM
 
-feature -- Access
-
-	Minimum_character_code: INTEGER is 0
-	Maximum_character_code: INTEGER is 255
-			-- Smallest and largest supported codes for CHARACTER values
-
 end -- class KL_PLATFORM

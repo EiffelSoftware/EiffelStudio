@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			set_border_width (10)
 			!! button.make_with_text (Current, "Press me")
 			!! button.make_with_text (Current, "Button with a very long label")
+			set_child_expandable (button, False)
 			!! button.make_with_text (Current, "Button 3")
 			set_parent (par)
 		end

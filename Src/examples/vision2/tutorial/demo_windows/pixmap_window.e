@@ -38,28 +38,28 @@ feature {NONE} -- Initialization
 
 			-- a button
 			create button.make_with_text (Current, "Press me!")
-			button.set_expand (False)
+			set_child_expandable (button, False)
 
 			-- a toggle button
 			create toggle_button.make_with_text (Current, "A toggle button")
-			toggle_button.set_expand (False)
+			set_child_expandable (toggle_button, False)
 
 			-- a check button
 			create check_button.make (Current)
 			check_button.set_text ("A check button")
-			check_button.set_expand (False)
+			set_child_expandable (check_button, False)
 
 			-- a radio button
 			create radio_button.make_with_text (Current, "A first radio button")
-			radio_button.set_expand (False)
+			set_child_expandable (radio_button, False)
 			create radio_button.make_with_text (Current, "A second radio button")
-			radio_button.set_expand (False)
+			set_child_expandable (radio_button, False)
 
 			-- a combo box
 			create combo.make (Current)
 			create comboListItem.make_with_text (combo, "Combo item 1")
 			create comboListItem.make_with_text (combo, "Combo item 2")
-			combo.set_expand (False)
+			set_child_expandable (combo, False)
 
 			-- a Tree
 			create tree.make (Current)
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			create optionMenu.make_with_text (option, "An option button")
 			create optionMenuItem.make_with_text (optionMenu, "option menu item 1")
 			create optionMenuItem.make_with_text (optionMenu, "option menu item 2")
-			option.set_expand (False)
+			set_child_expandable (option, False)
 
 			-- a multi column list
 			create mc.make_with_text (Current, <<"1st column", "2nd column", "3rd column">>)
@@ -159,7 +159,7 @@ feature -- Test functions
 --					statitem1.unset_pixmap
 --					statitem1.set_text ("Give me back my pixmap!")
 					check_button.set_pixmap (pix)
-					mcrow1.unset_cell_pixmap (3)
+				--	mcrow1.unset_cell_pixmap (3)
 					treeItem3.unset_pixmap
 					treeItem3.set_text ("Can I borrow your pixmap?")
 

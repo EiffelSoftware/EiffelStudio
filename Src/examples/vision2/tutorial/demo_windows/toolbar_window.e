@@ -29,16 +29,17 @@ feature {NONE} -- Initialization
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
 		do
-			{EV_VERTICAL_BOX} Precursor (par)
+			{EV_VERTICAL_BOX} Precursor (Void)
 			create sep.make (Current)
+			set_child_expandable (sep, False)
 			create_first_bar (Current)
 			create sep.make (Current)
+			set_child_expandable (sep, False)
 			create_second_bar (Current)
 			create sep.make (Current)
+			set_child_expandable (sep, False)
 			create_splits (Current)
-
--- Bug : Fix me.
---			set_parent (par)
+			set_parent (par)
 		end
 
 	set_tabs is
@@ -101,11 +102,11 @@ feature {NONE} -- Implementation
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
 			!! hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 
 			-- We create a first tool_bar
 			!! tool.make (hbox)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "explain")
 			add_button (tool, "", "system")
 			add_button (tool, "", "class")
@@ -123,11 +124,11 @@ feature {NONE} -- Implementation
 
 			-- We create a second tool_bar
 			!! tool.make (hbox)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "search")
 			create sep.make (tool)
 			!! tool.make_with_size (hbox, 50, 16)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "update")
 			add_button (tool, "", "qupdate")
 		end
@@ -141,13 +142,13 @@ feature {NONE} -- Implementation
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
 			!! hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 
 			create label.make (hbox)
 
 			-- We create a tool_bar
 			!! tool.make (hbox)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "up_stack")
 			add_button (tool, "", "dn_stack")
 			add_button (tool, "", "current")
@@ -160,9 +161,8 @@ feature {NONE} -- Implementation
 			create sep.make (tool)
 
 			!! tool.make_with_size (hbox, 50, 16)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "dbgrun")
-
 		end
 
 	create_third_tool_bar (par: EV_VERTICAL_BOX) is
@@ -179,12 +179,12 @@ feature {NONE} -- Implementation
 			tool_imp: EV_TOOL_BAR_IMP
 		do
 			!! hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 			hbox.set_spacing (5)
 
 			-- We create a tool_bar
 			!! tool.make (hbox)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_button (tool, "", "routdot")
 			add_button (tool, "", "classdot")
 			create sep.make (tool)
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			create field.make_with_text (hbox, "widget_make")
 --			field.set_minimum_width (100)
 			create label.make_with_text (hbox, "from :")
-			label.set_expand (False)
+			hbox.set_child_expandable (label, False)
 			label.set_vertical_resize (False)
 			create field.make_with_text (hbox, "EV_WIDGET")
 --			field.set_minimum_width (100)
@@ -231,11 +231,11 @@ feature {NONE} -- Implementation
 			sep: EV_TOOL_BAR_SEPARATOR
 		do
 			!! hbox.make (par)
-			hbox.set_expand (False)
+			par.set_child_expandable (hbox, False)
 
 			-- We create a tool_bar
 			!! tool.make (hbox)
-			tool.set_expand (False)
+			hbox.set_child_expandable (tool, False)
 			add_toggle (tool, "", "sattribu")
 			add_toggle (tool, "", "sonces")
 			create sep.make (tool)

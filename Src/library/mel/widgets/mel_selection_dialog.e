@@ -21,47 +21,55 @@ inherit
 			set_prompt_dialog, set_selection_dialog, set_command_dialog,
 			set_file_selection_dialog, selection_make, selection_make_no_auto_unmanage
 		redefine
-			clean_up, create_widget
+			create_widget, parent, created_dialog_automatically
 		end;
 
 creation
 	make,
 	make_no_auto_unmanage
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif selection dialog.
+		require
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
 			create_widget (a_parent.screen_object, widget_name, True);
-			Mel_widgets.put (Current, screen_object);
-			!! dialog_shell.make_from_existing (xt_parent (screen_object));
-			create_selection_children;
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE) is
 			-- Create a motif selection dialog and set `auto_manage' to True.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
-			parent := a_parent;
 			widget_name := a_name.to_c;
-			create_widget (a_parent.screen_object, widget_name, False)
-			!! dialog_shell.make_from_existing (xt_parent (screen_object));
-			create_selection_children;
+			create_widget (a_parent.screen_object, widget_name, False);
+			!! parent.make_from_existing (xt_parent (screen_object), a_parent);
+			Mel_widgets.add (Current);
 			set_default
 		ensure
 			exists: not is_destroyed;
+			parent_set: parent.parent = a_parent;
+			name_set: name.is_equal (a_name)
 			auto_unmanage: not auto_unmanage
 		end;
+
+feature {NONE} -- Initialization
 
 	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
 			-- Create selection dialog with `auto_manage_flag'.
@@ -71,22 +79,20 @@ feature {NONE} -- Initialization
 			else
 				screen_object := xm_create_selection_dialog (p_so, $w_name, auto_unmanage_arg, 1)
 			end
-			Mel_widgets.put (Current, screen_object)
 		end;
 
 feature -- Access
 
-	dialog_shell: MEL_DIALOG_SHELL;
+	parent: MEL_DIALOG_SHELL;
 			-- Dialog shell
 
-feature -- Removal
+feature {NONE} -- Implementation
 
-    clean_up is
-            -- Destroy the widget.
-        do
-            object_clean_up;
-            dialog_shell.object_clean_up
-        end;
+	created_dialog_automatically: BOOLEAN is
+			-- Was the dialog shell created automatically?
+		do
+			Result := True
+		end;
 
 feature {NONE} -- Implementation
 

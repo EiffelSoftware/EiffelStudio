@@ -154,7 +154,6 @@ feature -- Element Change
 			-- [Redecalaration of a function into an attribute]
 		local
 			result_type: TYPE_I
-			gen_type: GEN_TYPE_I
 			table_name, internal_name: STRING
 			rout_id: INTEGER
 			rout_info: ROUT_INFO
@@ -163,8 +162,7 @@ feature -- Element Change
 			generate_header (buffer)
 			result_type := type.actual_type.type_i
 			if result_type.has_formal then
-				gen_type ?= class_type.type
-				result_type := result_type.instantiation_in (gen_type)
+				result_type := result_type.instantiation_in (class_type)
 			end
 			internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 			add_in_log (class_type, internal_name)
@@ -269,9 +267,7 @@ feature -- Element Change
 			melted_feature: MELT_FEATURE
 			ba: BYTE_ARRAY
 			result_type: TYPE_I
-			static_type: INTEGER
-			current_type: CL_TYPE_I
-			base_class: CLASS_C
+			current_type: CLASS_TYPE
 			r_id: INTEGER
 			rout_info: ROUT_INFO
 		do
@@ -298,16 +294,14 @@ feature -- Element Change
 				-- Feature name
 			ba.append_raw_string (feature_name)
 				-- Type where the feature is written in
-			current_type := byte_context.current_type
-			static_type := current_type.type_id - 1
-			ba.append_short_integer (static_type)
+			current_type := byte_context.class_type
+			ba.append_short_integer (current_type.type_id - 1)
 
 				-- No rescue
 			ba.append ('%U')
 				-- Access to attribute; Result := <attribute access>
 			ba.append (Bc_current)
-			base_class := current_type.base_class
-			if base_class.is_precompiled then
+			if current_type.associated_class.is_precompiled then
 				r_id := rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
 				ba.append (Bc_pattribute)
@@ -318,8 +312,7 @@ feature -- Element Change
 					-- Feature id
 				ba.append_integer (feature_id)
 					-- Static type
-				ba.append_short_integer
-					(current_type.associated_class_type.static_type_id - 1)
+				ba.append_short_integer (current_type.static_type_id - 1)
 			end
 				-- Attribute meta-type
 			ba.append_uint32_integer (result_type.sk_value)

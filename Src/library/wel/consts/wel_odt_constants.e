@@ -43,6 +43,14 @@ feature -- Access
 		alias
 			"ODT_STATIC"
 		end
+		
+	Odt_tab: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"ODT_TAB"
+		end
+		
 
 end -- class WEL_ODT_CONSTANTS
 

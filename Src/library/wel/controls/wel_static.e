@@ -18,6 +18,8 @@ inherit
 			{NONE} all
 		end
 
+	WEL_COLOR_CONTROL
+
 creation 
 	make,
 	make_by_id
@@ -41,6 +43,24 @@ feature {NONE} -- Initialization
 			exists: exists
 			name_set: text.is_equal (a_name)
 			id_set: id = an_id
+		end
+
+feature -- Access
+
+	foreground_color: WEL_COLOR_REF is
+			-- foreground color used for the text of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_system (Color_windowtext)
+		end
+
+	background_color: WEL_COLOR_REF is
+			-- Background color used for the background of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_system (Color_btnface)
 		end
 
 feature -- Basic operations
@@ -87,4 +107,3 @@ end -- class WEL_STATIC
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -71,37 +71,8 @@ feature -- Access
 			a_row_less_than_row_count: a_row <= row_count
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
-		local
-			grid_row_i: EV_GRID_ROW_I
-			grid_row: SPECIAL [EV_GRID_ITEM_I]
-			a_item: EV_GRID_ITEM
-			a_grid_column_i: EV_GRID_COLUMN_I
-			grid_item_i: EV_GRID_ITEM_I
-			col_index: INTEGER
 		do
-				-- Retrieve column from grid
-			a_grid_column_i := column_internal (a_column)
-			col_index := a_grid_column_i.physical_index
-			
-			grid_row_i := row_internal (a_row)
-			grid_row :=  internal_row_data @ a_row
-
-			if a_column > grid_row.count then
-				enlarge_row (a_row, a_column)
-				grid_row := internal_row_data @ a_row
-			end
-			
-
-			
-			grid_item_i := grid_row @ (col_index)
-			
-			if grid_item_i = Void then
-				create a_item
-				grid_item_i := a_item.implementation
-				grid_item_i.set_parents (Current, a_grid_column_i, grid_row_i)
-				grid_row.put (grid_item_i, (col_index))
-			end
-			Result := grid_item_i.interface
+			Result := item_internal (a_row, a_column, True).interface
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -1588,6 +1559,52 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			row_not_void: Result /= Void
+		end
+
+feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
+
+	item_internal (a_row: INTEGER; a_column: INTEGER; create_item_if_void: BOOLEAN): EV_GRID_ITEM_I is
+			-- Cell at `a_row' and `a_column' position, if `create_item_if_void' then a new item will be created if Void
+		require
+			a_row_positive: a_row > 0
+			a_row_less_than_row_count: a_row <= row_count
+			a_column_positive: a_column > 0
+			a_column_less_than_column_count: a_column <= column_count
+		local
+			grid_row_i: EV_GRID_ROW_I
+			grid_row: SPECIAL [EV_GRID_ITEM_I]
+			a_item: EV_GRID_ITEM
+			a_grid_column_i: EV_GRID_COLUMN_I
+			grid_item_i: EV_GRID_ITEM_I
+			col_index: INTEGER
+		do
+				-- Retrieve column from grid
+			a_grid_column_i := column_internal (a_column)
+			col_index := a_grid_column_i.physical_index
+			
+			grid_row_i := row_internal (a_row)
+			grid_row :=  internal_row_data @ a_row
+
+				-- Enlarge row so that it can hold the data at the column's `physical_index'
+			if col_index >= grid_row.count then
+				if create_item_if_void then
+						-- We only want to make the row bigger if we are creating a new item if Void
+					enlarge_row (a_row, col_index + 1)
+					grid_row := internal_row_data @ a_row
+					grid_item_i := grid_row @ (col_index)
+				end
+			else
+				grid_item_i := grid_row @ (col_index)
+			end
+
+				-- Create new row if requested
+			if grid_item_i = Void and then create_item_if_void then
+				create a_item
+				grid_item_i := a_item.implementation
+				grid_item_i.set_parents (Current, a_grid_column_i, grid_row_i)
+				grid_row.put (grid_item_i, (col_index))
+			end
+			Result := grid_item_i
 		end
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation

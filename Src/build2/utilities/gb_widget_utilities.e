@@ -336,7 +336,6 @@ feature -- Basic operations
 			texts_not_void: texts /= Void
 			texts_not_empty: not texts.is_empty
 		local
-			current_text: STRING
 			text_cursor, tree_cursor: CURSOR
 		do
 			text_cursor := texts.cursor
@@ -490,6 +489,65 @@ feature {NONE} -- Implementation
 			tree_list.go_to (tree_cursor)
 		ensure
 			tree_list_unchanged: old tree_list.index = tree_list.index
+		end
+		
+	add_to_tree_node_alphabetically (tree_node_list: EV_TREE_NODE_LIST; tree_node: EV_TREE_NODE) is
+			-- Add `tree_node' to `tree_node_list' at a position so that it is ordered alphabetically
+			-- by its `text'.
+		require
+			tree_node_list_not_void: tree_node_list /= Void
+			tree_node_not_void: tree_node /= Void
+			tree_node_not_parented: tree_node.parent = Void
+			tree_node_has_text: not tree_node.text.is_empty
+		local
+			l_text: STRING
+		do
+				-- Note that we always go from the final position to the start. This is because if we are building
+				-- a tree that is already in order we do not have to iterate all of the items  in a node to find
+				-- out that it needs to be the final node. This will optimize the loading in Build as it should
+				-- be saved in order.
+
+			l_text := tree_node.text
+			from
+				tree_node_list.go_i_th (tree_node_list.count)
+			until
+				tree_node_list.off or else  tree_node_list.item.text < l_text 
+			loop
+				tree_node_list.back
+			end
+			tree_node_list.put_right (tree_node)
+		ensure
+			contained: tree_node_list.has (tree_node)
+			tree_node_contents_alphabetical (tree_node_list)
+		end
+		
+	tree_node_contents_alphabetical (tree_node_list: EV_TREE_NODE_LIST): BOOLEAN is
+			-- Are the `text' of all items contained ordered alphabetically?
+		require
+			tree_node_list_not_void: tree_node_list /= Void
+		local
+			l_cursor: CURSOR
+			current_item_text, last_item_text: STRING
+		do
+			Result := True
+			l_cursor := tree_node_list.cursor
+			from
+				tree_node_list.start
+			until
+				tree_node_list.off
+			loop
+				current_item_text := tree_node_list.item.text
+				if last_item_text /= Void then
+					if last_item_text > current_item_text then
+						Result := False
+					end
+				end
+				last_item_text := current_item_text.twin
+				tree_node_list.forth
+			end
+			tree_node_list.go_to (l_cursor)
+		ensure
+			index_not_changed: old tree_node_list.index = tree_node_list.index
 		end
 
 end -- class GB_UTILITIES

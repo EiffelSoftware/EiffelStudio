@@ -9,23 +9,25 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CELL [G] creation
+class CELL [G]
 
+creation
 	put
 
 feature -- Access
 
-	item: G;
+	item: G
 			-- Content of cell.
 
 feature -- Element change
+
 	put, replace (v : like item) is
 			-- Make `v' the cell's `item'.
 		do
 			item := v
 		ensure
 			item_inserted: item = v
-		end;
+		end
 
 end -- class CELL
 

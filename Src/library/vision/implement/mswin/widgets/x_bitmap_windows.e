@@ -87,6 +87,7 @@ feature -- Initialization
 			else
 				io.error.putstring ("Unable to read XBM from file ")
 				io.error.putstring (a_filename)
+				io.error.new_line
 			end
 		rescue
 			retried := true

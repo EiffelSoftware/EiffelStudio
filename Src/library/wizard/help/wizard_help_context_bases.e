@@ -17,7 +17,7 @@ feature -- Status Report
 	is_valid_url (a_url: STRING): BOOLEAN is
 			-- Does `a_url' have a valid URL syntax?
 		local
-			i: INTEGER
+		--	i: INTEGER
 		do
 			Result := True
 		--	from

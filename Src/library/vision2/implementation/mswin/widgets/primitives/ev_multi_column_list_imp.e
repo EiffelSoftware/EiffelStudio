@@ -793,8 +793,7 @@ feature {NONE} -- WEL Implementation
 			if transport_started_in_item = a then
 				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
-
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -928,6 +927,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/22 20:21:27  rogers
+--| On_right_button_down no longer calls the precursor, but calls the pointer_button_press_actions directly.
+--|
 --| Revision 1.55  2000/03/21 23:10:03  rogers
 --| Added features for chechking PND status with relation, and modified features to support this. Fixed column_title with a tmeporary implementation.
 --|

@@ -13,6 +13,19 @@ inherit
 
 feature -- Parsing
 
+	parse_resource_value (a_value: STRING) is
+			-- Parse the value `a_value'.
+		require
+			a_value_not_void: a_value /= Void;
+			a_value_not_empty: not a_value.empty
+		do
+			line := a_value;
+			parse_value;
+			if last_token = Void then
+				syntax_error ("Resource value expected")
+			end
+		end;
+			
 	parse (filename: STRING; table: RESOURCE_TABLE) is
 			-- Parse the resource file `filename' and store the
 			-- information in the resource table `table'.

@@ -96,7 +96,8 @@ feature {EV_ANY_I} -- Access
 		do
 			multi_column_list_imp := parent_imp
 			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				start_transport (a_x, a_y, a_button, 
+					0, 0, 0.5, a_screen_x, a_screen_y)
 				multi_column_list_imp.set_source_true
 				multi_column_list_imp.set_pnd_child_source (Current)
 				multi_column_list_imp.set_t_item_true
@@ -176,6 +177,18 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 			parent_imp.release_capture
 		end
 
+	set_heavy_capture is
+			-- Grab user input.
+		do
+			parent_imp.set_heavy_capture
+		end
+
+	release_heavy_capture is
+			-- Release user input.
+		do
+			parent_imp.release_heavy_capture
+		end
+
 	relative_position: TUPLE [INTEGER, INTEGER] is
 			-- Position relative to `Parent'.
 		do
@@ -211,6 +224,10 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/27 21:52:46  pichery
+--| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
+--| `set_heavy_capture' and `release_heavy_capture'.
+--|
 --| Revision 1.30  2000/03/24 17:30:44  brendel
 --| Moved update into _I.
 --|
@@ -234,7 +251,8 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --| Fixed bug in relative_position.
 --|
 --| Revision 1.23  2000/03/13 23:17:49  rogers
---| Removed redundent command associations. Added relative_position. Changed the export status of implementation features to {EV_MULTI_COLUMN_LIST_IMP}.
+--| Removed redundent command associations. Added relative_position. Changed the
+--| export status of implementation features to {EV_MULTI_COLUMN_LIST_IMP}.
 --|
 --| Revision 1.22  2000/03/09 16:13:52  brendel
 --| Added inheritance of EV_PICK_AND_DROPABLE_IMP.
@@ -243,7 +261,8 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --| Fixed set_parent by adding handling a Void argument.
 --|
 --| Revision 1.20  2000/03/03 00:19:50  rogers
---| Implemented set_parent and split set_selected into enable_select and disable_select.
+--| Implemented set_parent and split set_selected into enable_select and
+--| disable_select.
 --|
 --| Revision 1.19  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
@@ -264,7 +283,8 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.15.6.2  1999/12/17 17:33:10  rogers
---| Altered to fit in with the review branch. Make takes an interface. Now inherits from EV_PICK_AND_DROPABLE_IMP.
+--| Altered to fit in with the review branch. Make takes an interface.
+--| Now inherits from EV_PICK_AND_DROPABLE_IMP.
 --|
 --| Revision 1.15.6.1  1999/11/24 17:30:16  oconnor
 --| merged with DEVEL branch

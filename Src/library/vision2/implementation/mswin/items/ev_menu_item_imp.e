@@ -50,8 +50,8 @@ feature -- Status report
 
 	is_sensitive: BOOLEAN
 			-- Can this item be clicked on?
-			--| is not a function because we do not want to block the user from
-			--| setting the sensitive state while unparented.
+			--| is not a function because we do not want to block the
+			-- user from setting the sensitive state while unparented.
 
 feature -- Status setting
 
@@ -110,12 +110,14 @@ feature {NONE} -- Implementation
 	has_parent: BOOLEAN is
 			-- Is this menu item in a menu?
 		do
-			Result := parent_imp /= Void and then parent_imp.item_exists (id)
+			Result := parent_imp /= Void and then 
+				      parent_imp.item_exists (id)
 		end
 
 	--|FIXME implement as now pick and dropable
 
 	set_capture is
+			-- Grap user input
 		do
 			check
 				to_be_implemented: FALSE
@@ -123,6 +125,23 @@ feature {NONE} -- Implementation
 		end
 
 	release_capture is
+			-- Release user input
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	set_heavy_capture is
+			-- Grap user input
+		do
+			check
+				to_be_implemented: FALSE
+			end
+		end
+
+	release_heavy_capture is
+			-- Release user input
 		do
 			check
 				to_be_implemented: FALSE
@@ -166,8 +185,13 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/27 21:52:46  pichery
+--| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
+--| `set_heavy_capture' and `release_heavy_capture'.
+--|
 --| Revision 1.31  2000/03/10 00:32:20  rogers
---| Added set_capture and release_capture with a fixme and a check False so they compile. They need to be fixed.
+--| Added set_capture and release_capture with a fixme and a check False so they
+--| compile. They need to be fixed.
 --|
 --| Revision 1.30  2000/02/25 20:28:49  brendel
 --| Added function has_parent. Calls with target parent_imp are now protected

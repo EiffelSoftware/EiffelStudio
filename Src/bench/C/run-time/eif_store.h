@@ -77,6 +77,7 @@ extern void rt_init_store(
 	int accounting_type,
 	int buf_size);
 extern void rt_reset_store(void);
+
 extern void make_header(void);				/* Make header */
 extern void imake_header(void);				/* Make header */
 extern void ist_write(char *object);
@@ -92,13 +93,16 @@ extern void free_sorted_attributes(void);
 /*
  * Eiffel calls
  */
+extern void basic_general_free_store (char *object);
+extern void independent_free_store (char *object);
+
 extern void estore(EIF_INTEGER file_desc, char *object);
 extern void eestore(EIF_INTEGER file_desc, char *object);
 extern void sstore (EIF_INTEGER file_desc, char *object);
 
-extern void stream_estore(char **stream, char *object);
-extern void stream_eestore(char **stream, char *object);
-extern void stream_sstore (char **stream, char *object);
+extern long stream_estore(char **stream, long size, char *object);
+extern long stream_eestore(char **stream, long size, char *object);
+extern long stream_sstore (char **stream, long size, char *object);
 
 extern char **stream_malloc (int stream_size);
 #ifdef __cplusplus

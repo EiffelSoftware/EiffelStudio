@@ -69,7 +69,7 @@ rt_private void st_store(char *object);				/* Second pass of the store */
 rt_public void ist_write(char *object);
 rt_public void gst_write(char *object);
 rt_public void make_header(void);				/* Make header */
-rt_public void imake_header(void);				/* Make header */
+rt_public void imake_header(void);				/* Make header */ 
 rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
@@ -212,7 +212,7 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void stream_estore(char **buffer, char *object)
+rt_public long stream_estore(char **buffer, long size, char *object)
 {
 	rt_init_store (
 		store_write,
@@ -224,7 +224,7 @@ rt_public void stream_estore(char **buffer, char *object)
 		EIF_BUFFER_SIZE);
 
 	stream_buffer = *buffer;
-	stream_buffer_size = sizeof (*buffer);
+	stream_buffer_size = size;
 	stream_buffer_position = 0;
 
 	allocate_gen_buffer();
@@ -232,6 +232,13 @@ rt_public void stream_estore(char **buffer, char *object)
 
 	*buffer = stream_buffer;
 	rt_reset_store ();
+	return stream_buffer_size;
+}
+
+rt_public void basic_general_free_store (char *object)
+{
+	allocate_gen_buffer();
+	internal_store(object);
 }
 
 /* General store */
@@ -258,7 +265,7 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void stream_eestore(char **buffer, char *object)
+rt_public long stream_eestore(char **buffer, long size, char *object)
 {
 	rt_init_store (
 		store_write,
@@ -270,7 +277,7 @@ rt_public void stream_eestore(char **buffer, char *object)
 		EIF_BUFFER_SIZE);
 
 	stream_buffer = *buffer;
-	stream_buffer_size = sizeof (*buffer);
+	stream_buffer_size = size;
 	stream_buffer_position = 0;
 	
 	allocate_gen_buffer();
@@ -278,6 +285,7 @@ rt_public void stream_eestore(char **buffer, char *object)
 	*buffer = stream_buffer;
 
 	rt_reset_store ();
+	return stream_buffer_size;
 }
 
 /* Independent store */
@@ -311,7 +319,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void stream_sstore (char **buffer, char *object)
+rt_public long stream_sstore (char **buffer, long size, char *object)
 {
 	rt_init_store (
 		store_write,
@@ -323,7 +331,7 @@ rt_public void stream_sstore (char **buffer, char *object)
 		EIF_BUFFER_SIZE);
 
 	stream_buffer = *buffer;
-	stream_buffer_size = sizeof (*buffer);
+	stream_buffer_size = size;
 	stream_buffer_position = 0;
 
 	run_idr_init (buffer_size, 0);
@@ -337,6 +345,19 @@ rt_public void stream_sstore (char **buffer, char *object)
 
 	*buffer = stream_buffer;
 	rt_reset_store ();
+	return stream_buffer_size;
+}
+
+rt_public void independent_free_store (char *object)
+{
+	run_idr_init (buffer_size, 0);
+	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
+
+	internal_store(object);
+
+	run_idr_destroy ();
+	xfree (idr_temp_buf);
+	idr_temp_buf = (char *)0;
 }
 
 /* Stream allocation */
@@ -565,7 +586,7 @@ rt_public void st_write(char *object)
 
 }
 
-rt_private void gst_write(char *object)
+rt_public void gst_write(char *object)
 {
 	/* Write an object.
 	 * used for general store
@@ -610,7 +631,7 @@ rt_private void gst_write(char *object)
 
 }
 
-rt_private void ist_write(char *object)
+rt_public void ist_write(char *object)
 {
 	/* Write an object.
 	 * used for independent store
@@ -1059,7 +1080,7 @@ rt_private void object_write(char *object)
 
 
 
-rt_private void make_header(EIF_CONTEXT_NOARG)
+rt_public void make_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	EIF_GET_CONTEXT
@@ -1231,7 +1252,7 @@ printf ("Freeing s_attr %lx\n", s_attr);
 		}
 }
 
-rt_private void imake_header(EIF_CONTEXT_NOARG)
+rt_public void imake_header(EIF_CONTEXT_NOARG)
 {
 	/* Generate header for stored hiearchy retrivable by other systems. */
 	EIF_GET_CONTEXT

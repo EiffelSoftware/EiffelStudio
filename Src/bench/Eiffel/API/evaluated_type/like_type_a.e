@@ -44,7 +44,7 @@ feature -- Properties
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
 		do
-			Result := evaluated_type.is_basic
+			Result := actual_type.is_basic
 		end
 
 feature -- Access
@@ -57,14 +57,14 @@ feature -- Access
 	has_associated_class: BOOLEAN is
 			-- Does Current have an associated class?
 		do
-			Result := evaluated_type /= Void and then
-			evaluated_type.has_associated_class
+			Result := actual_type /= Void and then
+				actual_type.has_associated_class
 		end
 
-	associated_eclass: CLASS_C is
+	associated_class: CLASS_C is
 			-- Associated class
 		do
-			Result := evaluated_type.associated_eclass
+			Result := actual_type.associated_class
 		end
 
 feature -- Primitives
@@ -100,14 +100,6 @@ feature -- Primitives
 			-- Does `other' conform to `actual_type' ?
 		do
 			Result := actual_type.internal_conform_to (other, in_generics)
-		end
-
-	associated_class: CLASS_C is
-			-- Associated class
-		require else
-			actual_type_not_void: actual_type /= Void
-		do
-			Result := actual_type.associated_class
 		end
 
 	type_i: TYPE_I is

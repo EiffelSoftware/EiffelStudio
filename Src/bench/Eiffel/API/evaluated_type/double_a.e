@@ -9,8 +9,7 @@ inherit
 	BASIC_A
 		redefine
 			is_double, associated_class, same_as,
-			is_numeric, heaviest, internal_conform_to,
-			associated_eclass
+			is_numeric, heaviest, internal_conform_to
 		end
 
 feature -- Property
@@ -20,16 +19,16 @@ feature -- Property
 
 feature -- Access
 
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
-		once
-			Result := System.double_class.compiled_class
-		end
-
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_double
+		end
+
+	associated_class: CLASS_C is
+			-- Class DOUBLE
+		once
+			Result := System.double_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER}
@@ -58,14 +57,6 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		once
 			Result := Double_c_type
-		end
-
-	associated_class: CLASS_C is
-			-- Class DOUBLE
-		require else
-			double_class_compiled: System.double_class.compiled
-		once
-			Result := System.double_class.compiled_class
 		end
 
 end -- class DOUBLE_A

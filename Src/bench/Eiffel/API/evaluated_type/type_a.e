@@ -160,10 +160,9 @@ feature -- Access
 								is_formal or else is_none)
 		end
 
-	evaluated_type: TYPE_A is
-			-- Evaluated type (for like types)	
-		do
-			Result := actual_type
+	associated_class: CLASS_C is
+			-- Class associated to the current type
+		deferred
 		end
 
 	actual_type: TYPE_A is
@@ -177,14 +176,6 @@ feature -- Access
 			-- Has the current type generics types ?
 		do
 			Result := generics /= Void
-		end
-
-	associated_eclass: CLASS_C is
-			-- Eiffel class associated to the current type
-		deferred
-		ensure
-			non_void_if_has_associated_class: 
-				has_associated_class implies Result /= Void
 		end
 
 feature -- Output
@@ -281,11 +272,6 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Do the generic parameter of `type' conform to those of
 			-- Current ?
 		do
-		end
-
-	associated_class: CLASS_C is
-			-- Class associated to the current type
-		deferred
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is

@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 					until
 						parents.after
 					loop
-						parent_class := parents.item.associated_eclass;
+						parent_class := parents.item.associated_class;
 						add_tabs (st, i);
 						parent_class.append_signature (st);
 						if already_processed (parents.item) then

@@ -9,7 +9,7 @@ inherit
 	BASIC_A
 		redefine
 			is_boolean, type_i, associated_class, same_as,
-			internal_conform_to, associated_eclass
+			internal_conform_to
 		end
 
 feature -- Property
@@ -25,10 +25,10 @@ feature -- Access
 			Result := other.is_boolean
 		end
 
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
+	associated_class: CLASS_C is
+			-- Class BOOLEAN
 		once
-			Result := Eiffel_system.boolean_class.compiled_class
+			Result := System.boolean_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER}
@@ -47,14 +47,6 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		once
 			Result := Boolean_c_type
-		end
-
-	associated_class: CLASS_C is
-			-- Class BOOLEAN
-		require else
-			System.boolean_class.compiled
-		once
-			Result := System.boolean_class.compiled_class
 		end
 
 end -- class BOOLEAN_A

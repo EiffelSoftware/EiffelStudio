@@ -31,7 +31,7 @@ feature -- Stoning
 
 	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
-			Result := actual_type.associated_eclass
+			Result := actual_type.associated_class
 		end;
 
 feature -- Formatting

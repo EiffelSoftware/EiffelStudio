@@ -11,7 +11,7 @@ inherit
 		redefine
 			is_none, dump, type_i, same_as,
 			internal_conform_to, append_to,
-			storage_info, storage_info_with_name, associated_eclass
+			storage_info, storage_info_with_name
 		end
 
 feature -- Comparison
@@ -29,15 +29,15 @@ feature -- Properties
 
 feature -- Access
 
-	associated_eclass: CLASS_C is
-			-- No associated class
-		do
-		end
-
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_none
+		end
+
+	associated_class: CLASS_C is
+		do
+			-- No associated class
 		end
 
 feature -- Output
@@ -63,13 +63,6 @@ feature {COMPILER_EXPORTER}
 			-- Void C type
 		once
 			!!Result
-		end
-
-	associated_class: CLASS_C is
-		require else
-			True
-		do
-			-- No associated class
 		end
 
 	internal_conform_to (other: TYPE_A in_generics: BOOLEAN): BOOLEAN is

@@ -42,9 +42,9 @@ feature -- Access
 			end
 		end
 
-	associated_eclass: CLASS_C is
-			-- No associated class
+	associated_class: CLASS_C is
 		do
+			-- No associated class
 		end
 
 	position: INTEGER
@@ -103,11 +103,6 @@ feature {COMPILER_EXPORTER}
 				Result := constrain.internal_conform_to (other, in_generics)
 			end
 		end
-
-	associated_class: CLASS_C is
-		do
-			-- No associated class
-		end; -- associated_class
 
 	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',

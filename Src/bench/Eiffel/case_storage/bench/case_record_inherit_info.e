@@ -72,7 +72,7 @@ feature {NONE} -- Recording information for eiffelcase
 					until
 						i > list_tmp.upper
 					loop
-						e_class := list_tmp.item(i).associated_eclass
+						e_class := list_tmp.item(i).associated_class
 						if e_class /= Void then
 							!! gene.make ( e_class.name, Void )
 						else

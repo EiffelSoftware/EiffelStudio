@@ -39,7 +39,7 @@ feature -- Output
 			if f.is_constant then
 				st.add_string (" is ");
 				const ?= f;	--| Cannot fail
-				ec := const.type.associated_eclass;
+				ec := const.type.associated_class;
 				if equal (ec.name, "character") then
 					str := "'"
 				elseif equal (ec.name, "string") then

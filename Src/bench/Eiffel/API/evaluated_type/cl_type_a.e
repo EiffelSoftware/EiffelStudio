@@ -66,7 +66,7 @@ feature -- Access
 						is_separate = other_class_type.is_separate
 		end
 
-	associated_eclass: CLASS_C is
+	associated_class: CLASS_C is
 			-- Associated class to the type
 		do
 			Result := System.class_of_id (base_class_id)
@@ -89,7 +89,7 @@ feature -- Output
 			elseif is_separate then
 				st.add_string ("separate ")
 			end
-			associated_eclass.append_name (st)
+			associated_class.append_name (st)
 		end
 
 	dump: STRING is
@@ -123,14 +123,6 @@ feature {COMPILER_EXPORTER}
 			-- Assign `b' to `is_separate'.
 		do
 			is_separate := b
-		end
-
-	associated_class: CLASS_C is
-			-- Associated class to the type
-		require else
-			valid_base_class_id: base_class_id /= Void
-		do
-			Result := System.class_of_id (base_class_id)
 		end
 
 	type_i: CL_TYPE_I is

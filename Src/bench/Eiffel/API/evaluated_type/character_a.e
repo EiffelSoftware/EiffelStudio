@@ -9,7 +9,7 @@ inherit
 	BASIC_A
 		redefine
 			is_character, type_i, associated_class, same_as,
-			internal_conform_to, associated_eclass
+			internal_conform_to
 		end
 
 feature -- Property
@@ -25,8 +25,8 @@ feature -- Access
 			Result := other.is_character
 		end
 
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
+	associated_class: CLASS_C is
+			-- Class CHARACTER
 		once
 			Result := System.character_class.compiled_class
 		end
@@ -47,14 +47,6 @@ feature {COMPILER_EXPORTER}
 			-- C type
 		once
 			Result := Char_c_type
-		end
-
-	associated_class: CLASS_C is
-			-- Class CHARACTER
-		require else
-			System.character_class.compiled
-		once
-			Result := System.character_class.compiled_class
 		end
 
 end -- class CHARACTER_A

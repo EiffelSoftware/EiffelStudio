@@ -65,7 +65,7 @@ feature -- Output
 		local
 			actual_dump: STRING
 		do
-			actual_dump := evaluated_type.dump
+			actual_dump := actual_type.dump
 			!!Result.make (16 + actual_dump.count)
 			Result.append ("(like arg #")
 			Result.append_integer (position)

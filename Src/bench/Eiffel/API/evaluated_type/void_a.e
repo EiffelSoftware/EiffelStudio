@@ -27,15 +27,15 @@ feature -- Comparison
 
 feature -- Access
 
-	associated_eclass: CLASS_C is
-			-- No associated calss
-		do
-		end
-
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is `other' the same as Current ?
 		do
 			Result := other.is_void
+		end
+
+	associated_class: CLASS_C is
+		do
+			-- No associated calss
 		end
 
 feature -- Output
@@ -60,11 +60,6 @@ feature {COMPILER_EXPORTER}
 			-- Void type
 		once
 			!!Result
-		end
-
-	associated_class: CLASS_C is
-		do
-			-- No associated calss
 		end
 
 	create_info: CREATE_INFO is

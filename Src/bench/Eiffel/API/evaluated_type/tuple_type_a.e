@@ -13,7 +13,7 @@ inherit
 	GEN_TYPE_A
 		redefine
 			valid_generic, set_generics, solved_type, type_i, good_generics,
-			error_generics, check_constraints, associated_eclass,
+			error_generics, check_constraints,
 			same_as, same_class_type, is_tuple, associated_class,
 			storage_info, storage_info_with_name, substitute,
 			generate_constraint_creation_routine_error,
@@ -24,12 +24,6 @@ inherit
 feature -- Properties
 
 	is_tuple: BOOLEAN is True
-
-	associated_eclass: CLASS_C is
-			-- Associated eiffel class
-		once
-			Result := System.tuple_class.compiled_class
-		end
 
 feature -- Setting
 
@@ -67,6 +61,12 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		end
+
+	associated_class: CLASS_C is
+			-- Class TUPLE
+		once
+			Result := System.tuple_class.compiled_class
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
@@ -116,14 +116,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 					Result := array_type_a.conform_to (other)
 				end
 			end
-		end
-
-	associated_class: CLASS_C is
-			-- Class TUPLE
-		require else
-			tuple_class_compiled: System.tuple_class.compiled
-		once
-			Result := System.tuple_class.compiled_class
 		end
 
 	array_type_a : TYPE_A is

@@ -9,8 +9,7 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			is_basic, has_associated_class,
-			associated_eclass, is_like_current
+			is_basic, has_associated_class, is_like_current
 		end
 
 feature -- Properties
@@ -35,13 +34,7 @@ feature -- Access
 	has_associated_class: BOOLEAN is
 			-- Does Current have an associated class?
 		do
-			Result := evaluated_type /= Void
-		end
-
-	associated_eclass: CLASS_C is
-			-- Associated class
-		do
-			Result := actual_type.associated_eclass
+			Result := actual_type /= Void
 		end
 
 feature -- Comparison

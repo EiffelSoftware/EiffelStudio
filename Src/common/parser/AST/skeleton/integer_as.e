@@ -10,7 +10,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_integer, good_integer, simple_format
+			is_integer, good_integer
 		end
 
 feature -- Attributes
@@ -45,7 +45,7 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_string(value.out);
+			ctxt.put_string (value.out);
 		end;
 
 end -- class INTEGER_AS

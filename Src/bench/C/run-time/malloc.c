@@ -42,14 +42,19 @@
 #include "eif_local.h"			/* For epop() */
 #include "eif_sig.h"
 #include "eif_err_msg.h"
+#ifdef ISE_GC
 #ifdef EIF_REM_SET_OPTIMIZATION
 #include "eif_special_table.h"	/* For the special table interface. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif
 #ifdef VXWORKS
 #include <string.h>
 #endif
 #include "rt_main.h"
 
+#ifdef BOEHM_GC
+#include "rt_boehm.h"
+#endif
 
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
@@ -75,6 +80,7 @@
  */
 #define ALIGNMAX	((MEM_ALIGNBYTES < OVERHEAD) ? OVERHEAD : MEM_ALIGNBYTES)
 
+#ifdef ISE_GC
 /* Give the type of an hlist, by doing pointer comparaison (classic).
  * Also give the address of the hlist of a given type and the address of
  * the buffer related to a free list.
@@ -195,10 +201,13 @@ rt_shared int eif_max_mem = 0;
 
 int eif_tenure_max;			/* Maximum age of tenuring. */
 int eif_gs_limit;			/* Maximum size of object in GSZ. */
+int eif_scavenge_size;		/* Size of scavenge zones */
+#endif
+
 int eif_stack_chunk;		/* Size of local stack chunk. */
 int eif_chunk_size;			/* Size of memory chunks */
-int eif_scavenge_size;		/* Size of scavenge zones */
 
+#ifdef ISE_GC
 /* Error message commonly used */
 rt_private char *inconsistency = "free-list inconsistency";
 
@@ -225,11 +234,13 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes);		/* Allocate blo
 rt_private int create_scavenge_zones(void);	/* Attempt creating the two zones */
 rt_private void explode_scavenge_zone(struct sc_zone *sc);	/* Release objects to free-list */
 rt_public void sc_stop(void);					/* Stop the scavenging process */
+#endif
 
 /* Eiffel object setting */
 rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type);					/* Set Eiffel object prior use */
 rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge);				/* Set special Eiffel object */
 
+#ifdef ISE_GC
 rt_private void set_memory_object (EIF_REFERENCE object);
 
 /* Also used by the garbage collector */
@@ -237,6 +248,7 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
 rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes);					/* Wrapper to xmalloc */
 rt_shared EIF_REFERENCE get_to_from_core(unsigned int nbytes);		/* Get a free eiffel chunk from kernel */
+#endif
 
 #ifdef WORKBENCH
 rt_public void discard_breakpoints(void);	/* Avoid debugger to stop while in GC cycles */
@@ -248,12 +260,13 @@ rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop
 #define UNDISCARD_BREAKPOINTS
 #endif
 
-
+#ifdef ISE_GC
 #ifdef HAS_SMART_MMAP
 rt_private void free_unused(void);
 #else
 #ifdef HAS_SBRK
 #include <unistd.h>						/* Set break (system call) */
+#endif
 #endif
 #endif
 
@@ -281,6 +294,105 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+#ifdef BOEHM_GC
+rt_private void boehm_dispose (union overhead *header)
+	/* Record `dispose' routine fro Boehm GC. */
+{
+	uint32 dtype;
+	dtype = Deif_bid(header->ov_flags);
+	DISP(dtype, (EIF_REFERENCE) (header + 1));
+}
+#endif
+
+#if defined(BOEHM_GC) || defined(NO_GC)
+rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint32 nbytes)
+{
+	unsigned int real_nbytes;	/* Real object size */
+	int mod;					/* Remainder for padding */
+	union overhead *header;
+
+		/* We need to allocate room for the header and
+		 * make sure that we won't alignment problems. We
+		 * really use at least ALIGNMAX, so even if `nbytes'
+		 * is 0, some memory will be used (the header).
+		 */
+	real_nbytes = nbytes;
+	mod = real_nbytes % ALIGNMAX;
+	if (mod != 0)
+		real_nbytes += ALIGNMAX - mod;
+	if (real_nbytes & ~B_SIZE) {
+			/* Object too big */
+		return NULL;
+	} else {
+#ifdef BOEHM_GC
+		if (real_nbytes == 0) {
+			real_nbytes++;
+		}
+		if (atomic) {
+			header = (union overhead *) GC_malloc_atomic (real_nbytes + OVERHEAD);
+		} else {
+			header = (union overhead *) GC_malloc (real_nbytes + OVERHEAD);
+		}
+#endif
+#ifdef NO_GC
+		header = (union overhead *) malloc(real_nbytes + OVERHEAD);
+#endif
+		if (header != NULL) {
+			header->ov_size = real_nbytes;
+				/* Point to the first data byte, just after the header. */
+#ifdef BOEHM_GC
+/*			GC_is_valid_displacement(header);
+			GC_is_valid_displacement((EIF_REFERENCE)(header + 1));
+			*/
+			if (has_dispose) {
+				GC_register_finalizer(header, &boehm_dispose, 0, 0, 0);
+			}
+#endif
+			return (EIF_REFERENCE)(header + 1);
+		} else {
+			return NULL;
+		}
+	}
+}
+
+rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes) {
+	unsigned int real_nbytes;	/* Real object size */
+	int mod;					/* Remainder for padding */
+	union overhead *header;
+
+		/* We need to allocate room for the header and
+		 * make sure that we won't alignment problems. We
+		 * really use at least ALIGNMAX, so even if `nbytes'
+		 * is 0, some memory will be used (the header).
+		 */
+	real_nbytes = nbytes;
+	mod = real_nbytes % ALIGNMAX;
+	if (mod != 0)
+		real_nbytes += ALIGNMAX - mod;
+	if (real_nbytes & ~B_SIZE) {
+			/* Object too big */
+		return NULL;
+	} else {
+#ifdef BOEHM_GC
+		header = (union overhead *) GC_realloc((union overhead *) obj - 1, real_nbytes + OVERHEAD);
+#endif
+#ifdef NO_GC
+		header = (union overhead *) realloc((union overhead *) obj - 1, real_nbytes + OVERHEAD);
+#endif
+
+		if (header != NULL) {
+			header->ov_size = real_nbytes;
+				/* Point to the first data byte, just after the header. */
+			return (EIF_REFERENCE)(header + 1);
+		} else {
+			return NULL;
+		}
+	}
+}
+
+#endif
+
+#ifdef ISE_GC
 #ifdef EIF_THREADS
 extern EIF_REFERENCE safe_emalloc (uint32);
 extern EIF_REFERENCE safe_emalloc_size (uint32, uint32, uint32);
@@ -316,6 +428,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #define emalloc safe_emalloc
 #define emalloc_size safe_emalloc_size
 #define spmalloc safe_spmalloc
+#endif
 #endif
 
 rt_public EIF_REFERENCE emalloc (uint32 ftype)
@@ -355,6 +468,19 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	dprintf(8)("emalloc: type %d is %d bytes\n", type, nbytes);
 	flush;
 #endif
+
+#if defined(BOEHM_GC) || defined(NO_GC)
+	object = external_allocation (References(type) == 0, (int) Disp_rout(type), nbytes);
+	if (object != NULL) {
+		UNDISCARD_BREAKPOINTS
+		return eif_set(object, ftype | EO_NEW);
+	} else {
+		eraise("object allocation", EN_MEM);	/* Signals no more memory */
+		return NULL;
+	}
+#endif
+
+#ifdef ISE_GC
 
 	/* Depending on the optimization chosen, we allocate the object in
 	 * the Generational Scavenge Zone (GSZ) or in the free-list.
@@ -446,6 +572,8 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 	}
 
+#endif /* ISE_GC */
+
 	UNDISCARD_BREAKPOINTS
 
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
@@ -498,6 +626,20 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	
 	DISCARD_BREAKPOINTS
 
+#if defined(BOEHM_GC) || defined(NO_GC)
+		/* No dispose routine associated, therefore `0' for second argument */
+	object = external_allocation (atomic, 0, nbytes);
+	if (object != NULL) {
+		UNDISCARD_BREAKPOINTS
+		return eif_spset(object, EIF_FALSE);
+	} else {
+		eraise("Special allocation", EN_MEM);	/* Signals no more memory */
+		return NULL;
+	}
+#endif
+
+#ifdef ISE_GC
+
 		/* Remember set special optimization does not work if object are allocated
 		 * in scavenge zone. */
 #ifdef EIF_GSZ_ALLOC_OPTIMIZATION
@@ -533,6 +675,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
 	return eif_spset(object, EIF_FALSE);
 #endif
+#endif
 }
 
 rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
@@ -546,7 +689,9 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	EIF_INTEGER count, elem_size;
 	int old_size, new_size;					/* New and old size of special object. */
 	int old_real_size, new_real_size;		/* Size occupied by items of special */
+#ifdef ISE_GC
 	EIF_BOOLEAN need_update = EIF_FALSE;	/* Do we need to remember content of special? */
+#endif
 	EIF_BOOLEAN need_expanded_initialization = EIF_FALSE;	/* Do we need to initialize new entries? */
 
 	REQUIRE ("ptr not null", ptr != (EIF_REFERENCE) 0);
@@ -577,6 +722,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 
 	CHECK ("Stil not forwarded", !(HEADER(ptr)->ov_size & B_FWD));
 
+#ifdef ISE_GC
 		/* The accounting of memory used by Eiffel is not accurate here, but it is
 		 * not easy to know at this level whether the block was merely extended or
 		 * whether we had to allocate a new block. However, if the reallocation
@@ -600,6 +746,11 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			 */	
 
 		object = xrealloc (ptr, new_size, GC_ON | GC_FREE);
+#endif
+
+#if defined(BOEHM_GC) || defined(NO_GC)
+		object = external_reallocation (ptr, new_size);
+#endif
 
 		if ((EIF_REFERENCE) 0 == object) {
 			UNDISCARD_BREAKPOINTS
@@ -628,6 +779,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			memset (object + new_real_size, 0, new_size - new_real_size);
 		}
 
+#ifdef ISE_GC
 		if (ptr != object) {		/* Has ptr moved in the reallocation? */
 				/* If the reallocation had to allocate a new object, then we have to do
 				 * some further settings: if the original object was marked EO_NEW, we
@@ -706,6 +858,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 		}
 	}
 #endif
+#endif
 
 	RT_GC_WEAN(ptr);	/* Unprotect `ptr'. No more collection is expected. */
 
@@ -720,6 +873,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 		sp_init(object, HEADER(object + OVERHEAD)->ov_flags & EO_TYPE, count, nbitems - 1);
 	}
 
+#ifdef ISE_GC
 	if (need_update) {
 			/* If the object has moved in the reallocation process and was in the
 			 * remembered set, we must re-issue a memorization call otherwise all the
@@ -759,6 +913,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 			}
 		}
 	}
+#endif
 
 	UNDISCARD_BREAKPOINTS
 
@@ -792,7 +947,16 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	 * usual conventions).
 	 */
 	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
+#ifdef ISE_GC
 	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
+#endif
+
+#if defined(BOEHM_GC) || defined(NO_GC)
+	object = external_allocation (1, 0, nbytes);
+	if (object != NULL) {
+		UNDISCARD_BREAKPOINTS
+	}
+#endif
 
 	/* As in the memory allocation routines located in eif_malloc.c, a new
 	 * BIT object has to be marked after being allocated in the eif_free
@@ -826,6 +990,7 @@ rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 	 * 'nbytes' free. Otherwise, a null pointer is returned.
 	 */
 
+#ifdef ISE_GC
 	EIF_REFERENCE arena;		/* C arena allocated */
 
 	arena = xmalloc(nbytes, C_T, GC_OFF);
@@ -839,8 +1004,12 @@ rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
 
 	return arena;
+#else
+	return (EIF_REFERENCE) malloc (nbytes);
+#endif
 }
 
+#ifdef ISE_GC
 rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes)
 {
 	/* Requests 'nbytes' from the free-list (Eiffel if possible), garbage
@@ -852,6 +1021,7 @@ rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes)
 	
 	return xmalloc(nbytes, EIFFEL_T, GC_OFF);
 }
+#endif
 
 rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
 						/* Number of bytes requested */
@@ -864,6 +1034,7 @@ rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
 	 * The function returns a pointer to the free location found, or a null
 	 * pointer if there is no memory available.
 	 */
+#ifdef ISE_GC
 	int mod;			/* Remainder for padding */
 	EIF_REFERENCE result;		/* Pointer to the free memory location we found */
 
@@ -906,8 +1077,12 @@ rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
 	}
 
 	return result;	/* Pointer to free data space or null if out of memory */
+#else
+	return (EIF_REFERENCE) malloc (nbytes);
+#endif
 }
 
+#ifdef ISE_GC
 rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag)
 {
 	/* Returns an aligned block of 'nbytes' bytes or null if no more
@@ -1883,6 +2058,7 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 
 	return (EIF_REFERENCE) (selected + 1);		/* Free data space */
 }
+#endif /* ISE_GC */
 
 rt_public void xfree(register EIF_REFERENCE ptr)
 {
@@ -1892,6 +2068,7 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 	 * The contents of the block are preserved, though one should not
 	 * rely on this as it may change without notice.
 	 */
+#ifdef ISE_GC
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
@@ -1952,8 +2129,12 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
 #endif
+#else
+	free(ptr);
+#endif
 }
 
+#ifdef ISE_GC
 rt_public void xfreechunk(EIF_REFERENCE ptr)
 {
 	/* Frees the memory chunk which starts at 'ptr'. This has
@@ -2017,6 +2198,7 @@ rt_public void xfreechunk(EIF_REFERENCE ptr)
 		ptr, zone->ov_size & B_SIZE);
 #endif
 }
+#endif
 
 rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
 {
@@ -2025,6 +2207,7 @@ rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
 	 * provided to keep the C interface with the standard malloc package.
 	 */
 	
+#ifdef ISE_GC
 	register1 unsigned int nbytes;	/* Number of bytes requested */
 	register2 EIF_REFERENCE allocated;		/* Address of new arena */
 
@@ -2036,8 +2219,12 @@ rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
 	}
 
 	return allocated;		/* Pointer to new zero-filled zone */
+#else
+	return (EIF_REFERENCE) calloc(nelem, elsize);
+#endif
 }
 
+#ifdef ISE_GC
 rt_private void xfreeblock(union overhead *zone, uint32 r)
 					 		/* The to-be-freed zone */
 		 					/* Size of block */
@@ -2079,6 +2266,7 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 
 	SIGRESUME;					/* Critical section ends */
 }
+#endif
 
 rt_public EIF_REFERENCE crealloc(EIF_REFERENCE ptr, unsigned int nbytes)
 {
@@ -2088,7 +2276,11 @@ rt_public EIF_REFERENCE crealloc(EIF_REFERENCE ptr, unsigned int nbytes)
 	 * garbage collection turned on.
 	 */
 	
+#ifdef ISE_GC
 	return xrealloc(ptr, nbytes, GC_ON);
+#else
+	return (EIF_REFERENCE) realloc(ptr, nbytes);
+#endif
 }
 
 rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag)
@@ -2102,6 +2294,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	 * when reallocing an object which is part of the moved set).
 	 */
 	EIF_GET_CONTEXT
+#ifdef ISE_GC
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
 	register3 union overhead *zone;		/* The to-be-reallocated zone */
@@ -2329,8 +2522,12 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 #endif
 
 	return (EIF_REFERENCE) zone;		/* Pointer to new arena or 0 if failed */
+#else
+	return (EIF_REFERENCE) realloc(ptr, nbytes);
+#endif
 }
 
+#ifdef ISE_GC
 rt_public struct emallinfo *meminfo(int type)
 {
 	/* Return the pointer to the static data held in m_data.
@@ -3042,6 +3239,7 @@ rt_public void sc_stop(void)
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
 	st_reset (&memory_set);
 }
+#endif
 
 /*
  * Set an Eiffel object for public use.
@@ -3060,15 +3258,25 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type)
 	SIGBLOCK;					/* Critical section */
 	memset (object, 0, zone->ov_size & B_SIZE);		/* All set with zeros */
 
+#ifdef EIF_TID 
+#ifdef EIF_THREADS
+    zone->ovs_tid = eif_thr_id; /* tid from eif_thr_context */
+#else
+    zone->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
+#endif  /* EIF_THREADS */
+#endif  /* EIF_TID */
+
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 	zone->ov_flags = type;		/* Set dynamic type */
-	
+
+#ifdef ISE_GC
 	if (type & EO_NEW)					/* New object outside scavenge zone */
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 			urgent_plsc(&object);					/* Full collection */
 			if (-1 == epush(&moved_set, object))	/* Still failed */
 				enomem(MTC_NOARG);							/* Critical exception */
 		}
+#endif
 
 	/* If the object has an initialization routine, call it now. This routine
 	 * is in charge of setting some other flags like EO_COMP and initializing
@@ -3120,6 +3328,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 
 	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
 
+#ifdef ISE_GC
 	if (in_scavenge == EIF_FALSE) {
 		zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
 
@@ -3129,6 +3338,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 				enomem(MTC_NOARG);							/* Critical exception */
 		}
 	} else
+#endif
 		zone->ov_flags = EO_SPEC;	/* Object is special */
 
 	SIGRESUME;					/* End of critical section */
@@ -3141,6 +3351,7 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 	return object;
 }
 
+#ifdef ISE_GC
 rt_private void set_memory_object (EIF_REFERENCE object)
 	/* Add `object' into `memory_set'. */
 {
@@ -3171,3 +3382,5 @@ rt_private int32 compute_hlist_index (int32 size) {
 	  i++;
 	return i;
 }
+
+#endif

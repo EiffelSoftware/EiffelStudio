@@ -33,6 +33,8 @@ extern "C" {
 #define CHUNK_DEFAULT	262144		/* Number of bytes in standard chunk */
 #endif
 
+#ifdef ISE_GC
+
 /*
  * Type of requests for meminfo().
  */
@@ -82,8 +84,9 @@ extern "C" {
  */
 #define GC_FREE		2				/* Garbage collector takes care of free */
 #define GC_ON		1				/* Garbage collector is on */
-#define GC_OFF		0				/* Garbage collector is off */
+#endif
 
+#define GC_OFF		0				/* Garbage collector is off */
 
 /*
  * Global variables, not in a per thread basis.

@@ -56,6 +56,18 @@ extern "C" {
 #define GS_ON		0x00000002		/* Generation scavenging is set */
 #define GS_OFF		0x00000001		/* Generation scavenging is off */
 
+#ifdef WORKBENCH
+#ifdef CONCURRENT_EIFFEL
+#define DISP(x,y) \
+	(x == scount)?sep_obj_dispose(y):call_disp(x,y)
+#else
+#define DISP(x,y) call_disp(x,y)
+#endif
+
+#else
+#define DISP(x,y) ((void *(*)())Dispose(x))(y)
+#endif
+
 #ifdef EIF_THREADS
 extern EIF_MUTEX_TYPE *eif_gc_mutex;	/* GC mutex */
 #endif
@@ -96,13 +108,14 @@ extern struct stack_list opstack_list;	/* List of all `opstack' allocated in eac
 #endif
 #endif
 
+#endif /* ISE_GC */
+
 extern EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);	/* Creates an empty stack */
 extern  int st_extend(register struct stack *stk, register int size);	/* Extends a stack */
 extern void st_truncate(register struct stack *stk);	/* Truncate stack if necessary */
 extern void st_wipe_out(register struct stchunk *chunk);/* Remove unneeded chunk from stack */
 extern void st_reset(register struct stack *stk);/* Clean stack */
 
-#endif /* ISE_GC */
 
 #ifdef __cplusplus
 }

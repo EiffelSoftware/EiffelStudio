@@ -125,82 +125,14 @@ feature -- Status report
 				and then (rout_disp = other.rout_disp)
 		end
 
-	valid_operands (args: OPEN_ARGS): BOOLEAN is do Result := True end
-
---	valid_operands (args: OPEN_ARGS): BOOLEAN is
---			-- Are `args' valid operands for this routine?
---		local
---			i: INTEGER
---			mismatch: BOOLEAN
---			arg: ANY
---			arg_type_code: INTEGER_8
---			open_arg_type_code: INTEGER
---			a_boolean_ref: BOOLEAN_REF
---			a_character_ref: CHARACTER_REF
---			a_double_ref: DOUBLE_REF
---			an_integer_ref: INTEGER_REF
---			a_pointer_ref: POINTER_REF
---			a_real_ref: REAL_REF
---			int: INTERNAL
---		do
---			if args = Void or open_map = Void then
---				-- Void operands are only allowed
---				-- if object has no open operands.
---				Result := (open_map = Void)
---			elseif open_map /= Void and then args.count >= open_map.count then
---				from
---					create int
---					i := 1
---				until
---					i > open_map.count or mismatch
---				loop
---					arg := args.item (i)
---					arg_type_code := args.arg_item_code (i)
-----					open_arg_type_code := open_operand_type (i)
-----					open_arg_type_code := open_types.item (i)
---					if arg_type_code = feature {TUPLE}.reference_code then				
---						inspect	open_arg_type_code
---						when feature {TUPLE}.boolean_code then
---							a_boolean_ref ?= arg
---							mismatch := a_boolean_ref = Void
---						when feature {TUPLE}.character_code then
---							a_character_ref ?= arg
---							mismatch := a_character_ref = Void
---						when feature {TUPLE}.double_code then
---							a_double_ref ?= arg
---							mismatch := a_double_ref = Void
---						when feature {TUPLE}.integer_code then
---							an_integer_ref ?= arg
---							mismatch := an_integer_ref = Void
---						when feature {TUPLE}.pointer_code then
---							a_pointer_ref ?= arg
---							mismatch := a_pointer_ref = Void
---						when feature {TUPLE}.real_code then
---							a_real_ref ?= arg
---							mismatch := a_real_ref = Void
---						when feature {TUPLE}.reference_code then
---							if arg /= Void and then not eif_gen_conf (
---								int.dynamic_type (arg),
---								open_operand_type (i))
---							then
---								mismatch := True
---							end
---						end
---					else
---						if
---							arg_type_code /= open_arg_type_code
---							and (
---								open_arg_type_code = feature {TUPLE}.reference_code implies
---								open_operand_type (i) > 0)
---						then
---							mismatch := True
---						end
---					end
---						i := i + 1
---					end
---				Result := not mismatch
---			end
---		end
+	valid_operands (args: OPEN_ARGS): BOOLEAN is
+			-- Are `args' valid operands for this routine?
+		do
+				-- True for the moment. If it is not valid then an
+				-- exception will be thrown by the .NET runtime during
+				-- feature call.
+			Result := True
+		end
 
 feature -- Measurement
 

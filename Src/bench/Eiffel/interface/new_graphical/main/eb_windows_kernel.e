@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 				local_string.is_equal ("-unregserver") or local_string.is_equal ("/unregserver") or
 				local_string.is_equal ("-embedding") or local_string.is_equal ("/embedding"))
 			then
+				register_basic_graphical_types
+				initialize_resources (system_general, Eiffel_preferences)
 				create com_compiler.make
 			else
 				standard_make

@@ -26,7 +26,7 @@ feature
 			then
 				!!a_file.make (file_name);
 				if a_file.exists and then a_file.is_readable then
-					a_file.open_read;
+					a_file.open_binary_read;
 					a_file.readstream (a_file.count);
 					a_file.close;
 					Result :=  a_file.laststring

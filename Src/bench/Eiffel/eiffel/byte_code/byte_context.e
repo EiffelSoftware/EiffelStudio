@@ -384,8 +384,8 @@ feature
 		do
 			if not current_used then
 				set_local_index ("Current", Current_register);
+				current_used := true;
 			end;
-			current_used := true;
 		end;
 
 	mark_result_used is
@@ -503,6 +503,7 @@ feature
 		local
 			assign: ASSIGN_BL;
 			call: CALL_B;
+			constant_b: CONSTANT_B;
 			compound: BYTE_LIST [BYTE_NODE];
 			rassign: REVERSE_BL
 		do
@@ -529,7 +530,19 @@ feature
 								call ?= assign.source;
 								if call /= Void and then call.is_single then
 										-- Simple assignment of a single call
-									Result := has_invariant;
+									if has_invariant then
+										Result := True
+									else
+										constant_b ?= call;
+												-- If it is a constant. we don't need registers
+										Result := (constant_b = Void) and then
+												-- If we can optimize result := call, no registers
+											not assign.target.is_result and then
+												-- If it is not an instruction result := call but the
+												-- source is a predefined item (local, current, result
+												-- or argument), we can still optimize. Xavier
+											not call.is_predefined;
+									end;
 								end;
 							end;
 						elseif call /= Void and then call.is_single then

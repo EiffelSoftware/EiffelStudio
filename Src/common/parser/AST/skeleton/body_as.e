@@ -287,9 +287,8 @@ feature -- Debugger
 	find_breakable is
 			-- Look for breakable instructions.
 		do
-			record_break_node;  -- We want a breakpoint on routine entrance
 			if content /= Void then
-				content.find_breakable;
+				content.find_breakable
 			end;
 		end
  

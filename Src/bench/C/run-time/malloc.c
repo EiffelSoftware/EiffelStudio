@@ -3717,7 +3717,9 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	union overhead *next;		/* Next zone to be studied */
 	uint32 size = 0;			/* Flags to bo OR'ed on each object */
 	EIF_REFERENCE top = sc->sc_top;	/* Top in scavenge space */
-	rt_uint_ptr nb_objects = 0;	/* Number of objects in scavenge zone. */
+	rt_uint_ptr new_objects_overhead = 0;	/* Overhead size corresponding to new objects
+											   which have now a life of their own outside
+											   the scavenge zone. */
 
 	next = (union overhead *) sc->sc_arena;
 	if (next == (union overhead *) 0)
@@ -3754,7 +3756,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		if (-1 == epush(&moved_set, (EIF_REFERENCE) (zone + 1)))
 			enomem(MTC_NOARG);					/* Critical exception */
 		zone->ov_flags |= EO_NEW;		/* Released object is young */
-		nb_objects++;
+		new_objects_overhead += OVERHEAD;
 	}
 
 #ifdef MAY_PANIC
@@ -3790,7 +3792,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 #endif
 
 		eif_rt_xfree((EIF_REFERENCE) (zone + 1));			/* Put remainder back to free-list */
-		nb_objects++;
+		new_objects_overhead += OVERHEAD;
 	} else {
 		next = HEADER(sc->sc_arena);	/* Point to the header of the arena */
 	}
@@ -3804,22 +3806,21 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	next->ov_size = size;				/* A zero length bloc */
 	eif_rt_xfree((EIF_REFERENCE) (next + 1));			/* Free header of scavenge zone */
 
-	/* Update the statistics: we released 'nb_objects' blocks, so we created that
+	/* Update the statistics: we released 'new_objects_overhead , so we created that
 	 * amount of overhead. Note that we do have to change the amount of
 	 * memory used as the above call to `eif_rt_xfree' to mark the remaining
-	 * zone as free did not take into account the `nb_objects' overhead that was
+	 * zone as free did not take into account the `new_objects_overhead' that was
 	 * added (it considered it was a single block).
 	 */
 
-	flags = nb_objects * OVERHEAD;			/* Amount of "added" overhead space */
-	m_data.ml_used -= flags;
-	m_data.ml_over += flags;
+	m_data.ml_used -= new_objects_overhead;
+	m_data.ml_over += new_objects_overhead;
 	if (size & B_CTYPE) {					/* Scavenge zone in a C chunk */
-		c_data.ml_used -= flags;
-		c_data.ml_over += flags;
+		c_data.ml_used -= new_objects_overhead;
+		c_data.ml_over += new_objects_overhead;
 	} else {								/* Scavenge zone in an Eiffel chunk */
-		e_data.ml_used -= flags;
-		e_data.ml_over += flags;
+		e_data.ml_used -= new_objects_overhead;
+		e_data.ml_over += new_objects_overhead;
 	}
 
 	SIGRESUME;							/* End of critical section */

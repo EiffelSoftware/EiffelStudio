@@ -138,6 +138,14 @@ feature -- Standard window class values
 		ensure
 			result_not_null: Result /= default_pointer
 		end
+	
+	class_requires_icon: BOOLEAN is
+			-- Does `Current' require an icon to be registered?
+			-- If `True' `register_class' assigns a class icon, otherwise
+			-- no icon is assigned.
+		do
+			Result := True
+		end
 
 feature -- Default creation values
 
@@ -180,7 +188,9 @@ feature {NONE} -- Implementation
 			if not wnd_class.registered then
 				wnd_class.set_style (class_style)
 				wnd_class.set_window_procedure (class_window_procedure)
-				wnd_class.set_icon (class_icon)
+				if class_requires_icon then
+					wnd_class.set_icon (class_icon)
+				end
 				wnd_class.set_cursor (class_cursor)
 				if
 					background_brush = Void and then

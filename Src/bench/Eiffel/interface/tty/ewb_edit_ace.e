@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Edit Ace file.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_EDIT_ACE 
 
@@ -10,24 +16,18 @@ inherit
 			abbreviation as edit_ace_abb
 		end
 
-feature
+feature {NONE} -- Execution
 
 	execute is
 		local
 			lace_name: STRING;
 		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					lace_name := Lace.file_name
-					if lace_name = Void then
-						io.error.putstring ("You must select an Ace file first%N");
-					else
-						edit (Lace.file_name);
-					end;
-				end;
+			lace_name := Lace.file_name
+			if lace_name = Void then
+				io.error.putstring ("You must select an Ace file first%N");
+			else
+				edit (Lace.file_name);
 			end;
 		end;
 
-end
+end -- class EWB_EDIT_ACE

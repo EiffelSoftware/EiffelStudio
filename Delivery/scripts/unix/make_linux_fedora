@@ -13,11 +13,11 @@ verbose
 open mojo.ise 
 user manus manus 
 binary
-get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.tgz Eiffel55_fedora.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel55_free.tgz Eiffel55_free_fedora.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.iso.gz Eiffel55_enterprise_fedora.iso.gz
-get local/TEST_DELIV/PorterPackage/Eiffel55_university.iso.gz Eiffel55_university_fedora.iso.gz
-get local/TEST_DELIV/PorterPackage/Eiffel55_free.iso.gz Eiffel55_free_fedora.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_enterprise.tgz Eiffel56_fedora.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel56_free.tgz Eiffel56_free_fedora.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel56_enterprise.iso.gz Eiffel56_enterprise_fedora.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_university.iso.gz Eiffel56_university_fedora.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_free.iso.gz Eiffel56_free_fedora.iso.gz
 close 
 EOF
 
@@ -26,7 +26,7 @@ else
 	rm -rf PorterPackage
 	tar xvf ~/PorterPackage_all.tar
 	cd PorterPackage
-	export ISE_PLATFORM=linux-glibc2.1
+	export ISE_PLATFORM=linux-x86
 	compile_exes
 	make_images
 fi

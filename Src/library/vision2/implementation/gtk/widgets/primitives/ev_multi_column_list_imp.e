@@ -15,24 +15,23 @@ inherit
 	EV_PRIMITIVE_IMP
 		export
 			{EV_MULTI_COLUMN_LIST_ROW_IMP} widget
-		undefine
-			build
 		redefine
 			destroy
 		end
 
 creation
-	make_with_size
+	make_with_size,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make_with_size (par: EV_CONTAINER; col_nb: INTEGER) is         
+	make_with_size (col_nb: INTEGER) is         
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
 		do
 			widget := gtk_clist_new (col_nb)
-			show
+			gtk_object_ref (widget)
 			show_title_row
 			!! ev_children.make (0)
 		end
@@ -111,10 +110,10 @@ feature -- Status setting
 
 	destroy is
 		-- Destroy screen widget implementation and EV_LIST_ITEM objects
-	do
-		clear_items
-		{EV_PRIMITIVE_IMP} Precursor 
-	end
+		do
+			clear_items
+			{EV_PRIMITIVE_IMP} Precursor 
+		end
 
 	show_title_row is
 			-- Show the row of the titles.
@@ -248,9 +247,12 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Do nothing, need to be implemented
 		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

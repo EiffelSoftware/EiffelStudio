@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision split, gtk implementation."
 	status: "See notice at end of class"
@@ -8,39 +7,37 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_SPLIT_AREA_IMP
 	
 inherit
-	
 	EV_SPLIT_AREA_I
-		redefine
-			add_child1,
-			add_child2
-		end
 
 	EV_CONTAINER_IMP
-		undefine
-			add_child_ok,
-			child_add_successful,
-			add_child
+		redefine
+			add_child,
+			add_child_ok
 		end
-		
-	
-feature {EV_SPLIT_AREA} -- Implementation
-	
-	add_child1 (child_imp: EV_WIDGET_IMP) is
+
+feature -- Element change
+
+	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add the first child of the split.
 		do
-			{EV_SPLIT_AREA_I} Precursor (child_imp)
-			gtk_paned_add1 (widget, child_imp.widget)
+			if c_gtk_paned_child1 (widget) = default_pointer then
+				gtk_paned_add1 (widget, child_imp.widget)
+			elseif c_gtk_paned_child2 (widget) = default_pointer then
+				gtk_paned_add2 (widget, child_imp.widget)
+			end
 		end
-	
-	add_child2 (child_imp: EV_WIDGET_IMP) is
-			-- Add the second child.
+
+feature -- Assertion test
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
 		do
-			{EV_SPLIT_AREA_I} Precursor (child_imp)
-			gtk_paned_add2 (widget, child_imp.widget)
+			Result := c_gtk_container_nb_children (widget) < 2
 		end
 
 end -- class EV_SPLIT_AREA_IMP

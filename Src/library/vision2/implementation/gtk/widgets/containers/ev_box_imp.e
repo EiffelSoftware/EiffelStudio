@@ -15,16 +15,6 @@ inherit
 	EV_BOX_I
 		
 	EV_INVISIBLE_CONTAINER_IMP
-		undefine
-			add_child
-		end
-
-feature {NONE} -- Initialization
-	
-        make (par: EV_CONTAINER) is
-                        -- Create a fixed widget. 
-		deferred
-		end	
 
 feature -- Element change (box specific)
 	
@@ -62,17 +52,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 		do
 			
 		end
-
---feature {EV_BOX} -- Implementation
-	
---	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite. Several children
-			-- possible.
---		do
---			child ?= child_imp
---			gtk_box_pack_start (widget, child_imp.widget, 
---					    child_imp.expand, , 0)
---		end
 
 end -- class EV_BOX_IMP
 

@@ -12,7 +12,6 @@ class
 	EV_SCROLLABLE_AREA_IMP
 	
 inherit
-	
 	EV_SCROLLABLE_AREA_I
 		
 	EV_CONTAINER_IMP
@@ -23,17 +22,18 @@ creation
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a scrollable_area widget. 
 		do
 			widget := gtk_scrolled_window_new ( Default_pointer, 
 							    Default_pointer)
-			show
+			gtk_object_ref (widget)
 			gtk_scrolled_window_set_policy (gtk_scrolled_window (widget), 
 							gtk_policy_automatic, 
 							gtk_policy_automatic)
 		end	
-end
+
+end -- class EV_SCROLLABLE_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

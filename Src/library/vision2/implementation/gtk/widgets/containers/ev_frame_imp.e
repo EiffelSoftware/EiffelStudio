@@ -1,6 +1,7 @@
 indexing
 	description:
 		"EiffelVision Frame, gtk implementation";
+	status: "See notice at end of class."
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -18,20 +19,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create a frame with `par' as parent.
 		do
-			make_with_text (par, "")
+			widget := gtk_frame_new (default_pointer)
+			gtk_object_ref (widget)
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create a frame with `par' as parent.
 		local
 			a: ANY
 		do
 			a ?= txt.to_c
 			widget := gtk_frame_new ($a)
-			show
+			gtk_object_ref (widget)
 		end
 
 end -- class EV_FRAME_IMP

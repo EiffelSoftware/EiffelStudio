@@ -22,7 +22,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is         
+	make is         
 			-- Create a menu widget with `par' as parent.
 			-- We can't use `widget_make' here, because a menu
 			-- is not a child, otherwise, you couldn't put more
@@ -30,23 +30,23 @@ feature {NONE} -- Initialization
 			-- window
 		do
 			widget := gtk_option_menu_new ()
-			show
+			gtk_object_ref (widget)
 		end	
 
 feature {EV_MENU_ITEM_CONTAINER} -- Element change	
 	
-	add_menu (menu: EV_MENU) is
+	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Set menu for menu item
-		local
-			menu_imp: EV_MENU_IMP
 		do
-			menu_imp ?= menu.implementation
-			check
-				correct_imp: menu_imp /= void
-			end
 			gtk_option_menu_set_menu (widget, menu_imp.widget)
 		end
 	
+	remove_menu (menu_imp: EV_MENU_IMP) is
+			-- Set menu for menu item
+		do
+			gtk_option_menu_remove_menu (widget)
+		end
+
 end -- class EV_OPTION_BUTTON_IMP
 
 --|----------------------------------------------------------------

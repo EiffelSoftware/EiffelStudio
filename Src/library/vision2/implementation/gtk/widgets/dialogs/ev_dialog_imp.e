@@ -15,11 +15,12 @@ inherit
 
 	EV_WINDOW_IMP
 		undefine
-			build
+			set_default_options
 		end
 
 creation
-	make
+	make,
+	make_with_owner
 	
 end -- class EV_DIALOG_IMP
 

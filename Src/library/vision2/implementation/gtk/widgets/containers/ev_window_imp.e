@@ -16,31 +16,51 @@ inherit
 		
 	EV_CONTAINER_IMP
 		undefine
-			build
+			set_default_colors
 		redefine
 			add_child,
+			remove_child,
 			x,
-			y
+			y,
+			set_parent
 		end
 	
 creation
-	
-	make, make_top_level
-	
+	make,
+	make_with_owner
+
 feature {NONE} -- Initialization
 	
-        make (par: EV_WINDOW) is
+	make is
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 			initialize
 		end
-	
-	make_top_level is
+
+        make_with_owner (par: EV_WINDOW) is
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 			initialize
 		end
-	
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+			-- Before to remove the widget from the
+			-- container, we increment the number of
+			-- reference on the object otherwise gtk
+			-- destroyed the object. And after having
+			-- added the object to another container,
+			-- we remove this supplementary reference.
+		do
+			if parent_imp /= Void then
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+			end
+		end
+
 feature  -- Access
 
 	x: INTEGER is
@@ -258,6 +278,7 @@ feature -- Event -- removing command association
 			-- when the window is closed.
 		do
 			check False end
+			has_close_command := False
 		end
 
 	remove_resize_commands is
@@ -316,10 +337,15 @@ feature {NONE} -- Implementation
 feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
+			-- Add `child_imp' in the window.
 		do
-			child := child_imp
 			gtk_box_pack_end (vbox, child_imp.widget, True, True, 0)
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is
+			-- Remove `child_imp' from the window.
+		do
+			gtk_container_remove (vbox, child_imp.widget)
 		end
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation

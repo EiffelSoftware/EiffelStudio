@@ -18,19 +18,18 @@ inherit
 	EV_SPLIT_AREA_IMP
 	
 creation
-	
 	make
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_vpaned_new 
-			show
+			gtk_object_ref (widget)
 		end	
 	
-end
+end -- class EV_VERTICAL_SPLIT_AREA_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -16,22 +16,27 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 	
 	EV_BAR_ITEM_IMP
-		undefine
-			build
-		end	
-                
-creation
 
-	make
+creation
+	make,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-        make (parent: EV_CONTAINER) is
+        make is
                         -- Create a gtk entry.
                 do
                         widget := gtk_entry_new
-			show
+			gtk_object_ref (widget)
                 end
+
+	make_with_text (txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		do
+			make
+			set_text (txt)
+		end
 
 feature -- Access
 
@@ -46,13 +51,6 @@ feature -- Access
 
 feature -- Status setting
 	
-	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
-		do
-			gtk_entry_set_editable (widget, flag)
-		end
-
 	set_text (txt: STRING) is
 		local
 			a: ANY
@@ -77,20 +75,15 @@ feature -- Status setting
 			gtk_entry_prepend_text (widget, $a)
 		end
 	
-	set_position (pos: INTEGER) is
-		do
-			gtk_entry_set_position (widget, pos)
-		end
+--	set_position (pos: INTEGER) is
+--		do
+--			gtk_entry_set_position (widget, pos)
+--		end
 	
-	set_maximum_line_length (len: INTEGER) is
+	set_maximum_text_length (len: INTEGER) is
 		do
 			gtk_entry_set_max_length (widget, len)
 		end
-	
-	select_region (start_pos, end_pos: INTEGER) is
-		do
-			gtk_entry_select_region (widget, start_pos-1, end_pos-1)
-		end	
 	
 feature -- Event - command association
 	
@@ -101,26 +94,12 @@ feature -- Event - command association
 			add_command ("activate", cmd,  arg)
 		end
 
-	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add 'cmd' to the list of commands to be executed 
-			-- when the text of the widget have changed.
-		do
-			add_command ("changed", cmd,  arg)
-		end
-
 feature -- Event -- removing command association
 
 	remove_activate_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
-		do
-			check False end
-		end
-
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
 		do
 			check False end
 		end

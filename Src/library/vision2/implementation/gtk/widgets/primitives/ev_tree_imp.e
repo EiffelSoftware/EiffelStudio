@@ -19,11 +19,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create an empty Tree.
 		do
 			widget := gtk_tree_new
-			show
+			gtk_object_ref (widget)
 		end
 
 feature -- Event : command association
@@ -44,21 +44,19 @@ feature -- Event -- removing command association
 			check False end
 		end
 
-feature {EV_TREE_ITEM} -- Implementation
+feature {NONE} -- Implementation
 
-	add_item (item: EV_TREE_ITEM) is
+	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
-		local
-			item_imp: EV_TREE_ITEM_IMP
 		do
-			item_imp ?= item.implementation
-			check
-				correct_imp: item_imp /= Void
-			end
 			gtk_tree_append (widget, item_imp.widget)
-			gtk_widget_show (item_imp.widget)
 		end
 
+	remove_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Remove `item' to the list
+		do
+			gtk_tree_remove_item (widget, item_imp.widget)
+		end
 
 feature {NONE} -- Implementation
 

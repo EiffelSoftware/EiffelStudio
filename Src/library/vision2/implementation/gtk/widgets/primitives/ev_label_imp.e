@@ -23,19 +23,27 @@ inherit
 		redefine
 			make_with_text
                 end
+
 creation
+	make,
 	make_with_text
 
 feature {NONE} -- Initialization
 
-	make_with_text (parent: EV_CONTAINER; txt: STRING) is
+	make is
+                        -- Create a gtk label.
+                do
+                        make_with_text ("")
+                end
+
+	make_with_text (txt: STRING) is
                         -- Create a gtk label.
                 local
                         a: ANY
                 do
                         a ?= txt.to_c
                         widget := gtk_label_new ($a)
-			show
+			gtk_object_ref (widget)
                 end
 	
 feature {NONE} -- Implementation

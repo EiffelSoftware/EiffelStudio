@@ -16,11 +16,21 @@ inherit
 	EV_INVISIBLE_CONTAINER_I
 		
 	EV_CONTAINER_IMP
-		undefine
+		redefine
 			add_child_ok
 		end
+
+feature -- Assertion test
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to container.
+		do
+			Result := True
+		end
 	
-end
+end -- class EV_INVISIBLE_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

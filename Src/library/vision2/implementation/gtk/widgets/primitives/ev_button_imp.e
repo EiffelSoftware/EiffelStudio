@@ -30,15 +30,15 @@ inherit
 	EV_GTK_BUTTONS_EXTERNALS
 
 creation
-
-        make, make_with_text
+        make,
+	make_with_text
 
 feature {NONE} -- Initialization
 	
-	make (par: EV_CONTAINER) is
+	make is
 		do
 			widget := gtk_button_new
-			show
+			gtk_object_ref (widget)
 			initialize
 		end
 	
@@ -75,17 +75,6 @@ feature {NONE} -- Implementation
 	gtk_command_id: INTEGER
                         -- Id of the command handler
         
---	set_label_widget (new_label_widget: POINTER) is
---		do
---			label_widget := new_label_widget
---		end        
-	
-  --      label_widget: POINTER 
-                        -- gtk widget of the label inside the button
-           --     do
-            --            Result := c_gtk_get_label_widget (widget)
-             --   end
-	
 end -- class EV_BUTTON_IMP
 
 --|----------------------------------------------------------------

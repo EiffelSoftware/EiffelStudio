@@ -12,7 +12,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			build
+			set_default_colors
 		redefine
 			destroy
 		end
@@ -22,23 +22,17 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do
 			!! ev_children.make
 			widget := gtk_list_new
 			set_single_selection
-			gtk_widget_show (widget)
+			gtk_object_ref (widget)
 		end
 
 feature -- Access
-	select_item (index: INTEGER) is
-			-- Give the item of the list at the one-base
-			-- index. (Gtk uses 0 based indexs, I think)
-		do
-			gtk_list_select_item (widget, index-1)
-		end
 
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
@@ -86,6 +80,25 @@ feature -- Status setting
 			{EV_PRIMITIVE_IMP} Precursor 
 		end
 
+	select_item (index: INTEGER) is
+			-- Give the item of the list at the one-base
+			-- index. (Gtk uses 0 based indexs, I think)
+		do
+			gtk_list_select_item (widget, index - 1)
+		end
+
+	deselect_item (index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			gtk_list_unselect_item (widget, index - 1)
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		do
+			gtk_list_unselect_all (widget)
+		end
+
 	set_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
@@ -113,15 +126,15 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
 			-- selected.
 		do
-			add_command ("selection_changed", a_command, arguments)
+			add_command ("selection_changed", cmd, arg)
 			--add_command ("select_child", a_command, arguments)
 		end
 
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
+	add_double_click_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `command' executed when an item is
 			-- selected.
 		do
@@ -139,20 +152,27 @@ feature -- Event -- removing command association
 			check False end
 		end
 
-feature {EV_LIST_ITEM} -- Implementation
-
-	add_item (item: EV_LIST_ITEM) is
-			-- Add `item' to the list
-		local
-			item_imp: EV_LIST_ITEM_IMP
+	remove_double_click_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
 		do
-			item_imp ?= item.implementation
-			check
-				correct_imp: item_imp /= Void
-			end
+			check False end
+		end
+
+feature {EV_LIST_ITEM_IMP} -- Implementation
+
+	add_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Add `item' to the list.
+		do
 			ev_children.extend (item_imp)
 			gtk_container_add (widget, item_imp.widget)
-			--c_gtk_list_add_item (widget, item_imp.widget)
+		end
+
+	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Remove `item_imp' from the list.
+		do
+			ev_children.prune_all (item_imp)
+			gtk_container_remove (widget, item_imp.widget)
 		end
 
 end -- class EV_LIST_IMP

@@ -13,43 +13,80 @@ class
 inherit
 	EV_COMBO_BOX_I
 
-	EV_PRIMITIVE_IMP
+	EV_TEXT_FIELD_IMP
 		undefine
-			build
+			make_with_text,
+			destroy,
+			cut_selection,
+			copy_selection,
+			selection_start,
+			selection_end,
+			has_selection,
+			delete_selection,
+			select_all,
+			deselect_all
 		redefine
-			destroy
+			make,
+			text,
+			set_editable,
+			set_text,
+			append_text,
+			prepend_text,
+			set_position,
+			set_maximum_text_length,
+			select_region,
+			add_activate_command,
+			add_change_command,
+			remove_activate_commands,
+			remove_change_commands
 		end
-	
-creation
 
+	EV_LIST_IMP
+		undefine
+			set_default_colors,
+			set_default_options,
+			is_multiple_selection,
+			set_single_selection,
+			set_multiple_selection
+		redefine
+			make,
+			select_item,
+			selected_item,
+			rows,
+			selected,
+			clear_items,
+			add_selection_command,
+			add_double_click_selection_command,
+			remove_selection_commands,
+			remove_double_click_selection_commands,
+			add_item,
+			remove_item
+		end
+
+creation
 	make
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create a combo-box with `par' as parent.
 		do
 			!!ev_children.make
 			widget := gtk_combo_new
-			show
+			gtk_object_ref (widget)
 			entry_widget := c_gtk_combo_entry (widget)
 			list_widget := c_gtk_combo_list (widget)
 		end
 
 feature -- Access
 
-        text: STRING is
+	text: STRING is
 		local
 			p: POINTER
 		do
 			p := gtk_entry_get_text (entry_widget)
 			!!Result.make (0)
 			Result.from_c (p)
-		end
-
-	text_length: INTEGER is
-		do
-			Result := text.count
 		end
 
 	select_item (index: INTEGER) is
@@ -75,51 +112,12 @@ feature -- Access
 			end
 		end
 
-feature -- Basic operation
+feature -- Measurement
 
-	search (str: STRING): INTEGER is
-			-- Search the string `str' in the text.
-			-- If `str' is find, it returns its start
-			-- index in the text, otherwise, it returns
-			-- `Void'
+	extended_height: INTEGER is
+			-- height of the combo-box when the children are
+			-- visible.
 		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
-			-- nothing.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	paste (index: INTEGER) is
-			-- Insert the string which is in the 
-			-- Clipboard at the `index' postion in the
-			-- text.
-			-- If the Clipboard is empty, it does nothing. 
-		do
-			check
-				not_yet_implemented: False
-			end
 		end
 
 feature -- Status report
@@ -136,16 +134,8 @@ feature -- Status report
 			Result := c_gtk_list_selected (list_widget)
 		end
 
-feature -- Measurement
-
-	extended_height: INTEGER is
-			-- height of the combo-box when the children are
-			-- visible.
-		do
-		end
-
 feature -- Status setting
-	
+
 	set_editable (flag: BOOLEAN) is
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
@@ -161,7 +151,7 @@ feature -- Status setting
 			gtk_entry_set_text (entry_widget, $a)
 		end
 	
-	append_text (txt: STRING) is 
+	append_text (txt: STRING) is
 		local
 			a: ANY
 		do
@@ -182,7 +172,7 @@ feature -- Status setting
 			gtk_entry_set_position (entry_widget, pos)
 		end
 	
-	set_maximum_line_length (len: INTEGER) is
+	set_maximum_text_length (len: INTEGER) is
 		do
 			gtk_entry_set_max_length (entry_widget, len)
 		end
@@ -191,14 +181,6 @@ feature -- Status setting
 		do
 			gtk_entry_select_region (entry_widget, start_pos-1, end_pos-1)
 		end	
-
-	destroy is
-			-- Destroy screen widget implementation and EV_LIST_ITEM objects
-		do
-			clear_items
-			{EV_PRIMITIVE_IMP} Precursor 
-		end
-
 
 feature -- Element change
 
@@ -209,30 +191,18 @@ feature -- Element change
 			gtk_list_clear_items (list_widget, 0, rows)
 		end
 
-feature -- Resizing
-
-	set_minimum_width_in_characters (nb: INTEGER) is
-			-- Make `nb' characters visible on one line.
-		do
-			check not_implemented: False end
-		end	
-
-feature -- Event - command association
-	
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENT) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the button is pressed
-		do
-			add_command ( "activate", command,  arguments )
-		end
+feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
 			-- selected.
+		local
+			p: POINTER
 		do
+			p := widget
+			widget := list_widget
 			add_command ("selection_changed", a_command, arguments)
-			--add_command ("select_child", a_command, arguments)
+			widget := p
 		end
 
 	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
@@ -244,33 +214,31 @@ feature -- Event - command association
 			end
 		end
 
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be
+			-- executed when the button is pressed
+		local
+			p: POINTER
+		do
+			p := widget
+			widget := entry_widget
+			add_command ("activate", cmd,  arg)
+			widget := p
+		end
+
 	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text of the widget have changed.
+		local
+			p: POINTER
 		do
+			p := widget
+			widget := entry_widget
 			add_command ("changed", cmd,  arg)
+			widget := p
 		end
 
 feature -- Event -- removing command association
-
-	remove_activate_commands is
-			-- Empty the list of commands to be executed
-			-- when the text field is activated, ie when the user
-			-- press the enter key.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	remove_change_commands is
-			-- Empty the list of commands to be executed
-			-- when the text of the widget have changed.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
 
 	remove_selection_commands is	
 			-- Empty the list of commands to be executed
@@ -279,31 +247,55 @@ feature -- Event -- removing command association
 			check False end
 		end
 
+	remove_double_click_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			check False end
+		end
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
+		do
+			check False end
+		end
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+		do
+			check False end
+		end
+
 feature {EV_LIST_ITEM} -- Implementation
 
-	add_item (item: EV_LIST_ITEM) is
+	add_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Add `item' to the list
 		local
-			item_imp: EV_LIST_ITEM_IMP 
 			s: ANY
 		do
-			item_imp ?= item.implementation
-			check
-				correct_imp: item_imp /= Void
-			end
 			ev_children.extend (item_imp)
-			s ?= item.text.to_c
+			s ?= item_imp.text.to_c
 			gtk_combo_set_item_string (widget, item_imp.widget, $s)
-			gtk_widget_show (item_imp.widget)
 			gtk_container_add (list_widget, item_imp.widget)
-			--c_gtk_list_add_item (list_widget, item_imp.widget)
+		end
+
+	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Remove `item' from the list
+		do
+			ev_children.prune_all (item_imp)
+			gtk_container_remove (list_widget, item_imp.widget)
 		end
 
 feature {NONE} -- Implementation
 
 	entry_widget: POINTER
+		-- A pointer on the text field
 
 	list_widget: POINTER
+		-- A pointer on the list
 
 end -- class EV_COMBO_BOX_IMP
 

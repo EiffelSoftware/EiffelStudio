@@ -45,6 +45,7 @@ feature -- Status setting
 feature {EV_TOOL_BAR_SELECT_BUTTON_IMP} -- Implementation
 
 	on_parented is
+			-- `Current' has just been parented.
 		require else
 			has_parent: parent_imp /= Void
 		do

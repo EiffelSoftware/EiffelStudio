@@ -737,7 +737,7 @@ end
 			if creation_feature = Void then
 				creation_feature := default_create_feature
 				if creation_feature /= Void and then
-							creation_feature.empty_body then
+							creation_feature.is_empty then
 					-- Don't force a creation call if it does
 					-- nothing.
 					creation_feature := Void
@@ -844,7 +844,7 @@ end
 					has_default_rescue := False
 					if
 						def_resc /= Void
-						and then not def_resc.empty_body
+						and then not def_resc.is_empty
 						and then def_resc.feature_name_id /= feature_name_id
 					then
 						feature_i.create_default_rescue (def_resc.feature_name)

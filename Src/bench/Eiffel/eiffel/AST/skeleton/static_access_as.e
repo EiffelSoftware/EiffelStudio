@@ -28,6 +28,11 @@ inherit
 			type_check, good_integer, good_character,
 			make_integer, make_character
 		end
+		
+	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
 
 create
 	initialize
@@ -104,29 +109,33 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type checking of a static access.
 		local
-			class_type_as: CLASS_TYPE_AS
-			formal_as: FORMAL_AS
+			l_formal: FORMAL_A
+			l_gen_type: GEN_TYPE_A
+			l_type: TYPE_A
 			vsta1: VSTA1
+			vtug: VTUG
 		do
 				-- Check validity of class specification
-			class_type_as ?= class_type
-			if class_type_as = Void then
-				formal_as ?= class_type
-				check
-					formal_as_not_void: formal_as /= Void
-				end
-				create vsta1.make (formal_as.dump, feature_name)
-				vsta1.set_class (system.current_class)
+			l_type := class_type.actual_type
+			l_formal ?= l_type
+			if l_formal /= Void then
+				create vsta1.make (l_formal.dump, feature_name)
+				vsta1.set_class (context.current_class)
 				error_handler.insert_error (vsta1)
 				error_handler.raise_error
 			else
--- FIXME: Manu 10/29/2001: Do we really need to prevent static access on generic class?
--- 				if class_type_as.actual_type.has_generics then
--- 					create vsta1.make (class_type_as.class_name, feature_name)
--- 					vsta1.set_class (system.current_class)
--- 					error_handler.insert_error (vsta1)
--- 					error_handler.raise_error
--- 				end
+				if not l_type.good_generics then
+					vtug := l_type.error_generics
+					vtug.set_class (context.current_class)
+					vtug.set_feature (context.current_feature)
+					Error_handler.insert_error (vtug)
+					Error_handler.raise_error
+				end
+			end
+
+			if l_type.has_generics then
+				l_gen_type ?= l_type
+				Instantiator.dispatch (l_gen_type, context.current_class)
 			end
 
 				-- Check validity of call.

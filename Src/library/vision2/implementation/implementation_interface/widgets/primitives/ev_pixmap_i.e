@@ -22,16 +22,34 @@ feature {NONE} -- Initialization
 		deferred
 		end	
 
+feature -- Status report
+
+	is_free: BOOLEAN is
+			-- Is the pixmap free and then can be added in a
+			-- control?
+		require
+			exists: not destroyed
+		deferred
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
 			-- width of the pixmap
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			positive_result: Result > 0
 		end
 
 	height: INTEGER is
 			-- height of the pixmap
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			positive_result: Result > 0
 		end
 
 feature -- Basic operation

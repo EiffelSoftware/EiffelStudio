@@ -259,7 +259,7 @@ rt_public EIF_BOOLEAN econfg(char *obj1, char *obj2)
 	if ((char *) 0 == obj1 || (char *) 0 == obj2)
 		return (EIF_BOOLEAN) 0;
 
-	return (EIF_BOOLEAN) econfm(Dtype(obj1), Dtype(obj2));
+	return (EIF_BOOLEAN) econfm(Dftype(obj1), Dftype(obj2));
 
 }
 
@@ -268,7 +268,8 @@ rt_public int econfm(int ancestor, int heir)
 				/* And this must be the heir then */
 {
 	/* Does dynamic type `heir' conform to dynamic type `ancestor' ? */
-
+	return eif_gen_conf ((int16) heir, (int16) ancestor);
+/*
 	struct conform *ct = co_table[ancestor];
 	unsigned int i;
 	int j, k;
@@ -276,10 +277,12 @@ rt_public int econfm(int ancestor, int heir)
 
 	min = ct->co_min;
 	if (heir >= min && heir <= ct->co_max) {
+*/
 		/* Since the compiler assumed there is 8 bits on a character,
 		 * we do the same thing here and hardwire the `8' constant
 		 * value. -- FREDD
 		 */
+/*
 		k = heir - min;
 		i = (unsigned int) ct->co_tab [k / 8];
 		j = 7 - (k % 8);
@@ -287,6 +290,7 @@ rt_public int econfm(int ancestor, int heir)
 	}
 
 	return 0;
+*/
 }
 
 /*

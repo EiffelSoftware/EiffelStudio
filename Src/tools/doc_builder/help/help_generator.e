@@ -88,19 +88,31 @@ feature -- Generation
 			project_not_void: a_project /= Void
 		local
 			l_project_file_path: FILE_NAME
-			l_command: STRING
+			l_command,
+			old_path: STRING
 			l_constants: HELP_SETTING_CONSTANTS
+			l_dir: DIRECTORY
 		do		
 			l_constants := Shared_constants.Help_constants
 			create l_project_file_path.make_from_string (project.project_file.name)
 					-- Change to executable directory			
-			change_working_directory (l_constants.help_compiler_location.string)
+					
+			old_path := current_working_directory
+			create l_dir.make (l_constants.help_compiler_location.string)
+			if l_dir.exists then				
+				change_working_directory (l_dir.name)	
+			end
 			l_command := l_constants.help_compiler_name
 			l_command.append (" %"")
 			l_command.append (l_project_file_path)
 			l_command.append ("%"")
 					-- Execute HTML Help compiler
-			system (l_command)			
+			system (l_command)
+			if return_code /= 0 then
+				io.putstring ("It failed somehow.")
+			end
+			
+			change_working_directory (old_path)
 		end
 		
 	generate_vsip_help (a_project: MSHELP_PROJECT) is

@@ -6,7 +6,7 @@ system
 	paintbrush
 
 root 
-	EV_PAINTBRUSH (root_cluster): "make_and_launch"
+	PAINTBRUSH (root_cluster): "make_and_launch"
 
 default
 	assertion			(all)

@@ -110,6 +110,7 @@ feature {NONE} -- Implementation
 			gb_ev_container: GB_EV_CONTAINER
 			gb_ev_fontable: GB_EV_FONTABLE
 			gb_ev_pixmap: GB_EV_PIXMAP
+			gb_ev_progress_bar: GB_EV_PROGRESS_BAR
 		do
 		end
 

@@ -46,7 +46,8 @@ inherit
 			children as children_nb,
 			item as wel_item
 		redefine
-			wel_set_text
+			wel_set_text,
+			wel_text
 		end
 
 	WEL_TVIS_CONSTANTS
@@ -75,6 +76,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make
 			set_mask (Tvif_text + Tvif_state + Tvif_handle)
+			create real_text.make (0)
 		end
 
 	initialize is
@@ -237,7 +239,8 @@ feature -- {EV_TREE_IMP}
 						-- Decrease and store the number of items referencing
 						-- this image.
 					if loc_tuple.integer_item (2) = 0 then
-						top_parent_imp.reduce_image_list_references (image_index)
+						top_parent_imp.reduce_image_list_references (
+							image_index)
 							-- Reduce all indices greater than `image_index' by
 							-- one.
 						top_parent_imp.image_list.remove_image 
@@ -419,11 +422,21 @@ feature -- Status setting
  
 feature -- Element change
 
+	wel_text: STRING is
+			-- Item text.
+		do
+			Result := clone (real_text)
+		end
+
+	real_text: STRING
+			-- Internal `text'.
+
 	wel_set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		local
 			tree: EV_TREE_IMP
 		do
+			real_text := clone (txt)
 			set_mask (Tvif_text)
 			Precursor (txt)
 			tree := top_parent_imp
@@ -574,6 +587,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/03/29 20:36:26  brendel
+--| Modified text handling in compliance with new EV_TEXTABLE_IMP.
+--|
 --| Revision 1.52  2000/03/29 06:59:49  pichery
 --| Improved the add of pixmaps in an item.
 --|

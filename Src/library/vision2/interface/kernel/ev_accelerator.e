@@ -1,9 +1,8 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision accelerator. Objects that call an action sequence %N%
+		"Eiffel Vision accelerator. Objects that call an action sequence %N%
 		%when the given key combination is pressed any time in the %N%
-		%EiffelVision application."
+		%window it is set in."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,12 +25,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_key_combination (a_key_code: INTEGER;
+	make_with_key_combination (a_key: EV_KEY;
 		a_shift_down, a_alt_down, a_control_down: BOOLEAN) is
-			-- Create with `a_key_code'.
+			-- Create with `a_key'.
+		require
+			a_key_not_void: a_key /= Void
+			a_key_valid_accelerator: a_key.is_valid_accelerator
 		do
 			default_create
-			set_key_code (a_key_code)
+			set_key (a_key)
 			if a_shift_down then
 				enable_shift_key
 			end
@@ -46,37 +48,17 @@ feature {NONE} -- Initialization
 feature -- Events
 
 	actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when key combination is pressed.
-
-feature {EV_TITLED_WINDOW_IMP} -- Implementation
-
-	implementation: EV_ACCELERATOR_I
-			-- Implementation of accelerator.
-
-feature {NONE} -- Implementation
-
-	create_action_sequences is
-			-- Create action sequences for accelerator.
-		do
-			Precursor
-			create actions
-		end
-
-	create_implementation is
-			-- Create implementation of accelerator.
-		do
-			create {EV_ACCELERATOR_IMP} implementation.make (Current)
-		end
+			-- Actions performed when key combination is pressed on the window
+			-- it is set in.
 
 feature -- Access
 
-	key_code: INTEGER is
-			-- Representation of the character that must be entered
-			-- by the user. See class EV_KEY_CODE
+	key: EV_KEY is
+			-- Key that has to pressed to trigger actions.
 		do
-			Result := implementation.key_code
+			Result := implementation.key
 		ensure
-			bridge_ok: Result = implementation.key_code
+			bridge_ok: Result = implementation.key
 		end
 
 	shift_key: BOOLEAN is
@@ -105,12 +87,15 @@ feature -- Access
 
 feature -- Element change
 
-	set_key_code (a_key_code: INTEGER) is
-			-- Set `a_key_code' as new key that has to be pressed.
+	set_key (a_key: EV_KEY) is
+			-- Set `a_key' as new key that has to be pressed.
+		require
+			a_key_not_void: a_key /= Void
+			a_key_valid_accelerator: a_key.is_valid_accelerator
 		do
-			implementation.set_key_code (a_key_code)
+			implementation.set_key (a_key)
 		ensure
-			assigned: key_code = a_key_code
+			assigned: key.is_equal (a_key)
 		end
 
 	enable_shift_key is
@@ -166,7 +151,7 @@ feature -- Status report
 	is_equal (other: like Current): BOOLEAN is
 			-- Does `other' have the same key combination as `Current'?
 		do
-			Result := key_code = other.key_code and then
+			Result := key.is_equal (other.key) and then
 				alt_key = other.alt_key and then
 				shift_key = other.shift_key and then
 				control_key = other.control_key
@@ -175,47 +160,43 @@ feature -- Status report
 	out: STRING is
 			-- String representation of key combination.
 		do
-			Result := "<"
-			if control_key then
-				Result.append ("Ctrl-")
-			end
+			create Result.make (0)
 			if alt_key then
-				Result.append ("Alt-")
+				Result.append ("Alt+")
+			end
+			if control_key then
+				Result.append ("Ctrl+")
 			end
 			if shift_key then
-				Result.append ("Shift-")
+				Result.append ("Shift+")
 			end
-			--| FIXME key-code to char.
-			Result.append (key_code.out + ">")
+			Result.append (key.out)
 		end
 
-feature -- Obsolete
+feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
-	id: INTEGER is
-			-- Integer representation of key combination.
-			--| FIXME Used by EV_INTERNAL_ACCELERATOR_IMP.
+	implementation: EV_ACCELERATOR_I
+			-- Implementation of accelerator.
+
+feature {NONE} -- Implementation
+
+	create_action_sequences is
+			-- Create action sequences for accelerator.
 		do
-			Result := key_code
-			if control_key then
-				Result := Result + 2048
-			end
-			if alt_key then
-				Result := Result + 1024
-			end
-			if shift_key then
-				Result := Result + 512
-			end
+			Precursor
+			create actions
 		end
 
-	keycode: INTEGER is
-		obsolete
-			"Use: key_code"
+	create_implementation is
+			-- Create implementation of accelerator.
 		do
-			Result := key_code
+			create {EV_ACCELERATOR_IMP} implementation.make (Current)
 		end
 
 invariant
 	actions_not_void: actions /= Void
+	key_not_void: key /= Void
+	key_valid_accelerator: key.is_valid_accelerator
 
 end -- class EV_ACCELERATOR
 
@@ -240,6 +221,10 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/15 21:14:52  brendel
+--| Changed key_code: INTEGER to key: EV_KEY.
+--| Improved comments.
+--|
 --| Revision 1.6  2000/02/29 16:11:43  brendel
 --| Removed obsolete declaration. Added FIXME about usage of feature.
 --|

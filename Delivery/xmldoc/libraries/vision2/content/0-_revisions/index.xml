@@ -83,6 +83,9 @@
 					<item>
 						<bold>EV_TREE_NODE</bold> - Fixed bug which caused a crash if you performed the following: pruned a node from it's parent, pruned an empty node from this just pruned node and then attempted to insert a node within the empty node.
 					</item>
+					<item>
+					<bold>EV_DIRECTORY_DIALOG</bold> - Fixed bug in which the dialog always reported that "ok" has been selected even if the "cancel" button had been selected. This occurred if the dialog  had been shown more than once with "ok" already selected.
+					</item>
 				</list>
 			</item>
 			<item>

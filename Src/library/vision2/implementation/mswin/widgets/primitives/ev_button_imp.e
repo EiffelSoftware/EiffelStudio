@@ -61,6 +61,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	WEL_DRAWING_ROUTINES
 
 	WEL_BITMAP_BUTTON
 		rename
@@ -553,6 +555,8 @@ feature {EV_ANY_I} -- Drawing implementation
 			
 				-- Draw frame around `Current'. We must handle the three states, of it
 				-- being in, out or bolded in response to being a default push button.
+				--| Note that we shoudl probably use `draw_edge' here, but it gives us a
+				--| slightly different appearence to the old button style.
 			if has_pushed_appearence (state) then
 				draw_frame (memory_dc, text_rect, Button_in)
 			else
@@ -700,12 +704,6 @@ feature {EV_ANY_I} -- Drawing implementation
 				draw_state_flags := Wel_drawing_constants.Dss_disabled
 			end
 			dc.draw_state_bitmap (Void, a_bitmap, actual_x, actual_y, draw_state_flags)--, a_bitmap.width, a_bitmap.height)
-		end
-		
-	draw_focus_rect (dc: WEL_DC; r: WEL_RECT) is
-			-- Draw a focus rect represented by `r' on `dc'.
-		do
-			dc.draw_focus_rect (r)
 		end
 		
 	draw_frame (dc: WEL_DC; r: WEL_RECT; state: INTEGER) is

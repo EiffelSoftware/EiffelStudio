@@ -20,7 +20,7 @@ inherit
 			is_deep_equal, has_like, simple_format
 		redefine
 			format, fill_calls_list, replicate,
-			check_constraint_type
+			check_constraint_type, solved_type_for_format
 		end;
 
 	SHARED_INST_CONTEXT;
@@ -70,6 +70,57 @@ feature -- Conveniences
 				generics.go_i_th (p);
 				o_g.go_i_th (o_p);
 			end;
+		end;
+
+	solved_type_for_format (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
+			-- Track expanded classes
+		local
+			a_class: CLASS_C;
+			a_classi: CLASS_I;
+			gen_type: GEN_TYPE_A;
+			actual_generic: ARRAY [TYPE_A];
+			i, count: INTEGER;
+			type_a: TYPE_A;
+			abort: BOOLEAN
+		do
+			if generics = Void then
+				!! Result;
+			else
+				from
+					!! gen_type;
+					i := 1;
+					count := generics.count;
+					!!actual_generic.make (1, count);
+					gen_type.set_generics (actual_generic);
+				until
+					i > count or else abort
+				loop
+					type_a := generics.i_th (i).solved_type_for_format (feat_table, f);
+					if type_a = Void then
+						abort := True
+					else
+						actual_generic.put (type_a, i);
+					end;
+					i := i + 1;
+				end;
+				Result := gen_type;
+			end;
+			if abort then
+				Result := Void
+			else
+				a_classi := Universe.class_named (class_name, Inst_context.cluster);
+				if a_classi /= Void and then a_classi.compiled_class /= Void then
+					a_class := a_classi.compiled_class;
+					Result.set_base_type (a_class.id);
+						-- Base type class is expanded
+					Result.set_is_expanded (a_class.is_expanded);
+					if a_class.is_expanded then
+						record_exp_dependance (a_class);
+					end;
+				else
+					Result := Void
+				end
+			end
 		end;
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
@@ -271,21 +322,35 @@ feature -- Stoning
 
 	associated_classc: CLASS_C is
 			-- Associated class_c.
+		local
+			class_i: CLASS_I
 		do
 			check
 				Inst_context.cluster /= Void
 			end
-			Result := 
-				Universe.class_named (class_name,
-                        Inst_context.cluster).compiled_class;
+			class_i := Universe.class_named (class_name,
+						Inst_context.cluster);
+			if class_i /= Void then
+				Result := class_i.compiled_class
+			end;	
 		end
 
 feature -- Formatting
 
 	format (ctxt: FORMAT_CONTEXT_B) is 
 			-- Reconstitute text
+		local
+			class_c: CLASS_C;
+			c_name: STRING
 		do
-			ctxt.put_class_name (associated_classc);
+			class_c := associated_classc;
+			if class_c = Void then
+				c_name := clone (class_name);
+				c_name.to_upper;
+				ctxt.put_string (c_name)
+			else
+				ctxt.put_class_name (class_c)
+			end;
 			if generics /= Void then
 				ctxt.put_space;
 				ctxt.put_text_item_without_tabs (ti_L_bracket);

@@ -81,7 +81,8 @@ inherit
 			enabled as is_sensitive,
 			count as wel_count,
 			text as wel_text,
-			has_capture as wel_has_capture
+			has_capture as wel_has_capture,
+			text_length as wel_text_length
 		export
 			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
 			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
@@ -113,8 +114,7 @@ inherit
 			y_position,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message,
-			text_length
+			default_process_message
 		redefine
 			on_cben_endedit_item,
 			on_cbn_editchange,

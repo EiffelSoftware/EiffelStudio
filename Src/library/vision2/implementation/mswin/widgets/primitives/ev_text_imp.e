@@ -55,7 +55,8 @@ inherit
 			resize as wel_resize,
 			set_text as wel_set_text,
 			text as wel_text,
-			has_capture as wel_has_capture
+			has_capture as wel_has_capture,
+			text_length as wel_text_length
 		undefine
 			set_width,
 			set_height,
@@ -86,8 +87,7 @@ inherit
 			select_all,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message,
-			text_length
+			default_process_message
 		redefine
 			default_style,
 			default_ex_style,

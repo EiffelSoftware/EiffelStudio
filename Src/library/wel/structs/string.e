@@ -13,8 +13,6 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
-		redefine
-			dispose
 		end
 
 creation
@@ -96,12 +94,6 @@ feature -- Measurement
 			Result := length
 		end
 
-feature -- Dispose
-
-	dispose is
-		do
-			{WEL_STRUCTURE} precursor
-		end
 feature {NONE} -- Implementation
 
 	cwel_string_length (ptr: POINTER): INTEGER is

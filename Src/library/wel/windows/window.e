@@ -714,6 +714,7 @@ feature -- Basic operations
 		end
 
 	kill_timer (timer_id: INTEGER) is
+			-- Kill the timer identified by `timer_id'.
 		require
 			exists: exists
 			positive_timer_id: timer_id > 0

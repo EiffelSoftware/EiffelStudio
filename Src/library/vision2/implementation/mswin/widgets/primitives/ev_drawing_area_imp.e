@@ -206,7 +206,7 @@ feature {NONE} -- WEL Implementation
 			-- needs to be repainted.
 		local
 			clip: EV_RECTANGLE
-			pt: EV_POINT
+			pt: EV_COORDINATES
 			expose_event_data: EV_EXPOSE_EVENT_DATA
 		do
 			-- If a pixmap is linked to the area, we draw it

@@ -225,7 +225,7 @@ feature -- Clearing operations
 
 feature -- Drawing operations
 
-	draw_point (pt: EV_POINT) is
+	draw_point (pt: EV_COORDINATES) is
 			-- Draw `a_point'.
 		require else
 			dc_not_void: dc /= Void
@@ -233,7 +233,7 @@ feature -- Drawing operations
 			dc.set_pixel (pt.x, pt.y, foreground_color_imp)
 		end
 
-	draw_text (pt: EV_POINT; text: STRING) is
+	draw_text (pt: EV_COORDINATES; text: STRING) is
 			-- Draw text
 		require else
 			dc_not_void: dc /= Void
@@ -244,7 +244,7 @@ feature -- Drawing operations
 			dc.text_out (pt.x, pt.y, text)
 		end
 
-	draw_segment (pt1, pt2: EV_POINT) is
+	draw_segment (pt1, pt2: EV_COORDINATES) is
 			-- Draw a segment between `pt1' and `pt2'.
 		require else
 			dc_not_void: dc /= Void
@@ -253,7 +253,7 @@ feature -- Drawing operations
 			dc.line_to (pt2.x, pt2.y)
 		end
 
-	draw_polyline (pts: ARRAY [EV_POINT]; is_closed: BOOLEAN) is
+	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require else
 			dc_not_void: dc /= Void
@@ -289,7 +289,7 @@ feature -- Drawing operations
 			dc.polyline (flat_points)
 		end
 
-	draw_rectangle (pt: EV_POINT; w, h: INTEGER; orientation: REAL) is
+	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		require else
@@ -298,7 +298,7 @@ feature -- Drawing operations
 			draw_any_rectangle (pt, w, h, orientation, false)
 		end
 
-	draw_arc (pt: EV_POINT; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
 			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -312,7 +312,7 @@ feature -- Drawing operations
 			draw_any_arc (pt, r1, r2, start_angle, aperture, orientation, style, false)
 		end
 
-	draw_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
 			-- Copy `pix' into the drawable at the point `pt'.
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -326,7 +326,7 @@ feature -- Drawing operations
 
 feature -- Filling operations
 
-	fill_polygon (pts: ARRAY [EV_POINT]) is
+	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
 			 -- Fill a polygon.
 		require else
 			dc_not_void: dc /= Void
@@ -352,7 +352,7 @@ feature -- Filling operations
 			end
 		end
 
-	fill_rectangle (pt: EV_POINT; w, h: INTEGER; orientation: REAL) is
+	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		require else
@@ -361,7 +361,7 @@ feature -- Filling operations
 			draw_any_rectangle (pt, w, h, orientation, true)
 		end 
 
-	fill_arc (pt: EV_POINT; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
 			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Basic operations
 
-	draw_any_rectangle (center: EV_POINT; rw, rh: INTEGER; an_orientation: REAL; filled: BOOLEAN) is
+	draw_any_rectangle (center: EV_COORDINATES; rw, rh: INTEGER; an_orientation: REAL; filled: BOOLEAN) is
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight', it may be `filled'.
 		require
@@ -582,7 +582,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	draw_any_arc (center: EV_POINT; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER; filled: BOOLEAN) is
+	draw_any_arc (center: EV_COORDINATES; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER; filled: BOOLEAN) is
 			-- Draw an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -638,7 +638,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	arc_points (center: EV_POINT; radius1, radius2: INTEGER; 
+	arc_points (center: EV_COORDINATES; radius1, radius2: INTEGER; 
 				angle1, angle2, orientation: REAL): ARRAY [INTEGER] is
 			-- Returns the list of an arbitrary number of ordonated points composing the arc
 		local
@@ -781,7 +781,7 @@ feature {NONE} -- To check -- Temp
 			set_stipple (a_tile)
 		end
 
-	copy_pixmap (a_point: EV_POINT; a_pixmap : EV_PIXMAP) is
+	copy_pixmap (a_point: EV_COORDINATES; a_pixmap : EV_PIXMAP) is
 			-- Copy `a_pixmap' to the drawing at `a_point'.
 			-- If there is not enough space to create auxiliery bitmap (DDB) 
 			-- exception will be raised
@@ -822,7 +822,7 @@ feature {NONE} -- To check -- Temp
 ----			end
 		end
 
-	draw_inf_line (point1, point2: EV_POINT) is
+	draw_inf_line (point1, point2: EV_COORDINATES) is
 			-- Draw an infinite line traversing `point1' and `point2'.
 		require else
 			dc_not_void: dc /= Void

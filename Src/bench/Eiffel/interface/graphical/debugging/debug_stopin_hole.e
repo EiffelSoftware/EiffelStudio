@@ -17,8 +17,7 @@ inherit
 			process_feature, process_call_stack,
 			process_class
 		end;
-	SHARED_EIFFEL_PROJECT;
-	WARNING_MESSAGES
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -29,13 +28,24 @@ feature -- Properties
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Showstops
+			Result := Interface_names.f_Showstops
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showstops
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	symbol: PIXMAP is
 			-- Pixmaps for the button.
 		once
-			Result := bm_Setstop
+			Result := Pixmaps.bm_Setstop
 		end;
 
 feature -- Access
@@ -185,7 +195,7 @@ feature -- Update
 					mp.restore
 				end;
 			else
-				warner (Project_tool.popup_parent).gotcha_call (w_Cannot_debug)
+				warner (Project_tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_debug)
 			end
 		end;
 
@@ -213,7 +223,7 @@ feature -- Update
 					mp.restore
 				end;
 			else
-				warner (Project_tool.popup_parent).gotcha_call (w_Cannot_debug)
+				warner (Project_tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_debug)
 			end
 		end;
 
@@ -245,7 +255,7 @@ feature -- Update
 				end;
 				mp.restore
 			else
-				warner (Project_tool.popup_parent).gotcha_call (w_Cannot_debug)
+				warner (Project_tool.popup_parent).gotcha_call (Warning_messages.w_Cannot_debug)
 			end
 		end;
 

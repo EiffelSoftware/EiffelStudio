@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showindexing 
+			Result := Pixmaps.bm_Showindexing 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showindexing 
+			Result := Pixmaps.bm_Dark_showindexing 
 		end;
 
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showindexing
+			Result := Interface_names.f_Showindexing
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showindexing
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Indexing_of
+			Result := Interface_names.t_Indexing_of
 		end;
 
 	post_fix: STRING is "ind";

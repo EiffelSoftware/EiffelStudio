@@ -26,24 +26,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showflat 
+			Result := Pixmaps.bm_Showflat 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showflat 
+			Result := Pixmaps.bm_Dark_showflat 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showflat
+			Result := Interface_names.f_Showflat
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showflat
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Flat_form_of
+			Result := Interface_names.t_Flat_form_of
 		end;
 	
 	post_fix: STRING is "fla";

@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showexternals 
+			Result := Pixmaps.bm_Showexternals 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showexternals 
+			Result := Pixmaps.bm_Dark_showexternals 
 		end;
 
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showexternals
+			Result := Interface_names.f_Showexternals
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showexternals
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Externals_of
+			Result := Interface_names.t_Externals_of
 		end;
 
 	post_fix: STRING is "ext";

@@ -44,12 +44,12 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showcallers 
+			Result := Pixmaps.bm_Showcallers 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showcallers 
+			Result := Pixmaps.bm_Dark_showcallers 
 		end;
 
 feature -- Executions
@@ -82,8 +82,8 @@ feature -- Executions
 				rcw := routine_custom_window (popup_parent);
 				rcw.set_window (popup_parent);
 				rcw.call (Current, 
-						l_Showcallers, 	
-						l_Showallcallers,
+						Interface_names.l_Showcallers, 	
+						Interface_names.l_Showallcallers,
 						not to_show_all_callers)
 			else
 				old_execute (arg)
@@ -111,18 +111,33 @@ feature {NONE} -- Properties
 	name: STRING is
 		do
 			if to_show_all_callers then
-				Result := l_Showallcallers
+				Result := Interface_names.f_Showallcallers
 			else
-				Result := l_Showcallers
+				Result := Interface_names.f_Showcallers
 			end
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			if to_show_all_callers then
+				Result := Interface_names.m_Showallcallers
+			else
+				Result := Interface_names.m_Showcallers
+			end
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
 			if to_show_all_callers then
-				Result := l_All_callers
+				Result := Interface_names.t_All_callers
 			else
-				Result := l_callers
+				Result := Interface_names.t_Callers
 			end
 		end;
 

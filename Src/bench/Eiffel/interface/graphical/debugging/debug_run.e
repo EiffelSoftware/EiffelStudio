@@ -60,7 +60,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Debug_run 
+			Result := Pixmaps.bm_Debug_run 
 		end;
 
 	parent: COMPOSITE
@@ -140,8 +140,8 @@ end;
 							-- The Makefile file is more recent than the 
 							-- application
 						warner (popup_parent).custom_call (Current, 
-							w_Makefile_more_recent (Makefile_SH), 
-							l_Ok, Void, l_Cancel)
+							Warning_messages.w_Makefile_more_recent (Makefile_SH), 
+							Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 					else
 						mp.restore;
 						debug_window.clear_window;
@@ -167,10 +167,10 @@ end;
 				elseif make_f.exists then
 						-- There is no application
 					warner (popup_parent).custom_call (Current, 
-						w_No_system_generated, l_Ok, Void, l_Cancel);
+						Warning_messages.w_No_system_generated, Interface_names.b_Ok, Void, Interface_names.b_Cancel);
 				else
 					warner (popup_parent).gotcha_call 
-						(w_Must_compile_first)
+						(Warning_messages.w_Must_compile_first)
 				end;
 				mp.restore
 			else
@@ -209,7 +209,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Debug_run
+			Result := Interface_names.f_Debug_run
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Debug_run
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Debug_run
 		end;
 
 	run_request: RUN_REQUEST;

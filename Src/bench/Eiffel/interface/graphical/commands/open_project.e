@@ -12,11 +12,10 @@ inherit
 	EB_CONSTANTS;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	PIXMAP_COMMAND
+	COMMAND_W;
+	LICENCED_COMMAND
 		rename
-			init as make
-		redefine
-			is_sensitive
+			parent_window as Project_tool
 		end;
 	WARNER_CALLBACKS
 		rename
@@ -24,10 +23,6 @@ inherit
 			execute_warner_ok as open_project
 		end
 
-creation
-
-	make
-	
 feature -- Callbacks
 
 	exit_bench is
@@ -39,17 +34,9 @@ feature -- Callbacks
 	open_project (argument: ANY) is
 		do
 			if not project_tool.initialized then
-				last_name_chooser.set_window (popup_parent);
+				last_name_chooser.set_window (Project_tool);
 				last_name_chooser.call (Current)
 			end
-		end;
-
-feature -- Status report
-
-	is_sensitive: BOOLEAN is
-			-- Can Current be executed?
-		do
-			Result := True
 		end;
 
 feature {NONE} -- Implementation
@@ -61,14 +48,16 @@ feature {NONE} -- Implementation
 			last_char: CHARACTER;
 			dir_name: STRING;
 			expiration: INTEGER;
-			msg: STRING
+			msg: STRING;
+			new_name_chooser: NAME_CHOOSER_W
 		do
 			if not project_tool.initialized then
 				if argument = project_tool then
-					name_chooser (popup_parent).set_directory_selection;
-					last_name_chooser.hide_file_selection_list;
-					last_name_chooser.hide_file_selection_label;
-					last_name_chooser.set_title (l_Select_a_directory)
+					new_name_chooser := name_chooser (Project_tool);
+					new_name_chooser.set_directory_selection;
+					new_name_chooser.hide_file_selection_list;
+					new_name_chooser.hide_file_selection_label;
+					new_name_chooser.set_title (Interface_names.t_Select_a_directory)
 					if not licence.is_unlimited then
 						expiration := licence.time_left
 						if expiration < 30 then
@@ -80,15 +69,15 @@ feature {NONE} -- Implementation
 					if msg = Void then
 						open_project (argument)
 					else
-						warner (popup_parent).custom_call (Current,
-							msg, l_ok, Void, Void);
+						warner (Project_tool).custom_call (Current,
+							msg, Interface_names.b_Ok, Void, Void);
 					end
 				else
 					dir_name := clone (last_name_chooser.selected_file);
 					if dir_name.empty then
-						warner (popup_parent).custom_call (Current,
-							w_Directory_not_exist (dir_name), 
-							l_ok, Void, Void);
+						warner (Project_tool).custom_call (Current,
+							Warning_messages.w_Directory_not_exist (dir_name), 
+							Interface_names.b_Ok, Void, Void);
 					else
 						if dir_name.count > 1 then
 							last_char := dir_name.item (dir_name.count); 
@@ -99,20 +88,12 @@ feature {NONE} -- Implementation
 						!!project_dir.make (dir_name);
 						make_project (project_dir);
 						last_name_chooser.set_file_selection;
-						last_name_chooser.set_title (l_Select_a_file);
+						last_name_chooser.set_title (Interface_names.t_Select_a_file);
 						last_name_chooser.show_file_selection_list;
 						last_name_chooser.show_file_selection_label;
 					end
 				end
 			end
-		end;
-
-feature -- Properties
-
-	symbol: PIXMAP is
-			-- Pixmap for the button.
-		once
-			Result := bm_Open
 		end;
 
 feature -- Project Initialization
@@ -132,7 +113,7 @@ feature -- Project Initialization
 		do
 			ok := True;
 			if not project_dir.exists then
-				temp := w_Directory_not_exist (project_dir.name);
+				temp := Warning_messages.w_Directory_not_exist (project_dir.name);
 				ok := False;
 			elseif project_dir.is_new then
 					-- Create new project
@@ -141,13 +122,13 @@ feature -- Project Initialization
 					not project_dir.is_writable or else
 					not project_dir.is_executable
 				then
-					temp := w_Directory_wrong_permissions (project_dir.name);
+					temp := Warning_messages.w_Directory_wrong_permissions (project_dir.name);
 					ok := False;
 				else
 						-- Create a new project.
 					Eiffel_project.make (project_dir);
 					init_project;
-					title := clone (l_New_project);
+					title := clone (Interface_names.t_New_project);
 					title.append (": ");
 					title.append (project_dir.name);
 					project_tool.set_title (title);
@@ -156,10 +137,10 @@ feature -- Project Initialization
 					-- Retrieve existing project
 				project_eif_file := project_dir.project_eif_file;
 				if not project_eif_file.is_readable then
-					temp := w_Not_readable (project_eif_file.name);
+					temp := Warning_messages.w_Not_readable (project_eif_file.name);
 					ok := False
 				elseif not project_eif_file.is_plain then
-					temp := w_Not_a_file (project_eif_file.name);
+					temp := Warning_messages.w_Not_a_file (project_eif_file.name);
 					ok := False
 				else
 					!! mp.do_nothing;
@@ -169,7 +150,7 @@ feature -- Project Initialization
 					retrieve_project (project_dir);
 					if not Eiffel_project.error_occurred then
 						init_project;
-						title := clone (l_Project);
+						title := clone (Interface_names.t_Project);
 						title.append (": ");
 						title.append (project_dir.name);
 						if Eiffel_system.is_precompiled then
@@ -184,7 +165,7 @@ feature -- Project Initialization
 			if ok then
 				project_tool.set_initialized
 			else	
-				warner (popup_parent).custom_call (Current, temp, 
+				warner (Project_tool).custom_call (Current, temp, 
 					" OK ", Void, Void);
 			end
 		end;
@@ -194,18 +175,18 @@ feature -- Project Initialization
 		do	
 			Eiffel_project.retrieve (project_dir);
 			if Eiffel_project.retrieval_error then
-				warner (popup_parent).custom_call (Current, 
-						w_Project_corrupted (project_dir.name),
-						Void, "Exit now", Void)
+				warner (Project_tool).custom_call (Current, 
+						Warning_messages.w_Project_corrupted (project_dir.name),
+						Void, Interface_names.b_Exit_now, Void)
 			elseif Eiffel_project.read_write_error then
-				warner (popup_parent).custom_call (Current,
-						w_Cannot_open_project, Void, "Exit", Void)
+				warner (Project_tool).custom_call (Current,
+						Warning_messages.w_Cannot_open_project, Void, Interface_names.b_Exit, Void)
 			elseif Eiffel_project.is_read_only and then
 				not Eiffel_system.is_precompiled
 			then
 				project_tool.set_initialized;
-				warner (popup_parent).custom_call (Current,
-						w_Read_only_project, l_ok, "Exit", Void)
+				warner (Project_tool).custom_call (Current,
+						Warning_messages.w_Read_only_project, Interface_names.b_Ok, Interface_names.b_Exit, Void)
 			end;
 		end;
 
@@ -222,13 +203,5 @@ feature -- Project Initialization
 				Eiffel_project.set_degree_output (g_degree_output)
 			end
 		end;
-
-feature {NONE} -- Attributes
-
-	name: STRING is
-			-- Name fo the command.
-		do
-			Result := l_Open_project
-		end
 
 end -- class OPEN_PROJECT

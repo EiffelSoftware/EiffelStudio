@@ -50,7 +50,7 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licenced (argument)
 			 else
-				warner (popup_parent).call (Current, w_File_changed)
+				warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 			end
 		end;
 
@@ -59,14 +59,25 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Previous_target
+			Result := Pixmaps.bm_Previous_target
 		end;
 
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Previous_target
+			Result := Interface_names.f_Previous_target
 		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Previous_target
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+		end
 
 feature {NONE} -- Implementation
 
@@ -77,7 +88,7 @@ feature {NONE} -- Implementation
 		do
 			history := tool.history;
 			if history.empty or else (history.isfirst or history.before) then
-				warner (popup_parent).gotcha_call (w_Beginning_of_history)
+				warner (popup_parent).gotcha_call (Warning_messages.w_Beginning_of_history)
 			else
 				history.back;
 				tool.last_format.execute (history.item)

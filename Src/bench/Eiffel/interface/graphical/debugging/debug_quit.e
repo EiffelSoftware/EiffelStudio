@@ -78,7 +78,7 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Debug_quit 
+			Result := Pixmaps.bm_Debug_quit 
 		end;
  
 feature {NONE} -- Implementation
@@ -112,7 +112,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Debug_quit
+			Result := Interface_names.f_Debug_quit
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Debug_quit
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Debug_quit
 		end;
 
 	request: EWB_REQUEST;

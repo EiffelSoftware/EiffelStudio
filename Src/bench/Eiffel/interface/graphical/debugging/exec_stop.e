@@ -24,13 +24,13 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Pixmap for the button.
 		once
-			Result := bm_Exec_stop
+			Result := Pixmaps.bm_Exec_stop
 		end;
 
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'.
 		once
-			Result := bm_Dark_exec_stop
+			Result := Pixmaps.bm_Dark_exec_stop
 		end;
 
 feature {NONE} -- Attributes
@@ -44,7 +44,19 @@ feature {NONE} -- Attributes
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Exec_stop
+			Result := Interface_names.f_Exec_stop
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Exec_stop
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
+			Result := Interface_names.a_Exec_stop
 		end;
 
 end -- class EXEC_STOP

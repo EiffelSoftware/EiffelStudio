@@ -26,24 +26,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showonces 
+			Result := Pixmaps.bm_Showonces 
 		end;
 	
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showonces 
+			Result := Pixmaps.bm_Dark_showonces 
 		end;
 	
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showoncefunc
+			Result := Interface_names.f_Showoncefunc
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showoncefunc
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Oncefunc_of
+			Result := Interface_names.t_Oncefunc_of
 		end;
 
 	criterium (f: E_FEATURE): BOOLEAN is
@@ -68,9 +79,9 @@ feature {NONE} -- Properties
 		do
 			status := Application.status;
 			if status = void then
-				warner (popup_parent).gotcha_call (w_System_not_running)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (popup_parent).gotcha_call (w_System_not_stopped)
+				warner (popup_parent).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
 				!! Result.make;
 				dynamic_class := object.dynamic_class;

@@ -23,7 +23,18 @@ feature -- Access
 
 	name: STRING is
 		do
-			Result := l_Stoppable
+			Result := Interface_names.f_Stoppable
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Stoppable
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 feature -- Execution

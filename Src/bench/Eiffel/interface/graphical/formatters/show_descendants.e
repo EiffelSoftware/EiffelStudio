@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showdescendants 
+			Result := Pixmaps.bm_Showdescendants 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showdescendants 
+			Result := Pixmaps.bm_Dark_showdescendants 
 		end;
 
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showdescendants
+			Result := Interface_names.f_Showdescendants
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showdescendants
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Descendants_of
+			Result := Interface_names.t_Descendants_of
 		end;
 
 	post_fix: STRING is "des";

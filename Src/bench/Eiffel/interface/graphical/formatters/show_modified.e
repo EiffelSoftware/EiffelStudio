@@ -30,12 +30,12 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showmodified 
+			Result := Pixmaps.bm_Showmodified 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showmodified 
+			Result := Pixmaps.bm_Dark_showmodified 
 		end;
  
 	
@@ -43,12 +43,23 @@ feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showmodified
+			Result := Interface_names.f_Showmodified
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showmodified
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Modified_of
+			Result := Interface_names.t_Modified_of
 		end;
 
 	post_fix: STRING is "mod";

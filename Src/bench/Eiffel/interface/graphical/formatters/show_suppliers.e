@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showsuppliers 
+			Result := Pixmaps.bm_Showsuppliers 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showsuppliers 
+			Result := Pixmaps.bm_Dark_showsuppliers 
 		end;
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showsuppliers
+			Result := Interface_names.f_Showsuppliers
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showsuppliers
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Suppliers_of
+			Result := Interface_names.t_Suppliers_of
 		end;
 
 	post_fix: STRING is "sup";

@@ -81,9 +81,19 @@ feature -- Command execution
 feature -- Access
 
 	name: STRING is
-		once
-			!! Result.make (0);
-			Result.append ("Generate")
+		do
+			Result := Interface_names.f_Generate
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Generate
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end
 
 feature {NONE} -- Implementation
@@ -97,8 +107,7 @@ feature {NONE} -- Implementation
 			l_warner: WARNER_W
 		do
 			l_warner := warner (profile_tool)
-			l_warner.gotcha_call ("An error occured while loading the configuration for your profiler.%N%
-				%Please check with your system administrator whether your profiler is supported.%N");
+			l_warner.gotcha_call (Warning_messages.w_Load_configuration);
 		end
 
 end -- class GENERATE_PROFILE_INFO_CMD

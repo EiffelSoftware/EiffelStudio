@@ -22,24 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showonces 
+			Result := Pixmaps.bm_Showonces 
 		end;
 	
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showonces 
+			Result := Pixmaps.bm_Dark_showonces 
 		end;
 	
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showonces
+			Result := Interface_names.f_Showonces
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showonces
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Onces_of
+			Result := Interface_names.t_Onces_of
 		end;
 
 	post_fix: STRING is "onc";

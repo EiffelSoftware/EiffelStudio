@@ -29,7 +29,7 @@ feature  -- Properties
 	symbol: PIXMAP is
 			-- Empty symbol
 		do
-			Result := bm_default
+			Result := Pixmaps.bm_default
 		end;
 	
 feature {NONE} -- Implementation

@@ -28,13 +28,13 @@ feature -- Properties
 	symbol: PIXMAP is 
 			-- Pixmap for the button.
 		once 
-			Result := bm_Clickable 
+			Result := Pixmaps.bm_Clickable 
 		end;
  
 	dark_symbol: PIXMAP is 
 			-- Dark version of `symbol'.
 		once 
-			Result := bm_Dark_clickable
+			Result := Pixmaps.bm_Dark_clickable
 		end;
  
 	tool: CLASS_W;
@@ -88,7 +88,7 @@ feature -- Formatting
 					end
 				end
 			else
-				warner (popup_parent).gotcha_call (w_Cannot_retrieve_info);
+				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
 				restore_cursors
 			end
 		rescue
@@ -105,12 +105,23 @@ feature {NONE} -- Properties
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Showclick
+			Result := Interface_names.f_Showclick
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showclick
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Click_form_of
+			Result := Interface_names.t_Click_form_of
 		end;
 
 	post_fix: STRING is "clk";

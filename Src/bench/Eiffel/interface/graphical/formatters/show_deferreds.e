@@ -22,25 +22,35 @@ feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
-			Result := bm_Showdeferreds 
+			Result := Pixmaps.bm_Showdeferreds 
 		end;
  
 	dark_symbol: PIXMAP is 
 		once 
-			Result := bm_Dark_showdeferreds 
+			Result := Pixmaps.bm_Dark_showdeferreds 
 		end;
  
-	
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
-			Result := l_Showdeferreds
+			Result := Interface_names.f_Showdeferreds
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_Showdeferreds
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Deferreds_of
+			Result := Interface_names.t_Deferreds_of
 		end;
 
 	post_fix: STRING is "def";

@@ -1,7 +1,7 @@
 indexing	
 	description: 
 		"EiffelVision list item. This items are used in %
-		%the lists."
+		%the EV_LIST or EV_COMBO_BOX."
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"

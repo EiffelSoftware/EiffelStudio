@@ -17,7 +17,6 @@ inherit
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			on_parented,
 			interface
 		end
 
@@ -44,17 +43,19 @@ feature -- Status setting
 
 feature {EV_TOOL_BAR_SELECT_BUTTON_IMP} -- Implementation
 
-	on_parented is
-			-- `Current' has just been parented.
-		require else
-			has_parent: parent_imp /= Void
-		do
-			if is_selected = True then
-				parent_imp.check_button (id)
-			else
-				parent_imp.uncheck_button (id)
-			end
-		end
+	--| FIXME on_parented explicitly states that it happens BEFORE
+	--| parent is assigned. This is to be able to switch implementation.
+	--| See EV_PIXMAP.on_parented
+	--|on_parented is
+	--|	require else
+	--|		has_parent: parent_imp /= Void
+	--|	do
+	--|		if is_selected = True then
+	--|			parent_imp.check_button (id)
+	--|		else
+	--|			parent_imp.uncheck_button (id)
+	--|		end
+	--|	end
 
 feature {EV_ANY_I} -- Implementation
 

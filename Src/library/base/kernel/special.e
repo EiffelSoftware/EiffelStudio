@@ -22,10 +22,7 @@ feature {NONE} -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			-- Built-in
-			check
-				not_implemented_yet: False
-			end
+			-- Not yet implemented
 		ensure
 			area_allocated: count = n
 		end
@@ -54,11 +51,11 @@ feature -- Access
 				Result := start_position
 				nb := count
 			until
-				Result = nb or else equal (item (Result), v)
+				Result >= nb or else equal (item (Result), v)
 			loop
 				Result := Result + 1
 			end
-			if Result = nb then
+			if Result >= nb then
 				Result := -1
 			end
 		ensure

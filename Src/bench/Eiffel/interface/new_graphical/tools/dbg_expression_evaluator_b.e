@@ -792,10 +792,9 @@ feature -- EXPR_B evaluation
 				cse_dotnet ?= cse
 				tmp_result_value := cse_dotnet.current_object.dump_value
 			else
-				create tmp_result_value.make_object (l_addr, context_class)
+				create tmp_result_value.make_object (l_addr, cse.dynamic_class)
 			end
 			tmp_result_static_type := context_class
-
 		end		
 		
 feature -- Concrete evaluation

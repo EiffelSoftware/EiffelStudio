@@ -34,13 +34,14 @@ feature {NONE}
 		do
 			Result := Pixmaps.popup_instances_pixmap;
 		end;
-			
+
 feature {NONE}
+
+	edit_list: CMD_ED_CHOICE_WND
 
 	execute (arg: ANY) is
 		local
 			list: LINKED_LIST [CMD_INSTANCE];
-			edit_list: CMD_ED_CHOICE_WND
 		do
 			if command_editor.current_command /= Void then
 				list := command_editor.current_command.instances;
@@ -49,4 +50,14 @@ feature {NONE}
 			end
 		end;
 
+feature
+
+    update_popup_position is
+        do
+            if edit_list /= Void and then not edit_list.destroyed then
+                edit_list.update_position (real_x, real_y);
+				edit_list.raise;
+            end
+        end;
+			
 end

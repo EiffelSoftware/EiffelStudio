@@ -425,6 +425,7 @@ feature {NONE}
 			!! label_sw.make (Widget_names.scroll2, label_form)
 			!! labels.make (Widget_names.icon_box3, label_sw, Current)
 			!! del_com.make (Current);
+			set_action ("<Configure>", Current, Void);
 			initialize_window_attributes;
 			set_delete_command (del_com);
 		end
@@ -578,6 +579,10 @@ feature {NONE}
 					end
 				elseif argument = edit_hole then
 					question_box.popup (Current, Messages.reset_text_qu, Void)
+				elseif argument = Void then
+					-- configure event
+					popup_instances_button.update_popup_position;
+					popup_contexts_button.update_popup_position
 				end
 			end
 		end 

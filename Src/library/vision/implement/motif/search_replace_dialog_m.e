@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class SEARCH_REPLACE_DIALOG_M
+deferred class 
+	SEARCH_REPLACE_DIALOG_M
 
 inherit
 	SEARCH_REPLACE_DIALOG_I

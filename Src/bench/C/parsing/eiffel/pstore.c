@@ -101,7 +101,7 @@ char *s;
 		panic("Partial store inconsistency");
 #endif
 
-	store_write();				/* Flush the buffer */
+	flush_st_buffer();				/* Flush the buffer */
 
 	if (!gc_stopped) gc_run();					/* Restart GC */
 	return result;

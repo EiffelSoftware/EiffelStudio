@@ -157,7 +157,7 @@ EIF_OBJ object;
 
 }
 
-public void ewean(object)
+public EIF_OBJ ewean(object)
 EIF_OBJ object;
 {
 	/* The C wants to get rid of a reference which was previously kept. It may
@@ -165,13 +165,17 @@ EIF_OBJ object;
 	 * table. If the object is dead, the next GC cycle will collect it. The C
 	 * cannot reference the object through its EIF_OBJ handle any more.
 	 */
+	EIF_OBJ ret;
 	
-	eif_access(object) = (char *) 0;		/* Reset hector's entry */
 	if (-1 == epush(&free_stack, object)) {	/* Record free entry in the stack */
 		plsc();									/* Run GC cycle */
 		if (-1 == epush(&free_stack, object))	/* Again, we can't */
 			eraise("hector weaning", EN_MEM);	/* No more memory */
 	}
+	ret = eif_access(object);
+	eif_access(object) = (char *) 0;		/* Reset hector's entry */
+
+	return ret;				/* return unprotected address */
 }
 
 public void eufreeze(object)

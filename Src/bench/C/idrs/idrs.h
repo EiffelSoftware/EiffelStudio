@@ -73,7 +73,7 @@ extern bool_t idr_uchar();		/* Encoding of an unsigned char */
 extern bool_t idr_short();		/* Encoding of a short integer */
 extern bool_t idr_ushort();		/* Encoding of an unsigned short */
 extern bool_t idr_long();		/* Encoding of a long integer */
-extern bool_t idr_ulong();		/* Encoding of an unsigned long */
+extern bool_t idr_u_long();		/* Encoding of an unsigned long */
 extern bool_t idr_int();		/* Encoding of an integer */
 extern bool_t idr_uint();		/* Encoding of an unsigned integer */
 extern bool_t idr_float();		/* Encoding of a float */

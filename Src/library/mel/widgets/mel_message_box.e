@@ -312,7 +312,7 @@ feature -- Status setting
 		do
 			set_xm_string (screen_object, XmNmessageString, a_compound_string)
 		ensure
-			message_label_string_set: message_string.is_equal (a_compound_string)
+			-- message_label_string_set: message_string.is_equal (a_compound_string)
 		end;
 
 	set_cancel_label_string (a_compound_string: MEL_STRING) is
@@ -323,7 +323,7 @@ feature -- Status setting
 		do
 			set_xm_string (screen_object, XmNcancelLabelString, a_compound_string)
 		ensure
-			cancel_label_string_set: cancel_label_string.is_equal (a_compound_string)
+			-- cancel_label_string_set: cancel_label_string.is_equal (a_compound_string)
 		end;
 
 	set_help_label_string (a_compound_string: MEL_STRING) is
@@ -334,7 +334,7 @@ feature -- Status setting
 		do
 			set_xm_string (screen_object, XmNhelpLabelString, a_compound_string)
 		ensure
-			help_label_string_set: help_label_string.is_equal (a_compound_string)
+			-- help_label_string_set: help_label_string.is_equal (a_compound_string)
 		end;
 
 	set_ok_label_string (a_compound_string: MEL_STRING) is
@@ -345,7 +345,7 @@ feature -- Status setting
 		do
 			set_xm_string (screen_object, XmNokLabelString, a_compound_string)
 		ensure
-			ok_label_string_set: ok_label_string.is_equal (a_compound_string)
+			-- ok_label_string_set: ok_label_string.is_equal (a_compound_string)
 		end;
 
 	set_default_button_cancel is

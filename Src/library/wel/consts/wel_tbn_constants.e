@@ -86,13 +86,6 @@ feature -- Access
 			"TBN_DROPDOWN"
 		end
 
-	Tbn_closeup: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"TBN_CLOSEUP"
-		end
-
 end -- class WEL_TBN_CONSTANTS
 
 --|----------------------------------------------------------------

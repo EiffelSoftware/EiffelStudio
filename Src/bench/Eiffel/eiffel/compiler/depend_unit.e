@@ -5,11 +5,14 @@ class DEPEND_UNIT
 inherit
 
 	COMPARABLE
-		undefine
+		redefine
 			is_equal
 		end;
 
 	COMPILER_EXPORTER
+		redefine
+			is_equal
+		end
 
 creation
 
@@ -45,6 +48,13 @@ feature
 			Result := id < other.id or else
 				(equal (id, other.id) and then feature_id < other.feature_id);
 		end; -- infix "<"
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Are `other' and `Current' equal?
+		do
+			Result := feature_id = other.feature_id and
+					equal (id, other.id)
+		end
 
 feature -- Debug
 

@@ -821,7 +821,7 @@ end;
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
-					if equal (old_feature.written_in, a_class.id) then
+					if not equal (old_feature.written_in, a_class.id) then
 						feature_i.set_body_index (Body_index_counter.next);
 					else
 						feature_i.set_body_index (old_feature.body_index);
@@ -946,6 +946,7 @@ end;
 					if not is_the_same then
 							-- assertions have changed
 						!!assert_prop_list.make;
+						assert_prop_list.compare_objects;
 						assert_prop_list.extend (feature_i.rout_id_set.first)
 					else
 						is_the_same := old_description.is_body_equiv (yacc_feature)

@@ -183,6 +183,8 @@ feature -- Contract support
 				if dockable_target /= Void then
 					Result := True
 				end
+			else
+				Result := True
 			end
 		end
 

@@ -205,7 +205,8 @@ feature -- Access
 		end
 		
 	children: ARRAYED_LIST [GB_OBJECT]
-			-- `Result' is all children of `Current'.
+			-- `Result' is all children of `Current', ordered
+			-- as encountered within `Current'.
 		
 feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operation
 

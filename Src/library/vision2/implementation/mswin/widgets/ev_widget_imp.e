@@ -126,8 +126,6 @@ feature -- Access
 			-- A default parent for creation of the widgets.
 		once
 			!! Result.make_top ("Eiffel Vision default parent window")
---			!! Result.put (ww)
---			ww.set_style (clear_flag (ww.style, Ws_visible))
 		ensure
 			valid_parent: Result /= Void
 		end
@@ -171,7 +169,6 @@ feature -- Status setting
 			-- in case it was set insensitive by the child.
 		do
 			if parent_imp /= Void then
---				parent_imp.set_insensitive (False)
 				parent_imp.remove_child (Current)
 			end
 			wel_destroy

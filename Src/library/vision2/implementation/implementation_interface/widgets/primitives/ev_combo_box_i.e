@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	EV_TEXT_FIELD_I
-		export
-			{NONE} position, set_position
-		end
 
 	EV_LIST_I
 		export
@@ -21,6 +18,16 @@ inherit
 		undefine
 			set_default_colors,
 			set_default_options
+		end
+
+feature -- Access
+
+	extended_height: INTEGER is
+			-- height of the combo-box when the children are
+			-- visible.
+		require
+			exists: not destroyed
+		deferred
 		end
 
 feature -- Status Report
@@ -41,13 +48,13 @@ feature -- Status setting
 			end
 		end
 
-feature -- Measurement
+feature -- Element change
 
-	extended_height: INTEGER is
-			-- height of the combo-box when the children are
-			-- visible.
+	set_extended_height (value: INTEGER) is
+			-- Make `value' the new extended-height of the box.
 		require
 			exists: not destroyed
+			valid_value: value >= 0
 		deferred
 		end
 

@@ -17,8 +17,6 @@ inherit
 	
 	GB_SHARED_HISTORY
 	
---	GB_SHARED_SYSTEM_STATUS
-	
 	GB_SHARED_TOOLS
 
 create
@@ -45,6 +43,16 @@ feature -- Access
 				-- not displayed. There must also be a project open.
 			Result := not history.dialog.is_show_requested and not history.is_empty
 		end
+		
+	disable_selected is
+			-- Hide the history dialog.
+			-- Effectively undoes an execute.
+		do
+			if history.dialog.is_show_requested then
+				history.dialog.hide
+			end
+		end
+		
 
 feature -- Basic operations
 	

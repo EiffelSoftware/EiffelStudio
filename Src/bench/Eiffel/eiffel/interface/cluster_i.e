@@ -122,6 +122,11 @@ feature -- Attributes
 			-- It won't be removed even if it is no more
 			-- in the local Ace file
 
+	is_assembly: BOOLEAN is
+			-- Is current an instance of ASSEMBY_I?
+		do
+		end
+		
 	precomp_id: INTEGER
 			-- Id of the precompiled library to which the
 			-- cluster belongs
@@ -405,6 +410,7 @@ debug ("REMOVE_CLASS")
 	io.error.new_line;
 end;
 			old_cluster := old_cluster_i;
+			parent_cluster := old_cluster.parent_cluster;
 			is_precompiled := old_cluster_i.is_precompiled;
 			precomp_id := old_cluster_i.precomp_id;
 			precomp_ids := old_cluster_i.precomp_ids;
@@ -1745,6 +1751,17 @@ feature {NONE} -- Implementation
 			-- Parser adapted from the Eiffel parser.
 		once
 			create Result.make
+		end
+
+feature -- Formatting
+
+	format (st: STRUCTURED_TEXT) is
+			-- Output name of Current in `st'.
+			-- (from ASSEMBLY_INFO)
+		require -- from ASSEMBLY_INFO
+			st_not_void: st /= Void
+		do
+			st.add_string (path)
 		end
 
 feature {NONE} -- Externals

@@ -62,7 +62,7 @@ feature -- Status_report
 	element (pos: INTEGER): CHARACTER is
 			-- Element located at data position `pos'
 		do
-			Result := data.item (pos + c_packet_number_size).ascii_char
+			Result := data.item (pos + c_packet_number_size).to_character
 		end
 
 feature -- Status_setting

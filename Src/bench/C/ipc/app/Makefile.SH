@@ -56,6 +56,10 @@ SOURCES =  \$(LIB)
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
+.c.o:
+	\$(RM) \$@
+	\$(CC) -c \$(JCFLAGS) \$<
+
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################

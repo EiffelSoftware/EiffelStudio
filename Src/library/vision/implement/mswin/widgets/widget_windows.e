@@ -325,6 +325,9 @@ feature -- Status setting
 			-- We may need a call to UpdateWindow
 		do
 			private_background_color := a_color;
+			if exists then
+				invalidate
+			end
 		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is

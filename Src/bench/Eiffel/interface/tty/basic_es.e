@@ -103,7 +103,7 @@ feature -- Input/Output
 				%%T-short [-filter filtername] class | -filter filtername class |%N%
 				%%T-descendants class | -ancestors class |%N%
 				%%T-aversions class feature | -dversions class feature |%N%
-				%%T-implementors class feature | -callers class feature |%N%
+				%%T-implementers class feature | -callers class feature |%N%
 				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
 		end;
 
@@ -252,7 +252,7 @@ feature -- Command line options
 				else
 					command := loop_cmd
 				end;
-			elseif option.is_equal ("-implementors") then
+			elseif option.is_equal ("-implementers") then
 				if current_option < (argument_count - 1) then
 					if command /= Void then
 						option_error := True

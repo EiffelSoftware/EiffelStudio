@@ -1,30 +1,33 @@
+indexing
+	description: "Window in which ovals are drawn."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	RECTANGLE_DEMO_WINDOW
 
 inherit
 	DEMO_WIN
+		rename
+			fig_demo_cmd as rect_demo_cmd
+		end
 
 create
 	make
 
-feature -- deferred
+feature -- Implementation
 	
 	launch_demo is
 		do
-			create rect_demo_cmd.make_in ( ptr_window)
+			create rect_demo_cmd.make_in (client_window, display_mutex)
 			rect_demo_cmd.launch
 		end
 
 	rect_demo_cmd: RECTANGLE_DEMO_CMD
-
-	fig_demo_cmd: DEMO_CMD is
-		do
-			Result := rect_demo_cmd
-		end
+			-- To draw rectangles.
 
 	title: STRING is "Rectangles"
 			-- Title of the window.
-		
 
 end -- class RECTANGLE_DEMO_WINDOW
 

@@ -1,3 +1,8 @@
+indexing
+	description: "Constants used to retrieve resources."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	APPLICATION_IDS
 

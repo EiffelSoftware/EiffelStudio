@@ -1,8 +1,12 @@
+indexing
+	description: "Draw ovals in a specified window."
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class
 	OVAL_DEMO_CMD
 
 inherit
-
 	DEMO_CMD
 
 create
@@ -19,20 +23,27 @@ feature -- Basic operations
 			color: WEL_COLOR_REF
 			l_rect: WEL_RECT
 		do
-			create dc.make (t_parent)
-			dc.get
+				-- Initialize
 			r_left := next_number (t_parent.width)
 			r_top := next_number (t_parent.height)
 			r_right := next_number (t_parent.width)
 			r_bottom := next_number (t_parent.height)
 			color := std_colors @ (next_number (std_colors.count))
 			create brush.make_solid (color)
+			create l_rect.make (1, 1, t_parent.width, 30)
+
+				-- Drawing part
+			create dc.make (t_parent)
+			dc.get
 			dc.select_brush (brush)
 			dc.ellipse (r_left, r_top, r_right, r_bottom)
-			create l_rect.make (1, 1, t_parent.width, 30)
  			dc.draw_text (count.out, l_rect, feature {WEL_DT_CONSTANTS}.Dt_bottom)
  			dc.release
+
+				-- Clean
 			brush.delete
+			
+				-- Update
 			count := count + 1
 		end
 

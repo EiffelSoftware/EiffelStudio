@@ -314,12 +314,12 @@ feature {NONE} -- Command arguments
 	process_action (arg: EV_ARGUMENT1 [ANY]; data: EV_BUTTON_EVENT_DATA) is
 			-- Process an action based on `arg'.
 		local
-			super_melt_cmd: SUPER_MELT
-			insert_breakpoint_cmd: BREAKPOINT_INSERTER
+			super_melt_cmd: EB_SUPER_MELT_CMD
+			insert_breakpoint_cmd: EB_INSERT_BREAKPOINT_CMD
 			st: STONE
-			target: HOLE
+--			target: HOLE
 			wid: EV_WIDGET
-			holes: LINKED_LIST [HOLE]
+--			holes: LINKED_LIST [HOLE]
 		do
 			if arg = new_tooler_action then
 --				update_before_transport (data)
@@ -346,28 +346,28 @@ feature {NONE} -- Command arguments
 --						holes.forth
 --					end
 
-					if target /= Void then
-						target.receive (st)
-						deselect_all
-					end
+--					if target /= Void then
+--						target.receive (st)
+--						deselect_all
+--					end
 				end
 
 			elseif arg = super_melt_action then
 --				update_before_transport (data)
 				st := focus
 				if st /= Void then
-					create super_melt_cmd.do_nothing
-					super_melt_cmd.work (st)
-					deselect_all
+--					create super_melt_cmd.do_nothing
+--					super_melt_cmd.work (st)
+--					deselect_all
 				end
 
 			elseif arg = insert_breakpoint_action then
 --				update_before_transport (data)
 				st := focus
 				if st /= Void then
-					create insert_breakpoint_cmd.do_nothing
-					insert_breakpoint_cmd.work (st)
-					deselect_all
+--					create insert_breakpoint_cmd.do_nothing
+--					insert_breakpoint_cmd.work (st)
+--					deselect_all
 				end
 				
 			end

@@ -7,58 +7,26 @@ indexing
 class
 	TDS_ACCELERATORS_ITEM
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
-inherit
-	ANY
-		rename
-		export
-		undefine
-		redefine
-		select
+feature
+
+	set_event (v: STRING) is
+			-- Assign 'v' to `event'.
+		do
 		end
 
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
+	set_id_value (v: STRING) is
+			-- Assign `v' to `id_value'
+		do
+		end
 
-create
-	default_create
+	set_type (v: STRING) is
+			-- Assign 'v' to `type'.
+		do
+		end
 
-feature -- Initialization
-
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
+	insert_options (v: STRING) is
+			-- Assign 'v' to `options'.
+		do
+		end
 
 end -- class TDS_ACCELERATORS_ITEM

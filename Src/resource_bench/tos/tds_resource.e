@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	tree_view_item: INTEGER
+	tree_view_item: POINTER
 
 	is_wel_code_on: BOOLEAN
 
@@ -29,6 +29,7 @@ feature -- Access
 
 	set_type (a_type: INTEGER) is
 		do
+			type := a_type
 		end
 
 	make_options is
@@ -45,15 +46,20 @@ feature -- Access
 
 	set_id (s: STRING) is
 		do
+			if id = Void then
+				create id
+			end
 			id.set_id (s)
 		end
 
 	insert (v: TDS_RESOURCE) is
 		do
+			extend (v)
 		end
 
 	set_tree_view_item (a_parent: POINTER) is
 		do
+			tree_view_item := a_parent
 		end
 
 	set_wel_code (value: BOOLEAN) is

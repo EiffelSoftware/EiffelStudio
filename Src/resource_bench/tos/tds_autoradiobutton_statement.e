@@ -1,5 +1,5 @@
 indexing
-	description: "Groupbox statement representation in the tds"
+	description: "Autoradio button statement representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"

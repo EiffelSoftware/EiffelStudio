@@ -101,11 +101,11 @@ feature -- Implementation
 				end
 
 				if accept_cursor = Void then
-					create curs_code.make
+					create curs_code
 					create accept_cursor.make_with_code (curs_code.standard)
 				end
 				if deny_cursor = Void then
-					create curs_code.make
+					create curs_code
 					create deny_cursor.make_with_code (curs_code.no)
 				end
 
@@ -300,6 +300,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/16 17:19:43  brendel
+--| Fixed creation of EV_CURSOR_CODE.
+--|
 --| Revision 1.15  2000/02/21 18:28:59  rogers
 --| Removed commented out 'end' within pointed target as it is required.
 --|

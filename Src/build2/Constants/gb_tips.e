@@ -14,7 +14,7 @@ feature -- Access
 	
 	display_window: STRING is "The Display Window shows an accurate view of the window that is being%Ncreated and should be used to preview the interface.%NYou may not build directly into the Display Window."
 
-	shift_right_click_tip: STRING is "To insert an object at a paticular index within a container,%Nhold the shift key while dropping on a child of the container.%NThe object will be inserted at the index preceeding the child."
+	shift_right_click_tip: STRING is "To insert an object at a particular index within a container,%Nhold the shift key while dropping on a child of the container.%NThe object will be inserted at the index preceeding the child."
 	
 	color_pick_and_drop_tip: STRING is "To copy the foreground or background color of an object, %Npick the representation of the color from the%Nobject editor, and drop to the representation in another editor.%NThe transported color will be assigned to the object."
 	
@@ -36,6 +36,8 @@ feature -- Access
 	
 	importing: STRING is "You may import the contents of an existing .BPR%Nfile into your project, by selecting the 'File', 'Import Project...'%Ncommand, and selecting the existing project to be added."
 	
+	multiple_items: STRING is "While dropping from the Type Selector into%Nthe Layout Constructor, hold down one of the%Ndigit keys (1-9), to insert that many new objects."
+	
 	all_tips: ARRAYED_LIST [STRING] is
 			-- All tips avaialable from `Current'.
 		once
@@ -54,6 +56,7 @@ feature -- Access
 			Result.extend (directory_addition)
 			Result.extend (loading_constants)
 			Result.extend (importing)
+			Result.extend (multiple_items)
 		end
 	
 	tip_count: INTEGER is

@@ -40,7 +40,8 @@ feature
 			-- Show special format of `stone' in class text `text_window',
 			-- if it's clickable; do nothing otherwise.
 		local
-			last_cursor_position: INTEGER;
+			last_cursor_position, last_top_position: INTEGER;
+			position_saved: BOOLEAN;
 			root_stone: CLASSC_STONE
 		do
 			root_stone ?= text_window.root_stone;
@@ -60,15 +61,22 @@ feature
 					if 
 						text_window.last_format = text_window.tool.showtext_command
 					then
-						last_cursor_position := text_window.cursor_position
+						last_cursor_position := text_window.cursor_position;
+						last_top_position := text_window.top_character_position;
+						position_saved := true
 					end;
 					text_window.set_editable;
 					text_window.show_image;
 					text_window.set_read_only;
-					if last_cursor_position <= text_window.size then
-						text_window.set_cursor_position (last_cursor_position)
-					elseif last_cursor_position /= 0 then
-						text_window.set_cursor_position (text_window.size)
+					if position_saved then
+						if last_cursor_position > text_window.size then
+							last_cursor_position := text_window.size
+						end;
+						if last_top_position > text_window.size then
+							last_top_position := text_window.size
+						end;
+						text_window.set_cursor_position (last_cursor_position);
+						text_window.set_top_character_position (last_top_position)
 					end;
 					text_window.set_root_stone (stone);
 					text_window.set_last_format (Current);

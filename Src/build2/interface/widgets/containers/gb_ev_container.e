@@ -367,6 +367,9 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			update_object_editors_for_radio_unmerge (group_link.object, parent_editor)
 				-- Destroy `group_link' as it is no longer needed.
 			group_link.destroy
+			
+				-- Now update the project status, as something has changed.
+			enable_project_modified
 		end
 		
 	update_object_editors_for_radio_unmerge (unmerged_object: GB_OBJECT; calling_editor: GB_OBJECT_EDITOR) is
@@ -438,6 +441,8 @@ feature {NONE} -- Implementation
 			if (objects @ 2).merged_radio_button_groups = Void or not (objects @ 2).merged_radio_button_groups.has (display_object.child) then
 				(objects @ 2).merge_radio_button_groups (display_object.child)	
 			end
+				-- Now update the project status, as something has changed.
+			enable_project_modified
 		end
 		
 

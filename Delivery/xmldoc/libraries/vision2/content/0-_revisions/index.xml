@@ -44,8 +44,9 @@
 			<item>
 				<bold>EV_RICH_TEXT</bold> - Corrected postcondition of `buffered_format' which restricted the end position to `text_length' instead of `text_length' + 1.
 			</item>
-			<item><bold>EV_FILE_OPEN_DIALOG</bold> - Added features for retrieving multiple file names. The following additional features are now available: 'enable_multiple_selection', `disable_multiple_selection', `multiple_selection_enabled' and `file_names'.
-</item>
+			<item>
+				<bold>EV_FILE_OPEN_DIALOG</bold> - Added features for retrieving multiple file names. The following additional features are now available: 'enable_multiple_selection', `disable_multiple_selection', `multiple_selection_enabled' and `file_names'.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -73,17 +74,17 @@
 					</item>
 					<item>
 						<bold>EV_SPIN_BUTTON</bold>
-						<list ordered="false">
-						 <item>When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.</item>
-						<item>Fixed bug which restricted the maximum values permitted to approx. 16,000. Attempting to manipulate the spin button with values greater than this caused precondition violations internally.</item>
+						<list ordered="false"> 
+							<item>When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.</item>
+							<item>Fixed bug which restricted the maximum values permitted to approx. 16,000. Attempting to manipulate the spin button with values greater than this caused precondition violations internally.</item>
 						</list>
 					</item>
 					<item>
 						<bold>EV_SCREEN</bold>
 						<list ordered="false">
-						<item>`widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.</item>
-						<item>`set_pointer_position' was not setting the position accurately and it may have actually been set to one of the adjacent positions.</item>						
-</list>
+							<item>`widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.</item>
+							<item>`set_pointer_position' was not setting the position accurately and it may have actually been set to one of the adjacent positions.</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_COMBO_BOX</bold>
@@ -92,6 +93,7 @@
 							<item>Fixed `has_focus' to return True when either the combo or the text field when it exists has the focus.</item>
 							<item>Fixed call on Void target when calling `set_foreground_color' on a displayed combo box which is not editable.</item>
 							<item>Fixed invariant violation with a non editable combo box.</item>
+							<item>Fixed `caret_position' which was failing if you attempted to set a caret position to a value greater than approx 65,000.</item>
 						</list>
 					</item>
 					<item>
@@ -192,11 +194,11 @@
 					</item>
 					<item>
 						<bold>EV_DRAWABLE</bold> 
-							<list ordered="false">
-								<item>Corrected font placement with `draw_text' using fonts of the same height that have varying ascent values</item>
-								<item>Corrected `draw_arc' to handle all radian angles for both start_angle and aperture values</item>
-								<item>Fixed mask handling for `draw_sub_pixmap' to work with non-zero 'area' coordinates</item>
-							</list>
+						<list ordered="false">
+							<item>Corrected font placement with `draw_text' using fonts of the same height that have varying ascent values</item>
+							<item>Corrected `draw_arc' to handle all radian angles for both start_angle and aperture values</item>
+							<item>Fixed mask handling for `draw_sub_pixmap' to work with non-zero 'area' coordinates</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_MULTI_COLUMN_LIST</bold> - Fixed memory leak when setting string values
@@ -227,7 +229,7 @@
 					</item>
 					<item>
 						<bold>EV_WIDGET</bold>
-								<list ordered="false">
+						<list ordered="false">
 							<item>Optimized motion event handling so that current motion events only get requested when the previous one has been processed</item>
 							<item>Fixed theme managed handling in all widgets so that fonts when changed outside of the application by the theme manager get reflected in the Vision2 application</item>
 						</list>
@@ -709,8 +711,8 @@
 			</item>
 			<item>
 				<bold>EV_TABLE</bold> - Now inherits CHAIN instead of ARRAY. This is a breaking  change, and may require some modification to your code. The inheritance from  ARRAY was seriously flawed. For example, if you were to call `extend' on an  EV_CONTAINER object that was currently referencing an EV_TABLE, then this would  fail. Now that we inherit CHAIN, this problem, among others of a similar nature  are fixed. Another advantage of inheriting CHAIN, is that the table may now be  iterated which allows for greater flexibility.
-				<line_break></line_break>
-				<line_break></line_break> The following list details some of the breaking changes, and how to fix them:
+				<line_break/>
+				<line_break/> The following list details some of the breaking changes, and how to fix them:
 				<list ordered="false">
 					<item>
 						<bold>item</bold> - If you were using `item', you should change this to `item_at_position'. A  call to `item' will now return the current item.
@@ -904,7 +906,7 @@
 			</item>
 		</list>
 		<paragraph>
-			<bold></bold>
+			<bold/>
 		</paragraph>
 		<heading>
 			<size>2</size>EiffelStudio 5.2

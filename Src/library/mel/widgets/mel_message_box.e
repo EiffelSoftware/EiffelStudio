@@ -23,55 +23,106 @@ inherit
 
 creation
 	make, 
-	make_no_auto_unmanage
+	make_no_auto_unmanage,
+	make_from_existing
 
 feature {NONE} -- Initialization
 
-    create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
-            -- Create message box with `auto_manage_flag'.
-        do
-            if auto_manage_flag then
-                screen_object := xm_create_message_box (p_so, $w_name, default_pointer, 0)
-            else
-                screen_object := xm_create_message_box (p_so, $w_name, auto_unmanage_arg, 1)
-            end;
-            Mel_widgets.put (Current, screen_object);
-            create_message_children
-        end;
-
-	create_message_children is
-			-- Create corresponding mel children.	
-		local
-			so: POINTER
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+			-- Create message box with `auto_manage_flag'.
 		do
-			so := screen_object;
-			!! cancel_button.make_from_existing (xm_message_box_get_child (so, XmDIALOG_CANCEL_BUTTON));
-			!! help_button.make_from_existing (xm_message_box_get_child (so, XmDIALOG_HELP_BUTTON));
-			!! ok_button.make_from_existing (xm_message_box_get_child (so, XmDIALOG_OK_BUTTON));
-			!! message_label.make_from_existing (xm_message_box_get_child (so, XmDIALOG_MESSAGE_LABEL));
-			!! separator.make_from_existing (xm_message_box_get_child (so, XmDIALOG_SEPARATOR));
-			!! symbol_label.make_from_existing (xm_message_box_get_child (so, XmDIALOG_SYMBOL_LABEL))
-		end;
+			if auto_manage_flag then
+				screen_object := xm_create_message_box (p_so, $w_name, default_pointer, 0)
+			else
+				screen_object := xm_create_message_box (p_so, $w_name, auto_unmanage_arg, 1)
+			end;
+		end
 
 feature -- Access
 
-	cancel_button,
+	cancel_button: MEL_PUSH_BUTTON_GADGET is
 			-- Cancel button
+		local
+			w: POINTER
+		do
+			w := xm_message_box_get_child (screen_object, XmDIALOG_CANCEL_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	help_button,
+	help_button: MEL_PUSH_BUTTON_GADGET is
 			-- Help button
+		local
+			w: POINTER
+		do
+			w := xm_message_box_get_child (screen_object, XmDIALOG_HELP_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	ok_button: MEL_PUSH_BUTTON_GADGET;
+	ok_button: MEL_PUSH_BUTTON_GADGET is
 			-- Ok button
+		local
+			w: POINTER
+		do
+			w := xm_message_box_get_child (screen_object, XmDIALOG_OK_BUTTON);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	separator: MEL_SEPARATOR_GADGET;
+	separator: MEL_SEPARATOR_GADGET is
 			-- Separator used
+		local
+			w: POINTER
+		do
+			w := xm_message_box_get_child (screen_object, XmDIALOG_SEPARATOR);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	message_label,
+	message_label: MEL_LABEL_GADGET is
 			-- Message label where message is displayed
+		local
+			w: POINTER
+		do
+			w := xm_message_box_get_child (screen_object, XmDIALOG_MESSAGE_LABEL);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
-	symbol_label: MEL_LABEL_GADGET;
+	symbol_label: MEL_LABEL_GADGET is
 			-- Symbol widget representing the pixmap
+		local
+			w: POINTER
+		do
+			w := xm_message_box_get_child (screen_object, XmDIALOG_SYMBOL_LABEL);
+			if w /= default_pointer then
+				Result ?= Mel_widgets.item (w);
+				if Result = Void then
+					!! Result.make_from_existing (w, Current)
+				end
+			end
+		end;
 
 feature -- Status report
 
@@ -232,9 +283,10 @@ feature -- Status report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNsymbolPixmap);
+			Result := get_xt_pixmap (Current, XmNsymbolPixmap);
 		ensure
-			pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 feature -- Status setting
@@ -427,7 +479,9 @@ feature -- Status setting
 			-- Set `symbol_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNsymbolPixmap, a_pixmap)
 		ensure

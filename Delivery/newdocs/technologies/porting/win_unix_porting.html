@@ -5,17 +5,16 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Porting an Eiffel application from Unix to Windows or vice-versa</title>
+<title>Porting an Eiffel application from UNIX to Windows or vice-versa</title>
 <LINK REL=StyleSheet HREF="../../default.css">
 </head>
 
 <body>
 
-<h1>Porting an Eiffel application from Unix to Windows or vice-versa</h1>
+<h1>Porting an Eiffel application from UNIX to Windows or vice-versa</h1>
 <h2>Requirements</h2>
-<p>Before starting your project, you must decide  if you want your 
-program to run on either one or more platforms. If you decide to go for more 
-than one platform make sure you use platform independent Eiffel libraries or C/C++ 
+<p>Before starting your project, you must first decide if you want your program 
+to run either single or multi-platform. If you decide to go multi-platform make sure you use platform independent Eiffel libraries or C/C++ 
 code. ISE Eiffel provides the following multi-platform libraries:</p>
 <ul>
   <li>Eiffel2Java (on platform that supports JNI)</li>
@@ -33,13 +32,13 @@ code. ISE Eiffel provides the following multi-platform libraries:</p>
 <p>&nbsp;</p>
 <h2>Configuring your project</h2>
 <p>For porting between different UNIX systems, you simply need one configuration 
-file as the C/C++ externals should be the same. If they are not the same, as it 
-is the case between UNIX and Windows, you will need a configuration file per 
-platform where it is different.</p>
-<p>Usual case is to port from UNIX to Windows or vice versa. In this case,  
-the only difference in your configuration file will regard the external clause. 
-For example, an application using Vision2 should contain the following externals 
-specification for UNIX platforms:</p>
+file as the C/C++ externals should be the same. If this is not the case, as with UNIX and Windows, you will need a 
+different configuration file for each 
+platform where there is a difference.</p>
+<p>The usual scenario is to port from UNIX to Windows or vice versa. In this case,  
+the only difference in the configuration file is that of the external clause. 
+An example of this is demonstrated with the following external specification of 
+a Vision2 project first for UNIX:</p>
 <pre>external
 	include_path:
 		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
@@ -56,7 +55,7 @@ specification for UNIX platforms:</p>
 </pre>
 
 
-and the following content for Windows:
+and then for Windows:
 
 <pre>external
 
@@ -73,12 +72,12 @@ and the following content for Windows:
 
 </pre>
 
-<p>Note the `\` in front of the include path for Unix. This is required to 
+<p>Note the `\` in front of the include path for UNIX. This is required to 
 compile correctly on some UNIX platforms.</p>
 
-<p>Also some multiplatform libraries such as EiffelVision2 do not include the 
-same clusters on Windows or UNIX. As for the externals, the clusters need to be 
-specified differently depending on the platform.</p>
+<p>It is important to also note that some multi-platform libraries such as EiffelVision2 do not include the 
+same clusters for both UNIX and Windows. As with externals,  clusters need to be 
+specified  depending on the target platform.</p>
 
 <p>&nbsp;</p>
 
@@ -91,10 +90,10 @@ We recommend you to create an archive of the F_code for backup.</p>
 
 <p>To compile on a given platform, you have to make sure that you have a 
 complete ISE Eiffel delivery for the target platform and that your PATH environment variable 
-contains $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin. Then you have to check that 
-all the C externals that you are using have been compiled for this platform.</p>
+contains $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin. You then have to check that 
+all  C externals that you are using have been compiled for this platform.</p>
 
-<p>Then launch the `finish_freezing' script that will 
+<p>You can then launch the `finish_freezing' script that will 
 automatically recompile the C generated code and generate a new executable for 
 the given platform.</p>
 
@@ -102,19 +101,16 @@ the given platform.</p>
 
 <h2>Between UNIX and Windows</h2>
 
-<p>As we have seen above you need to have two different configuration files and 
-therefore to port your Windows application on Unix, you need to re-finalize your 
-project from scratch on either the Windows or UNIX platform using the 
-configuration file for UNIX. Make sure not to compile the C code as if you do it 
-on Windows it will not successfully compile.</p>
+<p>As shown above you will need to have two different configuration files to 
+port your Windows application to UNIX. You can then use the UNIX 
+configuration file to re-finalize your project (without C compilation) and then 
+you have ANSI compliant C code that may be compiled on a UNIX platform using the 
+above instructions.</p>
 
-<p>Once this is done, just follow the above steps for UNIX systems.</p>
-
-<p>For porting your UNIX application on Windows, you need to re-finalize your 
-project from scratch on either the Windows or UNIX platform using the Windows 
-configuration file. Make sure not to compile the C code as if you do it on Unix 
-it will not successfully compile. Then simply executes `finish_freezing.exe' in 
-the F_code directory.</p>
+<p>To compile your UNIX application on Windows simply follow the same 
+instructions as above using a Windows configuration file instead. When the ANSI 
+C code is generated, run finish_freezing.exe in the F_code directory on the 
+target Windows platform and your system will be compiled.</p>
 
 </body>
 

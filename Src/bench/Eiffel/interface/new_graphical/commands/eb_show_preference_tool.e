@@ -35,6 +35,8 @@ feature {NONE} -- Execution
 					-- Preference tool is not currently displayed, create and display it.
 				create preference_window.make (preferences.preferences, window_manager.last_focused_development_window.window)
 			end			
+			preference_window.set_size (preferences.misc_data.preference_window_width, preferences.misc_data.preference_window_height)
+			preference_window.set_show_hidden_preferences (preferences.misc_data.show_hidden_preferences)
 			preference_window.left_list.first.expand
 			preference_window.raise	
 		end

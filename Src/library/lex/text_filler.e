@@ -157,6 +157,8 @@ feature -- Status setting
 
 	set_file (f_name: STRING) is
 			-- Use `f_name' as input file.
+		require
+			file_name_not_void: f_name /= Void
 		do
 			!! file.make_open_read (f_name);
 			reset;
@@ -169,6 +171,8 @@ feature -- Status setting
 
 	set_string (s: STRING) is
 			-- Use `s' as the input string.
+		require
+			string_not_void: s /= Void
 		do
 			string := s;
 			reset;

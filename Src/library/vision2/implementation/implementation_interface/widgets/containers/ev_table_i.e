@@ -55,6 +55,11 @@ feature -- Status settings
 			-- Allow items to be of varying sizes.
 		deferred
 		end
+		
+	is_homogeneous: BOOLEAN is
+			-- Are all children restriced to be the same size.
+		deferred
+		end
 	
 	set_row_spacing (a_value: INTEGER) is
 			-- Spacing between two consecutive rows of `Current'.

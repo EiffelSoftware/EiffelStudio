@@ -10,9 +10,9 @@ class
 	EV_OPTION_BUTTON
 
 inherit
-	EV_BUTTON
+	EV_BUTTON 
 		redefine
-			initialiaze,
+			initialize,
 			set_text
 		end
 
@@ -121,6 +121,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/21 01:34:55  rogers
+--| Changed initialiaze -> initialize in redefinition from EV_BUTTON.
+--|
 --| Revision 1.19  2000/03/21 00:31:44  oconnor
 --| syntax
 --|

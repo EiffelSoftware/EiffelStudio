@@ -14,8 +14,7 @@
 
 class ecom_runtime_ec;
 
-#include <objbase.h>
-#include <oleauto.h>
+#include "eif_com.h"
 #include <string.h>
 #include <assert.h>
 #include "eif_eiffel.h"
@@ -23,8 +22,6 @@ class ecom_runtime_ec;
 #include "E_wide_string.h"
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
-#include "ecom_vba__collection.h"
-#include "ecom_vba__errobject.h"
 
 
 class ecom_runtime_ec

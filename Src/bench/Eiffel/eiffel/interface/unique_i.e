@@ -26,7 +26,7 @@ feature
 	equiv (other: FEATURE_I): BOOLEAN is
 			-- Is `other' equivalent to Current ?
 		do
-			Result := {CONSTANT_I} precursor (other)
+			Result := {CONSTANT_I} Precursor (other)
 			if Not Result then
 				System.current_class.insert_changed_feature (feature_name)
 			end
@@ -49,6 +49,8 @@ feature
 			actual_type: TYPE_A
 			vqui: VQUI
 		do
+			{CONSTANT_I} Precursor (feat_tbl)
+
 			actual_type := type.actual_type
 			if
 				feat_tbl.associated_class = written_class

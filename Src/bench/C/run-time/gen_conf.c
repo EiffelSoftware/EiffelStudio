@@ -1364,18 +1364,11 @@ rt_public int16 eif_register_bit_type (long size)
 		gdp = eif_new_gen_der(size, (int16*)0, dftype, '1', (char) 0, 0);
 
 		if (prev == (EIF_GEN_DER *)0) {
-#ifdef	EIF_REGISTER_BIT_TYPE_DEBUG
-		printf ("Put at %d, (EIFGEN_DER *) 0x%x\n", dftype, gdp);
-#endif
 			eif_derivations [dftype] = gdp;
 		} else {
 			prev->next = gdp;
-
-#ifdef	EIF_REGISTER_BIT_TYPE_DEBUG
-			printf ("Put at %d, (EIFGEN_DER *) 0x%x\n", gdp->id, gdp);
-#endif
-		eif_derivations[gdp->id] = gdp; /* Self-reference */
 		}
+		eif_derivations[gdp->id] = gdp; /* Self-reference */
 	}
 
 	return gdp->id;

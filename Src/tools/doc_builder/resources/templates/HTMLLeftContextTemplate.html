@@ -1,9 +1,32 @@
 <!-- Page Initialization -->
+<script language="javascript">
+
+function clearPreLoadPage() {
+	if (document.getelementbyid) //dom
+	{
+		document.getelementbyid('prepage').style.visibility='hidden';
+	}
+	else
+	{
+		if (document.layers) //ns4
+		{
+			document.prepage.visibility = 'hidden';
+		}
+		else //ie4
+		{
+			document.all.prepage.style.visibility = 'hidden';
+		}
+	}
+}
+// end -->
+</script>
+
 <script language="JavaScript">
 
 function pageLoad()
 //Page load function
 {
+	clearPreLoadPage();
 	selectFilterNode();
 	ToggleAll();
 }
@@ -197,6 +220,19 @@ function ToggleAll()
 
 	</head>
 	<body onload="pageLoad()">
+		<div id="prepage" style="position:absolute;z-index:5;top:30%;left:35%;">
+			<table bgcolor="#000000" border=1 bordercolor="#000000"
+			cellpadding=0 cellspacing=0 height=200 width=300>
+			  <tr>
+				<td width="100%" height="100%" bgcolor="#cccccc" align="center" valign="middle">
+				  <br><br>
+				  <font face="helvetica,verdana,arial" size=3 color="#000066">
+				  <b>loading table of contents...please wait...</b></font> <br>
+				  <img src="icon_page_loading.gif" border=1 width=75 height=15><br><br>
+				</td>
+			  </tr>
+			</table>
+		  </div>
 		<form name="theForm">
 			<table>
 				<tr>

@@ -229,9 +229,14 @@ rt_public int16 eif_compound_id (char *Current, int16 base_id, int16 *types)
 rt_public int16 eif_final_id (int16 *ttable, int16 **gttable, char *Current)
 
 {
-	int16   result;
+	int16   result, *gtp;
 
-	/* FIXME: use gttable if necessary */
+	if (gttable != (int16 **) 0) {
+		gtp = gttable [Dtype(Current)];
+
+		if ((gtp != (int16 *) 0) && (*gtp != -1))
+			return eif_compound_id (Current, ttable[Dtype(Current)], gtp);
+	}
 
 	result = ttable[Dtype(Current)];
 

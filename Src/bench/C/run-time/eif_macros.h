@@ -143,7 +143,7 @@ RT_LNK int fcount;
 
 #define RTAD(x) char CAT2(x,_freeze) = 0; char* CAT2(x,_area); char* CAT2(x,_area_minus_lower)
 
-#define RTAITYPE(x,y) CAT2(x,_dtype) = Dftype(y)
+#define RTAITYPE(x,y) CAT2(x,_dtype) = Dtype(y)
 
 #define RTAIOFFSETS(x,y) \
 	if (y) { \

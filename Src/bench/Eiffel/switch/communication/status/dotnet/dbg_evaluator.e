@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Class used for EB_EXPRESSION, to evaluate functions and ..."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -86,7 +86,7 @@ feature -- Access
 			l_param_i: INTEGER
 			l_ctype: CLASS_TYPE
 			
-
+			error_occured: BOOLEAN
 		do
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
@@ -115,7 +115,7 @@ feature -- Access
 				from
 					l_param_i := a_params.lower
 				until
-					l_param_i > a_params.upper
+					l_param_i > a_params.upper or error_occured
 				loop
 					l_dumpvalue_param := a_params @ l_param_i
 					l_icdv_param := l_dumpvalue_param.value_dotnet
@@ -123,15 +123,15 @@ feature -- Access
 							--| This means this value has been created by eStudioDbg
 							--| We need to build the corresponding ICorDebugValue object.
 						if l_dumpvalue_param.is_type_integer then
-							l_icdv_param := eifnet_debugger.evaluator.new_i4_evaluation (icd_frame, l_dumpvalue_param.value_integer)
+							l_icdv_param := eifnet_evaluator.new_i4_evaluation (icd_frame, l_dumpvalue_param.value_integer)
 						elseif l_dumpvalue_param.is_type_boolean then
-							l_icdv_param := eifnet_debugger.evaluator.new_boolean_evaluation (icd_frame, l_dumpvalue_param.value_boolean )
+							l_icdv_param := eifnet_evaluator.new_boolean_evaluation (icd_frame, l_dumpvalue_param.value_boolean )
 						elseif l_dumpvalue_param.is_type_character then
-							l_icdv_param := eifnet_debugger.evaluator.new_char_evaluation (icd_frame, l_dumpvalue_param.value_character )
+							l_icdv_param := eifnet_evaluator.new_char_evaluation (icd_frame, l_dumpvalue_param.value_character )
 						elseif l_dumpvalue_param.is_type_string then
-							l_icdv_param := eifnet_debugger.evaluator.new_eiffel_string_evaluation (icd_frame, l_dumpvalue_param.value_object )
-							l_result := l_icdv_param
+							l_icdv_param := eifnet_evaluator.new_eiffel_string_evaluation (icd_frame, l_dumpvalue_param.value_object )
 						end
+						error_occured := (eifnet_evaluator.last_call_success /= 0)
 					end
 					l_icdv_args.put (l_icdv_param, l_param_i + 1)
 						-- we'll set the first arg later
@@ -140,14 +140,17 @@ feature -- Access
 			else
 				create l_icdv_args.make (1, 1)				
 			end
-			l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
-			
-			if l_result = Void then
-			l_result := eifnet_debugger.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
+			if not error_occured then
+				l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
+
+				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
+				error_occured := (eifnet_evaluator.last_call_success /= 0)
 				
+				if not error_occured then
+					l_adv := debug_value_from_icdv (l_result)
+					Result := l_adv.dump_value	
+				end			
 			end
-			l_adv := debug_value_from_icdv (l_result)
-			Result := l_adv.dump_value
 		end
 
 feature {NONE} -- Implementation

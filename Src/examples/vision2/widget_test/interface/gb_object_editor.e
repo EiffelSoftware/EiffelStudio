@@ -54,6 +54,7 @@ feature -- Status Setting
 			tree: EV_TREE
 			combo_box: EV_COMBO_BOX
 			tool_bar: EV_TOOL_BAR
+			drawable: EV_DRAWABLE
 			multi_column_list: EV_MULTI_COLUMN_LIST
 			list_extendible_controls: LIST_EXTENDIBLE_CONTROLS
 			tree_extendible_controls: TREE_EXTENDIBLE_CONTROLS
@@ -61,6 +62,7 @@ feature -- Status Setting
 			combo_box_extendible_controls: COMBO_BOX_EXTENDIBLE_CONTROLS
 			tool_bar_extendible_controls: TOOL_BAR_EXTENDIBLE_CONTROLS
 			container_extendible_controls: CONTAINER_EXTENDIBLE_CONTROLS
+			drawing_controls: DRAWABLE_CONTROLS
 			current_parent: EV_CONTAINER
 			was_locked_on_entry: BOOLEAN
 		do
@@ -87,6 +89,14 @@ feature -- Status Setting
 					extend (common_editor.attribute_editor)
 				end
 				supported_types.forth
+			end
+			if is_instance_of (widget, dynamic_type_from_string ("EV_DRAWABLE")) then
+				drawable ?= widget
+				check
+					widget_is_drawable: drawable /= Void
+				end
+				create drawing_controls.make_with_control (drawable, Current)
+				extend (drawing_controls)
 			end
 			if is_instance_of (widget, dynamic_type_from_string ("EV_LIST")) then
 				list ?= widget

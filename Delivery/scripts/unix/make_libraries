@@ -65,6 +65,22 @@ remtrace vision
 exprt -r $DEFAULT_CVS_TAG -d vision Src/examples/vision
 remtrace vision2
 exprt -r $DEFAULT_CVS_TAG -d vision2 Src/examples/vision2
+cd vision2
+fullrd Boxes
+fullrd drawing_area
+fullrd ev_list
+fullrd fake_event
+fullrd figure
+fullrd hello_world
+fullrd menu
+fullrd multicolumn_list
+fullrd pixmap
+fullrd split_area
+fullrd test_all_widgets
+fullrd test_events
+fullrd tests
+fullrd tutorial
+cd ..
 remtrace studio
 exprt -r $DEFAULT_CVS_TAG -d studio Src/examples/studio
 

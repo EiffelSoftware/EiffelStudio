@@ -367,20 +367,24 @@ feature -- IL Generation
 			proc: PROCEDURE_I
 		do
 			if not is_single_class or inh_feat /= Void then
-				l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
-				if not l_is_method_impl_generated then
-						-- Generate local definition signature using the parent
-						-- signature. We do not do it on the parent itself because
-						-- its `feature_id' is not appropriate in `current_class_type'.
-					Byte_context.set_class_type (class_type)
-					dup_feat := feat.duplicate
-					if dup_feat.is_procedure then
-						proc ?= dup_feat
-						proc.set_arguments (inh_feat.arguments)
+				if inh_feat /= Void then
+					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
+					if not l_is_method_impl_generated then
+							-- Generate local definition signature using the parent
+							-- signature. We do not do it on the parent itself because
+							-- its `feature_id' is not appropriate in `current_class_type'.
+						Byte_context.set_class_type (class_type)
+						dup_feat := feat.duplicate
+						if dup_feat.is_procedure then
+							proc ?= dup_feat
+							proc.set_arguments (inh_feat.arguments)
+						end
+						dup_feat.set_type (inh_feat.type)
+						generate_feature (dup_feat, False, False, False)
+						Byte_context.set_class_type (current_class_type)
+					else
+						generate_feature (feat, False, False, False)
 					end
-					dup_feat.set_type (inh_feat.type)
-					generate_feature (dup_feat, False, False, False)
-					Byte_context.set_class_type (current_class_type)
 				else
 					generate_feature (feat, False, False, False)
 				end

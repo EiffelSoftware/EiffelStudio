@@ -143,7 +143,8 @@ feature -- Definition: creation
 		end
 
 	define_method (method_name: UNI_STRING; in_class_token: INTEGER;
-			method_flags: INTEGER; signature: MD_SIGNATURE; impl_flags: INTEGER): INTEGER
+			method_flags: INTEGER; signature: MD_METHOD_SIGNATURE;
+			impl_flags: INTEGER): INTEGER
 		is
 			-- Create new method in class `in_class_token'.
 		require
@@ -162,7 +163,7 @@ feature -- Definition: creation
 		end
 
 	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
-			field_flags: INTEGER; signature: MD_SIGNATURE): INTEGER
+			field_flags: INTEGER; signature: MD_FIELD_SIGNATURE): INTEGER
 		is
 			-- Create a new field in class `in_class_token'.
 		require
@@ -180,6 +181,33 @@ feature -- Definition: creation
 			result_valid: Result > 0
 		end
 
+	define_signature (signature: MD_LOCAL_SIGNATURE): INTEGER is
+			-- Define a new token for `signature'. To be used only for
+			-- local signature.
+		require
+			signature_not_void: signature /= Void
+		do
+			if not signature.is_written then
+				signature.update_item
+			end
+			last_call_success := c_define_signature (item, signature.item.item,
+				signature.size, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0
+		end
+		
+	define_string (str: UNI_STRING): INTEGER is
+			-- Define a new token for `str'.
+		require
+			str_not_void: str /= Void
+		do
+			last_call_success := c_define_user_string (item, str.item, str.count, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0
+		end
+		
 feature -- Settings
 
 	set_module_name (a_name: UNI_STRING) is
@@ -332,6 +360,33 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineMemberRef"
+		end
+
+	c_define_signature (an_item: POINTER; signature: POINTER;
+			sig_length: INTEGER; sig_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->GetTokenFromSig'. See doc on unmanaged
+			-- Metadata API to see why we call it `c_define_signature'.
+		external
+			"[
+				C++ IMetaDataEmit signature (PCCOR_SIGNATURE, ULONG, mdSignature *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"GetTokenFromSig"
+		end
+
+	c_define_user_string (an_item: POINTER; string: POINTER;
+			str_len: INTEGER; sig_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineUserString'.
+		external
+			"[
+				C++ IMetaDataEmit signature (LPCWSTR, ULONG, mdString *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineUserString"
 		end
 
 end -- class MD_EMIT

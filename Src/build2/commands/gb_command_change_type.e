@@ -28,6 +28,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER
 
 create
 	make
@@ -52,6 +54,7 @@ feature -- Basic Operation
 		local
 			original_object, new_object: GB_OBJECT
 		do
+			store_layout_constructor
 			original_object := Object_handler.deep_object_from_id (original_id)
 			
 				-- Call delete on object.
@@ -83,6 +86,7 @@ feature -- Basic Operation
 				history.add_command (Current)
 			end
 			new_object.set_name (original_object.name)
+			restore_layout_constructor
 			command_handler.update
 		end
 		
@@ -92,12 +96,14 @@ feature -- Basic Operation
 		local
 			original_object, current_object: GB_OBJECT
 		do
+			store_layout_constructor
 			original_object := Object_handler.deep_object_from_id (original_id)
 			current_object := Object_handler.deep_object_from_id (new_id)
 
 			object_handler.replace_object (current_object, original_object)
 			current_object.set_name (original_object.name)
 			current_object.layout_item.update_pixmap
+			restore_layout_constructor
 			command_handler.update
 		end
 		

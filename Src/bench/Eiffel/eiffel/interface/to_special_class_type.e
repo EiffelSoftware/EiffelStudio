@@ -53,6 +53,7 @@ feature
 			dtype: INTEGER;
 			c_name: STRING;
 			final_mode: BOOLEAN;
+			encoded_name: STRING
 		do
 			gen_param := first_generic;
 			is_expanded := gen_param.is_expanded;
@@ -69,7 +70,11 @@ feature
 				%/*%N%
 				% * make_area%N%
 				% */%Nvoid ");
-			file.putstring (Encoder.feature_name (id, feat.body_id));
+			encoded_name := Encoder.feature_name (id, feat.body_id);
+
+			System.used_features_log_file.add (Current, "make_area", encoded_name);
+
+			file.putstring (encoded_name);
 			file.putstring ("%
 				% (Current, arg1)%N%
 				%char *Current;%N%

@@ -17,7 +17,7 @@ inherit
 	CONSTRUCT_LIST [T]
 
 creation
-	make
+	make, make_filled
 
 feature {COMPILER_EXPORTER}
 

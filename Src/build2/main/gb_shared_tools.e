@@ -114,6 +114,13 @@ feature -- Access
 			Result := (create {GB_SHARED_HISTORY}).history.history_dialog
 		end
 		
+	multiple_split_area: MULTIPLE_SPLIT_AREA is
+			-- `Result' is multiple slit area to hold tools.
+		once
+			create Result
+		end
+
+		
 		
 	all_floating_tools: ARRAYED_LIST [EV_DIALOG] is
 			-- `Result' is all tools that are independent of the main window.

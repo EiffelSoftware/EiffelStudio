@@ -34,6 +34,17 @@ feature {NONE} -- Initialization
 			widget_make (par)
 		end
 
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		require
+			exists: not destroyed
+		do
+			implementation.add_selection_command (a_command, arguments)
+		end
+
 feature {EV_TREE_ITEM} -- Implementation
 	
 	implementation: EV_TREE_I	

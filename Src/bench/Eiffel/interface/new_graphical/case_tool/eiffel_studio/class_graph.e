@@ -183,11 +183,14 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 		do
 			Precursor {ES_GRAPH}
 			if center_class /= Void and then not has_node (center_class) then
-				check
-					not center_class.is_needed_on_diagram
+				if not center_class.is_needed_on_diagram then
+					-- Fake the class is still there but don't show it
+					add_node (center_class)
+					disable_all_links (center_class.links)
+--				else
+					-- The class must have been deleted/or renamed and can't be found enymore
+					-- The stone will be set to Void and the diagram is erased.
 				end
-				add_node (center_class)
-				disable_all_links (center_class.links)
 			end
 		end
 

@@ -2,7 +2,7 @@
 /* wel_hook.c                                                                */
 /*****************************************************************************/
 /* Used to monitor mouse messages for the pick and drop mechanism under      */
-/* Windows                                                                   */
+/* Windows. Source code for wel_hook.dll                                     */
 /*****************************************************************************/
 #include <windows.h>
 #include <stdio.h>
@@ -15,6 +15,8 @@
 #pragma data_seg(".shared")	// Make a new section that we'll make shared
 HHOOK hMouseHook = 0;		// HHOOK from SetWindowsHook
 HWND hHookWindow = 0;      	// Handle to the window that hook the mouse
+HWND hForegroundWnd_at_hook_time = 0;	// Handle to the foreground window
+										// at hook time.
 #pragma data_seg()			// Back to regular, nonshared data
 
 // Per process data
@@ -26,7 +28,7 @@ HINSTANCE hDllInstance = 0;
 //=============================================================================
 
 /*---------------------------------------------------------------------------*/
-/* FUNC: cwel_unhook_mouse                                                   */
+/* FUNC: unhook_mouse                                                        */
 /*---------------------------------------------------------------------------*/
 /* Unhook mouse messages. Call this function when you do not want monitor    */
 /* mouse messages anymore.                                                   */
@@ -87,6 +89,12 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 		)
 		return 0;
 
+	// The foreground window has changed since we have hooked the mouse
+	// (The user has pressed ALT+Tab). So we don't redirect the mouse
+	// messages
+	if (GetForegroundWindow() != hForegroundWnd_at_hook_time)
+		return 0;
+	
 	//===================================
 	// We will handle this mouse message
 	//===================================
@@ -168,7 +176,7 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 	}
 
 /*---------------------------------------------------------------------------*/
-/* FUNC: cwel_hook_mouse                                                     */
+/* FUNC: hook_mouse                                                          */
 /* ARGS: hHookWindow: Handle of the window registering the hook.             */
 /*---------------------------------------------------------------------------*/
 /* Hok mouse messages. Call this function when you want to monitor all mouse */
@@ -179,7 +187,13 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 int hook_mouse(HWND hWnd)
 	{
 	if (hWnd==NULL)
+		{
+		MessageBox (NULL, "Invalid hWnd", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;	// Invalid handle to a window, exit.
+		}
+	
+	// Remember the current foreground window
+	hForegroundWnd_at_hook_time = GetForegroundWindow();
 
 	// Hook the mouse messages
 	hMouseHook = SetWindowsHookEx (
@@ -193,6 +207,7 @@ int hook_mouse(HWND hWnd)
 	if (hMouseHook == NULL)
 		{
 		hHookWindow = NULL;
+		MessageBox (NULL, "hMouseHook==NULL", "wel_hook.dll error", MB_OK | MB_ICONSTOP);
 		return 0;
 		}
 	

@@ -119,7 +119,7 @@ feature -- Basic Operations
 	create_project (ace_name: STRING; project_directory_path: STRING) is
 			-- Create new project.
 		local
-			enum: ECOM_X__EIF_COMPILATON_TYPES_ENUM
+			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
 		do
 			valid_project := False
 			if ace_name /= Void and project_directory_path /= Void then

@@ -513,6 +513,10 @@ feature -- Access
 			"VK_SCROLL"
 		end
 
+	-- Vk_A thru Vk_Z are the same as their ASCII equivalents: 'A' thru 'Z'.
+
+	-- Vk_0 thru Vk_9 are the same as their ASCII equivalents: '0' thru '9'.
+
 end -- class WEL_VK_CONSTANTS
 
 --|-------------------------------------------------------------------------

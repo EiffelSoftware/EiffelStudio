@@ -44,6 +44,7 @@ feature {GB_XML_STORE} -- Output
 			end
 			if not first.is_empty then
 				item_text_element := new_child_element (element, item_text_string_new, "")
+				element.force_last (item_text_element)
 				from
 					first.start
 				until
@@ -55,6 +56,7 @@ feature {GB_XML_STORE} -- Output
 					first.forth
 				end
 				item_pixmap_element ?= new_child_element (element, item_pixmap_string_new, "")
+				element.force_last (item_pixmap_element)
 				from
 					first.start
 				until

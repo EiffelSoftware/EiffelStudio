@@ -145,10 +145,9 @@ feature {NONE}
 			transitions: TRANSITION;
 			sel_figure: STATE_CIRCLE;
 			figures: APP_FIGURES;
-			void_circle: STATE_CIRCLE;
 		do
 			if selected then
-				app_editor.set_selected (void_circle)
+				app_editor.set_selected (app_editor.initial_state_circle)
 			end;
 			transitions := app_editor.transitions;
 			figures := app_editor.figures;

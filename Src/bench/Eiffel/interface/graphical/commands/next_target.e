@@ -5,6 +5,9 @@ class NEXT_TARGET
 inherit
 
 	ICONED_COMMAND
+		redefine
+			execute
+		end;
 
 creation
 
@@ -17,6 +20,28 @@ feature -- Initialization
 			init (c, a_text_window)
 		end;
 
+	execute (argument: ANY) is
+		do
+			if argument = get_in then
+				text_window.tool.tell_type (command_name)
+			elseif argument = get_out then
+				text_window.tool.clean_type
+            elseif argument = warner then
+					-- The changes will be lost.
+				text_window.clear_clickable;
+				text_window.set_changed (false);
+				execute_licenced (Void)
+			else
+				warner.popdown;
+				if not text_window.changed then
+					execute_licenced (argument)
+				else
+					warner.set_window (text_window);
+					warner.call (Current, l_File_changed)
+				end
+			end
+		end;
+		
 feature {NONE}
 
 	work (argument: ANY) is

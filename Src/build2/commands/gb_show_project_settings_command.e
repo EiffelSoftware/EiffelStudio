@@ -52,7 +52,7 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			do
-				project_settings_window.show_modal_to_window (system_status.main_window)
+				project_settings_window.show_modal_to_window (main_window)
 				command_handler.update
 			end
 

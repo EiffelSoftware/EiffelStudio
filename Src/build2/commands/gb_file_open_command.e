@@ -83,7 +83,7 @@ feature -- Basic operations
 					((valid_file_name (dialog.file_name) and file_handler.last_load_successful) or dialog.file_name.is_empty)
 				loop
 						-- Display the dialog.
-					dialog.show_modal_to_window (system_status.main_window)
+					dialog.show_modal_to_window (main_window)
 						-- The dialog has now been opened once.
 					opened := True
 						-- If the ok button was clicked and the file name exists,
@@ -94,7 +94,7 @@ feature -- Basic operations
 						if file_handler.last_load_successful then
 							system_status.set_current_project (project_settings)
 							xml_handler.load
-							system_status.main_window.show_tools
+							main_window.show_tools
 							command_handler.update
 						end	
 					end

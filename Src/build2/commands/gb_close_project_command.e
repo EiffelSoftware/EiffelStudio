@@ -66,7 +66,7 @@ feature -- Basic operations
 			do
 				if system_status.project_modified then
 					create dialog.make_with_text (Save_prompt)
-					dialog.show_modal_to_window (system_status.main_window)
+					dialog.show_modal_to_window (main_window)
 						-- Do nothing if cancel was pressed.
 					if not dialog.selected_button.is_equal (Ev_cancel) then
 						if dialog.selected_button.is_equal (Ev_yes) then
@@ -89,7 +89,7 @@ feature -- Basic operations
 					-- of the `docked_object_editor'.
 				docked_object_editor.make_empty
 				system_status.close_current_project
-				system_status.main_window.hide_tools
+				main_window.hide_tools
 				destroy_floating_editors
 
 					-- Hide the component viewer.

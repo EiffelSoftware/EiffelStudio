@@ -19,6 +19,8 @@ inherit
 	
 	GB_SHARED_SYSTEM_STATUS
 	
+	GB_SHARED_TOOLS
+	
 	GB_SHARED_OBJECT_EDITORS
 
 create
@@ -62,18 +64,18 @@ feature -- Basic operations
 			dialog: GB_CODE_GENERATION_DIALOG
 		do
 			create dialog.make_default
-			dialog.show_relative_to_window (system_status.main_window)
+			dialog.show_relative_to_window (main_window)
 			dialog.start_generation
 			
 				-- The dialog is relative to the window until
-				-- complete, whenit is replaced with a modal dialog.
+				-- complete, when it is replaced with a modal dialog.
 				-- This was deemed the best solution, as if we did not convert
 				-- to a modal dialog, the dialog may be dissapear before a
 				-- user would ever see it. This is not good, and the behaviour
 				-- here is an attempt to combat this problem.
 			dialog.hide
 			dialog.show_completion
-			dialog.show_modal_to_window (system_status.main_window)
+			dialog.show_modal_to_window (main_window)
 		end
 
 end -- class GB_GENERATION_COMMAND

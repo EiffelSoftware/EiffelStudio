@@ -14,34 +14,13 @@ inherit
 	
 	EV_ANY_IMP
 		undefine
-			destroy
+			destroy,
+			needs_event_box
 		redefine
 			interface
 		end
 
 feature -- Status setting
-
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
-			-- Widget implementation at current mouse pointer position (if any)
-		local
-			a_x, a_y: INTEGER
-			gdkwin, gtkwid: POINTER
-		do
-			gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
-			if gdkwin /= NULL then				
-				from
-					feature {EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
-				until
-					Result /= Void or else gtkwid = NULL
-				loop
-					Result ?= eif_object_from_c (gtkwid)
-					gtkwid := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
-				end
-			end
-			if Result /= Void and then Result.is_destroyed then
-				Result := Void
-			end
-		end
 
 	start_dragable_filter (
 				a_type: INTEGER;

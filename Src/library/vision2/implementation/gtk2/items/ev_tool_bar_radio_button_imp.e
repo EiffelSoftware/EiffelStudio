@@ -12,10 +12,7 @@ class
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
@@ -23,10 +20,7 @@ inherit
 			parent_imp,
 			make,
 			interface,
-			set_parent_imp,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal,
+			set_item_parent_imp,
 			create_select_actions
 		end
 
@@ -81,10 +75,8 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+	set_item_parent_imp (a_container_imp: EV_ITEM_LIST_IMP [EV_ITEM]) is
 			-- Set `parent_imp' to `a_container_imp'.
-			-- (from EV_WIDGET_IMP)
-			-- (export status {EV_CONTAINER_IMP})
 		do
 			Precursor {EV_TOOL_BAR_BUTTON_IMP} (a_container_imp)
 			if a_container_imp = Void then
@@ -113,14 +105,6 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON
-
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 

@@ -6,23 +6,17 @@ deferred class POLY_TABLE [T -> ENTRY]
 inherit
 
 	SORTED_TWO_WAY_LIST [T];
-	IDABLE;
+	IDABLE
+		rename
+			id as rout_id,
+			set_id as set_rout_id
+		end;
 	SHARED_WORKBENCH;
 	SHARED_CODE_FILES;
 	SHARED_ARRAY_BYTE;
 	SHARED_SERVER;
 	SH_DEBUG;
 	COMPILER_EXPORTER
-
-feature -- IDABLE
-
-	id: INTEGER is
-			-- Id for server storage
-		do
-			Result := rout_id.id
-		end
-
-	set_id (i: INTEGER) is do end;
 
 feature
 

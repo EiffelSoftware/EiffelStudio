@@ -161,24 +161,24 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 	ev_children: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 			-- List of the children
 
-	clear_ev_children is
-			-- Clear all the items of the list.
-		require
-			exists: not destroyed
-		local
-			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
-		do
-			from
-				list := ev_children
-				list.start
-			until
-				list.after
-			loop
-				list.item.interface.remove_implementation
-				list.forth
-			end
-			list.wipe_out
-		end
+--	clear_ev_children is
+--			-- Clear all the items of the list.
+--		require
+--			exists: not destroyed
+--		local
+--			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+--		do
+--			from
+--				list := ev_children
+--				list.start
+--			until
+--				list.after
+--			loop
+--				list.item.interface.remove_implementation
+--				list.forth
+--			end
+--			list.wipe_out
+--		end
 
 end -- class EV_LIST_I
 

@@ -1,12 +1,20 @@
+indexing
+
+	description: 
+		"Data representation of feature clause information.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_FEATURE_CLAUSE
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialize
 
 	make (feats: like features; exp: like export_i) is
+			-- Set features to `feats' and export_i to `exp'.
 		require
 			valid_exp: exp /= Void;
 			valid_feats: feats /= Void;
@@ -18,17 +26,21 @@ feature {NONE}
 			export_i_set: export_i = exp
 		end;
 
-feature
+feature -- Properties
 
 	export_i: S_EXPORT_I;
+			-- Export status
 
 	comment: S_FREE_TEXT_DATA
-		-- Future purposes when we want comments for
-		-- the feature clause
-		-- (For the first release of ecase only public
-		-- and private clauses are recorded)
+			-- Future purposes when we want comments for
+			-- the feature clause
+			-- (For the first release of ecase only public
+			-- and private clauses are recorded)
 
 	features: ARRAYED_LIST [S_FEATURE_DATA];
+			-- Features for Current feature clause
+
+feature -- Comparison
 
 	same_export (exp: S_EXPORT_I): BOOLEAN is
 			-- Is export same as `exp'?
@@ -43,4 +55,4 @@ invariant
 	valid_features: features /= Void;
 	valid_export: export_i /= Void
 			
-end
+end -- class S_FEATURE_CLAUSE

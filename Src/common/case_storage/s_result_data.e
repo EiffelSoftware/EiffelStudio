@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Data representing the declaration of result types for features.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_RESULT_DATA
 
 inherit
@@ -8,7 +15,7 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (txt: STRING; t: like type) is
 			-- Set id to `s' and set
@@ -23,7 +30,7 @@ feature {NONE}
 			type_set: type = t
 		end;
 
-feature 
+feature -- Properties
 
 	text: STRING;
 			-- Text of Current (for bon eg (n)).
@@ -35,4 +42,4 @@ invariant
 
 	has_type: type /= Void
 
-end
+end -- class S_RESULT_DATA

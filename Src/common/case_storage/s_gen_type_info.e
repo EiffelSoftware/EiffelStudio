@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Explicit generic class type information.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_GEN_TYPE_INFO
 
 inherit
@@ -12,9 +19,33 @@ creation
 
 	make
 
-feature
+feature -- Properties
 
 	generics: FIXED_LIST [S_TYPE_INFO];
+			-- Generics list
+
+	has_generics: BOOLEAN is True
+			-- Does Current contain generics?
+			-- (Yes, it does)
+
+	real_class_ids: LINKED_LIST [INTEGER] is
+			-- List of real class ids that exist in system
+			-- in the generic paraments
+		do
+			!! Result.make;
+			from
+				generics.start
+			until
+				generics.after
+			loop
+				if generics.item.is_normal_class then
+					Result.append (generics.item.real_class_ids)
+				end
+				generics.forth
+			end
+		end
+
+feature -- Setting
 
 	set_generics (l: like generics) is
 			-- Set generics to `l'.
@@ -28,12 +59,10 @@ feature
 			generics_set: generics = l
 		end;
 
-	has_generics: BOOLEAN is
-		do
-			Result := True
-		end;
+feature -- Output
 
 	string_value: STRING is
+			-- String value of Current generic
 		do
 			Result := clone (free_text_name);
             Result.append (" [");
@@ -85,19 +114,4 @@ feature
             Result.append ("]");
 		end;
 
-	real_class_ids: LINKED_LIST [INTEGER] is
-		do
-			!! Result.make;
-			from
-				generics.start
-			until
-				generics.after
-			loop
-				if generics.item.is_normal_class then
-					Result.append (generics.item.real_class_ids)
-				end
-				generics.forth
-			end
-		end
-
-end
+end -- class S_GEN_TYPE_INFO

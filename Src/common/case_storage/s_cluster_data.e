@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Data representation of cluster information.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class S_CLUSTER_DATA
 
@@ -12,7 +18,7 @@ creation
 
 	make
 
-feature
+feature -- Properties
 
 	classes: FIXED_LIST [S_CLASS_DATA];
 			-- Class path within Current 
@@ -21,9 +27,15 @@ feature
 			-- Clusters within Current cluster
 
 	chart: S_CHART;
-            -- Informal description of Current cluster
+			-- Informal description of Current cluster
 
-feature -- Setting values
+	reversed_engineered_file_name: STRING is
+			-- Directory path of reversed engineered cluster
+			-- (with environment variables not interpreted)
+		do
+		end;
+
+feature -- Setting 
 
 	set_classes (l: like classes) is
 			-- Set classes to `l'.
@@ -50,25 +62,17 @@ feature -- Setting values
 		end;
 
 	set_chart (ch: like chart) is
-            -- Set chart to `ch'.
-        do
-            chart := ch;
-        end;
+			-- Set chart to `ch'.
+		do
+			chart := ch;
+		end;
 
 feature -- Comparison
 
-    infix "<" (other: like Current): BOOLEAN is
-            -- Is Current's name before or after other's name?
-        do
-            Result := (- view_id) < (- other.view_id)
-        end;
- 
-feature
-
-	reversed_engineered_file_name: STRING is
-			-- Directory path of reversed engineered cluster
-			-- (with environment variables not interpreted)
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is Current's name before or after other's name?
 		do
+			Result := (- view_id) < (- other.view_id)
 		end;
-
-end
+ 
+end -- class S_CLUSTER_DATA

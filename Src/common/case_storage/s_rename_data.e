@@ -1,10 +1,17 @@
+indexing
+
+	description: 
+		"Data representing the renamed feature.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_RENAME_DATA
 
 inherit
 
 	S_ELEMENT_DATA
 
-feature
+feature -- Properties
 
 	origin_feature_key: S_FEATURE_KEY;
 			-- Origin feature before being renamed
@@ -13,7 +20,7 @@ feature
 			-- Text entered if origin feature is not
 			-- specified	
 
-feature -- Setting values
+feature -- Setting 
 
 	set_free_form_text (txt: STRING) is
 			-- Set text to `txt'.
@@ -37,4 +44,4 @@ feature -- Setting values
 			key_set: origin_feature_key = key;
 		end;
 	
-end
+end -- class S_RENAME_DATA

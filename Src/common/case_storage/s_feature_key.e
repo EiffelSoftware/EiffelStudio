@@ -1,12 +1,17 @@
--- Class used to retrieve the FEATURE_DATA from
--- a hash table
+indexing
+
+	description: 
+		"Information used to identify the FEATURE_DATA.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_FEATURE_KEY
 
 creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make (f_name: STRING; cl_id: like class_id) is
 			-- Set feature_name to `f_name' and
@@ -22,7 +27,7 @@ feature {NONE}
 			class_id_set: class_id = cl_id
 		end;
 
-feature
+feature -- Properties
 
 	class_id: INTEGER;
 
@@ -33,4 +38,4 @@ invariant
 	valid_class_id: class_id /= Void;
 	valid_feature_name: feature_name /= Void and then not feature_name.empty
 
-end
+end -- class S_FEATURE_KEY

@@ -1,10 +1,19 @@
+indexing
+
+	description: 
+		"Abstraction class for linkable data objects.%
+		%A linkable object is an entity that has relationships%
+		%with other entities (i.e. it is linked to another entity).";
+	date: "$Date$";
+	revision: "$Revision $"
+
 deferred class S_LINKABLE_DATA
 
 inherit
 
 	COMPARABLE
 
-feature
+feature -- Properties
 
 	view_id: INTEGER;
 			-- View Id of Current
@@ -29,14 +38,12 @@ feature
 	heir_links: ARRAYED_LIST [S_INHERIT_DATA];
 			-- List of inheritance relations for which current is the heir
 
-feature
-
 	chart: S_CHART is
 			-- Informal chart of Current
 		do
 		end;
 
-feature -- Setting values
+feature -- Setting 
 
 	make (s: STRING) is
 			-- Set name to `s'.
@@ -70,8 +77,8 @@ feature -- Setting values
 
 	set_explanation (l: like explanation) is
 			-- Set explanation to `l'.
-        require
-            valid_l: l /= Void;
+		require
+			valid_l: l /= Void;
 		do
 			explanation := l
 		ensure
@@ -123,4 +130,4 @@ feature -- Setting values
 			heir_links_set: heir_links = l
 		end;
 
-end
+end -- class S_LINKABLE_DATA

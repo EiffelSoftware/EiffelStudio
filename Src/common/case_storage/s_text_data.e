@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Data representing text information.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_TEXT_DATA
 
 inherit
@@ -11,16 +18,7 @@ creation
 
 	make
 
-feature
-
-	text: STRING;
-
-	is_equal (other: like Current): BOOLEAN is
-		do
-			Result := text.is_equal (other.text)
-		end;
-
-feature {NONE} -- Setting values
+feature {NONE} -- Initialization
 
 	make (txt: STRING) is
 			-- Set text to `txt'.
@@ -32,4 +30,16 @@ feature {NONE} -- Setting values
 			text_set: text = txt
 		end;
 
-end
+feature -- Properties
+
+	text: STRING;
+			-- Text representing Current
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+		do
+			Result := text.is_equal (other.text)
+		end;
+
+end -- class S_TEXT_DATA

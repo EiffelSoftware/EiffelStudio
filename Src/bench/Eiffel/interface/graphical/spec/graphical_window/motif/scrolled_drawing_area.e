@@ -97,7 +97,7 @@ feature -- Access
 	parent: FORM;
 			-- Parent of drawing area
 
-	drawing: D_AREA_M;
+	drawing: DRAWING_AREA_IMP;
 			-- Drawing implementation of drawing area
 
 	vertical_scrollbar: SCROLLBAR;

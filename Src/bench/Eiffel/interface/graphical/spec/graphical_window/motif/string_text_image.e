@@ -51,7 +51,7 @@ feature -- Status setting
 
 feature -- Output
 
-	draw (d: DRAWING_X; values: GRAPHICAL_VALUES; is_in_highlighted_line: BOOLEAN;
+	draw (d: DRAWING_IMP; values: GRAPHICAL_VALUES; is_in_highlighted_line: BOOLEAN;
 			x_offset, y_offset: INTEGER) is
 			-- Draw the current text.
 		do

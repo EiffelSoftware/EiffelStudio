@@ -49,15 +49,13 @@ feature -- Callbacks
 
 	execute_warner_ok (argument: ANY) is
 		do
---			if not project_tool.initialized then
-				if choose_again then
-					choose_again := False
-					last_name_chooser.set_window (Project_tool)
-					last_name_chooser.call (Current)
-				else
-					init_project
-				end
---			end
+			if choose_again then
+				choose_again := False
+				last_name_chooser.set_window (Project_tool)
+				last_name_chooser.call (Current)
+			else
+				init_project
+			end
 		end
 
 feature -- License managment

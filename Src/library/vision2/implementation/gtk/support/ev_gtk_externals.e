@@ -2821,16 +2821,6 @@ feature -- External C functions
 			"C (gchar*, GLogLevelFlags, GLogFunc, gpointer): guint | <gtk/gtk.h>"
 		end
 
-	frozen g_logv (a_log_domain: POINTER; a_log_level: INTEGER; a_format: POINTER; a_args: POINTER) is
-			-- void		g_logv			(const gchar	*log_domain,
-			-- 					 GLogLevelFlags	 log_level,
-			-- 					 const gchar	*format,
-			-- 					 va_list	 args);
-			-- (from C_GLIB)
-		external
-			"C (gchar*, GLogLevelFlags, gchar*, va_list) | <gtk/gtk.h>"
-		end
-
 --	g_main_add_poll (a_fd: POINTER; a_priority: INTEGER) is
 --			-- void        g_main_add_poll          (GPollFD    *fd,
 --			-- 				      gint        priority);
@@ -3238,14 +3228,6 @@ feature -- External C functions
 			-- (from C_GLIB)
 		external
 			"C (gchar*): gchar* | <gtk/gtk.h>"
-		end
-
-	frozen g_printf_string_upper_bound (a_format: POINTER; a_args: POINTER): INTEGER is
-			-- guint	g_printf_string_upper_bound (const gchar* format,
-			-- 				     va_list	  args);
-			-- (from C_GLIB)
-		external
-			"C (gchar*, va_list): guint | <gtk/gtk.h>"
 		end
 
 	frozen g_ptr_array_add (a_array: POINTER; a_data: POINTER) is
@@ -3940,14 +3922,6 @@ feature -- External C functions
 			"C (gchar*): gchar* | <gtk/gtk.h>"
 		end
 
-	frozen g_strdup_vprintf (a_format: POINTER; a_args: POINTER): POINTER is
-			-- gchar*	 g_strdup_vprintf	(const gchar *format,
-			-- 				 va_list      args);
-			-- (from C_GLIB)
-		external
-			"C (gchar*, va_list): gchar* | <gtk/gtk.h>"
-		end
-
 	frozen g_strerror (a_errnum: INTEGER): POINTER is
 			-- gchar*	 g_strerror		(gint	      errnum);
 			-- (from C_GLIB)
@@ -4314,16 +4288,6 @@ feature -- External C functions
 			-- (from C_GLIB)
 		external
 			"C (GTuples*, gint, gint): gpointer | <gtk/gtk.h>"
-		end
-
-	frozen g_vsnprintf (a_string: POINTER; a_n: INTEGER; a_format: POINTER; a_args: POINTER): INTEGER is
-			-- gint	g_vsnprintf		(gchar	     *string,
-			-- 				 gulong	      n,
-			-- 				 gchar const *format,
-			-- 				 va_list      args);
-			-- (from C_GLIB)
-		external
-			"C (gchar*, gulong, gchar*, va_list): gint | <gtk/gtk.h>"
 		end
 
 	frozen gdk_add_client_message_filter (a_message_type: INTEGER; a_func: POINTER; a_data: POINTER) is
@@ -7442,18 +7406,6 @@ feature -- External C functions
 --			"C (GtkArg*, GtkArg*): gboolean | <gtk/gtk.h>"
 --		end
 --
---	gtk_args_collect (a_object_type: INTEGER; a_arg_info_hash_table: POINTER; a_arg_list_p: POINTER; a_info_list_p: POINTER; a_first_arg_name: POINTER; a_var_args: POINTER): POINTER is
---			-- gchar*		gtk_args_collect	 (GtkType	object_type,
---			-- 					  GHashTable    *arg_info_hash_table,
---			-- 					  GSList      **arg_list_p,
---			-- 					  GSList      **info_list_p,
---			-- 					  const gchar   *first_arg_name,
---			-- 					  va_list	var_args);
---			-- (from C_GTK_EXTERNALS)
---		external
---			"C (GtkType, GHashTable*, GSList**, GSList**, gchar*, va_list): gchar* | <gtk/gtk.h>"
---		end
-
 --	gtk_args_collect_cleanup (a_arg_list: POINTER; a_info_list: POINTER) is
 --			-- void		gtk_args_collect_cleanup (GSList       *arg_list,
 --			-- 					  GSList       *info_list);
@@ -8630,17 +8582,6 @@ feature -- External C functions
 --			-- (from C_GTK_CONTAINER)
 --		external
 --			"C (GtkType, gchar*, GtkArgInfo**): gchar* | <gtk/gtk.h>"
---		end
-
---	gtk_container_child_args_collect (a_object_type: INTEGER; a_arg_list_p: POINTER; a_info_list_p: POINTER; a_first_arg_name: POINTER; a_args: POINTER): POINTER is
----			-- gchar*	gtk_container_child_args_collect     (GtkType       object_type,
---			-- 					      GSList      **arg_list_p,
---			-- 					      GSList      **info_list_p,
---			-- 					      const gchar  *first_arg_name,
---			-- 					      va_list       args);
---			-- (from C_GTK_CONTAINER)
---		external
---			"C (GtkType, GSList**, GSList**, gchar*, va_list): gchar* | <gtk/gtk.h>"
 --		end
 
 --	gtk_container_child_composite_name (a_container: POINTER; a_child: POINTER): POINTER is
@@ -11771,17 +11712,6 @@ feature -- External C functions
 --			-- (from C_GTK_OBJECT)
 --		external
 --			"C (GtkObject*, GtkArg*, GtkArgInfo*) | <gtk/gtk.h>"
---		end
-
---	gtk_object_args_collect (a_object_type: INTEGER; a_arg_list_p: POINTER; a_info_list_p: POINTER; a_first_arg_name: POINTER; a_var_args: POINTER): POINTER is
---			-- gchar*	gtk_object_args_collect (GtkType      object_type,
---			-- 				 GSList	    **arg_list_p,
---			-- 				 GSList	    **info_list_p,
---			-- 				 const gchar *first_arg_name,
---			-- 				 va_list      var_args);
---			-- (from C_GTK_OBJECT)
---		external
---			"C (GtkType, GSList**, GSList**, gchar*, va_list): gchar* | <gtk/gtk.h>"
 --		end
 
 --	gtk_object_class_add_signals (a_klass: POINTER; a_signals: POINTER; a_nsignals: INTEGER) is

@@ -62,6 +62,7 @@ feature -- Access
 		local
 			size: INTEGER
 		do
+			mismatch_information.do_nothing
 			Result := c_retrieved (buffer, buffer_size, 0, $size)
 			object_stored_size := size
 		end

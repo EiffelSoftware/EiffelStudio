@@ -24,16 +24,16 @@ feature
 		require else
 			is_good_range: is_good_range
 		local
-			low, up: INTEGER;
+			low, up: CHARACTER;
 		do
 			from
-				low := charcode (lower.generation_value);
-				up := charcode (upper.generation_value);
+				low := lower.generation_value;
+				up := upper.generation_value;
 			until
 				low > up
 			loop
 				generated_file.putstring ("case '");
-				generated_file.escape_char (charconv(low));
+				generated_file.escape_char (low);
 				generated_file.putstring ("':");
 				generated_file.new_line;
 				low := low + 1;

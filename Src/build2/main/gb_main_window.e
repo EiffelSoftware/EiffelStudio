@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			create temp_tool_bar
 			temp_tool_bar.extend (window_selector.new_directory_button)
 			temp_tool_bar.extend (window_selector.expand_all_button)
-			temp_tool_bar.extend (window_selector.assign_main_window_button)
+			temp_tool_bar.extend (window_selector.assign_root_window_button)
 			vertical_holder.third_holder.add_command_tool_bar (temp_tool_bar)
 			
 			create constructor_box

@@ -1,3 +1,4 @@
 Lace error: Listed assembly in Ace file was not found.
 What to do: make sure you have correctly entered assembly specification
-   in Ace file (version, culture and public key token).
+   in Ace file (version, culture and public key token) or that specified
+   assembly has been processed by the ISE Eiffel Metadata Consumer.

@@ -1,8 +1,8 @@
 indexing
-	description: "This class is an ancestor to all GDI classes."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "This class is an ancestor to all GDI classes."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	WEL_GDI_ANY
@@ -12,6 +12,8 @@ inherit
 		redefine
 			make_by_pointer
 		end
+
+	WEL_REFERENCE_TRACKABLE
 
 feature {NONE} -- Creation
 	
@@ -48,73 +50,12 @@ feature -- Access
 			Result := gdi_objects_count_cell.item
 		end
 
-feature -- Status Report
-
-	references_tracked: BOOLEAN is
-			-- Are the number references of `Current' tracked?
-		obsolete
-			"use reference_tracked"
-		do
-			Result := reference_tracked
-		end
-
-	reference_tracked: BOOLEAN
-			-- Are the number references of `Current' tracked?
-
-feature -- Status Setting
-
-	enable_reference_tracking is
-			-- Set `references_tracked' to True.
-			-- 
-		require
-			exists: exists
-			tracking_reference_disabled: not reference_tracked
-		do
-			reference_tracked := True
-			references_number := 1
-		end
-
-	decrement_reference is
-			-- Decrement the number of references to this object.
-			--
-			-- When the number of references reach zero, 
-			-- `delete' is called if the object is not protected.
-		require
-			exists: exists
-			tracking_references_started: reference_tracked
-		do
-			if references_number > 0 then
-				references_number := references_number - 1
-				if references_number = 0 then
-					destroy_item
-				end
-			end
-		end
-
-	increment_reference is
-			-- Increment the number of references to this object.
-		require
-			exists: exists
-			tracking_references_started: reference_tracked
-		do
-			references_number := references_number + 1
-		end
-
 feature {NONE} -- Removal
 
 	destroy_item is
 			-- Ensure the current gdi object is deleted when
 			-- garbage collected.
-		local
-			p: POINTER
 		do
-			debug ("GDI_COUNT")
-				if item /= p then
-					io.putstring ("A GDI Object is about to be collected, and its GDI resource has not yet been destroyed.%N")
-					print (current)
-					io.new_line
-				end
-			end
 			delete_gdi_object
 		end
 
@@ -139,9 +80,6 @@ feature {NONE} -- Removal
 		end
 
 feature {NONE} -- Implementation
-
-	references_number: INTEGER
-			-- Number of object referring to this object.
 
 	increase_gdi_objects_count is
 			-- Increase the number of GDI objects allocated by this program.
@@ -186,7 +124,7 @@ feature -- Obsolete
 		obsolete
 			"use `dispose' instead if object is not shared, or call `start_tracking_references' and then `decrement_reference'"
 		do
-			delete_gdi_object
+			dispose
 		end
 
 end -- class WEL_GDI_ANY

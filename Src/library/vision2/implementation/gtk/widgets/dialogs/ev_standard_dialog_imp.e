@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 			-- Close window and call action sequence.
 		do
 			user_clicked_ok := True
-			selected_button := ev_ok
+			selected_button := internal_accept
 			C.gtk_widget_hide (c_object)
 		end
 		

@@ -15,6 +15,8 @@ inherit
 		end
 
 	EV_STANDARD_DIALOG_IMP
+		undefine
+			internal_accept
 		redefine
 			interface,
 			initialize

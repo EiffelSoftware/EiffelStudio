@@ -236,8 +236,8 @@ feature -- Basic operations
 
 				create ce_function_name.make (0)
 				create ec_function_name.make (0)
-				ec_function_name.append ("ccom_ec_pointed_long")
-				ce_function_name.append ("ccom_ce_pointed_long")
+				ec_function_name.append ("ccom_ec_pointed_integer")
+				ce_function_name.append ("ccom_ce_pointed_integer")
 
 			elseif is_hresult (pointed_visitor.vt_type) or is_error (pointed_visitor.vt_type) then
 				eiffel_type := clone (Ecom_hresult)

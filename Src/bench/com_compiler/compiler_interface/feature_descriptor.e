@@ -198,33 +198,33 @@ feature -- Access
 			end
 			create Result.make (20)
 			if is_once then
-				Result.append ("once ")
+				Result.append ("Once ")
 			end
 			if is_constant then
-				Result.append ("constant ")
+				Result.append ("Constant ")
 			end
 			if is_frozen then
-				Result.append ("frozen ")
+				Result.append ("Frozen ")
 			end
 			if is_external then
-				Result.append ("external ")
+				Result.append ("External ")
 			end
 			if is_deferred then
-				Result.append ("deferred ")
+				Result.append ("Deferred ")
 			end
 			if is_infix then
-				Result.append ("infix operator ")
+				Result.append ("Infix operator ")
 			elseif is_prefix then
-				Result.append ("prefix operator ")
+				Result.append ("Prefix operator ")
 			elseif is_attribute then
-				Result.append ("attribute: ")
+				Result.append ("Attribute: ")
 			elseif is_function then
-				Result.append ("function: ")
+				Result.append ("Function: ")
 			elseif is_procedure then
-				Result.append ("procedure: ")
+				Result.append ("Procedure: ")
 			end
 			Result.append (name)
-			Result.append ("%Nsignature: ")
+			Result.append ("%NSignature: ")
 			Result.append (signature)
 			if comments /= Void then
 				Result.append ("%N")

@@ -181,6 +181,11 @@ img
 	margin: 2px 2px 2px 2px;
 }
 
+li
+{
+	margin-bottom:1em;
+}
+
 .content_style
 {
 	margin: 0px 0px 0px 20px;

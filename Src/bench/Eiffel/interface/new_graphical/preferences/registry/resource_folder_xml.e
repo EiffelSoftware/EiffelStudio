@@ -65,10 +65,8 @@ feature -- Update
 			resource: RESOURCE
 			child: like Current
 			cursor, des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
-			node, category_node: XML_ELEMENT
-			s: STRING
+			node: XML_ELEMENT
 			txt: XML_TEXT
-			att: XML_ATTRIBUTE
 		do
 			cursor := doc.new_cursor
 			from

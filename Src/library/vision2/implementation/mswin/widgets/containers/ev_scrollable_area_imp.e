@@ -121,7 +121,7 @@ feature -- Access
 	x_offset: INTEGER is
 			-- Horizontal position of viewport relative to `item'.
 		do
-			if child /= Void then
+			if item /= Void then
 				Result := horizontal_position
 			end
 		end
@@ -129,7 +129,7 @@ feature -- Access
 	y_offset: INTEGER is
 			-- Vertical position of viewport relative to `item'.
 		do
-			if child /= Void then
+			if item /= Void then
 				Result := vertical_position
 			end
 		end
@@ -139,7 +139,7 @@ feature -- Element change
 	set_x_offset (an_x: INTEGER) is
 			-- Set `x_offset' to `an_x'.
 		do
-			if child /= Void then
+			if item /= Void then
 				set_horizontal_position (an_x)
 				Precursor (an_x)
 			end
@@ -148,7 +148,7 @@ feature -- Element change
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
-			if child /= Void then
+			if item /= Void then
 				set_vertical_position (a_y)
 				Precursor (a_y)
 			end
@@ -225,6 +225,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/26 18:35:06  brendel
+--| Replaced obsolete call.
+--|
 --| Revision 1.27  2000/04/24 16:02:55  brendel
 --| Undefine set_offset.
 --|

@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			object_not_void: an_object /= Void
 			object_is_top_level_instance: an_object.is_instance_of_top_level_object
 		do
+			History.cut_off_at_current_position
 			object_id := an_object.id
 			top_id := an_object.associated_top_level_object
 			is_deep_flatten := deep_flatten
@@ -65,9 +66,9 @@ feature -- Basic Operation
 		do
 				-- Recreate structures each time we execute which ensures that
 				-- they are reset if we call `execute' and `undo' multiple times.
-			create original_reference_objects.make (4)
-			create original_instance_objects.make (4)
-			create new_instance_objects.make (4)
+			create new_links.make (4)
+			create original_links.make (4)
+			create original_instances.make (4)
 
 			an_object := object_handler.deep_object_from_id (object_id)
 			top_object := object_handler.deep_object_from_id (top_id)
@@ -98,9 +99,11 @@ feature -- Basic Operation
 			top_object: GB_OBJECT
 			an_object: GB_OBJECT
 			new_objects, old_objects: ARRAYED_LIST [GB_OBJECT]
-			original_reference_object, original_instance_object, new_instance_object: INTEGER
 			parent_object: GB_PARENT_OBJECT
 			old_pos: INTEGER
+			original_link_object, new_link_object, original_instance_object: GB_OBJECT
+			is_selected: BOOLEAN
+			l_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			an_object := object_handler.deep_object_from_id (object_id)
 			top_object := object_handler.deep_object_from_id (top_id)
@@ -133,37 +136,41 @@ feature -- Basic Operation
 			end
 
 				-- Now replace the new representation of the object in the old parent.
+			if an_object.layout_item.is_selected then
+				is_selected := True
+			end
 			parent_object ?= an_object.parent_object
 			old_pos := parent_object.children.index_of (an_object, 1)
 			parent_object.remove_child (an_object)
 			object_handler.add_object (parent_object, new_object, old_pos)
+			if is_selected then
+				new_object.layout_item.select_actions.block
+				new_object.layout_item.enable_select
+				new_object.layout_item.select_actions.resume
+			end
 
 				-- Now iterate through all of the objects that were originally stored as having their
 				-- instances referers updated and store the connections to the pre `execute' state'.
 			from
-				original_reference_objects.start
-				original_instance_objects.start
-				new_instance_objects.start
+				new_links.start
+				original_links.start
+				original_instances.start
 			until
-				original_reference_objects.off
+				new_links.off
 			loop
-				original_reference_object := original_reference_objects.item
-				original_instance_object := original_instance_objects.item
-				new_instance_object := new_instance_objects.item
-
-				top_object := object_handler.deep_object_from_id (original_reference_object)
-				check
-					reference_has_new: top_object.instance_referers.has (new_instance_object)
-				end
-				top_object.instance_referers.remove (new_instance_object)
-				top_object.unconnect_instance_referers (top_object, object_handler.deep_object_from_id (new_instance_object))
+				new_link_object := object_handler.deep_object_from_id (new_links.item)
+				original_link_object := object_handler.deep_object_from_id (original_links.item)
+				original_instance_object := object_handler.deep_object_from_id (original_instances.item)
+					
+				new_link_object.instance_referers.remove (original_instance_object.id)
+				new_link_object.unconnect_instance_referers (new_link_object, original_instance_object)
 			
-				top_object.instance_referers.extend (original_instance_object, original_instance_object)
-				an_object.connect_instance_referers (top_object, object_handler.deep_object_from_id (original_instance_object))
+				original_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
+				original_link_object.connect_instance_referers (original_link_object, original_instance_object)
 				
-				original_reference_objects.forth
-				original_instance_objects.forth
-				new_instance_objects.forth
+				new_links.forth
+				original_links.forth
+				original_instances.forth
 			end
 			
 				-- Now update the instance referers for the top level object that had been flattened.
@@ -173,7 +180,20 @@ feature -- Basic Operation
 			new_object.connect_instance_referers (top_object, new_object)
 			top_object.instance_referers.put (new_object.id, new_object.id)
 			new_object.set_associated_top_level_object (top_object)
-
+			
+				-- Now update all editors. As we have replaced the original object, we need to
+				-- ensure that if they reference the original object, they now reference the new object.
+			l_editors := all_editors
+			from
+				l_editors.start
+			until
+				l_editors.off
+			loop
+				if l_editors.item.object.id = new_object.id then
+					l_editors.item.set_object (new_object)
+				end
+				l_editors.forth
+			end
 			
 			command_handler.update
 			
@@ -219,6 +239,7 @@ feature {NONE} -- Implementation
 			current_object_children, associated_object_children: ARRAYED_LIST [GB_OBJECT]
 			current_item, current_associated_item, top_object: GB_OBJECT
 			associated_cursor, current_cursor: CURSOR
+			original_link_object, new_link_object, original_instance_object: GB_OBJECT
 		do
 			if current_object.associated_top_level_object /= 0 then
 				current_object.remove_associated_top_level_object
@@ -244,16 +265,19 @@ feature {NONE} -- Implementation
 						-- If the current associated object has a reference to a top level object then we must
 						-- set the current object as an association to this top level object directly.
 
-					original_reference_objects.extend (current_associated_item.associated_top_level_object)
-					original_instance_objects.extend (current_associated_item.id)
-					new_instance_objects.extend (current_item.id)
+					new_links.extend (current_associated_item.associated_top_level_object)
+					original_instances.extend (current_item.id)
+					original_links.extend (current_associated_item.id)
+
+					original_link_object := current_associated_item
+					new_link_object := object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
+					original_instance_object := current_item
 					
-					top_object := object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
-					top_object.instance_referers.remove (current_associated_item.id)
-					top_object.instance_referers.extend (current_item.id, current_item.id)
-					current_item.set_associated_top_level_object (object_handler.deep_object_from_id (top_object.id))
-					current_object.connect_instance_referers (object_handler.deep_object_from_id (top_object.id), current_item)
-					
+					original_link_object.instance_referers.remove (original_instance_object.id)
+					new_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
+					current_item.set_associated_top_level_object (new_link_object)
+					current_object.connect_instance_referers (new_link_object, original_instance_object)
+
 						-- Ensure that the representations are updated to reflect the fact that they are locked.
 					current_item.represent_as_locked_instance
 					current_item.update_representations_for_name_or_type_change
@@ -272,9 +296,9 @@ feature {NONE} -- Implementation
 			associated_object_children_index_not_changed: old associated_object.children.index = associated_object.children.index
 		end
 
-	original_reference_objects: ARRAYED_LIST [INTEGER]
-	original_instance_objects: ARRAYED_LIST [INTEGER]
-	new_instance_objects: ARRAYED_LIST [INTEGER]
+	new_links: ARRAYED_LIST [INTEGER]
+	original_links: ARRAYED_LIST [INTEGER]
+	original_instances: ARRAYED_LIST [INTEGER]
 	
 feature {NONE} -- Contract Support	
 

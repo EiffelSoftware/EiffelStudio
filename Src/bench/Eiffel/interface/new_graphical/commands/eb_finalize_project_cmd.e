@@ -8,15 +8,11 @@ class
 
 inherit
 	EB_MELT_PROJECT_CMD
-		rename
---			choose_template as discard_assertions,
---			warner_ok as keep_assertions
 		redefine
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile,
 --			name, menu_name, accelerator,
 			finalization_error, perform_compilation,
---			discard_assertions, keep_assertions,
 			license_frequency
 		end
 	SHARED_ERROR_HANDLER

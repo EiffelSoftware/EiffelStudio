@@ -60,6 +60,14 @@ feature -- Access
 		deferred
 		end;
 
+feature {EB_BUTTON} -- Implementation
+
+	button_three_action: ANY is
+			-- Action to specify that the third button was pressed
+		once
+			!! Result
+		end;
+
 invariant
 
 	tool_not_void: tool /= Void

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Supplier of the application unique default_null_value. "
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,11 +10,9 @@ class
 feature -- Access
 	
 	db_default_null_value: DB_DEFAULT_NULL_VALUE is
-			-- Handle to actual database
+			-- Refers to the application unique default_null_value. 
 		once
-		--	if db_default_null_value_impl = Void then
-				create	db_default_null_value_impl
-		--	end
+			create db_default_null_value_impl.make
 			Result := db_default_null_value_impl
 		end
 

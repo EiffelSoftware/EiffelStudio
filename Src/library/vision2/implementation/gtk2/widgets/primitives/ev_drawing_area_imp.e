@@ -35,8 +35,7 @@ inherit
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
 		redefine
-			interface,
-			visual_widget
+			interface
 		end
 
 create

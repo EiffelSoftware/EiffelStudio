@@ -16,7 +16,6 @@ inherit
 	EV_GTK_WIDGET_IMP
 		redefine
 			interface,
-			initialize,
 			destroy
 		end
 

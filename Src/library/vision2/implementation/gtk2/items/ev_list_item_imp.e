@@ -10,10 +10,7 @@ class
 inherit
 	EV_LIST_ITEM_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP

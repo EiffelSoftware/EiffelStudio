@@ -131,7 +131,7 @@ feature {NONE} -- Graphical interface
 	my_device: EV_DRAWING_AREA
 			-- Part of the screen where the text is displayed.
 
-	buffered_screen: EV_PIXMAP
+	buffered_screen: EDITOR_BUFFERED_SCREEN
 			-- Buffer containing the current displayed screen.
 
 	my_scrollbar: EV_VERTICAL_SCROLL_BAR

@@ -2,12 +2,12 @@ indexing
 	description: "Implementation of ICodeParser"
 
 class
-	ECD_PARSER
+	CODE_PARSER
 
 inherit
 	SYSTEM_DLL_ICODE_PARSER
 	
-	ECD_SHARED_EVENT_MANAGER
+	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
 		end
@@ -20,17 +20,17 @@ feature -- Interface
 	parse (code_stream: TEXT_READER): SYSTEM_DLL_CODE_COMPILE_UNIT is
 			-- implementation of parse feature.
 		require else
-			referenced_assemblies_initialized: (create {ECD_REFERENCED_ASSEMBLIES}).assemblies_initialized
+			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local
 			l_eiffel_parser: EIFFEL_PARSER
 			l_class_to_parse: STRING
 			l_class_as: CLASS_AS
-			l_visitor: ECD_CODEDOM_VISITOR
-			l_support: ECD_SUPPORT
+			l_visitor: CODE_CODEDOM_VISITOR
+			l_support: CODE_SUPPORT
 			l_retried: BOOLEAN
 			l_code_stream: SYSTEM_STRING
 		do
-			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Starting CodeParser.Parse"])
 			if not l_retried then
 				initialize_referenced_assemblies
 				create l_eiffel_parser.make
@@ -48,9 +48,9 @@ feature -- Interface
 				Result ?= l_support.last_element_created;
 				last_compile_unit_generated := Result
 			end
-			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.log, ["Ending CodeParser.Parse"])
 		rescue
-			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			l_retried := True
 			Result := last_compile_unit_generated
 			retry
@@ -65,7 +65,7 @@ feature -- Interface
 		require
 		--	non_void_a_class_as: a_class_as /= Void
 		local
-			l_init_attributes: ECD_INIT_ATTRIBUTES
+			l_init_attributes: CODE_INIT_ATTRIBUTES
 		do
 			create l_init_attributes.make
 			a_class_as.process (l_init_attributes)
@@ -80,8 +80,8 @@ feature -- Interface
 --			i: INTEGER
 --			vs_references: VS_REFERENCES
 --			vs_reference: VS_REFERENCE
---			l_referenced_assemblies: LINKED_LIST [ECD_REFERENCED_ASSEMBLY]
---			l_code_dom_path: ECD_CODE_DOM_PATH
+--			l_referenced_assemblies: LINKED_LIST [CODE_REFERENCED_ASSEMBLY]
+--			l_code_dom_path: CODE_DOM_PATH
 		do
 --			create l_code_dom_path
 --			create l_referenced_assemblies.make
@@ -96,7 +96,7 @@ feature -- Interface
 --				vs_reference := vs_references.item (i)				
 --				l_assembly := l_code_dom_path.load_assembly (vs_reference.path)
 --				if l_assembly /= Void then
---					l_referenced_assemblies.extend (create {ECD_REFERENCED_ASSEMBLY}.make (l_assembly))
+--					l_referenced_assemblies.extend (create {CODE_REFERENCED_ASSEMBLY}.make (l_assembly))
 --				end
 --				i := i + 1
 --			end
@@ -104,4 +104,4 @@ feature -- Interface
 --			(create {TYPE_CONVERTER}).initialize_emitter_from_referenced_assemblies (l_referenced_assemblies)
 		end
 
-end -- class ECD_PARSER
+end -- class CODE_PARSER

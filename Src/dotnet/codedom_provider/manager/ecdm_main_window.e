@@ -11,6 +11,8 @@ inherit
 	ECDM_MAIN_WINDOW_IMP
 
 	ECDM_SAVED_SETTINGS
+		rename
+			make as saved_settings_make
 		export
 			{NONE} all
 		undefine
@@ -18,7 +20,7 @@ inherit
 			copy
 		end
 
-	ECD_EVENT_LOG_LEVEL
+	CODE_EVENT_LOG_LEVEL
 		export
 			{NONE} all
 		undefine
@@ -36,6 +38,7 @@ feature {NONE} -- Initialization
 		require
 			non_void_manager: a_manager /= Void
 		do
+			saved_settings_make
 			manager := a_manager
 			default_create
 		ensure

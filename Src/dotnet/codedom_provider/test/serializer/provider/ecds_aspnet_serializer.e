@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			-- Replace codedom provider with serializer's provider
 			-- and save previous provider information.
 		local
-			l_config: ECD_MACHINE_CONFIGURATION
+			l_config: CODE_MACHINE_CONFIGURATION
 		do
 			create l_config.make
 			saved_provider := l_config.language_provider (Eiffel_language)
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 		require
 			provider_changed: provider_changed
 		local
-			l_config: ECD_MACHINE_CONFIGURATION
+			l_config: CODE_MACHINE_CONFIGURATION
 		do
 			create l_config.make
 			l_config.remove_compiler_entry (Eiffel_language)

@@ -2,17 +2,17 @@ indexing
 	description	: "Converts Eiffel specific data into dotnet data."
 
 class
-	ECD_TYPE_CONVERTER_EIFFEL_TO_DOTNET
+	CODE_TYPE_CONVERTER_EIFFEL_TO_DOTNET
 
 inherit
-	ECD_AST_HISTORIC
+	CODE_AST_HISTORIC
 	
-	ECD_EXECUTION_ENVIRONMENT
+	CODE_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
 
-	ECD_SHARED_EVENT_MANAGER
+	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
 		end
@@ -54,13 +54,13 @@ feature -- Implementation
 		require
 			non_void_an_eiffel_type_name: an_eiffel_type_name /= Void
 			not_empty_an_eiffel_type_name: not an_eiffel_type_name.is_empty
-			referenced_assemblies_initialized: (create {ECD_REFERENCED_ASSEMBLIES}).assemblies_initialized
+			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local
 			l_cache_reflection: CACHE_REFLECTION
 			l_cat: CONSUMED_ASSEMBLY_TYPES
 			l_counter: INTEGER
 			l_eiffel_type_name: STRING
-			l_referenced_assemblies: LINKED_LIST [ECD_REFERENCED_ASSEMBLY]
+			l_referenced_assemblies: LINKED_LIST [CODE_REFERENCED_ASSEMBLY]
 			l_array_type: BOOLEAN
 		do
 			if Eiffel_base_types.has (an_eiffel_type_name) then
@@ -75,7 +75,7 @@ feature -- Implementation
 				end
 				an_eiffel_type_name.to_upper
 
-				l_referenced_assemblies := (create {ECD_REFERENCED_ASSEMBLIES}).referenced_assemblies
+				l_referenced_assemblies := (create {CODE_REFERENCED_ASSEMBLIES}).referenced_assemblies
 				from
 					l_referenced_assemblies.start
 					create l_cache_reflection.make (Clr_version)
@@ -101,7 +101,7 @@ feature -- Implementation
 						end
 						l_referenced_assemblies.forth
 					else
-						Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Missing_consumed_assembly, [l_referenced_assemblies.item.assembly.get_name])
+						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_consumed_assembly, [l_referenced_assemblies.item.assembly.get_name])
 					end
 				end
 
@@ -508,4 +508,4 @@ feature {NONE} -- Implementation - Cache
 			non_void_constructors: Result /= Void
 		end
 
-end -- Class ECD_TYPE_CONVERTER_EIFFEL_TO_DOTNET
+end -- Class CODE_TYPE_CONVERTER_EIFFEL_TO_DOTNET

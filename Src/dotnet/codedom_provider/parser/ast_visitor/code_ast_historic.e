@@ -2,7 +2,7 @@ indexing
 	description: "Support for CodeDOM Visitor."
 
 class
-	ECD_AST_HISTORIC
+	CODE_AST_HISTORIC
 
 feature -- Access
 
@@ -109,4 +109,4 @@ feature -- Attributes - parameters - local variables
 			Type_attributes.clear_all
 		end	
 
-end -- Class ECD_AST_HISTORIC
+end -- Class CODE_AST_HISTORIC

@@ -2,12 +2,12 @@ indexing
 	description: "AST atomic Visitor."
 	
 deferred class
-	ECD_AST_ATOMIC_VISITOR
+	CODE_AST_ATOMIC_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 
 feature {AST_YACC} -- Implementation
 
@@ -198,4 +198,4 @@ feature {AST_YACC} -- Implementation
 		do
 		end
 
-end -- ECD_AST_ATOMIC_VISITOR
+end -- CODE_AST_ATOMIC_VISITOR

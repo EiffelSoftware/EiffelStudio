@@ -2,12 +2,12 @@ indexing
 	description: "AST binary expression Visitor."
 	
 deferred class
-	ECD_AST_BINARY_EXPRESSION_VISITOR
+	CODE_AST_BINARY_EXPRESSION_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 
 feature {AST_YACC} -- Implementation
 
@@ -242,4 +242,4 @@ feature {NONE} -- Implementation
 			set_last_element_created (l_binary_operator_expression)
 		end		
 
-end -- ECD_AST_BINARY_EXPRESSION_VISITOR
+end -- CODE_AST_BINARY_EXPRESSION_VISITOR

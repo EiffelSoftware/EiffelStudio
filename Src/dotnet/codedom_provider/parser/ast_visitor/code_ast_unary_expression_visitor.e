@@ -2,7 +2,7 @@ indexing
 	description: "AST unary expression Visitor."
 	
 deferred class
-	ECD_AST_UNARY_EXPRESSION_VISITOR
+	CODE_AST_UNARY_EXPRESSION_VISITOR
 
 inherit
 	AST_VISITOR
@@ -34,4 +34,4 @@ feature {AST_YACC} -- Implementation
 		do
 		end
 
-end -- ECD_AST_UNARY_EXPRESSION_VISITOR
+end -- CODE_AST_UNARY_EXPRESSION_VISITOR

@@ -2,12 +2,12 @@ indexing
 	description: "AST skeleton Visitor."
 	
 deferred class
-	ECD_AST_SKELETON_VISITOR
+	CODE_AST_SKELETON_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 	
 feature {AST_YACC} -- Implementation
 
@@ -16,12 +16,12 @@ feature {AST_YACC} -- Implementation
 			-- | Create CODE_COMPILE_UNIT in witch is a CODE_NAMESPACE
 			-- | in witch is a CODE_TYPE_DECLARATION.
 		require else
-			referenced_assemblies_initialized: (create {ECD_REFERENCED_ASSEMBLIES}).assemblies_initialized
+			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local
 			l_code_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT
 			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
 			l_type_declaration: SYSTEM_DLL_CODE_TYPE_DECLARATION
-			l_referenced_assemblies: ECD_REFERENCED_ASSEMBLIES
+			l_referenced_assemblies: CODE_REFERENCED_ASSEMBLIES
 		do
 			create l_type_declaration.make
 			set_current_element (l_type_declaration)
@@ -638,4 +638,4 @@ feature {NONE} -- Implementation
 	Constructor_name: STRING is ".ctor"
 			-- Dotnet constructor name.
 
-end -- ECD_AST_SKELETON_VISITOR
+end -- CODE_AST_SKELETON_VISITOR

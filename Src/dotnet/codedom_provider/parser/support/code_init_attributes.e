@@ -3,11 +3,11 @@ indexing
 		"Generic class to parse the AST tree."
 
 class
-	ECD_INIT_ATTRIBUTES
+	CODE_INIT_ATTRIBUTES
 
 inherit
 	AST_VISITOR
-	ECD_AST_HISTORIC
+	CODE_AST_HISTORIC
 	
 create
 	make
@@ -303,7 +303,7 @@ feature {AST_YACC} -- Initialization
 
 	process_feature_as (l_as: FEATURE_AS) is
 		local
-			l_converter: ECD_TYPE_CONVERTER_EIFFEL_TO_DOTNET
+			l_converter: CODE_TYPE_CONVERTER_EIFFEL_TO_DOTNET
 		do
 			if l_as.is_attribute then
 				create l_converter
@@ -541,7 +541,7 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
-end -- ECD_INIT_ATTRIBUTES
+end -- CODE_INIT_ATTRIBUTES
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

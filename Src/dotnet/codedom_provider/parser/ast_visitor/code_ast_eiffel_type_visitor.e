@@ -2,12 +2,12 @@ indexing
 	description: "AST Eiffel type Visitor."
 	
 deferred class
-	ECD_AST_EIFFEL_TYPE_VISITOR
+	CODE_AST_EIFFEL_TYPE_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 
 feature {AST_YACC} -- Implementation
 
@@ -53,5 +53,5 @@ feature {AST_YACC} -- Implementation
 			-- Do nothing.
 		end
 
-end -- ECD_AST_EIFFEL_TYPE_VISITOR
+end -- CODE_AST_EIFFEL_TYPE_VISITOR
 

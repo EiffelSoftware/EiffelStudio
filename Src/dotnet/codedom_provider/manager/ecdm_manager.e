@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 	transactions: ARRAYED_LIST [ECDM_TRANSACTION]
 			-- List of registrations/unregistrations
 
-	registry_settings: ECD_REGISTRY_SETTINGS
+	registry_settings: CODE_REGISTRY_SETTINGS
 			-- Eiffel Codedom Provider registry settings
 
 invariant

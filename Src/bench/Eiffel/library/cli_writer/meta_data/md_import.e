@@ -70,7 +70,7 @@ feature -- Enumerating collections
 			success: last_call_success = 0
 		end
 
-	enum_type_defs (a_enum_hdl: INTEGER; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_type_defs (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all TypedDefs within the current scope.  
 			-- Note: the collection will contain Classes, Interfaces, etc,
 			-- as well as any TypeDefs added via an extensibility mechanism.
@@ -82,7 +82,7 @@ feature -- Enumerating collections
 			l_md_size := sizeof_mdTypeDef
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
-			last_call_success := cpp_enum_type_defs (item, $a_enum_hdl, l_mp_tokens.item , a_max_count, $l_count)
+			last_call_success := cpp_enum_type_defs (item, a_enum_hdl, l_mp_tokens.item , a_max_count, $l_count)
 			if 
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0 
@@ -91,7 +91,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_members (a_enum_hdl: INTEGER; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_members (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all members (fields and methods, but not properties or events)
 			-- defined by the class specified by cl.  
 			-- This does not include any members inherited by that class;
@@ -104,7 +104,7 @@ feature -- Enumerating collections
 			l_md_size := sizeof_mdToken
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
-			last_call_success := cpp_enum_members (item, $a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
+			last_call_success := cpp_enum_members (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
 			if 
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0 
@@ -113,7 +113,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_methods (a_enum_hdl: INTEGER; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_methods (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all methods defined by the specified TypeDef.  
 			-- Tokens are returned in the same order they were emitted.  
 			-- If you supply a nil token for the cl argument the method will enumerate
@@ -126,7 +126,7 @@ feature -- Enumerating collections
 			l_md_size := sizeof_mdMethodDef
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
-			last_call_success := cpp_enum_methods (item, $a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
+			last_call_success := cpp_enum_methods (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
 			if 
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0 
@@ -135,7 +135,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_fields (a_enum_hdl: INTEGER; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_fields (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all fields defined on a specified TypeDef.  
 			-- The tokens are returned in the same order as originally emitted into metadata.
 			-- If you specify cl as nil, the method will enumerate all the global
@@ -148,7 +148,8 @@ feature -- Enumerating collections
 			l_md_size := sizeof_mdFieldDef
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
-			last_call_success := cpp_enum_fields (item, $a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
+			last_call_success := cpp_enum_fields (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
+
 			if 
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0 
@@ -157,7 +158,7 @@ feature -- Enumerating collections
 			end
 		end
 
-	enum_params (a_enum_hdl: INTEGER; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
+	enum_params (a_enum_hdl: TYPED_POINTER [INTEGER]; a_typedef: INTEGER; a_max_count: INTEGER): ARRAY [INTEGER] is
 			-- Enumerates all attributed parameters for the method specified by md.  
 			-- By attributed parameters, we mean those parameters of a method 
 			-- which have been explicitly defined via a call to DefineParam
@@ -169,7 +170,7 @@ feature -- Enumerating collections
 			l_md_size := sizeof_mdParamDef
 			create l_mp_tokens.make (a_max_count * l_md_size)
 
-			last_call_success := cpp_enum_params (item, $a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
+			last_call_success := cpp_enum_params (item, a_enum_hdl, a_typedef, l_mp_tokens.item , a_max_count, $l_count)
 			if 
 				(last_call_success = 0 or last_call_success = 1 )
 				and then l_count > 0 
@@ -233,6 +234,51 @@ feature -- Obtaining Properties of a Specified Object
 			last_call_success := cpp_get_typedef_props (item, a_tok, mp_name.item, 255, $l_rsize, l_flag, $l_tkext)
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		end
+		
+	get_member_props (a_tok: INTEGER): STRING is
+			-- 
+		local
+			mp_name: MANAGED_POINTER
+			l_r_classtoken: INTEGER
+			l_rsize: INTEGER
+			l_flag: POINTER
+			l_sig: POINTER
+			l_sigsize: INTEGER
+			l_code_rva: INTEGER
+			l_pdwimpl_flags, l_cplustype_flag: POINTER
+			l_cst_ppvalue: POINTER
+			l_pcchvalue: INTEGER
+			
+		do
+			create mp_name.make (256 * 2)
+
+			last_call_success := cpp_get_member_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, l_flag, l_sig, $l_sigsize,
+				$l_code_rva, l_pdwimpl_flags, l_cplustype_flag, l_cst_ppvalue, $l_pcchvalue)
+
+			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+		end		
+
+	get_field_props (a_tok: INTEGER): STRING is
+			-- 
+		local
+			mp_name: MANAGED_POINTER
+			l_r_classtoken: INTEGER
+			l_rsize: INTEGER
+			l_flag: POINTER
+			l_sig: POINTER
+			l_sigsize: INTEGER
+			l_pdwdef_type: POINTER
+			l_ppvalue: POINTER
+			l_pcbvalue: INTEGER
+			
+		do
+			create mp_name.make (256 * 2)
+
+			last_call_success := cpp_get_field_props (item, a_tok, $l_r_classtoken, mp_name.item, 255, $l_rsize, 
+				l_flag, l_sig, $l_sigsize, l_pdwdef_type, l_ppvalue, $l_pcbvalue)
+
+			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
+		end	
 
 --feature -- obsolete
 --
@@ -403,6 +449,51 @@ feature {NONE} -- Implementation Obtaining information
 			"GetTypeDefProps"
 		end	
 
+	frozen cpp_get_member_props (obj: POINTER; 
+				a_member_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
+				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER]; 
+				r_pdwattr_flags: POINTER; 
+				ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
+				pulcode_rva: TYPED_POINTER [INTEGER]; pdwimpl_flags: POINTER;
+				pdwcplustype_flag: POINTER; a_cst_ppvalue: POINTER; 
+				pcchvalue: TYPED_POINTER [INTEGER]
+						): INTEGER is
+		external
+			"[
+				C++ inline use "cli_headers.h"
+			]"
+		alias
+			"[
+   				((IMetaDataImport*)$obj)->GetMemberProps((mdToken)$a_member_token, (mdTypeDef*)$r_class_token,
+						(LPWSTR)$r_name, (ULONG)$a_wcharsize, (ULONG*)$r_wchsize,
+						(DWORD*)$r_pdwattr_flags, 
+						(PCCOR_SIGNATURE*)$ppvsigblob, (ULONG*)$pcbsigblob,
+						(ULONG*) $pulcode_rva, (DWORD*) $pdwimpl_flags,
+						(DWORD*) $pdwcplustype_flag, (void const **) $a_cst_ppvalue,
+						(ULONG*) $pcchvalue)
+			]"
+		end	
+
+	frozen cpp_get_method_props (obj: POINTER; 
+				a_method_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
+				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER]; 
+				r_flags: POINTER; 
+				ppvsigblob: POINTER; pcbsigblob: TYPED_POINTER [INTEGER];
+				pulcode_rva: POINTER; pdwimpl_flags: POINTER; 
+						): INTEGER is
+		external
+			"[
+				C++ inline use "cli_headers.h"
+			]"
+		alias
+			"[
+   				((IMetaDataImport*)$obj)->GetMethodProps((mdMethodDef)$a_method_token, (mdTypeDef*)$r_class_token,
+						(LPWSTR)$r_name, (ULONG)$a_wcharsize, (ULONG*)$r_wchsize,
+						(DWORD*)$r_flags, (PCCOR_SIGNATURE*)$ppvsigblob, (ULONG*)$pcbsigblob,
+						(ULONG*)$pulcode_rva, (DWORD*)$pdwimpl_flags)
+			]"
+		end			
+
 	frozen cpp_get_field_props (obj: POINTER; 
 				a_field_token: INTEGER; r_class_token: TYPED_POINTER [INTEGER]; 
 				r_name: POINTER; a_wcharsize: INTEGER; r_wchsize: TYPED_POINTER [INTEGER]; 
@@ -411,11 +502,6 @@ feature {NONE} -- Implementation Obtaining information
 				a_def_val_byte_count: TYPED_POINTER [INTEGER]
 						): INTEGER is
 		external
---			"[
---				C++ IMetaDataImport signature(mdFieldDef, mdTypeDef*, LPWSTR, ULONG, ULONG*, 
---					DWORD*, PCCOR_SIGNATURE*, ULONG*, DWORD*, void const **, ULONG*): EIF_INTEGER
---				use "cli_headers.h"
---			]"
 			"[
 				C++ inline use "cli_headers.h"
 			]"

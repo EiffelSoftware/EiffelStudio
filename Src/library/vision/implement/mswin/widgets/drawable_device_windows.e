@@ -641,6 +641,7 @@ feature -- Implementation
 			left, top, right, bottom, x_start_arc, y_start_arc,
 			x_end_arc, y_end_arc: INTEGER
 			null_brush: WEL_NULL_BRUSH
+			local_arc_points: ARRAY [INTEGER]
 		do
 			left := center.x - radius1
 			right := center.x + radius1
@@ -650,14 +651,28 @@ feature -- Implementation
 			y_start_arc := center.y - (radius2 * sine (angle1 * Pi / 180)).rounded
 			x_end_arc := center.x + (radius1 * cosine ((angle1 + angle2) * Pi / 180)).rounded
 			y_end_arc := center.y - (radius2 * sine ((angle1 + angle2) * Pi / 180)).rounded
-			if not filled then
-				drawing_dc.arc (left, top, right, bottom, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
-			else
-				if arc_style = 0 then
-					drawing_dc.chord (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
-				elseif arc_style = 1 then
-					drawing_dc.pie (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
+			if orientation = 0.0 then
+				if not filled then
+					drawing_dc.arc (left, top, right, bottom, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
+				else
+					if arc_style = 0 then
+						drawing_dc.chord (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
+					elseif arc_style = 1 then
+						drawing_dc.pie (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
+					end
 				end
+			else
+				local_arc_points := arc_points (center, radius1, radius2, angle1, angle2, orientation);
+				if arc_style = 0 then
+					local_arc_points.force (local_arc_points @ 1, local_arc_points.upper  + 1)
+					local_arc_points.force (local_arc_points @ 2, local_arc_points.upper + 1)
+				elseif arc_style = 1 then
+					local_arc_points.force (center.x, local_arc_points.upper + 1)
+					local_arc_points.force (center.y, local_arc_points.upper + 1)
+					local_arc_points.force (local_arc_points @ 1, local_arc_points.upper + 1)
+					local_arc_points.force (local_arc_points @ 2, local_arc_points.upper + 1)
+				end;
+				drawing_dc.poly_line (local_arc_points)
 			end
 		end
 
@@ -850,6 +865,46 @@ feature {NONE} -- Implementation
 	
 	clip_list: LINKED_LIST [POINTER]
 			-- List of clipping areas
+
+	arc_points (center: COORD_XY; radius1, radius2: INTEGER; 
+				angle1, angle2, orientation: REAL): ARRAY [INTEGER] is
+			-- Returns the list of an arbitrary number of ordonated points composing the arc
+		local
+			nb_fracs, loop_angle, angle_inc, sino, coso, ell_x, ell_y, rot_x, rot_y: DOUBLE
+			segment_count, i, center_x, center_y: INTEGER
+		do
+			coso := cosine (- orientation * deg_rad_rate)
+			sino := sine (- orientation * deg_rad_rate)
+			center_x := center.x
+			center_y := center.y
+			nb_fracs := 4 * radius1.max(radius2) * angle2 * deg_rad_rate
+			segment_count := nb_fracs.rounded
+			angle_inc := - angle2 * deg_rad_rate / segment_count
+			!!Result.make (1, 2 * (segment_count + 1))
+			from
+				i := 0
+			until
+				i > segment_count
+			loop
+				ell_x := radius1 * cosine (loop_angle)
+				ell_y := radius2 * sine (loop_angle)
+				rot_x := center_x + ell_x * coso - ell_y * sino
+				rot_y := center_y + ell_x * sino + ell_y * coso
+				Result.put (rot_x.rounded, 2 * i + 1)
+				Result.put (rot_y.rounded, 2 * i + 2)
+				loop_angle := loop_angle + angle_inc
+				i := i + 1
+			end
+		end
+
+	deg_rad_rate: DOUBLE is
+			-- degrees into radians conversion constant
+		once
+			Result := Pi / 180
+		end
+		
+
+
 
 end -- class DRAWABLE_DEVICE_WINDOWS
  

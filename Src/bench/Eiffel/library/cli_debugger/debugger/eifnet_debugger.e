@@ -429,8 +429,6 @@ feature -- Interaction with .Net Debugger
 	
 feature {NONE} -- Stepping Implementation
 
-	last_stepper: ICOR_DEBUG_STEPPER
-
 	new_stepper: ICOR_DEBUG_STEPPER is
 			-- Retrieve or Create Stepper
 			-- Result value is the error code
@@ -445,14 +443,14 @@ feature {NONE} -- Stepping Implementation
 			edti := eifnet_debugger_info.managed_thread (thid)
 			if edti /= Void then
 				Result := edti.new_stepper
-				Result.add_ref 
+				Result.add_ref
 			else
 				Result := Void
 				eif_debug_display ("[DBG/WARNING] No thread available ...")
 			end
 		end
 
-	do_step (a_mode: INTEGER) is
+	do_step (a_mode: INTEGER; a_continue_enabled: BOOLEAN) is
 		require
 --			valid_step_mode: (a_mode = cst_control_step_next) 
 --								or else (a_mode = cst_control_step_in)
@@ -475,12 +473,14 @@ feature {NONE} -- Stepping Implementation
 					l_stepper.step (False)
 				end
 				check l_stepper.check_last_call_succeed end
-				
-				do_continue
+				if a_continue_enabled then
+					do_continue
+				end
 			else
 				debug  ("DEBUGGER_TRACE_EIFNET")
 					eif_debug_display ("[DBG/WARNING] No stepper made available ...")			
 				end
+				last_dbg_call_success := -1
 			end
 		end
 
@@ -509,6 +509,37 @@ feature -- Stepping Access
 
 			waiting_debugger_callback ("step range")			
 		end
+		
+	do_global_step_into is
+			-- Step next on each thread to stop as soon as possible
+			-- Nota: needed for Stop feature
+			-- ie: we'll use a stepper for each thread
+			-- then the final Continue .. to reach the Step callback
+		local
+			thid: INTEGER
+			tids: ARRAY [INTEGER]
+			i: INTEGER
+		do
+			debug ("debugger_trace_operation")
+				print ("[enter] EIFNET_DEBUGGER.do_global_step_into%N")
+			end
+
+			thid := application.status.current_thread_id
+
+			tids := eifnet_debugger_info.loaded_managed_threads.current_keys
+			
+			from
+				i := tids.lower
+			until
+				i > tids.lower				
+			loop
+				application.status.set_current_thread_id (tids @ i)
+				do_step (cst_control_step_into, False)
+				i := i + 1
+			end
+			application.status.set_current_thread_id (thid)
+			do_continue			
+		end		
 
 	do_step_next is
 			-- Step next.
@@ -516,8 +547,7 @@ feature -- Stepping Access
 			debug ("debugger_trace_operation")
 				print ("[enter] EIFNET_DEBUGGER.do_step_next%N")
 			end
-			
-			do_step (cst_control_step_next)
+			do_step (cst_control_step_next, True)
 			waiting_debugger_callback ("step next")
 		end
 
@@ -528,7 +558,7 @@ feature -- Stepping Access
 				print ("[enter] EIFNET_DEBUGGER.do_step_into%N")
 			end
 			
-			do_step (cst_control_step_into)
+			do_step (cst_control_step_into, True)
 			waiting_debugger_callback ("step into")
 		end		
 
@@ -539,7 +569,7 @@ feature -- Stepping Access
 				print ("[enter] EIFNET_DEBUGGER.do_step_out%N")
 			end
 			
-			do_step (cst_control_step_out)
+			do_step (cst_control_step_out, True)
 			waiting_debugger_callback ("step out")
 		end		
 
@@ -930,6 +960,10 @@ feature -- Specific function evaluation
 
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do	
+			debug ("debugger_trace_eval")
+				print ("<start> " + generator + ".generating_type_value_from_object_value %N")
+			end	
+		
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
 			l_class_type := a_class_type
@@ -967,11 +1001,12 @@ feature -- Specific function evaluation
 			l_icd_module.clean_on_dispose
 			l_icd_class.clean_on_dispose
 
-			debug ("DEBUGGER_TRACE_EVAL")
+			debug ("debugger_trace_eval")
 				if Result = Void then
 					print (l_class_type.full_il_type_name + ".generating_type.. :: Error ! %N")
 				end
-			end
+				print ("<stop> " + generator + ".generating_type_value_from_object_value %N")
+			end	
 		end	
 
  	debug_output_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
@@ -992,6 +1027,10 @@ feature -- Specific function evaluation
 		do	
 -- FIXME jfiat [2004/07/20] : Why do we set l_icd as a_icd ... this is not what we want, check it
 --			l_icd := a_icd
+			debug ("debugger_trace_eval")
+				print ("<start> "+ generator + ".debug_output_value_from_object_value %N")
+			end
+
 
 			l_class_type := a_class_type
 			l_feat := debug_output_feature_i (l_class_type.associated_class)
@@ -1040,11 +1079,12 @@ feature -- Specific function evaluation
 						+"] %N")
 				end
 			end
-			debug ("DEBUGGER_TRACE_EVAL")
+			debug ("debugger_trace_eval")
 				if Result = Void then
 					print ("EIFNET_DEBUGGER.debug_output_.. :: Error: non debuggable ! %N")
 				end
-			end
+				print ("<stop> "+ generator + ".debug_output_value_from_object_value %N")
+			end			
 		end
 
  	to_string_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
@@ -1059,6 +1099,10 @@ feature -- Specific function evaluation
 			l_func: ICOR_DEBUG_FUNCTION
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 		do	
+			debug ("debugger_trace_eval")
+				print ("<start> " + generator + ".to_string_value_from_exception_object_value %N")
+			end	
+			
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
 			l_icd_class := a_icd_obj.get_class
@@ -1087,6 +1131,9 @@ feature -- Specific function evaluation
 
 			l_icd_module.clean_on_dispose
 			l_icd_class.clean_on_dispose
+			debug ("debugger_trace_eval")
+				print ("<stop> " + generator + ".to_string_value_from_exception_object_value %N")
+			end			
 		end
 
  	get_message_value_from_exception_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_icd_obj: ICOR_DEBUG_OBJECT_VALUE): STRING is
@@ -1099,6 +1146,9 @@ feature -- Specific function evaluation
 			l_debug_info : EIFNET_DEBUG_VALUE_INFO
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE			
 		do	
+			debug ("debugger_trace_eval")
+				print ("<start> " + generator + ".get_message_value_from_exception_object_value %N")
+			end			
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
 			l_icd_module := eifnet_debugger_info.icor_debug_module_for_mscorlib
@@ -1120,6 +1170,9 @@ feature -- Specific function evaluation
 				end
 				l_func.clean_on_dispose
 			end
+			debug ("debugger_trace_eval")
+				print ("<stop> " + generator + ".get_message_value_from_exception_object_value %N")
+			end			
 		end
 
 	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_adapted_class_type: CLASS_TYPE;

@@ -35,7 +35,7 @@ feature -- Initialization
 	initialize is 
 		do 
 			is_initialized := True
-			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (c_object)
+			timeout_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_intermediary (object_id)
 		end
 
 feature -- Access
@@ -71,7 +71,7 @@ feature {EV_ANY_IMP, EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementa
 			valid_interval: an_interval >= 0
 		do
 			if timeout_kamikaze_agent_internal = Void then
-				timeout_kamikaze_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_kamikaze_intermediary (c_object)
+				timeout_kamikaze_agent_internal := agent (App_implementation.gtk_marshal).on_timeout_kamikaze_intermediary (object_id)
 			end
 			App_implementation.gtk_marshal.c_ev_gtk_callback_marshal_delayed_agent_call (
 				an_interval, timeout_kamikaze_agent_internal

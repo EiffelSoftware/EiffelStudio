@@ -226,7 +226,6 @@ feature -- Element change
 			pixmap_constant: GB_PIXMAP_CONSTANT
 			directory_constant: GB_DIRECTORY_CONSTANT
 			referers: ARRAYED_LIST [GB_CONSTANT_CONTEXT]
-			context: GB_CONSTANT_CONTEXT
 		do
 			if a_constant.type.is_equal (String_constant_type) then
 				string_constants.prune_all (a_constant)

@@ -35,8 +35,8 @@
         <ul>
           <li>Expressions can now be dynamically evaluated in the debugger. (<a href="../40_debugger/50_expression_evaluation/index.html">info</a>)</li>
           <li>Conditional breakpoints. (<a href="../40_debugger/20_breakpoints/index.html">info</a>)</li>
-          <li>Classes can now define `debug_output' a feature inherited from 
-          DEBUG_OUTPUT, whose string result is automatically displayed in the 
+          <li>Classes can now define <span  class="efeature">debug_output</span> a feature inherited from 
+          <span  class="eclass">DEBUG_OUTPUT</span>, whose string result is automatically displayed in the 
           debugger for all objects of that type. (<a href="../40_debugger/40_object_tool/17_debug_output.html">info</a>)</li>
           <li>Possible stack overflows can now be detected in the debugger
             before they occur. (<a href="../40_debugger/60_stack_overflow_prevention.html">info</a>)</li>
@@ -44,18 +44,39 @@
 		<h2>Libraries</h2>
         <h3>EiffelBase</h3>
         <ul>
-          <li>Improved speed of search operations in ARRAYED_LIST and HASH_TABLE.</li>
-          <li>Updated STRING for ELKS 2001 conformance.</li>
+          <li>Improved speed of search operations in <span  class="eclass">ARRAYED_LIST</span> and <span  class="eclass">HASH_TABLE</span>.</li>
+          <li><span  class="eclass">STRING</span> changes:</li>
+          <ul>
+          <li>Fixed <span  class="efeature">is_integer</span> to return False for strings 
+          of the form &quot;(-|+)[a-zA-Z]*[0-9]*)&quot;</li>
+          <li>Improved speed of <span  class="efeature">to_lower</span> and <span  class="efeature">to_upper</span>.</li>
+          <li>Updated for ELKS 2001 conformance:
+          <ul>
+          	<li>Changed signature of <span  class="efeature">out</span> and <span  class="efeature">replace_substring</span> 
+          to use <span class="eclass">STRING</span> instead of `like Current'.</li>
+          	<li>Added <span  class="efeature">keep_tail</span>, <span  class="efeature">keep_head</span>, <span  class="efeature">remove_tail</span>, <span  class="efeature">remove_head</span> and make 
+          	<span  class="efeature">head</span> and <span  class="efeature">tail</span> obsolete.</li>
+          	<li>Added <span  class="efeature">string</span>, <span  class="efeature">same_string</span>, <span  class="efeature">has_substring</span>, <span  class="efeature">fill_with</span>, 
+            <span  class="efeature">insert_string</span>, <span  class="efeature">insert_character</span>, 
+            <span  class="efeature">as_lower</span>, <span  class="efeature">as_upper.</span></li>
+          	<li>Modified <span  class="efeature">make_from_string</span> so that no sharing of internal string 
+            is done.</li>
+          	<li>Made <span  class="efeature">remake</span>, <span  class="efeature">replace_character</span> and <span  class="efeature">insert</span> obsolete.</li>
+        	</ul>
+          </li>
+          </ul>
         </ul>
         <h3>EiffelThread</h3>
         <ul>
-          <li>Fixed crashes when using `join' or `terminated from THREAD_CONTROL.</li>
+          <li>Fixed crashes when using <span  class="efeature">join</span> or
+           <span  class="efeature">terminated</span> from <span  class="eclass">THREAD_CONTROL</span>.</li>
         </ul>
         <h3>EiffelTime</h3>
         <ul>
           <li>EiffelTime has been rewritten so that no additional C libraries is 
-          needed in your project configuration file that needs to be updated to 
-          reflect this change.</li>
+          needed. Therefore you have to update your project configuration files 
+          to reflect this change, i.e. removing the include directory and the 
+          object file of the old EiffelTime library.</li>
         </ul>
         <h3>EiffelVision2</h3>
         <ul>
@@ -66,9 +87,9 @@
         <h3>WEL</h3>
         <ul>
           <li>Changed type of non-exported feature `internal_data' from 
-          WEL_WINDOW from INTEGER to POINTER.</li>
+          <span  class="eclass">WEL_WINDOW</span> from <span  class="eclass">INTEGER</span> to <span  class="eclass">POINTER</span>.</li>
           <li>Fixed a GDI memory leak when creating/releasing instances of 
-          descendant of WEL_CONTROL.</li>
+          descendant of <span  class="eclass">WEL_CONTROL</span>.</li>
         </ul>
         <p>&nbsp;</p>
         <p><a href="Eiffel51.html">Click here to check out what was new in 

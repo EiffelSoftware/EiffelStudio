@@ -51,7 +51,7 @@ feature {NONE}-- Initialization
 			valid_path: not a_path.is_empty
 			path_exists: (create {DIRECTORY}.make (a_path)).exists
 		do
-			set_internal_eiffel_path (a_path)
+			set_internal_eiffel_cache_path (a_path)
 			make (a_clr_version)
 		end
 		

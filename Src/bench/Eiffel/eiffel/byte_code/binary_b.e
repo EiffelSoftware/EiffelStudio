@@ -9,7 +9,8 @@ inherit
 			propagate, print_register,
 			analyze, unanalyze, generate, enlarged,
 			free_register, has_gcable_variable,
-			has_call, make_byte_code
+			has_call, make_byte_code,
+			is_unsafe, optimized_byte_node, calls_special_features
 		end;
 	
 feature 
@@ -168,28 +169,25 @@ feature
 		do
 		end;
 
-	enlarged: EXPR_B is
-			-- Enlarge the left and right handsides
+	nested_b: NESTED_B is
 		local
-			nested_b: NESTED_B;
 			a_access_expr: ACCESS_EXPR_B;
 			param: BYTE_LIST [EXPR_B];
 			--p: PARAMETER_B;
 			--param: BYTE_LIST [PARAMETER_B];
 		do
-			if not is_built_in then
-					-- Change this node into a nested call
-				!!nested_b;
-				!!a_access_expr;
-				a_access_expr.set_expr (left);
-				a_access_expr.set_parent (nested_b);
-				nested_b.set_target (a_access_expr);
-				!!param.make (1);
-				param.put_i_th (right, 1);
+				-- Change this node into a nested call
+			!!Result;
+			!!a_access_expr;
+			a_access_expr.set_expr (left);
+			a_access_expr.set_parent (Result);
+			Result.set_target (a_access_expr);
+			!!param.make (1);
+			param.put_i_th (right, 1);
 
 -- FIXME PARAMETER_B takes care of the cast if needed
---				!!p;
---				p.set_expression (right);
+--			!!p;
+--			p.set_expression (right);
 --debug
 --io.error.putstring (generator);
 --io.error.putstring (" BINARY ENLARGED:%NRight:");
@@ -199,12 +197,19 @@ feature
 --a_access_expr.context_type.trace;
 --io.error.putstring ("end display%N");
 --end;
---				p.set_attachment_type (a_access_expr.context_type);
---				param.put_i_th (p, 1);
+--			p.set_attachment_type (a_access_expr.context_type);
+--			param.put_i_th (p, 1);
 
-				access.set_parameters (param);
-				access.set_parent (nested_b);
-				nested_b.set_message (access);
+			access.set_parameters (param);
+			access.set_parent (Result);
+			Result.set_message (access);
+		end;
+
+	enlarged: EXPR_B is
+			-- Enlarge the left and right handsides
+		do
+			if not is_built_in then
+					-- Change this node into a nested call
 				Result := nested_b.enlarged;
 			else
 				Result := built_in_enlarged;
@@ -281,5 +286,33 @@ feature -- Byte code generation
 			-- operation
 		deferred
 		end;
+
+feature -- Array optimization
+
+	calls_special_features (array_desc: INTEGER): BOOLEAN is
+		do
+			Result := left.calls_special_features (array_desc) or else
+				right.calls_special_features (array_desc) or else
+				access.calls_special_features (array_desc)
+		end
+
+	is_unsafe: BOOLEAN is
+		do
+				-- Use the nested form of the byte code (the type resolution
+				-- does not work otherwise)
+			Result := nested_b.is_unsafe
+		end
+
+	optimized_byte_node: EXPR_B is
+		do
+			if is_built_in then
+				Result := Current
+				left := left.optimized_byte_node
+				right := right.optimized_byte_node
+				access := access.optimized_byte_node
+			else
+				Result := nested_b.optimized_byte_node
+			end
+		end
 
 end

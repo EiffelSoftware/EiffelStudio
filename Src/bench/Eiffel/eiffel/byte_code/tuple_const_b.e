@@ -65,7 +65,6 @@ feature -- IL generation
 		local
 			real_ty: GEN_TYPE_I
 			actual_type: CL_TYPE_I
-			basic_i: BASIC_I
 			expr: EXPR_B
 			base_class: CLASS_C
 			local_tuple: INTEGER

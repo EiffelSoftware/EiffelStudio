@@ -482,9 +482,6 @@ feature {NONE} -- Rebuilding
 	
 	store_expanded_state is
 			-- Store expanded state of `Current' into `expanded_clusters'.
-		local
-			selected_cluster: EB_SORTED_CLUSTER
-			selected_class: CLASS_I
 		do
 			expanded_clusters.wipe_out
 				-- Clear last set of expanded clusters.
@@ -492,21 +489,12 @@ feature {NONE} -- Rebuilding
 			if selected_item /= Void then
 					-- Store inclusive path of item currently selected in `Current'.
 					-- This is used to restore the selected item post rebuilding.
-				selected_cluster ?= selected_item.data
-				if selected_cluster /= Void then
-					selected_name := selected_cluster.actual_cluster.cluster_name
-				else
-					selected_class ?= selected_item.data
-					check
-						class_selected: selected_class /= Void
-					end
-					selected_name := selected_class.cluster.cluster_name + "." + selected_class.name
-				end
+				selected_name := path_name_from_tree_node (selected_item)
 			end
 			recursive_store (Current)
 				-- Actually perform recursion.
 		end
-		
+
 	recursive_store (tree_list: EV_TREE_NODE_LIST) is
 			-- Store full path name of clusters associated with all
 			-- expanded nodes of `tree_item', recursively into `expanded_clusters'.
@@ -515,6 +503,8 @@ feature {NONE} -- Rebuilding
 		local
 			cluster: EB_SORTED_CLUSTER
 			current_node: EV_TREE_NODE
+			l_parent: EV_TREE_NODE
+			l_name: STRING
 		do
 			from
 				tree_list.start
@@ -528,7 +518,9 @@ feature {NONE} -- Rebuilding
 						data_was_cluster: cluster /= Void
 					end
 					recursive_store (current_node)
-					expanded_clusters.put (cluster.actual_cluster.cluster_name, cluster.actual_cluster.cluster_name)
+					l_parent ?= current_node.parent
+					l_name := path_name_from_tree_node (current_node)
+					expanded_clusters.put (l_name, l_name)
 				end
 				tree_list.forth
 			end
@@ -555,8 +547,10 @@ feature {NONE} -- Rebuilding
 					-- If an item was selected before the rebuild, re-select
 					-- the item.
 				select_tree_item (selected_name, Current)
-				ensure_item_visible (selected_item)
-					-- Ensure that the selected item is visible on screen.
+				if selected_item /= Void then
+						-- Ensure that the selected item is visible on screen.
+					ensure_item_visible (selected_item)
+				end
 			elseif not is_empty and is_displayed then
 					-- Ensure that the first item is displayed.
 					--| FIXME Julian Rogers 08/12/03
@@ -636,6 +630,28 @@ feature {NONE} -- Rebuilding
 		end
 
 feature {NONE} -- Implementation
+
+	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING is
+			-- `Result' is a path name representing `tree_node' in the
+			-- form "base.kernel.COMPARABLE".
+		require
+			tree_node_not_void: tree_node /= Void
+		local
+			l_parent: EV_TREE_NODE
+		do
+			from
+				l_parent ?= tree_node.parent
+				Result := tree_node.text
+			until
+				l_parent = Void
+			loop
+				Result.prepend_character ('.')
+				Result.prepend (l_parent.text)
+				l_parent ?= l_parent.parent
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	on_key_pushed (a_key: EV_KEY) is
 			-- If `a_key' is enter, set a stone in the development window.

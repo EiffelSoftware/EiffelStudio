@@ -21,6 +21,15 @@ feature -- Equality
 			"deep_equal"
 		end
 
+	frozen standard_equal (target, source: ANY): BOOLEAN is
+			-- Is `target' attached to an object of the same type
+			-- as `source', and field-by-field identical to it?
+		external
+			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO): System.Boolean use ISE.Runtime.RUN_TIME"
+		alias
+			"standard_equal"
+		end
+
 feature -- Duplication
 
 	frozen standard_copy (target, source: ANY) is

@@ -160,7 +160,7 @@ extern struct conform **co_table;
 extern struct conform *fco_table[];
 #endif
 
-typedef char *(*fnptr)();       /* The function pointer type */
+typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 
 #ifdef WORKBENCH
 #include "eif_option.h"

@@ -35,6 +35,13 @@ feature -- Status settings
 
 feature -- Basic operation
 
+	put_new_line is
+			-- Go to the beginning of the following line.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 	search (str: STRING): INTEGER is
 			-- Search the string `str' in the text.
 			-- If `str' is find, it returns its start

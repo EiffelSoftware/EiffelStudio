@@ -42,6 +42,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
+	put_new_line is
+			-- Go to the beginning of the following line of position.
+		require
+			exists: not destroyed
+		do
+			implementation.put_new_line
+		end
+
 	search (str: STRING): INTEGER is
 			-- Search the string `str' in the text.
 			-- If `str' is find, it returns its start

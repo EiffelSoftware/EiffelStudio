@@ -91,11 +91,11 @@ debug ("OPTIMIZATION")
 	io.error.putstring ("Recording loop in class ");
 	io.error.putstring (context.a_class.class_name);
 	io.error.putstring (" (");
-	io.error.putint (context.a_class.id.id);
+	context.a_class.id.trace;
 	io.error.putstring ("), feature ");
 	io.error.putstring (context.a_feature.feature_name);
 	io.error.putstring (" (");
-	io.error.putint (body_index.id);
+	body_index.trace;
 	io.error.putstring (")%N");
 end;
 			!!opt_unit.make (context.a_class.id, body_index);

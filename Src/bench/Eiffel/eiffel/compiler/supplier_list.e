@@ -119,7 +119,7 @@ end;
 		-- doesn't extend check to if id already exists since
 		-- result is set !!!???!! dinov
 debug ("ACTIVITY")
-	io.error.putint (id.id);
+	id.trace;
 	io.error.new_line;
 end;
 					Result.extend (id);

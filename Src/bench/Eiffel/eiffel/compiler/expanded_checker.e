@@ -99,7 +99,7 @@ end;
 					else
 debug
 	io.error.putstring ("Inserting ");
-	io.error.putint (id.id);
+	id.trace;
 	io.error.putstring (" for class ");
 	io.error.putstring (client.class_name);
 	io.error.new_line;

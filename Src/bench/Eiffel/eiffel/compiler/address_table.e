@@ -39,7 +39,7 @@ feature -- Access
 			end
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.has ");
-	io.putint (class_id.id);
+	io.putstring (class_id.dump);
 	io.putchar (' ');
 	io.putint (feature_id)
 	io.putchar (' ');
@@ -59,7 +59,7 @@ feature -- Insert
 		do
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.record ");
-	io.putint (class_id.id);
+	io.putstring (class_id.dump);
 	io.putchar (' ');
 	io.putint (feature_id)
 	io.new_line

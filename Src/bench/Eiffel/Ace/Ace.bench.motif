@@ -287,12 +287,15 @@ external
 		"$(EIFFEL_SRC)/C/bench/special_tables.o",
 		"$(EIFFEL_SRC)/C/ipc/ewb/libewb.a",
 		"$(EIFFEL_SRC)/C/ipc/shared/libipc.a",
-		"$(EIFFEL_SRC)/C/idrs/libidr.a",
 		"$(EIFFEL_SRC)/C/parsing/eiffel/libeiffel.a",
 		"$(EIFFEL_SRC)/C/parsing/lace/liblace.a",
 		"$(EIFFEL_SRC)/C/parsing/shared/libparsing.a",
 		"$(EIFFEL_SRC)/C/platform/libplatform.a",
 		"$(EIFFEL_SRC)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
 		"$(EIFFEL_SRC)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(EIFFEL_SRC)/library/net/spec/$(PLATFORM)/lib/libnet.a",
+		"$(EIFFEL_SRC)/C/liman/lm/liblm.a",
+		"$(EIFFEL_SRC)/C/liman/shared/libshared.a",
+		"$(EIFFEL_SRC)/C/idrs/libidr.a"
 		"-L/usr/X11R6/lib -lXm -lXt -lX11 -lXext -lXp -lSM -lICE"
 end

@@ -63,9 +63,9 @@ feature -- Status Setting
 			external_name: "SetSourceName"
  		require
  			non_void_source_name: a_source_name /= Void
- 			not_empty_source_name: a_source_name.get_length > 0		
+ 			not_empty_source_name: a_source_name.get_length > 0
  		do
- 			source_name := a_source_name
+  			source_name := a_source_name
  		ensure
  			source_name_set: source_name.equals_string (a_source_name)
  		end
@@ -84,5 +84,9 @@ feature -- Basic Operations
 			not_empty_result: Result.get_length > 0
 		end
 		
+invariant
+	source_name_not_void: source_name /= Void
+	eiffel_keyword_not_void: eiffel_keyword /= Void
+
  end -- class INHERITANCE_CLAUSE
  

@@ -262,7 +262,7 @@ feature -- Element change
 				realize_children
 				mapping := false
 				tw ?= parent
-				if tw /= Void and then tw.exists then 
+				if tw /= Void and then tw.exists then
 					set_x_y (0, 0)
 					set_size (tw.client_width, tw.client_height)
 				end
@@ -292,7 +292,6 @@ feature -- Element change
 			i: INTEGER
 			ci: WIDGET_WINDOWS
 			sizeable_window: SIZEABLE_WINDOWS
-			shrinking: BOOLEAN
 		do
 			mapping := True
 			if new_width < width or else new_height < height or else shrunk then

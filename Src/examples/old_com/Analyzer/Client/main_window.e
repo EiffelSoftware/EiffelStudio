@@ -389,6 +389,7 @@ feature {NONE} -- Implementation
 	on_destroy is
 			-- End server first.
 		do
+			analyzer.terminate_server
 			analyzer.terminate
 		end
 		

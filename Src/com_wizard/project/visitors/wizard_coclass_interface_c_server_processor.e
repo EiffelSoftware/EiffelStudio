@@ -22,7 +22,8 @@ feature -- Basic operations
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 		do
 			-- Add parent and import header files
-			coclass_generator.cpp_class_writer.add_parent (an_interface.c_type_name, Public)
+			coclass_generator.cpp_class_writer.add_parent (an_interface.c_type_name, 
+					an_interface.namespace, Public)
 			coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
 			coclass_generator.cpp_class_writer.add_other_source (iid_definition (an_interface.name, an_interface.guid))
 

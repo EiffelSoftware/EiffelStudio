@@ -37,36 +37,8 @@ feature -- Initialization
 			interface.set_y (c_gdk_event_y (p))
 			interface.set_state (c_gdk_event_state (p))
 			interface.set_button (c_gdk_event_button (p))
-			interface.set_keyval (c_gdk_event_keyval (p))
 		end
 	
-feature {NONE} -- Implementation
-	
-	
-	c_gdk_event_x  (p: POINTER): DOUBLE is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end
-	
-	c_gdk_event_y (p: POINTER): DOUBLE is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_state (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_button (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
-	
-	c_gdk_event_keyval (p: POINTER): INTEGER is
-		external 
-			"C [macro %"gdk_eiffel.h%"]"
-		end	
 			
 end
 			

@@ -61,11 +61,6 @@ feature {EV_BUTTON_EVENT_DATA_I} -- Element change
 			button := new_button
 		end
 	
-	set_keyval (new_keyval: INTEGER) is
-		do
-			keyval := new_keyval
-		end
-	
 	
 feature -- Debug
 	
@@ -80,8 +75,6 @@ feature -- Debug
 			io.put_integer (button)
 			io.put_string (" State: ")			
 			io.put_integer (state)
-			io.put_string (" Keyval: ")			
-			io.put_integer (keyval)
 			io.put_string ("%N")		
 		end
 	

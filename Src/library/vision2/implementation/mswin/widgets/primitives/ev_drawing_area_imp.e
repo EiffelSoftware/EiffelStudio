@@ -24,6 +24,8 @@ inherit
 		end
 
 	EV_PIXMAPABLE_IMP
+		undefine
+			pixmap_drawable_ok
 		redefine
 			set_pixmap,
 			unset_pixmap
@@ -111,17 +113,15 @@ feature -- Element change
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of the widget.
 		do
---			{EV_PIXMAPABLE_IMP} Precursor (pix)
 			pixmap_imp ?= pix.implementation
-			pixmap_imp.set_free_status (False)
+			pixmap_imp.lock
 			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		do
---			{EV_PIXMAPABLE_IMP} Precursor
-			pixmap_imp.set_free_status (True)
+			pixmap_imp.unlock
 			pixmap_imp := Void
 			set_minimum_size (0, 0)
 		end

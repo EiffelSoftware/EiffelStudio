@@ -8,6 +8,8 @@ class
 	TOGGLE_B_WINDOWS
 
 inherit
+	ACCELERABLE_WINDOWS
+
 	BUTTON_WINDOWS
 		redefine
 			realize,
@@ -101,7 +103,7 @@ feature
 					end
 				else	
 					wc ?= parent
-					wel_make (wc, text, x , y , width + 20, height, id_default);
+					wel_make (wc, text, x , y , width + Extra_width, height, id_default);
 					if private_font /= Void then
 						set_font (private_font)
 					end
@@ -137,13 +139,6 @@ feature
 
 feature -- Status report
 
-	has_accelerator: BOOLEAN
-			-- Is there an accelerator key associated with
-			-- this widget?
-
-	accelerator_text: STRING
-			-- Text of accelerator.
-
 	state: BOOLEAN is
 			-- True if the toggle has been armed. False otherwise.
 		do
@@ -175,15 +170,6 @@ feature -- Status report
 		end;
 
 feature -- Status setting
-
-	set_accelerator_action (a_translation: STRING) is
-			-- Set the accerlator action (modifiers and key to use as a shortcut
-			-- in selecting a button) to `a_translation'.
-			-- `a_translation' must be specified with the X toolkit conventions.
-		do
-			accelerator_text := a_translation
-			has_accelerator := True
-		end
 
 	set_x (a_x: INTEGER) is
 		do
@@ -271,12 +257,6 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_accelerator_action is
-			-- Remove the accelerator action.
-		do
-			has_accelerator := False
-		end
-
 	remove_value_changed_action (a_command: COMMAND; arg: ANY) is
 			-- Remove a command from the list of action to execute
 			-- when value is changed
@@ -300,9 +280,7 @@ feature {BOX_WINDOWS} -- Status report
 			font_windows: FONT_WINDOWS
 		do
 			font_windows ?= font.implementation
-			Result := 7 * (font_windows.string_height (Current, text).max (Minimum_height)) // 4
-		ensure
-			result_greater_than_minimum: Result >= 7 * Minimum_height // 4
+			Result := (7 * (font_windows.string_height (Current, text).max (Minimum_height)) // 4)
 		end
 
 	toggle_width: INTEGER is
@@ -312,7 +290,7 @@ feature {BOX_WINDOWS} -- Status report
 			font_windows: FONT_WINDOWS
 		do
 			font_windows ?= font.implementation
-			Result := font_windows.string_width (Current, text) + 25
+			Result := font_windows.string_width (Current, text) + Extra_width
 		end
 
 feature {BOX_WINDOWS} -- Status setting
@@ -353,7 +331,7 @@ feature {NONE} -- Implementation
 	Extra_width: INTEGER is
 			-- Extra width
 		once
-			Result := 25
+			Result := 18
 		end
 
 	Minimum_height: INTEGER is 15
@@ -364,10 +342,8 @@ feature {NONE} -- Implementation
 			-- Default style for creation
 		local
 			a_radio: RADIO_BOX_WINDOWS
-			a_check: CHECK_BOX_WINDOWS
 		do
 			a_radio ?= parent;
-			a_check ?= parent;
 			if a_radio /= Void then
 				Result := Ws_child + Ws_visible + Bs_autoradiobutton
 			else

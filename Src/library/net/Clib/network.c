@@ -378,11 +378,7 @@ EIF_INTEGER get_servent_port(EIF_POINTER name, EIF_POINTER proto)
 void set_from_c(EIF_POINTER addr, EIF_POINTER c_part)
 	/*x copy internet address from addr into c_part */
 {
-#ifdef USE_STRUCT_COPY
 	((struct in_addr *) addr)->s_addr = ((struct in_addr *) c_part)->s_addr;
-#else
-	bcopy(((struct in_addr *) addr)->s_addr, (((struct sockaddr_in *) c_part)->s_addr), sizeof (struct in_addr));
-#endif
 }
 
 
@@ -428,11 +424,7 @@ void set_sock_addr_in(EIF_POINTER add, EIF_POINTER addr_in)
 	    structure addr_in (in_addr) into internet socket address stucture
 	    add (sockaddr_in) */
 {
-#ifdef USE_STRUCT_COPY
-	((struct sockaddr_in *) add)->sin_addr = *((struct in_addr *) addr_in);
-#else
-	bcopy((struct in_addr *) addr_in, &(((struct sockaddr_in *) add)->sin_addr), sizeof(struct in_addr));
-#endif
+	memcpy(&(((struct sockaddr_in *) add)->sin_addr), (struct in_addr *) addr_in, sizeof(struct in_addr));
 }
 
 
@@ -1120,7 +1112,7 @@ EIF_OBJ data_obj;
 	unsigned long tmp;
 	EIF_INTEGER result;
 
-	bcopy(((char *) data_obj), &value, sizeof(uint32));
+	memcpy(&value, ((char *) data_obj), sizeof(uint32));
 	lower = (uint32) ntohl(value);
 	upper = 0x00000000;
 	if (lower & 0x80000000) {
@@ -1150,20 +1142,20 @@ void c_set_number(EIF_OBJ data_obj, EIF_INTEGER num)
 	if (num & 0x8000000000000000)
 		lower |= 0x80000000;
 	value = htonl((uint32)(lower));
-	bcopy(&value, ((char *) data_obj), sizeof(uint32));
+	memcpy(((char *) data_obj), &value, sizeof(uint32));
 #endif
 }
 
 void c_set_data(EIF_OBJ pdata_obj, EIF_OBJ sdata_obj, EIF_INTEGER count)
 	/*x copy count amout of bytes from pdata_obj into sdata_obj */
 {
-	bcopy ((pdata_obj + c_packet_number_size()), sdata_obj, count);
+	memcpy(sdata_obj, (pdata_obj + c_packet_number_size()), count);
 }
 
 void c_get_data(EIF_OBJ rdata_obj, EIF_OBJ pdata_obj, EIF_INTEGER count)
 	/*x copy count amount of bytes from rdata_obj into pdata_obj */
 {
-	bcopy(rdata_obj, (pdata_obj + c_packet_number_size()), count);
+	memcpy((pdata_obj + c_packet_number_size()), rdata_obj, count);
 }
 
 

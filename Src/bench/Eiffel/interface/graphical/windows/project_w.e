@@ -60,7 +60,7 @@ feature -- Initialization
 			set_title (l_project);
 			set_icon_name (tool_name);
 			if bm_Project_icon.is_valid then
-				set_icon_pixmap (bm_Project_icon);
+				set_icon_pixmap (bm_Project_icon)
 			end;
 			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
@@ -73,9 +73,10 @@ feature -- Initialization
 			Application.set_after_stopped_command (app_stopped_cmd);
 			set_default_position;
 			realize;
+			focus_label.initialize_focusables;
 			init_text_window;
-			set_composite_attributes (Current);
-		end;
+			set_composite_attributes (Current)
+		end
 
 feature -- Resource Update
 
@@ -546,8 +547,8 @@ feature -- Graphical Interface
 			-- Build the menu bar
 		local
 			sep: SEPARATOR;
-            case_storage_cmd: CASE_STORAGE;
-            case_storage_menu_entry: EB_MENU_ENTRY;
+			case_storage_cmd: CASE_STORAGE;
+			case_storage_menu_entry: EB_MENU_ENTRY;
 		do
 			!! menu_bar.make (new_name, std_form);
 			!! file_menu.make ("File", menu_bar);
@@ -576,13 +577,13 @@ feature -- Graphical Interface
 			!! special_object_menu.make ("Object", special_menu);
 			special_object_menu.button.set_insensitive;
 			!! format_object_menu.make ("Object", format_menu);
-			format_object_menu.button.set_insensitive
+			format_object_menu.button.set_insensitive;
 
 			!! sep.make ("", special_menu);
 			!! case_storage_cmd.make (Current);
-            !! case_storage_menu_entry.make (case_storage_cmd, special_menu);
-            !! case_storage_cmd_holder.make_plain (case_storage_cmd);
-            case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
+			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
+			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
+			case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry)
 		end;
 
 	build_toolbar_menu is

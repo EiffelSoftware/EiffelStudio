@@ -29,7 +29,7 @@ feature
 	make is
 			-- Initialization
 		do
-			{LINKED_SET} precursor
+			{LINKED_SET} Precursor
 			compare_objects
 			!!arguments.make
 		end
@@ -49,7 +49,7 @@ feature
 	wipe_out is
 			-- Reset controller
 		do
-			{LINKED_SET} precursor
+			{LINKED_SET} Precursor
 			arguments.wipe_out
 			is_on := False
 		ensure then 

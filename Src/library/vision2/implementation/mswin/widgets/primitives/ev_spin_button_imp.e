@@ -35,8 +35,8 @@ inherit
 		redefine
 			make,
 			wel_set_parent,
-			move_and_resize,
-			resize,
+			wel_move_and_resize,
+			wel_resize,
 			--move,
 			destroy,
 			on_key_down,
@@ -204,7 +204,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- We must not resize the height of the tool-bar.
 		do
 			{EV_TEXT_FIELD_IMP} Precursor (0, 0, a_width - 20, a_height, repaint)
@@ -212,7 +212,7 @@ feature {NONE} -- WEL Implementation
 			container.move_and_resize (a_x, a_y, a_width, a_height, repaint)
 		end
 
-	resize (a_width, a_height: INTEGER) is
+	wel_resize (a_width, a_height: INTEGER) is
 			-- We must not resize the hight of the tool-bar.
 		do
 			container.resize (a_width, a_height)
@@ -268,6 +268,10 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/23 18:41:33  brendel
+--| resize -> wel_resize
+--| move_and_resize -> wel_move_and_resize
+--|
 --| Revision 1.6  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -138,7 +138,6 @@ feature {NONE} -- Initialization
 
 				-- Create the WEL LISTVIEW.
 			wel_make (default_parent, 0, 0, 0, 0, 0)
-			enable_multiple_selection
 		end
 
 	initialize is

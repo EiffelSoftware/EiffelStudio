@@ -6,80 +6,72 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class EB_TOOL 
+deferred class
+	EB_TOOL 
 
 inherit
-	NAMER
-
---	HOLE
-
 --	HELPABLE
+
+--	EB_SHARED_INTERFACE_TOOLS
+		-- waiting for a better place...
 
 	SHARED_CONFIGURE_RESOURCES
 
 	SHARED_PLATFORM_CONSTANTS
 
---	EB_CONSTANTS
+	NEW_EB_CONSTANTS
 
-	INTERFACE_NAMES
-		-- ?
+feature {NONE} -- Initialization
+
+	make (man: EB_TOOL_MANAGER) is
+		require
+			manager_exists: manager /= Void
+		do
+				-- Linking with manager
+			manager := man
+			parent := manager.tool_parent
+			parent_window := manager.associated_window
+
+			init_commands
+			build_interface
+		ensure
+			exists: not destroyed
+			parent_set: parent /= Void
+		end
+
+	build_interface is
+			-- build all the tool's widgets
+		deferred
+		ensure
+			contains_something: not container.destroyed
+		end
+
+	init_commands is
+			--
+		do
+			create close_cmd.make (Current)
+		end
 
 feature -- Tool Properties
 
-	parent: EV_WINDOW
+	parent: EV_CONTAINER
+			-- parent of Current.
+
+	parent_window: EV_WINDOW
 			-- window where Current is.
 
-	tool_name: STRING is 
-			-- Name of the tool
+	empty_tool_name: STRING is 
+			-- Name given to the tool when it is empty
 		do
 		end
 
-	history: STONE_HISTORY
-			-- History list for Current.
-
-	stone: STONE
-			-- Stone in tool
-
---	title: STRING is
-			-- The title of the tool.
---		deferred
---		end
-
-	save_cmd_holder: TWO_STATE_CMD_HOLDER is
+--	save_cmd_holder: TWO_STATE_CMD_HOLDER is
 			-- The command to save the contents of Current.
-		do
-		end
-
-	reset_stone is
-			-- Reset the stone to Void.
-		do
-			stone := Void
-		ensure
-			stone = Void
-		end
-
+--		do
+--		end
 
 	menu_bar: EV_STATIC_MENU_BAR
 			-- Menu bar
-			-- can be void
-
-	edit_menu: EV_MENU
-			-- Edit menu
-			-- Only used during debugging
-			-- can be void
-
-	file_menu: EV_MENU
-			-- File menu
-			-- can be void
-
-	help_menu: EV_MENU
-			-- Help menu
-			-- can be void
-
-
---	toolbar_parent: ROW_COLUMN
-			-- Toolbar parent
-			-- Not implemented yet
 
 --	edit_bar, format_bar: TOOLBAR
 			-- Main and format button bars
@@ -88,13 +80,6 @@ feature -- Tool Properties
 --	hole_button: EB_BUTTON_HOLE
 			-- Button to represent Current's default hole.
 			-- not implemented yet
-
-	history_window_title: STRING is
-			-- Title of the history window
-		do
-			Result := t_Empty
-				-- ? Elimination de EB_CONST
-		end
 
 	icon_id: INTEGER is
 			-- Icon id for window (for windows)
@@ -108,15 +93,15 @@ feature -- Access
 --		deferred
 --		end
 
-	help_index: INTEGER is
-			-- Index of help file nmae
-		do
-		end
+--	help_index: INTEGER is
+--			-- Index of help file nmae
+--		do
+--		end
 
-	help_file_name: FILE_NAME is
-			-- Help file name
-		do
-		end
+--	help_file_name: FILE_NAME is
+--			-- Help file name
+--		do
+--		end
 
 --	associated_help_widget: EV_CONTAINER is
 --			-- Associated parent widget for help window
@@ -125,6 +110,18 @@ feature -- Access
 --		end
 
 feature -- Status report
+
+	title: STRING is
+			-- The title of the tool.
+		do
+			Result := manager.tool_title
+		end
+
+	icon_name: STRING is
+			-- The title of the tool.
+		do
+			Result := manager.tool_icon_name
+		end
 
 	destroyed: BOOLEAN is
 			-- is Current destroyed?
@@ -144,75 +141,72 @@ feature -- Status setting
 	show is
 			-- makes tool visible
 		do
-			manager.show_tool
+			manager.show_tool (Current)
+		ensure
+			shown: shown
 		end
 
 	raise is
 		do
-			manager.raise_tool
+			manager.raise_tool (Current)
+		ensure
+			shown: shown
 		end
 
 	hide is
 			-- hides tool
 		do
-			manager.hide_tool
+			manager.hide_tool (Current)
+		ensure
+			hidden: not shown
 		end
 
 	destroy is
 			-- Destroys tool
 		do
-			manager.destroy_tool
+			manager.destroy_tool (Current)
+		ensure
+			destroyed: destroyed
 		end
 
 	set_title (s: STRING) is
 			-- Set parent title to `s'.
 		do
-			manager.set_title (s)
+			manager.set_tool_title (Current, s)
+		ensure
+			title_set: title.is_equal (s)
 		end
 
-feature -- Update
-
-
-feature -- Pick and Throw Implementation
-
-	reset is
-			-- Reset the window contents.
+	set_icon_name (s: STRING) is
+			-- Set icon name to `s'.
+			-- icon name is shown just below the icon.
 		do
-			reset_stone
-			history.wipe_out
-		end
-
-	unregister_holes is
-			-- Unregister holes.
-		do
---			unregister
---		ensure
---			current_unregistered: not registered
+			manager.set_tool_icon_name (Current, s)
+		ensure
+			title_set: icon_name.is_equal (s)
 		end
 
 feature -- Resize
 
-	set_minimum_size (min_x, min_y: INTEGER) is
+	set_size (min_x, min_y: INTEGER) is
 		do
-			manager.set_minimum_size (min_x, min_y)
+			manager.set_size (min_x, min_y)
 		end
 
-feature -- Element change
-
-	add_to_history (a_stone: like stone) is
-			-- Add `a_stone' to `history'
-		require
-			valid_history: history /= Void
+	set_width (new_width: INTEGER) is
 		do
-			history.extend (a_stone)
-		ensure
-			has_history: history.has (a_stone)
+			manager.set_width (new_width)
 		end
 
-feature {EB_TOOL_CONTAINER} -- Widget Implementation
+	set_height (new_height: INTEGER) is
+		do
+			manager.set_height (new_height)
+		end
+
+feature {EB_TOOL_MANAGER} -- Widget Implementation
 
 	-- tool display utilities.
-	-- these features can only be used by a tool container
+	-- these features can only be used by a tool manager
 
 	show_imp is
 			-- Show Current on the screen.
@@ -241,39 +235,28 @@ feature {EB_TOOL_CONTAINER} -- Widget Implementation
 
 feature {NONE} -- Implementation
 
-	manager: EB_TOOL_CONTAINER
+	manager: EB_TOOL_MANAGER
 			-- object containing Current
 
 	container: EV_CONTAINER is
 			-- Form representing Current
-			-- most of the time a VERTICAL_BOX
+			-- most of the time an EV_VERTICAL_BOX
 		deferred
 		end
 
---	raise_grabbed_popup is
---			-- Raise popup windows with exclusive grab set.
---		do
---			if 
---				last_warner /= Void and then
---				not last_warner.destroyed and then
---				last_warner.shown and then
---				last_warner.is_modal 
---			then
---				last_warner.raise
---			elseif 
---				last_confirmer /= Void and then 
---				last_confirmer.shown
---			then
---				last_confirmer.raise
---			elseif
---				last_name_chooser /= Void and then
---				last_name_chooser.shown
---			then
---				last_name_chooser.raise
---			else
---				window_manager.class_win_mgr.raise_shell_popup
---			end
---		end
+	raise_grabbed_popup is
+		obsolete
+			"Use `raise' instead"
+		do
+			raise
+		end
 
+feature {EB_TOOL_MANAGER} -- Commands
+
+	close_cmd: EB_CLOSE_TOOL_CMD
+	exit_app_cmd: EB_EXIT_APPLICATION_CMD
+
+invariant
+	tool_has_manager: manager /= Void
 
 end -- class EB_TOOL

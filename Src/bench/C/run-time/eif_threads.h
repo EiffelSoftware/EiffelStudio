@@ -412,7 +412,7 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #define EIF_MUTEX_TRYLOCK(m,r,msg)  \
     r = pthread_mutex_trylock(m);   \
     if (r && (r!=EBUSY)) eraise(msg, EN_EXT)
-#define EIF_MUTEX_UNLOCK(m,msg) if (pthread_mutex_unlock(m)) eraise(msg, EN_OMEM)
+#define EIF_MUTEX_UNLOCK(m,msg) if (pthread_mutex_unlock(m)) eraise(msg, EN_EXT)
 #define EIF_MUTEX_DESTROY(m,msg) \
     EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
 #define EIF_MUTEX_DESTROY0(m,msg) \

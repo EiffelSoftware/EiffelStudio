@@ -93,7 +93,7 @@ feature
 				Error_handler.insert_error (special_error);
 			end;
 
-			if System.il_generation then
+			if not System.il_generation then
 					-- Presence of attribute `internal_hash_code'.
 				internal_hash_code_feat ?= feature_table.item_id (Names_heap.internal_hash_code_name_id)
 				if

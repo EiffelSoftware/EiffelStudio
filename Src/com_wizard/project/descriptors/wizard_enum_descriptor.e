@@ -49,8 +49,6 @@ feature -- Access
 			create Result.make (512)
 			Result.append ("Added enumerator ")
 			Result.append (name)
-			Result.append ("%R%N%T")
-			Result.append ("Elements:")
 			from
 				elements.start
 			until

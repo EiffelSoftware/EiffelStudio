@@ -51,7 +51,14 @@ feature -- Access
 			l_description: STRING
 			l_field: WIZARD_RECORD_FIELD_DESCRIPTOR
 		do
-			Result := "Added Record "
+			create Result.make (500)
+			Result.append ("Added ")
+			if is_union then
+				Result.append ("Union ")
+			else
+				Result.append ("Record ")
+			end
+			Result.append (name)
 			from 
 				fields.start
 				Result.append ("%R%N%T")

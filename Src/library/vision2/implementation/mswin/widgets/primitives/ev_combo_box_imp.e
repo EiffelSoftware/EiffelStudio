@@ -19,13 +19,11 @@ inherit
 	EV_LIST_ITEM_HOLDER_IMP
 
 	EV_TEXT_COMPONENT_IMP
-		undefine
-			selection_start,
-			selection_end
 		redefine
 			set_editable,
 			move_and_resize,
-			on_key_down
+			on_key_down,
+			paste
 		end
 		
 	EV_BAR_ITEM_IMP
@@ -77,19 +75,6 @@ feature {NONE} -- Initialization
 			!! ev_children.make
 		end
 
-feature -- Access
-
-	selected_item: EV_LIST_ITEM is
-			-- Give the item which is currently selected
-			-- It start with a zero index in wel and with a
-			-- one index for the array.
-		do
-			Result ?= (ev_children.i_th (wel_selected_item + 1)).interface
-		end
-
-	is_editable: BOOLEAN
-			-- Is the combo-box editable
-
 feature -- Measurement
 
 	height: INTEGER is
@@ -123,6 +108,26 @@ feature -- Status report
 			-- Is item given by `an_id' selected?
 		do
 			Result := (an_id = wel_selected_item + 1)
+		end
+
+	is_editable: BOOLEAN
+			-- Is the combo-box editable
+
+	selected_item: EV_LIST_ITEM is
+			-- Give the item which is currently selected
+			-- It start with a zero index in wel and with a
+			-- one index for the array.
+		do
+			Result ?= (ev_children.i_th (wel_selected_item + 1)).interface
+		end
+
+	has_selection: BOOLEAN is
+			-- Has a current selection?
+		do
+			Result := cwin_lo_word (cwin_send_message_result (item,
+				Cb_geteditsel, 0, 0)) /=
+				cwin_hi_word (cwin_send_message_result (item,
+				Cb_geteditsel, 0, 0))
 		end
 
 feature -- Status setting
@@ -178,6 +183,49 @@ feature -- Element change
 			clear_ev_children
 		end
 
+feature -- Basic operation
+
+	select_all is
+			-- Select all the text.
+		do
+			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (0, -1))
+		end
+
+	deselect_all is
+			-- Unselect the current selection.
+		do
+			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (-1, 0))
+		end
+
+	delete_selection is
+			-- Delete the current selection.
+		do
+			cwin_send_message (item, Wm_clear, 0, 0)
+		end
+
+	cut_selection is
+			-- Cut the current selection to the clipboard.
+		do
+			cwin_send_message (item, Wm_cut, 0, 0)
+		end
+
+	copy_selection is
+			-- Copy the current selection to the clipboard.
+		do
+			cwin_send_message (item, Wm_copy, 0, 0)
+		end
+
+	paste (index: INTEGER) is
+			-- Insert the string which is in the 
+			-- Clipboard at the `index' postion in the
+			-- text.
+			-- If the Clipboard is empty, it does nothing. 
+		local
+			pos: INTEGER
+		do
+			cwin_send_message (item, Wm_paste, 0, 0)
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
@@ -224,15 +272,6 @@ feature {NONE} -- Inapplicable
 
 	set_caret_position (a_position: INTEGER) is
 			-- Set the caret position with `position'.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	clip_paste is
-			-- Paste at the current caret position the
-			-- content of the clipboard.
 		do
 			check
 				Inapplicable: False
@@ -383,21 +422,32 @@ feature {NONE} -- Wel implementation
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
-feature {NONE} -- Inapplicable
+	set_selection (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) the text between 
+			-- `start_pos' and `end_pos'. Both `start_pos' and
+			-- `end_pos' are selected.
+		do
+			cwin_send_message (item, Cb_seteditsel, 0, cwin_make_long (start_pos, end_pos))
+		end
 
 	wel_selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			check
-				Inapplicable: False
-			end
+			Result := cwin_lo_word (cwin_send_message_result (item, Cb_geteditsel, 0, 0))
 		end
 
 	wel_selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			check
-				Inapplicable: False
+			Result := cwin_hi_word (cwin_send_message_result (item, Cb_geteditsel, 0, 0))
+		end
+
+	clip_paste is
+			-- Paste at the current caret position the
+			-- content of the clipboard.
+		do
+			Check
+				Never_called: False
 			end
 		end
 

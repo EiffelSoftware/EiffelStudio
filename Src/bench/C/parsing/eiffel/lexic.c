@@ -2155,7 +2155,7 @@ static int get_char()
 	/* Try to recognize an eiffel character */
 
 	char *s, c;
-	int	i, char_value;
+	int	char_value;
 
 	s = token_str;		/* Statically allocated buffer */
 	inherit_context = 0;

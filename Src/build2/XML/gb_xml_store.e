@@ -57,83 +57,29 @@ feature {GB_XML_HANDLER} -- Implementation
 	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
 			-- Add XML representation of `an_object' to `element'.
 		local
-			gb_cell_object: GB_CELL_OBJECT
-			gb_container_object: GB_CONTAINER_OBJECT
-			gb_primitive_object: GB_PRIMITIVE_OBJECT
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			gb_titled_window_object: GB_TITLED_WINDOW_OBJECT
 			new_widget_element: XML_ELEMENT
-			gb_menu_bar_object: GB_MENU_BAR_OBJECT
-			gb_menu_object: GB_MENU_OBJECT
-			gb_tree_item_object: GB_TREE_ITEM_OBJECT
-			
+			gb_parent_object: GB_PARENT_OBJECT
 		do
 			output_attributes (an_object, element, add_names)
-				gb_titled_window_object ?= an_object
-				if gb_titled_window_object /= Void then
-					if not gb_titled_window_object.layout_item.is_empty then
-						layout_item ?= gb_titled_window_object.layout_item
-							from
-								layout_item.start
-							until
-								layout_item.off
-							loop
-								current_layout_item ?= layout_item.item
-								new_widget_element := create_widget_instance (element, current_layout_item.object.type)
-								element.force_last (new_widget_element)
-								add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
-								layout_item.forth
-							end
-					end
-				else
-				gb_cell_object ?= an_object
-				if gb_cell_object /= Void then
-					if not gb_cell_object.layout_item.is_empty then
-						layout_item ?= gb_cell_object.layout_item.first
-						new_widget_element := create_widget_instance (element, layout_item.object.type)
+			gb_parent_object ?= an_object
+				-- We check that the object may have children.
+			if gb_parent_object /= Void then
+				layout_item ?= gb_parent_object.layout_item
+				if layout_item /= Void and then not layout_item.is_empty then
+					from
+						layout_item.start	
+					until
+						layout_item.off
+					loop
+						current_layout_item ?= layout_item.item
+						new_widget_element := create_widget_instance (element, current_layout_item.object.type)
 						element.force_last (new_widget_element)
-						add_new_object_to_output (layout_item.object, new_widget_element, add_names)
-					end
-				else
-					gb_container_object ?= an_object
-					if gb_container_object /= Void then
-						layout_item := gb_container_object.layout_item	
-					end
-					gb_primitive_object ?= an_object
-					if gb_primitive_object /= Void then
-						layout_item ?= gb_primitive_object.layout_item
-					end
-					
-					gb_menu_bar_object ?= an_object
-					if gb_menu_bar_object /= Void then
-						layout_item ?= gb_menu_bar_object.layout_item
-					end
-					
-					gb_menu_object ?= an_object
-					if gb_menu_object /= Void then
-						layout_item ?= gb_menu_object.layout_item
-					end
-					
-					gb_tree_item_object ?= an_object
-					if gb_tree_item_object /= Void then
-						layout_item ?= gb_tree_item_object.layout_item
-					end
-
-					if layout_item /= Void and then not layout_item.is_empty then
-						from
-							layout_item.start	
-						until
-							layout_item.off
-						loop
-							current_layout_item ?= layout_item.item
-							new_widget_element := create_widget_instance (element, current_layout_item.object.type)
-							element.force_last (new_widget_element)
-							add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
-							layout_item.forth
-						end
+						add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
+						layout_item.forth
 					end
 				end
-				end
+			end
 		end
 		
 		

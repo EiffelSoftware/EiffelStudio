@@ -13,12 +13,6 @@ feature {NONE} -- Initialization
 		require
 			non_void_cmd: a_cmd /= Void;
 			non_void_parent: a_parent /= Void;
-		do
-			initialize_button (a_cmd, a_parent);
-		end;
-
-	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
-			-- Initialize the button part of Current.
 		deferred
 		end;
 

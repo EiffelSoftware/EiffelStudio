@@ -134,8 +134,6 @@ feature {NONE} -- Initialization
 			hbox.set_padding (Small_padding_size)
 			hbox.set_border_width (Default_border_size)
 			create notebook
-			notebook.set_minimum_size (200, 200)
-
 			create general_tab
 			notebook.extend (general_tab)
 			notebook.set_item_text (general_tab, general_tab.name)
@@ -179,6 +177,15 @@ feature {NONE} -- Initialization
 				-- Closing window
 			close_request_actions.wipe_out
 			close_request_actions.put_front (agent cancel_action)
+			
+				-- Minimum size of notebook.
+				-- We must only set it if it is not smaller than the current minimum
+				-- size, as this is affected by the size of the fonts used. If we
+				-- do set it to smaller, then this allows the contents to become bigger
+				-- than it is, and with large fonts, this cuts off some texts.
+			if notebook.minimum_width < 200 and notebook.minimum_height < 200 then
+				notebook.set_minimum_size (200, 200)	
+			end
 		end
 		
 	extend_button (b: EV_BOX; but: EV_BUTTON) is

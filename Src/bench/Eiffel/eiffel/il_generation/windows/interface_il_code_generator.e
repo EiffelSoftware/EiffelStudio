@@ -71,9 +71,7 @@ feature -- IL Generation
 			current_class_token := class_type_token (current_type_id)
 
 				-- Define all features used by ISE runtime.
-			if class_c.simple_conform_to (System.any_class.compiled_class) then
-				define_runtime_features (class_type)
-			end
+			define_runtime_features (class_type)
 
 				-- First generate anchored features as they might be needed by current class
 				-- features for code generation when current class is frozen.

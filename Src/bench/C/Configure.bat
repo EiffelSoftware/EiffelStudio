@@ -1,47 +1,40 @@
 @echo off
 if .%1. == .clean. goto clean
+if .%1. == .cleand. goto cleand
 if .%1. == .win32. goto win32
+if .%1. == .win64. goto win64
 :usage
 echo make ...
 echo     Options:
-echo        clean   - remove unecessary files
+echo        clean   - remove unecessary files including desc
+echo        cleand - remove unecessary files excluding desc
 echo        win32 b - build a Win32 run-time for Borland
-echo        win32 g - build a Win32 run-time for GCC-cygwin
-echo        win32 l - build a Win32 run-time for lcc
 echo        win32 m - build a Win32 run-time for Microsoft
+echo        win64 m - build a Win64 run-time for Microsoft
 goto end
 :win32
 if .%2. == .. goto usage
-if NOT .%2. == .b. goto msoft
-copy config.w32 eif_config.h
-copy config.bsh config.sh
+if NOT .%2. == .b. goto msc
+copy CONFIGS\windows-bcb-x86 config.sh
+set remove_desc=1
 goto process
-:msoft
-if NOT .%2. == .m. goto gcc
-copy config.w32 eif_config.h
-copy config.msh config.sh
+:msc
+if NOT .%2. == .m. goto usage
+copy CONFIGS\windows-msc-x86 config.sh
 goto process
-:gcc
-if NOT .%2. == .g. goto lcc
-copy config.w32 eif_config.h
-copy config.gsh config.sh
-goto process
-:lcc
-if NOT .%2. == .l. goto usage
-copy config.w32 eif_config.h
-copy config.lsh config.sh
+:win64
+if .%2. == .. goto usage
+if NOT .%2. == .m. goto usage
+copy CONFIGS\windows-msc-x86-64 config.sh
+set remove_desc=1
 goto process
 :process
-type config.sh
-echo The above is the configuration file for the
-echo chosen C++ compiler. If the above configurations
-echo are incorrect, then abort this program (control + break and then
-echo press any key) and edit the configuration file:
-echo     - config.msh (Configuration file for Visual C++)
-echo     - config.bsh (Configuration file for Borland C++)
-echo     - config.gsh (Configuration file for GCC)
-echo     - config.lsh (Configuration file for Lcc)
-pause
+
+bash eif_config_h.SH
+cd run-time
+bash eif_size_h.SH
+cd ..
+
 echo @echo off > make.w32
 echo $make %%1>> make.w32
 rt_converter.exe make.w32 make.w32
@@ -53,12 +46,12 @@ copy eif_config.h run-time
 copy eif_portable.h run-time
 copy config.sh bench
 copy make.w32 bench\make.bat
-copy config.sh minilzo
-copy make.w32 minilzo\make.bat
 copy config.sh console
 copy make.w32 console\make.bat
-copy config.sh desc
-copy make.w32 desc\make.bat
+if not %remove_desc% == 1 (
+	copy config.sh desc
+	copy make.w32 desc\make.bat
+)
 copy config.sh ipc\app
 copy make.w32 ipc\app\make.bat
 copy config.sh ipc\daemon
@@ -73,8 +66,6 @@ copy config.sh idrs
 copy make.w32 idrs\make.bat
 copy config.sh run-time
 copy make.w32 run-time\make.bat
-copy run-time\size.win run-time\eif_size.h
-copy run-time\size.win eif_size.h
 del make.w32
 rem
 rem Create OBJDIR, LIB, and FREELIB in run-time
@@ -99,8 +90,10 @@ cd ..\console
 ..\rt_converter.exe makefile-win.sh makefile
 cd ..\bench
 ..\rt_converter.exe makefile-win.sh makefile
-cd ..\minilzo
-..\rt_converter.exe makefile-win.sh makefile
+if not %remove_desc% == 1 (
+	cd ..\desc
+	..\rt_converter.exe makefile-win.sh makefile
+)
 cd ..\ipc\daemon
 ..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\ewb
@@ -109,9 +102,7 @@ cd ..\app
 ..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\shared
 ..\..\rt_converter.exe makefile-win.sh makefile
-cd ..\..\desc
-..\rt_converter.exe makefile-win.sh makefile
-cd ..
+cd ..\..
 rem
 rem Call make
 rem
@@ -135,13 +126,15 @@ echo cd platform>> make.bat
 echo call make>> make.bat
 echo cd ..\bench >> make.bat
 echo call make >> make.bat
-echo cd ..\minilzo >> make.bat
-echo call make >> make.bat
-echo cd ..\desc>> make.bat
-echo call make>> make.bat
+if not %remove_desc% == 1 (
+	echo cd ..\desc>> make.bat
+	echo call make>> make.bat
+)
 echo cd ..>> make.bat
 call make
 goto end
+:cleand
+set remove_desc=1
 :clean
 del cleanup.bat
 echo del *.err >> cleanup.bat
@@ -168,8 +161,9 @@ echo del cleanup.bat >> cleanup.bat
 
 copy cleanup.bat console\
 copy cleanup.bat bench\
-copy cleanup.bat minilzo\
-copy cleanup.bat desc\
+if not %remove_desc% == 1 (
+	copy cleanup.bat desc\
+)
 copy cleanup.bat ipc\app\
 copy cleanup.bat ipc\daemon\
 copy cleanup.bat ipc\ewb\
@@ -183,12 +177,12 @@ copy cleanup.bat run-time\FREELIB\
 
 cd bench
 call cleanup
-cd ..\minilzo
-call cleanup
 cd ..\console
 call cleanup
-cd ..\desc
-call cleanup
+if not %remove_desc% == 1 (
+	cd ..\desc
+	call cleanup
+)
 cd ..\ipc\app
 call cleanup
 cd ..\daemon
@@ -224,4 +218,5 @@ del *.$$$
 del cleanup.bat
 
 :end
+set remove_desc=
 echo Make completed

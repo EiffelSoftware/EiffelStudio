@@ -9,6 +9,8 @@ indexing
 
 class SCROLL_LIST 
 
+obsolete
+		"Use SCROLLABLE_LIST instead - it has the same semantics as a LINKED_LIST."
 inherit
 
 	FONTABLE
@@ -104,7 +106,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.scroll_list (Current, man, is_fixed);
+			implementation := toolkit.scroll_list (Current, man, is_fixed, a_parent);
 			implementation.set_widget_default;
 			list_imp.set_single_selection;
 		end;

@@ -35,6 +35,7 @@ inherit
 			get_item as wel_get_item,
 			insert_item as wel_insert_item
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,

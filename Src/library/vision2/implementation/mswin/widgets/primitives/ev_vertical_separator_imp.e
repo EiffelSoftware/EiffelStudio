@@ -26,7 +26,10 @@ feature -- Status setting
    	set_default_minimum_size is
    			-- Plateform dependant initializations.
    		do
-			set_minimum_width (2)
+			internal_set_minimum_width (2)
+			if parent_imp /= Void then
+				notify_change (1)
+			end
  		end
 
 feature {NONE} -- Implementation

@@ -39,6 +39,7 @@ inherit
 			set_text as wel_set_text,
 			destroy as wel_destroy
 		undefine
+			window_process_message,
 			remove_command,
 			set_width,
 			set_height,
@@ -108,8 +109,11 @@ feature -- Status setting
 			check
 				font_not_void: fw /= Void
 			end
-			set_minimum_width (fw.string_width (text) + 10)
-			set_minimum_height (7 * fw.height // 4 - 2)
+			internal_set_minimum_width (fw.string_width (text) + 10)
+			internal_set_minimum_height (7 * fw.height // 4 - 2)
+			if parent_imp /= Void then
+				notify_change (1 + 2)
+			end
 		end
 
 feature {NONE} -- WEL Implementation

@@ -21,12 +21,12 @@ inherit
 		
 	GB_CONSTANTS
 		
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 
 feature {NONE} -- Initialization
 

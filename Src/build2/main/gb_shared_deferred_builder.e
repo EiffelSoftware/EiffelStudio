@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	GB_ACCESSIBLE_DEFERRED_BUILDER
+	GB_SHARED_DEFERRED_BUILDER
 
 feature {NONE} -- Implementation
 

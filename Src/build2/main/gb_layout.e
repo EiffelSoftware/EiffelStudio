@@ -17,7 +17,7 @@ inherit
 			
 	GB_DEFAULT_STATE
 	
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 		undefine
 			default_create, copy, is_equal
 		end

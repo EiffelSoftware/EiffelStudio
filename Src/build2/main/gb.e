@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 		
-	GB_ACCESSIBLE_XML_HANDLER
+	GB_SHARED_XML_HANDLER
 		undefine
 			default_create, copy
 		end

@@ -33,7 +33,7 @@ feature -- Access
 			-- `Result' is representation of `Current'
 			-- unique each time.
 		do
-			Result := (new_object ((create {GB_ACCESSIBLE_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))
+			Result := (new_object ((create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))
 		ensure
 			result_not_void: Result /= Void
 		end

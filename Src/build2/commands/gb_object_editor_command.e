@@ -14,13 +14,13 @@ inherit
 			new_toolbar_item
 		end
 		
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 	
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 	
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 	
-	GB_ACCESSIBLE_OBJECT_EDITOR
+	GB_SHARED_OBJECT_EDITORS
 	
 	GB_CONSTANTS
 
@@ -74,7 +74,6 @@ feature {NONE} -- Implementation
 				button_tool_bar_parented: button.parent.parent /= Void
 			local
 				container: EV_CONTAINER
-				widget: EV_WIDGET
 				an_object_editor: GB_OBJECT_EDITOR
 				tool_bar: EV_TOOL_BAR
 				found: BOOLEAN

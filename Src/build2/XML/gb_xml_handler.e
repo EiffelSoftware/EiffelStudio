@@ -18,7 +18,7 @@ inherit
 	
 	TOE_TREE_FACTORY
 	
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 		
 feature -- Basic operations
 

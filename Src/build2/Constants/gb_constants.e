@@ -198,7 +198,7 @@ feature -- XML saving
 	filename: FILE_NAME is
 			-- File to be generated.
 		local
-			accessible_status: GB_ACCESSIBLE_SYSTEM_STATUS
+			accessible_status: GB_SHARED_SYSTEM_STATUS
 		do
 			create accessible_status
 			create Result.make_from_string (accessible_status.system_status.current_project_settings.project_location)

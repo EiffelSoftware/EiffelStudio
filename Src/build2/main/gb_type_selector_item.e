@@ -20,12 +20,12 @@ inherit
 			default_create, is_equal, copy
 		end
 		
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 		undefine
 			default_create, is_equal, copy
 		end
 		
-	GB_ACCESSIBLE_HISTORY
+	GB_SHARED_HISTORY
 		undefine
 			default_create, is_equal, copy
 		end
@@ -34,7 +34,7 @@ inherit
 		-- We could recursively find the tree containing `Current',
 		-- and do a reverse assignment onto a GB_TYPE_SELECTOR.
 		-- Which is better?
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 		undefine
 			default_create, is_equal, copy
 		end
@@ -56,8 +56,6 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current' and initialize pick and drop transport.
-		local
-			last_generated_object: GB_OBJECT
 		do
 			Precursor {EV_TREE_ITEM}
 			set_pebble_function (agent generate_transportable)

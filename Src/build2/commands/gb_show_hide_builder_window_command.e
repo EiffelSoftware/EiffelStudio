@@ -10,7 +10,7 @@ inherit
 
 	GB_TWO_STATE_COMMAND
 	
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 
 create
 	make

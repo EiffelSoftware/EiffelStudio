@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 
 feature {NONE} -- Implementation
 

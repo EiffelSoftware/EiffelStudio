@@ -22,7 +22,7 @@ inherit
 			implementation as old_imp
 		end
 		
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 		undefine
 			default_create, copy, is_equal
 		end

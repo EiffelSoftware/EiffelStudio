@@ -16,7 +16,7 @@ inherit
 	
 	TOE_TREE_FACTORY
 	
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 	
 feature -- Basic operations
 

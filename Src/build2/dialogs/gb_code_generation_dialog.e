@@ -19,7 +19,7 @@ inherit
 			default_create, copy
 		end
 		
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 		undefine
 			default_create, copy
 		end

@@ -22,17 +22,17 @@ inherit
 			implementation as old_imp
 		end
 
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 		undefine
 			copy, default_create, is_equal
 		end
 		
-	GB_ACCESSIBLE_OBJECT_EDITOR
+	GB_SHARED_OBJECT_EDITORS
 		
 	GB_CONSTANTS
 

@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	GB_SHARED_OBJECT_EDITOR_HANDLER
+	GB_SHARED_OBJECT_EDITORS
 	
 inherit
 	

@@ -14,7 +14,7 @@ inherit
 			default_create
 		end
 		
-	GB_ACCESSIBLE_OBJECT_EDITOR
+	GB_SHARED_OBJECT_EDITORS
 		
 	INTERNAL
 		undefine
@@ -28,12 +28,12 @@ inherit
 			default_create
 		end
 		
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 		undefine
 			default_create
 		end
 		
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 
 feature -- Initialization
 		

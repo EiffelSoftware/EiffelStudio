@@ -21,23 +21,23 @@ inherit
 			{NONE} all
 		end
 		
-	GB_ACCESSIBLE
+	GB_SHARED_TOOLS
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	GB_ACCESSIBLE_OBJECT_EDITOR
+	GB_SHARED_OBJECT_EDITORS
 		
 	GB_DEFAULT_STATE
 	
-	GB_ACCESSIBLE_XML_HANDLER
+	GB_SHARED_XML_HANDLER
 		undefine
 			default_create, copy
 		end
 
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 		
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 		undefine
 			default_create, copy, is_equal
 		end
@@ -125,9 +125,7 @@ feature {NONE} -- Implementation
 		require
 			menus_not_initialized: menus_initialized = False
 		local
-			help_about, file_exit, view_menu_display_window,
-			view_menu_builder_window, view_menu_history, project_menu_build,
-			project_menu_settings,  file_new: EV_MENU_ITEM
+			help_about, file_exit, project_menu_settings: EV_MENU_ITEM
 			menu_separator: EV_MENU_SEPARATOR
 			
 		do

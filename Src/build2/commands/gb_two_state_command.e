@@ -18,7 +18,7 @@ inherit
 			new_menu_item
 		end
 		
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 
 feature {NONE} -- Initialization
 

@@ -18,12 +18,12 @@ inherit
 			default_create, copy
 		end
 		
-	GB_ACCESSIBLE_HISTORY
+	GB_SHARED_HISTORY
 		undefine
 			default_create, copy
 		end
 		
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 
 create
 	default_create

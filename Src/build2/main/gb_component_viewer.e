@@ -18,7 +18,7 @@ inherit
 			copy, default_create
 		end
 		
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 		undefine
 			copy, default_create
 		end

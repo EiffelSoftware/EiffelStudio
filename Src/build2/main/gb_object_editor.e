@@ -25,26 +25,26 @@ inherit
 
 	GB_DEFAULT_STATE
 	
-	GB_ACCESSIBLE_OBJECT_EDITOR
+	GB_SHARED_OBJECT_EDITORS
 		
 	GB_NAMING_UTILITIES
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	GB_ACCESSIBLE_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 		
-	GB_ACCESSIBLE_SYSTEM_STATUS
+	GB_SHARED_SYSTEM_STATUS
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	GB_ACCESSIBLE_OBJECT_HANDLER
+	GB_SHARED_OBJECT_HANDLER
 		undefine
 			default_create, copy, is_equal
 		end
 		
-	GB_ACCESSIBLE_HISTORY
+	GB_SHARED_HISTORY
 		undefine
 			default_create, copy, is_equal
 		end
@@ -232,7 +232,7 @@ feature -- Status setting
 			end
 		end
 
-feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
+feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 		
 	end_name_change_on_object is
 			-- Update the object to reflect the edited name.
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 	control_holder: EV_VERTICAL_BOX
 		-- Holds the controls, and is placed in the scrollable area.
 	
-feature {GB_ACCESSIBLE_OBJECT_EDITOR} -- Implementation
+feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 
 	update_name_field is
 			-- Update `name_field' to reflect `object.name'.

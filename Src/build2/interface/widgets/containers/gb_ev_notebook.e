@@ -16,7 +16,7 @@ inherit
 			modify_from_xml_after_build
 		end
 		
-	GB_ACCESSIBLE_DEFERRED_BUILDER
+	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
 		end
@@ -127,7 +127,6 @@ feature {GB_XML_STORE} -- Output
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
-			current_element: XML_ELEMENT
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do

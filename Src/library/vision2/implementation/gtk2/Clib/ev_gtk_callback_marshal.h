@@ -22,7 +22,7 @@ void c_ev_gtk_callback_marshal_init
 void c_ev_gtk_callback_marshal_destroy ();
 
 guint c_ev_gtk_callback_marshal_signal_connect
-	(GtkObject*, const gchar*, EIF_OBJECT);
+	(GtkObject*, const gchar*, EIF_OBJECT, gboolean);
 
 guint c_ev_gtk_callback_marshal_signal_connect_true
 	(GtkObject*, const gchar*, EIF_OBJECT);
@@ -45,6 +45,9 @@ guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.5  2004/06/24 17:28:15  king
+// Added extra parameter for invoking signal handler before or after default signal handler
+//
 // Revision 1.4  2004/02/12 22:39:47  king
 // Removed redundant idle connection code
 //

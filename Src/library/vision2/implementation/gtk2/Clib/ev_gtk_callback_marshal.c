@@ -86,7 +86,8 @@ void dummy_callback (void)
 guint c_ev_gtk_callback_marshal_signal_connect (
     GtkObject* c_object,
     const gchar* signal,
-    EIF_OBJECT agent
+    EIF_OBJECT agent,
+    gboolean invoke_after_handler
 )
 		// Connect an `agent' to a named `signal' emitted by a GTK `c_object'.
 		// Return connection id.
@@ -107,7 +108,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
 	GClosure *closure;
 	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)eif_wean);
 	g_closure_set_marshal (closure, c_ev_gtk_new_callback_marshal);
-	connection_id = g_signal_connect_closure (c_object, signal, closure, FALSE);
+	connection_id = g_signal_connect_closure (c_object, signal, closure, invoke_after_handler);
 	return connection_id;
 }
 

@@ -1,14 +1,13 @@
 <document title="Reference for `eif_string'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_plug.h"
+<bold>#include "eif_plug.h"
 
-	EIF_REFERENCE eif_string (char *</bold> <italic>string</italic><bold>);</bold>
-		</code_block>
+EIF_REFERENCE eif_string (char *</bold> <italic>string</italic><bold>);</bold></code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 

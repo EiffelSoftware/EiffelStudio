@@ -1,14 +1,13 @@
 <document title="Reference for `attribute_exists'" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code_block>
-	<bold>#include "eif_cecil.h"</bold>
+<bold>#include "eif_cecil.h"</bold>
 
-	<bold>EIF_BOOLEAN attribute_exists (EIF_REFERENCE</bold> <italic>object</italic>, <bold>char *</bold> <italic>name</italic><bold>)</bold>; 
-		</code_block>
+<bold>EIF_BOOLEAN attribute_exists (EIF_REFERENCE</bold> <italic>object</italic>, <bold>char *</bold> <italic>name</italic><bold>)</bold>;</code_block>
 		<heading>
 			<size>2</size>DESCRIPTION
 		</heading>The 
@@ -30,5 +29,5 @@
 			<size>2</size>SEE ALSO
 		</heading>
 		<bold>eif_attribute</bold> (1). 
-		<bold/>
+		<bold></bold>
 	</paragraph></document>

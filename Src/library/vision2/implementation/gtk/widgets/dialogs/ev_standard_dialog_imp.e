@@ -143,8 +143,10 @@ feature {NONE} -- Implementation
 			until
 				is_destroyed or else selected_button /= Void
 			loop
+				if feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+					App_implementation.call_idle_actions
+				end
 				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
-				App_implementation.call_idle_actions
 			end
 		end
 		

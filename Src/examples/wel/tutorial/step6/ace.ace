@@ -8,7 +8,7 @@ default
 	assertion (all)
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\examples\wel\tutorial\step6\methode1"
+	root_cluster:	"$ISE_EIFFEL\examples\wel\tutorial\step6"
 
 		-- WEL
 	all wel: 		"$ISE_EIFFEL\library\wel"

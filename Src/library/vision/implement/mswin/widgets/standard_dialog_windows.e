@@ -16,10 +16,9 @@ inherit
 			default_style,
 			default_ex_style,
 			popup,
-			on_kill_focus,
 			on_paint,
-			on_set_focus,
 			on_size,
+			on_set_focus,
 			realize_current,
 			realize,	
 			set_x_y,
@@ -34,10 +33,9 @@ inherit
 			default_style,
 			default_ex_style,
 			popup,
-			on_kill_focus,
 			on_paint,
-			on_set_focus,
 			on_size,
+			on_set_focus,
 			realize_current,
 			realize,	
 			set_x_y,
@@ -87,7 +85,6 @@ feature -- Initialization
 			create_buttons
 			create_controls
 			set_fonts
-			set_default_button
 		end
 
 	realize is
@@ -539,16 +536,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	set_default_button is
-			-- Set default button.
-		deferred
-		end
-
-	unset_default_button is
-			-- Unset default button.
-		deferred
-		end
-
 	icon: WEL_ICON is
 			-- The icon
 		do
@@ -666,15 +653,7 @@ feature {NONE} -- Implementation
 	on_set_focus is
 			-- Focus on default.
 		do
-			set_default_button
 			determine_focus
-		end
-
-	on_kill_focus is
-			-- Reset Default button
-		do
-			unset_default_button
-			invalidate
 		end
 
 	button_width (a_label: STRING): INTEGER is

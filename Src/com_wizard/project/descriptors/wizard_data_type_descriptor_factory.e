@@ -43,7 +43,7 @@ feature -- Basic operations
 				create l_automation_creator
 				Result := l_automation_creator.create_descriptor (a_type_desc)
 			end
-			if is_unknown (l_var_type) then
+			if is_iunknown (l_var_type) then
 				a_system_description.set_iunknown
 			end
 		end

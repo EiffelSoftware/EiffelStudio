@@ -125,12 +125,12 @@ feature -- Basic operations
 				need_free_memory := True
 				free_memory_function_name := "rt_ce.free_memory_bstr"
 
-			elseif is_dispatch (a_type) then
+			elseif is_idispatch (a_type) then
 				ce_function_name.append ("ccom_ce_pointed_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
 				is_interface_pointer := True
 
-			elseif is_unknown (a_type) then
+			elseif is_iunknown (a_type) then
 				ce_function_name.append ("ccom_ce_pointed_unknown")
 				ec_function_name.append ("ccom_ec_unknown")
 				is_interface_pointer := True

@@ -178,10 +178,10 @@ feature {NONE} -- Implementation
 				elseif is_character (l_visitor.vt_type) or is_unsigned_char (l_visitor.vt_type) then
 					cecil_function_type := Eif_character_function
 					cecil_function_name := Eif_character_function_name					
-				elseif is_real4 (l_visitor.vt_type) then
+				elseif is_real (l_visitor.vt_type) then
 					cecil_function_type := Eif_real_function
 					cecil_function_name := Eif_real_function_name					
-				elseif is_real8 (l_visitor.vt_type) then
+				elseif is_double (l_visitor.vt_type) then
 					cecil_function_type := Eif_double_function
 					cecil_function_name := Eif_double_function_name
 				elseif l_visitor.vt_type = Vt_bool then

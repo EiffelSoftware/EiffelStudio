@@ -330,8 +330,13 @@ feature {NONE} -- Implementation
 		do
 			l_type := visitor.vt_type
 			create Result.make (1000)
-			Result.append ("%N%T")
-			Result.append (argument_type_set_up (position, l_type))
+
+			if not (is_variant (l_type) and visitor.is_structure) then
+				-- We are assigning variants directly into the `arguments' array
+				-- so there is no need to setup the type
+				Result.append ("%N%T")
+				Result.append (argument_type_set_up (position, l_type))
+			end
 			
 			if visitor.is_basic_type or visitor.is_enumeration or is_hresult (visitor.vt_type) or is_error (visitor.vt_type) then
 				create l_value.make (100)
@@ -371,7 +376,15 @@ feature {NONE} -- Implementation
 				Result.append (");%N%T")
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), l_value, visitor))
 
-			elseif visitor.is_array_basic_type or visitor.is_structure_pointer or (is_variant (l_type) and visitor.is_structure) then
+			elseif is_variant (l_type) and visitor.is_structure then
+				Result.append ("%N%T")
+				Result.append ("arguments [")
+				Result.append_integer (position)
+				Result.append ("] = *")
+				Result.append (name)
+				Result.append (";%N%T")
+
+			elseif visitor.is_array_basic_type or visitor.is_structure_pointer then
 				Result.append ("%N%T")
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
 
@@ -483,23 +496,19 @@ feature {NONE} -- Implementation
 			Result.append (" = (")
 
 			if visitor.is_coclass_pointer or visitor.is_interface_pointer then
-				if is_unknown (visitor.vt_type) then
+				if is_iunknown (visitor.vt_type) then
 					Result.append ("IUnknown *")
 				else
 					Result.append ("IDispatch *")
 				end
 			elseif visitor.is_coclass_pointer_pointer or visitor.is_interface_pointer_pointer then
-				if is_unknown (visitor.vt_type) then
+				if is_iunknown (visitor.vt_type) then
 					Result.append ("IUnknown **")
 				else
 					Result.append ("IDispatch **")
 				end
 			else
-				if is_variant (visitor.vt_type) and visitor.is_structure then
-					Result.append ("VARIANT *")
-				else
-					Result.append (visitor.c_type)
-				end
+				Result.append (visitor.c_type)
 			end
 			Result.append (")")
 			Result.append (value)

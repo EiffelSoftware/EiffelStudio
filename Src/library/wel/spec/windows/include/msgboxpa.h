@@ -9,7 +9,15 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void cwel_msgboxparams_set (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_MSGBOXPARAMS__ */
 

@@ -15,14 +15,29 @@
 
 #include "eif_eiffel.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef EIF_INTEGER (* EIF_EDITSTREAM_PROCEDURE)
 	(EIF_REFERENCE,     /* WEL_EDIT_STREAM Eiffel object */
 	 EIF_POINTER, /* buffer * */
 	 EIF_INTEGER  /* length */
 	 );
 
+
+#ifdef __cplusplus
+}
+#endif
+
 #ifndef __WEL_GLOBALS__
 #	include "wel_globals.h"
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* Eiffel routine signature for `internal_callback' */
@@ -84,6 +99,12 @@ extern EIF_EDITSTREAM_PROCEDURE wel_editstream_procedure;
 		/* Set `wel_editstream_in' with `value' */
 
 #endif
+
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* __WEL_EDITSTREAM__ */
 
 /*

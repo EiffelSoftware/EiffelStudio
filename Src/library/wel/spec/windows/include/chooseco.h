@@ -9,6 +9,10 @@
 #	include <cdlg.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_choose_color_set_lstructsize(_ptr_, _value_) (((CHOOSECOLOR *) _ptr_)->lStructSize = (DWORD) (_value_))
 #define cwel_choose_color_set_hwndowner(_ptr_, _value_) (((CHOOSECOLOR *) _ptr_)->hwndOwner = (HWND) (_value_))
 #define cwel_choose_color_set_rgbresult(_ptr_, _value_) (((CHOOSECOLOR *) _ptr_)->rgbResult = (COLORREF) (_value_))
@@ -22,6 +26,10 @@
 #define cwel_color_palette_get_i_th_color(_ptr_, _index_) ((EIF_INTEGER) (((COLORREF *) _ptr_) [_index_]))
 
 #define cwel_color_palette_set_i_th_color(_ptr_, _index_, _value_) ((((COLORREF *) _ptr_) [_index_] = (COLORREF) _value_))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_CHOOSECOLOR__ */
 

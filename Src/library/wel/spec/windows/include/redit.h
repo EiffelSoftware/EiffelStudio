@@ -13,8 +13,16 @@
 #	include <richedit.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef EIF_BORLAND
 #define SCF_ALL			0x0004
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* __WEL_RICHEDIT__ */

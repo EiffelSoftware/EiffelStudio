@@ -9,8 +9,16 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_nm_comboboxex_get_hdr(_ptr_) (&(((NMCOMBOBOXEX *) _ptr_)->hdr))
 #define cwel_nm_comboboxex_get_ceitem(_ptr_) (&(((NMCOMBOBOXEX *) _ptr_)->ceItem))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_NM_COMBOBOXEX__ */
 

@@ -13,6 +13,10 @@
 #	include "wel.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef EIF_INTEGER (* EIF_WNDPROC)
 	(EIF_OBJ,     /* WEL_DISPATCHER Eiffel object */
 	 EIF_POINTER, /* hwnd */
@@ -68,6 +72,10 @@ BOOL CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
 #	define cwel_release_dispatcher_object (eif_wean (dispatcher)) 
 		/* Set `dispather' with `addr' */
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* __WEL_DISPATCHER__ */

@@ -9,9 +9,17 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tc_keydown_get_hdr(_ptr_) (&(((TC_KEYDOWN *) _ptr_)->hdr))
 #define cwel_tc_keydown_get_wvkey(_ptr_) (((TC_KEYDOWN *) _ptr_)->wVKey)
 #define cwel_tc_keydown_get_flags(_ptr_) (((TC_KEYDOWN *) _ptr_)->flags)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TC_KEYDOWN__ */
 

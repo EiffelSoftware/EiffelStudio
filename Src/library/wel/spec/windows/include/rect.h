@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_rect_set_left(_ptr_, _value_) (((RECT *) _ptr_)->left = (int) (_value_))
 #define cwel_rect_set_top(_ptr_, _value_) (((RECT *) _ptr_)->top = (int) (_value_))
 #define cwel_rect_set_right(_ptr_, _value_) (((RECT *)_ptr_)->right = (int) (_value_))
@@ -20,6 +24,10 @@
 #define cwel_rect_get_bottom(_ptr_) ((((RECT *) _ptr_)->bottom))
 
 #define cwin_pt_in_rect(_ptr_, _point_) ((EIF_BOOLEAN) PtInRect ((RECT *) _ptr_, *((POINT *) _point_)))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_RECT__ */
 

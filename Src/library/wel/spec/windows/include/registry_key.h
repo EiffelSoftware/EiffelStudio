@@ -13,6 +13,11 @@
 #	include "registry.h"
 #endif
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwin_reg_key_name(_ptr_) (((REG_KEY *) _ptr_)->name)
 	
 #define	cwin_reg_key_class(_ptr_) (((REG_KEY *) _ptr_)->KeyClass)
@@ -20,6 +25,10 @@
 #define	cwin_reg_key_time(_ptr_) (((REG_KEY *) _ptr_)->LastWriteTime)
 
 #define cwin_reg_key_destroy(_ptr_) (free ((REG_KEY *)_ptr_))
+
+#ifdef __cplusplus
+}
+#endif
 		
 #endif  /* __WEL_REGISTRY_KEY__ */
 

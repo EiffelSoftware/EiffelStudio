@@ -9,11 +9,19 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_size_set_cx(_ptr_, _value_) (((SIZE *) _ptr_)->cx = (int) (_value_))
 #define cwel_size_set_cy(_ptr_, _value_) (((SIZE *) _ptr_)->cy = (int) (_value_))
 
 #define cwel_size_get_cx(_ptr_) ((EIF_INTEGER) (((SIZE *) _ptr_)->cx))
 #define cwel_size_get_cy(_ptr_) ((EIF_INTEGER) (((SIZE *) _ptr_)->cy))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_SIZE__ */
 

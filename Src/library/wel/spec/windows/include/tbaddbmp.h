@@ -9,11 +9,19 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tbaddbitmap_set_hinst(_ptr_,_value_) (((TBADDBITMAP *) _ptr_)->hInst = (HINSTANCE) (_value_))
 #define cwel_tbaddbitmap_set_nid(_ptr_,_value_) (((TBADDBITMAP *) _ptr_)->nID = (UINT) (_value_))
 
 #define cwel_tbaddbitmap_get_hinst(_ptr_) ((((TBADDBITMAP *) _ptr_)->hInst))
 #define cwel_tbaddbitmap_get_nid(_ptr_) ((((TBADDBITMAP *) _ptr_)->nID))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TOOLBAR_BITMAP__ */
 

@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tv_item_set_mask(_ptr_, _value_) (((TV_ITEM *) _ptr_)->mask = (UINT) (_value_))
 #define cwel_tv_item_set_hitem(_ptr_, _value_) (((TV_ITEM *) _ptr_)->hItem = (HTREEITEM) (_value_))
 #define cwel_tv_item_set_state(_ptr_, _value_) (((TV_ITEM *) _ptr_)->state = (UINT) (_value_))
@@ -30,6 +34,10 @@
 #define cwel_tv_item_get_iselectedimage(_ptr_) ((((TV_ITEM *) _ptr_)->iSelectedImage))
 #define cwel_tv_item_get_cchildren(_ptr_) ((((TV_ITEM *) _ptr_)->cChildren))
 #define cwel_tv_item_get_lparam(_ptr_) ((((TV_ITEM *) _ptr_)->lParam))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TREEVIEWITEM__ */
 

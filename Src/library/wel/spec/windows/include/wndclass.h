@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_wnd_class_set_style(_ptr_, _value_) (((WNDCLASS *) _ptr_)->style = (UINT) _value_)
 #define cwel_wnd_class_set_wnd_proc(_ptr_, _value_) (((WNDCLASS *) _ptr_)->lpfnWndProc = (WNDPROC) _value_)
 #define cwel_wnd_class_set_cls_extra(_ptr_, _value_) (((WNDCLASS *) _ptr_)->cbClsExtra = (int) _value_)
@@ -31,6 +35,10 @@
 #define cwel_wnd_class_get_menu_name(_ptr_) ((EIF_POINTER) (((WNDCLASS *) _ptr_)->lpszMenuName))
 #define cwel_wnd_class_get_class_name(_ptr_) ((EIF_POINTER) (((WNDCLASS *) _ptr_)->lpszClassName))
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_WNDCLASS__ */
 

@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_lv_column_set_mask(_ptr_, _value_) 		(((LV_COLUMN *) _ptr_)->mask = (UINT) (_value_))
 #define cwel_lv_column_set_fmt(_ptr_, _value_)			(((LV_COLUMN *) _ptr_)->fmt = (int) (_value_))
 #define cwel_lv_column_set_cx(_ptr_, _value_)			(((LV_COLUMN *) _ptr_)->cx = (int) (_value_))
@@ -24,6 +28,11 @@
 #define cwel_lv_column_get_cchtextmax(_ptr_)	(((LV_COLUMN *) _ptr_)->cchTextMax)
 /* Not define in Borlan C++
  * #define cwel_lv_column_get_iimage(_ptr_)		(((LV_COLUMN *) _ptr_)->iImage) */
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LISTVIEWCOLUMN__ */
 

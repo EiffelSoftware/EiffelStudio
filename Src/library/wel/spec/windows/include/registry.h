@@ -11,6 +11,11 @@
 
 #include "wel_reg_value.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //////////////////////////////////////////////////////////////
 //
 //  Structure used to store information about a key.
@@ -54,6 +59,10 @@ extern EIF_INTEGER cwin_reg_value_number(EIF_POINTER key);
 extern EIF_POINTER cwin_reg_connect_key(EIF_POINTER hostname, EIF_POINTER key);
 
 extern void cwin_reg_value_destroy(EIF_POINTER eif_value);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* __WEL_REGISTRY__ */
 

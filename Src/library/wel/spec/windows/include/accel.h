@@ -9,6 +9,11 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #define cwel_accel_set_fvirt(_ptr_, _value_) (((ACCEL *) _ptr_)->fVirt = (BYTE) (_value_))
 #define cwel_accel_set_key(_ptr_, _value_) (((ACCEL *) _ptr_)->key = (WORD) (_value_))
 #define cwel_accel_set_cmd(_ptr_, _value_) (((ACCEL *) _ptr_)->cmd = (WORD) (_value_))
@@ -16,6 +21,10 @@
 #define cwel_accel_get_fvirt(_ptr_) (((ACCEL *) _ptr_)->fVirt)
 #define cwel_accel_get_key(_ptr_) (((ACCEL *) _ptr_)->key)
 #define cwel_accel_get_cmd(_ptr_) (((ACCEL *) _ptr_)->cmd)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_ACCEL__ */
 

@@ -5,6 +5,11 @@
 
 #ifndef LANG_BELARUSIAN	/* MVC++ 4.1, BC++ 4.5 or BC++ 5.0 */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define LANG_BELARUSIAN                  0x23
 #define LANG_SERBIAN                     0x1a
 #define LANG_VIETNAMESE                  0x2a
@@ -81,6 +86,9 @@
 
 #endif /* MVC 4.2 */
 
+#ifdef __cplusplus
+}
+#endif
 
 /*
 --|-------------------------------------------------------------------------

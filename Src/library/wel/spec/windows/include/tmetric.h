@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_text_metric_get_tmheight(_ptr_) ((((TEXTMETRIC *) _ptr_)->tmHeight))
 #define cwel_text_metric_get_tmascent(_ptr_) ((((TEXTMETRIC *) _ptr_)->tmAscent))
 #define cwel_text_metric_get_tmdescent(_ptr_) ((((TEXTMETRIC *) _ptr_)->tmDescent))
@@ -29,6 +33,10 @@
 #define cwel_text_metric_get_tmstruckout(_ptr_) ((((TEXTMETRIC *) _ptr_)->tmStruckOut))
 #define cwel_text_metric_get_tmpitchandfamily(_ptr_) ((((TEXTMETRIC *) _ptr_)->tmPitchAndFamily))
 #define cwel_text_metric_get_tmcharset(_ptr_) ((((TEXTMETRIC *) _ptr_)->tmCharSet))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TEXTMETRIC__ */
 

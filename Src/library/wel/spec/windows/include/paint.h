@@ -9,9 +9,17 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_paintstruct_get_ferase(_ptr_) ((EIF_BOOLEAN) (((PAINTSTRUCT *) _ptr_)->fErase))
 #define cwel_paintstruct_get_rcpaint(_ptr_) ((EIF_POINTER) &(((PAINTSTRUCT *) _ptr_)->rcPaint))
 // #define cwel_paintstruct_get_hdc(_ptr_) ((EIF_POINTER) (((PAINTSTRUCT *) _ptr_)->hdc))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_PAINTSTRUCT__ */
 

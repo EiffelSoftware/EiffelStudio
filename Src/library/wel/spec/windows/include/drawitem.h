@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_drawitemstruct_get_ctltype(_ptr_) ((EIF_INTEGER) (((DRAWITEMSTRUCT *) _ptr_)->CtlType))
 #define cwel_drawitemstruct_get_ctlid(_ptr_) ((EIF_INTEGER) (((DRAWITEMSTRUCT *) _ptr_)->CtlID))
 #define cwel_drawitemstruct_get_itemid(_ptr_) ((EIF_INTEGER) (((DRAWITEMSTRUCT *) _ptr_)->itemID))
@@ -18,6 +22,10 @@
 #define cwel_drawitemstruct_get_hdc(_ptr_) ((EIF_POINTER) (((DRAWITEMSTRUCT *) _ptr_)->hDC))
 #define cwel_drawitemstruct_get_rcitem(_ptr_) ((EIF_POINTER) &(((DRAWITEMSTRUCT *) _ptr_)->rcItem))
 #define cwel_drawitemstruct_get_itemdata(_ptr_) ((EIF_INTEGER) (((DRAWITEMSTRUCT *) _ptr_)->itemData))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_DRAWITEMSTRUCT__ */
 

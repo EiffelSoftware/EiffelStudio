@@ -9,6 +9,10 @@
 #	include <redit.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_charformat_set_cbsize(_ptr_, _value_) (((CHARFORMAT *) _ptr_)->cbSize = (UINT) (_value_))
 #define cwel_charformat_set_dwmask(_ptr_, _value_) (((CHARFORMAT *) _ptr_)->dwMask = (DWORD) (_value_))
 #define cwel_charformat_set_dweffects(_ptr_, _value_) (((CHARFORMAT *) _ptr_)->dwEffects = (DWORD) (_value_))
@@ -27,6 +31,10 @@
 #define cwel_charformat_get_bcharset(_ptr_) ((((CHARFORMAT *) _ptr_)->bCharSet))
 #define cwel_charformat_get_bpitchandfamily(_ptr_) ((((CHARFORMAT *) _ptr_)->bPitchAndFamily))
 #define cwel_charformat_get_szfacename(_ptr_) ((((CHARFORMAT *) _ptr_)->szFaceName))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_CHARFORMAT__ */
 

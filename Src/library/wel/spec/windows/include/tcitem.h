@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_tc_item_set_mask(_ptr_, _value_) (((TC_ITEM *) _ptr_)->mask = (UINT) (_value_))
 #define cwel_tc_item_set_psztext(_ptr_, _value_) (((TC_ITEM *) _ptr_)->pszText = (LPSTR) (_value_))
 #define cwel_tc_item_set_cchtextmax(_ptr_, _value_) (((TC_ITEM *) _ptr_)->cchTextMax = (int) (_value_))
@@ -20,6 +24,10 @@
 #define cwel_tc_item_get_cchtextmax(_ptr_) ((((TC_ITEM *) _ptr_)->cchTextMax))
 #define cwel_tc_item_get_iimage(_ptr_) ((((TC_ITEM *) _ptr_)->iImage))
 #define cwel_tc_item_get_lparam(_ptr_) ((((TC_ITEM *) _ptr_)->lParam))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TABCONTROLITEM__ */
 

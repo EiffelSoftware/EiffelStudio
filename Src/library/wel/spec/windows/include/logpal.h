@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_log_palette_set_version(_ptr_, _value_) (((LOGPALETTE *) _ptr_)->palVersion = (WORD) (_value_))
 #define cwel_log_palette_set_num_entries(_ptr_, _value_) (((LOGPALETTE *) _ptr_)->palNumEntries = (WORD) (_value_))
 #define cwel_log_palette_set_pal_entry_red(_ptr_, _index_, _value_) (((LOGPALETTE *) _ptr_)->palPalEntry[_index_].peRed = (BYTE) _value_)
@@ -19,6 +23,11 @@
 #define cwel_log_palette_get_version(_ptr_) ((EIF_INTEGER) (((LOGPALETTE *) _ptr_)->palVersion))
 #define cwel_log_palette_get_num_entries(_ptr_) ((EIF_INTEGER) (((LOGPALETTE *) _ptr_)->palNumEntries))
 #define cwel_log_palette_get_pal_entry(_ptr_, _index_) ((EIF_POINTER) &(((LOGPALETTE *) _ptr_)->palPalEntry[_index_]))
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_LOGPALETTE__ */
 

@@ -9,11 +9,20 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_initcommctrlex_set_dwsize(_ptr_, _value_)	(((INITCOMMONCONTROLSEX *) _ptr_)->dwSize = (DWORD) (_value_))
 #define cwel_initcommctrlex_set_dwicc(_ptr_, _value_)	(((INITCOMMONCONTROLSEX *) _ptr_)->dwICC = (DWORD) (_value_))
 
 #define cwel_initcommctrlex_get_dwsize(_ptr_) 	(((INITCOMMONCONTROLSEX *) _ptr_)->dwSize)
 #define cwel_initcommctrlex_get_dwicc(_ptr_)	(((INITCOMMONCONTROLSEX *) _ptr_)->dwICC)
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_INITCOMMONCONTROLSEX__ */
 

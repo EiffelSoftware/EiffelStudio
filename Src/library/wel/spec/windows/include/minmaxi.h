@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_minmaxinfo_set_maxsize(_ptr_, _value_) (((MINMAXINFO *) _ptr_)->ptMaxSize = (*(POINT *) (_value_)))
 #define cwel_minmaxinfo_set_maxposition(_ptr_, _value_) (((MINMAXINFO *) _ptr_)->ptMaxPosition = (*(POINT *) (_value_)))
 #define cwel_minmaxinfo_set_mintracksize(_ptr_, _value_) (((MINMAXINFO *) _ptr_)->ptMinTrackSize = (*(POINT *) (_value_)))
@@ -18,6 +22,10 @@
 #define cwel_minmaxinfo_get_maxposition(_ptr_) (&(((MINMAXINFO *) _ptr_)->ptMaxPosition))
 #define cwel_minmaxinfo_get_mintracksize(_ptr_) (&(((MINMAXINFO *) _ptr_)->ptMinTrackSize))
 #define cwel_minmaxinfo_get_maxtracksize(_ptr_) (&(((MINMAXINFO *) _ptr_)->ptMaxTrackSize))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_MINMAXINFO__ */
 

@@ -9,6 +9,10 @@
 #	include <wel.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_mdi_cs_set_class_name(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->szClass = (LPCSTR) (_value_))
 #define cwel_mdi_cs_set_title(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->szTitle = (LPCSTR) (_value_))
 #define cwel_mdi_cs_set_owner(_ptr_, _value_) (((MDICREATESTRUCT *) _ptr_)->hOwner = (HINSTANCE) (_value_))
@@ -28,6 +32,10 @@
 #define cwel_mdi_cs_get_height(_ptr_) ((EIF_INTEGER) (((MDICREATESTRUCT *) _ptr_)->cy))
 #define cwel_mdi_cs_get_style(_ptr_) ((EIF_INTEGER) (((MDICREATESTRUCT *) _ptr_)->style))
 #define cwel_mdi_cs_get_lparam(_ptr_) ((EIF_POINTER) (((MDICREATESTRUCT *) _ptr_)->lParam))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_MDICREATESTRUCT__ */
 

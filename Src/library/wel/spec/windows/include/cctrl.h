@@ -13,6 +13,10 @@
 #	include <commctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef EIF_BORLAND
 #define UDS_HOTTRACK		0x0100
 #define TCIF_STATE			0x0010
@@ -24,6 +28,10 @@
 #define LVCF_IMAGE			0x0010
 #define PBS_SMOOTH			0x01
 #define PBS_VERTICAL		0x04
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* __WEL_COMMONCONTROLS__ */

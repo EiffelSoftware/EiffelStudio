@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_toolinfo_set_cbsize(_ptr_, _value_) (((TOOLINFO *) _ptr_)->cbSize = (UINT) (_value_))
 #define cwel_toolinfo_set_uflags(_ptr_, _value_) (((TOOLINFO *) _ptr_)->uFlags = (UINT) (_value_))
 #define cwel_toolinfo_set_hwnd(_ptr_, _value_) (((TOOLINFO *) _ptr_)->hwnd = (HWND) (_value_))
@@ -23,6 +27,10 @@
 #define cwel_toolinfo_get_rect(_ptr_) ((& ((TOOLINFO *) _ptr_)->rect))
 #define cwel_toolinfo_get_hinst(_ptr_) ((((TOOLINFO *) _ptr_)->hinst))
 #define cwel_toolinfo_get_lpsztext(_ptr_) ((((TOOLINFO *) _ptr_)->lpszText))
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_TOOLINFO__ */
 

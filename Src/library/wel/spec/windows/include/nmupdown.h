@@ -9,6 +9,10 @@
 #	include <cctrl.h>
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define cwel_nm_updown_set_ipos(_ptr_, _value_) (((NM_UPDOWN *) _ptr_)->iPos = (int) (_value_))
 #define cwel_nm_updown_set_idelta(_ptr_, _value_) (((NM_UPDOWN *) _ptr_)->iDelta = (int) (_value_))
 
@@ -16,6 +20,10 @@
 #define cwel_nm_updown_get_ipos(_ptr_) (((NM_UPDOWN *) _ptr_)->iPos)
 #define cwel_nm_updown_get_idelta(_ptr_) (((NM_UPDOWN *) _ptr_)->iDelta)
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_NM_UPDOWN__ */
 

@@ -548,6 +548,23 @@ feature {NONE} -- Private Implementation
 
 feature -- Delegated features
 
+	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+			-- `Result' is widget implementation at current
+			-- cursor position.
+		do
+			check
+				must_be_widget_to_get_called: False
+			end
+		end
+		
+	pnd_screen: EV_SCREEN is
+			-- `Result' is screen used for pick and drop.
+		do
+			check
+				must_be_widget_to_get_called: False
+			end
+		end
+
 	on_parented is
 			-- `Current' has just been added to a container
 		do
@@ -628,6 +645,18 @@ feature -- Delegated features
 				a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y
 			)
+		end
+		
+	internal_enable_drag is
+			-- Platform specific implementation of `enable_drag'.
+			-- Does nothing in this implementation.
+		do
+		end
+		
+	internal_disable_drag is
+			-- Platform specific implementation of `disable_drag'.
+			-- Does nothing in this implementation.
+		do
 		end
 
 	erase_rubber_band is

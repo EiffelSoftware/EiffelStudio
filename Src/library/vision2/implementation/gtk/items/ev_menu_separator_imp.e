@@ -25,7 +25,6 @@ inherit
 			interface,
 			initialize,
 			dispose,
-			menu_item_type,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
 			pointer_double_press_actions_internal
@@ -82,13 +81,6 @@ feature {NONE} -- Implementation
 		do
 			is_sensitive := False
 		end	
-		
-feature {EV_MENU_IMP} -- Implementation	
-
-	menu_item_type: INTEGER is
-		once
-			Result := Separator_type
-		end
 
 feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
 

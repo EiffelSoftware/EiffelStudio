@@ -43,5 +43,26 @@ feature -- Basic operations
 				file.change_name (new_file_name.string)
 			end
 		end
+		
+	delete_file (directory: FILE_NAME; a_file_name: STRING) is
+			-- Delete file named `a_file_name' from directory `directory'.
+		local
+			file: RAW_FILE
+			file_name: FILE_NAME
+		do
+			create file_name.make_from_string (directory)
+			file_name.extend (a_file_name)
+			create file.make (file_name)
+			if file.exists then
+				file.delete
+			end
+		end
+		
+	delete_directory_and_content (directory: DIRECTORY) is
+			-- Removed `directory' and all content from disk.
+		do
+			directory.delete_content
+			directory.delete
+		end
 
 end -- class GB_FILE_UTILITIES

@@ -38,11 +38,6 @@ feature -- Access
 		deferred
 		end
 	
-	icon_mask: EV_PIXMAP is
-			-- Transparency mask for `icon_pixmap'.
-		deferred
-		end
-
 feature -- Status report
 
 	is_minimized: BOOLEAN is
@@ -102,15 +97,6 @@ feature -- Element change
 			icon_name_assigned: icon_name.is_equal (an_icon_name)
 		end
 
-	set_icon_mask (an_icon_mask: EV_PIXMAP) is
-			-- Assign `an_icon_mask' to `icon_mask'.
-		require
-			pixmap_not_void: an_icon_mask /= Void
-		deferred
-		ensure
-			icon_mask_assigned: icon_mask.is_equal (an_icon_mask)
-		end
-
 	set_icon_pixmap (an_icon: EV_PIXMAP) is
 			-- Assign `an_icon' to `icon'.
 		require
@@ -147,6 +133,9 @@ end -- class EV_TITLED_WINDOW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/05/03 00:27:40  pichery
+--| Removed useless `icon_mask' feature
+--|
 --| Revision 1.38  2000/03/08 02:57:56  brendel
 --| Commented out is_minimized postconditions.
 --|

@@ -94,7 +94,8 @@ feature {NONE}
 			!!doc;
 			doc.set_directory_name (Environment.commands_directory);
 			doc.set_document_name (cmd.eiffel_type);
-			doc.save_text (cmd.template);
+			--doc.save_text (cmd.template);
+			doc.update (cmd.template);
 			command_catalog.add (cmd)
 		end;
 

@@ -184,11 +184,11 @@ invariant
 		selected_items.first = selected_item
 	selected_items_empty_xor_selected_item_not_void: is_useable implies
 		selected_items.empty xor selected_item /= Void
-	single_selection_implies_selected_items:
+	single_selection_implies_at_most_one_selected_item:
 		is_useable and not multiple_selection_enabled implies
 		selected_items.count <= 1
 	selection_size_within_bounds: is_useable implies
-		selected_items.count <= 1
+		selected_items.count <= count
 
 end -- class EV_LIST
 
@@ -213,6 +213,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/04/18 02:43:43  pichery
+--| Fixed invalid invariant for multiple selection lists.
+--|
 --| Revision 1.42  2000/04/05 21:16:22  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

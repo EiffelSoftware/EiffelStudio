@@ -80,14 +80,18 @@ feature -- Access
 		local
 			env: EV_ENVIRONMENT
 		do
-			create env
-			if not env.application.shift_pressed then
-				check
-					object_not_full: not is_full
-				end
+			if a_component.root_element_type.is_equal (Ev_menu_bar_string) then
 				add_new_component (a_component)
 			else
-				add_new_component_in_parent (a_component)
+				create env
+				if not env.application.shift_pressed then
+					check
+						object_not_full: not is_full
+					end
+					add_new_component (a_component)
+				else
+					add_new_component_in_parent (a_component)
+				end
 			end
 		end
 		
@@ -100,15 +104,24 @@ feature -- Access
 		local
 			an_object: GB_OBJECT
 			menu_bar_object: GB_MENU_BAR_OBJECT
+			component: GB_COMPONENT
 		do
 			Result := Precursor {GB_CELL_OBJECT} (object_representation)
-			
+			component ?= object_representation
 			an_object ?= object_representation
+			check
+				object_is_a_component_or_an_object: component /= Void or an_object /= Void
+			end
 			menu_bar_object ?= an_object
 			if menu_bar_object /= Void then
 				if object.menu_bar = Void then
 					Result := True
 				end
+			end
+				-- We now allow child addition if we are dropping a component.
+			if component /= Void and component.root_element_type.is_equal (Ev_menu_bar_string) and
+				object.menu_bar = Void then
+				Result := True
 			end
 		end
 
@@ -174,9 +187,10 @@ feature -- Access
 		local
 			current_type: INTEGER
 		do
+			io.putstring ("Entered accepts_child")
 			current_type := dynamic_type_from_string (a_type)
 			if type_conforms_to (current_type, dynamic_type_from_string ("EV_WIDGET")) or
-				type_conforms_to (current_type, dynamic_type_from_string ("EV_MENU_BAR")) then
+				type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_bar_string)) then
 				Result := True
 			end
 		end

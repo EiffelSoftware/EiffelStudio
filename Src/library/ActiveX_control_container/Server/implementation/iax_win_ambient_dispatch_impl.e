@@ -12,9 +12,17 @@ inherit
 	OLE_CONTROL_PROXY
 	
 	ECOM_STANDARD_DISPID_ENUM
+		export
+			{NONE} all
+		end
 	
 	AMBIENT_PROPERTIES
-	
+
+	WEL_COLOR_CONSTANTS
+		export
+			{NONE} all
+		end
+		
 feature -- Access
 
 	allow_windowless_activation: BOOLEAN is
@@ -26,12 +34,18 @@ feature -- Access
 	back_color: INTEGER is
 			-- Set the background color
 		do
+			if background_color = Void then
+				create background_color.make_by_color (Color_background)
+			end
 			Result := background_color.item
 		end
 
 	fore_color: INTEGER is
 			-- Set the ambient foreground color
 		do
+			if foreground_color = Void then
+				create foreground_color.make_by_color (Color_window)
+			end
 			Result := foreground_color.item
 		end
 

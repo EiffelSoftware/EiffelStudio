@@ -14,6 +14,9 @@ inherit
 	OUTER_SITE_PROXY
 	
 	DVASPECT_ENUM
+		export
+			{NONE} all
+		end
 
 feature -- Basic Operations
 

@@ -17,13 +17,16 @@ inherit
 		export
 			{NONE} all
 		undefine
-			index_of, is_equal, off, search, occurrences, has, is_in_default_state,
+			index_of, is_equal, search, occurrences, has, is_in_default_state,
 			item, index, after, is_empty, start, finish, forth
 		redefine
-			implementation
+			implementation,
+			parent_of_items_is_current
 		end
 	
 	EV_TREE_NODE
+		undefine
+			off
 		redefine
 			implementation
 		select
@@ -279,6 +282,19 @@ feature -- Contract support
 			if subtree_function /= Void then
 				Result := True	
 			end
+		end
+		
+feature {NONE} -- Contract support
+		
+	parent_of_items_is_current: BOOLEAN is
+			-- Do all items have parent `Current'?
+		do
+			Result := True
+			-- As `Current' is implemented completely as an interface,
+			-- it is not possible to correctly check this without
+			-- the invariant `parent_of_items_is_current' failing, as
+			-- `fill_from_subtree_function' is executed too late,
+			-- during the `expand_actions'.
 		end
 
 feature {EV_ANY_I} -- Implementation

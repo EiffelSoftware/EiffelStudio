@@ -19,6 +19,14 @@ feature {NONE} -- Initialization
 			value ?= yacc_arg (0)
 		end;
 
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_value (v: like value) is
+			-- Assign `v' to `value'.
+		do
+			value := v
+		end
+
 feature -- Properties
 
 	value: ID_SD;

@@ -15,19 +15,13 @@ creation
 
 feature -- Initialization
 
-	make_and_load is
+	make_and_load (a_profiler: STRING) is
 			-- Load the specific profiler-configuration file.
 		do
 			!! shared_prof_config;
-			io.putstring ("--> Which profile-tool did you use (default: `eiffel'): ");
-			io.readline;
-			profiler := io.laststring;
-			if profiler = Void or else profiler.empty then
-				profiler := "eiffel"
-			end;
-			profiler.to_lower;
-			read_config_file(profiler);
-			shared_prof_config.set_config_name (profiler);
+			a_profiler.to_lower;
+			read_config_file(a_profiler);
+			shared_prof_config.set_config_name (a_profiler);
 		end;
 
 feature {NONE} -- Implementation
@@ -276,7 +270,7 @@ feature {NONE} -- Constants
 	GLU_string: STRING is "generates_leading_underscore";
 		-- generates_leading_underscore
 
-feature {EWB_GENERATE} -- Error handling
+feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD} -- Error handling
 
 	error_occured: BOOLEAN
 		-- Was there an error during the load of the config file?

@@ -14,7 +14,7 @@ inherit
 			copy, is_equal
 		end
 
-	EXTEND_TABLE [FEATURE_I, INTEGER]
+	HASH_TABLE [FEATURE_I, INTEGER]
 		rename
 			item as item_id,
 			has as has_id,
@@ -22,8 +22,6 @@ inherit
 			key_for_iteration as key_for_iteration_id,
 			replace as replace_id,
 			search as search_id
-		export
-			{CLASS_C, COMPILED_CLASS_INFO} iteration_position
 		end
 
 	SHARED_WORKBENCH
@@ -42,11 +40,6 @@ inherit
 		end
 
 	SHARED_BODY_ID
-		undefine
-			copy, is_equal
-		end
-
-	SH_DEBUG
 		undefine
 			copy, is_equal
 		end
@@ -142,7 +135,7 @@ feature -- Access: compatibility
 				found_item := Void
 			end
 		end
-	
+
 feature -- Settings
 
 	set_origin_table (t: like origin_table) is
@@ -566,9 +559,9 @@ end;
 			-- Feature of feature_id id equal to `i'.
 		local
 			feat: FEATURE_I;
-			pos: INTEGER
+			l_cursor: CURSOR
 		do
-			pos := iteration_position
+			l_cursor := cursor
 			from
 				start
 			until
@@ -580,16 +573,16 @@ end;
 				end;
 				forth;
 			end;
-			go (pos);
+			go_to (l_cursor);
 		end;
 
 	feature_of_body_index (i: INTEGER): FEATURE_I is
 			-- Feature of body id equal to `i'.
 		local
 			feat: FEATURE_I;
-			pos: INTEGER
+			l_cursor: CURSOR
 		do
-			pos := iteration_position
+			l_cursor := cursor
 			from
 				start
 			until
@@ -601,7 +594,7 @@ end;
 				end;
 				forth;
 			end;
-			go (pos);
+			go_to (l_cursor);
 		end;
 
 	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
@@ -807,7 +800,7 @@ end;
 			end;
 		end;
 
-	replicated_features: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is
+	replicated_features: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER] is
 			-- Replicated features for Current feature table
 			-- hashed on body_index
 		local

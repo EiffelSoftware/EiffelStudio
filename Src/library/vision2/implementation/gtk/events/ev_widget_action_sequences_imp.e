@@ -119,6 +119,12 @@ feature -- Event handling
 		do
 			create Result
 		end
+		
+	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
+			-- Create a mouse_wheel action sequence.
+		do
+			create Result
+		end
 
 end
 

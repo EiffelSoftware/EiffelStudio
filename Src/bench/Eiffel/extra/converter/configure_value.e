@@ -41,7 +41,7 @@ feature -- Debug
 			print (name);
 			print (": ");
 			print (value);
-			io.new_line
+			io.put_new_line
 		end
 
 end -- class CONFIGURE_VALUE

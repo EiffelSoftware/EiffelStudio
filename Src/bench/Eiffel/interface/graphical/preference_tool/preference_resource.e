@@ -55,12 +55,12 @@ feature {PREFERENCE_CATEGORY} -- Access
 			file_is_open_write: file.is_open_write
 		do
 			if not associated_resource.has_changed then
-				file.putstring ("--");
+				file.put_string ("--");
 			end;
-			file.putstring (associated_resource.name);
-			file.putstring (": ");
+			file.put_string (associated_resource.name);
+			file.put_string (": ");
 			save_value (file);
-			file.putstring ("%N")
+			file.put_string ("%N")
 		end;
 
 	save_value (file: PLAIN_TEXT_FILE) is

@@ -445,7 +445,7 @@ feature -- Text processing
 
 feature -- Obsolete
 
-	new_line is do end
+	put_new_line is do end
 
 	put_char (c: CHARACTER) is do end
 

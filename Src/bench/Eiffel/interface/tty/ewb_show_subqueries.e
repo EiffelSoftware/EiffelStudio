@@ -18,27 +18,27 @@ feature {NONE} -- Implementation
 			i: INTEGER;
 		do
 			from
-				io.putstring ("All subqueries:%N");
+				io.put_string ("All subqueries:%N");
 				subqueries.start;
 				i := 1;
 			until
 				subqueries.after
 			loop
-				io.putchar ('[');
-				io.putint (i);
-				io.putstring ("] ");
-				io.putstring (subqueries.item.column);
-				io.putchar (' ');
-				io.putstring (subqueries.item.operator);
-				io.putchar (' ');
-				io.putstring (subqueries.item.value);
-				io.putstring (" is ");
+				io.put_character ('[');
+				io.put_integer (i);
+				io.put_string ("] ");
+				io.put_string (subqueries.item.column);
+				io.put_character (' ');
+				io.put_string (subqueries.item.operator);
+				io.put_character (' ');
+				io.put_string (subqueries.item.value);
+				io.put_string (" is ");
 				if subqueries.item.is_active then
-					io.putstring ("active");
+					io.put_string ("active");
 				else
-					io.putstring ("inactive");
+					io.put_string ("inactive");
 				end;
-				io.putchar ('%N');
+				io.put_character ('%N');
 				i := i + 1;
 				subqueries.forth;
 			end;
@@ -47,25 +47,25 @@ feature {NONE} -- Implementation
 	show_active_total_query is
 		do
 			from
-				io.putstring ("%NThe total active query:%N");
+				io.put_string ("%NThe total active query:%N");
 				subqueries.start;
 				subquery_operators.start;
 			until
 				subqueries.after
 			loop
 				if subqueries.item.is_active then
-					io.putstring (subqueries.item.column);
-					io.putchar (' ');
-					io.putstring (subqueries.item.operator);
-					io.putchar (' ');
-					io.putstring (subqueries.item.value);
+					io.put_string (subqueries.item.column);
+					io.put_character (' ');
+					io.put_string (subqueries.item.operator);
+					io.put_character (' ');
+					io.put_string (subqueries.item.value);
 					if not subquery_operators.after then
 						if subquery_operators.item.is_active then
-							io.putchar (' ');
-							io.putstring (subquery_operators.item.actual_operator);
+							io.put_character (' ');
+							io.put_string (subquery_operators.item.actual_operator);
 						end;
 					end;
-					io.putchar ('%N');
+					io.put_character ('%N');
 				end;
 				subqueries.forth;
 				if not subquery_operators.after then

@@ -700,7 +700,7 @@ feature -- Element change
 				put_comment_text ("(from ")
 				put_classi (global_adapt.source_enclosing_class.lace_class)
 				put_comment_text (")")
-				new_line
+				put_new_line
 			end
 		end
 
@@ -862,7 +862,7 @@ feature -- Output
 			if format.space_between_tokens then
 				text.add_space
 			elseif format.new_line_between_tokens then
-				new_line
+				put_new_line
 			end
 		end
 
@@ -941,7 +941,7 @@ feature -- Output
 			text.finish
 		end
 
-	new_line is
+	put_new_line is
 			-- Go to beginning of next line in `text'.
 		do
 			text.add_new_line
@@ -1018,7 +1018,7 @@ feature -- Output
 				if txt.is_empty or else txt.item (1) /= '|' then
 					put_text_item (ti_Dashdash)
 					put_comment_text (comments.item)
-					new_line
+					put_new_line
 				end
 				comments.forth
 			end

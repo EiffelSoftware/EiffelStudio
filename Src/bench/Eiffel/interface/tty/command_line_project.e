@@ -113,9 +113,9 @@ feature -- Project Initialization
 					Project_directory_name.set_directory (project_path_name)
 				else
 					error_occurred := True
-					io.error.putstring ("Cannot create project in:%N")
-					io.error.putstring (project_path_name)
-					io.error.new_line
+					io.error.put_string ("Cannot create project in:%N")
+					io.error.put_string (project_path_name)
+					io.error.put_new_line
 				end
 			end
 
@@ -131,20 +131,20 @@ feature -- Project Initialization
 						-- A Project exist
 					if stop_on_error then
 						error_occurred := stop_on_error
-						io.error.putstring ("In `")
-						io.error.putstring (project_dir.name)
-						io.error.putstring ("' an Eiffel project already exists%N")
-						io.error.putstring ("Compilation aborted due to `-batch' or `-stop' option.%N")
+						io.error.put_string ("In `")
+						io.error.put_string (project_dir.name)
+						io.error.put_string ("' an Eiffel project already exists%N")
+						io.error.put_string ("Compilation aborted due to `-batch' or `-stop' option.%N")
 					else
-						io.error.putstring ("In `")
-						io.error.putstring (project_dir.name)
-						io.error.putstring ("' an Eiffel project already exists.%N")
-						io.error.putstring ("Do you wish to overwrite it (Y-yes or N-no)? %N")
+						io.error.put_string ("In `")
+						io.error.put_string (project_dir.name)
+						io.error.put_string ("' an Eiffel project already exists.%N")
+						io.error.put_string ("Do you wish to overwrite it (Y-yes or N-no)? %N")
 						io.read_line
 						answer := io.last_string
 						answer.to_lower
 						error_occurred := not (answer.is_equal ("y") or answer.is_equal ("yes"))
-						io.error.new_line
+						io.error.put_new_line
 					end
 				end
 				project_is_new := True
@@ -209,8 +209,8 @@ feature -- Project Initialization
 				create project_dir.make (dir_name, project_file)
 			else
 				if msg /= Void then
-					io.error.putstring (msg)
-					io.error.new_line
+					io.error.put_string (msg)
+					io.error.put_new_line
 					error_occurred := True
 				end
 			end
@@ -225,7 +225,7 @@ feature -- Project retrieval
 		local
 			msg: STRING
 		do	
-			io.error.putstring ("Retrieving project...%N")
+			io.error.put_string ("Retrieving project...%N")
 				-- Retrieve the project
 			Eiffel_project.make (project_dir)
 
@@ -247,8 +247,8 @@ feature -- Project retrieval
 			end
 
 			if msg /= Void then
-				io.error.putstring (msg)
-				io.error.new_line
+				io.error.put_string (msg)
+				io.error.put_new_line
 				error_occurred := True
 			end
 		end
@@ -288,8 +288,8 @@ feature -- Project retrieval
 			end
 		rescue
 			l_retried := True
-			io.error.putstring ("An error occurred during removal of previous project.%N")
-			io.error.putstring ("Please make sure to have full permission to your existing project.%N")
+			io.error.put_string ("An error occurred during removal of previous project.%N")
+			io.error.put_string ("Please make sure to have full permission to your existing project.%N")
 			error_occurred := True
 			retry
 		end
@@ -300,16 +300,16 @@ feature -- Input/output
 		local
 			str: STRING
 		do
-			io.error.putstring ("%N%
+			io.error.put_string ("%N%
 				%Press <Return> to retry saving or <Q> to quit%N");
 			wait_for_return;
-			str := io.laststring.as_lower
+			str := io.last_string.as_lower
 			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
 		end;
 
 	wait_for_return is
 		do
-			io.readline;
+			io.read_line;
 		rescue
 			retry
 		end;
@@ -325,12 +325,12 @@ feature -- Check Ace file
 			if
 				not (f.exists and then f.is_readable and then f.is_plain)
 			then
-				io.error.putstring ("Ace file `");
-				io.error.putstring (fn);
+				io.error.put_string ("Ace file `");
+				io.error.put_string (fn);
 				if f.exists then
-					io.error.putstring ("' cannot be read%N");
+					io.error.put_string ("' cannot be read%N");
 				else
-					io.error.putstring ("' does not exist%N");
+					io.error.put_string ("' does not exist%N");
 				end;
 				lic_die (-1)
 			end

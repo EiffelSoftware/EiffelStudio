@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 					executed_from_widget := True
 				else
 					debug ("DEBUGGER_INTERFACE")
-						io.putstring ("Could not find the top window (dixit EB_EXEC_FORMAT_CMD)%N")
+						io.put_string ("Could not find the top window (dixit EB_EXEC_FORMAT_CMD)%N")
 					end
 					dev ?= Window_manager.last_focused_window
 					if dev /= Void then
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 						executed_from_widget := True
 					else
 						debug ("DEBUGGER_INTERFACE")
-							io.putstring ("Could not find the last focused window (dixit EB_EXEC_FORMAT_CMD)%N")
+							io.put_string ("Could not find the last focused window (dixit EB_EXEC_FORMAT_CMD)%N")
 						end
 						debugger_manager.set_debugging_window (Window_manager.a_development_window)
 						if Window_manager.a_development_window /= Void then

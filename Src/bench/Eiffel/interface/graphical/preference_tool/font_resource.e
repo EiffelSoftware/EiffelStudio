@@ -36,11 +36,11 @@ feature {NONE} -- Initialization
 				create actual_value.make
 				actual_value.set_name (value);
 				if not actual_value.is_font_valid then
-					io.error.putstring ("Warning: Could not allocate font ")
-					io.error.putstring (value)
-					io.error.putstring (" for resource ")
-					io.error.putstring (name)
-					io.error.new_line
+					io.error.put_string ("Warning: Could not allocate font ")
+					io.error.put_string (value)
+					io.error.put_string (" for resource ")
+					io.error.put_string (name)
+					io.error.put_new_line
 					actual_value := default_font;
 				end;
 				value := actual_value.name

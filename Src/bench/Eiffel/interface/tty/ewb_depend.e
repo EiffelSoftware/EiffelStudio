@@ -32,7 +32,7 @@ feature
 
 			create st.make
 			st.add_string ("Dependents:");
-			st.add_new_line;
+			st.add.put_new_line;
 			from
 				fdep.start
 			until
@@ -47,12 +47,12 @@ feature
 				supplier.append_name (st);
 				st.add_char ('.');
 				supp_f.append_name (st, supplier);
-				st.add_new_line;
+				st.add.put_new_line;
 
 				fdep.forth
 			end;
 			output_window.put_string (st.image);
-			output_window.new_line
+			output_window.put_new_line
 		end;
 
 end -- class EWB_DEPEND

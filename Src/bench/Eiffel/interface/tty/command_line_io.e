@@ -22,10 +22,10 @@ feature -- Input/output
 		local
 			str: STRING
 		do
-			io.error.putstring ("%N%
+			io.error.put_string ("%N%
 				%Press <Return> to resume compilation or <Q> to quit%N")
 			wait_for_return
-			str := io.laststring.as_lower
+			str := io.last_string.as_lower
 			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
 		end
 
@@ -33,19 +33,19 @@ feature -- Input/output
 		local
 			c: CHARACTER
 		do
-			io.putstring (message)
-			io.putstring (" [y/n]? ")
-			io.readchar
-			c := io.lastchar
+			io.put_string (message)
+			io.put_string (" [y/n]? ")
+			io.read_character
+			c := io.last_character
 			if c /= '%N' then
-				io.next_line
+				io.to_next_line
 			end
 			Result := ((c = 'Y') or (c = 'y'))
 		end
 
 	wait_for_return is
 		do
-			io.readline
+			io.read_line
 		end
 
 	get_last_input is
@@ -69,7 +69,7 @@ feature -- Input/output
 			count: INTEGER
 		do
 			wait_for_return
-			count := io.laststring.count
+			count := io.last_string.count
 			create arg.make (count)
 			command_arguments.wipe_out
 			from
@@ -78,7 +78,7 @@ feature -- Input/output
 			until
 				(i > count)
 			loop
-				item := io.laststring.item (i)
+				item := io.last_string.item (i)
 				if (item = ' ') or else (item = '%T') then
 					if arg.count /= 0 then
 						command_arguments.force (arg, j)
@@ -100,7 +100,7 @@ feature -- Input/output
 	get_class_name is
 		do
 			if not more_arguments then
-				io.putstring ("--> Class name: ")
+				io.put_string ("--> Class name: ")
 				get_name
 			end
 			get_last_input
@@ -113,7 +113,7 @@ feature -- Input/output
 	get_feature_name is
 		do
 			if not more_arguments then
-				io.putstring ("--> Feature name: ")
+				io.put_string ("--> Feature name: ")
 				get_name
 			end
 			get_last_input
@@ -126,7 +126,7 @@ feature -- Input/output
 	get_filter_name is
 		do
 			if not more_arguments then
-				io.putstring ("--> Filter name: ")
+				io.put_string ("--> Filter name: ")
 				get_name
 			end
 			get_last_input
@@ -142,15 +142,15 @@ feature -- Input/output
 			tmp: STRING
 		do
 			if not more_arguments then
-				io.putstring ("--> ")
-				io.putstring (an_option)
-				io.putstring (" [")
+				io.put_string ("--> ")
+				io.put_string (an_option)
+				io.put_string (" [")
 				if value then
-					io.putstring ("yes")
+					io.put_string ("yes")
 				else
-					io.putstring ("no")
+					io.put_string ("no")
 				end
-				io.putstring ("]: ")
+				io.put_string ("]: ")
 				get_name
 			end
 			get_last_input
@@ -171,7 +171,7 @@ feature -- Input/output
 	get_prof_file_name is
 		do
 			if not more_arguments then
-				io.putstring ("--> Profile information file name (default: `profinfo'): ")
+				io.put_string ("--> Profile information file name (default: `profinfo'): ")
 				get_name
 			end
 			get_last_input
@@ -181,14 +181,14 @@ feature -- Input/output
 		do
 			if not more_arguments then
 				from
-					io.putstring ("--> Compile type (default: `workbench'): ")
+					io.put_string ("--> Compile type (default: `workbench'): ")
 					get_name
 					get_last_input
 				until
 					last_input.is_empty or else last_input.is_equal ("workbench") or else
 					last_input.is_equal ("final")
 				loop
-					io.putstring ("--> Compile type (default: `workbench'): ")
+					io.put_string ("--> Compile type (default: `workbench'): ")
 					get_name
 					get_last_input
 				end
@@ -200,7 +200,7 @@ feature -- Input/output
 	get_profiler is
 		do
 			if not more_arguments then
-				io.putstring ("--> Used profiler (default: `eiffel'): ")
+				io.put_string ("--> Used profiler (default: `eiffel'): ")
 				get_name
 			end
 			get_last_input
@@ -219,20 +219,20 @@ feature -- Input/output
 		local
 			not_first: BOOLEAN
 		do
-			io.error.putstring ("%
+			io.error.put_string ("%
 				%Too many arguments. The following arguments will be ignored:%N")
 			from
 			until
 				not more_arguments
 			loop
 				if not_first then
-					io.error.putchar (' ')
+					io.error.put_character (' ')
 				end
 				not_first := True
-				io.error.putstring (command_arguments.current_item)
+				io.error.put_string (command_arguments.current_item)
 			end
-			io.error.new_line
-			io.error.new_line
+			io.error.put_new_line
+			io.error.put_new_line
 		end
 
 feature -- Setting

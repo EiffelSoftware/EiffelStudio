@@ -34,20 +34,20 @@ feature {NONE} -- Implementation
 		do
 			if Eiffel_system = Void or else Eiffel_system.name = Void then
 				output_window.put_string (Warning_messages.W_must_compile_first)
-				output_window.new_line
+				output_window.put_new_line
 			else
 				appl_name := Eiffel_system.application_name (True);
 				create f.make (appl_name);
 				if not f.exists then
 					output_window.put_string (Warning_messages.w_file_not_exist (appl_name))
-					output_window.new_line
+					output_window.put_new_line
 				else
 					create f_name.make_from_string (Workbench_generation_path);
 					f_name.set_file_name (Makefile_SH);
 					create make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then
 						output_window.put_string (Warning_messages.w_MakefileSH_more_recent)
-						output_window.new_line
+						output_window.put_new_line
 						error := True
 					end;
 					if not error then

@@ -70,14 +70,14 @@ feature -- Execution
 					if not to_write.empty then
 						to_write.prune_all ('%R')
 						if text_mode.is_equal ("UNIX") then
-							tmp_file.putstring (to_write)
+							tmp_file.put_string (to_write)
 							if to_write.item (to_write.count) /= '%N' then 
 								-- Add a carriage return like `vi' if there's none at the end 
-								tmp_file.new_line
+								tmp_file.put_new_line
 							end
 						else
 							to_write.replace_substring_all ("%N", "%R%N")
-							tmp_file.putstring (to_write)
+							tmp_file.put_string (to_write)
 						end
 					end
 					tmp_file.close

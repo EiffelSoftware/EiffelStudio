@@ -239,9 +239,9 @@ feature -- Execution
 			if arg = Expose_action then
 				expose_data ?= context_data;
 debug ("DRAWING")
-	io.error.putstring ("Expose number ");
-	io.error.putint (expose_data.exposes_to_come);
-	io.error.new_line
+	io.error.put_string ("Expose number ");
+	io.error.put_integer (expose_data.exposes_to_come);
+	io.error.put_new_line
 end
 				to_refresh.merge_clip (expose_data.clip);
 				if expose_data.exposes_to_come = 0 then

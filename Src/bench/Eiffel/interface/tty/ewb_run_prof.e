@@ -51,7 +51,7 @@ feature {NONE} -- Execute
 				st.add_new_line;
 			end;
 			output_window.put_string (st.image);
-			output_window.new_line
+			output_window.put_new_line
 		end;
 
 feature {NONE} -- Attributes

@@ -33,8 +33,8 @@ feature -- Output
 				ctxt.put_text_item (ti_Before_invariant)
 				ctxt.put_text_item_without_tabs (ti_Invariant_keyword)
 				ctxt.indent
-				ctxt.new_line
-				ctxt.new_line
+				ctxt.put_new_line
+				ctxt.put_new_line
 				from
 					start
 				until
@@ -48,10 +48,10 @@ feature -- Output
 						ctxt.put_comment_text ("from ")
 						ctxt.put_classi (item.source_class.lace_class)
 						ctxt.exdent
-						ctxt.new_line
+						ctxt.put_new_line
 					end
 					item.format (ctxt)
-					ctxt.new_line
+					ctxt.put_new_line
 					if ctxt.last_was_printed then
 						is_not_first := true
 						ctxt.commit
@@ -61,7 +61,7 @@ feature -- Output
 					forth
 				end
 				if is_not_first then
-					ctxt.new_line
+					ctxt.put_new_line
 					ctxt.commit
 					ctxt.put_text_item (ti_After_invariant)
 				else

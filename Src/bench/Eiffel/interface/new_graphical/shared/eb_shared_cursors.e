@@ -162,9 +162,9 @@ feature {NONE}
 					Result.set_with_named_file (full_path)
 				end
 			else
-				io.error.putstring ("Warning: cannot read pixmap file ")
-				io.error.putstring (full_path)
-				io.error.new_line
+				io.error.put_string ("Warning: cannot read pixmap file ")
+				io.error.put_string (full_path)
+				io.error.put_new_line
 				Result.set_size (20, 20) -- Default pixmap size
 			end
 		rescue

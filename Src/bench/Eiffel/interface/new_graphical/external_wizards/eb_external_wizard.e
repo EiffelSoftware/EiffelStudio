@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 				until
 					callback_file.end_of_file
 				loop
-					callback_file.readline
+					callback_file.read_line
 					if not callback_file.last_string.is_empty and then callback_file.last_string.index_of ('=', 1) /= 0 then
 						analysed_line := analyse_line (callback_file.last_string)
 						result_parameters.extend (analysed_line)

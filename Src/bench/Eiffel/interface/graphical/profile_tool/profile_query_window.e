@@ -79,13 +79,13 @@ feature -- Access
 
 			if aok then
 				create ptf.make_create_read_write (fn);
-				ptf.putstring ("Options:%N========%N%N");
-				ptf.putstring (profiler_options.image);
-				ptf.putstring ("%NQuery:%N======%N%N");
-				ptf.putstring (profiler_query.image);
-				ptf.putstring ("%NResults:%N========%N%N");
-				ptf.putstring (text_window.text);
-				ptf.new_line;
+				ptf.put_string ("Options:%N========%N%N");
+				ptf.put_string (profiler_options.image);
+				ptf.put_string ("%NQuery:%N======%N%N");
+				ptf.put_string (profiler_query.image);
+				ptf.put_string ("%NResults:%N========%N%N");
+				ptf.put_string (text_window.text);
+				ptf.put_new_line;
 				ptf.close
 			end
 		end

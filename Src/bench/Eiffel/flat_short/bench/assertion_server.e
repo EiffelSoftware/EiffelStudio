@@ -195,15 +195,15 @@ feature -- Debug
 
 	trace is
 		do	
-			io.error.putstring ("*** Feature Table ***%N")
+			io.error.put_string ("*** Feature Table ***%N")
 			from
 				feature_adapter_table.start
 			until
 				feature_adapter_table.after
 			loop
-				io.error.putstring ("body_index: ")
-				io.error.putstring (feature_adapter_table.key_for_iteration.out)
-				io.error.new_line
+				io.error.put_string ("body_index: ")
+				io.error.put_string (feature_adapter_table.key_for_iteration.out)
+				io.error.put_new_line
 				feature_adapter_table.forth
 			end
 		end

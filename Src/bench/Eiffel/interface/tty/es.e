@@ -111,16 +111,16 @@ feature -- Initialization
 				output_window.close
 			end
 		rescue
-			io.error.putstring ("ISE Eiffel 5: Session aborted%N")
-			io.error.putstring ("Exception tag: ")
+			io.error.put_string ("ISE Eiffel 5: Session aborted%N")
+			io.error.put_string ("Exception tag: ")
 			temp := original_tag_name
 			if output_window /= Void and then not output_window.is_closed then
 				output_window.close
 			end
 			if temp /= Void then
-				io.error.putstring (temp)
+				io.error.put_string (temp)
 			end
-			io.error.new_line
+			io.error.put_new_line
 			if not fail_on_rescue then
 				retried := True
 				retry
@@ -226,14 +226,14 @@ feature -- Setting
 		do
 			create output_window.make (filename)
 			if output_window.exists then
-				io.error.putstring ("File %"" + filename + "%" exists.%NPlease delete it first.%N")
+				io.error.put_string ("File %"" + filename + "%" exists.%NPlease delete it first.%N")
 				file_error := True
 			else
 				output_window.open_file
 				if not output_window.exists then
-					io.error.putstring ("Cannot create file: ")
-					io.error.putstring (filename)
-					io.error.new_line
+					io.error.put_string ("Cannot create file: ")
+					io.error.put_string (filename)
+					io.error.put_new_line
 					file_error := True
 				end
 			end
@@ -244,19 +244,19 @@ feature -- Output
 	print_option_error is
 			-- Print the correct usage of ewb.
 		do	
-			io.putstring (argument (0))
-			io.putstring (": incorrect options%N"); 
+			io.put_string (argument (0))
+			io.put_string (": incorrect options%N"); 
 			print_usage
 		end
 
 	print_usage is
 			-- Print the usage of command line options.
 		do
-			io.putstring ("Usage:%N%T")
-			io.putstring (argument (0))
-			io.putstring (" [-help | -version | -batch | ")
+			io.put_string ("Usage:%N%T")
+			io.put_string (argument (0))
+			io.put_string (" [-help | -version | -batch | ")
 			add_usage_special_cmds
-			io.putstring ("-loop | -quick_melt | ")
+			io.put_string ("-loop | -quick_melt | ")
 			if Has_documentation_generation then
 				io.put_string ("-clients [-filter filtername] class |%N%
 					%%T-suppliers [-filter filtername] class |%N%
@@ -265,7 +265,7 @@ feature -- Output
 					%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
 					%%T-filter filtername [-all | class] |%N%
 					%%T-descendants [-filter filtername] class |%N")
-				io.putstring ("%
+				io.put_string ("%
 					%%T-ancestors [-filter filtername] class |%N%
 					%%T-aversions [-filter filtername] class feature |%N%
 					%%T-dversions [-filter filtername] class feature |%N%
@@ -292,8 +292,8 @@ feature -- Output
 			cmd_name: STRING
 		do
 			print_usage
-			io.putstring ("%NOptions:%N"); 
-			io.putstring ("%Tdefault (no option): recompile the system.%N%N")
+			io.put_string ("%NOptions:%N"); 
+			io.put_string ("%Tdefault (no option): recompile the system.%N%N")
 
 			create command_list.make
 			keys := help_messages.current_keys
@@ -319,18 +319,18 @@ feature -- Output
 
 	print_one_help (opt: STRING; txt: STRING) is
 		do
-			io.putstring ("%T-")
-			io.putstring (opt)
-			io.putstring (": ")
-			io.putstring (txt)
-			io.putstring (".%N")
+			io.put_string ("%T-")
+			io.put_string (opt)
+			io.put_string (": ")
+			io.put_string (txt)
+			io.put_string (".%N")
 		end
 
 feature -- Update
 
 	add_usage_special_cmds is
 		do
-			io.putstring ("-freeze | %N%T-finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
+			io.put_string ("-freeze | %N%T-finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 		end
 
 	add_help_special_cmds is

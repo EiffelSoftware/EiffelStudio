@@ -336,10 +336,10 @@ feature  -- Compatibility
 			text_displayed.put_char (c)
 		end
 
-	new_line is
+	put_new_line is
 			-- Put a new line at current position.
 		do
-			text_displayed.new_line
+			text_displayed.put_new_line
 		end
 
 feature -- Search commands
@@ -768,8 +768,8 @@ feature {NONE} -- Implementation
 				display_line_with_context (line_index)
 			else
 				debug ("EDITOR")
-					io.error.putstring ("%N Editor Warning : Unable to scroll to Breakpoint number "+ bp_number.out + "%N")
-					io.error.putstring ("                   There are only " + bp_count.out + " in currently displayed class.%N")
+					io.error.put_string ("%N Editor Warning : Unable to scroll to Breakpoint number "+ bp_number.out + "%N")
+					io.error.put_string ("                   There are only " + bp_count.out + " in currently displayed class.%N")
 				end
 			end
 		end

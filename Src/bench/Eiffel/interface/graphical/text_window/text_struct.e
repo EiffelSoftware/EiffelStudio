@@ -32,12 +32,12 @@ feature
 	trace is
 		do
 			from
-				io.error.putstring ("Text structure:%N")
+				io.error.put_string ("Text structure:%N")
 				position := 1
 			until
 				position = clickable_count + 1
 			loop
-				io.error.putstring (item (position).tagged_out)
+				io.error.put_string (item (position).tagged_out)
 				position := position + 1
 			end
 		end

@@ -62,9 +62,9 @@ feature {PREFERENCE_CATEGORY} -- Access
 			if boolean_toggle = Void or else ar.actual_value = boolean_toggle.state then
 					--| boolean_toggle /= Void means: toggle has been displayed
 					--| and thus the user could have changed the value.
-				file.putstring (ar.value)
+				file.put_string (ar.value)
 			else
-				file.putstring (boolean_toggle.state.out)
+				file.put_string (boolean_toggle.state.out)
 			end
 		end;
 

@@ -137,7 +137,7 @@ feature -- Basic Operations
 			filename: FILE_NAME
 		do
 			f.open_read
-			f.readstream (f.count)
+			f.read_stream (f.count)
 			f.close
 			update_save_symbol
 			create filename.make_from_string (f.name)

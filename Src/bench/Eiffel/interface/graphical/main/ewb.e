@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 
 	crash (trace: STRING) is
 		do
-			io.error.putstring (trace)
+			io.error.put_string (trace)
 		end
 
 	restart is

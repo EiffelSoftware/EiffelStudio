@@ -137,7 +137,7 @@ feature {NONE} -- Update
 						configure_list.item.trace;
 						configure_list.forth
 					end
-					io.new_line;
+					io.put_new_line;
 					io.read_line
 				end
 			end
@@ -158,7 +158,7 @@ feature {NONE} -- Update
 			if makefile.is_creatable then
 				debug ("CONVERTING")
 					print ("Converting input file%N");
-					io.new_line;
+					io.put_new_line;
 					io.read_line
 				end				
 				if not input_file.empty then
@@ -234,7 +234,7 @@ feature {NONE} -- Update
 			end
 			if error then	
 				print (msg)
-				io.new_line;
+				io.put_new_line;
 				print ("usage: <name>: %"<value>%"");
 			else
 				create c_value.make (name, value);

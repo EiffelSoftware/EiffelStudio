@@ -58,7 +58,7 @@ feature -- Output
 			debug_tool.clear_cursor_position
 			debug_window.clear_window
 			debug_window.put_string ("System terminated")
-			debug_window.new_line
+			debug_window.put_new_line
 			debug_window.display
 			tool_supervisor.object_tool_mgr.reset
 			debug_tool.clear_object_tool
@@ -108,9 +108,9 @@ feature -- Execution
 						-- Ask the application to interrupt ASAP.
 					debug_window.clear_window
 					debug_window.put_string ("System is running")
-					debug_window.new_line
+					debug_window.put_new_line
 					debug_window.put_string ("Interruption request")
-					debug_window.new_line
+					debug_window.put_new_line
 					debug_window.display
 					Application.interrupt
 				end

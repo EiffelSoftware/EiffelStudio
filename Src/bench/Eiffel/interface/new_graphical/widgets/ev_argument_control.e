@@ -343,17 +343,17 @@ feature {NONE} -- Storage
 				arguments_file.open_write
 				arguments_file.start
 					-- Also save current argument here for retrieval in new execution of compiler.
-				arguments_file.putstring ("[" + saved_argument + "]")
+				arguments_file.put_string ("[" + saved_argument + "]")
 				if argument_check.is_selected then
-					arguments_file.putstring ("o")
+					arguments_file.put_string ("o")
 				end
-				arguments_file.new_line
+				arguments_file.put_new_line
 				user_arguments_list.start
 			until
 				user_arguments_list.after
 			loop
 				arguments_file.put_string (user_arguments_list.item.i_th (1))
-				arguments_file.new_line
+				arguments_file.put_new_line
 				user_arguments_list.forth
 			end
 			arguments_file.close

@@ -478,13 +478,13 @@ feature {NONE} -- Element Change
 						l_return_info.forth
 					end
 				end
-				new_line
+				put_new_line
 			else
 				text.add_new_line
 				text.add_indents (3)
 				text.add_comment ("-- ")
 				text.add_comment ("Description unavailable.")
-				new_line
+				put_new_line
 			end
 		end
 	

@@ -72,7 +72,7 @@ feature -- Update
 				edit_attr.work(Project_tool)
 			end
 			if edit_attr.modified or edit_local.modified then
-				io.putstring("modification done.%N")
+				io.put_string("modification done.%N")
 			end
 		end
 
@@ -87,7 +87,7 @@ feature -- Execution
 			edit_local := Project_tool.edit_local
 			edit_local.work(Project_tool)
 			if edit_local.modified then
-				io.putstring("modification done.%N")
+				io.put_string("modification done.%N")
 			end
 		end
 

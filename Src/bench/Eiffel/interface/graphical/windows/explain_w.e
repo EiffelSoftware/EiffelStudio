@@ -57,7 +57,7 @@ feature -- Status setting
 					l.after
 				loop
 					text_window.put_string (l.item)
-					text_window.new_line
+					text_window.put_new_line
 					l.forth
 				end
 				text_window.display

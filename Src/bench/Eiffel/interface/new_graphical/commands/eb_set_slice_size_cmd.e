@@ -111,7 +111,7 @@ feature -- Execution
 				min_slice_ref.set_item (slice_min)
 				max_slice_ref.set_item (slice_max)
 				debug ("DEBUGGER_INTERFACE")
-					io.putstring ("Messages are displayed%N")
+					io.put_string ("Messages are displayed%N")
 				end
 			end
 		end
@@ -268,8 +268,8 @@ feature {NONE} -- Implementation
 						else
 							create {DEBUGGED_OBJECT_CLASSIC} dobj.make (address, 0, 2)						
 						end
-						io.putstring ("Capacity: " + dobj.capacity.out + "%N")
-						io.putstring ("Max capacity: " + dobj.max_capacity.out + "%N")						
+						io.put_string ("Capacity: " + dobj.capacity.out + "%N")
+						io.put_string ("Max capacity: " + dobj.max_capacity.out + "%N")						
 					end
 					if for_tool then
 						obj := tool.get_object_display_parameters (address)
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 						-- A special value is available, that's an easy one!
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string ("Special_value found%N")
-						io.putstring ("Capacity: " + dv.capacity.out + "%N")
+						io.put_string ("Capacity: " + dv.capacity.out + "%N")
 					end
 				
 					slice_min := dv.sp_lower
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 				-- Display the dialog.
 			dial.disable_user_resize
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("displaying the dialog%N")
+				io.put_string ("displaying the dialog%N")
 			end
 			if for_tool then
 				dial.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			l_st_addr: STRING
 		do
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("dropped stone%N")
+				io.put_string ("dropped stone%N")
 			end
 
 			l_st_addr := st.object_address
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			if abs_spec_dv /= Void then
 				debug ("DEBUGGER_INTERFACE")
 					io.put_string ("Special_value found%N")
-					io.putstring ("Capacity: " + abs_spec_dv.capacity.out + "%N")
+					io.put_string ("Capacity: " + abs_spec_dv.capacity.out + "%N")
 				end
 				
 				get_slice_limits (False, Void, abs_spec_dv)
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 				obj := tool.get_object_display_parameters (l_st_addr)
 				if obj /= Void then
 					debug ("DEBUGGER_INTERFACE")
-						io.putstring ("Found an object at address " + l_st_addr + "!%N")
+						io.put_string ("Found an object at address " + l_st_addr + "!%N")
 					end
 	
 						--| FIXME jfiat [2003/10/08 - 18:19] Not very nice design ..
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 					else
 						create {DEBUGGED_OBJECT_CLASSIC} dobj.make (l_st_addr, 0, 1)
 						debug ("DEBUGGER_INTERFACE")
-							io.putstring ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
+							io.put_string ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
 						end
 						if dobj.is_special then
 							get_slice_limits (False, l_st_addr, Void)

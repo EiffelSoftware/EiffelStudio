@@ -83,19 +83,19 @@ feature {PREFERENCE_CATEGORY} -- Access
 					--| text /= Void means: text has been displayed
 					--| and thus the user could have changed the value.
 				if ar.value = Void or else ar.value.is_empty then
-					file.putstring ("%"%"")
+					file.put_string ("%"%"")
 				else
-					file.putchar ('%"')
-					file.putstring (ar.value)
-					file.putchar ('%"')
+					file.put_character ('%"')
+					file.put_string (ar.value)
+					file.put_character ('%"')
 				end
 			else
 				if text.text.is_empty then
-					file.putstring ("%"%"")
+					file.put_string ("%"%"")
 				else
-					file.putchar ('%"')
-					file.putstring (text.text)
-					file.putchar ('%"')
+					file.put_character ('%"')
+					file.put_string (text.text)
+					file.put_character ('%"')
 				end
 			end
 		end;

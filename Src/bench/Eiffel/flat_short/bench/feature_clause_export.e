@@ -112,7 +112,7 @@ feature -- Context output
 				ctxt.put_space;
 			end;
 			if comments = Void then
-				ctxt.new_line
+				ctxt.put_new_line
 			else
 				ctxt.put_comments (comments);
 			end;
@@ -140,7 +140,7 @@ feature -- Context output
 			end;
 			ctxt.put_text_item (ti_After_feature_clause)
 			ctxt.exdent;
-			ctxt.new_line;
+			ctxt.put_new_line;
 		end
 
 feature {FEATURE_CLAUSE_EXPORT, CATEGORY} -- Implementation

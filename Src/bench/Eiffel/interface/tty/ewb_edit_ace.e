@@ -25,7 +25,7 @@ feature {NONE} -- Execution
 		do
 			lace_name := Eiffel_ace.file_name
 			if lace_name = Void then
-				io.error.putstring ("You must select an Ace file first%N");
+				io.error.put_string ("You must select an Ace file first%N");
 			else
 				edit (lace_name);
 			end;

@@ -342,21 +342,21 @@ feature -- Update
 		do
 			s := yank_window.stored_output
 			if s.is_empty then
-				io.error.putstring ("There is no output to save.%N")
+				io.error.put_string ("There is no output to save.%N")
 			else
 				from
 				until
 					done
 				loop
 					if not command_line_io.more_arguments then
-						io.putstring ("--> File name: ")
+						io.put_string ("--> File name: ")
 						command_line_io.get_name
 					end
 					command_line_io.get_last_input
 					if not command_line_io.last_input.is_empty then
 						create file_w.make (command_line_io.last_input)
 						if file_w.exists then
-							io.putstring ("File already exists.%N")
+							io.put_string ("File already exists.%N")
 						else
 							file_w.open_file
 							if file_w.exists then
@@ -364,9 +364,9 @@ feature -- Update
 								file_w.close
 								done := True
 							else
-								io.error.putstring ("Cannot create file: ")
-								io.error.putstring (file_w.name)
-								io.error.new_line
+								io.error.put_string ("Cannot create file: ")
+								io.error.put_string (file_w.name)
+								io.error.put_new_line
 							end
 						end
 					else
@@ -387,7 +387,7 @@ feature -- Update
 			until
 				done
 			loop
-				io.putstring ("Command => ")
+				io.put_string ("Command => ")
 				command_line_io.get_name
 				command_line_io.get_last_input
 				rq := command_line_io.last_input
@@ -417,11 +417,11 @@ feature -- Update
 			if req.has ('.') then
 				dot_place := req.index_of ('.', 1)
 				debug
-					io.putstring ("Req :")
-					io.putstring (req)
-					io.putstring (": dot place")
-					io.putint (dot_place)
-					io.new_line
+					io.put_string ("Req :")
+					io.put_string (req)
+					io.put_string (": dot place")
+					io.put_integer (dot_place)
+					io.put_new_line
 				end	
 				menu := req.substring (1,dot_place -1)
 				if menu.count = 1 then 
@@ -461,9 +461,9 @@ feature -- Update
 							process_request (option)
 						end
 					else
-						io.putstring ("Unknown menu ")
-						io.putstring (menu)
-						io.putstring (".%N")
+						io.put_string ("Unknown menu ")
+						io.put_string (menu)
+						io.put_string (".%N")
 					end
 				end
 			else
@@ -502,9 +502,9 @@ feature -- Update
 						end
 						display_commands
 					else
-						io.putstring ("Unknown option ")
-						io.putstring (req)
-						io.putstring (".%N")
+						io.put_string ("Unknown option ")
+						io.put_string (req)
+						io.put_string (".%N")
 					end
 				end		
 			end
@@ -514,9 +514,9 @@ feature -- Output
 
 	display_header is
 		do
-			io.putstring ("==== ISE " + Workbench_name + " - Interactive Batch Version (v")
-			io.putstring (Version_number)
-			io.putstring (") ====%N%N")
+			io.put_string ("==== ISE " + Workbench_name + " - Interactive Batch Version (v")
+			io.put_string (Version_number)
+			io.put_string (") ====%N%N")
 		end
 
 	display_commands is

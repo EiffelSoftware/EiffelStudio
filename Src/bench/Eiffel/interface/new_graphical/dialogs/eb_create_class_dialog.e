@@ -583,12 +583,12 @@ feature {NONE} -- Implementation
 						in_buf.prune_all ('%R')
 						if text_mode_is_windows then
 							in_buf.replace_substring_all ("%N", "%R%N")
-							output.putstring (in_buf)
+							output.put_string (in_buf)
 						else
-							output.putstring (in_buf)
+							output.put_string (in_buf)
 							if in_buf.item (in_buf.count) /= '%N' then 
 									-- Add a carriage return like `vi' if there's none at the end 
-								output.new_line
+								output.put_new_line
 							end
 						end
 					end

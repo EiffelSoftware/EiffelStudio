@@ -60,9 +60,9 @@ feature {NONE} -- Execution
 				create prof_converter.make (<<proffile_dir, compile_type>>, conf_load.shared_prof_config);
 				if prof_converter.conf_load_error then
 					io.error.put_string (proffile_dir)
-					io.error.putstring (": File does not exist!%N%N")
+					io.error.put_string (": File does not exist!%N%N")
 				else
-					io.putstring ("Ready for queries...")
+					io.put_string ("Ready for queries...")
 				end
 			end;
 		end;
@@ -79,9 +79,9 @@ feature {NONE} -- Implementation
 			-- profiler specific configuration file.
 		do
 			output_window.put_string ("An error occurred while loading the configuration for your profiler.");
-			output_window.new_line;
+			output_window.put_new_line;
 			output_window.put_string ("Please check with your system administrator whether your profiler is supported.");
-			output_window.new_line;
+			output_window.put_new_line;
 		end
 
 end -- class EWB_GENERATE

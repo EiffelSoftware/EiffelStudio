@@ -53,9 +53,9 @@ feature -- Debug
 			until
 				after
 			loop
-				io.error.putstring ("Position: ");
-				io.error.putint (key_for_iteration);
-				io.error.new_line;
+				io.error.put_string ("Position: ");
+				io.error.put_integer (key_for_iteration);
+				io.error.put_new_line;
 				item_for_iteration.trace;
 				forth
 			end

@@ -90,9 +90,9 @@ feature {NONE}
 			if a_pix.is_valid then
 				Result.set_pixmap (a_pix, a_pix);
 			else
-				io.error.putstring ("Warning: cannot read cursor file ");
-				io.error.putstring (full_path);
-				io.error.new_line;
+				io.error.put_string ("Warning: cannot read cursor file ");
+				io.error.put_string (full_path);
+				io.error.put_new_line;
 			end;
 		end;
 

@@ -100,10 +100,10 @@ feature -- Access
 		local
 			res: like resources
 		do
-			file.putstring ("-- **** ");
-			file.putstring (name);
-			file.putstring (" **** ");
-			file.new_line
+			file.put_string ("-- **** ");
+			file.put_string (name);
+			file.put_string (" **** ");
+			file.put_new_line
 			from
 				res := resources;
 				res.start
@@ -113,7 +113,7 @@ feature -- Access
 				res.item.save (file);
 				res.forth
 			end;
-			file.new_line
+			file.put_new_line
 		end;
 
 	update is

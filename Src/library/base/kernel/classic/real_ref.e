@@ -256,7 +256,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of real value
 		do
-			Result := c_outr (item)
+			Result := c_outr32 (item)
 		end
 
 feature {NONE} -- Implementation
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			same_absolute_value: equal (Result, Current) or equal (Result, - Current)
 		end
 
-	c_outr (r: REAL): STRING is
+	c_outr32 (r: REAL): STRING is
 			-- Printable representation of real value
 		external
 			"C | %"eif_out.h%""
@@ -284,24 +284,24 @@ feature {NONE} -- Implementation
 			-- Integer part of `r' (same sign, largest absolute
 			-- value no greater than `r''s)
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"conv_ri"
+			"((EIF_INTEGER) ($r))"
 		end
 
 	c_truncated_to_integer_64 (r: REAL): INTEGER_64 is
 			-- Integer part of `r' (same sign, largest absolute
 			-- value no greater than `r''s)
 		external
-			"C macro use %"eif_misc.h%""
+			"C inline use %"eif_eiffel.h%""
 		alias
-			"conv_ri64"
+			"((EIF_INTEGER_64) ($r))"
 		end
 
 	c_ceiling (r: REAL): REAL is
 			-- Smallest integral value no smaller than `r'
 		external
-			"C macro signature (double): EIF_REAL use <math.h>"
+			"C signature (double): double use <math.h>"
 		alias
 			"ceil"
 		end
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 	c_floor (r: REAL): REAL is
 			-- Greatest integral value no greater than `r'
 		external
-			"C macro signature (double): EIF_REAL use <math.h>"
+			"C signature (double): double use <math.h>"
 		alias
 			"floor"
 		end

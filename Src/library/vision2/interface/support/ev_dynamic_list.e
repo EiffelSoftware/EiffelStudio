@@ -28,7 +28,7 @@ inherit
 			put_i_th as dl_put_i_th,
 			put_left as dl_put_left
 		export
-			{NONE} duplicate, new_chain
+			{NONE} duplicate, new_chain, dl_prune
 			{EV_DYNAMIC_LIST_I} sequential_index_of
 		undefine
 			changeable_comparison_criterion,

@@ -56,7 +56,6 @@ feature -- Initialization
 				request_select.load_result
 			end
 			request_select.terminate
-
 		end
 
 

@@ -472,6 +472,7 @@ feature -- Formatter
 			ctxt.begin;
 			if not ctxt.no_internals then
 				ctxt.put_keyword(" is");
+				ctxt.put_breakable; -- record in body_as, should be here
 			end;
 			if ctxt.trailing_comment_exists (position) then
 				ctxt.begin;

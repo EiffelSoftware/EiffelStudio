@@ -290,6 +290,7 @@ feature -- Type check, byte code and dead code removal
 				call.format (ctxt);
 				-- check whether "." is needeed
 			end;
+			ctxt.put_breakable;
 			ctxt.always_succeed;
 		end;
 

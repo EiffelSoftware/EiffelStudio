@@ -50,6 +50,7 @@ feature -- Type check, byte code and dead code removal
 			check_list.format (ctxt);
 			ctxt.indent_one_less;
 			ctxt.put_keyword ("end");
+			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 

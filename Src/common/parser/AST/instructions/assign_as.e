@@ -104,6 +104,7 @@ feature -- Type check, byte code production, dead_code_removal
 			ctxt.put_special (assign_symbol);
 			ctxt.new_expression;
 			source.format (ctxt);
+			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 		

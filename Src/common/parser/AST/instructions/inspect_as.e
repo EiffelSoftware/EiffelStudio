@@ -134,6 +134,7 @@ feature -- Formatter
 				ctxt.next_line;
 			end;
 			ctxt.put_keyword("end");
+			ctxt.put_breakable;	
 			ctxt.commit;
 		end;
 

@@ -217,6 +217,15 @@ feature
 						internal_name := clone (rout_table.feature_name (typ.type_id));
 						generated_file.putstring (internal_name);
 					else
+						if special_id = macro_id then
+								--| External procedure will be generated as:
+								--| (void) (c_proc (args));
+								--| The extra parenthesis are necessary if c_proc is
+								--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
+								--| Without the parenthesis, the cast is done only on the first
+								--| argument, not the entire expression (affectation)
+							generated_file.putchar ('(');
+						end;
 						internal_name := external_name;
 						generated_file.putstring (internal_name);
 					end;
@@ -278,6 +287,14 @@ feature
 			if generate_parenthesis then
 				generated_file.putchar (')');
 			end;
+			if
+				context.final_mode and then
+				not Eiffel_table.item_id (rout_id).is_polymorphic (class_type.type_id) and then
+				special_id = macro_id and encapsulated
+			then
+					--| See comments in `generate_access_on_type'
+				generated_file.putchar (')');
+			end
 			if meta then
 					-- Close parenthesis opened by metamorphosis code
 				generated_file.putchar (')');

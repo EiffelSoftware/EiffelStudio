@@ -278,12 +278,20 @@ feature -- Byte code generation
 					-- I'm not sure this is really needed
 				generated_file.putstring ("(void) ");
 			end;
+				--| External procedure will be generated as:
+				--| (void) (c_proc (args));
+				--| The extra parenthesis are necessary if c_proc is
+				--| an affectation e.g. c_proc(arg1, arg2) arg1 = arg2
+				--| Without the parenthesis, the cast is done only on the first
+				--| argument, not the entire expression (affectation)
+			generated_file.putchar ('(');
 			generated_file.putstring (external_name);
 			if arguments /= Void then
 				generated_file.putchar ('(');
 				generate_arguments_with_cast;
 				generated_file.putchar (')');
 			end;
+			generated_file.putchar (')');
 			generated_file.putchar (';');
 			generated_file.new_line;
 		end;

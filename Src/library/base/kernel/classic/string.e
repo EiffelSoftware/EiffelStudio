@@ -97,10 +97,12 @@ feature -- Initialization
 		require
 			string_exists: s /= Void
 		do
-			area := clone (s.area)
-			count := s.count
+			if Current /= s then
+				area := clone (s.area)
+				count := s.count
+			end
 		ensure
-			shared_implementation: not shared_with (s)
+			not_shared_implementation: Current /= s implies not shared_with (s)
 		end
 
 	make_from_c (c_string: POINTER) is

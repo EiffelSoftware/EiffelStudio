@@ -107,9 +107,11 @@ feature -- Initialization
 		require
 			string_exists: s /= Void
 		do
-			create internal_string_builder.make_from_value (s.internal_string_builder.to_string)
+			if Current /= s then
+				create internal_string_builder.make_from_value (s.internal_string_builder.to_string)
+			end
 		ensure
-			shared_implementation: not shared_with (s)
+			shared_implementation: Current /= s implies not shared_with (s)
 		end
 
 	make_from_native_array (arr: NATIVE_ARRAY [CHARACTER]) is

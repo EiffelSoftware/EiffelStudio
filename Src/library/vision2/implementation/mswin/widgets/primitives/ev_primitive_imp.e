@@ -16,8 +16,6 @@ inherit
 
 	EV_WIDGET_IMP
 		
-	EV_SIZEABLE_IMP
-
 feature -- Status setting
 
 	destroy is

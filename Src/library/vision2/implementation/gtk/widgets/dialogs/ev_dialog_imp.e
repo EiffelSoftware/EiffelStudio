@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 		local
 			a_key_code: INTEGER
 		do
-			if a_key /= Void and then not App_implementation.is_in_transport then
+			if a_key /= Void and then not (App_implementation.is_in_transport and then app_implementation.captured_widget /= Void) then
 				a_key_code := a_key.code
 
 				if a_key_code = Key_constants.Key_escape and then

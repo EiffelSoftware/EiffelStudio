@@ -1,15 +1,15 @@
 indexing
-
 	description: "Access to Java array of 'int'"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_INT_ARRAY
+class
+	JAVA_INT_ARRAY
 
 inherit
-
 	JAVA_ARRAY 
 
-creation
-	
+create
 	make
 	
 feature

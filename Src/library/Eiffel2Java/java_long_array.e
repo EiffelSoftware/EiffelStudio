@@ -1,13 +1,15 @@
 indexing
 	description: "Access to Java array of 'long'"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_LONG_ARRAY
+class
+	JAVA_LONG_ARRAY
 
 inherit
 	JAVA_ARRAY 
 
-creation
-	
+create
 	make
 	
 feature

@@ -1,16 +1,16 @@
 indexing
-
 	description: "Access to Java array of bytes. Bytes are %
                  %represented as CHARACTER in Eiffel."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_BYTE_ARRAY
+class
+	JAVA_BYTE_ARRAY
 
 inherit
-
 	JAVA_ARRAY 
 
-creation
-	
+create
 	make
 	
 feature

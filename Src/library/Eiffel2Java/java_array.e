@@ -1,21 +1,22 @@
 indexing
-	
 	description: "parent of all Java array classes that contains the %
                  %common routines to all arrays. Not to be used directly,%
                  % instead use the class with array of specific type."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_ARRAY
+class
+	JAVA_ARRAY
 
 inherit
-
 	SHARED_JNI_ENVIRONMENT
+
 	JAVA_EXTERNALS
 
-creation {NONE} -- prevent people from creating instances of this type
-
+create {NONE}
 	make_from_pointer
 
-feature
+feature {NONE} -- Initialization
 
 	make_from_pointer (p: POINTER) is
 			-- make an Eiffel array accessor out of a pointer to a 
@@ -25,6 +26,8 @@ feature
 		do
 			jarray := p
 		end
+
+feature -- Status report
 
 	count : INTEGER is
 			-- number of cells in this array

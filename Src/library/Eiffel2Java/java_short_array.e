@@ -1,16 +1,16 @@
 indexing
-
 	description: "Access to Java array of shorts (in Eiffel shorts %
                  %are respresente as INTEGER)"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_SHORT_ARRAY
+class
+	JAVA_SHORT_ARRAY
 
 inherit
-
 	JAVA_ARRAY
 
-creation
-	
+create
 	make
 	
 feature

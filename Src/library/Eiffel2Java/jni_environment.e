@@ -1,17 +1,17 @@
 indexing
-
 	description: "Holds information abouy JNI environment. %
                  %Potentially many JNI environments can exists at once,%
                  % but more than one was never tested"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JNI_ENVIRONMENT
+class
+	JNI_ENVIRONMENT
 
 inherit
-
 	JAVA_EXTERNALS
 
-creation {JAVA_VM}
-
+create {JAVA_VM}
 	make
 
 feature

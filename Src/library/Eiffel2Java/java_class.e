@@ -1,12 +1,13 @@
 indexing
-
 	description: "Access to Java classes. Static methods and %
                  %attributes are accessed via this class"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_CLASS
+class
+	JAVA_CLASS
 
 inherit
-
 	JAVA_OBJECT
 		rename
 			java_object_id as java_class_id
@@ -45,8 +46,7 @@ inherit
 		end
 			
 
-creation {JNI_ENVIRONMENT}
-
+create {JNI_ENVIRONMENT}
 	make
 
 feature

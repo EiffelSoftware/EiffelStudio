@@ -1,16 +1,16 @@
 indexing
-	
 	description: "Access to Java array of booleans. In Java it would %
                  %be declared as 'boolean arr[]'"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_BOOLEAN_ARRAY
+class
+	JAVA_BOOLEAN_ARRAY
 
 inherit
-
 	JAVA_ARRAY
 
-creation
-	
+create
 	make
 	
 feature

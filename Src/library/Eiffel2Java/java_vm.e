@@ -1,16 +1,16 @@
 indexing
-
 	description: "This class is used to initially load the JVM into %
                  %the running program"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class JAVA_VM
+class
+	JAVA_VM
 
 inherit
-
 	EXCEPTIONS
 
-creation
-
+create
 	make
 
 feature

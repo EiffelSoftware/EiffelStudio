@@ -39,6 +39,9 @@ doc:<file name="file.c" header="eif_file.h" version="$Id$" summary="Externals fo
 #include <unistd.h>
 #endif
 
+#ifdef I_TIME
+#include <time.h>
+#endif
 #ifdef I_UTIME
 #include <utime.h>
 #endif

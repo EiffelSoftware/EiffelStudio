@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			menu_item_imp ?= item_imp
 
 			ev_children.go_i_th (pos)
-			ev_children.put_left (menu_item_imp)
+		--	ev_children.put_left (menu_item_imp)
 
 			sep_imp ?= item_imp
 			if sep_imp /= Void then
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			ev_children.go_i_th (pos - 1)
+			--ev_children.go_i_th (pos - 1)
 		end
 
 	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN is
@@ -250,8 +250,8 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			delete_position (pos - 1)
-			ev_children.prune (menu_item_imp)
+		--	delete_position (pos - 1)
+		--	ev_children.prune (menu_item_imp)
 		end
 
 	destroy is
@@ -341,6 +341,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/10 17:57:48  brendel
+--| Removed calls to ev_children in graphical insert/remove function.
+--|
 --| Revision 1.14  2000/04/10 16:27:56  brendel
 --| Modified creation sequence.
 --|

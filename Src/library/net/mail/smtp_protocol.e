@@ -11,7 +11,7 @@ inherit
 	SENDING_PROTOCOL
 
 create
-	make_smtp, make_smtp_and_connect
+	make_smtp, make_smtp_connect_and_initiate
 
 feature -- Initialization
 
@@ -22,14 +22,14 @@ feature -- Initialization
 			make (a_hostname, default_port)
 		end
 
-	make_smtp_and_connect (a_hostname:STRING; a_username: STRING) is
+	make_smtp_connect_and_initiate (a_hostname:STRING; a_username: STRING) is
 			-- Create an smtp protocol with 'a_hostname, 'a_port' and 'a_username'.
 		do
 			username:= a_username
 			make (a_hostname, default_port)
 			connect
+			initiate
 		end
-
 
 feature -- Access
 
@@ -47,20 +47,8 @@ feature -- Access
 					 smtp_code_number /= 0
 		end
 
-feature -- Access EMAIL_PROTOCOL
-
-	default_port: INTEGER is 25
-
-feature -- Status setting
-
 	pipelining: BOOLEAN
 		-- Does the connection will use pipeline?
-
-feature -- Status setting. (EMAIL_RESOURCE)
-
-	is_sender: BOOLEAN is True
-
-	is_receiver: BOOLEAN is True
 
 feature -- Setting
 
@@ -76,11 +64,32 @@ feature -- Setting
 			pipelining:= False
 		end
 
-feature {NONE} -- Implementation (EMAIL_PROTOCOL).
+feature -- Access EMAIL_PROTOCOL
+
+	default_port: INTEGER is 25
+		-- Smtp default port.
+
+	memory_resource: MEMORY_RESOURCE
+		-- Memory resource to be send.
+
+feature -- Implementation (EMAIL_PROTOCOL).
+
+	transfer (resource: MEMORY_RESOURCE) is
+			-- Send the email and add a %N. at the end of the message.
+		require else
+			connection_exists: is_connected
+			connection_initiated: is_initiated
+		do
+			memory_resource:= resource
+			send_mail
+			terminate
+		end
+
+feature -- Basic operations.
 
 	initiate is
-			-- Initiate the smtp connection.
-			-- It can be an helo or an ehlo connection.
+			-- Initiate the smtp connection
+			-- It can be a helo or a ehlo connection.
 		do
 			if pipelining then
 				send (ehlo + username)
@@ -92,8 +101,11 @@ feature {NONE} -- Implementation (EMAIL_PROTOCOL).
 			end
 		end
 
-	transfer is
-			-- Send the email and add a %N. at the end of the message.
+	send_mail is
+			-- Send mail 'memory_resource' using smtp protocol.
+		require
+			connection_exists: is_connected
+			connection_initiated: is_initiated		
 		do
 
 		end
@@ -103,6 +115,11 @@ feature {NONE} -- Implementation (EMAIL_PROTOCOL).
 		do
 			socket.cleanup
 		end
+
+feature -- Implementation (EMAIL_RESOURCE)
+
+	can_receive: BOOLEAN is False
+		-- Smtp protocol can not receive.
 
 feature {NONE} -- Implementation
 

@@ -11,11 +11,10 @@ class
 inherit
 	EMAIL_PROTOCOL
 
-feature -- Initialization
+feature -- Implemantation (EMAIL_RESOURCE)
 
-	transfer is
-			-- Transfer any message.
-		deferred
-		end
+	can_send: BOOLEAN is True
+		-- A sending protocol can send.
+
 
 end -- class SENDING_PROTOCOL

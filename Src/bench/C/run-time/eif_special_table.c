@@ -87,9 +87,6 @@ rt_public int spt_realloc (struct special_table *spt, int size)
 	 * Reallocate the special table up to size `n'. 
 	 */
 
-	EIF_INTEGER 	*hkeys;			/* For key array creation. */
-	EIF_REFERENCE 	*hvalues;		/* For values array creation. */
-	EIF_REFERENCE 	*oldvalues;		/* For old values. */
 	int				gain;			/* Number of new free entries. */
 	EIF_INTEGER		index;			/* Index of first free entry. */
 	void			*temp;			/* Return value of realloc(). */

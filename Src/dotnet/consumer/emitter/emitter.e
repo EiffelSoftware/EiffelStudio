@@ -465,8 +465,8 @@ feature {NONE} -- Implementation
 	cache_writer: CACHE_WRITER
 			-- cache writer to manipulate contents of specified EAC.
 
-	cache_reader: CACHE_READER
-			-- Cache reader to read contents of specified EAC
+	cache_reader: CACHE_REFLECTION
+			-- Cache reflection to read contents of specified EAC
 			
 	exec_from_cli: BOOLEAN
 			-- Is consumer being executed from a command line interface?

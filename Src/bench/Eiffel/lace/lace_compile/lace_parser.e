@@ -43,12 +43,14 @@ feature
 				!!vd21;
 				vd21.set_file_name (file_name);
 				Error_handler.insert_error (vd21);
+				Error_handler.raise_error
 			else
 				if not open_file (file) then
 						-- Error when opening file
 					!!vd22;
 					vd22.set_file_name (file_name);
 					Error_handler.insert_error (vd22);
+					Error_handler.raise_error
 				else
 						-- Disable garbage collector before parsing
 					collection_off;

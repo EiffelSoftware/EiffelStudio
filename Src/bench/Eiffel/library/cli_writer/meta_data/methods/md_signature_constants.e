@@ -100,4 +100,115 @@ feature -- Types
 	element_type_pinned: INTEGER_8 is 0x05
 		-- ELEMENT_TYPE_MODIFIER,
 
+feature -- Native types
+
+	native_type_end: INTEGER_8 is 0x0
+			-- DEPRECATED
+
+	native_type_void: INTEGER_8 is 0x1
+			-- DEPRECATED
+
+	native_type_boolean: INTEGER_8 is 0x2
+			-- (4 byte boolean value: TRUE = non-zero, FALSE = 0)
+
+	native_type_i1: INTEGER_8 is 0x3
+
+	native_type_u1: INTEGER_8 is 0x4
+
+	native_type_i2: INTEGER_8 is 0x5
+
+	native_type_u2: INTEGER_8 is 0x6
+
+	native_type_i4: INTEGER_8 is 0x7
+
+	native_type_u4: INTEGER_8 is 0x8
+
+	native_type_i8: INTEGER_8 is 0x9
+
+	native_type_u8: INTEGER_8 is 0xa
+
+	native_type_r4: INTEGER_8 is 0xb
+
+	native_type_r8: INTEGER_8 is 0xc
+
+	native_type_syschar: INTEGER_8 is 0xd
+			-- DEPRECATED 
+
+	native_type_variant: INTEGER_8 is 0xe
+			-- DEPRECATED
+
+	native_type_currency: INTEGER_8 is 0xf
+
+	native_type_ptr: INTEGER_8 is 0x10
+			-- DEPRECATED
+
+	native_type_decimal: INTEGER_8 is 0x11
+			-- DEPRECATED
+
+	native_type_date: INTEGER_8 is 0x12
+			-- DEPRECATED
+
+	native_type_bstr: INTEGER_8 is 0x13
+
+	native_type_lpstr: INTEGER_8 is 0x14
+
+	native_type_lpwstr: INTEGER_8 is 0x15
+
+	native_type_lptstr: INTEGER_8 is 0x16
+
+	native_type_fixedsysstring: INTEGER_8 is 0x17
+
+	native_type_objectref: INTEGER_8 is 0x18
+			-- DEPRECATED
+
+	native_type_iunknown: INTEGER_8 is 0x19
+
+	native_type_idispatch: INTEGER_8 is 0x1a
+
+	native_type_struct: INTEGER_8 is 0x1b
+
+	native_type_intf: INTEGER_8 is 0x1c
+
+	native_type_safearray: INTEGER_8 is 0x1d
+
+	native_type_fixedarray: INTEGER_8 is 0x1e
+
+	native_type_int: INTEGER_8 is 0x1f
+
+	native_type_uint: INTEGER_8 is 0x20
+
+	native_type_nestedstruct: INTEGER_8 is 0x21
+			-- DEPRECATED (use NATIVE_TYPE_STRUCT)	
+
+	native_type_byvalstr: INTEGER_8 is 0x22
+	
+	native_type_ansibstr: INTEGER_8 is 0x23
+
+	native_type_tbstr: INTEGER_8 is 0x24
+			-- select BSTR or ANSIBSTR depending on platform
+
+	native_type_variantbool: INTEGER_8 is 0x25
+			-- (2-byte boolean value: TRUE = -1, FALSE = 0)
+
+	native_type_func: INTEGER_8 is 0x26
+
+	native_type_asany: INTEGER_8 is 0x28
+
+	native_type_array: INTEGER_8 is 0x2a
+
+	native_type_lpstruct: INTEGER_8 is 0x2b
+
+	native_type_custommarshaler: INTEGER_8 is 0x2c
+			--	Custom marshaler native type. This must be followed 
+			-- by a string of the following format:
+			-- "Native type name/0Custom marshaler type name/0Optional cookie/0"
+			-- Or
+			-- "{Native type GUID}/0Custom marshaler type name/0Optional cookie/0"
+
+	native_type_error: INTEGER_8 is 0x2d
+			-- This native type coupled with ELEMENT_TYPE_I4 will map to VT_HRESULT
+
+	native_type_max: INTEGER_8 is 0x50
+			-- first invalid element type
+
 end -- class MD_SIGNATURE_CONSTANTS

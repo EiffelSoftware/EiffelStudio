@@ -313,6 +313,18 @@ feature -- Definition: creation
 			success: last_call_success = 0
 			result_valid: Result & Md_mask = Md_param_def
 		end
+		
+	set_field_marshal (a_token: INTEGER; a_native_type_sig: MD_NATIVE_TYPE_SIGNATURE) is
+			-- Set a particular marshaling for `a_token'. Limited to parameter token for the moment.
+		require
+			a_token_valid: a_token & Md_mask = md_param_def
+			a_native_type_sig_not_void: a_native_type_sig /= Void
+		do
+			last_call_success := c_set_field_marshal (item, a_token,
+				a_native_type_sig.item.item, a_native_type_sig.count)
+		ensure
+			success: last_call_success = 0
+		end
 
 	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; a_signature: MD_FIELD_SIGNATURE): INTEGER
@@ -442,6 +454,20 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineField"
+		end
+
+	c_set_field_marshal (an_item: POINTER; a_token: INTEGER; a_signature: POINTER;
+			a_sig_length: INTEGER): INTEGER
+		is
+			-- Call `IMetaDataEmit->SetFieldMarshal'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdToken, PCCOR_SIGNATURE, ULONG): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"SetFieldMarshal"
 		end
 
 	c_define_member_ref (an_item: POINTER; type_token: INTEGER; name: POINTER;

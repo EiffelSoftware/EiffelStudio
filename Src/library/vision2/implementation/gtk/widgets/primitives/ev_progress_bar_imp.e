@@ -100,21 +100,33 @@ feature -- Element change
 	set_value (val: INTEGER) is
 			-- Make `val' the new current value.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	set_step (val: INTEGER) is
 			-- Make `val' the new step.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	set_minimum (val: INTEGER) is
 			-- Make `val' the new minimum.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	set_maximum (val: INTEGER) is
 			-- Make `val' the new maximum.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 end -- class EV_PROGRESS_BAR_IMP

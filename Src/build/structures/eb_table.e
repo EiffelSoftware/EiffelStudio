@@ -25,12 +25,10 @@ inherit
 			{ANY} item, max_size
 		end
 
-
 creation
 
 	make
 
-   
 feature 
 
 	make (size: INTEGER) is
@@ -48,10 +46,9 @@ feature
 	  local
 		 extra_block_size: INTEGER
 	  do
-		 if
-			(count >= upper - 1)
-		 then
-			extra_block_size := max (Block_threshold, (Extra_percentage * upper) // 100);
+		 if (count >= upper - 1) then
+			extra_block_size := Block_threshold.max 
+								((Extra_percentage * upper) // 100);
 			resize (1, upper + extra_block_size)
 		 end;
 		 count := count + 1;
@@ -85,9 +82,7 @@ feature
 		 loop
 			i := i + 1
 		 end;
-		 if
-			i > count
-		 then
+		 if i > count then
 			Result := 0
 		 else
 			Result := i

@@ -118,11 +118,15 @@ feature  -- Access
 			valid_stone: Result /= Void implies Result.is_valid
 		end;
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: STONE): BOOLEAN is
 			-- Is `other' same as Current?
 			--| By default: Result = equal (Current, other).
+		local
+			o: like Current
 		do
-			Result := equal (Current, other)
+				-- System level validity problems
+			o ?= other;
+			Result := equal (Current, o)
 		end
 
 end -- class STONE

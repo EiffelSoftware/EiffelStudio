@@ -16,6 +16,15 @@ feature -- Externals
 			"check_assert"
 		end
 
+	frozen conforms_to (obj1, obj2: ANY): BOOLEAN is
+			-- Generating type name of object `o'.
+			-- (type of which it is a direct instance)
+		external
+			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.GENERIC_CONFORMANCE"
+		alias
+			"conforms_to"
+		end
+	
 	frozen generic_parameter_count (o: SYSTEM_OBJECT): INTEGER is
 			-- Number of generic parameters. 0 if none.
 		external

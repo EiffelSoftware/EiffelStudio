@@ -6,12 +6,12 @@
 			<size>2</size> Using the Generated Code
 		</heading>
 		<paragraph> To access the component, you need to call features of the coclass. The data types of function arguments are either Eiffel types defined in Eiffeldata structure libraries (EiffelBase), standard COM data types defined in the EiffelCOM library, or component COM data types specified in the definition file. For example, from the following IDL line</paragraph>
-		<code_block>
+<code_block>
 HRESULT InterfaceFunction ([in] int a, [out, retval] MyStruct * b)
 </code_block>
 		<paragraph>The wizard generates the following feature in the Eiffel coclass:</paragraph>
-		<code_block>
-interface_function (a: INTEGER): MY_STRUCT_RECORD
+<code_block>
+<feature_name>interface_function</feature_name> <symbol>(</symbol><feature_name>a</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>MY_STRUCT_RECORD</class_name>
 </code_block>
 		<paragraph>where 
 			<code>
@@ -20,12 +20,12 @@ interface_function (a: INTEGER): MY_STRUCT_RECORD
 			<italic>MyStruct</italic>.
 		</paragraph>
 		<paragraph>Here is a more difficult example:</paragraph>
-		<code_block>
+<code_block>
 HRESULT a_function ([in] IsomeInterface * p_interface)
 </code_block>
 		<paragraph>The wizard generates the following Eiffelfeature:</paragraph>
-		<code_block>
-a_function (p_interface: ISOME_INTERFACE_INTERFACE)
+<code_block>
+<feature_name>a_function</feature_name> <symbol>(</symbol><local_variable>p_interface</local_variable><symbol>:</symbol> <class_name>ISOME_INTERFACE_INTERFACE</class_name><symbol>)</symbol>
 </code_block>
 		<paragraph>where 
 			<code>
@@ -41,16 +41,16 @@ a_function (p_interface: ISOME_INTERFACE_INTERFACE)
 		<paragraph>The wizard cannot generate fully specified contracts. Indeed, the tool has no domain specific knowledge and can only generate contracts that are domain independent. Such contracts, although useful, are not enough to describe entirely the behavior of the component. Generated contracts include void Eiffel objects as well as C pointer validity (for wrappers) checking. There might be other conditions to allow calls to an Eiffel coclass feature. Invariants and postconditions can be enforced in an heir of the generated Eiffel coclass. Preconditions, however, cannot be strengthened. A workaround provided by the wizard is to generate a precondition function for each feature in the interface. The default implementation of these functions always returns 
 			<italic>True</italic>. They should be redefined to implement the correct behavior:
 		</paragraph>
-		<code_block>
-interface_function (a: INTEGER): MY_STRUCT is
-                -- Example of a generated Eiffel coclass feature
-        require
-            interface_function_user_precondition: interface_function_user_precondition
-        do
-            ...
-        ensure
-            non_void_my_struct: Result /= Void
-        end
+<code_block>
+<feature_name>interface_function</feature_name> <symbol>(</symbol><local_variable>a</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>MY_STRUCT</class_name> <keyword>is</keyword>
+		<comment>-- Example of a generated Eiffel coclass feature</comment>
+	<keyword>require</keyword>
+		interface_function_user_precondition: <feature_name>interface_function_user_precondition</feature_name>
+	<keyword>do</keyword>
+		...
+	<keyword>ensure</keyword>
+		non_void_my_struct: <keyword>Result</keyword> <keyword>/=</keyword> <keyword>Void</keyword>
+	<keyword>end</keyword>
 </code_block>So the complete class hierarchy for an Eiffel client coclass is the following:
 		<paragraph/>
 		<heading>
@@ -65,7 +65,7 @@ interface_function (a: INTEGER): MY_STRUCT is
 		<heading>
 			<size>2</size>  Exceptions
 		</heading>
-		<paragraph>COM standard requires that any interface function returns a status value (knownas a HRESULT). This corresponds to side effect features which the Eiffel methodology tends to avoid. The work around used in EiffelCOM systems is to map these return values into Eiffel exceptions. If the server returns an error code, the EiffelCOM runtime raises an Eiffel exception that your code should catch.</paragraph>
+		<paragraph>COM standard requires that any interface function returns a status value (known as a HRESULT). This corresponds to side effect features which the Eiffel methodology tends to avoid. The work around used in EiffelCOM systems is to map these return values into Eiffel exceptions. If the server returns an error code, the EiffelCOM runtime raises an Eiffel exception that your code should catch.</paragraph>
 		<heading>
 			<size>3</size>EiffelCOM Client System ExceptionRaising
 		</heading>
@@ -86,57 +86,57 @@ interface_function (a: INTEGER): MY_STRUCT is
 			</code> and can consequently be used by the coclass client to catch the exceptions.
 		</paragraph>
 		<paragraph>The following code snippet illustrates how a client can process exceptions raised in the Eiffel coclass:</paragraph>
-		<code_block>
-indexing
-    description: "Eiffel coclass client example"
+<code_block>
+<keyword>indexing</keyword>
+	description<keyword>:</keyword> <string>"Eiffel coclass client example"</string>
 
-class
-    COCLASS_CLIENT
+<keyword>class</keyword>
+	<class_name>COCLASS_CLIENT</class_name>
 
-inherit
-    ECOM_EXCEPTION
-        export
-            {NONE} all
-        end
+<keyword>inherit</keyword>
+	<class_name>ECOM_EXCEPTION</class_name>
+		<keyword>export</keyword>
+			<symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol> <keyword>all</keyword>
+		<keyword>end</keyword>
 
-create
-    make
+<keyword>create</keyword>
+	<feature_name>make</feature_name>
 
-feature {NONE} -- Initialization
+<keyword>feature</keyword> <symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol> <comment>-- Initialization</comment>
 
-    make is
-            -- Initialize Eiffel coclass.
-        do
-            create coclass.make
-        end
+	<feature_name>make</feature_name> <keyword>is</keyword>
+			<comment>-- Initialize Eiffel coclass.</comment>
+		<keyword>do</keyword>
+			<keyword>create</keyword> <feature_name>coclass</feature_name><symbol>.</symbol><feature_name>make</feature_name>
+		<keyword>end</keyword>
 
-feature -- Basic Operations
+<keyword>feature</keyword> <comment>-- Basic Operations</comment>
 
-    coclass_feature_client is
-            -- Example of a coclass feature caller
-        local
-            retried: BOOLEAN
-            coclass: EIFFEL_COCLASS_PROXY
-        do
-            create coclass.make
-            if not retried then
-                coclass.coclass_feature -- Actual call
-            end
-        rescue
-            if hresult = E_notimpl then
-                -- Process non implemented function error.
-                retried := True
-                retry
-            elseif hresult = E_invalidarg then
-                -- Process invalid argument error.
-                retried := True
-                retry
-            else
-                -- Forward exception to caller.
-            end
-        end
+	<feature_name>coclass_feature_client</feature_name> <keyword>is</keyword>
+			<comment>-- Example of a coclass feature caller</comment>
+		<keyword>local</keyword>
+			<local_variable>retried</local_variable><symbol>:</symbol> <class_name>BOOLEAN</class_name>
+			<local_variable>coclass</local_variable><symbol>:</symbol> <class_name>EIFFEL_COCLASS_PROXY</class_name>
+		<keyword>do</keyword>
+			<keyword>create</keyword> <feature_name>coclass</feature_name><symbol>.</symbol><feature_name>make</feature_name>
+			<keyword>if</keyword> <keyword>not</keyword> <local_variable>retried</local_variable> <keyword>then</keyword>
+				<feature_name>coclass</feature_name><symbol>.</symbol><feature_name>coclass_feature</feature_name> <comment>-- Actual call</comment>
+			<keyword>end</keyword>
+		<keyword>rescue</keyword>
+			<keyword>if</keyword> <feature_name>hresult</feature_name> <symbol>=</symbol> <feature_name>E_notimpl</feature_name> <keyword>then</keyword>
+					<comment>-- Process non implemented function error.</comment>
+				<local_variable>retried</local_variable> <symbol>:=</symbol> <keyword>True</keyword>
+				<keyword>retry</keyword>
+			<keyword>elseif</keyword> <feature_name>hresult</feature_name> <symbol>=</symbol> <feature_name>E_invalidarg</feature_name> <keyword>then</keyword>
+					<comment>-- Process invalid argument error.</comment>
+				<local_variable>retried</local_variable> <symbol>:=</symbol> <keyword>True</keyword>
+				<keyword>retry</keyword>
+			<keyword>else</keyword>
+				<comment>-- Forward exception to caller.</comment>
+			<keyword>end</keyword>
+		<keyword>end</keyword>
 
-end -- class COCLASS_CLIENT
+<keyword>end</keyword> <comment>-- class COCLASS_CLIENT</comment>
 </code_block>
 		<heading>
 			<size>2</size> Summary

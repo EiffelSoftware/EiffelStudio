@@ -1,210 +1,200 @@
 <document title="EiffelStudio: A Guided Tour" output="studio">
 	<meta_data/>
 	<paragraph>
-		<div>
-			<paragraph>
-				<heading>
-					<size>2</size>
-					<content>Interactive Software Engineering</content>
-				</heading>
-			</paragraph>
-			<heading>
-				<size>3</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-99-document-info.xml#pgfId-467816</url>
-						<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
-					</link>
-				</content>
-			</heading>
-		</div>
-		<div>
-			<heading/>
-			<div>
-				<info>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
-					<link>
-						<url>http://docs.eiffel.com/general/guided_tour/environment/index.xml</url>
-						<label>http://docs.eiffel.com</label>
-					</link> Web site.  See the 
-					<link>
-						<url>../../../general/guided_tour/index.xml</url>
-						<label>list of introductory documents.  </label>
-					</link>
-					<line_break/>This is 
-					<bold>not</bold> an introduction to the Eiffel method and language.  Follow the preceding link for 
-					<italic>Invitation to Eiffel </italic>and a longer tutorial.
-				</info>
-			</div>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-02.xml#pgfId-471615</url>
-						<label>1 OVERVIEW AND PREREQUISITES</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-03.xml#pgfId-333608</url>
-						<label>2 COPYING THE EXAMPLE FILES</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-04.xml#pgfId-264352</url>
-						<label>3 STARTING EIFFELSTUDIO AND OPENING A PROJECT</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-05.xml#pgfId-258371</url>
-						<label>4 COMPILING AND EXECUTING A SYSTEM</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-06.xml#pgfId-3038</url>
-						<label>5 A LOOK AT THE PROJECT DIRECTORY</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-07.xml#pgfId-475544</url>
-						<label>6 STARTING TO BROWSE</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-08.xml#pgfId-479692</url>
-						<label>7 CLASS VIEWS</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-09.xml#pgfId-495679</url>
-						<label>8 PRODUCING AND EXPORTING DOCUMENTATION</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-10.xml#pgfId-510970</url>
-						<label>9 BROWSING FEATURES</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-11.xml#pgfId-511185</url>
-						<label>10 RETARGETING THROUGH PICK-AND-DROP</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-12.xml#pgfId-515538</url>
-						<label>11 RECOMPILING AND EDITING</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-13.xml#pgfId-519836</url>
-						<label>12 HANDLING SYNTAX AND VALIDITY ERRORS</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-14.xml#pgfId-515824</url>
-						<label>13 DEBUGGING AND RUN-TIME MONITORING</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-15.xml#pgfId-522626</url>
-						<label>14 COMPUTING PROJECT METRICS</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-16.xml#pgfId-527344</url>
-						<label>15 GRAPHICS-BASED DESIGN</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-17.xml#pgfId-527441</url>
-						<label>16 HOW EIFFELSTUDIO COMPILES</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-18.xml#pgfId-522597</url>
-						<label>17 THE COMMAND-LINE COMPILER</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-19.xml#pgfId-527948</url>
-						<label>18 EXECUTING A SYSTEM WITHIN AND WITHOUT EIFFELSTUDIO</label>
-					</link>
-				</content>
-			</heading>
-			<heading>
-				<size>2</size>
-				<content>
-					<link>
-						<url>../../../general/guided_tour/studio/index-20.xml#pgfId-521093</url>
-						<label>19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</label>
-					</link>
-				</content>
-			</heading>
-		</div>
+		<heading>
+			<size>2</size>
+			<content>Interactive Software Engineering</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>../../../general/guided_tour/studio/index-99-document-info.xml#pgfId-467816</url>
+				<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
+			</link>
+		</paragraph>
+		<paragraph>
+			<info>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
+				<link>
+					<url>http://docs.eiffel.com/general/guided_tour/environment/index.xml</url>
+					<label>http://docs.eiffel.com</label>
+				</link> Web site.  See the 
+				<link>
+					<url>../../../general/guided_tour/index.xml</url>
+					<label>list of introductory documents.  </label>
+				</link>
+				<line_break/>This is 
+				<bold>not</bold> an introduction to the Eiffel method and language.  Follow the preceding link for 
+				<italic>Invitation to Eiffel </italic>and a longer tutorial.
+			</info>
+		</paragraph>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-02.xml#pgfId-471615</url>
+					<label>1 OVERVIEW AND PREREQUISITES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-03.xml#pgfId-333608</url>
+					<label>2 COPYING THE EXAMPLE FILES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-04.xml#pgfId-264352</url>
+					<label>3 STARTING EIFFELSTUDIO AND OPENING A PROJECT</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-05.xml#pgfId-258371</url>
+					<label>4 COMPILING AND EXECUTING A SYSTEM</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-06.xml#pgfId-3038</url>
+					<label>5 A LOOK AT THE PROJECT DIRECTORY</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-07.xml#pgfId-475544</url>
+					<label>6 STARTING TO BROWSE</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-08.xml#pgfId-479692</url>
+					<label>7 CLASS VIEWS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-09.xml#pgfId-495679</url>
+					<label>8 PRODUCING AND EXPORTING DOCUMENTATION</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-10.xml#pgfId-510970</url>
+					<label>9 BROWSING FEATURES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-11.xml#pgfId-511185</url>
+					<label>10 RETARGETING THROUGH PICK-AND-DROP</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-12.xml#pgfId-515538</url>
+					<label>11 RECOMPILING AND EDITING</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-13.xml#pgfId-519836</url>
+					<label>12 HANDLING SYNTAX AND VALIDITY ERRORS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-14.xml#pgfId-515824</url>
+					<label>13 DEBUGGING AND RUN-TIME MONITORING</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-15.xml#pgfId-522626</url>
+					<label>14 COMPUTING PROJECT METRICS</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-16.xml#pgfId-527344</url>
+					<label>15 GRAPHICS-BASED DESIGN</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-17.xml#pgfId-527441</url>
+					<label>16 HOW EIFFELSTUDIO COMPILES</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-18.xml#pgfId-522597</url>
+					<label>17 THE COMMAND-LINE COMPILER</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-19.xml#pgfId-527948</url>
+					<label>18 EXECUTING A SYSTEM WITHIN AND WITHOUT EIFFELSTUDIO</label>
+				</link>
+			</content>
+		</heading>
+		<heading>
+			<size>2</size>
+			<content>
+				<link>
+					<url>../../../general/guided_tour/studio/index-20.xml#pgfId-521093</url>
+					<label>19 APPENDIX: WRITING DOCUMENTATION FILTERS WITH EFF, THE EIFFEL FILTER FORMAT</label>
+				</link>
+			</content>
+		</heading>
 	</paragraph></document>

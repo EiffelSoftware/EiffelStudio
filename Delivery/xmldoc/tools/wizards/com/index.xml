@@ -17,7 +17,8 @@
 			<line_break/> Version: 5.0
 			<line_break/> Availability: Full Package
 		</paragraph>
-		<paragraph>See:</paragraph>
+		<paragraph>See:
+		<line_break/>
 		<list ordered="false">
 			<item>
 				<link>
@@ -38,6 +39,7 @@
 				</link>
 			</item>
 		</list>
+		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

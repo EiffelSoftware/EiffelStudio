@@ -183,7 +183,11 @@ feature {NONE} -- Implementation
 				-- If a user selected "cancel" from the confirmation dialog,
 				-- then the wizard will not exit.
 			if object_handler.objects_all_named (objects) then
-				preferences.save_resources
+				if eiffel_installation_dir_name /= Void and eiffel_platform /= Void then
+						-- Only save the resources if the necessary resources
+						-- are available.
+					preferences.save_resources
+				end
 				build_finish
 				process_info
 				Precursor {WIZARD_FINAL_STATE_WINDOW}

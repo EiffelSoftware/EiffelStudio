@@ -74,8 +74,15 @@ feature {NONE} -- Implementation
 			interface_generator.generate_functions_and_properties (an_interface)
 		end
 
+	clean_up is
+			-- Clean up.
+		do
+			coclass := Void
+			eiffel_writer := Void
+		end
+
 invariant
-	non_void_writer: eiffel_writer /= Void
+	non_void_writer: not finished implies eiffel_writer /= Void
 
 end -- class WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR
 

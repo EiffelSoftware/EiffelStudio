@@ -35,8 +35,18 @@ feature -- Access
 	cpp_class_writer: WIZARD_WRITER_CPP_CLASS
 			-- C++ class writer.
 
+feature {NONE} -- Implementation
+
+	clean_up is
+			-- Clean up.
+		do
+			component := Void
+			interface := Void
+			cpp_class_writer := Void
+		end
+
 invariant
-	non_void_writer: cpp_class_writer /= Void
+	non_void_writer: not finished implies cpp_class_writer /= Void
 
 end -- class WIZARD_COMPONENT_INTERFACE_C_GENERATOR
 

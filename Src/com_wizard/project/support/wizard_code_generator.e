@@ -96,6 +96,11 @@ feature -- Basic operations
 			if not Shared_wizard_environment.abort then
 				generate_ace_and_resource 
 			end
+			if not Shared_wizard_environment.abort then
+				message_output.add_warning (Current, Generation_Successful)
+			end
+			finished := True
+			clean_up
 		end
 
 	process_type_descriptors is
@@ -248,7 +253,6 @@ feature -- Basic operations
 				progress_report.step
 				Alias_c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 				progress_report.step
-				message_output.add_warning (Current, Generation_Successful)
 			end
 			set_generated_ce_mapper (Void)
 			set_generated_ec_mapper (Void)
@@ -285,11 +289,28 @@ feature -- Basic operations
 			resource_file_generated := True
 		end
 
+feature {NONE} -- Implementation
+
+	finished: BOOLEAN
+			-- Is processing finished?
+
+	clean_up is
+			-- Clean up.
+		require
+			finished: finished
+		do
+			C_client_visitor := Void
+			Eiffel_client_visitor := Void
+			C_server_visitor := Void
+			Eiffel_server_visitor := Void
+
+		end
+	
 invariant
-	non_void_c_client_visitor: C_client_visitor /= Void
-	non_void_eiffel_client_visitor: Eiffel_client_visitor /= Void
-	non_void_c_server_visitor: C_server_visitor /= Void
-	non_void_eiffel_server_visitor: Eiffel_server_visitor /= Void
+	non_void_c_client_visitor: not finished implies C_client_visitor /= Void
+	non_void_eiffel_client_visitor: not finished implies Eiffel_client_visitor /= Void
+	non_void_c_server_visitor: not finished implies C_server_visitor /= Void
+	non_void_eiffel_server_visitor: not finished implies Eiffel_server_visitor /= Void
 	
 end -- class WIZARD_CODE_GENERATOR
 

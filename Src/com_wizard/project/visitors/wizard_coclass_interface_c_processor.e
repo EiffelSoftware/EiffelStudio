@@ -57,8 +57,15 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	clean_up is
+			-- Clean up.
+		do
+			coclass := Void
+			coclass_generator := Void
+		end
+
 invariant
-	non_void_coclass_generator: coclass_generator /= Void
+	non_void_coclass_generator: not finished implies coclass_generator /= Void
 
 end -- class WIZARD_COCLASS_INTERFACE_C_PROCESSOR
 

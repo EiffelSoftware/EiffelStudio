@@ -110,9 +110,20 @@ feature -- Basic Operations
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	clean_up is
+			-- Clean up.
+		do
+			component := Void
+			interface := Void
+			eiffel_writer := Void
+			inherit_clause := Void
+		end
+
 invariant
-	non_void_eiffel_writer: eiffel_writer /= Void
-	non_void_inherit_clause: inherit_clause /= Void
+	non_void_eiffel_writer: not finished implies eiffel_writer /= Void
+	non_void_inherit_clause: not finished implies inherit_clause /= Void
 
 end -- class WIZARD_COMPONENT_INTERFACE_EIFFEL_GENERATOR
 

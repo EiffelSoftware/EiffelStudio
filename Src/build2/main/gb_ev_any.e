@@ -77,7 +77,13 @@ inherit
 		undefine
 			default_create
 		end
-	
+		
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 
 feature -- Initialization
 		
@@ -221,7 +227,7 @@ feature {GB_XML_STORE} -- Output
 				--	at_least_one_element_added: element.count > old element.count
 		end
 		
-feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Status setting
+feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT, GB_OBJECT_HANDLER} -- Status setting
 		
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
@@ -298,6 +304,7 @@ feature {NONE} -- Implementation
 				p.call ([objects.item])
 				objects.forth
 			end
+			object.update_instances (p)
 			enable_project_modified
 		end
 		
@@ -306,10 +313,33 @@ feature {NONE} -- Implementation
 		do
 			objects.start
 			p.call ([objects.item])
+			object.update_first_instances (p)
 			enable_project_modified
 		end
 		
-		
+	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
+			-- For all instance referers recursively of `an_object', call `p' with the current
+			-- instance referer filled as the open argument. Used in places where `for_all_objects'
+			-- can not be used directly as some level of indirection and/or calculation is required
+			-- for each individual setting.
+		require
+			an_object_not_void: an_object /= Void
+			p_not_void: p /= Void
+		local
+			current_object: GB_OBJECT
+		do
+			from
+				an_object.instance_referers.start
+			until
+				an_object.instance_referers.off
+			loop
+				current_object := object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
+				p.call ([current_object])
+				for_all_instance_referers (current_object, p)
+				an_object.instance_referers.forth
+			end
+		end
+
 	update_editors is
 			-- Short version for calling everywhere.
 		do

@@ -39,7 +39,6 @@ inherit
 create
 	default_create,
 	make_with_size,
-	make_with_default,
 	make_for_test
 
 feature {NONE} -- Initialization
@@ -55,21 +54,6 @@ feature {NONE} -- Initialization
 		ensure then
 			width_assigned: width = a_width
 			height_assigned: height = a_height
-		end
-
-	make_with_default (pixmap_name: STRING) is
-			-- Create a pixmap initialized with the default
-			-- image named `pixmap_name'.
-		require
-			valid_pixmap_name: 
-				pixmap_name.is_equal("Information") or
-				pixmap_name.is_equal("Error") or
-				pixmap_name.is_equal("Question") or
-				pixmap_name.is_equal("Vision2") or
-				pixmap_name.is_equal("Warning")
-		do
-			default_create
-			implementation.set_with_default (pixmap_name)
 		end
 
 feature -- Comparison
@@ -180,7 +164,8 @@ feature {NONE} -- Implementation
 			create expose_actions
 		end
 
-feature {EV_ANY_I, EV_IMAGE_LIST_IMP} -- Implementation
+feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_DEFAULT_PIXMAPS_IMP} 
+-- Implementation
 
 	implementation: EV_PIXMAP_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -217,6 +202,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/05/03 16:31:49  pichery
+--| Removed feature `make_with_default'
+--|
 --| Revision 1.32  2000/05/03 00:25:28  pichery
 --| Updated valid_default_pixmap.
 --|

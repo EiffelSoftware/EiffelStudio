@@ -9,13 +9,10 @@ root
 
 default
 	assertion (all)
-	precompiled ("$ISE_EIFFEL\examples\com\wizard\string_manipulator\generated\client")
+	precompiled ("$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\client")
 
 cluster
-	root_cluster: ".";
-
-		-- Client
-	all component:						"..\generated\client"
+	root_cluster: "$ISE_EIFFEL\examples\com\wizard\string_manipulator\client";
 
 		-- EiffelBase
 	all base:						"$ISE_EIFFEL\library\base"
@@ -31,7 +28,14 @@ cluster
 
 external
 	include_path:	"$ISE_EIFFEL\library\wel\spec\windows\include",
-					"$ISE_EIFFEL\library\com\spec\windows\include";
-	object:		 	"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib";
-	
+				"$ISE_EIFFEL\library\com\spec\windows\include",
+				"$ISE_EIFFEL\library\time\Clib",
+				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\Client\Include",
+				"$ISE_EIFFEL\examples\com\wizard\string_manipulator\client\generated\Common\Include";
+
+	object:	 	"$(ISE_EIFFEL)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+				"$(ISE_EIFFEL)\library\time\spec\msc\lib\datetime.lib",
+				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com.lib",
+				"$(ISE_EIFFEL)\library\com\spec\msc\lib\com_runtime.lib",
+				"$(ISE_EIFFEL)\examples\com\wizard\string_manipulator\client\generated\Client\Clib\ecom.lib";
 end

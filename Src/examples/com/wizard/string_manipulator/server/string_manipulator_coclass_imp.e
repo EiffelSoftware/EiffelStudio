@@ -14,6 +14,25 @@ inherit
 		end
 
 	ECOM_EXCEPTION
+	
+creation
+	make,
+	make_from_pointer
+
+feature {NONE}  -- Initialization
+
+	make is
+			-- Creation.
+		do
+			create local_string.make (0)
+		end
+	
+	make_from_pointer (cpp_obj: POINTER) is
+			-- Creation.
+		do
+			set_item (cpp_obj)
+			make
+		end
 
 feature -- Access
 
@@ -24,49 +43,70 @@ feature -- Access
 		end
 
 	string_user_precondition: BOOLEAN is
-			-- Precondition of `string'
+			-- Precondition of `string'.
 		do
 			Result := local_string /= Void
 		end
 
-	replace_substring_user_precondition (arg_1: STRING; arg_2: INTEGER; arg_3: INTEGER): BOOLEAN is
-			-- Precondition of `replace_substring'
+	replace_substring_user_precondition (s: STRING; start_pos: INTEGER; end_pos: INTEGER): BOOLEAN is
+			-- Precondition of `replace_substring'.
 		do
 			Result := local_string /= Void
 		end
 
-	prune_all_user_precondition (arg_1: CHARACTER): BOOLEAN is
-			-- Precondition of `prune_all'
+	prune_all_user_precondition (c: CHARACTER): BOOLEAN is
+			-- Precondition of `prune_all'.
 		do
 			Result := local_string /= Void
 		end
 
 feature -- Basic Operations
 
-	set_string (arg_1: STRING) is
-			-- Set manipulated string with `arg_1'.
+	set_string (a_string: STRING) is
+			-- Set manipulated string with `a_string'.
+			-- `a_string' [in].  
 		do
-			local_string := arg_1
+			local_string := a_string
 		ensure then
-			string_set: local_string = arg_1
+			string_set: local_string = a_string
 		end
 
-	replace_substring (arg_1: STRING; arg_2: INTEGER; arg_3: INTEGER) is
-			-- Copy the characters of `arg_1' to positions `arg_2' .. `arg_3'.
+	replace_substring (s: STRING; start_pos: INTEGER; end_pos: INTEGER) is
+			-- Copy the characters of `s' to positions `start_pos' .. `end_pos'.
+			-- `s' [in].  
+			-- `start_pos' [in].  
+			-- `end_pos' [in].  
 		do
-			local_string.replace_substring (arg_1, arg_2, arg_3)
+			local_string.replace_substring (s, start_pos, end_pos)
 		end
 
-	prune_all (arg_1: CHARACTER) is
-			-- Remove all occurrences of `arg_1'.
+	prune_all (c: CHARACTER) is
+			-- Remove all occurrences of `c'.
+			-- `c' [in].  
 		do
-			local_string.prune_all (arg_1)
+			local_string.prune_all (c)
 		ensure then
-			pruned: not local_string.has (arg_1)
+			pruned: not local_string.has (c)
 		end
+
+	create_item is
+			-- Initialize `item'
+		do
+			item := ccom_create_item (Current)
+		end
+
 
 feature {NONE} -- Implementation
 
 	local_string: STRING
+	
+feature {NONE}  -- Externals
+
+	ccom_create_item (eif_object: STRING_MANIPULATOR_COCLASS): POINTER is
+			-- Initialize `item'
+		external
+			"C++ [new ecom_StringManipulatorLib::StringManipulator  %"ecom_StringManipulatorLib_StringManipulator_s.h%"](EIF_OBJECT)"
+		end
+
 
 end -- STRING_MANIPULATOR_COCLASS_IMP

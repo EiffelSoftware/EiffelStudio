@@ -1150,8 +1150,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
-			make_file.putstring ("$(MAKE) emain.o%N")
-			make_file.putstring ("%T$(RM) emain.c%N%N")
+			make_file.putstring ("$(MAKE) emain.o ; $(RM) emain.c%N%N")
 
 			from i := 1 until i > partial_system_objects loop
 				make_file.putstring (System_object_prefix)

@@ -56,7 +56,7 @@ feature
 	
 feature {NONE}
 
-	check_box1, check_box2: CHECK_BOX;
+	row_column1, row_column2: ROW_COLUMN;
 	form, form1, form2, form3: FORM
 	
 feature 
@@ -101,7 +101,8 @@ feature
 			del_com: DELETE_WINDOW
 		do
 			-- widget to attach forms to act as transporter
-			!! base.make (Widget_names.main_panel, a_screen)
+			!! base.make (Widget_names.main_panel, a_screen);
+			resources.check_fonts (base);
 			base.forbid_resize
 			if Pixmaps.eiffelbuild_pixmap.is_valid then
 				base.set_icon_pixmap (Pixmaps.eiffelbuild_pixmap)
@@ -186,29 +187,29 @@ feature
 
 			-- visibility form
 			!!form3.make (Widget_names.form3, form)
-			!!check_box1.make (Widget_names.check_box, form3);
-			!!check_box2.make (Widget_names.check_box, form3);
+			!!row_column1.make (Widget_names.row_column, form3);
+			!!row_column2.make (Widget_names.row_column1, form3);
 			!!visibility_label.make (Widget_names.visibility_label, form3)
-			!!cont_cat_t.make (Widget_names.context_catalog, check_box1)
-			!!cont_tree_t.make (Widget_names.context_tree, check_box1)
-			!!history_t.make (Widget_names.history_window, check_box1)
-			!!editor_t.make (Widget_names.editors_toggle, check_box1)
-			!!cmd_cat_t.make (Widget_names.command_catalog, check_box2)
-			!!app_edit_t.make (Widget_names.application_editor, check_box2)
-			!!interface_t.make (Widget_names.interface_label, check_box2)
-			!!interface_only_t.make (Widget_names.interface_only_label, check_box2)
+			!!cont_cat_t.make (Widget_names.context_catalog, row_column1)
+			!!cont_tree_t.make (Widget_names.context_tree, row_column1)
+			!!history_t.make (Widget_names.history_window, row_column1)
+			!!editor_t.make (Widget_names.editors_toggle, row_column1)
+			!!cmd_cat_t.make (Widget_names.command_catalog, row_column2)
+			!!app_edit_t.make (Widget_names.application_editor, row_column2)
+			!!interface_t.make (Widget_names.interface_label, row_column2)
+			!!interface_only_t.make (Widget_names.interface_only_label, row_column2)
 
 			form3.set_fraction_base (2);
 			form3.attach_left (visibility_label, 0);
 			form3.attach_right (visibility_label, 0);
-			form3.attach_top_widget (visibility_label, check_box1, 0);
-			form3.attach_top_widget (visibility_label, check_box2, 0);
-			form3.attach_right_position (check_box1, 1);
-			form3.attach_left_position (check_box2, 1);
-			form3.attach_left (check_box1, 0);
-			form3.attach_right (check_box2, 0);
-			form3.attach_bottom (check_box1, 0);
-			form3.attach_bottom (check_box2, 0);
+			form3.attach_top_widget (visibility_label, row_column1, 0);
+			form3.attach_top_widget (visibility_label, row_column2, 0);
+			form3.attach_right_position (row_column1, 1);
+			form3.attach_left_position (row_column2, 1);
+			form3.attach_left (row_column1, 0);
+			form3.attach_right (row_column2, 0);
+			form3.attach_bottom (row_column1, 0);
+			form3.attach_bottom (row_column2, 0);
 			-- interform attachment
 			form.attach_top_widget (form1, vseparator, 0)
 			form.attach_bottom (vseparator, 0)
@@ -225,8 +226,8 @@ feature
 			form.attach_bottom (form3, 2)
 
 				-- default state for buttons
-			cont_cat_t.arm;
-			cont_tree_t.arm;
+			cont_cat_t.set_toggle_on; 
+			cont_tree_t.set_toggle_on; 
 			editor_t.set_toggle_on; 
 			interface_t.set_toggle_on;
 			base.initialize_window_attributes;
@@ -250,8 +251,8 @@ feature -- Closing Current
 			if history_window.saved_application then
 				question_box.popup (Current, Messages.exit_qu, Void)
 			else
-				question_box.popup (Current, Messages.save_project_qu, Void);
 				save_question := True;
+				question_box.popup (Current, Messages.save_project_qu, Void);
 			end;
 		end;
 
@@ -283,6 +284,9 @@ feature -- Popup and popdown actions
 	popup is
 		do
 			if was_popped_down then
+				if cont_cat_t.armed then
+					Context_catalog.show
+				end;
 				if cont_tree_t.armed then
 					Tree.show
 				end
@@ -308,6 +312,9 @@ feature -- Popup and popdown actions
 	popdown is
 		do
 			was_popped_down := True;
+			if cont_cat_t.armed then
+				Context_catalog.hide
+			end
 			if cont_tree_t.armed then
 				Tree.hide
 			end

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Since `item' is shared, it does not need
 			-- to be freed.
 			-- Caution: `a_pointer' must be a pointer
-			-- comming from Windows.
+			-- coming from Windows.
 		do
 			item := a_pointer
 			shared := True

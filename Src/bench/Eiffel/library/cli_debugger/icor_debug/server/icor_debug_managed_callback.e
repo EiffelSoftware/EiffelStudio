@@ -112,12 +112,11 @@ feature {NONE} -- debugger behavior
 			process_callback := eifnet_debugger_info.callback_enabled (eifnet_debugger_info.last_managed_callback)
 
 			if process_callback then
-				Eifnet_debugger_info.init_current_callstack					
+				Eifnet_debugger_info.init_current_callstack
 				if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
 					execution_stopped := execution_stopped_on_end_of_breakpoint_callback
 				elseif Eifnet_debugger_info.last_managed_callback_is_step_complete then
 					if Eifnet_debugger_info.application.imp_dotnet.status.is_evaluating	then
---						print ("StepComplete while execution ...%N")
 						execution_stopped := False
 					else
 						execution_stopped := execution_stopped_on_end_of_step_complete_callback
@@ -154,7 +153,7 @@ feature {NONE} -- debugger behavior
 		local
 			l_previous_stack_info, l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO
 			l_copy: EIFNET_DEBUGGER_STACK_INFO
-			l_potential_next_il_offset: INTEGER
+			l_potential_il_offset: INTEGER
 			l_il_debug_info: IL_DEBUG_INFO_RECORDER
 			l_feat: FEATURE_I
 			l_class_type: CLASS_TYPE
@@ -176,9 +175,11 @@ feature {NONE} -- debugger behavior
 							l_copy.current_module_name,				
 							l_copy.current_class_token
 						)
-				l_potential_next_il_offset := l_il_debug_info.next_feature_breakable_il_offset_for (l_class_type, l_feat, l_copy.current_il_offset)
-				
-				l_copy.set_current_il_offset (l_potential_next_il_offset)
+						
+				l_potential_il_offset := l_il_debug_info.approximate_feature_breakable_il_offset_for (l_class_type, l_feat, l_copy.current_il_offset)
+					--| current il offset if corresponding to a bp slot, or approximate offset.
+					
+				l_copy.set_current_il_offset (l_potential_il_offset)
 				if l_copy.is_equal (l_current_stack_info) then
 					Eifnet_debugger_info.controller.do_continue				
 					Result := False

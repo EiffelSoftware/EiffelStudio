@@ -9,6 +9,8 @@ class
 
 inherit 
 
+	EIFNET_DEBUGGER_INFO_ACCESSOR
+
 	EIFNET_EXPORTER
 		export
 			{NONE} all
@@ -17,14 +19,6 @@ inherit
 	ICOR_EXPORTER
 		export
 			{NONE} all
-		end	
-	
-	EIFNET_DEBUGGER_INFO_ACCESSOR
-		export
-			{NONE} all
-			{ANY} icor_debug_process
-			{EIFNET_EXPORTER} icor_debug_thread,
-			      Eifnet_debugger_info, data_changed, reset_data_changed
 		end	
 
 	EIFNET_DEBUGGER_SYNCHRO
@@ -39,11 +33,6 @@ inherit
 		end
 
 	SHARED_DEBUG
-		export
-			{NONE} all
-		end		
-
-	EIFNET_DEBUGGER_CONTROL_CONSTANTS
 		export
 			{NONE} all
 		end		
@@ -238,37 +227,7 @@ feature -- Interaction with .Net Debugger
 			end
 		end	
 
-feature -- Stepping Access
 
-	set_last_control_mode_is_continue is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_continue)
-		end
-	set_last_control_mode_is_stop is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_stop)
-		end
-	set_last_control_mode_is_kill is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_kill)
-		end
-
-	set_last_control_mode_is_next is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_step_next)
-		end
-	set_last_control_mode_is_into is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_step_into)
-		end
-	set_last_control_mode_is_out is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_step_out)
-		end
-	set_last_control_mode_is_nothing is
-		do
-			Eifnet_debugger_info.set_last_control_mode (Cst_control_nothing)
-		end
 		
 feature {NONE} -- Stepping Implementation
 
@@ -287,23 +246,7 @@ feature {NONE} -- Stepping Implementation
 				last_stepper.deactivate
 				last_stepper := Void				
 			end
-
 			
---			debug ("DEBUGGER_TRACE_STEPPING")
---				if 
---					Eifnet_debugger_info.last_managed_callback_is_step_complete
---					and then Eifnet_debugger_info.icd_stepper /= Void 
---				then
---					print ("[?] Stepper.IsActive ??? => ")
---					if Eifnet_debugger_info.icd_stepper.is_active then
---						print ("Yes %N")
---					else
---						print ("No  %N")
---					end
---	--				last_stepper := Eifnet_debugger_info.icd_stepper
---				end
---			end
-
 			l_thread := icor_debug_thread
 			if l_thread /= Void then
 				l_frame := l_thread.get_active_frame
@@ -322,14 +265,6 @@ feature {NONE} -- Stepping Implementation
 				eif_debug_display ("[DBG/WARNING] No thread available ...")
 			end
 		end
-
-
---	set_last_stepping_mode (a_mode: INTEGER) is
---		require
---			step_value_valid: Eifnet_debugger_info.valid_stepping_mode (a_mode)
---		do
---			Eifnet_debugger_info.set_last_stepping_mode (a_mode)
---		end
 
 	do_step (a_mode: INTEGER) is
 		require
@@ -382,11 +317,6 @@ feature -- Stepping Access
 			debug ("debugger_trace_operation")
 				print ("[enter] EIFNET_DEBUGGER.do_step_range ("+a_bstep_in.out+")%N")
 			end
---			if a_bstep_in then
---				set_last_stepping_mode (cst_step_range_into)
---			else			
---				set_last_stepping_mode (cst_step_range_next)
---			end
 			l_succeed := get_stepper
 			if l_succeed then
 				debug  ("DEBUGGER_TRACE_EIFNET")
@@ -416,8 +346,6 @@ feature -- Stepping Access
 				print ("[enter] EIFNET_DEBUGGER.do_step_next%N")
 			end
 			
---			set_last_stepping_mode (cst_step_next)
-			
 			do_step (cst_control_step_next)
 			waiting_debugger_callback ("step next")
 		end
@@ -429,7 +357,6 @@ feature -- Stepping Access
 				print ("[enter] EIFNET_DEBUGGER.do_step_into%N")
 			end
 			
---			set_last_stepping_mode (cst_step_into)
 			do_step (cst_control_step_into)
 			waiting_debugger_callback ("step into")
 		end		
@@ -441,7 +368,6 @@ feature -- Stepping Access
 				print ("[enter] EIFNET_DEBUGGER.do_step_out%N")
 			end
 			
---			set_last_stepping_mode (cst_step_out)
 			do_step (cst_control_step_out)
 			waiting_debugger_callback ("step out")
 		end		
@@ -532,35 +458,6 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			end
 		end
 
---	active_il_frame: ICOR_DEBUG_IL_FRAME is
---		local
---			l_active_frame: ICOR_DEBUG_FRAME
---
---			l_il_frame: ICOR_DEBUG_IL_FRAME
---		do
---			l_active_frame := active_frame
---			if l_active_frame /= Void then
---				l_il_frame := l_active_frame.query_interface_icor_debug_il_frame
---				if l_active_frame.last_call_success = 0 then
---					l_il_frame.add_ref
---					Result := l_il_frame
---				end
---			end
---		end
---
---	active_il_offset: INTEGER is
---		do
---			Result := il_offset_from (active_il_frame)
---		end
---		
---	il_offset_from (a_frame: ICOR_DEBUG_IL_FRAME): INTEGER is
---			-- IL Offset for the frame `a_frame'
---		do
---			if a_frame /= Void then
---				Result := a_frame.get_ip
---			end		
---		end	
-
 	icd_function_from (a_frame: ICOR_DEBUG_FRAME): ICOR_DEBUG_FUNCTION is
 			-- CorDebugFunction from `a_frame'
 		do
@@ -589,14 +486,6 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 				end
 			end			
 		end
-
---	helper_thread_id: INTEGER is
---		do
---			if icor_debug_process /= Void then
---				Result := icor_debug_process.get_helper_thread_id
---			end
---		end
-		
 		
 feature -- Function Evaluation
 
@@ -613,14 +502,14 @@ feature -- Function Evaluation
 			if icd_string_instance = Void then
 				Result := "Void"
 			else
-				--| Get STRING info from compilo
+					--| Get STRING info from compilo
 				l_string_class := Eiffel_system.String_class.compiled_class
-				--| Get token to access `internal_string_builder'
+					--| Get token to access `internal_string_builder'
 				l_feat_internal_string_builder := l_string_class.feature_named (Internal_string_builder_name)
 				l_feat_internal_string_builder_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_internal_string_builder)
-				--| Get `internal_string_builder' from `STRING' instance Value
+					--| Get `internal_string_builder' from `STRING' instance Value
 				l_icd_value := icd_string_instance.get_field_value (icd_string_instance.get_class, l_feat_internal_string_builder_token)
-				--| l_icd_value represents the `internal_string_builder' value
+					--| l_icd_value represents the `internal_string_builder' value
 				if l_icd_value /= Void then
 					Result := (create {EIFNET_DEBUG_EXTERNAL_FORMATTER}).string_from_string_builder (l_icd_value)
 				end
@@ -738,7 +627,6 @@ feature -- Function Evaluation
 	function_evaluation (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; a_func: ICOR_DEBUG_FUNCTION): ICOR_DEBUG_VALUE is
 			-- Function evaluation result for `a_func' on `a_icd'
 		require
---			frame_not_void: a_frame /= Void
 			object_not_void: a_icd /= Void
 			func_not_void: a_func /= Void
 		local
@@ -814,4 +702,3 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 end -- class EIFNET_DEBUGGER
-

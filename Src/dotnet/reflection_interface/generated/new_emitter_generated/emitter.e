@@ -20,14 +20,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	PrepareEmitFromAssembly (assembly: SYSTEM_REFLECTION_ASSEMBLY) is
+	prepare_emit_from_assembly (assembly: SYSTEM_REFLECTION_ASSEMBLY) is
 		external
 			"IL signature (System.Reflection.Assembly): System.Void use Emitter"
 		alias
 			"PrepareEmitFromAssembly"
 		end
 
-	PrepareEmitFromFilename (FileName: STRING) is
+	prepare_emit_from_filename (FileName: STRING) is
 		external
 			"IL signature (System.String): System.Void use Emitter"
 		alias
@@ -36,7 +36,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	LoadExternalAssemblies (assembly: SYSTEM_REFLECTION_ASSEMBLY): SYSTEM_COLLECTIONS_ARRAYLIST is
+	load_external_assemblies (assembly: SYSTEM_REFLECTION_ASSEMBLY): SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL signature (System.Reflection.Assembly): System.Collections.ArrayList use Emitter"
 		alias

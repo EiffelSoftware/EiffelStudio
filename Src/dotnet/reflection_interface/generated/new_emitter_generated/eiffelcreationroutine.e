@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			"IL creator signature (System.Reflection.ConstructorInfo) use EiffelCreationRoutine"
 		end
 
-	frozen make_1 (Other: EIFFELCREATIONROUTINE) is
+	frozen make_1 (other: EIFFELCREATIONROUTINE) is
 		external
 			"IL creator signature (EiffelCreationRoutine) use EiffelCreationRoutine"
 		end

@@ -1,34 +1,33 @@
 indexing
-	Generator: "Eiffel Emitter 2.3b"
+	Generator: "Eiffel Emitter 2.6b2"
 	external_name: "ArgParser"
-
 deferred external class
 	ARGPARSER
 
+inherit
+	GLOBALS
+
 feature {NONE} -- Implementation
 
-	OnNonSwitch (value: STRING): INTEGER is
+	on_switch (switch_symbol: STRING; switch_value: STRING): SWITCHSTATUS_IN_ARGPARSER is
 		external
-			"IL signature (System.String): enum NewArgParser+SwitchStatus use ArgParser"
-		alias
-			"OnNonSwitch"
-			--
-		end
-
-	OnSwitch (switchSymbol: STRING; switchValue: STRING): INTEGER is
-		external
-			"IL signature (System.String, System.String): enum NewArgParser+SwitchStatus use ArgParser"
+			"IL signature (System.String, System.String): ArgParser+SwitchStatus use ArgParser"
 		alias
 			"OnSwitch"
-			--
 		end
 
-	OnDoneParse: INTEGER is
+	on_done_parse: SWITCHSTATUS_IN_ARGPARSER is
 		external
-			"IL signature (): enum NewArgParser+SwitchStatus use ArgParser"
+			"IL signature (): ArgParser+SwitchStatus use ArgParser"
 		alias
 			"OnDoneParse"
-			--
+		end
+
+	on_non_switch (value: STRING): SWITCHSTATUS_IN_ARGPARSER is
+		external
+			"IL signature (System.String): ArgParser+SwitchStatus use ArgParser"
+		alias
+			"OnNonSwitch"
 		end
 
 end -- class ARGPARSER

@@ -23,10 +23,6 @@ inherit
 		export
 			{NONE} all
 		end
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
 
 	SHARED_APPLICATION_EXECUTION
 		export
@@ -41,6 +37,12 @@ inherit
 	EB_SHARED_PIXMAPS
 		export
 			{NONE} all
+		end
+
+	DEBUGGING_UPDATE_ON_IDLE
+		redefine
+--			update,
+			real_update
 		end
 
 create
@@ -65,7 +67,7 @@ feature {NONE} -- Initialization
 			ev_list.key_press_actions.extend (agent key_pressed)
 			ev_list.select_actions.extend (agent on_item_selected)
 			ev_list.deselect_actions.extend (agent on_item_deselected)
-			update_agent := agent real_update
+			create_update_on_idle_agent
 		end
 
 	build_explorer_bar is
@@ -183,34 +185,13 @@ feature -- Status setting
 			update
 		end
 
-	update is
-			-- Refresh `Current's display.
-		local
-			l_status: APPLICATION_STATUS
-		do
-			cancel_process_real_update_on_idle
-			l_status := application.status
-			if l_status /= Void then
-				process_real_update_on_idle (l_status.is_stopped)
-			end
-		end
+-- For now, same as precursor, but may change in future
+-- so we leave this commented code
+--	update is
+--			-- Refresh `Current's display.
+--		do
+--		end
 	
-	update_agent_call_on_stopped_state: BOOLEAN
-	
-	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
-			-- Call `real_update' on idle action
-		do
-			update_agent_call_on_stopped_state := a_dbg_stopped
-			ev_application.idle_actions.extend (update_agent)			
-		end
-	
-	cancel_process_real_update_on_idle is
-			-- cancel any calls to `real_update' on idle action	
-		do
-			update_agent_call_on_stopped_state := False
-			ev_application.idle_actions.prune_all (update_agent)			
-		end		
-
 	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
 			-- Change the window and explorer bar `Current' is in.
 		require
@@ -463,16 +444,16 @@ feature {NONE} -- Implementation: internal data
 
 feature {NONE} -- Implementation
 
-	real_update is
+	real_update (dbg_was_stopped: BOOLEAN) is
 			-- Display current execution status.
+			-- dbg_was_stopped is ignore if Application/Debugger is not running			
 		local
 			lst: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			l_row: EV_MULTI_COLUMN_LIST_ROW
 			eval: BOOLEAN
 			l_expr: EB_EXPRESSION
 		do
-			ev_application.idle_actions.prune_all (update_agent)
-			if Application.is_running and Application.is_stopped then
+			if Application.is_running and Application.is_stopped and dbg_was_stopped then
 				eval := True
 			end
 			ev_list.remove_selection

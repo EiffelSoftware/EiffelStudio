@@ -45,9 +45,9 @@ inherit
 			{NONE} all
 		end
 	
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
+	DEBUGGING_UPDATE_ON_IDLE
+		redefine
+			update, real_update
 		end
 
 create
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			display_first_onces := False
 			display_first_special := True
 			display_first := True
-			update_agent := agent real_update
+			create_update_on_idle_agent
 		end
 
 	build_interface is
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			pretty_print_cmd.enable_sensitive
 			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
 
-			create hex_format_cmd.make (Current)
+			create hex_format_cmd.make (agent set_hexa_mode (?))
 			hex_format_cmd.enable_sensitive
 			mini_toolbar.extend (hex_format_cmd.new_mini_toolbar_item)
 
@@ -433,23 +433,7 @@ feature -- Status setting
 				process_real_update_on_idle (l_status.is_stopped)
 			end
 		end
-
-	update_agent_call_on_stopped_state: BOOLEAN
 	
-	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
-			-- Call `real_update' on idle action
-		do
-			update_agent_call_on_stopped_state := a_dbg_stopped
-			ev_application.idle_actions.extend (update_agent)			
-		end
-	
-	cancel_process_real_update_on_idle is
-			-- cancel any calls to `real_update' on idle action	
-		do
-			update_agent_call_on_stopped_state := False
-			ev_application.idle_actions.prune_all (update_agent)			
-		end	
-		
 	set_debugger_manager (a_manager: like debugger_manager) is
 			-- Affect `a_manager' to `debugger_manager'.
 		do
@@ -583,25 +567,23 @@ feature {NONE} -- Implementation
 
 	split: EB_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `stack_objects_tree' and `objects_tree'.
-
-	update_agent: PROCEDURE [ANY, TUPLE]
-			-- Procedure used to update Current.
-
-	real_update is
+			
+	real_update (dbg_was_stopped: BOOLEAN) is
 			-- Display current execution status.
+			-- dbg_was_stopped is ignore if Application/Debugger is not running			
 		local
-			status: APPLICATION_STATUS
+			l_status: APPLICATION_STATUS
 		do
-			ev_application.idle_actions.prune_all (update_agent)
-			status := application.status
-			if status /= Void then
+			l_status := application.status
+			if l_status /= Void then
 				pretty_print_cmd.refresh
 				stack_objects_tree.wipe_out
 				objects_tree.wipe_out
-				if status.is_stopped then
+
+				if l_status.is_stopped and dbg_was_stopped then
 					if
-						status.has_valid_call_stack
-						and then status.has_valid_current_eiffel_call_stack_element
+						l_status.has_valid_call_stack
+						and then l_status.has_valid_current_eiffel_call_stack_element
 							--| FIXME jfiat [2005/01/27] : maybe in futur evolution, 
 							--| we'll display some external data...
 					then
@@ -949,11 +931,8 @@ feature {NONE} -- Implementation
 	object_key_action (k: EV_KEY) is
 			-- Actions performed when a key is pressed on a top-level object.
 			-- Handle `Del'.
-		local
-			csts: EV_KEY_CONSTANTS
 		do
-			create csts
-			if k.code = csts.Key_delete then
+			if k.code = feature {EV_KEY_CONSTANTS}.Key_delete then
 				remove_object_cmd.execute
 			end
 		end
@@ -962,14 +941,12 @@ feature {NONE} -- Implementation
 			-- Actions performed when a key is pressed on a debug_value.
 			-- Handle `Ctrl+C'.
 		local
-			csts: EV_KEY_CONSTANTS
 			dv: ABSTRACT_DEBUG_VALUE
 			text_data: STRING
 			it: EV_TREE_NODE
 		do
-			create csts
 			if
-				k.code = csts.Key_c or k.code = csts.Key_insert and then
+				k.code = feature {EV_KEY_CONSTANTS}.Key_c or k.code = feature {EV_KEY_CONSTANTS}.Key_insert and then
 				ev_application.ctrl_pressed and then
 				not ev_application.alt_pressed and then
 				not ev_application.Shift_pressed

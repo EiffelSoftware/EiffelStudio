@@ -81,6 +81,7 @@ default
 	dead_code_removal (yes)
 	exception_trace (yes)
 	inlining (no)
+	inlining_size ("0")
 	arguments ("-from_bench")
 
 

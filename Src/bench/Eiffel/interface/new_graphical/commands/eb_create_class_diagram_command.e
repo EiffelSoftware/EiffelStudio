@@ -23,7 +23,7 @@ feature -- Basic operations
 			dialog: EB_CREATE_CLASS_DIALOG
 		do
 			create dialog.make_default (tool.development_window)
-			dialog.call ("New_class")
+			dialog.call_default
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is

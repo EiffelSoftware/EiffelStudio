@@ -1,5 +1,7 @@
-class DLE_EIFFEL_HISTORY inherit
+class
+	DLE_EIFFEL_HISTORY
 
+inherit
 	EIFFEL_HISTORY
 		rename
 			make as eh_make
@@ -8,13 +10,13 @@ class DLE_EIFFEL_HISTORY inherit
 		end
 	
 creation
-
 	make
 
 feature
 
 	make (static: EIFFEL_HISTORY) is
 		do
-		end;
+		end
 
 end -- class DLE_EIFFEL_HISTORY
+

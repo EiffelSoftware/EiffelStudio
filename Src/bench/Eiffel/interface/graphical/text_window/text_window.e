@@ -325,6 +325,7 @@ feature {NONE} -- Command arguments
 					Project_tool.receive (st);
 					deselect_all
 				end
+
 			elseif arg = super_melt_action then
 				but_data ?= context_data;
 				update_before_transport (but_data);

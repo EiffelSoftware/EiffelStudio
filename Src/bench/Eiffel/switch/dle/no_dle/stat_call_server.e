@@ -22,7 +22,11 @@ feature -- Server
 			!!Result.make ((3 * csize) // 2)
 		end;
 
-	Size_limit: INTEGER is 40;
+	Size_limit: INTEGER is 200
+			-- Size of the STAT_CALL_SERVER file (200 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 feature -- Access
 

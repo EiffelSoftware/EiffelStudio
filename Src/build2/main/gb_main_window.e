@@ -152,6 +152,7 @@ feature {NONE} -- Implementation
 			a_menu_bar.extend (view_menu)
 			view_menu.extend (command_handler.show_hide_builder_window_command.new_menu_item)
 			view_menu.extend (command_handler.show_hide_display_window_command.new_menu_item)
+			view_menu.extend (command_handler.show_hide_component_viewer_command.new_menu_item)
 			create menu_separator
 			view_menu.extend (menu_separator)
 			view_menu.extend (command_handler.show_history_command.new_menu_item)
@@ -257,6 +258,7 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_builder_window_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_display_window_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.show_hide_component_viewer_command.new_toolbar_item (True, False))
 		end
 		
 	show_about_dialog is

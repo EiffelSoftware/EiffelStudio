@@ -109,7 +109,13 @@ feature -- Feature specific to ISE runtime.
  		alias
  			"eif_gen_typename_of_type"
  		end
- 
+
+	frozen sp_count (sp_obj: POINTER): INTEGER is
+			-- Count of special object
+		external
+			"C use %"eif_plug.h%""
+		end
+
 feature -- Internal C routines
 
 	type_id_from_name (s: POINTER): INTEGER is

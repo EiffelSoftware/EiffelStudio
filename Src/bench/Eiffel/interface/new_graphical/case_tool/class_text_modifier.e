@@ -199,7 +199,7 @@ feature -- Modification
 			if valid_syntax then
 				execute_wizard (create {EB_FEATURE_COMPOSITION_WIZARD})
 			else
-				create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
+				create warning_dialog.make_with_text (Warning_messages.w_Class_syntax_error)
 				warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			end
 		end

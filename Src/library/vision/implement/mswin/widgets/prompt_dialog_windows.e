@@ -10,7 +10,8 @@ inherit
 	STANDARD_DIALOG_WINDOWS
 		rename
 			set_font_on_buttons as set_font_on_default_buttons,
-			create_buttons as create_default_buttons
+			create_buttons as create_default_buttons,
+			update_visibility as standard_update_visibility
 		redefine
 			on_control_id_command,
 			on_key_down,
@@ -22,13 +23,13 @@ inherit
 			create_buttons,
 			on_control_id_command,
 			on_key_down,
-			popup,
-			popdown,
-			set_font_on_buttons,
-			class_name
+			class_name,
+			update_visibility,
+			set_font_on_buttons
 		select
 			create_buttons,
-			set_font_on_buttons
+			set_font_on_buttons,
+			update_visibility
 		end
 
 	PROMPT_D_I
@@ -492,6 +493,19 @@ feature {NONE} -- Implementation
 			Result := text_height ("Y", text_font) + Dialog_unit
 		end
 
+	update_visibility is
+			-- Update visibilty of buttons
+		do
+			standard_update_visibility
+			if apply_button_hidden then
+				apply_button.hide
+			else
+				if not flag_set (apply_button.style, Ws_visible) then
+					apply_button.set_style (set_flag (apply_button.style, Ws_visible))
+				end
+			end
+		end
+
 	resize_children is
 			-- Resize the children if necessary.
 		do
@@ -506,6 +520,7 @@ feature {NONE} -- Implementation
 		do
 			if virtual_key = Vk_return then
 				ok_actions.execute (Current, Void)
+				disable_default_processing
 			end
 		end
 
@@ -555,11 +570,8 @@ feature {NONE} -- Implementation
 	create_buttons is
 			-- Create the buttons and hide them if necessary.
 		do
-			create_default_buttons
 			!! apply_button.make (Current, apply_label, 0, 0, 0, 0, apply_id)
-			if apply_button_hidden then
-				apply_button.hide
-			end
+			create_default_buttons
 		end
 
 	create_controls is

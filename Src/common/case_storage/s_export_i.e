@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class S_EXPORT_I 
+deferred class S_EXPORT_I
 
 feature -- Properties
 

@@ -1,7 +1,5 @@
 indexing
 
---%%%%%%%%%%%%%% UNDER CONSTRUCTION !!!!! %%%%%%%%
-
 	description: 
 		"Updated version of S_FEATURE_DATA for versions 3.4.0 and up.";
 	date: "$Date$";
@@ -43,7 +41,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_body (b: like body) is  --%%%%%%% 
+	set_body (b: like body) is
 			-- Set body to `b'.
 		do
 			body := b
@@ -57,7 +55,7 @@ feature -- Setting
 			is_reversed_engineered: is_reversed_engineered
 		end
 
-	set_status (s: like status) is  --%%%%%%% 
+	set_status (s: like status) is
 			-- Set status to `s'.
 		do
 			status := s

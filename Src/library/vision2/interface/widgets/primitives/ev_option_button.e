@@ -28,7 +28,7 @@ feature {EV_ANY} -- Initialization
 		do
 			{EV_BUTTON} Precursor
 			create menu
-			press_actions.extend (menu~show)
+			select_actions.extend (menu~show)
 			menu.item_select_actions.extend (~on_item_select)
 		end
 
@@ -121,6 +121,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/23 01:05:43  brendel
+--| Replaced obsolete call.
+--|
 --| Revision 1.20  2000/03/21 01:34:55  rogers
 --| Changed initialiaze -> initialize in redefinition from EV_BUTTON.
 --|

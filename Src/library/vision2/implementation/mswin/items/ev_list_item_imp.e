@@ -18,7 +18,8 @@ inherit
 
 	EV_SIMPLE_ITEM_IMP
 		undefine
-			parent
+			parent,
+			set_pointer_style
 		redefine
 			parent_imp,
 			interface,
@@ -121,6 +122,14 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			list_imp.release_capture
 		end
 
+	set_pointer_style (c: EV_CURSOR) is
+			-- Assign `c' to `parent_imp' pointer style.
+		do
+			if parent_imp /= Void then
+				parent_imp.set_pointer_style (c)
+			end
+		end
+
 feature -- Status report
 
 	text: STRING
@@ -217,6 +226,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/21 01:20:53  rogers
+--| Redefined set_pointer_style, so the parent_imp pointer style is called.
+--|
 --| Revision 1.35  2000/03/20 22:34:12  rogers
 --| Renamed set_child_source -> set_pnd_child_source.
 --|

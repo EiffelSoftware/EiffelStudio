@@ -185,23 +185,36 @@ feature -- Comparison
 	local
 			c1,c2: like cursor;
 		do
-			c1 := cursor;
-			c2 := other.cursor;
-			from
+			if (count = other.count) and 
+			   (object_comparison = other.object_comparison) then
+					--Count and comparison_criterium have to be the same
+				c1 := cursor;
+				c2 := other.cursor;
 				other.start
 				start
 				Result := True
-			until
-				after or other.after or not Result
-			loop
-				if not item.is_equal (other.item) then
-					Result := False
-				end
-				forth
-				other.forth
-			end;
-			go_to (c1);
-			other.go_to (c2);
+				if object_comparison then
+					from
+					until
+						after or not Result
+					loop
+						Result := equal (item, other.item)
+						forth
+						other.forth
+					end
+				else
+					from
+					until
+						after or not Result
+					loop
+						Result := item = other.item
+						forth
+						other.forth
+					end
+				end		
+				go_to (c1);
+				other.go_to (c2);
+			end
 		end;
 
 			
@@ -542,20 +555,17 @@ feature -- Duplication
 		end;
 
 	copy (other: like Current) is
-		local
-			c: like cursor;
 		do
-			wipe_out;
-			c := other.cursor;
-			from
-				other.start
-			until
-				other.after
-			loop
-				extend (other.item);
-				other.forth
-			end;
-			other.go_to (c);
+			if capacity < other.count then
+				make_area (other.count)
+				 	--lower for arrayed list always 1
+				upper := other.count
+			else
+				make_area (capacity)
+			end
+			count := other.count
+			object_comparison := other.object_comparison
+			subcopy (other, 1, other.count, 1)
 		end;
 
 	duplicate (n: INTEGER): like Current is
@@ -622,6 +632,7 @@ feature {NONE} --Internal
 invariant
 
 	prunable: prunable;
+	starts_from_one: lower = 1;
 
 end -- class ARRAYED_LIST
 
@@ -640,4 +651,3 @@ end -- class ARRAYED_LIST
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

@@ -25,6 +25,8 @@ exprt -r %DEFAULT_CVS_TAG -d vision "Src/library/vision"
 remtrace vision2
 exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 fullrd vision2\implementation\gtk
+remtrace vision2_extension
+exprt -r %DEFAULT_CVS_TAG -d vision2_extension "Src/library/vision2_extension"
 remtrace web
 exprt -r %DEFAULT_CVS_TAG -d web "Src/library/web"
 remtrace wel

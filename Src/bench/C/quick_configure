@@ -1,10 +1,5 @@
 #!/bin/sh
 
-if [ "$EIFFEL_SRC" = "" ]
-then
-	export EIFFEL_SRC="`pwd`/.."
-fi
-
 # quick_configure generate run-times libraries for the platforms given as 
 # arguments.
 

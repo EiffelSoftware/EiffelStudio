@@ -12,10 +12,24 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_TARGET_I
+		redefine
+			interface
+		end
 
 	EV_ITEM_LIST_I [EV_TOOL_BAR_ITEM]
 		redefine
 			interface
+		end
+		
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+
+	insertion_position: INTEGER is
+			-- `Result' is index of item beneath the
+			-- current mouse pointer or count + 1 if over the toolbar
+			-- and not over a button.
+		deferred
 		end
 
 feature {NONE} -- Implementation

@@ -42,18 +42,12 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
-		local
-			a_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			create a_pixmap
-			a_pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\ico\icon_undo_color.ico")
-			set_pixmap (a_pixmap)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_undo @ 1)
+			set_tooltip ("Undo")
 			select_actions.extend (agent history.undo)
 			history.set_undo_button (Current)
 		end
-
-feature {NONE} -- Implementation
-		
 
 end -- class GB_HISTORY_TOOL_BAR_BUTTON

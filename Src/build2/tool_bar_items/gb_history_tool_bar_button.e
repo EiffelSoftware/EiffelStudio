@@ -42,13 +42,10 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
-		local
-			a_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			create a_pixmap
-			a_pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\png\icon_cmd_history_color.png")
-			set_pixmap (a_pixmap)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_cmd_history @ 1)
+			set_tooltip ("History")
 			select_actions.extend (agent show_history)
 		end
 

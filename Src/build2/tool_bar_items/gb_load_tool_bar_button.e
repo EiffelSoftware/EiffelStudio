@@ -27,13 +27,10 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
-		local
-			a_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			create a_pixmap
-			a_pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\png\icon_new_editor_color.png")
-			set_pixmap (a_pixmap)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_new_editor @ 1)
+			set_tooltip ("Load")
 			select_actions.extend (agent load_object)
 		end
 

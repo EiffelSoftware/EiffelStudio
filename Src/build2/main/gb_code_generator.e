@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			
 					-- We must now perform the generation into `class_text'.
 					-- First replace the name of the class
-				set_class_name (system_status.current_project_settings.main_window_class_name + "_IMP")
+				set_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
 
 				
 				set_progress (0.7)
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 					-- First replace the name of the class
 				set_class_name (system_status.current_project_settings.main_window_class_name)
 				
-				set_inherited_class_name (system_status.current_project_settings.main_window_class_name + "_IMP")
+				set_inherited_class_name (system_status.current_project_settings.main_window_class_name + class_implementation_extension)
 				
 				temp_index := class_text.substring_index (event_declaration_tag, 1)				
 				class_text.replace_substring_all (event_declaration_tag, "")

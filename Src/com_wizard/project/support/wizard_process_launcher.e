@@ -60,9 +60,22 @@ feature -- Element Change
 
 feature -- Basic Operations
 
+	spawn (a_command_line, a_working_directory: STRING) is
+			-- Spawn process described in `a_command_line' from `a_working_directory'.
+		local
+			a_wel_string1, a_wel_string2: WEL_STRING
+		do
+			create process_info.make
+			create a_wel_string1.make (a_command_line)
+			create a_wel_string2.make (a_working_directory)
+			last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+				default_pointer, default_pointer, True, 0, default_pointer, a_wel_string2.item,
+				startup_info.item, process_info.item)
+		end
+
 	launch (a_command_line, a_working_directory: STRING) is
 			-- Launch process described in `a_command_line' from `a_working_directory'.
-			-- Command line should be delimited with symbol '"'.
+			-- Wait for end of process and write output to `output_message'.
 		require
 			non_void_command_line: a_command_line /= Void
 			non_void_working_directory: a_working_directory /= Void
@@ -81,15 +94,10 @@ feature -- Basic Operations
 			if not (a_command_line.item (a_command_line.count) = '"') then
 				a_command_line.append ("%"")
 			end
-			create process_info.make
 			a_string := clone (Console_spawn_application)
 			a_string.append (" ")
 			a_string.append (a_command_line)
-			create a_wel_string1.make (a_string)
-			create a_wel_string2.make (a_working_directory)
-			last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-				default_pointer, default_pointer, True, 0, default_pointer, a_wel_string2.item,
-				startup_info.item, process_info.item)
+			spawn (a_string, a_working_directory)
 			output_pipe.close_input
 			from
 				output_pipe.read_stream (Block_size)

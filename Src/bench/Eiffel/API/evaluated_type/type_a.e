@@ -30,6 +30,13 @@ inherit
 
 	SHARED_GENERIC_CONSTRAINT
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+		end
+
 feature -- Properties
 
 	generics: ARRAY [TYPE_A] is

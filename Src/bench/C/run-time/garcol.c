@@ -824,7 +824,10 @@ rt_public void reclaim(void)
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
 #ifdef EIF_WIN32
-	eif_cleanup();
+#ifdef EIF_THREADS
+	if (eif_thr_is_root ())
+#endif
+		eif_cleanup();
 #endif
 
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
@@ -871,8 +874,6 @@ rt_public void reclaim(void)
 #endif
 	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
 	}
-
-	eif_free (eif_globals);
 
 	/* The TSD is managed in a different way under VxWorks: each thread
 	 * must call taskVarAdd upon initialization and taskVarDelete upon

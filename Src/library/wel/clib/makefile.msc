@@ -3,10 +3,10 @@
 CC = cl
 
 # Finalized Version
-CFLAGS = -nologo -c -Ox -W1 -I..\spec\windows\include -I$(EIFFEL5)\bench\spec\windows\include -DNONAMELESSUNION
+CFLAGS = -nologo -c -Ox -W1 -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include -DNONAMELESSUNION
 
 # Debug Version
-#CFLAGS = -c -Zi -Od -W4 -I..\spec\windows\include -I$(EIFFEL5)\bench\spec\windows\include -DNONAMELESSUNION
+#CFLAGS = -c -Zi -Od -W4 -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include -DNONAMELESSUNION
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

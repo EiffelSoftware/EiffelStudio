@@ -11,6 +11,9 @@
 	recursively coying them.
 */
 
+/*
+doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Traversal of objects">
+*/
 
 #include "eif_portable.h"
 #include "rt_garcol.h"
@@ -19,7 +22,7 @@
 #include "eif_except.h"
 
 #if !defined CUSTOM || defined NEED_STORE_H
-#include "eif_store.h"
+#include "rt_store.h"
 #endif
 #if !defined CUSTOM || defined NEED_HASH_H
 #include "eif_hashin.h"
@@ -55,14 +58,27 @@ struct mstack {
 	char **st_bot;			/* ADDED FIELD for FIFO stack implementation */
 };
 
-/* The following stack is used to record the EIF_OBJECT protections of all the
- * objects created during the maping traversal. It is represented as a stack and
- * not as an array to avoid fragmentation when resizing (since we do not know
- * how many objects we will traverse)--RAM.
- */
-rt_private struct mstack map_stack;	/* Map table */
+/*
+doc:	<attribute name="map_stack" return_type="struct mstack" export="private">
+doc:		<summary>Map table. It is used to record the EIF_OBJECT protections of all the objects created during the maping traversal. It is represented as a stack and not as an array to avoid fragmentation when resizing (since we do not know how many objects we will traverse)--RAM.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private struct mstack map_stack;
 
-rt_shared EIF_INTEGER_32 obj_nb;		/* Counter of marked objects */
+/*
+doc:	<attribute name="obj_nb" return_type="EIF_INTEGER_32" export="shared">
+doc:		<summary>Counter of marked objects. Only used with ISE_GC.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_shared EIF_INTEGER_32 obj_nb;
 
 #ifndef lint
 rt_private char *rcsid =
@@ -394,7 +410,26 @@ rt_shared void map_reset(int emergency)
 #endif
 }
 
+/*
+doc:	<attribute name="referers_target" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Object for which we track all the objects that refers to it in `find_referers'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_REFERENCE referers_target = NULL;
+
+/*
+doc:	<attribute name="instance_type" return_type="EIF_INTEGER" export="private">
+doc:		<summary>Dynamic type used to track all objects of this particular dynamic type in `find_instance_of'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_INTEGER instance_type = 0;
 
 rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type)
@@ -420,8 +455,27 @@ struct obj_array {
 	int index;				/* Cursor position */
 };
 
-rt_private struct obj_array *found_collection = NULL;	/* All found objects */
-rt_private struct obj_array *marked_collection = NULL;	/* All marked objects */
+/*
+doc:	<attribute name="found_collection" return_type="struct obj_array *" export="private">
+doc:		<summary>Collects all matching objects found in `find_instance_of' or `find_referers'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data</fixme>
+doc:	</attribute>
+*/
+rt_private struct obj_array *found_collection = NULL;
+
+/*
+doc:	<attribute name="marked_collection" return_type="struct obj_array *" export="private">
+doc:		<summary>Keeps all objects marked during search in `find_instance_of' or `find_referers'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data</fixme>
+doc:	</attribute>
+*/
+rt_private struct obj_array *marked_collection = NULL;
 
 rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collection)
 	/* Add `obj' to `a_collection'. */
@@ -766,3 +820,6 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 }
 #endif
 
+/*
+doc:</file>
+*/

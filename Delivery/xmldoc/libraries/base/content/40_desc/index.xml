@@ -67,7 +67,7 @@
 				<link>
 					<url>../../reference/desc/spec/win32/dll_32_chart.xml</url>
 					<label>DLL_32</label>
-				</link>, providing the  library's name as argument to the creation procedure.
+				</link>) , providing the  library's name as argument to the creation procedure.
 			</item>
 			<item>
 				<link>

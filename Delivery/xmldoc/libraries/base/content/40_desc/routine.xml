@@ -8,32 +8,28 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>  To create a DESC object representing a routine from a DLL, use a  declaration such as:</paragraph>
-		<code_block>
-	<feature_name>your_routine</feature_name><symbol>:</symbol> <class_name>DLL_32_ROUTINE</class_name> 
-		</code_block>
+		<code_block><feature_name>your_routine</feature_name><symbol>:</symbol> <class_name>DLL_32_ROUTINE</class_name></code_block>
 		<paragraph>  where 
 			<code>
-				<local_variable>your_routine</local_variable>
+				<feature_name>your_routine</feature_name>
 			</code> should be replaced by whatever name you have chosen to  denote the routine in your software, and execute a creation instruction of the form:
 		</paragraph>
 		<code_block>
-	<keyword>create</keyword> <feature_name>your_routine</feature_name>.<feature_name>make_by_name</feature_name> <symbol>(</symbol>
-    		<feature_name>your_dll</feature_name>,
-    		<string>"your_routine_name"</string>,
-    		<symbol>&lt;&lt;</symbol>argtyp1, argtyp2, ...<symbol>&gt;&gt;</symbol>&gt;,
-    		<feature_name>res_type</feature_name><symbol>)</symbol> 
-		</code_block>
-		<paragraph>  or, if you prefer for faster access to identify the routine by an integer index rather  than a name:</paragraph>
+<keyword>create</keyword> <feature_name>your_routine</feature_name>.<feature_name>make_by_name</feature_name> <symbol>(</symbol>
+    	<feature_name>your_dll</feature_name>,
+    	<string>"your_routine_name"</string>,
+    	<symbol>&lt;&lt;</symbol>argtyp1, argtyp2, ...<symbol>&gt;&gt;</symbol>&gt;,
+    	<feature_name>res_type</feature_name><symbol>)</symbol></code_block>
+	<paragraph>  or, if you prefer for faster access to identify the routine by an integer index rather  than a name:</paragraph>
 		<code_block>
-	<keyword>create</keyword> <feature_name>your_routine</feature_name>.<feature_name>make_by_name</feature_name> <symbol>(</symbol>
-    		<feature_name>your_dll</feature_name>,
-    		<feature_name>your_routine_index</feature_name>, <comment>-- The only differing line</comment>
-    		<symbol>&lt;&lt;</symbol>argtyp1, argtyp2, ...<symbol>&gt;&gt;</symbol>&gt;,
-    		<feature_name>res_type</feature_name><symbol>)</symbol> 
-		</code_block>
+<keyword>create</keyword> <feature_name>your_routine</feature_name>.<feature_name>make_by_name</feature_name> <symbol>(</symbol>
+    	<feature_name>your_dll</feature_name>,
+    	<feature_name>your_routine_index</feature_name>, <comment>-- The only differing line</comment>
+    	<symbol>&lt;&lt;</symbol>argtyp1, argtyp2, ...<symbol>&gt;&gt;</symbol>&gt;,
+    	<feature_name>res_type</feature_name><symbol>)</symbol></code_block>
 		<paragraph>where 
 			<code>
-				<local_variable>your_dll</local_variable>
+				<feature_name>your_dll</feature_name>
 			</code> is the library object created 
 			<link>
 				<url>library.xml</url> 
@@ -42,10 +38,10 @@
 		</paragraph>
 		<paragraph>  After either call has been executed, the boolean value 
 			<code>
-				<local_variable>your_routine.meaningful</local_variable>
+				<feature_name>your_routine.meaningful</feature_name>
 			</code> will be true if and only if the creation has been successful, that is to say, the given  name or index did correspond to a routine of the library, and it was possible to  open it. If the value is false, you can have more details about the error by  comparing the value of 
 			<code>
-				<local_variable>your_routine.error_code</local_variable>
+				<feature_name>your_routine.error_code</feature_name>
 			</code>, an integer, to those  of constants attributes defined in class 
 			<link>
 				<url>../../reference/desc/general/shared_library_constants_chart.xml</url>

@@ -19,19 +19,19 @@
 				<paragraph> To compile the example: </paragraph>
 				<list ordered="false">
 					<item>Launch EiffelStudio. </item>
-					<item>Select
+					<item>Select 
 						<bold>Use existing Ace (control file)</bold> and click
 						<bold>OK</bold>.
 					</item>
-					<item>Browse to
-						<italic>Eiffel52\examples\base\calculator\</italic>.
+					<item>Browse to 
+						<italic>Eiffel54\examples\base\calculator\</italic>.
 					</item>
-					<item>Choose
-						<italic>Ace.mswin.ace</italic> on Windows platforms or
+					<item>Choose 
+						<italic>Ace.mswin.ace</italic> on Windows platforms or 
 						<italic>Ace.unix.ace</italic> on Unix platforms.
 					</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
-					<item>Click
+					<item>Click 
 						<bold>OK</bold>.
 					</item>
 				</list>
@@ -56,13 +56,13 @@ Allowable operations are:
 		'-': Subtract top two numbers on the stack.
 Enter a number, followed by :
 					</code_block>
-						<paragraph> Enter the first number to be put onto the stack, for example
+						<paragraph> Enter the first number to be put onto the stack, for example 
 							<code><symbol>3</symbol></code>.
 						</paragraph>
 						<note>
 							<bold>Note:</bold> Failing to enter a number at this stage will cause the sample to stop. This sample was designed to showcase the use of EiffelBase data structures and is not protected against unexpected entries.
 						</note>
-						<paragraph> You may then add another number on the stack by entering the character
+						<paragraph> You may then add another number on the stack by entering the character 
 							<code><symbol>a</symbol></code>:
 						</paragraph>
 						<code_block>
@@ -85,7 +85,7 @@ Accumulator = 3
 Next operation? a
 Enter a number, followed by :
 						</code_block>
-							<paragraph> Enter a second number, for example
+							<paragraph> Enter a second number, for example 
 								<code><symbol>2</symbol></code>. You can then apply any operation to the two operands such as minus:
 							</paragraph>
 							<code_block>
@@ -101,18 +101,18 @@ Accumulator = 1
 
 Next operation?
 							</code_block>
-								<paragraph> You may use the operation
-									<code><symbol>0</symbol></code> to clear the stack at any time. You may use
+								<paragraph> You may use the operation 
+									<code><symbol>0</symbol></code> to clear the stack at any time. You may use 
 									<code><symbol>q</symbol></code> to quit the program.
 								</paragraph>
 								<tip>
-									<bold>Tip:</bold> You can use the command
+									<bold>Tip:</bold> You can use the command 
 									<code><symbol>?</symbol></code> to display the list of available operations.
 								</tip>
 								<heading>
 									<size>2</size>Under the Hood
 								</heading>
-								<paragraph> This sample shows how to leverage EiffelBase data structures in a simple Eiffel system. The root class CALCULATOR first instantiates all
+								<paragraph> This sample shows how to leverage EiffelBase data structures in a simple Eiffel system. The root class CALCULATOR first instantiates all 
 									<italic>state</italic> objects, each corresponding to one possible operation. The state classes all inherit from STATE. They are:
 								</paragraph>
 								<list ordered="false">
@@ -124,11 +124,11 @@ Next operation?
 									<item>HELP: Prints available commands. </item>
 									<item>QUESTION: Get number from user.  </item>
 									<item>QUIT: Close application.  </item>
-								</list> Each of these classes implement the feature do_one_state from STATE which performs the operation associated with the state. The initial state is QUESTION which asks for the initial number to put in the
+								</list> Each of these classes implement the feature do_one_state from STATE which performs the operation associated with the state. The initial state is QUESTION which asks for the initial number to put in the 
 								<italic>accumulator</italic>. Following states depend on the user input.
 								<line_break/> Every descendant of STATE implement the feature operation which performs the corresponding stack transformation.
 							</paragraph>
-							<paragraph> See the
+							<paragraph> See the 
 								<link>
 									<url>root_cluster/index.html</url>
 									<label>reference</label>

@@ -980,11 +980,6 @@ end;
 			end;
 		end;
 
-	update_freeze_list (a_class_id: INTEGER) is
-		obsolete "Empty routine"
-		do
-		end;
-
 	process_type_system is
 			-- Compute the type system
 		local
@@ -1170,9 +1165,9 @@ end;
 					a_class := class_of_id (id_list.item);
 						-- Verbose
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (i);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 	i := i - 1;
 end;
 					io.error.putstring ("Degree 1: class ");
@@ -1584,9 +1579,9 @@ end;
 				loop
 					a_class := id_array.item (id_list.item);
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (i);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 	i := i - 1;
 end;
 						-- Verbose
@@ -1625,9 +1620,9 @@ end;
 				loop
 					a_class := class_of_id (id_list.item);
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (i);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 	i := i - 1;
 end;
 					if a_class /= Void then
@@ -1658,9 +1653,9 @@ end;
 			loop
 				a_class := id_array.item (id_list.item);
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (i);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 	i := i - 1;
 end;
 					-- Verbose
@@ -1686,9 +1681,9 @@ end;
 			loop
 				a_class := id_array.item (id_list.item);
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (i);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 	i := i - 1;
 end;
 				if not a_class.is_precompiled then
@@ -1868,9 +1863,9 @@ feature -- Final mode generation
 					-- not Void.
 				if a_class /= Void then
 debug ("COUNT");
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (nb-i+1);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 end;
 						-- Verbose
 					io.error.putstring ("Degree -4: class ");
@@ -1914,15 +1909,17 @@ end;
 				if a_class /= Void then
 						-- Verbose
 debug ("COUNT")
-	io.error.putstring ("(");
+	io.error.putstring ("[");
 	io.error.putint (nb-i+1);
-	io.error.putstring (") ");
+	io.error.putstring ("] ");
 end;
 					io.error.putstring ("Degree -5: class ");
 						temp := clone (a_class.class_name)
 						temp.to_upper;
 					io.error.putstring (temp);
 					io.error.new_line;
+
+					current_class := a_class;
 
 					a_class.pass4;
 				end;
@@ -1947,6 +1944,12 @@ end;
 			remover := Void;
 			remover_off := old_remover_off;
 			exception_stack_managed := old_exception_stack_managed
+		rescue
+				-- Clean the servers if the finalization is aborted
+			Tmp_poly_server.flush;
+			Tmp_poly_server.clear;
+			Tmp_opt_byte_server.flush;
+			Tmp_opt_byte_server.clear;
 		end;
 
 feature -- Dead code removal
@@ -2048,6 +2051,14 @@ feature -- In-lining optimization
 	set_array_optimization_on (b: BOOLEAN) is
 		do
 			array_optimization_on := b;
+		end;
+
+	inlining_on: BOOLEAN;
+			-- Is inlining on ?
+
+	set_inlining_on (b: BOOLEAN) is
+		do
+			inlining_on := b
 		end;
 
 feature
@@ -2848,6 +2859,13 @@ feature -- Plug and Makefile file
 				Plug_file.putstring ("[])();%N%N");
 			end;
 
+			if final_mode and then array_optimization_on then
+				remover.array_optimizer.generate_plug_declarations (Plug_file)
+			else
+				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
+										%long *eif_lower_table = (long *)0;%N");
+			end;
+
 				-- Pointer on creation feature of class STRING
 			Plug_file.putstring ("void (*eif_strmake)() = ");
 			Plug_file.putstring (str_make_name);
@@ -3376,6 +3394,7 @@ feature -- Conveniences
 		do
 			remover_off := False;
 			array_optimization_on := False;
+			inlining_on := False;
 			code_replication_off := True;
 			exception_stack_managed := False; 
 			Rescue_status.set_fail_on_rescue (False)

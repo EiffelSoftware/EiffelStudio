@@ -10,6 +10,9 @@ class
 inherit
 	WIZARD_REGISTRATION_GENERATOR
 
+	WIZARD_CPP_FEATURE_GENERATOR
+
+	WIZARD_GUID_GENERATOR
 
 feature -- Access
 
@@ -202,59 +205,6 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	libid_definition (a_name: STRING; a_guid: ECOM_GUID): STRING is
-			-- Definition of LIBID in source file.
-		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
-		do
-			create Result.make (1000)
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (Libid_type)
-			Result.append (Underscore)
-			Result.append (a_name)
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (a_guid.to_definition_string)
-			Result.append (Semicolon)
-		ensure
-			non_void_definition: Result /= Void
-			valid_definition: not Result.empty
-		end
-
-
-	libid_declaration (a_name: STRING): STRING is
-			-- Declaration of LIBID in header file.
-		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
-		do
-			-- extern "C" IID LIBID_`a_name';
-
-			create Result.make (1000)
-			Result.append (Extern)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append ("C")
-			Result.append (Double_quote)
-			Result.append (Space)
-			Result.append (Const)
-			Result.append (Space)
-			Result.append (Iid_type)
-			Result.append (Space)
-			Result.append (Libid_type)
-			Result.append (Underscore)
-			Result.append (a_name)
-			Result.append (Semicolon)
-		ensure
-			non_void_declaration: Result /= Void
-			valid_declaration: not Result.empty
-		end
-
 	ccom_initialize_com_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Administration function to register class object.
 			-- Only generated if is outproc server.
@@ -279,37 +229,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (Semicolon)
 			tmp_string.append (New_line_tab)
 
-			-- if (FAILED (hr))
-			tmp_string.append (If_keyword)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Failed)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Hresult_variable_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (Open_curly_brace)
-			tmp_string.append (New_line_tab_tab)
-
-			--	com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
-
-			tmp_string.append (Com_eraise)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Formatter)
-			tmp_string.append (Dot)
-			tmp_string.append (Format_message)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Hresult_variable_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Comma_space)
-			tmp_string.append (Hresult_code)
-			tmp_string.append (Space_open_parenthesis)
-			tmp_string.append (Hresult_variable_name)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Close_parenthesis)
-			tmp_string.append (Semicolon)
-			tmp_string.append (New_line_tab)
-			tmp_string.append (Close_curly_brace)
+			tmp_string.append (examine_hresult (Hresult_variable_name))
 			tmp_string.append (New_line_tab)
 
 			from
@@ -319,7 +239,7 @@ feature {NONE} -- Implementation
 			loop
 				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
 					-- hr = CoRegisterClassObject ('Class_id', static_case<IClassFactory*> ('class_object'),
-					-- CLSCTX_LOCAL_SERVER, REGCLS_SINGLEUSE, &'class_object_registration_token')
+					-- CLSCTX_LOCAL_SERVER, REGCLS_MULTIPLEUSE, &'class_object_registration_token')
 					-- ** Allow the implementors to choice between REGCLS_SINGLEUSE or REGCLS_MULTIPLEUSE later.
 
 					tmp_string.append (If_keyword)
@@ -350,9 +270,9 @@ feature {NONE} -- Implementation
 					tmp_string.append (Space_equal_space)
 					tmp_string.append (Co_register_class_object)
 					tmp_string.append (Space_open_parenthesis)
-					tmp_string.append (Clsid_type)
-					tmp_string.append (Underscore)
-					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+
+					tmp_string.append (clsid_name(system_descriptor.coclasses.item.c_type_name))
+
 					tmp_string.append (Comma_space)
 					tmp_string.append (Static_cast)
 					tmp_string.append (Less)
@@ -368,7 +288,7 @@ feature {NONE} -- Implementation
 					tmp_string.append (Comma_space)
 					tmp_string.append (Clsctx_local_server)
 					tmp_string.append (Comma_space)
-					tmp_string.append (Regcls_single_use)
+					tmp_string.append (Regcls_multiple_use)
 					tmp_string.append (Comma_space)
 					tmp_string.append (Ampersand)
 					tmp_string.append (Class_object_registration_token)
@@ -679,8 +599,8 @@ feature {NONE} -- Implementation
 
 					tmp_string.append (If_keyword)
 					tmp_string.append (Space_open_parenthesis)
-					tmp_string.append ("IsEqualGUID (* rclsid, CLSID_")
-					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append ("IsEqualGUID (* rclsid, ")
+					tmp_string.append (clsid_name (system_descriptor.coclasses.item.c_type_name))
 					tmp_string.append (Close_parenthesis)
 					tmp_string.append (Close_parenthesis)
 					tmp_string.append (New_line_tab)
@@ -1136,9 +1056,7 @@ feature {NONE} -- Implementation
 			
 			-- HRESULT hr = UnregisterTypeLib (LIBID_'library_name', 1,0,0, SYS_WIN32);
 			tmp_string.append ("HRESULT hr = UnRegisterTypeLib (")
-			tmp_string.append (Libid_type)
-			tmp_string.append (Underscore)
-			tmp_string.append (system_descriptor.name)
+			tmp_string.append (libid_name (system_descriptor.name))
 			tmp_string.append (", 1, 0, 0, SYS_WIN32);")
 			tmp_string.append (New_line_tab)
 

@@ -11,12 +11,6 @@ class
 inherit
 	SHARED_EIFFEL_PROJECT
 
-	EB_CONTEXT_TOOL_DATA
-		select
-			initialize_resources,
-			resources_initialized
-		end
-
 	EB_WINDOW_MANAGER_OBSERVER
 		redefine
 			on_item_removed
@@ -48,20 +42,8 @@ inherit
 			default_create
 		end
 		
-	RESOURCE_OBSERVATION_MANAGER
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
+	EB_SHARED_PREFERENCES	
 
-	OBSERVER
-		rename
-			update as retrieve_depth_preferences
-		undefine
-			default_create
-		end
-		
 	EV_SHARED_APPLICATION
 		undefine
 			default_create
@@ -120,12 +102,6 @@ feature {NONE} -- Initialization
 			widget.extend (border_frame)
 			
 			retrieve_depth_preferences
-			add_observer ("subcluster_depth", Current)
-			add_observer ("supercluster_depth", Current)
-			add_observer ("client_depth", Current)
-			add_observer ("supplier_depth", Current)
-			add_observer ("ancestor_depth", Current)
-			add_observer ("descendant_depth", Current)
 
 			development_window.editor_tool.text_area.add_edition_observer (Current)
 			area.key_press_actions.extend (agent on_key_pressed)
@@ -246,7 +222,8 @@ feature {NONE} -- Initialization
 			tb_commands.extend (toggle_cluster_legend_cmd)
 			tb_commands.extend (toggle_uml_cmd)
 			tb_commands.extend (force_settings_cmd)
-			custom_toolbar := retrieve_diagram_toolbar (tb_commands)
+			custom_toolbar := preferences.context_tool_data.retrieve_diagram_toolbar (tb_commands)
+
 			
 			from
 				tb_commands.start
@@ -475,9 +452,9 @@ feature -- Status settings.
 			l_array: ARRAY [STRING]
 			i: INTEGER
 		do
-			ignore_excluded_figures := boolean_resource_value ("ignore_excluded_class_figures", False)
+			ignore_excluded_figures := preferences.context_tool_data.ignore_excluded_class_figures --", False)
 			if not ignore_excluded_figures then
-				l_array := array_resource_value ("excluded_class_figures", Default_excluded_class_figures)
+				l_array := preferences.context_tool_data.excluded_class_figures -- Default_excluded_class_figures)
 				create excluded_class_figures.make (l_array.count)
 				from
 					i := l_array.lower
@@ -1652,12 +1629,12 @@ feature {NONE} -- Implementation
 	retrieve_depth_preferences is
 			-- Retrieve values for default depth from preferences.
 		do
-			default_subcluster_depth := integer_resource_value ("subcluster_depth", 1)
-			default_supercluster_depth := integer_resource_value ("supercluster_depth", 1)
-			default_client_depth := integer_resource_value ("client_depth", 0)
-			default_supplier_depth := integer_resource_value ("supplier_depth", 0)
-			default_ancestor_depth := integer_resource_value ("ancestor_depth", 1)
-			default_descendant_depth := integer_resource_value ("descendant_depth", 1)
+			default_subcluster_depth := preferences.context_tool_data.subcluster_depth --", 1)
+			default_supercluster_depth := preferences.context_tool_data.supercluster_depth--", 1)
+			default_client_depth := preferences.context_tool_data.client_depth--", 0)
+			default_supplier_depth := preferences.context_tool_data.supplier_depth--", 0)
+			default_ancestor_depth := preferences.context_tool_data.ancestor_depth--", 1)
+			default_descendant_depth := preferences.context_tool_data.descendant_depth--", 1)
 			
 			if class_graph /= Void then
 				class_graph.set_descendant_depth (default_descendant_depth)
@@ -1725,7 +1702,7 @@ feature {NONE} -- Implementation
 			-- Customize diagram toolbar.
 		do
 			custom_toolbar.customize
-			save_diagram_toolbar (custom_toolbar)
+			preferences.context_tool_data.save_diagram_toolbar (custom_toolbar)
 			reset_tool_bar_toggles
 		end
 			

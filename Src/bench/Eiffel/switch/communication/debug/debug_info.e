@@ -202,6 +202,12 @@ feature -- Element change
 
 feature -- Breakpoints
 
+	has_breakpoints: BOOLEAN is
+			-- Does the program have a breakpoint set?
+		do
+			Result := not debugged_routines.empty
+		end
+		
 	switch_breakpoint (f: E_FEATURE; i: INTEGER) is
 			-- Switch the `i'-th breakpoint of `f' ?
 		require

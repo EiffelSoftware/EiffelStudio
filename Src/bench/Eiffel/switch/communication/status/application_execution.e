@@ -26,6 +26,8 @@ inherit
 		end;
 	SHARED_CONFIGURE_RESOURCES
 
+	WINDOWS
+
 creation {SHARED_APPLICATION_EXECUTION}
 
 	make
@@ -40,8 +42,7 @@ feature {NONE} -- Initialization
 			current_execution_stack_number := 1
 		ensure
 			displayed_string_size: displayed_string_size = 100;
-			current_execution_stack_number_is_one:
-					current_execution_stack_number = 1
+			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end;
 
 feature -- Properties
@@ -131,9 +132,7 @@ feature -- Properties
 			-- Is the feature `f' valid for the
 			-- debugger context?
 		do
-			Result :=
-				f /= Void and then
-				f.is_debuggable
+			Result := f /= Void and then f.is_debuggable
 		ensure
 			valid_result: Result implies f /= Void and then	
 							f.is_debuggable
@@ -149,8 +148,7 @@ feature -- Properties
 			deb: LINKED_LIST [DEBUGGABLE]
 		do
 			deb := debug_info.debuggables (f)
-			Result := 
-				i <= deb.first.breakable_points.count 
+			Result := i <= deb.first.breakable_points.count 
 		end;
 
 	exists: BOOLEAN is
@@ -210,7 +208,7 @@ feature -- Access
 
 feature -- Element change
 
-	super_melt_feature (f: E_FEATURE) is
+	super_melt_feature (f: E_FEATURE; insert_breakpoint: BOOLEAN) is
 			-- Super melt feature `f' if it has not been super melted.
 		require
 			valid_debugged_feature: valid_debugged_feature (f);	
@@ -218,13 +216,14 @@ feature -- Element change
 		do
 			if not has_feature (f) then
 				add_feature (f)
-				if not is_breakpoint_set (f, 1) then
+				if insert_breakpoint and then not is_breakpoint_set (f, 1) then
 					switch_breakpoint (f, 1)
+					Window_manager.routine_win_mgr.show_stoppoint (f, 1);
 				end
 			end
 		end;
 
-	super_melt_class (c: E_CLASS) is
+	super_melt_class (c: E_CLASS; insert_breakpoint: BOOLEAN) is
 			-- Super melt all features written in class `c'.
 		require
 			valid_c: c /= Void
@@ -238,7 +237,7 @@ feature -- Element change
 				list.after
 			loop
 				if list.item.is_debuggable then
-					super_melt_feature (list.item);
+					super_melt_feature (list.item, insert_breakpoint);
 				end;
 				list.forth
 			end
@@ -256,6 +255,14 @@ feature -- Element change
 		ensure
 			has_feature: has_feature (f)
 		end;
+
+	has_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints?
+		require
+			successful_compilation: Eiffel_project.successful
+		do
+			Result := debug_info.has_breakpoints
+		end
 
 	switch_feature (f: E_FEATURE) is
 			-- Switch `f' from debugged to removed or from removed to debugged.
@@ -450,11 +457,7 @@ feature -- Execution
 		require
 			app_is_running: is_running;
 		do
-			if is_stopped then
-				quit_request.make (Rqst_quit);
-			else
-				quit_request.make (Rqst_kill);
-			end;
+			quit_request.make (Rqst_kill);
 			quit_request.send;		
 			process_termination;
 				-- Don't wait until the next event loop to

@@ -164,6 +164,7 @@ feature {NONE} -- Initialization
 			dib: WEL_DIB
 			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
+			screen_dc: WEL_SCREEN_DC
 		do
 			if error_code = Loadpixmap_error_noerror then
 					-- No error while loading the file
@@ -196,7 +197,7 @@ feature {NONE} -- Initialization
 						size_row * pixmap_height + 40
 						)
 					create internal_bitmap.make_by_dib(
-						bitmap_dc, 
+						s_dc, 
 						dib, 
 						Dib_rgb_colors
 						)
@@ -227,6 +228,9 @@ feature -- Access
 	dc: WEL_DC is
 			-- The device context of the control.
 		do
+			if not bitmap_dc.bitmap_selected then
+				bitmap_dc.select_bitmap(internal_bitmap)
+			end
 			Result := bitmap_dc
 		end
 
@@ -353,10 +357,13 @@ feature -- Status setting
 					old_height,					-- height source
 					Srccopy						-- copy mode
 					)
+				a_mask_bitmap_dc.unselect_bitmap
+				a_mask_bitmap_dc.delete
 			end
 		
 				-- Set the dc to be reseted.
 			dc_to_reset := True
+			bitmap_dc.unselect_bitmap
 		end
 
 	set_size (new_width, new_height: INTEGER) is
@@ -1000,39 +1007,43 @@ feature -- Duplication
 			-- (So as to satisfy `is_equal'.)
 		local
 			other_implementation: like Current
+			a_bitmap: WEL_BITMAP
 		do
 			other_implementation ?= other.implementation
 			bitmap_dc ?= other_implementation.bitmap_dc
-			internal_bitmap := other_implementation.internal_bitmap
-			mask_bitmap := other_implementation.mask_bitmap
+			create internal_bitmap.make_by_bitmap(other_implementation.bitmap)
+			create mask_bitmap.make_by_bitmap(other_implementation.mask_bitmap)
 			icon := other_implementation.icon
 			transparent_color := other_implementation.transparent_color
 		end
 
 feature -- Obsolete
 
-	internal_dc: WEL_MEMORY_DC is
-		obsolete
-			"Use: dc"
-		do
-			Result := bitmap_dc
-		end
-
-	character_representation: ARRAY [CHARACTER] is
-			-- Return a representation of the pixmap in
-			-- an array of character.
-		local
-			info: WEL_BITMAP_INFO
-		do
-			create info.make_by_dc (bitmap_dc, internal_bitmap, Dib_rgb_colors)
-			Result := bitmap_dc.di_bits (
-				internal_bitmap,
-				0,
-				height,
-				info,
-				Dib_rgb_colors
-				)
-		end
+--|----------------------------------------------------------------------------
+--| FIXME ARNAUD: To be removed after April 7th.
+--|----------------------------------------------------------------------------
+--	internal_dc: WEL_MEMORY_DC is
+--		obsolete
+--			"Use: dc"
+--		do
+--			Result := bitmap_dc
+--		end
+--
+--	character_representation: ARRAY [CHARACTER] is
+--			-- Return a representation of the pixmap in
+--			-- an array of character.
+--		local
+--			info: WEL_BITMAP_INFO
+--		do
+--			create info.make_by_dc (bitmap_dc, internal_bitmap, Dib_rgb_colors)
+--			Result := bitmap_dc.di_bits (
+--				internal_bitmap,
+--				0,
+--				height,
+--				info,
+--				Dib_rgb_colors
+--				)
+--		end
 
 feature {NONE} -- Externals
 
@@ -1077,6 +1088,10 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/30 17:41:14  pichery
+--| Last commit before splitting the implementation into 2 or more differents
+--| implementations.
+--|
 --| Revision 1.26  2000/03/29 06:58:58  pichery
 --| Implemented `stretch'.
 --| Fixed lots of bugs everywhere. Seems to start working smoothly now...

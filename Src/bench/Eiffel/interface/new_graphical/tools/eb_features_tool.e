@@ -162,7 +162,7 @@ feature -- Element change
 							end
 							Eiffel_system.System.set_current_class (Void)
 							widget.extend (tree)
-							if not tree.is_empty then
+							if not tree.is_empty and then tree.is_displayed then
 								tree.ensure_item_visible (tree.first)
 							end
 						end

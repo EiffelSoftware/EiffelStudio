@@ -42,6 +42,9 @@ feature -- Access
 		deferred
 		end
 
+	name: STRING
+			-- Current name of the color.
+
 feature -- Element change
 
 	set_rgb (a_red, a_green, a_blue: INTEGER) is
@@ -89,6 +92,16 @@ feature -- Element change
 		deferred
 		ensure
 			blue_set: blue = value
+		end
+
+	set_name (txt: STRING) is
+			-- Make `txt' the new name.
+		require
+			valid_name: txt /= Void
+		do
+			name := txt
+		ensure
+			name_set: name = txt
 		end
 
 feature -- Implementation

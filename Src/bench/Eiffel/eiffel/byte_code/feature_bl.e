@@ -69,13 +69,15 @@ end
 		local
 			tmp_register: REGISTER
 			access_b: ACCESS_B
+			basic_i: BASIC_I
 		do
 debug
 io.error.putstring ("In feature_bl [analyze_on]: ")
 io.error.putstring (feature_name)
 io.error.new_line
 end
-			if context_type.is_basic then
+			basic_i ?= context_type
+			if basic_i /= Void and not is_feature_special (True, basic_i) then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make

@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 		do
 			parser_make (<<help_switch, help_spelled_switch, no_logo_switch, list_assemblies_switch, 
 						list_assemblies_short, verbose_switch, verbose_short, add_switch, add_short,
-						remove_switch, remove_short, nice_switch, nice_short, fullname_switch,
+						remove_switch, remove_short, compact_switch, nice_switch, nice_short, fullname_switch,
 						fullname_short, out_switch, out_short, version_switch, version_short>>)
 			parse
 		
@@ -76,7 +76,6 @@ feature {NONE} -- Initialization
 		ensure
 			non_void_cache_writer: cache_writer /= Void
 		end
-		
 
 feature -- Access
 
@@ -112,6 +111,9 @@ feature -- Access
 	
 	remove_short: STRING is "r"
 			-- Shortcut equivalent of `remove_switch'
+			
+	compact_switch: STRING is "compact"
+			-- Switch used to clean and compact EAC
 
 	nice_switch: STRING is "nice"
 			-- Switch used to create indented xml
@@ -160,6 +162,9 @@ feature -- Status report
 	path_is_full_name: BOOLEAN
 			-- Is assembly path actually a display name?
 			
+	compact_cache: BOOLEAN
+			-- Should EAC be compacted?
+			
 feature {NONE} -- Implementation
 
 	start is
@@ -204,6 +209,9 @@ feature {NONE} -- Implementation
 					process_error (error_message)
 				end
 			end
+			if successful and compact_cache then
+				compact_and_clean_cache
+			end
 		end
 
 	process_switch (switch, switch_value: STRING) is
@@ -221,6 +229,8 @@ feature {NONE} -- Implementation
 				add_to_eac := True
 			elseif switch.is_equal (remove_short) or switch.is_equal (remove_switch) then
 				remove_from_eac := True
+			elseif switch.is_equal (compact_switch) then
+				compact_cache := True
 			elseif switch.is_equal (nice_short) or switch.is_equal (nice_switch) then
 				has_indented_output.set_item (True)
 			elseif switch.is_equal (fullname_short) or switch.is_equal (fullname_switch) then
@@ -246,7 +256,7 @@ feature {NONE} -- Implementation
 			elseif not display_usage_help and clr_version = Void then
 				set_error (Version_should_be_specified, Void)
 			elseif not (list_assemblies or display_usage_help) then
-				if not add_to_eac or remove_from_eac or list_assemblies then
+				if not add_to_eac or remove_from_eac or list_assemblies or compact_cache then
 					set_error (no_operation, Void)
 				elseif clr_version = Void or clr_version.is_empty or clr_version.item (1).as_lower /= 'v' then
 					set_error (invalid_version_specified, clr_version)	
@@ -275,10 +285,10 @@ feature {NONE} -- Implementation
 			exec_from_command_line: exec_from_cli
 		do
 			io.put_string ("Usage:%N%N")
-			io.put_string ("  " + System_name + " /a <assembly> [/full] /ver:<version> [/o:<path>] [/n] [/v] [/nologo]%N")
-			io.put_string ("  " + System_name + " /r <assembly> [/full] /ver:<version> [/o:<path>] [/v] [/nologo]%N")
+			io.put_string ("  " + System_name + " /a <assembly> [/full] /ver:<version> [/o:<path>] [/compact] [/n] [/v] [/nologo]%N")
+			io.put_string ("  " + System_name + " /r <assembly> [/full] /ver:<version> [/o:<path>] [/compact] [/v] [/nologo]%N")
 			io.put_string ("  " + System_name + " /l <assembly> [/full] /ver:<version> [/o:<path>] [/nologo]%N%N")
-			
+			io.put_string ("  " + System_name + " /compact /ver:<version> [/o:<path>] [/nologo]%N%N")
 			io.put_string ("Options:%N%N")
 			
 			io.put_string ("  /a[dd] - Put assembly in Eiffel Assembly Cache.%N")
@@ -287,6 +297,7 @@ feature {NONE} -- Implementation
 			io.put_string ("  /o[ut]:<path> - Alternative path for Eiffel assembly cache.%N")
 			io.put_string ("  /full[name] - Indicates that <assembly> is a full or part display name.%N")
 			io.put_string ("  /l[ist] - List assemblies in EAC.%N")
+			io.put_string ("  /compact - Cleans and compacts cache.%N")
 			io.put_string ("  /n[ice] - Writes indented XML for each assemblies consumed metadata.%N")
 			io.put_string ("  /v[erbose] - Display all information when consuming an assembly.%N")
 			io.put_string ("  /nologo - Prevent display of copyright notice.%N")
@@ -327,7 +338,6 @@ feature {NONE} -- Implementation
 				display_status ("Consuming '" + a_path + "' and all of it's dependencies.")
 			end	
 			cache_writer.add_assembly (a_path)
-			cache_writer.clean_cache
 		rescue
 			cache_writer.clean_cache
 		end
@@ -344,7 +354,6 @@ feature {NONE} -- Implementation
 				display_status ("Removing '" + a_path + "' and all dependents.")	
 			end		
 			cache_writer.remove_recursive_assembly (a_path)
-			cache_writer.clean_cache
 		rescue
 			cache_writer.clean_cache
 		end
@@ -405,7 +414,14 @@ feature {NONE} -- Implementation
 			else
 				display_status ("The Eiffel Assembly Cache is empty.")
 			end
-		end		
+		end
+		
+	compact_and_clean_cache is
+			-- compacts and cleans cache info
+		do
+			cache_writer.clean_cache
+			cache_writer.compact_cache_info
+		end
 	
 	target_path: STRING
 			-- Path to target assembly

@@ -556,13 +556,11 @@ feature {NONE} -- Implementation
 			-- Wm_ctlcolordialog message received.
 		local
 			paint_dc: WEL_PAINT_DC
-			brush: WEL_BRUSH
 		do
 			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
 			paint_dc.set_background_color (wel_background_color)
 			paint_dc.set_text_color (wel_foreground_color)
-			brush := allocated_brushes.get (Void, wel_background_color)
-			set_message_return_value (brush.to_integer)
+			set_message_return_value (background_brush.to_integer)
 		end
 		
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is

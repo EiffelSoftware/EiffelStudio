@@ -14,6 +14,8 @@ inherit
 	WEL_MULTIPLE_LINE_EDIT
 		rename
 			make as multiple_line_edit_make
+		export
+			{NONE} set_font
 		redefine
 			class_name,
 			default_style,

@@ -63,6 +63,11 @@ feature
 			-- The "arg<num>" string
 		do
 			create Result.make (10)
+			if type.is_true_expanded then
+					-- Expanded argument are copied into
+					-- a local variable `earg'.
+				Result.append_character ('e')
+			end
 			Result.append ("arg");
 			Result.append (position.out);
 		end;

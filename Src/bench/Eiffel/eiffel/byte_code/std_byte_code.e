@@ -109,7 +109,7 @@ feature
 
 			if compound /= Void then
 					-- Look for all instances of assignments in Result
-					-- in last instructions and set `last_in_result' iff
+					-- in last instructions and set `last_in_result' if
 					-- all were such assignments.
 				if not result_type.is_void and not is_once then
 					compound.finish;
@@ -216,9 +216,10 @@ feature
 				generated_file.putstring ("CURDSFC;");
 				generated_file.new_line;
 			end;
-				-- If necessary, generate the once stuff (i.e. checks for
-				-- the internal done flag). That way we do not enter the body
-				-- of the once if it has already been done. Preconditions,
+				-- If necessary, generate the once stuff (i.e. checks if
+				-- the value of the once was already set within the same
+				-- thread).  That way we do not enter the body of the
+				-- once if it has already been done. Preconditions,
 				-- if any, are only tested on the very first call.
 			generate_once;
 				-- Before entering in the code generate GC hooks, i.e. pass
@@ -292,7 +293,7 @@ feature
 				-- If there is a rescue clause, generate it now...
 			generate_rescue;
 				-- End of C function
-			generated_file.putstring ("EDCX%N"); -- ss MT
+			generated_file.putstring ("EDCX%N");
 			generated_file.exdent;
 			generated_file.putchar ('}');
 			generated_file.new_line;
@@ -319,8 +320,8 @@ feature
 				compound.finish;
 					-- If ALL the last statements were assignments in result,
 					-- generate a NOTREACHED for lint when last statement was
-					-- not of type assignment. Otherwise, the return statements
-					-- have already been generated.
+					-- not of type assignment. Otherwise, the return
+					-- statements have already been generated.
 				if compound.item.last_all_in_result then
 					assignment ?= compound.item;
 					a_creation ?= compound.item;
@@ -350,14 +351,9 @@ feature
 				-- been generated.
 			finish_compound;
 			if not result_type.is_void then
-					-- Routine is a function. Emit a blank line before
-					-- return expression unless we are in a once and hooks
-					-- have not been generated (which means we are in the
-					-- "if done" construct).
-				if (not is_once or context.ref_var_used > 0) and
-					(is_once or (not (compound = Void) and then compound.count > 1))
-				then
-					generated_file.new_line;
+				if is_once and then context.result_used then
+						generated_file.putstring ("*PResult = Result;");
+						generated_file.new_line;
 				end;
 				generated_file.putstring ("return ");
 					-- If Result was used, generate it. Otherwise, its value
@@ -615,8 +611,8 @@ feature
 				-- Generate temporary locals under the control of the GC
 			context.generate_temporary_ref_variables;
 
-				-- Result is declared only if needed. It is a static value
-				-- in case the routine is a once function.
+				-- Result is declared only if needed. For onces, it is
+				-- accessed via a key allowing us to have them per thread.
 			if (not result_type.is_void) and then context.result_used then
 				generate_result_declaration;
 			end;
@@ -665,12 +661,22 @@ feature
 					generated_file.new_line;
 				end;
 			end;
-				-- Onces have an internal flag 'done'. Note that even if Result
-				-- is not used in once functions, we have to generate the flag:
-				-- we cannot simply return 0 in case some treatment with side
-				-- effect were done.
+				-- Onces are processed via keys. We store a pointer to
+				-- Result (or something !=0 if void) to indicate whether
+				-- the once was processed or not. If processed, we'll get
+				-- the pointer to Result != 0.
+				-- Note that even if Result is not used in once functions,
+				-- we have to go through the key: we cannot simply return 0
+				-- in case some treatment with side effect were done.
 			if is_once then
-				generated_file.putstring ("static int done = 0;");
+				real_type (result_type).c_type.generate (generated_file);
+				generated_file.putstring ("*PResult = (");
+				real_type (result_type).c_type.generate (generated_file);
+				generated_file.putstring ("*) 0;");
+				generated_file.new_line;
+				generated_file.putstring ("EIF_ONCE_TYPE *key = EIF_once_keys + EIF_oidx_off + ");
+				generated_file.putint (context.once_index);
+				generated_file.putchar (';');
 				generated_file.new_line;
 			end;
 
@@ -692,8 +698,7 @@ feature
 					-- variable array, hehe.
 			else
 				ctype.generate (generated_file);
-				generated_file.putstring ("Result");
-				generated_file.putstring (" = ");
+				generated_file.putstring ("Result = ");
 				ctype.generate_cast (generated_file);
 				generated_file.putstring ("0;");
 				generated_file.new_line;

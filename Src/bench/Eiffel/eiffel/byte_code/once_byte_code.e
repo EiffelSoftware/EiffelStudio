@@ -29,7 +29,8 @@ feature
 		local
 			type_i: TYPE_I;
 		do
-			generated_file.putstring ("if (done)");
+			type_i := real_type (result_type);
+			generated_file.putstring ("if (MTOG(*key,PResult))");
 			generated_file.new_line;
 			generated_file.indent;
 				-- Full generation for a once function, but a single
@@ -38,9 +39,8 @@ feature
 			if result_type /= Void and then not result_type.is_void then
 				generated_file.putchar (' ');
 				if context.result_used then
-					generated_file.putstring ("Result");
+					generated_file.putstring ("*PResult");
 				else
-					type_i := real_type (result_type);
 					type_i.c_type.generate_cast (generated_file);
 					generated_file.putchar ('0');
 				end;
@@ -50,14 +50,35 @@ feature
 			generated_file.exdent;
 				-- Detach this block
 			generated_file.new_line;
-				-- Record once by recording its 'Result' address, only if it
-				-- is a reference. This will raise an exception if the address
-				-- cannot be recorded and 'done' will not be set to 1.
-			if context.result_used and real_type(result_type).c_type.is_pointer
-			then
-				generated_file.putstring ("RTOC;");
-				generated_file.new_line;
+			if context.result_used then
+				if real_type(result_type).c_type.is_pointer
+				then
+						-- Record once by allocating room in once_set stack.
+						-- This room will be updated to point to Result,
+						-- only if it is a reference. This will raise an
+						-- exception if the address cannot be recorded and
+						-- 'PResult' won't be set via the key.
+					generated_file.putstring ("PResult = (");
+					type_i.c_type.generate (generated_file);
+					generated_file.putstring ("*) RTOC((char **)0);");
+				else
+					-- If not a reference, we need to allocate some place
+					-- where to store the Result (We can't store Result
+					-- directly, since it might be 0...)
+					generated_file.putstring ("PResult = (");
+					type_i.c_type.generate (generated_file);
+					generated_file.putstring ("*) malloc(sizeof(");
+					type_i.c_type.generate (generated_file);
+					generated_file.putstring ("*));");
+				end;
+			else
+				generated_file.putstring ("PResult = (");
+				type_i.c_type.generate (generated_file);
+				generated_file.putstring ("*) 1;");
 			end;
+			generated_file.new_line;
+			generated_file.putstring ("MTOS(*key,PResult);");
+			generated_file.new_line;
 			if context.workbench_mode then
 					-- Real body id to be stored in the id list of already
 					-- called once routines to prevent supermelting them
@@ -68,8 +89,6 @@ feature
 				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line
 			end;
-			generated_file.putstring ("done = 1;");
-			generated_file.new_line;
 			init_dtype;
 		end;
 
@@ -79,7 +98,6 @@ feature
 			ctype: TYPE_C;
 		do
 			ctype := real_type (result_type).c_type;
-			generated_file.putstring ("static ");
 			ctype.generate (generated_file);
 			generated_file.putstring ("Result = ");
 			ctype.generate_cast (generated_file);

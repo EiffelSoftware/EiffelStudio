@@ -34,8 +34,6 @@ inherit
 
 	EV_PND_SOURCE_IMP
 
-	EV_PND_TARGET_IMP
-
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all

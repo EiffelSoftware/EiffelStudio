@@ -169,14 +169,36 @@ feature -- {EV_TREE_IMP}
 			-- `Current' has just been orphaned.
 			-- Because this message is only recieved when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of 
-			--the item and send this message.
+			-- the item and send this message.
 		do
 			remove_all_direct_references
+			top_parent_imp.reduce_image_list_references (image_index)
 		ensure then
 			index_not_changed: ev_children.index = old ev_children.index
 		end
 
-	
+	reduce_image_list_references (i: INTEGER) is
+			-- Decrease any references to an image position > `i' by one.
+		local
+			original_index: INTEGER
+		do
+			original_index := ev_children.index
+			from	
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.reduce_image_list_references (i)
+				ev_children.forth
+			end
+			ev_children.go_i_th (original_index)
+			if image_index > i then
+				image_index := image_index - 1
+				set_image (image_index, image_index)
+				top_parent_imp.set_tree_item (Current)
+			end
+		end
+
 	remove_all_direct_references is
 			-- Recurse through all children and update 
 			--`top_parent_imp.current_image_list_info' removing images
@@ -229,7 +251,6 @@ feature -- {EV_TREE_IMP}
 			end
 		end
 
-
 	set_pixmap_in_parent is
 			-- Add the pixmap to the parent by updating the parent's image 
 			-- list.
@@ -255,8 +276,8 @@ feature -- {EV_TREE_IMP}
 					-- If `p_imp.icon' is not already in image_list then
 					loc_image_list.add_icon (p_imp.icon)
 					image_index := loc_image_list.last_position
-						-- Add the icon to image_list and set image_index.
 					current_images.extend ([image_index, 1], item_value)	
+					-- Add the icon to image_list and set image_index.
 				else
 					loc_tuple := current_images.item (item_value)
 					image_index := loc_tuple.integer_item (1)
@@ -550,6 +571,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/28 01:11:02  rogers
+--| Added reduce_image_list_references.
+--|
+--|
 --| Revision 1.47  2000/03/28 00:17:00  brendel
 --| Revised `text' related features as specified by new EV_TEXTABLE_IMP.
 --|
@@ -568,7 +593,6 @@ end -- class EV_TREE_ITEM_IMP
 --| Added tree_view_pixmap_height, tree_view_pixmap_width, and fixed 
 --| set_pixmap so that repeated icons are shared internally in the image list.
 --|
-
 --| Revision 1.39  2000/03/24 00:18:01  rogers
 --| Implemented set_pixmap.
 --|

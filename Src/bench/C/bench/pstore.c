@@ -18,6 +18,8 @@
 #include "except.h"
 #include "store.h"
 #include "garcol.h"
+#include "memory.h"
+#include "error.h"
 #include "compress.h"
 
 #ifdef EIF_OS2
@@ -27,14 +29,9 @@
 rt_private fnptr make_index;	/* Index building routine */
 rt_private fnptr need_index;	/* Index checking routine */
 rt_private char *server;		/* Current server used */
+
 rt_private long pst_store();	/* Recursive store */
-
 rt_private void partial_store_write();
-
-extern void esys();			/* raise op sys error */
-extern void eio();
-extern void allocate_gen_buffer();
-extern char gc_ison();
 
 #undef DEBUG
 
@@ -56,17 +53,12 @@ char *s;
 	 * on server `s'. Return position in the file where the object is
 	 * stored. */
 
-	extern void gc_stop();
-	extern void gc_run();
-#ifdef DEBUG
-    extern long nomark();
-#endif
 	long result;	/* Position in the file */
 	char gc_stopped;
 
 	/* Initialization */
 
-	store_write_func = partial_store_write;
+	rt_init_store(partial_store_write, 0);
 
 	fides = (int)f_desc;				/* For use of `st_write' */
 	fstoretype = 'F';
@@ -111,7 +103,7 @@ char *s;
 
 	if (!gc_stopped) gc_run();					/* Restart GC */
 
-	store_write_func = store_write;
+	rt_reset_store();
 
 	return result;
 }

@@ -5,15 +5,10 @@ class SPECIAL_CLASS_TYPE
 inherit
 
 	CLASS_TYPE
-		rename
-			generate_feature as basic_generate_feature
-		end;
-	CLASS_TYPE
 		redefine
 			generate_feature
-		select
-			generate_feature
-		end;
+		end
+
 	SHARED_C_LEVEL;
 
 creation
@@ -28,7 +23,8 @@ feature
 		local
 			feature_name: STRING;
 		do
-			feature_name := feat.feature_name;
+			feature_name := feat.feature_name
+
 			if feature_name.is_equal ("put") then
 					-- Generate built-in feature `put' of class SPECIAL
 				generate_put (feat, file);
@@ -37,7 +33,7 @@ feature
 				generate_item (feat, file);
 			else
 					-- Basic generation
-				basic_generate_feature (feat, file);
+				{CLASS_TYPE} precursor (feat, file);
 			end;
 		end;
 
@@ -84,7 +80,7 @@ feature
 					%%T%TRTEC(EN_VEXP);%N");
 			end;
 
-			if	(not final_mode) or else assertion_level.check_precond then
+			if (not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
 					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else

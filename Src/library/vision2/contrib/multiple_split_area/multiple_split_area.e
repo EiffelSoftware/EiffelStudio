@@ -16,7 +16,7 @@ inherit
 			wipe_out as split_area_wipe_out
 		export
 			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} all
-			{ANY} parent, width, height, resize_actions, set_minimum_height
+			{ANY} parent, width, height, resize_actions, set_minimum_height, is_show_requested
 		redefine
 			initialize
 		end
@@ -34,9 +34,40 @@ feature {NONE} -- Initialization
 			create stored_splitter_widths.make (4)
 			create minimized_states.make (4)
 			all_split_areas.extend (Current)
+			disabled_minimize_button_shown := True
 		end
 
 feature -- Access
+
+	disabled_minimize_button_shown: BOOLEAN
+		-- Are disabled minimize buttons displayed?
+			
+	disabled_close_button_shown: BOOLEAN
+		-- Are close buttons displayed (disabled) for widgets that may not be closed?
+		
+	show_disabled_close_button: BOOLEAN is
+			-- Ensure `disabled_close_button_shown' is `True'.
+		do
+			disabled_close_button_shown := True
+		end
+	
+	hide_disabled_close_button: BOOLEAN is
+			-- Ensure `disable_close_button_shown' is `False'.
+		do
+			disabled_close_button_shown := False
+		end
+			
+	show_disabled_minimize_button is
+			-- Ensure `disabled_minimize_button_shown' is `True'.
+		do
+			disabled_minimize_button_shown := True
+		end
+	
+	hide_disabled_minimize_button is
+			-- Ensure `disabled_minimize_button_shown' is `False'.
+		do
+			disabled_minimize_button_shown := False
+		end
 
 	count: INTEGER is
 			-- Number of widgets actually within `Current', does not include any
@@ -104,7 +135,7 @@ feature -- Access
 		-- All widgets that have been inerted into `Current' but are presently
 		-- docked out of `Current'. No paticular order is guaranteed.
 		
-	docked_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	docked_out_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed when a widget is docked out of `Current'.
 		do
 			if docked_out_actions_internal = Void then
@@ -115,7 +146,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 		
-	docked_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	docked_in_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed after a widget has been docked in to `Current'.
 		do
 			if docked_in_actions_internal = Void then
@@ -128,26 +159,38 @@ feature -- Access
 		
 	close_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
 			-- 	Actions to be performed after close icon is selected.
-		once
-			create Result
+		do
+			if close_actions_internal = Void then
+				create close_actions_internal
+			end	
+			Result := close_actions_internal
 		end
 		
 	minimize_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed after a minimize icon is selected.
-		once
-			create Result
+		do
+			if minimize_actions_internal = Void then
+				create minimize_actions_internal
+			end	
+			Result := minimize_actions_internal
 		end
 		
 	maximize_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
 			-- Actions to be performed after a maximize icon is selected.
-		once
-			create Result
+		do
+			if maximize_actions_internal = Void then
+				create maximize_actions_internal
+			end	
+			Result := maximize_actions_internal
 		end
 		
 	restore_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
-			-- Actions to be performed after an itme has been restored.
-		once
-			create Result
+			-- Actions to be performed after an item has been restored.
+		do
+			if restore_actions_internal = Void then
+				create restore_actions_internal
+			end	
+			Result := restore_actions_internal
 		end
 
 	customizeable_area_of_widget (widget: EV_WIDGET): EV_HORIZONTAL_BOX is
@@ -187,11 +230,24 @@ feature -- Status setting
 			not_top_resizing: top_widget_resizing = False
 		end
 		
+	enable_close_button_as_grayed (widget: EV_WIDGET) is
+			-- Display a grayed out close button for `widget'.
+		require
+			widget_not_void: widget /= Void
+			may_enable_close_button: linear_representation.has (widget) or is_item_external (widget)
+		local
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+		do
+			holder := holder_of_widget (widget)
+			holder.enable_close_button_as_grayed
+		end
+		
+		
 	enable_close_button (widget: EV_WIDGET) is
 			-- Display a close button for `widget'.
 		require
 			widget_not_void: widget /= Void
-			linear_representation.has (widget)
+			may_enable_close_button: linear_representation.has (widget) or is_item_external (widget)
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
@@ -200,10 +256,10 @@ feature -- Status setting
 		end
 		
 	disable_close_button (widget: EV_WIDGET) is
-			-- Hide the close button for `widget'.
+			-- hide the close button for `widget'.
 		require
 			widget_not_void: widget /= Void
-			linear_representation.has (widget)
+			may_disable_close_button: linear_representation.has (widget) or is_item_external (widget)
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
@@ -222,7 +278,18 @@ feature -- Status setting
 			reset_timer: EV_TIMEOUT
 		do
 			holder := holder_of_widget (a_widget)
-			holder.simulate_minimum_height (a_height)
+--			from
+--				all_holders.start
+--			until
+--				all_holders.off
+--			loop
+--				if all_holders.item /= holder then
+--					max_size := max_size + all_holders.item.minimum_height
+--				end
+--				all_holders.forth
+--			end
+--			max_size := height - max_size
+			holder.simulate_minimum_height (a_height + holder_tool_height)--.min (max_size))
 			if Platform_is_windows then
 				holder.remove_simulated_height
 			else
@@ -230,6 +297,20 @@ feature -- Status setting
 				reset_timer.actions.extend (agent remove_tool_minimum_height (holder, reset_timer))
 			end
 		end
+		
+	is_blocked: BOOLEAN
+
+	block is
+			-- 
+		do
+			is_blocked := True
+		end
+		
+	unblock is
+		do
+			is_blocked := False
+		end
+		
 		
 	remove_tool_minimum_height (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; a_timeout: EV_TIMEOUT) is
 			-- Remove minimum height setting applied to `a_tool', and destroy `a_timeout'.
@@ -322,9 +403,12 @@ feature -- Status setting
 					minimized_states.put_left (False)
 				end
 			end
-			
+			print (height.out + " ")
 			rebuild	
+			
+			print (height.out + " ")
 			restore_heights_post_insertion (holder, desired_height)
+			print (height.out + " ")
 			if locked_in_here and parent_window (Current) /= Void then
 				parent_window (Current).unlock_update
 			end
@@ -373,16 +457,34 @@ feature -- Status setting
 			-- Remove `a_widget' from `Current'
 		require
 			a_widget_not_void: a_widget /= Void
-			contained: linear_representation.has (a_widget)
+			contained: linear_representation.has (a_widget) or is_item_external (a_widget)
 		local
 			locked_in_here: BOOLEAN
+			original_index: INTEGER
 		do
 			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
 			if locked_in_here and parent_window (Current) /= Void then
 				parent_window (Current).lock_update	
 			end		
+			store_positions
+			
+				-- Now update the stored positions so that on restoration, the removed
+				-- widget position is added to the resizeable widget. This ensures that the size of
+				-- only the adjustable widget is affected
+			original_index := linear_representation.index_of (a_widget, 1)
+			if not is_item_external (a_widget) then
+				if not is_item_minimized (a_widget) then
+					stored_splitter_widths.put_i_th (stored_splitter_widths.first + stored_splitter_widths.i_th (original_index), 1)
+				end
+				stored_splitter_widths.go_i_th (original_index)
+				stored_splitter_widths.remove
+			end
+
 			remove_implementation (a_widget)
 			rebuild
+			if not is_blocked then
+				restore_stored_positions	
+			end		
 			if locked_in_here and parent_window (Current) /= Void then
 				parent_window (Current).unlock_update
 			end
@@ -478,7 +580,7 @@ feature -- Status setting
 			end		
 			tool_holder := holder_of_widget (a_widget)
 			tool_holder.enable_minimized
-			tool_holder.set_restore_height (tool_holder.height)
+			tool_holder.set_restore_height (a_widget.height)
 			minimize_tool (tool_holder)
 			tool_holder.minimize_button.set_pixmap (restore_pixmap)
 			tool_holder.minimize_button.set_tooltip (restore_string)
@@ -542,7 +644,118 @@ feature -- Status setting
 			-- situation, must go back to minimized state.
 		end
 		
+	set_heights_no_resize (heights: ARRAYED_LIST [INTEGER]) is
+			-- Adjust heights of contents based on `heights' as a guide,
+			-- but ensure that `Current' is not resized unless the
+			-- minimum sizes of each widget force it to be so.
+		local
+			desired_height: INTEGER
+			excess_space: INTEGER
+			diff_from_min: INTEGER
+			widget: EV_WIDGET
+			non_minimized_count: INTEGER
+		do
+			from
+				all_holders.start
+			until
+				all_holders.off
+			loop
+				if all_holders.item.is_minimized then
+					desired_height := desired_height + holder_tool_height
+				else
+					non_minimized_count := non_minimized_count + 1
+					desired_height := desired_height + holder_tool_height + heights @ (all_holders.index)
+				end
+				all_holders.forth
+			end
+			desired_height := desired_height + (non_minimized_count - 1) * splitter_width
+			if height = minimum_height then
+						-- This is a hack to retrieve correct height for gtk
+				(create {EV_ENVIRONMENT}).application.process_events
+			end
+			excess_space := desired_height - height
+			if top_widget_resizing then
+					from
+						heights.start
+					until
+						heights.off or excess_space <= 0
+					loop
+						widget := linear_representation.i_th (heights.index)
+						if not is_item_minimized (widget) then
+							diff_from_min := (heights.item - widget.minimum_height).min (excess_space)
+							excess_space := excess_space - diff_from_min
+							heights.replace (heights.item - diff_from_min)
+						end
+						heights.forth
+					end
+				else
+--					from
+--						pre_insertion_holders.finish
+--						pre_insertion_heights.finish
+--					until
+--						pre_insertion_holders.off or space_to_share <= 0
+--					loop
+--						diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.minimum_height).min (space_to_share)
+--						space_to_share := space_to_share - diff_from_min
+--						pre_insertion_heights.replace (pre_insertion_heights.item - diff_from_min)
+--						pre_insertion_holders.back
+--						pre_insertion_heights.back
+--					end
+				end
+			set_heights (heights)
+		end
 		
+		
+	set_heights (heights: ARRAYED_LIST [INTEGER]) is
+			-- Adjust heights of contents based on `heights'.
+		local
+			locked_in_here: BOOLEAN
+		do
+			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			if locked_in_here then
+				parent_window (Current).lock_update	
+			end		
+			if not platform_is_windows then
+				application.process_events
+			end
+			if top_widget_resizing then
+				from
+					all_split_areas.start
+				until
+					all_split_areas.off
+				loop
+					if all_split_areas.item.full then
+						all_split_areas.item.set_split_position (all_split_areas.item.maximum_split_position)	
+					end
+					all_split_areas.forth
+				end
+			else
+				from
+					all_split_areas.finish
+				until
+					all_split_areas.off
+				loop
+					if all_split_areas.item.full then
+						all_split_areas.item.set_split_position (all_split_areas.item.minimum_split_position)						
+					end
+					all_split_areas.back
+				end
+			end
+			from
+				heights.start
+			until
+				heights.off
+			loop
+				if not is_item_minimized (linear_representation.i_th (heights.index)) then
+					resize_widget_to (linear_representation.i_th (heights.index), heights.item)
+				end
+				heights.forth
+			end
+			if locked_in_here then
+				parent_window (Current).unlock_update
+			end
+		end
+
 feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	rebuilding_locked: BOOLEAN
@@ -837,6 +1050,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		require
 			tool_holder_not_void: tool_holder /= Void
 			tool_holder_maximized: tool_holder.is_maximized
+		local
+			space_to_share, diff_from_min, index: INTEGER
+			height_to_share: INTEGER
 		do
 			tool_holder.disable_maximized
 			from
@@ -864,6 +1080,47 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			maximized_tool := Void
 			if must_rebuild then
 				rebuild
+				
+			index := linear_representation.index_of (tool_holder.tool, 1)
+--			stored_splitter_widths.go_i_th (index)
+--			stored_splitter_widths.replace (tool_holder.restore_height)
+--			space_to_share := tool_holder.restore_height + splitter_width
+				--	
+			from
+				linear_representation.start
+			until
+				linear_representation.off
+			loop
+				if not is_item_minimized (linear_representation.item) then
+					height_to_share := height_to_share + stored_splitter_widths.i_th (linear_representation.index) + holder_tool_height + splitter_width
+				else
+					height_to_share := height_to_share + holder_tool_height
+				end
+				linear_representation.forth
+			end
+			height_to_share := height_to_share - splitter_width
+			space_to_share := height_to_share - height
+			print ("space to share : " + space_to_share.out + "%N")
+			if top_widget_resizing then
+					from
+						linear_representation.start
+						stored_splitter_widths.start
+					until
+						linear_representation.off or space_to_share <= 0
+					loop
+						if linear_representation.item /= tool_holder.tool and not is_item_minimized (linear_representation.item) then
+							diff_from_min := (stored_splitter_widths.item - linear_representation.item.minimum_height).min (space_to_share)
+							space_to_share := space_to_share - diff_from_min
+							stored_splitter_widths.replace (stored_splitter_widths.item - diff_from_min)
+						end
+						linear_representation.forth
+						stored_splitter_widths.forth
+					end
+			end
+			if space_to_share > 0 then
+				stored_splitter_widths.go_i_th (index)
+				stored_splitter_widths.replace (stored_splitter_widths.item - space_to_share)-- + splitter_width)
+			end
 				restore_stored_positions
 			end
 		ensure
@@ -873,6 +1130,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 	store_positions is
 			-- Store all positions of splitters.
+		local
+			widget: EV_WIDGET
 		do
 			stored_splitter_widths.wipe_out
 			from
@@ -880,15 +1139,19 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				linear_representation.off
 			loop
-				stored_splitter_widths.extend (holder_of_widget (linear_representation.item).height)
+				widget := linear_representation.item
+			--	if is_item_minimized (widget) then
+			--		stored_splitter_widths.extend (0)
+			--	else
+					stored_splitter_widths.extend (linear_representation.item.height)--holder_of_widget (linear_representation.item).height)
+			--	end
 				linear_representation.forth
 			end
 		end
 		
 	restore_stored_positions is
 			-- Restore all positions of splitters from `store_positions'.
-		do
-			
+		do	
 			if not platform_is_windows then
 				application.process_events
 			end
@@ -915,6 +1178,23 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 					all_split_areas.back
 				end
 			end
+			
+--			from
+--				linear_representation.start
+--			until
+--				linear_representation.off
+--			loop
+--				if not is_item_minimized (linear_representation.item) then
+--					height_to_share := height_to_share + stored_splitter_widths.i_th (linear_representation.index) + holder_tool_height + splitter_width
+--				else
+--					height_to_share := height_to_share + holder_tool_height
+--				end
+--				linear_representation.forth
+--			end
+--			height_to_share := height_to_share - splitter_width
+--			print ("height : " + height.out + "%N")
+--			print ("height_to_share : " + height_to_share.out + "%N")
+--			
 			from
 				stored_splitter_widths.start
 			until
@@ -1009,89 +1289,175 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			tool_parented: a_tool.parent /= Void
 			tool_minimized: a_tool.is_minimized
 		local
-			index_of_tool: INTEGER
-			parent_split_area: EV_SPLIT_AREA
-			original_parent: EV_BOX
-			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			widgets: ARRAYED_LIST [EV_WIDGET]
-			maximum_insert_height, insert_height, tool_holder_height: INTEGER
-		do	
-			original_parent ?= a_tool.parent
-			remove_tool_from_parent (a_tool)
-			index_of_tool := index_of_holder (a_tool)
+			space_to_share, diff_from_min: INTEGER
+			index: INTEGER
+			height_to_share: INTEGER
+		do
+			store_positions
+--			original_parent ?= a_tool.parent
+--			remove_tool_from_parent (a_tool)
+--			index_of_tool := index_of_holder (a_tool)
+--			
+--			
+--			from
+--				linear_representation.go_i_th (index_of_tool - 1)
+--			until
+--				linear_representation.off
+--			loop
+--				if is_item_minimized (linear_representation.item) then
+--					tool_holder := holder_of_widget (linear_representation.item)
+--					tool_holder.parent.prune (tool_holder)
+--					a_tool.upper_box.put_front (tool_holder)
+--				end
+--				linear_representation.back
+--			end
+--			from
+--				linear_representation.go_i_th (index_of_tool + 1)
+--			until
+--				linear_representation.off
+--			loop
+--				if is_item_minimized (linear_representation.item) then
+--					tool_holder := holder_of_widget (linear_representation.item)
+--					tool_holder.parent.prune (tool_holder)
+--					a_tool.lower_box.extend (tool_holder)
+--				end
+--				linear_representation.forth
+--			end
 			
 			a_tool.disable_minimized
 			
-			if all_split_areas.valid_index (split_area_index (index_of_tool)) then
-				parent_split_area := all_split_areas.i_th (split_area_index (index_of_tool))
-			end
-			if parent_split_area = Void then
-				parent_split_area := all_split_areas.i_th (all_split_areas.count)
-			end
-			restore_parent_split_areas (parent_split_area)
+--			if all_split_areas.valid_index (split_area_index (index_of_tool)) then
+--				parent_split_area := all_split_areas.i_th (split_area_index (index_of_tool))
+--			end
+--			if parent_split_area = Void then
+--				parent_split_area := all_split_areas.i_th (all_split_areas.count)
+--			end
+--			restore_parent_split_areas (parent_split_area)
+--			
+--				-- The first two cases handle when we have two widgets inside a single split area.
+--			if all_holders.last = a_tool and then not top_widget_resizing then
+--				parent_split_area.set_second (a_tool)
+--			elseif index_of_holder (a_tool) = 2 and then top_widget_resizing then
+--				parent_split_area.set_second (a_tool)
+--			elseif parent_split_area.first = Void then
+--				parent_split_area.set_first (a_tool)
+--			else
+--				parent_split_area.set_second (a_tool)
+--			end
+--			update_expanded_state_of_all_split_areas
+--			
+--			update_all_minimize_buttons
+--			
+--				-- Now must update any minimized tools that were parented in the
+--				-- same box as `a_tool'. We now recalculate which box they should be
+--				-- held in.
+--			if original_parent /= void and not original_parent.is_empty then
+--				widgets := box_contents (original_parent)
+--				from
+--					widgets.start
+--				until
+--					widgets.off
+--				loop
+--					current_holder ?= widgets.item
+--					check
+--						item_was_holder: current_holder /= Void
+--					end
+--					minimize_tool (current_holder)
+--					widgets.forth
+--				end
+--			end
+--	
+--				-- Calculate the maximum restore height that is permitted, based on `height' of `Current',
+--				-- and minimum sizes of all items contained. This may be used to prevent `Current' from
+--				-- resizing.
+--			maximum_insert_height := height
+--			tool_holder_height := a_tool.minimum_height - a_tool.tool.minimum_height
+--			from
+--				linear_representation.start
+--			until
+--				linear_representation.off
+--			loop
+--				if linear_representation.item /= a_tool then
+--					-- As the tool of `holder' is already in `linear_representation' at this point,
+--					-- we must ignore it in the calculations.
+--					
+--						-- Must not forget to handle items that are minimized correctly.
+--						-- Those that are minimized are not displayed, only the holder.
+--					if linear_representation.item.is_displayed then
+--						maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
+--					else
+--						maximum_insert_height := maximum_insert_height - tool_holder_height
+--					end
+--				end
+--				linear_representation.forth
+--			end
+--
+--			insert_height := a_tool.restore_height.min (maximum_insert_height).max (0)						
+--			
+--			resize_widget_to (a_tool.tool, insert_height)
+
+			rebuild
 			
-				-- The first two cases handle when we have two widgets inside a single split area.
-			if all_holders.last = a_tool and then not top_widget_resizing then
-				parent_split_area.set_second (a_tool)
-			elseif index_of_holder (a_tool) = 2 and then top_widget_resizing then
-				parent_split_area.set_second (a_tool)
-			elseif parent_split_area.first = Void then
-				parent_split_area.set_first (a_tool)
-			else
-				parent_split_area.set_second (a_tool)
-			end
-			update_expanded_state_of_all_split_areas
 			
-			update_all_minimize_buttons
-			
-				-- Now must update any minimized tools that were parented in the
-				-- same box as `a_tool'. We now recalculate which box they should be
-				-- held in.
-			if original_parent /= void and not original_parent.is_empty then
-				widgets := box_contents (original_parent)
-				from
-					widgets.start
-				until
-					widgets.off
-				loop
-					current_holder ?= widgets.item
-					check
-						item_was_holder: current_holder /= Void
-					end
-					minimize_tool (current_holder)
-					widgets.forth
-				end
-			end
-	
-				-- Calculate the maximum restore height that is permitted, based on `height' of `Current',
-				-- and minimum sizes of all items contained. This may be used to prevent `Current' from
-				-- resizing.
-			maximum_insert_height := height
-			tool_holder_height := a_tool.minimum_height - a_tool.tool.minimum_height
+			index := linear_representation.index_of (a_tool.tool, 1)
+--			stored_splitter_widths.go_i_th (index)
+--			stored_splitter_widths.replace (a_tool.restore_height)
+--			space_to_share := a_tool.restore_height + splitter_width
 			from
 				linear_representation.start
 			until
 				linear_representation.off
 			loop
-				if linear_representation.item /= a_tool then
-					-- As the tool of `holder' is already in `linear_representation' at this point,
-					-- we must ignore it in the calculations.
-					
-						-- Must not forget to handle items that are minimized correctly.
-						-- Those that are minimized are not displayed, only the holder.
-					if linear_representation.item.is_displayed then
-						maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
-					else
-						maximum_insert_height := maximum_insert_height - tool_holder_height
-					end
+				if not is_item_minimized (linear_representation.item) then
+					height_to_share := height_to_share + stored_splitter_widths.i_th (linear_representation.index) + holder_tool_height + splitter_width
+				else
+					height_to_share := height_to_share + holder_tool_height
 				end
 				linear_representation.forth
 			end
-
-			insert_height := a_tool.restore_height.min (maximum_insert_height)						
+			height_to_share := height_to_share - splitter_width
+			space_to_share := height_to_share - height
 			
-			resize_widget_to (a_tool.tool, insert_height)
 			
+			if top_widget_resizing then
+					from
+						linear_representation.start
+						stored_splitter_widths.start
+					until
+						linear_representation.off or space_to_share <= 0
+					loop
+						if linear_representation.item /= a_tool.tool and not is_item_minimized (linear_representation.item) then
+							diff_from_min := (stored_splitter_widths.item - linear_representation.item.minimum_height).min (space_to_share)
+							space_to_share := space_to_share - diff_from_min
+							stored_splitter_widths.replace (stored_splitter_widths.item - diff_from_min)
+						end
+						linear_representation.forth
+						stored_splitter_widths.forth
+					end
+			end
+			if space_to_share > 0 then
+				stored_splitter_widths.go_i_th (index)
+				stored_splitter_widths.replace (stored_splitter_widths.item - space_to_share)-- + splitter_width)
+			end
+		--	
+--			from
+--				linear_representation.start
+--			until
+--				linear_representation.off
+--			loop
+--				if linear_representation.item /= a_tool.tool and not is_item_minimized (linear_representation.item) then
+--					height_to_share := height_to_share + stored_splitter_widths.i_th (linear_representation.index) + holder_tool_height + splitter_width
+--				else
+--					height_to_share := height_to_share + holder_tool_height
+--				end
+--				linear_representation.forth
+--			end
+--			height_to_share := height_to_share - splitter_width
+--			print ("height : " + height.out + "%N")
+--			print ("height_to_share : " + height_to_share.out + "%N")
+			
+			
+			restore_stored_positions
 				-- Now show the widget of the tool, as it was
 				-- hidden when minimized.
 			a_tool.tool.show
@@ -1128,13 +1494,14 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		local
 			split_area: EV_SPLIT_AREA
 		do
-			split_area ?= a_tool.parent
+			split_area ?= a_tool.parent			
 			a_tool.parent.prune_all (a_tool)
 				-- We must now unparent the split area if it is empty and
 				-- is the last split area in the control.
 			if split_area /= Void then
 				remove_parent_split_areas_bottom (split_area)	
 			end
+
 		ensure
 			tool_not_parented: a_tool.parent = Void
 		end
@@ -1483,13 +1850,21 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	docked_out_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	docked_out_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
 		-- Internal docked out actions, fired when a widget has been
 		-- docked out of `Current'.
 	
-	docked_in_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+	docked_in_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
 		-- Internal docked in actions, fired when a widget has been
 		-- docked in to `Current'.
+		
+	close_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	
+	restore_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	
+	maximize_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
+	
+	minimize_actions_internal: EV_NEW_ITEM_ACTION_SEQUENCE
 
 	pre_insertion_heights: ARRAYED_LIST [INTEGER]
 		-- All positions stored by last call to `store_heights_pre_insertion', used to
@@ -1533,11 +1908,12 @@ feature {NONE} -- Implementation
 			-- for each removal. 
 		require
 			a_widget_not_void: a_widget /= Void
-			contained: linear_representation.has (a_widget)
+			contained: linear_representation.has (a_widget) or is_item_external (a_widget)
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			first_minimized: EV_WIDGET
 			minimized_count: INTEGER
+			dialog: EV_DOCKABLE_DIALOG
 		do
 			holder := holder_of_widget (a_widget)
 			if maximized_tool /= Void then
@@ -1577,7 +1953,11 @@ feature {NONE} -- Implementation
 			end
 				-- Now actually remove `a_widget' from its holder.
 			if a_widget.parent /= Void then
+				dialog ?= parent_window (a_widget)
 				a_widget.parent.prune_all (a_widget)
+				if dialog /= Void then
+					dialog.destroy
+				end
 			end
 			
 				-- If `holder' was the maximized tool, then update
@@ -1598,10 +1978,13 @@ feature {NONE} -- Implementation
 				--| FIXME what happens if you have multiple items minimized before the
 				--| item you are removing? The stored splitter widths does not have enough items.
 				--| FIXME, why is there no remove here?
-			
-			linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
-			linear_representation.remove
-
+			if is_item_external (a_widget) then
+				external_representation.go_i_th (external_representation.index_of (a_widget, 1))
+				external_representation.remove
+			else
+				linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
+				linear_representation.remove
+			end
 		ensure
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1
@@ -1613,7 +1996,6 @@ feature {NONE} -- Implementation
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR
-			holder_height: INTEGER
 		do
 			cursor := linear_representation.cursor
 			create pre_insertion_heights.make (count)
@@ -1624,10 +2006,10 @@ feature {NONE} -- Implementation
 				linear_representation.off
 			loop
 				holder := holder_of_widget (linear_representation.item)
-					-- Must not include minimized and maximized items, as they are placed in `upper_box'
-					-- and `lower_box'.
-				holder_height := holder.height - holder.lower_box.height - holder.upper_box.height
-				pre_insertion_heights.extend (holder_height)
+			--		-- Must not include minimized and maximized items, as they are placed in `upper_box'
+			--		-- and `lower_box'.
+			--	holder_height := holder.height - holder.lower_box.height - holder.upper_box.height
+				pre_insertion_heights.extend (linear_representation.item.height)
 				pre_insertion_holders.extend (holder)
 				linear_representation.forth
 			end
@@ -1645,19 +2027,13 @@ feature {NONE} -- Implementation
 			height_valid: a_height > 0
 		local
 			local_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			an_index: INTEGER
 			stored_height: INTEGER
-			total_space_less_insertion: INTEGER
-			total_restore_heights: INTEGER
-			holder_restored: BOOLEAN
 			space_to_share: INTEGER
 			diff_from_min: INTEGER
 			cursor: CURSOR
-			maximum_insert_height: INTEGER
-			insert_height: INTEGER
 			tool_holder_height: INTEGER
-			total_restored: INTEGER
 		do
+		if not is_blocked then
 			cursor := linear_representation.cursor;
 			
 				-- Firstly, reduce all split areas to their minimums. This permits us to call
@@ -1691,52 +2067,11 @@ feature {NONE} -- Implementation
 				end
 			end
 
-				-- Calculate the height of a tool holder.
-			tool_holder_height := holder.minimum_height - holder.tool.minimum_height
+			-- Calculate the height of a tool holder.
+		tool_holder_height := holder_tool_height
 
-			
-				-- Calculate the maximum insert height that is permitted, based on `height' of `Current',
-				-- and minimum sizes of all items contained. This may be used to prevent `Current' from
-				-- resizing.
-			maximum_insert_height := height
-			from
-				linear_representation.start
-			until
-				linear_representation.off
-			loop
-				if linear_representation.item /= holder.tool then
-					-- As the tool of `holder' is already in `linear_representation' at this point,
-					-- we must ignore it in the calculations.
-					
-						-- Must not forget to handle items that are minimized correctly.
-						-- Those that are minimized are not displayed, only the holder.
-					if linear_representation.item.is_displayed then
-						maximum_insert_height := maximum_insert_height - linear_representation.item.minimum_height - tool_holder_height
-					else
-						maximum_insert_height := maximum_insert_height - tool_holder_height
-					end
-				end
-				linear_representation.forth
-			end
 
-			--insert_height := a_height.min (maximum_insert_height)
-			insert_height := a_height.max (holder.minimum_height).min (maximum_insert_height)
-
-			total_space_less_insertion := height - insert_height
-				-- Calculate the space that must be freed to insert `holder'.
-				
-			from
-				pre_insertion_heights.start
-			until
-				pre_insertion_heights.off
-			loop
-				total_restore_heights := total_restore_heights + pre_insertion_heights.item
-				pre_insertion_heights.forth
-			end
-
-			space_to_share := total_restore_heights - total_space_less_insertion
-				-- Calculate the space that must be shared.
-			
+		space_to_share := a_height + holder_tool_height + splitter_width
 			
 			if space_to_share > 0 then
 				-- If space must be shared, share between all holders, starting with "lowest priority" which is
@@ -1749,9 +2084,11 @@ feature {NONE} -- Implementation
 					until
 						pre_insertion_holders.off or space_to_share <= 0
 					loop
-						diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.minimum_height).min (space_to_share)
-						space_to_share := space_to_share - diff_from_min
-						pre_insertion_heights.replace (pre_insertion_heights.item - diff_from_min)
+						if not pre_insertion_holders.item.is_minimized then
+							diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.tool.minimum_height).min (space_to_share)
+							space_to_share := space_to_share - diff_from_min
+							pre_insertion_heights.replace (pre_insertion_heights.item - diff_from_min)
+						end
 						pre_insertion_holders.forth
 						pre_insertion_heights.forth
 					end
@@ -1762,7 +2099,7 @@ feature {NONE} -- Implementation
 					until
 						pre_insertion_holders.off or space_to_share <= 0
 					loop
-						diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.minimum_height).min (space_to_share)
+						diff_from_min := (pre_insertion_heights.item - pre_insertion_holders.item.tool.minimum_height).min (space_to_share)
 						space_to_share := space_to_share - diff_from_min
 						pre_insertion_heights.replace (pre_insertion_heights.item - diff_from_min)
 						pre_insertion_holders.back
@@ -1770,57 +2107,57 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		
+			pre_insertion_holders.go_i_th (linear_representation.index_of (holder.tool, 1))
+			pre_insertion_holders.put_left (holder)
+			
+			pre_insertion_heights.go_i_th (linear_representation.index_of (holder.tool, 1))
+			if space_to_share = 0 then
+				pre_insertion_heights.put_left (a_height)
+			else
+				pre_insertion_heights.put_left ((a_height - space_to_share - splitter_width - holder_tool_height).max (holder.tool.minimum_height))	
+			end
+			
 			
 				-- Now iterate through all `positions' and restore. We must handle the iteration in reverse, depending on
 				-- the state of `top_resizing'. This ensures that no matter which way `Current' resizes, it will
 				-- always reduce the holder that resizes first.
 			if top_widget_resizing then
 				from
-					linear_representation.finish
+					pre_insertion_holders.finish
 				until
-					(linear_representation.index < 2 and holder_restored) or linear_representation.off
+					pre_insertion_holders.off
 				loop
-					if holder_of_widget (linear_representation.item) = holder then
-						--holder.simulate_minimum_height (insert_height - tool_holder_height)
-						--holder.remove_simulated_height
-						resize_widget_to (holder.tool, insert_height - tool_holder_height)
-						total_restored :=  total_restored + insert_height - tool_holder_height
-						holder_restored := True
-					else
-						an_index := pre_insertion_holders.index_of (holder_of_widget (linear_representation.item), 1)
-						local_holder := pre_insertion_holders.i_th (an_index)
-						stored_height := pre_insertion_heights.i_th (an_index)
+					local_holder := pre_insertion_holders.item
+					if not local_holder.is_minimized then
+						stored_height := pre_insertion_heights.i_th (pre_insertion_holders.index)
 						resize_widget_to (local_holder.tool, stored_height)
-						total_restored := total_restored + stored_height
-						--local_holder.simulate_minimum_height (stored_height)
-						--local_holder.remove_simulated_height
 					end
-					linear_representation.back
+					pre_insertion_holders.back
 				end
-					if height - total_restored - (tool_holder_height + splitter_width * (count - 1)) > 0 then
-						resize_widget_to (linear_representation.first, height - total_restored - (tool_holder_height + splitter_width * (count - 1)))
-					end
 			else
-				from
-					linear_representation.start
-				until
-					linear_representation.index > linear_representation.count - 1 and holder_restored
-				loop
-					if holder_of_widget (linear_representation.item) = holder then
-						holder.simulate_minimum_height (insert_height - tool_holder_height)
-						holder.remove_simulated_height
-						holder_restored := True
-					else
-						an_index := pre_insertion_holders.index_of (holder_of_widget (linear_representation.item), 1)
-						local_holder := pre_insertion_holders.i_th (an_index)
-						stored_height := pre_insertion_heights.i_th (an_index)
-						local_holder.simulate_minimum_height (stored_height)
-						local_holder.remove_simulated_height
-					end
-					linear_representation.forth
-				end
+--				from
+--					linear_representation.start
+--				until
+--					linear_representation.index > linear_representation.count - 1 and holder_restored
+--				loop
+--					if holder_of_widget (linear_representation.item) = holder then
+--						holder.simulate_minimum_height (insert_height + tool_holder_height)
+--						holder.remove_simulated_height
+--						holder_restored := True
+--					else
+--						an_index := pre_insertion_holders.index_of (holder_of_widget (linear_representation.item), 1)
+--						local_holder := pre_insertion_holders.i_th (an_index)
+--						stored_height := pre_insertion_heights.i_th (an_index)
+--						local_holder.simulate_minimum_height (stored_height + tool_holder_height)
+--						local_holder.remove_simulated_height
+--					end
+--					linear_representation.forth
+--				end
 			end
 			linear_representation.go_to (cursor)
+			print ("%N")
+		end
 		ensure
 			index_not_changed: linear_representation.index = old linear_representation.index
 		end

@@ -61,7 +61,7 @@ feature -- Saving
 		do
 			st.new_line
 			language_name.save (st)
-			st.putstring (":%N%T%T")
+			st.put_string (":%N%T%T")
 			file_names.save_with_interval_separator (st, ",%N%T%T")
 		end
 

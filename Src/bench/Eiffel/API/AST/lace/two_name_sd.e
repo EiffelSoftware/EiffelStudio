@@ -58,7 +58,7 @@ feature -- Saving
 			-- Save current in `st'.
 		do
 			old_name.save (st)
-			st.putstring (" as ")
+			st.put_string (" as ")
 			new_name.save (st)
 		end
 

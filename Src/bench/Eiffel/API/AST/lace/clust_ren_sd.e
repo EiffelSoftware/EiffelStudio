@@ -58,7 +58,7 @@ feature -- Save
 			-- Save current in `st'.
 		do
 			cluster_name.save (st)
-			st.putstring (": rename")
+			st.put_string (": rename")
 			st.new_line
 			st.indent
 			renamings.save_with_interval_separator (st, ",%N%T%T%T%T")

@@ -188,9 +188,9 @@ feature -- Saving
 	save (st: GENERATION_BUFFER) is
 			-- Append current in `st'.
 		do
-			st.putstring ("(")
+			st.put_string ("(")
 			value.save (st)
-			st.putstring (")")
+			st.put_string (")")
 		end
 
 feature {NONE} -- Internal

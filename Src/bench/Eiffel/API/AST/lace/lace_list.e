@@ -145,7 +145,7 @@ feature -- Saving
 				i := i + 1
 
 				if i /= nb then
-					st.putstring (sep)
+					st.put_string (sep)
 				end
 			end
 		end
@@ -163,7 +163,7 @@ feature -- Saving
 				i = nb
 			loop
 				l_area.item (i).save (st)
-				st.putstring (sep)
+				st.put_string (sep)
 				i := i + 1
 			end
 		end

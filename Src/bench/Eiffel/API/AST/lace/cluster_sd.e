@@ -128,18 +128,18 @@ feature -- Saving
 			-- Save current in `st'.
 		do
 			if is_library then
-				st.putstring ("library ")
+				st.put_string ("library ")
 			elseif is_recursive then
-				st.putstring ("all ")
+				st.put_string ("all ")
 			end
 
 			cluster_name.save (st)
 			if parent_name /= Void then
-				st.putstring (" (")
+				st.put_string (" (")
 				parent_name.save (st)
-				st.putstring (")")
+				st.put_string (")")
 			end
-			st.putstring (":%T%T")
+			st.put_string (":%T%T")
 			directory_name.save (st)
 			st.new_line
 
@@ -344,7 +344,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 
 				Universe.insert_cluster (cluster)
 				debug ("REMOVE_CLASS")
-					io.error.putstring ("CLUSTER_SD calling fill%N");
+					io.error.put_string ("CLUSTER_SD calling fill%N");
 				end;
 				cluster.fill (exclude_list, include_list);
 			else

@@ -105,7 +105,7 @@ feature -- Saving
 	save (st: GENERATION_BUFFER) is
 			-- Save current in `st'.
 		do
-			st.putstring (option_name)
+			st.put_string (option_name)
 		end
 
 feature {COMPILER_EXPORTER} -- Update

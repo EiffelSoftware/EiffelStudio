@@ -152,7 +152,7 @@ feature -- Saving
 		do
 			if dependencies /= Void and then not dependencies.is_empty then
 				need_end := True
-				st.putstring ("depend")
+				st.put_string ("depend")
 				st.new_line
 				st.indent
 				use_name.save (st)
@@ -162,7 +162,7 @@ feature -- Saving
 
 			if use_name /= Void and then not use_name.is_empty then
 				need_end := True
-				st.putstring ("use")
+				st.put_string ("use")
 				st.new_line
 				st.indent
 				use_name.save (st)
@@ -172,7 +172,7 @@ feature -- Saving
 
 			if include_option /= Void and then not include_option.is_empty then
 				need_end := True
-				st.putstring ("include")
+				st.put_string ("include")
 				st.new_line
 				st.indent
 				include_option.save_with_separator (st, "; ")
@@ -182,7 +182,7 @@ feature -- Saving
 
 			if exclude_option /= Void and then not exclude_option.is_empty then
 				need_end := True
-				st.putstring ("exclude")
+				st.put_string ("exclude")
 				st.new_line
 				st.indent
 				exclude_option.save_with_separator (st, "; ")
@@ -192,7 +192,7 @@ feature -- Saving
 
 			if adapt_option /= Void and then not adapt_option.is_empty then
 				need_end := True
-				st.putstring ("adapt")
+				st.put_string ("adapt")
 				st.new_line
 				st.indent
 				adapt_option.save_with_separator (st, "; ")
@@ -202,7 +202,7 @@ feature -- Saving
 
 			if default_option /= Void and then not default_option.is_empty then
 				need_end := True
-				st.putstring ("default")	
+				st.put_string ("default")	
 				st.new_line
 				st.indent
 				default_option.save_with_new_line (st)
@@ -211,7 +211,7 @@ feature -- Saving
 
 			if options /= Void and then not options.is_empty then
 				need_end := True
-				st.putstring ("option")	
+				st.put_string ("option")	
 				st.new_line
 				st.indent
 				options.save_with_new_line (st)
@@ -220,7 +220,7 @@ feature -- Saving
 
 			if visible_option /= Void and then not visible_option.is_empty then
 				need_end := True
-				st.putstring ("visible")
+				st.put_string ("visible")
 				st.new_line
 				st.indent
 				visible_option.save_with_new_line (st)
@@ -228,7 +228,7 @@ feature -- Saving
 			end
 			
 			if need_end then
-				st.putstring ("end")
+				st.put_string ("end")
 			end
 		end
 

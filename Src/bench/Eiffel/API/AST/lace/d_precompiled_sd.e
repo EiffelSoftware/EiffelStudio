@@ -74,11 +74,11 @@ feature -- Saving
 			Precursor {D_OPTION_SD} (st)
 			if renamings /= Void then
 				st.new_line
-				st.putstring ("rename")
+				st.put_string ("rename")
 				st.indent
 				renamings.save (st)
 				st.exdent
-				st.putstring ("end")
+				st.put_string ("end")
 			end
 		end
 

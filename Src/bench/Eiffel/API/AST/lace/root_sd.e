@@ -127,13 +127,13 @@ feature -- Save
 			root_name.save (st)
 		
 			if cluster_mark /= Void then
-				st.putstring (" (")
+				st.put_string (" (")
 				cluster_mark.save (st)
-				st.putstring (")")
+				st.put_string (")")
 			end
 
 			if creation_procedure_name /= Void then
-				st.putstring (": ")
+				st.put_string (": ")
 				creation_procedure_name.save (st)
 			end
 		end

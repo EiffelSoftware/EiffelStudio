@@ -80,11 +80,11 @@ feature -- Save
 			-- Save current in `st'.
 		do
 			if is_string then
-				st.putchar ('"')
-				st.putstring (eiffel_string (Current))
-				st.putchar ('"')
+				st.put_character ('"')
+				st.put_string (eiffel_string (Current))
+				st.put_character ('"')
 			else
-				st.putstring (Current)
+				st.put_string (Current)
 			end
 		end
 

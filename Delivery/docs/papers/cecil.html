@@ -60,6 +60,7 @@ in
 (This is a zip of the entire example directory. You can also retrieve individual
 files from that directory by looking at <A HREF="ftp://ftp.eiffel.com/pub/examples/cecil">ftp://ftp.eiffel.com/pub/examples/cecil</A>
 and ignoring cecil.zip.)
+<P> The CECIL documentation, man pages and examples are part of the standard delivery with the ISE Compiler 4.5 and higher.
 <P>The present document complement the descriptions of Eiffel: The Language.
 Note that CECIL has been revised and improved since that book was published,
 so the explanations below have precedence over those of the book.
@@ -334,7 +335,8 @@ then type:
           <B>make cecil </B>(on unix)
 <BR><B>nmake cecil </B>(on windows, with VC++)
         </ul>
-
+<P> On version 4.4 and later, the CECIL library is automatically generated, you do not
+need to call `name cecil' any longer. This will be done when freezing or finalizing.
 <P><BR>This generates a CECIL archive whose name derived from the name
 &lt;system nameof the Eiffel system, as follows:
         <ul>
@@ -368,17 +370,27 @@ to melted routine".
         The CECIL archive already incorporates the Eiffel 4.x run-time. To
 use the functions provided in the CECIL archive, simply write the C programs
 according to the CECIL specifications of ETL, and then include the cecil
-archive in the linking line of your C application.
-<P>&nbsp;&nbsp;&nbsp; <B>cc [your C files object files and archives] lib&lt;system
-name>.a -lm </B>(on Unix)
+archive in the linking line of your C application. This line looks like: 
+<P>on Unix/linux: 
+<P><B>
+ld -o [name of your CECIL executable] [your C object files and archives] lib&lt;system
+name>.a -lm 
+</B>
+<P>on Windows, with MS VC++:
+<P><B>
+link [your link flags] -OUT:[name of your cecil executable] 
+[your C object files and archives] lib&lt;system 
+name>.lib [other Windows libraries]
+</B> 
 <P>Note:linking with "-lm" is required since the Eiffel 4 run-time uses
 the standard math libraries.You may need to link with other libraries (for
 example, on linux: with "-lbsd", in MT mode with "-lpthread" (posix threads)
 or "-lthread" (solaris)) .
-<P><FONT SIZE=+0>On Windows, go to the appropriate directory (W_code or
+<P><FONT SIZE=+0>On Windows, you can reuse the .lnk file, which is automatically generated when you freeze or finalize your system: go to the appropriate directory (W_code or
 F_code) and locate the file:
-<P>
-<system_name>.lnk</FONT>
+<UL>
+&lt;system_name>.lnk</FONT>
+</UL>
 <BR><FONT SIZE=+0>&nbsp;To have a Cecilized version (that is to say, a
 version usable from external&nbsp; software ) you should:
 <P>
@@ -595,6 +607,7 @@ alias</I>
 <BR><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 end</I>
           </ul>
+</FONT>
 Not doing this would generally produce warnings during the C compilation,
 and it could crash with some C compilers.
 <P>To perform the conversion, here is the actual Eiffel types mapping to
@@ -1048,8 +1061,7 @@ eif_type_id</H3>
 
           <ul>
         &nbsp;&nbsp;&nbsp;&nbsp; <B><FONT SIZE=+1># include "eif_gen_conf.h" </font> </B><FONT SIZE=+1># include "eif_gen_conf.h"
-            i
-<P><B><FONT SIZE=+1>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID eif_type_id (char *type_string)</FONT></B>
+<P><B>&nbsp;&nbsp;&nbsp; EIF_TYPE_ID eif_type_id (char *type_string)</FONT></B>
 <P>&nbsp;&nbsp;&nbsp; Returns the type identifier corresponding to the
 type described in type_string. If the type does not exists , is
 not visible or an instance of it is not declared in the root class (see
@@ -1414,6 +1426,7 @@ See also <A HREF="#eif_name">eif_name</A>, <A HREF="#eif_type_id">eif_type_id</A
             <ul>
           <B><FONT SIZE=+1>eif_make_from_c(eif_array, c_array, int nelts, int type) /* Macro */ </B>eif_make_from_c(eif_array, c_array, int nelts, int type) /* Macro */
               (since 4.5)
+</B>
 <P>Not on ISE Eiffel compilers prior to 4.5. However, its definition is available at
 <A HREF="ftp://ftp.eiffel.com/pub/examples/cecil/cecil/C2array/array-opt">ftp://ftp.eiffel.com/pub/examples/cecil/cecil/C2array/array-opt</A>
 . eif_array is an EIF_REFERENCE, c_array is a C array of type (type *), nelts is the number of elements in the array.

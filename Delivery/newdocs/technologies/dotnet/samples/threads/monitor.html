@@ -21,11 +21,11 @@
 <h1>
 Monitor_synchronization example</h1>
 
-<p class="Text">This sample demonstrates how to use the <span class="eClass">MONITOR</span> (Monitor) class 
-for thread synchronization. The sample queues up 5 asynchronous method calls. 
-Each method grabs the lock for <b>Current</b>, writes to the console, sleeps, 
-and then writes to the console a second time. The Monitor type's static 
-functions are used to enforce mutually exclusive access to a protected block of 
+<p class="Text">This sample demonstrates how to use the <span class="eClass">MONITOR</span> (Monitor) class
+for thread synchronization. The sample queues up 5 asynchronous method calls.
+Each method grabs the lock for <b>Current</b>, writes to the console, sleeps,
+and then writes to the console a second time. The Monitor type's static
+functions are used to enforce mutually exclusive access to a protected block of
 code.</p>
 <p class="Text">&nbsp;</p>
 
@@ -34,8 +34,8 @@ code.</p>
 <!--
 var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\winforms\\menu\\";
 var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\examples\\threading\\monitor\\"
-var eifp_name = "Eiffel project.eifp";
+var path_eifp_file = "..\\..\\Samples\\threading\\monitor\\"
+var eifp_name = "monitor.eifp";
 
 if (eiffel_studio) {
 	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
@@ -64,16 +64,16 @@ Start Resource access (Thread = 4).
 Stop Resource access (Thread = 4).
 </PRE>
 		<P>
-			When the display is finished, the application wait for you to 
+			When the display is finished, the application wait for you to
             pressed the return key to finished the application.</P>
 		<P>
 			&nbsp;</P>
 <h2>Under the Hood</h2>
-<p>This application shows how use the thread <span class="eClass">MONITOR</span>, 
-and lock the Current thread. In this example, the thread lock the access to the 
-resource, like that none of the other thread can take the resource as long as  the do not 
-release it. The resource here is the output and we can see on the output that 
-the thread can not access the output simultaneously. the command line to lock a 
+<p>This application shows how use the thread <span class="eClass">MONITOR</span>,
+and lock the Current thread. In this example, the thread lock the access to the
+resource, like that none of the other thread can take the resource as long as  the do not
+release it. The resource here is the output and we can see on the output that
+the thread can not access the output simultaneously. the command line to lock a
 resource is: <span class="eKeyword">feature</span> {<span class="eClass">MONITOR</span>}.<span class="eFeature">enter</span> (<span class="eKeyword">Current</span>).</p>
 <p>This sample contains the following class: </p>
 <ul>
@@ -95,8 +95,8 @@ resource is: <span class="eKeyword">feature</span> {<span class="eClass">MONITOR
 <p>&nbsp;</p>
 
 <h2>Notes</h2></a>
-<p class="Text">This sample is translated from the example located in the 
-Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK 
+<p class="Text">This sample is translated from the example located in the
+Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK
 samples directory of Microsoft Visual Studio .NET. </p>
 
 </body>

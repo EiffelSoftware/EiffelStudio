@@ -96,7 +96,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN is_frozen,  /* [in] */ EIF_BOOLEAN expanded1,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id );
+	void ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN is_deferred,  /* [in] */ EIF_BOOLEAN is_frozen,  /* [in] */ EIF_BOOLEAN is_expanded,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id );
 
 
 	/*-----------------------------------------------------------
@@ -726,7 +726,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	void ccom_put_integer64_constant(  /* [in] */ EIF_INTEGER i );
+	void ccom_put_integer64_constant(  /* [in] */ EIF_INTEGER_64 i );
 
 
 	/*-----------------------------------------------------------

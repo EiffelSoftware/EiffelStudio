@@ -96,7 +96,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP GenerateClassHeader(  /* [in] */ VARIANT_BOOL is_interface, /* [in] */ VARIANT_BOOL deferred1, /* [in] */ VARIANT_BOOL is_frozen, /* [in] */ VARIANT_BOOL expanded1, /* [in] */ VARIANT_BOOL is_external, /* [in] */ LONG type_id ) = 0;
+	virtual STDMETHODIMP GenerateClassHeader(  /* [in] */ VARIANT_BOOL is_interface, /* [in] */ VARIANT_BOOL is_deferred, /* [in] */ VARIANT_BOOL is_frozen, /* [in] */ VARIANT_BOOL is_expanded, /* [in] */ VARIANT_BOOL is_external, /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -726,7 +726,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP PutInteger64Constant(  /* [in] */ LONG i ) = 0;
+	virtual STDMETHODIMP PutInteger64Constant(  /* [in] */ LONGLONG i ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -113,16 +113,16 @@ feature -- Basic Operations
 			ccom_generate_class_mappings (initializer, class_name1, type_id, interface_id, source_file_name, element_type_name)
 		end
 
-	generate_class_header (is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
+	generate_class_header (is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
 			-- No description available.
 			-- `is_interface' [in].  
-			-- `deferred1' [in].  
+			-- `is_deferred' [in].  
 			-- `is_frozen' [in].  
-			-- `expanded1' [in].  
+			-- `is_expanded' [in].  
 			-- `is_external' [in].  
 			-- `type_id' [in].  
 		do
-			ccom_generate_class_header (initializer, is_interface, deferred1, is_frozen, expanded1, is_external, type_id)
+			ccom_generate_class_header (initializer, is_interface, is_deferred, is_frozen, is_expanded, is_external, type_id)
 		end
 
 	end_class is
@@ -856,7 +856,7 @@ feature -- Basic Operations
 			ccom_put_integer32_constant (initializer, i)
 		end
 
-	put_integer64_constant (i: INTEGER) is
+	put_integer64_constant (i: INTEGER_64) is
 			-- No description available.
 			-- `i' [in].  
 		do
@@ -1155,7 +1155,7 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_OBJECT,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_generate_class_header (cpp_obj: POINTER; is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
+	ccom_generate_class_header (cpp_obj: POINTER; is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_BOOLEAN,EIF_INTEGER)"
@@ -1785,10 +1785,10 @@ feature {NONE}  -- Externals
 			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
 		end
 
-	ccom_put_integer64_constant (cpp_obj: POINTER; i: INTEGER) is
+	ccom_put_integer64_constant (cpp_obj: POINTER; i: INTEGER_64) is
 			-- No description available.
 		external
-			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER)"
+			"C++ [ecom_EiffelCompiler::Core %"ecom_EiffelCompiler_Core.h%"](EIF_INTEGER_64)"
 		end
 
 	ccom_put_double_constant (cpp_obj: POINTER; d: DOUBLE) is

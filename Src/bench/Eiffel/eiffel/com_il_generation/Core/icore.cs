@@ -392,7 +392,7 @@ public interface ICore
 	void PutInteger8Constant( Int32 i  );
 	void PutInteger16Constant( Int32 i  );
 	void PutInteger32Constant( Int32 i  );
-	void PutInteger64Constant( Int32 i  );
+	void PutInteger64Constant( Int64 i  );
 
 	// Put `d' on IL stack.
 	void PutDoubleConstant( double d );

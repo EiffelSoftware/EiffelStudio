@@ -113,11 +113,9 @@ feature -- from ROUT_ENTRY
 			remover: REMOVER
 		do
 			remover := System.remover;
-			Result := 	remover = Void					-- Workbench mode
-						or else
-						System.remover_off				-- Dead code removal disconnected
-						or else
-						remover.is_body_alive (body_id)	-- Final mode
+			Result := 	remover = Void						-- Workbench mode
+						or else System.remover_off			-- Dead code removal disconnected
+						or else remover.is_body_alive (body_id)	-- Final mode
 		end;
 
 	routine_name: STRING is

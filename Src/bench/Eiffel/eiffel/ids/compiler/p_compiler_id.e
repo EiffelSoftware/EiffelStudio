@@ -3,7 +3,6 @@
 deferred class P_COMPILER_ID
 
 inherit
-
 	COMPILER_ID
 		rename
 			make as make_id

@@ -20,6 +20,7 @@ feature
 	make is
 		do
 			!!tags.make;
+			tags.compare_objects
 		end;
 
 	is_partial: BOOLEAN is

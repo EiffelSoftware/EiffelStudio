@@ -53,7 +53,6 @@ feature
 			as43: INCLUDE_PATH_NAME_SD;
 			as44: D_PRECOMPILED_SD
 			as45: PRECOMPILED_SD
-			as46: MULTITHREADED_SD
 		do
 			!!as_1.make (0);
 			as_1.pass_address(id_sd);
@@ -136,8 +135,6 @@ feature
 			as44.pass_address (d_precompiled_sd);
 			!!as45;
 			as45.pass_address (precompiled_sd)
-			!! as46
-			as46.pass_address (multithreaded_sd)
 		end;
 
 end

@@ -62,24 +62,24 @@ doc:	</attribute>
 rt_private char *tagged_out = NULL;
 
 /*
-doc:	<attribute name="tagged_max" return_type="int" export="private">
+doc:	<attribute name="tagged_max" return_type="size_t" export="private">
 doc:		<summary>Actual maximum size of `tagged_out'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_private int tagged_max = 0;
+rt_private size_t tagged_max = 0;
 
 /*
-doc:	<attribute name="tagged_len" return_type="int" export="private">
+doc:	<attribute name="tagged_len" return_type="size_t" export="private">
 doc:		<summary>Actual length of `tagged_out'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data.</synchronization>
 doc:	</attribute>
 */
-rt_private int tagged_len = 0;
+rt_private size_t tagged_len = 0;
 #endif /* EIF_THREADS */
 
 rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
@@ -92,11 +92,6 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab);		/* Write tu
 rt_private void buffer_allocate(void);	/* Allocate initial buffer */
 rt_public char *eif_out(EIF_REFERENCE object);		/* Build a copy of "tagged_out" for CECIL programmer. */
 rt_shared char *build_out(EIF_OBJECT object);		/* Build `tagged_out' string */
-
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
 
 /*
  * Routine for printing representation
@@ -161,23 +156,23 @@ rt_shared char *build_out(EIF_OBJECT object)
 	if (flags & EO_SPEC) {
 		if (flags & EO_TUPLE) {
 			/* Special object */
-			sprintf(buffero, "%s [0x%lX]\n", eif_typename((int16) Dftype(eif_access(object))),
-				(unsigned long) eif_access(object));
+			sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename((int16) Dftype(eif_access(object))),
+				(rt_uint_ptr) eif_access(object));
 			write_out();
 			/* Print recursively in `tagged_out' */
 			rec_twrite(eif_access(object), 0);
 		} else {
 			/* Special object */
-			sprintf(buffero, "%s [0x%lX]\n", eif_typename((int16) Dftype(eif_access(object))),
-				(unsigned long) eif_access(object));
+			sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename((int16) Dftype(eif_access(object))),
+				(rt_uint_ptr) eif_access(object));
 			write_out();
 			/* Print recursively in `tagged_out' */
 			rec_swrite(eif_access(object), 0);
 		}
 	} else {
 		/* Print instance class name and object id */
-		sprintf(buffero, "%s [0x%lX]\n", System(Deif_bid(flags)).cn_generator,
-			(unsigned long) eif_access(object));
+		sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", System(Deif_bid(flags)).cn_generator,
+			(rt_uint_ptr) eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
 		rec_write(eif_access(object), 0);
@@ -205,18 +200,18 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 {
 	/* Print recursively `object' in `tagged_out' */
 	RT_GET_CONTEXT
-	register2 struct cnode *obj_desc;	   /* Object type description */
-	register3 long nb_attr;				 /* Attribute number */
-	register4 uint32 *types;                /* Attribute types */
+	struct cnode *obj_desc;	   /* Object type description */
+	long nb_attr;				 /* Attribute number */
+	uint32 *types;                /* Attribute types */
 #ifndef WORKBENCH
-	register6 long *offsets;			   /* Attribute offsets table */
+	long *offsets;			   /* Attribute offsets table */
 #else
-	register4 int32 *cn_attr;			   /* Attribute keys */
+	int32 *cn_attr;			   /* Attribute keys */
 	long offset;
 #endif
-	register5 int16 dyn_type;			   /* Object dynamic type */
+	int16 dyn_type;			   /* Object dynamic type */
 	EIF_REFERENCE o_ref;
-	register7 char **names;				 /* Attribute names */
+	char **names;				 /* Attribute names */
 	EIF_REFERENCE reference;						/* Reference attribute */
 	long i;
 	uint32 type, ref_flags;
@@ -252,7 +247,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 		switch(type & SK_HEAD) {
 		case SK_POINTER:
 			/* Pointer attribute */
-			sprintf(buffero, "POINTER =  C pointer 0x%lX\n", (unsigned long) (*(fnptr *)o_ref));
+			sprintf(buffero, "POINTER =  C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) (*(fnptr *)o_ref));
 			write_out();
 			break;
 		case SK_BOOL:
@@ -310,7 +305,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			{		
 				char *str = b_out(o_ref);
 
-				sprintf(buffero, "BIT %lu = ", (unsigned long) LENGTH(o_ref));
+				sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
 				write_out();
 				write_string(str);
 				sprintf(buffero, "\n");
@@ -339,12 +334,12 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				ref_flags = HEADER(reference)->ov_flags;
 				if (ref_flags & EO_C) {
 					/* C reference */
-					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) reference);
+					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
 					write_out();
 				} else if (ref_flags & EO_SPEC) {
 					if (ref_flags & EO_TUPLE) {
-						sprintf(buffero, "%s [0x%lX]\n", eif_typename ((int16) Dftype(reference)),
-							(unsigned long) reference);
+						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename ((int16) Dftype(reference)),
+							(rt_uint_ptr) reference);
 						write_out();
 						write_tab(tab + 2);
 						sprintf(buffero, "-- begin tuple object --\n");
@@ -357,8 +352,8 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 						write_out();
 
 					} else {
-						sprintf(buffero, "%s [0x%lX]\n", eif_typename ((int16) Dftype(reference)),
-							(unsigned long) reference);
+						sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n", eif_typename ((int16) Dftype(reference)),
+							(rt_uint_ptr) reference);
 						write_out();
 						write_tab(tab + 2);
 						sprintf(buffero, "-- begin special object --\n");
@@ -371,8 +366,8 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 						write_out();
 					}
 				} else {
-					sprintf(buffero, "%s [0x%lX]\n",
-						eif_typename((int16) Dftype(reference)), (unsigned long) reference);
+					sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
+						eif_typename((int16) Dftype(reference)), (rt_uint_ptr) reference);
 					write_out();
 				}
 			} else {
@@ -388,9 +383,9 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	/* Print special object */
 	RT_GET_CONTEXT
 	union overhead *zone;		/* Object header */
-	register5 uint32 flags;		/* Object flags */
-	register3 EIF_INTEGER count;		/* Element count */
-	register4 EIF_INTEGER elem_size;	/* Element size */
+	uint32 flags;		/* Object flags */
+	EIF_INTEGER count;		/* Element count */
+	EIF_INTEGER elem_size;	/* Element size */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;
 	EIF_INTEGER old_count;
@@ -457,14 +452,14 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_DOUBLE *)o_ref);
 					write_out();
 				} else if (dtype == egc_sp_pointer) {
-					sprintf(buffero, "POINTER = C pointer 0x%lX\n",
-						(unsigned long) (*(fnptr *)o_ref));
+					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n",
+						(rt_uint_ptr) (*(fnptr *)o_ref));
 					write_out();
 				} else {
 					/* Must be bit */
 					char *str = b_out(o_ref);
 
-					sprintf(buffero, "BIT %lu = ", (unsigned long) LENGTH(o_ref));
+					sprintf(buffero, "BIT %u = ", LENGTH(o_ref));
 					write_out();
 					write_string(str);
 					sprintf(buffero, "\n");
@@ -482,10 +477,10 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 			if (0 == reference)
 				sprintf(buffero, "Void\n");
 			else if (HEADER(reference)->ov_flags & EO_C)
-				sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) reference);
+				sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) reference);
 			else
-				sprintf(buffero, "%s [0x%lX]\n",
-					eif_typename((int16) Dftype(reference)), (unsigned long) reference);
+				sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
+					eif_typename((int16) Dftype(reference)), (rt_uint_ptr) reference);
 			write_out();
 		}
 }
@@ -526,7 +521,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				write_out();
 				break;
 			case EIF_POINTER_CODE:
-				sprintf(buffero, "POINTER = 0x%lX\n", (unsigned long) eif_pointer_item(object,i));
+				sprintf(buffero, "POINTER = 0x%" EIF_POINTER_DISPLAY "\n", (rt_uint_ptr) eif_pointer_item(object,i));
 				write_out();
 				break;
 			case EIF_REFERENCE_CODE:
@@ -534,9 +529,9 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "Void\n");
 					write_out();
 				} else {
-					sprintf(buffero, "%s [0x%lX]\n",
+					sprintf(buffero, "%s [0x%" EIF_POINTER_DISPLAY "]\n",
 						eif_typename((int16) Dftype(eif_reference_item(object,i))),
-						(unsigned long) eif_reference_item(object,i));
+						(rt_uint_ptr) eif_reference_item(object,i));
 					write_out();
 				}
 				break;
@@ -564,7 +559,7 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 rt_private void write_tab(register int tab)
 {
 	RT_GET_CONTEXT
-	register1 int i = 0;
+	int i = 0;
 
 	for (; i < tab; i++) {
 		sprintf(buffero,"  ");
@@ -602,7 +597,7 @@ rt_private void write_string(char *str)
 {
 	/* Print `str' in `tagged_out'. */
 	RT_GET_CONTEXT
-	int buffer_len = strlen(str);	/* Length of `str' */
+	size_t buffer_len = strlen(str);	/* Length of `str' */
 
 	tagged_len += buffer_len;
 	if (tagged_len >= tagged_max) {
@@ -663,7 +658,7 @@ rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
 {
 	RT_GET_CONTEXT
 	register int len;
-	len = sprintf(buffero, "0x%lX", (unsigned long) p);
+	len = sprintf(buffero, "0x%" EIF_POINTER_DISPLAY, (rt_uint_ptr) p);
 	return makestr(buffero, len);
 }
 
@@ -726,7 +721,7 @@ rt_shared char *simple_out(struct item *val)
 		sprintf(tagged_out, "Bit object");
 		break;
 	case SK_POINTER:
-		sprintf(tagged_out, "POINTER = C pointer 0x%lX", (unsigned long) val->it_ref);
+		sprintf(tagged_out, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "", (rt_uint_ptr) val->it_ref);
 		break;
 	default:
 		sprintf(tagged_out, "Not an object?");

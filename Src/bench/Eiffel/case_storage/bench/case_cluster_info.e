@@ -33,7 +33,10 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			-- Cluster name
 
 	file_name: STRING;
-			-- Cluster file name (not include path)
+			-- Cluster file name (not including path)
+
+	full_path_name: STRING;
+			--  Cluster file name (including path)
 
 	set_file_name (n: STRING) is
 			-- Set file_name to `n'.
@@ -44,6 +47,17 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			file_name.append (n);
 		ensure
 			file_name_set: file_name.is_equal (n)
+		end;
+
+	set_full_path_name (n: STRING) is
+			-- Set full_path_name to `n'.
+		require
+			valid_name: n /= Void and then not n.empty
+		do
+			!! full_path_name.make (n.count);
+			full_path_name.append (n);
+		ensure
+			full_path_name_name_set: full_path_name.is_equal (n)
 		end;
 
 	set_name (n: STRING) is
@@ -76,11 +90,11 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 		end;
 
 	cluster_item (path_element: STRING): CASE_CLUSTER_INFO is
-			-- Does name equal to `path_element'?
+			-- Cluster info with path `path_element'?
 		require
 			valid_path_element: path_element /= Void
 		do
-			if path_element.is_equal (file_name) then
+			if path_element.is_equal (full_path_name) then
 				Result := Current
 			else
 				from
@@ -97,6 +111,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 	storage_info: S_CLUSTER_DATA_R332 is
 		local
 			clust_l: FIXED_LIST [S_CLUSTER_DATA];
+			sorted_clust_l: SORTED_TWO_WAY_LIST [S_CLUSTER_DATA];
 			classes_i: EXTEND_TABLE [CLASS_I, STRING];
 			classes: LINKED_LIST [CLASS_C];
 			class_c: CLASS_C;
@@ -105,7 +120,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			old_cluster_info: OLD_CASE_LINKABLE_INFO;
 			s_chart: S_CHART;
 			cluster_name: STRING;
-			dollar_path: STRING
+			dollar_path: STRING;
 		do
 				-- Need to covert to a string since
 				-- the dynamic type of cluster name
@@ -124,8 +139,9 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			end;
 				-- Get old descrition for data (if any) and update
 			   	-- s_class_data
-			old_cluster_info := old_clusters_info.item (name);
+			old_cluster_info := Old_case_info.old_cluster (name);
 			if old_cluster_info /= Void then
+				view_id := old_cluster_info.view_id;
 				if old_cluster_info.description /= Void then
 					Result.set_description (old_cluster_info.description)
 				end
@@ -133,6 +149,13 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 					Result.set_explanation (old_cluster_info.explanation)
 				end
 			end;
+			if view_id = 0 then
+				-- Cluster never existed so give it a
+				-- new id count
+				Old_case_info.decrement_cluster_view_number;
+				view_id := Old_case_info.cluster_view_number;
+			end;
+			Result.set_view_id (view_id);
 			if cluster_i /= Void then
 				classes_i := cluster_i.classes;
 				!! classes.make;
@@ -160,25 +183,26 @@ io.error.new_line;
 			end
 			if not clusters.empty then
 					-- Keep view ids of cluster if it has the same parent
-				!! clust_l.make (clusters.count);
+				!! sorted_clust_l.make;
 				from
 					clusters.start;
-					clust_l.start
 				until
 					clusters.after
 				loop
-					s_cluster_data := clusters.item.storage_info;
-					view_id := View_id_info.old_cluster_view_id (s_cluster_data.name);
-					if view_id = 0 then
-							-- Cluster never existed so give it a
-							-- new id count
-						View_id_info.decrement_cluster_view_number;
-						view_id := View_id_info.cluster_view_number;
-					end
-					s_cluster_data.set_view_id (view_id);
-					clust_l.replace (s_cluster_data);
-					clust_l.forth;
+					sorted_clust_l.put_front (clusters.item.storage_info);
 					clusters.forth
+				end;
+				sorted_clust_l.sort;
+				!! clust_l.make (sorted_clust_l.count);
+				from
+					clust_l.start;
+					sorted_clust_l.start
+				until
+					sorted_clust_l.after
+				loop
+					clust_l.replace (sorted_clust_l.item);
+					sorted_clust_l.forth;
+					clust_l.forth
 				end;
 				Result.set_clusters (clust_l);
 			end
@@ -293,81 +317,99 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO} -- Debug
 
 feature {NONE} -- Class information
 
-	class_storage_information (classes: LINKED_LIST [CLASS_C]): FIXED_LIST [S_CLASS_DATA] is
+	class_storage_information (classes: LINKED_LIST [CLASS_C]): 
+			FIXED_LIST [S_CLASS_DATA] is
 			-- Storage information for `classes'
 		require
 			valid_classes: classes /= Void and then not classes.empty;
 		local
 			classc: CLASS_C;
-			flat_struct: FLAT_STRUCT;
-			class_ast: CLASS_AS_B;
+			stored_classes: SORTED_TWO_WAY_LIST [S_CLASS_DATA];
+			format_reg: FORMAT_REGISTRATION;
+			class_ast: CLASS_AS;
 			i: INTEGER;
-			s_class_data: S_CLASS_DATA;
+			old_class_data, s_class_data: S_CLASS_DATA;
 			class_path: STRING;
-			old_classes: HASH_TABLE [INTEGER, STRING];
+			old_classes: HASH_TABLE [S_CLASS_DATA, STRING];
 			class_info: CASE_CLASS_INFO;
 			new_class_views: LINKED_LIST [S_CLASS_DATA];
 			view_id: INTEGER;
+			re_class: BOOLEAN;
 			c_name: STRING
 		do
-			old_classes := View_id_info.old_classes_with_cluster_name (name);
-			!! Result.make (classes.count);
-			!! flat_struct.initialize;
+			old_classes := Old_case_info.old_classes_with_cluster_name (name);
+			!! stored_classes.make;
+			!! format_reg.initialize;
 			!! new_class_views.make;
 			from
 				classes.start;
-				Result.start;
 			until
 				classes.after
 			loop
 				classc := classes.item;
-				io.error.putstring ("%TAnalyzing class ");
 				c_name := clone (classc.class_name);
 				c_name.to_upper;
-				io.error.putstring (c_name);
-				io.error.new_line;
-				!! class_info.make (classc);
-				class_info.formulate_class_data (flat_struct);
-				flat_struct.wipe_out;
-				s_class_data := class_info.s_class_data;
+				re_class := True;
 				view_id := 0;
 				if old_classes /= Void then
-					view_id := old_classes.item (s_class_data.name);
-					if view_id /= 0 then
-							-- Remove the class so we can detect old
-							-- classes that needs to be removed
-							-- from the system
-						old_classes.remove (s_class_data.name)
-					end
-				end;
-					-- Record parent cluster
-				if view_id = 0 then
-					View_id_info.increment_class_view_number;
-					view_id := View_id_info.class_view_number;
-					new_class_views.extend (s_class_data)
-				else
-debug ("CASE_ID")
-	io.error.putstring ("id: ");
-	io.error.putint (s_class_data.id);
-	io.error.putstring (" reusing view id: ");
-	io.error.putint (s_class_data.view_id);
-	io.error.new_line;
+					old_class_data := old_classes.item (c_name);
+					if old_class_data /= Void then
+							-- Remove the class so we can detect left over
+							-- classes that need to be removed
+							-- from the system.
+						view_id := old_class_data.view_id;
+						if classc.reverse_engineered and then 
+							old_class_data.id = classc.id 
+						then
+								-- Need to make sure that the id's match.
+								-- This approach is not fool proof. I didn't
+								-- want to do extensive checking to make sure
+								-- old_class_data is the same as class_c.
+								-- However, the likelyhood that another project
+								-- having the same class name and id and in the
+								-- same cluster is remote. I wanted this check
+								-- to be as optimal as possible -- dinov.
+							s_class_data := old_class_data
+							re_class := False;
+debug ("CASE")
+	io.error.putstring ("%T%T%Treusing old s_class_data.%N");
 end
-					Result.replace (s_class_data);
-					Result.forth;
+						end;
+						old_classes.remove (c_name);
+					end;
 				end;
-				s_class_data.set_view_id (view_id);
-				Case_file_server.tmp_save_class (s_class_data);
-				classes.forth;
-			end;
-			from
-				new_class_views.start
-			until
-				new_class_views.after
-			loop
-				View_id_info.increment_class_view_number;
-				view_id := View_id_info.class_view_number;
-				Result.replace (new_class_views.item);
+				if re_class then
+						io.error.putstring ("%TAnalyzing class ");
+						io.error.putstring (c_name);
+						io.error.new_line;
+						-- Need to reverse engineer class for eiffelcase.
+					!! class_info.make (classc);
+					class_info.formulate_class_data (format_reg);
+					format_reg.wipe_out;
+					s_class_data := class_info.s_class_data;
+					if old_class_data /= Void then
+						if old_class_data.description /= Void then
+							s_class_data.set_description (old_class_data.description)
+						end
+						if old_class_data.explanation /= Void then
+							s_class_data.set_explanation
+								(old_class_data.explanation)
+						end;
+						old_class_data := Void
+					end
+				end;	
+debug ("CASE_ID")
+	if view_id /= Void then
+		io.error.putstring ("id: ");
+		io.error.putint (s_class_data.id);
+		io.error.putstring (" reusing view id: ");
+		io.error.putint (s_class_data.view_id);
+		io.error.new_line;
+	end
+end
+				if view_id = 0 then
+					Old_case_info.increment_class_view_number;
+					view_id := Old_case_info.class_view_number;
 debug ("CASE_ID")
 	io.error.putstring (" id: ");
 	io.error.putint (s_class_data.id);
@@ -375,8 +417,25 @@ debug ("CASE_ID")
 	io.error.putint (s_class_data.view_id);
 	io.error.new_line;
 end
+				end;
+				s_class_data.set_view_id (view_id);
+				stored_classes.put_front (s_class_data);
+				if re_class then
+					Case_file_server.tmp_save_class (s_class_data);
+				end;
+				classes.forth;
+			end;
+			stored_classes.sort;
+			!! Result.make (stored_classes.count);
+			from
+				Result.start;
+				stored_classes.start
+			until
+				stored_classes.after
+			loop
+				Result.replace (stored_classes.item);
+				stored_classes.forth
 				Result.forth;
-				new_class_views.forth
 			end
 		ensure
 			valid_result: result /= Void;

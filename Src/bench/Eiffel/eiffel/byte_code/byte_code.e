@@ -553,7 +553,7 @@ feature -- Inherited Assertions
 					else
 						ct := inh_c.meta_type (Context.current_type).associated_class_type
 					end
-					byte_code := System.byte_server.item (inh_f.body_index)
+					byte_code := System.byte_server.disk_item (inh_f.body_index)
 					if inh_f.has_precondition and gen_prec then
 						Context.inherited_assertion.add_precondition_type (ct, byte_code)
 					end

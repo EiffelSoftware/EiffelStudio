@@ -1333,6 +1333,12 @@ end
 		require
 			no_error: not Error_handler.has_error
 		do
+				-- Purge all byte code to disk as some byte code modification
+				-- is required at generation time and we do not want it to persist
+				-- to disk.
+			Byte_server.take_control (Tmp_byte_server)
+			Inv_byte_server.take_control (Tmp_inv_byte_server)
+
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
 			process_degree_2
@@ -1671,14 +1677,17 @@ end
 			Tmp_inv_ast_server.finalize
 			Ast_server.take_control (Tmp_ast_server)
 			Class_info_server.take_control (Tmp_class_info_server)
-			Byte_server.take_control (Tmp_byte_server)
-			Inv_byte_server.take_control (Tmp_inv_byte_server)
 			Depend_server.take_control (Tmp_depend_server)
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server)
 			M_feature_server.take_control (Tmp_m_feature_server)
 			M_rout_id_server.take_control (Tmp_m_rout_id_server)
 			M_desc_server.take_control (Tmp_m_desc_server)
 			Class_comments_server.take_control (Tmp_class_comments_server)
+
+				-- No need to do `Byte_server' and `Inv_byte_server' because
+				-- it is done in `melt'. See comment in `melt' for rationale.
+			--Byte_server.take_control (Tmp_byte_server)
+			--Inv_byte_server.take_control (Tmp_inv_byte_server)
 		end
 
 feature -- IL code generation

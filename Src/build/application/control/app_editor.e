@@ -16,7 +16,8 @@ inherit
 			Third as popdown_labels_action,
 			Fourth as popup_labels_action,
 			Fifth as set_state_action,
-			Sixth as set_label_action
+			Sixth as set_label_action,
+			Seventh as namer_action
 		end;
 	EB_TOP_SHELL
 		rename
@@ -566,6 +567,7 @@ feature {NONE}
 				-- executed.
 			drawing_area.add_expose_action (Current, expose_action);
 			drawing_area.set_action ("Ctrl<Btn1Down>", Current, ctrl_select_action);
+			drawing_area.set_action ("Shift<Btn3Down>", Current, namer_action);
 			state_list.add_selection_action (Current, set_state_action);
 			transition_list.add_selection_action (Current, set_label_action);
 			
@@ -584,6 +586,7 @@ feature {NONE}
 			state_name: STRING;
 			circle: STATE_CIRCLE;
 			expose_data: EXPOSE_DATA;
+			rename_com: RENAME_COMMAND
 		do
 			if argument = expose_action then
 				expose_data ?= context_data;
@@ -598,6 +601,12 @@ feature {NONE}
 					display_states;
 					draw_figures;
 					display_transitions;
+				end;
+			elseif argument = namer_action then
+				figures.find;
+				if figures.found then	
+					!! rename_com;
+					rename_com.execute (figures.figure);
 				end;
 			elseif argument = set_state_action then
 				if (state_list.selected_item = Void) then
@@ -619,7 +628,7 @@ feature {NONE}
 			end;
 		end; 
 
-	invariant
+invariant
 
 		valid_fig: drawing_area /= Void implies figures /= Void;
 		valid_lines: drawing_area /= Void implies lines /= Void;

@@ -18,7 +18,7 @@ inherit
 
 	STORABLE
 
-creation
+create
 
 	make_chat
 
@@ -45,15 +45,15 @@ feature
 			else	
 				make (argv.item (1).to_integer)
 				max_to_poll := 1
-				!!poll.make_read_only
-				!!connections.make
+				create poll.make_read_only
+				create connections.make
 				connections.compare_objects
 				in.set_non_blocking
 				execute
 			end
 		rescue
 			io.error.putstring ("IN RESCUE%N")
-			!!message_out.make_message
+			create message_out.make_message
 			message_out.extend ("The server is down. ")
 			message_out.extend ("See you later...%N")
 			message_out.set_over (True)
@@ -85,14 +85,14 @@ feature
 					message_in ?= retrieved (connections.item.active_medium)
 					if message_in.new then
 						connections.item.set_client_name (message_in.client_name)
-						!!message_out.make_message
+						create message_out.make_message
 						message_out.set_client_name (message_in.client_name)
 						message_out.extend (message_in.client_name)
 						message_out.extend (" has just joined the server%N")
 					elseif message_in.over then
 						poll.remove_associated_read_command (connections.item.active_medium)
 						connections.remove
-						!!message_out.make_message
+						create message_out.make_message
 						message_out.set_client_name (message_in.client_name)
 						message_out.extend (message_in.client_name)
 						message_out.extend (" has just gone%N")
@@ -164,14 +164,14 @@ feature
 			if max_to_poll <= outflow.descriptor then
 				max_to_poll := outflow.descriptor + 1
 			end
-			!!new_connection.make (clone (outflow))
+			create new_connection.make (clone (outflow))
 			connections.extend (new_connection)
 			poll.put_read_command (new_connection)
 		end
 
 	send_already_connected is
 		do
-			!!message_out.make_message
+			create message_out.make_message
 			if connections.count > 0 then
 				message_out.extend ("These people are already connected :")
 				from

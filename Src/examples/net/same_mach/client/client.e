@@ -13,7 +13,7 @@ inherit
 
 	SOCKET_RESOURCES
 
-creation
+create
 
 	make
 
@@ -24,7 +24,7 @@ feature
 	make is
 			-- Establish communication with server, and exchange messages.
 		do
-			!!soc1.make_client ("/tmp/here")
+			create soc1.make_client ("/tmp/here")
 			soc1.connect
 			process -- See below
 			soc1.cleanup
@@ -38,7 +38,7 @@ feature
 		local
 			our_list, our_new_list: OUR_MESSAGE
 		do
-			!!our_list.make
+			create our_list.make
 			our_list.extend ("This ")
 			our_list.extend ("is ")
 			our_list.extend ("our ")

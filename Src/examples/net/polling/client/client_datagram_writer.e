@@ -17,7 +17,7 @@ inherit
 			active_medium
 		end
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature
 			char: CHARACTER
 		do
 				-- Make packet with characters `a' to `j' in successive positions
-			!!sen_pack.make (10)
+			create sen_pack.make (10)
 			from char := 'a' until char > 'j' loop
 				sen_pack.put_element (char, char |-| 'a')
 				char := char.next

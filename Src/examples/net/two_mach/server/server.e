@@ -15,7 +15,7 @@ inherit
 
 	STORABLE
 
-creation
+create
 
 	make
 
@@ -33,7 +33,7 @@ feature
                                 io.error.putstring (argv.item (0))
                                 io.error.putstring (" portnumber%N")
                         else
-                                !!soc1.make_server_by_port (argv.item (1).to_integer)
+                                create soc1.make_server_by_port (argv.item (1).to_integer)
 				from
 					soc1.listen (5)
 					count := 0

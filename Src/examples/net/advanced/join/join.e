@@ -16,7 +16,7 @@ inherit
 			received
 		end
 
-creation
+create
 
 	make_join
 
@@ -34,12 +34,12 @@ feature
 				make (argv.item (2).to_integer, argv.item (1))
 				max_to_poll := in_out.descriptor + 1
 
-				!!connection.make (in_out)
-				!!poll.make_read_only
+				create connection.make (in_out)
+				create poll.make_read_only
 				poll.put_read_command (connection)
 	
-				!!std_input.make (io.input)
-				!!input_poll.make_read_only
+				create std_input.make (io.input)
+				create input_poll.make_read_only
 				input_poll.put_read_command (std_input)
 	
 				send_name_to_server
@@ -47,7 +47,7 @@ feature
 			end
 		rescue
 			io.error.putstring ("IN RESCUE%N");
-			!!message_out.make_message
+			create message_out.make_message
 			message_out.set_client_name (client_name)
 			message_out.set_new (False)
 			message_out.set_over (True)
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 
 	send_name_to_server is
 		do
-			!!message_out.make_message
+			create message_out.make_message
 			message_out.set_client_name (client_name)
 			message_out.set_new (True)
 			message_out.set_over (False)
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 				if temp.is_equal ("bye") then
 					over := True
 				end
-				!!message_out.make_message
+				create message_out.make_message
 				message_out.extend (temp)
 				message_out.extend ("%N")
 				message_out.set_over (over)

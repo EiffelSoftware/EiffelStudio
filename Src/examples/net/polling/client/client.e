@@ -9,7 +9,7 @@ indexing
 
 class POLLING_CLIENT
 
-creation
+create
 
 	make
 
@@ -27,12 +27,12 @@ feature
 				io.error.putstring (argv.item (0))
 				io.error.putstring (" hostname portnumber%N")
 			else
-				!!soc.make_targeted_to_hostname (argv.item (1), 
+				create soc.make_targeted_to_hostname (argv.item (1), 
 								 argv.item (2).to_integer)
-				!!ps.make_write_only
-				!!readcomm.make (soc)
+				create ps.make_write_only
+				create readcomm.make (soc)
 				ps.put_read_command (readcomm)
-				!!writecomm.make (soc)
+				create writecomm.make (soc)
 				ps.put_write_command (writecomm)
 				ps.execute (15, 20000)
 				ps.make_read_only

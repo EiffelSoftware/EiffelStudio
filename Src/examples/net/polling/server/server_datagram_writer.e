@@ -17,7 +17,7 @@ inherit
 			active_medium
 		end
 
-creation
+create
 
 	make
 
@@ -31,7 +31,7 @@ feature
 			i: INTEGER
 		do
 				-- Make packet with 10 characters `a' in successive positions
-			!!sen_pack.make (10)
+			create sen_pack.make (10)
 			from i := 0 until i > 9 loop
 				sen_pack.put_element ('a', i)
 				i := i + 1

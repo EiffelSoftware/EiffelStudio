@@ -15,7 +15,7 @@ inherit
 
 	STORABLE
 
-creation
+create
 
 	make
 
@@ -28,7 +28,7 @@ feature
 		local
 			count: INTEGER
 		do
-			!!soc1.make_server ("/tmp/here")
+			create soc1.make_server ("/tmp/here")
 			from
 				soc1.listen (5)
 				count := 0

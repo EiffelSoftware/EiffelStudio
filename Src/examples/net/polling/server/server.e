@@ -10,7 +10,7 @@ indexing
 
 class POLLING_SERVER
 
-creation
+create
 
 	make
 
@@ -29,11 +29,11 @@ feature
 				io.error.putstring (argv.item (0))
 				io.error.putstring (" portnumber%N")
 			else
-				!!soc.make_bound (argv.item (1).to_integer)
-				!!ps.make_read_only
-				!!readcomm.make (soc)
+				create soc.make_bound (argv.item (1).to_integer)
+				create ps.make_read_only
+				create readcomm.make (soc)
 				ps.put_read_command (readcomm)
-				!!writecomm.make (soc)
+				create writecomm.make (soc)
 				ps.put_write_command (writecomm)
 				ps.execute (15, 20000)
 				ps.make_write_only

@@ -15,7 +15,7 @@ inherit
 
 	STORABLE
 
-creation
+create
 
 	make
 

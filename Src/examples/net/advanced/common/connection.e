@@ -13,7 +13,7 @@ inherit
 
 	POLL_COMMAND
 
-creation
+create
 
 	make
 

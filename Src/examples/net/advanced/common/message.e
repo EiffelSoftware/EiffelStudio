@@ -15,7 +15,7 @@ inherit
 
 	LINKED_LIST [STRING]
 
-creation
+create
 
 	make_message
 

@@ -464,7 +464,7 @@ feature -- Basic Operations
 				file_path.replace (compiler_feature.e_feature.written_class.file_name)
 				start_position := compiler_feature.e_feature.ast.start_position
 				txt := compiler_feature.written_class.lace_class.text.substring (1, start_position)
-				line_number.set_item (txt.occurrences ('%N') + 1)
+				line_number.set_item (txt.occurrences ('%N'))
 			end
 		end
 

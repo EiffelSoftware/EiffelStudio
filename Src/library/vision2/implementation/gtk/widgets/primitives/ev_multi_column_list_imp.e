@@ -456,15 +456,36 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		local
 			gdkwin_parent, gdkwin_parent_parent: POINTER
 			clist_parent: POINTER
+			a_row: INTEGER
 		do
 			gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
-			gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
+			if gdkwin_parent /= Default_pointer then
+				gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
+			end
 			clist_parent := C.gdk_window_get_parent (
 				C.gtk_clist_struct_clist_window (list_widget)
 			)
 			Result := gdkwin_parent = clist_parent or
 				gdkwin_parent_parent = clist_parent
-		end 
+
+			if clist_parent = gdkwin_parent then
+				if row_from_y_coord (a_y) /= 0 then
+					Result := False
+					print ("Mouse over row " + row_from_y_coord (a_y).out + "%N")
+				end
+			end
+		end
+
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
+
+	row_from_y_coord (a_y: INTEGER): INTEGER is
+			-- Returns the row at relative coordinate `a_y'.
+		do
+			Result := a_y // (row_height + 1) + 1
+			if Result > ev_children.count then
+				Result := 0
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -637,6 +658,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/29 22:14:51  king
+--| Added initial row pnd support
+--|
 --| Revision 1.54  2000/03/29 01:42:02  king
 --| Added redundant set_row_pixmap feature
 --|

@@ -57,7 +57,8 @@ feature {NONE} -- File
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_filename: FILE_NAME
-			l_text: STRING
+			l_text,
+			l_text_no_index: STRING
 			l_util: UTILITY_FUNCTIONS
 		do
 			create l_util
@@ -70,20 +71,32 @@ feature {NONE} -- File
 				else
 					create l_filename.make_from_string (toc.name + "/")
 				end
-				replace_token (l_text, filter_frame_size_token, "120")
+				replace_token (l_text, filter_frame_size_token, filter_frame_height.out)
 			else
 				create l_filename.make_from_string ("")
-				replace_token (l_text, filter_frame_size_token, "25")
+				replace_token (l_text, filter_frame_size_token, filter_frame_height.out)
 			end
 			replace_token (l_text, html_default_toc_token, l_filename.string + l_util.short_name (default_toc_file_name))
 			replace_token (l_text, html_default_filter_token, l_filename.string + l_util.short_name (filter_template_file_name))
+			l_text_no_index := l_text.twin
 			replace_token (l_text, html_default_index_token, l_filename.string + "index.html")
+			replace_token (l_text_no_index, html_default_index_token, "")
 			l_file.close
+			
+				-- Create the main project file
 			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory)
 			l_filename.extend (name)
 			l_filename.add_extension (project_filename_extension)
 			create project_file.make_create_read_write (l_filename.string)
 			project_file.put_string (l_text)
+			project_file.close
+			
+				-- Create the main project file which has no index file
+			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory)
+			l_filename.extend (name + "_no_content")
+			l_filename.add_extension (project_filename_extension)
+			create project_file.make_create_read_write (l_filename.string)
+			project_file.put_string (l_text_no_index)
 			project_file.close
 		end
 
@@ -330,6 +343,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	filter_frame_height: INTEGER is
+			-- Height to set filter frame		
+		do
+			Result := 50
+			if not search_text.is_empty then
+				Result := Result + 50
+			end
+			if not full_filter_text.is_empty then
+				Result := Result + 50
+			end
+		end
+
 feature {NONE} -- File
 
 	compiled_filename_extension: STRING is
@@ -360,14 +385,7 @@ feature {NONE} -- File
 
 	root_resource_files: ARRAYED_LIST [STRING] is
 			-- List of resource file to copy with project
-		once	
-			create Result.make (6)
-			Result.extend ("toc.js")
-			Result.extend ("simple_toc.js")
-			Result.extend ("toc.css")
-			Result.extend ("header.html")
-			Result.extend ("header_mainarea.jpg")
-			Result.extend ("header.css")
+		deferred				
 		end
 
 	copy_root_resource_files is

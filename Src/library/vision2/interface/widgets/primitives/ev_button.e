@@ -118,9 +118,6 @@ feature {NONE} -- Implementation
 			create {EV_BUTTON_IMP} implementation.make (Current)
 		end
 
-invariant
-	select_actions_not_void: select_actions /= Void
- 
 end -- class EV_BUTTON
 
 --!-----------------------------------------------------------------------------

@@ -199,7 +199,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 			/* Out of memory */
 			enomem();
 
-		bzero((struct fop_list *) eif_fop_table, OP_TABLE_SIZE * sizeof (struct fop_list *));
+		bzero((struct fop_list *) eif_fop_table, (OP_TABLE_SIZE+1) * sizeof (struct fop_list *));
 	}
 
 	list = eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE]; /* Binary operation so as to point on the correct place in 'eif_fop_table'  */ 
@@ -299,7 +299,8 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
                         /* Out of memory */
                         enomem();
  
-                bzero((struct pop_list *) eif_pop_table, OP_TABLE_SIZE * sizeof (struct pop_list *));
+                bzero((struct pop_list *) eif_pop_table, (OP_TABLE_SIZE+1) * sizeof (struct pop_list *));
+
         }
  
 

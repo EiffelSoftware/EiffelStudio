@@ -215,9 +215,9 @@ feature -- Basic Operations
 		do
 			ignore_cursor_moves := True
 			if not selection_is_empty then
-				l1 := selection_start.y_in_lines
+				l1 := selection_cursor.y_in_lines
 				l2 := cursor.y_in_lines
-				x1 := selection_start.x_in_characters
+				x1 := selection_cursor.x_in_characters
 				x2 := cursor.x_in_characters
 				txt := selected_string
 				if lower then
@@ -226,7 +226,7 @@ feature -- Basic Operations
 					txt.to_upper
 				end
 				replace_selection (txt)
-				selection_start.make_from_character_pos (x1, l1, Current)
+				selection_cursor.make_from_character_pos (x1, l1, Current)
 				cursor.make_from_character_pos (x2, l2, Current)
 				enable_selection
 			end

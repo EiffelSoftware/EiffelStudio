@@ -47,4 +47,23 @@ feature
 			end
 		end;
 
+	eiffel_string (s: STRING): STRING is
+			-- "eiffel" representation of `s'
+			-- Translation of special characters
+		local
+			value_area: SPECIAL [CHARACTER];
+			i, value_count: INTEGER;
+		do
+			from
+				value_area := s.area;
+				value_count := s.count
+				!! Result.make (value_count);
+			until
+				i >= value_count
+			loop
+				Result.append (char_text (value_area.item (i)));
+				i := i + 1
+			end;
+		end
+
 end -- class CHARACTER_ROUTINES

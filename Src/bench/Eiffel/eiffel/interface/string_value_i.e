@@ -4,10 +4,11 @@ inherit
 
 	VALUE_I
 		redefine
-			is_string
+			is_string, append_clickable_signature
 		end;
-	SHARED_WORKBENCH
-	
+	SHARED_WORKBENCH;
+	CHARACTER_ROUTINES
+
 feature 
 
 	str_val: STRING;
@@ -63,5 +64,12 @@ feature
 			Result.append (str_val);
 			Result.extend ('"');
 		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_char ('"');
+			a_clickable.put_string (eiffel_string (str_val));
+			a_clickable.put_char ('"');
+		end
 
 end

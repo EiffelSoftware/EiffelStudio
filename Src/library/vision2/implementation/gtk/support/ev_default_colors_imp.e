@@ -16,9 +16,17 @@ feature -- Access
 			-- Color usely used for the background of dialogs
 		local
 			r, g, b: INTEGER
-		do
-			
+		do			
 			c_gtk_style_default_bg_color ($r, $g, $b)
+			!! Result.make_rgb (r, g, b)
+		end
+
+	Color_dialog_fg: EV_COLOR is
+			-- Color usely used for the foreground of dialogs
+		local
+			r, g, b: INTEGER
+		do
+			c_gtk_style_default_fg_color ($r, $g, $b)
 			!! Result.make_rgb (r, g, b)
 		end
 
@@ -49,7 +57,7 @@ feature -- Access
 			-- Default foreground color for most of the widgets.
 		do
 			check True end
-			Result := Color_dialog
+			Result := Color_dialog_fg
 		end
 
 end -- class EV_DEFAULT_COLORS_IMP

@@ -92,6 +92,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_bzero HAS_BZERO	/**/
 
+/* HAS_CHOWN:
+ *	This symbol, if defined, indicates that the chown routine is
+ *	available.
+ */
+#$d_chown HAS_CHOWN		/**/
+
 /* HAS_DUP2:
  *	This symbol, if defined, indicates that the dup2 routine is
  *	available to duplicate file descriptors.
@@ -479,10 +485,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$i_sysun I_SYS_UN		/**/
 
-#$i_termio I_TERMIO		/**/
-#$i_termios I_TERMIOS		/**/
-#$i_sgtty I_SGTTY		/**/
-
 /* I_TIME:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <time.h>.
@@ -630,10 +632,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #$d_smartmmap HAS_SMART_MMAP	/**/
 
-/* HAS_CHOWN:
- *	This symbol, if defined, indicates that the chown system call is
- *	available
- */
 /* HAS_GETPWUID:
  *	This symbol, if defined, indicates that the getpwuid system call is
  *	available
@@ -646,8 +644,6 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	This symbol, if defined, indicates that the geteuid system call is
  *	available
  */
-#$d_chown HAS_CHOWN	/**/
-
 #$d_getpwuid HAS_GETPWUID	/**/
 
 #$d_getgrgid HAS_GETGRGID	/**/

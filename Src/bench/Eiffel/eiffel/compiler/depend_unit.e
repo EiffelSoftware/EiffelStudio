@@ -24,7 +24,11 @@ feature  -- Initialization
 		do
 			id := c_id;
 			feature_id := f.feature_id
-			rout_id := f.rout_id_set.first
+			if f.is_attribute and then f.rout_id_set.count > 1 then
+				rout_id := f.rout_id_set.item (2)
+			else
+				rout_id := f.rout_id_set.first
+			end
 			written_in := f.written_in
 			body_index := f.body_index
 			is_external := f.is_external

@@ -39,8 +39,6 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 	
-	console: SYSTEM_CONSOLE
-	
 	dictionary: IMPORT_DIALOG_DICTIONARY
 			-- Dictionary
 		indexing
@@ -113,20 +111,6 @@ feature -- Access
 			external_name: "CancelButton"
 		end
 
-	message_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			-- Message text box
-		indexing
-			external_name: "MessageTextBox"
-		end
-		
-feature -- Constants
-
-	Border_style: INTEGER is 3
-			-- Window border style: a fixed, single line border
-		indexing
-			external_name: "BorderStyle"
-		end
-
 	Window_height: INTEGER is 
 			-- Window width
 		indexing
@@ -137,60 +121,6 @@ feature -- Constants
 			else
 				Result := 280
 			end
-		end
-		
-	Window_width: INTEGER is 800
-			-- Window width
-		indexing
-			external_name: "WindowWidth"
-		end
-	
-	Margin: INTEGER is 10
-			-- Margin
-		indexing
-			external_name: "Margin"
-		end
-	
-	Label_height: INTEGER is 20
-			-- Label height
-		indexing
-			external_name: "LabelHeight"
-		end
-	
-	Label_font_size: REAL is 10.0
-			-- Label font size
-		indexing
-			external_name: "LabelFontSize"
-		end
-
-	Font_size: REAL is 8.0
-			-- Font size
-		indexing
-			external_name: "FontSize"
-		end
-		
-	Bold_style: INTEGER is 1
-			-- Bold style
-		indexing
-			external_name: "BoldStyle"
-		end
-
-	Regular_style: INTEGER is 0
-			-- Regular style
-		indexing
-			external_name: "RegularStyle"
-		end
-		
-	Button_height: INTEGER is 23
-			-- Button height
-		indexing
-			external_name: "ButtonHeight"
-		end
-	
-	Button_width: INTEGER is 75
-			-- Button height
-		indexing
-			external_name: "ButtonWidth"
 		end
 		
 feature -- Basic Operations
@@ -211,74 +141,54 @@ feature -- Basic Operations
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			--set_borderstyle (dictionary.Border_style)
-			--a_size.set_Width (dictionary.Window_width)
-			set_borderstyle (Border_style)
-			a_size.set_Width (Window_width)
+			set_borderstyle (dictionary.Border_style)
+			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (Window_height)
 			set_size (a_size)		
 
 				-- `Selected assembly: '
 			create assembly_label.make_label
 			assembly_label.set_text (dictionary.Assembly_label_text)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
-			--a_size.set_Height (dictionary.Label_height)
-			a_size.set_Height (Label_height)
+			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			--create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 
-			create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size,  Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 
 			assembly_label.set_font (label_font)
 			
 			create assembly_descriptor_label.make_label
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style) 
-			create a_font.make_font_10 (dictionary.Font_family_name, Font_size,  Regular_style) 
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style) 
 			assembly_descriptor_label.set_font (a_font)			
 			assembly_descriptor_label.set_text (dictionary.Assembly_descriptor_text (assembly_descriptor))
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin + dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin + Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			assembly_descriptor_label.set_location (a_point)			
-			--a_size.set_Width (Window_width - 2 * Left_margin)
-			--assembly_descriptor_label.set_size (a_size)
 			assembly_descriptor_label.set_autosize (True)
 			
 				-- `Destination_path: '
 			create destination_path_label.make_label
 			destination_path_label.set_text (dictionary.Destination_path_label_text)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (3 * dictionary.Margin + 2 * dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (3 * Margin + 2 * Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (3 * dictionary.Margin + 2 * dictionary.Label_height)
 			destination_path_label.set_location (a_point)
-			--a_size.set_Height (dictionary.Label_height)
-			a_size.set_Height (Label_height)
+			a_size.set_Height (dictionary.Label_height)
 			destination_path_label.set_size (a_size)
 			destination_path_label.set_font (label_font)				
 
 				-- Destination path text box
 			create destination_path_text_box.make_textbox
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (4 * dictionary.Margin + 3 * dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (4 * Margin + 3 * Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (4 * dictionary.Margin + 3 * dictionary.Label_height)
 			destination_path_text_box.set_location (a_point)
-			--a_size.set_Width (dictionary.Window_width - dictionary.Button_width - 3 * dictionary.Margin)
-			--a_size.set_Height (dictionary.Label_height)
-			a_size.set_Width (Window_width - Button_width - 3 * Margin)
-			a_size.set_Height (Label_height)
+			a_size.set_Width (dictionary.Window_width - dictionary.Button_width - 3 * dictionary.Margin)
+			a_size.set_Height (dictionary.Label_height)
 			destination_path_text_box.set_size (a_size)
 
 				-- Browse button
 			create browse_button.make_button
-			--a_point.set_X (dictionary.Window_width - dictionary.Margin - dictionary.Button_width) 
-			--a_point.set_Y (3 * dictionary.Margin + 3 * dictionary.Label_height + dictionary.Margin // 2)
-			a_point.set_X (Window_width - Margin - Button_width) 
-			a_point.set_Y (3 * Margin + 3 * Label_height + Margin // 2)
+			a_point.set_X (dictionary.Window_width - dictionary.Margin - dictionary.Button_width) 
+			a_point.set_Y (3 * dictionary.Margin + 3 * dictionary.Label_height + dictionary.Margin // 2)
 			browse_button.set_location (a_point)
 			browse_button.set_text (dictionary.Browse_button_label)
 			type := type_factory.GetType_String (dictionary.System_event_handler_type)
@@ -289,10 +199,8 @@ feature -- Basic Operations
 			create explanation_label.make_label
 			explanation_label.set_text (dictionary.Explanation_label_text)
 			explanation_label.set_font (a_font)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (5 * dictionary.Margin + 4 * dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (5 * Margin + 4 * Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (5 * dictionary.Margin + 4 * dictionary.Label_height)
 			explanation_label.set_location (a_point)
 			explanation_label.set_autosize (True)
 
@@ -301,15 +209,11 @@ feature -- Basic Operations
 				create dependancies_check_box.make_checkbox
 				dependancies_check_box.set_text (dictionary.Dependancies_check_box_text)
 				dependancies_check_box.set_font (a_font)
-				--a_point.set_X (dictionary.Margin)
-				--a_point.set_Y (7 * dictionary.Margin + 5 * dictionary.Label_height)
-				a_point.set_X (Margin)
-				a_point.set_Y (7 * Margin + 5 * Label_height)
+				a_point.set_X (dictionary.Margin)
+				a_point.set_Y (7 * dictionary.Margin + 5 * dictionary.Label_height)
 				dependancies_check_box.set_location (a_point)
-				--a_size.set_height (dictionary.Label_height)
-				--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-				a_size.set_height (Label_height)
-				a_size.set_width (Window_width - 2 * Margin)
+				a_size.set_height (dictionary.Label_height)
+				a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
 				dependancies_check_box.set_size (a_size)
 				dependancies_check_box.set_checked (True)
 				dependancies_check_box.set_autocheck (True)
@@ -318,14 +222,11 @@ feature -- Basic Operations
 			
 				-- OK button
 			create ok_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			a_point.set_X ((Window_width // 2) - (Margin //2) - Button_width) 
+			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
 			if dependancies.count > 0 then
-				--a_point.set_Y (9 * dictionary.Margin + 6 * dictionary.Label_height)
-				a_point.set_Y (9 * Margin + 6 * Label_height)
+				a_point.set_Y (9 * dictionary.Margin + 6 * dictionary.Label_height)
 			else
-				--a_point.set_Y (6 * dictionary.Margin + 5 * dictionary.Label_height)
-				a_point.set_Y (6 * Margin + 5 * Label_height)
+				a_point.set_Y (6 * dictionary.Margin + 5 * dictionary.Label_height)
 			end
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
@@ -335,14 +236,11 @@ feature -- Basic Operations
 
 				-- Cancel button
 			create cancel_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			a_point.set_X ((Window_width // 2) + (Margin //2))
+			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
 			if dependancies.count > 0 then
-				--a_point.set_Y (9 * dictionary.Margin + 6 * dictionary.Label_height)
-				a_point.set_Y (9 * Margin + 6 * Label_height)
+				a_point.set_Y (9 * dictionary.Margin + 6 * dictionary.Label_height)
 			else
-				--a_point.set_Y (6 * dictionary.Margin + 5 * dictionary.Label_height)
-				a_point.set_Y (6 * Margin + 5 * Label_height)
+				a_point.set_Y (6 * dictionary.Margin + 5 * dictionary.Label_height)
 			end
 			cancel_button.set_location (a_point)
 			cancel_button.set_text (dictionary.Cancel_button_label)
@@ -370,14 +268,12 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
-			type: SYSTEM_TYPE
 			on_confirmation_event_handler_delegate: SYSTEM_EVENTHANDLER
 			warning_dialog: WARNING_DIALOG
 		do
 			if dependancies.count > 0 then
 				if not dependancies_check_box.Checked then
-					type := type_factory.GetType_String (dictionary.System_event_handler_type)
-					on_confirmation_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "ImportAssemblyWithoutDependancies")
+					create on_confirmation_event_handler_delegate.make_eventhandler (Current, $import_assembly_without_dependancies)
 					create warning_dialog.make (assembly_descriptor, dependancies, dictionary.Warning_text, on_confirmation_event_handler_delegate)
 				else
 					import_assembly_and_dependancies
@@ -410,7 +306,7 @@ feature -- Event handling
 		do
 			ask_for_folder
 			if last_folder /= Void then
-				console.writeline_string (last_folder)
+				destination_path_text_box.set_text (last_folder)
 			end
 		end
 		
@@ -446,39 +342,6 @@ feature {NONE} -- Implementation
 			browser.ask_for_folder
 			last_folder := browser.last_folder
 		end
-		
-	assembly_name_from_info: SYSTEM_REFLECTION_ASSEMBLYNAME is
-			-- Assembly name corresponding to `assembly_descriptor'.
-		require
-			non_void_descriptor: assembly_descriptor /= Void
-		local
-			version: SYSTEM_VERSION
-			culture: SYSTEM_GLOBALIZATION_CULTUREINFO
-			encoding: SYSTEM_TEXT_ASCIIENCODING
-			public_key: ARRAY [INTEGER_8]
-			retried: BOOLEAN
-		do
-			create Result.make
-			Result.set_Name (assembly_descriptor.Name)
-			create version.make_3 (assembly_descriptor.Version)
-			Result.set_Version (version)
-			if not assembly_descriptor.Culture.equals_string (dictionary.Neutral_culture) then
-				create culture.make (assembly_descriptor.Culture)
-			else
-				create culture.make (dictionary.Empty_string)
-			end
-			Result.set_CultureInfo (culture)
-			create encoding.make_asciiencoding 
-			if not retried then
-				public_key := encoding.GetBytes (assembly_descriptor.PublicKey)
-				Result.SetPublicKeyToken (public_key)
-			end
-		ensure
-			non_void_assembly_name: Result /= Void
-		rescue
-			retried := True
-			retry
-		end
 	
 	import_assembly_and_dependancies is
 			-- Import the assembly corresponding to `assembly_descriptor' and its dependancies.
@@ -487,17 +350,25 @@ feature {NONE} -- Implementation
 		require
 			non_void_assembly_descriptor: assembly_descriptor /= Void
 		local
+			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			--emitter: ISE_REFLECTION_EIFFELCODEGENERATOR
+			emitter: NEWEIFFELCLASSGENERATOR
+			returned_value: INTEGER
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
-			assembly_name := assembly_name_from_info
+			create conversion_support.make_conversionsupport
+			assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
 			assembly := assembly.load (assembly_name)
-			console.writeline_string (dictionary.Assembly_and_dependancies_importation_message)
-			display_message (dictionary.Assembly_and_dependancies_importation_message)
-			--create emitter.make
-			--emitter.importassemblyfromgac (assembly)
-			controls.remove (message_text_box)
+			returned_value := message_box.show (dictionary.Assembly_and_dependancies_importation_message)
+			create emitter.make_neweiffelclassgenerator
+			if destination_path_text_box.text /= Void then
+				ok_button.set_enabled (False)
+				cancel_button.set_enabled (False)
+				emitter.importassemblywithdependancies (assembly, destination_path_text_box.text)
+			else
+				returned_value := message_box.show (dictionary.No_path)
+			end
 			refresh
 		end
 
@@ -510,45 +381,24 @@ feature {NONE} -- Implementation
 		local
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			assembly: SYSTEM_REFLECTION_ASSEMBLY
-			--emitter: ISE_REFLECTION_EIFFELCODEGENERATOR		
+			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
+			emitter: NEWEIFFELCLASSGENERATOR
+			returned_value: INTEGER
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX		
 		do
-			assembly_name := assembly_name_from_info
+			create conversion_support.make_conversionsupport
+			assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
 			assembly := assembly.load (assembly_name)
-			console.writeline_string (dictionary.Assembly_importation_message)
-			display_message (dictionary.Assembly_importation_message)
-			--create emitter.make
-			--emitter.importassemblywithoutdependancies (assembly)
-			controls.remove (message_text_box)
-			refresh			
-		end
-		
-	display_message (a_message: STRING) is
-			-- Display `a_message' in a text box at the bottom of the window.
-		indexing
-			external_name: "DisplayMessage"
-		require
-			non_void_message: a_message /= Void
-			not_empty_message: a_message.length > 0
-		local
-			a_size: SYSTEM_DRAWING_SIZE
-			a_point: SYSTEM_DRAWING_POINT
-		do
-			create message_text_box.make_textbox
-			message_text_box.set_forecolor (dictionary.Red_color)
-			message_text_box.set_text (a_message)
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			a_size.set_width (Window_width - 2 * Margin)
-			message_text_box.set_size (a_size)
-			a_point.set_x (Margin)
-			if dependancies.count > 0 then
-				--a_point.set_Y (9 * dictionary.Margin + 6 * dictionary.Label_height)
-				a_point.set_Y (9 * Margin + 6 * Label_height)
+			returned_value := message_box.show (dictionary.Assembly_importation_message)
+			create emitter.make_neweiffelclassgenerator
+			if destination_path_text_box.text /= Void then
+				ok_button.set_enabled (False)
+				cancel_button.set_enabled (False)
+				emitter.importassemblywithoutdependancies (assembly, destination_path_text_box.text)
 			else
-				--a_point.set_Y (6 * dictionary.Margin + 5 * dictionary.Label_height)
-				a_point.set_Y (6 * Margin + 5 * Label_height)
-			end	
-			message_text_box.set_location (a_point)
-			controls.add (message_text_box)
+				returned_value := message_box.show (dictionary.No_path)
+			end
+			refresh			
 		end
 		
 end -- class IMPORT_DIALOG

@@ -182,198 +182,7 @@ feature -- Access
 		indexing
 			external_name: "ErrorTextBox"
 		end
-		
-feature -- Constants
-
---	Title: STRING is "Inheritance clauses viewer"
---			-- Window title
---		indexing
---			external_name: "Title"
---		end
-	
-	Border_style: INTEGER is 3
-			-- Window border style: a fixed, single line border
-		indexing
-			external_name: "BorderStyle"
-		end
-
-	Panel_border_style: INTEGER is 0
-			-- Panel border style: none
-		indexing
-			external_name: "PanelBorderStyle"
-		end
-		
-	Window_width: INTEGER is 800
-			-- Window width
-		indexing
-			external_name: "WindowWidth"
-		end
-
-	Window_height: INTEGER is 600
-			-- Window height
-		indexing
-			external_name: "WindowHeight"
-		end
-		
---	Class_label_text: STRING is "Class: "
---			-- Text of class label
---		indexing
---			external_name: "ClassLabelText"
---		end
---	
-	Margin: INTEGER is 10
-			-- Margin
-		indexing
-			external_name: "Margin"
-		end
-	
-	Label_height: INTEGER is 20
-			-- Label height
-		indexing
-			external_name: "LabelHeight"
-		end
-	
---	Font_family_name: STRING is "Verdana"
---			-- Name of label font family
---		indexing
---			external_name: "FontFamilyName"
---		end
-	
-	Label_font_size: REAL is 10.0
-			-- Label font size
-		indexing
-			external_name: "LabelFontSize"
-		end
-
-	Font_size: REAL is 8.0
-			--Font size
-		indexing
-			external_name: "FontSize"
-		end
-		
-	Bold_style: INTEGER is 1
-			-- Bold style
-		indexing
-			external_name: "BoldStyle"
-		end
-		
---	Parent_label_text: STRING is "Parent: " 
---			-- Text of parent label
---		indexing
---			external_name: "ParentLabelText"
---		end
---
---	Add_button_label: STRING is "Add"
---			-- Add button label
---		indexing
---			external_name: "AddButtonLabel"
---		end
---		
---	Ok_button_label: STRING is "OK"
---			-- OK button label
---		indexing
---			external_name: "OkButtonLabel"
---		end
---		
---	Cancel_button_label: STRING is "Cancel"
---			-- Cancel button label
---		indexing
---			external_name: "CancelButtonLabel"
---		end
---
---	System_event_handler_type: STRING is "System.EventHandler"
---			-- `System.EventHandler' type
---		indexing
---			external_name: "SystemEventHandlerType"
---		end
---	
---	Space: STRING is " "
---			-- Space
---		indexing
---			external_name: "Space"
---		end
---	
---	Opening_bracket: STRING is "("
---			-- Opening bracket
---		indexing
---			external_name: "OpeningBracket"
---		end
---
---	Closing_bracket: STRING is ")"
---			-- Closing bracket
---		indexing
---			external_name: "ClosingBracket"
---		end
---	
---	Colon: STRING is ":"
---			-- Colon
---		indexing
---			external_name: "Colon"
---		end
---	
---	Inverted_comma: STRING is "%""
---			-- Inverted comma
---		indexing
---			external_name: "ExternalName"
---		end
---	
---	External_name_keyword: STRING is "External name"
---			-- External name
---		indexing
---			external_name: "ExternalNameKeyword"
---		end
-		
-	Button_width: INTEGER is 75
-			-- Button width
-		indexing
-			external_name: "ButtonWidth"
-		end
-
-	Button_height: INTEGER is 23
-			-- Button height
-		indexing
-			external_name: "ButtonHeight"
-		end
-		
-	List_height: INTEGER is 
-			-- Rename list height
-		indexing
-			external_name: "ListHeight"
-		once
-			--Result := dictionary.Window_height - 14 * dictionary.Margin - 6 * dictionary.Label_height - 2 * dictionary.Button_height
-			Result := Window_height - 14 * Margin - 6 * Label_height - 2 * Button_height
-		end
-	
---	Rename_clauses_text: STRING is "Rename clauses: "
---			-- Rename clauses label text
---		indexing
---			external_name: "RenameClausesText"
---		end
---		
---	Rename_clause_text: STRING is "Rename clause: "
---			-- Rename clause label text
---		indexing
---			external_name: "RenameClauseText"
---		end
---
-	List_view_border_style: INTEGER is 1
-			-- List view border style
-		indexing
-			external_name: "ListViewBorderStyle"
-		end
-	
---	New_clause: STRING is "-- New clause"
---			-- New clause
---		indexing
---			external_name: "NewClause"
---		end
---	
---	As_keyword: STRING is "as"
---			-- As keyword
---		indexing
---			external_name: "AsKeyword"
---		end
-		
+			
 	Rename_box_width: INTEGER is
 			-- Rename box width
 		indexing
@@ -381,28 +190,7 @@ feature -- Constants
 		require
 			non_void_as_label: as_label /= Void
 		once
-			--Result := (dictionary.Window_width - 4 * dictionary.Margin - as_label.width) // 2
-			Result := (Window_width - 4 * Margin - as_label.width) // 2
-		end
-	
---	Red_color: SYSTEM_DRAWING_COLOR is
---			-- Red color
---		indexing
---			external_name: "RedColor"
---		once
---			Result := Result.Red
---		end
-
-	View: INTEGER is 3
-			-- View property for list view
-		indexing
-			external_name: "View"
-		end
-
-	Alignment: INTEGER is 5
-			-- Alignment in list view
-		indexing
-			external_name: "Alignment"
+			Result := (dictionary.Window_width - 4 * dictionary.Margin - as_label.width) // 2
 		end
 
 feature -- Basic Operations
@@ -427,38 +215,28 @@ feature -- Basic Operations
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			--set_borderstyle (dictionary.Border_style)
-			--a_size.set_Width (dictionary.Window_width)
-			--a_size.set_Height (dictionary.Window_height)
-			set_borderstyle (Border_style)
-			a_size.set_Width (Window_width)
-			a_size.set_Height (Window_height)
+			set_borderstyle (dictionary.Border_style)
+			a_size.set_Width (dictionary.Window_width)
+			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)
 
 				-- `Class: '
 			create class_label.make_label
 			class_label.set_text (dictionary.Class_label_text)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin)
 			class_label.set_location (a_point)
 			class_label.set_autosize (True)
-			--create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 						create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size,  Bold_style) 
-			create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size, Bold_style) 						create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size,  Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 
 			class_label.set_font (label_font)
 			
 				-- Class name 
 			create class_name_label.make_label
-			--a_point.set_X (dictionary.Margin + class_label.width)
-			--a_point.set_Y (dictionary.Margin)
-			a_point.set_X (Margin + class_label.width)
-			a_point.set_Y (Margin)
+			a_point.set_X (dictionary.Margin + class_label.width)
+			a_point.set_Y (dictionary.Margin)
 			class_name_label.set_location (a_point)
 			class_name_label.set_text (eiffel_class.eiffelname.toupper)
 			class_name_label.set_autosize (True)
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style)
-			--create a_font.make_font_10 (dictionary.Font_family_name, Label_font_size, Bold_style)
 			class_name_label.set_font (label_font)	
 			
 				-- External name
@@ -468,41 +246,30 @@ feature -- Basic Operations
 			external_name_text := external_name_text.concat_string_string_string_string (external_name_text, dictionary.Inverted_comma, eiffel_class.fullexternalname, dictionary.Inverted_comma)
 			external_name_text := external_name_text.concat_string_string (external_name_text, dictionary.Closing_bracket)
 			external_name_label.set_text (external_name_text)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin + dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin + Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
 			external_name_label.set_location (a_point)			
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			--a_size.set_height (dictionary.Label_height)
-			a_size.set_width (Window_width - 2 * Margin)
-			a_size.set_height (Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_height (dictionary.Label_height)
 			external_name_label.set_size (a_size)
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style) 
-			create a_font.make_font_10 (dictionary.Font_family_name, Font_size,  Bold_style) 
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style) 
 			external_name_label.set_font (a_font)
 			
 				-- `Parent: '
 			create parent_label.make_label
 			parent_label.set_text (dictionary.Parent_label_text)
-			--a_point.set_X (dictionary.Margin)
-			--a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
-			a_point.set_X (Margin)
-			a_point.set_Y (Margin + 2 * Label_height)
+			a_point.set_X (dictionary.Margin)
+			a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
 			parent_label.set_location (a_point)
 			parent_label.set_autosize (True)
 			parent_label.set_font (label_font)
 
 			create parent_name_label.make_label
-			--a_point.set_X (dictionary.Margin + parent_label.width)
-			--a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
-			a_point.set_X (Margin + parent_label.width)
-			a_point.set_Y (Margin + 2 * Label_height)
+			a_point.set_X (dictionary.Margin + parent_label.width)
+			a_point.set_Y (dictionary.Margin + 2 * dictionary.Label_height)
 			parent_name_label.set_location (a_point)			
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin - parent_label.width)
-			a_size.set_width (Window_width - 2 * Margin - parent_label.width)
-			--a_size.set_height (dictionary.Label_height)
-			a_size.set_height (Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin - parent_label.width)
+			a_size.set_height (dictionary.Label_height)
 			parent_name_label.set_size (a_size)
 			parent_name_label.set_text (parent_name)
 			parent_name_label.set_font (Label_font)
@@ -510,39 +277,31 @@ feature -- Basic Operations
 				-- Main panel
 			create panel.make_panel
 			a_point.set_x (0)
-			--a_point.set_y (2 * dictionary.Margin + 3 * dictionary.Label_height)
-			a_point.set_y (2 * Margin + 3 * Label_height)
+			a_point.set_y (2 * dictionary.Margin + 3 * dictionary.Label_height)
 			panel.set_location (a_point)
-			--a_size.set_width (dictionary.Window_width)
-			--a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)
-			a_size.set_width (Window_width)
-			a_size.set_height (Window_height - 6 * Margin - 3 * Label_height - Button_height)
+			a_size.set_width (dictionary.Window_width)
+			a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)
 			panel.set_size (a_size)
-			panel.set_borderstyle (Panel_border_style)
+			panel.set_borderstyle (dictionary.Panel_border_style)
 			
 				-- Rename clauses list
-			--create_list_view (rename_clauses, dictionary.Margin, dictionary.Margin + dictionary.Label_height)
-			create_list_view (rename_clauses, Margin, Margin + Label_height)
+			create_list_view (rename_clauses, dictionary.Margin, dictionary.Margin + dictionary.Label_height)
 			rename_list_view := created_list
 			rename_list_view.items.item (0).set_selected (True)
 			rename_list_view.items.item (0).set_checked (True)
 			
 				-- Rename clauses label
-			--create_label (dictionary.Rename_clauses_text, dictionary.Margin, dictionary.Margin)
-			create_label (dictionary.Rename_clauses_text, Margin, Margin)
+			create_label (dictionary.Rename_clauses_text, dictionary.Margin, dictionary.Margin)
 			
 				-- Text box for rename clause
-			--create_label (dictionary.Rename_clause_text, dictionary.Margin, 2 * dictionary.Margin + dictionary.Label_height + List_height)
-			create_label (dictionary.Rename_clause_text, Margin, 2 * Margin + Label_height + List_height)
+			create_label (dictionary.Rename_clause_text, dictionary.Margin, 2 * dictionary.Margin + dictionary.Label_height + dictionary.List_height)
 			inheritance_clause_label := created_label
 			display_rename_text_boxes
 				
 				-- Add button
 			create add_button.make_button
-			a_point.set_X (Margin) 
-			a_point.set_Y (3 * Margin + 3 * Label_height + List_height)
-			--a_point.set_X (dictionary.Margin) 
-			--a_point.set_Y (3 * dictionary.Margin + 3 * dictionary.Label_height + List_height)
+			a_point.set_X (dictionary.Margin) 
+			a_point.set_Y (3 * dictionary.Margin + 3 * dictionary.Label_height + dictionary.List_height)
 			add_button.set_location (a_point)
 			add_button.set_text (dictionary.Add_button_label)
 			type := type_factory.GetType_String (dictionary.System_event_handler_type)
@@ -552,10 +311,8 @@ feature -- Basic Operations
 			
 				-- OK button			
 			create ok_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			--a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
-			a_point.set_X ((Window_width // 2) - (Margin //2) - Button_width) 
-			a_point.set_Y (Window_height - 4 * Margin - Button_height)
+			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
+			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
 			on_ok_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnOkEventHandler")
@@ -563,10 +320,8 @@ feature -- Basic Operations
 			
 				-- Cancel button
 			create cancel_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			--a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
-			a_point.set_X ((Window_width // 2) + (Margin //2))
-			a_point.set_Y (Window_height - 4 * Margin - Button_height)
+			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
+			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
 			cancel_button.set_location (a_point)
 			cancel_button.set_text (dictionary.Cancel_button_label)
 			on_cancel_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnCancelEventHandler")
@@ -593,19 +348,22 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
-			old_rename: RENAME_CLAUSE
-			new_rename: RENAME_CLAUSE
+			old_rename: ISE_REFLECTION_RENAMECLAUSE
+			new_rename: ISE_REFLECTION_RENAMECLAUSE
 			rename_clause_handler: RENAME_CLAUSE_HANDLER
 			new_inheritance_clauses: ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST]
-		do
+			support: ISE_REFLECTION_CONVERSIONSUPPORT
+		do			
 			if rename_list_view.selecteditems.count > 0 then
+				create support.make_conversionsupport
 				if rename_source_text_box.text /= Void and rename_target_text_box.text /= Void then
 					if rename_source_text_box.text.length > 0 and rename_target_text_box.text.length > 0 and not has_rename (rename_source_text_box.text, rename_target_text_box.text) then
-						create new_rename.make (rename_source_text_box.text, rename_target_text_box.text)
+						create new_rename.make_renameclause
+						new_rename.makefrominfo (rename_source_text_box.text, rename_target_text_box.text)
 						create rename_clause_handler.make (eiffel_class, parent_name, Current)
 						if source_exists (rename_source_text_box.text) then
-							old_rename := rename_clause_from_text (existing_list_item.text)
-							rename_clause_handler.remove_rename_clause (rename_clause_text_from_info (old_rename.source, old_rename.target))
+							old_rename := support.renameclausefromtext (existing_list_item.text)
+							rename_clause_handler.remove_rename_clause (rename_clause_text_from_info (old_rename.sourcename, old_rename.targetname))
 							rename_clause_handler.update_features (new_rename)
 							if rename_clause_handler.is_valid then
 								panel.controls.remove (	error_text_box)
@@ -651,9 +409,11 @@ feature -- Event handling
 			selected_items: SELECTEDLISTVIEWITEMCOLLECTION_IN_SYSTEM_WINDOWS_FORMS_LISTVIEW
 			an_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
 			i: INTEGER
-			a_rename_clause: RENAME_CLAUSE
+			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
 			item_text: STRING
+			support: ISE_REFLECTION_CONVERSIONSUPPORT
 		do
+			create support.make_conversionsupport
 			selected_items := rename_list_view.selecteditems
 			if selected_items.count = 1 then
 				from
@@ -664,9 +424,9 @@ feature -- Event handling
 					item_text := an_item.text
 					if item_text /= Void then
 						if item_text.length > 0 and not item_text.equals_string (dictionary.New_clause) then
-							a_rename_clause := rename_clause_from_text (item_text)								
-							rename_source_text_box.set_text (a_rename_clause.source)									
-							rename_target_text_box.set_text (a_rename_clause.target)
+							a_rename_clause := support.renameclausefromtext (item_text)								
+							rename_source_text_box.set_text (a_rename_clause.sourcename)									
+							rename_target_text_box.set_text (a_rename_clause.targetname)
 						elseif item_text.equals_string (dictionary.New_clause) and rename_source_text_box.text /= Void then
 							if rename_source_text_box.text.length > 0 then
 								rename_source_text_box.clear
@@ -706,7 +466,7 @@ feature -- Event handling
 
 feature -- Gui Update
 
-	update_add (a_clause: RENAME_CLAUSE) is
+	update_add (a_clause: ISE_REFLECTION_RENAMECLAUSE) is
 			-- Add `a_clause' in the list view of current inheritance clauses.
 		indexing
 			external_name: "UpdateAdd"
@@ -716,7 +476,7 @@ feature -- Gui Update
 			list_view_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
 			a_new_clause: STRING
 		do
-			a_new_clause := rename_clause_text_from_info (a_clause.source, a_clause.target)
+			a_new_clause := rename_clause_text_from_info (a_clause.sourcename, a_clause.targetname)
 			create list_view_item.make_1 (a_new_clause)
 			list_view_item := rename_list_view.items.add_listviewitem (list_view_item)
 			rename_table.add (a_new_clause, list_view_item)
@@ -727,7 +487,7 @@ feature -- Gui Update
 			panel.refresh
 		end
 
-	update_replace (an_old_clause, a_new_clause: RENAME_CLAUSE) is
+	update_replace (an_old_clause, a_new_clause: ISE_REFLECTION_RENAMECLAUSE) is
 			-- Replace `an_old_clause' from the list view of current inheritance clauses by `a_new_clause'.
 		indexing
 			external_name: "UpdateReplace"
@@ -740,12 +500,12 @@ feature -- Gui Update
 			an_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
 			new_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
 		do
-			old_text := rename_clause_text_from_info (an_old_clause.source, an_old_clause.target)
+			old_text := rename_clause_text_from_info (an_old_clause.sourcename, an_old_clause.targetname)
 			if rename_table.contains (old_text) then
 				an_item ?= rename_table.item (old_text)
 				rename_list_view.items.remove (an_item)
 				rename_table.remove (old_text)
-				new_text := rename_clause_text_from_info (a_new_clause.source, a_new_clause.target)
+				new_text := rename_clause_text_from_info (a_new_clause.sourcename, a_new_clause.targetname)
 				create new_item.make_1 (new_text)
 				new_item := rename_list_view.items.add_listviewitem (new_item)
 				rename_table.add (new_text, new_item)
@@ -768,10 +528,12 @@ feature {RENAME_CLAUSE_HANDLER} -- Basic Operations
 			non_void_target: a_target /= Void
 			not_empty_source: a_source.length > 0
 			not_empty_target: a_target.length > 0	
+		local
+			a_rename_clause: ISE_REFLECTION_RENAMECLAUSE
 		do
-			Result := a_source
-			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.As_keyword, dictionary.Space)
-			Result := Result.concat_string_string (Result, a_target)
+			create a_rename_clause.make_renameclause
+			a_rename_clause.makefrominfo (a_source, a_target)
+			Result := a_rename_clause.tostring
 		ensure
 			rename_clause_text_created: Result /= Void
 			not_empty_rename_clause_Text: Result.length > 0
@@ -804,10 +566,12 @@ feature {NONE} -- Implementation
 			as_index: INTEGER
 			source: STRING
 			target: STRING
-			rename_clause: RENAME_CLAUSE
+			rename_clause: ISE_REFLECTION_RENAMECLAUSE
 			a_list: SYSTEM_COLLECTIONS_ARRAYLIST
 			added: INTEGER
+			support: ISE_REFLECTION_CONVERSIONSUPPORT
 		do
+			create support.make_conversionsupport
 			parents := eiffel_class.parents
 			inheritance_clauses ?= parents.item (parent_name)
 			if inheritance_clauses /= Void then
@@ -820,7 +584,7 @@ feature {NONE} -- Implementation
 					loop
 						a_rename_clause ?= renames.item (i)
 						if a_rename_clause /= Void then
-							added := a_list.add (rename_clause_from_text (a_rename_clause))
+							added := a_list.add (support.renameclausefromtext (a_rename_clause))
 						end
 						i := i + 1
 					end
@@ -853,8 +617,7 @@ feature {NONE} -- Implementation
 			a_label.set_autosize (True)
 			a_label.set_borderstyle (0)
 			a_label.set_textalign (32)
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
-			create a_font.make_font_10 (dictionary.Font_family_name, Font_size, Bold_style)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
 			a_label.set_font (a_font)
 			panel.controls.add (a_label)
 			created_label := a_label
@@ -877,31 +640,26 @@ feature {NONE} -- Implementation
 			list_view_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
 			type: SYSTEM_TYPE
 			on_item_event_handler_delegate: SYSTEM_EVENTHANDLER
-			clause_text: STRING
-			rename_clause: RENAME_CLAUSE
+			rename_clause: ISE_REFLECTION_RENAMECLAUSE
 		do
 			create list_view.make_listview
-			--list_view.set_borderstyle (dictionary.List_view_border_style)
-			list_view.set_borderstyle (List_view_border_style)
+			list_view.set_borderstyle (dictionary.List_view_border_style)
 			list_view.set_checkboxes (False)
 			list_view.set_fullrowselect (True)
 			list_view.set_gridlines (False)
 			list_view.set_multiselect (False)
 			list_view.set_sorting (0)
-			--list_view.set_view (dictionary.View)
-			list_view.set_view (View)
+			list_view.set_view (dictionary.View)
 			list_view.set_activation (0)
-			--list_view.set_alignment (dictionary.Alignment)
-			list_view.set_alignment (Alignment)
+			list_view.set_alignment (dictionary.Alignment)
 			list_view.set_scrollable (True)
 			list_view.set_tabindex (0)
 			
 			a_point.set_X (x_position)
 			a_point.set_Y (y_position)
 			list_view.set_location (a_point)
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			a_size.set_width (Window_width - 2 * Margin)
-			a_size.set_height (List_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_height (dictionary.List_height)
 			list_view.set_size (a_size)	
 			create list_view_item.make_1 (dictionary.New_clause)
 			list_view_item := list_view.items.add_listviewitem (list_view_item)
@@ -912,11 +670,8 @@ feature {NONE} -- Implementation
 			loop
 				rename_clause ?= a_list.item (i)
 				if rename_clause /= Void then
-					clause_text := rename_clause.source
-					clause_text := clause_text.concat_string_string_string_string (clause_text, dictionary.Space, dictionary.As_keyword, dictionary.Space)
-					clause_text := clause_text.concat_string_string (clause_text, rename_clause.target)
-					create list_view_item.make_1 (clause_text)
-					rename_table.add (clause_text, list_view_item)
+					create list_view_item.make_1 (rename_clause.tostring)
+					rename_table.add (rename_clause.tostring, list_view_item)
 					list_view_item := list_view.items.add_listviewitem (list_view_item)
 				end				
 				i := i + 1
@@ -943,79 +698,26 @@ feature {NONE} -- Implementation
 			tmp_label.set_text (dictionary.As_keyword)
 			as_label_width := tmp_label.width
 			
-			--create_label (dictionary.As_keyword, dictionary.Window_width // 2 - as_label_width //2, 3 * dictionary.Margin + 2 * dictionary.Label_height + List_height)
-			create_label (dictionary.As_keyword, Window_width // 2 - as_label_width //2, 3 * Margin + 2 * Label_height + List_height)
+			create_label (dictionary.As_keyword, dictionary.Window_width // 2 - as_label_width //2, 3 * dictionary.Margin + 2 * dictionary.Label_height + dictionary.List_height)
 			as_label := created_label
 			
 			create rename_source_text_box.make_textbox
-			--a_point.set_x (dictionary.Margin)
-			--a_point.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height + List_height)
-			a_point.set_x (Margin)
-			a_point.set_y (2 * Margin + 2 * Label_height + List_height)
+			a_point.set_x (dictionary.Margin)
+			a_point.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height + dictionary.List_height)
 			rename_source_text_box.set_location (a_point)
 			a_size.set_width (Rename_box_width)
-			--a_size.set_height (dictionary.Label_height)
-			a_size.set_height (Label_height)
+			a_size.set_height (dictionary.Label_height)
 			rename_source_text_box.set_size (a_size)
 			panel.controls.add (rename_source_text_box)	
 
 			create rename_target_text_box.make_textbox			
-			--a_point.set_x (dictionary.Margin + created_label.width + Rename_box_width + 2 * dictionary.Margin)
-			--a_point.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height + List_height)
-			a_point.set_x (Margin + created_label.width + Rename_box_width + 2 * Margin)
-			a_point.set_y (2 * Margin + 2 * Label_height + List_height)
+			a_point.set_x (dictionary.Margin + created_label.width + Rename_box_width + 2 * dictionary.Margin)
+			a_point.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height + dictionary.List_height)
 			rename_target_text_box.set_location (a_point)
 			a_size.set_width (Rename_box_width)
-			--a_size.set_height (dictionary.Label_height)
-			a_size.set_height (Label_height)
+			a_size.set_height (dictionary.Label_height)
 			rename_target_text_box.set_size (a_size)
 			panel.controls.add (rename_target_text_box)	
-		end
-	
-	rename_clause_from_text (a_text: STRING): RENAME_CLAUSE is
-			-- Rename clause corresponding to `a_text'
-		indexing
-			external_name: "RenameClauseFromText"
-		require
-			non_void_text: a_text /= Void
-			not_empty_text: a_text.length > 0
-		local
-			as_index: INTEGER
-			source: STRING
-			target: STRING
-			test_string: STRING
-		do
-			test_string := dictionary.Space
-			test_string := test_string.concat_string_string_string (test_string, dictionary.As_keyword, dictionary.Space)
-			as_index := a_text.indexof_string_int32 (test_string, 0)
-			if as_index /= 0 then
-				source := a_text.substring_int32_int32 (0, as_index)
-				target := a_text.substring (as_index + test_string.length)	
-				create Result.make (source, target)
-			end
-		ensure
-			rename_clause_created: Result /= Void
-		end
-	
-	source_from_text (a_text: STRING): STRING is
-			-- Rename clause source from `a_text'
-		indexing
-			external_name: "SourceFromText"
-		require
-			non_void_text: a_text /= Void
-			not_empty_text: a_text.length > 0
-		local
-			test_string: STRING
-			as_index: INTEGER
-		do
-			test_string := dictionary.Space
-			test_string := test_string.concat_string_string_string (test_string, dictionary.As_keyword, dictionary.Space)
-			as_index := a_text.indexof_string_int32 (test_string, 0)
-			if as_index > 0 then
-				Result := a_text.substring_int32_int32 (0, as_index)
-			end
-		ensure
-			source_built: Result /= Void
 		end
 	
 	existing_list_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM 
@@ -1061,14 +763,16 @@ feature {NONE} -- Implementation
 			list_items: LISTVIEWITEMCOLLECTION_IN_SYSTEM_WINDOWS_FORMS_LISTVIEW
 			i: INTEGER
 			existing_source: STRING
+			support: ISE_REFLECTION_CONVERSIONSUPPORT
 		do
+			create support.make_conversionsupport
 			list_items := rename_list_view.items
 			from
 				i := 1
 			until
 				i = list_items.count or Result
 			loop
-				existing_source := source_from_text (list_items.item (i).text)
+				existing_source := support.sourcefromtext (list_items.item (i).text)
 				if existing_source.tolower.equals_string (a_source.tolower) then
 					existing_list_item := list_items.item (i)
 					Result := True
@@ -1102,15 +806,11 @@ feature {NONE} -- Implementation
 			create error_text_box.make_textbox
 			error_text_box.set_forecolor (dictionary.Red_color)
 			error_text_box.set_text (a_message)
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			--a_size.set_height (dictionary.Label_height)
-			a_size.set_width (Window_width - 2 * Margin)
-			a_size.set_height (Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_height (dictionary.Label_height)
 			error_text_box.set_size (a_size)
-			--a_point.set_x (dictionary.Margin)
-			--a_point.set_y (4 * dictionary.Margin + 4 * dictionary.Label_height + dictionary.List_height)
-			a_point.set_x (Margin)
-			a_point.set_y (4 * Margin + 4 * Label_height + List_height)
+			a_point.set_x (dictionary.Margin)
+			a_point.set_y (4 * dictionary.Margin + 4 * dictionary.Label_height + dictionary.List_height)
 			error_text_box.set_location (a_point)
 			panel.controls.add (error_text_box)
 		end

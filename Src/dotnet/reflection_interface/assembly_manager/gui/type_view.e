@@ -100,18 +100,6 @@ feature -- Access
 		indexing
 			external_name: "EiffelDictionary"
 		end
-	
-	type_modifications: TYPE_MODIFICATIONS is
-			-- Type modifications
-		indexing
-			external_name: "TypeModifications"
-		once
-			create Result.make
-			--Result.set_full_external_name (eiffel_class.fullexternalname)
-		ensure
-			type_modifications_created: Result /= Void
-			--full_external_name_set: Result.full_external_name.equals_string (eiffel_class.fullexternalname)
-		end
 		
 	ok_button: SYSTEM_WINDOWS_FORMS_BUTTON
 			-- OK button
@@ -161,134 +149,6 @@ feature -- Access
 			external_name: "ErrorTextBox"
 		end
 		
-feature -- Constants
-	
-	Border_style: INTEGER is 3
-			-- Window border style: a fixed, single line border
-		indexing
-			external_name: "BorderStyle"
-		end
-			
-	Window_width: INTEGER is 800
-			-- Window width
-		indexing
-			external_name: "WindowWidth"
-		end
-
-	Window_height: INTEGER is 600
-			-- Window height
-		indexing
-			external_name: "WindowHeight"
-		end
-	
-	Margin: INTEGER is 10
-			-- Margin
-		indexing
-			external_name: "Margin"
-		end
-
-	Label_height: INTEGER is 20
-			-- Label height
-		indexing
-			external_name: "LabelHeight"
-		end
-		
-	Label_font_size: REAL is 10.0
-			-- Label font size
-		indexing
-			external_name: "LabelFontSize"
-		end
-	
-	Font_size: REAL is 8.0
-			-- Font size
-		indexing
-			external_name: "FontSize"
-		end
-		
-	Bold_style: INTEGER is 1
-			-- Bold style
-		indexing
-			external_name: "BoldStyle"
-		end
-
-	Regular_style: INTEGER is 0
-			-- Regular style
-		indexing
-			external_name: "RegularStyle"
-		end
-
-	Italic_style: INTEGER is 2
-			-- Italic style
-		indexing
-			external_name: "ItalicStyle"
-		end
-		
-	Button_height: INTEGER is 23
-			-- Button height
-		indexing
-			external_name: "ButtonHeight"
-		end
-	
-	Button_width: INTEGER is 75
-			-- Button height
-		indexing
-			external_name: "ButtonWidth"
-		end
-	
-	Initialization: INTEGER is 1
-			-- Constant corresponding to initialization feature clause
-		indexing
-			external_name: "Initialization"
-		end
-
-	Access: INTEGER is 2
-			-- Constant corresponding to access feature clause
-		indexing
-			external_name: "Access"
-		end	
-
-	Element_change: INTEGER is 3
-			-- Constant corresponding to element change feature clause
-		indexing
-			external_name: "ElementChange"
-		end
-
-	Basic_operations: INTEGER is 4
-			-- Constant corresponding to basic operations feature clause
-		indexing
-			external_name: "BasicOperations"
-		end		
-
-	Unary_operators: INTEGER is 5
-			-- Constant corresponding to unary operators feature clause
-		indexing
-			external_name: "UnaryOperators"
-		end
-
-	Binary_operators: INTEGER is 6
-			-- Constant corresponding to binary operators feature clause
-		indexing
-			external_name: "BinaryOperators"
-		end	
-
-	Specials: INTEGER is 7
-			-- Constant corresponding to specials feature clause
-		indexing
-			external_name: "Specials"
-		end	
-
-	Implementation: INTEGER is 8
-			-- Constant corresponding to implementation feature clause
-		indexing
-			external_name: "Implementation"
-		end	
-
-	Align_left: INTEGER is 32
-			-- Left alignment
-		indexing
-			external_name: "AlignLeft"
-		end
-		
 feature -- Basic Operations
 
 	initialize_gui is
@@ -305,29 +165,22 @@ feature -- Basic Operations
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			--set_borderstyle (dictionary.Border_style)
-			--a_size.set_Width (dictionary.Window_width)
-			--a_size.set_Height (dictionary.Window_height)
-			set_borderstyle (Border_style)
-			a_size.set_Width (Window_width)
-			a_size.set_Height (Window_height)
+			set_borderstyle (dictionary.Border_style)
+			a_size.set_Width (dictionary.Window_width)
+			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 
 				-- `Selected assembly: '
-			--create_form_label (assembly_descriptor.name, dictionary.Margin, dictionary.Margin)
-			create_form_label (assembly_descriptor.name, Margin, Margin)
-			--create_form_label (dictionary.Assembly_description (assembly_descriptor), dictionary.Margin, dictionary.Margin + dictionary.Label_height)
-			create_form_label (dictionary.Assembly_description (assembly_descriptor), Margin, Margin + Label_height)
+			create_form_label (assembly_descriptor.name, dictionary.Margin, dictionary.Margin)
+			create_form_label (dictionary.Assembly_description (assembly_descriptor), dictionary.Margin, dictionary.Margin + dictionary.Label_height)
 				
 				-- Build editable class
 			build_class_contract_form (eiffel_class)
 			
 				-- OK button
 			create ok_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			--a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
-			a_point.set_X ((Window_width // 2) - (Margin //2) - Button_width) 
-			a_point.set_Y (Window_height - 4 * Margin - Button_height)
+			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
+			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
 			ok_button.set_location (a_point)
 			ok_button.set_text (dictionary.Ok_button_label)
 			type := type_factory.GetType_String (dictionary.System_event_handler_type)
@@ -336,10 +189,8 @@ feature -- Basic Operations
 
 				-- Cancel button
 			create cancel_button.make_button
-			--a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			--a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
-			a_point.set_X ((Window_width // 2) + (Margin //2))
-			a_point.set_Y (Window_height - 4 * Margin - Button_height)
+			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
+			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
 			cancel_button.set_location (a_point)
 			cancel_button.set_text (dictionary.Cancel_button_label)
 			on_cancel_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnCancelEventHandler")
@@ -676,15 +527,11 @@ feature {NONE} -- Implementation
 			type: SYSTEM_TYPE
 		do
 			create panel.make_panel
-			--a_position.set_x (dictionary.Margin)
-			--a_position.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height)
-			a_position.set_x (Margin)
-			a_position.set_y (2 * Margin + 2 * Label_height)
+			a_position.set_x (dictionary.Margin)
+			a_position.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height)
 			panel.set_location (a_position)
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			--a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 4 * dictionary.Label_height - dictionary.Button_height)
-			a_size.set_width (Window_width - 2 *  Margin)
-			a_size.set_height (Window_height - 6 * Margin - 4 * Label_height - Button_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 4 * dictionary.Label_height - dictionary.Button_height)
 			panel.set_size (a_size)
 			panel.set_borderstyle (0)
 			panel.set_backcolor (dictionary.White_color)
@@ -692,35 +539,29 @@ feature {NONE} -- Implementation
 			controls.add (panel)
 			
 				-- Indexing clause
-			--create_label (eiffel_dictionary.Indexingkeyword, dictionary.Margin, dictionary.Margin, dictionary.Keyword_color, True)	
-			create_label (eiffel_dictionary.Indexingkeyword, Margin, Margin, dictionary.Keyword_color, True)	
+			create_label (eiffel_dictionary.Indexingkeyword, dictionary.Margin, dictionary.Margin, dictionary.Keyword_color, True)	
 			
 				-- External name
 			an_external_clause := eiffel_dictionary.Externalnamekeyword
 			an_external_clause := an_external_clause.concat_string_string (an_external_clause, eiffel_dictionary.Colon)
-			--create_label (an_external_clause, 3 * dictionary.Margin, dictionary.Margin + dictionary.Label_height, dictionary.Keyword_color, True)
-			create_label (an_external_clause, 3 * Margin, Margin + Label_height, dictionary.Keyword_color, True)	
+			create_label (an_external_clause, 3 * dictionary.Margin, dictionary.Margin + dictionary.Label_height, dictionary.Keyword_color, True)
 			
 			create formatter.make_formatter
 			an_external_name := eiffel_dictionary.Invertedcomma
 			an_external_name := an_external_name.concat_string_string_string (an_external_name, formatter.formatstrongname (an_eiffel_class.fullexternalname), eiffel_dictionary.Invertedcomma)
-			--create_label (an_external_name, 3 * dictionary.Margin + label_width, dictionary.Margin + dictionary.Label_height, dictionary.Comment_color, False)
-			create_label (an_external_name, 3 * Margin + label_width, Margin + Label_height, dictionary.Comment_color, False)
+			create_label (an_external_name, 3 * dictionary.Margin + label_width, dictionary.Margin + dictionary.Label_height, dictionary.Comment_color, False)
 			
 				-- frozen
 			if an_eiffel_class.IsFrozen then
-				--create_label (eiffel_dictionary.Frozenkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
-				create_label (eiffel_dictionary.Frozenkeyword, Margin, 2 * Margin + 2 * Label_height, dictionary.Keyword_color, True)
+				create_label (eiffel_dictionary.Frozenkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			end				
 				-- expanded
 			if an_eiffel_class.IsExpanded then
-				--create_label (eiffel_dictionary.Expandedkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
-				create_label (eiffel_dictionary.Expandedkeyword, Margin, 2 * Margin + 2 * Label_height, dictionary.Keyword_color, True)
+				create_label (eiffel_dictionary.Expandedkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			end
 				-- deferred
 			if an_eiffel_class.IsDeferred then
-				--create_label (eiffel_dictionary.Deferredkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
-				create_label (eiffel_dictionary.Deferredkeyword, Margin, 2 * Margin + 2 * Label_height, dictionary.Keyword_color, True)
+				create_label (eiffel_dictionary.Deferredkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			end
 			
 				-- external class
@@ -728,23 +569,19 @@ feature {NONE} -- Implementation
 			if an_eiffel_class.isfrozen or an_eiffel_class.isdeferred or an_eiffel_class.isexpanded then
 				external_class :=	eiffel_dictionary.Externalkeyword
 				external_class := external_class.concat_string_string_string (external_class, eiffel_dictionary.Space, eiffel_dictionary.Classkeyword)
-				--create_label (external_class, dictionary.Margin + dictionary.label_width, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
-				create_label (external_class, Margin + label_width, 2 * Margin + 2 * Label_height, dictionary.Keyword_color, True)
+				create_label (external_class, dictionary.Margin + label_width, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			else
-				--create_label (eiffel_dictionary.Classkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
-				create_label (eiffel_dictionary.Classkeyword, Margin, 2 * Margin + 2 * Label_height, dictionary.Keyword_color, True)
+				create_label (eiffel_dictionary.Classkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			end
 			create class_name_text_box.make_textbox
-			--set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, dictionary.Window_width - 5 * dictionary.Margin, dictionary.Class_color)
-			set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * Margin, 2 * Margin + 3 * Label_height, Window_width - 5 * Margin, dictionary.Class_color)
+			set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, dictionary.Window_width - 5 * dictionary.Margin, dictionary.Class_color)
 			type := type_factory.GetType_String (dictionary.System_event_handler_type)
 			on_class_name_enter_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnEnterEventHandler")
 			class_name_text_box.add_gotfocus (on_class_name_enter_event_handler_delegate)
 			on_class_name_leave_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnClassNameLeaveEventHandler")
 			class_name_text_box.add_lostfocus (on_class_name_leave_event_handler_delegate)
 			
-			--panel_height := 2 * Margin + 4 * dictionary.Label_height
-			panel_height := 2 * Margin + 4 * Label_height
+			panel_height := 2 * dictionary.Margin + 4 * dictionary.Label_height
 			
 				-- inherit
 				-- 	PARENT_NAME
@@ -765,10 +602,8 @@ feature {NONE} -- Implementation
 			end_class := eiffel_dictionary.Endkeyword
 			end_class := end_class.concat_string_string_string_string (end_class, eiffel_dictionary.Space, eiffel_dictionary.Dashes, eiffel_dictionary.Space)
 			end_class := end_class.concat_string_string (end_class, eiffel_dictionary.Classkeyword)
-			--create_label (end_class, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-			create_label (end_class, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-			--create_label (an_eiffel_class.eiffelname.toupper, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
-			create_label (an_eiffel_class.eiffelname.toupper, Margin + label_width, panel_height + Margin, dictionary.Class_color, False)
+			create_label (end_class, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+			create_label (an_eiffel_class.eiffelname.toupper, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
 			end_class_name_label := created_label
 		end
 	
@@ -798,11 +633,9 @@ feature {NONE} -- Implementation
 			a_label.set_textalign (32)
 			a_label.set_forecolor (a_color)
 			if is_bold_font then 
-				--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
-				create a_font.make_font_10 (dictionary.Font_family_name, Font_size, Bold_style)
+				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
 			else
-				--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
-				create a_font.make_font_10 (dictionary.Font_family_name, Font_size, Regular_style)
+				create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style)
 			end
 			a_label.set_font (a_font)
 			panel.controls.add (a_label)
@@ -832,11 +665,8 @@ feature {NONE} -- Implementation
 			a_label.set_text (a_text)	
 			a_label.set_autosize (True)
 			a_label.set_borderstyle (0)
---			a_label.set_textalign (dictionary.Align_left)
-			a_label.set_textalign (Align_left)
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style)				
-			create a_font.make_font_10 (dictionary.Font_family_name, Label_font_size, Bold_style)
-			a_label.set_font (a_font)
+			a_label.set_textalign (dictionary.Align_left)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style)						a_label.set_font (a_font)
 			--label_width := a_label.width
 			--created_label := a_label
 			controls.add (a_label)
@@ -892,14 +722,13 @@ feature {NONE} -- Implementation
 			a_point.set_Y (y_position)
 			a_text_box.set_location (a_point)
 			a_text_box.set_text (a_text)
-			a_size.set_height (Label_height)
+			a_size.set_height (dictionary.Label_height)
 			a_size.set_width (a_width)
 			a_text_box.set_size (a_size)
 			a_text_box.set_borderstyle (0)
 			a_text_box.set_textalign (0)
 			a_text_box.set_forecolor (a_color)
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
-			create a_font.make_font_10 (dictionary.Font_family_name, Font_size, Italic_style)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
 			a_text_box.set_font (a_font)
 			panel.controls.add (a_text_box)
 		end
@@ -921,7 +750,6 @@ feature {NONE} -- Implementation
 			select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			formatted_parents: ARRAY [STRING]
 			i: INTEGER
-			--parent_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			on_parent_event_handler_delegate: SYSTEM_EVENTHANDLER
 			type: SYSTEM_TYPE
 		do
@@ -929,10 +757,8 @@ feature {NONE} -- Implementation
 			parents := an_eiffel_class.Parents
 			
 			if parents.Count > 1 or has_any_in_clause or (parents.Count = 1 and (not parents.Contains (eiffel_dictionary.Anyclass))) then
-				--create_label (eiffel_dictionary.Inheritkeyword, dictionary.Margin, dictionary.Margin + panel_height, dictionary.Keyword_color, True)
-				create_label (eiffel_dictionary.Inheritkeyword, Margin, Margin + panel_height, dictionary.Keyword_color, True)
-				--panel_height := panel_height + dictionary.Label_height + Margin
-				panel_height := panel_height + Label_height + Margin
+				create_label (eiffel_dictionary.Inheritkeyword, dictionary.Margin, dictionary.Margin + panel_height, dictionary.Keyword_color, True)
+				panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 				
 				parents_names := parents.Keys
 				enumerator := parents_names.GetEnumerator
@@ -961,82 +787,64 @@ feature {NONE} -- Implementation
 					a_parent := formatted_parents.item (i)
 					if a_parent /= Void then
 						if (not a_parent.equals_string (eiffel_dictionary.Anyclass)) or has_any_in_clause then
-							--create_label (a_parent, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
-							create_label (a_parent, 3 * Margin, panel_height, dictionary.Class_color, False)
-
+							create_label (a_parent, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
 							type := type_factory.GetType_String (dictionary.System_event_handler_type)
 							on_parent_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnParentEventHandler")
 							created_label.add_Click (on_parent_event_handler_delegate)
-							--parent_text_box.add_Click (on_parent_event_handler_delegate)
 						end
 					end
-					--panel_height := panel_height + dictionary.Label_height
-					panel_height := panel_height + Label_height
+					panel_height := panel_height + dictionary.Label_height
 					
 					inheritance_clauses ?= parents.Item (a_parent)
 					if inheritance_clauses /= Void then
 							-- rename clauses
 						if inheritance_clauses.Item (0).Count > 0 then
-							--create_label (eiffel_dictionary.Renamekeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
-							create_label (eiffel_dictionary.Renamekeyword, 6 * Margin, panel_height, dictionary.Keyword_color, True)
+							create_label (eiffel_dictionary.Renamekeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 							rename_clauses := inheritance_clauses.Item (0)
 							if rename_clauses /= Void and then rename_clauses.Count > 0 then
-								--panel_height := panel_height + dictionary.Label_height
-								panel_height := panel_height + Label_height
+								panel_height := panel_height + dictionary.Label_height
 								build_inheritance_clauses (rename_clauses, rename_boxes, i)
-								--panel_height := rename_clauses.count * dictionaryLabel_height + panel_height
-								panel_height := rename_clauses.count * Label_height + panel_height
+								panel_height := rename_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
 
 							-- undefine clauses
 						if inheritance_clauses.Item (1).Count > 0 then
-							--create_label (eiffel_dictionary.Undefinekeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
-							create_label (eiffel_dictionary.Undefinekeyword, 6 * Margin, panel_height, dictionary.Keyword_color, True)
+							create_label (eiffel_dictionary.Undefinekeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 							undefine_clauses := inheritance_clauses.Item (1)
 							if undefine_clauses /= Void and then undefine_clauses.Count > 0 then
-								--panel_height := panel_height + dictionary.Label_height
-								panel_height := panel_height + Label_height
+								panel_height := panel_height + dictionary.Label_height
 								build_inheritance_clauses (undefine_clauses, undefine_boxes, i)
-								--panel_height := undefine_clauses.count * dictionary.Label_height + panel_height
-								panel_height := undefine_clauses.count * Label_height + panel_height
+								panel_height := undefine_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
 
 							-- redefine clauses
 						if inheritance_clauses.Item (2).Count > 0 then
-							--create_label (eiffel_dictionary.Redefinekeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
-							create_label (eiffel_dictionary.Redefinekeyword, 6 * Margin, panel_height, dictionary.Keyword_color, True)
+							create_label (eiffel_dictionary.Redefinekeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 							redefine_clauses := inheritance_clauses.Item (2)
 							if redefine_clauses /= Void and then redefine_clauses.Count > 0 then
-								--panel_height := panel_height + dictionary.Label_height
-								panel_height := panel_height + Label_height
+								panel_height := panel_height + dictionary.Label_height
 								build_inheritance_clauses (redefine_clauses, redefine_boxes, i)
-								--panel_height := redefine_clauses.count * dictionary.Label_height + panel_height
-								panel_height := redefine_clauses.count * Label_height + panel_height
+								panel_height := redefine_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
 
 							-- select clauses
 						if inheritance_clauses.Item (3).Count > 0 then
-							--create_label (eiffel_dictionary.Selectkeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
-							create_label (eiffel_dictionary.Selectkeyword, 6 * Margin, panel_height, dictionary.Keyword_color, True)
+							create_label (eiffel_dictionary.Selectkeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 							select_clauses := inheritance_clauses.Item (3)
 							if select_clauses /= Void and then select_clauses.Count > 0 then
-								--panel_height := panel_height + dictionary.Label_height
-								panel_height := panel_height + Label_height
+								panel_height := panel_height + dictionary.Label_height
 								build_inheritance_clauses (select_clauses, select_boxes, i)
-								--panel_height := redefine_clauses.count * dictionary.Label_height + panel_height
-								panel_height := select_clauses.count * Label_height + panel_height
+								panel_height := select_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
 						
 							-- Add `end' keyword at the end of inheritance clauses
 						if inheritance_clauses.Item (0).Count > 0 or inheritance_clauses.Item (1).Count > 0 or inheritance_clauses.Item (2).Count > 0 or inheritance_clauses.item (3).count > 0 then
-							--create_label (eiffel_dictionary.Endkeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
-							--panel_height := panel_height + dictionary.Label_height
-							create_label (eiffel_dictionary.Endkeyword, 6 * Margin, panel_height, dictionary.Keyword_color, True)
-							panel_height := panel_height + Label_height
+							create_label (eiffel_dictionary.Endkeyword, 6 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
+							panel_height := panel_height + dictionary.Label_height
 						end						
 					end
 					i := i - 1
@@ -1078,7 +886,7 @@ feature {NONE} -- Implementation
 			valid_parent_number: parent_number >= 0
 		local
 			i: INTEGER
-			a_clause: STRING
+			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
 			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			array: ARRAY [INTEGER]
 		do
@@ -1087,14 +895,12 @@ feature {NONE} -- Implementation
 				i = clauses.Count
 			loop
 				a_clause ?= clauses.Item (i)
-				if a_clause /= Void and then a_clause.Length > 0 then
+				if a_clause /= Void then
 					create a_text_box.make_textbox
 					if i < (clauses.Count - 1) then
-						--create_label (a_clause.concat_string_string (a_clause, eiffel_dictionary.Comma), 9 * dictionary.Margin, panel_height + i* dictionary.Label_height, dictionary.Text_color, False)
-						create_label (a_clause.concat_string_string (a_clause, eiffel_dictionary.Comma), 9 * Margin, panel_height + i* Label_height, dictionary.Text_color, False)
+						create_label (a_clause.tostring.concat_string_string (a_clause.tostring, eiffel_dictionary.Comma), 9 * dictionary.Margin, panel_height + i* dictionary.Label_height, dictionary.Text_color, False)
 					else
-						--create_label (a_clause, 9 * dictionary.Margin, panel_height + i* dictionary.Label_height, dictionary.Text_color, False)
-						create_label (a_clause, 9 * Margin, panel_height + i* Label_height, dictionary.Text_color, False)
+						create_label (a_clause.tostring, 9 * dictionary.Margin, panel_height + i* dictionary.Label_height, dictionary.Text_color, False)
 					end
 					create array.make (2)
 					array.put (0, parent_number)
@@ -1137,10 +943,8 @@ feature {NONE} -- Implementation
 			if an_eiffel_class.CreationRoutines.Count > 0 and not an_eiffel_class.IsDeferred and not is_special_class (an_eiffel_class) then			
 					-- Do not generate creation clause for expanded classes
 				if not an_eiffel_class.IsExpanded then
-					--create_label (eiffel_dictionary.Createkeyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-					--panel_height := panel_height + dictionary.Label_height + dictionary.Margin
-					create_label (eiffel_dictionary.Createkeyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-					panel_height := panel_height + Label_height + Margin
+					create_label (eiffel_dictionary.Createkeyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+					panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 					from
 						i := 0
 						create creation_routines_boxes.make
@@ -1151,58 +955,38 @@ feature {NONE} -- Implementation
 						if a_routine /= Void and then a_routine.Length > 0 then
 							create a_text_box.make_textbox
 							if i < (creation_routines.Count - 1) then
-								create_label (a_routine.concat_string_string (a_routine, eiffel_dictionary.Comma), 3 * Margin, panel_height + i * Label_height, dictionary.Feature_color, False)
+								create_label (a_routine.concat_string_string (a_routine, eiffel_dictionary.Comma), 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
 							else
-								create_label (a_routine, 3 * Margin, panel_height + i * Label_height, dictionary.Feature_color, False)
+								create_label (a_routine, 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
 							end
 							creation_routines_boxes.add (a_text_box, i)
 						end
 						i := i + 1
 					end
-					--panel_height := panel_height + dictionary.Label_height * creation_routines.count
-					panel_height := panel_height + Label_height * creation_routines.count
+					panel_height := panel_height + dictionary.Label_height * creation_routines.count
 				end				
 			elseif an_eiffel_class.CreationRoutines.Count = 0 and not an_eiffel_class.IsDeferred and an_eiffel_class.CreateNone then
-				--create_label (eiffel_dictionary.Createkeyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--new_label_width := dictionary.Margin + label_width
-				--create_label (Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				create_label (eiffel_dictionary.Createkeyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				new_label_width := Margin + label_width
-				--create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + Margin, dictionary.Text_color, False)
+				create_label (eiffel_dictionary.Createkeyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
-				--create_label (dictionary.None_class, new_label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
-				create_label (dictionary.None_class, new_label_width, panel_height + Margin, dictionary.Class_color, False)
+				create_label (dictionary.None_class, new_label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
 				new_label_width := new_label_width + label_width
-				--create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + Margin, dictionary.Text_color, False)
-				--panel_height := panel_height + dictionary.Label_height + dictionary.Margin
-				panel_height := panel_height + Label_height + Margin
+				create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
+				panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 			end
 			
 			if an_eiffel_class.InitializationFeatures.Count > 0 and not an_eiffel_class.IsDeferred and not is_special_class (an_eiffel_class) then
 					-- Generate initialization feature clause.
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--new_label_width := dictionary.Margin + label_width
-				--create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				--new_label_width := new_label_width + label_width
-				--create_label (dictionary.None_class, new_label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
-				--new_label_width := new_label_width + label_width
-				--create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
-				--new_label_width := new_label_width + label_width
-				--create_label (dictionary.Initialization_comment, new_label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				new_label_width := Margin + label_width
-				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + Margin, dictionary.Text_color, False)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				new_label_width := dictionary.Margin + label_width
+				create_label (dictionary.Opening_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
-				create_label (dictionary.None_class, new_label_width, panel_height + Margin, dictionary.Class_color, False)
+				create_label (dictionary.None_class, new_label_width, panel_height + dictionary.Margin, dictionary.Class_color, False)
 				new_label_width := new_label_width + label_width
-				create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + Margin, dictionary.Text_color, False)
+				create_label (dictionary.Closing_curl_bracket, new_label_width, panel_height + dictionary.Margin, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
-				create_label (dictionary.Initialization_comment, new_label_width, panel_height + Margin, dictionary.Comment_color, False)
-
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				panel_height := panel_height + 2 * Margin + Label_height
+				create_label (dictionary.Initialization_comment, new_label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
 				initialization_features := an_eiffel_class.InitializationFeatures
 				from
 					i := 0
@@ -1211,8 +995,7 @@ feature {NONE} -- Implementation
 				loop
 					a_feature ?= initialization_features.Item (i)
 					if a_feature /= Void then
-						--build_eiffel_feature (an_eiffel_class, a_feature, dictionary.Initialization, i)
-						build_eiffel_feature (an_eiffel_class, a_feature, Initialization, i)
+						build_eiffel_feature (an_eiffel_class, a_feature, dictionary.Initialization, i)
 					end
 					i := i + 1
 				end			
@@ -1258,92 +1041,64 @@ feature {NONE} -- Implementation
 				-- Generate access feature clause.
 			access_features := an_eiffel_class.AccessFeatures
 			if access_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Access_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Access_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height
-				--intern_build_class_features (an_eiffel_class, access_features, dictionary.Access)
-				intern_build_class_features (an_eiffel_class, access_features, Access)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Access_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
+				intern_build_class_features (an_eiffel_class, access_features, dictionary.Access)
 			end	
 				
 				-- Generate element change feature clause.
 			element_change_features := an_eiffel_class.ElementChangeFeatures
 			if element_change_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Element_change_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Element_change_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height				
-				--intern_build_class_features (an_eiffel_class, element_change_features, dictionary.Element_change)
-				intern_build_class_features (an_eiffel_class, element_change_features, Element_change)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Element_change_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height				
+				intern_build_class_features (an_eiffel_class, element_change_features, dictionary.Element_change)
 			end					
 
 				-- Generate basic operations feature clause.
 			basic_operations_features := an_eiffel_class.BasicOperations
 			if basic_operations_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Basic_operations_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Basic_operations_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height
-				--intern_build_class_features (an_eiffel_class, basic_operations_features, dictionary.Basic_operations)
-				intern_build_class_features (an_eiffel_class, basic_operations_features, Basic_operations)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Basic_operations_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
+				intern_build_class_features (an_eiffel_class, basic_operations_features, dictionary.Basic_operations)
 			end	
 
 				-- Generate unary operators feature clause.
 			unary_operators_features := an_eiffel_class.UnaryOperatorsFeatures
 			if unary_operators_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Unary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Unary_operators_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height
-				--intern_build_class_features (an_eiffel_class, unary_operators_features, dictionary.Unary_operators)
-				intern_build_class_features (an_eiffel_class, unary_operators_features, Unary_operators)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Unary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
+				intern_build_class_features (an_eiffel_class, unary_operators_features, dictionary.Unary_operators)
 			end	
 
 				-- Generate binary operators feature clause.
 			binary_operators_features := an_eiffel_class.BinaryOperatorsFeatures
 			if binary_operators_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Binary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Binary_operators_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height
-				--intern_build_class_features (an_eiffel_class, binary_operators_features, dictionary.Binary_operators)
-				intern_build_class_features (an_eiffel_class, binary_operators_features, Binary_operators)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Binary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
+				intern_build_class_features (an_eiffel_class, binary_operators_features, dictionary.Binary_operators)
 			end	
 
 				-- Generate specials feature clause.
 			specials_features := an_eiffel_class.SpecialFeatures
 			if specials_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Specials_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Specials_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height
-				--intern_build_class_features (an_eiffel_class, specials_features, dictionary.Specials)
-				intern_build_class_features (an_eiffel_class, specials_features, Specials)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Specials_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
+				intern_build_class_features (an_eiffel_class, specials_features, dictionary.Specials)
 			end	
 
 				-- Generate implementation feature clause.
 			implementation_features := an_eiffel_class.ImplementationFeatures
 			if implementation_features.Count > 0 then
-				--create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
-				--create_label (dictionary.Implementation_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
-				--panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				create_label (dictionary.Feature_keyword, Margin, panel_height + Margin, dictionary.Keyword_color, True)
-				create_label (dictionary.Implementation_comment, Margin + label_width, panel_height + Margin, dictionary.Comment_color, False)
-				panel_height := panel_height + 2 * Margin + Label_height
-				--intern_build_class_features (an_eiffel_class, implementation_features, dictionary.Implementation)
-				intern_build_class_features (an_eiffel_class, implementation_features, Implementation)
+				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
+				create_label (dictionary.Implementation_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
+				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
+				intern_build_class_features (an_eiffel_class, implementation_features, dictionary.Implementation)
 			end
 		end
 
@@ -1355,7 +1110,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_list: a_list /= Void
 			non_void_eiffel_class: an_eiffel_class /= Void
-			valid_feature_clause: feature_clause >= Initialization and feature_clause <= Implementation
+			valid_feature_clause: feature_clause >= dictionary.Initialization and feature_clause <= dictionary.Implementation
 		local
 			i: INTEGER
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
@@ -1367,8 +1122,7 @@ feature {NONE} -- Implementation
 				a_feature ?= a_list.Item (i)
 				if a_feature /= Void and then (a_feature.EiffelName /= Void and a_feature.EiffelName.Length > 0) then
 					build_eiffel_feature (an_eiffel_class, a_feature, feature_clause, i)
-					--panel_height := panel_height + dictionary.Margin
-					panel_height := panel_height + Margin
+					panel_height := panel_height + dictionary.Margin
 				end
 				i := i + 1
 			end		
@@ -1382,8 +1136,7 @@ feature {NONE} -- Implementation
 			non_void_feature: a_feature /= Void
 			non_void_feature_name: a_feature.EiffelName /= Void
 			not_empty_feature_name: a_feature.EiffelName.Length > 0
-			--valid_feature_clause: feature_clause >= dictionary.Initialization and feature_clause <= dictionary.Implementation
-			valid_feature_clause: feature_clause >= Initialization and feature_clause <= Implementation
+			valid_feature_clause: feature_clause >= dictionary.Initialization and feature_clause <= dictionary.Implementation
 			valid_feature_number: feature_number >= 0
 			non_void_eiffel_class: an_eiffel_class /= Void
 		local
@@ -1394,7 +1147,7 @@ feature {NONE} -- Implementation
 			feature_name_width: INTEGER
 			arguments: SYSTEM_COLLECTIONS_ARRAYLIST
 			i: INTEGER
-			an_argument: ARRAY [STRING]
+			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
 			argument_name: STRING
 			argument_type: STRING
 			argument_name_width: INTEGER
@@ -1406,20 +1159,17 @@ feature {NONE} -- Implementation
 		do
 			is_unary_operator := an_eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)	
 			label_width := 0
-			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
-			create a_font.make_font_10 (dictionary.Font_family_name, Font_size, Italic_style)
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
 			
 				-- frozen
 			if a_feature.IsFrozen then
-				--create_label (eiffel_dictionary.Frozenkeyword, 3 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
-				create_label (eiffel_dictionary.Frozenkeyword, 3 * Margin, panel_height, dictionary.Keyword_color, True)
+				create_label (eiffel_dictionary.Frozenkeyword, 3 * dictionary.Margin, panel_height, dictionary.Keyword_color, True)
 			end
 				
 				-- feature name
 			create a_text_box.make_textbox
 			create tmp_label.make_label
-			--new_label_width := 3 * dictionary.Margin + label_width
-			new_label_width := 3 * Margin + label_width
+			new_label_width := 3 * dictionary.Margin + label_width
 			if is_unary_operator and a_feature.IsPrefix then				
 				create_label (eiffel_dictionary.Prefixkeyword, new_label_width, panel_height, dictionary.Keyword_color, True)
 				new_label_width := new_label_width + label_width
@@ -1468,11 +1218,9 @@ feature {NONE} -- Implementation
 					i = arguments.Count 
 				loop
 					an_argument ?= arguments.Item (i)
-					if an_argument /= Void then
-						if an_argument.Count = 4 then
-							argument_name := an_argument.Item (0)
-							argument_type := an_argument.Item (2)
-						end
+					if an_argument /= Void then						
+						argument_name := an_argument.eiffelname
+						argument_type := an_argument.typeeiffelname
 					end
 					create a_text_box.make_textbox		
 					argument_name_width := text_box_width_from_text (argument_name, a_font)				
@@ -1513,7 +1261,7 @@ feature {NONE} -- Implementation
 				return_type_width := text_box_width_from_text (a_feature.returntype.typeeiffelname, a_font)
 				set_editable_text_box_properties (a_text_box, a_feature.returntype.typeeiffelname, new_label_width, panel_height, return_type_width, dictionary.Class_color)
 			end
-			panel_height := panel_height + Label_height
+			panel_height := panel_height + dictionary.Label_height
 		end	
 	
 	type_view_handler: TYPE_VIEW_HANDLER
@@ -1536,16 +1284,11 @@ feature {NONE} -- Implementation
 			create error_text_box.make_textbox
 			error_text_box.set_forecolor (dictionary.Red_color)
 			error_text_box.set_text (a_message)
-			--a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			--a_size.set_height (dictionary.Label_height)
-			a_size.set_width (Window_width - 2 * Margin)
-			a_size.set_height (Label_height)
+			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
+			a_size.set_height (dictionary.Label_height)
 			error_text_box.set_size (a_size)
-			--a_point.set_x (dictionary.Margin)
-			--a_point.set_y (Window_height - 5 * dictionary.Margin - dictionary.Label_height - dictionary.Button_height)
-			a_point.set_x (Margin)
-			a_point.set_y (Window_height - 5 * Margin - Label_height - Button_height)
-			
+			a_point.set_x (dictionary.Margin)
+			a_point.set_y (dictionary.Window_height - 5 * dictionary.Margin - dictionary.Label_height - dictionary.Button_height)	
 			error_text_box.set_location (a_point)
 			controls.add (error_text_box)
 		end

@@ -11,8 +11,10 @@ inherit
 	CHECK_BOX_I
 
 	BOX_WINDOWS
+		rename
+			make as row_column_make
 		redefine
-			realize_children
+			class_name
 		end
 
 creation
@@ -24,59 +26,21 @@ feature {NONE} -- Initalization
 			-- Make a check box.
 		do
 			!! private_attributes
-			parent ?= oui_parent.implementation;
-			!! toggle_list.make;
+			parent ?= oui_parent.implementation
+			!! toggle_list.make
+			initialize
+			set_margin_width (5)
+			set_margin_height (5)
 			managed := man
-			set_form_width (Minimum_width)
+			set_same_size
 		end
 
 feature {NONE} -- Implementation
 
-	realize_current is
-			-- Realize current and the children.
-		local
-			wc: WEL_COMPOSITE_WINDOW
-		do
-			if not exists then
-				wc ?= parent
-				wel_make (wc, "", x, y, width, height, id_default)
-				realize_children
-			end
-		end
-
-	realize_children is
-			-- Realize the children.
-		local
-			tb: TOGGLE_B_WINDOWS;
-			c: CURSOR
-			wc: WEL_COMPOSITE_WINDOW
-		do
-			if not exists then
-				wc ?= parent
-				wel_make (wc, "", x, y, width, height, id_default)
-			end;
-			from
-				c := toggle_list.cursor;
-				toggle_list.start
-			variant
-				toggle_list.count - toggle_list.index
-			until
-				toggle_list.after
-			loop
-				tb := toggle_list.item;
-				tb.realize;
-				toggle_list.forth
-			end;
-			toggle_list.go_to (c)
-		end
-
-	wel_children: LINKED_LIST [WEL_WINDOW]
-			-- List of children
-
-feature {NONE} -- Inapplicable
-
-	wel_set_menu (wel_menu: WEL_MENU) is 
-		do
+	class_name: STRING is
+			-- Class name
+		once
+			Result := "EvisionCheckBox"
 		end
 
 end -- class CHECK_BOX_WINDOWS

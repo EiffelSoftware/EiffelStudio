@@ -38,7 +38,8 @@ inherit
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
 		undefine
-			pnd_press
+			pnd_press,
+			check_drag_and_drop_release
 		redefine
 			initialize,
 			interface
@@ -490,6 +491,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/27 23:16:27  rogers
+--| Undefined check_drag_and_drop_release from EV_ARRAYED_LIST_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.67  2000/04/26 04:05:20  pichery
 --| EV_IMAGE_LIST_IMP.add_pixmap now
 --| takes an EV_PIXMAP as parameter.

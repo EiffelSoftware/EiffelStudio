@@ -18,6 +18,17 @@ inherit
 
 feature {NONE} -- Initialization
 
+	make_with_title (a_title: STRING) is
+			-- Initialize with `a_title'.
+		require
+			a_title_not_void: a_title /= Void
+		do
+			default_create
+			set_title (a_title)
+		end
+
+feature {NONE} -- Initialization
+
 	create_action_sequences is
 			-- Initialize ok/cancel actions.
 		do
@@ -117,6 +128,9 @@ end -- class EV_STANDARD_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/21 23:07:28  brendel
+--| Added make_with_title for consistency with EV_WINDOW.
+--|
 --| Revision 1.10  2000/02/29 18:09:09  oconnor
 --| reformatted indexing cluase
 --|

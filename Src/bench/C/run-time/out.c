@@ -224,7 +224,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			break;
 		case SK_WCHAR:
 			/* Wide character attribute */
-			sprintf(buffero, "WIDE_CHARACTER = %lu\n", *(EIF_WIDE_CHAR *)o_ref);
+			sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
 			write_out();
 			break;
 		case SK_INT8:

@@ -123,17 +123,15 @@ feature -- Element change
 			-- Do not move cursor.
 		local
 			imp: EV_WIDGET_IMP
-			was_after: BOOLEAN
 		do
-			was_after := index = count + 1
+			if index > count then
+				index := index + 1
+			end
 			if v.parent /= Void then
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
 			C.gtk_container_add (c_object, imp.c_object)
-			if was_after then
-				index := index + 1
-			end
 			new_item_actions.call ([v])
 		end
 
@@ -162,7 +160,9 @@ feature -- Element change
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
-			index := index + 1
+			if index /= 0 then
+				index := index + 1
+			end
 			C.gtk_container_add (c_object, imp.c_object)
 			gtk_reorder_child (c_object, imp.c_object, 0)
 			new_item_actions.call ([v])
@@ -273,6 +273,10 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/01 23:39:30  brendel
+--| Improved previous fix of `extend'.
+--| Fixed bug in `put_front'.
+--|
 --| Revision 1.7  2000/03/01 23:10:14  brendel
 --| Fixed bug in `extend'.
 --|

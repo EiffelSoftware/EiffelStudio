@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
-			if a_key.is_arrow or else a_key.code = a_key.key_tab then
+			if a_key.is_arrow or else a_key.code = (create {EV_KEY_CONSTANTS}).key_tab then
 				Result := True
 			end
 		end
@@ -227,6 +227,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2001/06/30 19:23:12  pichery
+--| updated to take into account changes in interface of EV_KEY
+--|
 --| Revision 1.14  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

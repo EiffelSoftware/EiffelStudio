@@ -44,10 +44,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- By default: set status code with `Eole_e_notimpl'.
 			-- Redefine in descendant if needed.
 		do
-			if interface_id.is_equal (Iid_class_factory) or interface_id.is_equal (Iid_unknown) then
-				Result := Current.ole_interface_ptr
-				set_last_hresult (S_ok)
-			elseif interface_id.is_equal (Iid_dispatch) then
+			if interface_id.is_equal (Iid_dispatch) or interface_id.is_equal (Iid_unknown) then
 				Result := dispatch_interface.ole_interface_ptr
 				set_last_hresult (S_ok)
 			else

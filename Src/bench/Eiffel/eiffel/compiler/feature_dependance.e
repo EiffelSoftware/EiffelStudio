@@ -8,11 +8,18 @@ class
 
 inherit
 	TWO_WAY_SORTED_SET [DEPEND_UNIT]
+		export
+			{NONE} all
+			{ANY} cursor, go_to, start, before, after, forth, item, active,
+				count, first_element, last_element, object_comparison, sublist,
+				extend
 		redefine
 			make, wipe_out, copy, is_equal
 		end
 
 	SHARED_WORKBENCH
+		export
+			{NONE} all
 		undefine
 			copy, is_equal
 		end

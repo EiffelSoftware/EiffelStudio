@@ -172,9 +172,17 @@ feature -- Status report
 		deferred
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
-			-- `Result' is [width, height] in pixels of `a_string' in the
-			-- current font, taking into account line breaks ('%N').
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
+			-- taking into account line breaks ('%N').
+			-- `width' and `height' correspond to the rectange used to bound `a_string', and
+			-- should be used when placing strings next to each as part of a text.
+			-- On some fonts, characters may extend outside of the bounds given by `width' and `height',
+			-- for example certain italic letters may overhang other letters. Use `left_offset' and
+			-- `right_offset' to determine if there is any overhang for `a_string'. a negative `left_offset'
+			-- indicates overhang to the left, while a positive `right_offset' indicates an overhang to the right.
+			-- To determine the complete bounding rectangle for `a_string' add negative `left_offset'
+			-- and positive `right_offset' to `width'.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -202,7 +210,7 @@ feature -- Status report
 				cur_width := cur_width.max (string_width (s))
 				cur_height := cur_height + l_height
 			end
-			Result := [cur_width, cur_height]
+			Result := [cur_width, cur_height, 0, 0]
 		end
 
 feature {EV_ANY_I} -- Implementation

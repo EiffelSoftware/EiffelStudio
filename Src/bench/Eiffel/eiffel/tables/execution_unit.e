@@ -1,10 +1,10 @@
 indexing
 	description: "Execution unit of an Eiffel feature"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXECUTION_UNIT 
+class
+	EXECUTION_UNIT 
 
 inherit
 	HASHABLE
@@ -211,7 +211,7 @@ feature -- Access
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal to Current ?
 		do
-			Result := 	class_type_id = other.class_type_id
+			Result := class_type_id = other.class_type_id
 						and then body_index = other.body_index
 		end
 

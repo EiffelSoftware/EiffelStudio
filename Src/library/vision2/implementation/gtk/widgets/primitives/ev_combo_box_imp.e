@@ -124,7 +124,11 @@ feature {NONE} -- Initialization
 					agent on_button_released,
 					Default_translate
 			)
+			on_item_clicked_agent := agent on_item_clicked
+			on_key_pressed_agent := agent on_key_pressed
 		end
+		
+	on_item_clicked_agent, on_key_pressed_agent: PROCEDURE [EV_COMBO_BOX_IMP, TUPLE]
 		
 feature -- Status report
 
@@ -208,15 +212,15 @@ feature {NONE} -- Implementation
 			-- Add `v' to container.
 		local
 			imp: EV_LIST_ITEM_IMP
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
 			imp ?= v.implementation
-			temp_string := (imp.text).to_c
-			C.gtk_combo_set_item_string (container_widget, imp.c_object, $temp_string)
+			create a_gs.make (imp.text)
+			C.gtk_combo_set_item_string (container_widget, imp.c_object, a_gs.item)
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_item_parent_imp (Current)
-			imp.real_signal_connect (imp.c_object, "button-press-event", agent on_item_clicked, Default_translate)
-			imp.real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, key_event_translate_agent)
+			real_signal_connect (imp.c_object, "button-press-event", on_item_clicked_agent, Default_translate)
+			real_signal_connect (imp.c_object, "key-press-event", on_key_pressed_agent, key_event_translate_agent)
 			if count = 1 and is_sensitive then
 				imp.enable_select
 			end

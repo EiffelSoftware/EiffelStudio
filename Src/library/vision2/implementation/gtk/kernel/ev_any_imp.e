@@ -101,18 +101,11 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 				i := i + 1
 			end
 			is_destroyed := True
-			disconnect_all_signals
+--			disconnect_all_signals
 			if C.gtk_is_window (c_object) then
-				C.gtk_object_destroy (c_object)
-			elseif C.gtk_object_struct_ref_count (c_object) > 1 then
-				if C.gtk_widget_struct_parent (c_object) /= NULL then
-					C.gtk_container_remove (C.gtk_widget_struct_parent (c_object), c_object)
-				else
-					--print ("Object has ref count of more than 1 but with no parent%N")
-				end
-			else
 				C.gtk_object_unref (c_object)
 			end
+			C.gtk_object_destroy (c_object)
 			c_object := NULL
 		ensure then
 			c_object_detached: c_object = NULL
@@ -149,12 +142,12 @@ feature {EV_ANY_I} -- Event handling
 			an_agent_not_void: an_agent /= Void
 		local
 			a_connection_id: INTEGER
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := a_signal_name.to_c
+			create a_gs.make (a_signal_name)
 			a_connection_id := c_signal_connect_true (
 				c_object,
-				$temp_string,
+				a_gs.item,
 				an_agent
 			)
 			signal_ids.extend (a_connection_id)
@@ -174,19 +167,19 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		local
-			a_sig_temp: ANY
+			a_gs: GEL_STRING
 		do
-			a_sig_temp := a_signal_name.to_c
+			create a_gs.make (a_signal_name)
 			if translate /= Void then
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
-					$a_sig_temp,
+					a_gs.item,
 					agent gtk_marshal.translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
 				last_signal_connection_id := c_signal_connect (
 					a_c_object,
-					$a_sig_temp,
+					a_gs.item,
 					an_agent
 				)
 			end
@@ -336,6 +329,7 @@ feature {NONE} -- Implementation
 				gtk_signal_disconnect_by_data (c_object, object_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
+				gtk_object_destroy (c_object)
 				gtk_object_unref (c_object)
 			end
 			Precursor {IDENTIFIED}

@@ -30,10 +30,12 @@ feature {NONE} -- Initialization
 			-- Connect `interface' and initialize `c_object'.
 		local
 			temp_font: EV_FONT
+			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
+			create a_gs.make ("Font selection dialog")
 			set_c_object (C.gtk_font_selection_dialog_new (
-						eiffel_to_c ("Font selection dialog")
+						a_gs.item
 					))
 			create temp_font
 			temp_font.set_height (14)
@@ -119,11 +121,13 @@ feature -- Element change
 		local
 			a_success_flag: BOOLEAN
 			font_imp: EV_FONT_IMP
+			a_gs: GEL_STRING
 		do
 			font_imp ?= a_font.implementation
+			create a_gs.make (font_imp.system_name)
 			a_success_flag := C.gtk_font_selection_dialog_set_font_name (
 							c_object,
-							eiffel_to_c (font_imp.system_name)
+							a_gs.item
 						)
 			check font_found: a_success_flag end
 			reset_dialog

@@ -309,10 +309,10 @@ feature -- Element change
 	set_title (new_title: STRING) is
 			-- Set `title' to `new_title'.
 		local
-			temp_txt: ANY
+			a_gs: GEL_STRING
 		do
-			temp_txt := new_title.to_c
-			C.gtk_window_set_title (c_object, $temp_txt)
+			create a_gs.make (new_title)
+			C.gtk_window_set_title (c_object, a_gs.item)
 
 			-- Make sure the gtk window has a corresponding gdk window
 			if not has_struct_flag (C.GTK_REALIZED_ENUM) then
@@ -325,14 +325,14 @@ feature -- Element change
 		local
 			mb_imp: EV_MENU_BAR_IMP
 			menu_imp: EV_MENU_IMP
-			temp_txt: ANY
+			a_gs: GEL_STRING
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
 			mb_imp.set_parent_window_imp (Current)
 			C.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			C.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
-			temp_txt := ("activate_item").to_c
+			create a_gs.make ("activate_item")
 			from
 				menu_bar.start
 			until
@@ -341,7 +341,7 @@ feature -- Element change
 				menu_imp ?= menu_bar.item.implementation
 				if menu_imp /= Void and then menu_imp.key /= 0 then
 					C.gtk_widget_add_accelerator (menu_imp.c_object,
-						$temp_txt,
+						a_gs.item,
 						accel_group,
 						menu_imp.key,
 						C.gdk_mod1_mask_enum,
@@ -441,20 +441,6 @@ feature {EV_DRAWING_AREA_IMP, EV_LIST_ITEM_LIST_IMP} -- Implementation
 	focus_widget: EV_WIDGET_IMP
 			-- Widget that has the focus.
 
-	disable_default_key_processing is
-		do
-			enable_key_processing := False
-		end
-
-	enable_default_key_processing is
-		do
-			enable_key_processing := True
-		end
-
-	enable_key_processing: BOOLEAN
-			-- Should default gtk key handler be enabled, used to prevent default keys
-			-- losing the widget focus, useful for when using drawing area as a text processor.
-
 feature {NONE} -- Implementation
 
 	default_width: INTEGER
@@ -477,21 +463,21 @@ feature {NONE} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
-			win_sig1, win_sig2: ANY
+			a_gs: GEL_STRING
 		do
 			Precursor (a_key, a_key_string, a_key_press)
-			if focus_widget /= Void and then a_key /= Void then
-					-- focus_widget drawing_area or gtklist.
+			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
+					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						win_sig1 := ("key-press-event").to_c
-						C.gtk_signal_emit_stop_by_name (c_object, $win_sig1)
+						create a_gs.make ("key-press-event")
+						C.gtk_signal_emit_stop_by_name (c_object, a_gs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						win_sig2 := ("key-release-event").to_c
-						C.gtk_signal_emit_stop_by_name (c_object, $win_sig2)
+						create a_gs.make ("key-release-event")
+						C.gtk_signal_emit_stop_by_name (c_object, a_gs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	
@@ -509,7 +495,6 @@ feature {NONE} -- Implementation
 			is_initialized := False
 			set_title("")
 			accel_group := C.gtk_accel_group_new
-			accel_group := C.gtk_accel_group_ref (accel_group)
 			C.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
@@ -523,7 +508,6 @@ feature {NONE} -- Implementation
 	initialize_client_area is
 			-- FIXME: Need comments
 		local
-			scr: EV_SCREEN
 			bar_imp: EV_VERTICAL_BOX_IMP
 		do
 			vbox := C.gtk_vbox_new (False, 0)
@@ -532,7 +516,6 @@ feature {NONE} -- Implementation
 			hbox := C.gtk_hbox_new (False, 0)
 			C.gtk_widget_show (hbox)
 
-			create upper_bar
 			bar_imp ?= upper_bar.implementation
 			check
 				bar_imp_not_void: bar_imp /= Void
@@ -541,14 +524,12 @@ feature {NONE} -- Implementation
 			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 			C.gtk_box_pack_start (vbox, hbox, True, True, 0)
 
-			create lower_bar
 			bar_imp ?= lower_bar.implementation
 			check
 				bar_imp_not_void: bar_imp /= Void
 			end
 			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
-			create scr
 			app_implementation.window_oids.extend (object_id)
 		end
 

@@ -156,8 +156,11 @@ feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- set the `text' of the frame
+		local
+			a_gs: GEL_STRING
 		do
-			C.gtk_frame_set_label (container_widget, eiffel_to_c (a_text))
+			create a_gs.make (a_text)
+			C.gtk_frame_set_label (container_widget, a_gs.item)
 		end
 
 	remove_text is

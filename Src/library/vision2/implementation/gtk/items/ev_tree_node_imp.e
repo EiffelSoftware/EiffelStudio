@@ -31,28 +31,6 @@ inherit
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 
 	EV_TREE_NODE_ACTION_SEQUENCES_IMP
-
-	EV_TEXTABLE_IMP
-		rename
-			interface as textable_imp_interface
-		redefine
-			set_text,
-			remove_text
-		end
-
-	EV_TOOLTIPABLE_IMP
-		rename
-			interface as tooltipable_imp_interface
-		end
-
-	EV_PIXMAPABLE_IMP
-		rename
-			interface as pixmapable_imp_interface
-		redefine
-			set_pixmap,
-			remove_pixmap,
-			pixmap
-		end
 		
 	EV_PND_DEFERRED_ITEM
 		undefine
@@ -70,9 +48,6 @@ feature {NONE} -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_label_new (NULL))
-			-- label used for textable and tooltipable implementations.
-			text_label := c_object
 			create ev_children.make (0)
 		end
 
@@ -136,13 +111,13 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- 
 		do
-			Precursor {EV_TEXTABLE_IMP} (a_text)
+			text := a_text
 		end
 		
 	remove_text is
 			-- 
 		do
-			Precursor {EV_TEXTABLE_IMP}
+			text := ""
 		end	
 
 feature -- PND
@@ -303,10 +278,10 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	insert_pixmap is
 		local
-			gdkpix, gdkmask, text_ptr: POINTER
+			a_gs: GEL_STRING
 			is_leaf, is_expded: INTEGER
 		do
-			C.gtk_label_get (text_label, $text_ptr)
+			create a_gs.make (text)
 			if gdk_pixmap /= NULL and then parent_tree_imp /= Void then
 				if pix_height > parent_tree_imp.row_height then
 					C.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
@@ -314,7 +289,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				C.gtk_ctree_set_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
-					text_ptr,-- text,
+					a_gs.item,-- text,
 					3, -- spacing
 					gdk_pixmap,
 					gdk_mask,
@@ -375,7 +350,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_TREE_IMP} -- Implementation
 
 	parent_widget_is_displayed: BOOLEAN is
 			--
@@ -387,7 +362,29 @@ feature {NONE} -- Implementation
 				Result := temp_par_tree_imp.is_displayed
 			end
 		end
+		
+	text: STRING
+	
+	tooltip: STRING
+	
+	set_tooltip (a_text: STRING) is
+		do
+			tooltip := a_text
+		end
 
+	remove_tooltip is
+		do
+			tooltip := ""		
+		end
+	
+	align_text_left is do  end
+	
+	align_text_center is do  end
+	
+	align_text_right is do end
+
+	alignment: EV_TEXT_ALIGNMENT	
+	
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 		local
 			a_pix_imp: EV_PIXMAP_IMP
@@ -403,6 +400,8 @@ feature {NONE} -- Implementation
 				insert_pixmap
 			end
 		end
+		
+	pix_width, pix_height: INTEGER
 
 	remove_pixmap is
 		do
@@ -420,8 +419,7 @@ feature {NONE} -- Implementation
 				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)				
 			end
 		end
-		
-	
+
 	gdk_pixmap, gdk_mask: POINTER
 		-- Stored gdk pixmap data.
 

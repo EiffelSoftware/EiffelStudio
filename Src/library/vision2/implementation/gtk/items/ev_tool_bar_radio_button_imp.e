@@ -21,7 +21,9 @@ inherit
 			make,
 			interface,
 			initialize,
-			create_select_actions
+			create_select_actions,
+			enable_sensitive,
+			disable_sensitive
 		end
 
 	EV_RADIO_PEER_IMP
@@ -135,6 +137,27 @@ feature {EV_ANY_I} -- Implementation
 				avoid_reselection := False
 			end
 		end
+		
+	enable_sensitive is
+			-- 
+		do
+			if not is_sensitive then
+				C.gtk_widget_set_sensitive (c_object, True)
+				C.gtk_widget_set_state (c_object, gtk_state)
+			end
+		end
+	
+	disable_sensitive is
+			-- 
+		do
+			if is_sensitive then
+				gtk_state := C.gtk_widget_struct_state (c_object)
+				C.gtk_widget_set_sensitive (c_object, False)
+			end		
+		end
+	
+	gtk_state: INTEGER
+		-- Used to get around gtk sensitive bug that doesn't take flat style in to account.
 
 	avoid_reselection: BOOLEAN
 

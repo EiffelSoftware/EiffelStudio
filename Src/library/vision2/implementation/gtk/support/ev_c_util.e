@@ -7,10 +7,10 @@ feature -- Output
 			-- Use puts to print a string on the console.
 			-- This can safely be used inside `dispose'.
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := s.to_c
-			puts ($temp_string)
+			create a_gs.make (s)
+			puts (a_gs.item)
 		end
 
 	puts (s: POINTER) is
@@ -41,45 +41,6 @@ feature -- Conversion
 		end
 
 	-- FIXME this is a hack and needs to be thought over.
-
-  	 eiffel_to_c (o: ANY): POINTER is
-			-- Try to convert any eiffel object into
-			-- a useful C structrue.
-			-- Supports:
-			--     STRING -> char*
-			--     SEQUENCE [STRING] -> char**
-			--| Only use this directly in a function call.
-			--|  eg: f (eiffel_to_c (a), b, c)
-			--| Never use it if the funtion call it is used in may trigger a GC
-			--| cycle. eg: f (eiffel_to_c (a), b, create {FOO}.make)
-			--| A create like the one above may cause the structure returned by
-			--| eiffel_to_c move before it is passed to f.
-			--| You have been warned. Sam 19991209
-		local
-			a: ANY
-			s: STRING
-			sl: SEQUENCE [STRING]
-			c_sl: ARRAY [POINTER]
-		do
-			s ?= o
-			sl ?= o
-			if s /= Void then
-				a ?= s.to_c
-			elseif sl /= Void then
-				create c_sl.make (1, sl.count)
-				from sl.start
-				until sl.after
-				loop
-					a ?= sl.item.to_c
-					c_sl.put ($a, sl.index)
-					sl.forth
-				end
-				a ?= c_sl.to_c
-			end
-			if a /= Void then
-				Result := p2p ($a)
-			end
-		end
 		
 feature {EV_GTK_CALLBACK_MARSHAL}
 

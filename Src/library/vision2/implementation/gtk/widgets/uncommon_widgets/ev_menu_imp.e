@@ -66,12 +66,12 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			a_temp_str: ANY
+			a_gs: GEL_STRING
 		do
 			real_text := clone (a_text)
-			a_temp_str := u_lined_filter (real_text).to_c
+			create a_gs.make (u_lined_filter (real_text))
 			key := C.gtk_label_parse_uline (text_label,
-				$a_temp_str)
+				a_gs.item)
 			C.gtk_widget_show (text_label)
 		end
 
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 		local
 			accel_group: POINTER
 			menu_imp: EV_MENU_IMP
-			activate_string, activate_item_string: ANY
+			a_gs: GEL_STRING
 		do
 			Precursor {EV_MENU_ITEM_LIST_IMP} (an_item_imp, pos)
 			if an_item_imp.key /= 0 then
@@ -117,17 +117,17 @@ feature {NONE} -- Implementation
 				end
 				menu_imp ?= an_item_imp
 				if menu_imp = Void then
-					activate_string := ("activate").to_c
+					create a_gs.make ("activate")
 					C.gtk_widget_add_accelerator (an_item_imp.c_object,
-						$activate_string,
+						a_gs.item,
 						accel_group,
 						an_item_imp.key,
 						0,
 						0)
 				else
-					activate_item_string := ("activate_item").to_c
+					create a_gs.make ("activate_item")
 					C.gtk_widget_add_accelerator (menu_imp.c_object,
-						$activate_item_string,
+						a_gs.item,
 						accel_group,
 						menu_imp.key,
 						0,

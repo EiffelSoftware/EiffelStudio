@@ -78,16 +78,36 @@ feature {NONE} -- Initialization
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
 			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)
 			C.gtk_ctree_set_show_stub (list_widget, True)
+			C.gtk_ctree_set_indent (list_widget, 17)
 			C.gtk_widget_show (list_widget)
-			C.gtk_container_add (c_object, list_widget)
-			
+			--C.gtk_container_add (c_object, list_widget)
+			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
 			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
 		
 			create tree_node_ptr_table.make (100)
+			create timer.make_with_interval (0)
+			timer.actions.extend (agent on_time_out)
 		end
-		
+	
+	tree_width: INTEGER
+	
+	timer: EV_TIMEOUT
+	
+	on_time_out is
+			-- 
+		local
+			a_wid: INTEGER
+		do
+			a_wid := C.gtk_clist_columns_autosize (list_widget) + 16
+			if tree_width /= a_wid then
+				C.gtk_widget_set_usize (list_widget, a_wid, -1)
+				tree_width := a_wid
+			end
+			timer.set_interval (0)
+		end
+	
 	visual_widget: POINTER is
 			-- 
 		do
@@ -257,6 +277,10 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			if a_tree_node_imp /= Void then
 				a_tree_node_imp.expand_callback
 			end
+			if timer.interval = 0 then
+				timer.set_interval (500)
+			end
+			
 			--C.gtk_clist_thaw (list_widget)
 		end
 
@@ -271,6 +295,9 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
 				a_tree_node_imp.collapse_callback
 			end
 			C.gtk_clist_thaw (list_widget)
+			if timer.interval = 0 then
+				timer.set_interval (500)
+			end
 		end
 		
 	selected_node: EV_TREE_NODE_IMP
@@ -530,9 +557,6 @@ feature -- Implementation
 
 	post_drop_steps is
 			-- Steps to perform once an attempted drop has happened.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
 			if pnd_row_imp /= Void then
 				if pnd_row_imp.mode_is_pick_and_drop then
@@ -541,13 +565,8 @@ feature -- Implementation
 			elseif mode_is_pick_and_drop then
 					signal_emit_stop (c_object, "button-press-event")
 			end
-			create env
-			app_imp ?= env.application.implementation
-			check
-				app_imp_not_void: app_imp /= Void
-			end
 
-			app_imp.on_drop (pebble)
+			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void	
@@ -578,12 +597,8 @@ feature {EV_TREE_NODE_IMP}
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
 		local
 			temp_row_ptr: POINTER
-			ver_adj: POINTER
-			ver_offset: INTEGER
 		do
-			ver_adj := C.gtk_scrolled_window_get_vadjustment (c_object)
-			ver_offset := C.gtk_adjustment_struct_value (ver_adj).rounded
-			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, (a_y + ver_offset) // (row_height + 1))
+			temp_row_ptr := C.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
 			if temp_row_ptr /= NULL then
 				Result := tree_node_ptr_table.item (temp_row_ptr)
 			end
@@ -690,9 +705,10 @@ feature {NONE} -- Implementation
 			end
 
 				-- Remove all items (Eiffel part)
-			ev_children.wipe_out
-
-			child_array.wipe_out
+--			ev_children.wipe_out
+--			child_array.wipe_out
+			create ev_children.make (0)
+			create child_array.make (5)
 			tree_node_ptr_table.clear_all
 			
 			index := 0
@@ -751,8 +767,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
 		local
 			text_ptr: POINTER
+			a_gs: GEL_STRING
 		do
-			C.gtk_label_get (a_item_imp.text_label, $text_ptr)	
+			create a_gs.make (a_item_imp.text)
+			text_ptr := a_gs.item
 			Result := C.gtk_ctree_insert_node (
 				list_widget,
 				par_node,

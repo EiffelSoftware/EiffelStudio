@@ -44,26 +44,31 @@ feature -- Initialize
 			-- Initialize the list.
 		local
 			temp_sig_id: INTEGER
+			a_gs: GEL_STRING
 		do
 			{EV_LIST_ITEM_LIST_IMP} Precursor
+			create a_gs.make ("leave-notify-event")
 			temp_sig_id := c_signal_connect (
 					list_widget,
-					eiffel_to_c ("leave-notify-event"),
+					a_gs.item ,
 					agent set_is_out (True)
 			)
+			create a_gs.make ("enter-notify-event")
 			temp_sig_id := c_signal_connect (
 					list_widget,
-					eiffel_to_c ("enter-notify-event"),
+					a_gs.item,
 					agent set_is_out (False)
 			)
+			create a_gs.make ("focus-in-event")
 			temp_sig_id := c_signal_connect (
 					visual_widget,
-					eiffel_to_c ("focus-in-event"),
+					a_gs.item,
 					agent attain_focus
 			)
+			create a_gs.make ("focus-out-event")
 			temp_sig_id := c_signal_connect (
 					visual_widget,
-					eiffel_to_c ("focus-out-event"),
+					a_gs.item,
 					agent lose_focus
 			)
 			disable_multiple_selection
@@ -196,14 +201,14 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_ITEM_IMP
 			temp_sig_id: INTEGER
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v)
 			v_imp ?= v.implementation
-			temp_string := ("focus-out-event").to_c
+			create a_gs.make ("focus-out-event")
 			temp_sig_id := c_signal_connect (
 				v_imp.c_object,
-				$temp_string,
+				a_gs.item,
 				agent lose_focus
 				)
 		end

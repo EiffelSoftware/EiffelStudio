@@ -618,12 +618,12 @@ feature {EV_ANY_IMP} -- Implementation
 
 	aux_info_struct: POINTER is
 		local
-			aux_info_string: ANY
+			a_gs: GEL_STRING
 		do
-			aux_info_string := ("gtk-aux-info").to_c
+			create a_gs.make ("gtk-aux-info")
 			Result := C.gtk_object_get_data (
 				c_object,
-				$aux_info_string
+				a_gs.item
 			)
 		end
 
@@ -719,9 +719,9 @@ feature {NONE} -- Implementation
 					end
 					l := C.glist_struct_next (l) 
 				end
+				C.g_list_free (a_child_list)
 			else
 				real_set_background_color (a_c_object, bg)
-				C.g_list_free (a_child_list)
 			end
 		end
 		

@@ -69,12 +69,12 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		require
 			a_accel_grp_not_null: a_accel_grp /= NULL
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := ("show").to_c
+			create a_gs.make ("show")
 			C.gtk_widget_add_accelerator (
 				c_object,
-				$temp_string,
+				a_gs.item,
 				a_accel_grp,
 				key_code_to_gtk (key.code),
 				modifier_mask,

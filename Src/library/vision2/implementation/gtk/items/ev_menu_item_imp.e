@@ -99,19 +99,19 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			temp_string: STRING
-			dummy_string: ANY
+			a_gs: GEL_STRING
 		do
 			real_text := clone (a_text)	
 			if a_text.has ('&') then
 				temp_string := clone (a_text)
 				filter_ampersand (temp_string, '_')
-				dummy_string := temp_string.to_c
+				create a_gs.make (temp_string)
 				key := C.gtk_label_parse_uline (text_label,
-				$dummy_string)
+				a_gs.item)
 			else
 				key := 0
-				dummy_string := a_text.to_c
-				C.gtk_label_set_text (text_label, $dummy_string)
+				create a_gs.make (a_text)
+				C.gtk_label_set_text (text_label, a_gs.item)
 			end	
 			C.gtk_widget_show (text_label)
 		end

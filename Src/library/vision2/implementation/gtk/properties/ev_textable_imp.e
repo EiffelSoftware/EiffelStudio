@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := ("").to_c
-			text_label := C.gtk_label_new ($temp_string)
+			create a_gs.make ("")
+			text_label := C.gtk_label_new (a_gs.item)
 			C.gtk_widget_show (text_label)
 			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end
@@ -91,20 +91,20 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := a_text.to_c
-			C.gtk_label_set_text (text_label, $temp_string)
+			create a_gs.make (a_text)
+			C.gtk_label_set_text (text_label, a_gs.item)
 			C.gtk_widget_show (text_label)
 		end
 
 	remove_text is
 			-- Assign `Void' to `text'.
 		local
-			temp_text: ANY
+			a_gs: GEL_STRING
 		do
-			temp_text := ("").to_c
-			C.gtk_label_set_text (text_label, $temp_text)
+			create a_gs.make ("")
+			C.gtk_label_set_text (text_label, a_gs.item)
 			C.gtk_widget_hide (text_label)
 		end
 	

@@ -24,10 +24,13 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
+		local
+			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
+			create a_gs.make ("Select file")
 			set_c_object
-				(C.gtk_file_selection_new (eiffel_to_c ("Select file")))
+				(C.gtk_file_selection_new (a_gs.item))
 			C.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
 			set_start_directory (".")
@@ -38,6 +41,7 @@ feature {NONE} -- Initialization
 			-- Setup action sequences.
 		local
 			a_child_list, a_label: POINTER
+			a_gs: GEL_STRING
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
@@ -46,7 +50,8 @@ feature {NONE} -- Initialization
 				a_child_list,
 				0)
 			C.g_list_free (a_child_list)
-			C.gtk_label_set_text (a_label, eiffel_to_c (internal_accept))
+			create a_gs.make (internal_accept)
+			C.gtk_label_set_text (a_label, a_gs.item)
 			
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
@@ -113,28 +118,37 @@ feature -- Element change
 
 	set_filter (a_filter: STRING) is
 			-- Set `a_filter' as new filter.
+		local
+			a_gs: GEL_STRING
 		do
 			filter := clone (a_filter)
-			C.gtk_file_selection_complete (c_object, eiffel_to_c (a_filter))
+			create a_gs.make (a_filter)
+			C.gtk_file_selection_complete (c_object, a_gs.item)
 		end
 
 	set_file_name (a_name: STRING) is
 			-- Make `a_name' the selected file.
+		local
+			a_gs: GEL_STRING
 		do
-			C.gtk_file_selection_set_filename (c_object, eiffel_to_c (a_name))
+			create a_gs.make (a_name)
+			C.gtk_file_selection_set_filename (c_object, a_gs.item)
 		end
 
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
+		local
+			a_gs: GEL_STRING
 		do
 			start_directory := a_path
 			if start_directory.item (start_directory.count) /= '/' then
 				-- The path has no trailing / so we add one to internal string.
 				start_directory.append ("/")
 			end
+			create a_gs.make (start_directory)
 			C.gtk_file_selection_set_filename (
 				c_object,
-				eiffel_to_c (start_directory)
+				a_gs.item
 			)
 		end
 

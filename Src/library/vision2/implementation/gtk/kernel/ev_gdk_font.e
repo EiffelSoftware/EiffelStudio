@@ -31,10 +31,10 @@ feature {NONE} -- Implementation
 	load is
 			-- Load font specified in `full_name'.
 		local
-			temp_string: ANY
+			a_gs: GEL_STRING
 		do
-			temp_string := full_name.to_c
-			c_object := C.gdk_font_load ($temp_string)
+			create a_gs.make (full_name)
+			c_object := C.gdk_font_load (a_gs.item)
 		end
 
 	destroy is

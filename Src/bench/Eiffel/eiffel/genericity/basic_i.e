@@ -10,7 +10,7 @@ inherit
 		undefine
 			type_a
 		redefine
-			is_basic, is_reference, c_type, base_class, is_valid,
+			is_basic, is_reference, c_type, is_valid,
 			cecil_value
 		end
 
@@ -23,18 +23,6 @@ inherit
 
 	BYTE_CONST
 
-feature {CLASS_B} -- Settings
-
-	set_class_id (an_id: like class_id) is
-			-- Assign `an_id' to Current.
-		require
-			positive_id: an_id > 0
-		do
-			class_id := an_id
-		ensure
-			class_id_set: class_id = an_id
-		end
-
 feature -- Access
 
 	c_type: TYPE_C is
@@ -43,26 +31,16 @@ feature -- Access
 			Result := Current
 		end
 
-	metamorphose_type: BASIC_I is
-			-- Type used for metamorphose. Needed for TYPED_POINTER_I
-			-- since transformed into a POINTER_I for metamorphose.
+	reference_type: CL_TYPE_I is
+			-- Associated reference type of Current
 		do
-			Result := Current
+			create Result.make (class_id)
 		end
 
-	associated_reference: CLASS_TYPE is
-			-- Reference class associated with simple type
-		deferred
-		end
-
-	base_class: CLASS_C is
-			-- Associated class
+	associated_reference_class_type: CLASS_TYPE is
+			-- Reference class type of Current
 		do
-			if System.il_generation then
-				Result := type_a.associated_class
-			else
-				Result := associated_reference.associated_class
-			end
+			Result := reference_type.associated_class_type
 		end
 
 feature -- Status report
@@ -92,17 +70,16 @@ feature -- Byte code generation
 			valid_reg: reg /= Void
 			valid_value: value /= Void
 			valid_file: buffer /= Void
+		local
+			l_metamorphose_type: CL_TYPE_I	
 		do
 			reg.print_register
 			buffer.putstring (" = ")
-				-- Even though we pass a basic type (which does not correspond
-				-- to the associated reference class) to CREATE_TYPE, it works
-				-- because `base_class' is redefined so that it always return
-				-- the associated reference class and `base_class' is called
-				-- by `associated_class_type' which is called by CREATE_TYPE.
-			(create {CREATE_TYPE}.make (metamorphose_type)).generate
+				-- Type used for metamorphose.
+			l_metamorphose_type := reference_type;
+			(create {CREATE_TYPE}.make (l_metamorphose_type)).generate
 			buffer.putstring (", *")
-			metamorphose_type.generate_access_cast (buffer)
+			generate_access_cast (buffer)
 			reg.print_register
 			buffer.putstring (" = ")
 			value.print_register
@@ -146,4 +123,9 @@ feature
 			valid_array: ba /= Void
 		deferred
 		end 
+		
+invariant
+	is_basic: is_basic
+	is_expanded: is_expanded
+
 end

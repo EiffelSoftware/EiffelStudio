@@ -286,26 +286,23 @@ feature {NONE} -- Implementation
 	resize_model_if_needed (a_columns: INTEGER) is
 			-- 
 		local
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
+			a_type_array: MANAGED_POINTER
 			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 			i: INTEGER
 		do		
 			if a_columns > model_column_count - 1 then
-				create a_type_array.make (0, a_columns + 1)
+				create a_type_array.make ((a_columns + 1) * sizeof_gtype)
 				from
-					a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
+					add_gdk_type_pixbuf (a_type_array.item, 0)
 					i := 1
 				until
 					i > a_columns
 				loop
-					a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, i)
+					add_g_type_string (a_type_array.item, i * sizeof_gtype)
 					i := i + 1
 				end
-				
-				a_type_array_c := a_type_array.to_c
-				
-				list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns + 1, $a_type_array_c)
+
+				list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns + 1, a_type_array.item)
 				
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
 	
@@ -322,7 +319,44 @@ feature {NONE} -- Implementation
 				end				
 			end	
 		end
-		
+
+	add_g_type_string (an_array: POINTER; a_pos: INTEGER) is
+			-- Add G_TYPE_STRING constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		require
+			an_array_not_null: an_array /= default_pointer
+			a_pos_nonnegative: a_pos >= 0
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"{
+				GType type = G_TYPE_STRING;
+				memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+			}"
+		end
+
+	add_gdk_type_pixbuf (an_array: POINTER; a_pos: INTEGER) is
+			-- Add GDK_TYPE_PIXBUF constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		require
+			an_array_not_null: an_array /= default_pointer
+			a_pos_nonnegative: a_pos >= 0
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"{
+				GType type = GDK_TYPE_PIXBUF;
+				memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+			}"
+		end
+
+	sizeof_gtype: INTEGER is
+			-- Size of the `GType' C type
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"sizeof(GType)"
+		end		
 
 	create_list (a_columns: INTEGER) is
 			-- Create the clist with `a_columns' columns.

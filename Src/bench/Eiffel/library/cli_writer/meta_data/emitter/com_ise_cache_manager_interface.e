@@ -13,21 +13,28 @@ inherit
 	COM_OBJECT
 
 create
-	make,
 	make_by_pointer
 	
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make is
-			-- creates new instance
+	initialize is
+			-- Initialize current.
 		do
-			item := new_ise_cache_manager
+			last_call_success := c_initialize (item)
+			is_initialized := True
+		ensure
+			success: last_call_success = 0
 		end
 		
 feature -- Access
 
+	is_initialized: BOOLEAN
+			-- Has Current been correctly initiliazed?
+
 	is_successful: BOOLEAN is
-			-- was the last operation successful?
+			-- Was last operation successful?
+		require
+			initialized: is_initialized
 		local
 			res: INTEGER
 		do
@@ -38,7 +45,9 @@ feature -- Access
 		end
 	
 	last_error_message: UNI_STRING is
-			-- last error message of a failed operation
+			-- Last error message of a failed operation
+		require
+			initialized: is_initialized
 		local
 			res: POINTER
 		do
@@ -56,6 +65,7 @@ feature -- Basic Oprtations
 			-- consume an assembly into the EAC from the gac defined by
 			-- "'aname', Version='aversion', Culture='aculture', PublicKeyToken='akey'"
 		require
+			initialized: is_initialized
 			non_void_name: aname /= Void
 			non_void_version: aversion /= Void
 			non_void_culture: aculture /= Void
@@ -84,6 +94,7 @@ feature -- Basic Oprtations
 			-- consume the local assembly found at 'apath' and all of its local dependacies into 'adest'.
 			-- GAC dependacies will be put into the EAC
 		require
+			initialized: is_initialized
 			non_void_path: apath /= Void
 			non_empty_path: apath.length > 0
 			non_void_dest: adest /= Void
@@ -101,8 +112,9 @@ feature -- Basic Oprtations
 		end
 		
 	relative_folder_name (aname, aversion, aculture, akey: UNI_STRING): UNI_STRING is
-			-- retireves the relative path to an assembly
+			-- Retrieves relative path to an assembly.
 		require
+			initialized: is_initialized
 			non_void_name: aname /= Void
 			non_void_version: aversion /= Void
 			non_void_culture: aculture /= Void
@@ -122,9 +134,11 @@ feature -- Basic Oprtations
 			create bstr_culture.make_by_uni_string (aculture)
 			if akey /= Void and akey.length > 0 then
 				create bstr_key.make_by_uni_string (akey)
-				last_call_success := c_relative_folder_name (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item, $res)
+				last_call_success := c_relative_folder_name (item, bstr_name.item,
+					bstr_version.item, bstr_culture.item, bstr_key.item, $res)
 			else
-				last_call_success := c_relative_folder_name (item, bstr_name.item, bstr_version.item, bstr_culture.item, void_pointer, $res)
+				last_call_success := c_relative_folder_name (item, bstr_name.item,
+					bstr_version.item, bstr_culture.item, void_pointer, $res)
 			end
 
 			if res /= Void then
@@ -138,6 +152,7 @@ feature -- Basic Oprtations
 	assembly_info_from_assembly (apath: UNI_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve the assembly information from a assembly
 		require
+			initialized: is_initialized
 			non_void_path: apath /= Void
 			non_empty_path: apath.length > 0
 		local
@@ -156,13 +171,15 @@ feature -- Basic Oprtations
 		end
 		
 feature {NONE} -- Implementation
-
-	new_ise_cache_manager: POINTER is
-			-- Creates new instance
-		external
-			"C use %"cli_writer.h%""
-		end
 		
+	c_initialize (ap:POINTER): INTEGER is
+			-- was the last operation successful?
+		external
+			"C++ ISE_Cache_COM_ISE_CACHE_MANAGER signature ():EIF_INTEGER use %"ise_cache_manager.h%""
+		alias
+			"initialize"
+		end
+
 	c_is_successful (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- was the last operation successful?
 		external

@@ -881,7 +881,8 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_R
 
 {
 	int16   result, *gtp;
-	int	table_index = Dtype (Current) - offset;
+	int16	dtype = Dtype (Current);
+	int	table_index = dtype - offset;
 
 	if (gttable != (int16 **) 0)
 	{
@@ -889,7 +890,7 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_R
 
 		if ((gtp != (int16 *) 0) && (*(gtp+1) != TERMINATOR))
 		{
-			*gtp = stype;
+			*gtp = dtype;
 			return eif_compound_id ((int16 *)0, (int16) Dftype (Current), ttable[table_index], gtp);
 		}
 	}

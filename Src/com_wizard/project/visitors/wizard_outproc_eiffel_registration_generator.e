@@ -25,12 +25,7 @@ feature -- Basic operations
 		do
 			create eiffel_writer.make
 
-			tmp_name := to_eiffel_name (shared_wizard_environment.project_name)
-			tmp_name.prepend ("ECOM_")
-			tmp_name.append ("_REGISTRATION")
-			tmp_name.to_upper
-
-			eiffel_writer.set_class_name (tmp_name)
+			eiffel_writer.set_class_name (registration_class_name)
 			eiffel_writer.set_description (description_message)
 			set_default_ancestors (eiffel_writer)
 

@@ -108,24 +108,24 @@ doc:	</attribute>
 */
 rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
 	{
-		0L,		/* mem_used */
-		0L,		/* mem_collect */		 0L,		/* mem_avg */
-		0L,		/* real_avg */			 0L,		/* real_time */
-		0L,		/* real_iavg */			 0L,		/* real_itime */
-		0.,		/* cpu_avg */			 0.,		/* sys_avg */
-		0.,		/* cpu_iavg */			 0.,		/* sys_iavg */
-		0.,		/* cpu_time */			 0.,		/* sys_time */
-		0.,		/* cpu_itime */			 0.,		/* sys_itime */
+		0L,		/* count */				0L,		/* mem_used */
+		0L,		/* mem_collect */		0L,		/* mem_avg */
+		0L,		/* real_avg */			0L,		/* real_time */
+		0L,		/* real_iavg */			0L,		/* real_itime */
+		0.,		/* cpu_avg */			0.,		/* sys_avg */
+		0.,		/* cpu_iavg */			0.,		/* sys_iavg */
+		0.,		/* cpu_time */			0.,		/* sys_time */
+		0.,		/* cpu_itime */			0.,		/* sys_itime */
 	},
 	{
-		0L,		/* mem_used */
-		0L,		/* mem_collect */		 0L,		/* mem_avg */
-		0L,		/* real_avg */			 0L,		/* real_time */
-		0L,		/* real_iavg */			 0L,		/* real_itime */
-		0.,		/* cpu_avg */			 0.,		/* sys_avg */
-		0.,		/* cpu_iavg */			 0.,		/* sys_iavg */
-		0.,		/* cpu_time */			 0.,		/* sys_time */
-		0.,		/* cpu_itime */			 0.,		/* sys_itime */
+		0L,		/* count */				0L,		/* mem_used */
+		0L,		/* mem_collect */		0L,		/* mem_avg */
+		0L,		/* real_avg */			0L,		/* real_time */
+		0L,		/* real_iavg */			0L,		/* real_itime */
+		0.,		/* cpu_avg */			0.,		/* sys_avg */
+		0.,		/* cpu_iavg */			0.,		/* sys_iavg */
+		0.,		/* cpu_time */			0.,		/* sys_time */
+		0.,		/* cpu_itime */			0.,		/* sys_itime */
 	}
 };
 
@@ -464,9 +464,8 @@ rt_shared int tenure;
 /*
 doc:	<attribute name="plsc_per" return_type="long" export="public">
 doc:		<summary>Period of calls to `plsc' in `acollect'.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None since initialized in `main.c'.</synchronization>
-doc:		<fixme>Add protection to routines that modify its value.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None while initialized in main.c, but use `eif_memory_mutex' when updating its value.</synchronization>
 doc:	</attribute>
 */
 rt_public long plsc_per;
@@ -551,9 +550,8 @@ rt_shared struct chunk *last_from = NULL;
 /*
 doc:	<attribute name="th_alloc" return_type="long" export="public">
 doc:		<summary>Allocation threshold before calling GC. Initialized in `main.c', updated in `memory.c'.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Propose mutex in `memory.c' to update its value.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None while initialized in main.c, but use `eif_memory_mutex' when updating its value.</synchronization>
 doc:	</attribute>
 */
 rt_public long th_alloc;
@@ -561,9 +559,8 @@ rt_public long th_alloc;
 /*
 doc:	<attribute name="gc_monitor" return_type="int" export="public">
 doc:		<summary>Disable GC time-monitoring. By default it is 0.</summary>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<fixme>Propose mutex in `memory.c' to updated its value.</fixme>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None while initialized in main.c, but use `eif_memory_mutex' when updating its value.</synchronization>
 doc:	</attribute>
 */
 rt_public int gc_monitor = 0;

@@ -197,6 +197,7 @@ struct gacinfo {
 };
 
 struct gacstat {
+	long count;				/* Number of full or partial collection so far. */
 	long mem_used;			/* State of memory after previous run */
 	long mem_collect;		/* Memory collected during previous run */
 	long mem_avg;			/* Average memory collected in a cycle */

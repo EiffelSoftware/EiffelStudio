@@ -39,6 +39,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_run_idr.h"
 #include "rt_store.h"
 #include "rt_except.h"
+#include "rt_memory.h"
 
 #include <string.h>
 
@@ -158,6 +159,7 @@ rt_public void eif_thr_init_root(void)
 	EIF_LW_MUTEX_CREATE(eif_gc_gsz_mutex, "Couldn't create GSZ mutex");
 	EIF_LW_MUTEX_CREATE(eif_thread_launch_mutex, "Cannot create mutex for thread launcher\n");
 	EIF_LW_MUTEX_CREATE (eif_except_lock, "Couldn't create exception lock");
+	EIF_LW_MUTEX_CREATE (eif_memory_mutex, "Couldn't create memory mutex");
 	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 #ifdef EIF_WIN32

@@ -83,10 +83,9 @@ rt_public int eif_no_reclaim = 0;
 doc:	<attribute name="cc_for_speed" return_type="int" export="public">
 doc:		<summary>Is runtime memory allocation optimized for speed or for memory. Default value is `1' (speed), except on some platforms where it is not supported or if scavenging is disabled.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Not safe</thread_safety>
-doc:		<synchronization>None</synchronization>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Use `eif_memory_mutex' when updating its value.</synchronization>
 doc:		<eiffel_classes>MEMORY</eiffel_classes>
-doc:		<fixme>Update done in `memory.c' are not thread safe.</fixme>
 doc:	</attribute>
 */
 #if defined VXWORKS

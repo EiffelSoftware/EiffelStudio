@@ -22,18 +22,14 @@ RT_LNK void mem_free(EIF_REFERENCE object);	/* Unconditionally free object */
 RT_LNK void mem_speed(void);
 RT_LNK void mem_slow(void);
 RT_LNK void mem_tiny(void);
-RT_LNK EIF_INTEGER mem_largest(void);
-RT_LNK void mem_coalesc(void);
+RT_LNK EIF_INTEGER mem_coalesc(void);
 RT_LNK long mem_tget(void);
 RT_LNK void mem_tset(long int value);
 RT_LNK long mem_pget(void);
 RT_LNK void mem_pset(long int value);
-RT_LNK void mem_stat(long int type);
-RT_LNK long mem_info(long int field);
+RT_LNK void mem_stat(EIF_POINTER item, EIF_INTEGER type);
 RT_LNK void gc_mon(char flag);
-RT_LNK void gc_stat(long int type);	/* Initialize the GC statistics buffer */
-RT_LNK long gc_info(long int field);
-RT_LNK double gc_infod(long int field);
+RT_LNK void gc_stat(EIF_POINTER item, EIF_INTEGER type);	/* Initialize the GC statistics buffer */
 RT_LNK char gc_ison(void);
 RT_LNK void eif_set_max_mem(EIF_INTEGER); /* Set max memory RT can allocate */
 RT_LNK EIF_INTEGER eif_tenure (void);		/* Return maximum tenuring age. */

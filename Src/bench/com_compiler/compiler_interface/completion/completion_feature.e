@@ -21,11 +21,11 @@ inherit
 			evaluated_class,
 			exported_to_all,
 			external_name,
-			feature_location,
 			has_postcondition,
 			has_precondition,
 			implementers_count,
 			implementers,
+			feature_location,
 			is_attribute,
 			is_constant,
 			is_deferred,
@@ -53,7 +53,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_arguments: like arguments_internal; a_feature_type: INTEGER; a_file_name: like file_name) is
+	make (a_name: like name; a_arguments: like arguments_internal; a_feature_type: INTEGER; a_file_name: like file_name; a_start_position: like start_position) is
 			-- create an instance
 		require
 			non_void_name: a_name /= Void
@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 			name.to_lower
 			file_name := clone (a_file_name)
 			file_name.to_lower
+			start_position := a_start_position
 			if a_arguments /= Void then
 				arguments_internal := a_arguments
 			else
@@ -77,7 +78,7 @@ feature {NONE} -- Initialization
 			create {ARRAYED_LIST [STRING]} overloads_return_types.make (0)
 		end
 		
-	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_file_name: like file_name) is
+	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_file_name: like file_name; a_start_position: like start_position) is
 			-- create an instance with a return type
 		require
 			non_void_name: a_name /= Void
@@ -87,7 +88,7 @@ feature {NONE} -- Initialization
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		do
-			make (a_name, a_arguments, a_feature_type, a_file_name) 
+			make (a_name, a_arguments, a_feature_type, a_file_name, a_start_position) 
 			return_type := clone (a_return_type)
 			return_type.to_upper
 		end
@@ -187,11 +188,14 @@ feature -- Access
 			if file_path /= Void then
 				file_path.put (file_name)
 			end
-			line_number.set_item (0);
+			line_number.set_item (start_position)
 		end
 		
 	file_name: STRING
 			-- file name feature is contained within
+
+	start_position: INTEGER
+			-- line location in `file_name' of feature
 
 feature -- Basic Operations
 	
@@ -210,7 +214,7 @@ feature -- Basic Operations
 			return_type_added: overloads_return_types.has (a_return_type)
 		end
 		
-feature {NONE} -- Dummy implementations
+feature {NONE} -- Dummy implementations 
 
 	all_callers: FEATURE_ENUMERATOR is
 			-- all callers to feature

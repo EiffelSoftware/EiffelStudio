@@ -48,8 +48,8 @@ feature -- Basic operations
 			coclass_generator.interface_names.extend (a_name)
 
 			if 
-				an_interface.dispinterface and 
-				not  an_interface.dual 
+				an_interface.dispinterface or 
+				an_interface.dual 
 			then
 				dispatch_interface := True
 			end

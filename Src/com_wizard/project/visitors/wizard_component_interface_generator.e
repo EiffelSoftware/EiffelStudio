@@ -65,14 +65,14 @@ feature -- Basic operations
 				end
 			end
 
-			if not an_interface.functions.empty then
+			if not an_interface.functions_empty then
 				from
-					an_interface.functions.start
+					an_interface.functions_start
 				until
-					an_interface.functions.after
+					an_interface.functions_after
 				loop
-					process_function (an_interface.functions.item)
-					an_interface.functions.forth
+					process_function (an_interface.functions_item)
+					an_interface.functions_forth
 				end
 			end
 		end

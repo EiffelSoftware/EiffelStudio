@@ -30,7 +30,8 @@ inherit
 			recycle	,
 			file_loading_setup,
 			key_not_handled_action,
-			on_text_saved
+			on_text_saved,
+			on_text_back_to_its_last_saved_state
 		end	
 
 create
@@ -199,6 +200,18 @@ feature {NONE} -- Text loading
 			{EB_CLICKABLE_EDITOR} Precursor
 			completion_mode := 0
 		end
+
+	on_text_back_to_its_last_saved_state is
+			-- Reset click tool when back to the saved state
+		do
+			Precursor
+			if dev_window.stone /= Void and then text_displayed.click_tool_enabled then
+				text_displayed.update_click_list (dev_window.stone, True)
+				text_displayed.clear_syntax_error
+			end
+		end
+		
+
 
 feature {NONE} -- Process Vision2 events
 
@@ -671,7 +684,6 @@ feature {NONE} -- Implementation
 			text_displayed.insert_customized_expression (Editor_preferences.customized_strings.item (index))
 			refresh_now
 		end
-		
 
 	show_syntax_warning is
 			-- Display syntax error warning message

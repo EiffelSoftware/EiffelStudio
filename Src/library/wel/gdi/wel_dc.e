@@ -10,6 +10,8 @@ deferred class
 inherit
 	WEL_ANY
 
+	WEL_REFERENCE_TRACKABLE
+
 	WEL_DT_CONSTANTS
 		export
 			{NONE} all

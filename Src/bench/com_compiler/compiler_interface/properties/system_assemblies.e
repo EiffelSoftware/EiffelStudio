@@ -129,11 +129,11 @@ feature -- Access
 			-- save the assemblies to the ace file
 		local
 			l_assemblies: LACE_LIST [ASSEMBLY_SD]
-			copy_assemblies: like assemblies_impl
+			copy_assemblies: like assemblies_table
 			cluster_name: ID_SD
 		do
 			-- Save assemblies
-			copy_assemblies := clone (assemblies_impl)
+			copy_assemblies := clone (assemblies_table)
 			l_assemblies := ace_accesser.root_ast.assemblies
 			if l_assemblies = Void then
 					-- if there is no assembly option then we need to create it
@@ -141,22 +141,16 @@ feature -- Access
 				ace_accesser.root_ast.set_assemblies (l_assemblies)
 			end
 			
-			-- remove duplicate assemblies from AST
+			-- remove assemblies that already are in AST from copy_assemblies
 			from
 				l_assemblies.start
 			until
 				l_assemblies.after
 			loop
-				if assemblies_table.has (l_assemblies.item.cluster_name) then
-					copy_assemblies.search (assemblies_table.item (l_assemblies.item.cluster_name))
-					if not copy_assemblies.exhausted then
-						copy_assemblies.remove
-					end
-					l_assemblies.forth
-				else
-					l_assemblies.remove
+				if copy_assemblies.has (l_assemblies.item.cluster_name) then
+					copy_assemblies.remove (l_assemblies.item.cluster_name)
 				end
-
+				l_assemblies.forth
 			end
 
 			-- Insert at the end new clusters.
@@ -166,7 +160,7 @@ feature -- Access
 				until
 					copy_assemblies.after
 				loop
-					l_assemblies.extend (copy_assemblies.item)
+					l_assemblies.extend (copy_assemblies.item_for_iteration)
 					copy_assemblies.forth
 				end
 			end

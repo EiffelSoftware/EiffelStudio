@@ -34,7 +34,7 @@ rt_private IDRF idrf;			/* IDR filter for serializations */
  */
 
 #ifdef EIF_WIN32
-rt_public void prt_destroy()
+rt_public void prt_destroy(EIF_BOOLEAN t)
 {
 	idrf_destroy (&idrf);
 }

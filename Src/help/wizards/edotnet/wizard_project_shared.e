@@ -33,4 +33,7 @@ feature {NONE} -- Constants
 			create Result
 		end		
 
+	Empty_string: STRING is ""
+			-- Empty string
+			
 end -- class WIZARD_PROJECT_SHARED

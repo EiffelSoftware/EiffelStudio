@@ -24,12 +24,16 @@ feature  -- Initialization
 			generate_dll := False
 			root_class_name := "APPLICATION"
 			creation_routine_name := "make"
+			dotnet_assembly_filename := Empty_string
+			emit_directory := Default_directory
+			eiffel_formatting := True
 			
 			create available_assemblies.make
 			create selected_assemblies.make
 			retrieve_available_assemblies
 			remove_kernel_assembly
 			remove_system_assembly
+			create local_assemblies.make (1)
 		end
 
 feature -- Setting
@@ -61,7 +65,31 @@ feature -- Setting
 		ensure
 			creation_routine_name_set: creation_routine_name = a_name
 		end
-		
+	
+	set_dotnet_assembly_filename (a_filename: like dotnet_assembly_filename) is
+			-- Set `dotnet_assembly_filename' with `a_filename'.
+		do
+			dotnet_assembly_filename := a_filename
+		ensure
+			dotnet_assembly_filename_set: dotnet_assembly_filename = a_filename
+		end
+
+	set_emit_directory (a_filename: like emit_directory) is
+			-- Set `emit_directory' with `a_filename'.
+		do
+			emit_directory := a_filename
+		ensure
+			emit_directory_set: emit_directory = a_filename
+		end	
+	
+	set_eiffel_formatting (a_value: like eiffel_formatting) is
+			-- Set `eiffel_formatting' with `a_value'.
+		do
+			eiffel_formatting := a_value
+		ensure
+			eiffel_formatting_set: eiffel_formatting = a_value
+		end
+
 feature -- Access
 
 	icon_location: STRING
@@ -76,13 +104,27 @@ feature -- Access
 
 	creation_routine_name: STRING
 			-- Name of the creation routine of the root class
-		
+	
+	dotnet_assembly_filename: STRING
+			-- Filename of .NET assembly to emit
+	
+	emit_directory: STRING
+			-- Path to folder where assembly corresponding to `dotnet_assembly_filename' should be generated
+	
+	eiffel_formatting: BOOLEAN
+			-- Should the emitter generate Eiffel-friendly names?
+			
 	available_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			-- Available (and not selected) Assemblies
 	
 	selected_assemblies: LINKED_LIST [ASSEMBLY_INFORMATION]
 			-- Selected Assemblies
-			
+	
+	local_assemblies: HASH_TABLE [STRING, STRING]
+			-- Local assemblies
+			-- | Key: Assembly filename
+			-- | Value: Path to folder where assembly was emitted
+		
 	application_type: STRING is
 			-- "dll" if `generate_dll' is set, "exe" otherwise
 		do
@@ -392,5 +434,18 @@ feature {NONE} -- Implementation
 			imported_assemblies := proxy.imported_assemblies
 			intern_retrieve_available_assemblies (imported_assemblies)			
 		end
+	
+	Default_directory: STRING is 
+			-- Default emit directory ($ISE_EIFFEL\library.net\)
+		once
+			Result := clone (Eiffel_installation_dir_name)
+			Result.append (Dotnet_library_relative_path)
+		ensure
+			non_void_directory: Result /= Void
+			not_empty_directory: not Result.is_empty
+		end
+	
+	Dotnet_library_relative_path: STRING is "\library.net\"
+			-- Path to `library.net' folder relatively to the Eiffel delivery
 			
 end -- class WIZARD_INFORMATION

@@ -210,7 +210,7 @@ feature
 					history.extend (root_stone)
 				else
 					warner.set_window (Current);
-					warner.gotcha_call ("Pebble is not valid")
+					warner.gotcha_call (w_Pebble_not_valid)
 				end
 			end
 		ensure
@@ -314,6 +314,17 @@ feature
 			focus_start = 0;
 			focus_end = 0;
 			not changed
+		end;
+
+	clear_text is
+		do
+			image.wipe_out;
+			clear_clickable;
+			position := 0;
+			text_position := 0;
+			focus_start := 0;
+			focus_end := 0;
+			set_changed (false);
 		end;
 
 	clear_window is

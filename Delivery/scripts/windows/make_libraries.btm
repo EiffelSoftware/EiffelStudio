@@ -35,8 +35,7 @@ iff not defined NO_COMPILE then
 	cd %EIFFEL_SRC
 	exprt -l -r %DEFAULT_CVS_TAG -d headers Src/library
 	cd headers
-	gunzip headers.tar.gz
-	tar -xf headers.tar
+	tar xvfz headers.tar.gz
 	iff not isdir apps then
 		remtrace Couldnt retrieve the header files.
 		CANCEL

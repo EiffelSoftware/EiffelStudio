@@ -171,8 +171,17 @@ feature -- Element change
 		require
 			a_color_not_void: a_color /= Void
 			is_parented: parent /= Void
+		local
+			item_index: INTEGER
 		do
-			to_implement ("EV_GRID_COLUMN_I.background_color")
+			from
+				item_index := 1
+			until
+				item_index > count
+			loop
+				item (item_index).set_background_color (a_color)
+				item_index := item_index + 1
+			end
 		ensure
 			--background_color_set: forall (item(j).background_color = a_color)
 		end

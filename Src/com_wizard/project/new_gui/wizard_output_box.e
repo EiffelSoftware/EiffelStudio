@@ -57,10 +57,7 @@ feature {NONE} -- Initialization
 			wizard_output_upper_box.extend (output_text)
 			progress_bar.disable_segmentation
 			progress_bar_label.set_text ("Ready.")
-			create title_indices.make (20)
-			create warning_indices.make (400)
-			create error_indices.make (2)
-			create text.make (256 * 1024)
+			create internal_text.make (256 * 1024)
 		end
 
 feature -- Access
@@ -103,10 +100,7 @@ feature -- Basic Operations
 			-- Clear output.
 		do
 			output_text.set_text ("")
-			text.wipe_out
-			title_indices.wipe_out
-			error_indices.wipe_out
-			warning_indices.wipe_out
+			internal_text.wipe_out
 		end
 	
 	process_event (a_event: EV_THREAD_EVENT) is
@@ -266,7 +260,7 @@ feature {NONE} -- GUI Events Handling
 			-- Called by `select_actions' of `save_button'.
 			-- Save rich text content.
 		local
-			l_dialog: EV_FILE_OPEN_DIALOG
+			l_dialog: EV_FILE_SAVE_DIALOG
 			l_file_name: STRING
 		do
 			create l_dialog.make_with_title ("Browse for log file")
@@ -306,15 +300,13 @@ feature {NONE} -- Implementation
 		local
 			l_underline: STRING
 		do
-			title_indices.extend (text.count + 2)
 			create l_underline.make (a_title.count)
 			l_underline.fill_character ('-')
-			text.append ("%R%N")
-			text.append (a_title)
-			text.append ("%R%N")
-			text.append (l_underline)
-			text.append ("%R%N%R%N")
-			title_indices.extend (text.count - 1)
+			append_text ("%R%N")
+			append_text (a_title)
+			append_text ("%R%N")
+			append_text (l_underline)
+			append_text ("%R%N%R%N")
 			update_output
 		end
 
@@ -323,11 +315,9 @@ feature {NONE} -- Implementation
 		require
 			non_void_error: a_error /= Void
 		do
-			error_indices.extend (text.count + 1)
-			text.append ("%R%NERROR: ")
-			text.append (a_error)
-			text.append ("%R%N")
-			error_indices.extend (text.count)
+			append_text ("%R%NERROR: ")
+			append_text (a_error)
+			append_text ("%R%N")
 			update_output
 		end
 
@@ -336,10 +326,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_warning: a_warning /= Void
 		do
-			warning_indices.extend (text.count)
-			text.append (a_warning)
-			text.append ("%R%N")
-			warning_indices.extend (text.count)
+			append_text (a_warning)
+			append_text ("%R%N")
 			update_output
 		end
 
@@ -348,8 +336,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_message: a_message /= Void
 		do
-			text.append (a_message)
-			text.append ("%R%N")
+			append_text (a_message)
+			append_text ("%R%N")
 			update_output
 		end
 				
@@ -358,10 +346,24 @@ feature {NONE} -- Implementation
 		require
 			non_void_text: a_text /= Void
 		do
-			text.append (a_text)
+			append_text (a_text)
 			update_output
 		end
 	
+	append_text (a_text: STRING) is
+			-- Append `a_text' to `text', wrap lines of more than 1024 characters.
+		require	
+			non_void_text: a_text /= Void
+		do	
+			if a_text.count < 1024 then
+				internal_text.append (a_text)
+			else	
+				internal_text.append (a_text.substring (1, 1023))
+				internal_text.append ("%R%N")
+				append_text (a_text.substring (1024, a_text.count))
+			end
+		end
+
 	update_output is
 			-- Append `a_text' to content of `output_text' using format `a_format'.
 		local
@@ -370,17 +372,17 @@ feature {NONE} -- Implementation
 		do
 			l_visible_lines := output_text.visible_lines_count
 			from
-				l_index := text.count
+				l_index := internal_text.count
 			until
 				i >= l_visible_lines or l_index <= 0
 			loop
-				l_index := text.last_index_of ('%N', l_index) - 1
+				l_index := internal_text.last_index_of ('%N', l_index) - 1
 				i := i + 1
 			end
 			if l_index > 0 then
-				l_displayed_text := text.substring (text.count.min (l_index + 2), text.count)
+				l_displayed_text := internal_text.substring (internal_text.count.min (l_index + 2), internal_text.count)
 			else
-				l_displayed_text := text
+				l_displayed_text := internal_text
 			end
 			output_text.set_text (l_displayed_text)
 		end
@@ -390,7 +392,7 @@ feature {NONE} -- Implementation
 		local
 			l_scroll: INTEGER
 		do
-			output_text.set_text (text)
+			output_text.set_text (internal_text)
 			l_scroll := output_text.line_count - output_text.visible_lines_count + 1
 			if l_scroll > 0 then
 				output_text.scroll_to_line (l_scroll)
@@ -436,18 +438,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Access
 
-	text: STRING
+	internal_text: STRING
 			-- Output text
 
-	title_indices: ARRAYED_LIST [INTEGER]
-			-- Array of title indices
-	
-	warning_indices: ARRAYED_LIST [INTEGER]
-			-- Array of warning indices
-	
-	error_indices: ARRAYED_LIST [INTEGER]
-			-- Array of error indices
-	
 	output_text: WIZARD_TEXT
 			-- Output text
 
@@ -458,11 +451,6 @@ feature {NONE} -- Private Access
 		ensure
 			valid_parent: Result /= Void
 		end
-
-invariant
-	valid_title_indices: title_indices /= Void implies title_indices.count \\ 2 = 0
-	valid_warning_indices: warning_indices /= Void implies warning_indices.count \\ 2 = 0
-	valid_error_indices: error_indices /= Void implies error_indices.count \\ 2 = 0
 
 end -- class WIZARD_OUTPUT_BOX
 

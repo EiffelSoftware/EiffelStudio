@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			name := "TEST SUITE"
 			select_strategy ("linear")
 		ensure
-			non_empty_name: name /= Void
+			non_empty_name: name /= Void and then not name.is_empty
 			test_results_exist: test_results /= Void
 			sequential_strategy: equal (selected_strategy, "linear")
 		end
@@ -197,7 +197,7 @@ feature -- Status setting
 	set_name (n: STRING) is
 			-- Set name to `n'.
 		require
-			non_empty_name: n /= Void and then n.is_empty
+			non_empty_name: n /= Void and then not n.is_empty
 		do
 			name := n
 		ensure

@@ -8,7 +8,7 @@ class
 	TUPLE
 
 inherit
-	ANY
+	HASHABLE
 		redefine
 			copy, is_equal
 		end
@@ -29,6 +29,37 @@ feature -- Creation
 			non_void_native_array: native_array /= Void
 		end
 
+feature -- Status report
+
+	hash_code: INTEGER is
+			-- Hash code value
+		local 
+			i, nb: INTEGER 
+			l_item: SYSTEM_OBJECT
+			l_key: HASHABLE
+		do 
+			from
+				i := 1
+				nb := count
+			until
+				i > nb 
+			loop
+				l_item := fast_item (i - 1) 
+				if is_reference_item (i) then
+					l_key ?= l_item
+					if l_key /= Void then 
+						Result := Result + l_key.hash_code * internal_primes.i_th (i) 
+					end
+				else
+						-- A basic type
+					Result := Result + l_item.get_hash_code * internal_primes.i_th (i)
+				end
+				i := i + 1 
+			end 
+				-- Ensure it is a positive value.
+			Result := Result.hash_code
+		end 
+		
 feature -- Access
 
 	item, infix "@" (k: INTEGER): ANY is
@@ -729,8 +760,20 @@ feature {NONE} -- Implementation
 
 	generic_typecode (pos: INTEGER): INTEGER_8 is
 			-- Code for generic parameter `pos' in `obj'.
+		local
+			l_item: SYSTEM_OBJECT
 		do
-			Result ?= reverse_lookup.item (fast_item (pos).get_type)
+			l_item := fast_item (pos)
+			if l_item /= Void then
+				l_item := reverse_lookup.item (l_item.get_type)
+				if l_item /= Void then
+					Result ?= l_item
+				else
+					Result := reference_code
+				end
+			else
+				Result := reference_code
+			end
 		end
 
 	reverse_lookup: HASHTABLE is
@@ -763,6 +806,12 @@ feature {NONE} -- Implementation
 			Result.put (integer_8_code, feature {TYPE}.get_type_string (("System.Byte").to_cil))
 			Result.put (integer_16_code, feature {TYPE}.get_type_string (("System.Int16").to_cil))
 			Result.put (integer_64_code, feature {TYPE}.get_type_string (("System.Int64").to_cil))
+		end
+
+	internal_primes: PRIMES is
+			-- For quick access to prime numbers.
+		once 
+			create Result
 		end
 
 invariant

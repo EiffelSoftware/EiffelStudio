@@ -85,7 +85,7 @@ minigzip.obj: minigzip.c zlib.h zconf.h
 
 # we must cut the command line to fit in the MS/DOS 128 byte limit:
 zlib.lib: $(OBJ1) $(OBJ2)
-	del zlib.lib
+	-del zlib.lib
 	$(LIB) zlib +$(OBJP1)
 	$(LIB) zlib +$(OBJP2)
 

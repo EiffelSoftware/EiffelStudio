@@ -59,7 +59,7 @@ feature -- IL code generation
 			
 				-- Evaluate the type and create a corresponding object type.
 			il_generator.generate_current
-			il_generator.create_formal_type
+			il_generator.create_type
 		end
 		
 feature -- Byte code generation

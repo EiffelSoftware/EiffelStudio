@@ -40,6 +40,7 @@
 			<li><B>EV_RECTANGLE</B> - Added precondition to `intersects' which stops a Void rectangle being passed as an argument.</li>
 			<li><B>EV_TOOL_BAR_SEPARATOR</B> - Now export many inherited features to {ANY} instead of {NONE}, including `parent'.</li>
 			<li><B>EV_ENVIRONMENT</B> - Added `supported_image_formats' which returns a LINEAR [STRING] containing all valid formats by their three letter extension.</li>
+			<li><B>EV_CHECKABLE_LIST</B> - New class added which behaves as an EV_LIST, except that for each EV_LIST_ITEM contained, an associated check box is displayed.</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
 		<ul>
@@ -85,13 +86,15 @@
 					- Querying `color' after a used had cancelled the dialog would previously crash 
 					a system, if `set_color' had never been called.
 					<li>
-						<b>EV_COLOR_IMP</b>
+						<b>EV_COLOR</b>
 					- Fixed `set_rgb_with_24_bit' which would fail when called.
 					<li>
 						<b>EV_BUTTON, EV_TOGGLE_BUTTON</b> - The buttons now correctly display a text, 
 						pixmap and background color simultaneously. Previously, the background color 
 						was never displayed, and either the pixmap or text would be displayed, not 
 						both.</li>
+					<li>
+						<b>EV_TEXT</b> - If not `is_editable' and a `background_color' had been set, it was only used on lines containing text. The `background_color' is now correctly displayed throughout the whole control when not `is_editable'.</li>
 				</ul>
 			<li>
 				<b>Gtk</b></li>

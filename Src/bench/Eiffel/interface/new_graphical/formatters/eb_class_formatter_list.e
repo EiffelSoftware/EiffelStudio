@@ -60,6 +60,18 @@ feature {NONE} -- Initialization
 
 		end
 
+feature -- Basic Operations
+
+	set_implementation_formats_insensitive (flag: BOOLEAN) is
+		do
+			start
+			item.launch_cmd.set_insensitive (flag)
+			forth
+			item.launch_cmd.set_insensitive (flag)
+			forth
+			item.launch_cmd.set_insensitive (flag)
+		end
+
 feature -- Constants
 
 	default_format: EB_FORMATTER is

@@ -39,7 +39,9 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	count: INTEGER is
-			-- Number of widgets in `Current'.
+			-- Number of widgets actually within `Current', does not include any
+			-- widgets that are currently docked out. Therefore, when a widget is
+			-- docked out, `count' is reduced by one.
 		do
 			Result := linear_representation.count
 		ensure
@@ -50,11 +52,8 @@ feature -- Access
 			-- Is `a_widget' minimized in `Current'?
 		require
 			widget_contained: linear_representation.has (a_widget)
-		local
-			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
-			holder ?= all_holders.i_th (linear_representation.index_of (a_widget, 1))
-			Result := holder.is_minimized
+			Result := holder_of_widget (a_widget).is_minimized
 		end
 		
 	is_item_maximized (a_widget: EV_WIDGET): BOOLEAN is
@@ -65,7 +64,8 @@ feature -- Access
 			if maximized_tool /= Void then
 				Result := maximized_tool.tool = a_widget	
 			end
-			
+		ensure
+			Result_consistent: Result implies maximized_tool /= Void
 		end
 		
 	is_item_external (a_widget: EV_WIDGET): BOOLEAN is
@@ -791,9 +791,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				-- Firstly hide the actual widget of the tool, so that its minimum size
 				-- has no effect.
 			a_tool.tool.hide
-			
-			
-			position_of_tool := all_holders.index_of (a_tool, 1)
+
+			position_of_tool := index_of_holder (a_tool)
 			if position_of_tool = 1 or else all_minimized (1, position_of_tool - 1) then
 				remove_tool_from_parent (a_tool)
 				lower_holder := all_holders.i_th (next_non_minimized_down (position_of_tool))
@@ -1142,6 +1141,20 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			result_not_void: Result /= Void
 			position_not_changed: all_holders.index = old all_holders.index
 		end
+		
+	index_of_holder (a_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER): INTEGER is
+			-- `Result' is index of `a_holder' within `Current'.
+			-- Ignores any holders that are docked out, so will not correspond to
+			-- `all_holders.i_th'.
+		require
+			a_holder_not_void: a_holder /= Void
+			holder_not_external: not a_holder.is_external
+		do
+			Result := linear_representation.index_of (a_holder.tool, 1)
+		ensure
+			valid_result: Result >= 1 and Result <= count
+		end
+		
 		
 	update_for_holder_position_change (original_position, new_position: INTEGER) is
 			--

@@ -1,35 +1,28 @@
 indexing
 
 	description: 
-		"EiffelVision split, gtk implementation."
+		"EiffelVision split, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	
-	EV_SPLIT_IMP
+	EV_SPLIT_AREA_I
 	
 inherit
+	EV_CONTAINER_I
 	
-	EV_SPLIT_I
-
-	EV_CONTAINER_IMP
-		
+feature {EV_SPLIT_AREA} -- Implementation
 	
-feature {EV_SPLIT} -- Implementation
-	
-	add_child1 (child_imp: EV_WIDGET_IMP) is
+	add_child1 (child_imp: EV_WIDGET_I) is
 			-- Add the first child of the split.
-		do
-			gtk_paned_add1 (widget, child_imp.widget)
+		deferred
 		end
 	
-	add_child2 (child_imp: EV_WIDGET_IMP) is
+	add_child2 (child_imp: EV_WIDGET_I) is
 			-- Add the second child.
-		do
-			gtk_paned_add2 (widget, child_imp.widget)
+		deferred
 		end
 
 end

@@ -1,17 +1,17 @@
 indexing
 
 	description: 
-		"EiffelVision vertical split, implementation interface."
+		"EiffelVision horizontal split, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 deferred class
-	EV_VERTICAL_SPLIT_I
+	EV_HORIZONTAL_SPLIT_AREA_I
 	
 inherit
-	EV_SPLIT_I
+	EV_SPLIT_AREA_I
 end
 
 --|----------------------------------------------------------------

@@ -1,7 +1,7 @@
 indexing
 	description: "EiffelVision wel horizontal split window.%
 			% Mswindows implementation.%
-			% This class is used by EV_HORIZONTAL_SPLIT_IMP."
+			% This class is used by EV_HORIZONTAL_SPLIT_AREA_IMP."
 	status: "See notice at end of class"
 	id: "$$"
 	date: "$Date$"
@@ -27,7 +27,7 @@ creation
 
 feature -- Initialization
 
-	initialize_parent (imp: EV_SPLIT_IMP) is
+	initialize_parent (imp: EV_SPLIT_AREA_IMP) is
 			-- Initialize the horizontal parent of the window
 		do
 			split_imp ?= imp
@@ -35,8 +35,8 @@ feature -- Initialization
 
 feature {NONE} -- Access
 
-	split_imp: EV_HORIZONTAL_SPLIT_IMP
-			-- The parent container, an EV_SPLIT_IMP
+	split_imp: EV_HORIZONTAL_SPLIT_AREA_IMP
+			-- The parent container, an EV_SPLIT_AREA_IMP
 
 feature -- Event handling
 

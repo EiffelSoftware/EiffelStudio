@@ -6,7 +6,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			byte_node, type_check
+			byte_node, type_check, value_i
 		end
 
 feature -- Attributes
@@ -42,6 +42,15 @@ feature -- Type check and byte code
 		do
 			!!Result;
 			Result.set_value (value);
+		end;
+
+feature
+
+	value_i: BIT_VALUE_I is
+			-- Interface constant value
+		do
+			!!Result;
+			Result.set_bit_val (value)
 		end;
 
 end

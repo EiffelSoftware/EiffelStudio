@@ -74,12 +74,6 @@ feature -- Basic operations
 			end
 		end
 
-	set_default_null_value (value: DOUBLE) is
-			-- Set the value to represent a database null value.
-		do
-			implementation.set_default_null_value (value)
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: DATABASE_STORE [DATABASE]

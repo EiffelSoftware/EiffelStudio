@@ -810,6 +810,11 @@ rt_public void reclaim(void)
 	dprintf(1)("reclaim: collecting all objects...\n");
 #endif
 
+#if ! defined CUSTOM || defined NEED_OPTION_H
+	if (prof_enabled)
+		exitprf();			/* Store profile information */
+#endif
+
 	/* Reset GC status otherwise full_sweep() might skip some memory blocks
 	 * (those previously used as partial scavenging areas).
 	 */
@@ -834,11 +839,6 @@ rt_public void reclaim(void)
 
 #ifdef DLE
 	dle_reclaim();			/* Reclaim resources introduced by DLE */
-#endif
-
-#if ! defined CUSTOM || defined NEED_OPTION_H
-	if (prof_enabled)
-		exitprf();			/* Store profile information */
 #endif
 
 #ifdef DEBUG

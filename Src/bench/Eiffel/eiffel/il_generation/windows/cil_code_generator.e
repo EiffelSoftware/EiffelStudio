@@ -4078,7 +4078,8 @@ feature -- Once management
 				-- Set current module and class
 			set_current_module_for_class (class_c)
 			current_class := class_c
-			current_class_token := current_module.class_data_token (class_c)
+				-- Avoid generating class data when there are no once routines
+			current_class_token := 0
 			method_body := Void
 				-- Generate data for once features in class `class_c'
 				-- (they are either immediate or replicated in it)
@@ -4090,6 +4091,9 @@ feature -- Once management
 			loop
 				feature_i := feature_table.item_for_iteration
 				if feature_i.is_once and then feature_i.access_in = class_c.class_id then
+					if current_class_token = 0 then
+						current_class_token := current_module.class_data_token (class_c)
+					end
 					sync_token := 0
 					generate_once_data_info (feature_i)
 					if sync_token /= 0 then
@@ -4113,7 +4117,7 @@ feature -- Once management
 								feature {MD_METHOD_ATTRIBUTES}.il | feature {MD_METHOD_ATTRIBUTES}.managed)
 							method_body := method_writer.new_method_body (class_constructor_token)
 						end
-						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.newobj, constructor_token (current_module.object_type_id))
+						method_body.put_newobj (constructor_token (current_module.object_type_id), 0)
 						method_body.put_opcode_mdtoken (feature {MD_OPCODES}.stsfld, sync_token)
 					end
 				end
@@ -4188,12 +4192,16 @@ feature -- Once management
 		require
 			name_not_void: name /= Void
 			name_not_empty: not name.is_empty
+		local
+			class_data_token: INTEGER
 		do
+			class_data_token := current_module.class_data_token (current_class)
 			uni_string.set_string (once_done_name (name))
-			done_token := md_emit.define_member_ref (
-				uni_string,
-				current_module.class_data_token (current_class),
-				done_sig)
+			done_token := md_emit.define_member_ref (uni_string, class_data_token, done_sig)
+			if global_once_generation then
+				uni_string.set_string (once_sync_name (name))
+				sync_token := md_emit.define_member_ref (uni_string, class_data_token, sync_sig)
+			end
 		end
 
 	generate_once_result_info (name: STRING; type_i: TYPE_I) is
@@ -4233,7 +4241,24 @@ feature -- Once management
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		do
+			if global_once_generation then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
+				method_body.put_static_call (current_module.define_monitor_method_token ("Enter"), 1, False)
+			end
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, done_token)
+		end
+
+	generate_once_return (has_result: BOOLEAN) is
+			-- Generate return from once routine, including loading of function result if `has_result' is true.
+		do
+			if has_result then
+				generate_once_result
+			end
+			if global_once_generation then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.ldsfld, sync_token)
+				method_body.put_static_call (current_module.define_monitor_method_token ("Exit"), 1, False)
+			end
+			generate_return (has_result)
 		end
 
 	generate_once_result is

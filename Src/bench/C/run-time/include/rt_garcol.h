@@ -25,7 +25,7 @@ extern "C" {
 #define STACK_CHUNK		1000	/* Size of a stack chunk */
 #endif
 #define MIN_FREE		100		/* Below that, chunk is nearly full */
-#define TH_ALLOC		262144	/* Allocation threshold (256 K)*/
+#define TH_ALLOC		786432	/* Allocation threshold (768 K)*/
 #define TH_ALLOC_MIN	8192	/* Minimal allocation threshold (8 K).*/
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
 #define TO_MAX			7		/* Maximum number of allocable 'to' */

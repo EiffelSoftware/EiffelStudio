@@ -81,9 +81,11 @@ feature {NONE} -- Initialization
 			disable_sensitive
 			add_agent (agent execute)
 			
-			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_c)
-			create acc.make_with_key_combination (key, True, False, False)
-			set_accelerator (acc)
+				-- Removed for now, as it clashes with keyboard
+				-- cut command.
+	--		create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_c)
+	--		create acc.make_with_key_combination (key, True, False, False)
+	--		set_accelerator (acc)
 		end
 		
 feature -- Access

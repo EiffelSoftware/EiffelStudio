@@ -11,7 +11,7 @@
 //--------------------------------------------------------------------------
 
 
-#include "E_guid.h"
+#include "ecom_guid.h"
 #ifdef __cplusplus
 	extern "C" {
 #endif

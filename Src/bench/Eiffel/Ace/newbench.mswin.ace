@@ -38,6 +38,7 @@ default
 	disabled_debug ("debugger_eifnet_data")
 	disabled_debug ("debugger_hook")
 	disabled_debug ("debugger_il_info_trace")
+	disabled_debug ("debugger_il_info_trace_extra")
 	disabled_debug ("debugger_interface")
 	disabled_debug ("debugger_trace")
 	disabled_debug ("debugger_trace_breakpoint")
@@ -99,6 +100,7 @@ default
 	line_generation (no)
 	profile (no)
 	trace (no)
+	override_cluster ("override")
 	check_vape (yes)
 	console_application (yes)
 	syntax_warning (yes)
@@ -113,6 +115,9 @@ default
 
 
 cluster
+	override:		"$EIFFEL_SRC\Eiffel\override"
+
+
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; "CVS"; 

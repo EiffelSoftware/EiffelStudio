@@ -86,11 +86,11 @@ feature -- Conveniences
 			-- Integer value
 		local
 			constant_i: CONSTANT_I
-			integer_value: INT_VALUE_I
+			integer_value: INTEGER_CONSTANT
 		do
 			constant_i ?= context.a_class.feature_table.item (Current)
 			integer_value ?= constant_i.value
-			!! Result.make (integer_value.int_val, constant_i)
+			!! Result.make (context.a_class, integer_value.value, constant_i)
 		end
 
 	make_character: CHAR_CONST_VAL_B is
@@ -101,7 +101,7 @@ feature -- Conveniences
 		do
 			constant_i ?= context.a_class.feature_table.item (Current)
 			char_value ?= constant_i.value
-			!! Result.make (char_value.char_val, constant_i)
+			!! Result.make (context.a_class, char_value.char_val, constant_i)
 		end
 
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences

@@ -88,6 +88,9 @@ extern void arg_init();					/* Command line arguments saving */
 public unsigned TIMEOUT;     /* Time out for interprocess communications */
 #endif
 
+#ifdef EIF_WINDOWS
+extern void show_trace();
+#endif
 
 #ifdef DEBUG
 extern void mem_diagnose();				/* Memory usage dump */
@@ -123,13 +126,9 @@ char **envp;
 		ename = _argv[0];				/* Program name is the filename */
 #elif defined EIF_WINDOWS
 	static char module_name [255] = {0};
-	extern HANDLE eif_conoutfile, eif_coninfile;
 
 	_fmode = O_BINARY;
 	GetModuleFileName (NULL, module_name, 255);
-
-	eif_coninfile = GetStdHandle (STD_INPUT_HANDLE);
-	eif_conoutfile = GetStdHandle (STD_OUTPUT_HANDLE);
 
 	ename = strrchr (module_name, '\\');
 	if (ename++ == (char *) 0)
@@ -255,6 +254,11 @@ public void failure()
 	
 	trapsig(emergency);					/* Weird signals are trapped */
 	esfail();							/* Dump the execution stack trace */
+
+#ifdef EIF_WINDOWS
+	show_trace();
+#endif
+
 	reclaim();							/* Reclaim all the objects */
 	exit(1);							/* Abnormal termination */
 
@@ -271,6 +275,10 @@ int sig;
 	
 	print_err_msg(stderr, "\n\n%s: PANIC: caught signal #%d (%s) -- Giving up...\n",
 		ename, sig, signame(sig));
+
+#ifdef EIF_WINDOWS
+	show_trace();
+#endif
 
 	exit(2);							/* Really abnormal termination */
 

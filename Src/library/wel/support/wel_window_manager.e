@@ -60,11 +60,11 @@ feature {NONE} -- Implementation
 		end
 
 	cwin_set_window_long (hwnd: POINTER; offset: INTEGER; value: POINTER) is
-			-- SDK SetWindowLongPtr
+			-- SDK SetWindowLong
 		external
-			"C [macro %"wel.h%"] (HWND, int, LONG_PTR)"
+			"C [macro %"wel.h%"] (HWND, int, LONG)"
 		alias
-			"SetWindowLongPtr"
+			"SetWindowLong"
 		end
 
 end -- class WEL_WINDOW_MANAGER

@@ -682,7 +682,7 @@ feature -- Status setting
 			-- Update Window cache buffer for Window style.
 			--|
 			--| Certain window data is cached, so changes you make using 
-			--| SetWindowLongPtr will not take effect until you call the 
+			--| SetWindowLong will not take effect until you call the 
 			--| SetWindowPos function. Specifically, if you change any 
 			--| of the frame styles, you must call SetWindowPos with 
 			--| the SWP_FRAMECHANGED flag for the cache to be updated 

@@ -59,7 +59,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	} else {
 		WNDPROC proc = NULL;
 		struct EIF_WEL_USERDATA *data =
-			(struct EIF_WEL_USERDATA *) GetWindowLongPtr (hwnd, GWL_USERDATA);
+			(struct EIF_WEL_USERDATA *) GetWindowLong (hwnd, GWL_USERDATA);
 
 		if (data) {
 			proc = data->default_window_procedure;
@@ -80,7 +80,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 					data->object_id = 0;
 					data->default_window_procedure = NULL;
 					free (data);
-					SetWindowLongPtr (hwnd, GWL_USERDATA, (LONG_PTR) 0);
+					SetWindowLong (hwnd, GWL_USERDATA, (LONG) 0);
 				}
 			}
 		}
@@ -130,7 +130,7 @@ INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			default:
 				if (dialog_result != 0) {
 						/* Set the result given by WEL to the dialog */
-					dialog_result = SetWindowLongPtr (hwnd, DWL_MSGRESULT, (LONG_PTR) dialog_result);
+					dialog_result = SetWindowLong (hwnd, DWL_MSGRESULT, (LONG) dialog_result);
 					return (dialog_result != 0);
 				} else
 					return FALSE;

@@ -74,6 +74,7 @@ feature -- Element change
 			if v /= Void then
 				imp ?= v.implementation
 				C.gtk_container_add (container_widget, imp.c_object)
+				update_child_requisition (imp.c_object)
 				on_new_item (v)
 			end
 		end
@@ -107,6 +108,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/21 22:33:32  king
+--| Added call to update_child_requisition on item addition
+--|
 --| Revision 1.7  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

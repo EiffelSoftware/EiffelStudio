@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>DIRECTORY</title>
+</head>
+
+<body>
+<h1>DIRECTORY</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>SYSTEM_DIRECTORY
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{SYSTEM_DIRECTORY}.get_file_system_entries
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>When querying `has_entry', the user must have FileIOPermission (Read)
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>When querying `has_query' an exception (DirectoryNotFoundException) 
+	can be raised if the directory doesn't exist.
+	<li>When querying `has_query' an exception (ArgumentException) 
+	can be raised if the directory name is invalid (empty, or contains invalid characters).
+</ul>
+<h2>Other notes</h2>
+
+</body>
+
+</html>

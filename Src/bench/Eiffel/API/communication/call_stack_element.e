@@ -35,11 +35,13 @@ feature {NONE} -- Initialization
 if enabled_debug_trace then
 	io.error.putstring ("%T%TCreating CALL_STACK_ELEMENT: ");
 end
+
 			!! unprocessed_values.make (10);
 			init_recv_c;
 			init_rout_c;
 
 			c_recv_rout_info (Current);
+
 if enabled_debug_trace then
 	if is_exhausted then
 		io.error.putstring ("EXHAUSTED");

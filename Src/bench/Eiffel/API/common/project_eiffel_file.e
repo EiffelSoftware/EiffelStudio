@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"project.eif or precompile.eif file for an eiffelbench project.";
 	date: "$Date$";
@@ -8,18 +7,20 @@ indexing
 class PROJECT_EIFFEL_FILE
 
 inherit
-
 	RAW_FILE
 		rename
 			make as file_make
 		end;
-	EXCEPTIONS;
+
+	EXCEPTIONS
+
 	UNIX_SIGNALS
 		rename
 			meaning as sig_meanging,
 			ignore as sig_ignore,
 			catch as sig_catch
-		end;
+		end
+
 	SYSTEM_CONSTANTS
 
 creation
@@ -123,10 +124,8 @@ feature -- Update
 				!! rt.make (1);
 				!! f_parser;
 				f_parser.parse_file (project_txt_name, rt);
-				project_version_number := rt.get_string 
-					(version_number_tag, "");
-				stored_project_version_number := rt.get_string 
-					(storable_version_number_tag, "");
+				project_version_number := rt.get_string (version_number_tag, "");
+				stored_project_version_number := rt.get_string (storable_version_number_tag, "");
 				if 
 					project_version_number.empty or else 
 					stored_project_version_number.empty or else 

@@ -20,7 +20,7 @@ inherit
 			tool_name, set_default_format, stone, stone_type, synchronize,
 			process_object, close, set_default_size,
 			update_boolean_resource, update_integer_resource,
-			set_title, resources, history_window_title
+			set_title, resources, history_window_title, help_index, icon_id
 		end;
 	BAR_AND_TEXT
 		rename
@@ -31,7 +31,7 @@ inherit
 			stone, stone_type, synchronize, process_object,
 			close, make_shell, reset, update_boolean_resource, 
 			set_default_size, update_integer_resource,
-			set_title, resources, history_window_title
+			set_title, resources, history_window_title, help_index, icon_id
 		select
 			close_windows, make_shell, reset
 		end;
@@ -44,11 +44,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_shell (a_shell: EB_SHELL) is
+	make_shell (a_screen: SCREEN) is
 			-- Create an object tool.
 		do
 			is_in_project_tool := False;
-			old_make_shell (a_shell);
+			old_make_shell (a_screen);
 			set_default_sp_bounds
 		end;
 
@@ -145,6 +145,14 @@ feature -- Window Properties
 		do
 			Result := Interface_names.t_Select_object
 		end;
+
+	help_index: INTEGER is 4
+
+	icon_id: INTEGER is
+			-- Icon id of Current window (only for windows)
+		do
+			Result := Interface_names.i_Object_id
+		end;
  
 feature -- Access
  
@@ -226,7 +234,7 @@ feature -- Update
 		do
 			old_reset;
 			set_default_sp_bounds
-			init_text_window;
+			init_text_window
 		end;
  
 	process_object (a_stone: like stone) is

@@ -25,7 +25,7 @@ inherit
 			update_array_resource,
 			set_default_size,
 			resources, close, update_graphical_resources,
-			raise, build_save_as_menu_entry
+			raise, build_save_as_menu_entry, help_index, icon_id
 		end;
 	EB_CONSTANTS;
 
@@ -112,7 +112,15 @@ feature -- Properties
 		do
 			Result := system_resources
 		end
+
+	help_index: INTEGER is 7
 		
+	icon_id: INTEGER is
+			-- Icon id of Current window (only for windows)
+		do
+			Result := Interface_names.i_System_id
+		end;
+ 
 feature -- Access
 
 	compatible (a_stone: STONE): BOOLEAN is
@@ -287,14 +295,11 @@ feature -- Graphical Interface
 	display is
 			-- Display the system tool
 		local
-			ts: EB_TOP_SHELL;
 			mp: MOUSE_PTR
 		do
 			if not realized then
 				!! mp.set_watch_cursor
-				!! ts.make (project_tool.screen);
-				make_shell (ts);
-				ts.set_title (tool_name);
+				make_shell (Project_tool.screen);
 				mp.restore
 				set_default_size;
 				set_default_format;

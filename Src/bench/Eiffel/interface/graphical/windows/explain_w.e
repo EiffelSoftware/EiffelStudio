@@ -17,7 +17,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			build_toolbar_menu,
-			close, set_title, resources
+			close, set_title, resources, help_index, icon_id
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -26,7 +26,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			build_toolbar_menu,
-			close, set_title, resources
+			close, set_title, resources, help_index, icon_id
 		end;
 	EB_CONSTANTS
 
@@ -92,7 +92,15 @@ feature -- Properties
 			-- Accept any type stone
 		do
 			Result := Any_type
-		end
+		end;
+
+	help_index: INTEGER is 5
+
+	icon_id: INTEGER is
+			-- Icon id of Current window (only for windows)
+		do
+			Result := Interface_names.i_Explain_id
+		end;
 
 feature -- Status setting
 

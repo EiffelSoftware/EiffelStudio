@@ -18,6 +18,7 @@ inherit
 			{ANY} receive
 		end;
 	CLOSEABLE;
+	HELPABLE;
 	SHARED_TABS
 
 feature -- Window Properties
@@ -159,6 +160,11 @@ feature -- Window Properties
 			Result := Interface_names.t_Empty
 		end;
 
+	icon_id: INTEGER is
+			-- Icon id for window (for windows)
+		do
+		end
+
 feature -- Access
 
 	resources: RESOURCE_CATEGORY is
@@ -175,6 +181,22 @@ feature -- Access
 			-- Are we able to edit the text?
 		do
 		end;
+
+	help_index: INTEGER is
+			-- Index of help file nmae
+		do
+		end;
+
+	help_file_name: FILE_NAME is
+			-- Help file name
+		do
+		end
+
+	associated_help_widget: WIDGET is
+			-- Associated parent widget for help window
+		do
+			Result := popup_parent
+		end
 
 feature -- Window Implementation
 
@@ -739,8 +761,8 @@ feature {PROJECT_W} -- Implementation
 			help_cmd: HELP_COMMAND;
 			help_menu_entry: EB_MENU_ENTRY;
 		do
-			!! help_menu.make (Interface_names.f_Help, menu_bar);
-			!! help_cmd;
+			!! help_menu.make (Interface_names.m_Help, menu_bar);
+			!! help_cmd.make (Current);
 			!! help_menu_entry.make_default (help_cmd, help_menu);
 			menu_bar.set_help_button (help_menu.menu_button)
 		end;

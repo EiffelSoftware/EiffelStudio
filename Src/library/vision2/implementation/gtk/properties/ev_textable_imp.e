@@ -22,16 +22,6 @@ inherit
 	
 feature {NONE} -- Initialization
 	
-	make is
- 		deferred
- 		end
-
-	make_with_text (txt: STRING) is
-		do
-			make
-			create_text_label (txt)
-                end
-	
 	create_text_label (txt: STRING) is
 		require
 			call_only_once: label_widget = Default_pointer

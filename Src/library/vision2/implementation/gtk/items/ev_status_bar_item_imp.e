@@ -15,12 +15,17 @@ inherit
 			parent_imp
 		end
 
-	EV_SIMPLE_ITEM_IMP
+	EV_ITEM_IMP
 		undefine
 			parent
 		redefine
 			interface,
 			initialize
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface
 		end
 
 create
@@ -39,7 +44,7 @@ feature -- Initialization
 	initialize is
 			-- Initialize the pixmap and text containers
 		do
-			{EV_SIMPLE_ITEM_IMP} Precursor
+			{EV_ITEM_IMP} Precursor
 			is_initialized := False
 			textable_imp_initialize
 			pixmapable_imp_initialize
@@ -121,6 +126,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/07 22:35:29  brendel
+--| Removed inheritance of EV_SIMPLE_ITEM.
+--|
 --| Revision 1.23  2000/03/01 18:03:58  king
 --| Removed redundant features index and set_index
 --|

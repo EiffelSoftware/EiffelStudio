@@ -53,6 +53,9 @@ feature {NONE} -- Initialization
 
 			-- Creating the array containing the menu_items.
 			create menu_items_array.make (0)
+
+			-- initializing status
+			menu := Void
 		end	
 
 feature -- Status setting
@@ -105,7 +108,7 @@ feature {NONE} -- Status report
 			-- Text shown on the option button if 
 			-- an item has been selected.
 		do
-			if ( menu /= Void) then
+			if (menu /= Void) then
 				if (selected_item /= Void) then
 					Result := selected_item.text
 				else
@@ -115,6 +118,9 @@ feature {NONE} -- Status report
 				Result := Void
 			end
 		end
+
+	menu: EV_MENU_IMP
+			-- The menu contained in the option button.
 
 feature {EV_MENU_ITEM_HOLDER} -- Element change	
 	

@@ -93,8 +93,6 @@ int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 %token 		TE_CREATION
 %token		TE_LARRAY
 %token		TE_RARRAY
-%token		TE_LTUPLE
-%token		TE_RTUPLE
 %token 		TE_RPARAN
 %token		TE_LCURLY
 %token		TE_RCURLY
@@ -1312,6 +1310,11 @@ A_precursor:				TE_PRECURSOR Parameters
 								$$ = create_node2(PRECURSOR_AS,click_list_elem ($<value>3),$7);
 								click_list_set ($$, $<value>3);
 								yacc_error_code=342;}
+	|						TE_PRECURSOR TE_LCURLY Pushing_id TE_RCURLY Parameters
+								{
+								$$ = create_node2(PRECURSOR_AS,click_list_elem ($<value>2),$5);
+								click_list_set ($$, $<value>2);
+								yacc_error_code=341;}
 	;
 
 Remote_call:				Call_on_feature_access
@@ -1451,7 +1454,7 @@ Manifest_array:			TE_LARRAY {list_init();yacc_error_code=382;} Manifest_expressi
 							{$$ = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=383;}
 	;
 
-Manifest_tuple:			TE_LTUPLE {list_init();yacc_error_code=382;} Manifest_expression_list TE_RTUPLE
+Manifest_tuple:			TE_LSQURE {list_init();yacc_error_code=382;} Manifest_expression_list TE_RSQURE
 							{$$ = create_node1(TUPLE_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=383;}
 	;
 

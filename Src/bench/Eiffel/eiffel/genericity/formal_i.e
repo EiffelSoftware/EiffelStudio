@@ -12,7 +12,7 @@ inherit
 			complete_instantiation_in,
 			generated_id, is_explicit, generate_gen_type_il,
 			generate_cid, generate_cid_array, generate_cid_init,
-			make_gen_type_byte_code
+			make_gen_type_byte_code, is_reference, is_expanded
 		end
 
 	SHARED_BYTE_CONTEXT
@@ -25,13 +25,17 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (i: INTEGER) is
+	make (is_ref: like is_reference; is_exp: like is_expanded; i: like position) is
 			-- Assign `i' to `position'.
 		require
 			valid_position: i > 0
 		do
+			is_reference := is_ref
+			is_expanded := is_exp
 			position := i
 		ensure
+			is_reference_set: is_reference = is_ref
+			is_expanded_set: is_expanded = is_exp
 			position_set: position = i
 		end
 
@@ -57,6 +61,12 @@ feature -- Access
 
 	position: INTEGER
 			-- Position of the formal in declarations
+
+	is_reference: BOOLEAN
+			-- Is current constrained to be always a reference?
+
+	is_expanded: BOOLEAN
+			-- Is current constrained to be always an expanded?
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -109,8 +119,7 @@ feature -- Status report
 	type_a: FORMAL_A is
 			-- Associated FORMAL_A object.
 		do
-			create Result
-			Result.set_position (position)
+			create Result.make (is_reference, is_expanded, position)
 		end
 
 feature -- Comparison
@@ -121,9 +130,8 @@ feature -- Comparison
 			other_formal: FORMAL_I
 		do
 			other_formal ?= other
-			Result := 	other_formal /= Void
-						and then
-						other_formal.position = position
+			Result := other_formal /= Void and then other_formal.position = position and then
+				is_reference = other.is_reference and then is_expanded = other.is_expanded
 		end
 
 feature -- Generic conformance

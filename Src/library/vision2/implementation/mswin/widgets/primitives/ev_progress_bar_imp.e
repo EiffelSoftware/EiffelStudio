@@ -11,7 +11,7 @@ inherit
 	EV_PROGRESS_BAR_I
 
 	EV_PRIMITIVE_IMP
-		undefine
+		redefine
 			on_key_down
 		end
 
@@ -31,11 +31,12 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
 			on_set_focus,
 			on_kill_focus,
 			on_key_up,
 			default_style
+		redefine
+			on_key_down
 		end
 
 	WEL_PBS_CONSTANTS
@@ -82,6 +83,21 @@ feature -- Status setting
 			-- progress bar.
 		do
 			set_position (value)
+		end
+
+feature {NONE} -- WEL implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			if has_command (Cmd_key_press) then
+				data := get_key_data (virtual_key, key_data)
+				execute_command (Cmd_key_press, data)
+			end
 		end
 
 feature {NONE} -- Inapplicable

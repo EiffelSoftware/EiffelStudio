@@ -318,16 +318,18 @@ feature -- Platform
 			create Result
 		end
 
-feature -- Basic operations
+feature {NONE} -- Initialization
 
-	default_rescue is
-			-- Process exception for routines with no Rescue clause.
+	default_create is
+			-- Process instances of classes with no creation clause.
 			-- (Default: do nothing.)
 		do
 		end
 
-	default_create is
-			-- Process instances of classes with no creation clause.
+feature -- Basic operations
+
+	default_rescue is
+			-- Process exception for routines with no Rescue clause.
 			-- (Default: do nothing.)
 		do
 		end

@@ -15,7 +15,7 @@ inherit
 		undefine
 			pass_address, copy, setup, consistent, is_equal
 		redefine
-			number_of_stop_points
+			number_of_stop_points, is_equivalent
 		end;
 	CONSTRUCT_LIST [T]
 		rename
@@ -83,6 +83,28 @@ feature -- Element change
 
 			other.go_to (cur)
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		local
+			i, nb: INTEGER
+		do
+			nb := other.count
+			if count = nb then
+				from
+					i := 1
+					Result := True
+				until
+					not Result or else i > nb
+				loop
+					Result := equivalent (i_th (i),
+						other.i_th (i))
+					i := i + 1
+				end
+			end
+		end
 
 feature {AST_EIFFEL, FORMAT_CONTEXT} -- Output
 

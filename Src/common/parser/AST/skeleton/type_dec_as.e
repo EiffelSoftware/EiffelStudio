@@ -10,6 +10,9 @@ class TYPE_DEC_AS
 inherit
 
 	AST_EIFFEL
+		redefine
+			is_equivalent
+		end
 
 feature {NONE} -- Initialization
 
@@ -37,6 +40,15 @@ feature {ROUTINE_AS} -- Incrementality
 		do
 			id_list.start
 		end;
+
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		do
+			Result := equivalent (id_list, other.id_list) and then
+				equivalent (type, other.type)
+		end
 
 feature {AST_EIFFEL} -- Output
 

@@ -135,7 +135,7 @@ feature -- Access
 			gcvalues.memory_free
 
 			if gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_copy_enum then
-				Result := drawing_mode_copy
+				Result := drawing_mode_copy	
 			elseif gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_xor_enum then
 				Result := drawing_mode_xor
 			elseif gdk_drawing_mode = feature {EV_GTK_EXTERNALS}.Gdk_invert_enum then
@@ -176,21 +176,13 @@ feature -- Access
 			Result := style = feature {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
 		end
 
-feature -- Status report
-
-	is_drawable: BOOLEAN is
-			-- Is the device drawable?
-		do
-			Result := drawable /= default_pointer
-		end
-
 feature -- Element change
 
 	set_font (a_font: EV_FONT) is
 			-- Set `font' to `a_font'.
 		do
 			if internal_font_imp /= a_font.implementation then
-				internal_font_imp ?= a_font.implementation				
+				internal_font_imp ?= a_font.implementation
 			end
 		end
 
@@ -324,8 +316,7 @@ feature -- Clearing operations
 			tmp_fg_color: EV_COLOR
 		do
 			if drawable /= default_pointer then
-				create tmp_fg_color
-				tmp_fg_color.copy (foreground_color)
+				tmp_fg_color := foreground_color
 				set_foreground_color (background_color)
 				feature {EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1,
 					x,
@@ -667,12 +658,6 @@ feature {NONE} -- Implemention
 			same_size: pts.count = Result.count / 2
 		end
 
-	radians_to_gdk (ang: REAL): INTEGER is
-			-- Converts `ang' (radians) to degrees * 64.
-		do
-			Result := ((ang / Pi) * 180 * 64).rounded
-		end
-
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 	pixbuf_from_drawable: POINTER is
@@ -773,17 +758,6 @@ feature {NONE} -- Implementation
 	internal_font_imp: EV_FONT_IMP
 	
 	interface: EV_DRAWABLE
-	
-	math: EV_FIGURE_MATH is
-		once
-			create Result
-		end
-		
-	system_colormap: POINTER is
-			-- Default system color map used for allocating colors.
-		once
-			Result := feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap
-		end
 		
 	gdk_gc_unref (a_gc: POINTER) is 
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);

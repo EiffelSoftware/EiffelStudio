@@ -28,6 +28,27 @@ feature {NONE}
 			"Current version of system has not been successfully compiled. %N%
 			%Cannot use debugging facilities.";
 
+	w_Cannot_debug_attributes: STRING is
+			"This format is not applicable to attributes.";
+
+	w_Cannot_debug_constants: STRING is
+			"This format is not applicable to constant attributes.";
+
+	w_Cannot_debug_deferreds: STRING is
+			"This format is not applicable to deferred features.";
+
+	w_Cannot_debug_dynamics: STRING is
+			"This format is not applicable to dynamic features.";
+
+	w_Cannot_debug_externals: STRING is
+			"This format is not applicable to external features.";
+
+	w_Cannot_debug_feature: STRING is
+			"This format is not applicable to this feature.";
+
+	w_Cannot_debug_uniques: STRING is
+			"This format is not applicable to unique attributes.";
+
 	w_Cannot_find_class (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void

@@ -27,7 +27,7 @@ feature -- Basic operation
 		local
 			formater: XML_FORMATER
 		do
-				-- Generate an XML representation of the sysyetm in `document'.
+				-- Generate an XML representation of the system in `document'.
 			generate_document (False)
 			create formater.make
 				-- Process the document ready for output
@@ -50,7 +50,7 @@ feature {NONE} -- Basic operation.
 			file.close
 		end
 		
-feature {NONE} -- Implementation
+feature {GB_XML_HANDLER} -- Implementation
 
 	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
 			-- Add XML representation of `an_object' to `element'.
@@ -190,11 +190,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		-- Result of last call to `generate_document'.
 		-- XML document generated from created window.
 
-
 feature {NONE} -- Implementation
-
-	xml_format: STRING is "<?xml version=%"1.0%" encoding=%"UTF-8%"?>"
-		-- XML format type, included at start of `document'.
 			
 	generated_names: ARRAYED_LIST [STRING] is
 			-- All names generated automatically.

@@ -138,12 +138,13 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						--| Ancestors
 					tree_item := build_ancestors_tree_folder ("Ancestors", features_tool.current_compiled_class)
 					extend (tree_item)
-					if
-						expand_tree and then
-						tree_item.is_expandable
-					then
-						tree_item.expand
-					end	
+--| Uncomment to auto expand first node for ancestors
+--					if
+--						expand_tree and then
+--						tree_item.is_expandable
+--					then
+--						tree_item.expand
+--					end	
 						--| Features
 					from 
 						fcl.start
@@ -370,7 +371,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make_with_text (n)
 			Result.set_pixmap (Pixmaps.Icon_format_ancestors)
-			fill_ancestors_item (Result, a_compiled_class)
+			Result.extend (create {EV_TREE_ITEM}.make_with_text ("click to refresh"))
+			Result.expand_actions.extend (agent fill_ancestors_item (Result, a_compiled_class))
 		end
 		
 	fill_ancestors_item (a_tree_item: EV_TREE_ITEM; a_class_c: CLASS_C) is

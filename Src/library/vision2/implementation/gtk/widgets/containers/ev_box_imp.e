@@ -70,9 +70,9 @@ feature {EV_BOX} -- Implementation
 			-- Remove the given child.
 			-- Function redefined because the widget is in a box. 
 		do
-			-- removing the box in which the widget is will destroy
-			-- both box_widget and widget.
+			gtk_container_remove (GTK_CONTAINER (child_imp.box_widget), child_imp.widget)
 			gtk_container_remove (GTK_CONTAINER (widget), child_imp.box_widget)
+			
 		end
 
 end -- class EV_BOX_IMP

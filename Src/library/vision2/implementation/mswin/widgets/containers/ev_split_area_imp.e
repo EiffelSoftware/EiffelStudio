@@ -22,7 +22,6 @@ inherit
 		redefine
 			set_insensitive,
 			parent_ask_resize,
-			set_move_and_size,
 			set_width,
 			set_height
 		end
@@ -33,7 +32,6 @@ inherit
 			parent as wel_parent,
 			destroy as wel_destroy
 		undefine
---			destroy,
 			set_width,
 			set_height,
 			remove_command,
@@ -82,7 +80,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Initialise
+feature -- Initialize
 
 	make (par: EV_CONTAINER) is
 			-- Create the control window.
@@ -130,13 +128,12 @@ feature -- Status settings
 			-- Set current widget in insensitive mode if
    			-- `flag'.
 		do
-			if child1 /= Void then
-				child1.set_insensitive (flag)
-			end
 			if child2 /= Void then
 				child2.set_insensitive (flag)
+				{EV_CONTAINER_IMP} Precursor (flag)
+			else
+				{EV_CONTAINER_IMP} Precursor (flag)
 			end
-			Precursor (flag)
 		end
 
 feature -- Resizing
@@ -165,19 +162,22 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation
 
-	parent_ask_resize (new_width, new_height: INTEGER) is
+	parent_ask_resize (a_width, a_height: INTEGER) is
 			-- Resize the box and all the children inside
    		do
-  			resize (minimum_width.max (new_width), minimum_height.max (new_height))
-			resize_children (level)
-		end
-
-	set_move_and_size (a_x, a_y, new_width, new_height: INTEGER) is
-			-- When the parent asks to move and resize, it does it
-			-- and the notice the child.
-		do
-			Precursor (a_x, a_y, new_width, new_height)
-			resize_children (level)
+			child_cell.resize (minimum_width.max (a_width), minimum_height.max (a_height))
+			if resize_type = 3 then
+	  			move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
+				resize_children (level)
+			elseif resize_type = 2 then
+				move_and_resize ((child_cell.width - width) // 2 + child_cell.x, child_cell.y, width, child_cell.height, True)
+				resize_children (level)
+			elseif resize_type = 1 then
+				move_and_resize (child_cell.x, (child_cell.height - height) // 2 + child_cell.y, child_cell.width, height, True)
+				resize_children (level)
+			else
+				move ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y)
+			end
 		end
 
 feature {EV_WEL_SPLIT_WINDOW} -- Implementation

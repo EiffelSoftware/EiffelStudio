@@ -150,7 +150,7 @@ feature -- Status report
 			eiffel_string_type = o.GetType();	
 			string_builder_info = eiffel_string_type.GetField ("$$internal_string_builder");
 			if (string_builder_info == null) {
-				string_builder_info = eiffel_string_type.GetField ("$$InternalStringBuilder");
+				string_builder_info = eiffel_string_type.GetField ("$$internalStringBuilder");
 			}
 			builder = (StringBuilder) string_builder_info.GetValue (o);
 			Result = "\"" + builder.ToString() + "\"";
@@ -180,7 +180,7 @@ feature -- Status report
 			eiffel_special_type = special.GetType();
 			native_info = eiffel_special_type.GetField ("$$native_array");
 			if (native_info == null) {
-				native_info = eiffel_special_type.GetField ("$$NativeArray");
+				native_info = eiffel_special_type.GetField ("$$nativeArray");
 			}
 			Result = (Array) native_info.GetValue (special);
 		}

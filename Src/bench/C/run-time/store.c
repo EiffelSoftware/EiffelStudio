@@ -3,7 +3,7 @@
   ####    #####   ####   #####   ######           ####
  #          #    #    #  #    #  #               #    #
   ####      #    #    #  #    #  #####           #
-      #     #    #    #  #####   #        ###    #
+	  #     #    #    #  #####   #        ###    #
  #    #     #    #    #  #   #   #        ###    #    #
   ####      #     ####   #    #  ######   ###     ####
 
@@ -28,7 +28,7 @@
 #include "eif_error.h"
 #include "eif_main.h"
 #include "eif_compress.h"
-#include "x2c.h"			/* For macro LNGPAD */
+#include "x2c.h"	/* For macro LNGPAD */
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -69,10 +69,12 @@ rt_private void st_store(char *object);				/* Second pass of the store */
 rt_public void ist_write(char *object);
 rt_public void gst_write(char *object);
 rt_public void make_header(void);				/* Make header */
-rt_public void imake_header(void);				/* Make header */ 
+rt_public void imake_header(void);				/* Make header */
 rt_private int store_buffer();		/* %%ss undefined not used in run-time */
 rt_private void object_write (char *object);
 rt_private void gen_object_write (char *object);
+rt_private void st_write_cid (uint32);
+rt_private void ist_write_cid (uint32);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
 rt_public void store_write(void);
@@ -492,6 +494,9 @@ rt_private void st_store(char *object)
 
 	zone->ov_flags = flags & ~EO_STORE;		/* Unmark it */
 
+	/* Map generic type id to its base id */
+	flags = Mapped_flags(flags);
+
 	/* Evaluation of the number of references of the object */
 	if (flags & EO_SPEC) {					/* Special object */
 		if (!(flags & EO_REF)) {			/* Special of simple types */
@@ -543,15 +548,19 @@ rt_public void st_write(char *object)
 	 */
 
 	register2 union overhead *zone;
-	uint32 flags;
+	uint32 flags, fflags;
 	register1 uint32 nb_char;
 
 	zone = HEADER(object);
-	flags = zone->ov_flags;
+	fflags = zone->ov_flags;
+	flags = Mapped_flags(fflags);
+
 	/* Write address */
 
 	buffer_write((char *)(&object), sizeof(char *));
 	buffer_write((char *)(&flags), sizeof(uint32));
+	st_write_cid (fflags & EO_TYPE);
+
 #if DEBUG & 2
 		printf ("\n %lx", object);
 		printf (" %lx", flags);
@@ -593,15 +602,18 @@ rt_public void gst_write(char *object)
 	 */
 
 	register2 union overhead *zone;
-	uint32 flags;
+	uint32 flags, fflags;
 	/*register1 uint32 nb_char;*/ /* %%ss removed unused */
 
 	zone = HEADER(object);
-	flags = zone->ov_flags;
+	fflags = zone->ov_flags;
+	flags = Mapped_flags(fflags);
+
 	/* Write address */
 
 	buffer_write((char *)(&object), sizeof(char *));
 	buffer_write((char *)(&flags), sizeof(uint32));
+	st_write_cid (fflags & EO_TYPE);
 
 #if DEBUG & 1
 		printf ("\n %lx", object);
@@ -638,15 +650,18 @@ rt_public void ist_write(char *object)
 	 */
 
 	register2 union overhead *zone;
-	uint32 flags;
+	uint32 flags, fflags;
 	/* register1 uint32 nb_char;*/ /* %%ss removed unused */
 
 	zone = HEADER(object);
-	flags = zone->ov_flags;
+	fflags = zone->ov_flags;
+	flags = Mapped_flags(fflags);
+
 	/* Write address */
 
 	widr_multi_any ((char *)(&object), 1);
 	widr_norm_int (&flags);
+	ist_write_cid (fflags & EO_TYPE);
 
 #if DEBUG & 1
 		printf ("\n %lx", object);
@@ -728,8 +743,10 @@ rt_private void gen_object_write(char *object)
 	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 flags = HEADER(object)->ov_flags;
+	uint32 fflags = HEADER(object)->ov_flags;
+	uint32 flags, hflags, hfflags;
 
+	flags = Mapped_flags(fflags);
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
 
@@ -754,7 +771,10 @@ rt_private void gen_object_write(char *object)
 					{
 						/* int q;*/ /* %%ss removed unused */
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
-						buffer_write((char *)(&(HEADER(bptr)->ov_flags)), sizeof(uint32));
+						hfflags = HEADER(bptr)->ov_flags;
+						hflags = Mapped_flags(hfflags);
+						buffer_write((char *)(&hflags), sizeof(uint32));
+						st_write_cid (hfflags & EO_TYPE);
 						buffer_write((char *)(&(bptr->b_length)), sizeof(uint32));
 						buffer_write((char *) (bptr->b_value), bptr->b_length);
 					}
@@ -825,7 +845,11 @@ rt_private void gen_object_write(char *object)
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (o_ptr + sizeof(long));
-						buffer_write((char *) (&(HEADER(object + OVERHEAD)->ov_flags)), sizeof(uint32));
+						hfflags = HEADER(object + OVERHEAD)->ov_flags;
+						hflags = Mapped_flags(hfflags);
+						buffer_write((char *) (&hflags), sizeof(uint32));
+						st_write_cid (hfflags & EO_TYPE);
+
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 							gen_object_write(ref);
@@ -842,8 +866,11 @@ rt_private void gen_object_write(char *object)
 				if (!(flags & EO_COMP)) {	/* Special of references */
 					buffer_write(object, count*sizeof(EIF_REFERENCE));
 				} else {			/* Special of composites */
+					hfflags = HEADER(object)->ov_flags;
+					hflags = Mapped_flags(hfflags);
 					elem_size = *(long *) (o_ptr + sizeof(long));
-					buffer_write((char *)(&(HEADER(object)->ov_flags)), sizeof(uint32));
+					buffer_write((char *)(&hflags), sizeof(uint32));
+					st_write_cid (hfflags & EO_TYPE);
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						gen_object_write(ref);
@@ -863,8 +890,10 @@ rt_private void object_write(char *object)
 #endif
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 flags = HEADER(object)->ov_flags;
+	uint32 fflags = HEADER(object)->ov_flags;
+	uint32 flags, hflags, hfflags;
 
+	flags = Mapped_flags(fflags);
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
 
@@ -915,7 +944,10 @@ rt_private void object_write(char *object)
 								printf ("\n");
 						}
 #endif
-						widr_norm_int (&(HEADER(bptr)->ov_flags));	/* %%zs misuse, removed ",1" */
+						hfflags = HEADER(bptr)->ov_flags;
+						hflags = Mapped_flags(hfflags);
+						widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
+						ist_write_cid (hfflags & EO_TYPE);
 						widr_multi_bit (bptr, 1, bptr->b_length, 0);
 					}
 
@@ -1033,7 +1065,11 @@ rt_private void object_write(char *object)
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (o_ptr + sizeof(long));
-						widr_norm_int (&(HEADER (object + OVERHEAD)->ov_flags));		/* %%zs misuse, removed ",1" */
+						hfflags = HEADER(object + OVERHEAD)->ov_flags;
+						hflags = Mapped_flags(hfflags);
+						widr_norm_int (&hflags);		/* %%zs misuse, removed ",1" */
+						ist_write_cid (hfflags & EO_TYPE);
+
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 							object_write(ref);
@@ -1067,7 +1103,11 @@ rt_private void object_write(char *object)
 #endif
 				} else {			/* Special of composites */
 					elem_size = *(long *) (o_ptr + sizeof(long));
-					widr_norm_int (&(HEADER (object)->ov_flags));	/* %%zs misuse, removed ",1" */
+					hfflags = HEADER(object)->ov_flags;
+					hflags = Mapped_flags(hfflags);
+					widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
+					ist_write_cid (hflags & EO_TYPE);
+
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 						object_write(ref);
@@ -1445,7 +1485,7 @@ rt_public void flush_st_buffer (void)
 rt_public int char_write(char *pointer, int size)
 {
 	EIF_GET_CONTEXT
-    return write(s_fides, pointer, size);
+	return write(s_fides, pointer, size);
 	EIF_END_GET_CONTEXT
 }
 
@@ -1495,5 +1535,46 @@ void store_write(void)
 		current_position = 0;
 	else
 		eio();
+}
+
+void st_write_cid (uint32 dftype)
+
+{
+	int16 *cidarr, count;
+
+	cidarr = eif_gen_cid ((int16) dftype);
+	count  = *cidarr;
+
+	buffer_write ((char *) (&count), sizeof (int16));
+
+	/* If count = 1 then we don't need to write more data */
+
+	if (count > 1)
+		buffer_write ((char *) (cidarr+1), count * sizeof (int16));
+}
+
+void ist_write_cid (uint32 dftype)
+
+{
+	int16 *cidarr;
+	uint32 count, i, val;
+
+	cidarr = eif_gen_cid ((int16) dftype);
+	count  = (uint32) *cidarr;
+
+	widr_norm_int (&count);
+
+	/* If count = 1 then we don't need to write more data */
+
+	if (count > 1)
+	{
+		++cidarr;
+
+		for (i = 1; i <= count; ++i, ++cidarr)
+		{
+			val = (uint32) *cidarr;
+			widr_norm_int (&val);
+		}
+	}
 }
 

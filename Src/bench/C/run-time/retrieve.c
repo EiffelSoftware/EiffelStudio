@@ -27,7 +27,7 @@
 #include "eif_rtlimits.h"
 #include "eif_traverse.h"
 #include "eif_compress.h"
-#include "x2c.h"		/* For macro LNGPAD */
+#include "x2c.h"	/* For macro LNGPAD */
 
 #include <ctype.h>					/* For isspace() */
 
@@ -98,6 +98,8 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
 
 rt_private int readline (register char *ptr, register int *maxlen);
 rt_private int buffer_read (register char *object, int size);
+rt_private void rt_read_cid (uint32 *, uint32);
+rt_private void rt_id_read_cid (uint32 *, uint32);
 
 /* Initialization and Resetting for retrieving an independent store */
 rt_private void independent_retrieve_init (long idrf_size, EIF_BOOLEAN is_limited_by_short);
@@ -129,6 +131,9 @@ rt_private char *stream_buffer;
 rt_private int stream_buffer_position;
 rt_private int stream_buffer_size;
 
+/* Static CID array */
+
+rt_private int16 cidarr [256];
 
 /* Initialize retrieve function pointers and globals */
  
@@ -142,7 +147,7 @@ rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read
 
 		/* Set the retrieving functions which are going to be used for the current retrieving
 		 * operation */
-    retrieve_read_func = retrieve_function;
+	retrieve_read_func = retrieve_function;
 	char_read_func = char_read_function;
 	if (buf_size)
 		buffer_size = buf_size;
@@ -151,7 +156,7 @@ rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read
 /* Reset retrieve function pointers and globals to their default values */
  
 rt_public void rt_reset_retrieve(void) {
-    retrieve_read_func = old_retrieve_read_func;
+	retrieve_read_func = old_retrieve_read_func;
 	char_read_func = old_char_read_func;
 	buffer_size = old_buffer_size;
 	rt_kind = old_rt_kind;
@@ -351,7 +356,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJ new_hector;
-	uint32 flags;
+	uint32 fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
@@ -391,6 +396,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		buffer_read((char *)(&flags), (sizeof(uint32)));
+		rt_read_cid (&fflags, flags);
 
 #if DEBUG & 2
 		printf (" %x", flags);
@@ -414,10 +420,10 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 			/* Normal object */
 			if (rt_kind) {
 				nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-				newadd = emalloc(dtypes[flags & EO_TYPE]); 
+				newadd = emalloc(fflags & EO_TYPE); 
 			} else {
 				nb_char = Size((uint16)(flags & EO_TYPE));
-				newadd = emalloc(flags & EO_TYPE);
+				newadd = emalloc(fflags & EO_TYPE);
 			}
 		}
 		
@@ -503,7 +509,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJ new_hector;
-	uint32 flags;
+	uint32 fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
@@ -535,6 +541,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		buffer_read((char *)(&flags), sizeof(uint32));
+		rt_read_cid (&fflags, flags);
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -623,7 +630,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 		} else {
 			/* Normal object */
 			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-			newadd = emalloc(dtypes[flags & EO_TYPE]); 
+			newadd = emalloc(fflags & EO_TYPE); 
 		}
 		
 		/* Creation of the Eiffel object */	
@@ -685,7 +692,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 	char *oldadd;
 	char *newadd = (char *) 0;
 	EIF_OBJ new_hector;
-	uint32 flags;
+	uint32 fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
@@ -724,6 +731,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 
 		/* Read object flags (dynamic type) */
 		ridr_norm_int (&flags);
+		rt_id_read_cid (&fflags, flags);
 
 #if DEBUG & 1
 		printf (" %x", flags);
@@ -818,7 +826,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 		} else {
 			/* Normal object */
 			nb_char = Size((uint16)(dtypes[flags & EO_TYPE]));
-			newadd = emalloc(dtypes[flags & EO_TYPE]); 
+			newadd = emalloc(fflags & EO_TYPE); 
 		}
 		
 		/* Creation of the Eiffel object */	
@@ -1000,14 +1008,16 @@ rt_private void rt_update2(char *old, char *new, char *parent)
 	 * if `new' is not an expanded object,parent is equal to it. */
 
 	long nb_references;
-	uint32 flags;
+	uint32 flags, fflags;
 	char *reference;
 	union overhead *zone = HEADER(new);
 	char* addr;
 	long size;				/* New object size */
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 
-	flags = zone->ov_flags;
+	fflags = zone->ov_flags;
+	flags = Mapped_flags(fflags);
+
 	if (flags & EO_SPEC) {				/* Special object */
 		char *o_ref;
 		long count, elem_size, old_elem_size;
@@ -1067,6 +1077,7 @@ update:
 	
 				*(char **) addr = new + new_offset;				/* Expanded reference */
 				if (rt_kind) {
+					/* CHECK THIS - M.S. */
 					uint32 old_flags = HEADER(new + new_offset)->ov_flags;
 					HEADER(new + new_offset)->ov_flags &= ~EO_TYPE;
 					HEADER(new + new_offset)->ov_flags |= dtypes[old_flags & EO_TYPE];
@@ -1502,7 +1513,9 @@ rt_private int direct_read (register char *object, int size)
 
 	while (amount < size) {
 		i = char_read_func (buf, size - amount);
-		if (i < 0)
+		if (i <= 0)
+				/* If we read 0 bytes, it means that we reached the end of file,
+				 * so we are missing something, instead of going further we stop */
 			eio();
 		amount += i;
 		buf += i;
@@ -1575,7 +1588,9 @@ rt_public int old_retrieve_read (void)
 	char * ptr = general_buffer;
 
 	end_of_buffer = char_read_func (ptr, buffer_size);
-	if (end_of_buffer < 0)
+	if (end_of_buffer <= 0)
+			/* If we read 0 bytes, it means that we reached the end of file,
+			 * so we are missing something, instead of going further we stop */
 		eio();
 
 	current_position = 0;
@@ -1607,11 +1622,13 @@ rt_public int old_retrieve_read_with_compression (void)
 	  ptr += EIF_CMPS_HEAD_SIZE;
 	  read_size = dcmps_in_size;
 
-	  while (total_read < read_size) {
+	  while (read_size > 0) {
 			  part_read = char_read_func (ptr, read_size);
-			  if (part_read < 0)
+			  if (part_read <= 0)
+				/* If we read 0 bytes, it means that we reached the end of file,
+				 * so we are missing something, instead of going further we stop */
 					  eio();
-			  total_read += part_read;
+			  read_size -= part_read;
 			  ptr += part_read;
 	  }
 
@@ -1636,15 +1653,17 @@ rt_public int retrieve_read (void)
 	short read_size;
 	int part_read = 0, total_read = 0;
 
-	end_of_buffer = 0;
 	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
 		eio();
+	end_of_buffer = read_size;
 
-	while (end_of_buffer < read_size) {
+	while (read_size > 0) {
 		part_read = char_read_func (ptr, read_size);
-		if (part_read < 0)
+		if (part_read <= 0)
+				/* If we read 0 bytes, it means that we reached the end of file,
+				 * so we are missing something, instead of going further we stop */
 			eio();
-		end_of_buffer += part_read;
+		read_size -= part_read;
 		ptr += part_read;
 	}
 	current_position = 0;
@@ -1666,8 +1685,6 @@ rt_public int retrieve_read_with_compression (void)
 	int part_read = 0;
 	int total_read = 0;
 	
-	end_of_buffer = 0;
-	
 	if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
 		eio();
 	pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
@@ -1678,11 +1695,13 @@ rt_public int retrieve_read_with_compression (void)
 	ptr += EIF_CMPS_HEAD_SIZE;
 	read_size = dcmps_in_size;
 	
-	while (end_of_buffer < read_size) {
+	while (read_size > 0) {
 		part_read = char_read_func (ptr, read_size);
-		if (part_read < 0)
+		if (part_read <= 0)
+				/* If we read 0 bytes, it means that we reached the end of file,
+				 * so we are missing something, instead of going further we stop */
 			eio();
-		end_of_buffer += part_read;
+		read_size -= part_read;
 		ptr += part_read;
 	}
 	
@@ -1706,9 +1725,11 @@ rt_private void gen_object_read (char *object, char *parent)
 	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 flags = HEADER(object)->ov_flags;
+	uint32 fflags = HEADER(object)->ov_flags;
+	uint32 flags;
 	/* int *attrib_order;*/ /* %%ss removed */
 
+	flags = Mapped_flags(fflags);
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
 
@@ -1736,12 +1757,13 @@ rt_private void gen_object_read (char *object, char *parent)
 				case SK_BIT:
 						{
 							/* int q; */ /* %%ss removed */
-							uint32 old_flags;
+							uint32 old_flags, hflags;
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							buffer_read((char *) (&old_flags), sizeof(uint32));
-							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
+							rt_read_cid (&hflags, old_flags);
+							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
 							buffer_read((char *) bptr, bptr->b_length);
 							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
@@ -1750,15 +1772,16 @@ rt_private void gen_object_read (char *object, char *parent)
 
 					break;
 				case SK_EXP: {
-					uint32  old_flags;
+					uint32  old_flags, hflags;
 					long size_count;
 
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
 					buffer_read((char *) (&old_flags), sizeof(uint32));
+					rt_read_cid (&hflags, old_flags);
 					/* FIXME size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);*/
 					size_count = get_expanded_pos (o_type, --num_attrib);
 
-					HEADER(object + size_count)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+					HEADER(object + size_count)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 					HEADER(object + size_count)->ov_size = (uint32)(get_expanded_pos (o_type, -1) + (object - parent));
 					gen_object_read (object + size_count, parent);						
 
@@ -1819,14 +1842,15 @@ rt_private void gen_object_read (char *object, char *parent)
 						buffer_read((char *)object, count*sizeof(EIF_DOUBLE));
 						break;
 					case SK_EXP: {
-						uint32 old_flags;
+						uint32 old_flags, hflags;
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						buffer_read((char *) (&old_flags), sizeof(uint32));
+						rt_read_cid (&hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 	
-							HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
 							gen_object_read (ref, parent);						
 							}
@@ -1850,13 +1874,14 @@ rt_private void gen_object_read (char *object, char *parent)
 				if (!(flags & EO_COMP)) {		/* Special of references */
 					buffer_read(object, count*sizeof(EIF_REFERENCE));
 				} else {						/* Special of composites */
-					uint32  old_flags;
+					uint32  old_flags, hflags;
 
 					buffer_read((char *) (&old_flags), sizeof(uint32));
+					rt_read_cid (&hflags, old_flags);
 					elem_size = *(long *) (o_ptr + sizeof(long));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
-						HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 						HEADER(ref)->ov_size = (uint32)(ref - parent);
 						gen_object_read (ref, parent);						
 					}
@@ -1875,9 +1900,11 @@ rt_private void object_read (char *object, char *parent)
 	long attrib_offset;
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 flags = HEADER(object)->ov_flags;
+	uint32 fflags = HEADER(object)->ov_flags;
+	uint32 flags;
 	int *attrib_order;
 
+	flags = Mapped_flags(fflags);
 	o_type = flags & EO_TYPE;
 	num_attrib = System(o_type).cn_nbattr;
 	attrib_order = dattrib[o_type];
@@ -1924,12 +1951,13 @@ rt_private void object_read (char *object, char *parent)
 #if DEBUG & 1
 							int q;
 #endif
-							uint32 old_flags;
+							uint32 old_flags, hflags;
 							struct bit *bptr = (struct bit *)(object + attrib_offset);
 
 							HEADER(bptr)->ov_flags = egc_bit_dtype;
 							ridr_norm_int (&old_flags);
-							HEADER(bptr)->ov_flags |= old_flags & (EO_COMP | EO_REF);
+							rt_id_read_cid (&hflags, old_flags);
+							HEADER(bptr)->ov_flags = hflags & (EO_COMP | EO_REF);
 
 							ridr_multi_bit (bptr, 1, 0);
 							if ((types_cn & SK_DTYPE) != LENGTH(bptr))
@@ -1947,18 +1975,19 @@ rt_private void object_read (char *object, char *parent)
 
 					break;
 				case SK_EXP: {
-					uint32  old_flags;
+					uint32  old_flags, hflags;
 					long size_count;
 
 					ridr_multi_any (object + attrib_offset, 1);
 					ridr_norm_int (&old_flags);
+					rt_id_read_cid (&hflags, old_flags);
 					size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);
 
 #if DEBUG & 1
 					printf ("\n %lx", *((char **)(object + attrib_offset)));
 					printf (" %lx", old_flags);
 #endif
-					HEADER(object + size_count)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+					HEADER(object + size_count)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 					HEADER(object + size_count)->ov_size = (uint32)(get_expanded_pos (o_type, -1) + (object - parent));
 					object_read (object + size_count, parent);						
 
@@ -2058,17 +2087,18 @@ rt_private void object_read (char *object, char *parent)
 #endif
 						break;
 					case SK_EXP: {
-						uint32  old_flags;
+						uint32  old_flags, hflags;
 
 						elem_size = *(long *) (o_ptr + sizeof(long));
 						ridr_norm_int (&old_flags);
+						rt_id_read_cid (&hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
 	
 #if DEBUG & 1
 							printf (" %x", old_flags);
 #endif
-							HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
 							object_read (ref, parent);						
 	
@@ -2126,16 +2156,17 @@ rt_private void object_read (char *object, char *parent)
 					}
 #endif
 				} else {						/* Special of composites */
-					uint32  old_flags;
+					uint32  old_flags, hflags;
 
 					ridr_norm_int (&old_flags);
+					rt_read_cid (&hflags, old_flags);
 #if DEBUG & 1
 					printf (" %x", old_flags);
 #endif
 					elem_size = *(long *) (o_ptr + sizeof(long));
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
-						HEADER(ref)->ov_flags = (old_flags & (EO_REF|EO_COMP|EO_TYPE));
+						HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_COMP|EO_TYPE));
 						HEADER(ref)->ov_size = (uint32)(ref - parent);
 						object_read (ref, parent);						
 					}
@@ -2225,5 +2256,62 @@ int stream_read(char *pointer, int size)
 	stream_buffer_position += size;
 	return size;
 	EIF_END_GET_CONTEXT
+}
+
+rt_private void rt_read_cid (uint32 *nflags, uint32 oflags)
+
+{
+	int16 count, dftype;
+
+	*nflags = oflags;   /* default */
+
+	buffer_read ((char *) &count, sizeof (int16));
+
+	if (count < 2)  /* Nothing to read */
+		return;
+
+	*cidarr = count;
+	buffer_read ((char *) (cidarr+1), count * sizeof (int16));
+	cidarr [count+1] = -1;
+
+	if (rt_kind)
+		dftype = eif_gen_id_from_cid (cidarr, dtypes);
+	else
+		dftype = eif_gen_id_from_cid (cidarr, (int *)0);
+
+	*nflags = (oflags & EO_UPPER) | dftype;
+}
+
+rt_private void rt_id_read_cid (uint32 *nflags, uint32 oflags)
+
+{
+	uint32 count, val;
+	int16 dftype, *ip;
+	int i;
+
+	*nflags = oflags;   /* default */
+
+	ridr_norm_int (&count);    
+
+	if (count < 2)  /* Nothing to read */
+		return;
+
+	*cidarr = count;
+	ip = cidarr + 1;
+
+	for (i = count; i; --i, ++ip)
+	{
+		ridr_norm_int (&val);
+		*ip = (int16) val;
+	}
+
+	cidarr [count+1] = -1;
+
+	if (rt_kind)
+		dftype = eif_gen_id_from_cid (cidarr, dtypes);
+	else
+		dftype = eif_gen_id_from_cid (cidarr, (int *)0);
+
+	*nflags = (oflags & EO_UPPER) | dftype;
 }
 

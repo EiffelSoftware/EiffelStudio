@@ -148,7 +148,7 @@ feature {NONE}
 feature {NONE}
 
         Table_name: STRING is
-                "DB_BOOK"
+                "db_book"
 
 end -- class INSERTER
 

@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 							new_instance_exists: gb_ev_any /= Void
 						end
 							-- Add the appropriate objects to `objects'.
-						if current_type.is_equal ("EV_TITLED_WINDOW") then
+						if current_type.is_equal (Ev_titled_window_string) then
 							add_set (gb_ev_any.generate_code (current_element, "", Void))
 						else
 							add_set (gb_ev_any.generate_code (current_element, current_iterative_name, child_names (current_iterative_name)))

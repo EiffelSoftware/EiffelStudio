@@ -17,11 +17,16 @@ inherit
 		end
 		
 	GB_DEFAULT_STATE
+	
+	GB_CONSTANTS
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	default_create
 	
-feature {NONE} -- Imitialization
+feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
@@ -48,7 +53,7 @@ feature {NONE} -- Imitialization
 			end
 				-- Components made from WINDOWS are not allowed, as
 				-- only one window is currently allowed in the system.
-			if an_object.type.is_equal ("EV_TITLED_WINDOW") then
+			if an_object.type.is_equal (Ev_titled_window_string) then
 				Result := False
 			end
 		end

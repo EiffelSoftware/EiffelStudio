@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			an_object: GB_CELL_OBJECT
 		do
 			default_create
-			create an_object.make_with_type_and_object ("EV_TITLED_WINDOW", display_window)
+			create an_object.make_with_type_and_object (ev_titled_window_string, display_window)
 			set_text ("TITLED_WINDOW")
 			object_handler.add_root_object (an_object)
 			an_object.set_layout_item (Current)

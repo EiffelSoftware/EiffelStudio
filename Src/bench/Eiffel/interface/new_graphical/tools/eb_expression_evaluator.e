@@ -70,15 +70,6 @@ feature {NONE} -- Initialization
 		do
 			create tb
 			
-				--| Delete command
-			create delete_expression_cmd.make
-			delete_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_delete_very_small)
-			delete_expression_cmd.set_tooltip (Interface_names.e_Remove_expressions)
-			delete_expression_cmd.add_agent (~remove_selected)
-			tbb := delete_expression_cmd.new_mini_toolbar_item
---			tbb.drop_actions.extend (~delete_dropped)
-			tb.extend (tbb)
-			
 				--| Create command
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_new_expression)
@@ -96,6 +87,15 @@ feature {NONE} -- Initialization
 --			tbb.drop_actions.extend (~edit_dropped)
 			tb.extend (tbb)
 
+				--| Delete command
+			create delete_expression_cmd.make
+			delete_expression_cmd.set_mini_pixmaps (Pixmaps.Icon_delete_very_small)
+			delete_expression_cmd.set_tooltip (Interface_names.e_Remove_expressions)
+			delete_expression_cmd.add_agent (~remove_selected)
+			tbb := delete_expression_cmd.new_mini_toolbar_item
+--			tbb.drop_actions.extend (~delete_dropped)
+			tb.extend (tbb)
+			
 			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, tb)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then

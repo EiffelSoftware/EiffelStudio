@@ -168,7 +168,13 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libwkbench.a"
+			if System.has_separate then
+				Result := "%
+					%$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libcwkbench.a %
+					%$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+			else
+				Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libwkbench.a"
+			end
 		end;
 
 	generate_other_objects is

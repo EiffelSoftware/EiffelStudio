@@ -445,11 +445,10 @@ feature -- Generation, Header
 			generate_include_path;
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
-				%CC = $cc%N");
+				%CC = $cc%N%
+				%CFLAGS = $optimize $ccflags $large ");
 			if System.has_separate then
-				Make_file.putstring ("CFLAGS = $optimize $ccflags $large -DCONCURRENT_EIFFEL ");
-			else
-				Make_file.putstring ("CFLAGS = $optimize $ccflags $large ");
+				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
 			end;
 			generate_specific_defines;
 			Make_file.putstring ("-I%H$(EIFFEL3)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
@@ -683,9 +682,6 @@ feature -- Generation (Linking rules)
 				Make_file.putstring ("$(EXTERNALS) ");
 			end;
 			Make_file.putstring (run_time);
-			if System.Concurrent_Eiffel then
-				Make_file.putstring (" $(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a");
-			end
 			Make_file.putstring (" $(LIBS)%N");
 
 			generate_additional_rules;

@@ -190,7 +190,13 @@ feature
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libruntime.a"
+			if System.has_separate then
+				Result := "%
+					%$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libcruntime.a %
+					%$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+			else
+				Result := "$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libruntime.a"
+			end
 		end;
 
 	generate_additional_rules is

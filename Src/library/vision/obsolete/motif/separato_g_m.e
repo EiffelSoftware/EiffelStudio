@@ -5,7 +5,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SEPARATO_G_M 
+class 
+	SEPARATO_G_M 
 
 inherit
 
@@ -37,14 +38,14 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN; oui_parent:
-COMPOSITE) is
+	make (a_separator_gadget: SEPARATOR_G; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif separator gadget.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_sep_make (a_separator_gadget.identifier,
-					mel_parent (a_separator_gadget, widget_index),
-					man);
+			mel_sep_make (a_separator_gadget.identifier, mc, man)
 		end;
 
 feature -- Access

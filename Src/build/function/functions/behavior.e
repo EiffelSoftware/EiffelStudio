@@ -51,7 +51,7 @@ feature -- Query
 			from
 				output_list.start
 			until
-				output_list.after 
+				output_list.after or else Result
 			loop
 				Result := output_list.item.associated_command = cmd;
 				output_list.forth

@@ -42,16 +42,16 @@ feature {COMPILER_EXPORTER}
 			if value /= Void then
 				if value.is_no then
 					v := No_debug;
-				elseif value.is_yes then
+				elseif value.is_yes or  value.is_all then
 					v := Yes_debug;
-				elseif value.is_all then
-					v := Yes_debug;
+					Lace.ace_options.set_has_debug (True)
 				elseif value.is_name then
 					tag_value := clone (value.value)
 					tag_value.to_lower;
 					!!debug_tag.make;
 					debug_tag.tags.put (tag_value);
 					v := debug_tag;
+					Lace.ace_options.set_has_debug (True)
 				else
 					error (value);
 				end;

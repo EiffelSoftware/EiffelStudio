@@ -39,6 +39,7 @@ feature -- Type check, byte code, dead code removal and formatter
 		local
 			i, nb: INTEGER
 			array_type: GEN_TYPE_A
+			multi_type: MULTI_TYPE_A
 			generics: ARRAY [TYPE_A]
 			lowest_type, element_type: TYPE_A
 			cl_type_a: CL_TYPE_A
@@ -51,19 +52,29 @@ feature -- Type check, byte code, dead code removal and formatter
 			from
 				nb := expressions.count
 				i := nb
+				create multi_type.make (nb)
 				
 					-- Take last element in manifest array and let's suppose
 					-- it is the lowest type.
-				lowest_type := context.item
+				if nb > 0 then
+					lowest_type := context.item
+				else
+						-- Case of an array with no elements in it.
+						-- The type is by default ARRAY [ANY].
+					create cl_type_a
+					cl_type_a.set_base_class_id (System.any_id)
+					lowest_type := cl_type_a
+				end
 			until
 				i < 1
 			loop
+				element_type := context.item
+				multi_type.put (element_type, i)
 					-- If ANY is the common ancestor, there is no need to search
 					-- for one, we simply pop the remaining types.
 				if not done then
 						-- Let's try to find the type to which everyone conforms to.
 						-- If not found it will be ANY.
-					element_type := context.item
 					if lowest_type.conform_to (element_type) then
 						lowest_type := element_type
 					elseif element_type.conform_to (lowest_type) then
@@ -84,16 +95,18 @@ feature -- Type check, byte code, dead code removal and formatter
 			create array_type.make (generics)
 			array_type.set_base_class_id (System.array_id)
 
+			multi_type.set_last_type (array_type)
+
 				-- Update type stack
-			context.replace (array_type)
+			context.replace (multi_type)
 				-- Update array-line stack
-			context.array_line.insert (array_type)
+			context.array_line.insert (multi_type)
 		end
 
 	byte_node: ARRAY_CONST_B is
 			-- Byte code for a manifest array
 		local
-			array_line: LINE [GEN_TYPE_A]
+			array_line: LINE [MULTI_TYPE_A]
 		do
 			create Result
 			Result.set_expressions (expressions.byte_node)

@@ -9,7 +9,9 @@ inherit
 		redefine
 			func_editor, 
 			input_data, output_data
-		end;
+		end
+
+	WINDOWS
 
 creation
 
@@ -168,12 +170,15 @@ feature {FUNC_DROP, FUNC_CUT} -- Adding and removing commands on the interface.
 			-- Return an instanciated command corresponding
 			-- to `ouput_data'.
 		require
-			editor_not_void: func_editor /= Void
 			command_not_void: output_data /= Void
 		do
 			if corresponding_internal_meta_command = Void then
 				!! Result.make 
-				Result.add_command (func_editor.current_state, output_data.instantiated_command)
+				if func_editor /= Void then
+					Result.add_command (func_editor.current_state, output_data.instantiated_command)
+				else
+					Result.add_command (main_panel.current_state, output_data.instantiated_command)
+				end
 				corresponding_internal_meta_command := Result
 			else
 				Result := corresponding_internal_meta_command

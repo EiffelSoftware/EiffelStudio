@@ -22,10 +22,30 @@ feature {NONE} -- Initialization
 			-- Create `current' and assifgn `an_object' to `internal_object'.
 		require
 			an_object_not_void: an_object /= Void
+		local
+			all_instance_objects: ARRAYED_LIST [GB_OBJECT]
 		do
 			internal_object := an_object
 			if an_object.is_instance_of_top_level_object then
 				associated_top_level_object := an_object.associated_top_level_object
+			end
+
+				-- Now must store all instances of nested objects within `an_object'.
+			create all_instance_objects.make (20)
+			an_object.all_children_recursive (all_instance_objects)
+			all_instance_objects.extend (an_object)
+			create all_contained_instances.make (10)
+			from
+				all_instance_objects.start
+			until
+				all_instance_objects.off
+			loop
+				if all_instance_objects.item.is_instance_of_top_level_object then
+						-- By using `put', we ensure that there is only a single entry for each
+						-- instance of a top level object.
+					all_contained_instances.put (all_instance_objects.item.associated_top_level_object, all_instance_objects.item.associated_top_level_object)
+				end
+				all_instance_objects.forth
 			end
 		ensure
 			object_set: internal_object = an_object

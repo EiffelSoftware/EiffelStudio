@@ -11,22 +11,16 @@ creation
 
 feature {NONE}
 
-	open_command: OPEN_CMD;
-
-	save_command: SAVE_CMD;
-
 	make is
 		do
 			associated_catalog := command_catalog;
-			!!save_command.make;
-			!!open_command.make;
 			reset_commands
 		end;
 
 	reset_commands is
 		do
-			extend (save_command);
-			extend (open_command);
+			extend (save_cmd);
+			extend (open_cmd);
 		end;
 
 	symbol: PIXMAP is

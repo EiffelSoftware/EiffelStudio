@@ -12,10 +12,6 @@ creation
 	
 feature {NONE}
 
-	popup_command: POPUP_CMD;
-
-	popdown_command: POPDOWN_CMD;
-
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.windows_pixmap
@@ -34,15 +30,13 @@ feature {NONE}
 	make is 
 		do
 			associated_catalog := command_catalog;
-			!!popup_command.make;
-			!!popdown_command.make;
 			reset_commands
 		end;
 
 	reset_commands is
 		do
-			extend (popup_command);
-			extend (popdown_command);
+			extend (popup_cmd);
+			extend (popdown_cmd);
 		end;
 
 end -- class WINDOW_CMDS

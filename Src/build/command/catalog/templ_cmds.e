@@ -11,10 +11,6 @@ creation
 
 feature {NONE}
 
-	command_command: COMMAND_CMD;
-
-	undoable_command: UNDOABLE_CMD;
-
 	--exit_command: EXIT_CMD;
 
 feature {NONE}
@@ -22,15 +18,13 @@ feature {NONE}
 	make is
 		do
 			associated_catalog := command_catalog;
-			!!command_command.make;
-			!!undoable_command.make;
 			reset_commands
 		end;
 
 	reset_commands is
 		do
-			extend (command_command);
-			extend (undoable_command);
+			extend (command_cmd);
+			extend (undoable_cmd);
 		end;
 
 	symbol: PIXMAP is

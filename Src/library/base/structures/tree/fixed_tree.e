@@ -44,8 +44,7 @@ feature -- Initialization
 			valid_number_of_children: n >= 0
 		do
 			arity := 0
-			create fixed_list.make_filled (n)
-			fl_make (n)
+			create fixed_list.make (n)
 			replace (v)
 		ensure
 			node_item: item = v
@@ -59,7 +58,6 @@ feature -- Initialization
 		do
 			arity := n
 			create fixed_list.make_filled (n)
-			fl_make_filled (n)
 			replace (v)
 		ensure
 			node_item: item = v
@@ -154,7 +152,7 @@ feature -- Element change
 				n.compare_references
 			end
 			arity := arity + 1
-			put_i_th (n, arity) 
+			fixed_list.extend (n)
 			n.attach_to_parent (Current)
 		ensure then
 			child_replaced: n.parent = Current
@@ -518,7 +516,7 @@ feature {NONE} -- private access fixed_list
 
 	fl_make_filled (n: INTEGER) is
 		do
-			fixed_list.make (n)
+			fixed_list.make_filled (n)
 		end
 		
 	fl_extend (v: FIXED_TREE [like item]) is

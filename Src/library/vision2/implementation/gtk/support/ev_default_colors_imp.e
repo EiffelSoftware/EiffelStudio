@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	Color_dialog: EV_COLOR is
+	Color_dialog, Color_3d_face: EV_COLOR is
 			-- Color usely used for the background of dialogs
 		local
 			r, g, b: INTEGER
@@ -37,6 +37,38 @@ feature -- Access
 			r, g, b: INTEGER
 			color: POINTER
 		do
+			color := gtk_style_struct_fg (gtk_widget_get_default_style)
+			r := gdk_color_struct_red (color)
+			g := gdk_color_struct_green (color)
+			b := gdk_color_struct_blue (color)
+			create Result
+			Result.set_rgb_with_16_bit (r, g, b)
+		end
+
+	Color_3d_highlight: EV_COLOR is
+			-- Used for 3D-effects (light color)
+			-- Name "color highlight"
+		local
+			r, g, b: INTEGER
+			color: POINTER
+		do
+--| FIXME, can you implement it Sam ?
+			color := gtk_style_struct_fg (gtk_widget_get_default_style)
+			r := gdk_color_struct_red (color)
+			g := gdk_color_struct_green (color)
+			b := gdk_color_struct_blue (color)
+			create Result
+			Result.set_rgb_with_16_bit (r, g, b)
+		end
+
+	Color_3d_shadow: EV_COLOR is
+			-- Used for 3D-effects (dark color)
+			-- Name "color shadow"
+		local
+			r, g, b: INTEGER
+			color: POINTER
+		do
+--| FIXME, can you implement it Sam ?
 			color := gtk_style_struct_fg (gtk_widget_get_default_style)
 			r := gdk_color_struct_red (color)
 			g := gdk_color_struct_green (color)
@@ -98,6 +130,13 @@ end -- class EV_DEFAULT_COLORS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/05/12 19:27:07  pichery
+--| Added colors `Color_3d_face', `Color_3d_highlight',
+--| `Color_3d_shadow'.
+--|
+--| Revision 1.7.4.1  2000/05/03 19:08:42  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

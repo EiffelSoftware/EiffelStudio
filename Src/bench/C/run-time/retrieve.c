@@ -10,6 +10,10 @@
 	Eiffel retrieve mechanism.
 */
 
+/*
+doc:<file name="retrieve.c" header="eif_retrieve.h" version="$Id$" summary="Retrieval part of object serialization.">
+*/
+
 #include "eif_portable.h"
 #include "eif_lmalloc.h"
 #include "eif_project.h" /* for egc_ce_gtype, egc_bit_dtype */
@@ -251,32 +255,169 @@ typedef union {
 } multi_value;
 
 /*
- * Public data declarations 
- */
-rt_public struct htable *rt_table;		/* Table used for solving references */
-rt_public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
-rt_public char rt_kind;			/* Kind of storable */
-rt_public char rt_kind_version;		/* Version of storable */
-rt_public EIF_BOOLEAN eif_discard_pointer_values = EIF_TRUE;/* We do not keep pointer values
-															   when retrieving a pointer object */
+doc:	<attribute name="rt_table" return_type="struct htable *" export="shared">
+doc:		<summary>Table used for solving references.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_shared struct htable *rt_table;
 
 /*
- * Private data declaration
- */
+doc:	<attribute name="nb_recorded" return_type="int32" export="shared">
+doc:		<summary>Number of items recorded in `hec_stack' during retrieval.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_shared int32 nb_recorded = 0;
+
+/*
+doc:	<attribute name="rt_kind" return_type="char" export="shared">
+doc:		<summary>Kind of storable.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_shared char rt_kind;
+
+/*
+doc:	<attribute name="rt_kind_version" return_type="char" export="shared">
+doc:		<summary>Version of storable. Only used for independent store.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_shared char rt_kind_version;
+
+/*
+doc:	<attribute name="eif_discard_pointer_value" return_type="EIF_BOOLEAN" export="public">
+doc:		<summary>To discard or not the pointer value upon retrieval. By default we do not keep the value as a pointer value represent allocated memory which might not be present at retrieval time.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STORABLE</eiffel_classes>
+doc:		<fixme>Could be a in a private per thread or global and protected through a mutex.</fixme>
+doc:	</attribute>
+*/
+rt_public EIF_BOOLEAN eif_discard_pointer_values = EIF_TRUE;
+
+/*
+doc:	<attribute name="type_conversions" return_type="type_table *" export="private">
+doc:		<summary></summary>
+doc:		<access></access>
+doc:		<indexing></indexing>
+doc:		<thread_safety></thread_safety>
+doc:		<synchronization></synchronization>
+doc:		<eiffel_classes></eiffel_classes>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private type_table *type_conversions;
+
+/*
+doc:	<attribute name="mismatches" return_type="mismatch_table *" export="private">
+doc:		<summary></summary>
+doc:		<access></access>
+doc:		<indexing></indexing>
+doc:		<thread_safety></thread_safety>
+doc:		<synchronization></synchronization>
+doc:		<eiffel_classes></eiffel_classes>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private mismatch_table *mismatches;
 
-rt_private int **dattrib;				/* Pointer to attribute offsets in each object
-						 * for independent store */
-rt_private int *dtypes;				/* Dynamic types */
-rt_private uint32 *spec_elm_size;			/*array of special element sizes*/
-rt_private uint32 old_overhead = 0;		/*overhead size from stored object*/
-rt_private char * r_buffer = (char *) 0;		/*buffer for make_header*/
+/*
+doc:	<attribute name="dattrib" return_type="int **" export="private">
+doc:		<summary>Pointer to attribyte offsets in each object for independent store.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>[dftype][i-th attribute]</indexing>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int **dattrib;
+
+/*
+doc:	<attribute name="dtypes" return_type="int *" export="private">
+doc:		<summary>Conversion between dtypes found in storable file and dtypes of current system. Used for general and independent store.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>[old dftype]</indexing>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int *dtypes;
+
+/*
+doc:	<attribute name="spec_elm_size" return_type="uint32 *" export="private">
+doc:		<summary>Array of special element sizes. Only used for special of expanded types where definition of expanded types is different in stored file and retrieval system.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>[old dftype]</indexing>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a per thread data. </fixme>
+doc:	</attribute>
+*/
+rt_private uint32 *spec_elm_size;
+
+/*
+doc:	<attribute name="old_overhead" return_type="uint32" export="private">
+doc:		<summary>Overhead size from stored object which might be different from retrieval system. Used only in case of special of expanded objects.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private uint32 old_overhead = 0;
+
+/*
+doc:	<attribute name="r_buffer" return_type="char *" export="private">
+doc:		<summary>Buffer for reading of storable header.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private char * r_buffer = NULL;
 
 #ifndef EIF_THREADS
-rt_private int r_fides;			/* File descriptor use for retrieve */
-#endif /* EIF_THREADS */
+/*
+doc:	<attribute name="r_fides" return_type="int" export="private">
+doc:		<summary>File descriptor use for retrieve.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int r_fides;
+#endif
 
+/*
+doc:	<attribute name="class_translations" return_type="unamed struct" export="private">
+doc:		<summary></summary>
+doc:		<access></access>
+doc:		<indexing></indexing>
+doc:		<thread_safety></thread_safety>
+doc:		<synchronization></synchronization>
+doc:		<eiffel_classes></eiffel_classes>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private struct {
 		/* Pointer to array of class translation entries */
 	class_translation *table;
@@ -339,24 +480,118 @@ rt_private int (stream_read) (char *, int);
 int retrieve_read (void);
 int retrieve_read_with_compression (void);
 
-int (*retrieve_read_func)(void) = retrieve_read_with_compression;
-int (*char_read_func)(char *, int) = char_read;
-int (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
-int (*old_char_read_func)(char *, int) = char_read;
-rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
+/*
+doc:	<attribute name="retrieve_read_func" return_type="int (*)(void)" export="private">
+doc:		<summary>High level function to read storable file. It uses `char_read_func' to actually read bytes of the file.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in private per thread data.</fixme>
+doc:	</attribute>
+*/
+rt_private int (*retrieve_read_func)(void) = retrieve_read_with_compression;
+
+/*
+doc:	<attribute name="char_read_func" return_type="int (*)(char *buf, int n)" export="shared">
+doc:		<summary>Read `n' bytes from content of storable and store it in allocated buffer `buf'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread.</fixme>
+doc:	</attribute>
+*/
+rt_shared int (*char_read_func)(char *, int) = char_read;
+
+/*
+doc:	<attribute name="old_retrieve_read_func" return_type="int (*)(void)" export="private">
+doc:		<summary>Nice hack for compiler so that compiler can use a different `retrieve_read_func' for its modified use of store/retrieve. So each time we use the compiler one, at the end we restore the `old' one which is the default one for traditional store/retrieve.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:	</attribute>
+*/
+rt_private int (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
+
+/*
+doc:	<attribute name="old_char_read_func" return_type="int (*)(char *, int)" export="private">
+doc:		<summary>Nice hack for compiler so that compiler can use a different `char_read_func' for its modified use of store/retrieve. So each time we use the compiler one, at the end we restore the `old' one which is the default one for traditional store/retrieve.</summary>
+doc:		<access>Read/Wriite</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:	</attribute>
+*/
+rt_private int (*old_char_read_func)(char *, int) = char_read;
+
+/*
+doc:	<attribute name="old_rt_kind" return_type="char" export="private">
+doc:		<summary>Old kind of storable.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:	</attribute>
+*/
 rt_private char old_rt_kind;			/* Kind of storable */
+
+/*
+doc:	<attribute name="old_buffer_size" return_type="long" export="private">
+doc:		<summary>Old buffer size.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data. Also I'm not sure this is really needed anymore?</fixme>
+doc:	</attribute>
+*/
+rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
 
 /*
  * Convenience functions
  */
 
-/* Declarations to work with streams */
+/*
+doc:	<attribute name="stream_buffer" return_type="char *" export="private">
+doc:		<summary>Pointer to memory buffer where storable is located.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a per thread data. Code in `stream_read' does not make sense at all since no resizing of `stream_buffer' will occur (we are reading not writing here!). </fixme>
+doc:	</attribute>
+*/
 rt_private char *stream_buffer;
+
+/*
+doc:	<attribute name="stream_buffer_position" return_type="int" export="private">
+doc:		<summary>Position of cursor in `stream_buffer' while reading storable.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private int stream_buffer_position;
+
+/*
+doc:	<attribute name="stream_buffer_size" return_type="long" export="private">
+doc:		<summary>Size of `stream_buffer'.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private long stream_buffer_size;
 
-/* Static CID array */
-
+/*
+doc:	<attribute name="cidarr" return_type="int16 [256]" export="private">
+doc:		<summary>Static CID array.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Should be in a private per thread data. Fixed size is not good. It should be a resizable array.</fixme>
+doc:	</attribute>
+*/
 rt_private int16 cidarr [256];
 
 /* Initialize retrieve function pointers and globals */
@@ -553,8 +788,40 @@ rt_private void free_mismatch_table (mismatch_table *table)
 
 /* TODO: How should data be placed into `mismatch_information'?
  */
+/*
+doc:	<attribute name="mismatch_information_initialiize" return_type="EIF_PROCEDURE" export="private">
+doc:		<summary>Re-initialization of `mismatch_information' table used by MISMATCH_CORRECTOR.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_PROCEDURE mismatch_information_intialize;
+
+/*
+doc:	<attribute name="mismatch_information_add" return_type="EIF_PROCEDURE" export="private">
+doc:		<summary>Insert new items in `mismatch_information' table </summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
+doc:		<fixme>Should be in a private per thread data.</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_PROCEDURE mismatch_information_add;
+
+/*
+doc:	<attribute name="mismtach_information" return_type="EIF_OBJECT" export="private">
+doc:		<summary>Protected reference to `mismatch_information' of MISMATCH_CORRECTOR.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>MISMATCH_CORRECTOR, MISMATCH_INFORMATION</eiffel_classes>
+doc:		<fixme>Should be in a private per thread data as it `mismatch_information' is a once per thread at the Eiffel level.</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_OBJECT mismatch_information_object;
 
 rt_public void set_mismatch_information_access (
@@ -723,6 +990,16 @@ rt_public EIF_REFERENCE stream_eretrieve(EIF_POINTER *buffer, EIF_INTEGER size, 
 }
 
 #ifdef RECOVERABLE_SCAFFOLDING
+/*
+doc:	<attribute name="eif_use_old_independent_retrieve" return_type="EIF_BOOLEAN" export="private">
+doc:		<summary>Do we want to use old independent format or new one that can fix some mismatch? Default new one.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>STORABLE</eiffel_classes>
+doc:		<fixme>Should be in a private per thread data. Is this obsolete now?</fixme>
+doc:	</attribute>
+*/
 rt_private EIF_BOOLEAN eif_use_old_independent_retrieve = EIF_FALSE;
 rt_public void eif_set_old_independent_retrieve (EIF_BOOLEAN state)
 {
@@ -4428,3 +4705,6 @@ rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 		*crflags = *nflags;
 }
 
+/*
+doc:</file>
+*/

@@ -10,7 +10,7 @@ inherit
 			generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init,
 			generate_default_value, generate_expanded_creation, default_create,
-			tuple_code, name
+			tuple_code, name, has_associated_class_type
 		end
 
 create
@@ -31,6 +31,10 @@ feature -- Status report
 		do
 			Result := feature {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
+
+	has_associated_class_type: BOOLEAN is True
+			-- Since there is only one associated class type, which is
+			-- the type for BIT_REF, we are always sure to find it.
 
 feature
 
@@ -134,9 +138,9 @@ feature -- Generic conformance
 
 		do
 			buffer.put_integer (generated_id (final_mode))
-			buffer.put_string (", ")
+			buffer.put_character (',')
 			buffer.put_integer (size)
-			buffer.put_string (", ")
+			buffer.put_character (',')
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is

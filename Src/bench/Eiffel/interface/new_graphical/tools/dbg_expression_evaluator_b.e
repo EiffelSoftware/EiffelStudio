@@ -341,12 +341,12 @@ feature -- EXPR_B evaluation
 						res := not l_left_value.same_as (l_right_value)
 					end
 				end
-				if not error_occured then
+				if not error_occurred then
 					tmp_result_static_type := System.boolean_class.compiled_class
 					create tmp_result_value.make_boolean (res, tmp_result_static_type)
 				end
 			end
-			if not error_occured and tmp_result_value = Void then
+			if not error_occurred and tmp_result_value = Void then
 				error_message := a_bin_equal_b.generator + "/BINARY_B : sorry not available"				
 			end
 		end
@@ -446,12 +446,12 @@ feature -- EXPR_B evaluation
 			l_target := a_nested_b.target
 			l_target_value := standalone_evaluation_expr_b (l_target)
 			
-			if not error_occured then
+			if not error_occurred then
 				tmp_target := l_target_value
 				l_message := a_nested_b.message
 				l_message_value := standalone_evaluation_expr_b (l_message)
 				
-				if not error_occured then
+				if not error_occurred then
 					tmp_result_value := l_message_value					
 				end
 			end
@@ -619,7 +619,7 @@ feature -- EXPR_B evaluation
 					l_parameters_b.after or error_message /= Void
 				loop
 					l_dmp := parameter_evaluation (l_parameters_b.item)
-					if not error_occured then
+					if not error_occurred then
 						Result.extend (l_dmp)
 					end
 					l_parameters_b.forth
@@ -952,7 +952,7 @@ feature -- Concrete evaluation
 					end
 					l_dyntype := dobj.class_type
 					if l_dyntype = Void then
-						error_message := "Error occured: unable to find the context object <" + a_addr + ">"
+						error_message := "Error occurred: unable to find the context object <" + a_addr + ">"
 					elseif l_dynclass = Void then
 						l_dynclass := l_dyntype.associated_class						
 					end
@@ -964,12 +964,12 @@ feature -- Concrete evaluation
 				l_dyntype := l_dynclass.types.first
 			end				
 
-			if not error_occured then
+			if not error_occurred then
 					-- Get real feature
 				realf := f.ancestor_version (f.written_class)
 				if realf = Void then
 						--| FIXME JFIAT: 2004-02-01 : why `realf' can be Void in some case ?
-						--| occured for EV_RICH_TEXT_IMP.line_index (...)
+						--| occurred for EV_RICH_TEXT_IMP.line_index (...)
 					debug ("debugger_trace_eval_data")
 						print ("f.ancestor_version (f.written_class) = Void%N")
 						print ("  f.feature_signature = " + f.feature_signature + "%N")
@@ -990,7 +990,7 @@ feature -- Concrete evaluation
 							params.start
 							byte_context.set_class_type (l_dyntype)
 						until
-							params.after or error_occured
+							params.after or error_occurred
 						loop
 							dmp := params.item
 							l_params_index := l_params_index + 1
@@ -1013,7 +1013,7 @@ feature -- Concrete evaluation
 							params.start
 							byte_context.set_class_type (l_dyntype)
 						until
-							params.after or error_occured
+							params.after or error_occurred
 						loop
 							dmp := params.item
 							dmp.send_value
@@ -1085,7 +1085,7 @@ feature -- Concrete evaluation
 						error_message := "Function " + f.name + " raised an exception"
 					end
 				end -- evaluation
-				if not error_occured and then tmp_result_value /= Void then
+				if not error_occurred and then tmp_result_value /= Void then
 					at := f.type.actual_type
 					tmp_result_static_type := at.associated_class
 					if tmp_result_static_type = Void then

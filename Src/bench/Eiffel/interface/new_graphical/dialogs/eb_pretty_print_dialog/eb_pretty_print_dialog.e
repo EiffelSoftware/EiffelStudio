@@ -195,15 +195,19 @@ feature -- Status setting
 			has_current_object: has_object
 		local
 			l_dv: ABSTRACT_DEBUG_VALUE			
+			l_addr: STRING
 		do
 			if current_dump_value = Void then
+				l_addr := current_object.object_address
 				if application.is_dotnet then
-					l_dv := Application.imp_dotnet.kept_object_item (current_object.object_address)
+					if application.imp_dotnet.know_about_kept_object (l_addr) then
+						l_dv := Application.imp_dotnet.kept_object_item (l_addr)					
+					end						
 					if l_dv /= Void then
 						current_dump_value := l_dv.dump_value
 					end					
 				else
-					create current_dump_value.make_object (current_object.object_address, current_object.dynamic_class)				
+					create current_dump_value.make_object (l_addr, current_object.dynamic_class)				
 				end
 			end
 		end
@@ -224,7 +228,7 @@ feature -- Status setting
 						upper_slice_field.set_tooltip (l_str_length)						
 					else
 						editor.remove_text
-						create l_dlg.make_with_text ("Sorry a problem occured, %Nwe are not able to show you the value ...%N")
+						create l_dlg.make_with_text ("Sorry a problem occurred, %Nwe are not able to show you the value ...%N")
 						l_dlg.show_modal_to_window (window)
 					end
 				else

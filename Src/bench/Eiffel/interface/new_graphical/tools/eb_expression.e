@@ -141,7 +141,7 @@ feature -- Status report
 feature -- Bridge to dbg_expression_evaluator
 
 	error_message: STRING is
-			-- Error message text if any error occured
+			-- Error message text if any error occurred
 		do
 			if Result = Void and then expression_evaluator /= Void then
 				Result := expression_evaluator.error_message

@@ -71,15 +71,19 @@ feature {NONE} -- Debug Value
 feature {NONE} -- Debug Value
 
 	associated_debug_value: ABSTRACT_DEBUG_VALUE is
+		local
+			l_addr: STRING
 		do
 			Result := internal_associated_debug_value
 			if Result = Void then
-				Result ?= Application.imp_dotnet.kept_object_item (debug_value.address)
+				l_addr := debug_value.address
+				if application.imp_dotnet.know_about_kept_object (l_addr) then
+					Result := Application.imp_dotnet.kept_object_item (l_addr)					
+				end
 				internal_associated_debug_value := Result
 			end
 		end
 
 	internal_associated_debug_value: like associated_debug_value
-
 
 end

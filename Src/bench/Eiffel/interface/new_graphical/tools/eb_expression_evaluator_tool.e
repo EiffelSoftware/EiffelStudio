@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 					Result.set_deny_cursor (ost.X_stone_cursor)
 				end
 			else
-				l_tooltip.prepend_string ("[!] Error occured : " + expr.error_message + "%N%N")
+				l_tooltip.prepend_string ("[!] Error occurred : " + expr.error_message + "%N%N")
 				
 				Result.extend (expr.error_message)
 				Result.pointer_double_press_actions.extend (agent show_text_in_popup (expr.error_message, ?,?,?,?,?,?,?,?))			

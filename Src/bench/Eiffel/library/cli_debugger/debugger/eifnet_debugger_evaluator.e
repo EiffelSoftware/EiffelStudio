@@ -409,7 +409,7 @@ feature {NONE}
 				check False end
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception
-					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
+					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 				end
 				eifnet_debugger.do_clear_exception
 			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
@@ -446,14 +446,14 @@ feature {NONE}
 				Result := Void --"WARNING: Could not evaluate output"
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception
-					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occured %N")
+					print ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
 				end
 				eifnet_debugger.do_clear_exception
 			elseif eifnet_debugger.last_managed_callback_is_eval_exception then
 				Result := Void
 				last_eval_is_exception := True
 			elseif eifnet_debugger.last_managed_callback_is_exit_process then
-				eifnet_debugger.notify_exit_process_occured
+				eifnet_debugger.notify_exit_process_occurred
 				Result := Void
 			else				
 				Result := l_icd_eval.get_result

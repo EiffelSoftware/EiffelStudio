@@ -51,8 +51,8 @@ feature {NONE} -- Properties
 	il_debug_info_recorder: IL_DEBUG_INFO_RECORDER
 			-- IL Info container
 
-	error_occured: BOOLEAN
-			-- Did an error occured during processing ?
+	error_occurred: BOOLEAN
+			-- Did an error occurred during processing ?
 
 feature -- Bridge
 
@@ -165,7 +165,7 @@ feature -- Access
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
-			error_occured := False
+			error_occurred := False
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			
@@ -205,7 +205,7 @@ feature -- Access
 						from
 							l_param_i := a_params.lower
 						until
-							l_param_i > a_params.upper or error_occured
+							l_param_i > a_params.upper or error_occurred
 						loop
 							l_dumpvalue_param := a_params @ l_param_i
 							l_icdv_param := l_dumpvalue_param.value_dotnet
@@ -216,7 +216,7 @@ feature -- Access
 									print (generating_type + ".dotnet_evaluate_function: creating dotnet value from DUMP_VALUE %N")
 								end
 								l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
-								error_occured := (eifnet_evaluator.last_call_success /= 0)
+								error_occurred := (eifnet_evaluator.last_call_success /= 0)
 							end
 							debug ("debugger_trace_eval_data")
 								print (generating_type + ".dotnet_evaluate_function: param ... %N")
@@ -229,7 +229,7 @@ feature -- Access
 					else
 						create l_icdv_args.make (1, 1)
 					end
-					if not error_occured then
+					if not error_occurred then
 						debug ("debugger_trace_eval_data")
 							print (generating_type + ".dotnet_evaluate_function: target ... %N")
 							display_info_on_object (l_icdv_obj)							
@@ -238,9 +238,9 @@ feature -- Access
 						l_icdv_args.put (l_icdv_obj, 1) -- First arg is the obj on which the evaluation is done.
 
 						l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_function, l_icdv_args)
-						error_occured := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
+						error_occurred := (eifnet_evaluator.last_call_success /= 0) or (eifnet_evaluator.last_eval_is_exception)
 						
-						if not error_occured then
+						if not error_occurred then
 							l_adv := debug_value_from_icdv (l_result)
 							Result := l_adv.dump_value	
 						end			
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 				else					
 				end
 
-				error_occured := (eifnet_evaluator.last_call_success /= 0)
+				error_occurred := (eifnet_evaluator.last_call_success /= 0)
 			end
 		end
 
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 					else					
 					end
 				end
-				error_occured := (eifnet_evaluator.last_call_success /= 0)
+				error_occurred := (eifnet_evaluator.last_call_success /= 0)
 			end
 		end
 
@@ -389,7 +389,9 @@ feature -- Helpers
 		require
 			address_valid: addr /= Void and then not addr.is_empty
 		do
-			Result := Application.imp_dotnet.kept_object_item (addr)
+			if Application.imp_dotnet.know_about_kept_object (addr) then
+				Result := Application.imp_dotnet.kept_object_item (addr)				
+			end
 		end
 
 feature {NONE} -- Debug purpose only

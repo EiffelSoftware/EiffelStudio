@@ -623,7 +623,7 @@ rt_private void split_to_block(void);		/* Keep only needed space in 'to' block *
 rt_private int sweep_from_space(void);		/* Clean space after the scavenging */
 rt_private int find_scavenge_spaces(void);	/* Find a pair of scavenging spaces */
 rt_private struct chunk *find_std_chunk(register struct chunk *start);	/* Look for a standard-size chunk */
-#if !(defined EIF_NO_SCAVENGING  || defined EIF_THREADS)
+#ifndef EIF_NO_SCAVENGING
 rt_private void find_to_space(struct sc_zone *to);		/* Find standard-size 'to' chunks */
 #endif
 
@@ -2932,12 +2932,9 @@ rt_private int find_scavenge_spaces(void)
 	 * disgusting to be revealed here--RAM.
 	 * The function returns 0 if all is ok, -1 otherwise.
 	 */
-#if defined EIF_NO_SCAVENGING || defined EIF_THREADS
-	/* In MT mode, we do not want the object out of the scavenge zone 
-	 * to move. */
+#if defined EIF_NO_SCAVENGING
 	return -1;
 #else	/* EIF_NO_SCAVENGING */
-	EIF_GET_CONTEXT
 	int from_size;					/* Size of selected 'from' space */
 	EIF_REFERENCE to_space;					/* Location of the 'to' space */
 
@@ -3088,7 +3085,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	return (struct chunk *) 0;		/* No standard size chunk found */
 }
 
-#if !(defined EIF_NO_SCAVENGING  || defined EIF_THREADS)
+#ifndef EIF_NO_SCAVENGING
 rt_private void find_to_space(struct sc_zone *to)
 					/* The zone structure we want to fill in */
 {

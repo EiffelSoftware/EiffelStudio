@@ -35,15 +35,11 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 			button_box: EV_HORIZONTAL_BOX
 			hbox: EV_HORIZONTAL_BOX
-			version_label: EV_LABEL
 			copyright_label: EV_LABEL
 			info_label: EV_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
-			borland_label: EV_LABEL
-			borland_box: EV_HORIZONTAL_BOX
-			borland_image: EV_PIXMAP
 		do
 			default_create
 			set_title ("Vision2 widget demo")

@@ -32,7 +32,7 @@ feature
 			source := s;
 		end;
 
-	need_enlarging: BOOLEAN is true;
+	need_enlarging: BOOLEAN is True;
 			-- This node needs enlarging
 
 	enlarged: ASSIGN_BL is

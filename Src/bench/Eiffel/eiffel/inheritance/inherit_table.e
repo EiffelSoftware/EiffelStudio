@@ -322,10 +322,10 @@ debug ("ACTIVITY")
 	end;
 end;
 					if a_class.is_used_as_expanded then
-						!!depend_unit.make (a_class.id, -2);
+						!!depend_unit.make_expanded_unit (a_class.id);
 						pass2_control.propagators.extend (depend_unit)
 					end;
-					!!depend_unit.make (a_class.id, -1);
+					!!depend_unit.make_creation_unit (a_class.id);
 					pass2_control.propagators.extend (depend_unit)
 				end;
 			else
@@ -360,7 +360,7 @@ end;
 				if a_class.is_used_as_expanded and then
 					(new_creators  = Void or else new_creators.count > 1)
 				then
-					!!depend_unit.make (a_class.id, -2);
+					!!depend_unit.make_expanded_unit (a_class.id);
 					pass2_control.propagators.extend (depend_unit)
 				end;
 				old_creators := Void

@@ -217,7 +217,7 @@ feature -- Type check, byte code and dead code removal
 							-- Insert the creation without creation routine
 							-- (feature id = -1) in the dependance of the
 							-- current feature
-						!!depend_unit.make (creation_class.id, -1);
+						!!depend_unit.make_creation_unit (creation_class.id);
 						context.supplier_ids.extend (depend_unit);
 					elseif creators.empty then
 						!!vgcc5;

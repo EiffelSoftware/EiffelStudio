@@ -1,6 +1,6 @@
 AR = lib 
 CC = cl
-CFLAGS = -Ogityb1 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Ox -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 LN = copy
 MAKE = make
 RANLIB = echo
@@ -12,7 +12,7 @@ OBJECTS =  $(OBJS) $(WOBJS)
 all:: net.lib
 
 .c.obj:
-	$(CC) -Fo$@ -c $(CFLAGS) $<
+	$(CC) -o $@ -c $(CFLAGS) $<
 
 SMODE = network.c network_r.c hostname.c syncpoll.c storable.c
 
@@ -30,9 +30,9 @@ local_realclean::
 
 net.lib: $(OBJS)
 	$(RM) $@
-	$(AR) /OUT:$@ $(OBJS) wsock32.lib
+	$(AR) -OUT:$@ $(OBJS) wsock32.lib
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
-	if not exist ..\spec\w32msc mkdir ..\spec\w32msc
-	if not exist ..\spec\w32msc\lib mkdir ..\spec\w32msc\lib
-	copy net.lib ..\spec\w32msc\lib\net.lib
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy wnet.lib ..\spec\msc\lib\wnet.lib

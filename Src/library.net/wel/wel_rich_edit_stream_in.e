@@ -20,13 +20,14 @@ feature {NONE} -- Initialization
 			-- Initialize the C variables.
 		do
 			Precursor {WEL_RICH_EDIT_STREAM}
-			cwel_set_editstream_in_procedure_address ($internal_callback)
+			create stream_in_delegate.make (Current, $internal_callback)
+			cwel_set_editstream_in_procedure_address (stream_in_delegate)									
 			cwel_editstream_set_pfncallback_in (item)
 		end
 
-feature -- Access
+feature {NONE} -- Access
 
-	buffer: STRING
+	buffer: WEL_STRING
 			-- Buffer to set in `read_buffer'.
 
 feature -- Basic operations
@@ -49,19 +50,15 @@ feature {NONE} -- Implementation
 			-- `a_data_length' is a C-pointer to an integer, that has to
 			-- be set to the length of the data that was actually
 			-- written into `a_buffer'.
-		local
-			a: ANY
-		do
-		
+		do		
 			stream_result := 0
 			read_buffer (a_buffer_length)
-
-			a := buffer.area
-			a_buffer.memory_copy ($a, buffer.count)
+			a_buffer.memory_copy (buffer.item, buffer.count)
 			cwel_set_integer_reference_value (a_data_length, buffer.count)
-			
 			Result := stream_result
 		end
+		
+	stream_in_delegate: WEL_RICH_EDIT_STREAM_IN_DELEGATE
 
 feature {NONE} -- Externals
 
@@ -77,13 +74,13 @@ feature {NONE} -- Externals
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_set_editstream_in_procedure_address (address: POINTER) is
+	cwel_set_editstream_in_procedure_address (address: WEL_RICH_EDIT_STREAM_IN_DELEGATE) is
 		external
-			"C [macro %"estream.h%"]"
+			"C [macro %"estream.h%"] (EIF_POINTER)"
 		end
 
-
 end -- class WEL_RICH_EDIT_STREAM_IN
+
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

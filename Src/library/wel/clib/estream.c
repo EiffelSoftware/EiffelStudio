@@ -13,14 +13,13 @@
 
 	EIF_EDITSTREAM_OUT_PROCEDURE wel_editstream_out_procedure = NULL;
 	/* Address of the Eiffel routine `internal_callback' (class WEL_EDIT_STREAM_OUT) */
-	
 #endif
 
 
 
 DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG FAR * pcb)
 {
-	 
+
 	// This function is called by the system to transfere text into a Rich Edit Control.
 	// dwCookie holds a EIF_OBJECT pointing to the WEL_RICH_EDIT_STREAM_IN object that will
 	// process the transfere.
@@ -32,11 +31,13 @@ DWORD CALLBACK cwel_editstream_in_callback (DWORD dwCookie, LPBYTE pbBuff, LONG 
 	WGTCX
 
 	if (dwCookie) {
-		/* Call the Eiffel routine `internal_callback'. */
-		return (DWORD) (((EIF_EDITSTREAM_IN_PROCEDURE)wel_editstream_in_procedure) (
+		// Call the Eiffel routine `internal_callback'.
+		return (DWORD) (((EIF_EDITSTREAM_IN_PROCEDURE) wel_editstream_in_procedure) (
+#ifndef EIF_IL_DLL
 			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie),
+#endif
 			(EIF_POINTER) pbBuff,
-			(EIF_INTEGER) cb, 
+			(EIF_INTEGER) cb,
 			(EIF_POINTER)pcb));
 	} else {
 		return (DWORD) 0;
@@ -50,7 +51,7 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 	// This function is called by the system to read text from a Rich Edit Control.
 	// dwCookie holds a EIF_OBJECT pointing to the WEL_RICH_EDIT_STREAM_IN object that will
 	// process the transfere.
-	// pbBuff is a pointer to a character array that holds the text that has been read 
+	// pbBuff is a pointer to a character array that holds the text that has been read
 	// from the Rich Edit Control.
 	// cb is the size of the character array.
 	// *pcb will be set to the actual size of data read (and processed).
@@ -63,7 +64,11 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 
 			/* Call the Eiffel routine `internal_callback'. */
 		return (DWORD) (((EIF_EDITSTREAM_OUT_PROCEDURE) wel_editstream_out_procedure) (
-			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie), pbBuff, cb));
+#ifndef EIF_IL_DLL
+			(EIF_REFERENCE) eif_access ((EIF_OBJECT) dwCookie),
+#endif
+			pbBuff,
+			cb));
 	} else {
 		return (DWORD) 0;
 	}
@@ -72,13 +77,13 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 #ifdef EIF_THREADS
 
 
-void wel_set_editstream_in_procedure_address(EIF_POINTER _value_) 
+void wel_set_editstream_in_procedure_address(EIF_POINTER _value_)
 {
 		WGTCX
 		wel_editstream_in_procedure = (EIF_EDITSTREAM_IN_PROCEDURE) _value_;
 }
 
-void wel_set_editstream_out_procedure_address(EIF_POINTER _value_) 
+void wel_set_editstream_out_procedure_address(EIF_POINTER _value_)
 {
 		WGTCX
 		wel_editstream_out_procedure = (EIF_EDITSTREAM_OUT_PROCEDURE) _value_;

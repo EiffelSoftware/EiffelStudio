@@ -12,6 +12,8 @@ class
 
 inherit
 	EV_PRIMITIVE
+		export {NONE}
+			add_double_click_command, remove_double_click_commands
 		redefine
 			implementation
 		end

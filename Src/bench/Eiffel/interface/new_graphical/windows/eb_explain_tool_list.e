@@ -6,8 +6,11 @@ indexing
 class
 	EB_EXPLAIN_TOOL_LIST
 
+obsolete
+	"The explain tool is obsolete."
+
 inherit
-	EB_EDIT_TOOL_LIST [EB_EXPLAIN_TOOL]
+	EB_TEXT_TOOL_LIST [EB_EXPLAIN_TOOL]
 		redefine
 			make
 		end

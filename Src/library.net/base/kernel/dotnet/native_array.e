@@ -3,6 +3,7 @@ indexing
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
 		]"
+	assembly: "mscorlib", "1.0.3300.0", "neutral", "b77a5c561934e089"
 	date: "$Date$"
 	revision: "$Revision$"
 

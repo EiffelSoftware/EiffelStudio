@@ -75,9 +75,9 @@ feature -- Access
 	duplicate: like Current is
 			-- Duplication
 		do
-			Result := clone (Current)
-			Result.set_meta_generic (clone (meta_generic))
-			Result.set_true_generics (clone (true_generics))
+			Result := twin
+			Result.set_meta_generic (meta_generic.twin)
+			Result.set_true_generics (true_generics.twin)
 		end
 
 	instantiation_in (other: GEN_TYPE_I): like Current is
@@ -198,8 +198,7 @@ feature -- Access
 			if is_true_expanded then
 				buffer.putstring ("expanded ")
 			end
-			s := clone (base_class.name)
-			s.to_upper
+			s := base_class.name_in_upper
 			buffer.putstring (s)
 			l_meta := meta_generic
 			count := l_meta.count
@@ -242,7 +241,7 @@ feature -- Access
 				end
 			end
 			if not l_is_precompiled then
-				Result := clone (l_class_c.name)
+				Result := l_class_c.name.twin
 		
 				l_meta := meta_generic
 		
@@ -256,7 +255,7 @@ feature -- Access
 						i > count
 					loop
 						Result.append (sep)
-						tmp := clone (l_meta.item (i).il_type_name (a_prefix))
+						tmp := l_meta.item (i).il_type_name (a_prefix).twin
 						tmp.remove_head (tmp.last_index_of ('.', tmp.count))
 						tmp.to_lower
 						Result.append (tmp)

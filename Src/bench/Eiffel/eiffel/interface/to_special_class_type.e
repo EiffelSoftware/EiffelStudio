@@ -103,7 +103,7 @@ feature -- C Code generation
 				buffer.new_line
 				buffer.putstring ("EIF_INTEGER elem_size = (EIF_Size(")
 				expanded_type ?= gen_param
-				non_expanded_type := clone (expanded_type)
+				non_expanded_type := expanded_type.twin
 				non_expanded_type.set_is_true_expanded (False)
 				if final_mode then
 					dtype := non_expanded_type.type_id - 1
@@ -187,8 +187,8 @@ feature -- C Code generation
 
 				-- Set dynamic type
 			create gen_type.make (System.special_id)
-			gen_type.set_meta_generic (clone (type.meta_generic))
-			gen_type.set_true_generics (clone (type.true_generics))
+			gen_type.set_meta_generic (type.meta_generic.twin)
+			gen_type.set_true_generics (type.true_generics.twin)
 
 			generate_ov_flags_start (buffer, gen_type)
 			buffer.putstring ("zone->ov_flags |= typres")

@@ -260,8 +260,7 @@ feature -- Access
 	name_in_upper: STRING is
 			-- Cluster name in upper case
 		do
-			Result := clone (cluster_name)
-			Result.to_upper
+			Result := cluster_name.as_upper
 		end
 		
 	top_of_recursive_cluster: CLUSTER_I is
@@ -712,9 +711,9 @@ feature {COMPILER_EXPORTER} -- Element change
 						if not found then
 							if check_dir then
 								-- Check that it is really a directory.
-								create sub_dir_path.make_from_string (clone (cl_path))
+								create sub_dir_path.make_from_string (cl_path)
 								sub_dir_path.extend (file_name)
-								create sub_dir_suffix.make_from_string (clone (suffix))
+								create sub_dir_suffix.make_from_string (suffix)
 								sub_dir_suffix.extend (file_name)
 								create sub_dir_file.make (sub_dir_path)
 
@@ -724,9 +723,7 @@ feature {COMPILER_EXPORTER} -- Element change
 									suffixes.extend (sub_dir_suffix)
 								else
 									if is_efile then
-										create prefixed_file_name.make_from_string(
-																clone (suffix)
-																			 )
+										create prefixed_file_name.make_from_string (suffix)
 										prefixed_file_name.extend (file_name)
 										-- It's an Eiffel source file.
 										insert_class_from_file (prefixed_file_name)
@@ -772,9 +769,7 @@ feature {COMPILER_EXPORTER} -- Element change
 							create class_file.make (class_path)
 							if class_file.exists then
 								if is_recursive then
-									create prefixed_file_name.make_from_string(
-															clone (suffix)
-																		 )
+									create prefixed_file_name.make_from_string(suffix)
 									prefixed_file_name.extend (file_name)
 									insert_class_from_file (prefixed_file_name)
 

@@ -70,10 +70,10 @@ feature {NONE} -- Initialization
 				
 			if is_local then
 					-- Look in EIFGEN/Assemblies.
-				l_assembly_location := clone (Local_assembly_path)
+				l_assembly_location := Local_assembly_path.twin
 			else
 					-- Look in EAC.
-				l_assembly_location := clone (l_env.Assemblies_path (System.clr_runtime_version))
+				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
 			end
 			l_assembly_location.extend (l_assembly_directory)
 			create dollar_path.make_from_string (l_assembly_location)
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 				initialize_from_local_assembly (l_ass.name)
 			end
 
-			prefix_name := clone (l_ass.name) + "_"
+			prefix_name := l_ass.name + "_"
 			prefix_name.replace_substring_all (".", "_")
 			prefix_name := prefix_name.as_lower
 
@@ -126,10 +126,10 @@ feature {NONE} -- Initialization
 				
 			if is_local then
 					-- Look in EIFGEN/Assemblies.
-				l_assembly_location := clone (Local_assembly_path)
+				l_assembly_location := Local_assembly_path.twin
 			else
 					-- Look in EAC.
-				l_assembly_location := clone (l_env.Assemblies_path (System.clr_runtime_version))
+				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
 			end
 			l_assembly_location.extend (l_assembly_directory)
 			create dollar_path.make_from_string (l_assembly_location)
@@ -231,11 +231,11 @@ feature -- Initialization
 			
 				-- We first read all XML files to ensure that they all exist, otherwise
 				-- we raise an error.
-			create l_types_file.make_from_string (clone (path))
+			create l_types_file.make_from_string (path)
 			l_types_file.set_file_name (type_list_file_name)
 			l_types ?= l_reader.new_object_from_file (l_types_file)
 
-			create l_reference_file.make_from_string (clone (path))
+			create l_reference_file.make_from_string (path)
 			l_reference_file.set_file_name (referenced_assemblies_file_name)
 			l_referenced_assemblies ?= l_reader.new_object_from_file (l_reference_file)
 
@@ -272,7 +272,7 @@ feature -- Initialization
 						l_class_name.prepend (prefix_name)
 					end
 					l_external_name := l_types.dotnet_names.item (i)
-					l_path := clone (l_external_name)
+					l_path := l_external_name.twin
 					l_path.append (xml_extension)
 					create l_class.make (Current, l_class_name, l_external_name, l_path)
 					if not l_class.exists then
@@ -296,7 +296,7 @@ feature -- Initialization
 				i > nb
 			loop
 				l_cons_assembly := l_referenced_assemblies.assemblies.item (i)
-				l_assembly_location := clone (l_env.Assemblies_path (System.clr_runtime_version))
+				l_assembly_location := l_env.Assemblies_path (System.clr_runtime_version).twin
 				l_assembly_location.extend (build_assembly_path (
 					l_cons_assembly.name, l_cons_assembly.version,
 					l_cons_assembly.culture, l_cons_assembly.key))
@@ -304,7 +304,7 @@ feature -- Initialization
 					
 				l_assembly ?= Universe.cluster_of_path (l_path)
 				if l_assembly = Void then
-					l_local_path := clone (Local_assembly_path)
+					l_local_path := Local_assembly_path.twin
 					l_local_path.extend (build_assembly_path (
 						l_cons_assembly.name, l_cons_assembly.version,
 						l_cons_assembly.culture, l_cons_assembly.key))
@@ -358,7 +358,7 @@ feature -- Initialization
 				end
 				from
 					l_assemblies.start
-					l_names := clone (assembly_path)
+					l_names := assembly_path.twin
 				until
 					l_assemblies.after
 				loop
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('-')
 			
 			if a_version /= Void then
-				l_version := clone (a_version)
+				l_version := a_version.twin
 				l_version.replace_substring_all (".", "_")
 				Result.append (l_version)
 			end

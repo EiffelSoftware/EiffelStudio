@@ -131,7 +131,7 @@ feature -- Duplication
 			-- Clone
 		do
 			Precursor {EIFFEL_LIST} (other)
-			argument_names := clone (other.argument_names)
+			argument_names := other.argument_names.twin
 		end
 
 feature -- Element change
@@ -385,5 +385,8 @@ feature {FEATURE_I}
 			end
 			Result.set_argument_names (args)
 		end
-		
+
+invariant
+	argument_names_not_void: argument_names /= Void
+
 end -- end of class FEAT_ARG

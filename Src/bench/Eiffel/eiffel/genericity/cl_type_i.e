@@ -107,7 +107,7 @@ feature -- Access
 		do
 			l_class_c := base_class
 			if l_class_c.is_external then
-				Result := clone (l_class_c.external_class_name)
+				Result := l_class_c.external_class_name.twin
 			else
 				l_is_precompiled := l_class_c.is_precompiled
 				if l_is_precompiled then
@@ -118,7 +118,7 @@ feature -- Access
 					end
 				end
 				if not l_is_precompiled then
-					Result := internal_il_type_name (clone (l_class_c.name), a_prefix)
+					Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
 				end
 			end
 		end

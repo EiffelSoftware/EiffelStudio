@@ -449,8 +449,8 @@ feature -- Status setting
 				not_first_parsing := True
 			end
 
-			old_universe := clone (Universe)
-			old_system := clone (System)
+			old_universe := Universe.twin
+			old_system := System.twin
 
 			Universe.clusters.wipe_out
 

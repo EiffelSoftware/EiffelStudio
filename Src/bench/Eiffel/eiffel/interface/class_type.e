@@ -163,7 +163,7 @@ feature -- Access
 		require
 			is_precompiled: is_precompiled
 		do
-			Result := clone (il_casing.namespace_casing (is_dotnet_name, internal_namespace))
+			Result := il_casing.namespace_casing (is_dotnet_name, internal_namespace).twin
 			if a_prefix /= Void then
 				Result.append_character ('.')
 				Result.append (a_prefix)
@@ -311,7 +311,7 @@ feature -- Settings
 		local
 			l_pos: INTEGER
 		do
-			internal_namespace := clone (associated_class.lace_class.actual_namespace)
+			internal_namespace := associated_class.lace_class.actual_namespace.twin
 			internal_type_name := type.il_type_name (Void)
 			l_pos := internal_type_name.last_index_of ('.', internal_type_name.count)
 			internal_type_name := internal_type_name.substring (l_pos + 1, internal_type_name.count)
@@ -704,7 +704,7 @@ feature -- Generation
 					-- If the status of the file has been changed we delete the
 					-- previous version.
 				if has_cpp_status_changed then
-					previous_file_name := clone (file_name)
+					previous_file_name := file_name.twin
 					if has_cpp_externals_calls then
 						previous_file_name.append (Dot_c)
 					else

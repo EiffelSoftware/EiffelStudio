@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 		do
 			create clusters.make (25)
 			assemblies_to_be_added := Void
+			override_cluster_names := Void
 		ensure
 			clusters_not_void: clusters /= Void
 			assemblies_to_be_added_reset: assemblies_to_be_added = Void
@@ -481,7 +482,10 @@ feature {COMPILER_EXPORTER} -- Implementation
 		do
 			from
 				make
-				override_cluster_names := clone (other.override_cluster_names)
+				override_cluster_names := other.override_cluster_names
+				if override_cluster_names /= Void then
+					override_cluster_names := override_cluster_names.twin
+				end
 				other.clusters.start
 			until
 				other.clusters.after

@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>DIRECTORY_NAME</title>
+</head>
+
+<body>
+<h1>DIRECTORY_NAME</h1>
+<h2>Used .NET classes</h2>
+<ul>
+	<li>PATH
+</ul>
+<h2>Static methods used</h2>
+<ul>
+	<li>{PATH}.invalid_path_chars
+</ul>
+<h2>Security notes</h2>
+<ul>
+	<li>None.
+</ul>
+<h2>Unhandled exceptions</h2>
+<ul>
+	<li>None.
+</ul>
+<h2>Other notes</h2>
+<p>By reading comments in the C code of eif_is_directory_valid it seems the behavior of
+{DIRECTORY_NAME}.is_valid is not clearly defined at all. In base.NET it returns True iff:
+<UL>
+	<li>The name is neither empty nor blank,
+	<li>The name doesn't contain invalid characters.
+</UL>
+
+</body>
+
+</html>

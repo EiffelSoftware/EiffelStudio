@@ -10,23 +10,31 @@ indexing
 class 
 	ACTIONS_WINDOW
 	
+inherit
+	
+	EV_WINDOW
+	
+	
 creation
 	
-	make
+	make_with_main_widget
 
 feature -- Access
 	
-	window: EV_WINDOW
+	Default_string_length: INTEGER is 5;
+	
 	
 	box: EV_HORIZONTAL_BOX 
 	show_button, hide_button: EV_BUTTON
+	width_entry, height_entry: EV_ENTRY
 	
 	widget: EV_WIDGET
 
 feature -- Initialization
 	
-	make (main_widget: EV_WIDGET) is
+	make_with_main_widget (main_widget: EV_WIDGET) is
 		do
+			make
 			widget := main_widget
 			set_widgets
 			set_values
@@ -38,16 +46,27 @@ feature -- Status setting
 	set_widgets is
 			-- Create the widgets inside the window
                 do
-			!!window.make
-			!!box.make (window)
+			
+			!!box.make (Current)
 			!!show_button.make (box)
 			!!hide_button.make (box)
+			!!width_entry.make (box)
+			!!height_entry.make (box)
                 end
 	
 	set_values is
+		local
+			s: STRING
  		do
+			set_title ("Control widget behavior")
 			show_button.set_text ("Show")
 			hide_button.set_text ("Hide")
+			!!s.make (Default_string_length)
+			s.append_integer (widget.width)
+			width_entry.set_text (s)
+			s.wipe_out
+			s.append_integer (widget.height)
+			height_entry.set_text (s)
  		end
 
  	set_commands is
@@ -65,20 +84,6 @@ feature -- Status setting
 			hide_button.add_command (e, hide_c, a)
  		end
 	
-feature
-	
-	show is
-			-- show the window
-		do
-			window.show
-		end
-	
-feature -- Command executing
-	
-	execute (argument: EV_ARGUMENT1[STRING]) is
-		do
-			show
-		end
 end
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

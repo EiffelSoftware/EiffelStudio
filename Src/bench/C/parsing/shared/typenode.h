@@ -126,7 +126,7 @@
 #define CREATION_EXPR_AS	165
 #define ROUTINE_CREATION_AS 166
 #define TUPLE_AS			167
-#define SIGNATURE_AS		168
+#define OPERAND_AS			168
 
 /* Lace nodes */ 
 

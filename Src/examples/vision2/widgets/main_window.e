@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 					-- an image.
 				pixmap ?= widget
 				if pixmap /= Void then
-					pixmap.set_with_named_file ("eiffel_wizard.bmp")
+					pixmap.set_with_named_file ("../../bm_About.png")
 				end
 				tree_item.select_actions.extend (agent test_widget (widget))
 				counter := counter + 1

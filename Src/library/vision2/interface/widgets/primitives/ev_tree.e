@@ -85,9 +85,9 @@ feature {EV_ANY} -- Contract support
 				loop
 					t_item.put_left (t_item2)
 					t_item.prune (t_item2)
-				if not t_item.off then
-					t_item.forth
-				end
+					if not t_item.off then
+						t_item.forth
+					end
 				end
 				t_item.put_front (t_item2)
 				t_item2.prune (t_item3)
@@ -170,6 +170,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/03/10 19:22:55  king
+--| Corrected indentation in make_for_test
+--|
 --| Revision 1.30  2000/03/09 19:58:52  king
 --| Removed multiple selection features
 --|

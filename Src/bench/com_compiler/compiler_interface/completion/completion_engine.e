@@ -96,7 +96,7 @@ feature -- Element settings
 			feature_name := a_feature_name
 			feature_i := feature_table.item (feature_name)
 			if feature_i = void then
-				cf := completion_feature (feature_name)
+				cf := uncompiled_completion_feature (feature_name)
 				if cf /= void then
 					create {R_DYN_FUNC_I} feature_i
 				end
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	completion_feature (a_feature_name: STRING): COMPLETION_FEATURE is
+	uncompiled_completion_feature (a_feature_name: STRING): COMPLETION_FEATURE is
 			-- Feature `a_feature_name' from file `a_file_name'
 		require
 			non_void_feature_name: a_feature_name /= void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if Result = void then
-				cf := completion_feature (a_target)
+				cf := uncompiled_completion_feature (a_target)
 				if cf /= void then
 					Result := type_from_type_name (cf.return_type)
 				end

@@ -22,6 +22,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -55,12 +65,54 @@ feature -- Access
 		local
 			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			parent_object: GB_OBJECT
+			all_dependents: HASH_TABLE [GB_OBJECT, INTEGER]
+			contents: XM_ELEMENT
+			element_info: ELEMENT_INFORMATION
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			top_level_id: INTEGER
+			actual_object: GB_OBJECT
+			new_parent: GB_OBJECT
+			selected_window: GB_WINDOW_SELECTOR_ITEM
 		do
-			Result := not clipboard.is_empty and (layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (window_selector.has_focus)
+			Result := not clipboard.is_empty and ((layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (window_selector.has_focus))
 			if not clipboard.is_empty and (layout_constructor.has_focus and layout_constructor.selected_item /= Void) then
 				layout_item ?= layout_constructor.selected_item
 				parent_object ?= layout_item.object
 				Result := parent_object.accepts_child (clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
+			end
+				-- Now ensure that we do not nest an instance of a top level widget in a structure
+				-- that does not permit such nesting, thereby preventing nested inheritance cycles.
+			if Result then
+				if layout_constructor.has_focus then
+					layout_item ?= layout_constructor.selected_item
+					if layout_item /= Void then
+						new_parent ?= layout_item.object
+					end
+				else
+					selected_window ?= window_selector.selected_window
+					if selected_window /= Void then
+						new_parent ?= selected_window.object
+					end
+				end	
+				if new_parent /= Void then	
+					contents ?= clipboard.contents_cell.item.first
+					contents ?= child_element_by_name (contents, internal_properties_string)
+					full_information := get_unique_full_info (contents)
+					element_info := full_information @ (reference_id_string)
+					if element_info /= Void then
+						top_level_id := element_info.data.to_integer
+					
+						create all_dependents.make (4)
+						actual_object := object_handler.deep_object_from_id (top_level_id)
+						if actual_object /= Void then
+							actual_object.all_dependents_recursive (actual_object, all_dependents)
+							all_dependents.extend (actual_object, actual_object.id)
+							Result := Result and not all_dependents.has (new_parent.id)
+						end
+						
+						Result := Result and new_parent.override_drop_on_child (actual_object)
+					end
+				end
 			end
 		end
 

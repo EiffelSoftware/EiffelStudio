@@ -1,5 +1,4 @@
 indexing
-
 	description: "Implementation of TUPLE"
 	status: "See notice at end of class"
 	date: "$Date$"
@@ -9,19 +8,7 @@ class
 	TUPLE
 
 inherit
-	ARRAY [ANY]
-		rename
-			make as array_make
-		export
-			{NONE} all
-			{ANY} item, put, infix "@", lower, upper, valid_index,
-			is_empty, count
-		end
-
 	HASHABLE
-		undefine
-			is_equal, copy
-		end
 	
 create
 	make
@@ -29,17 +16,163 @@ create
 feature -- Creation
 
 	make is
-
+		obsolete
+			"Use no creation procedure to create a TUPLE instance"
 		do
-			array_make (1, eif_gen_count ($Current))
 		end
 
+feature -- Access
+
+	item, infix "@" (index: INTEGER): ANY is
+			-- Entry of key `index'.
+		require
+			valid_index: valid_index (index)
+		do
+			inspect eif_item_type ($Current, index)
+			when boolean_code then Result := eif_boolean_item ($Current, index)
+			when character_code then Result := eif_character_item ($Current, index)
+			when wide_character_code then Result := eif_wide_character_item ($Current, index)
+			when double_code then Result := eif_double_item ($Current, index)
+			when real_code then Result := eif_real_item ($Current, index)
+			when pointer_code then Result := eif_pointer_item ($Current, index)
+			when integer_code then Result := eif_integer_32_item ($Current, index)
+			when integer_8_code then Result := eif_integer_8_item ($Current, index)
+			when integer_16_code then Result := eif_integer_16_item ($Current, index)
+			when integer_64_code then Result := eif_integer_64_item ($Current, index)
+			when Reference_code then Result := eif_reference_item ($Current, index)
+			end
+		end
+	
+	reference_item (index: INTEGER): ANY is
+			-- Reference item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_reference: is_reference_item (index)
+		do
+			Result := eif_reference_item ($current, index)
+		end
+		
+	boolean_item (index: INTEGER): BOOLEAN is
+			-- Boolean item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_boolean: is_boolean_item (index)
+		do
+			Result := eif_boolean_item ($Current, index)
+		end
+
+	character_item (index: INTEGER): CHARACTER is
+			-- Character item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_character: is_character_item (index)
+		do
+			Result := eif_character_item ($Current, index)
+		end
+
+	wide_character_item (index: INTEGER): WIDE_CHARACTER is
+			-- Character item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_wide_character: is_wide_character_item (index)
+		do
+			Result := eif_wide_character_item ($Current, index)
+		end
+
+	double_item (index: INTEGER): DOUBLE is
+			-- Double item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_numeric: is_numeric_item (index)
+		do
+			inspect eif_item_type ($Current, index)
+			when integer_8_code then Result := eif_integer_8_item ($Current, index)
+			when integer_16_code then Result := eif_integer_16_item ($Current, index)
+			when integer_32_code then Result := eif_integer_32_item ($Current, index)
+			when integer_64_code then Result := eif_integer_64_item ($Current, index)
+			when real_code then Result := eif_real_item ($Current, index)
+			else
+				check
+					is_double: eif_item_type ($Current, index) = double_code
+				end
+				Result := eif_double_item ($Current, index)
+			end
+		end
+
+	integer_8_item (index: INTEGER): INTEGER_8 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_8_item (index)
+		do
+			Result := eif_integer_8_item ($Current, index)
+		end
+
+	integer_16_item (index: INTEGER): INTEGER_16 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_16_item (index)
+		do
+			Result := eif_integer_16_item ($Current, index)
+		end
+
+	integer_item, integer_32_item (index: INTEGER): INTEGER is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_item (index)
+		do
+			Result := eif_integer_32_item ($Current, index)
+		end
+
+	integer_64_item (index: INTEGER): INTEGER_64 is
+			-- Integer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_integer: is_integer_64_item (index)
+		do
+			Result := eif_integer_64_item ($Current, index)
+		end
+
+	pointer_item (index: INTEGER): POINTER is
+			-- Pointer item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_pointer: is_pointer_item (index)
+		do
+			Result := eif_pointer_item ($Current, index)
+		end
+
+	real_item (index: INTEGER): REAL is
+			-- real item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
+		do
+			inspect eif_item_type ($Current, index)
+			when integer_8_code then Result := eif_integer_8_item ($Current, index)
+			when integer_16_code then Result := eif_integer_16_item ($Current, index)
+			when integer_32_code then Result := eif_integer_32_item ($Current, index)
+			when integer_64_code then Result := eif_integer_64_item ($Current, index)
+			when double_code then
+					-- Special case of manifest tuple.
+				Result := eif_double_item ($Current, index).truncated_to_real
+			else
+				check
+					is_real: eif_item_type ($Current, index) = real_code
+				end
+				Result := eif_real_item ($Current, index)
+			end
+		end
+
+		
 feature -- Status report
 
 	hash_code: INTEGER is
 			-- Hash code value
 		local 
-			i, nb: INTEGER 
+			i, nb, l_hash: INTEGER 
 			l_key: HASHABLE 
 		do 
 			from
@@ -48,16 +181,182 @@ feature -- Status report
 			until
 				i > nb 
 			loop
-				l_key ?= item (i) 
-				if l_key /= Void then 
-					Result := Result + l_key.hash_code * internal_primes.i_th (i) 
-				end 
+				inspect eif_item_type($Current, i)
+				when boolean_code then l_hash := eif_boolean_item ($Current, i).hash_code
+				when character_code then l_hash := eif_character_item ($Current, i).hash_code
+				when wide_character_code then l_hash := eif_wide_character_item ($Current, i).hash_code
+				when double_code then l_hash := eif_double_item ($Current, i).hash_code
+				when real_code then l_hash := eif_real_item ($Current, i).hash_code
+				when pointer_code then l_hash := eif_pointer_item ($Current, i).hash_code
+				when integer_code then l_hash := eif_integer_32_item ($Current, i).hash_code
+				when integer_8_code then l_hash := eif_integer_8_item ($Current, i).hash_code
+				when integer_16_code then l_hash := eif_integer_16_item ($Current, i).hash_code
+				when integer_64_code then l_hash := eif_integer_64_item ($Current, i).hash_code
+				when reference_code then
+					l_key ?= eif_reference_item ($Current, i) 
+					if l_key /= Void then 
+						l_hash := l_key.hash_code
+					else
+						l_hash := 0
+					end
+				end
+				Result := Result + l_hash * internal_primes.i_th (i) 
 				i := i + 1 
 			end 
 				-- Ensure it is a positive value.
 			Result := Result.hash_code
 		end 
+
+	valid_index (k: INTEGER): BOOLEAN is
+			-- Is `k' a valid key?
+		do
+			Result := k >= 1 and then k <= count
+		end
+
+	count: INTEGER is
+			-- Number of element in Current.
+		do
+				-- `-1' because we always allocate one item more to avoid
+				-- to do `-1' each time we want to access or store an item
+				-- of current.
+			Result := feature {ISE_RUNTIME}.sp_count ($Current) - 1
+		end
+
+	lower: INTEGER is 1
+			-- Lower bound of TUPLE.
+
+	upper: INTEGER is
+			-- Upper bound of TUPLE.
+		do
+			Result := count
+		end
+
+	is_empty: BOOLEAN is
+			-- Is Current empty?
+		do
+			Result := count = 0
+		end
+
+feature -- Element change
+
+	put (v: ANY; index: INTEGER) is
+		require
+			valid_index: valid_index (index)
+		do
+			inspect eif_item_type ($Current, index)
+			when boolean_code then eif_put_boolean_item_with_object ($Current, index, $v)
+			when character_code then eif_put_character_item_with_object ($Current, index, $v)
+			when wide_character_code then eif_put_wide_character_item_with_object ($Current, index, $v)
+			when double_code then eif_put_double_item_with_object ($Current, index, $v)
+			when real_code then eif_put_real_item_with_object ($Current, index, $v)
+			when pointer_code then eif_put_pointer_item_with_object ($Current, index, $v)
+			when integer_code then eif_put_integer_32_item_with_object ($Current, index, $v)
+			when integer_8_code then eif_put_integer_8_item_with_object ($Current, index, $v)
+			when integer_16_code then eif_put_integer_16_item_with_object ($Current, index, $v)
+			when integer_64_code then eif_put_integer_64_item_with_object ($Current, index, $v)
+			when Reference_code then eif_put_reference_item_with_object ($Current, index, $v)
+			end
+		end
+
+	put_reference (v: ANY; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_reference_item (index)
+		do
+			eif_put_reference_item_with_object ($Current, index, $v)
+		end
 		
+	put_boolean (v: BOOLEAN; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_boolean_item (index)
+		do
+			eif_put_boolean_item ($Current, index, v)
+		end
+		
+	put_character (v: CHARACTER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_character_item (index)
+		do
+			eif_put_character_item ($Current, index, v)
+		end
+		
+	put_wide_character (v: WIDE_CHARACTER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_wide_character_item (index)
+		do
+			eif_put_wide_character_item ($Current, index, v)
+		end
+		
+	put_double (v: DOUBLE; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_double_item (index)
+		do
+			eif_put_double_item ($Current, index, v)
+		end
+		
+	put_real (v: REAL; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_real_item (index)
+		do
+			eif_put_real_item ($Current, index, v)
+		end
+		
+	put_pointer (v: POINTER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_pointer_item (index)
+		do
+			eif_put_pointer_item ($Current, index, v)
+		end
+		
+	put_integer, put_integer_32 (v: INTEGER; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_item (index)
+		do
+			eif_put_integer_32_item ($Current, index, v)
+		end
+		
+	put_integer_8 (v: INTEGER_8; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_8_item (index)
+		do
+			eif_put_integer_8_item ($Current, index, v)
+		end
+		
+	put_integer_16 (v: INTEGER_16; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_16_item (index)
+		do
+			eif_put_integer_16_item ($Current, index, v)
+		end
+		
+	put_integer_64 (v: INTEGER_64; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_integer_64_item (index)
+		do
+			eif_put_integer_64_item ($Current, index, v)
+		end
+
 feature -- Type queries
 
 	is_boolean_item (index: INTEGER): BOOLEAN is
@@ -65,7 +364,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = boolean_code)
+			Result := (eif_item_type ($Current, index) = boolean_code)
 		end
 
 	is_character_item (index: INTEGER): BOOLEAN is
@@ -73,7 +372,15 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = character_code)
+			Result := (eif_item_type ($Current, index) = character_code)
+		end
+
+	is_wide_character_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a WIDE_CHARACTER?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (eif_item_type ($Current, index) = wide_character_code)
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
@@ -81,7 +388,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = double_code)
+			Result := (eif_item_type ($Current, index) = double_code)
 		end
 
 	is_integer_8_item (index: INTEGER): BOOLEAN is
@@ -89,7 +396,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = integer_8_code)
+			Result := (eif_item_type ($Current, index) = integer_8_code)
 		end
 
 	is_integer_16_item (index: INTEGER): BOOLEAN is
@@ -97,7 +404,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = integer_16_code)
+			Result := (eif_item_type ($Current, index) = integer_16_code)
 		end
 
 	is_integer_item, is_integer_32_item (index: INTEGER): BOOLEAN is
@@ -105,7 +412,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = integer_code)
+			Result := (eif_item_type ($Current, index) = integer_code)
 		end
 
 	is_integer_64_item (index: INTEGER): BOOLEAN is
@@ -113,7 +420,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = integer_64_code)
+			Result := (eif_item_type ($Current, index) = integer_64_code)
 		end
 
 	is_pointer_item (index: INTEGER): BOOLEAN is
@@ -121,7 +428,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = pointer_code)
+			Result := (eif_item_type ($Current, index) = pointer_code)
 		end
 
 	is_real_item (index: INTEGER): BOOLEAN is
@@ -129,7 +436,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = real_code)
+			Result := (eif_item_type ($Current, index) = real_code)
 		end
 
 	is_reference_item (index: INTEGER): BOOLEAN is
@@ -137,7 +444,7 @@ feature -- Type queries
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_gen_typecode ($Current, index) = reference_code)
+			Result := (eif_item_type ($Current, index) = reference_code)
 		end
 
 	is_numeric_item (index: INTEGER): BOOLEAN is
@@ -147,7 +454,7 @@ feature -- Type queries
 		local
 			tcode: CHARACTER
 		do
-			tcode := eif_gen_typecode ($Current, index)
+			tcode := eif_item_type ($Current, index)
 			Result := (tcode = integer_code) or else
 					 (tcode = real_code) or else
 					 (tcode = double_code)
@@ -173,6 +480,14 @@ feature -- Type queries
 			-- Are all items of type CHARACTER?
 		do
 			Result := is_tuple_uniform (character_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_wide_character: BOOLEAN is
+			-- Are all items of type WIDE_CHARACTER?
+		do
+			Result := is_tuple_uniform (wide_character_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -256,7 +571,7 @@ feature -- Type conversion queries
 			until
 				i > cnt or else not Result
 			loop
-				tcode := eif_gen_typecode ($Current, i)
+				tcode := eif_item_type ($Current, i)
 				Result := (tcode = integer_code) or else 
 						 (tcode = real_code) or else 
 						 (tcode = double_code)
@@ -279,165 +594,12 @@ feature -- Type conversion queries
 			until
 				i > cnt or else not Result
 			loop
-				tcode := eif_gen_typecode ($Current, i)
+				tcode := eif_item_type ($Current, i)
 				Result := (tcode = integer_code) or else (tcode = real_code)
 				i := i + 1
 			end
 		ensure
 			yes_if_empty: (count = 0) implies Result
-		end
-
-feature -- Access
-
-	boolean_item (index: INTEGER): BOOLEAN is
-			-- Boolean item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_boolean: is_boolean_item (index)
-		local
-			ref: BOOLEAN_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	character_item (index: INTEGER): CHARACTER is
-			-- Character item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_character: is_character_item (index)
-		local
-			ref: CHARACTER_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	double_item (index: INTEGER): DOUBLE is
-			-- Double item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_numeric: is_numeric_item (index)
-		local
-			iref: INTEGER_REF
-			rref: REAL_REF
-			dref: DOUBLE_REF
-		do
-			dref ?= item (index)
-			if dref /= Void then
-				Result := dref.item
-			else
-				rref ?= item (index)
-				if rref /= Void then
-					Result := rref.item
-				else
-					iref ?= item (index)
-					if iref /= Void then
-						Result := iref.item
-					end
-				end
-			end
-		end
-
-	integer_8_item (index: INTEGER): INTEGER_8 is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_8_item (index)
-		local
-			ref: INTEGER_8_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	integer_16_item (index: INTEGER): INTEGER_16 is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_16_item (index)
-		local
-			ref: INTEGER_16_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	integer_item, integer_32_item (index: INTEGER): INTEGER is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_item (index)
-		local
-			ref: INTEGER_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	integer_64_item (index: INTEGER): INTEGER_64 is
-			-- Integer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_integer: is_integer_64_item (index)
-		local
-			ref: INTEGER_64_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	pointer_item (index: INTEGER): POINTER is
-			-- Pointer item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_pointer: is_pointer_item (index)
-		local
-			ref: POINTER_REF
-		do
-			ref ?= item (index)
-			if ref /= Void then
-				Result := ref.item
-			end
-		end
-
-	real_item (index: INTEGER): REAL is
-			-- real item at `index'.
-		require
-			valid_index: valid_index (index)
-			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
-		local
-			iref: INTEGER_REF
-			rref: REAL_REF
-			dref: DOUBLE_REF
-		do
-			rref ?= item (index)
-			if rref /= Void then
-				Result := rref.item
-			else
-				iref ?= item (index)
-				if iref /= Void then
-					Result := iref.item
-				else
-					-- Special case (manifest TUPLEs)
-					dref ?= item (index)
-					if dref /= Void then
-						Result := dref.truncated_to_real
-					end
-				end
-			end
 		end
 
 feature -- Conversion
@@ -633,16 +795,18 @@ feature {ROUTINE}
 		require
 			valid_index: valid_index (index)
 		do
-			Result := eif_gen_typecode ($Current, index)
+			Result := eif_item_type ($Current, index)
 		end
 
 feature {NONE} -- Implementation
 
 	boolean_code: CHARACTER is 'b'
 	character_code: CHARACTER is 'c'
+	wide_character_code: CHARACTER is 'u'
 	double_code: CHARACTER is 'd'
 	real_code: CHARACTER is 'f'
 	integer_code: CHARACTER is 'i'
+	integer_32_code: CHARACTER is 'i'
 	pointer_code: CHARACTER is 'p'
 	reference_code: CHARACTER is 'r'
 	integer_8_code: CHARACTER is 'j'
@@ -652,37 +816,242 @@ feature {NONE} -- Implementation
 			-- Code used to identify type in TUPLE.
 
 	is_tuple_uniform (code: CHARACTER): BOOLEAN is
-			-- Are all items of type `code'? 
+			-- Are all items of type `code'?
+		local
+			i, nb: INTEGER
+			l_code: CHARACTER
 		do
 			if count > 0 then
-				Result := eif_gen_is_uniform ($Current, code)
+				from
+					nb := count
+					if code = any_code then
+							-- We take first type code and compare all the remaining ones
+							-- against it.
+						i := 2
+						l_code := eif_item_type ($Current, 1)
+					else
+						i := 1
+						l_code := code
+					end
+				until
+					i > nb or not Result
+				loop
+					Result := l_code = eif_item_type ($Current, i)
+					i := i + 1
+				end
 			else
 				Result := True
 			end
-		end
-
-	eif_gen_is_uniform (obj: POINTER; code: CHARACTER): BOOLEAN is
-			-- Are all items in `obj' of type `code'?
-		external
-			"C use %"eif_gen_conf.h%""
-		end
-
-	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
-			-- Code for generic parameter `pos' in `obj'.
-		external
-			"C use %"eif_gen_conf.h%""
-		end
-
-	eif_gen_count (obj: POINTER): INTEGER is
-			-- Number of generic parameters of `obj'.
-		external
-			"C use %"eif_gen_conf.h%""
 		end
 
 	internal_primes: PRIMES is
 			-- For quick access to prime numbers.
 		once 
 			create Result
+		end
+
+feature {NONE} -- Externals: Access
+
+	eif_item_type (obj: POINTER; pos: INTEGER): CHARACTER is
+			-- Code for generic parameter `pos' in `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		alias
+			"eif_item_type"
+		end
+
+	eif_boolean_item (obj: POINTER; pos: INTEGER): BOOLEAN is
+			-- Boolean item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_character_item (obj: POINTER; pos: INTEGER): CHARACTER is
+			-- Character item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_wide_character_item (obj: POINTER; pos: INTEGER): WIDE_CHARACTER is
+			-- Wide character item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_double_item (obj: POINTER; pos: INTEGER): DOUBLE is
+			-- Double item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_real_item (obj: POINTER; pos: INTEGER): REAL is
+			-- Real item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_pointer_item (obj: POINTER; pos: INTEGER): POINTER is
+			-- Pointer item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_integer_8_item (obj: POINTER; pos: INTEGER): INTEGER_8 is
+			-- Integer_8 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_integer_16_item (obj: POINTER; pos: INTEGER): INTEGER_16 is
+			-- Integer_16 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_integer_32_item (obj: POINTER; pos: INTEGER): INTEGER is
+			-- Integer_32 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_integer_64_item (obj: POINTER; pos: INTEGER): INTEGER_64 is
+			-- Integer_64 item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_reference_item (obj: POINTER; pos: INTEGER): ANY is
+			-- Reference item at position `pos' in tuple `obj'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+feature {NONE} -- Externals: Setting
+
+	eif_put_boolean_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set boolean item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_character_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set character item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_wide_character_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set wide character item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_double_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set double item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_real_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set real item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_pointer_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set pointer item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_8_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set integer_8 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_16_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set integer_16 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_32_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set integer_32 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_64_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set integer_64 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_reference_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set reference item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_boolean_item (obj: POINTER; pos: INTEGER; v: BOOLEAN) is
+			-- Set boolean item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_character_item (obj: POINTER; pos: INTEGER; v: CHARACTER) is
+			-- Set character item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_wide_character_item (obj: POINTER; pos: INTEGER; v: WIDE_CHARACTER) is
+			-- Set wide character item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_double_item (obj: POINTER; pos: INTEGER; v: DOUBLE) is
+			-- Set double item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_real_item (obj: POINTER; pos: INTEGER; v: REAL) is
+			-- Set real item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_pointer_item (obj: POINTER; pos: INTEGER; v: POINTER) is
+			-- Set pointer item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_8_item (obj: POINTER; pos: INTEGER; v: INTEGER_8) is
+			-- Set integer_8 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_16_item (obj: POINTER; pos: INTEGER; v: INTEGER_16) is
+			-- Set integer_16 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_32_item (obj: POINTER; pos: INTEGER; v: INTEGER) is
+			-- Set integer_32 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
+		end
+
+	eif_put_integer_64_item (obj: POINTER; pos: INTEGER; v: INTEGER_64) is
+			-- Set integer_64 item at position `pos' in tuple `obj' with `v'.
+		external
+			"C macro use %"eif_rout_obj.h%""
 		end
 
 indexing

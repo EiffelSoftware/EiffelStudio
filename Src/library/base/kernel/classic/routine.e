@@ -486,40 +486,35 @@ feature {NONE} -- Implementation
 				i > ocnt
 			loop
 				code := loc_open_type_codes.item (i + 1) -- pos. 1 is code of BASE_TYPE!
-
-				check loc_operands /= Void end
-				if code = Eif_real_code then
-					-- Special treatment of reals
-					ref_arg := loc_operands.real_item (i)
-				else
-					ref_arg := loc_operands.item (i)
+				check
+					loc_operands /= Void
 				end
-
 				j := loc_open_map.item (i)
 
 				inspect code
 					when Eif_boolean_code then
-						rout_obj_putb (new_args, j, $ref_arg)
+						rout_putb (new_args, j, loc_operands.boolean_item(i))
 					when Eif_character_code then
-						rout_obj_putc (new_args, j, $ref_arg)
+						rout_putc (new_args, j, loc_operands.character_item(i))
 					when Eif_double_code then
-						rout_obj_putd (new_args, j, $ref_arg)
+						rout_putd (new_args, j, loc_operands.double_item(i))
 					when Eif_integer_8_code then
-						rout_obj_puti8 (new_args, j, $ref_arg)
+						rout_puti8 (new_args, j, loc_operands.integer_8_item(i))
 					when Eif_integer_16_code then
-						rout_obj_puti16 (new_args, j, $ref_arg)
+						rout_puti16 (new_args, j, loc_operands.integer_16_item(i))
 					when Eif_integer_code then
-						rout_obj_puti32 (new_args, j, $ref_arg)
+						rout_puti32 (new_args, j, loc_operands.integer_32_item(i))
 					when Eif_integer_64_code then
-						rout_obj_puti64 (new_args, j, $ref_arg)
+						rout_puti64 (new_args, j, loc_operands.integer_64_item(i))
 					when Eif_pointer_code then
-						rout_obj_putp (new_args, j, $ref_arg)
+						rout_putp (new_args, j, loc_operands.pointer_item(i))
 					when Eif_real_code then
-						rout_obj_putf (new_args, j, $ref_arg)
+						rout_putf (new_args, j, loc_operands.real_item(i))
 					when Eif_wide_char_code then
-						rout_obj_putwc (new_args, j, $ref_arg)
+						rout_putwc (new_args, j, loc_operands.wide_character_item(i))
 					else
-						rout_obj_putr (new_args, j, $ref_arg)
+						ref_arg := loc_operands.reference_item(i)
+						rout_putr (new_args, j, $ref_arg)
 				end
 
 				i := i + 1
@@ -533,40 +528,35 @@ feature {NONE} -- Implementation
 				i > ccnt
 			loop
 				code := loc_closed_type_codes.item (i)
-
-				check loc_closed_operands /= Void end
-				if code = Eif_real_code then
-					-- Special treatment of reals
-					ref_arg := loc_closed_operands.real_item (i)
-				else
-					ref_arg := loc_closed_operands.item (i)
+				check
+					loc_closed_operands /= Void
 				end
-
 				j := loc_closed_map.item (i)
 
 				inspect code
 					when Eif_boolean_code then
-						rout_obj_putb (new_args, j, $ref_arg)
+						rout_putb (new_args, j, loc_closed_operands.boolean_item(i))
 					when Eif_character_code then
-						rout_obj_putc (new_args, j, $ref_arg)
+						rout_putc (new_args, j, loc_closed_operands.character_item(i))
 					when Eif_double_code then
-						rout_obj_putd (new_args, j, $ref_arg)
+						rout_putd (new_args, j, loc_closed_operands.double_item(i))
 					when Eif_integer_8_code then
-						rout_obj_puti8 (new_args, j, $ref_arg)
+						rout_puti8 (new_args, j, loc_closed_operands.integer_8_item(i))
 					when Eif_integer_16_code then
-						rout_obj_puti16 (new_args, j, $ref_arg)
+						rout_puti16 (new_args, j, loc_closed_operands.integer_16_item(i))
 					when Eif_integer_code then
-						rout_obj_puti32 (new_args, j, $ref_arg)
+						rout_puti32 (new_args, j, loc_closed_operands.integer_32_item(i))
 					when Eif_integer_64_code then
-						rout_obj_puti64 (new_args, j, $ref_arg)
+						rout_puti64 (new_args, j, loc_closed_operands.integer_64_item(i))
 					when Eif_pointer_code then
-						rout_obj_putp (new_args, j, $ref_arg)
+						rout_putp (new_args, j, loc_closed_operands.pointer_item(i))
 					when Eif_real_code then
-						rout_obj_putf (new_args, j, $ref_arg)
+						rout_putf (new_args, j, loc_closed_operands.real_item(i))
 					when Eif_wide_char_code then
-						rout_obj_putwc (new_args, j, $ref_arg)
+						rout_putwc (new_args, j, loc_closed_operands.wide_character_item(i))
 					else
-						rout_obj_putr (new_args, j, $ref_arg)
+						ref_arg := loc_closed_operands.reference_item (i)
+						rout_putr (new_args, j, $ref_arg)
 				end
 
 				i := i + 1
@@ -611,57 +601,57 @@ feature {NONE} -- Externals
 		external "C use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putb (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putb (args: POINTER; idx: INTEGER; val: BOOLEAN) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putwc (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putwc (args: POINTER; idx: INTEGER; val: WIDE_CHARACTER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putc (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putc (args: POINTER; idx: INTEGER; val: CHARACTER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putd (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putd (args: POINTER; idx: INTEGER; val: DOUBLE) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_puti8 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_puti8 (args: POINTER; idx: INTEGER; val: INTEGER_8) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_puti16 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_puti16 (args: POINTER; idx: INTEGER; val: INTEGER_16) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_puti32 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_puti32 (args: POINTER; idx: INTEGER; val: INTEGER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_puti64 (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_puti64 (args: POINTER; idx: INTEGER; val: INTEGER_64) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putp (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putp (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putf (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putf (args: POINTER; idx: INTEGER; val: REAL) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end
 
-	rout_obj_putr (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_putr (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C macro use %"eif_rout_obj.h%""
 		end

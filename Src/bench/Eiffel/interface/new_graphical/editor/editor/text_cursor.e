@@ -122,12 +122,12 @@ feature -- Cursor movement
 				if token.next = Void then
 						-- No next token? Go to next line.
 					set_line_to_next
-					set_current_char (line.first, 1)
+					set_current_char (line.first_token, 1)
 				else
 					set_current_char (token.next, 1)
-			else
-					pos_in_token = pos_in_token - 1
 				end
+			else
+					set_current_char (token, pos_in_token + 1)
 			end
 		end
 
@@ -139,12 +139,12 @@ feature -- Cursor movement
 				if token.previous = Void then
 						-- No previous token? Go to previous line.
 					set_line_to_previous
-					set_current_char (line.last, line.last.length)
+					set_current_char (line.end_token, line.end_token.length)
 				else
 					set_current_char (token.previous, token.previous.length)
 				end
 			else
-					pos_in_token = pos_in_token - 1
+					set_current_char (token, pos_in_token - 1)
 			end
 		end
 
@@ -162,12 +162,12 @@ feature -- Cursor movement
 
 	go_start_line is
 		do
-			set_current_char (line.first, 1)
+			set_current_char (line.first_token, 1)
 		end
 
 	go_end_line is
 		do
-			set_current_char (line.last, line.last.length)
+			set_current_char (line.end_token, line.end_token.length)
 		end
 
 feature {NONE} -- Implementation

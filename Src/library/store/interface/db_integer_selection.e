@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			-- Result of last query executed.
 
 	implementation: DATABASE_INTEGER_SELECTION [DATABASE]
-			-- Handle reference to specific database implementation
+			-- Handle reference to specific database implementation.
 
 end -- class DB_INTEGER_SELECTION
 

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			label: EV_LABEL
 			frame: EV_FRAME
 			tool_bar: EV_TOOL_BAR
+			temp_cell: EV_CELL
 		do
 			default_create
 			tool := a_tool
@@ -42,6 +43,13 @@ feature {NONE} -- Initialization
 			create label.make_with_text (display_name)
 			label.align_text_left
 			horizontal_box.extend (label)
+			horizontal_box.disable_item_expand (label)
+			create temp_cell
+			temp_cell.set_minimum_width (spacing_to_holder_tool_bar)
+			horizontal_box.extend (temp_cell)
+			horizontal_box.disable_item_expand (temp_cell)
+			create tool_bar_cell
+			horizontal_box.extend (tool_bar_cell)
 			create tool_bar
 			create minimize_button
 			minimize_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
@@ -59,7 +67,27 @@ feature {NONE} -- Initialization
 			vertical_box.extend (a_tool)
 		end
 		
+feature -- Basic operation
+
+	add_command_tool_bar (a_tool_bar: EV_TOOL_BAR) is
+			-- Display `a_tool_bar' within header of `Current'.
+		require
+			tool_bar_not_void: a_tool_bar /= Void
+		do
+			command_tool_bar := a_tool_bar
+			if tool_bar_cell.is_empty then
+				tool_bar_cell.wipe_out
+			end
+			tool_bar_cell.extend (a_tool_bar)
+		ensure
+			command_tool_bar_set: command_tool_bar = a_tool_bar
+		end
+
 feature -- Access
+
+	command_tool_bar: EV_TOOL_BAR
+		-- A toolbar with specific commands related to `tool',
+		-- or Void if not set.
 
 	tool: EV_WIDGET
 		-- Tool in `Current'.
@@ -96,6 +124,9 @@ feature -- Access
 		
 
 feature {NONE} -- Implementation
+
+	tool_bar_cell: EV_CELL
+		-- A cell to hold `command_tool_bar'.
 
 	minimize is
 			-- Minimize `Current' if not minimized, restore otherwise.
@@ -134,6 +165,9 @@ feature {NONE} -- Implementation
 			Result ?= parent
 			if Result = Void then
 				Result ?= parent.parent	
+			end
+			if Result = Void then
+				Result ?= parent.parent.parent
 			end
 		ensure
 			Result_not_void: Result /= Void

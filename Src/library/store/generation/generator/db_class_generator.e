@@ -59,6 +59,9 @@ feature -- Basic operations
 			description_set: description_set
 			content_set: template_content_set
 		local
+			showme: STRING
+			showme2: STRING
+			showmez: STRING
 			attr_tag: STRING
 			attr_tag_index, attr_tag_end_index, tag_close_index: INTEGER
 			template_block: STRING
@@ -80,7 +83,9 @@ feature -- Basic operations
 							template_block := gfc.substring (attr_tag_index + attr_tag.count, attr_tag_end_index - 1)
 							create_result_block (template_block)
 							gfc.replace_substring (result_block, attr_tag_index, attr_tag_end_index + tags.Attribute_block_end.count - 1)
-							attr_tag_index := gfc.substring_index (tags.attribute_block, attr_tag_end_index)
+							showme := tags.attribute_block
+							showme2 := gfc.substring (attr_tag_end_index - 2, attr_tag_end_index + 10)
+							attr_tag_index := gfc.substring_index (tags.attribute_block, attr_tag_index)
 						else
 							attr_tag_index := gfc.substring_index (tags.attribute_block, attr_tag_index + attr_tag.count)
 						end

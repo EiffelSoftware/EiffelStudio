@@ -99,24 +99,9 @@ feature -- Basic operations
 		local
 			mname: STRING
 		do
-				-- Add it to the managed menu items
-			if managed_menu_items = Void then
-				create managed_menu_items.make (1)
-			end
 				-- Create the menu item
 			create Result.make (Current)
-			mname := menu_name.twin
-			if accelerator /= Void then
-				mname.append (Tabulation)
-				mname.append (accelerator.out)
-			end
-			Result.set_text (mname)
-			Result.enable_sensitive
-			if is_visible then
-				Result.enable_select
-			else
-				Result.disable_select
-			end
+			initialize_menu_item (Result)
 			Result.select_actions.extend (agent execute)
 		end
 

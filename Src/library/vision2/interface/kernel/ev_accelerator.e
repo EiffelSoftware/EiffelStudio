@@ -1,11 +1,13 @@
 indexing
 	description:
-		"Eiffel Vision accelerator. Objects that call an action sequence %N%
-		%when the given key combination is pressed any time in the %N%
-		%window it is set in."
+		"A keyboard accelerator defines `actions' to be performed when a%
+		%`key' is pressed. See `{EV_TITLED_WINDOW}.accelerators'"
 	status: "See notice at end of class"
+	keywords: "accelerator, keyboard, key, shortcut, hotkey"
 	date: "$Date$"
 	revision: "$Revision$"
+
+--| FIXME This feature names in this class should be propogated to the _I.
 
 class
 	EV_ACCELERATOR
@@ -26,124 +28,123 @@ create
 feature {NONE} -- Initialization
 
 	make_with_key_combination (a_key: EV_KEY;
-		a_shift_down, a_alt_down, a_control_down: BOOLEAN) is
-			-- Create with `a_key'.
+		require_shift, require_alt, require_control: BOOLEAN) is
+			-- Create with `a_key' and modifiers.
 		require
 			a_key_not_void: a_key /= Void
-			a_key_valid_accelerator: a_key.is_valid_accelerator
+			a_key_is_valid_accelerator: a_key.is_valid_accelerator
 		do
 			default_create
 			set_key (a_key)
-			if a_shift_down then
-				enable_shift_key
+			if require_shift then
+				enable_shift_required
 			end
-			if a_alt_down then
-				enable_alt_key
+			if require_alt then
+				enable_alt_required
 			end
-			if a_control_down then
-				enable_control_key
+			if require_control then
+				enable_control_required
 			end
 		end
 
 feature -- Events
 
 	actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions performed when key combination is pressed on the window
-			-- it is set in.
+			-- Actions to be performed when `key' is pressed.
 
 feature -- Access
 
 	key: EV_KEY is
-			-- Key that has to pressed to trigger actions.
+			-- Key that will trigger `actions'.
 		do
 			Result := implementation.key
 		ensure
 			bridge_ok: Result = implementation.key
 		end
 
-	shift_key: BOOLEAN is
-			-- Must the shift key be pressed?
+	shift_required: BOOLEAN is
+			-- Must the shift key be pressed to trigger `actions'?
 		do
 			Result := implementation.shift_key
 		ensure
 			bridge_ok: Result = implementation.shift_key
 		end
 
-	alt_key: BOOLEAN is
-			-- Must the alt key be pressed?
+	alt_required: BOOLEAN is
+			-- Must the alt key be pressed to trigger `actions'?
 		do
 			Result := implementation.alt_key
 		ensure
 			bridge_ok: Result = implementation.alt_key
 		end
 
-	control_key: BOOLEAN is
-			-- Must the control key be pressed?
+	control_required: BOOLEAN is
+			-- Must the control key be pressed to trigger `actions'?
 		do
 			Result := implementation.control_key
 		ensure
 			bridge_ok: Result = implementation.control_key
 		end
 
-feature -- Element change
+feature -- Status setting
 
-	set_key (a_key: EV_KEY) is
-			-- Set `a_key' as new key that has to be pressed.
+	set_key (a_key: INTEGER) is
+			-- Assign `a_key' to `key'.
 		require
 			a_key_not_void: a_key /= Void
 			a_key_valid_accelerator: a_key.is_valid_accelerator
 		do
 			implementation.set_key (a_key)
 		ensure
-			assigned: key.is_equal (a_key)
+			a_key_assigned: key.is_equal (a_key)
 		end
 
-	enable_shift_key is
-			-- "Shift" must be pressed for the key combination.
+	enable_shift_required is
+			-- Make `shift_required' True.
 		do
 			implementation.enable_shift_key
 		ensure
-			enabled: shift_key
+			shift_required: shift_required
 		end
 
-	disable_shift_key is
-			-- "Shift" is not part of the key combination.
+	disable_shift_required is
+			-- Make `shift_required' False.
 		do
 			implementation.disable_shift_key
 		ensure
-			disabled: not shift_key
+			not_shift_required: not shift_required
 		end
 
-	enable_alt_key is
-			-- "Alt" must be pressed for the key combination.
+	enable_alt_required is
+			-- Make `alt_required' True.
 		do
 			implementation.enable_alt_key
 		ensure
-			enabled: alt_key
+			alt_required: alt_required
 		end
 
-	disable_alt_key is
-			-- "Alt" is not part of the key combination.
+	disable_alt_required is
+			-- Make `alt_required' False.
 		do
 			implementation.disable_alt_key
 		ensure
-			disabled: not alt_key
+			not_alt_required: not alt_required
 		end
 
-	enable_control_key is
-			-- "Control" must be pressed for the key combination.
+	enable_control_required is
+			-- Make `control_required' True.
 		do
 			implementation.enable_control_key
 		ensure
-			enabled: control_key
+			control_reuqired: control_reuqired
 		end
 
 	disable_control_key is
-			-- "Control" is not part of the key combination.
+			-- Make `control_required' False.
 		do
 			implementation.disable_control_key
 		ensure
-			disabled: not control_key
+			not_control_reuqired: not control_reuqired
 		end
 
 feature -- Status report
@@ -152,22 +153,22 @@ feature -- Status report
 			-- Does `other' have the same key combination as `Current'?
 		do
 			Result := key.is_equal (other.key) and then
-				alt_key = other.alt_key and then
-				shift_key = other.shift_key and then
-				control_key = other.control_key
+				alt_required = other.alt_required and then
+				shift_required = other.shift_required and then
+				control_required = other.control_required
 		end
 
 	out: STRING is
 			-- String representation of key combination.
 		do
 			create Result.make (0)
-			if alt_key then
+			if alt_required then
 				Result.append ("Alt+")
 			end
-			if control_key then
+			if control_required then
 				Result.append ("Ctrl+")
 			end
-			if shift_key then
+			if shift_required then
 				Result.append ("Shift+")
 			end
 			Result.append (key.out)
@@ -176,22 +177,28 @@ feature -- Status report
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
 	implementation: EV_ACCELERATOR_I
-			-- Implementation of accelerator.
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Implementation
 
 	create_action_sequences is
-			-- Create action sequences for accelerator.
+			-- See `{EV_ANY}.create_action_sequences'
 		do
 			Precursor
 			create actions
 		end
 
 	create_implementation is
-			-- Create implementation of accelerator.
+			-- See `{EV_ANY}.create_implementation'
 		do
 			create {EV_ACCELERATOR_IMP} implementation.make (Current)
 		end
+
+feature -- Obsolete
+
+	id: INTEGER is check false end
+			-- Integer representation of key combination.
+			--| FIXME Used by EV_INTERNAL_ACCELERATOR_IMP.
 
 invariant
 	actions_not_void: actions /= Void
@@ -221,6 +228,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/15 22:08:24  oconnor
+--| updated comments and modifier feature names
+--|
 --| Revision 1.7  2000/03/15 21:14:52  brendel
 --| Changed key_code: INTEGER to key: EV_KEY.
 --| Improved comments.
@@ -255,7 +265,6 @@ end -- class EV_ACCELERATOR
 --|
 --| Revision 1.3.2.2  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

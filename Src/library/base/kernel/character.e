@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: CHARACTER): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than current character?
 		do
 			-- Built-in

@@ -1,6 +1,7 @@
 indexing
 
-	description: "Access to command-line arguments.";
+	description: "Access to command-line arguments. This class %
+		%may be used as ancestor by classes needing its facilities.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
@@ -12,10 +13,11 @@ class
 feature -- Access 
 
 	argument (i: INTEGER): STRING is
-			-- Command line argument number `i'
+			-- `i'-th argument of command that started system execution
 			-- (the command name if `i' = 0)
 		require
-			0 <= i ; i <= argument_count
+			index_large_enough: i >= 0;
+			index_small_enough: i <= argument_count
 		do
 			Result := arg_option (i) 
 		end;
@@ -54,9 +56,11 @@ feature -- Access
 		end
 
 	command_name: STRING is
-			-- Name of command that started application
+			-- Name of command that started system execution
 		once	
 			Result := arg_option (0)
+		ensure
+			definition: Result = argument (0)
 		end;
 
 feature -- Status report
@@ -217,10 +221,12 @@ feature -- Status setting
 feature -- Measurement
 
 	argument_count: INTEGER is
-			-- Number of arguments on the command line
-			-- (not including command name)
+			-- Number of arguments given to command that started
+			-- system execution (command name does not count)
 		once
 			Result := arg_number - 1
+		ensure
+			Result >= 0
 		end;
 
 feature {NONE} -- Implementation

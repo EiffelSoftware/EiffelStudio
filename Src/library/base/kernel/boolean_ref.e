@@ -9,15 +9,30 @@ indexing
 
 class BOOLEAN_REF inherit
 
-	ANY
+	HASHABLE
 		redefine
-			out
+			is_hashable, out
 		end
 
 feature -- Access
 
 	item: BOOLEAN;
 			-- Boolean value
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := 1
+		end;
+
+feature -- Status report
+
+	is_hashable: BOOLEAN is
+			-- May current object be hashed?
+			-- (True if it is not its type's default.)
+		do
+			Result := item
+		end;
 
 feature -- Element change
 
@@ -29,32 +44,39 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: BOOLEAN_REF): BOOLEAN_REF is
+	infix "and" (other: BOOLEAN_REF): BOOLEAN is
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
-			Result.set_item (item and other.item)
+			Result := item and other.item
+		ensure
+			result_exists: Result /= Void;
+			de_morgan: Result = not (not Current or not other);
+			commutative: Result = (other and Current);
+			consistent_with_semi_strict: Result implies (Current and then other)
 		end;
 
-	infix "and then" (other: BOOLEAN_REF): BOOLEAN_REF is
+	infix "and then" (other: BOOLEAN_REF): BOOLEAN is
 			-- Boolean semi-strict conjunction with `other'
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
-			Result.set_item (item and then other.item)
+			Result := item and then other.item
+		ensure
+			result_exists: Result /= Void;
+			de_morgan: Result = not (not Current or else not other)
 		end;
 
-	infix "implies" (other: BOOLEAN_REF): BOOLEAN_REF is
+	infix "implies" (other: BOOLEAN_REF): BOOLEAN is
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
-			Result.set_item (item implies other.item)
+			Result := item implies other.item
+		ensure
+			definition: Result = (not Current or else other)
 		end;
 
 	prefix "not" : BOOLEAN_REF is
@@ -64,37 +86,44 @@ feature -- Basic operations
 			Result.set_item (not item)
 		end;
 
-	infix "or" (other: BOOLEAN_REF): BOOLEAN_REF is
+	infix "or" (other: BOOLEAN_REF): BOOLEAN is
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
-			Result.set_item (item or other.item)
+			Result := item or other.item
+		ensure
+			result_exists: Result /= Void;
+			de_morgan: Result = not (not Current and not other);
+			commutative: Result = (other or Current);
+			consistent_with_semi_strict: Result implies (Current or else other)
 		end;
 
-	infix "or else" (other: BOOLEAN_REF): BOOLEAN_REF is
+	infix "or else" (other: BOOLEAN_REF): BOOLEAN is
 			-- Boolean semi-strict disjunction with `other'
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
-			Result.set_item (item or else other.item)
+			Result := item or else other.item
+		ensure
+			result_exists: Result /= Void;
+			de_morgan: Result = not (not Current and then not other)
 		end;
 
-	infix "xor" (other: BOOLEAN_REF): BOOLEAN_REF is
+	infix "xor" (other: BOOLEAN_REF): BOOLEAN is
 			-- Boolean exclusive or with `other'
 		require
 			other_exists: other /= Void
 		do
-			!! Result;
-			Result.set_item (item xor other.item)
+			Result := item xor other.item
+		ensure
+			definition: Result = ((Current or other) and not (Current and other))
 		end;
 
 feature -- Output
 
 	out: STRING is
-			-- Printable representation of boolean.
+			-- Printable representation of boolean
 		do
 			Result := c_outb ($item)
 		end;
@@ -102,10 +131,16 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	c_outb (b: BOOLEAN): STRING is
-			-- Printable representation of boolean.
+			-- Printable representation of boolean
 		external
 			"C"
 		end;
+
+invariant
+
+	involutive_negation: is_equal (not (not Current));
+	non_contradiction: not (Current and (not Current));
+	completeness: Current or (not Current)
 
 end -- class BOOLEAN_REF
 

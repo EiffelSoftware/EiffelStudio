@@ -10,8 +10,20 @@ indexing
 class CHARACTER_REF inherit
 
 	COMPARABLE
+		rename
+			max as max_ref,
+			min as min_ref
+		export
+			{NONE} max_ref, min_ref
 		redefine
-			out
+			out, three_way_comparison
+		end;
+
+	HASHABLE
+		undefine
+			is_equal
+		redefine
+			is_hashable, out
 		end
 
 feature -- Access
@@ -25,14 +37,54 @@ feature -- Access
 			Result := chcode ($item);		
 		end;
 
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := code
+		end;
+
+feature -- Status report
+
+	is_hashable: BOOLEAN is
+			-- May current object be hashed?
+			-- (True if it is not its type's default.)
+		do
+			Result := item /= '%U'
+		end;
+
 feature -- Comparison
 
-	infix "<" (other: CHARACTER_REF): BOOLEAN is
-			-- Is current character less than `other'?
-		require else
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is `other' greater than current character?
+		do
+			Result := item < other.item
+		end;
+
+	three_way_comparison (other: CHARACTER_REF): INTEGER is
+			-- If current object equal to `other', 0;
+			-- if smaller, -1; if greater, 1
+		do
+			if item < other.item then
+				Result := -1
+			elseif other.item < item then
+				Result := 1
+			end
+		end;
+
+	max (other: CHARACTER_REF): CHARACTER is
+			-- The greater of current object and `other'
+		require
 			other_exists: other /= Void
 		do
-			Result := item < other.item;
+			Result := max_ref (other).item
+		end;
+
+	min (other: CHARACTER_REF): CHARACTER is
+			-- The smaller of current object and `other'
+		require
+			other_exists: other /= Void
+		do
+			Result := min_ref (other).item
 		end;
 
 feature -- Element change
@@ -46,7 +98,7 @@ feature -- Element change
 feature -- Output
 
 	out: STRING is
-			-- Printable representation of character.
+			-- Printable representation of character
 		do
 			Result := c_outc ($item)
 		end;
@@ -99,13 +151,13 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	chcode (c: like item): INTEGER is
-			-- Associated integer value.
+			-- Associated integer value
 		external
 			"C"
 		end;
 
 	c_outc (c: CHARACTER): STRING is
-			-- Printable representation of character.
+			-- Printable representation of character
 		external
 			"C"
 		end;

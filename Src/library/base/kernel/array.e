@@ -38,21 +38,33 @@ feature -- Initialization
 
 	make (minindex, maxindex: INTEGER) is
 			-- Allocate array; set index interval to
-			-- `minindex' .. `maxindex'
-			-- (empty if `minindex' > `maxindex').
+			-- `minindex' .. `maxindex'; set all values to default.
+			-- (Make array empty if `minindex' > `maxindex').
 		do
-			upper := -1;
-				-- (`lower' initialized to 0 by default, so invariant holds)
 			if minindex <= maxindex then
 				make_area (maxindex - minindex + 1);
 				lower := minindex;
 				upper := maxindex
 			else
+				lower := 0;
+				upper := -1;
 				make_area (0)
 			end;
 		ensure
-			no_capacity: (minindex > maxindex) implies (capacity = 0);
-			capacity_constraint: (minindex <= maxindex) implies (capacity = maxindex - minindex + 1)
+			no_count: (minindex > maxindex) implies (count = 0);
+			count_constraint: (minindex <= maxindex) implies (count = maxindex - minindex + 1)
+		end;
+
+	make_from_array (a: ARRAY [G]) is
+			-- Initialize from the items of `a'.
+			-- (Useful in proper descendants of class `ARRAY',
+			-- to initialize an array-like object from a manifest array.)
+		require
+			array_exists: a /= Void
+		do
+			area := a.area;
+			lower := a.lower;
+			upper := a.upper
 		end;
 
 	setup (other: like Current) is
@@ -65,7 +77,7 @@ feature -- Initialization
 feature -- Access
 
 	frozen item, frozen infix "@", entry (i: INTEGER): G is
-			-- Entry at index `i', if in index interval.
+			-- Entry at index `i', if in index interval
 		do
 			Result := area.item (i - lower);
 		end;
@@ -113,7 +125,7 @@ feature -- Measurement
 			-- Maximum index
 
 	count, capacity: INTEGER is
-			-- Available indices
+			-- Number of available indices
 		do
 			Result := upper - lower + 1
 		end;
@@ -192,7 +204,7 @@ feature -- Status report
 		end;
 
 	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' a valid index?
+			-- Is `i' within the bounds of the array?
 		do
 			Result := (lower <= i) and then (i <= upper)
 		end;
@@ -213,7 +225,7 @@ feature -- Status report
 
 feature -- Element change
  
-	frozen put, enter (v: G; i: INTEGER) is
+	frozen put, enter (v: like item; i: INTEGER) is
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
 			area.put (v, i - lower);
@@ -234,7 +246,7 @@ feature -- Element change
 			put (v, i)
 		ensure
 			inserted: item (i) = v;
-			higher_capacity: capacity >= old capacity
+			higher_count: count >= old count
 		end;
 
 feature -- Removal
@@ -281,7 +293,7 @@ feature -- Resizing
 			-- indices down to `minindex' and up to `maxindex'.
 			-- Do not lose any previously entered item.
 		require
-			valid_indices: minindex <= maxindex
+			good_indices: minindex <= maxindex
 		local
 			old_size, new_size, old_count: INTEGER;
 			new_lower, new_upper: INTEGER;
@@ -314,10 +326,20 @@ feature -- Resizing
 			end;
 			lower := new_lower;
 			upper := new_upper
+		ensure
+			no_low_lost: lower = minindex.min (old lower);
+			no_high_lost: upper = maxindex.max (old upper)
 		end;	
 				
 				
 feature -- Conversion
+
+	to_pointer: POINTER is
+			-- Address of actual sequence of values,
+			-- for passing to external (non-Eiffel) routines
+		do
+			Result := conv_pp ($area)
+		end;
 
 	to_c: ANY is
 			-- Address of actual sequence of values,
@@ -440,10 +462,16 @@ feature {NONE} -- Implementation
 			Result := area = Void or else area.count = 0
 		end;
 
+	conv_pp (p: like area): POINTER is
+			-- Return its argument
+		external
+			"C"
+		end;
+
 invariant
 
-	consistent_size: capacity = upper - lower + 1;
-	non_negative_capacity: capacity >= 0;
+	consistent_size: count = upper - lower + 1;
+	non_negative_count: count >= 0
 
 end -- class ARRAY
 

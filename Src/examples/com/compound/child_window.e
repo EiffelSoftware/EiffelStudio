@@ -79,11 +79,13 @@ feature -- Initialization
 			tvitem: WEL_TREE_VIEW_ITEM
 			tvinss: WEL_TREE_VIEW_INSERT_STRUCT
 			retried: BOOLEAN
+			file_name: FILE_NAME
 		do
 			if not retried then
 				create tvitem_table.make (5)
 				if is_compound_file (name) then
-					create storage.make_open_file (name, Stgm_share_deny_write)
+					create file_name.make_from_string (name)
+					create storage.make_open_file (file_name, Stgm_share_deny_write)
 					mdi_child_window_make (p, name)
 					create tree_view.make (Current, 0, 0, width, height, Tree_view_id)
 					create tvitem.make
@@ -194,7 +196,7 @@ feature -- Message Processing
 			end
 		end
 
-   	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
 			-- Notifications processing
 		local
 			stor: ECOM_STORAGE

@@ -1,0 +1,64 @@
+system
+	"emitter"
+
+root
+	EMITTER: make
+
+default
+	namespace ("ISE.Cache")
+	assertion (no)
+	msil_generation (yes)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (yes)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (yes)
+
+
+-- EiffelBase
+
+cluster
+	all root_cluster:		"$EIFFEL_SRC\dotnet\consumer\emitter"
+		exclude
+			"EIFGEN"; 
+		end
+
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all base_net:		"$EIFFEL_SRC\library.net\base"
+
+	helpers:		"$EIFFEL_SRC\dotnet\helpers"
+
+	components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	xml_serializer:		"$EIFFEL_SRC\dotnet\consumer\serialization"
+
+	all support:		"$EIFFEL_SRC\dotnet\consumer\support"
+
+
+	library xml:		"$ISE_EIFFEL\library.net\xml"
+
+	library system_:		"$ISE_EIFFEL\library.net\system"
+
+	cache:		"E:\dotnet\consumer\cache"
+
+	all wel:		"E:\library\wel"
+
+external
+
+	include_path:
+		"E:\library\wel\spec\windows\include"
+
+	assembly:
+		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\system.dll",
+		"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\System.XML.dll"
+
+end

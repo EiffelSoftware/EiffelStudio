@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 		end
 		
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_ANY} -- Implementation
 
 	on_item_added_at (an_item: G; item_index: INTEGER) is
 			-- `an_item' has just been added at index `item_index'.

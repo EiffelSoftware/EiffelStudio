@@ -189,6 +189,7 @@ extern void rel_core(void);				/* Give memory back to kernel */
 extern int chunk_coalesc(struct chunk *c);			/* Coalescing to reduce fragmentation */
 extern char *get_to_from_core(unsigned int nbytes);	/* Get to_space from core for partial scavenging */
 extern void memck(unsigned int max_dt);
+
 extern void mem_diagnose(int sig);			/* Memory usage dump */
 extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
 extern void sc_stop(void);

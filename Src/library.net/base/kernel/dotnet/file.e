@@ -190,9 +190,12 @@ feature -- Access
 
 	file_pointer: POINTER is
 			-- File pointer as required in C
+		local
+			l_file: FILE_STREAM
 		do
 			if not is_closed then
-				Result := internal_stream.handle
+				l_file ?= internal_stream
+				Result := l_file.handle
 			end
 		end
 
@@ -1012,7 +1015,7 @@ feature -- Element change
 		local
 			buf: NATIVE_ARRAY [INTEGER_8]
 			bs, rd: INTEGER
-			st, ost: FILE_STREAM
+			st, ost: like internal_stream
 		do
 				-- Open in append mode.
 			open_append
@@ -1446,7 +1449,7 @@ feature {FILE} -- Implementation
 	internal_file: FILE_INFO
 			-- File data concerning `Current'
 
-	internal_stream: FILE_STREAM
+	internal_stream: SYSTEM_STREAM
 			-- File stream relative to `Current'
 
 	internal_end_of_file: BOOLEAN

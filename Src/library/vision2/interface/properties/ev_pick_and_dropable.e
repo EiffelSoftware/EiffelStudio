@@ -46,6 +46,9 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.pebble
 		end
+	
+	target_name: STRING
+			-- Optional textual name describing `Current' pick and drop hole.
 
 feature -- Status setting
 
@@ -88,6 +91,17 @@ feature -- Status setting
 			pebble_removed: pebble = Void
 		end
 
+	set_target_name (a_name: STRING) is
+			-- Assign `a_name' to `target_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			target_name := clone (a_name)
+		ensure
+			target_name_assigned:
+				a_name /= target_name and a_name.is_equal (target_name)
+		end
+
 	set_pick_and_drop_mode is
 			-- Set user interface mode to pick and drop,
 		do
@@ -102,6 +116,14 @@ feature -- Status setting
 			implementation.set_drag_and_drop_mode
 		ensure
 			mode_is_drag_and_drop: mode_is_drag_and_drop 
+		end
+
+	set_target_menu_mode is
+			-- Set user interface mode to pop-up menu of targets.
+		do
+			implementation.set_target_menu_mode
+		ensure
+			mode_is_target_menu: mode_is_target_menu
 		end
 
 	set_pebble_position (a_x, a_y: INTEGER) is
@@ -143,6 +165,14 @@ feature -- Status report
 			Result := implementation.mode_is_drag_and_drop
 		ensure
 			bridge_ok: Result = implementation.mode_is_drag_and_drop
+		end
+
+	mode_is_target_menu: BOOLEAN is
+			-- Is the user interface mode a pop-up menu of targets?
+		do
+			Result := implementation.mode_is_target_menu
+		ensure
+			bridge_ok: Result = implementation.mode_is_target_menu
 		end
 
 feature -- User input events
@@ -222,6 +252,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/25 00:56:45  oconnor
+--| added right click context menu UI for PND.
+--|
 --| Revision 1.8  2000/04/18 16:52:49  king
 --| Corrected typos in set_pebble_function comment
 --|

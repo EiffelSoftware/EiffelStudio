@@ -33,7 +33,7 @@ feature
 			if f.is_constant then
 				output_window.put_string (" is ");
 				const ?= f;	--| Cannot fail
-				output_window.put_string (const.value.dump);
+				const.value.append_clickable_signature (output_window);
 			end
 		end;
 

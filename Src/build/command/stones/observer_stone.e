@@ -65,11 +65,15 @@ feature -- Stone features
 
 	process (hole: HOLE) is
 			-- Process Current stone dropped in hole `hole'.
+		local
+			cut_hole: CUT_HOLE
 		do
-				--| If `hole' is the wastebasket.
-			hole.process_any (Current)
-				--| If `hole' is another kind of hole.
-			hole.process_instance (Current)
+			cut_hole ?= hole
+			if cut_hole /= Void then
+				hole.process_any (Current)  --| wastebasket
+			else
+				hole.process_instance (Current)
+			end
 		end
 
 end -- class OBSERVER_STONE

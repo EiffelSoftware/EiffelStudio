@@ -281,7 +281,7 @@ feature -- Element change
 		do
 			implementation.set_foreground_color (color)
 		ensure
-			foreground_color_set: foreground_color = color
+			foreground_color_set: foreground_color.equal_color(color)
 		end
 
 feature -- Measurement 

@@ -12,8 +12,8 @@ mt_prefix='mt'
 mtccflags='-pipe -fPIC -DEIF_THREADS -DEIF_LINUXTHREADS'
 mtlibs='-lnsl -lm -lpthread'
 
-warning_level='-Wall'
-optimize='-O0 -g'
+warning_level='-Wall -pedantic -std=gnu99'
+optimize='-O3'
 wkoptimize='-O0'
 
 start_test='if [ ! -f finished ] ; then'

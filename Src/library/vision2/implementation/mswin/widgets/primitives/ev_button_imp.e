@@ -96,6 +96,7 @@ inherit
 			on_key_down,
 			on_key_up,
 			on_set_cursor,
+			on_size,
 			show,
 			hide
 		redefine
@@ -244,6 +245,13 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Button re-sized.
+		do
+			Precursor (size_type, a_width, a_height)
+			interface.resize_actions.call ([screen_x, screen_y, a_width, a_height])
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -312,6 +320,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/03/07 17:41:21  rogers
+--| Redefined on_size from WEL_BITMAP_BUTTON so the re-size actions can be called.
+--|
 --| Revision 1.40  2000/03/03 00:55:56  brendel
 --| Changed `text' to `safe_text'.
 --|

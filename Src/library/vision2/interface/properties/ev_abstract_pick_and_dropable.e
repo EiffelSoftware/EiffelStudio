@@ -13,7 +13,7 @@ deferred class
 inherit
 	IDENTIFIED
 		export
-			{NONE} free_id, id_freed
+			{NONE} free_id, id_freed, default_create
 		end
 
 feature -- Access

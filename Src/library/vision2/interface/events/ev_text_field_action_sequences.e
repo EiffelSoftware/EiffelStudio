@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	ANY
+		export
+			{EV_ANY_HANDLER} default_create
 		undefine
 			default_create, copy
 		end

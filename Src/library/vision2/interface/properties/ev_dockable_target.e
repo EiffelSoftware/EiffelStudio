@@ -27,6 +27,8 @@ inherit
 		end
 		
 	IDENTIFIED
+		export
+			{EV_ANY_HANDLER} default_create
 		undefine
 			copy, is_equal, default_create
 		end

@@ -8,6 +8,12 @@ indexing
 
 deferred class
 	EV_PROJECTOR
+	
+inherit
+	ANY
+		export
+			{EV_ANY_HANDLER} default_create
+		end
 
 feature {NONE} -- Initialization
 

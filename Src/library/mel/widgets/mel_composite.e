@@ -55,6 +55,16 @@ feature -- Access
 		do
 		end;
 
+	is_frame: BOOLEAN is
+			-- Is Current a fame?
+		do
+		end;
+
+	is_paned_window: BOOLEAN is
+			-- Is Current a paned window?
+		do
+		end;
+
 	children: FIXED_LIST [POINTER] is
 			-- List of the children widgets `screen_object'
 			-- (Does not include popup children)

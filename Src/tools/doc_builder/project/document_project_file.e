@@ -472,9 +472,15 @@ feature {NONE} -- Implementation
 					project.Shared_document_manager.initialize_stylesheet (l_value)
 				end				
 			end
+			
 				-- Header
 			if e.name.is_equal (header_file_tag) then
-				header_name := l_value		
+				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then					
+					l_value := prompt_for_new_location (l_value, "header file", True)
+				end
+				if l_value /= Void and not l_value.is_empty then
+					header_name := l_value
+				end							
 			end
 			
 			if e.name.is_equal (process_header_tag) then
@@ -487,7 +493,12 @@ feature {NONE} -- Implementation
 			
 				-- Footer file
 			if e.name.is_equal (footer_file_tag) then
-				footer_name := l_value
+				if not (create {PLAIN_TEXT_FILE}.make (l_value)).exists then					
+					l_value := prompt_for_new_location (l_value, "footer file", True)
+				end
+				if l_value /= Void and not l_value.is_empty then
+					footer_name := l_value
+				end						
 			end
 			
 			if e.name.is_equal (process_footer_tag) then
@@ -598,7 +609,7 @@ feature {NONE} -- Implementation
 			l_directory_dialog: EV_DIRECTORY_DIALOG
 			l_warning: EV_WARNING_DIALOG
 		do
-			create l_warning.make_with_text ("Could not open " + context + " " + a_old_loc + "Please provide a new location.")
+			create l_warning.make_with_text ("Could not open " + context + " " + a_old_loc + ".  Please provide a new location.")
 			l_warning.show_modal_to_window ((create {SHARED_OBJECTS}).Application_window)
 			
 			if is_file then

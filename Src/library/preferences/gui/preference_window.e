@@ -271,14 +271,17 @@ feature {NONE} -- Execution
 			
 			create a_screen
 			edition_window_x := right_list.screen_x + column1_width
-			edition_window_x := edition_window_x.min (a_screen.width - edition_window_width).max (0)
+			--edition_window_x := edition_window_x.min (a_screen.width - edition_window_width).max (0)
+				--| FIXME IEK Previous line commented out as it is not multi-display friendly
+			edition_window_x := edition_window_x.max (0)
 			
 				--| FIXME IEK Need to be able to query scrollbar values in Vision2 lists
 			rl_bottom_y := right_list.screen_y + right_list.height - (right_list.row_height * 2)
 				--| Make sure popup dialog stays within preference window area
 			edition_window_y := (right_list.screen_y + (it.row_number * right_list.row_height + (edition_window_height - right_list.row_height))).min (rl_bottom_y)
 			
-			edition_window_y := edition_window_y.min (a_screen.height - edition_window_height)
+			--edition_window_y := edition_window_y.min (a_screen.height - edition_window_height)
+				--| FIXME IEK Previous line commented out as it is not multi-display friendly
 			
 			current_edition_window.set_position (edition_window_x, edition_window_y)
 			current_edition_window.set_size (edition_window_width, edition_window_height)

@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<title>Reflection system specification</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<h2>3. ISE.ReflectionInterface.dll</h2>
+
+				<p>
+						The ISE reflection interface is aimed at connecting .NET names with corresponding Eiffel names by using XML files. It is a kind of database where you put XML files describing .NET types and you retrieve a more user-friendly type description. <br>
+						Only shared assemblies can be stored in this database.
+				</p>
+				<br>
+
+				<a name = storage>
+				<h3>3.1 How can I put a type in the database?</h3>
+				<br>
+
+						<a name = start_storage>
+						<h4>3.1.1 Start assembly storage...</h4>
+
+								<p>
+										First, you have to notify the database you want to start storage by calling one of the two following features: `start_assembly_storage_from_type' or `start_assembly_storage_from_info'. <br>
+										In fact, the interface assumes you will store an entire assembly, meaning all the types in the assembly. So you have to specify the assembly before adding any type.<br>
+										Depending on the context you are using ISE reflection interface, you may prefer to call `start_assembly_storage_from_type' or `start_assembly_storage_from_info'. These two features do exactly the same thing, namely notify the database that storage begins. So the choice is really up to you, it is just a matter of convenience.<br><br>
+
+										Short forms of these features can be found in the delivery. At this point, feature signatures will be enough for explanations:
+										<ul>
+												<li>
+														`start_assembly_storage_from_type (a_type: SYSTEM_TYPE)'
+												</li>
+												<li>
+														`start_assembly_storage_from_info (a_version, a_culture, a_public_key: STRING)'
+												</li>
+										</ul>
+
+										As mentioned earlier, the point is to specify the assembly you will work on. So you can either give an instance of `SYSTEM_TYPE' or the assembly version, culture and publik key, knowing that only this information will be internally used by the database.
+										<br><br>
+
+										This database may be used by several processes at the same time. Therefore it provides a synchronization mechanism between concurrent processes. Actually, each time a user asks for storage, a write lock file is generated, and each time a user asks for retrieval, a read lock file is created. When you call one the two previous features to start assembly storage, you cannot be aware other users are currently reading or writing. The reflection interface will check whether storage is possible and make result available in `last_write_successful'. <br>
+										Thus, you have to check `last_write_successful' is True before adding any type.
+								</p>
+						<br>
+
+						<a name = add_type>
+						<h4>3.1.2 Add a type to the database...</h4>
+
+								<p>
+										Once you have notified the database that you start storage and checked start was successful, you can add a new type by calling feature `add_type (xml_filename: STRING)'.<br>
+										The argument `xml_filename' is the path to type description XML file.<br>
+								</p>
+								<p>
+										As highlighted before, the ISE reflection interface is designed in a way you can add as many types as you want to the database by calling `add_type', with no need to call `start_assembly_storage_from...' on the condition all types belong to the same assembly.
+								</p>
+								<p>
+										In fact, if you use assembly `ISE.CodeGenerator.dll' to generate your Xml files (usualy by calling the emitter), you don't have to call `add_type', since generators from `ISE.CodeGenerator.dll' automatically put generated files in the database. This feature is only provided in case you want to generate Xml files on your own.
+								</p>
+						</h3>
+						<br>
+
+						<a name = end_storage>
+						<h4>3.1.3 End assembly storage...</h4>
+
+								<p>
+										In the same way you have notified the database you want to store data, you have to notify you have finished to store types, at least in this assembly, by calling `end_assembly_storage'.<br>
+										This feature takes no argument. It only has a function of notification. When `end_assembly_storage' is called, the database will remove write lock on the assembly.
+								</p>
+				<br>
+
+			<a name = retrieval>
+			<h3>3.2 How can I retrieve information from the database?</h3>
+			<br>
+
+					<a name = assembly_retrieval>
+					<h3>3.2.1 Retrieve an assembly...</h3>
+
+							<p>
+									The first kind of information you may want to retrieve is an assembly. In the same way you had two features to start assembly storage, ISE reflection interface provides two queries to get information about an assembly:
+									<ul>
+											<li>
+													`assembly_from_type (a_type: SYSTEM_TYPE): EIFFEL_ASSEMBLY'
+											</li>
+											<li>
+													`assembly_from_info (a_version, a_culture, a_key: STRING): EIFFEL_ASSEMBLY'
+											</li>
+									</ul>
+
+									The first feature may be more convenient sometimes, but the only information used by the database to retrieve assembly description file is version, culture and key.<br>
+									Then it will use the XML file to generate an instance of `EIFFEL_ASSEMBLY' (cf. <a href = "./Eiffel_components.html">2. ISE.EiffelComponents.dll</a>), which may be easier to use.
+							</p>
+					<br>
+
+					<a name = type_retrieval>
+					<h3>3.2.2 Retrieve a type...</h3>
+
+							<p>
+									ISE reflection interface also provides a query (`type') to get information about a .NET type. Its signature is: `type (a_type: SYSTEM_TYPE): EIFFEL_CLASS'.<br>
+									First, the database looks for the assembly defining this type by using type assembly qualified name. Then, it uses type full name to find location of type description XML file. At last, it uses XML file to generate a more user-friendly representation that is an instance of `EIFFEL_CLASS'.<br>
+									This class provides useful information to match .NET names and Eiffel names (cf. <a href = "./Eiffel_components.html">2. ISE.EiffelComponents.dll</a>).
+							</p>
+					<br>
+
+					<a name = assemblies_retrieval>
+					<h3>3.2.3 Retrieve all the assemblies...</h3>
+
+							<p>
+									ISE reflection interface also provides a query called `assemblies', which enables you to get all the assemblies stored in the database. The result is an instance of `SYSTEM_COLLECTIONS_ARRAYLIST', which is in fact a list of `EIFFEL_ASSEMBLY' (cf. <a href = "./Eiffel_components.html">2. ISE.EiffelComponents.dll</a>).<br>
+									A point that has not been mentioned yet is that database keeps a kind of index in XML format with paths to assembly description XML files, that is used to build this list of `EIFFEL_ASSEMBLY'. This index is updated each time feature `end_assembly_storage' is called (not earlier to be sure that no error has occurred during storage).
+							</p>
+					<br>
+
+					<a name = concurrence_issue>
+					<h3>3.2.4 Concurrence issue</h3>
+
+							<p>
+									In the same way storage may be impossible because of concurrent processes, data retrieval may also fail. Therefore, ISE reflection interface updates a boolean called `last_read_successful' to let you about this.<br>
+									In both cases, you can have some more information about the storage/retrieval error by calling `last_error'. This query return an instance of `REFLECTION_ERROR_INFO', which has three attributes: `code: INTEGER', `name: STRING' and `description: STRING'.
+							</p>
+
+			<br>
+
+			<a name = hash_value>
+			<h3>3.3 MD5 Hash algorithm</h3>
+
+					<p>
+							ISE reflection interface uses MD5 hash algorithm to generate unique names for assembly folders. Therefore you will find a feature called `hash_value (a_string: STRING): STRING' which gives the hash value of `a_string' by using MD5 algorithm provided by the SDK framework.<br>
+							This feature is used internally by `start_assembly_storage...' to create the folder where Xml files will be stored. <br>
+							It is also used by the generators of `ISE.CodeGenerator.dll' to generate xml files in the right folder.
+					</p>
+		<br><br>
+	</body>
+</html>

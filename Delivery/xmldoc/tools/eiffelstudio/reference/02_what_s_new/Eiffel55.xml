@@ -34,6 +34,9 @@
 			<item>Removed <code><feature_name>consistent</feature_name></code> and <code><feature_name>setup</feature_name></code> from <code><class_name>ANY</class_name></code></item>
 			<item>Removed <code><feature_name>Void</feature_name></code> from <code><class_name>ANY</class_name></code> as <code><keyword>Void</keyword></code> is now a keyword.</item>
 			<item>Added <feature_name>for_all</feature_name>, <feature_name>do_all</feature_name>, <feature_name>do_if</feature_name> and <feature_name>there_exists</feature_name> to <class_name>ARRAY</class_name>. As a consequence descendants of <class_name>ARRAY</class_name> which also inherit from <class_name>LINEAR</class_name> have to select the proper version of those routines as they also appear in <class_name>LINEAR</class_name>.</item>
+			<item>Fixed <feature_name>dynamic_type_from_string</feature_name> from <class_name>INTERNAL</class_name> under .NET which was not working if you were using the .NET naming convention or if you specified a namespace.</item>
+			<item>Added <feature_name>generic_count</feature_name>, <feature_name>generic_count_with_type</feature_name> in <class_name>INTERNAL</class_name> to find out how many generic parameter a type has.</item>
+			<item>Added <feature_name>generic_dynamic_type_with_type</feature_name> in <class_name>INTERNAL</class_name> to find out the type of the i-th generic parameter of a given type.</item>
 		</list>
 		<heading><size>3</size>EiffelTime</heading>
 		<list ordered="false">

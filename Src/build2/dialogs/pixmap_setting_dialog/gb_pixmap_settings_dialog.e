@@ -92,6 +92,15 @@ inherit
 		end
 		
 	GB_FILE_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -142,6 +151,7 @@ feature {NONE} -- Initialization
 			all_object_and_event_names := object_handler.all_object_and_event_names
 			retrieve_all_names
 			retrieve_all_paths
+			set_icon_pixmap (Icon_build_window @ 1)
 		end
 
 feature {NONE} -- Implementation

@@ -37,7 +37,8 @@ feature {NONE}
 			-- Make Current
 		do
 			make_visible (a_parent);
-			initialize_transport
+			initialize_transport;
+			register;
 		end;
 
 	target: WIDGET is
@@ -54,7 +55,7 @@ feature {NONE}
 		local
 			namable: NAMABLE
 		do
-			namable ?= dropped;
+			namable ?= dropped.data;
 			if namable /= Void then
 				namer_window.set_namable (namable)
 			end

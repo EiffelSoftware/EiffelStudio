@@ -41,6 +41,7 @@ feature -- Access
 			Result.extend (label)
 			create combo_box
 			Result.extend (combo_box)
+			combo_box.disable_edit
 			create item_lowered.make_with_text (Ev_frame_lowered_string)
 			combo_box.extend (item_lowered)
 			create item_raised.make_with_text (Ev_frame_raised_string)

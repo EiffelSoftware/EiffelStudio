@@ -108,7 +108,8 @@ feature {NONE} -- Implementation
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
-					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
 					tool.last_format.associated_command.filter (filter_name)
 				end

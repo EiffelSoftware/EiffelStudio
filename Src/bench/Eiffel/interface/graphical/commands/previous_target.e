@@ -17,7 +17,8 @@ inherit
 		end;
 	WARNER_CALLBACKS
 		rename
-			execute_warner_ok as save_changes
+			execute_warner_ok as save_changes,
+			execute_warner_help as loose_changes
 		end
 
 creation
@@ -26,21 +27,19 @@ creation
 
 feature -- Callbacks
 
-	execute_warner_help is
+	loose_changes is
 			-- Useless here
 		do
-			-- Do Nothing
+			text_window.disable_clicking;
+			execute_licensed (Void)
 		end;
 
 	save_changes (argument: ANY) is
 			-- The changes will be lost.
-		local
-			class_w: CLASS_W
 		do
-			class_w ?= tool
 			text_window.disable_clicking;
-			if class_w /= Void then
-				class_w.save_cmd_holder.associated_command.execute (Void)
+			if tool /= Void then
+				tool.save_cmd_holder.associated_command.execute (Void)
 			end
 			execute_licensed (Void)
 		end;
@@ -56,7 +55,8 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licensed (argument)
 			 else
-				warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 			end
 		end;
 

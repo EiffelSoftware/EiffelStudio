@@ -13,9 +13,11 @@ inherit
 		rename
 			init as make
 		end;
+
 	WARNER_CALLBACKS
 		rename
-			execute_warner_ok as save_changes
+			execute_warner_ok as save_changes,
+			execute_warner_help as loose_changes
 		end
 
 creation
@@ -24,8 +26,9 @@ creation
 	
 feature -- Callbacks
 
-	execute_warner_help is
+	loose_changes is
 		do
+			window_manager.close (tool);
 		end;
 
 	save_changes (argument: ANY) is
@@ -55,7 +58,8 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
 					window_manager.close (tool)
 				end

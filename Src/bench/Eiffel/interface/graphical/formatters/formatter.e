@@ -19,7 +19,8 @@ inherit
 	SHARED_CONFIGURE_RESOURCES;
 	WARNER_CALLBACKS
 		rename
-			execute_warner_ok as save_changes
+			execute_warner_ok as save_changes,
+			execute_warner_help as loose_changes
 		end
 
 feature -- Properties
@@ -33,23 +34,13 @@ feature -- Properties
 
 feature -- Callbacks
 
-	execute_warner_help is
-		do
-		end;
-
-	save_changes (argument: ANY) is
-			-- If it comes here this means ok has
-			-- been pressed in the warner window
-			-- for file modification (only showtext
-			-- command can modify text)
+	loose_changes is
+			-- Default procedure which will be executed if the user
+			-- click on `Yes' or `No'.
 		local
 			old_do_format: BOOLEAN;
 			mp: MOUSE_PTR
 		do
-			if tool.save_cmd_holder /= Void then
-				tool.save_cmd_holder.associated_command.execute (Void)
-			end
-
 			!! mp.set_watch_cursor;
 			text_window.set_changed (false);
 				-- Because the text in the window has been changed,
@@ -61,6 +52,19 @@ feature -- Callbacks
 			do_format := old_do_format;
 			tool.add_to_history (tool.stone);
 			mp.restore
+		end;
+
+	save_changes (argument: ANY) is
+			-- If it comes here this means `Ok' has
+			-- been pressed in the warner window
+			-- for file modification (only showtext
+			-- command can modify text)
+		do
+			if tool.save_cmd_holder /= Void then
+				tool.save_cmd_holder.associated_command.execute (Void)
+			end
+
+			loose_changes
 		end;
 
 feature -- Execution
@@ -82,7 +86,8 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licensed (formatted)
 			else
-				warner (popup_parent).call (Current, Warning_messages.w_File_changed)
+				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 			end
 		end;
 

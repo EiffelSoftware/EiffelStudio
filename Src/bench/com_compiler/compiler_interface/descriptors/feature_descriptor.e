@@ -50,6 +50,11 @@ inherit
         end
 
     COMPLETION_ENTRY
+    	rename
+    		signature as description
+    	redefine
+    		description
+    	end
 
     SHARED_EIFFEL_PROJECT
         export {NONE}
@@ -57,6 +62,13 @@ inherit
         undefine
             is_equal
         end
+
+	COMPLETION_HELPERS
+		export
+			{NONE} all
+        undefine
+            is_equal
+		end
 
 create
     make_with_class_i_and_feature_i
@@ -177,64 +189,15 @@ feature -- Access
             result_exists: Result /= void           
         end
 
-    description: STRING is
-            -- Feature description.
-            --| FIXME For the moment, only returns the external name.
-        local
-            ef: EIFFEL_FILE
-            comments: EIFFEL_COMMENTS
-            ast: FEATURE_AS
-        do
-            ast := compiler_feature.e_feature.ast
-            if not compiler_feature.is_il_external and ast /= Void then
-                create ef.make (compiler_feature.e_feature.written_class.file_name, ast.end_position)
-                ef.set_current_feature (ast)
-                comments := ef.current_feature_comments             
-            end
-            create Result.make (20)
-            if is_once then
-                Result.append ("Once ")
-            end
-            if is_constant then
-                Result.append ("Constant ")
-            end
-            if is_frozen then
-                Result.append ("Frozen ")
-            end
-            if is_external then
-                Result.append ("External ")
-            end
-            if is_deferred then
-                Result.append ("Deferred ")
-            end
-            if is_infix then
-                Result.append ("Infix operator ")
-            elseif is_prefix then
-                Result.append ("Prefix operator ")
-            elseif is_attribute then
-                Result.append ("Attribute: ")
-            elseif is_function then
-                Result.append ("Function: ")
-            elseif is_procedure then
-                Result.append ("Procedure: ")
-            end
-            Result.append (name)
-            Result.append ("%NSignature: ")
-            Result.append (signature)
-            if comments /= Void then
-                Result.append ("%N")
-                Result.append ("Description:%N")
-                from
-                    comments.start
-                until
-                    comments.after
-                loop
-                    Result.append (comments.item + "%N")
-                    comments.forth
-                end
-            end
-            Result.prune_all ('%R')
-            Result.prune_all ('%T')
+	description: STRING is
+			-- Feature description.
+			--| FIXME For the moment, only returns the external name.
+		local
+			index: INTEGER
+			overload_text: STRING
+		do
+ 			extract_description (compiler_feature, compiler_class)
+ 			Result := extracted_description
         ensure then
             result_exists: Result /= void           
         end
@@ -271,12 +234,7 @@ feature -- Access
                 Result.append (": ")
                 Result.append (type.dump)
             end
-            if overload_count > 1 then
-            	Result.append (" [+" + overload_count.out + " overloads]")
-            elseif overload_count = 1 then
-            	Result.append (" [+1 overload]")            	
-            end
-        ensure then
+         ensure then
             result_exists: Result /= void           
         end
 
@@ -546,15 +504,7 @@ feature -- Basic Operations
                 end
             end
         end
-
-	increase_overload_count is
-			-- Increment overload count (used in description)
-		do
-			overload_count := overload_count + 1
-		ensure
-			overload_count_increased: overload_count = old overload_count + 1
-		end
-		
+	
 feature {COMPLETION_HELPERS} -- Element settings
 
 	set_name (a_name: like internal_name) is
@@ -569,9 +519,6 @@ feature {COMPLETION_HELPERS} -- Element settings
 		end
 		
 feature {FEATURE_DESCRIPTOR} -- Implementation
-        
-	overload_count: INTEGER
-			-- Overload count (used in description)
 
     local_callers_internal: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE] is
             -- Callers of `compiler_feature'.

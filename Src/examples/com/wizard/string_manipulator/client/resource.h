@@ -2,9 +2,9 @@
 // Microsoft Developer Studio generated include file.
 // Used by String_manipulator_client.rc
 //
-#define Set_string_button               3
-#define Replace_substring_button        4
-#define Prune_button                    6
+#define Set_string_button               2001
+#define Replace_substring_button        2002
+#define Prune_button                    2003
 #define String_manipulator_client_dialog_box 101
 #define Set_string_edit                 1003
 #define Current_string_display          1004

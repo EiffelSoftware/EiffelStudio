@@ -1,7 +1,7 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>One of the innovations of the new Eiffel Software Eiffel 5.x environment is a set of metric facilities enabling developers and managers to obtain quantitative information about software systems and the process of producing them.</paragraph>
+		<paragraph>One of the innovations of the new EiffelStudio 5.x environment is a set of metric facilities enabling developers and managers to obtain quantitative information about software systems and the process of producing them.</paragraph>
 		<list ordered="false">
 			<item> Find out basic quantitative properties of a system, such as the number of classes, the number of features, how many times the system has been compiled and many others</item>
 			<item> Define new properties as mathematical combinations of the basic ones, and compute the resulting values, to get the answers to such questions as what percentage of my system's routines have precondition clauses' or what is the average number of features, lines, or invariant clauses per class?</item>

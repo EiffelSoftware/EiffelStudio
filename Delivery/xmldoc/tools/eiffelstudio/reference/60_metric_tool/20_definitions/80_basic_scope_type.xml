@@ -15,7 +15,7 @@
 			<bold>How to compute a measure</bold>:<line_break></line_break>
 			<line_break/> The following algorithm determines how to obtain a measure by applying a metric to a scope:<line_break></line_break>
 			<line_break/> 1. If the scope's type is one of the basic scope types of the metric, Feature or Class in the example, the metric's specification must include a predefined mechanism to compute the measure.
-			<line_break/> That mechanism will directly access properties of the software-through the development environment (as in Eiffel Software Eiffel), or by directly analyzing the source code.
+			<line_break/> That mechanism will directly access properties of the software-through the development environment (as in EiffelStudio), or by directly analyzing the source code.
 			<line_break/> 2. If the scope's type is 
 			<bold>smaller</bold> than all basic scope types of the metric -referring to the order relation between scopes: Feature less than Class, Class less than Cluster and so on- the measure will always be zero. This cannot happen with the Lines metric, since the smallest of all scope types, Feature, is one of its basic scope types. But if requested to apply the metric Parents (number of parents) to a feature, we should return zero, since the Class is the only basic scope type for this metric and Feature is smaller than Class. The reason for this is obvious: we are asked to compute the "number of parents" for a feature, but the smallest unit for which this metric is defined is Class, so the only appropriate answer is zero. (This rule is important in connection with the next case.)
 			<line_break/> 3. Otherwise (the scope's type is not one of the basic scope types of the metric, but 

@@ -22,6 +22,11 @@ feature
 			!! Result
 		end;
 
+	Menu_names: MENU_NAMES is
+		once
+			!! Result
+		end
+
 	Pixmaps: PIXMAPS is
 		once
 			!! Result
@@ -41,5 +46,5 @@ feature
 		once
 			!! Result
 		end;
-
+	
 end

@@ -1,58 +1,63 @@
+indexing
+	description: "Arguments used when calling commands."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-class COMMAND_ARGS
+class 
 
-
+	COMMAND_ARGS
 
 	
 feature {NONE}
 
 	nothing: ANY is
 		once
-		end;
+		end
 
 	First: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Second: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Third: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Fourth: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Fifth: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Sixth: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Seventh: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Eighth: ANY is
 		once
 			!!Result
-		end;
+		end
 
 	Nineth: ANY is
 		once
 			!!Result
-		end;
+		end
 
 end

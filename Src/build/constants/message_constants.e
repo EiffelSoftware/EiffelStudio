@@ -31,6 +31,10 @@ feature -- Error messages
 			"File %%X %Nalready exists. Cannot save!";
 	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
 	Dir_not_chosen_er: STRING is "No Directory chosen!";
+	Empty_project_name_er: STRING is "You must specify a project name !";
+	Eb_project_not_exists_er: STRING is 
+			"Project directory :%N %%X does not exist!";
+	Eb_project_not_valid: STRING is "Project directory:%N%%X is not a valid directory!";
 	Generate_er: STRING is "Cannot generate files to directory%N%%X";
 	Group_name_exists_er: STRING is "Group %%X already exists!";
 	Incomp_er: STRING is "Incompatible types!";
@@ -58,9 +62,6 @@ feature -- Error messages
 			"%%X is not a valid state name (identifier).";
 	Label_name_clash_er: STRING is
 			"There is a label with the same name from inherited class.%N%%X";
-	Empty_project_name_er: STRING is "You must specify a project name !";
-	Eb_project_not_exists_er: STRING is 
-			"Project directory :%N %%X does not exist!";
 	Remove_init_state_er: STRING is "Cannot remove initial state!";
 	Remove_parent_er: STRING is "Cannot remove parent for predefined command!";
 	Retrieve_er: STRING is 

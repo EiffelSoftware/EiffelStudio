@@ -62,9 +62,9 @@ feature {NONE} -- Request constants
 	Rqst_sp_lower: INTEGER is 30
 		-- Bounds for special objects inspection
 
-	Rqst_sp_upper: INTEGER is 31
-		-- Bounds for special objects inspection
-
+	Rqst_metamorphose: INTEGER is 31
+		-- Convert the top-level item on the operational stack from a basic type to a reference type.
+	
 	Rqst_new_breakpoint: INTEGER is 33
 		-- Debugger asking interruption of application in
 		-- order to take new breakpoint(s) into account.
@@ -86,6 +86,9 @@ feature {NONE} -- Request constants
 
 	Rqst_application_cwd: INTEGER is 38
 		-- Set current directory for application.
+
+	Rqst_create_ref: INTEGER is 39
+		-- Create a reference based on a basic type (INTEGER => INTEGER_REF...)
 
 feature {NONE} -- Resume
 
@@ -180,5 +183,5 @@ feature {NONE} -- For workbench responses.
 		once
 			create Result.make (10)
 		end
-	
+
 end

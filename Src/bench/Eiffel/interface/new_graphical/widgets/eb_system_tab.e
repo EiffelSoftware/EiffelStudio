@@ -314,7 +314,6 @@ feature {NONE} -- Generation of AST
 		local
 			argument_sd: FREE_OPTION_SD
 			v: OPT_VAL_SD
-			l_type_name: STRING
 		do
 			create argument_sd.make (type_id)
 			if a_name /= Void then

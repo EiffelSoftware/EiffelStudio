@@ -45,6 +45,7 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			selected_items as wel_selected_items,
+			selected_item as wel_selected_item,
 			get_item as wel_get_item,
 			insert_item as wel_insert_item,
 			set_column_width as wel_set_column_width,
@@ -765,6 +766,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.81  2000/04/19 01:31:02  pichery
+--| Added redefine clause
+--|
 --| Revision 1.80  2000/04/18 21:25:39  pichery
 --| - Fixed bug in `on_size' (swap of parameters)
 --| - Cosmetics

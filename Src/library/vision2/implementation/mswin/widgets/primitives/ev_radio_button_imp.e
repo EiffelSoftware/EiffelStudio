@@ -124,6 +124,8 @@ feature {NONE} -- Implementation
 
 	on_bn_clicked is
 			-- Called when button is pressed.
+			--| FIXME When more widgets are put into the container this widget
+			--| is in, the system hangs in an an infinite loop after a click.
 		do
 			enable_select
 			{EV_SELECT_BUTTON_IMP} Precursor
@@ -156,6 +158,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/22 00:53:15  brendel
+--| Added FIXME.
+--|
 --| Revision 1.26  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

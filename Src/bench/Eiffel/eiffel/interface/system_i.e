@@ -247,10 +247,10 @@ feature -- Properties
 			-- consists of saving the name the very first time it
 			-- is computed.
 
-	set_array_make_name (name: STRING) is
+	set_array_make_name (a_name: STRING) is
 			-- Set `name' to `array_make_name'.
 		do
-			array_make_name := clone (name)
+			array_make_name := clone (a_name)
 		end
 
 	tuple_make_name: STRING
@@ -1229,39 +1229,39 @@ end
 			rout_id: INTEGER
 			melted_file: RAW_FILE
 			file_name: FILE_NAME
-			name: STRING
+			l_name: STRING
 			precomp_makefile: PRECOMP_MAKER
 		do
 debug ("ACTIVITY")
-	io.error.putstring ("Updating system_name.eif%N")
+	io.error.putstring ("Updating name.eif%N")
 end
 			if empty then
 					-- We are generating an empty melted file, this means that
 					-- we froze our system.
-				name := clone (system_name)
+				l_name := clone (name)
 			else
 					-- Find the correct melted name when there is no freeze
 					--
-					-- When there is no precompiled library, we need to use the `system_name'.
+					-- When there is no precompiled library, we need to use the `name'.
 					-- When there is one, we need to check if a freeze occurred during
 					-- the life cycle of the project, this can be detected by checking the
 					-- type of `makefile_generator' which should be either WKBENCH_MAKER or
 					-- FINAL_MAKER.
 				precomp_makefile ?= makefile_generator
 				if precomp_makefile = Void then
-						-- We already froze our project, so we can keep `system_name'
-					name := clone (system_name)
+						-- We already froze our project, so we can keep `name'
+					l_name := clone (name)
 				else
 					check
 						Uses_precompiled_library: Workbench.precompiled_directories /= Void	
 						Not_multiple_precompiled: Workbench.precompiled_directories.count = 1
 					end
-					name := clone (Workbench.melted_file_name)
+					l_name := clone (Workbench.melted_file_name)
 				end	
 			end
-			name.append (".melted")
+			l_name.append (".melted")
 			create file_name.make_from_string (Workbench_generation_path)
-			file_name.set_file_name (name)
+			file_name.set_file_name (l_name)
 			create melted_file.make_open_write (file_name)
 
 				-- There is something to update

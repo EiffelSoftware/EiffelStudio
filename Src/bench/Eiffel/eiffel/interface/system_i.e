@@ -2785,7 +2785,7 @@ end
 				i := i + 1
 			end
 
-			Skeleton_file.putstring ("struct cnode fsystem[] = {%N")
+			Skeleton_file.putstring ("struct cnode egc_fsystem[] = {%N")
 			from
 				i := 1
 			until
@@ -2822,7 +2822,7 @@ end
 
 			if not final_mode then
 					-- Generate the array of routine id arrays
-				Skeleton_file.putstring ("int32 *fcall[] = {%N")
+				Skeleton_file.putstring ("int32 *egc_fcall[] = {%N")
 				from
 					i := 1
 					nb := cltype_array.upper
@@ -2846,7 +2846,7 @@ end
 				Skeleton_file.putstring ("};%N%N")
 					-- Generate the correspondances stable between original
 					-- dynamic types and new dynamic types
-				Skeleton_file.putstring ("int16 fdtypes[] = {%N")
+				Skeleton_file.putstring ("int16 egc_fdtypes[] = {%N")
 				from
 					i := 1
 				until
@@ -3056,7 +3056,7 @@ end
 				i := i + 1
 			end
 
-			Conformance_file.putstring ("struct conform *fco_table[] = {%N")
+			Conformance_file.putstring ("struct conform *egc_fco_table[] = {%N")
 
 			from
 				i := 1
@@ -3305,7 +3305,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("();%N")
 
 				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("EIF_INTEGER prof_enabled = (EIF_INTEGER) ")
+			Plug_file.putstring ("EIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
 			if Lace.ace_options.has_profile then
 				Plug_file.putstring ("3;%N")
 			else
@@ -3344,16 +3344,16 @@ feature -- Plug and Makefile file
 			end
 
 				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("void (*eif_strmake)(EIF_REFERENCE, EIF_INTEGER) = ")
+			Plug_file.putstring ("void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER) = ")
 			Plug_file.putstring (str_make_name)
 			Plug_file.putstring (";%N")
 				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("void (*eif_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER) = ")
+			Plug_file.putstring ("void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER) = ")
 			Plug_file.putstring (arr_make_name)
 			Plug_file.putstring (";%N")
 
 				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("void (*eif_strset)(EIF_REFERENCE, EIF_INTEGER) = ")
+			Plug_file.putstring ("void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER) = ")
 			Plug_file.putstring (set_count_name)
 			Plug_file.putstring (";%N")
 
@@ -3365,17 +3365,17 @@ feature -- Plug and Makefile file
 			end
 
 				-- Dynamic type of class STRING
-			Plug_file.putstring ("int str_dtype = ")
+			Plug_file.putstring ("int egc_str_dtype = ")
 			Plug_file.putint (str_type_id - 1)
 			Plug_file.putstring (";%N")
 
 				-- Dynamic type of class ARRAY[ANY]
-			Plug_file.putstring ("int arr_dtype = ")
+			Plug_file.putstring ("int egc_arr_dtype = ")
 			Plug_file.putint (arr_type_id - 1)
 			Plug_file.putstring (";%N")
 
 				-- Dispose routine id from class MEMORY (if compiled) 
-			Plug_file.putstring ("int32 disp_rout_id = ")
+			Plug_file.putstring ("int32 egc_disp_rout_id = ")
 			if memory_class /= Void then
 				Plug_file.putint (memory_dispose_id.id)
 			else
@@ -3386,7 +3386,7 @@ feature -- Plug and Makefile file
 				-- Dynamic type of class BIT_REF
 			bit_cl := class_of_id (bit_id)
 			type_id := bit_cl.types.first.type_id
-			Plug_file.putstring ("int bit_dtype = ")
+			Plug_file.putstring ("int egc_bit_dtype = ")
 			Plug_file.putint (type_id - 1)
 			Plug_file.putstring (";%N")
 
@@ -3506,7 +3506,7 @@ feature -- Main file generation
 
 			Main_file.putstring ("%
 				%%Teif_rtinit(argc, argv, envp);%N%
-				%%Tif (prof_enabled) initprf();%N%
+				%%Tif (egc_prof_enabled) initprf();%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N%
@@ -3572,13 +3572,13 @@ feature -- Main file generation
 				static_type_id_counter.generate_offsets (Initialization_file)
 				execution_table.counter.generate_offsets (Initialization_file)
 				dispatch_table.counter.generate_offsets (Initialization_file)
-				Initialization_file.putstring ("int32 rcorigin = ")
+				Initialization_file.putstring ("int32 egc_rcorigin = ")
 				Initialization_file.putint (rcorigin)
-				Initialization_file.putstring (";%Nint rcdt = ")
+				Initialization_file.putstring (";%Nint egc_rcdt = ")
 				Initialization_file.putint (dtype)
-				Initialization_file.putstring (";%Nint32 rcoffset = ")
+				Initialization_file.putstring (";%Nint32 egc_rcoffset = ")
 				Initialization_file.putint (rcoffset)
-				Initialization_file.putstring (";%Nint rcarg = ")
+				Initialization_file.putstring (";%Nint egc_rcarg = ")
 				if has_argument then
 					Initialization_file.putstring ("1")
 				else
@@ -3649,7 +3649,7 @@ feature -- Main file generation
 			if final_mode then
 				Initialization_file.putint (dtype)
 			else
-				Initialization_file.putstring ("rcdt")
+				Initialization_file.putstring ("egc_rcdt")
 			end
 			Initialization_file.putstring (");%N")
 
@@ -3673,17 +3673,17 @@ feature -- Main file generation
 				end
 			else
 				if has_separate then
-					Initialization_file.putstring ("%T%Tif (rcorigin != -1)%N%
-						%%T%T%Tif (rcarg)%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
+					Initialization_file.putstring ("%T%Tif (egc_rcorigin != -1)%N%
+						%%T%T%Tif (egc_rcarg)%N%
+						%%T%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc-1, root_argv));%N%
 						%%T%T%Telse%N%
-						%%T%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N")
+						%%T%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 				else
-					Initialization_file.putstring ("%Tif (rcorigin != -1)%N%
-						%%T%Tif (rcarg)%N%
-						%%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
+					Initialization_file.putstring ("%Tif (egc_rcorigin != -1)%N%
+						%%T%Tif (egc_rcarg)%N%
+						%%T%T%T(FUNCTION_CAST(void, (char *, char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
 						%%T%Telse%N%
-						%%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N")
+						%%T%T%T(FUNCTION_CAST(void, (char *)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N")
 				end
 			end
 
@@ -3709,12 +3709,12 @@ feature -- Main file generation
 
 			Initialization_file.putstring ("%N}%N")
 
-			-- Generation of einit() and tabinit(). Only for workbench
+			-- Generation of egc_einit() and egc_tabinit(). Only for workbench
 			-- mode.
 
 			if not final_mode then
 					-- Prototypes
-				Initialization_file.generate_extern_declaration ("void", "tabinit", <<>>)
+				Initialization_file.generate_extern_declaration ("void", "egc_tabinit", <<>>)
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -3729,7 +3729,7 @@ feature -- Main file generation
 				end
 
 
-				Initialization_file.putstring ("%Nvoid tabinit(void)%N{%N")
+				Initialization_file.putstring ("%Nvoid egc_tabinit(void)%N{%N")
 				from
 					i := 1
 					nb := type_id_counter.value
@@ -3750,7 +3750,7 @@ feature -- Main file generation
 				end
 				Initialization_file.putstring ("}%N%N")
 
-				Initialization_file.generate_function_signature ("void", "einit", True, Initialization_file, <<"">>, <<"void">>)
+				Initialization_file.generate_function_signature ("void", "egc_einit", True, Initialization_file, <<"">>, <<"void">>)
 
 					-- Set C variable `scount'.
 				Initialization_file.putstring ("%Tscount = ")
@@ -3773,7 +3773,7 @@ feature -- Main file generation
 				Initialization_file.putstring (";%N}%N"); -- MT
 			end
 
-			-- Module initialization routine 'system_mod_init'
+			-- Module initialization routine 'egc_system_mod_init'
 
 			-- Declarations
 
@@ -3799,7 +3799,7 @@ feature -- Main file generation
 
 			-- Module initialization
 			Initialization_file.generate_function_signature (
-				"void", "system_mod_init", True, Initialization_file, <<"">>, <<"void">>
+				"void", "egc_system_mod_init", True, Initialization_file, <<"">>, <<"void">>
 															)
 			from
 				i := 1
@@ -3873,7 +3873,7 @@ feature --Workbench option file generation
 			end
 
 				-- Then option C array
-			Option_file.putstring ("struct eif_opt foption[] = {%N")
+			Option_file.putstring ("struct eif_opt egc_foption[] = {%N")
 			from
 				i := 1
 				nb := Type_id_counter.value

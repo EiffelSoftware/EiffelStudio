@@ -26,7 +26,7 @@ inherit
 		redefine
 			is_feature_pointer, type_a, description, sk_value,
 			generate_cecil_value, element_type, tuple_code,
-			name
+			name, reference_type
 		end
 
 create

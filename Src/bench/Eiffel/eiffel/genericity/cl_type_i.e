@@ -162,16 +162,15 @@ feature -- Access
 		do
 			if is_expanded then
 				create exp
-				exp.set_class_type (base_class.types.search_item (Current))
+				exp.set_cl_type_i (Current)
 				exp.set_type_i (Current)
 				Result := exp
 			else
 				Result := c_type.description
-			end
-
-			ref ?= Result
-			if ref /= Void then
-				ref.set_type_i (Current)
+				ref ?= Result
+				if ref /= Void then
+					ref.set_type_i (Current)
+				end
 			end
 		end
 
@@ -179,6 +178,23 @@ feature -- Access
 			-- Associated C type
 		do
 			Result := Reference_c_type
+		end
+
+	reference_type: CL_TYPE_I is
+			-- Associated reference type of Current
+		do
+			if not is_expanded then
+				Result := Current
+			else
+				Result := twin
+				Result.set_is_expanded (False)
+			end
+		end
+
+	associated_reference_class_type: CLASS_TYPE is
+			-- Reference class type of Current
+		do
+			Result := reference_type.associated_class_type
 		end
 		
 	associated_class_type: CLASS_TYPE is

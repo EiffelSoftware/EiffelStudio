@@ -11,7 +11,7 @@ inherit
 			type_a
 		redefine
 			is_basic, is_reference, c_type, is_valid,
-			cecil_value
+			cecil_value, reference_type
 		end
 
 	TYPE_C
@@ -30,17 +30,11 @@ feature -- Access
 		do
 			Result := Current
 		end
-
+		
 	reference_type: CL_TYPE_I is
-			-- Associated reference type of Current
+			-- Assocated reference type of Current.
 		do
 			create Result.make (class_id)
-		end
-
-	associated_reference_class_type: CLASS_TYPE is
-			-- Reference class type of Current
-		do
-			Result := reference_type.associated_class_type
 		end
 
 feature -- Status report

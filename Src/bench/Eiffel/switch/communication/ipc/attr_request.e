@@ -41,6 +41,11 @@ inherit
 			{NONE} all
 		end	
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 create
 
 	make
@@ -186,6 +191,18 @@ feature {NONE} -- Implementation
 					create {CHARACTER_VALUE} attr.make_attribute (attr_name, e_class, to_character (c_tread))
 				when Sk_wchar then
 					create {DEBUG_VALUE [WIDE_CHARACTER]} attr.make_attribute (attr_name, e_class, to_wide_char (c_tread))
+				when Sk_uint8 then
+					fixme ("Use NATURAL when compiler is bootstrapped")
+					create {DEBUG_VALUE [INTEGER_8]} attr.make_attribute (attr_name, e_class, to_natural_8 (c_tread))
+				when Sk_uint16 then
+					fixme ("Use NATURAL when compiler is bootstrapped")
+					create {DEBUG_VALUE [INTEGER_16]} attr.make_attribute (attr_name, e_class, to_natural_16 (c_tread))
+				when Sk_uint32 then
+					fixme ("Use NATURAL when compiler is bootstrapped")
+					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (attr_name, e_class, to_natural_32 (c_tread))
+				when Sk_uint64 then
+					fixme ("Use NATURAL when compiler is bootstrapped")
+					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (attr_name, e_class, to_natural_64 (c_tread))
 				when Sk_int8 then
 					create {DEBUG_VALUE [INTEGER_8]} attr.make_attribute (attr_name, e_class, to_integer_8 (c_tread))
 				when Sk_int16 then
@@ -342,6 +359,58 @@ feature {NONE} -- Implementation
 		do
 			a := s.area;
 			($Result).memory_copy ($a, Wide_character_bytes)
+		end
+
+	to_natural_8 (s: STRING): INTEGER_8 is
+			-- Convert binary integer_8 enclosed in `s' into an NATURAL_8.
+		require
+			s_not_void: s /= Void
+			valid_string: s.count = natural_8_bytes
+		local
+			a: ANY
+		do
+			fixme ("Use NATURAL when compiler is bootstrapped")
+			a := s.area;
+			($Result).memory_copy ($a, natural_8_bytes)
+		end
+
+	to_natural_16 (s: STRING): INTEGER_16 is
+			-- Convert binary integer_16 enclosed in `s' into an NATURAL_16.
+		require
+			s_not_void: s /= Void
+			valid_string: s.count = natural_16_bytes
+		local
+			a: ANY
+		do
+			fixme ("Use NATURAL when compiler is bootstrapped")
+			a := s.area;
+			($Result).memory_copy ($a, natural_16_bytes)
+		end
+
+	to_natural_32 (s: STRING): INTEGER is
+			-- Convert binary integer enclosed in `s' into an NATURAL.
+		require
+			s_not_void: s /= Void
+			valid_string: s.count = natural_32_bytes
+		local
+			a: ANY
+		do
+			fixme ("Use NATURAL when compiler is bootstrapped")
+			a := s.area;
+			($Result).memory_copy ($a, natural_32_bytes)
+		end
+
+	to_natural_64 (s: STRING): INTEGER_64 is
+			-- Convert binary integer_64 enclosed in `s' into an NATURAL_64.
+		require
+			s_not_void: s /= Void
+			valid_string: s.count = natural_64_bytes
+		local
+			a: ANY
+		do
+			fixme ("Use NATURAL when compiler is bootstrapped")
+			a := s.area;
+			($Result).memory_copy ($a, natural_64_bytes)
 		end
 
 	to_integer_8 (s: STRING): INTEGER_8 is

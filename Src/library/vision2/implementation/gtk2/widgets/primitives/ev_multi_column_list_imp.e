@@ -291,14 +291,14 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do		
 			if a_columns > model_column_count - 1 then
-				create a_type_array.make ((a_columns + 1) * sizeof_gtype)
+				create a_type_array.make ((a_columns + 1) * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 				from
-					add_gdk_type_pixbuf (a_type_array.item, 0)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
 					i := 1
 				until
 					i > a_columns
 				loop
-					add_g_type_string (a_type_array.item, i * sizeof_gtype)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, i * feature {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
 					i := i + 1
 				end
 
@@ -319,48 +319,7 @@ feature {NONE} -- Implementation
 				end				
 			end	
 		end
-
-	add_g_type_string (an_array: POINTER; a_pos: INTEGER) is
-			-- Add G_TYPE_STRING constant in `an_array' at `a_pos' bytes from beginning
-			-- of `an_array'.
-		require
-			an_array_not_null: an_array /= default_pointer
-			a_pos_nonnegative: a_pos >= 0
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-				{
-					GType type = G_TYPE_STRING;
-					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
-				}
-			]"
-		end
-
-	add_gdk_type_pixbuf (an_array: POINTER; a_pos: INTEGER) is
-			-- Add GDK_TYPE_PIXBUF constant in `an_array' at `a_pos' bytes from beginning
-			-- of `an_array'.
-		require
-			an_array_not_null: an_array /= default_pointer
-			a_pos_nonnegative: a_pos >= 0
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-				{
-					GType type = GDK_TYPE_PIXBUF;
-					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
-				}
-			]"
-		end
-
-	sizeof_gtype: INTEGER is
-			-- Size of the `GType' C type
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"sizeof(GType)"
-		end		
+	
 
 	create_list (a_columns: INTEGER) is
 			-- Create the clist with `a_columns' columns.

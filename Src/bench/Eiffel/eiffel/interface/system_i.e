@@ -582,6 +582,7 @@ end
 				Tmp_m_desc_server.remove (id)
 
 				melted_set.prune (a_class)
+				freeze_set.prune (a_class)
 				classes.remove (id)
 
 					-- Remove client/supplier syntactical relations
@@ -967,7 +968,7 @@ end
 				deg_output.put_melting_changes_message
 
 				execution_table.set_levels
-					-- Create a non-empty update file ("melted.eif")
+					-- Create a non-empty melted file
 				make_update (False)
 debug ("VERBOSE")
 	io.error.putstring ("Saving melted.eif%N")
@@ -1395,12 +1396,17 @@ end
 			rcorigin, rcoffset: INTEGER
 			rout_id: ROUTINE_ID
 			melted_file: RAW_FILE
+			file_name: FILE_NAME
+			name: STRING
 		do
 debug ("ACTIVITY")
-	io.error.putstring ("Updating melted.eif%N")
+	io.error.putstring ("Updating system_name.eif%N")
 end
-			melted_file := Update_file
-			melted_file.open_write
+			name := clone (system_name)
+			name.append (".melted")
+			!! file_name.make_from_string (Workbench_generation_path)
+			file_name.set_file_name (name)
+			!! melted_file.make_open_write (file_name)
 
 				-- There is something to update
 			if empty then

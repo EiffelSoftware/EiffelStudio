@@ -7,6 +7,32 @@ indexing
 external class
 	ISE_RUNTIME
 
+feature -- Duplication
+
+	standard_copy (target, source: ANY) is
+			-- Copy `source' onto `target'.
+		external
+			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO, ISE.Runtime.EIFFEL_TYPE_INFO) use ISE.Runtime.RUN_TIME"
+		alias
+			"standard_copy"
+		end
+
+	standard_clone (o: ANY): SYSTEM_OBJECT is
+			-- Create a new instance of same type as `o'.
+		external
+			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE_Runtime.EIFFEL_TYPE_INFO.Object use ISE.Runtime.GENERIC_CONFORMANCE"
+		alias
+			"create_like_object"
+		end
+
+	deep_clone (o: ANY): SYSTEM_OBJECT is
+			-- 
+		external
+			"IL static signature (ISE.Runtime.EIFFEL_TYPE_INFO): ISE.Runtime.EIFFEL_TYPE_INFO use ISE.Runtime.RUN_TIME"
+		alias
+			"deep_clone"
+		end
+		
 feature -- Externals
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN is
@@ -16,7 +42,7 @@ feature -- Externals
 			"check_assert"
 		end
 
-	frozen conforms_to (obj1, obj2: ANY): BOOLEAN is
+	frozen conforms_to (obj1, obj2: SYSTEM_OBJECT): BOOLEAN is
 			-- Generating type name of object `o'.
 			-- (type of which it is a direct instance)
 		external
@@ -33,7 +59,7 @@ feature -- Externals
 			"generic_parameter_count"
 		end
 
-	frozen generator (o: ANY): SYSTEM_STRING is
+	frozen generator (o: SYSTEM_OBJECT): SYSTEM_STRING is
 			-- Generating class name of object `o'.
 			-- (base class of the type of which it is a direct instance)
 		external
@@ -42,7 +68,7 @@ feature -- Externals
 			"generator"
 		end
 
-	frozen generating_type (o: ANY): SYSTEM_STRING is
+	frozen generating_type (o: SYSTEM_OBJECT): SYSTEM_STRING is
 			-- Generating type name of object `o'.
 			-- (type of which it is a direct instance)
 		external

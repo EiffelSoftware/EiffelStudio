@@ -26,12 +26,7 @@ inherit
 			initialize,
 			make,
 			interface,
-			set_foreground_color,
-			foreground_color_pointer,
-			set_text,
 			has_focus,
-			destroy,
-			on_key_event,
 			set_focus,
 			default_key_processing_blocked,
 			on_focus_changed
@@ -41,7 +36,9 @@ inherit
 		undefine
 			set_default_colors,
 			visual_widget,
-			set_composite_widget_pointer_style
+			set_composite_widget_pointer_style,
+			destroy,
+			on_key_event
 		redefine
 			select_callback,
 			remove_i_th,
@@ -51,12 +48,7 @@ inherit
 			selected,
 			add_to_container,
 			interface,
-			set_foreground_color,
-			foreground_color_pointer,
 			has_focus,
-			destroy,
-			on_item_clicked,
-			on_key_event,
 			set_focus,
 			default_key_processing_blocked,
 			on_focus_changed,
@@ -73,7 +65,7 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a combo-box.
 		local
-			
+			activate_id: INTEGER
 		do
 			base_make (an_interface)
 
@@ -81,6 +73,7 @@ feature {NONE} -- Initialization
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
 			container_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			dropdown_window := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_popwin (container_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, container_widget, False, False, 0)
 
 			-- Pointer to the text we see.
@@ -90,10 +83,7 @@ feature {NONE} -- Initialization
 			list_widget := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_list (container_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_combo_set_use_arrows (container_widget, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_combo_set_case_sensitive (container_widget, 1)
-	
-			create timer.make_with_interval (0)
-			timer.actions.extend (agent launch_select_actions)
-			timer_imp ?= timer.implementation
+
 			activate_id := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_activate_id (container_widget)
 			feature {EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
 			
@@ -115,13 +105,7 @@ feature {NONE} -- Initialization
 			)
 			real_signal_connect (entry_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
 			real_signal_connect (entry_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
-			real_signal_connect (
-					list_widget,
-					"button-release-event",
-					agent (App_implementation.gtk_marshal).on_combo_box_button_release (c_object),
-					Void
-			)
-		
+			real_signal_connect (dropdown_window, "unmap-event", agent (App_implementation.gtk_marshal).on_combo_box_dropdown_unmapped (c_object), App_implementation.default_translate)
 		end
 		
 feature -- Status report
@@ -181,38 +165,42 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		do
-			avoid_callback := True
-			Precursor {EV_TEXT_FIELD_IMP} (a_text)
-			avoid_callback := False
-		end
-
 	set_maximum_text_length (len: INTEGER) is
 			-- Set the length of the longest 
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Set foreground color to `a_color'.
-		do
-			real_set_foreground_color (list_widget, a_color)
-		end
-		
 	set_focus is
-			-- 
+			-- Set the focus to the entry widget.
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (entry_widget)
 		end
 
-feature {EV_LIST_ITEM_IMP} -- Implementation
+feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	container_widget: POINTER
 			-- Gtk combo struct
+			
+	launch_select_actions is
+			-- 
+		local
+			sel_item: EV_LIST_ITEM
+			sel_item_imp: EV_LIST_ITEM_IMP
+		do
+			sel_item ?= selected_item
+			if sel_item /= Void then
+				sel_item_imp ?= sel_item.implementation
+				if sel_item_imp /= Void then
+					call_select_actions (sel_item_imp)
+				end				
+			end
+		end
 
 feature {NONE} -- Implementation
+
+	dropdown_window: POINTER
+			-- Pointer to the GtkWindow that drops down on item selection.
 
 	pixmaps_size_changed is
 			-- The size of the displayed pixmaps has just
@@ -266,9 +254,7 @@ feature {NONE} -- Implementation
 			real_signal_connect (v_imp.c_object, "key-press-event", on_key_pressed_intermediary_agent, key_event_translate_agent)
 
 			-- Make sure the first item is always selected.
-			avoid_callback := True
 			feature {EV_GTK_EXTERNALS}.gtk_list_select_item (container_widget, 1)
-			avoid_callback := False
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -291,100 +277,10 @@ feature {NONE} -- Implementation
 			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
 		end
 
-	foreground_color_pointer: POINTER is
-			-- Pointer on the C object representing the foreground color of Current
-		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_style_struct_fg (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (list_widget))
-		end
-		
-	timer: EV_TIMEOUT; timer_imp: EV_TIMEOUT_IMP
-		-- Timer and its associated implementation needed for selection hack.
-	
-	triggering_item: EV_LIST_ITEM_IMP
-		-- Item that has been selected.
-	
-	activate_id: INTEGER
-			-- Activate event handler id
-
-	avoid_callback: BOOLEAN
-			-- Flag used to avoid repeated emission of select signal from combo box.
-
 	select_callback (n: INTEGER; an_item: POINTER) is
 			-- Redefined to counter repeated select signal of combo box. 
-		local
-			popwin: POINTER
 		do	
-			--| FIXME IEK Remove hacks when gtk+ 2.0 is out
-			if is_displayed then
-				if not avoid_callback then			
-				 	triggering_item ?= eif_object_from_c ((App_implementation.gtk_marshal).gtk_value_pointer (an_item))
-				 	if not button_pressed then
-						popwin := feature {EV_GTK_EXTERNALS}.gtk_combo_struct_popwin (container_widget)
-						feature {EV_GTK_EXTERNALS}.gtk_widget_hide (popwin)
-						if (((feature {EV_GTK_EXTERNALS}.gtk_object_struct_flags (visual_widget) // feature {EV_GTK_EXTERNALS}.gTK_HAS_GRAB_ENUM) \\ 2)) = 1 then
-							feature {EV_GTK_EXTERNALS}.gtk_grab_remove (popwin)
-							feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (0)
-						end
-					end
-					avoid_callback := True
-					timer_imp.set_interval_kamikaze (1)
-				else
-					avoid_callback := False
-				end
-			end
-		end
-		
-	button_pressed: BOOLEAN
-
-	on_item_clicked is
-			-- The user has clicked on an item.
-		do
-			Precursor {EV_LIST_ITEM_LIST_IMP}
-			button_pressed := True
-		end
-		
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-		local
-		--	success: BOOLEAN
-		do
-			if 
-				a_key /= Void and then Key_down = a_key.code
-			then
-					feature {EV_GTK_EXTERNALS}.signal_handler_unblock (entry_widget, activate_id)
-				--	success := feature {EV_GTK_EXTERNALS}.gtk_widget_activate (entry_widget)
-					feature {EV_GTK_EXTERNALS}.signal_handler_block (entry_widget, activate_id)
-			end
-			Precursor {EV_TEXT_FIELD_IMP} (a_key, a_key_string, a_key_press)
-		end
-	
-	launch_select_actions is
-			-- 
-		local
-			a_triggering_item: EV_LIST_ITEM_IMP
-		do
-			timer.actions.wipe_out
-			a_triggering_item := triggering_item
-			if a_triggering_item /= Void then
-				call_select_actions (a_triggering_item)
-			end
-			triggering_item := Void
-			timer.actions.extend (agent launch_select_actions)
-		end
-
-	destroy is
-			-- Destroy Current
-		do
-			timer.destroy
-			timer := Void
-			triggering_item := Void
-			Precursor {EV_TEXT_FIELD_IMP}
-		end
-		
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-		
-	on_button_released is
-		do
-			button_pressed := False
+			-- Do nothing, we handle selection via unmapping of popup window and explicit calling.
 		end
 		
 feature {EV_ANY_I} -- Implementation

@@ -42,7 +42,7 @@ feature -- Properties
 	error_position: INTEGER;
 			-- Position in file where error occurred (during degree 3)?
 
-feature {E_PROJECT} -- Element change
+feature {E_PROJECT, COMPILER_EXPORTER} -- Element change
 
 	insert_interrupt_error (is_during_comp: BOOLEAN) is
 			-- Insert an `interrup_error' so that the compilation

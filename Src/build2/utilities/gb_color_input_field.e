@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
 		local
-			frame: EV_FRAME
 			tool_bar: EV_TOOL_BAR
 		do
 			call_default_create (any)
@@ -60,10 +59,10 @@ feature {NONE} -- Initialization
 			color_area.pointer_double_press_actions.force_extend (agent color_area_double_clicked)
 			color_area.expose_actions.force_extend (agent color_area.clear)
 			color_area.drop_actions.extend (agent accept_color_stone (?))
-			create frame
-			frame.extend (color_area)
-			horizontal_box.extend (frame)
-			horizontal_box.disable_item_expand (frame)
+			create color_area_parent
+			color_area_parent.extend (color_area)
+			horizontal_box.extend (color_area_parent)
+			horizontal_box.disable_item_expand (color_area_parent)
 			
 			create select_button.make_with_text (select_button_text)
 			create tool_bar
@@ -84,7 +83,7 @@ feature {NONE} -- Initialization
 			horizontal_box.disable_item_expand (tool_bar)
 			extend (horizontal_box)
 			
-			frame.set_minimum_width (tool_bar.height)
+			color_area_parent.set_minimum_width (tool_bar.height)
 			
 			a_parent.extend (Current)
 			populate_constants
@@ -104,6 +103,9 @@ feature -- Access
 		
 	color_area: EV_DRAWING_AREA
 		-- Area in which current color is displayed.
+		
+	color_area_parent: EV_FRAME
+		-- parent for `color_area'.
 
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
@@ -177,12 +179,14 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		do
 			if constants_button.is_selected then
 				select_button.parent.hide
+				color_area_parent.hide
 				constants_combo_box.show
 				constants_combo_box.first.enable_select
 				spacing_cell.hide
 			else
 				constants_combo_box.hide
 				select_button.parent.show
+				color_area_parent.show
 				constants_combo_box.remove_selection
 				spacing_cell.show
 			end
@@ -205,6 +209,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				color_constants.off
 			loop
 				create list_item.make_with_text (color_constants.item.name)
+				list_item.set_pixmap (color_constants.item.small_pixmap)
 				list_item.set_data (color_constants.item)
 				
 				constants_combo_box.extend (list_item)

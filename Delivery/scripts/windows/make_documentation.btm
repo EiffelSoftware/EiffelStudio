@@ -7,14 +7,24 @@ iff not isdir %DOCUMENT_DIR then
 	echo %DOCUMENT_DIR is not a directory
 	CANCEL
 endiff
-iff not exist %DOCUMENT_DIR\document.exe then
-	echo Cannot find document.exe
-	CANCEL
-endiff
 iff not isdir %INSTALL_DIR\docs then
 	echo No destination directory for the documentation
 	CANCEL
 endiff
+
+remtrace Compiling document.exe
+cdd %EIFFEL_SRC
+exprt -r %DEFAULT_CVS_TAG -d document Src/tools/document
+cd %EIFFEL_SRC\document
+clean_project
+finalize Ace.ace
+fff
+cleanup_eiffel document.exe
+iff not exist document.exe then
+	remtrace Couldnt generate document.exe
+	CANCEL
+endiff
+move document.exe %DOCUMENT_DIR
 
 remtrace Retrieve the documentation
 cdd %DOCUMENT_DIR

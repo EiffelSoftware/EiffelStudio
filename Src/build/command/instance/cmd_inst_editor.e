@@ -144,6 +144,7 @@ feature
 			!! close_b.make (Current, top_form);
 			!! argument_sw.make (Widget_names.scroll2, form);
 			!! arguments.make (Widget_names.icon_box1, argument_sw);
+			arguments.set_spacing (5);
 			initialize_window_attributes;
 				-- *******************
 				-- Perform attachments 

@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Displays routine text in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_R_TEXT 
 
@@ -8,15 +14,28 @@ inherit
 			name as text_cmd_name,
 			help_message as r_text_help,
 			abbreviation as text_abb
+		redefine
+			process_feature
 		end
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature
+feature {NONE} -- Implementation
 
-	display (feature_i: FEATURE_I; class_c: CLASS_C) is
+	associated_cmd: E_FEATURE_CMD is
+			-- Associated feature command to be executed
+			-- after successfully retrieving the feature_i
+			-- (No associated cmd)
+		do
+			check 
+				not_be_called: false
+			end
+		end;
+
+	process_feature (feature_i: FEATURE_I; class_c: CLASS_C) is
+			-- Process feature `feature_i' defined in `class_c'.
 		local
 			stone: FEATURE_STONE;
 			text: STRING;
@@ -33,4 +52,4 @@ feature
 			end;
 		end;
 
-end
+end -- class EWB_R_TEXT

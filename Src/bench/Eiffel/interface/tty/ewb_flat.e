@@ -1,79 +1,47 @@
+indexing
+
+	description: 
+		"Displays class flat in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_FLAT 
 
 inherit
 
-	EWB_CMD
-		rename
-			name as flat_cmd_name,
-			help_message as flat_help,
-			abbreviation as flat_abb
+	EWB_FILTER
 		redefine
-			loop_execute
+			name, help_message, abbreviation,
+			set_context_attributes
 		end
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature -- Creation
+feature -- Properties
 
-	make (cn, fn: STRING) is
+	name: STRING is
 		do
-			class_name := cn;
-			class_name.to_lower;
-			filter_name := fn
+			Result := flat_cmd_name;
 		end;
 
-	class_name: STRING;
-
-	filter_name: STRING;
-			-- Name of the filter to be used (if any)
-
-feature
-
-	loop_execute is
+	help_message: STRING is
 		do
-			get_class_name;
-			class_name := last_input;
-			filter_name := Void;
-			check_arguments_and_execute;
+			Result := flat_help
 		end;
 
-	execute is
-		local
-			class_c: CLASS_C;
-			ctxt: FORMAT_CONTEXT_B;
-			class_i: CLASS_I;
-			text_filter: TEXT_FILTER
+	abbreviation: CHARACTER is
 		do
-			init_project;
-			if not (error_occurred or project_is_new) then
-				retrieve_project;
-				if not error_occurred then
-					class_i := Universe.unique_class (class_name);
-					if class_i /= Void then
-						class_c := class_i.compiled_class;
-						if class_c = Void then
-							io.error.putstring (class_name);
-							io.error.putstring (" is not in the system%N");
-						else
-							!!ctxt.make (class_c);
-							ctxt.execute;
-							if filter_name /= Void then
-								!!text_filter.make (filter_name);
-								text_filter.process_text (ctxt.text);
-								output_window.put_string (text_filter.image)
-							else
-								output_window.put_string (ctxt.text.image)
-							end
-						end;
-					else
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the universe%N");
-					end
-				end;
-			end;
+			Result := flat_abb
 		end;
 
-end
+feature {NONE} -- Setting
+
+	set_context_attributes (ctxt: FORMAT_CONTEXT_B) is
+			-- Set context attributes `ctxt'.
+		do
+			ctxt.set_is_short;
+		end;
+
+end -- class EWB_FLAT

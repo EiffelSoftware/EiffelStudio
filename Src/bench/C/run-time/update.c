@@ -117,7 +117,7 @@ rt_public void update(char ignore_updt)
 
 #ifdef EIF_WIN32
 	strcat(filename, "\\");
-#elif not defined __VMS
+#elif !(defined __VMS)
 	strcat(filename, "/");
 #endif
 

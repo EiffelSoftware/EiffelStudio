@@ -25,6 +25,10 @@ feature -- Access
 
 feature -- Element change
 
+	update is
+		deferred
+		end
+
 	set_proportion (p:INTEGER) is
 			-- Set the split proportion from 0 to 100.
 		require

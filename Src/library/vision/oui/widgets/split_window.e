@@ -78,6 +78,13 @@ feature -- Access
 	is_vertical: BOOLEAN
 			-- Is the split window a vertical one?
 
+feature -- Sizing policy
+
+	update is
+		do
+			implementation.update
+		end
+
 feature -- Element change
 
 	set_proportion (p:INTEGER) is

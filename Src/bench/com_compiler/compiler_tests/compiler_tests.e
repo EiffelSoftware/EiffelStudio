@@ -134,8 +134,8 @@ feature {NONE} -- Implementation
 				main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("load", "Load Project [*.ace|*.epr filename]", agent on_load_project_selected))	
 			end
 			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("1", "IEIFFEL_PROJECT_INTERFACE", agent on_project_selected))
-			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "Completion Info Test", agent on_completion_info_selected))
-			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "Project Properties Test", agent on_project_properties_selected))
+			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("2", "IEIFFEL_COMPLETION_INFO", agent on_completion_info_selected))
+			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("3", "IEIFFEL_PROJECT_PROPERTIES", agent on_project_properties_selected))
 			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("4", "IEIFFEL_SYSTEM_BROWSER_INTERFACE", agent on_system_browser_selected))
 			
 			main_menu.add_item (create {CONSOLE_MENU_ITEM}.make ("x", "Exit Tester", Void))

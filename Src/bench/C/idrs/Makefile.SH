@@ -35,6 +35,7 @@ DIR = $DIR
 
 AR = ar rc
 CC = $cc
+RUN_TIME = ../run-time
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
 LINT = lint
@@ -75,7 +76,7 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-DPFLAGS = -I$(TOP)
+DPFLAGS = -I$(TOP) -I$(RUN_TIME)
 CFLAGS = $(DPFLAGS)
 
 LSRC = \

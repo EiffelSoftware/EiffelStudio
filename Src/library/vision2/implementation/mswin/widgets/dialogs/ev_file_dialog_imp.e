@@ -112,6 +112,24 @@ feature -- Element change
 			start_directory := clone (a_path)
 			wel_set_initial_directory (a_path)
 		end
+		
+feature {NONE} -- Implementation
+
+	valid_file_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid file_name on the current platform?
+			-- Certain characters are not permissible and this is dependent
+			-- on the current platform. The following characters are not permitted,
+			-- and this list may not be exhaustive:
+			-- Windows - " * / : < > ? \ |
+			-- Linux - & *
+		do
+			if not (a_name.has ('%%') or a_name.has ('*') or a_name.has ('/') or a_name.has (':')
+				or a_name.has ('<') or a_name.has ('>') or a_name.has ('?') or a_name.has ('\')
+				or a_name.has ('|')) then
+				
+				Result := True
+			end
+		end
 
 feature -- Deferred
 

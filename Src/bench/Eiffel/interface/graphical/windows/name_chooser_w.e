@@ -102,12 +102,14 @@ feature {NONE} -- Properties
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is
+		local
+			mp: MOUSE_PTR
 		do
 			popdown;
 			if argument = Current then
 				last_caller.execute (Current)
 			else
-				set_global_cursor (watch_cursor);
+				!! mp.set_watch_cursor;
 				project_tool.set_changed (false);
 				if not project_tool.initialized then
 					discard_licence;

@@ -211,6 +211,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
 						
+						gb_ev_any.set_object (window_object)
+						
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
@@ -294,6 +296,7 @@ feature {NONE} -- Implementation
 						
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
+						gb_ev_any.set_object (object)
 						
 							-- Ensure that the new class exists.
 						check

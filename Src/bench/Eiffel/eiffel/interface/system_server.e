@@ -17,22 +17,23 @@ feature -- Initialization
 	make is
 			-- Create all the servers.
 		do
-			!! classes.make
-			!! server_controler.make
-			!! feat_tbl_server.make
-			!! class_comments_server.make
-			!! body_server.make
-			!! byte_server.make
-			!! ast_server.make
-			!! class_info_server.make
-			!! inv_ast_server.make
-			!! inv_byte_server.make
-			!! depend_server.make
-			!! rep_depend_server.make
-			!! m_feat_tbl_server.make
-			!! m_feature_server.make
-			!! m_rout_id_server.make
-			!! m_desc_server.make
+			create classes.make
+			create unref_classes.make (10)
+			create server_controler.make
+			create feat_tbl_server.make
+			create class_comments_server.make
+			create body_server.make
+			create byte_server.make
+			create ast_server.make
+			create class_info_server.make
+			create inv_ast_server.make
+			create inv_byte_server.make
+			create depend_server.make
+			create rep_depend_server.make
+			create m_feat_tbl_server.make
+			create m_feature_server.make
+			create m_rout_id_server.make
+			create m_desc_server.make
 		end
 
 feature -- Clean up of the temporary server file
@@ -111,6 +112,11 @@ feature -- Access
 	classes: CLASS_C_SERVER;
 			-- Server for compiled classes
 			--| Reminder: This is not a real server
+	
+	unref_classes: ARRAYED_LIST [CLASS_I]
+			-- Place holder to keep a class alive even though class
+			-- is not directly referenced by System. Class has
+			-- been added by one of the compiler tool provider.
 
 	server_controler: SERVER_CONTROL;
 			-- Controler of servers
@@ -156,5 +162,24 @@ feature -- Access
 
 	class_comments_server: CLASS_COMMENTS_SERVER;
 			-- Server for class comments 
+
+invariant
+	classes_not_void: classes /= Void
+	unref_classes_not_void: unref_classes /= Void
+	server_controler_not_void: server_controler /= Void
+	feat_tbl_server_not_void: feat_tbl_server /= Void
+	class_comments_server_not_void: class_comments_server /= Void
+	body_server_not_void: body_server /= Void
+	byte_server_not_void: byte_server /= Void
+	ast_server_not_void: ast_server /= Void
+	class_info_server_not_void: class_info_server /= Void
+	inv_ast_server_not_void: inv_ast_server /= Void
+	inv_byte_server_not_void: inv_byte_server /= Void
+	depend_server_not_void: depend_server /= Void
+	rep_depend_server_not_void: rep_depend_server /= Void
+	m_feat_tbl_server_not_void: m_feat_tbl_server /= Void
+	m_feature_server_not_void: m_feature_server /= Void
+	m_rout_id_server_not_void: m_rout_id_server /= Void
+	m_desc_server_not_void: m_desc_server /= Void
 
 end -- class SYSTEM_SERVER

@@ -8,12 +8,12 @@ class
 	SCROLL_BAR_WINDOW
 
 inherit
-	DEMO_WINDOW
-
-	EV_VERTICAL_BOX
+	EV_HORIZONTAL_SCROLL_BAR
 		redefine
 			make
 		end
+
+	DEMO_WINDOW
 
 creation
 	make
@@ -24,34 +24,23 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 			-- We create the box first without parent because it
 			-- is faster.
-		local
-			cmd: EV_ROUTINE_COMMAND
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			{EV_HORIZONTAL_SCROLL_BAR} Precursor (Void)
+			
+			set_gauge_tabs
+			create scroll_bar_tab.make (Void)
+			tab_list.extend(scroll_bar_tab)
+			create action_window.make(Current,tab_list)
+			make_with_range (par, 0, 100)
+			set_parent(par)
 
-			create t1.make (Current)
-			create s1.make (Current)
-			set_parent (par)
-			create cmd.make (~execute1)
-			s1.add_change_value_command (cmd, Void)
 		end
-
-feature -- Execution features
-
-	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			--Executed when we use the scroll bar
-		local
-	do
-		t1.set_text(s1.value.out)
-	end
-	
 
 
 feature -- Access
 
-	t1: EV_TEXT_FIELD
-	s1: EV_HORIZONTAL_SCROLL_BAR
-	
+	scroll_bar_tab: SCROLL_BAR_TAB
+
 end -- class SCROLL_BAR_WINDOW
 
 --|----------------------------------------------------------------

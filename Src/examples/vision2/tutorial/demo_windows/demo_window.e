@@ -70,6 +70,13 @@ feature -- Basic operation
 			set_widget_tabs
 			tab_list.extend(primitive_tab)
 		end
+		
+	set_gauge_tabs is
+			-- Sets the gauge tabs
+		do
+			set_primitive_tabs
+			tab_list.extend(gauge_tab)
+		end
 
 	tab_list:LINKED_LIST[ANY_TAB]
 
@@ -141,6 +148,14 @@ feature -- Basic operation
 			create Result.make (Void)
 		end
 
+
+	gauge_tab: GAUGE_TAB is
+			-- Creation of the gauge tab
+		once
+			create Result.make (Void)
+		end
+
+
 feature -- Deferred features
 
 	set_parent (par: EV_CONTAINER) is
@@ -149,6 +164,7 @@ feature -- Deferred features
 			-- default_parent.
 		deferred
 		end
+
 		
 end -- class DEMO_WINDOW
 

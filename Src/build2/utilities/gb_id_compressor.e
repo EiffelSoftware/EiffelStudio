@@ -37,7 +37,12 @@ feature -- Basic operation
 			until
 				counter > existing_ids.count
 			loop
-				lookup.extend (counter, existing_ids @ counter)
+						-- If existing id is 0, then it means that
+						-- we are dealing with an old save, and as such there
+						-- were no ids in the system, so ignore.
+				if existing_ids @ counter /= 0  then
+					lookup.extend (counter, existing_ids @ counter)
+				end
 				counter := counter + 1
 			end
 			

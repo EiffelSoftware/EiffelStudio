@@ -28,10 +28,10 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	code_size: INTEGER_8 is
+	code_size: INTEGER is
 			-- Size of current feature.
 		do
-			Result := (internal_data & 0xFC) |>> 2
+			Result := (internal_data & 0x000000FC) |>> 2
 		ensure
 			valid_result: Result >= 0 and Result < 64
 		end
@@ -46,29 +46,29 @@ feature -- Saving
 	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
 			-- Write to stream `m' at position `pos'.
 		local
-			l_data: like internal_data
+			l_data: INTEGER_8
 			l_ptr: POINTER
 		do
-			l_data := internal_data
+			l_data := (internal_data & 0x000000FF).to_integer_8
 			l_ptr := m.item + pos
 			l_ptr.memory_copy ($l_data, 1)
 		end
 		
 feature -- Settings
 
-	set_code_size (a_size: INTEGER_8) is
+	set_code_size (a_size: INTEGER) is
 			-- Set `code_size' to `a_size' of current feature.
 		require
 			valid_size: a_size >= 0 and a_size < 64
 		do
-			internal_data := feature {MD_METHOD_CONSTANTS}.tiny_format | (a_size |<< 2)
+			internal_data := feature {MD_METHOD_CONSTANTS}.tiny_format.to_integer_32 | (a_size |<< 2)
 		ensure
 			code_size_set: code_size = a_size			
 		end
 		
 feature {NONE} -- Implementation
 
-	internal_data: INTEGER_8
+	internal_data: INTEGER
 			-- Hold value of code_size and header type.
 
 end -- class MD_TINY_METHOD_HEADER

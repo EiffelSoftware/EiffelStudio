@@ -29,6 +29,11 @@ inherit
 		end
 
 	PLATFORM_CONSTANTS
+	
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 
 create {EB_WINDOW_MANAGER}
 	make
@@ -1025,7 +1030,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 				create {EV_FILE_SAVE_DIALOG} dd
 			end
 			dd.set_start_directory (Eiffel_project.name)
-			dd.filters.extend (["*.def", "Dynamic Library Definition (*.def)"])
+			set_dialog_filters_and_add_all (dd, <<definition_files_filter>>)
 			dd.ok_actions.extend (agent file_was_chosen (dd))
 			dd.show_modal_to_window (window)
 		end

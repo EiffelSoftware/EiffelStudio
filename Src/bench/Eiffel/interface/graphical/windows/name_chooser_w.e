@@ -49,7 +49,7 @@ feature {NONE}
 				set_global_cursor (watch_cursor);
 				project_tool.set_changed (false);
 				if not project_tool.initialized then
-					discard_license;
+					discard_licence;
 					exit
 				end;
 			end

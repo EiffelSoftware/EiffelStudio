@@ -58,7 +58,7 @@ feature -- Basic operations
 			internal_client_x := grid.internal_client_x
 			internal_client_width := grid.internal_client_width
 			
-			horizontal_buffer_offset := grid.viewport.x_offset
+			horizontal_buffer_offset := grid.viewport_x_offset
 			
 			
 			if grid.column_count > 0 then
@@ -131,7 +131,7 @@ feature -- Basic operations
 			internal_client_y := grid.internal_client_y
 			internal_client_height := grid.internal_client_height
 			
-			vertical_buffer_offset := grid.viewport.y_offset
+			vertical_buffer_offset := grid.viewport_y_offset
 			
 			if not grid.header.is_empty then
 				
@@ -215,7 +215,7 @@ feature -- Basic operations
 			-- `Result' is item at virtual position `an_x', `a_y' relative to the top
 			-- left hand corner of the virtual size.
 		do
-			Result := item_at_position (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport.y_offset)
+			Result := item_at_position (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset)
 		end
 
 	item_at_position (an_x, a_y: INTEGER): EV_GRID_ITEM_I is
@@ -241,7 +241,7 @@ feature -- Basic operations
 			-- Redraw grid contents at coordinates `an_x', `a_y', `a_width', `a_height'
 			-- relative to the upper left corner of the virtual area.
 		do
-			redraw_area_in_drawable_coordinates (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport.y_offset, a_width, a_height)
+			redraw_area_in_drawable_coordinates (an_x - grid.internal_client_x + grid.viewable_x_offset, a_y - grid.internal_client_y + grid.viewport_y_offset, a_width, a_height)
 		end
 
 	redraw_area_in_drawable_coordinates (an_x, a_y, a_width, a_height: INTEGER) is
@@ -345,8 +345,8 @@ feature -- Basic operations
 			internal_client_width := grid.internal_client_width
 			internal_client_height := grid.internal_client_height
 			
-			vertical_buffer_offset := grid.viewport.y_offset
-			horizontal_buffer_offset := grid.viewport.x_offset
+			vertical_buffer_offset := grid.viewport_y_offset
+			horizontal_buffer_offset := grid.viewport_x_offset
 			
 			
 			if grid.row_count > 0 and grid.column_count > 0 then

@@ -51,10 +51,9 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Welcome to the%NEiffel Build Wizard")
-			message.set_text ("This wizard enables you to develop a new Eiffel Vision2 project.%
-				%%N%NEiffel Build will be launched as part of this process, which will%
-				%%Nenable a non trivial interface to be developed.")
+			title.set_text ("Welcome to the%NAdvanced GUI Project Wizard")
+			message.set_text ("This wizard enables you to develop a GUI project interactively%
+				%%Nusing the EiffelVision2 library.%N%N (See also the Advanced Graphics Project Wizard to choose%N from a set of predefined GUI designs.)")
 		end
 	
 	pixmap_icon_location: FILE_NAME is

@@ -118,8 +118,8 @@ feature {NONE} -- Implementation
 				title.set_text ("Interface Modification.")
 				subtitle.set_text ("Perform desired interface modifications and click 'Finish' to exit.")
 			else
-				title.set_text ("Interface Construction.")
-				subtitle.set_text ("Build desired interface for generated system.")
+				title.set_text ("Interface Design.")
+				subtitle.set_text ("Design your GUI.")
 			end
 		end
 

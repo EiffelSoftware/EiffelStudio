@@ -10,30 +10,10 @@ class SAVE_PREF_CMD
 inherit
 	PREFERENCE_COMMAND;
 	EXECUTION_ENVIRONMENT;
-	RESOURCES
+	EB_RESOURCES
 
 creation
 	make
-
-feature -- Properties
-
-	name: STRING is "Save"
-
-feature {NONE} -- Useless
-
-	symbol: PIXMAP is
-		do
-			check
-				do_not_call: false
-			end
-		end;
-
-	dark_symbol: PIXMAP is
-		do
-			check
-				do_not_call: false
-			end
-		end
 
 feature {PREFERENCE_COMMAND} -- Execution
 
@@ -75,21 +55,23 @@ feature {PREFERENCE_COMMAND} -- Execution
 			file: PLAIN_TEXT_FILE;
 			fn: FILE_NAME;
 			msg: STRING;
-			wd: WARNING_D
+			wd: WARNING_D;
+			file_names: RESOURCE_FILES
 		do
+			!! file_names.make ("bench");
 			if install_button.state then
 				if general_button.state then
 					!! fn.make_from_string (file_names.system_general)
 				else
 					!! fn.make_from_string (file_names.system_specific)
 				end
-			elseif home_dir_button.state then
+			elseif home_dir_button /= Void and then home_dir_button.state then
 				if general_button.state then
 					!! fn.make_from_string (file_names.user_general)
 				else
 					!! fn.make_from_string (file_names.user_specific)
 				end
-			elseif defaults_button.state then
+			elseif defaults_button /= Void and then defaults_button.state then
 				if general_button.state then
 					!! fn.make_from_string (file_names.defaults_general)
 				else
@@ -114,7 +96,8 @@ feature {PREFERENCE_COMMAND} -- Execution
 				else
 					!! wd.make ("Warning", dialog);
 					!! msg.make (0);
-					msg.append ("Unappropriate permissions to%Nsafe to that file.");
+					msg.append ("Do not have appropriate permissions to%Nsave to file ");
+					msg.append (fn);
 					wd.set_message (msg);
 					wd.hide_help_button;
 					wd.hide_cancel_button;
@@ -207,7 +190,8 @@ feature {NONE} -- Implementation
 		local
 			frame_1, frame_2: FRAME;
 			box_1, box_2: RADIO_BOX;
-			label: LABEL
+			label: LABEL;
+			resource_files: RESOURCE_FILES
 		do
 			!! frame_1.make ("Directories", form);
 			!! frame_2.make ("File", form);
@@ -224,11 +208,16 @@ feature {NONE} -- Implementation
 			general_button.set_toggle_on;
 			!! platform_button.make ("Platform specific resource file", box_2);
 
+			!! resource_files.make ("bench");
+
 			!! install_button.make ("Install Directory", box_1);
 			install_button.set_toggle_on;
-			!! home_dir_button.make ("Home Directory", box_1);
-			!! defaults_button.make ("$EIF_DEFAULTS Directory", box_1);
-
+			if resource_files.user_specific /= Void then
+				!! home_dir_button.make ("Home Directory", box_1)
+			end;
+			if resource_files.defaults_general /= Void then
+				!! defaults_button.make ("$EIF_DEFAULTS Directory", box_1);
+			end;
 			form.attach_left (label, 1);
 			form.attach_top (label, 1);
 			form.attach_top_widget (label, frame_1, 1);

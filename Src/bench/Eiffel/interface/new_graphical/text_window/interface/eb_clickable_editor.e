@@ -466,7 +466,6 @@ feature {NONE}-- Process Vision2 Events
 			stone: STONE
 			bkstn: BREAKABLE_STONE
 			cur: EDITOR_CURSOR
-			cv_errst: ERROR_STONE
 		do
 			if button = 1 and then pick_n_drop_status /= pnd_drop then
 				{EB_EDITOR} Precursor (x_pos, y_pos, button, a_screen_x, a_screen_y)

@@ -15,6 +15,9 @@ inherit
 	EV_WINDOW_I
 		
 	EV_CONTAINER_IMP
+		undefine
+			initialize_colors
+		end
 	
 creation
 	
@@ -113,6 +116,54 @@ feature  -- Access
                         end
                 end 
 
+feature -- Measurement
+
+	maximum_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		do
+		end	
+	
+	maximum_height: INTEGER is
+			-- Maximum height that application wishes widget
+			-- instance to have
+		do
+		end
+
+feature -- Status report
+
+        is_iconic_state: BOOLEAN is
+                        -- Does application start in iconic state?
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+feature -- Status setting
+
+        set_iconic_state is
+                        -- Set start state of the application to be iconic.
+		do
+			check
+                                not_yet_implemented: False
+                        end	
+                end
+
+        set_normal_state is
+                        -- Set start state of the application to be normal.
+		do
+			check
+                                not_yet_implemented: False
+                        end
+                end
+
+	set_maximize_state is
+			-- Set start state of the application to be
+			-- maximized.
+		do
+		end
+
 feature -- Element change
 
         set_icon_mask (mask: EV_PIXMAP) is
@@ -147,36 +198,7 @@ feature -- Element change
                                 not_yet_implemented: False
                         end
 		end
-	
-feature -- Status report
 
-        is_iconic_state: BOOLEAN is
-                        -- Does application start in iconic state?
-		do
-			check
-                                not_yet_implemented: False
-                        end
-                end
-
-feature -- Status setting
-
-        set_iconic_state is
-                        -- Set start state of the application to be iconic.
-		do
-			check
-                                not_yet_implemented: False
-                        end	
-                end
-
-        set_normal_state is
-                        -- Set start state of the application to be normal.
-		do
-			check
-                                not_yet_implemented: False
-                        end
-                end
-
-feature -- Element change
 
         set_icon_name (new_name: STRING) is
                         -- Set `icon_name' to `new_name'.
@@ -185,7 +207,20 @@ feature -- Element change
                                 not_yet_implemented: False
                         end
                 end
-end
+
+feature -- Resizing
+
+	set_maximum_width (max_width: INTEGER) is
+			-- Set `maximum_width' to `max_width'.
+		do
+		end 
+
+	set_maximum_height (max_height: INTEGER) is
+			-- Set `maximum_height' to `max_height'.
+		do
+		end
+
+end -- class EV_WINDOW_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

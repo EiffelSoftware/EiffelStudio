@@ -49,7 +49,7 @@ feature -- Access
 			create window
 			wel_window ?= window.implementation
 			open_clipboard (wel_window)
-			if clipboard_open and then is_clipboard_format_available (Cf_text) then
+			if clipboard_open and then is_clipboard_format_available (feature {WEL_CLIPBOARD_CONSTANTS}.Cf_text) then
 				retrieve_clipboard_text
 				Result := last_string
 				Result.prune_all ('%R')

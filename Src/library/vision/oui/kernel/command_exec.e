@@ -11,6 +11,8 @@ inherit
 	EVENT_HDL
 		export
 			{NONE} all
+		redefine
+			is_equal
 		end
 
 creation
@@ -44,11 +46,18 @@ feature
 			end;
 			command_clone.set_context_data (context_data);
 			command_clone.execute (argument)
-		end 
+		end;
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is Current equal to `other' ?
+		do
+			Result := command = other.command and then
+				equal (argument, other.argument)
+		end;
 
 invariant
 
-	not (command = Void)
+	valid_command: command /= Void
 
 end 
 

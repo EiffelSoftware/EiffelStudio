@@ -1,28 +1,27 @@
 indexing
 
 	description: 
-		"EiffelVision menu. Menu contains menu items several menu items and shows them when the menu is opened."
+		"EiffelVision menu. Menu contains several menu items and shows them when the menu is opened."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_MENU
+class
+	EV_MENU
 
 inherit
-
 	EV_MENU_ITEM_CONTAINER 
 		redefine
 			implementation
 		end
 
 creation
-	
 	make_with_text
 	
 feature {NONE} -- Initialization
 	
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; label: STRING) is         
+	make_with_text (par: EV_MENU_CONTAINER; label: STRING) is         
 			-- Create a menu widget with `par' as
 			-- parent
 		do

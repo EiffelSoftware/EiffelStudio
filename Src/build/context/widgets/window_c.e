@@ -19,8 +19,8 @@ inherit
 		redefine
 			create_context, cut, undo_cut, position_initialization,
 			is_in_a_group, root, set_position,
-			intermediate_name, is_bulletin, full_name,
-			deleted, remove_yourself, group_name,
+			intermediate_name, is_bulletin, is_selectionable,
+			full_name, deleted, remove_yourself, group_name,
 			set_x_y, set_size, set_visual_name,
 			reset_modified_flags,
 			raise, x, y, set_real_x_y, is_window,
@@ -100,9 +100,11 @@ feature -- Setting values
 			if flag then
 					-- The current size must be saved
 				size_modified := True
-				widget_forbid_resize
-			else
-				widget_allow_resize
+	--| Since the execution mecanism is changed, it's no more interesting
+	--| to bloc the resize
+--				widget_forbid_resize
+--			else
+--				widget_allow_resize
 			end
 		end
 
@@ -126,13 +128,13 @@ feature {NONE} -- Widget access
 		deferred
 		end
 
-	widget_forbid_resize is
-		deferred
-		end
-
-	widget_allow_resize is
-		deferred
-		end
+-- 	widget_forbid_resize is
+-- 		deferred
+-- 		end
+-- 
+-- 	widget_allow_resize is
+-- 		deferred
+-- 		end
 feature 
 
 	title_label: STRING is
@@ -174,6 +176,11 @@ feature
 	is_bulletin: BOOLEAN is
 		do
 			Result := True
+		end
+
+	is_selectionable: BOOLEAN is
+		do
+			Result := False
 		end
 
 	is_perm_window: BOOLEAN is

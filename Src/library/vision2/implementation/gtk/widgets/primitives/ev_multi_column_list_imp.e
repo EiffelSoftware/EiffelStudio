@@ -912,11 +912,11 @@ feature -- Implementation
 	post_drop_steps is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if pnd_row_imp /= Void then
+			if pnd_row_imp /= Void and not is_destroyed then
 				if pnd_row_imp.mode_is_pick_and_drop then
 					signal_emit_stop (c_object, "button-press-event")
 				end
-			elseif mode_is_pick_and_drop then
+			elseif mode_is_pick_and_drop and not is_destroyed then
 					signal_emit_stop (c_object, "button-press-event")
 			end
 

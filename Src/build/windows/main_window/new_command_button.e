@@ -47,7 +47,9 @@ feature {NONE} -- Implementation
 			cmd.set_eiffel_text (cmd.template)
 			cmd.overwrite_text
 			command_catalog.add (cmd)
-			parent_command_editor.set_command_tool_command (cmd)
+			if parent_command_editor /= Void then
+				parent_command_editor.set_command_tool_command (cmd)
+			end
 		end
 
 	parent_command_editor: COMMAND_EDITOR

@@ -39,6 +39,7 @@ eif_integer_64_display='PRId64'
 eif_natural_64_display='PRIu64'
 eif_pointer_display='"lX"'
 eif_integer_64_constant='INT64_C(x)'
+eif_natural_64_constant='UINT64_C(x)'
 d_uint64_to_real='define'
 
 #File system

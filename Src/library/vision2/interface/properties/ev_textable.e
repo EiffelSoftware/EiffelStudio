@@ -23,7 +23,6 @@ feature {NONE} -- Initialization
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: not a_text.is_empty
-			default_create_not_already_called: not default_create_called
 		do
 			default_create
 			set_text (a_text)

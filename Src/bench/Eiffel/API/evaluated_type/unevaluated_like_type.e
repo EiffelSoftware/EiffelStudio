@@ -14,9 +14,10 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_current
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_string: like dump) is
 			-- Initialize `anchor' to `a_string'
@@ -26,6 +27,15 @@ feature -- Initialization
 			anchor := a_string
 		ensure
 			set: anchor = a_string
+		end
+
+	make_current is
+			-- Initialize `anchor' to `Current'.
+		do
+			anchor := Like_current
+			is_like_current := True
+		ensure
+			is_like_current_set: is_like_current
 		end
 
 feature -- Properties
@@ -114,10 +124,13 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	Like_current: STRING is "Current"
+			-- String constant for `Current'.
+	
 invariant
 
 	non_void_anchor: anchor /= Void
 	is_like_current_implies_current_anchor: is_like_current
-				implies anchor.is_equal ("Current")
+				implies anchor.is_equal (Like_current)
 
 end -- class UNEVALUATED_LIKE_TYPE

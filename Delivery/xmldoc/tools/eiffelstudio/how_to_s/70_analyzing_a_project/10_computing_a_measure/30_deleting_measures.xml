@@ -27,7 +27,7 @@
 			<item>Click on the 
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml#delete</url>
-					<label>delete</label>
+					<label>delete<image><url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url></image></label>
 				</link>
 				<link>
 					<url>30_deleting_measures.xml</url>
@@ -44,10 +44,10 @@
 				<url>10_calculating_a_measure.xml</url>
 				<label>Calculating measures</label>
 			</link>
+			<line_break/>
 			<link>
 				<url>20_saving_a_measure.xml</url>
 				<label>saving measures</label>
 			</link>
-			<line_break/>
 		</seealso>
 	</paragraph></document>

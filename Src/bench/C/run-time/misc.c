@@ -374,7 +374,6 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	union overhead *zone;
 	char *new_area, *ref;
 	long elem_size;			/* Size of each item within area */
-	void *(*init)(EIF_REFERENCE, EIF_REFERENCE); /* Initialization routine for expanded objects */
 	int dtype;				/* Dynamic type of the first expanded object */
 	int dftype;				/* Full dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
@@ -439,49 +438,23 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	ref = (new_area + j * elem_size) + OVERHEAD;	/* Needed for stupid gcc */
 	dftype = Dftype(ref);					/* Gcc won't let me expand that!! */
 	dtype = Dtype(ref);					/* Gcc won't let me expand that!! */
-	init = (void *(*)(EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
 
 	RT_GC_PROTECT(new_area);
 
 		/* Initialize expanded objects from 0 to (j - 1) */
-	for (
-		n = 0, ref = new_area + OVERHEAD;
-		n < j;
-		n++, ref += elem_size
-	) {
-		zone = HEADER(ref);
-		zone->ov_size = ref - new_area;		/* For GC: offset within area */
-		zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
-		if (init) {
-			RT_GC_PROTECT(ref);
-			(init)(ref, ref);						/* Call initialization routine if any*/
-			RT_GC_WEAN(ref);
-		}
-	}
+	sp_init(new_area, dftype, 0, j - 1);
 
-	/* Update offsets for k objects starting at j */
+		/* Update expanded offsets for k objects starting at j */
 	for (
 		n = j + k - 1, ref = new_area + (n * elem_size);
 		n >= j;
-		n--, ref -= elem_size
-	)
+		n--, ref -= elem_size)
+	{
 		((union overhead *) ref)->ov_size = ref - new_area + OVERHEAD;
-	
-	/* Intialize remaining objects from (j + k) to (i - 1) */
-	for (
-		n = j + k, ref = new_area + (n * elem_size) + OVERHEAD;
-		n < i;
-		n++, ref += elem_size
-	) {
-		zone = HEADER(ref);
-		zone->ov_size = ref - new_area;		/* For GC: offset within area */
-		zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
-		if (init) {
-			RT_GC_PROTECT(ref);
-			(init)(ref, ref);						/* Call initialization routine if any */
-			RT_GC_WEAN(ref);
-		}
 	}
+	
+		/* Intialize remaining objects from (j + k) to (i - 1) */
+	sp_init(new_area, dftype, j + k, i - 1);
 
 	RT_GC_WEAN(new_area);
 	return new_area;

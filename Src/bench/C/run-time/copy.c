@@ -732,12 +732,9 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	 * composite.
 	 */
 
-	EIF_GET_CONTEXT
-
 	union overhead *zone;			/* Malloc information zone */
-	void  *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* Initialization routine to be called */
-	EIF_INTEGER i, count, elem_size;
-	int dtype, dftype;
+	EIF_INTEGER count, elem_size;
+	int dftype;
 	EIF_REFERENCE ref;
 
 	zone = HEADER(spobj);
@@ -749,20 +746,9 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 			/* case of a special object of expanded structures */
 		ref = spobj + OVERHEAD;
 		dftype = HEADER(ref)->ov_flags & EO_TYPE;
-		dtype = Deif_bid(dftype);
 		memset (spobj, 0, count * elem_size);
 			/* Initialize new expanded elements, if any */
-		init = (void *(*)(EIF_REFERENCE, EIF_REFERENCE)) (XCreate(dtype));
-		for (i = 0; i < count; i++, ref += elem_size) {
-			zone = HEADER(ref);
-			zone->ov_size = ref - spobj;	/* For GC */
-			zone->ov_flags = dftype;		/* Expanded type */
-			if (init) {
-				RT_GC_PROTECT(ref);
-				(init)(ref, ref);			/* Call initialization routine if any */
-				RT_GC_WEAN(ref);
-			}
-		}
+		sp_init (spobj, dftype, 0, count - 1);
 	} else
 		memset (spobj, 0, count * elem_size);
 }

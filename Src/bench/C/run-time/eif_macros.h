@@ -93,10 +93,10 @@ extern "C" {
 #define RTMB(x,y)			makebit(x,y)
 #define RTXB(x,y)			b_copy(x,y)
 #define RTEB(x,y)			b_equal(x,y)
+#define RTLX(x)				cr_exp(x)
 #ifdef WORKBENCH
 RT_LNK int fcount;
 #define RTUD(x)				((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
-#define RTLX(x)				cr_exp(x)
 #else
 #define RTUD(x)				(x) /* For convenience */
 #endif

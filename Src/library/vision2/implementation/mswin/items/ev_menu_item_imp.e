@@ -177,6 +177,11 @@ feature {NONE} -- Implementation
 			-- Set `text' to `a_txt'. See `wel_text'.
 		do
 			real_text := clone (a_text)
+			
+				-- Force the menu bar to be recomputed.
+			if parent_imp /= Void then
+				parent_imp.rebuild_control
+			end
 		end
 
 	text_length: INTEGER is
@@ -209,6 +214,9 @@ feature {NONE} -- Implementation
 				private_pixmap := Void
 				if parent_imp /= Void then
 					parent_imp.internal_replace (Current, parent_imp.index_of (interface, 1))
+		
+						-- Force the menu bar to be recomputed.
+					parent_imp.rebuild_control
 				end
 			end
 		end
@@ -219,6 +227,9 @@ feature {NONE} -- Implementation
 			Precursor (a_pixmap)
 			if parent_imp /= Void then
 				parent_imp.internal_replace (Current, parent_imp.index_of (interface, 1))
+
+						-- Force the menu bar to be recomputed.
+				parent_imp.rebuild_control
 			end
 		end
 		
@@ -782,9 +793,10 @@ feature {NONE} -- Implementation
 			pix_imp ?= a_pixmap_imp_state
 			if pix_imp /= Void then
 				Result := pix_imp.icon
-				Result.increment_reference
 			end
-			if Result = Void then
+			if Result /= Void then
+				Result.increment_reference
+			else
 				Result := a_pixmap_imp_state.build_icon
 				Result.enable_reference_tracking
 			end

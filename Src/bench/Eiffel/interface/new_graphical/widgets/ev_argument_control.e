@@ -170,7 +170,6 @@ feature -- Storage
 			-- Store the current arguments to their corresponding files and set current 
 			-- arguments for system execution.
 		do
-			io.putint (mode)
 			if Workbench.system_defined then
       			Lace.argument_list.put_front (current_argument.text)
            	end

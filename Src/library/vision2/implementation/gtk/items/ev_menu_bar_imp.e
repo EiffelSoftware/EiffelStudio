@@ -46,7 +46,9 @@ feature {EV_WINDOW_IMP} -- Implementation
 	parent: EV_WINDOW is
 			-- Parent window of Current.
 		do
-			Result := parent_imp.interface
+			if parent_imp /= Void then
+				Result := parent_imp.interface
+			end
 		end
 	
 	remove_parent_window is

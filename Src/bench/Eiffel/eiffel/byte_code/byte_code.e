@@ -220,10 +220,15 @@ feature
 	feature_origin: STRING is
 			-- Value of the dynamic type where the feature is written
 		do
-			!! Result.make (15);
-			Result.append ("RTUD(");
-			Result.append (context.class_type.id.generated_id);
-			Result.extend (')')
+			if Context.workbench_mode then
+				!! Result.make (15);
+				Result.append ("RTUD(");
+				Result.append (context.class_type.id.generated_id);
+				Result.extend (')')
+			else
+				!! Result.make (5);
+				Result.append_integer (context.class_type.type_id - 1);
+			end
 		end;
 
 	generate_arguments is

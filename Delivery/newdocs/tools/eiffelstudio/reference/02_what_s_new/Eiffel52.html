@@ -10,7 +10,6 @@
 		<H1>What's new in EiffelStudio 5.2</H1>
 		<h2>Graphical environment</h2>
         <ul>
-          <li>More improvements in usability and bug fixes.</li>
           <li>Added a status bar, which gives a lot of information, such as the
             state of the compilation or the name of the current project.</li>
           <li>Clicking feature clauses in the feature tree now centers the
@@ -24,6 +23,7 @@
             classes that have been edited in EiffelStudio, skipping the
             sometimes tedious degree 6, that looks for modified classes.</li>
           <li>Control picking now has a configurable effect.</li>
+          <li>More improvements in usability and bug fixes.</li>
         </ul>
 		<h2>Compiler</h2>
         <ul>
@@ -33,6 +33,9 @@
         </ul>
 		<h2>Debugger</h2>
         <ul>
+          <li>Right-clicking on one of the run buttons will popup a dialog 
+          enabling you to choose the command line argument (it is a shortcut for 
+          `Project Settings'-&gt;Debug tab).</li>
           <li>Expressions can now be dynamically evaluated in the debugger. (<a href="../40_debugger/50_expression_evaluation/index.html">info</a>)</li>
           <li>Conditional breakpoints. (<a href="../40_debugger/20_breakpoints/index.html">info</a>)</li>
           <li>Classes can now define <span  class="efeature">debug_output</span> a feature inherited from 
@@ -45,6 +48,9 @@
         <h3>EiffelBase</h3>
         <ul>
           <li>Improved speed of search operations in <span  class="eclass">ARRAYED_LIST</span> and <span  class="eclass">HASH_TABLE</span>.</li>
+          <li>Reduced number of exported features in <span  class="eclass">TUPLE</span>.</li>
+          <li>Updated <span  class="eclass">INTERNAL</span> and <span  class="eclass">TUPLE</span> to accept <span  class="eclass">INTEGER_XX</span> 
+          based queries/commands.</li>
           <li><span  class="eclass">STRING</span> changes:</li>
           <ul>
           <li>Fixed <span  class="efeature">is_integer</span> to return False for strings 
@@ -73,7 +79,7 @@
         </ul>
         <h3>EiffelTime</h3>
         <ul>
-          <li>EiffelTime has been rewritten so that no additional C libraries is 
+          <li>Rewritten so that no additional C libraries is 
           needed. Therefore you have to update your project configuration files 
           to reflect this change, i.e. removing the include directory and the 
           object file of the old EiffelTime library.</li>
@@ -86,7 +92,7 @@
         </ul>
         <h3>WEL</h3>
         <ul>
-          <li>Changed type of non-exported feature `internal_data' from 
+          <li>Changed type of non-exported feature `internal_data' of 
           <span  class="eclass">WEL_WINDOW</span> from <span  class="eclass">INTEGER</span> to <span  class="eclass">POINTER</span>.</li>
           <li>Fixed a GDI memory leak when creating/releasing instances of 
           descendant of <span  class="eclass">WEL_CONTROL</span>.</li>

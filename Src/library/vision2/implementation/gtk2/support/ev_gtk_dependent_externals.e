@@ -8,6 +8,21 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_resize (a_window: POINTER; a_width: INTEGER; a_height: INTEGER) is
+		external
+			"C signature (GtkWindow*, gint, gint) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_set_resizable (a_window: POINTER; a_resize: BOOLEAN) is
+		external
+			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_get_resizable (a_window: POINTER): BOOLEAN is
+		external
+			"C signature (GtkWindow*): gboolean use <gtk/gtk.h>"
+		end
+
 	frozen gtk_tree_path_list_free_contents (a_list: POINTER) is
 			-- Free tree path items contained within `a_list'
 		external

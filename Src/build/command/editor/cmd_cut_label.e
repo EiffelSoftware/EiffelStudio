@@ -11,7 +11,7 @@ inherit
 
 	CMD_CUT
 		redefine
-			element, undo, update
+			element, undo, redo, update
 		end
 	
 feature {NONE}
@@ -46,7 +46,22 @@ feature {NONE}
 				end
 			end
 			update
-		end -- undo
+				--| Add displayed label if needed.
+			if edited_command.command_editor.shown then
+				edited_command.command_editor.labels.extend (element)
+			end
+		end
+
+	redo is
+		do
+			{CMD_CUT} Precursor
+				--| Remove displayed label if needed.
+			if edited_command.command_editor.shown then
+				edited_command.command_editor.labels.finish
+				edited_command.command_editor.labels.remove
+			end
+		end
+
 
 	update is
 		do

@@ -96,13 +96,6 @@ feature -- Access
 			bridge_ok: Result = implementation.status_bar
 		end
 
-	blocking_window: EV_WINDOW is
-			-- Window that `Current' is a transient for.
-		do
-			Result := implementation.blocking_window
-		ensure
-			bridge_ok: Result = implementation.blocking_window
-		end
 feature -- Status report
 
 	has (v: like item): BOOLEAN is
@@ -129,14 +122,6 @@ feature -- Status report
 		end
 
 feature -- Status setting
-
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		do
-			implementation.set_blocking_window (a_window)
-		ensure
-			assigned: blocking_window = a_window
-		end
 
 	enable_modal is
 			-- Set `is_modal' to `True'.
@@ -387,6 +372,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/05/03 00:24:57  pichery
+--| Removed useless blocking windows.
+--|
 --| Revision 1.54  2000/04/28 21:43:32  brendel
 --| Replaced EV_STATUS_BAR with EV_WIDGET.
 --|

@@ -208,6 +208,9 @@ feature -- Basic operations
 				end
 				item_imp.set_internal_children (Void)
 			end
+
+			-- Then, we redraw the tree
+			invalidate
 		end
 
 	general_remove_item (item_imp: EV_TREE_ITEM_IMP) is
@@ -231,6 +234,9 @@ feature -- Basic operations
 			end
 			ev_children.remove (item_imp.h_item)
 			delete_item (item_imp)
+
+			-- Then, we redraw the tree
+			invalidate
 		end
 
 	get_children (item_imp: EV_TREE_ITEM_IMP): ARRAYED_LIST [EV_TREE_ITEM_IMP] is

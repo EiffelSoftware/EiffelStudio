@@ -606,6 +606,22 @@ feature -- Status setting
 		ensure
 			subrow_indent_set: subrow_indent = a_subrow_indent
 		end
+		
+	set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap: EV_PIXMAP) is
+			-- Assign `an_expand_node_pixmap' to `expand_node_pixmap' and `a_collapse_node_pixmap'
+			-- to `collapse_node_pixmap'. These pixmaps are used in rows containing subrows for
+			-- expanding/collapsing the row.
+		require
+			pixmaps_not_void: an_expand_node_pixmap /= Void and a_collapse_node_pixmap /= Void
+			pixmaps_dimensions_identical: an_expand_node_pixmap.width = a_collapse_node_pixmap.width and
+				an_expand_node_pixmap.height = a_collapse_node_pixmap.height
+		do
+			expand_node_pixmap := an_expand_node_pixmap
+			collapse_node_pixmap := a_collapse_node_pixmap
+			redraw_client_area
+		ensure
+			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
+		end
 
 feature -- Status report
 
@@ -1070,41 +1086,49 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_DRAWABLE_GRID_ITE
 			-- subrow. For example, to determine the height available for the node image
 			-- within a subrow, subtract 2 * tree_node_spacing from the `row_height'.
 			
-	expand_pixmap: EV_PIXMAP is
-			-- A pixmap representing the image used for the expand pixmap.
+	expand_node_pixmap: EV_PIXMAP
+		-- Pixmap used within `Current' to indicate that a tree node may be expanded.
+		
+	collapse_node_pixmap: EV_PIXMAP
+		-- Pixmap used within `Current' to indicate that a tree node may be collapsed.
+			
+	build_expand_node_pixmap is
+			-- Construct the default `expand_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
-		once
+		do
 			start_offset := 2
 			end_offset := tree_node_button_dimension - start_offset - 1
 			middle_offset := tree_node_button_dimension // 2
-			create Result
-			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
-			Result.set_foreground_color (white)
-			Result.clear
-			Result.set_foreground_color (black)
-			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
-			Result.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
+			create expand_node_pixmap
+			expand_node_pixmap.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			expand_node_pixmap.set_foreground_color (white)
+			expand_node_pixmap.clear
+			expand_node_pixmap.set_foreground_color (black)
+			expand_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			expand_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			expand_node_pixmap.draw_segment (middle_offset, start_offset, middle_offset, end_offset)
 		ensure
-			result_not_void: Result /= Void
+			expand_node_pixmap_not_void: expand_node_pixmap /= Void
 		end
 		
-	collapse_pixmap: EV_PIXMAP is
-			-- A pixmap representing the image used for the collapse pixmap.
+	build_collapse_node_pixmap is
+			-- Construct the default `collapse_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
 		once
 			start_offset := 2
 			end_offset := tree_node_button_dimension - start_offset - 1
 			middle_offset := tree_node_button_dimension // 2
-			create Result
-			Result.set_size (tree_node_button_dimension, tree_node_button_dimension)
-			Result.set_foreground_color (white)
-			Result.clear
-			Result.set_foreground_color (black)
-			Result.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
-			Result.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+			create collapse_node_pixmap
+			collapse_node_pixmap.set_size (tree_node_button_dimension, tree_node_button_dimension)
+			collapse_node_pixmap.set_foreground_color (white)
+			collapse_node_pixmap.clear
+			collapse_node_pixmap.set_foreground_color (black)
+			collapse_node_pixmap.draw_rectangle (0, 0, tree_node_button_dimension, tree_node_button_dimension)
+			collapse_node_pixmap.draw_segment (start_offset, middle_offset, end_offset, middle_offset)
+		ensure
+			collapse_node_pixmap_not_void: collapse_node_pixmap /= Void	
 		end
 		
 	tree_node_button_dimension: INTEGER is 9	
@@ -1292,6 +1316,8 @@ feature {NONE} -- Drawing implementation
 			row_height := 16
 			is_row_height_fixed := True
 			subrow_indent := 0
+			build_expand_node_pixmap
+			build_collapse_node_pixmap
 			
 			create internal_row_data.make
 			create columns.make

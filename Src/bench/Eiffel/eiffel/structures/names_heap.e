@@ -189,7 +189,7 @@ feature {NONE} -- Implementation: access
 			put ("default_rescue") check found_item = default_rescue_name_id end
 			put ("dispose") check found_item = dispose_name_id end
 			put ("_invariant") check found_item = internal_invariant_name_id end
-			put ("void") check found_item = void_name_id end
+			put ("internal_argument_array") check found_item = internal_argument_array_name_id end
 			put ("EIF_REFERENCE") check found_item = eif_reference_name_id end
 			put ("EIF_INTEGER_8") check found_item = eif_integer_8_name_id end
 			put ("EIF_INTEGER_16") check found_item = eif_integer_16_name_id end
@@ -277,7 +277,8 @@ feature {NONE} -- Implementation: access
 			put ("internal_hash_code") check found_item = internal_hash_code_name_id end
 			put ("base_address") check found_item = base_address_name_id end
 			put ("item_address") check found_item = item_address_name_id end
-			put ("internal_argument_array") check found_item = internal_argument_array_name_id end
+			put ("to_double") check found_item = to_double_name_id end
+			put ("to_real") check found_item = to_real_name_id end
 		end
 		
 invariant

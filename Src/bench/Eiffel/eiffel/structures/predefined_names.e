@@ -25,7 +25,7 @@ feature -- Constants
 	default_rescue_name_id: INTEGER is 15
 	dispose_name_id: INTEGER is 16
 	internal_invariant_name_id: INTEGER is 17
-	void_name_id: INTEGER is 18
+	internal_argument_array_name_id: INTEGER is 18
 	eif_reference_name_id: INTEGER is 19
 	eif_integer_8_name_id: INTEGER is 20
 	eif_integer_16_name_id: INTEGER is 21
@@ -113,7 +113,8 @@ feature -- Constants
 	internal_hash_code_name_id: INTEGER is 103
 	base_address_name_id: INTEGER is 104
 	item_address_name_id: INTEGER is 105
-	internal_argument_array_name_id: INTEGER is 106
+	to_double_name_id: INTEGER is 106
+	to_real_name_id: INTEGER is 107
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

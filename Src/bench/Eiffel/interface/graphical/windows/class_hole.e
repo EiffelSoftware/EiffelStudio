@@ -14,7 +14,7 @@ inherit
 		redefine
 			symbol, full_symbol, icon_symbol,
 			name, stone_type, process_class, process_feature,
-			compatible, process_classi, receive
+			compatible, process_classi, receive, menu_name, accelerator
 		end
 
 creation
@@ -26,19 +26,19 @@ feature -- Properties
 	symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Class
+			Result := Pixmaps.bm_Class
 		end;
 
 	full_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Class_dot
+			Result := Pixmaps.bm_Class_dot
 		end;
 
 	icon_symbol: PIXMAP is
 			-- Icon for the class tool
 		once
-			Result := bm_Class_icon
+			Result := Pixmaps.bm_Class_icon
 		end;
 
 	stone_type: INTEGER is
@@ -48,7 +48,18 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := l_New_class
+			Result := Interface_names.f_New_class
+		end;
+
+	menu_name: STRING is
+			-- Name used in menu entry
+		do
+			Result := Interface_names.m_New_class
+		end;
+
+	accelerator: STRING is
+			-- Accelerator action for menu entry
+		do
 		end;
 
 feature -- Access
@@ -92,7 +103,7 @@ feature -- Update
 		do
 			if not st.is_valid then
 				warner (Project_tool).gotcha_call
-								(w_Feature_not_compiled);
+								(Warning_messages.w_Feature_not_compiled);
 			else
 				create_class_tool (st)
 			end

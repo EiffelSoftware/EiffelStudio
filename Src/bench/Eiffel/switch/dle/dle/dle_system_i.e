@@ -1048,9 +1048,9 @@ end;
 			f: INDENT_FILE
 		do
 			if not byte_context.final_mode then
-				f := Rout_info_file;
-				f.open_write;
-				f.putstring (Rout_info_table.dle_C_string);
+				f := Rout_info_file
+				f.open_write
+				Rout_info_table.generate_dle (f)
 				f.close
 			end
 		end;

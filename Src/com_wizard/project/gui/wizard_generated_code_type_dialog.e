@@ -79,8 +79,7 @@ feature -- Behavior
 	on_ok is
 			-- Process Next button activation.
 		do
-			shared_wizard_environment.set_client (client_radio.checked)
-			shared_wizard_environment.set_server (server_radio.checked)
+			shared_wizard_environment.set_client_server (client_radio.checked, server_radio.checked)
 			shared_wizard_environment.set_in_process_server (in_process_check.checked)
 			shared_wizard_environment.set_out_of_process_server (out_of_process_check.checked)
 			Shared_wizard_environment.set_compile_eiffel (not eiffel_code_compilation_check.checked)			

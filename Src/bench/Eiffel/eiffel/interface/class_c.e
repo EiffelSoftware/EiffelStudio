@@ -745,7 +745,6 @@ feature -- Expanded rues validity
 		local
 			constraint_type: TYPE_A
 			l_formals: like generic_features
-			l_formal: FORMAL_A
 			l_cursor: CURSOR
 		do
 debug ("CHECK_EXPANDED")

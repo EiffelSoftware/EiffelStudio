@@ -7,7 +7,6 @@ inherit
 	DEBUG_EXT;
 	IPC_SHARED;
 	SHARED_DEBUG;
-	SHARED_WORKBENCH;
 	EXEC_MODES
 
 creation
@@ -89,10 +88,11 @@ feature
 		local
 			bpts: BREAK_LIST;
 			bp: BREAKPOINT;
-			routine: E_FEATURE
+			routine: E_FEATURE;
+			status: APPLICATION_STATUS
 		do
 			Debug_info.remove_all_breakpoints;
-			inspect Run_info.execution_mode
+			inspect Application.execution_mode
 			when No_stop_points then
 					-- Do not send new stop points.
 			when User_stop_points then
@@ -104,10 +104,11 @@ feature
 			when Routine_breakables then
 					-- Execution with only breakable points of current 
 					-- routine set.
-				if Run_info.is_running then
+				status := Application.status;
+				if status /= Void then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.e_feature;
+					routine := status.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -119,10 +120,11 @@ feature
 					-- Execution with breakable points of current routine
 					-- and user-defined stop points set.
 				Debug_info.set_all_breakpoints;
-				if Run_info.is_running then
+				status := Application.status;
+				if status /= Void then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.e_feature;
+					routine := status.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -133,10 +135,11 @@ feature
 			when Routine_stop_points then
 					-- Execution with only user-defined stop points of
 					-- current routine set.
-				if Run_info.is_running then
+				status := Application.status;
+				if status /= Void then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.e_feature;
+					routine := status.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -147,10 +150,11 @@ feature
 			when Last_routine_breakable then
 					-- Execution with only the last breakable point of
 					-- current routine set.
-				if Run_info.is_running then
+				status := Application.status;
+				if status /= Void then
 						-- If the application is not running, there is no 
 						-- current routine ...
-					routine := Run_info.e_feature;
+					routine := status.e_feature;
 					if 
 						routine /= Void and then 
 						Debug_info.has_feature (routine) 
@@ -161,11 +165,14 @@ feature
 			when Out_of_routine then
 					-- Execution with all breakable points set except
 					-- those of the current routine.
-				routine := Run_info.e_feature;
-				if Run_info.is_running and then routine /= Void then 
-					Debug_info.set_out_of_routine_breakables (routine)
-				else
-					Debug_info.set_all_breakables
+				status := Application.status;
+				if status /= Void then
+					routine := status.e_feature;
+					if routine /= Void then 
+						Debug_info.set_out_of_routine_breakables (routine)
+					else
+						Debug_info.set_all_breakables
+					end
 				end
 			else
 					-- Unknown execution mode. Do nothing.
@@ -204,16 +211,9 @@ feature
 			-- Send Current request to ised, which may 
 			-- relay it to the application.
 		do
-			send_simple_request (request_code)
+			send_rqst_0 (request_code)
 		end;
 
 	request_code: INTEGER;
-
-feature {NONE} -- External features
-
-	send_simple_request (i: INTEGER) is
-		external
-			"C"
-		end
 
 end

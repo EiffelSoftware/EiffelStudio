@@ -40,6 +40,19 @@ feature -- Attributes
 	value: STRING;
 			-- Integer value
 
+	is_once_string: BOOLEAN
+			-- Is current preceded by `once' keyword?
+
+feature -- Settings
+
+	set_is_once_string (v: like is_once_string) is
+			-- Set `is_once_string' with `v'.
+		do
+			is_once_string := v
+		ensure
+			is_once_string_set: is_once_string = v
+		end
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

@@ -36,6 +36,12 @@
 
 #include <stdio.h>
 
+#ifdef EIF_ASSERTIONS
+#if defined(EIF_WIN32) && defined (_DEBUG)
+#include <crtdbg.h>
+#endif
+#endif
+
 #define dprintf(n)		if (DEBUG & (n)) printf
 
 rt_public void epop(register struct stack *stk, register int nb_items);					/* Pops values off a stack */
@@ -320,6 +326,23 @@ rt_shared void initstk(void)
 
 	EIF_GET_CONTEXT
 	char **top;
+
+#ifdef EIF_ASSERTIONS
+#if defined(EIF_WIN32) && defined(_DEBUG)
+	int tmpDbgFlag = 0;
+	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
+	_CrtSetReportMode(_CRT_ERROR, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ERROR, _CRTDBG_FILE_STDOUT);
+	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDOUT);
+
+	tmpDbgFlag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	tmpDbgFlag |= _CRTDBG_DELAY_FREE_MEM_DF;
+	tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
+	_CrtSetDbgFlag(tmpDbgFlag);
+#endif
+#endif
 
 	top = st_alloc(&loc_set, STACK_CHUNK);
 	if (top != (char **) 0)

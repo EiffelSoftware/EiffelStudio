@@ -37,7 +37,8 @@ feature -- Status setting
    	set_default_minimum_size is
    			-- Platform dependant initializations.
    		do
-			internal_set_minimum_width (user_scroll_bar_width)
+			internal_set_minimum_width ((create {WEL_SYSTEM_METRICS})
+				.horizontal_scroll_bar_arrow_height)
  		end
 
 feature {EV_ANY_I} -- Implementation
@@ -67,6 +68,9 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/03/07 00:10:06  brendel
+--| Implemented minimum size using WEL_SYSTEM_METRICS.
+--|
 --| Revision 1.4  2000/02/15 03:20:32  brendel
 --| Changed order of initialization. All gauges are now initialized in
 --| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.
@@ -83,7 +87,9 @@ end -- class EV_VERTICAL_SCROLL_BAR_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.2.10.2  2000/01/06 20:35:02  rogers
---| Fixed to fit in with major new vision2 changes. make now takes an interface. make_with_range no longer takes a parent. Initialize is redefined from ev_scroll_bar_imp and set the standard range as 1-100.
+--| Fixed to fit in with major new vision2 changes. make now takes an interface.
+--|  make_with_range no longer takes a parent. Initialize is redefined from
+--| ev_scroll_bar_imp and set the standard range as 1-100.
 --|
 --| Revision 1.2.10.1  1999/11/24 17:30:35  oconnor
 --| merged with DEVEL branch

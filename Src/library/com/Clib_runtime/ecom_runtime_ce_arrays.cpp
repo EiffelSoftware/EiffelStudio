@@ -151,10 +151,13 @@ int ecom_runtime_ce::ccom_element_number (EIF_INTEGER dim_count, EIF_INTEGER * e
 {
 	int result = 0, i = 0;
 
-	result = 1;
-	for (i = 0; i < dim_count; i++)
+	if (dim_count > 0)
 	{
-		result = result * element_count[i];
+		result = 1;
+		for (i = 0; i < dim_count; i++)
+		{
+			result = result * element_count[i];
+		}
 	}
 	return result;
 };

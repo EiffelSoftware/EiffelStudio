@@ -146,8 +146,8 @@
 /* The following are application error messages */
 
 /* The following are error messages whose causes are not clear  */
-#define CURERR7 	"    Invalid number of parameters to the creation feature\n-- correct format is: your_executable init parameters_if_any."
-#define CURERR8 	"    The first parameter of service file must be `init' or `creation'."
+#define CURERR7 	"    Invalid number of parameters to start the concurrent application\n-- Correct format is: executable init parameters_of_the_creation_feature_of_root_obj(if_any)."
+#define CURERR8 	"    The first parameter of service file must be `init'(used by user to start\n up application) or `creation'(used by system)."
 #define CURERR9 	"    The following error occurs when connect with SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up."	
 #define CURERR11 	"    The following error occurs when send request to SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number."	
 #define CURERR12 	"    The following error occurs when get message from SCOOP DAEMON on host <%s>.\nPlease make sure that the SCOOP DAEMON is up and using the corresponding port number."	

@@ -265,7 +265,7 @@ feature -- Basic operations
 				ec_function_return_type := clone (c_type)
 
 				ec_function_body := ec_function_body_cell (pointed_visitor.eiffel_type, pointed_visitor.c_type, 
-					pointed_visitor.ec_function_name, pointed_visitor.need_generate_ec)
+					pointed_visitor.ec_function_name, pointed_visitor.need_generate_ec, pointed_visitor.writable)
 
 			end
 			set_visitor_atributes (a_visitor)
@@ -589,7 +589,8 @@ feature {NONE} -- Implementation
 		end
 
 	ec_function_body_cell (element_eiffel_type, element_c_type, element_ec_function: STRING;
-					need_generate_element_ec_function: BOOLEAN): STRING is
+					need_generate_element_ec_function: BOOLEAN;
+					element_writable: BOOLEAN): STRING is
 			-- Eiffel to C function body for CELL type
 			-- 
 		require
@@ -766,6 +767,10 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append ("eif_object")
+			if element_writable then
+				Result.append (Comma_space)
+				Result.append (Null)
+			end
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Close_parenthesis)

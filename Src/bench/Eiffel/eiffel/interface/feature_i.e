@@ -1891,9 +1891,6 @@ feature -- Debugging
 			bc.make_byte_code (Byte_array);
 			Result.set_byte_code (Byte_array.character_array);
 			Result.set_breakable_points (Byte_context.breakable_points);
-			Result.set_total_local_count (Byte_context.local_list.count);
-			Result.set_local_count (bc.local_count)
-			Result.set_argument_count (bc.argument_count);
 			Byte_context.clear_all;
 			Context.clear2
 		end;

@@ -5,7 +5,7 @@ JCFLAGS = $(CFLAGS) -c $ccflags $optimize
 LIB_EXE = $lib_exe
 LN = copy
 MAKE = $make
-MV = \bin\mv
+MV = move
 RM = del
 
 .c.obj:
@@ -60,30 +60,30 @@ runtime.lib: $(OBJECTS)
 
 all:: wkbench.lib
 
-wkbench.lib: $(WOBJECTS) 
+wkbench.lib: $(WOBJECTS)
 	$(RM) $@
 	$link_wline
 
-..\extra\win32\networku\networku.lib: ..\extra\win32\networku\networku.c 
+..\extra\win32\networku\networku.lib: ..\extra\win32\networku\networku.c
 	cd ..\extra\win32\networku
 	$(MAKE)
 	cd ..\..\..\run-time
 
 ..\extra\win32\console\econsole.lib: ..\extra\win32\console\econsole.c ..\extra\win32\console\argcargv.c
 	cd ..\extra\win32\console
-	$(MAKE) 
+	$(MAKE)
 	cd ..\..\..\run-time
 
 ..\idrs\idr.lib:
 	cd ..\idrs
-	$(MAKE) 
+	$(MAKE)
 	cd ..\run-time
 
 #all:: ebench.lib
 
 ..\extra\win32\ipc\app\network.lib: ..\extra\win32\ipc\app\proto.c
 	cd ..\extra\win32\ipc\app
-	$(MAKE) 
+	$(MAKE)
 	cd ..\..\..\..\run-time
 
 ebench.lib: $(EOBJ)
@@ -94,7 +94,7 @@ all:: x2c.exe
 
 x2c.exe: x2c.c
 	$(RM) $@
-	$(CC) $(JCFLAGS) x2c.c 
+	$(CC) $(JCFLAGS) x2c.c
 
 all:: config.h portable.h
 
@@ -258,15 +258,15 @@ wsearch.c : search.c
 	$(RM) wsearch.c
 	$(LN) search.c wsearch.c
 
-wmain.c : main.c 
+wmain.c : main.c
 	$(RM) wmain.c
 	$(LN) main.c wmain.c
 
-wobject_id.c : object_id.c 
+wobject_id.c : object_id.c
 	$(RM) wobject_id.c
 	$(LN) object_id.c wobject_id.c
 
-wdle.c : dle.c 
+wdle.c : dle.c
 	$(RM) wdle.c
 	$(LN) dle.c wdle.c
 
@@ -384,7 +384,7 @@ wconsole.obj : wconsole.c
 wmain.obj : wmain.c struct.h
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
-wobject_id.obj : wobject_id.c 
+wobject_id.obj : wobject_id.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 debug.obj : debug.c

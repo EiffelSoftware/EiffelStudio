@@ -11,6 +11,9 @@ inherit
 	EV_LIST_I
 
 	EV_PRIMITIVE_IMP
+		undefine
+			initialize_colors
+		end
 
 creation
 	make
@@ -23,6 +26,17 @@ feature -- Initialization
 		do
 			widget := gtk_list_new
 			gtk_widget_show (widget)
+		end
+
+feature -- Access
+
+	get_item (index: INTEGER): EV_LIST_ITEM is
+			-- Give the item of the list at the one-base
+			-- index.
+		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Status report
@@ -73,7 +87,6 @@ feature {EV_LIST_ITEM} -- Implementation
 				correct_imp: item_imp /= Void
 			end
 			c_gtk_add_list_item (widget, item_imp.widget)
-			gtk_widget_show (item_imp.widget)			
 		end
 
 end -- class EV_LIST_IMP

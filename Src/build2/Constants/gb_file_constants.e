@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that contain constants for "
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,7 +71,11 @@ feature -- XML saving
 			create accessible_status
 			create Result.make_from_string (accessible_status.system_status.current_project_settings.project_location)
 			Result.extend ("system_interface.xml")
-		end		
+		end
+		
+	linux_ace_name: STRING is "ace.Linux.ace"
+	
+	windows_ace_name: STRING is "ace.Windows.ace"
 		
 	project_filename: STRING is "build_project.bpr"
 		-- File name for project settings.

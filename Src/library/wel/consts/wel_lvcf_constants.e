@@ -40,18 +40,19 @@ feature -- Access
 			"LVCF_WIDTH"
 		end
 
-	Lvcf_image: INTEGER is
-			-- The ilmage member is valid
-		external
-			"C [macro <cctrl.h>]"
-		alias
-			"LVCF_IMAGE"
-		end
+-- XX Not defined in Borland C++
+--	Lvcf_image: INTEGER is
+--			-- The ilmage member is valid
+--		external
+--			"C [macro <cctrl.h>]"
+--		alias
+--			"LVCF_IMAGE"
+--		end
 
 feature -- Format
 
 	Lvcfmt_right: INTEGER is
-			-- alignment of the column.
+			-- alignment of the column : right.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
@@ -61,7 +62,7 @@ feature -- Format
 		end
 
 	Lvcfmt_center: INTEGER is
-			-- alignment of the column.
+			-- alignment of the column : center.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
@@ -71,13 +72,23 @@ feature -- Format
 		end
 
 	Lvcfmt_left: INTEGER is
-			-- alignment of the column.
+			-- alignment of the column : left.
 			-- Do not use for the first column of the list view
 			-- that must always be left-aligned.
 		external
 			"C [macro <cctrl.h>]"
 		alias
 			"LVCFMT_LEFT"
+		end
+
+	Lvcfmt_justifymask: INTEGER is
+			-- alignment of the column : justify.
+			-- Do not use for the first column of the list view
+			-- that must always be left-aligned.
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"LVCFMT_JUSTIFYMASK"
 		end
 
 feature -- Status report

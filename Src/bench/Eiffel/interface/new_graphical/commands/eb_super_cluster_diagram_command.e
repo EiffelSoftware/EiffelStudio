@@ -19,12 +19,10 @@ feature -- Basic operations
 	execute is
 			-- Perform operation.
 		local
-			stone: STONE
 			cla_s: CLASSI_STONE
 			clu_s: CLUSTER_STONE
 			clu: CLUSTER_I
 		do
-			
 			if tool.class_view /= Void then
 				cla_s := tool.class_stone
 				if cla_s /= Void and then cla_s.is_valid then

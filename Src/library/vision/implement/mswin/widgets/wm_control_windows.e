@@ -42,7 +42,7 @@ feature -- Status report
  		ensure then
 			Result >= 0
 		end
-	
+
 	icon_mask: PIXMAP is
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the

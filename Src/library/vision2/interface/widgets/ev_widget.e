@@ -515,18 +515,11 @@ feature -- Event - command association
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 		do
 			implementation.add_button_press_command (mouse_button, cmd, arg)
 		end
-
---	get_button_press_commands (mouse_button: INTEGER): LINKED_LIST[EV_COMMAND] is
---			-- Return the list of commands to be executed when
-	--		-- button number 'mouse_button' is pressed.
-	--	require
-	--		exists: not destroyed
-	--	do
-	--		implementation.get_button_press_commands (mouse_button)
-	--	end
 
 	add_button_release_command (mouse_button: INTEGER;
 		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -535,6 +528,8 @@ feature -- Event - command association
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 			valid_command_type: -- is_type_button (cmd)
 		do
 			implementation.add_button_release_command (mouse_button, cmd, arg)
@@ -548,6 +543,8 @@ feature -- Event - command association
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 		do
 			implementation.add_double_click_command (mouse_button, cmd, arg)
 		end
@@ -641,6 +638,8 @@ feature -- Event -- removing command association
 			-- button number 'mouse_button' is pressed.
 		require
 			exists: not destroyed
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 		do
 			implementation.remove_button_press_commands (mouse_button)
 		end
@@ -650,6 +649,8 @@ feature -- Event -- removing command association
 			-- button number 'mouse_button' is released.
 		require
 			exists: not destroyed
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 		do
 			implementation.remove_button_release_commands (mouse_button)
 		end

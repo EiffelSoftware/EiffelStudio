@@ -75,6 +75,8 @@ feature -- Event - command association
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 		deferred
 		end
 
@@ -84,6 +86,8 @@ feature -- Event - command association
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void
+			button_large_enough: mouse_button > 0
+			button_small_enough: mouse_button < 4
 		deferred
 		end
 

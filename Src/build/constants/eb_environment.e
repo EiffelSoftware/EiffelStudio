@@ -6,7 +6,8 @@ inherit
 	EXECUTION_ENVIRONMENT
 		rename
 			put as environment_put
-		end;
+		end
+	SHARED_TOOLKIT_NAME
 
 feature -- Directory name constants
 
@@ -83,10 +84,13 @@ feature -- File name constants
 feature -- File names for EiffelBuild
 
 	Ace_file: FILE_NAME is
-		once
-			!! Result.make_from_string (EiffelBuild_directory);
-			Result.extend (Ace_name);
-			Result.set_file_name (Ace_name);
+			-- Name of ace file in ebuild installation directory
+			-- It contains the name of the current toolkit
+		do
+			!! Result.make_from_string (EiffelBuild_directory)
+			Result.extend (Ace_name)
+			Result.set_file_name (Ace_name)
+			Result.add_extension (Shared_toolkit_name)
 			Result.add_extension (Ace_name_in_lower_case)
 		end;
 
@@ -311,21 +315,21 @@ feature -- Directory creation
 
 	create_ace_file is
 			-- Create the Ace file in the generated directory
-			-- if it does not exist.
+			--  if it does not exist.
 		local
 			proj_ace_f: RAW_FILE;
 			ace_f: RAW_FILE;
 		do
 			!! proj_ace_f.make (Project_ace_file);
+			!! ace_f.make (Ace_file);
 			if not proj_ace_f.exists then
-				!! ace_f.make (Ace_file);
 				if ace_f.exists and then ace_f.is_readable then
 					proj_ace_f.append (ace_f)
 				else
 					io.error.putstring ("EiffelBuild: cannot find file%N");
 					io.error.putstring (ace_f.name);
 					io.error.putstring (".%N");
-				end;
+				end
 			end
 		end;
 

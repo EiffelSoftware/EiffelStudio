@@ -4,9 +4,21 @@ inherit
 
 	STORABLE
 
+creation
+
+	make
+
+feature {NONE}
+
+	make is
+		do
+			!! chart;
+			!! feature_clause_list.make (2);
+		end;
+
 feature -- Specification
 
-	features: ARRAYED_LIST [S_FEATURE_DATA];
+	feature_clause_list: ARRAYED_LIST [S_FEATURE_CLAUSE];
 			-- Features of class
 
 	invariants: FIXED_LIST [S_TAG_DATA];
@@ -17,18 +29,17 @@ feature -- Specification
 
 feature -- Setting values
 
-	set_features (l: like features) is
+	set_feature_clause_list (l: like feature_clause_list) is
 			-- Set features to `l'.
 			--| Allow empty features to be stored
 			--| to disk (because of bench).
 		do
-			features := l
+			feature_clause_list := l
 		end;
  
 	set_invariants (l: like invariants) is
 			-- Set invariants to `l'.
 		do
-io.error.putstring ("");
 			invariants := l
 		end;
  
@@ -37,6 +48,11 @@ io.error.putstring ("");
 		do
 			chart := ch
 		end;
+
+invariant
+
+	valid_chart: chart /= Void;
+	valid_feature_clause_list: feature_clause_list /= Void
 
 end
 

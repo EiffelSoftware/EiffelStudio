@@ -15,11 +15,14 @@ feature
 	description: S_FREE_TEXT_DATA;
 			-- Description of Current
  
+	explanation: S_FREE_TEXT_DATA;
+			-- Brief explanation of Current
+ 
 	client_links: ARRAYED_LIST [S_CLI_SUP_DATA];
 			-- List of supplier relations for which current
 			-- is the client
 
-	heir_links: FIXED_LIST [S_RELATION_DATA];
+	heir_links: ARRAYED_LIST [S_RELATION_DATA];
 			-- List of inheritance relations for which current is the heir
 
 feature
@@ -59,6 +62,18 @@ feature -- Setting values
 			file_name := s
 		ensure
 			file_name_set: file_name = s
+		end;
+
+	set_explanation (l: like explanation) is
+			-- Set explanation to `l'.
+		require
+			valid_l: l /= Void;
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
+		do
+			explanation := l
+		ensure
+			explanation_set: explanation = l
 		end;
 
 	set_description (l: like description) is

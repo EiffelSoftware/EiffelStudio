@@ -39,6 +39,7 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_ANY_IMP
 		do
+			
 			v_imp ?= v.implementation
 			check
 				v_imp_not_void: v_imp /= Void
@@ -47,6 +48,7 @@ feature {NONE} -- Implementation
 			if i < count then
 				gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
 			end
+			update_child_requisition (v_imp.c_object)
 			on_new_item (v)
 		end
 
@@ -127,6 +129,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2001/06/21 22:35:29  king
+--| Added call to update_child_requisition
+--|
 --| Revision 1.19  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

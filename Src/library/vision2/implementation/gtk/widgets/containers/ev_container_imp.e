@@ -74,9 +74,10 @@ feature -- Element change
 			if v /= Void then
 				w ?= v.implementation
 				C.gtk_container_add (container_widget, w.c_object)
+				update_child_requisition (w.c_object)
 				on_new_item (v)
 			end
-		end
+		end		
 	
 feature {EV_RADIO_BUTTON_IMP, EV_CONTAINER_IMP} -- Access
 
@@ -299,6 +300,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2001/06/21 22:34:11  king
+--| Added call to update_child_requisition
+--|
 --| Revision 1.36  2001/06/07 23:08:06  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

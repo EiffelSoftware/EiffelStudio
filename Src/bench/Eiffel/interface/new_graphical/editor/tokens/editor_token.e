@@ -59,6 +59,9 @@ feature -- Miscellaneous
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		deferred
+		ensure
+			Result_positive: Result > 0
+			Result_small_enough: Result <= length
 		end
 
 invariant

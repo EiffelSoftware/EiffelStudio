@@ -16,7 +16,6 @@ creation
 	
 feature 
 
-
 	selected_rout_id_set: ROUT_ID_SET;
 
 	selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE): FEATURE_I is

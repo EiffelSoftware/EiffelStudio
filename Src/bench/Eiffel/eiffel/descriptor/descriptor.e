@@ -68,7 +68,7 @@ feature -- Generation
 				Real_body_index_counter.generate_extern_offsets (f);
 				f.new_line;
 
-				f.generate_protected_static_declaration ("void", "build_desc", <<>>);
+				f.generate_static_declaration ("void", "build_desc", <<>>);
 
 				f.putstring (precomp_C_string)
 			else
@@ -158,7 +158,7 @@ feature -- Generation
 			class_type_id := class_type.id;
 			init_name := class_type_id.init_name;
 
-			f.generate_protected_extern_declaration ("void", init_name, <<>>);
+			f.generate_extern_declaration ("void", init_name, <<>>);
 
 			f.putstring ("void ");
 			f.putstring (init_name);

@@ -178,11 +178,9 @@ feature -- Basic operations
 		local
 			i, a_descriptor: INTEGER
 		do
+			progress_report.set_range (progress_report.range + type_lib.type_info_count)
 			from
 				i := 0
-				progress_report.set_range (progress_report.range + type_lib.type_info_count)
-				progress_report.set_title (Generation_title)
-				progress_report.start
 			until
 				i = type_lib.type_info_count or Shared_wizard_environment.abort
 			loop
@@ -358,7 +356,7 @@ feature -- Basic operations
 		local
 			i: INTEGER
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
-			implemented_interface_Descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+			implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 			type_descriptor: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
 		do
 			from

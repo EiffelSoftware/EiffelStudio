@@ -31,7 +31,9 @@ public void wide_listen()
 	 */
 
 	if (-1 == add_input(EWBIN, rqsthandle)) {
+#ifdef USE_ADD_LOG
 		add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
+#endif
 		dexit(1);
 	}
 
@@ -45,6 +47,8 @@ public void wide_listen()
 			return;						/* Anyway, abort processing */
 	}
 
+#ifdef USE_ADD_LOG
 	add_log(12, "do_select: %s (%s)", s_strerror(), s_strname());
+#endif
 }
 

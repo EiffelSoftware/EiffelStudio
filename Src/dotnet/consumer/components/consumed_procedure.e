@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			declared_type_set: declared_type = a_type
 		end
 
-	make_attribute_setter (en: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE) is
+	make_attribute_setter (en: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE; a_is_static: BOOLEAN) is
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
@@ -82,7 +82,9 @@ feature {NONE} -- Initialization
 			member_make (en, en, True, a_type)
 			a := <<arg>>
 			f := f | feature {FEATURE_ATTRIBUTE}.Is_frozen
-			f := f | feature {FEATURE_ATTRIBUTE}.Is_static
+			if a_is_static then
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_static	
+			end
 			f := f | feature {FEATURE_ATTRIBUTE}.Is_attribute_setter
 		ensure
 			eiffel_name_set: eiffel_name = en

@@ -33,6 +33,7 @@ inherit
 			class_path,
 			is_deferred,
 			is_external,
+			is_true_external,
 			is_generic,
 			is_library,
 			is_in_system
@@ -450,6 +451,12 @@ feature -- Access
 				Result := compiler_class.compiled_class.is_external
 			end
 		end
+		
+    is_true_external: BOOLEAN is
+            -- Is true external class?
+        do
+            Result := compiler_class.compiled_class.is_true_external
+        end
 
 	is_generic: BOOLEAN is
 			-- Is class generic?

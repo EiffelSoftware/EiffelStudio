@@ -7,7 +7,7 @@
 				<label>EXCEPTIONS class</label>
 			</link> provides helper features to analyze the caught exception and handle it.
 		</paragraph>
-		<paragraph>The EXCEPTIONS class also provides ways to raise exception, via its feature 
+		<paragraph>The <code><class_name>EXCEPTIONS</class_name></code> class also provides ways to raise exception, via its feature 
 			<link>
 				<url>/libraries/base/reference/kernel/exceptions.xml#f_raise</url>
 				<label>'raise'</label>

@@ -139,7 +139,6 @@ feature -- Text operations
 			if b <= count and then b > a then
 					-- Does not highlight if `b' is beyond the
 					-- bounds of the text.
-
 				set_selection (a, b)
 			end
 		end

@@ -15,7 +15,8 @@ inherit
 
 	EV_MESSAGE_DIALOG_IMP	
 		redefine
-			set_default
+			set_default,
+			icon_build
 		end
 
 creation

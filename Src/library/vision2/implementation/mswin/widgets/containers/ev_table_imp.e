@@ -78,12 +78,6 @@ feature {NONE} -- Initialization
 
 feature {EV_TABLE_I} -- Access
 
-	count: INTEGER is
-			-- Number of widgets contained in `Current'.
-		do
-			Result := ev_children.count
-		end
-
 	is_homogeneous: BOOLEAN
 			-- Are all the cells equal in size ?
 			--| Gtk does not allow you to set the homogenuity of the
@@ -173,9 +167,7 @@ feature {EV_TABLE_I} -- Status report
 	widget_count: INTEGER is
 			-- Number of widgets in `Current'.
 		do
-			check
-				to_be_implemented: False
-			end
+			Result := ev_children.count
 		end
 
 	top_level_window_imp: EV_WINDOW_IMP

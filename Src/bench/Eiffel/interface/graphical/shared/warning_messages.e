@@ -9,7 +9,7 @@ feature {NONE}
 								%Keeping assertion checking inhibits any optimization%N%
 								%specified in the Ace (inlining, array optimization,%N%
 								%dead-code removal) and will produce a final executable%N%
-								%that is not optimal in speed and size.%N%";
+								%that is not optimal in speed and size.%N";
 
 	w_Beginning_of_history: STRING is "Beginning of history";
 

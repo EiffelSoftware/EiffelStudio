@@ -159,7 +159,7 @@ feature -- Basic operations
 			valid_interface_name: not an_interface.name.is_empty
 		do
 			create Result.make (100)
-			Result.append ("call_bacl_on_")
+			Result.append ("call_back_on_")
 			Result.append (name_for_feature (an_interface.name))
 			Result.append ("_enabled")
 		ensure

@@ -1225,24 +1225,66 @@ feature -- Class info
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
 			l_class_name: STRING
 			l_meth_attr: INTEGER
-			l_type: GEN_TYPE_I
+			l_gen_type: GEN_TYPE_I
 			i, nb: INTEGER
+			l_type: TYPE_I
+			l_ref: REFERENCE_I
+			l_cl_type: CL_TYPE_I
+			l_class_type: CLASS_TYPE
+			l_ext_class: EXTERNAL_CLASS_C
 		do
 			l_class_token := actual_class_type_token (class_type.implementation_id)
 			l_class_name := class_type.associated_class.name_in_upper
 
 			if class_type.is_generic then
-				l_type ?= class_type.type
+				l_gen_type ?= class_type.type
 				create l_name_ca.make
 				l_name_ca.put_string (l_class_name)
 				from
-					l_name_ca.put_integer_32 (l_type.meta_generic.count)
-					i := l_type.meta_generic.lower
-					nb := l_type.meta_generic.upper
+					l_name_ca.put_integer_32 (l_gen_type.meta_generic.count)
+					i := l_gen_type.meta_generic.lower
+					nb := l_gen_type.meta_generic.upper
 				until
 					i > nb
 				loop
-					l_name_ca.put_string (l_type.meta_generic.item (i).il_type_name (Void))
+					l_type := l_gen_type.meta_generic.item (i)
+					l_ref ?= l_type
+					if l_ref /= Void then
+							-- It is a formal, simply put ANY here
+						l_class_type := any_type.associated_class_type
+					else
+							-- It is an expanded generic derivation
+						l_cl_type ?= l_type
+						check
+							l_cl_type_not_void: l_cl_type /= Void
+						end
+						l_class_type := l_cl_type.associated_class_type
+						if l_cl_type.is_external then
+							l_ext_class ?= l_cl_type.base_class
+						end
+					end
+					l_class_name := l_class_type.full_il_type_name
+					if l_ext_class = Void then
+							-- Case of an Eiffel class (including basic type)
+						if 
+							l_class_type.is_precompiled and then
+							not l_class_type.is_external
+						then
+							check
+								has_assembly_info: l_class_type.assembly_info /= Void
+							end
+							l_class_name.append (", ")
+							l_class_name.append (l_class_type.assembly_info.full_name)
+						end
+					else
+							-- External class, add assembly full name only when it is
+							-- not `mscorlib'.
+						if not l_ext_class.assembly.assembly_name.is_equal ("mscorlib") then
+							l_class_name.append (", ")
+							l_class_name.append (l_ext_class.assembly.full_name)
+						end
+					end
+					l_name_ca.put_string (l_class_name)
 					i := i + 1
 				end
 				l_name_ca.put_integer_16 (0)

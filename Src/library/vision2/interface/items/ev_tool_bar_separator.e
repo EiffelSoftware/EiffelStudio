@@ -13,10 +13,14 @@ inherit
 	EV_TOOL_BAR_ITEM
 		export
 			{NONE} all
-			{ANY} parent, out
+			{ANY} out, tagged_out, parent, equal,
+				conforms_to, generating_type, print,
+				destroy, is_destroyed, set_data, data,
+				id_object, object_id
 		redefine
 			implementation
 		end
+		
 
 create
 	default_create

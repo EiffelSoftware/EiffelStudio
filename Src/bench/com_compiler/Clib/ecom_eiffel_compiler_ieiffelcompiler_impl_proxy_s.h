@@ -79,6 +79,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Takes a path and expands it using the env vars.
+	-----------------------------------------------------------*/
+	EIF_REFERENCE ccom_expand_path(  /* [in] */ EIF_OBJECT a_path );
+
+
+	/*-----------------------------------------------------------
 	Generate a cyrptographic key filename.
 	-----------------------------------------------------------*/
 	void ccom_generate_msil_keyfile(  /* [in] */ EIF_OBJECT filename );

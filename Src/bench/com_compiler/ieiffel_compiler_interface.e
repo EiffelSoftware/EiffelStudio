@@ -59,6 +59,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	expand_path_user_precondition (a_path: STRING): BOOLEAN is
+			-- User-defined preconditions for `expand_path'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	generate_msil_keyfile_user_precondition (filename: STRING): BOOLEAN is
 			-- User-defined preconditions for `generate_msil_keyfile'.
 			-- Redefine in descendants if needed.
@@ -148,6 +155,15 @@ feature -- Basic Operations
 			-- Return ISE_EIFFEL environment var.
 		require
 			ise_eiffel_user_precondition: ise_eiffel_user_precondition
+		deferred
+
+		end
+
+	expand_path (a_path: STRING): STRING is
+			-- Takes a path and expands it using the env vars.
+			-- `a_path' [in].  
+		require
+			expand_path_user_precondition: expand_path_user_precondition (a_path)
 		deferred
 
 		end

@@ -82,6 +82,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Takes a path and expands it using the env vars.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP expand_path(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Generate a cyrptographic key filename.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP generate_msil_keyfile(  /* [in] */ BSTR filename ) = 0;

@@ -12,9 +12,11 @@ else
 	co -r %DEFAULT_CVS_TAG -d com_wizard "Src/com_wizard"
 endiff
 
+mkdir %INSTALL_DIR\wizards\com\resources
+copy %EIFFEL_SRC\com_wizard\root\resources\*.* %INSTALL_DIR\wizards\com\resources
+
 remtrace Compile the COM wizard
 cdd %EIFFEL_SRC\com_wizard\root
-copy ..\project\gui\binaries\*.* .
 clean_project
 finalize Ace.ace
 fff

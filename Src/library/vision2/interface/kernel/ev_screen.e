@@ -47,6 +47,13 @@ feature -- Basic operation
 			implementation.fake_pointer_button_release (a_button)
 		end
 
+	fake_pointer_button_click (a_button: INTEGER) is
+			-- Simulate the user clicking `a_button' on the pointing device.
+		do
+			implementation.fake_pointer_button_press (a_button)
+			implementation.fake_pointer_button_release (a_button)
+		end
+
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
 		do
@@ -56,6 +63,13 @@ feature -- Basic operation
 	fake_key_release (a_key: EV_KEY) is
 			-- Simulate the user releasing a `key'.
 		do
+			implementation.fake_key_release (a_key)
+		end
+
+	fake_key_click (a_key: EV_KEY) is
+			-- Simulate the user clicking a `key'.
+		do
+			implementation.fake_key_press (a_key)
 			implementation.fake_key_release (a_key)
 		end
 
@@ -119,6 +133,10 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/26 22:33:26  pichery
+--| Added usefull features `fake_pointer_button_click'
+--| and `fake_key_click'.
+--|
 --| Revision 1.13  2000/04/25 22:56:34  king
 --| Removed invalid comments and pointer_position
 --|

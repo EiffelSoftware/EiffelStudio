@@ -6403,10 +6403,12 @@ rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once)
 			if (*arena == once)						/* Found indirection */
 			{
 				EIF_END_GET_CONTEXT	/* MT-safe */
-				return (EIF_REFERENCE *) arena;				/* Return indirection ptr */
+				return (EIF_REFERENCE *) arena;		/* Return indirection ptr */
 			}
 	}	
 	
+	EIF_END_GET_CONTEXT				/* MT-safe */
+	return (EIF_REFERENCE *) 0;		/* Could not find indirection pointer. */
 } /* eif_once_set_addr */
 
 /*

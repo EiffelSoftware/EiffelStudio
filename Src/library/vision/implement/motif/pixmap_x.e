@@ -12,6 +12,8 @@ class
 inherit
 
 	PIXMAP_I
+		rename
+			depth as number_of_colors
 		undefine
 			is_equal
 		end;
@@ -23,22 +25,16 @@ inherit
 
 	MEL_PIXMAP
 		rename
-			make as old_make
+			make as mel_pixmap_make
 		undefine
 			has_valid_display
 		redefine
-			display
+			display, dispose
 		end;
 
-	MEMORY
-		rename
-			free as gc_free
-		export
-			{NONE} all
+	MEL_XMP_CONSTANTS
 		undefine
 			is_equal
-		redefine
-			dispose
 		end;
 
 creation
@@ -54,6 +50,7 @@ feature {NONE} -- Initialization
 			last_open_display_not_null: last_open_display /= Void
 		do
 			display := last_open_display;
+			display_handle := display.handle;
 		end; 
 
 	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN) is
@@ -64,6 +61,7 @@ feature {NONE} -- Initialization
 			mel_display: MEL_DISPLAY
 		do
 			display ?= a_screen.implementation;
+			display_handle := display.handle;
 			check
 				valid_display: display /= Void
 			end
@@ -74,7 +72,7 @@ feature -- Access
 	display: MEL_DISPLAY;
 			-- Display where resource is allocated
 
-	bitmap: BITMAP_RESOURCE_X
+	bitmap: MEL_PIXMAP
 			-- Single plane bitmap 
 
 	height: INTEGER;
@@ -89,10 +87,13 @@ feature -- Access
 	width: INTEGER 
 			-- Width of pixmap
 
+	number_of_colors: INTEGER;	
+			-- Number of colors in the pixmap
+
 	last_operation_correct: BOOLEAN is
 			-- Was the last operation correctly performed ?
 		do
-			Result := is_valid
+			Result := last_operation_correct_ref.item
 		end;
 
 feature -- Status setting
@@ -103,11 +104,11 @@ feature -- Status setting
 			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid
 		do
 			identifier := a_pixmap.identifier;
+			depth := a_pixmap.depth;
 			is_allocated := False;
-			display_handle := a_pixmap.display_handle;
 			height := 1;
 			width := 1;
-			depth := 2
+			number_of_colors := 2
 		end;
 
 feature -- Element change
@@ -119,34 +120,63 @@ feature -- Element change
 			bitmap_format: MEL_BITMAP_FORMAT;
 			pixmap: MEL_PIXMAP;
 			gc: MEL_GC;
-			def_screen: MEL_SCREEN
+			def_screen: MEL_SCREEN;
+			xpm_format: MEL_XPM_FORMAT;
+			attr: MEL_XPM_ATTRIBUTES
 		do
 			free_resources;
 			def_screen := display.default_screen;
-			!! bitmap_format.make_from_file (def_screen, a_file_name);
-			if bitmap_format.is_valid then
+				-- True reading the file as a xpm format.
+				-- If this fails then try to read it as bitmap format.
+			!! attr.make;
+			attr.set_valuemask (XpmSize+XpmHotspot+XpmInfos);
+			!! xpm_format.make_from_file (def_screen, a_file_name, attr);
+			if xpm_format.is_valid then
 				is_allocated := True;
-				height := bitmap_format.height;
-				width := bitmap_format.width;
-				hot_x := bitmap_format.x_hot;
-				hot_y := bitmap_format.y_hot;
+				identifier := xpm_format.pixmap.identifier;
+				depth := xpm_format.pixmap.depth;
+				number_of_colors := attr.number_of_colors;
+				height := attr.height;
+				width := attr.width;
+				hot_x := attr.x_hotspot;
+				hot_y := attr.y_hotspot;
+				if xpm_format.shape_mask /= Void then
+					xpm_format.shape_mask.destroy;
+				end;
+			else
+				if xpm_format.error = XpmFileInvalid then
+					!! bitmap_format.make_from_file (def_screen, a_file_name);
+					if bitmap_format.is_valid then
+						is_allocated := True;
+						height := bitmap_format.height;
+						width := bitmap_format.width;
+						hot_x := bitmap_format.x_hot;
+						hot_y := bitmap_format.y_hot;
+
+						!! gc.make (def_screen);
+						gc.set_background_color (def_screen.white_pixel);
+						gc.set_foreground_color (def_screen.black_pixel);
+						pixmap := bitmap_format.to_pixmap (def_screen, gc);
+						gc.destroy;
+
+						identifier := pixmap.identifier;
+						depth := pixmap.depth;
+						number_of_colors := 2; -- Black and white bitmap
+						update_widgets;
+						bitmap_format.bitmap.destroy
+					end
+				end
+			end;
+			attr.destroy;
+			if is_allocated then
 				if hot_x < 0 or else hot_x >= width then
 					hot_x := width // 2
 				end;
 				if hot_y < 0 or else hot_y >= height then
 					hot_y := height // 2
 				end;
-				!! gc.make (def_screen);
-				gc.set_background_color (def_screen.white_pixel);
-				gc.set_foreground_color (def_screen.black_pixel);
-				pixmap := bitmap_format.to_pixmap (def_screen, gc);
-				gc.free;
-				identifier := pixmap.identifier;
-				display_handle := pixmap.display_handle;
-				depth := 2; -- Black and white bitmap
-				update_widgets;
-				bitmap_format.bitmap.free
 			end;
+			last_operation_correct_ref.set_item (is_allocated)
 		end;
 
 	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER) is
@@ -162,29 +192,25 @@ feature -- Element change
 			free_resources;
 			mel_d := display;
 			mel_s := mel_d.default_screen;
-			!! mp.make (mel_s, 
+			!! mp.make (mel_s,
 					p_width, p_height, mel_s.default_depth);
 			if mp.is_valid then
+				identifier := mp.identifier;
+				depth := mp.depth;
+				number_of_colors := 1;
 				mel_widget ?= a_widget;
 				!! gc.make (mel_s);
-				mp.copy_area (mel_widget, gc, x, y, p_width, p_height, 0, 0);
-				gc.free;
+				copy_area (mel_widget, gc, x, y, p_width, p_height, 0, 0);
+				gc.destroy;
 				is_allocated := True; 
+				width := p_width;
+				height := p_height;
+				hot_x := 0;
+				hot_y := 0;
 				update_widgets;
-			end
+			end;
+			last_operation_correct_ref.set_item (is_allocated)
 		end; 
-
-	retrieve (a_file_name: STRING) is
-			-- Retreive the pixmap from a file named `a_file_name'.
-			-- Set `last_operation_correct'.
-		local
-			mel_scr: MEL_SCREEN
-		do
-			-- use display
-			free_resources;
-			is_allocated := True;
-			update_widgets;
-		end;
 
 feature -- Output
 
@@ -192,7 +218,13 @@ feature -- Output
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
+		local
+			xmp_format: MEL_XPM_FORMAT
 		do
+			!! xmp_format.write_to_file
+				(display, a_file_name,
+				Current, Void, Void);
+			last_operation_correct_ref.set_item (xmp_format.is_valid)
 		end;
 
 feature -- Element change
@@ -212,7 +244,7 @@ feature -- Element change
 				gc.set_background_color (def_screen.white_pixel);
 				gc.set_foreground_color (def_screen.black_pixel);
 				bitmap.copy_plane (Current, gc, 0, 0, width, height, 0, 0, 1);
-				gc.free
+				gc.destroy
 			end;
 		ensure
 			valid_bitmap: bitmap /=  Void and then bitmap.is_valid
@@ -225,7 +257,7 @@ feature {NONE} -- Implementation
 			-- Free the pixmap resources.
 		do
 			if bitmap /= Void then	
-				bitmap.free;
+				bitmap.destroy;
 				bitmap := Void
 			end;
 			dispose
@@ -235,7 +267,7 @@ feature {NONE} -- Implementation
 			-- Called when the pixmap is garbaged
 		do
 			if is_allocated then
-				free;
+				destroy;
 				is_allocated := False
 			end
 		end; 
@@ -276,6 +308,12 @@ feature {NONE} -- Implementation
 				end
 			end
 		end;
+
+	last_operation_correct_ref: BOOLEAN_REF is
+			-- Cell for storing the success of the last operation
+		once
+			!! Result
+		end
 	
 end -- class PIXMAP_X
 

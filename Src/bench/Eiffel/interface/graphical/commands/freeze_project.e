@@ -25,9 +25,7 @@ feature {NONE}
 				(argument = Current)
 			then
 				warner.set_window (text_window);
-				warner.custom_call (Current, 
-							"Freezing implies some C compilation%N%
-							%and linking. Do you want to do it now?",
+				warner.custom_call (Current, w_Freeze_warning,
 							"Freeze now", Void, "Cancel");
 			elseif argument = warner then
 				compile (argument);

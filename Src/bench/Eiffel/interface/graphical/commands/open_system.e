@@ -45,12 +45,9 @@ feature {NONE}
 					text_window.display_header (fn);
 					Lace.set_file_name (fn)
 				else
-					!!temp.make (0);
-					temp.append ("File: ");
-					temp.append (fn);
-					temp.append ("%Ncannot be read. Try again?");
 					warner.set_window (text_window);
-					warner.custom_call (Current, temp, " Ok ", Void, "Cancel");
+					warner.custom_call (Current, w_Cannot_read_file_retry (fn),
+									 " Ok ", Void, "Cancel");
 				end
 			else
 				-- First click on open

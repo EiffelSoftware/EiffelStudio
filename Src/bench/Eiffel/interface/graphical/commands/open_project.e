@@ -90,25 +90,17 @@ feature
 				then
 						-- Create new project
 					if not project_dir.exists then
-						!! temp.make (0);
-						temp.append ("Directory: ");
-						temp.append (project_dir.name);
-						temp.append ("%Ndoes not exist");
+						temp := w_Directory_not_exist (project_dir.name);
 						ok := False;
 					elseif not project_dir.is_directory then
-						!! temp.make (0);
-						temp.append (project_dir.name);
-						temp.append ("%Nis not a directory");
+						temp := w_Not_a_directory (project_dir.name);
 						ok := False;
 					elseif 
 						not (project_dir.is_readable and then
 							project_dir.is_writable and then
 							project_dir.is_executable)
 					then
-						!! temp.make (0);
-						temp.append ("Directory: ");
-						temp.append (project_dir.name);
-						temp.append ("%Ndoes not have appropriate permissions.");
+						temp := w_Directory_wrong_permissions (project_dir.name);
 						ok := False;
 					else
 						init_project_directory := project_dir;
@@ -123,14 +115,10 @@ feature
 				else
 						-- Retrieve existing project
 					if not workbench_file.is_readable then
-						!! temp.make (0);
-						temp.append (workbench_file.name);
-						temp.append ("%Nis not readable");
+						temp := w_Not_readable (workbench_file.name);
 						ok := False
 					elseif not workbench_file.is_plain then
-						!! temp.make (0);
-						temp.append (workbench_file.name);
-						temp.append ("%Nis not a file");
+						temp := w_Not_a_file (workbench_file.name);
 						ok := False
 					else
 						retrieve_project (project_dir, workbench_file);
@@ -146,13 +134,10 @@ feature
 				end
 			else
 				retried := False;
-					!! temp.make (0);
-					temp.append ("Project in: ");
-					temp.append (project_dir.name);	
-					temp.append ("%NCannot be retrieved. Check permissions");
-					temp.append ("%Nand please try again");
 				warner.set_window (text_window);
-				warner.custom_call (Current, temp, " Ok ", Void, Void)
+				warner.custom_call (Current, 
+								w_Cannot_retrieve_project (project_dir.name), 
+								" Ok ", Void, Void)
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then
@@ -200,12 +185,10 @@ feature
 					workbench_file.close
 				end;
 				project_tool.set_initialized;
-					!! temp.make (0);
-					temp.append ("Project in: ");
-					temp.append (project_dir.name);	
-					temp.append ("%Nis corrupted. Cannot continue");
 				warner.set_window (text_window);
-				warner.custom_call (Current, temp, "Exit now", Void, Void)
+				warner.custom_call (Current, 
+							w_Project_corrupted (project_dir.name), 
+							"Exit now", Void, Void)
 			end
 		rescue
 			if Rescue_status.is_unexpected_exception then

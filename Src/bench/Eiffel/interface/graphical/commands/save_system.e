@@ -23,7 +23,6 @@ feature {NONE}
 			to_write: STRING;
 			file_name: STRING;
 			aok: BOOLEAN;
-			temp: STRING;
 			show_text: SHOW_TEXT
 		do
 			if text_window.file_name /= Void then
@@ -43,31 +42,20 @@ feature {NONE}
 				(new_file.exists) and then (not new_file.is_plain)
 			then
 				aok := False;
-				!! temp.make (0);
-				temp.append (new_file.name);
-				temp.append ("%Nis not a plain file");
 				warner.set_window (text_window);
-				warner.gotcha_call (temp);
+				warner.gotcha_call (w_Not_a_plain_file (new_file.name))
 			elseif
 				new_file.exists and then (not new_file.is_writable)
 			then
 				aok := False;
-				!! temp.make (0);
-				temp.append ("File: ");
-				temp.append (new_file.name);
-				temp.append (" is not writable.%NPlease check permissions");
 				warner.set_window (text_window);
-				warner.gotcha_call (temp);
+				warner.gotcha_call (w_Not_writable (new_file.name))
 			elseif
 				(not new_file.exists) and then (not new_file.is_creatable)
 			then
 				aok := False;
-				!! temp.make (0);
-				temp.append ("File: ");
-				temp.append (new_file.name);
-				temp.append (" cannot be created.%NPlease check permissions");
 				warner.set_window (text_window);
-				warner.gotcha_call (temp);
+				warner.gotcha_call (w_Not_creatable (new_file.name))
 			end;
 
 			if aok then

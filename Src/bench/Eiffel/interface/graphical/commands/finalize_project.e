@@ -29,9 +29,7 @@ feature {NONE}
 			if argument = text_window then
 				assert_confirmed := False;
 				warner.set_window (text_window);
-				warner.custom_call (Current,
-					"Finalizing implies some C compilation%N%
-					%and linking. Do you want to do it now?",
+				warner.custom_call (Current, w_Finalize_warning,
 					"Finalize now", Void, "Cancel");
 			elseif 
 				(argument = warner) or else
@@ -41,11 +39,7 @@ feature {NONE}
 				if not assert_confirmed then
 					assert_confirmed := True;
 					warner.set_window (text_window);
-					warner.custom_call (Current,
-						"By default assertions enabled in the Ace%N%
-						%file are kept in final mode.%N%
-						%A final executable with assertion checking%N%
-						%enabled is not optimal in speed and size.%N",
+					warner.custom_call (Current, w_Assertion_warning,
 						"Keep assertions", "Discard assertions", "Cancel"); 
 				else
 					compile (argument);

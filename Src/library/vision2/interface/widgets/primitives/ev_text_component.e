@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 	"EiffelVision text component. Common ancestor for text classes like% 
 	%text field and text area."
@@ -9,11 +8,9 @@ indexing
 	revision: "$Revision$"
 
 deferred class 
-	
 	EV_TEXT_COMPONENT
 
 inherit
-
 	EV_PRIMITIVE
 		redefine
 			implementation
@@ -95,7 +92,7 @@ feature -- Status setting
 		do
 			implementation.set_maximum_line_length (len)
 		end
-	
+
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) the text between 
 			-- `start_pos' and `end_pos'
@@ -107,6 +104,17 @@ feature -- Status setting
 			implementation.select_region (start_pos, end_pos)
 		ensure
 			-- region selected
+		end
+
+feature -- Resizing
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+		require
+			exists: not destroyed
+			valid_nb: nb > 0
+		do
+			implementation.set_minimum_width_in_characters (nb)
 		end
 
 feature -- Basic operation

@@ -43,6 +43,22 @@ feature -- Access
 		deferred
 		end
 
+feature -- Misc.
+
+	build_icon: WEL_ICON is
+			-- Build a WEL_ICON from `bitmap' and `mask_bitmap'.
+		local
+			icon_info: WEL_ICON_INFO
+		do
+			create icon_info.make
+			icon_info.set_fIcon (True)
+			icon_info.set_color_bitmap (bitmap)
+			if mask_bitmap /= Void then
+				icon_info.set_mask_bitmap (mask_bitmap)
+			end
+			create Result.make_by_icon_info (icon_info)
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
@@ -78,6 +94,9 @@ end -- class EV_PIXMAP_IMP_STATE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/05/03 00:37:00  pichery
+--| Added feature `build_icon' + Refactoring.
+--|
 --| Revision 1.3  2000/04/25 01:25:12  pichery
 --| Added `icon' attribute for polymorphism
 --|

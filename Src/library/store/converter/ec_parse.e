@@ -50,7 +50,7 @@ feature  -- Status setting
 			ecp_token_array := at;
 			ecp_parsed := True;
 			ecp_message.wipe_out;
-			if at.empty then 
+			if at.is_empty then 
 				set_ecp_parse_error("Empty Line")
 			end;
 			from

@@ -387,13 +387,13 @@ feature -- Contexts
 			end
 		end
 
-	generate_plug_declarations (plug_file: INDENT_FILE) is
+	generate_plug_declarations (buffer: GENERATION_BUFFER) is
 		do
-			generate_feature_table (plug_file, "eif_lower_table", lower_rout_id)
-			generate_feature_table (plug_file, "eif_area_table", area_rout_id)
+			generate_feature_table (buffer, "eif_lower_table", lower_rout_id)
+			generate_feature_table (buffer, "eif_area_table", area_rout_id)
 		end
 
-	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING
+	generate_feature_table (buffer: GENERATION_BUFFER; table_name: STRING
 			rout_id: ROUTINE_ID) is
 		local
 			entry: POLY_TABLE [ENTRY]
@@ -401,15 +401,15 @@ feature -- Contexts
 		do
 			entry := Eiffel_table.poly_table (rout_id)
 			temp := rout_id.table_name
-			Plug_file.putstring ("extern long ")
-			Plug_file.putstring (temp)
-			Plug_file.putstring ("[];%Nlong *")
-			Plug_file.putstring (table_name)
-			Plug_file.putstring (" = ")
-			Plug_file.putstring (temp)
-			Plug_file.putstring (" - ")
-			Plug_file.putint (entry.min_type_id - 1)
-			Plug_file.putstring (";%N")
+			buffer.putstring ("extern long ")
+			buffer.putstring (temp)
+			buffer.putstring ("[];%Nlong *")
+			buffer.putstring (table_name)
+			buffer.putstring (" = ")
+			buffer.putstring (temp)
+			buffer.putstring (" - ")
+			buffer.putint (entry.min_type_id - 1)
+			buffer.putstring (";%N")
 		end
 
 feature {NONE} -- Contexts

@@ -375,7 +375,6 @@ feature {NONE} -- Implementation
 			-- We must move the bar before repositioning the tool-bar.
 		do
 			bar.move (a_x, a_y)
-			reposition
 		end
 
 feature {NONE} -- WEL Implementation

@@ -60,13 +60,18 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			data: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				info.enable_pixmaps_set
-				Result := pixmap_name + ".set_with_named_file (%"" + element_info.data + "%")"
+				data := element_info.data
+				data := data.substring (data.last_index_of ('\', data.count), data.count)
+				data := "constant_by_name (%"pixmap_location%") + %"" + data
+				Result := pixmap_name + ".set_with_named_file (" + data + "%")"
+
 				if type_conforms_to (dynamic_type_from_string (info.type), dynamic_type_from_string (Ev_container_string)) then
 					Result := Result + indent + info.name + ".set_background_pixmap (" + pixmap_name + ")"
 				else

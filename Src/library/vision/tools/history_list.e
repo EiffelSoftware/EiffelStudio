@@ -58,7 +58,7 @@ feature -- Cursor movement
 				history_windows.forth
 			end
 		ensure
-			position = old position - 1
+			index = old index - 1
 		end;
 
 	forth is

@@ -36,6 +36,11 @@ inherit
 			default_create
 		end
 		
+	REFACTORING_HELPER
+		undefine
+			default_create
+		end
+		
 create
 	make
 	
@@ -103,8 +108,7 @@ feature {NONE} -- Implementation
 		local
 			bt: BASIC_TYPE
 			ct: CLASS_TYPE_AS
-			type_as_class_c: CLASS_C
-			class_c_any: CLASS_C
+			type_as_class: CLASS_I
 			l_body: BODY_AS
 		do
 			l_body := a_feature.body
@@ -114,13 +118,10 @@ feature {NONE} -- Implementation
 			end
 			Result := (bt /= Void) or (ct /= Void and then ct.is_expanded)
 			if not Result and then ct /= Void then
-				if System.any_class.is_compiled then
-					class_c_any := System.any_class.compiled_class
-						--| FIXME remove argument from `associated_eiffel_class'.
-					type_as_class_c := ct.associated_eiffel_class(class_c_any)
-					if type_as_class_c /= Void then
-						Result := type_as_class_c.is_expanded
-					end
+				fixme ("Remove usage of `System.any_class' to search for ct's base class.")
+				type_as_class := ct.associated_eiffel_class (System.any_class)
+				if type_as_class /= Void and then type_as_class.is_compiled then
+					Result := type_as_class.compiled_class.is_expanded
 				end
 			end
 		end

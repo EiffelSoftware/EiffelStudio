@@ -6,8 +6,6 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
--- List of the classes in the universe, in alphabetical order
-
 class EWB_CLASS_LIST 
 
 inherit

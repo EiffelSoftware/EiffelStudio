@@ -27,19 +27,22 @@ feature
 		do
 			!! description_name.make_from_string (Common_directory)
 			description_name.extend (Description_file_name)
-			!! description_file.make_open_read (description_name)
-			from
-				description_file.start
-				current_line := 0
-			until
-				description_file.end_of_file
-			loop
-				current_line := 1 + current_line
-				description_file.read_line
-				line := clone (description_file.last_string)
-				process_line (line)
+			!! description_file.make (description_name)
+			if description_file.exists then
+				description_file.open_read
+				from
+					description_file.start
+					current_line := 0
+				until
+					description_file.end_of_file
+				loop
+					current_line := 1 + current_line
+					description_file.read_line
+					line := clone (description_file.last_string)
+					process_line (line)
+				end
+				description_file.close
 			end
-			description_file.close
 		end
 
 feature {NONE} -- Implementation

@@ -2,30 +2,41 @@
 <html>
 
 <head>
-<title>Introduction</title>
-<META NAME="MS-HKWD" CONTENT="debugger">
-<META NAME="MS-HKWD" CONTENT="application, debug">
+<title>Main address bar</title>
+<META NAME="MS-HKWD" CONTENT="address bar">
+<META NAME="MS-HKWD" CONTENT="main address bar">
 <LINK REL=StyleSheet HREF="/default.css">
 </head>
 
 <body>
 
-<h1>Introduction</h1>
-<p>A debugger is a tool that allows you to <a HREF="10_execution/00_introduction.html">run</a> an application and view its state at any
-moment. This includes having information concerning the current <a HREF="30_call_stack_tool/00_introduction.html">call stack</a> and
-the <a HREF="40_object_tool/00_introduction.html">state of objects</a> of the system, ie the values of
-their attributes. This kind of
-information can be used to spot objects that have invalid states, to see the
-consequences of the execution of a feature over an object state, and so on.
-<p>The new features of the EiffelStudio debugger include:
+<h1>Main address bar</h1>
+<p>The main address bar is located in the top part of windows, between the two
+<A HREF="../../05_general_interface_description/30_main_toolbars.html">main toolbars</a> (when they are displayed).</p>
+<p>SCREENSHOT(Main address bar)</p>
+<p>It has several components:</p>
 <ul>
-  <li>Stopping the application in frozen features as well as in
-    melted features
-  <li> <a HREF="10_execution/40_step_into_a_feature.html">Stepping into</a> features, <a HREF="10_execution/50_step_by_step.html">executing them one line at a time</a>, or
-    <a HREF="10_execution/60_step_out.html">stepping out</a> of them
-  <li>Setting <a HREF="20_breakpoints/00_introduction.html">breakpoints</a> on-the-fly, while the execution is running
-  <li>A completely new interface, fully graphical and easier to use
-</ul>
+	<LI>
+History back and forth arrows <IMG SRC="/images/eiffelstudio/icon_back_color.gif" width="16" height="16">
+and <IMG SRC="/images/eiffelstudio/icon_forth_color.gif" width="16" height="16">
+	<LI>
+Fields where the current class or feature name is displayed
+	<LI>
+Format icons to change the format used by the editor
+ <IMG SRC="/images/eiffelstudio/icon_format_text_color.gif" width="16" height="16">,
+ <IMG SRC="/images/eiffelstudio/icon_format_clickable_color.gif" width="16" height="16">,
+ <IMG SRC="/images/eiffelstudio/icon_format_flat_color.gif" width="16" height="16">,
+ <IMG SRC="/images/eiffelstudio/icon_format_contract_color.gif" width="16" height="16"> and
+ <IMG SRC="/images/eiffelstudio/icon_format_interface_color.gif" width="16" height="16"> 
+</UL>
+
+<p>It is possible to type a class or feature name to center the editor on it.
+Typing a class name that does not exist in the set of known classes pops up a
+dialog to create a class of that name. </p>
+<P CLASS="tip"><B>Tip</B>: Wildcards (* and ?) are available in these fields.</P>
+
+<P CLASS="tip"><b>Tip</b>: The history is also accessible in the <b>View/Go to</b>
+menu.</P>
 
 </body>
 

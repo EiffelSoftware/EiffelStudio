@@ -65,6 +65,7 @@ feature {NONE}
 			attr_desc: ATTR_DESC;
 			stop_recursion: BOOLEAN;
 			position: INTEGER;
+			attr: ATTRIBUTE_I
 		do
 			current_id := class_type.associated_class.class_id;
 			stop_recursion := id_set.has (current_id);
@@ -89,7 +90,21 @@ end;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
 					id := client.class_id;
-					if id = current_type.associated_class.class_id then
+					if System.il_generation then
+							-- In IL code generation, static fields are handled as Eiffel
+							-- attribute, but they do not follow the rule about cycles
+							-- in expanded creation and therefore we should discard
+							-- them from the test.
+						attr ?= class_type.associated_class.feature_table.feature_of_rout_id (attr_desc.rout_id)
+						check
+							has_attribute: attr /= Void
+						end
+					end
+					if
+						id = current_type.associated_class.class_id and then
+						(not System.il_generation or else
+						attr.extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
+					then
 							-- Found expanded circuit
 						!!vlec;
 						vlec.set_class (current_type.associated_class);

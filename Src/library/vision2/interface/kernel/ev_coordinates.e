@@ -46,13 +46,21 @@ feature -- Access
 	x, x_abs: INTEGER is
 			-- Horizontal position.
 		do
-			Result := x_precise.truncated_to_integer
+			if x_precise > 0.0 then
+				Result := (x_precise + 0.5).truncated_to_integer
+			else
+				Result := (x_precise - 0.5).truncated_to_integer
+			end
 		end
 			
 	y, y_abs: INTEGER is
 			-- Vertical position.
 		do
-			Result := y_precise.truncated_to_integer
+			if y_precise > 0.0 then
+				Result := (y_precise + 0.5).truncated_to_integer
+			else
+				Result := (y_precise - 0.5).truncated_to_integer
+			end
 		end
 			
 	x_precise: DOUBLE

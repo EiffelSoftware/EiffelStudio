@@ -130,6 +130,15 @@ feature -- Basic operations
 				tt.append (Closing_parenthesis)
 			end
 			Result.set_tooltip (tt)
+			if drop_agent /= Void then
+				Result.drop_actions.extend (drop_agent)
+			end
+			if veto_drop_agent /= Void then
+				Result.drop_actions.set_veto_pebble_function (veto_drop_agent)
+			end
+			if pebble_function /= Void then
+				Result.set_pebble_function (pebble_function)
+			end
 		end
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is

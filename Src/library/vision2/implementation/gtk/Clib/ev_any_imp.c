@@ -12,93 +12,35 @@
 #include <gtk/gtk.h>
 #include "ev_any_imp.h"
 
-//#define DEBUG
-
 void (*ev_any_imp_c_object_dispose) (EIF_REFERENCE);
-
 
 EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object)
         // Retrieve EIF_REFERENCE from object_id in `c_object'.
         // Returns NULL if Eiffel object has been reaped by the GC.
 {
-    // local
             int eif_oid;
             EIF_REFERENCE eif_reference = NULL;
-#ifdef DEBUG
-        g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-            "c_ev_any_imp_get_eif_reference_from_object_id (%X (%s)) = %X",
-            (int) c_object,
-            gtk_type_name (GTK_OBJECT_TYPE (c_object)),
-            (int) eif_id_object (
-                (int) gtk_object_get_data (GTK_OBJECT (c_object), "eif_oid")
-            )
-        );
-#endif /* DEBUG */
-    // require
-            //g_assert (c_object != NULL);
-            //g_assert (GTK_IS_WIDGET (c_object));
-    // do
-            if ((eif_oid = (int) gtk_object_get_data (
+            
+	    if ((eif_oid = (int) gtk_object_get_data (
                 GTK_OBJECT (c_object),
                 "eif_oid"
             ))) {
 	        eif_reference = eif_id_object (eif_oid);
             }
             return (eif_reference);
-    // end
 }
-
 
 void c_ev_any_imp_c_object_dispose (GtkWidget* c_object, int eif_oid)
         // "destroy" signal handler.
         // Pass call to Eiffel feature if Eiffel object exists.
 {
-    // local
             EIF_REFERENCE eif_reference;
-#ifdef DEBUG
-        g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-            "c_ev_any_imp_c_object_dispose (%X (%s), %d (%X))",
-            (int) c_object,
-            gtk_type_name (GTK_OBJECT_TYPE (c_object)),
-            eif_oid,
-            (int) eif_id_object (eif_oid)
-        );
-#endif /* DEBUG */
-    // require
-            //g_assert (c_object != NULL);
-            //g_assert (GTK_IS_WIDGET (c_object));
-            //g_assert (eif_oid != 0);
-    // do
-            eif_reference = eif_id_object (eif_oid);
-            if (eif_reference) {
+            
+	    eif_reference = eif_id_object (eif_oid);
+	    if (eif_reference) {
                 ev_any_imp_c_object_dispose (eif_reference);
             }
-    // end
 }
-
-
-gboolean c_ev_any_imp_c_object_references_eif_object (GtkWidget* c_object)
-        // Does `c_object' reference Eiffel object?
-{
-#ifdef DEBUG
-        g_log (G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-            "c_ev_any_imp_c_object_references_eif_object (%X (%s)) = %d",
-            (int) c_object,
-            gtk_type_name (GTK_OBJECT_TYPE (c_object)),
-            gtk_object_get_data (GTK_OBJECT (c_object), "eif_object") ? 1 : 0
-        );
-#endif /* DEBUG */
-    // require
-            //g_assert (c_object != NULL);
-            //g_assert (GTK_IS_WIDGET (c_object));
-    // do
-            return ((gboolean) gtk_object_get_data (
-                GTK_OBJECT (c_object),
-                "eif_object"
-            ));
-    // end
-}
-
 
 void c_ev_any_imp_set_eif_oid_in_c_object (
     GtkWidget* c_object,
@@ -108,6 +50,8 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
         // Store Eiffel object_id in `gtk_object'.
         // Set up signal handlers.
 {
+	    	// Our function pointer is reset every time,
+		// This could be done with just one setting function.
             ev_any_imp_c_object_dispose = c_object_dispose;
             gtk_object_set_data (
                 GTK_OBJECT (c_object),
@@ -121,12 +65,8 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
                 (gpointer*) eif_oid
             );
             if (GTK_IS_WINDOW (c_object)) {
-				gtk_object_ref (GTK_OBJECT (c_object));
-				gtk_object_set_data (
-					GTK_OBJECT (c_object),
-					"ref_from_eif",
-					(gpointer*) TRUE
-				);
+			// As Windows are toplevel widgets they need to stay alive unless explicitly destroyed.
+		gtk_object_ref (GTK_OBJECT (c_object));
             }
 }
 
@@ -151,6 +91,9 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.13  2003/08/13 20:16:23  king
+// Zapped more useless code
+//
 // Revision 1.12  2003/08/13 19:37:38  king
 // Removed C compilation error
 // Zapped a lot of useless code in the process

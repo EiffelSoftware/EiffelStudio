@@ -23,24 +23,23 @@ slowly because the compiler did a very bad job at generating the code. Here
 efficiency means to generate as few as possible interfaces to map the Eiffel
 classes.</p>
 <p>CLS compliant is very important for people who choose Eiffel as a programming
-language (mostly because of its benefits: assertions, genericity,...) and that
-want to produce reusable components.</p>
+language (mostly because of its benefits: assertions, genericity,...) and who want to produce reusable components.</p>
 <h2>General description</h2>
 <p>Basically, we will promote classes that are multiply-inherited into .NET
 interfaces. To give an example if in Eiffel you have:</p>
 <pre>class
-	A
-inherit
-	B
 	C
+inherit
+	A
+	B
 end</pre>
 <p>then in .NET you might have the following set of classes and interfaces:</p>
-<pre>class A implements IB and IC
+<pre>class A implements IA
 class B implements IB
-class C implements IC
+class C implements IA and IB
 
-interface IB
-interface IC</pre>
+interface IA
+interface IB</pre>
 <p>This is one way of seeing it, but we could generate it in many different
 ways. It is important that:</p>
 
@@ -54,35 +53,43 @@ metadata.</li>
 
 <p>Because of the last point, we decided that we would indeed generate the
 following set of classes and interfaces:</p>
-<pre>class A_IMP implements B and C
+<pre>class A_IMP implements A
 class B_IMP implements B
-class C_IMP implements C
+class C_IMP implements A and B and inherits A_IMP
 
 interface B
 interface C</pre>
 
+<p class="note"><b>Note:<br>
+</b>Class C_IMP inherits most of its implementation from A_IMP. This is done to
+avoid code duplication.</p>
+
 <p>So if in Eiffel you have the following piece of code:</p>
 
-<pre>a: A
-b: B
+<pre>b: B
+c: C
 
-create a
-b := a</pre>
+create c
+b := c</pre>
 
 <p>It will translate in C# as:</p>
 
-<pre>A a;
-B b;
+<pre>B b;
+C c;
 
 /* Method 1 */
-a = new A_IMP();
-b = a;
+c = new C_IMP();
+b = c;
 
 /* Method 2 */
-a = EiffelFactory.new_A();
-b = a;</pre>
+c = EiffelFactory.new_C();
+b = c;</pre>
 
-<p>&nbsp;</p>
+<p class="note"><b>Note:<br>
+</b>Creation is performed in two different ways. One through the use of a .NET
+constructor, and the second one through a factory call. Both will be implemented
+in case there is no way to use the .NET constructor mechanism, but we will try
+to stick as much as possible on the use of .NET constructor.</p>
 
 </body>
 

@@ -27,7 +27,7 @@ inherit
 			make_from_array as array_make_from_array
 		export
 			{NONE} all
-			{ANY} area
+			{ANY} area, array_item, count
 		redefine
 			wipe_out
 		end

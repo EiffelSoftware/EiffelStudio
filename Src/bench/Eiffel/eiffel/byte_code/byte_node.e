@@ -32,17 +32,16 @@ inherit
 
 feature -- Eiffel source line information
 
-	line_number : INTEGER is     
-			-- Line number where construct
-			-- begins in the Eiffel source.
+	line_number: INTEGER is     
+			-- Position where construct is located in Eiffel source.
 		do
-			Result := -1;
 				-- Unknown by default.
+			Result := -1
 		ensure
 			Result_positive: Result > 0
 		end
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr: like line_number) is
 			-- Set `line_number' to `lnr'.
 		require
 			lnr_positive: lnr > 0

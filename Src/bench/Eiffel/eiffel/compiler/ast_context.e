@@ -24,6 +24,13 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			is_equal, copy
+		end
+
 creation
 	make
 
@@ -206,16 +213,16 @@ feature -- Setting
 			locals := l;
 		end;
 
-	feature_name: STRING is
+	feature_name_id: INTEGER is
 			-- Name of the current feature analyzed
 		require
 			feature_exists: a_feature /= Void or else level2
 		do
 			if not level2 then
 					-- Not checking invariant
-				Result := a_feature.feature_name;
+				Result := a_feature.feature_name_id
 			else
-				Result := "invariant";
+				Result := Names_heap.invariant_name_id
 			end;
 		end;
 
@@ -283,7 +290,7 @@ feature -- Setting
 			rout_id: INTEGER
 		do
 				-- Name
-			byte_code.set_feature_name (feature_name)
+			byte_code.set_feature_name_id (feature_name_id)
 				-- Feature id
 			byte_code.set_body_index (a_feature.body_index)
 				-- Result type if any

@@ -48,8 +48,6 @@ feature -- Creation
 
 	make (a_name: STRING; a_screen: SCREEN) is
 			-- Create widgets.
-		local
-			close_b: CLOSE_WINDOW_BUTTON
 		do
 			Precursor (a_name, a_screen)
 			set_title (a_name)
@@ -113,8 +111,7 @@ feature {NONE} -- Initialization
 
 	set_values is
 			-- Set values for GUI elements.
-		local
-			
+		local	
 			del_com: DELETE_WINDOW
 		do
 			command_editor.set_command_tool (Current)

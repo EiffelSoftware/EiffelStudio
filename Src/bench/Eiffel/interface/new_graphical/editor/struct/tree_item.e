@@ -36,19 +36,25 @@ feature -- Status report
 feature -- Element change
 
 	set_key (k: like key) is
-			-- Make `k' the next item
+			-- Make `k' the value of `key'.
 		do
 			key := k
 		end
 
+	set_tree (t: like tree) is
+			-- Make `t' the value of `tree'.
+		do
+			tree := t
+		end
+
 	set_next (ti: TREE_ITEM) is
-			-- Make `ti' the next item
+			-- Make `ti' the next item.
 		do
 			next := ti
 		end
 
 	set_previous (ti: TREE_ITEM) is
-			-- Make `ti' the previous item
+			-- Make `ti' the previous item.
 		do
 			previous := ti
 		end
@@ -92,6 +98,7 @@ feature -- Basic Operations
 		local
 			ti: like key
 		do
+			other.set_tree (tree)
 			link_right (other)
 			create ti.make (other)
 			key.add_right (ti)
@@ -102,6 +109,7 @@ feature -- Basic Operations
 		local
 			ti: like key
 		do
+			other.set_tree (tree)
 			link_left (other)
 			create ti.make (other)
 			key.add_left (ti)

@@ -2,9 +2,9 @@
 :Title EiffelCOM Help
 1 Getting Started
 2 Introduction=IDH_started
-2 Creating a New Component from a COM definition=IDH_createnewcom
-2 Creating a New Component from an Eiffel Project=IDH_new_from_eiffel
-2 Accessing a Component=IDH_access
+2 Creating a new component from a COM definition=IDH_createnewcom
+2 Creating a new component from an Eiffel project.=IDH_createneweiffel
+2 Accessing a component=IDH_access
 2 Simmary=IDH_summary_started
 1 Microsoft Component Object Model
 2 Overview=IDH_comoverview
@@ -19,6 +19,7 @@
 3 Generated Code Type Dialog=IDH_code_type_dialog
 3 Definition File Dialog=IDH_definition_file_dialog
 3 Eiffel Project File Dialog=IDH_eiffel_project_dialog
+3 Destination File Dialog=IDH_destination_folder_dialog
 3 IDL Marshalling Definition Dialog=IDH_idl_marshling_dialog
 3 Type Library Marshalling Definition Dialog=IDH_type_lib_marshaling_dialog
 3 Final Dialog=IDH_final_dialog

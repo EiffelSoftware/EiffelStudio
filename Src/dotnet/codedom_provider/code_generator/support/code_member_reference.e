@@ -32,6 +32,8 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_GENERATION_STATE
+
 create {CODE_TYPE_REFERENCE_FACTORY, CODE_STOCK_TYPE_REFERENCES}
 	make
 
@@ -134,31 +136,14 @@ feature -- Access
 		require
 			initialized: is_initialized
 		local
-			i: INTEGER
 			l_type: TYPE
 		do
 			if internal_eiffel_name = Void then
 				if Resolver.is_generated (implementing_type) then
-					if is_redefined then
-						if parent /= Void then
-							Result := parent.eiffel_name
-						else
-							Result := Name_formatter.formatted_feature_name (name)
-						end
+					if is_redefined and then parent /= Void then
+						Result := parent.eiffel_name
 					else
 						Result := Name_formatter.formatted_feature_name (name)
-						if hierarchy_has_name (Result) then
-							Result.append ("_2")
-							i := 3
-						end
-						from
-						until
-							not hierarchy_has_name (Result)						
-						loop
-							Result.keep_head (Result.last_index_of ('_', Result.count))
-							Result.append (i.out)
-							i := i + 1
-						end
 					end
 				else
 					l_type := implementing_type.dotnet_type
@@ -216,80 +201,7 @@ feature -- Access
 			-- Type with homonym feature
 			-- Set by `hierarchy_has_name'.
 
-	unique_name: STRING is
-			-- Unique feature name in type built from current feature name
-		require
-			is_generated: Resolver.is_generated (implementing_type)
-		local
-			i: INTEGER
-			l_type: CODE_GENERATED_TYPE
-		do
-			Resolver.search (implementing_type)
-			check
-				was_found: Resolver.found
-			end
-			l_type := Resolver.found_type
-			from
-				Result := eiffel_name.twin
-				Result.append ("_2")
-				i := 3
-			until
-				not l_type.features.has (Result) and not hierarchy_has_name (Result)
-			loop
-				Result.keep_head (Result.last_index_of ('_', Result.count))
-				Result.append (i.out)
-				i := i + 1
-			end
-		ensure
-			non_void_name: Result /= Void
-		end
-		
 feature -- Status Report
-
-	hierarchy_has_name (a_name: STRING): BOOLEAN is
-			-- Does class hierarchy containing current member
-			-- have a feature with eiffel name `a_name'?
-			-- Start search in parents of `implementing_type'.
-		require
-			non_void_name: a_name /= Void
-		local
-			l_type: TYPE
-			l_interfaces: NATIVE_ARRAY [TYPE]
-			i, l_count: INTEGER
-		do
-			Resolver.search (implementing_type)
-			if Resolver.found then
-				Result := parents_have_feature (a_name, Resolver.found_type.parents)
-			else
-				l_type := implementing_type.dotnet_type
-				if l_type /= Void then
-					if l_type.base_type /= Void then
-						Result := dotnet_hierarchy_has_feature (a_name, l_type.base_type)
-						if Result then
-							parent_type_with_homonym := Type_reference_factory.Type_reference_from_type (l_type.base_type)
-						end
-					end
-					if not Result then
-						l_interfaces := l_type.get_interfaces
-						if l_interfaces /= Void then
-							from
-								l_count := l_interfaces.count
-							until
-								i = l_count or Result
-							loop
-								Result := dotnet_hierarchy_has_feature (a_name, l_interfaces.item (i))
-								if Result then
-									parent_type_with_homonym := Type_reference_factory.Type_reference_from_type (l_interfaces.item (i))
-								end
-								i := i + 1
-							end
-						end
-					end
-				end
-			end
-		ensure
-			parent_type_with_homonym_set: (parent_type_with_homonym /= Void) = Result
-		end
 
 	has_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN is
 			-- Does member have arguments `a_arguments'?
@@ -359,70 +271,6 @@ feature -- Element Settings
 		end
 		
 feature {NONE} -- Implementation
-
-	parents_have_feature (a_name: STRING; a_parents: HASH_TABLE [CODE_PARENT, STRING]): BOOLEAN is
-			-- Do `parents' or their ancestor have a feature with eiffel name `a_name'?
-		require
-			non_void_name: a_name /= Void
-			non_void_parents: a_parents /= Void
-			initialized: is_initialized
-		local
-			l_type: CODE_GENERATED_TYPE
-			l_features: HASH_TABLE [CODE_FEATURE, STRING]
-			l_dotnet_type: TYPE
-			l_parent_type: CODE_TYPE_REFERENCE
-		do
-			from
-				a_parents.start
-			until
-				a_parents.after or Result
-			loop
-				l_parent_type := a_parents.item_for_iteration.type
-				Resolver.search (l_parent_type)
-				if Resolver.found then
-					l_type := Resolver.found_type
-					l_features := l_type.features
-					l_features.search (a_name)
-					Result := l_features.found
-					if Result then
-						parent_type_with_homonym := l_parent_type
-					end
-					if not Result then
-						Result := parents_have_feature (a_name, l_type.parents)
-					end
-				else
-					l_dotnet_type := l_parent_type.dotnet_type
-					if l_dotnet_type /= Void then
-						Result := dotnet_hierarchy_has_feature (a_name, l_dotnet_type)
-						if Result then
-							parent_type_with_homonym := l_parent_type
-						end
-					end
-				end
-				a_parents.forth
-			end
-		ensure
-			parent_type_with_homonym_set: (parent_type_with_homonym /= Void) = Result
-		end
-	
-	dotnet_hierarchy_has_feature (a_name: STRING; a_type: TYPE): BOOLEAN is
-			-- Do `a_type' or any base type of `a_type' have a feature with Eiffel name `a_name'?
-			--| We don't actually need to search parents as representation of .NET type in metadata is flat
-		local
-			l_features: LIST [CODE_MEMBER_REFERENCE]
-		do
-			l_features := Metadata_provider.features (a_name, a_type)
-			if l_features /= Void then
-				from
-					l_features.start
-				until
-					l_features.after or Result
-				loop
-					Result := l_features.item.eiffel_name.is_equal (a_name)
-					l_features.forth
-				end
-			end
-		end
 
 	parent_in_type (a_type: CODE_TYPE_REFERENCE): CODE_MEMBER_REFERENCE is
 			-- Parent in type `a_type'

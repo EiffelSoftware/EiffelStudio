@@ -23,7 +23,10 @@ inherit
 			on_lvn_itemchanged,
  			on_lvn_itemchanging,
 			on_lvn_keydown,
- 			on_lvn_setdispinfo
+ 			on_lvn_setdispinfo,
+			on_left_button_up,
+			on_left_button_double_click,
+			on_left_button_down
 		end
 
 	APPLICATION_IDS
@@ -31,15 +34,10 @@ inherit
 			{NONE} all
 		end 
 
-	WEL_LVCF_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_TVIF_CONSTANTS
-		export
-			{NONE} all
-		end
+--	WEL_TVIF_CONSTANTS
+--		export
+--			{NONE} all
+--		end
 
 	WEL_ILC_CONSTANTS
 		export
@@ -74,8 +72,8 @@ feature {NONE} -- Initialization
  			{WEL_LIST_VIEW} Precursor (a_parent, a_x, a_y, a_width, a_height, an_id)
 
 				-- create the image list
-			create image_list.make(Large_image_width, Large_image_height, Ilc_color4)
-			create small_image_list.make(Small_image_width, Small_image_height, Ilc_color4)
+			create image_list.make(Large_image_width, Large_image_height, Ilc_color4, True)
+			create small_image_list.make(Small_image_width, Small_image_height, Ilc_color4, True)
 
 				-- First match the background color of the imagelist with
 				-- the background color of the list view.
@@ -304,6 +302,27 @@ feature -- Notifications
 			-- for an item.
 		do
 			add_mess_output ("Set disp info")
+		end
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			add_mess_output ("Left button up")
+		end
+
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			add_mess_output ("Left button double click")
+		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			add_mess_output ("Left button down")
 		end
 
 feature -- Changing the style

@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			a_file.read_word
 			if a_file.last_string.is_equal ("define") then
 				a_file.read_word
-				id := clone (a_file.last_string)
+				id := a_file.last_string.twin
 				a_file.read_word
 				if
 					a_file.last_string.is_integer or

@@ -788,37 +788,37 @@ long sig;
 
 	sig_ign[sig] = 0;
 #ifdef SIGTTIN
-	if (sig = SIGTTIN) {
+	if (sig == SIGTTIN) {
 		(void) signal(SIGTTIN, SIG_DFL);	/* Ignore background input signal */
 		return;
 	}
 #endif
 #ifdef SIGTTOU
-	if (sig = SIGTTOU) {
+	if (sig == SIGTTOU) {
 		(void) signal(SIGTTOU, SIG_DFL);	/* Ignore background output signal */
 		return;
 	}
 #endif
 #ifdef SIGTSTP
-	if (sig = SIGTSTP) {
+	if (sig == SIGTSTP) {
 		(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGCONT
-	if (sig = SIGCONT) {
+	if (sig == SIGCONT) {
 		(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGTRAP
-	if (sig = SIGTRAP) {
+	if (sig == SIGTRAP) {
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGFPE
-	if (sig = SIGFPE) {
+	if (sig == SIGFPE) {
 		(void) signal(SIGFPE, exfpe);		/* Raise an Eiffel exception when caught */
 		return;
 	}
@@ -837,37 +837,37 @@ long sig;
 
 	sig_ign[sig] = 1;
 #ifdef SIGTTIN
-	if (sig = SIGTTIN) {
+	if (sig == SIGTTIN) {
 		(void) signal(SIGTTIN, SIG_IGN);	
 		return;
 	}
 #endif
 #ifdef SIGTTOU
-	if (sig = SIGTTOU) {
+	if (sig == SIGTTOU) {
 		(void) signal(SIGTTOU, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGTSTP
-	if (sig = SIGTSTP) {
+	if (sig == SIGTSTP) {
 		(void) signal(SIGTSTP, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGCONT
-	if (sig = SIGCONT) {
+	if (sig == SIGCONT) {
 		(void) signal(SIGCONT, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGTRAP
-	if (sig = SIGTRAP) {
+	if (sig == SIGTRAP) {
 		(void) signal(SIGTRAP, SIG_IGN);
 		return;
 	}
 #endif
 #ifdef SIGFPE
-	if (sig = SIGFPE) {
+	if (sig == SIGFPE) {
 		(void) signal(SIGFPE, SIG_IGN);	
 		return;
 	}
@@ -943,37 +943,37 @@ long sig;
 
 	sig_ign[sig] = osig_ign[sig];
 #ifdef SIGTTIN
-	if (sig = SIGTTIN) {
+	if (sig == SIGTTIN) {
 		(void) signal(SIGTTIN, SIG_IGN);	/* Ignore background input signal */
 		return;
 	}
 #endif
 #ifdef SIGTTOU
-	if (sig = SIGTTOU) {
+	if (sig == SIGTTOU) {
 	 	(void) signal(SIGTTOU, SIG_IGN);	/* Ignore background output signal */
 		return;
 	}
 #endif
 #ifdef SIGTSTP
-	if (sig = SIGTSTP) {
+	if (sig == SIGTSTP) {
 		(void) signal(SIGTSTP, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGCONT
-	if (sig = SIGCONT) {
+	if (sig == SIGCONT) {
 		(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGTRAP
-	if (sig = SIGTRAP) {
+	if (sig == SIGTRAP) {
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 		return;
 	}
 #endif
 #ifdef SIGFPE
-	if (sig = SIGFPE) {
+	if (sig == SIGFPE) {
 		(void) signal(SIGFPE, exfpe);		/* Raise an Eiffel exception when caught */
 		return;
 	}

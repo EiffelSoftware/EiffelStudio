@@ -142,28 +142,28 @@ rt_shared struct stack loc_stack = {			/* Local indirection stack */ /* %%zmt */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-rt_public struct stack loc_set = {				/* Local variable stack */
+rt_public struct stack loc_set = {				/* Local variable stack */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-rt_private struct stack rem_set = {			/* Remembered set */
+rt_private struct stack rem_set = {			/* Remembered set */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-rt_shared struct stack moved_set = {			/* Moved objects set */
+rt_shared struct stack moved_set = {			/* Moved objects set */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-rt_public struct stack once_set = {			/* Once functions */
+rt_public struct stack once_set = {			/* Once functions */ /* %%zmt */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -176,17 +176,17 @@ rt_public struct stack once_set = {			/* Once functions */
  * threshold for the next step (generation collcetion). The size_table array
  * is used by the generation scavenging algorithm.
  */
-rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */
-rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */
-rt_shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */
-rt_public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */
-rt_public int gc_running = 0;			/* Is the GC running */
-rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */
-rt_public int gc_ran = 0;				/* Has the GC been running */
+rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ /* %%zmt */
+rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ /* %%zmt */
+rt_shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */ /* %%zmt */
+rt_public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */ /* %%zmt */
+rt_public int gc_running = 0;			/* Is the GC running */ /* %%zmt */
+rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */ /* %%zmt */
+rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
 
 #if defined __VMS || defined EIF_OS2 || defined SYMANTEC_CPP
-rt_public int r_fides;	/* moved here from retrieve.c */
-rt_public char r_fstoretype;	/* moved here from retrieve.c */
+rt_public int r_fides;	/* moved here from retrieve.c */ /* %%zmt */
+rt_public char r_fstoretype;	/* moved here from retrieve.c */ /* %%zmt %/
 	/* Was getting a link warning that it couldn't find this symbol.
 	 * Under vms the linker won't include the symbol if at least one
 	 * routine from the module isn't used.
@@ -197,17 +197,17 @@ rt_public char r_fstoretype;	/* moved here from retrieve.c */
  * space more than once: for each spoilt chunk we find, we have to allocate a
  * new 'to' zone at the next partial scavenge.
  */
-rt_private struct s_table *spoilt_tbl = (struct s_table *) 0;
+rt_private struct s_table *spoilt_tbl = (struct s_table *) 0;	/* %%zmt */
 
 /* Zones used for partial scavenging */
-rt_shared struct sc_zone ps_from;		/* From zone */
-rt_shared struct sc_zone ps_to;		/* To zone */
+rt_shared struct sc_zone ps_from;		/* From zone */ /* %%zmt */
+rt_shared struct sc_zone ps_to;		/* To zone */ /* %%zmt */
 rt_shared struct chunk *last_from =
-	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */
+	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */ /* %%zmt */
 
-rt_public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */
-rt_public int gc_monitor = 0;			/* Disable GC time-monitoring by default */
-rt_public char *root_obj = (char *) 0;	/* Address of the 'root' object */
+rt_public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */ /* %%zmt */
+rt_public int gc_monitor = 0;			/* Disable GC time-monitoring by default */ /* %%zmt */
+rt_public char *root_obj = (char *) 0;	/* Address of the 'root' object */ /* %%zmt */
 
 /* Automatic invokations of GC */
 rt_public int acollect(void);				/* Collection based on threshold */
@@ -3161,6 +3161,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	 * if none was found in the Eiffel list.
 	 */
 
+	EIF_GET_CONTEXT
 	register2 std_size = CHUNK - sizeof(struct chunk);
 
 	for (/* empty */; start != (struct chunk *) 0; start = start->ck_lprev) {
@@ -3189,6 +3190,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	}
 
 	return (struct chunk *) 0;		/* No standard size chunk found */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void find_to_space(struct sc_zone *to)
@@ -3266,11 +3268,13 @@ rt_shared char *to_chunk(void)
 	 * attempts to release some core. The address returned is the first one
 	 * which will be used, i.e. the start of the header block.
 	 */
-	
+
+	EIF_GET_CONTEXT
 	if (ps_to.sc_arena == (char *) 0)
 		return (char *) 0;
 
 	return ps_to.sc_arena;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *scavenge(register char *root, struct sc_zone *to)
@@ -3376,6 +3380,7 @@ rt_public int collect(void)
 	 * to the user via MEMORY primitives.
 	 */
 
+	EIF_GET_CONTEXT
 	int result;
 	int started_here = 0;
 
@@ -3402,6 +3407,7 @@ rt_public int collect(void)
 		}
 
 	return result;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int generational_collect(void)
@@ -4797,6 +4803,7 @@ rt_public void eremb(char *obj)
 	 * normally done by the RTAP macro.
 	 */
 
+	EIF_GET_CONTEXT
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
 		urgent_plsc(&obj);					/* Compacting garbage collection */
 		if (-1 == epush(&rem_set, obj))		/* Still low on memory */
@@ -4815,6 +4822,7 @@ rt_public void eremb(char *obj)
 	/* If we come here, the object was successfully pushed in the stack */
 	
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark it as remembered */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void erembq(char *obj)
@@ -4824,10 +4832,12 @@ rt_public void erembq(char *obj)
 	 * on every 'put' operation).
 	 */
 
+	EIF_GET_CONTEXT
 	if (-1 == epush(&rem_set, obj))		/* Cannot record object */
 		enomem(MTC_NOARG);						/* Critical exception */
 
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -4909,6 +4919,7 @@ rt_public void onceset(register char **ptr)
 	 * the garbage collector (we are storing the address of a C static variable.
 	 */
 
+	EIF_GET_CONTEXT
 #ifdef DEBUG
 	dprintf(32)("onceset: value 0x%lx at 0x%lx\n", *ptr, ptr);
 	flush;
@@ -4916,6 +4927,7 @@ rt_public void onceset(register char **ptr)
 	
 	if (-1 == epush(&once_set, (char *)ptr))
 		eraise("once function recording", EN_MEM);
+	EIF_END_GET_CONTEXT
 }
 
 /*

@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			if associated_class /= Void then
 				Result := clone (capital_command_name)
 				Result.append (Interface_names.l_Of_class)
-				Result.append (associated_class.name)
+				Result.append (associated_class.name_in_upper)
 			else
 				Result := Interface_names.l_Not_in_system_no_info
 			end

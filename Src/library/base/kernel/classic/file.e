@@ -1455,7 +1455,7 @@ feature {NONE} -- Implementation
 	file_unlink (fname: POINTER) is
 			-- Delete file `fname'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *) use %"eif_file.h%""
 		end
 
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
@@ -1558,13 +1558,13 @@ feature {NONE} -- Implementation
 	file_touch (f_name: POINTER) is
 			-- Touch file `f_name'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *) use %"eif_file.h%""
 		end
 
 	file_rename (old_name, new_name: POINTER) is
 			-- Change file name from `old_name' to `new_name'.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, char *) use %"eif_file.h%""
 		end
 
 	file_perm (f_name, who, what: POINTER; flag: INTEGER) is
@@ -1651,25 +1651,25 @@ feature {NONE} -- Implementation
 	file_exists (f_name: POINTER): BOOLEAN is
 			-- Does `f_name' exist.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *): EIF_BOOLEAN use %"eif_file.h%""
 		end
 
 	file_path_exists (f_name: POINTER): BOOLEAN is
 			-- Does `f_name' exist.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *): EIF_BOOLEAN use %"eif_file.h%""
 		end
 
 	file_access (f_name: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access test `which' on `f_name' using real UID.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, EIF_INTEGER): EIF_BOOLEAN use %"eif_file.h%""
 		end
 
 	file_creatable (f_name: POINTER; n: INTEGER): BOOLEAN is
 			-- Is `f_name' of count `n' creatable.
 		external
-			"C | %"eif_file.h%""
+			"C signature (char *, EIF_INTEGER): EIF_BOOLEAN use %"eif_file.h%""
 		end
 
 	c_retrieved (file_handle: INTEGER): ANY is
@@ -1685,7 +1685,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C | %"eif_store.h%""
+			"C signature (EIF_INTEGER, EIF_REFERENCE) use %"eif_store.h%""
 		alias
 			"estore"
 		end
@@ -1694,7 +1694,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C | %"eif_store.h%""
+			"C signature (EIF_INTEGER, EIF_REFERENCE) use %"eif_store.h%""
 		alias
 			"eestore"
 		end
@@ -1703,7 +1703,7 @@ feature {NONE} -- Implementation
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
-			"C | %"eif_store.h%""
+			"C signature (EIF_INTEGER, EIF_REFERENCE) use %"eif_store.h%""
 		alias
 			"sstore"
 		end

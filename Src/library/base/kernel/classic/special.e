@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 	frozen spclearall (p: POINTER) is
 			-- Reset all items to default value.
 		external
-			"C use %"eif_copy.h%""
+			"C signature (EIF_REFERENCE) use %"eif_copy.h%""
 		end
 
 	frozen sparycpy (old_area: POINTER; newsize, s, n: INTEGER): SPECIAL [T] is
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			-- from `oldarea'.
 			-- Old items are at position `s' in new area.
 		external
-			"C use %"eif_misc.h%""
+			"C signature (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER): EIF_REFERENCE use %"eif_misc.h%""
 		alias
 			"arycpy"
 		end

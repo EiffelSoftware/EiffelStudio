@@ -276,6 +276,18 @@ run-time/Jmakefile
 run-time/Makefile.SH
 run-time/U
 run-time/U/workbench.H
+run-time/eif_project.h
+run-time/eif_project.c
+run-time/eif_once.c
+run-time/eif_once.h
+run-time/rout_obj.c
+run-time/eif_rout_obj.h
+run-time/eif_rw_lock.c
+run-time/eif_rw_lock.h
+run-time/gen_conf.c
+run-time/eif_gen_conf.h
+run-time/eif_special_table.c
+run-time/eif_special_table.h
 run-time/argv.c
 run-time/eif_argv.h
 run-time/bits.c
@@ -290,8 +302,6 @@ run-time/debug.c
 run-time/eif_debug.h
 run-time/dir.c
 run-time/eif_dir.h
-run-time/dle.c
-run-time/eif_dle.h
 run-time/eif_eiffel.h
 run-time/equal.c
 run-time/eif_equal.h
@@ -359,3 +369,4 @@ run-time/eif_wbench.h
 run-time/x2c.c
 eif_confmagic.h                  Magic symbol remapping
 bench/Makefile.SH
+minilzo/Makefile.SH

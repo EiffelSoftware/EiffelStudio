@@ -83,7 +83,7 @@ USE_STDARG
 #include <processes.h>	    /* pipe, exec, vfork... */
 #include <unixlib.h>	    /* getpid, ... */
 #include <unixio.h>	    /* open, close, read, write, dup, ... */
-/* #include <file.h>	    /* O_RDWR, O_NDELAY, ... */
+/* #include <file.h>	*//* O_RDWR, O_NDELAY, ... */
 #include file		    /* be sure to get the VMS, not the Eiffel file.h */
 #include <ints.h>
 
@@ -874,7 +874,7 @@ static unsigned int read_efn, write_efn;
 static int fdvec_new(FD fd, PCB *pcb, char *devnam, io_mode rwmode, int bufsiz) 
 {
     assert (fd < CARD(ipcvms_fdvec));
-    /* assert("fd is closed"); */
+    /* assert ("fd is closed"); */
 
     ipcvms_fdvec[fd]._info.fdnam = strnew(devnam);
     ipcvms_fdvec[fd]._info.mode = rwmode;
@@ -897,7 +897,7 @@ static void fdvec_remove_pcbref(FD fd, PCB *pcb)
 	if (!pcb->fdrefcnt) {	/* if there's no more references to this pcb */
 free_pcb:   /* label for debugging porpoises */
 	    if (pcb->devnam) 
-		assert(pcb->devnam == ipcvms_fdvec[fd]._info.fdnam);
+		assert (pcb->devnam == ipcvms_fdvec[fd]._info.fdnam);
 	    if (pcb->chan)
 		sys$dassgn(pcb->chan);
 	    if (pcb->rdbuf)
@@ -914,7 +914,7 @@ free_pcb:   /* label for debugging porpoises */
 /* descriptor, usually when the file is closed.				*/
 static void fdvec_destroy(FD fd, PCB *pcb)
 {
-    assert(ipcvms_fdvec[fd].pcb == pcb);
+    assert (ipcvms_fdvec[fd].pcb == pcb);
     if (ipcvms_fdvec[fd]._info.flags.inited) {
 	ipcvms_free_fd_efn(fd);
 	if (ipcvms_fdvec[fd].pcb) {
@@ -938,7 +938,7 @@ static void fdvec_destroy(FD fd, PCB *pcb)
 
 static void fdvec_dup(FD fd1, FD fd2)
 {
-    assert(!ipcvms_fdvec[fd2]._info.flags.inited);
+    assert (!ipcvms_fdvec[fd2]._info.flags.inited);
     ipcvms_fdvec[fd2] = ipcvms_fdvec[fd1];
     ipcvms_fdvec[fd2]._info.fdnam = strnew(ipcvms_fdvec[fd1]._info.fdnam);
     if (ipcvms_fdvec[fd2].pcb)
@@ -1179,8 +1179,8 @@ int ipcvms_pipe(FD fdsc[2], ...)
 #define xxMAX_MBXMAXMSG	512		/* warn: just for debugging! */
 
     ipcvms_init(0);			/* one-time initialization */
-    assert(ipcvms_pid);			/* we must now know our pid */
-    assert(ipcvms_progname);		/*  and our program (image) name */
+    assert (ipcvms_pid);			/* we must now know our pid */
+    assert (ipcvms_progname);		/*  and our program (image) name */
 pipe_debug: /* label for debugging. I still don't use goto's */
 
     /* pick up optional arguments: flags, bufsize, bufquota */
@@ -1221,7 +1221,7 @@ pipe_debug: /* label for debugging. I still don't use goto's */
 	RETURN_VMSERR(st)
     }
     st = sys$getdviw(1, pcb->chan, 0, dvi_list1, &pcb->iosb, 0,0,0);
-    assert(SUCCESS(st));
+    assert (SUCCESS(st));
     DXPTR(devnam_d)[DXLEN(devnam_d)] = '\0';
     /* pcb->devnam = strnnew(DXPTR(devnam_d), DXLEN(devnam_d)); */
 
@@ -1230,8 +1230,8 @@ pipe_debug: /* label for debugging. I still don't use goto's */
 
     pcb->modearg = flags;
     pcb->flags.async = BOOLEAN(flags & O_NDELAY);
-    assert(SUCCESS(pcb->iosb.sts));
-    assert(pcb->iosb.siz == 0);
+    assert (SUCCESS(pcb->iosb.sts));
+    assert (pcb->iosb.siz == 0);
 
     /* open write mailbox using C library function */
 #ifdef USE_NDELAY
@@ -1248,8 +1248,8 @@ pipe_debug: /* label for debugging. I still don't use goto's */
     **FIXIT** use get_fdname to get cannonical device name
     fdsc[1] = fdvec_new(err, pcb, devnam, io_write, pcb->maxmsg);
     pcb->devnam = ipcvms_fdvec[err]._info.fdnam;
-    assert(SUCCESS(pcb->iosb.sts));
-    assert(pcb->iosb.siz == 0);
+    assert (SUCCESS(pcb->iosb.sts));
+    assert (pcb->iosb.siz == 0);
 
     /* open read mailbox using C library function */
     /* flags &= ~O_NDELAY;			/* clear all bits but O_NDELAY */
@@ -1292,7 +1292,7 @@ int ipcvms_close(FD fd)
     get_fdname(fd, fdname);
     err = close(fd);
     if (pcb) {
-	assert(err >= 0);		/* assert close did not fail */
+	assert (err >= 0);		/* assert close did not fail */
     } 
     do_log_close(fd, pcb, err, fdname);
     fdvec_destroy(fd, pcb);
@@ -1336,7 +1336,7 @@ int ipcvms_dup2(FD fd1, FD fd2)
     do_log_oper(fd1, pcb, err, "dup2(%d,%d) %s", fd1, fd2, buf);
     if (err >= 0) {			/* dup2 succeeded */
 	if (pcb) 			/* if fd1 is one of ours */
-	    assert(ipcvms_fdvec[fd2].pcb == NULL);
+	    assert (ipcvms_fdvec[fd2].pcb == NULL);
 	assert (fd2 < CARD(ipcvms_fdvec) );
 	fdvec_dup(fd1, fd2);
     } else { 
@@ -1536,7 +1536,7 @@ static int my_read(FD fd, PCB *pcb, char *buf, size_t nbytes, bool_t read_async)
 	/* only post async read if explicitly requested */
 	if (read_async) async_mod = IO$M_NOW;
 	else async_mod = 0;
-	assert(async_mod == 0); 	/* NO ASYNC READS, PLEASE */
+	assert (async_mod == 0); 	/* NO ASYNC READS, PLEASE */
 	pcb->flags.read_rdy = FALSE;
 	/* save partner (writer) pid from previous read if known */
 	/* if (pcb->iosb.pid) pcb->partner_pid = pcb->iosb.pid; */
@@ -1722,7 +1722,7 @@ static unsigned int pending_message_count(FD fd, PCB *pcb)
 	    ipcvms_progname, fd, ipcvms_fdvec[fd]._info.fdnam, st, strerror(EVMSERR,st));
 	return -1;
     }	
-    assert(devclass == DC$_MAILBOX);
+    assert (devclass == DC$_MAILBOX);
     return (devdep & 0xFFFF);	
 } /* end pending_message_count() */
 
@@ -1871,7 +1871,7 @@ static void select_attn_cleanup()
     VMS_STS st;
     int ii;
 
-    assert(select_data_numb <= CARD(select_data));
+    assert (select_data_numb <= CARD(select_data));
     for (ii=0;  ii < select_data_numb;  ++ii) {
 	if (select_data[ii].chan) {
 	    st = sys$cancel(select_data[ii].chan);
@@ -1888,7 +1888,7 @@ static void select_attn_set(int efn, int nfds, int *fdset, int flag)
 {
     VMS_STS st; int ii;
 
-    assert(nfds <= CARD(select_data));
+    assert (nfds <= CARD(select_data));
 
     /* loop over the file descriptor bit mask */
     for (ii = 0;  ii < nfds;  ++ii) {
@@ -1919,7 +1919,7 @@ int my_select(int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *t
     VMS_STS st;
     int rdy;
 
-    assert(nfds <= 32);
+    assert (nfds <= 32);
 
 
     /* First check to see if any fd's are ready, and avoid all this overhead. */

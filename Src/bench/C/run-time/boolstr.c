@@ -10,21 +10,12 @@
 	Externals for class BOOL_STRING.
 */
 
-#include "eif_config.h"
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
-
 #include "eif_portable.h"
 #include "eif_boolstr.h"
+#include <string.h>
 
 rt_public char *bl_str_set(char *a1, int s, int n)
-         
       			/* number of boolean in `a1' */
-      
 {
 	int i;
 
@@ -39,7 +30,7 @@ rt_public char *bl_str_and(char *a1, char *a2, char *a3, int s)
 	int i;
 
 	for (i = 0; i < s; i++)
-		a3[i] = a1[i] && a2[i];
+		a3[i] = (char) (a1[i] && a2[i]);
 
 	return a3;
 }
@@ -49,7 +40,7 @@ rt_public char *bl_str_or(char *a1, char *a2, char *a3, int s)
 	int i;
 
 	for (i = 0; i < s; i++)
-		a3[i] = a1[i] || a2[i];
+		a3[i] = (char) (a1[i] || a2[i]);
 
 	return a3;
 }
@@ -59,7 +50,7 @@ rt_public char *bl_str_xor(char *a1, char *a2, char *a3, int s)
 	int i;
 
 	for (i = 0; i < s; i++)
-		a3[i] = a1[i] ^ a2[i];
+		a3[i] = (char) (a1[i] ^ a2[i]);
 
 	return a3;
 }
@@ -69,15 +60,13 @@ rt_public char *bl_str_not(char *a1, char *a2, int s)
 	int i;
 
 	for (i = 0; i < s; i++)
-		a2[i] = !a1[i];
+		a2[i] = (char) (!a1[i]);
 
 	return a2;
 }
 
 rt_public char *bl_str_shiftr(char *a1, char *a2, int s, int n)
-              
       			/* number of booleans in `a1' */
-      
 {
 	/* Right shift `a1' by `n' positions */
 	if (n < s)
@@ -91,9 +80,7 @@ rt_public char *bl_str_shiftr(char *a1, char *a2, int s, int n)
 }
 
 rt_public char *bl_str_shiftl(char *a1, char *a2, int s, int n)
-              
       			/* number of booleans in `a1' */
-      
 {
     int i;
 

@@ -16,31 +16,20 @@
 #ifndef _portable_h_
 #define _portable_h_
 
+#include "eif_config.h"
+
+#include <limits.h>			/* To avoid redefinition of constants limits. */
+#include "eif_confmagic.h"
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
  
-#ifndef _config_h_
-#include "eif_config.h"
-#endif
-
-#include <limits.h>			/* To avoid redefinition of constants limits. */
-#ifdef EIF_WINDOWS
-#ifdef EIF_WIN32
-#include "eif_confmagic.h"
-#include <stdlib.h>
-#else
-#include "confmagc.h"
-#endif
-#else
-#include "eif_confmagic.h"
-#endif
-
 #ifdef EIF_VMS
 /* 
  *  VMS system specific definitions 
  */
-#define VMS_PATH_MAX 512    /* allow for ODS5 names */
 #define _POSIX_EXIT
 #define __NEW_STARLET	/* define prototypes for sys$, lib$ function calls */
 /* #define _VMS_V6_SOURCE	** see DECC RTL doc (geteuid) */
@@ -64,12 +53,20 @@ extern "C" {
 #define readdir   eif_vms_readdir
 #define seekdir   eif_vms_seekdir
 #define telldir   eif_vms_telldir
+
+#ifdef __cplusplus
+}
+#endif
+
 #include <dirent.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <unixlib.h>
 #include <unixio.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef unsigned long VMS_STS;		/* VMS status (condition) value */
 typedef struct _generic_64 bintim;	/* VMS binary time (8 bytes) */
@@ -116,7 +113,13 @@ typedef struct itemlist3def {
  * Standard types
  */
 #ifdef EIF_VMS
+#ifdef __cplusplus
+}
+#endif
 #include <ints.h>		/* integer sizes are architecture dependent */
+#ifdef __cplusplus
+extern "C" {
+#endif
 #elif INTSIZE < 4
 typedef int int16;
 typedef long int32;
@@ -158,7 +161,7 @@ typedef unsigned int uint32;
 
 #ifdef  EIF_USE_DLL
 #define RT_LNK	__declspec(dllimport)
-#elif   EIF_MAKE_DLL
+#elif defined(EIF_MAKE_DLL)
 #define RT_LNK	__declspec(dllexport)
 #else
 #define RT_LNK extern
@@ -171,13 +174,22 @@ typedef unsigned int uint32;
 #define rt_shared				/* data shared between modules, but not public */
 
 /* Maps an Eiffel type on a C type */
-typedef long            EIF_INTEGER;
-typedef unsigned char   EIF_CHARACTER;
-typedef float           EIF_REAL;
-typedef double          EIF_DOUBLE;
-typedef char *          EIF_REFERENCE;
-typedef char *          EIF_POINTER;
-typedef unsigned char   EIF_BOOLEAN;
+typedef unsigned char	EIF_BOOLEAN;
+typedef unsigned char	EIF_CHARACTER;
+typedef uint32			EIF_WIDE_CHAR;
+typedef char			EIF_INTEGER_8;
+typedef int16			EIF_INTEGER_16;
+typedef int32			EIF_INTEGER;
+typedef int32			EIF_INTEGER_32;
+#if defined(EIF_WIN32) || defined(EIF_VMS)      /* or whatever they actually are */
+typedef __int64			EIF_INTEGER_64;
+#else
+typedef long long		EIF_INTEGER_64;
+#endif
+typedef float			EIF_REAL;
+typedef double			EIF_DOUBLE;
+typedef char *			EIF_REFERENCE;
+typedef void *			EIF_POINTER;
 
 	/* previously in eif_globals.h */
 #define MTC_NOARG           

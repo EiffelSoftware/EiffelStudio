@@ -4,20 +4,17 @@
 	$Id$
 */
 
-#include <string.h>
-#include <ctype.h>
 #include "eif_portable.h"
-#include "eif_macros.h"
+#include "rt_macros.h"
+#include "eif_globals.h"
 #include "eif_struct.h"
 #include "eif_gen_conf.h"
+#include "rt_gen_types.h"
 #include "eif_lmalloc.h"
-#include "eif_threads.h"
-#include <assert.h>
-
-#ifdef EIF_VMS	/* this should be done for all platforms */
+#include "rt_threads.h"
+#include "rt_assert.h"
 #include <ctype.h>
-#endif
-
+#include <string.h>
 
 /*------------------------------------------------------------------*/
 /* Debugging flag. If set, the names of the generated types will be */
@@ -30,7 +27,7 @@
 #ifdef GEN_CONF_DEBUG
 rt_public void log_puts (char *);
 rt_public void log_puti (int);
-#define logfile "c:\gentypes.log"
+#define logfile "gentypes.log"
 #endif
 
 /*------------------------------------------------------------------*/
@@ -58,10 +55,12 @@ rt_public int    eif_par_table2_size = 0;
 /* Result   : RTUD(no)                                              */
 /*------------------------------------------------------------------*/
 
+#ifdef WORKBENCH
 #ifdef EIF_THREADS
 rt_private int16 *rtud_inv = (int16 *) 0;
 #else
 rt_public int16 *rtud_inv = (int16 *) 0;
+#endif
 #endif
 
 /*------------------------------------------------------------------*/
@@ -194,16 +193,83 @@ rt_private EIF_GEN_DER **eif_derivations = (EIF_GEN_DER **)0;
 rt_private int16 cid_array [3];
 
 /*------------------------------------------------------------------*/
+
+#define SPECIAL_SIZE    -(FORMAL_TYPE)
+
+/*------------------------------------------------------------------*/
 /* Various base ids. RTUD(no)                                       */
 /*------------------------------------------------------------------*/
 
-rt_private int16 egc_character_dtype = -1;
-rt_private int16 egc_boolean_dtype = -1;
-rt_private int16 egc_integer_dtype = -1;
-rt_private int16 egc_real_dtype = -1;
-rt_private int16 egc_double_dtype = -1;
-rt_private int16 egc_pointer_dtype = -1;
 rt_private int16 tuple_static_type = -1;
+
+/*------------------------------------------------------------------*/
+/* Special codes for basic types, etc.                              */
+/*------------------------------------------------------------------*/
+
+typedef struct {
+
+	char    *name;      /* Name in uppercase (e.g. BOOLEAN) */
+	short   length;     /* Length of name */
+	char    code;       /* Character code (e.g. 'b' for BOOLEAN) */
+	int16   egc_dtype;  /* Dtype of this type */
+
+} SPECIAL_CODE;
+
+rt_private SPECIAL_CODE codes [SPECIAL_SIZE] = {
+
+{(char *) 0, 0, (char) 0, (int16) -1},              /* unused */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* terminator */
+{"CHARACTER", 9, EIF_CHARACTER_CODE, (int16) -1},   /* character */
+{"BOOLEAN", 7, EIF_BOOLEAN_CODE, (int16) -1},       /* boolean */
+{"INTEGER", 7, EIF_INTEGER_CODE, (int16) -1},       /* integer */
+{"REAL", 4, EIF_REAL_CODE, (int16) -1},             /* real */
+{"DOUBLE", 6, EIF_DOUBLE_CODE, (int16) -1},         /* double */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* bit */
+{"POINTER", 7, EIF_POINTER_CODE, (int16) -1},       /* pointer */
+{"NONE", 4, (char) 0, (int16) -1},                  /* none */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* for internal use */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* like arg */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* like current */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* like precomp. feature */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* like feature */
+{(char *) 0, 0, (char) 0, (int16) -1},              /* tuple*/
+{"INTEGER_8", 9, EIF_INTEGER_8_CODE, (int16) -1},   /* integer_8 */
+{"INTEGER_16", 10, EIF_INTEGER_16_CODE, (int16) -1},/* integer_16 */
+{"INTEGER_64", 10, EIF_INTEGER_64_CODE, (int16) -1},/* integer_64 */
+{"WIDE_CHARACTER", 17, EIF_WIDE_CHAR_CODE, (int16) -1},  /* Wide character */
+
+/* Add new basic types here. Codes = -20, -21, ... 
+   You have to update file 'eif_gen_types.h'.
+   The name must be exactly the class name.
+*/
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 20 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 21 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 22 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 23 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 24 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 25 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 26 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 27 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 28 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 29 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 30 */
+{(char *) 0, 0, (char) 0, (int16) -1},  /* unused 31 */
+
+};
+
+/*------------------------------------------------------------------*/
+/* Codemap is used to map character codes to type constants. E.g.   */
+/* 'b' -> BOOLEAN_TYPE, etc. Automatically computed by init.        */
+/* May be shared by threads.                                        */
+/*------------------------------------------------------------------*/
+
+rt_private  short   codemap [256];
+
+/*------------------------------------------------------------------*/
+/* Access to table of SPECIAL_CODEs                                 */
+/*------------------------------------------------------------------*/
+
+#define SPC_PTR(t)  (((t)<0)&&((t)>-(SPECIAL_SIZE)))?(codes-(t)):(SPECIAL_CODE*)0
 
 /*------------------------------------------------------------------*/
 /* Clean up.                                                        */
@@ -484,9 +550,10 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 
 rt_public void eif_gen_conf_init (int max_dtype)
 {
-	int    dt;
+	int    dt, i;
 	char   *cname;
 	struct eif_par_types **pt;
+	SPECIAL_CODE    *sp;
 
 #ifdef EIF_THREADS
 		/* First we create the mutex */
@@ -538,7 +605,8 @@ rt_public void eif_gen_conf_init (int max_dtype)
 		eif_anc_id_map [dt]  = (EIF_ANC_ID_MAP *) 0;
 	}
 
-	/* Now initialize egc_xxx_dtypes */
+	/* Now initialize egc_xxx_dtypes and 
+	   egc_dtype entries in table `codes' */
 
 	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt)
 	{
@@ -551,34 +619,30 @@ rt_public void eif_gen_conf_init (int max_dtype)
 		{
 			egc_any_dtype = (int16) dt;
 		}
-		if ((strcmp("CHARACTER",cname)==0))
-		{
-			egc_character_dtype = (int16) dt;
-		}
-		if ((strcmp("BOOLEAN",cname)==0))
-		{
-			egc_boolean_dtype = (int16) dt;
-		}
-		if ((strcmp("INTEGER",cname)==0))
-		{
-			egc_integer_dtype = (int16) dt;
-		}
-		if ((strcmp("REAL",cname)==0))
-		{
-			egc_real_dtype = (int16) dt;
-		}
-		if ((strcmp("DOUBLE",cname)==0))
-		{
-			egc_double_dtype = (int16) dt;
-		}
-		if ((strcmp("POINTER",cname)==0))
-		{
-			egc_pointer_dtype = (int16) dt;
-		}
+
 		if ((strcmp("TUPLE",cname)==0))
 		{
 			tuple_static_type = (int16) dt;
 		}
+
+		for (i = 0, sp = codes; i < SPECIAL_SIZE; ++i, ++sp)
+		{
+			if ((sp->name == (char *) 0) || (strcmp(sp->name,cname) != 0))
+				continue;
+
+			sp->egc_dtype = (int16) dt;
+			break;
+		}
+	}
+
+	/* Setup codemap */
+
+	memset ((char *) codemap, 0, 256*sizeof(short));
+
+	for (i = 0, sp = codes; i < SPECIAL_SIZE; ++i, ++sp)
+	{
+		if (sp->code != (char) 0)
+			codemap [(int)(sp->code)] = -i;
 	}
 
 	/* Now setup inverse RTUD table. This is used
@@ -605,7 +669,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 
 	cid_array [0] = 1;  /* count */
 	cid_array [1] = 0;  /* id */
-	cid_array [2] = -1; /* Terminator */
+	cid_array [2] = TERMINATOR; /* Terminator */
 }
 /*------------------------------------------------------------------*/
 /* Clean up.                                                        */
@@ -619,12 +683,12 @@ rt_shared void eif_gen_conf_cleanup ()
 	int i, j;
 
 #ifdef EIF_THREADS
-	assert (eif_thr_is_root ());
+	REQUIRE ("Called by root thread", eif_thr_is_root ());
 #endif	/* EIF_THREADS */
-	assert (eif_anc_id_map);
-	assert (eif_conf_tab);
-	assert (eif_derivations);
-	assert (eif_cid_map);
+	REQUIRE ("eif_anc_id_map not null", eif_anc_id_map);
+	REQUIRE ("eif_conf_tab not null", eif_conf_tab);
+	REQUIRE ("eif_derivations not null", eif_derivations);
+	REQUIRE ("eif_cid_map not null", eif_cid_map);
 
 #ifdef WORKBENCH
 	eif_free (rtud_inv);	/* (int16 *) */
@@ -640,7 +704,7 @@ rt_shared void eif_gen_conf_cleanup ()
 			eif_free (tmp->map);	/* int16 * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->map)));
+			CHECK ("", !(is_in_lm (tmp->map)));
 #endif	/* LMALLOC_CHECK */
 		}
 		eif_free (tmp);
@@ -658,28 +722,28 @@ rt_shared void eif_gen_conf_cleanup ()
 			eif_free (tmp->low_tab);	/* unsigned char * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->low_tab)));
+			CHECK ("", !(is_in_lm (tmp->low_tab)));
 #endif	/* LMALLOC_CHECK */
 		}
 		if (tmp->high_tab != tmp->shigh_tab)
 			eif_free (tmp->high_tab);	/* unsigned char * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->high_tab)));
+			CHECK ("", !(is_in_lm (tmp->high_tab)));
 #endif	/* LMALLOC_CHECK */
 		}
 		if (tmp->low_comp != tmp->slow_comp)	
 			eif_free (tmp->low_comp);	 	/* unsigned char * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->low_comp)));
+			CHECK ("", !(is_in_lm (tmp->low_comp)));
 #endif	/* LMALLOC_CHECK */
 		}
 		if (tmp->high_comp != tmp->shigh_comp)	
 			eif_free (tmp->high_comp);	 	/* unsigned char * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->high_comp)));
+			CHECK ("", !(is_in_lm (tmp->high_comp)));
 #endif	/* LMALLOC_CHECK */
 		}
 		eif_free (tmp);
@@ -696,21 +760,21 @@ rt_shared void eif_gen_conf_cleanup ()
 			eif_free (tmp->typearr);			/* int16 * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->typearr)));
+			CHECK ("", !(is_in_lm (tmp->typearr)));
 #endif	/* LMALLOC_CHECK */
 		}
 		if (tmp->gen_seq != tmp->sgen_seq)
 			eif_free (tmp->gen_seq);			/* int16 * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->gen_seq)));
+			CHECK ("", !(is_in_lm (tmp->gen_seq)));
 #endif	/* LMALLOC_CHECK */
 		}
 		if (tmp->ptypes != tmp->sptypes)
 			eif_free (tmp->ptypes);		/* int16 * */
 		else {
 #ifdef LMALLOC_CHECK
-			assert (!(is_in_lm (tmp->ptypes)));
+			CHECK ("", !(is_in_lm (tmp->ptypes)));
 #endif	/* LMALLOC_CHECK */
 		}
 		eif_free (tmp->name);			/* char * */
@@ -749,11 +813,11 @@ rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base
 
 	result = base_id;
 
-	if ((types != (int16 *)0) && (*(types+1) != -1))
+	if ((types != (int16 *)0) && (*(types+1) != TERMINATOR))
 	{
 		/* Check if it's cached - if yes return immediately */
 
-		if ((cache != (int16 *)0) && (*cache != -1))
+		if ((cache != (int16 *)0) && (*cache != TERMINATOR))
 		{
 #ifdef GEN_CONF_DEBUG
 			log_puts ("Cached -> ");
@@ -766,14 +830,14 @@ rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base
 #ifdef GEN_CONF_DEBUG
 		intable = types;
 		log_puts ("{");
-		while (*intable != -1)
+		while (*intable != TERMINATOR)
 		{
 			log_puti ((int) *intable);
 			log_puts (",");
 			++intable;
 		}
 
-		log_puts ("-1} -> ");
+		log_puts ("TERMINATOR} -> ");
 #endif
 
 		intable  = types+1;
@@ -808,8 +872,8 @@ rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base
 		return gresult;
 	}
 
-	if (result <= -256)        /* expanded */
-		return RTUD(-256 - result);
+	if (result <= EXPANDED_LEVEL)        /* expanded */
+		return RTUD(EXPANDED_LEVEL - result);
 
 	return RTUD(result);
 }
@@ -831,7 +895,7 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_R
 	{
 		gtp = gttable [dtype];
 
-		if ((gtp != (int16 *) 0) && (*(gtp+1) != -1))
+		if ((gtp != (int16 *) 0) && (*(gtp+1) != TERMINATOR))
 		{
 			*gtp = stype;
 			return eif_compound_id ((int16 *)0, Current, ttable[dtype], gtp);
@@ -840,8 +904,8 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_R
 
 	result = ttable[dtype];
 
-	if (result <= -256)        /* expanded */
-		return -256 - result;
+	if (result <= EXPANDED_LEVEL)        /* expanded */
+		return EXPANDED_LEVEL - result;
 
 	return result;
 }
@@ -868,8 +932,8 @@ rt_public int16 eif_gen_param (int16 stype, EIF_REFERENCE obj, int pos, char *is
 
 	/* Check for expanded */
 
-	if (dftype <= -256)
-		dftype = - 256 - dftype;
+	if (dftype <= EXPANDED_LEVEL)
+		dftype = EXPANDED_LEVEL - dftype;
 
 	if ((dftype < 0) || (dftype >= next_gen_id))
 		eif_panic ("Invalid type");
@@ -906,11 +970,11 @@ rt_public int16 eif_gen_param (int16 stype, EIF_REFERENCE obj, int pos, char *is
 
 	result = gdp->typearr [pos-1];
 
-	if (result <= -256)
+	if (result <= EXPANDED_LEVEL)
 	{
 		/* Expanded type but not a bit type */
 		*is_exp = '1';
-		result  = -256-result;
+		result  = EXPANDED_LEVEL-result;
 	}
 
 	if (result < first_gen_id)
@@ -943,8 +1007,8 @@ rt_public int eif_gen_count (EIF_REFERENCE obj)
 
 	/* Check for expanded */
 
-	if (dftype <= -256)
-		dftype = -256-dftype;
+	if (dftype <= EXPANDED_LEVEL)
+		dftype = EXPANDED_LEVEL-dftype;
 
 	if ((dftype < 0) || (dftype >= next_gen_id))
 		eif_panic ("Invalid type");
@@ -984,64 +1048,52 @@ rt_public char eif_gen_typecode (EIF_REFERENCE obj, int pos)
 	int16       dftype, gtype;
 	EIF_GEN_DER *gdp;
 	EIF_ANC_ID_MAP *amap;
+	SPECIAL_CODE    *spc;
 
 	if (obj == (EIF_REFERENCE )0)
 		return 0;
 
 	dftype = Dftype(obj);
 
-	/* Check for expanded */
+		/* Check for expanded */
+	if (dftype <= EXPANDED_LEVEL)
+		dftype = EXPANDED_LEVEL-dftype;
 
-	if (dftype <= -256)
-		dftype = -256-dftype;
+		/* Check type validity */
+	REQUIRE ("Ddftype(obj) is non-negative", dftype >= 0);
+	REQUIRE ("Dftype(obj) is less than maximum computed id", dftype < next_gen_id);
+	REQUIRE ("We have routines, so we must have tuples.", tuple_static_type >= 0);
 
-	if ((dftype < 0) || (dftype >= next_gen_id))
-		eif_panic ("Invalid type");
+	amap = eif_anc_id_map [dftype];
 
-	if (tuple_static_type >= 0)
+	if (amap == (EIF_ANC_ID_MAP *) 0)
 	{
+		CHECK("", EIF_FALSE);
+		/* EIF_ANC_ID_MAP not already computed */
+		eif_compute_anc_id_map (dftype); /* GC !!! */
 		amap = eif_anc_id_map [dftype];
-
-		if (amap == (EIF_ANC_ID_MAP *) 0)
-		{
-			eif_compute_anc_id_map (dftype);
-			amap = eif_anc_id_map [dftype];
-		}
-
-		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
-	}
-	else
-	{
-		gdp = eif_derivations [dftype];
 	}
 
-	if (gdp == (EIF_GEN_DER *)0)
-		eif_panic ("Not a generic type.");
+	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
 
-	if (gdp->is_bit)
-		eif_panic ("Not a generic type.");
+	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
+	CHECK ("Not a bit type", !gdp->is_bit);
 
-	if ((pos <= 0) || (pos > gdp->size))
-		eif_panic ("Invalid generic parameter position.");
+	CHECK ("Valid generic position min", pos > 0);
+	CHECK ("Valid generic position max", pos <= gdp->size);
 
 	gtype = gdp->typearr [pos-1];
 
-	if (gtype <= -256)
-		gtype = -256-gtype;
+	if (gtype <= EXPANDED_LEVEL)
+		gtype = EXPANDED_LEVEL-gtype;
 
-	switch (gtype)
-	{
-		case -2: return 'c';
-		case -3: return 'b';
-		case -4: return 'i';
-		case -5: return 'f';
-		case -6: return 'd';
-		case -8: return 'p';
-		default: break;
-	}
+	spc = SPC_PTR(gtype);
+
+	if ((spc != (SPECIAL_CODE *)0) && (spc->code))
+		return spc->code;
 
 	/* Reference */
-	return 'r';
+	return EIF_REFERENCE_CODE;
 }
 /*------------------------------------------------------------------*/
 /* Is generic type uniform? ONLY for TUPLE and its descendants!     */
@@ -1060,8 +1112,8 @@ rt_public char eif_gen_is_uniform (EIF_REFERENCE obj, char code)
 
 	/* Check for expanded */
 
-	if (dftype <= -256)
-		dftype = -256-dftype;
+	if (dftype <= EXPANDED_LEVEL)
+		dftype = EXPANDED_LEVEL-dftype;
 
 	if ((dftype < 0) || (dftype >= next_gen_id))
 		eif_panic ("Invalid type");
@@ -1092,23 +1144,10 @@ rt_public char eif_gen_is_uniform (EIF_REFERENCE obj, char code)
 	if (gdp->size == 0)
 		return EIF_TRUE;
 
-	switch (code)
-	{
-		case 'c': utype = -2;
-				  break;
-		case 'b': utype = -3;
-				  break;
-		case 'i': utype = -4;
-				  break;
-		case 'f': utype = -5;
-				  break;
-		case 'd': utype = -6;
-				  break;
-		case 'p': utype = -8;
-				  break;
-		default : utype = gdp->typearr [0];
-				  break;
-	}
+	if (codemap [code])
+		utype = codemap [code];
+	else
+		utype = gdp->typearr [0];
 
 	for (i = 1; i < gdp->size;++i)
 	{
@@ -1118,6 +1157,7 @@ rt_public char eif_gen_is_uniform (EIF_REFERENCE obj, char code)
 
 	return EIF_TRUE;
 }
+
 /*------------------------------------------------------------------*/
 /* Typecode string for target/argument types of a ROUTINE object.   */
 /* ONLY for ROUTINE!                                                */
@@ -1125,156 +1165,220 @@ rt_public char eif_gen_is_uniform (EIF_REFERENCE obj, char code)
 
 rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 {
+	EIF_GET_CONTEXT
+
 	EIF_REFERENCE ret;	/* Return value. */
 	int16 dftype, gtype;
+	int len;
 	int pos;
 	EIF_GEN_DER *gdp;
 	EIF_ANC_ID_MAP *amap;
-	char tstr [256];
 	char *strp;
+	SPECIAL_CODE    *spc;
 
 #ifdef EIF_THREADS
 	EIFMTX_LOCK;
 #endif
 
-	if (obj == (EIF_REFERENCE )0)
-		eif_panic ("Invalid object");
+	REQUIRE ("obj not null", obj != (EIF_REFERENCE )0);
 
 	dftype = Dftype(obj);
 
-	/* Check for expanded */
-
-	if (dftype <= -256)
-		dftype = -256-dftype;
-
-	if ((dftype < 0) || (dftype >= next_gen_id))
-		eif_panic ("Invalid type");
+	REQUIRE ("Expanded", dftype > EXPANDED_LEVEL);
+	REQUIRE ("Non negative dftype", dftype >= 0);
+	REQUIRE ("Valid dftype", dftype < next_gen_id);
 
 	gdp = eif_derivations [dftype];
 
-	if (gdp == (EIF_GEN_DER *)0)
-		eif_panic ("Not a generic type.");
+	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
+	CHECK ("Not a bit type", !gdp->is_bit);
+	CHECK ("Not a routine object", gdp->size > 1);
 
-	if (gdp->is_bit)
-		eif_panic ("Not a generic type.");
-
-	if (gdp->size < 2)
-		eif_panic ("Not a routine object.");
-
-	/* Type of call target */
-
+		/* Type of call target */
 	gtype = gdp->typearr [0];
 
-	if (gtype <= -256)
-		gtype = -256-gtype;
-
-	strp = tstr;
-
-	switch (gtype)
-	{
-		case -2: *strp = 'c';
-				 break;
-		case -3: *strp = 'b';
-				 break;
-		case -4: *strp = 'i';
-				 break;
-		case -5: *strp = 'f';
-				 break;
-		case -6: *strp = 'd';
-				 break;
-		case -8: *strp = 'p';
-				 break;
-		default: *strp = 'r';
-				 break;
-	}
-
-	/* Now treat the arguments.
-	   This is necessarily a TUPLE 
-	*/
-
+		/* Now treat the arguments.  This is necessarily a TUPLE */
 	dftype = gdp->typearr [1];
 
-	/* Check for expanded */
+	CHECK ("Expanded", dftype > EXPANDED_LEVEL);
+	CHECK ("Non negative dftype", dftype >= 0);
+	CHECK ("Valid dftype", dftype < next_gen_id);
+	CHECK ("Routines implies we have tuples", tuple_static_type >= 0);
 
-	if (dftype <= -256)
-		dftype = -256-dftype;
+	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
 
-	if ((dftype < 0) || (dftype >= next_gen_id))
-		eif_panic ("Invalid type");
+	amap = eif_anc_id_map [dftype];
 
-	/* NOTE: Since dftype is a TUPLE
-			 we have RTUD(dftype) = dftype. 
-	*/
-
-	if (tuple_static_type >= 0)
+	if (amap == (EIF_ANC_ID_MAP *) 0)
 	{
+		eif_compute_anc_id_map (dftype);
 		amap = eif_anc_id_map [dftype];
+	}
+	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
 
-		if (amap == (EIF_ANC_ID_MAP *) 0)
-		{
-			eif_compute_anc_id_map (dftype);
-			amap = eif_anc_id_map [dftype];
-		}
+	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
+	CHECK ("Not a bit type", !gdp->is_bit);
 
-		gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+		/* Create a string for gdp->size + 1 characters */
+	len = gdp->size + 1;
+
+	ret = emalloc(egc_str_dtype);
+	RT_GC_PROTECT(ret);
+		/* Protect address in case it moves */
+
+	nstcall = 0;
+	(egc_strmake)(ret, (EIF_INTEGER) len);
+	nstcall = 0;
+	(egc_strset)(ret, (EIF_INTEGER) len);
+
+	/* We know the `area' is the very first reference
+	 * of the STRING object, hence the simple de-referencing.
+	 */
+
+	RT_GC_WEAN(ret);			/* Remove protection */
+
+	strp = *(EIF_REFERENCE*)ret;
+
+	if (gtype <= EXPANDED_LEVEL)
+		gtype = EXPANDED_LEVEL-gtype;
+
+	spc = SPC_PTR(gtype);
+
+	if ((spc != (SPECIAL_CODE *)0))
+	{
+		CHECK ("Basic type", spc->code);
+		*strp = spc->code;
 	}
 	else
 	{
-		gdp = eif_derivations [dftype];
+		/* Reference type */
+		*strp = EIF_REFERENCE_CODE;
 	}
 
-	if (gdp == (EIF_GEN_DER *)0)
-		eif_panic ("Not a generic type.");
+	strp++;
 
-	if (gdp->is_bit)
-		eif_panic ("Not a generic type.");
-
-	++strp;
-
-	for (pos = 0; pos < gdp->size; ++pos, ++strp)
+	for (pos = 0; pos < gdp->size; pos++, strp++)
 	{
 		gtype = gdp->typearr [pos];
 
-		if (gtype <= -256)
-			gtype = -256-gtype;
+		if (gtype <= EXPANDED_LEVEL)
+			gtype = EXPANDED_LEVEL-gtype;
 
-		switch (gtype)
+		if ((spc = SPC_PTR(gtype)) != (SPECIAL_CODE *)0)
 		{
-			case -2: *strp = 'c';
-					 break;
-			case -3: *strp = 'b';
-					 break;
-			case -4: *strp = 'i';
-					 break;
-			case -5: *strp = 'f';
-					 break;
-			case -6: *strp = 'd';
-					 break;
-			case -8: *strp = 'p';
-					 break;
-			default: *strp = 'r';
-					 break;
+			CHECK ("Basic type", spc->code);
+			*strp = spc->code;
+		}
+		else
+		{
+			/* reference type */
+			*strp = EIF_REFERENCE_CODE;
 		}
 	}
-
-	*strp = '\0';
-
-	strp = eif_malloc (strlen (tstr) + 1);
-
-	if (strp == (char *) 0)
-		enomem();
-
-	strcpy (strp, tstr);
 
 #ifdef EIF_THREADS
 	EIFMTX_UNLOCK;
 #endif
 
-	ret = makestr(strp, strlen(strp));
-	eif_free (strp);
+	return ret;	
+}
+
+/*------------------------------------------------------------------*/
+/* Typecode string for closed argument types of a ROUTINE object.   */
+/* ONLY for TUPLE!                                                  */
+/*------------------------------------------------------------------*/
+
+rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
+{
+	EIF_GET_CONTEXT
+
+	EIF_REFERENCE ret;	/* Return value. */
+	int16 dftype, gtype;
+	int len;
+	int pos;
+	EIF_GEN_DER *gdp;
+	EIF_ANC_ID_MAP *amap;
+	char *strp;
+	SPECIAL_CODE    *spc;
+
+#ifdef EIF_THREADS
+	EIFMTX_LOCK;
+#endif
+
+	REQUIRE ("obj not null", obj != (EIF_REFERENCE )0);
+
+	dftype = Dftype(obj);
+
+	REQUIRE ("Expanded", dftype > EXPANDED_LEVEL);
+	REQUIRE ("Non negative dftype", dftype >= 0);
+	REQUIRE ("Valid dftype", dftype < next_gen_id);
+
+	gdp = eif_derivations [dftype];
+
+	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
+	CHECK ("Not a bit type", !gdp->is_bit);
+	CHECK ("We have routines, so we must have tuples.", tuple_static_type >= 0);
+
+	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
+
+	amap = eif_anc_id_map [dftype];
+
+	if (amap == (EIF_ANC_ID_MAP *) 0)
+	{
+		eif_compute_anc_id_map (dftype);
+		amap = eif_anc_id_map [dftype];
+	}
+	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
+
+	CHECK ("gdp not null", gdp != (EIF_GEN_DER *)0);
+	CHECK ("Not a bit type", !gdp->is_bit);
+
+		/* Create a string for gdp->size characters */
+	len = gdp->size;
+
+	ret = emalloc(egc_str_dtype);
+	RT_GC_PROTECT(ret);
+		/* Protect address in case it moves */
+
+	nstcall = 0;
+	(egc_strmake)(ret, (EIF_INTEGER) len);
+	nstcall = 0;
+	(egc_strset)(ret, (EIF_INTEGER) len);
+
+	/* We know the `area' is the very first reference
+	 * of the STRING object, hence the simple de-referencing.
+	 */
+
+	RT_GC_WEAN(ret);			/* Remove protection */
+
+	strp = *(EIF_REFERENCE*)ret;
+
+	for (pos = 0; pos < len; pos++, strp++)
+	{
+		gtype = gdp->typearr [pos];
+
+		if (gtype <= EXPANDED_LEVEL)
+			gtype = EXPANDED_LEVEL-gtype;
+
+		if ((spc = SPC_PTR(gtype)) != (SPECIAL_CODE *)0)
+		{
+			CHECK ("Basic type", spc->code);
+			*strp = spc->code;
+		}
+		else
+		{
+			/* reference type */
+			*strp = EIF_REFERENCE_CODE;
+		}
+	}
+
+#ifdef EIF_THREADS
+	EIFMTX_UNLOCK;
+#endif
 
 	return ret;	
 }
+
 /*------------------------------------------------------------------*/
 /* Type of generic parameter in `obj' at position `pos'.            */
 /*                                                                  */
@@ -1390,10 +1494,10 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 	arr_dtype = egc_arr_dtype;
 #endif
 
-	typearr [0] = -1;           /* No static call context */
-	typearr [1] = arr_dtype;    /* Base type of ARRAY     */
-	typearr [2] = dtype;        /* Parameter type */
-	typearr [3] = -1;
+	typearr [0] = -1;		   /* No static call context */
+	typearr [1] = arr_dtype;   /* Base type of ARRAY     */
+	typearr [2] = dtype;       /* Parameter type */
+	typearr [3] = TERMINATOR;
 
 	return eif_compound_id ((int16 *)0, (EIF_REFERENCE )0,(int16) arr_dtype, typearr);
 }
@@ -1467,7 +1571,7 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 	}
 
 	gdp->gen_seq [0] = len;
-	gdp->gen_seq [len+1] = -1;
+	gdp->gen_seq [len+1] = TERMINATOR;
 
 	/* Fill array */
 
@@ -1482,7 +1586,7 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 /* NULL, use it to map old to new dtypes ('retrieve')               */
 /* Format:                                                          */
 /* First entry: count                                               */
-/* Then 'count' type ids, then -1                                   */
+/* Then 'count' type ids, then TERMINATOR                           */
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
@@ -1507,12 +1611,12 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 		{
 			dtype = cidarr [i];
 
-			if (dtype <= -256)
+			if (dtype <= EXPANDED_LEVEL)
 			{
 				/* expanded */
 
-				dtype = dtype_map [-256-dtype];
-				dtype = -256 - RTUD_INV(dtype);
+				dtype = dtype_map [EXPANDED_LEVEL-dtype];
+				dtype = EXPANDED_LEVEL - RTUD_INV(dtype);
 			}
 			else
 			{
@@ -1534,11 +1638,11 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 		{
 			dtype = cidarr [i];
 
-			if (dtype <= -256)
+			if (dtype <= EXPANDED_LEVEL)
 			{
 				/* expanded */
 
-				dtype = -256 - RTUD_INV((-256-dtype));
+				dtype = EXPANDED_LEVEL - RTUD_INV((EXPANDED_LEVEL-dtype));
 			}
 			else
 			{
@@ -1552,7 +1656,7 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 		}
 	}
 
-	cidarr [count+1] = -1;
+	cidarr [count+1] = TERMINATOR;
 	dftype  = eif_compound_id ((int16 *)0, (EIF_REFERENCE )0, *(cidarr+1), cidarr);
 	*cidarr = count;
 
@@ -1573,6 +1677,7 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	int i, idx, result;
 	unsigned char mask;
 	int16 stype, ttype;
+	SPECIAL_CODE    *spc;
 
 	if (source_type == target_type)
 	{
@@ -1582,8 +1687,8 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	stype = source_type;
 	ttype = target_type;
 
-	if (stype <= -256)
-		stype   = -256 - stype;
+	if (stype <= EXPANDED_LEVEL)
+		stype   = EXPANDED_LEVEL - stype;
 
 	if (ttype < 0)
 	{
@@ -1596,16 +1701,14 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	{
 		/* Basic types (other than BIT) */
 
-		switch (stype)
+		spc = SPC_PTR(stype);
+
+		if ((spc != (SPECIAL_CODE *)0) && (spc->egc_dtype != -1))
 		{
-			case -2: return eif_gen_conf ((int16)RTUD(egc_character_dtype), ttype);
-			case -3: return eif_gen_conf ((int16)RTUD(egc_boolean_dtype), ttype);
-			case -4: return eif_gen_conf ((int16)RTUD(egc_integer_dtype), ttype);
-			case -5: return eif_gen_conf ((int16)RTUD(egc_real_dtype), ttype);
-			case -6: return eif_gen_conf ((int16)RTUD(egc_double_dtype), ttype);
-			case -8: return eif_gen_conf ((int16)RTUD(egc_pointer_dtype), ttype);
-			default: return 0; 
+			return eif_gen_conf ((int16)RTUD(spc->egc_dtype), ttype);
 		}
+
+		return 0;
 	}
 
 	stab = eif_conf_tab[stype];
@@ -1708,14 +1811,14 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 					if (ttype < first_gen_id)
 						ttype = RTUD(ttype);
 
-					if (stype <= -256)
+					if (stype <= EXPANDED_LEVEL)
 					{
-						stype = -256-stype;
+						stype = EXPANDED_LEVEL-stype;
 
 						if (stype < first_gen_id)
 							stype = RTUD(stype);
 
-						stype = -256-stype;
+						stype = EXPANDED_LEVEL-stype;
 					}
 					else
 					{
@@ -1743,7 +1846,7 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 
 		result = 0;
 
-		while (!result && (*ptypes != -1))
+		while (!result && (*ptypes != TERMINATOR))
 		{
 			result = eif_gen_conf (*ptypes, ttype);
 			++ptypes;
@@ -1782,7 +1885,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 							int16 apply_rtud, char *cachable)
 
 {
-	int16   dftype, gcount, i, hcode, ltype, uniformizer;
+	int16   dftype, gcount = 0, i, hcode, ltype, uniformizer = 0;
 	int16   *save_otab;
 	int     pos, mcmp;
 	char    is_expanded, is_tuple;
@@ -1793,20 +1896,20 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 	/* Get full type */
 
 	dftype = **intab;
-	ltype = -1;      /* No 'like' type */
+	ltype = TERMINATOR;      /* No 'like' type */
 	is_expanded = (char) 0;
 	is_tuple = (char) 0;
 
-	if (dftype <= -256)
+	if (dftype <= EXPANDED_LEVEL)
 	{
 		/* expanded */
-		dftype   = -256-dftype;
+		dftype   = EXPANDED_LEVEL-dftype;
 		is_expanded = '1';
 	}
 
 	/* Check whether it's a TUPLE Type */
 
-	if (dftype == -15)
+	if (dftype == TUPLE_TYPE)
 	{
 		(*intab)++;
 		uniformizer = **intab;  /* Uniformizer of TUPLE */
@@ -1817,10 +1920,10 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 		/* May be expanded */
 
-		if (dftype <= -256)
+		if (dftype <= EXPANDED_LEVEL)
 		{
 			/* expanded */
-			dftype   = -256-dftype;
+			dftype   = EXPANDED_LEVEL-dftype;
 			is_expanded = '1';
 		}
 
@@ -1829,7 +1932,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 	/* Process anchored types */
 
-	if ((dftype == -13)||(dftype == -14))
+	if ((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE))
 	{
 		/* Anchor to a feature */
 
@@ -1858,7 +1961,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
-	if ((dftype == -11) || (dftype == -12))
+	if ((dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE))
 	{
 		/* Anchor to argument or Current */
 
@@ -1888,13 +1991,13 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
-	if (dftype <= -16)
+	if (dftype <= FORMAL_TYPE)
 	{
 		/* formal generic */
 
 		*cachable = (char) 0;   /* Cannot cache - may change */
 
-		pos = -16-dftype;
+		pos = FORMAL_TYPE - dftype;
 
 		/* get actual generic from `stype' for descendant
 		   `obj_type' if stype > 0 else use obj_type.
@@ -1912,9 +2015,11 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 			gdp = eif_derivations [(amap->map)[stype - (amap->min_id)]];
 
-			if (gdp == NULL) {
-					/* The static call context is not a generic class.
-					 * Hence we have to take 'obj_type'. */
+			if (gdp == NULL) 
+			{
+				/* The static call context is not a generic class.
+				   Hence we have to take 'obj_type'. */
+
 				gdp = eif_derivations [obj_type];
 			}
 		}
@@ -1938,7 +2043,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 		(*intab)++;
 
-		if (dftype == -7)   /* BIT type */
+		if (dftype == BIT_TYPE)   /* BIT type */
 		{
 			dftype = eif_register_bit_type ((long) (**intab));
 			(*intab)++;
@@ -1963,7 +2068,7 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		(*intab)++;
 
 		if (is_expanded)
-			**outtab = -256-dftype;
+			**outtab = EXPANDED_LEVEL-dftype;
 		else
 			**outtab = dftype;
 		(*outtab)++;
@@ -2017,8 +2122,6 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 
 		if (prev == (EIF_GEN_DER *)0)
 			eif_derivations [RTUD(dftype)] = gdp;
-				/* FIXME: Eric Bezault fix is the following */
-			/*eif_derivations [RTUD(dftype)] = gdp;*/
 		else
 			prev->next = gdp;
 
@@ -2104,6 +2207,8 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 		/* Small array */
 		tp = result->stypearr;
 	}
+
+	tp[size]=-1;
 
 	if (size > 0)
 	{
@@ -2514,6 +2619,7 @@ rt_private void eif_expand_tables(int new_size)
 /* dftype : full type id; RTUD(yes)                                 */
 /* Attention! This routine is not threaded safe (because of the    */
 /* static buffer "result"). It must be protected by a lock.         */
+/* ATTENTION: kill the previous 'attention' comment.                */
 /*------------------------------------------------------------------*/
 
 rt_private char *eif_typename (int16 dftype)
@@ -2521,7 +2627,7 @@ rt_private char *eif_typename (int16 dftype)
 	/* Not MT-safe. */
 	EIF_GEN_DER *gdp;
 	int         len;
-	static char result [MAX_NUM_LEN + 1];	/* Limited in size */
+	char    *result;
 			
 	if (dftype < 0)
 		eif_panic ("Invalid type");
@@ -2541,12 +2647,33 @@ rt_private char *eif_typename (int16 dftype)
 
 	len = eif_typename_len (dftype);
 
-	if (len > MAX_NUM_LEN)
-		eif_panic ("Class name is too long");
+	/* Create dynamic buffer for string */
+
+	result = eif_malloc (len + 1);
+
+	if (result == (char *) 0)
+		enomem();
 
 	*result = '\0';
 
 	eif_create_typename (dftype, result);
+
+	/* It may happen that gdp->name is now not NULL (BIT types).
+	   In this case we have to free 'result' and use
+	   gdp->name instead. */
+
+	if (gdp->name != (char *) 0)
+	{
+		eif_free (result);
+		result = gdp->name;
+	}
+	else
+	{
+		/* Remember the string in gdp->name. Otherwise
+		   we get a memory leak. */
+
+		gdp->name = result;
+	}
 
 	return result;
 }
@@ -2562,33 +2689,31 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 	int16       *gp, dtype, i;
 	int         size;
 	char        *bits;
+	SPECIAL_CODE    *spc;
 
-	if (dftype <= -256)
+	if (dftype <= EXPANDED_LEVEL)
 	{
 		strcat (result, "expanded ");
-		eif_create_typename ((int16)(-256-dftype), result);
+		eif_create_typename ((int16)(EXPANDED_LEVEL-dftype), result);
 		return;
 	}
 
 	if (dftype < 0)
 	{
-		switch (dftype) 
+		spc = SPC_PTR(dftype);
+
+		if ((spc != (SPECIAL_CODE *)0) && (spc->name != (char *)0))
 		{
-			case -2 : strcat(result, "CHARACTER");
-					  break;
-			case -3 : strcat(result, "BOOLEAN");
-					  break;
-			case -4 : strcat(result, "INTEGER");
-					  break;
-			case -5 : strcat(result, "REAL");
-					  break;
-			case -6 : strcat(result, "DOUBLE");
-					  break;
-			case -8 : strcat(result, "POINTER");
-					  break;
-			case -9 : strcat(result, "NONE");
-					  break;
-			default : eif_panic ("Invalid type");
+			strcat (result, spc->name);
+		}
+		else
+		{
+			if (dftype == NONE_TYPE)
+			{
+				strcat(result, "NONE");
+			}
+			else
+				eif_panic ("Invalid type");
 		}
 		return;
 	}
@@ -2664,10 +2789,10 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 		{
 			dtype = *gp;
 
-			if (dtype <= -256)
+			if (dtype <= EXPANDED_LEVEL)
 			{
-				dtype = -256-dtype;
-				dtype = -256-RTUD(dtype);
+				dtype = EXPANDED_LEVEL-dtype;
+				dtype = EXPANDED_LEVEL-RTUD(dtype);
 			}
 			else
 			{
@@ -2695,23 +2820,22 @@ rt_private int eif_typename_len (int16 dftype)
 	EIF_GEN_DER *gdp;
 	int16       *gp, i, len, dtype;
 	int         size;
+	SPECIAL_CODE    *spc;
 
-	if (dftype <= -256)
-		return 9 + eif_typename_len ((int16)(-256-dftype)); /* expanded */
+	if (dftype <= EXPANDED_LEVEL)
+		return 9 + eif_typename_len ((int16)(EXPANDED_LEVEL-dftype)); /* expanded */
 
 	if (dftype < 0)
 	{
-		switch (dftype) 
-		{
-			case -2 : return 9; /* character */
-			case -3 : return 7; /* boolean */
-			case -4 : return 7; /* integer */
-			case -5 : return 4; /* real */
-			case -6 : return 6; /* double */
-			case -8 : return 7; /* pointer */
-			case -9 : return 4; /* none */
-			default : eif_panic ("Invalid type");
-		}
+		spc = SPC_PTR(dftype);
+
+		if ((spc != (SPECIAL_CODE *)0) && (spc->length))
+			return spc->length;
+
+		if (dftype == NONE_TYPE) 
+			return 4;
+
+		eif_panic ("Invalid type");
 	}
 
 	if (dftype < first_gen_id)
@@ -2762,10 +2886,10 @@ rt_private int eif_typename_len (int16 dftype)
 	{
 		dtype = *gp;
 
-		if (dtype <= -256)
+		if (dtype <= EXPANDED_LEVEL)
 		{
-			dtype = -256-dtype;
-			dtype = -256-RTUD(dtype);
+			dtype = EXPANDED_LEVEL-dtype;
+			dtype = EXPANDED_LEVEL-RTUD(dtype);
 		}
 		else
 		{
@@ -2835,10 +2959,10 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 
 	dtype = dftype;
 
-	if (dtype <= -256)
+	if (dtype <= EXPANDED_LEVEL)
 	{
 		/* expanded */
-		dtype = -256-dtype;
+		dtype = EXPANDED_LEVEL-dtype;
 		is_expanded = '1';
 	}
 
@@ -2854,7 +2978,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 		else
 		{
 			if (is_expanded)
-				typearr [*idx] = (apply_rtud ? -256-RTUD(dtype) : -256-dtype);
+				typearr [*idx] = (apply_rtud ? EXPANDED_LEVEL-RTUD(dtype) : EXPANDED_LEVEL-dtype);
 			else
 				typearr [*idx] = (apply_rtud ? RTUD(dtype) : dtype);
 		}
@@ -2871,7 +2995,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 
 	if (gdp->is_bit)
 	{
-		typearr [*idx] = -7;    /* Bit type */
+		typearr [*idx] = BIT_TYPE;    /* Bit type */
 		(*idx)++;
 		typearr [*idx] = (int16) (gdp->size); /* Nr of bits */
 		(*idx)++;
@@ -2882,7 +3006,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 
 	if (gdp->is_tuple)
 	{
-		typearr [*idx] = -15;                   /* TUPLE type */
+		typearr [*idx] = TUPLE_TYPE;                   /* TUPLE type */
 		(*idx)++;
 		typearr [*idx] = gdp->uniformizer;      /* Uniformizer of TUPLE */
 		(*idx)++;
@@ -2893,7 +3017,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 	/* It's a generic type */
 
 	if (is_expanded)
-		typearr [*idx] = -256-RTUD(gdp->base_id);
+		typearr [*idx] = EXPANDED_LEVEL-RTUD(gdp->base_id);
 	else
 		typearr [*idx] = RTUD(gdp->base_id);
 
@@ -2915,7 +3039,7 @@ rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx, int16
 rt_private void eif_compute_ctab (int16 dftype)
 
 {
-	int16 outtab [256], *outtable, *intable, nulltab[]={-1};
+	int16 outtab [256], *outtable, *intable, nulltab[]={TERMINATOR};
 	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
 	int i, count, offset, pcount;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
@@ -2958,7 +3082,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	pcount = 1; /* Parent count + 1 */
 
-	while (*intable != -1)
+	while (*intable != TERMINATOR)
 	{
 		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 		++pcount;
@@ -3025,7 +3149,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 	if (intable == (int16 *)0)
 		intable = nulltab;
 
-	while (*intable != -1)
+	while (*intable != TERMINATOR)
 	{
 		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 		pctab = eif_conf_tab [pftype];
@@ -3092,7 +3216,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 		}
 	}
 
-	*ptypes = -1;
+	*ptypes = TERMINATOR;
 
 	/* Put own type in table if it's not expanded */
 
@@ -3125,7 +3249,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 rt_private void eif_compute_anc_id_map (int16 dftype)
 
 {
-	int16 outtab [256], *outtable, *intable, nulltab[]={-1};
+	int16 outtab [256], *outtable, *intable, nulltab[]={TERMINATOR};
 	int16 min_id, max_id, pftype, dtype;
 	int i, count, offset;
 	int16 *src, *dest;
@@ -3149,7 +3273,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 
 	min_id = max_id = RTUD_INV(dtype);
 
-	while (*intable != -1)
+	while (*intable != TERMINATOR)
 	{
 		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 
@@ -3181,7 +3305,7 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 	if (intable == (int16 *)0)
 		intable = nulltab;
 
-	while (*intable != -1)
+	while (*intable != TERMINATOR)
 	{
 		pftype = eif_id_of (-1, &intable, &outtable, dftype, 1, &cachable);
 		pamap = eif_anc_id_map [pftype];
@@ -3213,272 +3337,12 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
 
-/*------------------------------------------------------------------*/
-/* Compute the dynamic type corresponding to the C string type      */
-/* `type_string'                                                    */
-/*------------------------------------------------------------------*/
-rt_private int is_good (char c);
-rt_private int is_type_separator (char c);
-rt_private int is_generic (struct gt_info *type, char *class);
-rt_private int16 gen_type_id (int32 cecil_id);
-rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array);
-rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number,
-		char **type_string_array, int16* typearr, int pos, int length);
-
-rt_public EIF_TYPE_ID eif_type_id (char *type_string)
+rt_public int16 eif_find_true_type (int16 x)
+	/* Find true type of an object after many compilations in workbench mode
+	 * `x' being the compiled type, it returns the type in current compilation */
 {
-	char **type_string_array = (char **) 0;
-	char *string_type = (char *) 0;
-	char c = (char) 0;
-	int i = 0;
-	int state = 1;
-	int n = 0;	/* Number of elements in an the C generated array */
-	int l = 0;	/* length of the currently analyzed string */
-	EIF_TYPE_ID result; /* Computed `type_id' */
-
-	if (type_string == (char *) 0)
-			/* Cannot process current string */
-		return -1;
-
-		/* Cut the string and put each part in an array */
-	while ((c = type_string [i]) != (char) 0) {
-		if (is_good(c)) {
-			l++;
-			state = 0;
-		}
-		if (state == 0 && is_type_separator (c)) {
-			state = 1;
-			type_string_array = (char **) eif_realloc (type_string_array, (n + 1) * sizeof (char *));
-			if (type_string_array == (char **) 0)
-				enomem();
-			string_type = (char *) eif_malloc ((l + 1) * sizeof (char));
-			if (string_type == (char *) 0)
-				enomem();
-			string_type = (char *) memcpy (string_type, type_string + i - l, l);
-			string_type [l] = (char) 0;
-			type_string_array [n] = string_type;
-			n++;
-			l = 0;
-		}
-		i++;
-	}
-
-	if (type_string_array == (char **) 0) {
-			/* There was only a simple type, not a generic one. */
-		type_string_array = (char **) eif_malloc (sizeof (char *));
-		if (type_string_array == (char **) 0)
-			enomem();
-		string_type = (char *) eif_malloc ((l + 1) * sizeof (char));
-		if (string_type == (char *) 0)
-			enomem();
-		string_type = (char *) memcpy (string_type, type_string + i - l, l);
-		string_type [l] = (char) 0;
-		type_string_array [0] = string_type;
-		n = 1;
-	}
-	result = compute_eif_type_id (n, type_string_array);
-
-		/* Free all the allocated memory */
-	for (i=0; i <= n - 1; i++) {
-		string_type = type_string_array [i];
-		eif_free (string_type);
-	}
-	eif_free (type_string_array);
-
-	return result;
+	return RTUD_INV(x);
 }
-
-rt_private int is_good (char c)
-{
-	return isalpha (c) || isdigit (c) || (c == '_');
-}
-
-rt_private int is_type_separator (char c)
-{
-	return ((c == '[') || (c == ']') || (c == ',') || (c == ' '));
-}
-
-rt_private int is_generic (struct gt_info *type, char *class)
-{
-	struct gt_info *ltype;
-
-	ltype = (struct gt_info *) ct_value (&egc_ce_gtype, class);
-	if ((struct gt_info *) 0 == ltype)
-			/* We did not find an entry of `class' in the list of generic
-			 * classes, so we should return FALSE */
-		return EIF_NO_TYPE;
-	else {
-			/* We found a generic class with name `class' so we fill the give
-			 * `type' structures */
-		type->gt_param = ltype ->gt_param;
-		type->gt_gen = ltype ->gt_gen;
-		type->gt_type = ltype ->gt_type;
-		return 1;
-	}
-}
-
-rt_private EIF_TYPE_ID compute_eif_type_id (int n, char **type_string_array)
-{
-	struct gt_info type;
-	EIF_TYPE_ID result;
-	int error = 0;
-
-	if (is_generic (&type, type_string_array[0]) > 0) {
-		int16 *typearr = (int16 *) 0;
-
-			/* Allocate the typearr structures and do the basic
-			 * initialization, the first element is set to `-1' since
-			 * there is no static call context, the last one too as a terminator
-			 * for other generic conformance routines
-			 */
-		typearr = (int16 *) eif_malloc ((n + 2) * sizeof (int16));
-		if (typearr == (int16 *)0)
-			enomem();
-		typearr [0] = -1;
-		typearr [n + 1] = -1;
-
-			/* There is a generic type, so we need to analyze the generic parameter
-			 * before finding out the real type */
-		eif_type_id_ex (&error, &type, type.gt_param, type_string_array, typearr, 0, n);
-		if (error == 0) {
-			result = (EIF_TYPE_ID) eif_compound_id ((int16 *)0, (char *)0,(int16) typearr[1], typearr);
-		}
-		eif_free (typearr);
-	} else
-		result = eifcid(type_string_array [0]);
-
-	if (error == 0) {
-		return result;
-	} else {
-		return EIF_NO_TYPE;
-	}
-}
-
-rt_private void eif_type_id_ex (int *error, struct gt_info *type, int gen_number,
-		char **type_string_array, int16* typearr, int pos, int length)
-{
-	int i = 0;
-	struct gt_info ltype;
-	int32 cecil_id;
-	int32 *gtype;			/* Generic information for current type */
-	int32 *itype;			/* Generic information for inspected type */
-	int32 *t;				/* To walk through the gt_gen array */
-	int16 real_type_id;		/* Computed type id */
-	int matched = 0;		/* Did the inspected type matched our entry? */
-	int index = (int) 0;	/* Index at which we need to write or read the type */
-	
-	if ((*error == 1) || ((pos + gen_number) > (length - 1))) {
-			/* The number of parameters given to resolve the generic type is
-			 * not big enough */
-		*error = 1;
-		return;
-	}
-
-		/* Allocate the gtype array with the corresponding number of generics */
-	gtype = (int32 *) eif_malloc (gen_number * sizeof (int32));
-	if (gtype == (int32 *) 0)
-		enomem();
-
-		/* Allocate the itype array with the corresponding number of generics */
-	itype = (int32 *) eif_malloc (gen_number * sizeof (int32));
-	if (itype == (int32 *) 0)
-		enomem();
-
-	for (i = 1; i <= gen_number; i++) {
-		if (is_generic (&ltype, type_string_array [index + pos + i]) > 0) {
-			eif_type_id_ex (error, &ltype, ltype.gt_param,
-					type_string_array, typearr, index + pos + i, length);
-				/* A generic type is always a reference type */
-			index = index + ltype.gt_param;
-			gtype [i - 1] = SK_DTYPE;
-		} else {
-			cecil_id = eifcid (type_string_array [index + pos + i]);
-			real_type_id  = gen_type_id (cecil_id);
-			switch (cecil_id & SK_HEAD)	{
-				case SK_BOOL:
-				case SK_CHAR:
-				case SK_INT:
-				case SK_FLOAT:
-				case SK_DOUBLE:
-				case SK_POINTER:
-					gtype [i - 1] = cecil_id & SK_HEAD;
-					typearr [index + pos + i + 1] = real_type_id;
-					break;
-				default: 
-					gtype [i - 1] = SK_DTYPE;
-					typearr [index + pos + i + 1] = RTUD_INV(real_type_id);
-					break;
-			}
-		}
-	}
-
-	/* Warning: This code is taken from the file `cecil.c'. At some point we should maybe
-	 * share this into a function, so that we do not need to update it too much, however
-	 * for now, we need some changes */
-
-	/* At this point, we have built the generic informations of the type in the
-	 * gtype array and gen_param holds the number of generic parameters, so that
-	 * we know how much information is significant within the array. Now, we
-	 * have to start a linear look-up in the gt_gen array. The number of
-	 * instances in the system should be small anyway, so it should not cost too
-	 * much time.
-	 */
-
-	t = type->gt_gen;
-	while (*t != SK_INVALID) {
-		/* Fetch the generic meta-types which are forthcomming in the itype
-		 * array (inspected type).
-		 * Then compare the itype built against the gtype we got. If they match,
-		 * we found the type and exit the loop. Otherwise, we continue...
-		 */
-
-		matched = 1;						/* Assume a perfect match */
-		for (i = 0; i < gen_number; i++) {	/* Built itype for comparaison */
-			itype[i] = *t++;
-			if (itype[i] != gtype[i])		/* Matching done on the fly */
-				matched = 0;				/* The types do not match */
-		}
-		if (matched) {		/* We found the type */
-			t -= gen_number;
-			break;			/* End of loop processing */
-		}
-	}
-
-	/* To compute the index in the gt_type array where we can find the type ID,
-	 * we have to count how many items we inspected and divide by the number
-	 * of generic parameters. The 't' variable points one location after the
-	 * match, hence the '-1' in the formula below.
-	 * No it doesn't, the instruction  "t -= gen_number" brings it back
-	 * exactly where it should be -- FRED
-	 */
-	
-	if (matched == 1) {
-		i = (t - type->gt_gen) / gen_number;
-		typearr [pos + 1] = RTUD_INV (type->gt_type[i]);	/* The requested generic type ID */
-	} else {
-			/* The type has not been compiled, i.e. not part of the system and there is
-			 * not yet a generic derivation */
-		*error = 1;
-	}
-
-	eif_free (gtype);
-	eif_free (itype);
-}
-
-rt_private int16 gen_type_id (int32 cecil_id)
-{
-			/* We need to find out which basic type it is */
-	switch (cecil_id & SK_HEAD) {
-	  	case SK_CHAR:   return -2;
-		case SK_BOOL:   return -3;
-		case SK_INT:    return -4;
-		case SK_FLOAT:  return -5;
-		case SK_DOUBLE: return -6;
-		case SK_POINTER: return -8;
-		default:	return (int16) ((uint32) cecil_id & SK_DTYPE);
-	}
-}
-
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/

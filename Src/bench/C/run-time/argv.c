@@ -10,17 +10,12 @@
 	Initialization of the argc/argv run-time copies for class ARGUMENTS.
 */
 
-#include "eif_config.h"
-#ifdef I_STRING
-#include <string.h>				/* For strcpy(), strlen() */
-#else
-#include <strings.h>
-#endif
 #include "eif_portable.h"
 #include "eif_malloc.h"				/* For cmalloc() */
 #include "eif_plug.h"				/* For makestr() */
 #include "eif_except.h"				/* For fatal_error() */
 #include "eif_argv.h"
+#include <string.h>				/* For strcpy(), strlen() */
 
 
 rt_public int eif_argc;			/* Initial argc value (argument count) */

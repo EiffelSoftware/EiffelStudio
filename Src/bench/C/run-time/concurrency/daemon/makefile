@@ -1,5 +1,5 @@
-FLAG = -c -I$(EIFFEL4)/bench/spec/$(PLATFORM)/include 
-LIBS = -lsocket -lnsl -lm $(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a
+FLAG = -c -I$(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/include 
+LIBS = -lsocket -lnsl -lm $(ISE_EIFFEL)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a
 OBJS = dog.o subs.o 
 CC = cc
 

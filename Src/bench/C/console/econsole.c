@@ -17,6 +17,9 @@
 #include "eif_err_msg.h"
 #include "eif_econsole.h"
 #include "eif_error.h"
+#include "rt_threads.h"
+#include "rt_main.h"
+#include <ctype.h>
 
 #ifdef WORKBENCH
 #include "server.h"	/* For `debug_mode' */
@@ -99,7 +102,7 @@ EIF_CHARACTER eif_console_readchar(void)
 	return eif_console_buffer [0];
 }
 
-long eif_console_readline(char *s,long bound,long start)
+EIF_INTEGER eif_console_readline(EIF_CHARACTER *s, EIF_INTEGER bound, EIF_INTEGER start)
 {
 	long amount, read;
 	static char *c = NULL;	/* declared as static: the value of `c' will be stored for the next call */
@@ -145,7 +148,7 @@ long eif_console_readline(char *s,long bound,long start)
 
 }
 
-long eif_console_readstream(char *s, long bound)
+EIF_INTEGER eif_console_readstream (EIF_CHARACTER *s, EIF_INTEGER bound)
        		/* Target buffer where read characters are written */
        		/* Size of the target buffer */
 {
@@ -198,7 +201,7 @@ long eif_console_readstream(char *s, long bound)
 	return bound - amount - 1;	/* Number of characters read */
 }
 
-long eif_console_readword(char *s, long bound, long start)
+EIF_INTEGER eif_console_readword(EIF_CHARACTER *s, EIF_INTEGER bound, EIF_INTEGER start)
 /*
     s		Target buffer where read characters are written
 	bound   Size of the target buffer
@@ -216,7 +219,7 @@ long eif_console_readword(char *s, long bound, long start)
 	 */
 
 	EIF_INTEGER amount;	/* Amount of bytes to be read */
-	EIF_CHARACTER c;   /* Last char read */
+	EIF_CHARACTER c = (EIF_CHARACTER) 0;   /* Last char read */
 	int finished = (int) 1;
 
 	eif_show_console();
@@ -265,7 +268,7 @@ long eif_console_readword(char *s, long bound, long start)
 	return bound - start + 1;			/* Error condition */
 }
 
-void eif_console_putint (long l)
+void eif_console_putint (EIF_INTEGER l)
 {
 	int t;
 	DWORD dummy_length = (DWORD) 0;
@@ -284,7 +287,7 @@ void eif_console_putchar (EIF_CHARACTER c)
 	writeconsole(eif_conoutfile, &c,1, &dummy_length, NULL);
 }
 
-void eif_console_putstring (EIF_POINTER s, long length)
+void eif_console_putstring (EIF_CHARACTER *s, EIF_INTEGER length)
 {
 	DWORD dummy_length = (DWORD) 0;
 
@@ -373,7 +376,7 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	EIF_MUTEX_UNLOCK(eif_exception_trace_mutex, "Could not unlock mutex for saving the exception trace in a file\n");
 #endif
 
-	eif_console_putstring (s, strlen(s));
+	eif_console_putstring ((EIF_CHARACTER *) s, strlen(s));
 	return r;
 }
 
@@ -383,7 +386,6 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
 	 * can see what has been the problem after a crash of his system */
 {
 	BOOL b;
-	EIF_CHARACTER c;
 
 	if (eif_console_allocated) {
 #ifdef EIF_THREADS
@@ -391,13 +393,12 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
 #endif
 		{
 #ifdef WORKBENCH
-			if (crashed || debug_mode) {
-#else
-			if (crashed) {
-#endif
-				eif_console_putstring("\nPress Return to finish the execution...\0", 40);
+			if (debug_mode) {
+				EIF_CHARACTER c;
+				eif_console_putstring((EIF_CHARACTER *) "\nPress Return to finish the execution...\0", 40);
 				c = eif_console_readchar ();
 			}
+#endif
 			CloseHandle (eif_coninfile);
 			CloseHandle (eif_conoutfile);
 			b = FreeConsole ();

@@ -23,6 +23,10 @@ extern void start_timer(void);			/* Starts the timer for communication */
 extern void stop_timer(void);			/* Stops the timer */
 #endif
 
+/* forward definitions */
+rt_private void send_dmpitem_request(struct item *ip);
+
+
 rt_public void send_rqst_0 (long int code)
 {
 	Request rqst;
@@ -31,7 +35,7 @@ rt_public void send_rqst_0 (long int code)
 #endif
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 0: %ld from es4", code);
+    add_log(100, "sending request 0: %ld from ec", code);
 #endif
 
 #ifdef EIF_WIN32
@@ -57,7 +61,7 @@ rt_public void send_rqst_1 (long int code, long int info1)
 #endif
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 1: %ld from es4", code);
+    add_log(100, "sending request 1: %ld from ec", code);
 #endif
 	Request_Clean (rqst);
 	rqst.rq_type = (int) code;
@@ -78,7 +82,7 @@ rt_public void send_rqst_2 (long int code, long int info1, long int info2)
 #endif
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 2: %ld from es4", code);
+    add_log(100, "sending request 2: %ld from ec", code);
 #endif
 
 	Request_Clean (rqst);
@@ -101,7 +105,7 @@ rt_public void send_rqst_3 (long int code, long int info1, long int info2, long 
 #endif
 
 #ifdef USE_ADD_LOG
-    add_log(100, "sending request 3: %ld from es4", code);
+    add_log(100, "sending request 3: %ld from ec", code);
 #endif
 
 	Request_Clean (rqst);
@@ -115,6 +119,157 @@ rt_public void send_rqst_3 (long int code, long int info1, long int info2, long 
 #else
 	send_packet(writefd(sp), &rqst);
 #endif
+}
+
+rt_private void send_dmpitem_request(struct item *ip)
+{
+	Request rqst;
+#ifndef EIF_WIN32
+	STREAM *sp = stream_by_fd[EWBOUT];
+#endif
+
+#ifdef USE_ADD_LOG
+    add_log(100, "sending specific request: %ld from ec", code);
+#endif
+
+	/* prepare the request to send */
+	Request_Clean (rqst);
+	rqst.rq_type = DUMPED;
+	rqst.rq_dump.dmp_type = DMP_ITEM;
+	rqst.rq_dump.dmp_item = ip;
+
+	/* send the request */
+#ifdef EIF_WIN32
+	send_packet(sp, &rqst);
+#else
+	send_packet(writefd(sp), &rqst);
+#endif
+}
+
+/* send an integer value to the application */
+rt_public void send_integer_value(long value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_INT32;
+	item.it_int32 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a real value to the application */
+rt_public void send_real_value(float value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_FLOAT;
+	item.it_float = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a double value to the application */
+rt_public void send_double_value(double value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_DOUBLE;
+	item.it_double = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a char value to the application */
+rt_public void send_char_value(char value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_CHAR;
+	item.it_char = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a boolean value to the application */
+rt_public void send_bool_value(char value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_BOOL;
+	item.it_char = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a reference value to the application */
+rt_public void send_ref_value(long value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_REF;
+	item.it_ref = (char *)value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a pointer value to the application */
+rt_public void send_ptr_value(long value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_POINTER;
+	item.it_ptr = (char *)value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a string to the application */
+rt_public void send_string_value(char* string)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_STRING;
+	item.it_ref = string;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a bit value to the application */
+rt_public void send_bit_value(char *value)
+{
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_BIT;
+	item.it_bit = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
 }
 
 rt_public EIF_BOOLEAN recv_ack (void)
@@ -134,14 +289,14 @@ rt_public EIF_BOOLEAN recv_ack (void)
 
 
 #ifdef USE_ADD_LOG
-    add_log(100, "receiving request : %ld for es4", pack.rq_type);
+    add_log(100, "receiving request : %ld for ec", pack.rq_type);
 #endif
 
 	switch (pack.rq_type) {
 	case ACKNLGE:
 
 #ifdef USE_ADD_LOG
-	    add_log(100, "acknowledge request : %ld for es4", pack.rq_ack.ak_type);
+	    add_log(100, "acknowledge request : %ld for ec", pack.rq_ack.ak_type);
 #endif
 		switch (pack.rq_ack.ak_type) {
 		case AK_OK:
@@ -174,7 +329,7 @@ rt_public EIF_BOOLEAN recv_dead (void)
 		return (EIF_BOOLEAN) 0;
 
 #ifdef USE_ADD_LOG
-    add_log(100, "receiving request : %ld for es4", pack.rq_type);
+    add_log(100, "receiving request : %ld for ec", pack.rq_type);
 #endif
 
 #ifdef EIF_WIN32
@@ -217,8 +372,7 @@ EIF_REFERENCE c_tread (void)
 }
 
 #ifdef EIF_WIN32
-rt_public void send_simple_request(code)
-long code;		/* Request type */
+rt_public void send_simple_request(long code)
 {
 	/* Send the simple request specified by code */
 

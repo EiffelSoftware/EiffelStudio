@@ -28,12 +28,11 @@
 #ifndef _eif_special_table_h_
 #define _eif_special_table_h_
 
+#include "eif_portable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_config.h"
-#include "eif_portable.h"
 
 #ifdef EIF_REM_SET_OPTIMIZATION
 #define	EIF_SPT_SZ	8192	
@@ -44,7 +43,7 @@ struct special_table {
 	int			 	h_size;			/* Size of table */
 	int			 	count;			/* Index of next free entry. */
 	int 			old_count;		/* Count at before last collection. */
-	EIF_INTEGER 	*h_keys;		/* Array of keys (integers) */
+	EIF_INTEGER_32 	*h_keys;		/* Array of keys (integers) */
 	EIF_REFERENCE 	*h_values;		/* Array of pointers. */
 	EIF_REFERENCE	*old_values;	/* Previous array of pointers. */
 };

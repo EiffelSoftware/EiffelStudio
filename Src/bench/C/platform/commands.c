@@ -34,23 +34,12 @@
 #include <assert.h>
 #endif
 
-#ifdef EIF_OS2
-#define INCL_DOSPROCESS		/* Constants used for calls to DosExecPgm() */
-#define INCL_DOS
-#define INCL_DOSERRORS
-#include <os2.h>
-#endif
-
 rt_private fnptr set_proc;
 rt_private fnptr send_proc;
 
 extern EIF_INTEGER eif_system(char *);
 
 #ifdef EIF_WIN32
-extern char *eif_getenv (char *);
-#endif
-
-#ifdef EIF_OS2
 extern char *eif_getenv (char *);
 #endif
 
@@ -80,12 +69,12 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	current_dir = (char *) getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 
-	eiffel_dir = (char *) eif_getenv("EIFFEL4");
+	eiffel_dir = (char *) eif_getenv("ISE_EIFFEL");
 	cmd = malloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
-	strcat (cmd, eif_getenv("PLATFORM"));
+	strcat (cmd, eif_getenv("ISE_PLATFORM"));
 	strcat (cmd, "\\bin\\finish_freezing.exe");
 
 	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
@@ -132,12 +121,12 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 	current_dir = getcwd(NULL, PATH_MAX);
 	chdir(eif_access(c_code_dir));
 
-	eiffel_dir = (char *) eif_getenv("EIFFEL4");
+	eiffel_dir = (char *) eif_getenv("ISE_EIFFEL");
 	cmd = malloc (45 + strlen (eiffel_dir));
 	if (cmd == (char *)0)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
-	strcat (cmd, eif_getenv("PLATFORM"));
+	strcat (cmd, eif_getenv("ISE_PLATFORM"));
     strcat (cmd, "\\bin\\finish_freezing.exe");
     rc = DosExecPgm(LoadError,           /* Object name buffer           */
                     sizeof(LoadError),   /* Length of object name buffer */
@@ -225,28 +214,22 @@ void eif_gr_call_finish_freezing(EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ fr
 void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_command_name, EIF_OBJ driver_name)
 {
 #if defined EIF_WIN32 || defined EIF_OS2
-	char *src, *eiffel_dir, *system_exe;
+	char *source_exe, *target_exe;
 	FILE *fi, *fo;
 	char buffer[4096];
-	char *start_dir;
 	size_t amount;
 
-		/* Given abc\EIFGEN\W_code */
-		/* The starting directory is abc or abc\EIFGEN\W_code - 14 characters */
-	start_dir = malloc (strlen(eif_access(c_code_dir)));
-	strncpy (start_dir, eif_access(c_code_dir), strlen(eif_access(c_code_dir))-14);
-
 		/* Link */
-
-	eiffel_dir = (char *) eif_getenv("EIFFEL4");
-	src = malloc(strlen(eif_access(driver_name))+1);
-	if (src == (char *)0)
+	amount = strlen (eif_access(driver_name));
+	source_exe = (char *) malloc(amount + 1);
+	if (source_exe == (char *)0)
 		enomem();
-	strcpy (src, eif_access (driver_name));
-	fi = fopen (src, "rb");
-	system_exe = malloc (strlen (eif_access (system_name)) + strlen (eif_access (c_code_dir)) + 5);
-	sprintf (system_exe, "%s\\%s.EXE", eif_access (c_code_dir), eif_access (system_name));
-	fo = fopen (system_exe, "wb");
+	strncpy (source_exe, eif_access (driver_name), amount);
+	source_exe [amount + 1] = '\0';
+	fi = fopen (source_exe, "rb");
+	target_exe = malloc (strlen (eif_access (system_name)) + strlen (eif_access (c_code_dir)) + 6);
+	sprintf (target_exe, "%s\\%s.exe", eif_access (c_code_dir), eif_access (system_name));
+	fo = fopen (target_exe, "wb");
 
 	amount = 4096;
 	while (amount == 4096) {
@@ -257,9 +240,8 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 
 	fclose (fi);
 	fclose (fo);
-	free (src);
-	free (start_dir);
-	free (system_exe);
+	free (source_exe);
+	free (target_exe);
 
 #elif defined EIF_VMS
 	char *cmd; size_t cmd_len; 
@@ -326,15 +308,6 @@ void eif_gr_link_driver (EIF_OBJ request, EIF_OBJ c_code_dir, EIF_OBJ system_nam
 
 /* Platform definition */
 
-EIF_BOOLEAN eif_is_os2(void)
-{
-#ifdef EIF_OS2
-	return EIF_TRUE;
-#else
-	return EIF_FALSE;
-#endif
-}
-
 EIF_BOOLEAN eif_is_vms (void)
 {
 #ifdef EIF_VMS
@@ -356,11 +329,7 @@ EIF_BOOLEAN eif_is_windows(void)
 EIF_REFERENCE eif_date_string (EIF_INTEGER a_date)
 {
 	EIF_REFERENCE result;
-#ifdef EIF_VMS
 	char *date_string = ctime((time_t*)&a_date);
-#else
-	char *date_string = ctime(&a_date);
-#endif
 
 	result = RTMS(date_string);
 	/* free (date_string); FIXME - check with xavier */

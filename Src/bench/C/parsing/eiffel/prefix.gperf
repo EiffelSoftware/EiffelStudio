@@ -1,6 +1,0 @@
-# Run this file through
-#   gperf -l -k '1,2,$' -N std_prefix prefix.gperf > prefix.c
-# to produce a fast keyword recognition function.
-not
-+
--

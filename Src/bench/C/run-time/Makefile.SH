@@ -92,8 +92,8 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-CFLAGS = -I$(TOP) -I. -I../ipc/app
-DPFLAGS = -I$(TOP) -I. -I../ipc/app
+CFLAGS = -I$(TOP) -I. -I../ipc/app -I./include
+DPFLAGS = -I$(TOP) -I. -I../ipc/app -I./include
 
 NETWORK_OBJ = ../ipc/app/network.o
 MTNETWORK_OBJ = ../ipc/app/MTnetwork.o
@@ -104,8 +104,7 @@ LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
 	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
-	eif_rw_lock.c \
-	gen_conf.c rout_obj.c
+	eif_rw_lock.c gen_conf.c rout_obj.c eif_type_id.c
 
 OTHER = main.c except.c
 
@@ -160,6 +159,7 @@ WSRC = \
 	eif_project.c \
 	eif_rw_lock.c \
 	gen_conf.c \
+	eif_type_id.c \
 	rout_obj.c
 
 ESRC = \
@@ -206,12 +206,12 @@ ESRC = \
 	eif_project.c \
 	eif_rw_lock.c \
 	gen_conf.c \
+	eif_type_id.c \
 	rout_obj.c
 
 
 MT_LOBJ = \
 	MTeif_special_table.o \
-	MTeif_once.o \
 	MTcompress.o \
 	MToption.o	\
 	MTconsole.o \
@@ -256,11 +256,11 @@ MT_LOBJ = \
 	MTeif_project.o \
 	MTeif_rw_lock.o \
 	MTgen_conf.o \
+	MTeif_type_id.o \
 	MTrout_obj.o
 
 LOBJ = \
 	eif_special_table.o \
-	eif_once.o \
 	compress.o \
 	option.o	\
 	object_id.o \
@@ -305,12 +305,12 @@ LOBJ = \
 	eif_project.o \
 	eif_rw_lock.o \
 	gen_conf.o \
+	eif_type_id.o \
 	rout_obj.o
 
 WOBJ = \
 	$(NETWORK) \
 	eif_special_table.o \
-	eif_once.o \
 	compress.o \
 	console.o \
 	woption.o \
@@ -359,12 +359,12 @@ WOBJ = \
 	weif_project.o \
 	eif_rw_lock.o \
 	wgen_conf.o \
+	weif_type_id.o \
 	wrout_obj.o
 
 MT_WOBJ = \
 	$(MTNETWORK) \
 	MTeif_special_table.o \
-	MTeif_once.o \
 	MTcompress.o \
 	MTconsole.o \
 	MTwoption.o \
@@ -413,12 +413,12 @@ MT_WOBJ = \
 	MTweif_project.o \
 	MTeif_rw_lock.o \
 	MTwgen_conf.o \
+	MTweif_type_id.o \
 	MTwrout_obj.o
 
 EOBJ = \
 	woption.o \
 	eif_special_table.o \
-	eif_once.o \
 	compress.o \
 	console.o \
 	wmalloc.o \
@@ -466,6 +466,7 @@ EOBJ = \
 	weif_project.o \
 	eif_rw_lock.o \
 	wgen_conf.o \
+	weif_type_id.o \
 	wrout_obj.o
 
 all:: eif_size.h
@@ -735,6 +736,9 @@ weif_threads.o: eif_threads.c
 wgen_conf.o: gen_conf.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
+weif_type_id.o: eif_type_id.c
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
 wrout_obj.o: rout_obj.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
@@ -881,10 +885,10 @@ MTeif_threads.o: eif_threads.c
 MTeif_special_table.o: eif_special_table.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
-MTeif_once.o: eif_once.c
+MTgen_conf.o: gen_conf.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
-MTgen_conf.o: gen_conf.c
+MTeif_type_id.o: eif_type_id.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTrout_obj.o: rout_obj.c
@@ -1020,6 +1024,9 @@ MTweif_threads.o: eif_threads.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwgen_conf.o: gen_conf.c
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTweif_type_id.o: eif_type_id.c
 	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
 
 MTwrout_obj.o: rout_obj.c

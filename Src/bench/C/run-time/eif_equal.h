@@ -13,11 +13,11 @@
 #ifndef _eif_equal_h_
 #define _eif_equal_h_
 
+#include "eif_portable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_portable.h"
 
 #ifndef TRUE
 #define TRUE 1

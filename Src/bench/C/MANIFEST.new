@@ -291,8 +291,6 @@ run-time/debug.c
 run-time/debug.h
 run-time/dir.c
 run-time/dir.h
-run-time/dle.c
-run-time/dle.h
 run-time/eiffel.h
 run-time/equal.c
 run-time/equal.h

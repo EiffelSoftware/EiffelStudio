@@ -10,14 +10,13 @@
 	The Interpreter.
 */
 
-#include "eif_project.h"
-#include "eif_config.h"
 #include "eif_portable.h"
-#include "eif_interp.h"
+#include "eif_project.h"
+#include "rt_interp.h"
 #include "eif_malloc.h"
 #include "eif_plug.h"
 #include "eif_eiffel.h"
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_hashin.h"
 #include "eif_cecil.h"
 #include "eif_hector.h"
@@ -31,14 +30,17 @@
 #include <math.h>
 #include "eif_main.h"
 #include "eif_gen_conf.h"
-#include "x2c.header"		/* For LNGPAD */
+#include "rt_gen_types.h"
+#include "x2c.h"		/* For LNGPAD */
+#include "eif_misc.h"
+#include "rt_assert.h"
 
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"
 #endif
 
 /*#define SEP_DEBUG */  /**/
-/*#define DEBUG 6 */	/**/
+/*#define DEBUG 6 */ 	/**/
 /*#define TEST */ /**/
 #ifdef TEST
 #include <stdio.h>
@@ -62,14 +64,14 @@
  * variables are more likely to be used in a routine than arguments, hence
  * they are located before arguments in the array--RAM.
  */
-#define icurrent	(*iregs)					/* Value of Current */
-#define iresult		(*(iregs+1))				/* Result of function */
-#define ilocnum		(*(iregs+2))				/* Number of locals */
-#define iargnum		(*(iregs+3))				/* Number of arguments */
-#define loc(n)		(*(iregs+3+(n)))			/* Locals from 1 to locnum */
+#define icurrent	(*iregs)						/* Value of Current */
+#define iresult		(*(iregs+1))					/* Result of function */
+#define ilocnum	(*(iregs+2))					/* Number of locals */
+#define iargnum		(*(iregs+3))					/* Number of arguments */
+#define loc(n)		(*(iregs+3+(n)))				/* Locals from 1 to locnum */
 #define arg(n)		(*(iregs+3+locnum+(n)))		/* Arguments from 1 to argnum */
 #define nbregs		(locnum+argnum+SPECIAL_REG)	/* Total # of registers */
-#define icur_dtype	Dtype(icurrent->it_ref)		/* Dtype of current */
+#define icur_dtype	Dtype(icurrent->it_ref)			/* Dtype of current */
 #define icur_dftype	Dftype(icurrent->it_ref)		/* Dftype of current */
 /* Interpreter routine flag */
 #define INTERP_CMPD 1			/* Interpretation of a compound */
@@ -99,7 +101,7 @@ rt_shared struct opstack op_stack = { /* %%ss mt */
  * to be fetched. Its behaviour is similar to the one of PC in a central
  * processing unit.
  */
-rt_public char *IC = (char *)0;	/* Interpreter Counter (like PC on a CPU) */ /* %%ss mt */
+rt_public unsigned char *IC = (unsigned char *)0;	/* Interpreter Counter (like PC on a CPU) */ /* %%ss mt */
 
 /* To speed-up access of the local parameters and variables, they are all
  * gathered in a separate array (automagically resized). The value of Current
@@ -122,6 +124,8 @@ rt_private int locnum = 0;		/* Number of locals */ /* %%ss mt */
  * have no reason to have changed.
  */
 rt_private unsigned long tagval = 0L;	/* Records number of interpreter's call */ /* %%ss mt */
+rt_private struct stochunk *saved_scur = NULL; /* current feature context */
+rt_private struct item *saved_stop = NULL; /* current feature context */
 #endif /* EIF_THREADS */
 
 /* Error message */
@@ -131,70 +135,71 @@ rt_private char *unknown_type = "unknown entity type";
 /* Monadic and diadic operator handling */
 rt_private void monadic_op(int code);				/* Execute a monadic operation */
 rt_private void diadic_op(int code);				/* Execute a diadic operation */
+rt_private void eif_interp_gt(struct item *first, struct item *second);	/* > operation */
+rt_private void eif_interp_lt(struct item *first, struct item *second);	/* < operation */
+rt_private void eif_interp_eq (struct item *f, struct item *s);			/* == operation */
+rt_private uint32 eif_expression_type (uint32 first, uint32 second);	/* type of a numeric binary expression */
 
 /* Min and max operation */
 rt_private void eif_interp_min_max (int code);	/* Execute `min' or `max' depending
 														   on value of `type' */
-rt_private void eif_interp_generator ();	/* generate the name of the basic type */
+rt_private void eif_interp_generator (void);	/* generate the name of the basic type */
+rt_private void eif_interp_offset (void);	/* execute `offset' on character and pointer type */
+rt_private void eif_interp_bit_operations (void);	/* execute bit operations on integers */
+rt_private void eif_interp_basic_operations (void);	/* execute basic operations on basic types */
 
 /* Assertion checking */
-rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
-rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
+rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where);				/* Invariant check */
+rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
 rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
-rt_private double get_double(void);			/* Get a double constant */
-rt_private float get_float(void);				/* Get a float constant */
+rt_private EIF_DOUBLE get_double(void);			/* Get a EIF_DOUBLE constant */
 rt_private long get_long(void);				/* Get a long constant */
 rt_private short get_short(void);				/* Get a short constant */
-rt_private fnptr get_fnptr(void);				/* Get a function pointer */
-rt_private char *get_address(void);			/* Get an address */
-rt_private short get_compound_id(EIF_CONTEXT char *obj, short dtype);			/* Get a compound type id */
-
-/* Writing constants */
-rt_private void write_long(char *where, long int value);				/* Write long constant */
-rt_private void write_float(char *where, float value);				/* Write a float constant */
-rt_private void write_double(char *where, double value);			/* Write a double constant */
-rt_private void write_fnptr(char *where, fnptr value);				/* Write a function pointer constant */
-rt_private void write_address(char *where, char *value);			/* Write an address constant */
+rt_private short get_compound_id(char *obj, short dtype);			/* Get a compound type id */
 
 /* Interpreter interface */
-rt_public void exp_call();				/* Sets IC before calling interpret */ /* %%ss undefine */
-rt_public void xinterp(EIF_CONTEXT char *icval);	/* Sets IC before calling interpret */
+rt_public void exp_call(void);				/* Sets IC before calling interpret */ /* %%ss undefine */
+rt_public void xinterp(unsigned char *icval);	/* Sets IC before calling interpret */
 rt_public void xinitint(void);			/* Initialization of the interpreter */
-rt_private void interpret(EIF_CONTEXT int flag, int where);	/* Run the interpreter */
+rt_private void interpret(int flag, int where);	/* Run the interpreter */
 
 /* Feature call and/or access  */
-rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype);					/* Interpreter dispatcher (in water) */
-rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int ptype);					/* Interpreter precomp dispatcher */
+rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, struct item* previous_otop);
+rt_private int icall(int fid, int stype, int is_extern, int ptype);					/* Interpreter dispatcher (in water) */
+rt_private int ipcall(int32 origin, int32 offset, int is_extern, int ptype);					/* Interpreter precomp dispatcher */
 rt_private void interp_access(int fid, int stype, uint32 type);			/* Access to an attribute */
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type);			/* Access to a precompiled attribute */
 rt_private void address(int32 fid, int stype, int for_rout_obj);					/* Address of a routine */
-rt_private void assign(long int fid, int stype, uint32 type);					/* Assignment in an attribute */
-rt_private void passign(int32 origin, int32 f_offset, uint32 type);					/* Assignment in a precomp attribute */
+rt_private void assign(long offset, uint32 type);									/* Assignment in an attribute */
 
 /* Calling protocol */
-rt_private void init_var(struct item *ptr, long int type, char *current_ref);	/* Initialize to 0 a variable entity */
-rt_private void init_registers(EIF_CONTEXT_NOARG);	/* Intialize registers in callee */
-rt_private void allocate_registers(EIF_CONTEXT_NOARG);		/* Allocate the register array */
-rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top);			/* Resynchronize the register array */
-rt_private void pop_registers(void);			/* Remove local vars and arguments */
+rt_private void init_var(struct item *ptr, long int type, char *current_ref); /* Initialize to 0 a variable entity */
+rt_private void init_registers(void);			/* Intialize registers in callee */
+rt_private void allocate_registers(void);		/* Allocate the register array */
+rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top); /* Resynchronize the register array */
+rt_private void pop_registers(void);						/* Remove local vars and arguments */
 
 /* Operational stack handling routines */
-rt_public struct item *opush(register struct item *val);			/* Push one value on op stack */
-rt_public struct item *opop(void);				/* Pop last item */
+rt_public struct item *opush(register struct item *val);	/* Push one value on op stack */
+rt_public struct item *opop(void);							/* Pop last item */
 rt_private struct item *stack_allocate(register int size);	/* Allocates first chunk */
 rt_private int stack_extend(register int size);				/* Extend stack's size */
-rt_private void npop(register int nb_items);					/* Pop 'n' items */
-rt_public struct item *otop(void);				/* Pointer to value at the top */
-rt_private struct item *oitem(uint32 n);			/* Pointer to value at position `n' down the stack */
-rt_private void stack_truncate(void);			/* Truncate stack if necessary */
-rt_private void wipe_out(register struct stochunk *chunk);				/* Remove unneeded chunk from stack */
+rt_private void npop(register int nb_items);				/* Pop 'n' items */
+rt_public struct item *otop(void);							/* Pointer to value at the top */
+rt_private struct item *oitem(uint32 n);					/* Pointer to value at position `n' down the stack */
+rt_private void stack_truncate(void);						/* Truncate stack if necessary */
+rt_private void wipe_out(register struct stochunk *chunk);	/* Remove unneeded chunk from stack */
 #ifdef DEBUG
-rt_private void dump_stack(void);				/* Dumps the operational stack */
-rt_public void idump(FILE *, char *);					/* Byte code dumping */
-rt_private void iinternal_dump(FILE *, char *);			/* Internal (compound) dumping */
+rt_private void dump_stack(void);							/* Dumps the operational stack */
+rt_public void idump(FILE *, char *);						/* Byte code dumping */
+rt_private void iinternal_dump(FILE *, char *);				/* Internal (compound) dumping */
 #endif
+
+/* debug functions */
+extern void discard_breakpoints(void);	/* discard all breakpoints. used when we don't want to stop */ 
+extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 
 /* Those macros are used to save and restore the ``x'' stack context to/from 
  * ``y'' and ``z'', which are respectively the current chunk and the current
@@ -207,10 +212,11 @@ rt_private void iinternal_dump(FILE *, char *);			/* Internal (compound) dumping
  * extra information when interpret() returns successfully.
  */
 #define STACK_PRESERVE \
-	struct dcall *dtop;				\
-	struct stdchunk *dcur;			\
-	struct item *stop;				\
-	struct stochunk *scur
+	struct dcall * volatile dtop;				\
+	struct stdchunk * volatile dcur;			\
+	struct item * volatile stop;				\
+	struct stochunk * volatile scur
+
 #define SAVE(x,y,z) \
 	{								\
 		(y) = (x).st_cur;			\
@@ -229,7 +235,7 @@ rt_private char *rcsid =
 #endif
 
 
-rt_public void xinterp(EIF_CONTEXT char *icval)
+rt_public void xinterp(unsigned char *icval)
 {
 	/* Starts interpretation at IC = icval. It is the interpreter entry
 	 * point for C code. When an exception occurs in the interpreted
@@ -259,7 +265,7 @@ rt_public void xinterp(EIF_CONTEXT char *icval)
 	 * for clean-up. But other than that, the pseudo vector is ignored.
 	 */
 
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 
 	/* If we return from a longjmp, an exception has occurred. We restore the
 	 * saved debugging context, then extract the top record to also restore the
@@ -291,11 +297,9 @@ rt_public void xinterp(EIF_CONTEXT char *icval)
 	(void) interpret(MTC INTERP_CMPD, 0);	/* Start interpretation */
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_public void xiinv(EIF_CONTEXT char *icval, int where)
+rt_public void xiinv(unsigned char *icval, int where)
 			
 				/* Invariant checked after or before ? */
 {
@@ -310,7 +314,7 @@ rt_public void xiinv(EIF_CONTEXT char *icval, int where)
 	dstart();					/* Get calling record */
 	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
 	SAVE(op_stack, scur, stop);	/* Save operation stack */
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 
 	if (setjmp(exenv)) {
 		RTXSC;							/* Restore stack contexts */
@@ -323,11 +327,9 @@ rt_public void xiinv(EIF_CONTEXT char *icval, int where)
 	(void) interpret(MTC INTERP_INVA, where);
 	expop(&eif_stack);					/* Pop pseudo vector */
 	dpop();								/* Remove calling context */
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_public void xinitint(EIF_CONTEXT_NOARG)
+rt_public void xinitint(void)
 {
 	/* Creation of the register array. */
 	EIF_GET_CONTEXT
@@ -336,11 +338,11 @@ rt_public void xinitint(EIF_CONTEXT_NOARG)
 	iregs = (struct item **) cmalloc(iregsz);
 	if (iregs == (struct item **) 0)	/* Not enough room */
 		enomem(MTC_NOARG);
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private void interpret(EIF_CONTEXT int flag, int where)
+#undef EIF_VOLATILE
+#define EIF_VOLATILE volatile
+rt_private void interpret(int flag, int where)
 					/* Flag set to INTERP_INVA or INTERP_CMPD */
 					/* Are we checking invariant before or after compound? */
 {
@@ -350,35 +352,34 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 int code;				/* Current intepreted byte code */
-	register2 struct item *last;	/* Last pushed value */
-	register3 long offset;			/* Offset for jumps and al */
-	register4 char *string;			/* Strings for assertions tag */
-	int type;						/* Often used to hold type values */
-	int32 once_code = 0;			/* Once H code value */
-	char *rescue;					/* Location of rescue clause */
-	jmp_buf exenv;					/* In case we have to setjmp() */
-	struct ex_vect *exvect;			/* Routine's execution vector */
-	struct item *stop;				/* To save stack context */
-	struct stochunk *scur;			/* Current chunk (stack context) */
-	char **l_top;					/* Local top */
-	struct stchunk *l_cur;			/* Current local chunk */
-	char **ls_top;					/* loc_stack top */
-	struct stchunk *ls_cur;			/* Current loc_stack chunk */
-	char **h_top;					/* Hector stack top */
-	struct stchunk *h_cur;			/* Current hector stack chunk */
-	int assert_type;				/* Assertion type */
-	int is_extern = 0;				/* External flag for featue call */
-	char pre_success;				/* Flag for precondition success */ 
-	char in_first_block;			/* Flag for chained preconditions */ 
-	long rtype;						/* Result type */
-	char *rvar;						/* Result address for once */
-	int32 rout_id;					/* Routine id */
-	int32 body_id;					/* Body id of once routine */
-	int current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
-	char **saved_prof_top;			/* Saved top of `prof_stack' */
-	long once_key;			/* Index in once table */
-	int  is_once;			/* Is it a once routine? */
+	register1 int volatile code;			/* Current intepreted byte code */
+	register2 struct item * volatile last;	/* Last pushed value */
+	register3 long volatile offset;			/* Offset for jumps and al */
+	unsigned char * volatile string;		/* Strings for assertions tag */
+	int volatile type;						/* Often used to hold type values */
+	unsigned char * volatile rescue;		/* Location of rescue clause */
+	jmp_buf exenv;							/* In case we have to setjmp() */
+	RTEX;									/* Routine's execution vector and debugger
+											   level depth */
+	struct item * volatile stop;			/* To save stack context */
+	struct stochunk * volatile scur;		/* Current chunk (stack context) */
+	char ** volatile l_top;					/* Local top */
+	struct stchunk * volatile l_cur;		/* Current local chunk */
+	char ** volatile ls_top;				/* loc_stack top */
+	struct stchunk * volatile ls_cur;		/* Current loc_stack chunk */
+	char ** volatile h_top;					/* Hector stack top */
+	struct stchunk * volatile h_cur;		/* Current hector stack chunk */
+	int volatile assert_type;				/* Assertion type */
+	int volatile is_extern = 0;				/* External flag for feature call */
+	char volatile pre_success;				/* Flag for precondition success */ 
+	long volatile rtype;					/* Result type */
+	void * volatile PResult = NULL;			/* Result address for once */
+	int32 volatile rout_id;					/* Routine id */
+	int32 volatile body_id = -1;			/* Body id of routine */
+	int volatile current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
+	char ** volatile saved_prof_top;		/* Saved top of `prof_stack' */
+	long volatile once_key;			/* Index in once table */
+	int  volatile is_once;			/* Is it a once routine? */
 	RTSN;							/* Save nested flag */
  
 #ifdef CONCURRENT_EIFFEL
@@ -414,18 +415,6 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	switch (code = *IC++) {		/* Read current byte-code and advance IC */
 
 	/*
-	 * Start of debuggable byte code.
-	 */
-	case BC_DEBUGABLE:
-#ifdef DEBUG
-		dprintf(2)("BC_DEBUGABLE\n");
-		dprintf(2)("0x%lX: ", IC + sizeof(long) - 1);
-#endif
-		offset = get_long();	/* Get the body ID */
-		drun(offset);			/* Initialize debugger for this feature */
-		/* Fall through */
-
-	/*
 	 * Start of routine byte code.
 	 */
 	case BC_START:
@@ -433,18 +422,17 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		dprintf(2)("BC_START\n");
 #endif
 		rout_id = (int32) get_long();	/* Get the routine id */
+		body_id = (uint32) get_long();	/* Get the body id */
 		rtype = get_long();				/* Get the result type */
 		argnum = get_short();			/* Get the argument number */
 	
 		if (is_once) {				/* If it is a once */
-			body_id = (uint32) get_long();	/* Get the body id */
-
-				/* Put pointer to 'result' in 'rvar' */
+				/* Put pointer to 'result' in 'PResult' */
 
 				/* MTOG = MT Once Get */
-			if (MTOG((char *),EIF_once_values[once_key], rvar))
+			if (MTOG((char *),EIF_once_values[once_key], PResult))
 			{
-				/* Already executed. 'rvar' points to result */
+				/* Already executed. 'PResult' points to result */
 
 				npop(argnum + 1);       /* Pop Current and the arguments */
 
@@ -458,31 +446,19 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					switch (rtype & SK_HEAD) 
 					{
 						case SK_BOOL:
-						case SK_CHAR:   
-								last->it_char = *rvar;
-								break;
-						case SK_INT:    
-								last->it_long = *((long*)rvar);
-								break;
-						case SK_FLOAT:  
-								last->it_float = *((float*)rvar);
-								break;
-						case SK_DOUBLE: 
-								last->it_double = *((double*)rvar);
-								break;
-						case SK_POINTER:
-								last->it_ptr = *((char**) rvar);
-								break;
+						case SK_CHAR: last->it_char = *((EIF_CHARACTER *) PResult); break;
+						case SK_WCHAR: last->it_wchar = *((EIF_WIDE_CHAR *) PResult); break;
+						case SK_INT8: last->it_int8 = *((EIF_INTEGER_8 *) PResult); break;
+						case SK_INT16: last->it_int16 = *((EIF_INTEGER_16 *) PResult); break;
+						case SK_INT32: last->it_int32 = *((EIF_INTEGER_32 *) PResult); break;
+						case SK_FLOAT: last->it_float = *((EIF_REAL *) PResult); break;
+						case SK_INT64: last->it_int64 = *((EIF_INTEGER_64 *) PResult); break;
+						case SK_DOUBLE: last->it_double = *((EIF_DOUBLE *) PResult); break;
+						case SK_POINTER: last->it_ptr = *((EIF_POINTER *) PResult); break;
 						case SK_BIT:
 						case SK_EXP:
 						case SK_REF:
-						/* %%zs Obsolete comment: */
-						/* Once access is done via an hector pointer, since
-						 * the address where the value is stored might not be
-						 * suitably aligned, therefore making it impossible to
-						 * use onceset.
-						 */
-								last->it_ref = eif_access(rvar);
+								last->it_ref = *((EIF_REFERENCE *) PResult);
 								break;
 						default:
 								eif_panic(MTC "invalid result type");
@@ -494,7 +470,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			else
 			{
 				/* Allocate space for 'result' then thread-specific (if MT
-				   mode) store it via the key table. */
+				   mode) store it via the key table and initialize `Result'
+				   to its default value. */
 
 				if ((rtype & SK_HEAD) != SK_VOID) 
 				{
@@ -502,26 +479,45 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					{
 						case SK_BOOL:
 						case SK_CHAR:   
-								rvar = cmalloc (sizeof (char));
+								PResult = (void *) cmalloc (sizeof (EIF_CHARACTER));
+								*((EIF_CHARACTER *) PResult) = (EIF_CHARACTER) 0;
 								break;
-						case SK_INT:    
-								rvar = (char *) cmalloc (sizeof (long));
+						case SK_WCHAR:   
+								PResult = (void *) cmalloc (sizeof (EIF_WIDE_CHAR));
+								*((EIF_WIDE_CHAR *) PResult) = (EIF_WIDE_CHAR) 0;
+								break;
+						case SK_INT8:    
+								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_8));
+								*((EIF_INTEGER_8 *) PResult) = (EIF_INTEGER_8) 0;
+								break;
+						case SK_INT16:    
+								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_16));
+								*((EIF_INTEGER_16 *) PResult) = (EIF_INTEGER_16) 0;
+								break;
+						case SK_INT32:    
+								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_32));
+								*((EIF_INTEGER_32 *) PResult) = (EIF_INTEGER_32) 0;
 								break;
 						case SK_FLOAT:  
-								rvar = (char *) cmalloc (sizeof (float));
+								PResult = (void *) cmalloc (sizeof (EIF_REAL));
+								*((EIF_REAL *) PResult) = (EIF_REAL) 0;
+								break;
+						case SK_INT64:    
+								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_64));
+								*((EIF_INTEGER_64 *) PResult) = (EIF_INTEGER_64) 0;
 								break;
 						case SK_DOUBLE: 
-								rvar = (char *) cmalloc (sizeof (double));
+								PResult = (void *) cmalloc (sizeof (EIF_DOUBLE));
+								*((EIF_DOUBLE *) PResult) = (EIF_DOUBLE) 0;
 								break;
 						case SK_POINTER:
-								rvar = (char *) cmalloc (sizeof (char *));
+								PResult = (void *) cmalloc (sizeof (EIF_POINTER));
+								*((EIF_POINTER *) PResult) = (EIF_POINTER) 0;
 								break;
 						case SK_BIT:
 						case SK_EXP:
 						case SK_REF:    
-							/*	rvar = (char *) cmalloc (sizeof (char *)); */
-							/* rvar allocated in hector stack */
-								rvar = henter((char *) 0);
+								PResult = RTOC(0);
 								break;
 					default:        
 								eif_panic(MTC "invalid result type");
@@ -530,11 +526,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				else
 				{
 					/* It's a procedure we need only to store something != 0 */
-					rvar = (char *) 1;
+					PResult = (void *) 1;
 				}
 
 				/* MTOS = MT Once Set */
-				MTOS(EIF_once_values[once_key], rvar);
+				MTOS(EIF_once_values[once_key], PResult);
 			}
 
 			onceadd(body_id);	/* Add this routine to the list of already */
@@ -556,18 +552,18 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			switch (last->type & SK_HEAD) {
 			case SK_REF:			/* Lovely comment */
 			case SK_EXP:
-				epush(&loc_stack, (char *)(&ref));
+				RT_GC_PROTECT(ref);
 				type = get_short ();
 				type = get_compound_id(MTC icurrent->it_ref, (short) type);
 				last->it_ref = RTLN(type);
-				epop(&loc_stack, 1);
+				RT_GC_WEAN(ref);
 				last->type = SK_EXP;
 				eif_std_ref_copy(ref, last->it_ref);
 				break;
 			case SK_BIT:
-				epush(&loc_stack, (char *)(&ref));
+				RT_GC_PROTECT(ref);
 				last->it_bit = RTLB(get_short());
-				epop(&loc_stack, 1);
+				RT_GC_WEAN(ref);
 				b_copy(ref, last->it_bit);
 				break;
 			}
@@ -578,7 +574,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		switch(flag) {				/* What are we interpreting? */
 		case INTERP_CMPD:			/* A compound (i.e. Eiffel feature) */
 			string = IC;			/* Get the feature name */
-			IC += strlen(IC) + 1;
+			IC += strlen((char *) IC) + 1;
 			code = get_short();		/* Dynamic type where feature is written */
 
 			/* Get an execution vector for the current feature, and link it
@@ -589,7 +585,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			 * calling context wrt the global execution flow in the Eiffel
 			 * stack).
 			 */
-			RTEA(string, code, icurrent->it_ref);
+			RTEAA((char *) string, code, (icurrent->it_ref), (unsigned char)locnum, (unsigned char)argnum, body_id);
 			check_options(MTC eoption + icur_dtype, icur_dtype);
 			dexset(exvect);
 			scur = op_stack.st_cur;		/* Save stack context */
@@ -619,7 +615,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			eif_panic(MTC botched);
 		}
 
-		rescue = (char *) 0;		/* No rescue */
+		rescue = NULL;		/* No rescue */
 		if (*IC++) {
 			offset = get_long();	/* Fetch rescue offset */
 			rescue = IC + offset;	/* Compute rescue start */
@@ -671,10 +667,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				if (tagval != stagval)
 					sync_registers(MTC scur, stop);
 				if (is_once) {
-					/* If the Result is an expanded, then we have an hector pointer
-					 * in place of the result.
-					 */
-					eif_access(rvar) = last->it_ref;
+					*((EIF_REFERENCE *) PResult) = last->it_ref;
 				}
 				break;
 			case SK_BIT:
@@ -682,17 +675,14 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				last->it_bit = RTLB(type & SK_BMASK);
 				last->type = type;
 				if (is_once) {
-					/* If the Result is a bit, then we have an hector pointer
-					* in place of the result.
-					*/
-					eif_access(rvar) = last->it_bit;
+					*((EIF_REFERENCE *) PResult) = last->it_bit;
 				}
 				break;
 			default:
 				break;
 			}
 
-			if (rescue != (char *) 0) {	/* If there is a rescue clause */
+			if (rescue) {	/* If there is a rescue clause */
 				l_top = loc_set.st_top;		/* Save C local stack */
 				l_cur = loc_set.st_cur;
 				ls_top = loc_stack.st_top;	/* Save loc_stack */
@@ -701,9 +691,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				h_cur = hec_stack.st_cur;
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
-				exvect->ex_jbuf = (char *) exenv;	/* Longjmp address */
-				if (setjmp(exenv))
+				exvect->ex_jbuf = &exenv;	/* Longjmp address */
+				if (setjmp(exenv)) {
 					IC = rescue;				/* Jump to rescue clause */
+						/* Reset calling convention flags */
+					is_extern = 0;
+				}
 			}
 		}
 			break;
@@ -774,7 +767,6 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			IC += offset;						/* Skip preconditions */
 
 		pre_success = '\01';
-		in_first_block = '\01';
 		break;
 
 	/*
@@ -797,24 +789,84 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CAST_LONG\n");
 #endif
+		offset = get_long ();	/* Get integer size */
 		last = otop ();
 		switch (last->type & SK_HEAD) {
 			case (SK_FLOAT):{
-				float f = last->it_float;
-				last->it_long = (long) f;
+				EIF_REAL f = last->it_float;
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) f; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) f; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) f; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) f; break;
+					default:
+						eif_panic ("Illegal type");
+				}
 				}
 				break;
 			case (SK_DOUBLE):{
-				double d = last->it_double;
-				last->it_long = (long) d;
+				EIF_DOUBLE d = last->it_double;
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) d; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) d; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) d; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) d; break;
+					default:
+						eif_panic ("Illegal type");
+				}
 				}
 				break;
-			case (SK_INT):
+			case SK_INT8:
+				switch (offset) {
+					case 8: break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_int8; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_int8; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_int8; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT16:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_int16; break;
+					case 16: break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_int16; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_int16; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT32:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_int32; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_int32; break;
+					case 32: break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_int32; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT64:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_int64; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_int64; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_int64; break;
+					case 64: break;
+					default:
+						eif_panic ("Illegal type");
+				}	
 				break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
 			}
-		last->type = SK_INT;
+		switch (offset) {
+			case 8: last->type = SK_INT8; break;
+			case 16: last->type = SK_INT16; break;
+			case 32: last->type = SK_INT32; break;
+			case 64: last->type = SK_INT64; break;
+			default:
+				eif_panic ("Illegal type");
+		}
 		break;
 
 	/*
@@ -827,17 +879,22 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case (SK_INT):{
-				long l = last->it_long;
-				last->it_float = (float) l;
-				}
+			case SK_INT8:
+				last->it_float = (EIF_REAL) last->it_int8;
 				break;
-			case (SK_DOUBLE):{
-				double d = last->it_double;
-				last->it_float = (float) d;
-				}
+			case SK_INT16:
+				last->it_float = (EIF_REAL) last->it_int16;
 				break;
-			case (SK_FLOAT):
+			case SK_INT32:
+				last->it_float = (EIF_REAL) last->it_int32;
+				break;
+			case SK_INT64:
+				last->it_float = (EIF_REAL) last->it_int64;
+				break;
+			case (SK_DOUBLE):
+				last->it_float = (EIF_REAL) last->it_double;
+				break;
+			case SK_FLOAT:
 				break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
@@ -855,17 +912,22 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case (SK_INT):{
-				long l = last->it_long;
-				last->it_double = l;
-				}
+			case SK_INT8:
+				last->it_double = (EIF_DOUBLE) last->it_int8;
 				break;
-			case (SK_FLOAT):{
-				float f = last->it_float;
-				last->it_double = f;
-				}
+			case SK_INT16:
+				last->it_double = (EIF_DOUBLE) last->it_int16;
 				break;
-			case (SK_DOUBLE):
+			case SK_INT32:
+				last->it_double = (EIF_DOUBLE) last->it_int32;
+				break;
+			case SK_INT64:
+				last->it_double = (EIF_DOUBLE) last->it_int64;
+				break;
+			case SK_FLOAT:
+				last->it_double = (EIF_DOUBLE) last->it_float;
+				break;
+			case SK_DOUBLE:
 				break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
@@ -890,31 +952,19 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			switch (rtype & SK_HEAD) 
 			{
 				case SK_BOOL:
-				case SK_CHAR:   
-						*rvar = last->it_char;
-						break;
-				case SK_INT:    
-						*((long*)rvar) = last->it_long;
-						break;
-				case SK_FLOAT:  
-						*((float*)rvar) = last->it_float; 
-						break;
-				case SK_DOUBLE: 
-						*((double*)rvar) = last->it_double;
-						break;
-				case SK_POINTER:
-						*((char**) rvar) = last->it_ptr;
-						break;
+				case SK_CHAR:   *((EIF_CHARACTER *) PResult) = last->it_char; break;
+				case SK_WCHAR: *((EIF_WIDE_CHAR *) PResult) = last->it_wchar; break;
+				case SK_INT8: *((EIF_INTEGER_8 *) PResult) = last->it_int8; break;
+				case SK_INT16: *((EIF_INTEGER_16 *) PResult) = last->it_int16; break;
+				case SK_INT32: *((EIF_INTEGER_32 *) PResult) = last->it_int32; break;
+				case SK_INT64: *((EIF_INTEGER_64 *) PResult) = last->it_int64; break;
+				case SK_FLOAT: *((EIF_REAL*) PResult) = last->it_float; break;
+				case SK_DOUBLE: *((EIF_DOUBLE*) PResult) = last->it_double; break;
+				case SK_POINTER: *((EIF_POINTER *) PResult) = last->it_ptr; break;
 				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:
-				/* Once access is done via an hector pointer, since
-				 * the address where the value is stored might not be
-				 * suitably aligned, therefore making it impossible to
-				 * use onceset.
-				 */
-						eif_access(rvar) = last->it_ref;
-						break;
+						*((EIF_REFERENCE *) PResult) = last->it_ref; break;
 			}
 		}
 		break;
@@ -938,10 +988,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:	/* See below */ 
-					/* If the Result is a reference, then we have an hector pointer
-				 	* in place of the result.
-					*/
-					eif_access(rvar) = last->it_ref;
+					*((EIF_REFERENCE *) PResult) = last->it_ref;
 					break;
 				}
 			}
@@ -1006,7 +1053,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			offset = get_long();		/* Get the feature id */
 			code = get_short();			/* Get the static type */
 			type = get_uint32();		/* Get attribute meta-type */
-			assign(offset, code, type);
+			assign(RTWA(code, offset, icur_dtype), type);
 		}
 		break;
 
@@ -1024,7 +1071,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
 			type = get_uint32();		/* Get attribute meta-type */
-			passign(origin, ooffset, type);
+			assign(RTWPA(origin, ooffset, icur_dtype), type);
 		}
 		break;
 
@@ -1107,10 +1154,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		 */
 		if (is_once) {
 			last = iresult;
-				/* If the Result is a reference, then we have an hector pointer
-				 * in place of the result.
-				 */
-			eif_access(rvar) = last->it_ref;
+			*((EIF_REFERENCE *) PResult) = last->it_ref;
 		}
 		break;
 
@@ -1155,7 +1199,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (char *) 0;
-			assign(offset, code, meta);
+			assign(RTWA(code, offset, icur_dtype), meta);
 		}
 		break;
 
@@ -1181,7 +1225,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (char *) 0;
-			passign(origin, ooffset, meta);
+			assign(RTWPA(origin, ooffset, icur_dtype), meta);
 		}
 		break;
 
@@ -1272,11 +1316,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		switch (*IC++) {				
 		case BC_TAG:				/* Assertion tag */
 			string = IC;
-			IC += strlen(IC) + 1;
+			IC += strlen((char *) IC) + 1;
 			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
-				RTIT(string, icurrent->it_ref);
+				RTIT((char *) string, icurrent->it_ref);
 			else
-				RTCT(string, assert_type);
+				RTCT((char *) string, assert_type);
 			break;
 		case BC_NOTAG:				/* No assertion tag */
 			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
@@ -1312,7 +1356,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	/*
 	 * End of precondition in the first block.
 	 */
-	case BC_END_FST_PRE:
+	case BC_END_PRE:
 #ifdef DEBUG
 		dprintf(2)("BC_END_FST_PRE\n");
 #endif
@@ -1324,27 +1368,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		if (!code) {
 			pre_success = '\0'; 
 			IC += offset;
-		}
-		else {
+		} else {
 			RTCK;
-		}
-		break;
-
-	/*
-	 * Remove precondition exception. 
-	 */
-	case BC_END_PRE:
-#ifdef DEBUG
-		dprintf(2)("BC_END_PRE\n");
-#endif
-		offset = get_long(); 	/* the offset to the corresponding 
-								 * precondition block's "BC_GOTO_BODY"
-								*/
-		code = (int) opop()->it_char;	
-									/* Get the assertion boolean result */
-		if (!code) {
-			pre_success = '\0';
-			IC += offset;
 		}
 		break;
 
@@ -1355,7 +1380,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RAISE_PREC\n");
 #endif
-		RTCF;
+		if (!pre_success) {
+			RTCF;
+		}
 		break;
 
 	/*
@@ -1371,14 +1398,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 									 */
 			if (pre_success){ 
 				IC += offset;		/* Go to the body of routine */
-				if (!in_first_block) {
-					RTCK;
-				}
 			}
-			else
+			else {
+				RTCK;		/* Remove failed exception from stack */
 				pre_success = '\01';
 									/* Reset success for next block */
-			in_first_block = '\0';
+			}
 			break;
 		}
 
@@ -1394,9 +1419,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			code = get_short();		/* Get the local variant index */
 			last = loc(code);
-			offset = opop()->it_long;	/* Get the new variant value */
-			old_val = last->it_long;	/* Get the old variant value */
-			last->it_long = offset;		/* Save the new variant value */
+			offset = opop()->it_int32;	/* Get the new variant value */
+			old_val = last->it_int32;	/* Get the old variant value */
+			last->it_int32 = offset;		/* Save the new variant value */
 			if ((old_val == -1L || old_val > offset) && offset >= 0) {
 				RTCK;
 			}
@@ -1414,7 +1439,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		dprintf(2)("BC_INIT_VARIANT\n");
 #endif
 		code = get_short();
-		loc(code)->it_long = -1;
+		loc(code)->it_int32 = -1;
 		break;
 
 	/*
@@ -1429,10 +1454,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			code = WDBG(icur_dtype, (char *) 0);		/* No debug key */
 		else {
 			int i;
+			int length;
 			for (i = 0, code = 0; i < offset; i++) {
+				length = get_long ();	/* Get the length of the manifest string */
 				string = IC;						/* Get a debug key */
-				IC += strlen(IC) + 1;
-				code |= WDBG(icur_dtype, string);
+				IC += (length + 1);
+				code |= WDBG(icur_dtype, (char *) string);
 			}
 		}
 		offset = get_long();	/* Get the jump value */
@@ -1461,7 +1488,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			char *new_obj;						/* New object */
 			unsigned long stagval;
 			short has_args, has_open, has_closed;
-			struct item *addr, *aargs, *aopen, *aclosed;
+			struct item *addr, *true_addr, *aargs, *aopen, *aclosed;
 			char *args, *open, *closed;
 
 			args = open = closed = (char *) 0;
@@ -1470,6 +1497,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			has_closed = get_short(); /* Do we have a closed map array? */
 			type = get_short();
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+			true_addr = opop();  /* True address of routine */
 			addr = opop();  /* Address of routine */
 			if (has_closed)
 			{
@@ -1487,7 +1515,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				args = (char *) (aargs->it_ref);
 			}
 			stagval = tagval;
-			new_obj = RTLNR((int16)type, addr->it_ptr, args, open, closed);		/* Create new object */
+				/* Create new object */
+			new_obj = RTLNR((int16)type, addr->it_ptr, true_addr->it_ptr, args, open, closed);
+
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
@@ -1620,7 +1650,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		{
 			struct item *lower, *upper;
-			long intval;
+			EIF_INTEGER_8 intval_8;
+			EIF_INTEGER_16 intval_16;
+			EIF_INTEGER_32 intval_32;
+			EIF_INTEGER_64 intval_64;
 			char charval;
 
 			upper = opop();				/* Get the upper bound */
@@ -1628,9 +1661,24 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			last = otop();				/* Get the inspect expression value */
 			offset = get_long();		/* Get the jump value */
 			switch (last->type) {
-			case SK_INT:
-				intval = last->it_long;
-				if (lower->it_long <= intval && intval <= upper->it_long)
+			case SK_INT8:
+				intval_8 = last->it_int8;
+				if (lower->it_int8 <= intval_8 && intval_8 <= upper->it_int8)
+					IC += offset;
+				break;
+			case SK_INT16:
+				intval_16 = last->it_int16;
+				if (lower->it_int16 <= intval_16 && intval_16 <= upper->it_int16)
+					IC += offset;
+				break;
+			case SK_INT32:
+				intval_32 = last->it_int32;
+				if (lower->it_int32 <= intval_32 && intval_32 <= upper->it_int32)
+					IC += offset;
+				break;
+			case SK_INT64:
+				intval_64 = last->it_int64;
+				if (lower->it_int64 <= intval_64 && intval_64 <= upper->it_int64)
 					IC += offset;
 				break;
 			case SK_CHAR:
@@ -1672,7 +1720,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_METAMORPHOSE\n");
 #endif 	
-		{	char *new_obj;
+		{	EIF_REFERENCE volatile new_obj = NULL;
 			uint32 head_type;
 			unsigned long stagval;
 
@@ -1689,17 +1737,33 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					new_obj = RTLN(egc_char_ref_dtype);
 					*new_obj = last->it_char;
 					break;
-				case SK_INT:
-					new_obj = RTLN(egc_int_ref_dtype);
-					*(long *) new_obj = last->it_long;
+				case SK_WCHAR:	
+					new_obj = RTLN(egc_wchar_ref_dtype);
+					*(EIF_WIDE_CHAR *) new_obj = last->it_wchar;
+					break;
+				case SK_INT8:
+					new_obj = RTLN(egc_int8_ref_dtype);
+					*(EIF_INTEGER_8 *) new_obj = last->it_int8;
+					break;
+				case SK_INT16:
+					new_obj = RTLN(egc_int16_ref_dtype);
+					*(EIF_INTEGER_16 *) new_obj = last->it_int16;
+					break;
+				case SK_INT32:
+					new_obj = RTLN(egc_int32_ref_dtype);
+					*(EIF_INTEGER_32 *) new_obj = last->it_int32;
+					break;
+				case SK_INT64:
+					new_obj = RTLN(egc_int64_ref_dtype);
+					*(EIF_INTEGER_64 *) new_obj = last->it_int64;
 					break;
 				case SK_FLOAT:
 					new_obj = RTLN(egc_real_ref_dtype);
-					*(float *) new_obj = last->it_float;
+					*(EIF_REAL *) new_obj = last->it_float;
 					break;
 				case SK_DOUBLE:
 					new_obj = RTLN(egc_doub_ref_dtype);
-					*(double *) new_obj = last->it_double;
+					*(EIF_DOUBLE *) new_obj = last->it_double;
 					break;
 				case SK_POINTER:
 					new_obj = RTLN(egc_point_ref_dtype);
@@ -1801,9 +1865,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			dprintf(2)("BC_FEATURE_INV\n");
 #endif
 		string = IC;					/* Get the feature name */
-		IC += strlen(IC) + 1;
+		IC += strlen((char *) IC) + 1;
 		if (otop()->it_ref == (char *) 0)	/* Called on a void reference? */
-			eraise(string, EN_VOID);		/* Yes, raise exception */
+			eraise((char *) string, EN_VOID);		/* Yes, raise exception */
 		offset = get_long();				/* Get the feature id */
 		code = get_short();					/* Get the static type */
 
@@ -1836,9 +1900,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			int32 offset, origin;
 
 			string = IC;					/* Get the feature name */
-			IC += strlen(IC) + 1;
+			IC += strlen((char *) IC) + 1;
 			if (otop()->it_ref == (char *) 0)/* Called on a void reference? */
-				eraise(string, EN_VOID);	/* Yes, raise exception */
+				eraise((char *) string, EN_VOID);	/* Yes, raise exception */
 			origin = get_long();			/* Get the origin class id */
 			offset = get_long();			/* Get the offset in origin */
 			nstcall = 1;					/* Invariant check turned on */
@@ -1894,9 +1958,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			uint32 type;
 
 			string = IC;					/* Get the attribute name */
-			IC += strlen(IC) + 1;			
+			IC += strlen((char *) IC) + 1;			
 			if (otop()->it_ref == (char *) 0)
-				eraise(string, EN_VOID);
+				eraise((char *) string, EN_VOID);
 			offset = get_long();			/* Get feature id */
 			code = get_short();				/* Get static type */
 			type = get_uint32();			/* Get attribute meta-type */
@@ -1917,9 +1981,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			uint32 type;
 
 			string = IC;					/* Get the attribute name */
-			IC += strlen(IC) + 1;			
+			IC += strlen((char *) IC) + 1;			
 			if (otop()->it_ref == (char *) 0)
-				eraise(string, EN_VOID);
+				eraise((char *) string, EN_VOID);
 			origin = get_long();			/* Get the origin class id */
 			ooffset = get_long();			/* Get the offset in origin */
 			type = get_uint32();			/* Get attribute meta-type */
@@ -2005,6 +2069,15 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		last->it_char = *IC++;
 		break;
 
+	case BC_WCHAR:
+#ifdef DEBUG
+		dprintf(2)("BC_WCHAR\n");
+#endif
+		last = iget();
+		last->type = SK_WCHAR;
+		last->it_wchar = (EIF_WIDE_CHAR) get_long ();
+		break;
+
 	/*
 	 * Boolean constant.
 	 */
@@ -2020,13 +2093,40 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	/*
 	 * Integer constant.
 	 */
-	case BC_INT:
+	case BC_INT8:
 #ifdef DEBUG
-		dprintf(2)("BC_INT\n");
+		dprintf(2)("BC_INT8\n");
 #endif
 		last = iget();
-		last->type = SK_INT;
-		last->it_long = get_long();
+		last->type = SK_INT8;
+		last->it_int8 = (EIF_INTEGER_8) (*IC++);
+		break;
+
+	case BC_INT16:
+#ifdef DEBUG
+		dprintf(2)("BC_INT16\n");
+#endif
+		last = iget();
+		last->type = SK_INT16;
+		last->it_int16 = (EIF_INTEGER_16) get_short();
+		break;
+
+	case BC_INT32:
+#ifdef DEBUG
+		dprintf(2)("BC_INT32\n");
+#endif
+		last = iget();
+		last->type = SK_INT32;
+		last->it_int32 = (EIF_INTEGER_32) get_long();
+		break;
+
+	case BC_INT64:
+#ifdef DEBUG
+		dprintf(2)("BC_INT64\n");
+#endif
+		last = iget();
+		last->type = SK_INT64;
+		last->it_int64 = (EIF_INTEGER_64) get_long();
 		break;
 
 	/*
@@ -2038,7 +2138,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_FLOAT;
-		last->it_float = (float) get_double();
+		last->it_float = (EIF_REAL) get_double();
 		break;
 
 	/*
@@ -2135,50 +2235,6 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		break;
 
 	/*
-	 * `generator' and `generating_type' function calls
-	 */
-	case BC_GENERATOR:
-		eif_interp_generator ();
-		break;
-
-	case BC_ZERO:
-		{
-		struct item *first = otop();	/* First operand will be replace by result */
-		switch(first->type & SK_HEAD) {
-			case SK_INT:
-				first->it_long = (EIF_INTEGER) 0;
-				break;
-			case SK_FLOAT:
-				first->it_float = (EIF_REAL) 0.0;
-				break;
-			case SK_DOUBLE:
-				first->it_double = (EIF_DOUBLE) 0.0;
-				break;
-			default: eif_panic(MTC botched);
-			}
-		}
-		break;
-
-		/* Call to `one' */
-	case BC_ONE:
-		{
-		struct item *first = otop();	/* First operand will be replace by result */
-		switch(first->type & SK_HEAD) {
-			case SK_INT:
-				first->it_long = (EIF_INTEGER) 1;
-				break;
-			case SK_FLOAT:
-				first->it_float = (EIF_REAL) 1.0;
-				break;
-			case SK_DOUBLE:
-				first->it_double = (EIF_DOUBLE) 1.0;
-				break;
-			default: eif_panic(MTC botched);
-			}
-		}
-		break;
-
-	/*
 	 * Diadic operators.
 	 */
 	case BC_LT:				/* Lesser than op */
@@ -2201,11 +2257,19 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		break;
 
 	/*
-	 * Min, Max operations
+	 * Basic operations to improve speed and correctness of operations
+	 * on basic types.
 	 */
-	case BC_MIN:
-	case BC_MAX:
-		eif_interp_min_max (code);
+	case BC_BASIC_OPERATIONS:
+		eif_interp_basic_operations ();
+		break;
+
+	/*
+	 * Bit operations on INTEGER
+	 */
+	
+	case BC_INT_BIT_OP:
+		eif_interp_bit_operations();
 		break;
 
 	/*
@@ -2293,7 +2357,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	 */
 	case BC_OBJECT_ADDR:
 		{
-		struct item *pointed_object;
+		struct item * volatile pointed_object = NULL;
 	 	EIF_BOOLEAN is_attribute = EIF_FALSE;
 		uint32 value_offset = get_uint32();
 #ifdef DEBUG
@@ -2349,12 +2413,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 				switch (pointed_object->type & SK_HEAD) {
 					case SK_BOOL:
-					case SK_CHAR: last->it_ref = (char *) (&(pointed_object->it_char)); break;
-					case SK_INT: last->it_ref = (char *) (&(pointed_object->it_long)); break;
-					case SK_FLOAT: last->it_ref = (char *) (&(pointed_object->it_float)); break;
-					case SK_DOUBLE: last->it_ref = (char *) (&(pointed_object->it_double)); break;
-					case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
-					case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
+					case SK_CHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
+					case SK_WCHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
+					case SK_INT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int8)); break;
+					case SK_INT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int16)); break;
+					case SK_INT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int32)); break;
+					case SK_INT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int64)); break;
+					case SK_FLOAT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_float)); break;
+					case SK_DOUBLE: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_double)); break;
+					case SK_BIT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_bit)); break;
+					case SK_POINTER: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_ptr)); break;
 					default:
 						eif_panic(MTC "illegal type for address access");
 				}
@@ -2382,12 +2450,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 		switch (pointed_object->type & SK_HEAD) {
 			case SK_BOOL:
-			case SK_CHAR: last->it_ref = (char *) (&(pointed_object->it_char)); break;
-			case SK_INT: last->it_ref = (char *) (&(pointed_object->it_long)); break;
-			case SK_FLOAT: last->it_ref = (char *) (&(pointed_object->it_float)); break;
-			case SK_DOUBLE: last->it_ref = (char *) (&(pointed_object->it_double)); break;
-			case SK_BIT: last->it_ref = (char *) (&(pointed_object->it_bit)); break;
-			case SK_POINTER: last->it_ref = (char *) (&(pointed_object->it_ptr)); break;
+			case SK_CHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_char)); break;
+			case SK_WCHAR: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_wchar)); break;
+			case SK_INT8: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int8)); break;
+			case SK_INT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int16)); break;
+			case SK_INT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int32)); break;
+			case SK_INT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int64)); break;
+			case SK_FLOAT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_float)); break;
+			case SK_DOUBLE: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_double)); break;
+			case SK_BIT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_bit)); break;
+			case SK_POINTER: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_ptr)); break;
 			default:
 				eif_panic(MTC "illegal type for address access");
 			}
@@ -2425,7 +2497,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			int curr_pos = 0;
 			struct item *it;
 			long elem_size;
-			char *OLD_IC;
+			unsigned char *OLD_IC;
 			short is_tuple;
  
 			stype = get_short();			/* Get the static type */
@@ -2443,7 +2515,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
  
 			new_obj = RTLN(dtype);			/* Create new object */
 
-			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
+			RT_GC_PROTECT(new_obj);   /* Protect new_obj */
 			if (is_tuple)
 				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
 			else
@@ -2463,15 +2535,19 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
 					case SK_CHAR:
-						*(char *) sp_area = it->it_char;
-						sp_area += sizeof(char);
+						*(EIF_CHARACTER *) sp_area = it->it_char;
+						sp_area += sizeof(EIF_CHARACTER);
+						break;
+					case SK_WCHAR:
+						*(EIF_WIDE_CHAR *) sp_area = it->it_wchar;
+						sp_area += sizeof(EIF_WIDE_CHAR);
 						break;
 					case SK_BIT:
-						*(char **) sp_area = it->it_bit;
+						*(EIF_REFERENCE *) sp_area = it->it_bit;
 						sp_area += BITOFF(LENGTH(it->it_bit)); 
 						break;
 					case SK_EXP:
-						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(long));
+						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
 						eif_std_ref_copy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
@@ -2479,17 +2555,29 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						*(char **) sp_area = it->it_ref;
 						sp_area += sizeof(char *);
 						break;
-					case SK_INT:
-						*(long *) sp_area = it->it_long;
-						sp_area += sizeof(long);
+					case SK_INT8:
+						*(EIF_INTEGER_8 *) sp_area = it->it_int8;
+						sp_area += sizeof(EIF_INTEGER_8);
+						break;
+					case SK_INT16:
+						*(EIF_INTEGER_16 *) sp_area = it->it_int16;
+						sp_area += sizeof(EIF_INTEGER_16);
+						break;
+					case SK_INT32:
+						*(EIF_INTEGER_32 *) sp_area = it->it_int32;
+						sp_area += sizeof(EIF_INTEGER_32);
+						break;
+					case SK_INT64:
+						*(EIF_INTEGER_64 *) sp_area = it->it_int64;
+						sp_area += sizeof(EIF_INTEGER_64);
 						break;
 					case SK_FLOAT:
-						*(float *) sp_area = it->it_float;
-						sp_area += sizeof(float);
+						*(EIF_REAL *) sp_area = it->it_float;
+						sp_area += sizeof(EIF_REAL);
 						break;
 					case SK_DOUBLE:
-						*(double *) sp_area = it->it_double;
-						sp_area += sizeof(double);
+						*(EIF_DOUBLE *) sp_area = it->it_double;
+						sp_area += sizeof(EIF_DOUBLE);
 						break;
 					case SK_POINTER:
 						*(char **) sp_area = it->it_ptr;
@@ -2499,7 +2587,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						eif_panic(MTC botched);
 				}
 			}
-			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
+			RT_GC_WEAN(new_obj);			/* Release protection of `new_obj' */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
@@ -2524,7 +2612,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			int curr_pos = 0;
 			struct item *it;
 			long elem_size;
-			char *OLD_IC;
+			unsigned char *OLD_IC;
 			short is_tuple;
  
 			origin = get_long();		/* Get the origin class id */
@@ -2540,7 +2628,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			OLD_IC = IC;					/* Save IC counter */
  
 			new_obj = RTLN(dtype);			/* Create new object */
-			epush (&loc_stack, (char *)(&new_obj));   /* Protect new_obj */
+			RT_GC_PROTECT(new_obj);   /* Protect new_obj */
 			if (is_tuple)
 				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
 			else
@@ -2559,15 +2647,19 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
 					case SK_CHAR:
-						*(char *) sp_area = it->it_char;
-						sp_area += sizeof(char);
+						*(EIF_CHARACTER *) sp_area = it->it_char;
+						sp_area += sizeof(EIF_CHARACTER);
+						break;
+					case SK_WCHAR:
+						*(EIF_WIDE_CHAR *) sp_area = it->it_wchar;
+						sp_area += sizeof(EIF_WIDE_CHAR);
 						break;
 					case SK_BIT:
-						*(char **) sp_area = it->it_bit;
+						*(EIF_REFERENCE *) sp_area = it->it_bit;
 						sp_area += BITOFF(LENGTH(it->it_bit)); 
 						break;
 					case SK_EXP:
-						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(long));
+						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
 						eif_std_ref_copy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
@@ -2575,17 +2667,29 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						*(char **) sp_area = it->it_ref;
 						sp_area += sizeof(char *);
 						break;
-					case SK_INT:
-						*(long *) sp_area = it->it_long;
-						sp_area += sizeof(long);
+					case SK_INT8:
+						*(EIF_INTEGER_8 *) sp_area = it->it_int8;
+						sp_area += sizeof(EIF_INTEGER_8);
+						break;
+					case SK_INT16:
+						*(EIF_INTEGER_16 *) sp_area = it->it_int16;
+						sp_area += sizeof(EIF_INTEGER_16);
+						break;
+					case SK_INT32:
+						*(EIF_INTEGER_32 *) sp_area = it->it_int32;
+						sp_area += sizeof(EIF_INTEGER_32);
+						break;
+					case SK_INT64:
+						*(EIF_INTEGER_64 *) sp_area = it->it_int64;
+						sp_area += sizeof(EIF_INTEGER_64);
 						break;
 					case SK_FLOAT:
-						*(float *) sp_area = it->it_float;
-						sp_area += sizeof(float);
+						*(EIF_REAL *) sp_area = it->it_float;
+						sp_area += sizeof(EIF_REAL);
 						break;
 					case SK_DOUBLE:
-						*(double *) sp_area = it->it_double;
-						sp_area += sizeof(double);
+						*(EIF_DOUBLE *) sp_area = it->it_double;
+						sp_area += sizeof(EIF_DOUBLE);
 						break;
 					case SK_POINTER:
 						*(char **) sp_area = it->it_ptr;
@@ -2595,7 +2699,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						eif_panic(MTC botched);
 				}
 			}
-			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
+			RT_GC_WEAN(new_obj);			/* Release protection of `new_obj' */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;
@@ -2662,10 +2766,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		dprintf(2)("BC_ADD_STRIP\n");
 #endif
 		string = IC;
-		IC += strlen(IC) + 1;
+		IC += strlen((char *) IC) + 1;
 		last = iget();
 		last->type = SK_REF;
-		last->it_ref = string;
+		last->it_ref = (EIF_REFERENCE) string;
 		break;
 
 	/*
@@ -2712,20 +2816,22 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		{
 			char *str_obj;			  /* String object created */
 			unsigned long stagval;
+			int32 length;
  
-			 stagval = tagval;
+			stagval = tagval;
+			length = get_long ();	/* Get the length of the manifest string */
 			string = IC;
-			/* FIXME: string length */
-			IC += strlen(IC) + 1;
+			IC += (length + 1);		/* Increment the byte code pointer to
+									 * the end of the string */
 			last = iget();
-			last->type = SK_INT;		/* Protect empty cell from GC */
+			last->type = SK_INT32;		/* Protect empty cell from GC */
  
 			/* We have to use the str_obj temporary variable instead of doing
 			 * the assignment directly into last->it_ref because the GC might
 			 * run a cycle when makestr() is called...
 			 */
 
-			str_obj = makestr(string, strlen(string));
+			str_obj = makestr((char *) string, length);
  
 			last->type = SK_REF;
 			last->it_ref = str_obj;
@@ -2800,23 +2906,33 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		break;
 
 	/*
-	 * Next debugging instruction.
+	 * Standard debugger hook.
 	 */
-	case BC_NEXT:
+	case BC_HOOK:
 #ifdef DEBUG
-		dprintf(2)("BC_NEXT\n");
+		dprintf(2)("BC_HOOK\n");
 #endif
-		dnext();				/* Debugger hook */
+		offset = get_long();		/* retrieve the parameter of BC_HOOK: line number */
+		saved_scur = scur;			/* save feature context */
+		saved_stop = stop;			/* save feature context */
+		dstop(dtop()->dc_exec,offset);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
+		saved_scur = NULL;			/* reset feature context */
+		saved_stop = NULL;			/* reset feature context */
 		break;
 
 	/*
-	 * Active breakpoint.
+	 * Debugger hook for nested calls.
 	 */
-	case BC_BREAK:
+	case BC_NHOOK:
 #ifdef DEBUG
-		dprintf(2)("BC_BREAK\n");
+		dprintf(2)("BC_NHOOK\n");
 #endif
-		dbreak(MTC PG_BREAK);		/* Debugger hook */
+		offset = get_long();		/* retrieve the parameter of BC_NHOOK: line number */
+		saved_scur = scur;			/* save feature context */
+		saved_stop = stop;			/* save feature context */
+		dstop_nested(dtop()->dc_exec,offset);	/* Debugger hook - stop point reached */
+		saved_scur = NULL;			/* reset feature context */
+		saved_stop = NULL;			/* reset feature context */
 		break;
 
 	/*
@@ -2881,18 +2997,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				sep_para_index[tmp_tyc] = get_short();
 			}
 			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
-#ifdef SEP_DEBUG
-				printf("Now, test %d parameter: %lx\n", sep_para_index[tmp_tyc]+1, ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
-				if (Dtype(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref) != sep_obj_id) {
-					printf ("Error, Dtype(%d)=%d\n", tmp_tyc, Dtype(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref));
-				}
-				else {
-					printf("To Reserve <%s, %d, %d>\n", hostname_of_sep_obj(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref), pid_of_sep_obj(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref), oid_of_sep_obj(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref)); 
-				}
-#endif
-				if (CURRSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
+				if (CURRSO(ivalue(IV_ARG, sep_para_index[tmp_tyc],0)->it_ref)) {
 					for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
-						CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+						CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref);
 					}
 					tmp_tyc = 0;
 					CURRSFW;
@@ -2915,7 +3022,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			short tmp_tyc;
 			nb_of_sep_paras = get_short();
 			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				CURFSO(ivalue(MTC IV_ARG, get_short())->it_ref);
+				CURFSO(ivalue(MTC IV_ARG, get_short(),0)->it_ref);
 			}
 		}	
 		break;
@@ -3052,8 +3159,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 							CURPB(tyc_last->it_char, tyc_tmp); break;
 						case SK_CHAR: 
 							CURPC(tyc_last->it_char, tyc_tmp); break;
-						case SK_INT: 
-							CURPI(tyc_last->it_long, tyc_tmp); break;
+						case SK_WCHAR: 
+							CURPWC(tyc_last->it_wchar, tyc_tmp); break;
+						case SK_INT8: 
+							CURPI8(tyc_last->it_int8, tyc_tmp); break;
+						case SK_INT16: 
+							CURPI16(tyc_last->it_int16, tyc_tmp); break;
+						case SK_INT32: 
+							CURPI32(tyc_last->it_int32, tyc_tmp); break;
+						case SK_INT64: 
+							CURPI64(tyc_last->it_int64, tyc_tmp); break;
 						case SK_FLOAT:
 							CURPR(tyc_last->it_float, tyc_tmp); break;
 						case SK_DOUBLE:
@@ -3079,7 +3194,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					switch (ret_type & SK_HEAD) {
 						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
 						case SK_CHAR: 	last->it_char = CURGC(0); break;
-						case SK_INT: 	last->it_long = CURGI(0); break;
+						case SK_WCHAR: 	last->it_wchar = CURGWC(0); break;
+						case SK_INT8: 	last->it_int8 = CURGI8(0); break;
+						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
+						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
+						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
 						case SK_FLOAT: 	last->it_float = CURGR(0); break;
 						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
@@ -3217,8 +3336,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 							CURPB(tyc_last->it_char, tyc_tmp); break;
 						case SK_CHAR: 
 							CURPC(tyc_last->it_char, tyc_tmp); break;
-						case SK_INT: 
-							CURPI(tyc_last->it_long, tyc_tmp); break;
+						case SK_WCHAR: 
+							CURPWC(tyc_last->it_wchar, tyc_tmp); break;
+						case SK_INT8: 
+							CURPI8(tyc_last->it_int8, tyc_tmp); break;
+						case SK_INT16: 
+							CURPI16(tyc_last->it_int16, tyc_tmp); break;
+						case SK_INT32: 
+							CURPI32(tyc_last->it_int32, tyc_tmp); break;
+						case SK_INT64: 
+							CURPI64(tyc_last->it_int64, tyc_tmp); break;
 						case SK_FLOAT:
 							CURPR(tyc_last->it_float, tyc_tmp); break;
 						case SK_DOUBLE:
@@ -3244,7 +3371,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					switch (ret_type & SK_HEAD) {
 						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
 						case SK_CHAR: 	last->it_char = CURGC(0); break;
-						case SK_INT: 	last->it_long = CURGI(0); break;
+						case SK_WCHAR: 	last->it_wchar = CURGWC(0); break;
+						case SK_INT8: 	last->it_int8 = CURGI8(0); break;
+						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
+						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
+						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
 						case SK_FLOAT: 	last->it_float = CURGR(0); break;
 						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
@@ -3345,7 +3476,11 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 					switch (ret_type & SK_HEAD) {
 						case SK_BOOL: 	last->it_char = (char)(CURGB(0)); break;
 						case SK_CHAR: 	last->it_char = CURGC(0); break;
-						case SK_INT: 	last->it_long = CURGI(0); break;
+						case SK_WCHAR: 	last->it_wchar = CURGWC(0); break;
+						case SK_INT8: 	last->it_int8 = CURGI8(0); break;
+						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
+						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
+						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
 						case SK_FLOAT: 	last->it_float = CURGR(0); break;
 						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
@@ -3391,20 +3526,19 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			}
 			else {
 				RTCK;
-				in_first_block = '\01';
 				pre_success = '\01';
 				/* free the separate parameters */
 				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-					CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+					CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref);
 
 				}
 				/* wait some time */
 				CURCSPFW;
 				/* reserve the separate parameters */
 				for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; ) {
-					if (CURRSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref)) {
+					if (CURRSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref)) {
 						for(tmp_tyc--; tmp_tyc >= 0; tmp_tyc--) {
-							CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc])->it_ref);
+							CURFSO(ivalue(MTC IV_ARG, sep_para_index[tmp_tyc],0)->it_ref);
 						}
 						tmp_tyc = 0;
 						CURRSFW;
@@ -3485,7 +3619,7 @@ fprintf(stdout, "$$$$$$$$$$  After CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop());
 		dprintf(2)("BC_END_RESCUE\n");
 #endif
 		RTEF;
-		goto null;	/* RTOK skipped */
+		return;
 
 	/*
 	 * End of current Eiffel routine.
@@ -3494,14 +3628,14 @@ fprintf(stdout, "$$$$$$$$$$  After CREATE_SEP_OBJ, STACK_TOP=%lx\n", otop());
 #ifdef DEBUG
 		dprintf(2)("BC_NULL\n");
 #endif
-		if (rescue != (char *) 0)
-			RTOK;
-null:
-
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
 		pop_registers();	/* Pop registers */
-		RTEE;				/* Remove vector pushed by RTEA */
+		if (rescue) {
+			RTEOK;	/* ends routine with rescue clause by cleaning the trace stack */
+		} else {
+			RTEE;	/* remove execution vector from stack */
+		}
 		return;
 
 	case BC_INV_NULL:
@@ -3517,8 +3651,9 @@ null:
 	}
 	}							/* Remember: indentation was wrong--RAM */
 	/* NOTREACHED */
-	EIF_END_GET_CONTEXT
 }
+#undef EIF_VOLATILE
+#define EIF_VOLATILE
 
 #ifndef EIF_THREADS
 /*
@@ -3529,15 +3664,14 @@ char *inv_mark_table = (char *) 0;	/* Marking table to avoid checking the same
 									 */ /* %%ss mt */
 #endif /* EIF_THREADS */
 
-rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where)          
+rt_private void icheck_inv(char *obj, struct stochunk *scur, struct item *stop, int where)          
 					  		/* Current chunk (stack context) */
 							/* To save stack context */
 		  					/* Invariant after or before */
 {
 	EIF_GET_CONTEXT
 	/* Check invariant on non-void object `obj' */
-	char *old_IC;		/* IC backup */
-	union overhead *zone = HEADER(obj);
+	unsigned char *OLD_IC;		/* IC backup */
 	int dtype = Dtype(obj);
 
 	if (inv_mark_table == (char *) 0)
@@ -3547,14 +3681,13 @@ rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct 
 	memset  (inv_mark_table, 0, scount);
 
 	if (~in_assertion & WASC(dtype) & CK_INVARIANT) {
-		old_IC = IC;				/* Save IC */
-		irecursive_chkinv(MTC dtype, obj, scur, stop, where);
-		IC = old_IC;				/* Restore IC */
+		OLD_IC = IC;				/* Save IC */
+		irecursive_chkinv(dtype, obj, scur, stop, where);
+		IC = OLD_IC;				/* Restore IC */
 	}
-	EIF_END_GET_CONTEXT
 }
 
-rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
+rt_private void irecursive_chkinv(int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
 		  
 		  
 					  		/* Current chunk (stack context) */
@@ -3568,7 +3701,7 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 	int *cn_parents;
 	int p_type;
 
-	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
+	if (dtype <= 0) return;		/* ANY does not have invariants */
 
 	if ((char) 0 != inv_mark_table[dtype])	/* Already checked */
 		return;
@@ -3576,7 +3709,7 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 		inv_mark_table[dtype] = (char) 1;	/* Mark as checked */
 
 	/* Automatic protection of `obj' */
-	epush(&loc_stack, (char *)(&obj));
+	RT_GC_PROTECT(obj);
 
 	/* Recursion on parents first. */
 	cn_parents = node->cn_parents;
@@ -3590,14 +3723,12 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 
 	/* Invariant check */
 	{
-		uint32 body_id;
-		uint16 body_index;
+		uint16 body_id;
 		struct item *last;
 
-		CBodyIdx(body_index,INVARIANT_ID,dtype);	
-		if (body_index != INVALID_INDEX) {
-			body_id = dispatch[body_index];
-			if (body_id < zeroc) { 				/* Frozen invariant */
+		CBodyId(body_id,INVARIANT_ID,dtype);	
+		if (body_id != INVALID_ID) {
+			if (egc_frozen [body_id]) {		/* Frozen invariant */
 				unsigned long stagval = tagval;	/* Tag value backup */
 	
 				((void (*)()) egc_frozen[body_id])(obj, where);
@@ -3606,7 +3737,6 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 					sync_registers(MTC scur, stop);
 	
 			} else 
-#ifndef DLE
 			{				/* Melted invariant */
 				last = iget();					/* Push `obj' */
 				last->type = SK_REF;
@@ -3625,38 +3755,11 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 
 				sync_registers(MTC scur, stop);		/* Resynchronize registers */
 			}
-#else
-			if (body_id < dle_level) {
-					/* Static melted invariant */
-				last = iget();					/* Push `obj' */
-				last->type = SK_REF;
-				last->it_ref = obj;
-
-				xiinv(MTC melt[body_id], where);
-				sync_registers(MTC scur, stop);		/* Resynchronize registers */
-			} else if (body_id < dle_zeroc) {
-					/* Dynamic frozen invariant */
-				unsigned long stagval = tagval;	/* Tag value backup */
-				((void (*)()) dle_frozen[body_id])(obj, where);
-				if (tagval != stagval)			/* Resynchronize registers */
-					sync_registers(MTC scur, stop);
-			} else {
-					/* Dynamic melted invariant */
-				last = iget();					/* Push `obj' */
-				last->type = SK_REF;
-				last->it_ref = obj;
-
-				xiinv(MTC dle_melt[body_id], where);
-				sync_registers(MTC scur, stop);		/* Resynchronize registers */
-			}
-#endif
 		}
 	}
 
 	/* No more propection for `obj' */
-	epop(&loc_stack, 1);
-
-	EIF_END_GET_CONTEXT
+	RT_GC_WEAN(obj);
 }
 
 /*
@@ -3691,7 +3794,10 @@ rt_private void monadic_op(int code)
 		dprintf(2)("BC_UMINUS\n");
 #endif
 		switch(first->type & SK_HEAD) {
-		case SK_INT:	first->it_long = -first->it_long; break;
+		case SK_INT8:	first->it_int8 = (EIF_INTEGER_8) -first->it_int8; break;
+		case SK_INT16:	first->it_int16 = (EIF_INTEGER_16) -first->it_int16; break;
+		case SK_INT32:	first->it_int32 = -first->it_int32; break;
+		case SK_INT64:	first->it_int64 = -first->it_int64; break;
 		case SK_FLOAT:	first->it_float = -first->it_float; break;
 		case SK_DOUBLE:	first->it_double = -first->it_double; break;
 		default:
@@ -3707,7 +3813,7 @@ rt_private void monadic_op(int code)
 		dprintf(2)("BC_NOT\n");
 #endif
 		switch(first->type & SK_HEAD) {
-		case SK_BOOL: first->it_char = !first->it_char; break;
+		case SK_BOOL: first->it_char = (EIF_BOOLEAN) !first->it_char; break;
 		default:
 			eif_panic(MTC botched);
 		}
@@ -3733,512 +3839,464 @@ rt_private void diadic_op(int code)
 	
 #define f first
 #define s second
-#define b break
 
 	second = opop();			/* Fetch second operand */
 	first = otop();				/* First operand will be replace by result */
 
 	switch (code) {				/* Execute operation */
 
-	/*
-	 * And operation (boolean).
-	 */
+	/* And operation (boolean). */
 	case BC_AND:
-#ifdef DEBUG
-		dprintf(2)("BC_AND\n");
-#endif
-		first->it_char = first->it_char && second->it_char;
+		first->it_char = (EIF_BOOLEAN) (first->it_char && second->it_char);
 		break;
 
-	/*
-	 * Or operation (boolean).
-	 */
+	/* Or operation (boolean). */
 	case BC_OR:
-#ifdef DEBUG
-		dprintf(2)("BC_OR\n");
-#endif
-		first->it_char = first->it_char || second->it_char;
+		first->it_char = (EIF_BOOLEAN) (first->it_char || second->it_char);
 		break;
 
-	/*
-	 * Xor operation (boolean).
-	 */
+	/* Xor operation (boolean). */
 	case BC_XOR:
-#ifdef DEBUG
-		dprintf(2)("BC_XOR\n");
-#endif
-		first->it_char = (first->it_char && !second->it_char) ||
-			(!first->it_char && second->it_char);
+		first->it_char = (EIF_BOOLEAN) ((first->it_char && !second->it_char) ||
+			(!first->it_char && second->it_char));
 		break;
 
-	/*
-	 * Lesser or equal operation.
-	 */
-	case BC_LE:		/* Lesser or equal op */
-#ifdef DEBUG
-		dprintf(2)("BC_LE\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_CHAR: first->it_char = first->it_char <= second->it_char; break;
-		case SK_INT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_long <= s->it_long; b;
-			case SK_FLOAT: f->it_char = (float) f->it_long <= s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_long <= s->it_double; b;
-			default: eif_panic(botched);
-			}
-			break;
-		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_float <= (float) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_float <= s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_float <= s->it_double; b;
-			default: eif_panic(botched);
-			}
-			break;
-		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double <= (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double <= (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double <= s->it_double; b;
-			default: eif_panic(botched);
-			}
-			break;
-		default: eif_panic(MTC botched);
-		}
-		first->type = SK_BOOL;		/* Result is a boolean */
+	/* Lesser or equal operation. */
+	case BC_LE:
+		eif_interp_gt(first, second);
+		first->it_char = EIF_TEST (!first->it_char);
 		break;
 
-	/*
-	 * Lesser than operation.
-	 */
+	/* Lesser than operation. */
 	case BC_LT:
-#ifdef DEBUG
-		dprintf(2)("BC_LT\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_CHAR: first->it_char = first->it_char < second->it_char; break;
-		case SK_INT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_long < s->it_long; b;
-			case SK_FLOAT: f->it_char = (float) f->it_long < s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_long < s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_float < (float) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_float < s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_float < s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double < (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double < (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double < s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		default: eif_panic(MTC botched);
-		}
-		first->type = SK_BOOL;		/* Result is a boolean */
+		eif_interp_lt (first, second);
 		break;
 
-	/*
-	 * Equality operation.
-	 */
-	case BC_EQ:
-#ifdef DEBUG
-		dprintf(2)("BC_EQ\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_BOOL:
-		case SK_CHAR: first->it_char = first->it_char == second->it_char; break;
-		case SK_INT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_long == s->it_long; b;
-			case SK_FLOAT: f->it_char = (float) f->it_long == s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_long == s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_float == (float) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_float == s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_float == s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double == (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double == (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double == s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_BIT:
-		case SK_EXP:
-		case SK_REF:
-			first->it_char = first->it_ref == second->it_ref;
-			break;
-		case SK_POINTER:
-			first->it_char = first->it_ptr == second->it_ptr;
-			break;
-		default: eif_panic(MTC botched);
-		}
-		first->type = SK_BOOL;		/* Result is a boolean */
-		break;
-
-	/*
-	 * Greater or equal operation.
-	 */
+	/* Greater or equal operation. */
 	case BC_GE:
-#ifdef DEBUG
-		dprintf(2)("BC_GE\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_CHAR: first->it_char = first->it_char >= second->it_char; break;
-		case SK_INT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_long >= s->it_long; b;
-			case SK_FLOAT: f->it_char = (float) f->it_long >= s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_long >= s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_float >= (float) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_float >= s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_float >= s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double >= (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double >= (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double >= s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		default:
-			eif_panic(MTC botched);
-		}
-		first->type = SK_BOOL;		/* Result is a boolean */
+		eif_interp_lt (first, second);
+		first->it_char = EIF_TEST(!first->it_char);
 		break;
 
-	/*
-	 * Greater than operation.
-	 */
+	/* Greater than operation. */
 	case BC_GT:
-#ifdef DEBUG
-		dprintf(2)("BC_GT\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_CHAR: first->it_char = first->it_char > second->it_char; break;
-		case SK_INT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_long > s->it_long; b;
-			case SK_FLOAT: f->it_char = (float) f->it_long > s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_long > s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_float > (float) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_float > s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_float > s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double > (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double > (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double > s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		default: eif_panic(MTC botched);
-		}
-		first->type = SK_BOOL;		/* Result is a boolean */
+		eif_interp_gt (first, second);
 		break;
 
-	/*
-	 * Different operation (not equal).
-	 */
+	/* Equality operation. */
+	case BC_EQ:
+		eif_interp_eq (first, second);
+		break;
+
+	/* Different operation (not equal). */
 	case BC_NE:
-#ifdef DEBUG
-		dprintf(2)("BC_NE\n");
-#endif
+		eif_interp_eq (first, second);
+		first->it_char = EIF_TEST(!first->it_char);
+		break;
+
+	/* Minus operation. */
+	case BC_MINUS: {
+		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
 		switch(first->type & SK_HEAD) {
-		case SK_BOOL:
-		case SK_CHAR:
-			first->it_char = first->it_char != second->it_char; break;
-		case SK_INT:
+		case SK_INT8:
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_long != s->it_long; b;
-			case SK_FLOAT: f->it_char = (float) f->it_long != s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_long != s->it_double; b;
+			case SK_INT8: f->it_int8 = f->it_int8 - s->it_int8; break;
+			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 - s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 - s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 - s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 - s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 - s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT16:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int16 = f->it_int16 - (EIF_INTEGER_16) s->it_int8; break;
+			case SK_INT16: f->it_int16 = f->it_int16 - s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 - s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 - s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 - s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 - s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT32:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int8; break;
+			case SK_INT16: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int16; break;
+			case SK_INT32: f->it_int32 = f->it_int32 - s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 - s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 - s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 - s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT64:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int8; break;
+			case SK_INT16: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int16; break;
+			case SK_INT32: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int32; break;
+			case SK_INT64: f->it_int64 = f->it_int64 - s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 - s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 - s->it_double; break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_float != (float) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_float != s->it_float; b;
-			case SK_DOUBLE: f->it_char = (double) f->it_float != s->it_double; b;
+			case SK_INT8: f->it_float = f->it_float - (EIF_REAL) s->it_int8; break;
+			case SK_INT16: f->it_float = f->it_float - (EIF_REAL) s->it_int16; break;
+			case SK_INT32: f->it_float = f->it_float - (EIF_REAL) s->it_int32; break;
+			case SK_INT64: f->it_float = f->it_float - (EIF_REAL) s->it_int64; break;
+			case SK_FLOAT: f->it_float = f->it_float - s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float - s->it_double;break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double != (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double != (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double != s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_BIT:
-		case SK_EXP:
-		case SK_REF:
-			first->it_char = first->it_ref != second->it_ref;
-			break;
-		case SK_POINTER:
-			first->it_char = first->it_ptr != second->it_ptr;
-			break;
-		default: eif_panic(MTC botched);
-		}
-		first->type = SK_BOOL;		/* Result is a boolean */
-		break;
-
-	/*
-	 * Minus operation.
-	 */
-	case BC_MINUS:
-#ifdef DEBUG
-		dprintf(2)("BC_MINUS\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_INT:
-			first->type = second->type;
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_long = f->it_long - s->it_long; b;
-			case SK_FLOAT: f->it_float = (float) f->it_long - s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_long - s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_FLOAT:
-			first->type = second->type == SK_DOUBLE ? SK_DOUBLE : SK_FLOAT;
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_float = f->it_float - (float) s->it_long; b;
-			case SK_FLOAT: f->it_float = f->it_float - s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_float - s->it_double;b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_DOUBLE:
-			first->type = SK_DOUBLE;
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_double = f->it_double - (double) s->it_long; b;
-			case SK_FLOAT: f->it_double = f->it_double - (double) s->it_float; b;
-			case SK_DOUBLE: f->it_double = f->it_double - s->it_double; b;
+			case SK_INT8: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_double = f->it_double - (EIF_DOUBLE) s->it_float; break;
+			case SK_DOUBLE: f->it_double = f->it_double - s->it_double; break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		default: eif_panic(MTC botched);
 		}
+		first->type = sk_type;
+		}
 		break;
 
-	/*
-	 * Modulo operator.
-	 */
+	/* Modulo operator. */
 	case BC_MOD:
-#ifdef DEBUG
-		dprintf(2)("BC_MOD\n");
-#endif
 		switch(first->type & SK_HEAD) {
-		case SK_INT: first->it_long = first->it_long % second->it_long; break;
+		case SK_INT8: first->it_int8 = first->it_int8 % second->it_int8; break;
+		case SK_INT16: first->it_int16 = first->it_int16 % second->it_int16; break;
+		case SK_INT32: first->it_int32 = first->it_int32 % second->it_int32; break;
+		case SK_INT64: first->it_int64 = first->it_int64 % second->it_int64; break;
 		default: eif_panic(MTC botched);
 		}
 		break;
 
-	/*
-	 * Plus operator.
-	 */
-
-	case BC_PLUS:
-#ifdef DEBUG
-		dprintf(2)("BC_PLUS\n");
-#endif
+	/* Plus operator. */
+	case BC_PLUS: {
+		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
 		switch(first->type & SK_HEAD) {
-		case SK_INT:
-			first->type = second->type;
+		case SK_INT8:
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_long = f->it_long + s->it_long; b;
-			case SK_FLOAT: f->it_float = (float) f->it_long + s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_long + s->it_double; b;
+			case SK_INT8: f->it_int8 = f->it_int8 + s->it_int8; break;
+			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 + s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 + s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 + s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 + s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 + s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT16:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int16 = f->it_int16 + (EIF_INTEGER_16) s->it_int8; break;
+			case SK_INT16: f->it_int16 = f->it_int16 + s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 + s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 + s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 + s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 + s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT32:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int8; break;
+			case SK_INT16: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int16; break;
+			case SK_INT32: f->it_int32 = f->it_int32 + s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 + s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 + s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 + s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT64:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int8; break;
+			case SK_INT16: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int16; break;
+			case SK_INT32: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int32; break;
+			case SK_INT64: f->it_int64 = f->it_int64 + s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 + s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 + s->it_double; break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
-			first->type = second->type == SK_DOUBLE ? SK_DOUBLE : SK_FLOAT;
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_float = f->it_float + (float) s->it_long; b;
-			case SK_FLOAT: f->it_float = f->it_float + s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_float + s->it_double;b;
+			case SK_INT8: f->it_float = f->it_float + (EIF_REAL) s->it_int8; break;
+			case SK_INT16: f->it_float = f->it_float + (EIF_REAL) s->it_int16; break;
+			case SK_INT32: f->it_float = f->it_float + (EIF_REAL) s->it_int32; break;
+			case SK_INT64: f->it_float = f->it_float + (EIF_REAL) s->it_int64; break;
+			case SK_FLOAT: f->it_float = f->it_float + s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float + s->it_double;break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
-			first->type = SK_DOUBLE;
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_double = f->it_double + (double) s->it_long; b;
-			case SK_FLOAT: f->it_double = f->it_double + (double) s->it_float; b;
-			case SK_DOUBLE: f->it_double = f->it_double + s->it_double; b;
+			case SK_INT8: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_double = f->it_double + (EIF_DOUBLE) s->it_float; break;
+			case SK_DOUBLE: f->it_double = f->it_double + s->it_double; break;
 			default: eif_panic(MTC botched);
 			}
 			break;
-		default:
-			eif_panic(MTC botched);
+		default: eif_panic(MTC botched);
+		}
+		first->type = sk_type;
 		}
 		break;
 
-	/*
-	 * Power operator.
-	 */
+	/* Power operator. */
 	case BC_POWER:
-#ifdef DEBUG
-		dprintf(2)("BC_POWER\n");
-#endif
 		switch (first->type & SK_HEAD) {
-			case SK_INT:
+			case SK_INT8:
 				switch (second->type & SK_HEAD) {
-				case SK_INT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_long); b;
-				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_float); b;
-				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_long, (double)s->it_double); b;
+				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int8); break;
+				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int16); break;
+				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int32); break;
+				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int64); break;
+				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_float); break;
+				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, s->it_double); break;
 				default: eif_panic(MTC botched);
 				}
-				first->type = SK_DOUBLE;
+				break;
+			case SK_INT16:
+				switch (second->type & SK_HEAD) {
+				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int8); break;
+				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int16); break;
+				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int32); break;
+				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int64); break;
+				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_float); break;
+				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, s->it_double); break;
+				default: eif_panic(MTC botched);
+				}
+				break;
+			case SK_INT32:
+				switch (second->type & SK_HEAD) {
+				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int8); break;
+				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int16); break;
+				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int32); break;
+				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int64); break;
+				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_float); break;
+				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, s->it_double); break;
+				default: eif_panic(MTC botched);
+				}
+				break;
+			case SK_INT64:
+				switch (second->type & SK_HEAD) {
+				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int8); break;
+				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int16); break;
+				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int32); break;
+				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int64); break;
+				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_float); break;
+				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, s->it_double); break;
+				default: eif_panic(MTC botched);
+				}
 				break;
 			case SK_FLOAT:
 				switch (second->type & SK_HEAD) {
-				case SK_INT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_long); b;
-				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_float); b;
-				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_float, (double)s->it_double); b;
+				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int8); break;
+				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int16); break;
+				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int32); break;
+				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int64); break;
+				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_float); break;
+				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, s->it_double); break;
 				default: eif_panic(MTC botched);
 				}
-				first->type = SK_DOUBLE;
 				break;
 			case SK_DOUBLE:
 				switch (second->type & SK_HEAD) {
-				case SK_INT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_long); b;
-				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_float); b;
-				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_double, (double)s->it_double); b;
+				case SK_INT8: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int8); break;
+				case SK_INT16: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int16); break;
+				case SK_INT32: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int32); break;
+				case SK_INT64: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int64); break;
+				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_float); break;
+				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow (f->it_double, s->it_double); break;
 				default: eif_panic(MTC botched);
 				}
-				first->type = SK_DOUBLE;
 				break;
 		default:
 			eif_panic(MTC botched);
 		}
+		first->type = SK_DOUBLE;
 		break;
 
-	/*
-	 * Multiplication operator.
-	 */
-	case BC_STAR:
+	/* Multiplication operator. */
+	case BC_STAR: {
+		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
 		switch(first->type & SK_HEAD) {
-		case SK_INT:
-			first->type = second->type;
+		case SK_INT8:
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_long = f->it_long * s->it_long; b;
-			case SK_FLOAT: f->it_float = (float) f->it_long * s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_long * s->it_double; b;
+			case SK_INT8: f->it_int8 = f->it_int8 * s->it_int8; break;
+			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 * s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 * s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 * s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 * s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 * s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT16:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int16 = f->it_int16 * (EIF_INTEGER_16) s->it_int8; break;
+			case SK_INT16: f->it_int16 = f->it_int16 * s->it_int16; break;
+			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 * s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 * s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 * s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 * s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT32:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int8; break;
+			case SK_INT16: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int16; break;
+			case SK_INT32: f->it_int32 = f->it_int32 * s->it_int32; break;
+			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 * s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 * s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 * s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT64:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int8; break;
+			case SK_INT16: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int16; break;
+			case SK_INT32: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int32; break;
+			case SK_INT64: f->it_int64 = f->it_int64 * s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 * s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 * s->it_double; break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_FLOAT:
-			first->type = second->type == SK_DOUBLE ? SK_DOUBLE : SK_FLOAT;
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_float = f->it_float * (float) s->it_long; b;
-			case SK_FLOAT: f->it_float = f->it_float * s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_float * s->it_double;b;
+			case SK_INT8: f->it_float = f->it_float * (EIF_REAL) s->it_int8; break;
+			case SK_INT16: f->it_float = f->it_float * (EIF_REAL) s->it_int16; break;
+			case SK_INT32: f->it_float = f->it_float * (EIF_REAL) s->it_int32; break;
+			case SK_INT64: f->it_float = f->it_float * (EIF_REAL) s->it_int64; break;
+			case SK_FLOAT: f->it_float = f->it_float * s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float * s->it_double;break;
 			default: eif_panic(MTC botched);
 			}
 			break;
 		case SK_DOUBLE:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_double = f->it_double * (EIF_DOUBLE) s->it_float; break;
+			case SK_DOUBLE: f->it_double = f->it_double * s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		default: eif_panic(MTC botched);
+		}
+		first->type = sk_type;
+		}
+		break;
+
+	/* Real division operator. */
+	case BC_SLASH: {
+		uint32 sk_type = eif_expression_type (first->type & SK_HEAD, second->type & SK_HEAD);
+		switch(first->type & SK_HEAD) {
+		case SK_INT8:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 / s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 / s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT16:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 / s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 / s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT32:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 / s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 / s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_INT64:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 / s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 / s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_FLOAT:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_float = f->it_float / (EIF_REAL) s->it_int8; break;
+			case SK_INT16: f->it_float = f->it_float / (EIF_REAL) s->it_int16; break;
+			case SK_INT32: f->it_float = f->it_float / (EIF_REAL) s->it_int32; break;
+			case SK_INT64: f->it_float = f->it_float / (EIF_REAL) s->it_int64; break;
+			case SK_FLOAT: f->it_float = f->it_float / s->it_float; break;
+			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float / s->it_double;break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		case SK_DOUBLE:
+			switch (second->type & SK_HEAD) {
+			case SK_INT8: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int8; break;
+			case SK_INT16: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int16; break;
+			case SK_INT32: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int32; break;
+			case SK_INT64: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int64; break;
+			case SK_FLOAT: f->it_double = f->it_double / (EIF_DOUBLE) s->it_float; break;
+			case SK_DOUBLE: f->it_double = f->it_double / s->it_double; break;
+			default: eif_panic(MTC botched);
+			}
+			break;
+		default: eif_panic(MTC botched);
+		}
+		if ((sk_type != SK_DOUBLE) && (sk_type != SK_FLOAT))
+		  		/* First type was before an integer that we divided with another
+				 * integer of a different size. In that case the return type is
+				 * always a DOUBLE. */
 			first->type = SK_DOUBLE;
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_double = f->it_double * (double) s->it_long; b;
-			case SK_FLOAT: f->it_double = f->it_double * (double) s->it_float; b;
-			case SK_DOUBLE: f->it_double = f->it_double * s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		default:
-			eif_panic(MTC botched);
+		else
+			first->type = sk_type;
 		}
 		break;
 
-	/*
-	 * Real division operator.
-	 */
-	case BC_SLASH:
-#ifdef DEBUG
-		dprintf(2)("BC_SLASH\n");
-#endif
+	/* Integer division operator. */
+	case BC_DIV:
 		switch(first->type & SK_HEAD) {
-
-		case SK_INT:
-			first->type = second->type;
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_double = (double) f->it_long / s->it_long;	
-						f->type = SK_DOUBLE; b;
-			case SK_FLOAT: f->it_float = (float) f->it_long / s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_long / s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_FLOAT:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_float = f->it_float / (float) s->it_long; b;
-			case SK_FLOAT: f->it_float = f->it_float / s->it_float; b;
-			case SK_DOUBLE: f->it_double = (double) f->it_float / s->it_double;
-							f->type = SK_DOUBLE; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		case SK_DOUBLE:
-			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_double = f->it_double / (double) s->it_long; b;
-			case SK_FLOAT: f->it_double = f->it_double / (double) s->it_float; b;
-			case SK_DOUBLE: f->it_double = f->it_double / s->it_double; b;
-			default: eif_panic(MTC botched);
-			}
-			break;
-		default:
-			eif_panic(MTC botched);
-		}
-		break;
-
-	/*
-	 * Integer division operator.
-	 */
-	case BC_DIV:	/* Integer division op */
-#ifdef DEBUG
-		dprintf(2)("BC_DIV\n");
-#endif
-		switch(first->type & SK_HEAD) {
-		case SK_INT: first->it_long = first->it_long / second->it_long; break;
+		case SK_INT8: first->it_int8 = (first->it_int8 / second->it_int8); break;
+		case SK_INT16: first->it_int16 = (first->it_int16 / second->it_int16); break;
+		case SK_INT32: first->it_int32 = (first->it_int32 / second->it_int32); break;
+		case SK_INT64: first->it_int64 = (first->it_int64 / second->it_int64); break;
 		default: eif_panic(MTC botched);
 		}
 		break;
@@ -4247,9 +4305,263 @@ rt_private void diadic_op(int code)
 		/* NOTREACHED */
 	}
 
-#undef b
 #undef s
 #undef f
+}
+
+rt_private int eif_type_weight (uint32 sk_type) {
+	/* Compute weight of `sk_type' */
+	switch (sk_type) {
+		case SK_INT8: return 1L;
+		case SK_INT16: return 2L;
+		case SK_INT32: return 3L;
+		case SK_INT64: return 4L;
+		case SK_FLOAT: return 5L;
+		case SK_DOUBLE: return 6L;
+		default:
+			CHECK ("False", 0);
+			return 0L;
+	}
+}
+
+rt_private uint32 eif_expression_type (uint32 first, uint32 second)
+	/* Compute the type of expression `f' op `s' using Eiffel type checking */
+{
+  	if (eif_type_weight(first) >= eif_type_weight(second))
+		return first;
+	else
+		return second;
+}
+
+rt_private void eif_interp_gt(struct item *f, struct item *s) {
+	switch(f->type & SK_HEAD) {
+	case SK_CHAR: f->it_char = f->it_char > s->it_char; break;
+	case SK_INT8:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int8 > s->it_int8; break;
+		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 > s->it_int16; break;
+		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 > s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 > s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int8 > s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int8 > s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT16:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int16 > (EIF_INTEGER_16) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int16 > s->it_int16; break;
+		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 > s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 > s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int16 > s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int16 > s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT32:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int32 > (EIF_INTEGER_32) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int32 > (EIF_INTEGER_32) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_int32 > s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 > s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int32 > s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int32 > s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT64:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int64 > s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int64 > s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_FLOAT:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_float > (EIF_REAL) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_float > (EIF_REAL) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_float > (EIF_REAL) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_float > (EIF_REAL) s->it_int64; break;
+		case SK_FLOAT: f->it_char = f->it_float > s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_float > s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_DOUBLE:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_float > (EIF_DOUBLE) s->it_int64; break;
+		case SK_FLOAT: f->it_char = f->it_double > (EIF_DOUBLE) s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double > s->it_double); break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	default: eif_panic(MTC botched);
+	}
+	f->type = SK_BOOL;		/* Result is a boolean */
+}
+
+rt_private void eif_interp_lt(struct item *f, struct item *s) {
+	switch(f->type & SK_HEAD) {
+	case SK_CHAR: f->it_char = f->it_char < s->it_char; break;
+	case SK_INT8:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int8 < s->it_int8; break;
+		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 < s->it_int16; break;
+		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 < s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 < s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int8 < s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int8 < s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT16:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int16 < (EIF_INTEGER_16) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int16 < s->it_int16; break;
+		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 < s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 < s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int16 < s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int16 < s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT32:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int32 < (EIF_INTEGER_32) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int32 < (EIF_INTEGER_32) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_int32 < s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 < s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int32 < s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int32 < s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT64:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int64 < s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int64 < s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_FLOAT:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_float < (EIF_REAL) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_float < (EIF_REAL) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_float < (EIF_REAL) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_float < (EIF_REAL) s->it_int64; break;
+		case SK_FLOAT: f->it_char = f->it_float < s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_float < s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_DOUBLE:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_float < (EIF_DOUBLE) s->it_int64; break;
+		case SK_FLOAT: f->it_char = f->it_double < (EIF_DOUBLE) s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double < s->it_double); break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	default: eif_panic(MTC botched);
+	}
+	f->type = SK_BOOL;		/* Result is a boolean */
+}
+
+rt_private void eif_interp_eq (struct item *f, struct item *s) {
+	switch(f->type & SK_HEAD) {
+	case SK_BOOL:
+	case SK_CHAR: f->it_char = f->it_char == s->it_char; break;
+	case SK_INT8:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int8 == s->it_int8; break;
+		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 == s->it_int16; break;
+		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 == s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 == s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int8 == s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int8 == s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT16:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int16 == (EIF_INTEGER_16) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int16 == s->it_int16; break;
+		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 == s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 == s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int16 == s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int16 == s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT32:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int32 == (EIF_INTEGER_32) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int32 == (EIF_INTEGER_32) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_int32 == s->it_int32; break;
+		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 == s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int32 == s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int32 == s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_INT64:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int64; break;
+		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int64 == s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int64 == s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_FLOAT:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_float == (EIF_REAL) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_float == (EIF_REAL) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_float == (EIF_REAL) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_float == (EIF_REAL) s->it_int64; break;
+		case SK_FLOAT: f->it_char = f->it_float == s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_float == s->it_double; break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_DOUBLE:
+		switch (s->type & SK_HEAD) {
+		case SK_INT8: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_float == (EIF_DOUBLE) s->it_int64; break;
+		case SK_FLOAT: f->it_char = f->it_double == (EIF_DOUBLE) s->it_float; break;
+		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double == s->it_double); break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+	case SK_BIT:
+	case SK_EXP:
+	case SK_REF:
+		f->it_char = f->it_ref == s->it_ref;
+		break;
+	case SK_POINTER:
+		f->it_char = f->it_ptr == s->it_ptr;
+		break;
+	default: eif_panic(MTC botched);
+	}
+	f->type = SK_BOOL;		/* Result is a boolean */
 }
 
 rt_private void eif_interp_generator (void)
@@ -4261,24 +4573,16 @@ rt_private void eif_interp_generator (void)
 	
 	first = otop();				/* First operand will be replace by result */
 	switch (first->type & SK_HEAD) {
-		case SK_BOOL:
-			first->it_ref = RTMS_EX("BOOLEAN", 7);
-			break;
-		case SK_CHAR:
-			first->it_ref = RTMS_EX("CHARACTER", 9);
-			break;
-		case SK_INT:
-			first->it_ref = RTMS_EX("INTEGER", 7);
-			break;
-		case SK_FLOAT:
-			first->it_ref = RTMS_EX("REAL", 4);
-			break;
-		case SK_DOUBLE:
-			first->it_ref = RTMS_EX("DOUBLE", 6);
-			break;
-		case SK_POINTER:
-			first->it_ref = RTMS_EX("POINTER", 7);
-			break;
+		case SK_BOOL: first->it_ref = RTMS_EX("BOOLEAN", 7); break;
+		case SK_CHAR: first->it_ref = RTMS_EX("CHARACTER", 9); break;
+		case SK_WCHAR: first->it_ref = RTMS_EX("WIDE_CHARACTER", 14); break;
+		case SK_INT8: first->it_ref = RTMS_EX("INTEGER_8", 9); break;
+		case SK_INT16: first->it_ref = RTMS_EX("INTEGER_16", 10); break;
+		case SK_INT32: first->it_ref = RTMS_EX("INTEGER", 7); break;
+		case SK_INT64: first->it_ref = RTMS_EX("INTEGER_64", 10); break;
+		case SK_FLOAT: first->it_ref = RTMS_EX("REAL", 4); break;
+		case SK_DOUBLE: first->it_ref = RTMS_EX("DOUBLE", 6); break;
+		case SK_POINTER: first->it_ref = RTMS_EX("POINTER", 7); break;
 		default: eif_panic(MTC botched);
 	}
 	first->type = SK_REF;
@@ -4304,35 +4608,25 @@ rt_private void eif_interp_min_max (int code)
 	switch (code) {				/* Execute operation */
 		case BC_MAX:
 			switch(first->type & SK_HEAD) {
-				case SK_CHAR:
-					first->it_char = EIF_MAX(first->it_char, second->it_char);
-					break;
-				case SK_INT:
-					first->it_long = EIF_MAX(first->it_long, second->it_long);
-					break;
-				case SK_FLOAT:
-					first->it_float = EIF_MAX(first->it_float, second->it_float);
-					break;
-				case SK_DOUBLE:
-					first->it_double = EIF_MAX(first->it_double, second->it_double);
-					break;
+				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MAX(first->it_char, second->it_char); break;
+				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) EIF_MAX(first->it_int8, second->it_int8); break;
+				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MAX(first->it_int16, second->it_int16); break;
+				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MAX(first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MAX(first->it_int64, second->it_int64); break;
+				case SK_FLOAT: first->it_float = (EIF_REAL) EIF_MAX(first->it_float, second->it_float); break;
+				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) EIF_MAX(first->it_double, second->it_double); break;
 				default: eif_panic(MTC botched);
 				}
 			break;
 		case BC_MIN:
 			switch(first->type & SK_HEAD) {
-				case SK_CHAR:
-					first->it_char = EIF_MIN(first->it_char, second->it_char);
-					break;
-				case SK_INT:
-					first->it_long = EIF_MIN(first->it_long, second->it_long);
-					break;
-				case SK_FLOAT:
-					first->it_float = EIF_MIN(first->it_float, second->it_float);
-					break;
-				case SK_DOUBLE:
-					first->it_double = EIF_MIN(first->it_double, second->it_double);
-					break;
+				case SK_CHAR: first->it_char = (EIF_CHARACTER) EIF_MIN(first->it_char, second->it_char); break;
+				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) EIF_MIN(first->it_int8, second->it_int8); break;
+				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MIN(first->it_int16, second->it_int16); break;
+				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MIN(first->it_int32, second->it_int32); break;
+				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MIN(first->it_int64, second->it_int64); break;
+				case SK_FLOAT: first->it_float = (EIF_REAL) EIF_MIN(first->it_float, second->it_float); break;
+				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) EIF_MIN(first->it_double, second->it_double); break;
 				default: eif_panic(MTC botched);
 				}
 			break;
@@ -4341,11 +4635,195 @@ rt_private void eif_interp_min_max (int code)
 #undef EIF_MIN
 }
 
+rt_private void eif_interp_offset(void)
+{
+	/* Execute the `+' operator on CHARACTER or POINTER type and push
+	 * the result back on the stack.
+	 * Instead of poping the two operands and pushing the result back, we handle
+	 * the references of both, poping only the second. I am relying on the fact
+	 * that the last poped value remains uccorrupted in a non-freed chunk--RAM.
+	 */
+
+	struct item *second;		/* Second operand */
+	struct item *first;			/* First operand */
+	
+	second = opop();			/* Fetch second operand */
+	first = otop();				/* First operand will be replace by result */
+	switch(first->type & SK_HEAD) {
+		case SK_CHAR:
+			first->it_char = (EIF_CHARACTER) (((EIF_INTEGER_32) first->it_char) + second->it_int32);
+			break;
+		case SK_POINTER:
+			first->it_ptr = RTPOF(first->it_ptr, second->it_int32);
+			break;
+		default: eif_panic(MTC botched);
+	}
+}
+
+rt_private void eif_interp_basic_operations (void)
+	/* execute basic operations on basic types and put the result back on the
+	 * stack.
+	 */
+{
+	EIF_GET_CONTEXT
+	int code = *IC++;		/* Read current byte-code and advance IC */
+	struct item *first;		/* First operand */
+
+	switch (code) {
+			/* `max' and `min' function calls */
+		case BC_MIN:
+		case BC_MAX:
+			eif_interp_min_max (code);
+			break;
+
+			/* `generator' and `generating_type' function calls */
+		case BC_GENERATOR:
+			eif_interp_generator ();
+			break;
+
+			/* Offset operation on CHARACTER and POINTER */
+		case BC_OFFSET:
+			eif_interp_offset();
+			break;
+	
+			/* Call to `zero' */
+		case BC_ZERO:
+			first = otop();	/* First operand will be replace by result */
+			switch(first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) 0; break;
+				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) 0; break;
+				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) 0; break;
+				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) 0; break;
+				case SK_FLOAT: first->it_float = (EIF_REAL) 0.0; break;
+				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) 0.0; break;
+				default: eif_panic(MTC botched);
+				}
+			break;
+
+			/* Call to `one' */
+		case BC_ONE:
+			first = otop();	/* First operand will be replace by result */
+			switch(first->type & SK_HEAD) {
+				case SK_INT8: first->it_int8 = (EIF_INTEGER_8) 1; break;
+				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) 1; break;
+				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) 1; break;
+				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) 1; break;
+				case SK_FLOAT: first->it_float = (EIF_REAL) 1.0; break;
+				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) 1.0; break;
+				default: eif_panic(MTC botched);
+				}
+			break;
+
+			break;
+
+		default: eif_panic (botched);
+	}
+}
+
+rt_private void eif_interp_bit_operations (void)
+{
+	/* execute bit operations on integers and the result back on the stack.
+	 * Instead of poping the two operands and pushing the result back, we handle
+	 * the references of both, poping only the second. I am relying on the fact
+	 * that the last poped value remains uccorrupted in a non-freed chunk--RAM.
+	 */
+
+	EIF_GET_CONTEXT
+	int code = *IC++;		/* Read current byte-code and advance IC */
+	struct item *second = (struct item *) 0;
+	struct item *first = (struct item *) 0;
+
+	if (code != BC_INT_BIT_NOT)
+		second = opop();	/* Fetch second operand if required */
+	first = otop ();		/* First operand, it will be replaced by result */
+
+	switch (code) {
+		case BC_INT_BIT_AND:
+			first->it_int32 = eif_bit_and (first->it_int32, second->it_int32);
+			break;
+		case BC_INT_BIT_OR:
+			first->it_int32 = eif_bit_or (first->it_int32, second->it_int32);
+			break;
+		case BC_INT_BIT_XOR:
+			first->it_int32 = eif_bit_xor (first->it_int32, second->it_int32);
+			break;
+		case BC_INT_BIT_NOT:
+			first->it_int32 = eif_bit_not (first->it_int32);
+			break;
+		case BC_INT_BIT_SHIFT_LEFT:
+			first->it_int32 = eif_bit_shift_left (first->it_int32, second->it_int32);
+			break;
+		case BC_INT_BIT_SHIFT_RIGHT:
+			first->it_int32 = eif_bit_shift_right (first->it_int32, second->it_int32);
+			break;
+		case BC_INT_BIT_TEST:
+			first->it_int32 = eif_bit_test (first->it_int32, second->it_int32);
+			break;
+		default: eif_panic (botched);
+	}
+}
+
 /*
  * Function calling routines
  */
 
-rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype)
+rt_public struct item *dynamic_eval(int fid, int stype, int is_extern, int is_precompiled, struct item* previous_otop)
+						/* Feature ID */
+						/* Static type (entity where feature is applied) */
+						/* Is it an external or an Eiffel feature */
+						/* Precompiled ? (0=no, other=yes) */
+	{
+	/* This is the debugger dispatcher for routine calls. It is called when
+	 * the user want to dynamically evaluate a feature. Depending on the
+	 * routine's temperature, the snow version (i.e. C code) is called and the
+	 * result, if any, is left on the operational stack. The I->C pattern is
+	 * called to push the parameters on the "C stack" correctly. Otherwise,
+	 * the interpreter is called. The function returns 1 to the caller if a
+	 * resynchronization of registers is needed.
+	 */
+
+	EIF_GET_CONTEXT
+	uint16 			body_id = 0;		/* Value of selected body ID */
+	unsigned long 	stagval = tagval;	/* Save tag value */
+	unsigned char *	OLD_IC = NULL;		/* IC back-up */
+	unsigned char	sync_needed = 0;	/* A priori, no need for sync_registers */
+	uint32 			pid = 0;			/* Pattern id of the frozen feature */
+	int32 			rout_id = 0;		/* routine id of the requested feature */
+	struct item 	*result = NULL;		/* Result of the function (NULL if none) */
+	struct stochunk *previous_scur = saved_scur;
+	struct item		*previous_stop = saved_stop;
+	
+	rout_id = Routids(stype)[fid];
+	CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+	OLD_IC = IC;					/* IC back up */
+	discard_breakpoints();			/* discard all breakpoints. We don't want to stop */ 
+	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
+		pid = (uint32) FPatId(body_id);
+		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
+		if (tagval != stagval)		/* Interpreted function called */
+			sync_needed = 1;				/* Resynchronize registers */
+	} else {
+		/* The proper way to start the interpretation of a melted feature is to call `xinterp' 
+		 * in order to initialize the calling context (which is not done by `interpret').
+		 * `tagval' will therefore be set, but we have to resynchronize the registers anyway.
+		 */
+		xinterp(MTC melt[body_id]);
+		sync_needed = 1;					/* Compulsory synchronisation */
+		}
+	if (otop()!=previous_otop) /* a result has been pushed on the stack */
+		result = opop(); 
+
+	undiscard_breakpoints();		/* restore previous state. */
+	IC = OLD_IC;					/* Restore IC back-up */
+	
+	/* restore operational stack if needed */
+	if (sync_needed==1 && previous_scur!=NULL && previous_stop!=NULL)
+		sync_registers(previous_scur, previous_stop); 
+
+	return result;
+	}
+
+rt_private int icall(int fid, int stype, int is_extern, int ptype)
 						/* Feature ID */
 						/* Static type (entity where feature is applied) */
 						/* Is it an external or an Eiffel feature */
@@ -4360,37 +4838,30 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype)
 	 */
 
 	EIF_GET_CONTEXT
-	uint32 body;					/* Value of selected body ID */
+	uint16 body_id;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
-	char *old_IC;					/* IC back-up */
+	unsigned char *OLD_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int32 rout_id;
-	uint16 body_index;	
 	
 
 	rout_id = Routids(stype)[fid];
 
-	if (ptype == -1)
-	{
-		CBodyIdx(body_index,rout_id,Dtype(otop()->it_ref));
+	if (ptype == -1) {
+		CBodyId(body_id,rout_id,Dtype(otop()->it_ref));
+	} else {
+		CBodyId(body_id,rout_id,RTUD(ptype));
 	}
-	else
-	{
-		CBodyIdx(body_index,rout_id,RTUD(ptype));
-	}
-	body = dispatch[body_index];	/* Body id of the eiffel routine */
-	old_IC = IC;				/* IC back up */
-	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
-		pid = (uint32) FPatId(body);
-		(pattern[pid].toc)(egc_frozen[body], is_extern); /* Call pattern */
+
+	OLD_IC = IC;				/* IC back up */
+	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
+		pid = (uint32) FPatId(body_id);
+		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
-	} else 
-#ifndef DLE
-	{
-	
-		/*IC = melt[body];*/					/* Melted byte code */
+	} else {
+		/*IC = melt[body_id];*/					/* Melted byte code */
 		/*interpret(INTERP_CMPD, 0);*/		/* Interpret (tagval not set) */
 
 		/* The proper way to start the interpretation of a melted
@@ -4399,34 +4870,15 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern, int ptype)
 		 * `tagval' will therefore be set, but we have to 
 		 * resynchronize the registers anyway. --ericb
 		 */
-		xinterp(MTC melt[body]);
+		xinterp(MTC melt[body_id]);
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
-#else
-	if (body < dle_level) {
-			/* Static melted routine */
-		xinterp(MTC melt[body]);
-		result = 1;							/* Compulsory synchronisation */
-	} else if (body < dle_zeroc) {
-			/* Dynamic frozen routine */
-		pid = (uint32) DLEFPatId(body);
-		(pattern[pid].toc)(dle_frozen[body], is_extern); /* Call pattern */
-		if (tagval != stagval)		/* Interpreted function called */
-			result = 1;				/* Resynchronize registers */
-	} else {
-			/* Dynamic melted routine */
-		xinterp(MTC dle_melt[body]);
-		result = 1;							/* Compulsory synchronisation */
-	}
-#endif
-	IC = old_IC;					/* Restore IC back-up */
+	IC = OLD_IC;					/* Restore IC back-up */
 	return result;
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int ptype)
+rt_private int ipcall(int32 origin, int32 offset, int is_extern, int ptype)
 						/* Origin class ID of the feature.*/
 						/* offset of the feature in the origin class */
 						/* Is it an external or an Eiffel feature */
@@ -4441,34 +4893,25 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int
 	 */
 
 	EIF_GET_CONTEXT
-	uint32 body;					/* Value of selected body ID */
+	uint16 body_id;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
-	char *old_IC;					/* IC back-up */
+	unsigned char *OLD_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
-	int16 body_index;
 
 	if (ptype == -1)
-	{
-		body_index = desc_tab[origin][Dtype(otop()->it_ref)][offset].info;
-	}
+		body_id = desc_tab[origin][Dtype(otop()->it_ref)][offset].info;
 	else
-	{
-		body_index = desc_tab[origin][RTUD(ptype)][offset].info;
-	}
+		body_id = desc_tab[origin][RTUD(ptype)][offset].info;
 
-	body = dispatch[body_index];	/* Body id of the eiffel routine */
-	old_IC = IC;				/* IC back up */
-	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
-		pid = (uint32) FPatId(body);
-		(pattern[pid].toc)(egc_frozen[body], is_extern); /* Call pattern */
+	OLD_IC = IC;				/* IC back up */
+	if (egc_frozen [body_id]) {		/* We are below zero Celsius, i.e. ice */
+		pid = (uint32) FPatId(body_id);
+		(pattern[pid].toc)(egc_frozen[body_id], is_extern); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
-	} else 
-#ifndef DLE
-	{
-	
-		/*IC = melt[body];	*/				/* Melted byte code */
+	} else {
+		/*IC = melt[body_id];	*/				/* Melted byte code */
 		/*interpret(INTERP_CMPD, 0);	*/	/* Interpret (tagval not set) */
 
 		/* The proper way to start the interpretation of a melted
@@ -4477,31 +4920,12 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern, int
 		 * `tagval' will therefore be set, but we have to 
 		 * resynchronize the registers anyway. --ericb
 		 */
-		xinterp(MTC melt[body]);
+		xinterp(MTC melt[body_id]);
 	
 		result = 1;							/* Compulsory synchronisation */
 	}
-#else
-	if (body < dle_level) {
-			/* Static melted routine */
-		xinterp(MTC melt[body]);
-		result = 1;							/* Compulsory synchronisation */
-	} else if (body < dle_zeroc) {
-			/* Dynamic frozen routine */
-		pid = (uint32) DLEFPatId(body);
-		(pattern[pid].toc)(dle_frozen[body], is_extern); /* Call pattern */
-		if (tagval != stagval)		/* Interpreted function called */
-			result = 1;				/* Resynchronize registers */
-	} else {
-			/* Dynamic melted routine */
-		xinterp(MTC dle_melt[body]);
-		result = 1;							/* Compulsory synchronisation */
-	}
-#endif
-	IC = old_IC;					/* Restore IC back-up */
+	IC = OLD_IC;					/* Restore IC back-up */
 	return result;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void interp_access(int fid, int stype, uint32 type)
@@ -4527,9 +4951,13 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
 	case SK_CHAR: last->it_char = *(current + offset); break;
-	case SK_INT: last->it_long = *(long *) (current + offset); break;
-	case SK_FLOAT: last->it_float = *(float *) (current + offset); break;
-	case SK_DOUBLE: last->it_double = *(double *) (current + offset); break;
+	case SK_WCHAR: last->it_wchar = *(EIF_WIDE_CHAR *) (current + offset); break;
+	case SK_INT8: last->it_int8 = *(EIF_INTEGER_8 *) (current + offset); break;
+	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
+	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
+	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
+	case SK_FLOAT: last->it_float = *(EIF_REAL *) (current + offset); break;
+	case SK_DOUBLE: last->it_double = *(EIF_DOUBLE *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(char **) (current + offset); break;
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
@@ -4563,9 +4991,13 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
 	case SK_CHAR: last->it_char = *(current + offset); break;
-	case SK_INT: last->it_long = *(long *) (current + offset); break;
-	case SK_FLOAT: last->it_float = *(float *) (current + offset); break;
-	case SK_DOUBLE: last->it_double = *(double *) (current + offset); break;
+	case SK_WCHAR: last->it_wchar = *(EIF_WIDE_CHAR *) (current + offset); break;
+	case SK_INT8: last->it_int8 = *(EIF_INTEGER_8 *) (current + offset); break;
+	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
+	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
+	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
+	case SK_FLOAT: last->it_float = *(EIF_REAL *) (current + offset); break;
+	case SK_DOUBLE: last->it_double = *(EIF_DOUBLE *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(char **) (current + offset); break;
 	case SK_REF: last->it_ref = *(char **) (current + offset); break;
@@ -4576,52 +5008,48 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	}
 }
 
-rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
-		 				/* Feature ID */
-		  				/* Static type (entity where feature is applied) */
-						/* Attribute meta-type */
+rt_private void assign(long offset, uint32 type)
+						/* offset of field in current object
+						 * type of object
+						 */
 {
 	/* Assign the value on top of the stack to the attribute described by its
-	 * name (fid) and the static type where it is declared (stype). The value
-	 * is then popped off from the stack.
-	 */
+	 * offset. */
 	
 	EIF_GET_CONTEXT
-	long offset;					/* Offset of the attribute */
 	struct item *last;				/* Value on top of the stack */
-	/* struct ac_info *info;*/ /* Attribute access information */ /* %%ss removed */
 	char *ref;
-
-	/* Attribute access information evaluation */
-	offset = RTWA(stype, fid, icur_dtype);
 
 	last = opop();					/* Value to be assigned */
 
 #define l last
-#define b break
 #define i icurrent
 
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
-	case SK_CHAR: *(i->it_ref + offset) = l->it_char; b;
-	case SK_INT:
+	case SK_CHAR: *(i->it_ref + offset) = l->it_char; break;
+	case SK_WCHAR: *(EIF_WIDE_CHAR *) (i->it_ref + offset) = l->it_wchar; break;
+	case SK_INT8: *(EIF_INTEGER_8 *)(i->it_ref + offset) = l->it_int8; break;
+	case SK_INT16: *(EIF_INTEGER_16 *)(i->it_ref + offset) = l->it_int16; break;
+	case SK_INT64: *(EIF_INTEGER_64 *)(i->it_ref + offset) = l->it_int64; break;
+	case SK_INT32:
 		switch (last->type) {
-		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
-		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
-		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
+		case SK_INT32: *(EIF_INTEGER_32 *)(i->it_ref + offset) = l->it_int32; break;
+		case SK_FLOAT: *(EIF_INTEGER_32 *) (i->it_ref + offset) = (EIF_INTEGER_32) l->it_float; break;
+		case SK_DOUBLE: *(EIF_INTEGER_32 *) (i->it_ref + offset) = (EIF_INTEGER_32) l->it_double; break;
 		default: eif_panic(MTC unknown_type);
 		}
 		break;
 	case SK_FLOAT:
 		switch (last->type) {
-		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
-		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
+		case SK_FLOAT: *(EIF_REAL *) (i->it_ref + offset) = l->it_float; break;
+		case SK_DOUBLE: *(EIF_REAL *) (i->it_ref + offset) = (EIF_REAL) l->it_double;break;
 		default: eif_panic(MTC unknown_type);
 		}
 		break;
-	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
-	case SK_POINTER: *(char **) (i->it_ref + offset) = l->it_ptr; b;
-	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); b;
+	case SK_DOUBLE: *(EIF_DOUBLE *) (i->it_ref + offset) = l->it_double; break;
+	case SK_POINTER: *(char **) (i->it_ref + offset) = l->it_ptr; break;
+	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;
 	case SK_REF:
 		/* Perform aging tests: if the reference is new and is assigned to an
 		 * old object which is not yet remembered, then we need to put it in
@@ -4637,91 +5065,19 @@ rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
 
 
 #undef i
-#undef b
 #undef l
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
-			 			/* Origin class ID of the attribute.*/
-			   			/* offset of the feature in the origin class */
-						/* Attribute meta-type */
-{
-	/* Assign the value on top of the stack to the attribute described by its
-	 * origin class `origin' and with offset `offset' in that class. The value
-	 * is then popped off from the stack.
-	 */
-	
-	EIF_GET_CONTEXT
-	long offset;					/* Offset of the attribute */
-	struct item *last;				/* Value on top of the stack */
-	/* struct ac_info *info;*/ /* Attribute access information */ /* %%ss removed */
-	char *ref;
-
-	/* Attribute access information evaluation */
-	offset = RTWPA(origin, f_offset, icur_dtype);
-
-	last = opop();					/* Value to be assigned */
-
-#define l last
-#define b break
-#define i icurrent
-
-	switch (type & SK_HEAD) {
-	case SK_BOOL:
-	case SK_CHAR: *(i->it_ref + offset) = l->it_char; b;
-	case SK_INT:
-		switch (last->type) {
-		case SK_INT: *(long *)(i->it_ref + offset) = l->it_long; b;
-		case SK_FLOAT: *(long *) (i->it_ref + offset) = (long) l->it_float; b;
-		case SK_DOUBLE: *(long *) (i->it_ref + offset) = (long) l->it_double; b;
-		default: eif_panic(MTC unknown_type);
-		}
-		break;
-	case SK_FLOAT:
-		switch (last->type) {
-		case SK_FLOAT: *(float *) (i->it_ref + offset) = l->it_float; b;
-		case SK_DOUBLE: *(float *) (i->it_ref + offset) = (float) l->it_double;b;
-		default: eif_panic(MTC unknown_type);
-		}
-		break;
-	case SK_DOUBLE: *(double *) (i->it_ref + offset) = l->it_double; b;
-	case SK_POINTER: *(char **) (i->it_ref + offset) = l->it_ptr; b;
-	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); b;
-	case SK_REF:
-		/* Perform aging tests: if the reference is new and is assigned to an
-		 * old object which is not yet remembered, then we need to put it in
-		 * the remembered set. This has to be done before doing the actual
-		 * assignment, as RTAR may call eremb() which in turn may call the GC.
-		 */
-		ref = icurrent->it_ref;
-		RTAR(last->it_ref, ref);
-		*(char **) (ref + offset) = last->it_ref;
-		break;
-	default: eif_panic(MTC unknown_type);
-	}
-
-
-#undef i
-#undef b
-#undef l
-
-	EIF_END_GET_CONTEXT
-}
-
-void call_disp(EIF_CONTEXT uint32 dtype, char *object)
+void call_disp(uint32 dtype, char *object)
 {
 	/* Save the interpreter counter and restore it after the dispose
 	 * routine for `object' with dynamic type `dtype'.
 	 */
 	EIF_GET_CONTEXT
-	char *OLD_IC;
+	unsigned char *OLD_IC;
 	OLD_IC = IC;
 	(wdisp (dtype))(object);
 	IC = OLD_IC;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void address(int32 fid, int stype, int for_rout_obj)
@@ -4750,51 +5106,27 @@ rt_private void address(int32 fid, int stype, int for_rout_obj)
  * Get constants from byte code in an hopefully portable (slow) way--RAM.
  */
 
-rt_private double get_double(EIF_CONTEXT_NOARG)
+rt_private EIF_DOUBLE get_double(void)
 {
-	/* Get double stored at IC in byte code array. The value has been stored
+	/* Get EIF_DOUBLE stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
 	EIF_GET_CONTEXT
 	union {
-		char xtract[sizeof(double)];
-		double value;
+		char xtract[sizeof(EIF_DOUBLE)];
+		EIF_DOUBLE value;
 	} xdouble;
 	register1 char *p = (char *) &xdouble;
 	register2 int i;
 
-	for (i = 0; i < sizeof(double); i++)
+	for (i = 0; i < sizeof(EIF_DOUBLE); i++)
 		*p++ = *IC++;
 
-	return *(double *) &xdouble;	/* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
+	return *(EIF_DOUBLE *) &xdouble;	/* Correctly aligned by union */
 }
 
-rt_private float get_float(EIF_CONTEXT_NOARG)
-{
-	/* Get float stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(float)];
-		float value;
-	} xfloat;
-	register1 char *p = (char *) &xfloat;
-	register2 int i;
-
-	for (i = 0; i < sizeof(float); i++)
-		*p++ = *IC++;
-	
-	return *(float *) &xfloat;		/* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
-}
-
-rt_private long get_long(EIF_CONTEXT_NOARG)
+rt_private long get_long(void)
 {
 	/* Get long int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4812,11 +5144,9 @@ rt_private long get_long(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(long *) &xlong;		/* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private short get_short(EIF_CONTEXT_NOARG)
+rt_private short get_short(void)
 {
 	/* Get short int stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4834,11 +5164,9 @@ rt_private short get_short(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 	
 	return *(short *) &xshort;		/* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private uint32 get_uint32(EIF_CONTEXT_NOARG)
+rt_private uint32 get_uint32(void)
 {
 	/* Get uint32 stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
@@ -4856,55 +5184,9 @@ rt_private uint32 get_uint32(EIF_CONTEXT_NOARG)
 		*p++ = *IC++;
 
 	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private fnptr get_fnptr(EIF_CONTEXT_NOARG)
-{
-	/* Get a fnptr stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(fnptr)];
-		fnptr value;
-	} xfnptr;
-	register1 char *p = (char *) &xfnptr;
-	register2 int i;
-
-	for (i = 0; i < sizeof(fnptr); i++)
-		*p++ = *IC++;
-	
-	return *(fnptr *) &xfnptr;		/* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
-}
-
-rt_private char *get_address(EIF_CONTEXT_NOARG)
-{
-	/* Get an address stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(char *)];
-		char *value;
-	} xaddress;
-	register1 char *p = (char *) &xaddress;
-	register2 int i;
-
-	for (i = 0; i < sizeof(char *); i++)
-		*p++ = *IC++;
-	
-	return *(char **) &xaddress;	/* Correctly aligned by union */
-
-	EIF_END_GET_CONTEXT
-}
-
-rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
+rt_private short get_compound_id(char *Current, short dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
 	EIF_GET_CONTEXT
@@ -4923,16 +5205,16 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 
 		switch (last)
 		{
-			case -11: /* like argument */
+			case LIKE_ARG_TYPE: /* like argument */
 						pos = (int) get_short();
 						*(gp++) = (int16) RTCA(arg(pos)->it_ref, -10);
 						++cnt;
 						break;
-			case -12: /* like Current */
+			case LIKE_CURRENT_TYPE: /* like Current */
 						*(gp++) = (int16) (icur_dftype);
 						++cnt;
 						break;
-			case -13: /* like feature - see BC_PCLIKE */
+			case LIKE_PFEATURE_TYPE: /* like feature - see BC_PCLIKE */
 						{
 							short stype;
 							int32 origin, ooffset;
@@ -4944,7 +5226,7 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 							++cnt;
 						}
 						break;
-			case -14: /* like feature - see BC_CLIKE */
+			case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
 						{
 							short code;
 							long  offset;
@@ -4970,99 +5252,7 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 		return dtype;
 	
 	return (short) eif_compound_id((int16 *)0,Current, (int16) dtype, gen_types);
-
-	EIF_END_GET_CONTEXT
 }
-
-/*
- * Write constants to byte code in an hopefully portable (slow) way--RAM.
- */
-
-rt_private void write_long(char *where, long int value)
-{
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(long)];
-		long value;
-	} xlong;
-	register1 char *p = (char *) &xlong;
-	register2 int i;
-
-	xlong.value = value;
-
-	for (i = 0; i < sizeof(long); i++)
-		*where++ = *p++;
-}
-
-rt_private void write_float(char *where, float value)
-{
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(float)];
-		float value;
-	} xfloat;
-	register1 char *p = (char *) &xfloat;
-	register2 int i;
-
-	xfloat.value = value;
-
-	for (i = 0; i < sizeof(float); i++)
-		*where++ = *p++;
-}
-
-rt_private void write_double(char *where, double value)
-{
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(double)];
-		double value;
-	} xdouble;
-	register1 char *p = (char *) &xdouble;
-	register2 int i;
-
-	xdouble.value = value;
-
-	for (i = 0; i < sizeof(double); i++)
-		*where++ = *p++;
-}
-
-rt_private void write_fnptr(char *where, fnptr value)
-{
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(fnptr)];
-		fnptr value;
-	} xfnptr;
-	register1 char *p = (char *) &xfnptr;
-	register2 int i;
-
-	xfnptr.value = value;
-
-	for (i = 0; i < sizeof(fnptr); i++)
-		*where++ = *p++;
-}
-
-rt_private void write_address(char *where, char *value)
-{
-	/* Write 'value' in possibly mis-aligned address 'where' */
-
-	union {
-		char xtract[sizeof(char *)];
-		char *value;
-	} xaddress;
-	register1 char *p = (char *) &xaddress;
-	register2 int i;
-
-	xaddress.value = value;
-
-	for (i = 0; i < sizeof(char *); i++)
-		*where++ = *p++;
-}
-
 
 /*
  * Calling protocol
@@ -5077,10 +5267,14 @@ rt_private void init_var(struct item *ptr, long int type, char *current_ref)
 
 	switch (type & SK_HEAD) {
 	case SK_BOOL:
-	case SK_CHAR:		ptr->it_char = (char) 0; break;
-	case SK_INT:		ptr->it_long = (long) 0; break;
-	case SK_FLOAT:		ptr->it_float = (float) 0; break;
-	case SK_DOUBLE:		ptr->it_double = (double) 0; break;
+	case SK_CHAR:		ptr->it_char = (EIF_CHARACTER) 0; break;
+	case SK_WCHAR:		ptr->it_wchar = (EIF_WIDE_CHAR) 0; break;
+	case SK_INT8:		ptr->it_int8 = (EIF_INTEGER_8) 0; break;
+	case SK_INT16:		ptr->it_int16 = (EIF_INTEGER_16) 0; break;
+	case SK_INT32:		ptr->it_int32 = (EIF_INTEGER_32) 0; break;
+	case SK_INT64:		ptr->it_int64 = (EIF_INTEGER_64) 0; break;
+	case SK_FLOAT:		ptr->it_float = (EIF_REAL) 0; break;
+	case SK_DOUBLE:		ptr->it_double = (EIF_DOUBLE) 0; break;
 	case SK_BIT:		ptr->it_ref = (char *)0; break;
 	case SK_EXP:		dtype = get_short ();
 						dtype = get_compound_id(MTC current_ref, (short) dtype);
@@ -5094,7 +5288,7 @@ rt_private void init_var(struct item *ptr, long int type, char *current_ref)
 	}
 }
 
-rt_private void init_registers(EIF_CONTEXT_NOARG)
+rt_private void init_registers(void)
 {
 	/* Upon entry in a new feature, given that locnum and argnum are set,
 	 * initialize the register array, poping the registers from the stack,
@@ -5152,20 +5346,18 @@ rt_private void init_registers(EIF_CONTEXT_NOARG)
 	last->it_ref = current;			/* Restore saved value */
 
 	iresult = last = iget();		/* Get room for Result */
-	last->type = SK_INT;			/* By default, avoid GC traversal */
+	last->type = SK_INT32;			/* By default, avoid GC traversal */
 
 	ilocnum = last= iget();			/* Push # of locals */
-	last->type = SK_INT;			/* Initializes record */
-	last->it_long = locnum;			/* Got this from byte code */
+	last->type = SK_INT32;			/* Initializes record */
+	last->it_int32 = locnum;			/* Got this from byte code */
 
 	iargnum = last = iget();		/* Push # of arguments */
-	last->type = SK_INT;			/* Initializes record */
-	last->it_long = argnum;			/* Got this from byte code */
-
-	EIF_END_GET_CONTEXT
+	last->type = SK_INT32;			/* Initializes record */
+	last->it_int32 = argnum;			/* Got this from byte code */
 }
 
-rt_private void allocate_registers(EIF_CONTEXT_NOARG)
+rt_private void allocate_registers(void)
 {
 	/* Automagically increase/decrease the size of the register array. If its
 	 * size is too small, then of course we try to extend it. However, it it's
@@ -5203,10 +5395,9 @@ rt_private void allocate_registers(EIF_CONTEXT_NOARG)
 			iregs = new;
 		}
 	}
-	EIF_END_GET_CONTEXT
 }
 
-rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top)
+rt_shared void sync_registers(struct stochunk *stack_cur, struct item *stack_top)
 						   		/* Saved current chunk of op stack */
 					   			/* Saved top of op stack */
 {
@@ -5234,20 +5425,26 @@ rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct ite
 	/* The stack is now in the state it had right after the initial settings.
 	 * Start by filling in the special registers (appear in reverse order).
 	 */
-	for (n = 0, reg = iregs + SPECIAL_REG - 1; n < SPECIAL_REG; n++, reg--)
+	for (n = 0, reg = iregs + SPECIAL_REG - 1; n < SPECIAL_REG; n++, reg--) {
 		*reg = opop();
+		(*reg)->it_addr = &((*reg)->itu); /* synchronize the address of the value with its location */
+	}
 
-	locnum = ilocnum->it_long;		/* # of local variables */
-	argnum = iargnum->it_long;		/* # of arguments */
-	allocate_registers(MTC);			/* `iregs' could have been reduced */
+	locnum = ilocnum->it_int32;		/* # of local variables */
+	argnum = iargnum->it_int32;		/* # of arguments */
+	allocate_registers(MTC);		/* `iregs' could have been reduced */
 
 	/* Local variables also appear in reverse order */
-	for (n = 0, reg = iregs+locnum+SPECIAL_REG-1; n < locnum; n++, reg--)
+	for (n = 0, reg = iregs+locnum+SPECIAL_REG-1; n < locnum; n++, reg--) {
 		*reg = opop();
+		(*reg)->it_addr = &((*reg)->itu); /* synchronize the address of the value with its location */
+	}
 
 	/* Finally, arguments appear in reverse order */
-	for (n = 0, reg = iregs+locnum+SPECIAL_REG+argnum-1; n < argnum; n++, reg--)
+	for (n = 0, reg = iregs+locnum+SPECIAL_REG+argnum-1; n < argnum; n++, reg--) {
 		*reg = opop();
+		(*reg)->it_addr = &((*reg)->itu); /* synchronize the address of the value with its location */
+	}
 
 	memcpy (&op_stack, &op_context, sizeof(struct opstack));
 
@@ -5257,11 +5454,9 @@ rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct ite
 	 */
 	
 	dsync();						/* Resynchronize cached status */
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_private void pop_registers(EIF_CONTEXT_NOARG)
+rt_private void pop_registers(void)
 {
 	/* This is the reverse operation of init_registers(). We remove all the
 	 * registers from the stack because the Eiffel function is now returning.
@@ -5277,9 +5472,9 @@ rt_private void pop_registers(EIF_CONTEXT_NOARG)
 	register1 int nb_items;			/* Number of registers to be popped off */
 	struct item *result;			/* To save the result */
 	struct item saved_result;		/* Save value pointed to by iresult */
-
-	nb_items = opop()->it_long;		/* This is the nummber of arguments */
-	nb_items += otop()->it_long;	/* Add the number of locals */
+	
+	nb_items = opop()->it_int32;		/* This is the nummber of arguments */
+	nb_items += otop()->it_int32;	/* Add the number of locals */
 	nb_items += SPECIAL_REG - 1;	/* Add Current, Result and ilocnum */
 
 	/* Using npop() may truncate the unused chunks at the tail of the stack,
@@ -5295,15 +5490,13 @@ rt_private void pop_registers(EIF_CONTEXT_NOARG)
 		result = iget();				/* Get a new result record */
 		memcpy (result, &saved_result, ITEM_SZ);
 	}
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
  * Operational stack handling.
  */
 
-rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
+rt_private struct item *stack_allocate(register int size)
 				   					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
@@ -5332,7 +5525,6 @@ rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
 	chunk->sk_prev = (struct stochunk *) 0;
 
 	return arena;			/* Stack allocated */
-	EIF_END_GET_CONTEXT
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one
@@ -5341,7 +5533,7 @@ rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
  * (char *) elements, we now store (struct item) ones.
  */
 
-rt_public struct item *opush(EIF_CONTEXT register struct item *val)
+rt_public struct item *opush(register struct item *val)
 {
 	/* Push value 'val' on top of the operational stack. If it fails, raise
 	 * an "Out of memory" exception. If 'val' is a null pointer, simply
@@ -5349,7 +5541,7 @@ rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 	 */
 	EIF_GET_CONTEXT
 	register1 struct item *top = op_stack.st_top;	/* Top of stack */
-
+	
 	if (top == (struct item *) 0)	{			/* No stack yet? */
 		top = stack_allocate(STACK_CHUNK);		/* Create one */
 		if (top == (struct item *) 0)	 		/* Could not create stack */
@@ -5382,10 +5574,9 @@ rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 		memcpy (top, val, ITEM_SZ);		/* Push it on the stack */
 
 	return top;				/* Address of allocated item */
-	EIF_END_GET_CONTEXT
 }
 
-rt_private int stack_extend(EIF_CONTEXT register int size)
+rt_private int stack_extend(register int size)
 				   					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.
@@ -5416,10 +5607,9 @@ rt_private int stack_extend(EIF_CONTEXT register int size)
 	SIGRESUME;									/* Restore signal handling */
 
 	return 0;			/* Everything is ok */
-	EIF_END_GET_CONTEXT
 }
 
-rt_public struct item *opop(EIF_CONTEXT_NOARG)
+rt_public struct item *opop(void)
 {
 	/* Removes one item from the operational stack and return a pointer to
 	 * the removed item, which also happens to be the first free location.
@@ -5455,10 +5645,9 @@ rt_public struct item *opop(EIF_CONTEXT_NOARG)
 	SIGRESUME;
 
 	return op_stack.st_top;
-	EIF_END_GET_CONTEXT
 }
 
-rt_private void npop(EIF_CONTEXT register int nb_items)
+rt_private void npop(register int nb_items)
 {
 	/* Removes 'nb_items' from the operational stack. Occasionaly, we also
 	 * try to truncate the unused chunks from the tail of the stack. We do
@@ -5472,7 +5661,7 @@ rt_private void npop(EIF_CONTEXT register int nb_items)
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. That would indeed make popping very efficient.
 	 */
-	
+
 	arena = op_stack.st_cur->sk_arena;
 	top = op_stack.st_top;
 	top -= nb_items;				/* Hopefully, we remain in current chunk */
@@ -5524,19 +5713,21 @@ rt_private void npop(EIF_CONTEXT register int nb_items)
 
 	if (d_cxt.pg_status == PG_RUN)	/* Program is running */
 		stack_truncate();			/* Eventually remove unused chunks */
-	EIF_END_GET_CONTEXT
 }
 
-rt_public struct item *otop(EIF_CONTEXT_NOARG)
-{
+rt_public struct item *otop(void)
+	{
 	/* Returns a pointer to the top of the stack or a NULL pointer if
 	 * stack is empty. I assume a value has already been pushed (i.e. the
 	 * stack has been created).
 	 */
 	
 	EIF_GET_CONTEXT
-	register1 struct item *last_item;		/* Address of last item stored */
-	register2 struct stochunk *prev;		/* Previous chunk in stack */
+	struct item *last_item;		/* Address of last item stored */
+	struct stochunk *prev;		/* Previous chunk in stack */
+
+	if (op_stack.st_top==NULL)
+		return NULL;
 
 	last_item = op_stack.st_top - 1;
 	if (last_item >= op_stack.st_cur->sk_arena)
@@ -5547,45 +5738,45 @@ rt_public struct item *otop(EIF_CONTEXT_NOARG)
 	 */
 	prev = op_stack.st_cur->sk_prev;
 
-#ifdef MAY_PANIC
-	if (prev == (struct stochunk *) 0)
-		eif_panic("operational stack is empty");
-#endif
-	
-	return prev->sk_end - 1;			/* Last item of previous chunk */
-	EIF_END_GET_CONTEXT
-}
+	if (prev == NULL)
+		return NULL;
+	else
+		return prev->sk_end - 1;			/* Last item of previous chunk */
+	}
 
-rt_private struct item *oitem(EIF_CONTEXT uint32 n)
-{
-	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if
-	 * stack is empty. I assume a value has already been pushed (i.e. the
-	 * stack has been created).
-	 */
-	
+rt_private struct item *oitem(uint32 n)
+	{
+	/* Returns a pointer to the item at position `n' down the stack or a NULL pointer if */ 
+	/* stack is empty. It assumes a value has already been pushed (i.e. the stack has been created). */
 	EIF_GET_CONTEXT
-	register1 struct item *last_item;		/* Address of last item stored */
-	register2 struct stochunk *prev;		/* Previous chunk in stack */
+	struct item		*access_item;	/* Address of item we try to access */
+	struct stochunk	*prev;			/* Previous chunk in stack */
+	struct stochunk	*curr;			/* Current chunk in stack */
 
-	last_item = op_stack.st_top - 1 -n;
-	if (last_item >= op_stack.st_cur->sk_arena)
-		return last_item;
+	access_item = (op_stack.st_top - 1 - n);
+	if (access_item >= (op_stack.st_cur->sk_arena))
+		return access_item;
 
-	/* It seems the item is at the left edge of a chunk. Look for previous chunk then...
-	 */
-	prev = op_stack.st_cur->sk_prev;
+	/* It seems the item is at the left edge of a chunk. Look for previous chunk then... */
+	prev = cop_stack.st_cur;
 
-#ifdef MAY_PANIC
-	if (prev == (struct stochunk *) 0)
-		eif_panic("operational stack is empty");
-#endif
+	do
+		{
+		/* Item is not in the current chunk. Let's see if it's not in the previous one */
+		curr = prev;
+		prev = prev->sk_prev;
 
-	return prev->sk_end - 1 - (n - (op_stack.st_cur->sk_arena - last_item));
-	EIF_END_GET_CONTEXT
-}
+		if (prev == NULL)
+			return NULL; /* operational stack is empty, we return NULL */
+		access_item = prev->sk_end - (curr->sk_arena - access_item);
+		}
+	while (access_item < prev->sk_arena);
+		
+	return access_item;
+	}
 
-rt_private void stack_truncate(EIF_CONTEXT_NOARG)
-{
+rt_private void stack_truncate(void)
+	{
 	/* Free unused chunks in the stack. If the current chunk has at least
 	 * MIN_FREE locations, then we may free all the chunks starting with the
 	 * next one. Otherwise, we skip the next chunk and free the remainder.
@@ -5599,23 +5790,23 @@ rt_private void stack_truncate(EIF_CONTEXT_NOARG)
 	 * via npop(), and npop() cannot be called by the debugger--RAM.
 	 */
 
-	top = op_stack.st_top;					/* The first free location */
-	if (op_stack.st_end - top > MIN_FREE) {	/* Enough locations left */
-		op_stack.st_tl = op_stack.st_cur;	/* Last chunk from now on */
-		wipe_out(op_stack.st_cur->sk_next);	/* Free starting at next chunk */
-	} else {								/* Current chunk is nearly full */
-		next = op_stack.st_cur->sk_next;	/* We are followed by 'next' */
-		if (next != (struct stochunk *) 0) {/* There is indeed a next chunk */
+	top = op_stack.st_top;						/* The first free location */
+	if (op_stack.st_end - top > MIN_FREE) {		/* Enough locations left */
+		op_stack.st_tl = op_stack.st_cur;		/* Last chunk from now on */
+		wipe_out(op_stack.st_cur->sk_next);		/* Free starting at next chunk */
+	} else {									/* Current chunk is nearly full */
+		next = op_stack.st_cur->sk_next;		/* We are followed by 'next' */
+		if (next != (struct stochunk *) 0) {	/* There is indeed a next chunk */
 			op_stack.st_tl = next;			/* New tail chunk */
 			wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
 		}
 	}
-	EIF_END_GET_CONTEXT
-}
+
+	}
 
 rt_private void wipe_out(register struct stochunk *chunk)
-									/* First chunk to be freed */
-{
+			/* First chunk to be freed */
+	{
 	/* Free all the chunks after 'chunk' */
 
 	register2 struct stochunk *next;	/* Address of next chunk */
@@ -5626,22 +5817,23 @@ rt_private void wipe_out(register struct stochunk *chunk)
 	chunk->sk_prev->sk_next = (struct stochunk *) 0;	/* Previous is last */
 
 	for (
-		next = chunk->sk_next;
-		chunk != (struct stochunk *) 0;
-		chunk = next, next = chunk ? chunk->sk_next : chunk
+			next = chunk->sk_next; 
+			chunk != (struct stochunk *) 0; 
+			chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
 		xfree((char *) chunk);
-}
+	}
 
 /*
  * For debugger: getting values of locals, arguments, Result and Current.
  */
 
 /* VARARGS1 */
-rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
+rt_public struct item *ivalue(int code, int num, uint32 start)
 		 		/* Request code */
 				/* Additional info for local and arguments */
-{
+				/* start of operational stack (for frozen feature only - used by cresult, carg.. macros) */
+	{
 	/* Extract information from the interpreter's registers. For local and
 	 * arguments, a range checking is performmed and a null pointer returned
 	 * if the information requested is invalid (e.g. when asking for local #4
@@ -5650,1632 +5842,108 @@ rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
 	 * To avoid endless tests, there is a convention: if the routine has n
 	 * locals, then n+1 is the result of the routine, if it exists.
 	 */
-
 	EIF_GET_CONTEXT
 
-	switch (code) {
-	case IV_LOCAL:						/* Nth local */
-		if (num > ilocnum->it_long)
-			return (struct item *) 0;			/* Out of range */
-		else if (num == ilocnum->it_long) {		/* Off by one */
-			if (iresult->type != SK_VOID)		/* If there is a result */
-				return iresult;					/* Then return it */
-			else
-				return (struct item *) 0;		/* Else signal out of range */
-		}
-		return loc(num + 1);					/* Locals from 1 to ilocnum */
-	case IV_ARG:						/* Nth argument */
-		if (num >= iargnum->it_long)
-			return (struct item *) 0;	/* Out of range */
-		return arg(num + 1);			/* Arguments from 1 to iargnum */
-	case IV_CURRENT:					/* Current */
-		return icurrent;
-	case IV_RESULT:						/* Result */
-		return iresult;
-	default:
-		eif_panic(MTC "illegal value request");
-	}
+	struct ex_vect 	*exvect = eif_stack.st_top; /* get the execution vector */
+	struct item 	*result_item = NULL;
 
-	/* NOTREACHED */
-	EIF_END_GET_CONTEXT
-}
-
-#ifdef DEBUG
-rt_private void dump_stack(void)
-{
-	/* Dumps the contents of the operational stack */
-
-	register1 struct item *last;	/* For looping over subsidiary roots */
-	register2 int roots;			/* Number of roots in each chunk */
-	register3 struct stochunk *s;	/* To walk through each stack's chunk */
-	int done = 0;					/* Top of stack not reached yet */
-	int i;
-
-	/* There is no need to check for the existence of the operational stack:
-	 * we know it has already been created.
-	 */
-
-	for (s = op_stack.st_hd; s && !done; s = s->sk_next) {
-		last = s->sk_arena;						/* Start of stack */
-		if (s != op_stack.st_cur)				/* Before current pos? */
-			roots = s->sk_end - last;			/* The whole chunk */
-		else {
-			roots = op_stack.st_top - last;		/* Stop at the top */
-			done = 1;							/* Reached end of stack */
-		}
-
-		printf("dump_stack: %d objects in %s chunk\n",
-			roots, done ? "last" : "current");
-		for (i = 0; i < roots; i++, last++) {
-			switch (last->type & SK_HEAD) {
-			case SK_EXP:
-				printf("	%d: expanded 0x%lx DT = %d\n", i,
-					last->it_ref, Dtype(last->it_ref));
-				break;
-			case SK_REF:
-				if (last->it_ref == (char *) 0)
-					printf("	%d: 0x%lx\n", i, last->it_ref);
+	if (egc_frozen[exvect->ex_bodyid] == NULL) {
+		/* if the feature is melted or super melted, 
+		 * we look in the registers of the interpreter
+		 */
+		switch (code) {
+		case IV_LOCAL:								/* Nth local */
+			if (num > ilocnum->it_int32)
+				return (struct item *) 0;			/* Out of range */
+			else if (num == ilocnum->it_int32){		/* Off by one */
+				if (iresult->type != SK_VOID)		/* If there is a result */
+					return iresult;					/* Then return it */
 				else
-					printf("	%d: 0x%lx DT = %d\n", i,
-						last->it_ref, Dtype(last->it_ref));
-				break;
-			case SK_BOOL:
-				printf("	%d: bool %s\n", i,
-					last->it_char ? "true" : "false");
-				break;
-			case SK_CHAR:
-				printf("	%d: char %d\n", i, last->it_char);
-				break;
-			case SK_INT:
-				printf("	%d: int %ld\n", i, last->it_long);
-				break;
-			case SK_FLOAT:
-				printf("	%d: float %f\n", i, last->it_float);
-				break;
-			case SK_DOUBLE:
-				printf("	%d: double %lf\n", i, last->it_double);
-				break;
-			case SK_BIT:
-				printf("	%d: BITS\n", i);
-				break;
-			case SK_POINTER:
-				printf("	%d: pointer 0x%lx\n", i, last->it_ref);
-				break;
-			case SK_VOID:
-				printf("	%d: void\n", i);
-				break;
-			default:
-				printf("	%d: UNKNOWN TYPE 0x%lx\n", i, last->type);
+					return (struct item *) 0;		/* Else signal out of range */
 			}
-		}
-	}
-}
-
-static void xiprint(struct item *last)
-{
-	/* Print a stack item */
-
-	switch (last->type & SK_HEAD) {
-	case SK_BOOL:
-		dprintf(1)("BOOLEAN %s\n", (last->it_char ? "True" : "False"));
-		break;
-	case SK_CHAR:
-		dprintf(1)("CHARACTER %c\n", last->it_char);
-		break;
-	case SK_INT:
-		dprintf(1)("INTEGER %ld\n", last->it_long);
-		break;
-	case SK_FLOAT:	
-		dprintf(1)("REAL %lf\n", last->it_float);
-		break;
-	case SK_DOUBLE:
-		dprintf(1)("DOUBLE %lf\n", last->it_double);
-		break;
-	case SK_REF:
-		{
-			dprintf(1)("Reference: ");
-			if (last->it_ref == (char *) 0) {
-				dprintf(1)("Void\n");
-			} else {
-				dprintf(1)("%s\n", System(Dtype(last->it_ref)).cn_generator);
-			}
-		}
-		break;
-	}
-}
-
-static void xidebug(void)
-{
-	/* Print Current and arguments */
-
-	int i;
-
-	dprintf(1)("Current = ");
-	xiprint(icurrent);
-	for (i=1; i <= argnum; i++) {
-		dprintf(1)("\targ #%d = ", i);
-		xiprint(arg(i));
-	}
-	for (i=1; i <= locnum; i++) {
-		dprintf(1)("\tloc #%d = ", i);
-		xiprint(loc(i));
-	}
-}
-
-static void xistack(int n)
-{
-	/* Print the `n' items on the top of the stack */
-
-	struct opstack op_context;		/* To save stack's context */
-	int i;
-
-	memcpy (&op_context, &op_stack, sizeof(struct opstack));
-
-	for (i=0 ; i<n ; i++) {
-		dprintf(1)("top - %d : ", i);
-		xiprint(opop());
-	}
-
-	memcpy (&op_stack, &op_context, sizeof(struct opstack));
-}
-
-#endif
-
-/*
- * Testing routines.
- */
-
-#ifdef DEBUG
-/*
- * Byte-code dumping routines.
- */
-
-rt_public void idump(FILE *fd, char *start)
-{
-	/* Dumps an ASCII representation (disassembling) of byte code starting at
-	 * IC and ending at BC_NULL. The dump is made in the file fd.
-	 */
-	char *old_IC = IC;
-	long rout_id;
-	register1 int code;
-	register3 long offset;
-	register4 char *string;
-	uint32 body_id;
-	int has_rescue = 0;
-	int i;
-	int is_once;
-
-	IC = start;
-
-	is_once = 0;
-
-	if (*IC++)  /* Check once flag */
-	{
-		is_once = 1;
-
-		IC += sizeof (long);    /* Skip flag and reserved space */
-	}
-	switch (code = *IC++) {		/* Read current byte-code and advance IC */
-
-	/*
-	 * Start of debuggable byte code.
-	 */
-	case BC_DEBUGABLE:
-		offset = get_long();
-		fprintf(fd, "0x%lX %s%d\n", IC - 1 - sizeof(long), "BC_DEBUGABLE #",
-			offset);
-		/* Fall through */
-
-	/*
-	 * Start of routine byte code.
-	 */
-	case BC_START:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_START");
-		rout_id = get_long();
-		fprintf(fd, "0x%lX rout_id = %ld\n", IC - sizeof(long), rout_id);
-		offset = get_long();			/* Get the result type */
-		fprintf(fd, "0x%lX %s 0x%lx\n", IC - sizeof(long), "RESULT type", offset);
-		code = get_short();				/* Get the argument number */
-		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(short), "ARGS", code);
-
-		if (is_once) {				/* If it is a once */
-			body_id = (uint32) get_long();  /* Get the body id */
-			fprintf(fd, "0x%lX %s 0x%lx\n", IC - sizeof(long), "Body id", body_id);
-
-		} else
-			fprintf(fd, "0x%lX %s\n", IC - 1, "not once");
-
-		code = get_short();		/* Get the local number */
-		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(short), "LOCAL", code);
-		for(i = 0; i < code; i++) {
-			offset = get_long();
-			fprintf(fd, "0x%lx loc(%d)->type = 0x%lx\n", IC - sizeof(long),
-				i, offset);
-		}
-		while (*IC++ != BC_NO_CLONE_ARG) {
-			if (*(IC - 1) != BC_CLONE_ARG) {
-				fprintf(fd, "WARNING: 0x%lX should have been %d, was %d\n",
-					IC - 1, BC_CLONE_ARG, (int) *(IC - 1));
-				continue;
-			}
-			code = get_short();
-			fprintf(fd, "0x%lX %s%d\n", IC - 1 - sizeof(short),
-				"BC_CLONE_ARG #", code);
-		}
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_NO_CLONE_ARG");
-
-		if (rout_id != 0) {
-			string = IC;
-			IC += strlen(string) + 1;	/* Get the feature name */
-			fprintf(fd, "0x%lX %s \"%s\"\n", string, "feature", string);
-			code = get_short();			/* Dyn. type where feature is written */
-			fprintf(fd, "0x%lX %s %d (%s)\n", IC - sizeof(short), "WRITTEN", code, System(code).cn_generator);
-		}
-
-		has_rescue = (int) *IC++;
-		if (has_rescue) {
-			offset = get_long();			/* Compute the rescue offset */
-			fprintf(fd, "0x%lX %s 0x%lX\n", IC - 1, "RESCUE", IC + offset);
-		} else
-			fprintf(fd, "0x%lX %s\n", IC - 1, "no rescue");
-
-		break;
-	default:
-		eif_panic(botched);
-	}
-	
-	iinternal_dump(fd, IC);				/* Compound dump */
-	if (has_rescue)
-		iinternal_dump(fd, IC);			/* Rescue dump */
-
-	IC = old_IC;
-}
-	
-rt_private void iinternal_dump(FILE *fd, char *start)
-{
-	register1 int code;				/* Current intepreted byte code */
-	register2 struct item *last;	/* Last pushed value */
-	register3 long offset;			/* Offset for jumps and al */
-	register4 char *string;			/* Strings for assertions tag */
-	int type;						/* Stores type informations, usually */
-	int i;
-	double d;
-	float f;
-
-	IC = start;
-	for (;;) {					/* Indentation is wrong on purpose--RAM */
-	switch (code = *IC++) {		/* Read current byte-code and advance IC */
-
-	/*
-	 * Start of precondition check
- 	 */
-	case BC_PRECOND:
-		fprintf(fd, "0x%lX %s, offset: %d\n", IC - 1, "BC_PRECOND", get_long());
-		break;
-
-	/*
-	 * Start of postcondition check.
-	 */
-	case BC_POSTCOND:
-		fprintf(fd, "0x%lX %s, offset: %d\n", IC - 1, "BC_POSTCOND", get_long());
-		break;
-
-	/*
-	 * End of rescue compound
- 	 */
-	case BC_END_RESCUE:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_RECUE");
-		return;
-
-	/*
-	 * Deferred compound mark.
-	 */
-	case BC_DEFERRED:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_DEFERRED");
-		break;
-
-	/*
-	 * Rescue compound mark
-	 */
-	case BC_RESCUE:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_RESCUE");
-		break;
-
-	/*
-	 * Assignment to result.
-	 */
-	case BC_RASSIGN:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_RASSIGN");
-		break;
-
-	/*
-	 * Assignment to an expanded result
-	 */
-	case BC_REXP_ASSIGN:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_REXP_ASSIGN");
-		break;
-
-	/*
-	 * Assignment to local variable.
-	 */
-	case BC_LASSIGN:
-		code = get_short();		/* Get the local number (from 1 to locnum) */
-		fprintf(fd, "0x%lX %s #%d\n", 
-			IC - sizeof(short) - 1, "BC_LASSIGN", code);
-		break;
-
-	/*
-	 * Assignment to a local expanded variable
-	 */
-	case BC_LEXP_ASSIGN:
-		code = get_short();		/* Get the local number (from 1 to locnum) */
-		fprintf(fd, "0x%lX %s #%d\n", IC - sizeof(short) - 1,
-			"BC_LEXP_ASSIGN", code);
-		break;
-
-	/*
-	 * Assignment to an attribute.
-	 */
-	case BC_ASSIGN:
-	{ 								/* No new indent level--RAM */
-		uint32 type;
-
-		offset = get_long();		/* Get the feature id */
-		code = get_short();			/* Get the static type */
-		type = get_uint32();		/* Get attribute meta-type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d, meta-type=0x%lx\n",
-			IC - sizeof(short) - sizeof(long) -sizeof(uint32) - 1,
-			"BC_ASSIGN", offset, code, type);
-	}
-		break;
-
-	/*
-	 * Assignment to a precompiled attribute.
-	 */
-	case BC_PASSIGN:
-	{ 								/* No new indent level--RAM */
-		int32 origin, ooffset;
-		uint32 type;
-
-		origin = get_long();		/* Get the origin class id */
-		ooffset = get_long();		/* Get the offset in origin */
-		type = get_uint32();		/* Get attribute meta-type */
-		fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, meta-type=0x%lx\n",
-			IC - sizeof(long) - sizeof(long) -sizeof(uint32) - 1,
-			"BC_PASSIGN", origin, ooffset, type);
-	}
-		break;
-
-	/*
-	 * Assignment to an expanded attribute
-	 */
-	case BC_EXP_ASSIGN:
-		offset = get_long();		/* Get the feature id */
-		code = get_short();			/* Get the static type */
-		type = get_short();			/* Get attribute meta-type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
-			"BC_EXP_ASSIGN", offset, code);
-		break;
-
-	/*
-	 * Assignment to a precompiled expanded attribute
-	 */
-	case BC_PEXP_ASSIGN:
-		{
-			int32 origin, ooffset;
-
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			type = get_short();			/* Get attribute meta-type */
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%d\n",
-				IC - sizeof(long) - sizeof(long) - sizeof(uint32) - 1,
-				"BC_PEXP_ASSIGN", origin, ooffset);
-			break;
-		}
-
-	/*
-	 * Assignment to a NONE entity
-	 */
-	case BC_NONE_ASSIGN:
-		fprintf(fd, "0x%lX BC_NONE_ASSIGN\n", IC - 1);
-		break;
-
-	/*
-	 * Reverese assignment to Result.
-	 */
-	case BC_RREVERSE:
-		type = get_short();			/* Get the reverse type */
-
-/* GENERIC CONFORMANCE */
-		while (get_short() != -1)
-			;
-
-		fprintf(fd, "0x%lX %s rt=%d\n", IC - sizeof(short) - 1,
-			"BC_RREVERSE", type);
-		break;
-
-	/*
-	 * Reverse assignment to a local variable.
-	 */
-	case BC_LREVERSE:
-		code = get_short();			/* Get local number */
-		type = get_short();			/* Get the reverse type */
-/* GENERIC CONFORMANCE */
-		while (get_short() != -1)
-			;
-		fprintf(fd, "0x%lX %s #%d, rt=%d\n", IC - 2 * sizeof(short) - 1,
-			"BC_LREVERSE", code, type);
-		break;
-	
-	/*
-	 * Reverse assignment to an attribute.
-	 */
-	case BC_REVERSE:
-		{
-			uint32 meta;
-			offset = get_long();		/* Get the feature id */
-			code = get_short();			/* Get the static type */
-			meta = get_uint32();		/* Get the attribute meta-type */
-			type = get_short();			/* Get the reverse type */
-/* GENERIC CONFORMANCE */
-			while (get_short() != -1)
-				;
-			fprintf(fd, "0x%lX %s fid=%d, st=%d, rt=%d\n",
-				IC - 2 * sizeof(short) - sizeof(long) - 1,
-				"BC_REVERSE", offset, code, type);
-		}
-		break;
-
-	/*
-	 * Reverse assignment to a precompiled attribute.
-	 */
-	case BC_PREVERSE:
-		{
-			int32 origin, ooffset;
-			uint32 meta;
-
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			meta = get_uint32();		/* Get the attribute meta-type */
-			type = get_short();			/* Get the reverse type */
-/* GENERIC CONFORMANCE */
-			while (get_short() != -1)
-				;
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, rt=%d\n",
-				IC - 2 * sizeof(long) - sizeof(long) - 1,
-				"BC_PREVERSE", origin, ooffset, type);
-		}
-		break;
-
-	/*
-	 * Clone of a reference
-	 */
-	case BC_CLONE:
-		fprintf(fd,"0x%lX BC_CLONE\n", IC - 1);
-		break;
-
-	/*
-	 * Exception "Void assigned to expanded"
-	 */
-	case BC_EXP_EXCEP:
-		fprintf(fd, "0x%lX BC_EXP_EXCEP\n", IC - 1);
-		break;
-
-	/*
-	 * Void reference
-	 */
-	case BC_VOID:
-		fprintf(fd, "0x%lX BC_VOID\n", IC - 1);
-		break;
-
-	/*
-	 * Check instruction.
-	 */
-	case BC_CHECK:
-		offset = get_long();	/* Jump offset in assertion is not checked */
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_CHECK", IC + offset);
-		break;
-
-	/*
-	 * Retry instruction
-	 */
-	case BC_RETRY:
-		offset = get_long();	/* Retry offset */
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_RETRY", IC + offset);
-		break;
-
-	/*
-	 * An Eiffel loop construct.
-	 */
-	case BC_LOOP:
-		offset = get_long();	/* Jump offset if assertion is not checked */
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_LOOP", IC + offset);
-		break;
-
-	/*
-	 * Assertion checking.
-	 */
-	case BC_ASSERT:
-		{
-			char *tag;
-			char *start = IC - 1;
-
-			switch (*IC++) {
-			case BC_PRE: 	string = "EX_PRE"; break;
-			case BC_PST:	string = "EX_POST"; break;
-			case BC_CHK:	string = "EX_CHECK"; break;
-			case BC_LINV:	string = "EX_LINV"; break;
-			case BC_LVAR:	string = "EX_VAR"; break;
-			case BC_INV:	string = "EX_CINV"; break;
-			default:		string = "UNKNOWN"; break;
-			}
-			switch (*IC++) {				
-			case BC_TAG:				/* Assertion tag */
-				tag = IC;
-				IC += strlen(IC) + 1;
-				break;
-			case BC_NOTAG:				/* No assertion tag */
-				tag = "";
-				break;
-			case BC_NOT_REC:			/* Do nothing */
-				tag = "TAG NOT RECORDED";
-				break;
-			default:
-				tag = "UNKNOWN";
-				break;
-			}
-			fprintf(fd, "0x%lX %s %s, \"%s\"\n", start,
-				"BC_ASSERT", string, tag);
-		}
-		break;
-
-	/*
-	 * End of precondition in first block.
-	 */
-	case BC_END_FST_PRE:
-		fprintf(fd, "0x%lX %s Offset = %d\n", IC - 1, "BC_END_FST_PRE", get_long());
-		break;
-
-	/*
-	 * End of precondition.
-	 */
-	case BC_END_PRE:
-		fprintf(fd, "0x%lX %s Offset=%d\n", IC - 1, "BC_END_PRE", get_long());
-		break;
-
-	/*
-	 * Raise precondition violation 
-	 */
-	case BC_RAISE_PREC:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_RAISE_PREC");
-		break;
-
-	/*
-	 * Go to the body of the routine. 
-	 */
-	case BC_GOTO_BODY:
-		fprintf(fd, "0x%lX %s, offset: %d\n", IC - 1, "BC_GOTO_BODY", get_long());
-		break;
-
-	/*
-	 * End of assertion.
-	 */
-	case BC_END_ASSERT:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_ASSERT");
-		break;
-
-	/*
-	 * End of loop variant.
-	 */
-	case BC_END_VARIANT:
-		code = get_short();
-		fprintf(fd, "0x%lX %s %d\n", IC - 1, "BC_END_VARIANT", code);
-		break;
-
-	/*
-	 * Initialization of the last variant recording variable.
-	 */
-	case BC_INIT_VARIANT:
-		code = get_short();
-		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(long) - 1,
-			"BC_INIT_VARIANT", code);
-		break;
-
-	/*
-	 * Debug statement.
-	 */
-	case BC_DEBUG:
-		offset = get_long();	/* Number of keys */
-		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(long) - 1,
-			"BC_DEBUG", offset);
-		if (offset > 0L) {
-			int i;
-			for (i = 0; i < offset; i++) {
-				string = IC;						/* Get a debug key */
-				IC += strlen(IC) + 1;
-				fprintf(fd, "0x%lX DEBUG \"%s\"\n", string, string);
-			}
-		}
-		offset = get_long();	/* Get the jump value */
-		fprintf(fd, "0x%lX JUMP not debug 0x%lX\n", IC - sizeof(long),
-			IC + offset);
-		break;
-
-	/*
-	 * Invariant checking after creation
-	 */
-	case BC_CREAT_INV:
-#ifdef DEBUG
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_CREAT_INV");
-#endif
-		break;
-
-	/*
-	 * Creation instruction.
-	 */
-	case BC_CREATE:
-		switch (*IC++) {
-		case BC_CTYPE:				/* Hardcoded creation type */
-			type = get_short();
-/* GENERIC CONFORMANCE */
-			while (get_short() != -1)
-				;
-
-			fprintf(fd, "0x%lX BC_CREATE dt=%d\n", IC - sizeof(short) - 2,
-				type);
-			break;
-		case BC_CARG:				/* Like argument creation type */
-			type = get_short();		/* Default creation type if void arg.  */
-/* GENERIC CONFORMANCE */
-			while (get_short() != -1)
-				;
-			code = get_short();		/* Argument position */
-			fprintf(fd, "0x%lX BC_CREATE dt=%d, arg=%d\n",
-				IC - 2 * sizeof(short) - 2,
-				type, code);
-			break;
-		case BC_CLIKE:				/* Like feature creation type */
-			code = get_short();
-			offset = get_long();	/* Get the routine id of the anchor */
-			fprintf(fd, "0x%lX BC_CREATE fid=%d\n", 
-				IC - sizeof(short) - sizeof(long) - 2, offset);
-			break;
-		case BC_PCLIKE:				/* Like (precomp) feature creation type */
-			{
-			int32 origin, ooffset;
-
-			origin = get_long();			/* Get the origin class id */
-			ooffset = get_long();			/* Get the offset in origin */
-			fprintf(fd, "0x%lX BC_CREATE origin =%ld, offset = %ld\n", 
-				IC - sizeof(long) - sizeof(long) - 2, origin, ooffset);
-			break;
-			}
-		case BC_CCUR:				/* Like Current creation type */
-			fprintf(fd, "0x%lX BC_CREATE current\n", IC - 2);
-			break;
+		return loc(num + 1);						/* Locals from 1 to ilocnum */
+
+		case IV_ARG:								/* Nth argument */
+			if (num >= iargnum->it_int32)
+				return (struct item *) 0;			/* Out of range */
+			return arg(num + 1);					/* Arguments from 1 to iargnum */
+			
+		case IV_CURRENT:							/* Current */
+			return icurrent;
+			
+		case IV_RESULT:								/* Result */
+			return iresult;
+				
 		default:
-			fprintf(fd, "0x%lX UNKNOWN\n", IC - 2);
-		}	
-		break;
-
-	/*
-	 * Once case of multi-branch instruction (when part).
-	 */
-	case BC_RANGE:
-		offset = get_long();		/* Get the jump value */
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_RANGE", IC + offset);
-		break;
-	
-	/*
-	 * End of multi-branch instruction.
-	 */
-	case BC_INSPECT:
-		fprintf(fd, "0x%lX BC_INSPECT\n", IC - 1);
-		break;
-
-	/*
-	 * Unmatched inspect value.
-	 */
-	case BC_INSPECT_EXCEP:
-		fprintf(fd, "0x%lX BC_INSPECT_EXCEP\n", IC - 1);
-		break;
-
-	/*
-	 * Call on a simple type.
-	 */
-	case BC_METAMORPHOSE:
-		fprintf(fd, "0x%lX %s\n", IC - 1,
-			"BC_METAMORPHOSE");
-		break;
-
-	/* 
-	 * Creation of a manifest array
-	 */
-	case BC_ARRAY:
-		{
-			short stype, dtype, feat_id;
-			long nbr_of_items;
-			short is_tuple;
-
-			stype = get_short();		/* Get the static type*/
-			dtype = get_short();		/* Get the static type*/
-
-/*GENERIC CONFORMANCE */
-			while (get_short () != -1)
-				;
-
-			feat_id = get_short();		/* Get the feature id*/
-			nbr_of_items = get_long();	/* Get the nbr of items in array*/
-			is_tuple = get_short(); /* Is it actually a TUPLE?*/
-			fprintf(fd, "0x%lX %s, st=%d dt=%d fid=%d nbr=%d\n",
-				 	IC - (2*sizeof(short)) - sizeof(long) - 1, 
-					"BC_ARRAY", stype, dtype, feat_id, nbr_of_items);
+			eif_panic(MTC "illegal value request");
 		}
-		break;
+	} else {
+		/* if the feature is frozen, we look in the c_opstack
+		 * unlike with melted feature, here we retrieve the address
+		 * of the value of the result/arg/local. So we have to transform
+		 * the c_item into an item --Arnaud
+		 */
+		switch (code) {
+		case IV_LOCAL:									/* Nth local */
+			if (num > clocnum) {
+				break; 									/* Out of range */
+			}
+			else if (num == clocnum) {					/* Off by one */
+				if (cresult->type != SK_VOID) {			/* If there is a result */
+					result_item = cresult;				/* Then return it */
+					break;
+				} else {
+					break;								/* Else signal out of range */
+				}
+			}
+			result_item = cloc(num + 1);				/* Locals from 1 to ilocnum */
+			break;
 
-	/* 
-	 * Creation of a manifest array (when ARRAY is precompiled)
-	 */
-	case BC_PARRAY:
-		{
-			int32 origin, ooffset;
-			short dtype;
-			long nbr_of_items;
-			short is_tuple;
+		case IV_ARG:									/* Nth argument */
+			if (num >= cargnum) {
+				break; 									/* Out of range */
+			}
+			result_item = carg(num + 1);				/* Arguments from 1 to iargnum */
+			break;
 
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			dtype = get_short();		/* Get the dynamic type*/
+		case IV_CURRENT:								/* Current */
+			result_item = ccurrent;
+			break;
 
-/*GENERIC CONFORMANCE */
-			while (get_short () != -1)
-				;
-			nbr_of_items = get_long();	/* Get the nbr of items in array*/
-			is_tuple = get_short(); /* Is it actually a TUPLE?*/
-			fprintf(fd, "0x%lX %s, origin=%ld dt=%d offset=%ld nbr=%d\n",
-				 	IC - (sizeof(short)) - (3*sizeof(long)) - 1, 
-					"BC_PARRAY", origin, dtype, ooffset, nbr_of_items);
+		case IV_RESULT:									/* Result */
+			result_item = cresult;
+			break;
+
+		default:
+			eif_panic("illegal value request");
+			/* NOT REACHED */
+			break;
 		}
-		break;
-
-	/* 
-	 * Retrieve Old expression from local register
-	 */
-	case BC_RETRIEVE_OLD:
-		fprintf(fd, "0x%lX %s local #: %d\n", IC - 1, "BC_RETRIEVE_OLD", get_short());
-		break;
-	
-	/* 
-	 * Save Old expression into local register
-	 */
-	case BC_OLD:
-		fprintf(fd, "0x%lX %s local #: %d\n", IC - 1, "BC_OLD", get_short());
-		break;
-
-	/*
-	 * Beginning of old evaluation
-	 */
-	case BC_START_EVAL_OLD:
-		fprintf(fd, "0x%lX %s offset: %d\n", IC - 1, "BC_START_EVAL_OLD", get_long());
-		break;
 		
-	/*
-	 * End of old evaluation
-	 */
-	case BC_END_EVAL_OLD:
-		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_EVAL_OLD");
-		break;
-	
-	/* 
-	 * Add strip fid 
-	 */
-	case BC_ADD_STRIP:
-		string = IC;
-		IC += strlen(IC) + 1;
-		fprintf(fd, "0x%lX %s \"%s\"\n", string - 1, "BC_ADD_STRIP", string);
-		break;
-	
-	/* 
-	 * End strip 
-	 */
-	case BC_END_STRIP:
-		{
-			short s_type, d_type;
-			long nbr;
-			s_type = get_short();
-			d_type = get_short();
-			nbr = get_long();
-			fprintf(fd, "0x%lX %s, nbr of items=%d, stype=%d, dtype=%d\n", 
-				IC - sizeof(long) - (2*sizeof(short)) - 1, 
-				"BC_END_STRIP", nbr, s_type, d_type);
-			break;
+		/* transform the 'c_item' into an regular item (like the one used with melted features) */
+		if (result_item != (struct item *)0) {
+			switch (result_item->type & SK_HEAD) {
+			case SK_BOOL:
+			case SK_CHAR: result_item->it_char = *((EIF_CHARACTER *)(result_item->it_addr)); break;
+			case SK_WCHAR: result_item->it_wchar = *((EIF_WIDE_CHAR *)(result_item->it_addr)); break;
+			case SK_INT8: result_item->it_int8 = *((EIF_INTEGER_8 *)(result_item->it_addr)); break;
+			case SK_INT16: result_item->it_int16 = *((EIF_INTEGER_16 *)(result_item->it_addr)); break;
+			case SK_INT32: result_item->it_int32 = *((EIF_INTEGER_32 *)(result_item->it_addr)); break;
+			case SK_INT64: result_item->it_int64 = *((EIF_INTEGER_64 *)(result_item->it_addr)); break;
+			case SK_FLOAT: result_item->it_float = *((EIF_REAL *)(result_item->it_addr)); break;
+			case SK_DOUBLE: result_item->it_double = *((EIF_DOUBLE *)(result_item->it_addr)); break;
+			case SK_POINTER: result_item->it_ptr = *((char **)(result_item->it_addr)); break;
+			case SK_BIT: result_item->it_bit = *((char **)(result_item->it_addr)); break;
+			case SK_EXP:
+			case SK_REF:
+				result_item->it_ref = *((char **)(result_item->it_addr)); break;
+			case SK_VOID:
+				/* nothing to do*/
+				break;
+			}
 		}
-	
-	/*
-	 * Calling an external function.
-	 */
-	case BC_EXTERN:
-		offset = get_long();				/* Get the feature id */
-		code = get_short();					/* Get the static type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - 1,
-			"BC_EXTERN", offset, code);
-		break;
-
-	/*
-	 * Calling an Eiffel feature.
-	 */
-	case BC_FEATURE:
-		offset = get_long();				/* Get the feature id */
-		code = get_short();					/* Get the static type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - 1,
-			"BC_FEATURE", offset, code);
-		break;
-
-	/*
-	 * Calling a precompiled external function.
-	 */
-	case BC_PEXTERN:
-		{
-			int32 origin, offset;
-
-			origin = get_long();			/* Get the origin class id */
-			offset = get_long();			/* Get the offset in the origin */
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld\n",
-				IC - sizeof(long) - sizeof(long) - 1,
-				"BC_PEXTERN", origin, offset);
-			break;
-		}
-
-	/*
-	 * Calling a precompiled Eiffel feature.
-	 */
-	case BC_PFEATURE:
-		{
-			int32 origin, offset;
-
-			origin = get_long();			/* Get the origin class id */
-			offset = get_long();			/* Get the offset in the origin */
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld\n",
-				IC - sizeof(long) - sizeof(long) - 1,
-				"BC_PFEATURE", origin, offset);
-			break;
-		}
-
-	/*
-	 * Calling an external in a nested expression (invariant check needed).
-	 */
-	case BC_EXTERN_INV:
-		string = IC;				/* Get the feature name */
-		IC += strlen(IC) + 1;
-		offset = get_long();			/* Get the feature id */
-		code = get_short();				/* Get the static type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", string - 1,
-			"BC_EXTERN_INV", offset, code, string);
-		break;
-
-	/*
-	 * Calling an Eiffel feature in a nested expression (invariant check).
-	 */
-	case BC_FEATURE_INV:
-		string = IC;				/* Get the feature name */
-		IC += strlen(IC) + 1;
-		offset = get_long();			/* Get the feature id */
-		code = get_short();				/* Get the static type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", string - 1,
-			"BC_FEATURE_INV", offset, code, string);
-		break;
-
-	/*
-	 * Calling a precompiled external in a nested expression (invariant check needed).
-	 */
-	case BC_PEXTERN_INV:
-		{
-			int32 origin, offset;
-
-			string = IC;				/* Get the feature name */
-			IC += strlen(IC) + 1;
-			origin = get_long();			/* Get the origin class id */
-			offset = get_long();			/* Get the offset in the origin */
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, \"%s\"\n", string - 1,
-				"BC_PEXTERN_INV", origin, offset, string);
-			break;
-		}
-	/*
-	 * Calling a precompiled Eiffel feature in a nested expression
-	 * (invariant check).
-	 */
-	case BC_PFEATURE_INV:
-		{
-			int32 origin, offset;
-
-			string = IC;				/* Get the feature name */
-			IC += strlen(IC) + 1;
-			origin = get_long();			/* Get the origin class id */
-			offset = get_long();			/* Get the offset in the origin */
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, \"%s\"\n", string - 1,
-				"BC_PFEATURE_INV", origin, offset, string);
-			break;
-		}
-
-	/*
-	 * Access to an attribute.
-	 */
-	case BC_ATTRIBUTE:
-	{
-		uint32 type;
-
-		offset = get_long();				/* Get feature id */
-		code = get_short();					/* Get static type */
-		type = get_uint32();				/* Get attribute meta-type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d, meta-type=0x%lx\n",
-			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
-			"BC_ATTRIBUTE", offset, code, type);
-		break;
 	}
+	return result_item;
 
-	/*
-	 * Access to a precompiled attribute.
-	 */
-	case BC_PATTRIBUTE:
-	{
-		int32 origin, ooffset;
-		uint32 type;
-
-		origin = get_long();		/* Get the origin class id */
-		ooffset = get_long();		/* Get the offset in origin */
-		type = get_uint32();				/* Get attribute meta-type */
-		fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, meta-type=0x%lx\n",
-			IC - sizeof(long) - sizeof(long) - sizeof(uint32) - 1,
-			"BC_PATTRIBUTE", origin, ooffset, type);
-		break;
-	}
-
-	/*
-	 * Accessing an attribute in a nested expression (need invariant check).
-	 */
-	case BC_ATTRIBUTE_INV:
-		string = IC;						/* Get the attribute name */
-		IC += strlen(IC) + 1;			
-		offset = get_long();				/* Get feature id */
-		code = get_short();					/* Get static type */
-		type = get_uint32();				/* Get attribute meta-type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d, \"%s\"\n", 
-			string - sizeof(long) - sizeof(short) - sizeof(uint32) - 1,
-			"BC_ATTRIBUTE_INV", offset, code, string);
-		break;
-			
-	/*
-	 * Accessing a precompiled attribute in a nested expression
-	 * (need invariant check).
-	 */
-	case BC_PATTRIBUTE_INV:
-		{
-			int32 origin, ooffset;
-
-			string = IC;						/* Get the attribute name */
-			IC += strlen(IC) + 1;			
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			type = get_uint32();				/* Get attribute meta-type */
-			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, \"%s\"\n", 
-				string - sizeof(long) - sizeof(long) - sizeof(uint32) - 1,
-				"BC_PATTRIBUTE_INV", origin, ooffset, string);
-			break;
-		}
-			
-	/*
-	 * Rotate the operational stack.
-	 */
-	case BC_ROTATE:
-		code = get_short();
-		fprintf(fd, "0x%lX BC_ROTATE %d\n",
-			IC - sizeof(short) - 1, code);
-		break;
-	
-	/*
-	 * Hector protection of an address
-	 */
-	case BC_PROTECT:
-		fprintf(fd, "0x%lX BC_PROTECT\n", IC - 1);
-		break;
-
-	/* 
-	 * Hector address release
-	 */
-	case BC_RELEASE:
-		code = get_short();
-		fprintf(fd, "0x%lX BC_RELEASE %d\n", IC - sizeof(short) - 1, code);
-		break;
-
-	/*
-	 * Access to Current.
-	 */
-	case BC_CURRENT:
-		fprintf(fd, "0x%lX BC_CURRENT\n", IC - 1);
-		break;
-	
-	/*
-	 * Character constant.
-	 */
-	case BC_CHAR:
-		fprintf(fd, "0x%lX BC_CHAR '%c'\n", IC - 1, *IC);
-		IC++;
-		break;
-
-	/*
-	 * Boolean constant.
-	 */
-	case BC_BOOL:
-		fprintf(fd, "0x%lX BC_BOOL %s\n", IC - 1, *IC ? "true" : "false");
-		IC++;
-		break;
-
-	/*
-	 * Integer constant.
-	 */
-	case BC_INT:
-		offset = get_long();
-		fprintf(fd, "0x%lX BC_INT %ld\n", IC - sizeof(long) - 1, offset);
-		break;
-
-	/*
-	 * Real constant.
-	 */
-	case BC_FLOAT:
-		d = get_double();
-		fprintf(fd, "0x%lX BC_FLOAT %f\n", IC - sizeof(double) - 1, (float) d);
-		break;
-
-	/*
-	 * Double constant.
-	 */
-	case BC_DOUBLE:
-		d = get_double();
-		fprintf(fd, "0x%lX BC_DOUBLE %f\n", IC - sizeof(double) - 1, d);
-		break;
-
-	/*
-	 * Access to Result.
-	 */
-	case BC_RESULT:
-		fprintf(fd, "0x%lX BC_RESULT\n", IC - 1);
-		break;
-		
-	/*
-	 * Access to a local variable.
-	 */
-	case BC_LOCAL:
-		code = get_short();				/* Get number (from 1 to locnum) */
-		fprintf(fd, "0x%lX %s #%d\n", IC - sizeof(short) - 1,
-			"BC_LOCAL", code);
-		break;
-
-	/*
-	 * Access to an argument.
-	 */
-	case BC_ARG:
-		code = get_short();				/* Get number (from 1 to argnum) */
-		fprintf(fd, "0x%lX %s #%d\n", IC - sizeof(short) - 1,
-			"BC_ARG", code);
-		break;
-
-	/*
-	 * And then operator (left value).
-	 */
-	case BC_AND_THEN:
-		offset = get_long();
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_AND_THEN", IC + offset);
-		break;
-
-	/*
-	 * Or else operator (left value).
-	 */
-	case BC_OR_ELSE:
-		offset = get_long();
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_OR_ELSE", IC + offset);
-		break;
-
-	/*
-	 * Monadic operators.
-	 */
-	case BC_UPLUS:			/* Unary plus */
-		fprintf(fd, "0x%lX BC_UPLUS\n", IC - 1);
-		break;
-	case BC_UMINUS:			/* Unary minus */
-		fprintf(fd, "0x%lX BC_UMINUS\n", IC - 1);
-		break;
-	case BC_NOT:			/* Unary negation */
-		fprintf(fd, "0x%lX BC_NOT\n", IC - 1);
-		break;
-
-	/*
-	 * Diadic operators.
-	 */
-	case BC_LT:				/* Lesser than op */
-		fprintf(fd, "0x%lX BC_LT\n", IC - 1);
-		break;
-	case BC_GT:				/* Greater than op */
-		fprintf(fd, "0x%lX BC_GT\n", IC - 1);
-		break;
-	case BC_MINUS:			/* Minus op */
-		fprintf(fd, "0x%lX BC_MINUS\n", IC - 1);
-		break;
-	case BC_XOR:			/* Xor op */
-		fprintf(fd, "0x%lX BC_XOR\n", IC - 1);
-		break;
-	case BC_GE:				/* Greater or equal op */
-		fprintf(fd, "0x%lX BC_GE\n", IC - 1);
-		break;
-	case BC_EQ:				/* Equality */
-		fprintf(fd, "0x%lX BC_EQ\n", IC - 1);
-		break;
-	case BC_NE:				/* Not equal op */
-		fprintf(fd, "0x%lX BC_NE\n", IC - 1);
-		break;
-	case BC_STAR:			/* Multiplication op */
-		fprintf(fd, "0x%lX BC_STAR\n", IC - 1);
-		break;
-	case BC_POWER:			/* Power op */
-		fprintf(fd, "0x%lX BC_POWER\n", IC - 1);
-		break;
-	case BC_LE:				/* Less or equal op */
-		fprintf(fd, "0x%lX BC_LE\n", IC - 1);
-		break;
-	case BC_DIV:			/* Div op */
-		fprintf(fd, "0x%lX BC_DIV\n", IC - 1);
-		break;
-	case BC_AND:			/* Logical conjuntion op */
-		fprintf(fd, "0x%lX BC_AND\n", IC - 1);
-		break;
-	case BC_SLASH:			/* Real division op */
-		fprintf(fd, "0x%lX BC_SLASH\n", IC - 1);
-		break;
-	case BC_MOD:			/* Integer remainder division op */
-		fprintf(fd, "0x%lX BC_MOD\n", IC - 1);
-		break;
-	case BC_PLUS:			/* Addition op */
-		fprintf(fd, "0x%lX BC_PLUS\n", IC - 1);
-		break;
-	case BC_OR:				/* Logocal disjunction op */
-		fprintf(fd, "0x%lX BC_OR\n", IC - 1);
-		break;
-
-	/*
-	 * Expanded equality
- 	 */
-	case BC_BIT_STD_EQUAL:
-		fprintf(fd, "0x%lX BC_BIT_STD_EQUAL\n", IC - 1);
-		break;
-
-	/*
-	 * Expanded equality
- 	 */
-	case BC_STANDARD_EQUAL:
-		fprintf(fd, "0x%lX BC_STANDARD_EQUAL\n", IC - 1);
-		break;
-
-	/*
-	 * True comparison
-	 */
-	case BC_TRUE_COMPAR:
-		fprintf(fd, "0x%lx BC_TRUE_COMPAR\n", IC - 1);
-		break;
-
-	/*
-	 * False comparison
-	 */
-	case BC_FALSE_COMPAR:
-		fprintf(fd, "0x%lX BC_FALSE_COMPAR\n", IC - 1);
-		break;
-
-	/*
-	 * Address operator.
-	 */
-	case BC_ADDR:
-		offset = get_long();			/* Get the feature id */
-		code = get_short();				/* Get the static type */
-		fprintf(fd, "0x%lX %s fid=%d, st=%d\n",
-			IC - sizeof(short) - sizeof(long) - 1,
-			"BC_ADDR", offset, code);
-		break;
-
-	/*
-	 * Reserved space (for object address)
-	 */
-	case BC_RESERVE:
-		fprintf(fd, "0x%lX BC_RESERVE\n", IC - 1);
-		break;
-
-	/*
-	 * Object address operator.
-	 */
-	case BC_OBJECT_ADDR:
-		{
-		uint32 nb_uint32 = get_uint32();
-		fprintf(fd, "0x%lX BC_OBJECT_ADDR offset=%d\n", IC - sizeof(uint32) - 1, nb_uint32);
-		}
-		break;
-
-	/*
-	 * Object expression address operator.
-	 */
-	case BC_OBJECT_EXPR_ADDR:
-		{
-		uint32 ptr_pos, value_pos;
-		ptr_pos = get_uint32();
-		value_pos = get_uint32();
-		fprintf(fd, "0x%lX BC_OBJECT_EXPR_ADDR ptr:%d value: %d\n",
-					IC - 2 * sizeof(uint32) - 1, ptr_pos, value_pos);
-		}
-		break;
-
-	/*
-	 * Pop.
-	 */
-	case BC_POP:
-		{
-		uint32 nb_uint32 = get_uint32();
-		fprintf(fd, "0x%lX BC_POP %d\n", IC - sizeof(uint32) - 1, nb_uint32);
-		}
-		break;
-
-	/*
-	 * Manifest string.
-	 */
-	case BC_STRING:
-		string = IC;
-		IC += strlen(IC) + 1;
-		fprintf(fd, "0x%lX BC_STRING \"%s\"\n", string - 1, string);
-		break;
-
-	/*
-	 * Manifest bit
-	 */
-	case BC_BIT:
-		{
-			char *str;
-			int nb_uint32;
-
-			nb_uint32 = get_uint32() + 1;          /* Read bit count */
-			/*str = b_out(IC) - bug here*/
-			fprintf(fd, "BIT %d\n", nb_uint32 - 1);
-			/*xfree(str);*/
-			IC += nb_uint32*sizeof(uint32);
-		}
-		break;
-			
-	/*
-	 * Jump if top of stack is false (value is poped).
-	 */
-	case BC_JMP_F:				/* Jump if false */
-		offset = get_long();	/* Get jump offset */
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_JMP_F", IC + offset);
-		break;
-
-	/*
-	 * Jump if top of stack is true (value is poped).
-	 */
-	case BC_JMP_T:				/* Jump if false */
-		offset = get_long();	/* Get jump offset */
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_JMP_T", IC + offset);
-		break;
-
-	/*
-	 * Unconditional jump.
-	 */
-	case BC_JMP:
-		offset = get_long();
-		fprintf(fd, "0x%lX %s 0x%lX\n", IC - sizeof(long) - 1,
-			"BC_JMP", IC + offset);
-		break;
-
-	/*
-	 * Next debugging instruction.
-	 */
-	case BC_NEXT:
-		fprintf(fd, "0x%lX BC_NEXT\n", IC - 1);
-		break;
-
-	/*
-	 * Active breakpoint.
-	 */
-	case BC_BREAK:
-		fprintf(fd, "0x%lX BC_BREAK\n", IC - 1);
-		break;
-
-	/*
-	 * End of current Eiffel routine.
-	 */
-	case BC_NULL:
-		fprintf(fd, "0x%lX BC_NULL\n", IC - 1);
-		return;
-
-	/*
-	 * End of current Eiffel invariant.
-	 */
-	case BC_INV_NULL:
-		fprintf(fd, "0x%lX BC_INV_NULL\n", IC - 1);
-		return;
-
-	/*
-	 * Cast operator
-	 */
-
-	case BC_CAST_LONG:
-		fprintf(fd, "0x%lX BC_CAST_LONG\n", IC - 1);
-		break;
-
-	case BC_CAST_FLOAT:
-		fprintf(fd, "0x%lX BC_CAST_FLOAT\n", IC - 1);
-		break;
-
-	case BC_CAST_DOUBLE:
-		fprintf(fd, "0x%lX BC_CAST_DOUBLE\n", IC - 1);
-		break;
-
-	case BC_REF_TO_PTR:
-		fprintf(fd, "0x%lX BC_REF_TO_PTR\n", IC - 1);
-		break;
-
-#ifdef CONCURRENT_EIFFEL
-	/* The following instructions started with BC_SEP are used by
-	 * Concurrent Eiffel.
-	*/
-
-	/* the current has called a separate feature in checking its
-	 * pre-condition.
-	*/
-	case BC_SEP_SET:
-		fprintf(fd, "0x%lX BC_SEP_SET\n", IC - 1);
-		break;
-	
-	/* clear the flag indicating whether the current separate feature
-	 * has called a separate feature call in its pre-condition 
-	 * checking.
-	*/
-	case BC_SEP_UNSET:
-		fprintf(fd, "0x%lX BC_SEP_UNSET\n", IC - 1);
-		break;
-
-	/* reserve separate parameters of the current feature which are
-	 * used in at least one separate feature call.
-	*/
-	case BC_SEP_RESERVE: 
-		{
-			short nb_of_sep_paras;
-			short tmp_tyc;
-			nb_of_sep_paras = get_short();
-			fprintf(fd, "0x%lX BC_SEP_RESERVE %d separate parameters\n", IC - sizeof(short) - 1, nb_of_sep_paras);
-			fprintf(fd, "	");
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				fprintf(fd, "  %d", get_short() + 1);
-			}
-			fprintf(fd, "\n");
-		}	
-		break;
-
-	/* free separate parameters of the current feature which are
-	 * used in at least one  separate feature call.
-	*/
-	case BC_SEP_FREE: 
-		{
-			short nb_of_sep_paras;
-			short tmp_tyc;
-			nb_of_sep_paras = get_short();
-			fprintf(fd, "0x%lX BC_SEP_FREE with %d parameters\n", IC - sizeof(short) - 1, nb_of_sep_paras);
-			fprintf(fd, "	");
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				fprintf(fd, "  %d", get_short() + 1);
-			}
-			fprintf(fd, "\n");
-		}	
-		break;
-
-	/* change the local object stored in the top of the operation stack into 
-	 * a separate object 
-	*/
-	case BC_SEP_TO_SEP:
-		fprintf(fd, "0x%lX BC_SEP_TO_SEP\n", IC - 1);
-		break;
-
-	/* to perform a separate external feature call */
-	case BC_SEP_EXTERN:
-	case BC_SEP_PEXTERN:
-	/* to perform a separate feature call */
-	case BC_SEP_FEATURE:
-	case BC_SEP_PFEATURE:
-		{
-			short nb_of_paras;
-			short tyc_tmp;
-			uint32 ret_type;
-			char need_ack;
-			char *feature_name;
-			char *class_name;
-			char tyc_command = *(IC-1);
-
-			int32 origin;
-
-			fprintf(fd, "0x%lX ", IC - 1);
-
-			nb_of_paras = get_short();	/* number of parameters */
-			class_name = IC;			/* get the class name   */
-			IC += strlen(IC) + 1;
-			feature_name = IC;			/* get the feature name */
-			IC += strlen(IC) + 1;
-			ret_type = get_uint32();	/* Get the feature's return type */
-			need_ack = *IC++;			/* if the proc needs acknowledgement */
-
-			if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-				offset = get_long(); 		/* Get the feature id */		
-				code = get_short();   		/* Get the static type */
-			} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-				origin = get_long();		/* Get the origin class id */
-				offset = get_long(); 		/* Get the offset in origin */
-			}
-
-			if (tyc_command == BC_SEP_FEATURE || tyc_command == BC_SEP_EXTERN) {
-				if (tyc_command == BC_SEP_FEATURE)
-					fprintf(fd, " BC_SEP_FEATURE paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, offset, code);
-				else 
-					fprintf(fd, " BC_SEP_EXTERN paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, offset, code);
-			} else if (tyc_command == BC_SEP_PFEATURE || tyc_command == BC_SEP_PEXTERN) {
-				if (tyc_command == BC_SEP_PFEATURE)
-					fprintf(fd, " BC_SEP_PFEATURE paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, origin, offset);
-				else
-					fprintf(fd, " BC_SEP_PEXTERN paras#=%d, class=%s, feat=%s, ret_type=%d, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type & SK_HEAD, need_ack, origin, offset);
-			}
-		}	
-		break;
-
-
-	/* to perform a separate external feature call */
-	case BC_SEP_EXTERN_INV:
-	case BC_SEP_PEXTERN_INV:
-	/* to perform a separate feature call */
-	case BC_SEP_FEATURE_INV:
-	case BC_SEP_PFEATURE_INV:
-		{
-			short nb_of_paras;
-			short tyc_tmp;
-			uint32 ret_type;
-			char need_ack;
-			char *feature_name;
-			char *class_name;
-			char tyc_command = *(IC-1);
-
-			int32 origin;
-
-			fprintf(fd, "0x%lX ", IC - 1);
-
-			nb_of_paras = get_short();	/* number of parameters */
-			class_name = IC;			/* get the class name   */
-			IC += strlen(IC) + 1;
-			feature_name = IC;			/* get the feature name */
-			IC += strlen(IC) + 1;
-			ret_type = get_uint32();	/* Get the feature's return type */
-			need_ack = *IC++;			/* if the proc needs acknowledgement */
-
-			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-				offset = get_long(); 		/* Get the feature id */		
-				code = get_short();   		/* Get the static type */
-			} else if (tyc_command == BC_SEP_PFEATURE_INV|| tyc_command == BC_SEP_PEXTERN_INV) {
-				origin = get_long();		/* Get the origin class id */
-				offset = get_long(); 		/* Get the offset in origin */
-			}
-
-			if (tyc_command == BC_SEP_FEATURE_INV || tyc_command == BC_SEP_EXTERN_INV) {
-				if (tyc_command == BC_SEP_FEATURE_INV)
-					fprintf(fd, " BC_SEP_FEATURE_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, offset, code);
-				else
-					fprintf(fd, " BC_SEP_EXTERN_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	offset=%ld, code=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, offset, code);
-			} else if (tyc_command == BC_SEP_PFEATURE_INV || tyc_command == BC_SEP_PEXTERN_INV) {
-				if (tyc_command == BC_SEP_PFEATURE_INV)
-					fprintf(fd, " BC_SEP_PFEATURE_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, origin, offset);
-				else
-					fprintf(fd, " BC_SEP_PEXTERN_INV paras#=%d, class=%s, feat=%s, ret_type=0x%lx, need_ack=%d\n	origin=%ld, offset=%ld\n", nb_of_paras, class_name, feature_name, ret_type, need_ack, origin, offset);
-			}
-		}	
-		break;
-
-	/* to perform a separate attribute call */
-	case BC_SEP_ATTRIBUTE_INV:
-	case BC_SEP_PATTRIBUTE_INV:
-		{
-			uint32 ret_type;
-			char *feature_name;
-			char *class_name;
-			char tyc_command = *(IC-1);
-
-			int32 origin, ooffset;
-
-			fprintf(fd, "0x%lX ", IC - 1);
-
-			class_name = IC;			/* get the class name   */
-			IC += strlen(IC) + 1;
-			feature_name = IC;			/* get the feature name */
-			IC += strlen(IC) + 1;
-
-			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
-				offset = get_long();  			/* Get feature id */ 
-				code = get_short();        		/* Get static type */
-			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
-				origin = get_long();   			/* Get the origin class id */
-				ooffset = get_long();			/* Get the offset in origin */
-			}
-			ret_type = get_uint32();		/* Get attribute meta-type */
-			
-			if (tyc_command == BC_SEP_ATTRIBUTE_INV) {
-				fprintf(fd, " BC_SEP_ATTRIBUTE_INV  class=%s, feat=%s, ret_type=0x%lx\n	offset=%ld, code=%ld\n", class_name, feature_name, ret_type, offset, code);
-			} else if (tyc_command == BC_SEP_PATTRIBUTE_INV) {
-				fprintf(fd, " BC_SEP_PATTRIBUTE_INV class=%s, feat=%s, ret_type=0x%lx\n	origin=%ld, offset=%ld\n", class_name, feature_name, ret_type, origin, offset);
-			}
-		}	
-		break;
-
-	/*
-	 * process the failure of precondition checking with separate feature call(s)
-	 */
-	case BC_SEP_RAISE_PREC:
-		fprintf(fd, "0x%lX ", IC - 1);
-		{
-			short nb_of_sep_paras;
-			short sep_para_index[constant_max_number_of_sep_paras];
-			short tmp_tyc;
-			char reserve_cmd = *IC++;
-			fprintf(fd, "BC_SEP_RAISE_PREC\n");
-			nb_of_sep_paras = get_short();
-			if (reserve_cmd != BC_SEP_RESERVE) {
-				fprintf(fd, "expect BC_SEP_RESERVE\n");
-			}
-			else {
-				fprintf(fd, "	BC_SEP_RESERVE with %d parameters\n	<", nb_of_sep_paras);
-			}
-			for (tmp_tyc=0; tmp_tyc < nb_of_sep_paras; tmp_tyc++) {
-				sep_para_index[tmp_tyc] = get_short() + 1;
-				fprintf(fd, " %d ", sep_para_index[tmp_tyc]);
-			}
-			offset = get_long(); 		/* get the offset to the point to recheck
-										 * the pre-condition.
-										*/
-			fprintf(fd, " > offset=%d\n", offset);
-		}
-		break;
-
-	/* create separate object */
-	case BC_SEP_CREATE:
-		{
-			char *class_name, *feature_name;
-			class_name = IC;
-			IC += strlen(IC) + 1;
-			feature_name = IC;
-			IC += strlen(IC) + 1;
-			fprintf(fd, "0x%lX BC_SEP_CREATE on %s with procedure <%s>\n", IC-1, class_name, feature_name);
-			break;
-		}
-
-	/* finishing creating separate object */
-	case BC_SEP_CREATE_END:
-		fprintf(fd, "0x%lX BC_SEP_CREATE_END\n", IC - 1);
-		break;
-#endif
-
-
-	default:
-		fprintf(fd, "0x%lX UNKNOWN (opcode = %d)\n", IC - 1, code);
-	}
-	}							/* Remember: indentation was wrong--RAM */
-	/* NOTREACHED */
+	/* NOT REACHED */
 }
-#endif
-

@@ -13,16 +13,16 @@
 #ifndef _except_h
 #define _except_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "eif_globals.h"
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include <setjmp.h>
 #include <errno.h>    /* needed in error.c, except.c, retrieve.c */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Macros for easy access */
 #define ex_jbuf		exu.exur.exur_jbuf
@@ -105,6 +105,7 @@ extern "C" {
 #define EN_FATAL	25			/* Eiffel run-time fatal error */
 #define EN_DOL		26			/* $ applied to melted feature */
 #define EN_ISE_IO	27			/* I/O error raised by the ISE Eiffel runtime */
+#define EN_COM		28			/* COM error raised by EiffelCOM runtime */
 
 #define EN_OSTK		97			/* Run-time exception catching */
 #define EN_ILVL		98			/* In level: pseudo-type for execution trace */
@@ -133,13 +134,14 @@ RT_LNK void exclear(EIF_CONTEXT_NOARG);				/* Clears the exception stack */
 RT_LNK void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
 RT_LNK void ereturn(EIF_CONTEXT_NOARG);			/* Return to lastly recorded rescue entry */
 RT_LNK struct ex_vect *exget(register2 struct xstack *stk);	/* Get a new vector on stack */
-RT_LNK void excatch(EIF_CONTEXT char *jmp);			/* Set exception catcher from C to interpret */
+RT_LNK void excatch(jmp_buf *jmp);			/* Set exception catcher from C to interpret */
 RT_LNK void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
 
 #ifndef WORKBENCH
 RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
-RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object);	/* Set execution stack on routine entrance */
+RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object); /* Set execution stack on routine entrance */
+RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, int bid); /* Set execution stack on routine entrance */
 RT_LNK struct ex_vect *exnext(EIF_CONTEXT_NOARG);	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */

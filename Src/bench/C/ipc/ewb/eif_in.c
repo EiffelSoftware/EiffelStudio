@@ -2,6 +2,7 @@
 #include "eif_io.h"
 #include "eif_in.h"
 #include "ewb.h"
+#include <string.h>
 
 #ifdef EIF_WIN32
 extern STREAM *sp;
@@ -42,7 +43,7 @@ void rqst_handler_to_c(EIF_OBJ eif_rqst_hdlr, EIF_INTEGER rqst_type, EIF_PROC ei
 }
 
 
-EIF_OBJ request_handler (void)
+EIF_REFERENCE request_handler (void)
 {
 	/* Dispatch request from ised to
 	 * proper RQST_HANDLER Eiffel object
@@ -63,7 +64,7 @@ EIF_OBJ request_handler (void)
 }
 
 
-EIF_OBJ request_dispatch (Request rqst)
+EIF_REFERENCE request_dispatch (Request rqst)
 {
 	char *eif_string;
 

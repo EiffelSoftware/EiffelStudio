@@ -14,10 +14,6 @@
 #ifndef _eif_store_h_
 #define _eif_store_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 
 #ifndef NULL
@@ -28,19 +24,26 @@ extern "C" {
 #include "eif_malloc.h"				/* For macros HEADER */
 #include "eif_garcol.h"				/* For flags manipulation */
 
-/* Different kinds of storage */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#define BASIC_STORE_3_1 '\0'
-#define BASIC_STORE_3_2 '\02'
-#define BASIC_STORE_4_0 '\06'
-#define GENERAL_STORE_3_1 '\01'
-#define GENERAL_STORE_3_2 '\03'
-#define GENERAL_STORE_3_3 '\05'
-#define GENERAL_STORE_4_0 '\07'
-#define INDEPENDENT_STORE_3_2 '\04'
-#define INDEPENDENT_STORE_4_0 '\10' /* Octal values */
-#define INDEPENDENT_STORE_4_3 '\11' /* Octal values */
-#define INDEPENDENT_STORE_4_4 '\12' /* Octal values */
+/* Different kinds of storage */
+#define BASIC_STORE_3_1			0x00
+#define BASIC_STORE_3_2			0x02
+#define BASIC_STORE_4_0			0x06
+#define GENERAL_STORE_3_1		0x01
+#define GENERAL_STORE_3_2		0x03
+#define GENERAL_STORE_3_3		0x05
+#define GENERAL_STORE_4_0		0x07
+#define INDEPENDENT_STORE_3_2	0x04
+#define INDEPENDENT_STORE_4_0	0x08
+#define INDEPENDENT_STORE_4_3	0x09
+#define INDEPENDENT_STORE_4_4	0x0A
+#define INDEPENDENT_STORE_5_0	0x0B
+
+/* Setting of `eif_is_new_independent_format' */
+#define eif_set_new_independent_format(v)	eif_is_new_independent_format = (EIF_BOOLEAN) (v)
 
 extern char rt_kind_version;
 
@@ -78,8 +81,7 @@ extern void rt_init_store(
 	void (*flush_buffer_function) (void),
 	void (*st_write_function) (char *),
 	void (*make_header_function) (void),
-	int accounting_type,
-	int buf_size);
+	int accounting_type);
 extern void rt_reset_store(void);
 
 extern void make_header(void);				/* Make header */
@@ -109,6 +111,11 @@ RT_LNK long stream_eestore(char **stream, long size, char *object, EIF_INTEGER *
 RT_LNK long stream_sstore (char **stream, long size, char *object, EIF_INTEGER *);
 
 RT_LNK char **stream_malloc (int stream_size);
+RT_LNK void stream_free (char **stream);
+
+RT_LNK EIF_BOOLEAN eif_is_new_independent_format;	/* Do we use the 4.5 independent
+													   storable mechanism? */
+
 #ifdef __cplusplus
 }
 #endif

@@ -16,13 +16,12 @@
 /*#define MEMCHK */
 /*#define MEM_STAT */
 
-#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_project.h"
-#include "eif_portable.h"	/* must come before <errno.h> for VMS */
 #include "eif_lmalloc.h"	/* for eif_calloc, eif_malloc, eif_free */
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
-#include <assert.h>
+#include "rt_assert.h"
 
 #ifdef HAS_SMART_MMAP
 #include <sys/mman.h>
@@ -33,11 +32,13 @@
 
 #include "eif_eiffel.h"			/* For bcopy/memcpy */
 #include "eif_timer.h"			/* For getcputime */
-#include "eif_malloc.h"
-#include "eif_garcol.h"			/* For Eiffel flags and function declarations */
+#include "rt_malloc.h"
+#include "rt_macros.h"
+#include "rt_garcol.h"			/* For Eiffel flags and function declarations */
+#include "rt_threads.h"
 #include "eif_except.h"			/* For exception raising */
 #include "eif_plug.h"
-#include "x2c.header"			/* For macro LNGPAD */
+#include "x2c.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
 #include "eif_sig.h"
 #include "eif_err_msg.h"
@@ -47,9 +48,7 @@
 #ifdef VXWORKS
 #include <string.h>
 #endif
-#ifndef TEST
-#include "eif_main.h"
-#endif
+#include "rt_main.h"
 
 
 /* For debugging */
@@ -80,16 +79,33 @@
  * Also give the address of the hlist of a given type and the address of
  * the buffer related to a free list.
  */
-#define CHUNK_TYPE(c)	(((c) == c_hlist)? C_T : EIFFEL_T)
-#define FREE_LIST(t)	((t)? c_hlist : e_hlist)
-#define BUFFER(c)		(((c) == c_hlist)? c_buffer : e_buffer)
+#define CHUNK_TYPE(c)		(((c) == c_hlist)? C_T : EIFFEL_T)
+#define FREE_LIST(t)		((t)? c_hlist : e_hlist)
+#define BUFFER(c)			(((c) == c_hlist)? c_buffer : e_buffer)
+
+/* Fast access to `hlist'. All sizes between `0' and HLIST_SIZE_LIMIT
+ * with their own padding which is a multiple of ALIGNMAX
+ * have their own entry in the `hlist'.
+ *  E.g.: 0, 8, 16, ...., 512 in case where ALIGNMAX = 8
+ * Above `HLIST_SIZE_LIMIT', the corresponding entry `i' has
+ * the sizes between 2^i and (2^(i+1) - 1).
+ *
+ * In `compute_hlist_index' we decided to shift by default by 8 since the minimum
+ * of ALIGNMAX is 4 which gives us 19 more possibilities in addition to the 64
+ * of HLIST_INDEX_LIMIT. Resulting in a value of 83 for NBLOCKS defined in
+ * `include/rt_malloc.h'
+ */
+#define HLIST_INDEX_LIMIT	64
+#define HLIST_DEFAULT_SHIFT 8
+#define HLIST_SIZE_LIMIT	HLIST_INDEX_LIMIT * ALIGNMAX
+#define HLIST_INDEX(size)	(((size) < HLIST_SIZE_LIMIT)? \
+							 	(size / ALIGNMAX) : compute_hlist_index (size))
 
 /* For eif_trace_types() */
 
 #define CHUNK_T     0           /* Scanning a chunk */
 #define ZONE_T      1           /* Scanning a generation scavenging zone */
 
-#ifndef EIF_THREADS
 /* The main data-structures for eif_malloc are filled-in statically at
  * compiled time, so that no special initialization routine is
  * necessary. (Except in MT mode --ZS)
@@ -172,8 +188,6 @@ rt_public long eiffel_usage = 0;		/* Monitor Eiffel memory usage */
  */
 rt_shared int eif_max_mem = 0;
 
-#endif /* EIF_THREADS */
-
 /* Not in a per thread basis. */
 
 	/* These variables are used to know the size of chunks and scavenge zones
@@ -181,6 +195,7 @@ rt_shared int eif_max_mem = 0;
 
 int eif_tenure_max;			/* Maximum age of tenuring. */
 int eif_gs_limit;			/* Maximum size of object in GSZ. */
+int eif_stack_chunk;		/* Size of local stack chunk. */
 int eif_chunk_size;			/* Size of memory chunks */
 int eif_scavenge_size;		/* Size of scavenge zones */
 
@@ -188,6 +203,7 @@ int eif_scavenge_size;		/* Size of scavenge zones */
 rt_private char *inconsistency = "free-list inconsistency";
 
 /* Functions handling free list */
+rt_private int32 compute_hlist_index (int32 size);
 rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
 rt_shared void rel_core(void);					/* Release core to kernel */
 rt_private union overhead *add_core(register unsigned int nbytes, int type);		/* Get more core from kernel */
@@ -211,14 +227,25 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc);	/* Release objects to
 rt_public void sc_stop(void);					/* Stop the scavenging process */
 
 /* Eiffel object setting */
-rt_shared EIF_REFERENCE eif_set(EIF_REFERENCE object, unsigned int nbytes, uint32 type);					/* Set Eiffel object prior use */
-rt_shared EIF_REFERENCE eif_spset(EIF_REFERENCE object, unsigned int nbytes);				/* Set special Eiffel object */
+rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type);					/* Set Eiffel object prior use */
+rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge);				/* Set special Eiffel object */
 
 /* Also used by the garbage collector */
 rt_shared int split_block(register union overhead *selected, register uint32 nbytes);				/* Split a block (return length) */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
 rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes);					/* Wrapper to xmalloc */
 rt_shared EIF_REFERENCE get_to_from_core(unsigned int nbytes);		/* Get a free eiffel chunk from kernel */
+
+#ifdef WORKBENCH
+rt_public void discard_breakpoints(void);	/* Avoid debugger to stop while in GC cycles */
+rt_public void undiscard_breakpoints(void); /* re-authorize the debugger to stop */
+#define DISCARD_BREAKPOINTS	discard_breakpoints();
+#define UNDISCARD_BREAKPOINTS	undiscard_breakpoints();
+#else
+#define DISCARD_BREAKPOINTS
+#define UNDISCARD_BREAKPOINTS
+#endif
+
 
 #ifdef HAS_SMART_MMAP
 rt_private void free_unused(void);
@@ -252,6 +279,31 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
+#ifdef EIF_THREADS
+extern EIF_REFERENCE safe_emalloc (uint32);
+extern EIF_REFERENCE safe_spmalloc (unsigned int, EIF_BOOLEAN);
+rt_public EIF_REFERENCE emalloc (uint32 ftype)
+{
+	EIF_REFERENCE result = NULL;
+	EIF_GC_MUTEX_LOCK;
+	result = safe_emalloc (ftype);
+	EIF_GC_MUTEX_UNLOCK;
+	return result;
+}
+
+rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
+{
+	EIF_REFERENCE result = NULL;
+	EIF_GC_MUTEX_LOCK;
+	result = safe_spmalloc (nbytes, atomic);
+	EIF_GC_MUTEX_UNLOCK;
+	return result;
+}
+
+#define emalloc safe_emalloc
+#define spmalloc safe_spmalloc
+#endif
+
 rt_public EIF_REFERENCE emalloc(uint32 ftype)
 							/* Full dynamic type */
 {
@@ -259,13 +311,10 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 	 * "No more memory" exception. The routine returns the pointer on a new
 	 * object holding at least 'nbytes'.
 	 */
-	EIF_GET_CONTEXT
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
 	unsigned int nbytes;		/* Object's size */
-	uint32 type, dtype;
-
-	dtype = (uint32) Deif_bid(ftype);
-	type  = (ftype & EO_UPPER) | dtype;
+	uint32 type = (uint32) Deif_bid(ftype);
+	
 
 #ifdef EMCHK
 	printf("--- Start of emalloc (DT %d) ---\n",type);
@@ -279,6 +328,8 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 		return (EIF_REFERENCE) 0;			/* In case they chose to ignore EN_CDEF */
 	}
 #endif
+
+	DISCARD_BREAKPOINTS
 
 	/* Fetch object's size in bytes. Note that the size of all the Eiffel
 	 * objects is correctly padded, but do not account for the header's size.
@@ -304,16 +355,25 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 	 */
 
 #ifdef EIF_MEMORY_OPTIMIZATION
-	if (!(gen_scavenge & GS_OFF) 
-		&& nbytes <= eif_gs_limit )
+	if (!(gen_scavenge & GS_OFF) && (int) nbytes <= eif_gs_limit )
 #else	/* EIF_MEMORY_OPTIMIZATION */
-
 	if (!(gen_scavenge & GS_OFF) && ((int) nbytes <= eif_gs_limit) && (0 == Disp_rout(type))) 
 #endif	/* EIF_MEMORY_OPTIMIZATION */
 	{
 		object = malloc_from_zone(nbytes);
-		if (object != (EIF_REFERENCE) 0)
-			{
+		if (object != (EIF_REFERENCE) 0) {
+			UNDISCARD_BREAKPOINTS
+
+			CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+
+			object = eif_set(object, ftype);	/* Set for Eiffel use */
+
+#ifdef EMCHK
+			printf("--- End of emalloc (malloc_from_zone) ---\n");
+			memck(0);
+			printf("--- --------------------------------- ---\n\n");
+#endif
+
 #ifdef EIF_MEMORY_OPTIMIZATION
 			/* Extra operations for `memory' objects. */
 			if (0 != Disp_rout (type))		/* It is a memory object.	*/
@@ -326,20 +386,10 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 						enomem(MTC_NOARG);				/* Critical exception */
 				}
 			}
-
-#endif	/* EIF_REM_SET_OPTIMIZATION */
-#ifdef EMCHK
-			EIF_REFERENCE ret_val;
-
-			ret_val = eif_set(object, nbytes, ftype);	/* Set for Eiffel use */
-			printf("--- End of emalloc (malloc_from_zone) ---\n");
-			memck(0);
-			printf("--- --------------------------------- ---\n\n");
-			return ret_val;
-#else
-			return eif_set(object, nbytes, ftype);		/* Set for Eiffel use */
 #endif
-			}
+			return object;
+
+		}
 	}
 
 	/* Try an allocation in the free list, with garbage collection turned on.
@@ -349,430 +399,405 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 	 */
 	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
 
-	if (object != (EIF_REFERENCE) 0)
-		{
+	if (object != (EIF_REFERENCE) 0) {
+		UNDISCARD_BREAKPOINTS
+
+		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+
 #ifdef EMCHK
 		rt_public EIF_REFERENCE ret_val;
 
-		ret_val = eif_set(object, nbytes, ftype | EO_NEW);	/* Set for Eiffel use */
+		ret_val = eif_set(object, ftype | EO_NEW);	/* Set for Eiffel use */
 		printf("--- End of emalloc (xmalloc) ---\n");
 		memck(0);
 		printf("--- ------------------------ ---\n\n");
 		return ret_val;
 #else
-		return eif_set(object, nbytes, ftype | EO_NEW);		/* Set for Eiffel use */
+		return eif_set(object, ftype | EO_NEW);		/* Set for Eiffel use */
 #endif
-		}
+	}
 
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
 	object = xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
 
-	if (object != (EIF_REFERENCE) 0)
-		{
+	if (object != (EIF_REFERENCE) 0) {
+		UNDISCARD_BREAKPOINTS
+
+		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+
 #ifdef EMCHK
 		rt_public EIF_REFERENCE ret_val;
 
-		ret_val = eif_set(object, nbytes, ftype | EO_NEW);	/* Set for Eiffel use */
+		ret_val = eif_set(object, ftype | EO_NEW);	/* Set for Eiffel use */
 		printf("--- End of emalloc (xmalloc after gen_scav) ---\n");
 		memck(0);
 		printf("--- --------------------------------------- ---\n\n");
 		return ret_val;
 #else
-		return eif_set(object, nbytes, ftype | EO_NEW);		/* Set for Eiffel use */
+		return eif_set(object, ftype | EO_NEW);		/* Set for Eiffel use */
 #endif
-		}
+	}
+
+	UNDISCARD_BREAKPOINTS
 
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 
 	/* NOTREACHED */
-
-	EIF_END_GET_CONTEXT
-
-	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
-
-}
-
-rt_public EIF_REFERENCE strmalloc(unsigned int nbytes)
-
-{
-	/* String optimization: When allocating a special string, intead
-	 * doing it in the free-list, we tempt to allocate it in the 
-	 * GSZ. 
-	 */
-
-	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
-	EIF_REFERENCE ret;			/* Return value: allocated object. */
-
-	EIF_GET_CONTEXT
-
-#ifdef STRMALLOC_DEBUG
-	printf ("STRMALLOC_DEBUG: Allocation of string of size %d\n", nbytes);
-#endif 	/* STRMALLOC_DEBUG */
-
-	if ((int) nbytes > eif_gs_limit)		/* Is string too big to be 
-									 * in generational scavenge zone. */
-	{
-
-#ifdef STRMALLOC_DEBUG
-	printf ("STRMALLOC_DEBUG: string will be allocated in free-list \n");
-#endif 	/* STRMALLOC_DEBUG */
-
-		ret = spmalloc (nbytes);
-		if (ret == (EIF_REFERENCE) 0)	/* Not enough memory in free-list. */
-			eraise("String special allocation", EN_MEM);	/* No more memory */
-		EIF_END_GET_CONTEXT
-		return ret;	/* Allocate it in Free-list. */
-	}
-
-	 object = malloc_from_zone (nbytes);	/* allocate it in scavenge zone. */
-
-#ifdef STRMALLOC_DEBUG
-	printf ("STRMALLOC_DEBUG: string allocated in GSZ : new string = 0x%x=%s\n", object, object);
-#endif 	/* STRMALLOC_DEBUG */
-
-	if (object != (EIF_REFERENCE) 0)
-	{		
-		ret = eif_strset(object, nbytes);			/* Special Eiffel object */
-		EIF_END_GET_CONTEXT
-		return ret;
-	}
-	
-	object = spmalloc (nbytes);
-	if (object != (EIF_REFERENCE) 0)	
-								/* Allocating in free-list was successfull? */
-	{
-		EIF_END_GET_CONTEXT
-		return object;			/* No need to set it. It has been done in
-								 * `spmalloc' */
-	}
-
-	eraise("String special allocation", EN_MEM);	/* No more memory */
-	/* NOTREACHED */	
-	EIF_END_GET_CONTEXT
-
 	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
 }
 
-rt_public EIF_REFERENCE spmalloc(unsigned int nbytes)
-
+rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 {
 	/* Memory allocation for an Eiffel special object. It either succeeds or
 	 * raises the "No more memory" exception. The routine returns the pointer
 	 * on a new special object holding at least 'nbytes'.
+	 * `atomic' means that it is a special object without references.
 	 */
 
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
-
-	/* Special object cannot be allocated in the scavenge zone, because they
-	 * might have to be realloc'ed and this is not supported if the object
-	 * is not in the free list.
-	 */
-	 object = xmalloc(nbytes, EIFFEL_T, GC_ON);
-
-	 if (object != (EIF_REFERENCE) 0)
-		return eif_spset(object, nbytes);			/* Special Eiffel object */
 	
-	eraise("Special object allocation", EN_MEM);	/* No more memory */
+	DISCARD_BREAKPOINTS
 
-	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
+		/* Remember set special optimization does not work if object are allocated
+		 * in scavenge zone. */
+#ifdef EIF_GSZ_ALLOC_OPTIMIZATION
+	if (nbytes >= (unsigned int) eif_gs_limit) {
+#endif
+		/* New special object is too big to be created in generational scavenge zone.
+		 * So we allocate it in free list. */
+		object = xmalloc(nbytes, EIFFEL_T, GC_ON);
+		UNDISCARD_BREAKPOINTS
+		if (object == (EIF_REFERENCE) 0)
+			eraise("Special allocation", EN_MEM);	/* No more memory */
+		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+		return eif_spset(object, EIF_FALSE);
+#ifdef EIF_GSZ_ALLOC_OPTIMIZATION
+	}
+
+	object = malloc_from_zone (nbytes);	/* allocate it in scavenge zone. */
+
+	if (object != (EIF_REFERENCE) 0) {
+		UNDISCARD_BREAKPOINTS
+		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+		return  eif_spset(object, EIF_TRUE);
+	}
+	
+		 /* No more space in scavenge zone: allocation in free list. */
+	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
+	if (object == (EIF_REFERENCE) 0) {
+		UNDISCARD_BREAKPOINTS
+		eraise("Special allocation", EN_MEM);	/* No more memory */
+	}
+
+	UNDISCARD_BREAKPOINTS
+	CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+	return eif_spset(object, EIF_FALSE);
+#endif
 }
-
-rt_public EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems)
-		  			/* Original pointer */
-			 		/* New number of items wanted */
-{
-	/* Reallocation of a string object `ptr' for new count `nbitems' */
-	EIF_GET_CONTEXT
-	union overhead *zone;		/* Malloc information zone */
-	EIF_REFERENCE ref, object;
-	long count, elem_size;
-	int size;		/* New size of string. */
-
-	/* At the end of the special object arena, there are two long values which
-	 * are kept up-to-date: the actual number of items held and the size in
-	 * byte of each item (the same for all items).
-	 */
-
-	/********************** Preconditions ***********************/
-	assert (ptr != (EIF_REFERENCE) 0);			/* Object not NULL. */
-	assert (!(HEADER (ptr)->ov_size & B_FWD));	/* Cannot be forwarded. */
-	assert (HEADER (ptr)->ov_flags & EO_SPEC);	/* Must be a special object. */
-	assert (!(HEADER (ptr)->ov_flags & EO_REF));	
-							/* Cannot be full of references. */
-	assert (!(HEADER (ptr)->ov_flags & EO_COMP));	
-							/* cannot be a composite object. */
-	/******************** End of Preconditions. *****************/
-
-	zone = HEADER(ptr);
-	assert (HEADER (ptr)->ov_flags & EO_SPEC);
-	ref = ptr + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	count = *(long *) ref;
-	elem_size = *(long *) (ref + sizeof(long));
-	size = elem_size * nbitems + LNGPAD_2;
-
-#ifdef STRREALLOC_DEBUG
-		printf ("STRREALLOC_DEBUG: special string %x=%s reallocation, new size= %d, old_size = %d\n", ptr, ptr, size, HEADER(ptr)->ov_size & B_SIZE);
-#endif	/* STRREALLOC_DEBUG */
-
-	epush(&loc_stack, (EIF_REFERENCE) (&ptr));	/* Object may move if GC called */
-
-	assert (!(HEADER(ptr)->ov_size & B_FWD));	/* Not forwarded. */
-	if (zone->ov_flags & (EO_NEW | EO_OLD))	/* Is it out of GSZ? */
-	{
-
-#ifdef STRREALLOC_DEBUG
-		printf ("STRREALLOC_DEBUG: special string %x is out of GSZ\n", ptr);
-#endif	/* STRREALLOC_DEBUG */
-
-		if (nbitems > count)				/* Then update memory usage. */
-			eiffel_usage += (nbitems - count) * elem_size;
-			
-		/* Reallocation in the free-list. */
-		object = xrealloc (ptr, size, GC_ON | GC_FREE);
-
-		assert (!(HEADER(ptr)->ov_size & B_FWD));	/* Not forwarded. */
-
-		/* Reset extra-items with zeros */
-		if (count < nbitems) {
-			memset (object + (count * elem_size), 0, (nbitems - count) * elem_size);
-		}
-
-		if (ptr != object)		/* Has ptr moved in the reallocation? */
-		{
-			/* Then Update Header. */
-			zone->ov_size &= ~B_C;		/* Cannot freeze a special object */
-
-			if (HEADER(ptr)->ov_flags & EO_NEW) 
-			{		 								/* Original was new */
-				if (-1 == epush(&moved_set, object)) 
-				{									/* Cannot record object */
-					urgent_plsc(&object);			/* Full safe collection */
-					if (-1 == epush(&moved_set, object))/* Still failed */
-						enomem(MTC_NOARG);			/* Critical exception */
-				}
-			
-			}
-			if (zone->ov_size & B_FWD)		/* Does zone need to be updated? */
-					zone = HEADER (zone->ov_fwd);
-									/* `ptr' has moved, update zone. */
-			assert (!(zone->ov_size & B_FWD));	/* Not forwarded. */
-
-			if (object != ptr && zone->ov_flags & EO_REM)
-					erembq (object);
-		}
-	}
-	else	/* Was allocated in the GSZ. */
-	{
-#ifdef STRREALLOC_DEBUG
-		printf ("STRREALLOC_DEBUG: special string %x small enough, reallocated in GSZ, size = %d\n", ptr, size);
-#endif	/* STRREALLOC_DEBUG */
-
-		assert (!(HEADER (ptr)->ov_size & B_BUSY));	/* In scavenge zone. */
-		if (nbitems == count) {		/* Does resized object have same size? */
-			epop (&loc_stack, 1);	/* Unprotect `ptr'. */	
-			return ptr;				/* Return unchanged `ptr'. */
-		}
-
-		object = strmalloc (size);	/* Reserve `size' bytes in GSZ. */
-		zone = HEADER (object);
-
-		if ((EIF_REFERENCE) 0 == object) {
-			eraise("String reallocation", EN_MEM);
-			return (EIF_REFERENCE) 0;
-		}
-
-		/* Copy `ptr' in `object'.	*/
-		assert (!(HEADER (ptr)->ov_size & B_FWD));	/* Not forwarded. */
-		if (nbitems > count) {	/* Is resized object bigger? */
-			memcpy  (object, ptr, 
-					(HEADER (ptr)->ov_size & B_SIZE) - LNGPAD_2);
-			memset ((char *) object + (count * elem_size), 0, 
-							(nbitems - count) * elem_size);
-		}
-		else	{				/* Smaller object requested. */
-			memcpy (object, ptr, (HEADER (object)->ov_size & B_SIZE) - LNGPAD_2);
-		}
-								/* Truncate extra bytes. */
-
-		/* Set flags. */
-		zone->ov_flags |= HEADER (ptr)->ov_flags;	
-								/* Same as ptr's header, but size is updated. */	
-	}
-
-	if ((EIF_REFERENCE) 0 == object) 
-	{
-		eraise("String reallocation", EN_MEM);
-		return (EIF_REFERENCE) 0;
-	}
-
-	epop(&loc_stack, 1);	
-					/* Unprotect `ptr'. No more collection is expected. */
-
-	/* Update special attributes count and element size at the end */
-	zone = HEADER(object);
-	ref = object + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	*(long *) ref = nbitems;						/* New count */
-	*(long *) (ref + sizeof(long)) = elem_size; 	/* New item size */
-
-	/*** Postconditions. ***/
-	assert (HEADER (object)->ov_flags & EO_SPEC);	/* Must be special. */
-	assert (!(HEADER (object)->ov_flags & EO_REF));	/* Not full of refs. */
-	assert (!(HEADER (object)->ov_flags & EO_C));	/* Not a C one. */
-	assert ((HEADER (object)->ov_size & B_SIZE) >= size);/* Correct new size. */
-	/**** End of Postconditions. ***/	
-
-	return object;
-
-	EIF_END_GET_CONTEXT
-}	/* strrealloc () */
 
 rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 		  			/* Original pointer */
 			 		/* New number of items wanted */
 {
-	/* Reallocation of a special object `ptr' for new count `nbitems' */
+		/* Reallocation of a string object `ptr' for new count `nbitems' */
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
-	char  *(*init)(EIF_REFERENCE);			/* Initialization routine to be called */
+	void *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* Initialization routine to be called */
 	EIF_REFERENCE ref, object;
-	long count, elem_size;
+	EIF_INTEGER count, elem_size;
 	int dtype, dftype;
+	int old_size, new_size;					/* New and old size of special object. */
+	int old_real_size, new_real_size;		/* Size occupied by items of special */
+	EIF_BOOLEAN need_update = EIF_FALSE;	/* Do we need to remember content of special? */
+	EIF_BOOLEAN need_expanded_initialization = EIF_FALSE;	/* Do we need to initialize new entries? */
+
+	REQUIRE ("ptr not null", ptr != (EIF_REFERENCE) 0);
+	REQUIRE ("Not forwarded", !(HEADER (ptr)->ov_size & B_FWD));
+	REQUIRE ("Special object:", HEADER (ptr)->ov_flags & EO_SPEC);
+
+	DISCARD_BREAKPOINTS
 
 	/* At the end of the special object arena, there are two long values which
 	 * are kept up-to-date: the actual number of items held and the size in
 	 * byte of each item (the same for all items).
 	 */
-
 	zone = HEADER(ptr);
-	assert (HEADER (ptr)->ov_flags & EO_SPEC);
-	ref = ptr + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	count = *(long *) ref;
-	elem_size = *(long *) (ref + sizeof(long));
+	old_size = zone->ov_size & B_SIZE;	/* Old size of array */
+	ref = ptr + old_size - LNGPAD_2;
+	count = *(EIF_INTEGER *) ref;		/* Current number of elements */
+	elem_size = *(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER));
+	old_real_size = count * elem_size;	/* Size occupied by items in old special */
+	new_real_size = nbitems * elem_size;	/* Size occupied by items in new special */
+	new_size = new_real_size + LNGPAD_2;		/* New required size */
 
-	/* The accounting of memory used by Eiffel is not accurate here, but it is
-	 * not easy to know at this level whether the block was merely extended or
-	 * whether we had to allocate a new block. However, if the reallocation
-	 * shrinks the object, we know xrealloc will not move the block but shrink
-	 * it in place, so there is no need to update the usage.
-	 */
-
-	if (nbitems > count)
-		eiffel_usage += (nbitems - count) * elem_size;
-
-	/* It is very important to give the GC_FREE flag to xrealloc, as if the
-	 * special object happens to move during the reallocing operation, its
-	 * old "location" must not be freed in case it is in the moved_set or
-	 * whatever GC stack. This old copy will be normally reclaimed by the
-	 * GC. Also, this prevents a nasty bug when Eiffel objects share the area.
-	 * When one of this area is resized and moved, the other object still
-	 * references somthing valid (although the area is no longer shared)--RAM.
-	 */
-
-	epush(&loc_stack, (EIF_REFERENCE) (&ptr));	/* Object may move if GC called */
-	object = xrealloc(ptr, (unsigned int)(elem_size * nbitems + LNGPAD_2), GC_ON | GC_FREE);
-	if ((EIF_REFERENCE) 0 == object) {
-		eraise("special reallocation", EN_MEM);
-		return (EIF_REFERENCE) 0;
-	}
-	epop(&loc_stack, 1);
-
-	/* Reset extra-items with zeros */
-	if (count < nbitems) {
-		memset (object + (count * elem_size), 0, (nbitems - count) * elem_size);
+	if (nbitems == count) {		/* OPTIMIZATION: Does resized object have same size? */
+		UNDISCARD_BREAKPOINTS
+		return ptr;				/* If so, we return unchanged `ptr'. */
 	}
 
-	/* Update special attributes count and element size at the end */
-	zone = HEADER(object);
-	ref = object + (zone->ov_size & B_SIZE) - LNGPAD_2;
-	*(long *) ref = nbitems;						/* New count */
-	*(long *) (ref + sizeof(long)) = elem_size; 	/* New item size */
+	RT_GC_PROTECT(ptr);	/* Object may move if GC called */
 
-	/* Initialize new expanded elements, if any */
-	if (zone->ov_flags & EO_COMP) {
-		 /* case of a special object of expanded structures */
+	CHECK ("Stil not forwarded", !(HEADER(ptr)->ov_size & B_FWD));
+
+		/* The accounting of memory used by Eiffel is not accurate here, but it is
+		 * not easy to know at this level whether the block was merely extended or
+		 * whether we had to allocate a new block. However, if the reallocation
+		 * shrinks the object, we know xrealloc will not move the block but shrink
+		 * it in place, so there is no need to update the usage.
+		 */
+
+	if (new_size > old_size)				/* Then update memory usage. */
+		eiffel_usage += (new_size - old_size);
+
+#ifdef EIF_GSZ_ALLOC_OPTIMIZATION
+	if (zone->ov_flags & (EO_NEW | EO_OLD)) {	/* Is it out of GSZ? */
+#endif
+			/* It is very important to give the GC_FREE flag to xrealloc, as if the
+			 * special object happens to move during the reallocing operation, its
+			 * old "location" must not be freed in case it is in the moved_set or
+			 * whatever GC stack. This old copy will be normally reclaimed by the
+			 * GC. Also, this prevents a nasty bug when Eiffel objects share the area.
+			 * When one of this area is resized and moved, the other object still
+			 * references somthing valid (although the area is no longer shared)--RAM.
+			 */	
+
+		object = xrealloc (ptr, new_size, GC_ON | GC_FREE);
+
+		if ((EIF_REFERENCE) 0 == object) {
+			UNDISCARD_BREAKPOINTS
+			eraise("special reallocation", EN_MEM);
+			return (EIF_REFERENCE) 0;
+		}
+
+		zone = HEADER (object);
+		new_size = zone->ov_size & B_SIZE;	/* `xrealloc' can change the `new_size' value for padding */
+
+		CHECK ("Not forwarded", !(HEADER(ptr)->ov_size & B_FWD));
+
+			/* Reset extra-items with zeros or default expanded value if any */
+		if (new_real_size > old_real_size) {
+			CHECK ("New size bigger than old one", new_size >= old_size);
+			memset (object + old_real_size, 0, new_size - old_real_size);
+			if (zone->ov_flags & EO_COMP)
+				need_expanded_initialization = EIF_TRUE;
+		} else { 	/* Smaller object requested. */
+			CHECK ("New size smaller than old one", new_size <= old_size);
+				/* We need to remove existing elements between `new_real_size'
+				 * and `new_size'. Above `new_size' it has been taken care
+				 * by `xrealloc' when moving the memory area above `new_size'
+				 * in the free list.
+				 */
+			memset (object + new_real_size, 0, new_size - new_real_size);
+		}
+
+		if (ptr != object) {		/* Has ptr moved in the reallocation? */
+				/* If the reallocation had to allocate a new object, then we have to do
+				 * some further settings: if the original object was marked EO_NEW, we
+				 * must push the new object into the moved set. Also we must reset the B_C
+				 * flags set by malloc (which makes it impossible to freeze a special
+				 * object, but it cannot be achieved anyway since a reallocation may
+				 * have to move it).
+				 */
+
+			zone->ov_size &= ~B_C;		/* Cannot freeze a special object */
+			need_update = EIF_TRUE;
+		}
+#ifdef EIF_GSZ_ALLOC_OPTIMIZATION
+	} else {	/* Was allocated in the GSZ. */
+		CHECK ("In scavenge zone", !(HEADER (ptr)->ov_size & B_BUSY));
+
+			/* We do not need to reallocate an array if the existing one has enough
+			 * space to accomadate the resizing */
+		if (new_size > old_size) {
+				/* Reserve `new_size' bytes in GSZ if possible. */
+			object = spmalloc (new_size, EIF_TEST(!(zone->ov_flags & EO_REF)));
+		} else
+			object = ptr;
+
+		if (object == (EIF_REFERENCE) 0) {
+			UNDISCARD_BREAKPOINTS
+			eraise("Special reallocation", EN_MEM);
+			return (EIF_REFERENCE) 0;
+		}
+
+			/* Set flags of newly created object */
+		zone = HEADER (object);
+		new_size = zone->ov_size & B_SIZE;	/* `spmalloc' can change the `new_size' value for padding */
+
+				/* Copy only dynamic type and object nature and age from old object
+				 * We cannot copy HEADER(ptr)->ov_flags because `ptr' might have
+				 * moved outside the GSZ during reallocation of `object'. */
+		zone->ov_flags |= HEADER(ptr)->ov_flags & (EO_TYPE | EO_REF | EO_COMP);
+
+			/* Update flags of new object */
+		if ((zone->ov_flags & EO_NEW) && (zone->ov_flags & (EO_REF | EO_COMP))) 
+				/* New object has been created outside the
+				 * scavenge zone, we need to remember it
+				 * if it contains references to other objects. */
+			erembq (object);	/* Usual remembrance process. */
+
+		CHECK ("Not forwarded", !(HEADER (ptr)->ov_size & B_FWD));
+
+			/* Copy `ptr' in `object'.	*/
+		if (new_real_size > old_real_size) {
+			CHECK ("New size bigger than old one", new_size >= old_size);
+				/* If object has been resized we do not need to clean the new
+				 * allocated memory because `spmalloc' does it for us. */
+			if (object != ptr)
+			  		/* Object has been resized to grow, we need to copy old items. */
+				memcpy (object, ptr, old_real_size);
+			else {
+				CHECK ("New size same as old one", new_size = old_size);
+			  		/* We need to clean area between `old_real_size' and
+					 * `new_real_size'.
+					 */
+				memset (object + old_real_size, 0, new_size - old_real_size);
+			}
+			
+			if (zone->ov_flags & EO_COMP)
+					/* Object has been resized and contains expanded objects.
+					 * We need to initialize the newly allocated area. */
+				need_expanded_initialization = EIF_TRUE;
+		} else {				/* Smaller object requested. */
+			CHECK ("New size smaller than old one", new_size <= old_size);
+				/* We need to remove existing elements between `new_real_size'
+				 * and `new_size'. Above `new_size' we do not care since it
+				 * is in the scavenge zone and no one is going to access it
+				 */
+			memset (object + new_real_size, 0, new_size - new_real_size);
+		}
+	}
+#endif
+
+	RT_GC_WEAN(ptr);	/* Unprotect `ptr'. No more collection is expected. */
+
+		/* Update special attributes count and element size at the end */
+	ref = object + new_size - LNGPAD_2;
+	*(EIF_INTEGER *) ref = nbitems;						/* New count */
+	*(EIF_INTEGER *) (ref + sizeof(EIF_INTEGER)) = elem_size; 	/* New item size */
+
+	if (need_expanded_initialization) {
+	   		/* case of a special object of expanded structures */
 		EIF_REFERENCE addr = object + OVERHEAD;		/* Needed for that stupid gcc */
 		dftype = HEADER(addr)->ov_flags & EO_TYPE;
 		dtype = Deif_bid(dftype);
-		init = (char *(*) (char *)) XCreate(dtype);
-
-#ifdef MAY_PANIC
-		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
-			eif_panic("init routine lost");
-#endif
+		init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(dtype);
 
 		for (
-			ref = object + count * elem_size + OVERHEAD;
+			ref = object + old_real_size + OVERHEAD;
 			count < nbitems;
 			count++, ref += elem_size
 		) {
 			zone = HEADER(ref);
 			zone->ov_size = ref - object;	/* For GC */
 			zone->ov_flags = dftype;			/* Expanded type */
-			(init)(ref);					/* Call initialization routine */
+			if (init) {
+				RT_GC_PROTECT(ref);
+				(init)(ref, ref);			/* Call initialization routine if any */
+				RT_GC_WEAN(ref);
+			}
 		}
 		zone = HEADER(object);				/* Restore malloc info zone */
 	}
 
-	if (ptr == object)
-		return object;						/* Object did not move */
+	if (need_update) {
+			/* If the object has moved in the reallocation process and was in the
+			 * remembered set, we must re-issue a memorization call otherwise all the
+			 * old contents of the area could be freed. Note that the test below is
+			 * NOT perfect, since the area could have been moved by the GC and still
+			 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
+			 */
 
-	/* If the reallocation had to allocate a new object, then we have to do
-	 * some further settings: if the original object was marked EO_NEW, we
-	 * must push the new object into the moved set. Also we must reset the B_C
-	 * flags set by malloc (which makes it impossible to freeze a special
-	 * object, but it cannot be achieved anyway since a reallocation may
-	 * have to move it).
-	 */
-
-	zone->ov_size &= ~B_C;					/* Cannot freeze a special object */
-
-	/* If the object has moved in the reallocation process and was in the
-	 * remembered set, we must re-issue a memorization call otherwise all the
-	 * old contents of the area could be freed. Note that the test below is
-	 * NOT perfect, since the area could have been moved by the GC and still
-	 * have not been moved around wrt the GC stacks. But it doen't hurt--RAM.
-	 */
-
-	if ((object != ptr) && (HEADER (ptr)->ov_flags & EO_REM))
-	{
-#ifdef EIF_REM_SET_OPTIMIZATION 
-		if (HEADER(ptr)->ov_flags & EO_REF)
+		if (HEADER (ptr)->ov_flags & EO_REM)
 		{
-#ifdef SPREALLOC_DEBUG
-			printf ("SPREALLOC: object %x has moved to %x\n", ptr, object);
-#endif
-			assert (HEADER (object)->ov_flags & EO_REF);
-			assert (HEADER (object)->ov_flags & EO_SPEC);
-			assert (HEADER (object)->ov_flags & EO_REM);
-			assert (HEADER (object)->ov_flags & EO_OLD);
-			assert(!(is_in_rem_set (ptr)));
-			assert (is_in_special_rem_set (ptr));
-			eif_promote_special (object); 
-					/* FIXME:  Should we replace old `ptr' 
-					 * by  `object' instead? */
-				/* We re-issue the remembering process. */
-		}
-		else
-			erembq (object);
+#ifdef EIF_REM_SET_OPTIMIZATION 
+			if (HEADER(ptr)->ov_flags & EO_REF) {
+				CHECK ("Special object", HEADER (object)->ov_flags & EO_SPEC);
+				CHECK ("Full of references", HEADER (object)->ov_flags & EO_REF);
+				CHECK ("Remembered object", HEADER (object)->ov_flags & EO_REM);
+				CHECK ("Old", HEADER (object)->ov_flags & EO_OLD);
+				CHECK ("Not in remember set", !(is_in_rem_set (ptr)));
+				CHECK ("In special remember set", is_in_special_rem_set (ptr));
+				eif_promote_special (object); 
+						/* FIXME:  Should we replace old `ptr' 
+						 * by  `object' instead? */
+					/* We re-issue the remembering process. */
+			} else
+				erembq (object);
 #else
-		erembq (object);	/* Usual remembrance process. */
-				/* A simple remembering for other special objects. */
+			erembq (object);	/* Usual remembrance process. */
+					/* A simple remembering for other special objects. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
-	}
-	if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new */
-		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
-			urgent_plsc(&object);					/* Full safe collection */
-			if (-1 == epush(&moved_set, object))	/* Still failed */
-				enomem(MTC_NOARG);							/* Critical exception */
+		}
+
+		if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new, ie not allocated
+														 * in GSZ. */
+			if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
+				urgent_plsc(&object);					/* Full safe collection */
+				if (-1 == epush(&moved_set, object))	/* Still failed */
+					enomem(MTC_NOARG);					/* Critical exception */
+			}
 		}
 	}
+
+	UNDISCARD_BREAKPOINTS
+
+	ENSURE ("Special object", HEADER (object)->ov_flags & EO_SPEC);
+	ENSURE ("Eiffel object", !(HEADER (object)->ov_flags & EO_C));
+	ENSURE ("Valid new size", (int)(HEADER (object)->ov_size & B_SIZE) >= new_size);
 
 	return object;
+}
 
-	EIF_END_GET_CONTEXT
-}	/* sprealloc () */
+rt_public EIF_REFERENCE bmalloc(long int size)
+{
+	/* Memory allocation for an Eiffel bit structure. It either succeeds
+	 * or raises the "No more memory" exception. `size' is the required size
+	 * of the bit type, in bits.
+	 */
+
+	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
+	unsigned int nbytes;			/* Object's size */
+
+	DISCARD_BREAKPOINTS
+
+	(void) eif_register_bit_type (size);
+#ifdef DEBUG
+	printf ("bmalloc: %d bits requested.\n", size);
+#endif
+
+	/* A BIT object has a length field (the number of bits in the object), and
+	 * an arena where the bits are stored, from left to right, as an array of
+	 * booleans (i.e. the first bit is the rightmost one, as opposed to the
+	 * usual conventions).
+	 */
+	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
+	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
+
+	/* As in the memory allocation routines located in eif_malloc.c, a new
+	 * BIT object has to be marked after being allocated in the eif_free
+	 * list. Otherwise the GC will be lost. 
+	 * Fixes negate-big-bit-local.
+	 * -- Fabrice
+	 */
+
+	if (object != (EIF_REFERENCE ) 0) {
+		EIF_REFERENCE result;
+		CHECK ("Allocated size big enough", nbytes <= (HEADER(object)->ov_size & B_SIZE));
+		result = eif_set(object, egc_bit_dtype | EO_NEW);
+		LENGTH(result) = (uint32) size;				/* Record size */
+
+		UNDISCARD_BREAKPOINTS
+		return result;
+	}
+
+  
+	UNDISCARD_BREAKPOINTS
+	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
+	return (0); /* NOTREACHED */
+}
 
 rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 {
@@ -821,7 +846,6 @@ rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
 	 * The function returns a pointer to the free location found, or a null
 	 * pointer if there is no memory available.
 	 */
-	EIF_GET_CONTEXT
 	int mod;			/* Remainder for padding */
 	EIF_REFERENCE result;		/* Pointer to the free memory location we found */
 
@@ -864,8 +888,6 @@ rt_shared EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag)
 	}
 
 	return result;	/* Pointer to free data space or null if out of memory */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag)
@@ -875,7 +897,6 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 	 * and the garbage collector called, if gc_flag is on. It is assumed
 	 * that 'nbytes' is a correctly padded number.
 	 */
-	EIF_GET_CONTEXT
 	EIF_REFERENCE result;					/* Location of the malloc'ed block */
 
 	/* We keep an acoounting of the amount of memory allocated for Eiffel in
@@ -1028,8 +1049,6 @@ rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **
 
 	/* No other choice but to request for more core */
 	return allocate_from_core(nbytes, hlist, MB_EO);
-
-	EIF_END_GET_CONTEXT
 }
 
 #ifdef HAS_SMART_MMAP
@@ -1063,7 +1082,6 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	 * block if found, a null pointer otherwise.
 	 */
 	EIF_GET_CONTEXT
-	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *selected = (union overhead *) 0;	
 							/* The selected block */
@@ -1076,15 +1094,9 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 #endif
 
 	/* Quickly compute the index in the hlist array where we have a
-	 * chance to find the right block. The idea is to do a right
-	 * logical shift until the register is zero. The number of shifts
-	 * done is the base 2 logarithm of 'nbytes'.
+	 * chance to find the right block.
 	 */
-
-	r = (uint32) nbytes;
-	i = 0;
-	while (r >>= 1)
-		i++;
+	i = HLIST_INDEX(nbytes);
 
 	/* This is the heart of malloc: Look in the hlist array to see if there is
 	 * already a block available. If so, we take the first one and we eventually
@@ -1094,32 +1106,70 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 
 	SIGBLOCK;				/* Critical section */
 
-	for (; i < NBLOCKS; i++) {
-		if ((selected = hlist[i]) == (union overhead *) 0)
-			continue;
-		else if ((selected->ov_size & B_SIZE) >= nbytes) {
-			hlist[i] = selected->ov_next;		/* Remove block from list */
+	if (i >= HLIST_INDEX_LIMIT) {
+		for (; i < NBLOCKS; i++) {
+			if ((selected = hlist[i]) == (union overhead *) 0)
+				continue;
+			else if ((selected->ov_size & B_SIZE) >= nbytes) {
+				hlist[i] = selected->ov_next;		/* Remove block from list */
+				if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
+					BUFFER(hlist)[i] = hlist[i];	/* Update cache */
+				break;				/* Found it, selected points to it */
+			} else {
+				/* Walk through list, until we find a good block. This
+				 * is only done for the first 'i'. Afterwards, either the
+				 * first item will fit, or we'll have to report failure.
+				 */
+				for (
+					p = selected, selected = p->ov_next;
+					selected != (union overhead *) 0;
+					p = selected, selected = p->ov_next
+				)
+					if ((selected->ov_size & B_SIZE) >= nbytes) {
+						p->ov_next = selected->ov_next;	/* Remove from list */
+						if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
+							BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
+						break;		/* Found it, selected points to it */
+					}
+				if (selected != (union overhead *) 0)
+					break;			/* Exit main loop */
+			}
+		}
+	} else {
+		selected = hlist[i];
+	  	if (selected) {
+			hlist[i] = selected->ov_next;		/* remove block from list */
 			if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
-				BUFFER(hlist)[i] = hlist[i];	/* Update cache */
-			break;				/* Found it, selected points to it */
+			  	BUFFER(hlist)[i] = hlist[i];	/* update cache */
 		} else {
-			/* Walk through list, until we find a good block. This
-			 * is only done for the first 'i'. Afterwards, either the
-			 * first item will fit, or we'll have to report failure.
-			 */
-			for (
-				p = selected, selected = p->ov_next;
-				selected != (union overhead *) 0;
-				p = selected, selected = p->ov_next
-			)
-				if ((selected->ov_size & B_SIZE) >= nbytes) {
-					p->ov_next = selected->ov_next;	/* Remove from list */
-					if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
-						BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
-					break;		/* Found it, selected points to it */
+			for (i++; i < NBLOCKS; i++) {
+				if ((selected = hlist[i]) == (union overhead *) 0)
+					continue;
+				else if ((selected->ov_size & B_SIZE) >= nbytes) {
+					hlist[i] = selected->ov_next;		/* Remove block from list */
+					if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
+						BUFFER(hlist)[i] = hlist[i];	/* Update cache */
+					break;				/* Found it, selected points to it */
+				} else {
+					/* Walk through list, until we find a good block. This
+					 * is only done for the first 'i'. Afterwards, either the
+					 * first item will fit, or we'll have to report failure.
+					 */
+					for (
+						p = selected, selected = p->ov_next;
+						selected != (union overhead *) 0;
+						p = selected, selected = p->ov_next
+					)
+						if ((selected->ov_size & B_SIZE) >= nbytes) {
+							p->ov_next = selected->ov_next;	/* Remove from list */
+							if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
+								BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
+							break;		/* Found it, selected points to it */
+						}
+					if (selected != (union overhead *) 0)
+						break;			/* Exit main loop */
 				}
-			if (selected != (union overhead *) 0)
-				break;			/* Exit main loop */
+			}
 		}
 	}
 		
@@ -1142,8 +1192,6 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	 * having been split). Memory accounting is done in set_up().
 	 */
 	return set_up(selected, nbytes);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared EIF_REFERENCE get_to_from_core (unsigned int nbytes)
@@ -1151,11 +1199,7 @@ rt_shared EIF_REFERENCE get_to_from_core (unsigned int nbytes)
 	/* For the partial scavenging algorithm, gets a new free chunk for
 	 * the to_space.
 	 */
-	EIF_GET_CONTEXT
-
 	return allocate_from_core (nbytes, e_hlist, MB_CHUNK);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type)
@@ -1241,8 +1285,6 @@ rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead 
 		return set_up(selected, nbytes);
 	else
 		return set_up_chunk(selected, nbytes);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private union overhead *add_core(register unsigned int nbytes, int type)
@@ -1444,8 +1486,6 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 #endif
 
 	return oldbrk;			/* Pointer to new free zone */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared void rel_core(void)
@@ -1474,12 +1514,15 @@ rt_private int free_last_chunk(void)
 	 */
 	EIF_GET_CONTEXT
 	int nbytes;				/* Number of bytes to be freed */
-	EIF_REFERENCE last_addr;		/* The first address beyond the last chunk */
 	union overhead *arena;	/* The address of the arena enclosed in chunk */
 	struct chunk *last_chk;	/* Pointer to last chunk header */
 	struct chunk last_desc;	/* A copy of the overhead part from last chunk */
 	uint32 i;				/* Index in hash table where block is stored */
 	uint32 r;				/* To compute hashing index for released block */
+
+#if (!defined (HAS_SMART_MMAP)) && defined HAS_SBRK
+	EIF_REFERENCE last_addr;		/* The first address beyond the last chunk */
+#endif
 
 #if (!defined (HAS_SMART_MMAP)) && defined (HAS_SBRK) && (!defined (HAS_SMART_SBRK))
 	return -5;
@@ -1489,7 +1532,9 @@ rt_private int free_last_chunk(void)
 		return -4;						/* Make sure a failure is reported */
 	nbytes = last_chk->ck_length +		/* Amount of bytes is chunk's length */
 		sizeof(struct chunk);			/* plus the header overhead */
+#if (!defined (HAS_SMART_MMAP)) && defined HAS_SBRK
 	last_addr = (EIF_REFERENCE) last_chk + nbytes;
+#endif
 
 	/* Return immediately if the last chunk is used as a scavenging 'to' zone or
 	 * contains a generation scavenging pool.
@@ -1577,9 +1622,7 @@ rt_private int free_last_chunk(void)
 		i = (uint32) -1;
 	else {
 		r = (uint32) arena->ov_size & B_SIZE;
-		i = 0;
-		while (r >>= 1)
-			i++;
+		i = HLIST_INDEX(r);
 		disconnect_free_list(arena, i);		/* Remove arena from free list */
 	}
 
@@ -1693,8 +1736,6 @@ rt_private int free_last_chunk(void)
 
 	return 0;			/* Signals no error */
 #endif	/* !HAS_SMART_MMAP && HAS_SBRK && !HAS_SMART_SBRK */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int nbytes)
@@ -1764,8 +1805,6 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int 
 #endif
 
 	return (EIF_REFERENCE) (selected + 1);		/* Free data space */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigned int nbytes)
@@ -1825,8 +1864,6 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 #endif
 
 	return (EIF_REFERENCE) (selected + 1);		/* Free data space */
-
-	EIF_END_GET_CONTEXT	
 }
 
 rt_public void xfree(register EIF_REFERENCE ptr)
@@ -1837,7 +1874,6 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 	 * The contents of the block are preserved, though one should not
 	 * rely on this as it may change without notice.
 	 */
-	EIF_GET_CONTEXT	
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
@@ -1898,8 +1934,6 @@ rt_public void xfree(register EIF_REFERENCE ptr)
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
 #endif
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void xfreechunk(EIF_REFERENCE ptr)
@@ -1913,7 +1947,6 @@ rt_public void xfreechunk(EIF_REFERENCE ptr)
 	 * memory used is updated if the block is not a block freed by partial
 	 * scavenging (as the objects it was holding have already been counted).
 	 */
-	EIF_GET_CONTEXT
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
@@ -1965,8 +1998,6 @@ rt_public void xfreechunk(EIF_REFERENCE ptr)
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
 #endif
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize)
@@ -1999,7 +2030,9 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	 */
 	EIF_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
+#ifndef EIF_MALLOC_OPTIMIZATION
 	register5 uint32 size;				/* Size of the coalesced block */
+#endif
 
 	SIGBLOCK;					/* Critical section starts */
 
@@ -2023,14 +2056,10 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	r &= B_SIZE;					/* Clear all flags */
 	zone->ov_size = r | (i & (B_LAST | B_CTYPE));	/* Save size B_LAST & type */
 
-	i = 0;
-	while (r >>= 1)
-		i++;
-
+	i = HLIST_INDEX(r);
 	connect_free_list(zone, i);		/* Insert block in free list */
 
 	SIGRESUME;					/* Critical section ends */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE crealloc(EIF_REFERENCE ptr, unsigned int nbytes)
@@ -2058,8 +2087,8 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
 	register3 union overhead *zone;		/* The to-be-reallocated zone */
-	EIF_REFERENCE safeptr;						/* GC-safe pointer */
-	int size_gain;						/* Gain in size brought by coalesc */
+	EIF_REFERENCE safeptr;				/* GC-safe pointer */
+	int size, size_gain;				/* Gain in size brought by coalesc */
 	
 #ifdef LMALLOC_CHECK
 	if (is_in_lm (ptr))
@@ -2068,7 +2097,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 	if (nbytes & ~B_SIZE)
 		return (EIF_REFERENCE) 0;		/* I guess we can't malloc more than 2^27 */
 
-	zone = ((union overhead *) ptr) - 1;	/* Walk backward to header */
+	zone = HEADER(ptr);
 
 #ifdef DEBUG
 	dprintf(16)("realloc: reallocing block 0x%lx to be %d bytes\n",
@@ -2143,7 +2172,9 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 #ifdef EIF_MALLOC_OPTIMIZATION
 	size_gain = 0;
 #else	/* EIF_MALLOC_OPTIMIZATION */
-	size_gain = coalesc(zone);	/* Function has a side effect (this is C) */
+	size_gain = 0;
+	while ((size = coalesc(zone)))	/* Perform coalescing as long as possible */
+		size_gain += size;
 #endif	/* EIF_MALLOC_OPTIMIZATION */
 
 #ifdef DEBUG
@@ -2239,7 +2270,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 
 	if (gc_flag & GC_ON) {
 		safeptr = ptr;
-		if (-1 == epush(&loc_stack, (EIF_REFERENCE) (&safeptr))) {	/* Protect against moves */
+		if (-1 == RT_GC_PROTECT(safeptr)) {	/* Protect against moves */
 			eraise("object reallocation", EN_MEM);	/* No more memory */
 			return (EIF_REFERENCE) 0;						/* They ignored it */
 		}
@@ -2249,7 +2280,7 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 
 	if (gc_flag & GC_ON) {
 		ptr = safeptr;
-		epop(&loc_stack, 1);			/* Remove protection */
+		RT_GC_WEAN(safeptr);			/* Remove protection */
 	}
 
 	/* Keep Eiffel flags. If GC was on, it might have run its cycle during
@@ -2279,8 +2310,6 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 #endif
 
 	return (EIF_REFERENCE) zone;		/* Pointer to new arena or 0 if failed */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public struct emallinfo *meminfo(int type)
@@ -2290,7 +2319,6 @@ rt_public struct emallinfo *meminfo(int type)
 	 * to malloc, however, but may fool the garbage collector.
 	 * Type selects the kind of information wanted.
 	 */
-	EIF_GET_CONTEXT
 
 	switch(type) {
 	case M_C:
@@ -2300,8 +2328,6 @@ rt_public struct emallinfo *meminfo(int type)
 	}
 	
 	return &m_data;		/* Pointer to static data */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared int split_block(register union overhead *selected, register uint32 nbytes)
@@ -2317,7 +2343,6 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 	 * Caller is responsible for issuing a SIGBLOCK before any call to
 	 * this critical routine.
 	 */
-	EIF_GET_CONTEXT
 	register5 uint32 flags;				/* Flags of original block */
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
@@ -2350,9 +2375,7 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 		e_data.ml_over += OVERHEAD;
 
 	/* Compute hash index */
-	i = 0;
-	while (r >>= 1)
-		i++;
+	i = HLIST_INDEX(r);
 
 	/* If the block we split was the last one in the chunk, the new block is now
 	 * the last one. There is no need to clear the B_BUSY flag, as normally the
@@ -2375,8 +2398,6 @@ rt_shared int split_block(register union overhead *selected, register uint32 nby
 #endif
 
 	return r & B_SIZE;			/* Length of split block */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int coalesc(register union overhead *zone)
@@ -2391,7 +2412,6 @@ rt_private int coalesc(register union overhead *zone)
 	 * It is up to the caller to issue a SIGBLOCK prior any call to this
 	 * critical routine.
 	 */
-	EIF_GET_CONTEXT
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *next;		/* Pointer to next block */
@@ -2426,9 +2446,7 @@ rt_private int coalesc(register union overhead *zone)
 	 */
 
 	/* First, compute the position in hash list */
-	i = 0;
-	while (r >>= 1)
-		i++;
+	i = HLIST_INDEX(r);
 	disconnect_free_list(next, i);		/* Remove block from free list */
 	
 	/* Finally, we set the new coalesced block correctly, checking for last
@@ -2447,8 +2465,6 @@ rt_private int coalesc(register union overhead *zone)
 #endif
 
 	return (i & B_SIZE) + OVERHEAD;		/* Number of coalesced free bytes */
-
-	EIF_END_GET_CONTEXT
 }
 		
 rt_private void connect_free_list(register union overhead *zone, register uint32 i)
@@ -2463,7 +2479,6 @@ rt_private void connect_free_list(register union overhead *zone, register uint32
 	 * It is up to the caller to ensure signal exceptions are blocked when
 	 * entering in this critical routine.
 	 */
-	EIF_GET_CONTEXT
 	register1 union overhead *last;		/* Pointer to last block */
 	register2 union overhead *p;		/* To walk along free list */
 	register4 union overhead **hlist;	/* The free list */
@@ -2489,10 +2504,10 @@ rt_private void connect_free_list(register union overhead *zone, register uint32
 	 * machine.
 	 */
 
-	p = hlist[i];					/* Head of list */
+	p = hlist[i];		/* Head of list */
 
-	if (p == (union overhead *) 0) {
-		zone->ov_next = (union overhead *) 0;	/* First element */
+	if (!p) {
+		zone->ov_next = NULL;	/* First element */
 		hlist[i] = zone;
 		blist[i] = zone;						/* Update buffer cache */
 		return;
@@ -2523,17 +2538,15 @@ rt_private void connect_free_list(register union overhead *zone, register uint32
 			blist[i] = zone;				/* Record insertion point */
 			return;
 		}
-	
+
 	/* If we come here, then we reached the end of the list without
 	 * being able to insert the element. Thus, insertion takes place
-	 * at the tail.
-	 */
+	 * at the tail. */
 	
 	last->ov_next = zone;
 	zone->ov_next = (union overhead *) 0;	/* Last element in list */
-	blist[i] = zone;						/* Record last insertion point */
 
-	EIF_END_GET_CONTEXT
+	blist[i] = zone;						/* Record last insertion point */
 }
 
 rt_private void disconnect_free_list(register union overhead *next, register uint32 i)
@@ -2545,7 +2558,6 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 	 * It is up to the caller to ensure signal exceptions are blocked when
 	 * entering in this critical routine.
 	 */
-	EIF_GET_CONTEXT		
 	register3 union overhead *p;		/* To walk along free list */
 	register4 union overhead **hlist;	/* The free list */
 	register5 union overhead **blist;	/* Associated buffer cache */
@@ -2570,7 +2582,7 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 	 */
 	if (next != hlist[i]) {
 		p = blist[i];				/* Cached value = location of last op */
-		if (!p || next <= p)		/* Is it ok ? */
+		if ((!p) || (next <=p))		/* Is it ok ? */
 			p = hlist[i];			/* No, it is before the cached location */
 		for (; p; p = p->ov_next) {
 			if (p->ov_next == next) {			/* Next block is ok */
@@ -2580,28 +2592,21 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 			}
 		}
 
-#ifdef MAY_PANIC
-		/* Consistency check: we MUST have found the block.
-		 * Otherwise, it is a fatal error.
-		 */
-		if (p == (union overhead *) 0) {
+			/* Consistency check: we MUST have found the block.
+			 * Otherwise, it is a fatal error. */
+		CHECK ("p not null", p != NULL);
 #ifdef DEBUG
-			printf("Uh-Oh... Item 0x%lx not found in %s list #%d\n",
-				next, next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
-			printf("Dumping of list:\n");
-			for (p = hlist[i]; p; p = p->ov_next)
-				printf("\t0x%lx\n", p);
-#endif
-			eif_panic("free-list botched");
-		}
+		printf("Uh-Oh... Item 0x%lx not found in %s list #%d\n",
+			next, next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
+		printf("Dumping of list:\n");
+		for (p = hlist[i]; p; p = p->ov_next)
+			printf("\t0x%lx\n", p);
 #endif
 
 	} else {
 		hlist[i] = hlist[i]->ov_next;
 		blist[i] = hlist[i];		/* Record last operation on free list */
 	}
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared void lxtract(union overhead *next)
@@ -2616,9 +2621,7 @@ rt_shared void lxtract(union overhead *next)
 	register2 uint32 i;				/* Index in H-list (free list) */
 
 	r = next->ov_size & B_SIZE;		/* Pure size of block */
-	i = 0;							/* Compute hash index */
-	while (r >>= 1)					/* Log base 2 of the size */
-		i++;
+	i = HLIST_INDEX(r);							/* Compute hash index */
 	disconnect_free_list(next, i);	/* Remove from free list */
 }
 
@@ -2665,10 +2668,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 		 * if necessary (i.e. if its size changes).
 		 */
 		r = flags & B_SIZE;		/* Pure size */
-		i = 0;
-		while (r >>= 1)			/* Compute hash index */
-			i++;
-		r = flags & B_SIZE;		/* Save size for later */
+		i = HLIST_INDEX(r);
 
 		while (!(zone->ov_size & B_LAST)) {		/* Not last block */
 			if (0 == coalesc(zone))
@@ -2688,9 +2688,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 			r = flags & B_SIZE;			/* Size of coalesced block */
 			if (max_size < (int) r)
 				max_size = r;			/* Update maximum size yielded */
-			i = 0;
-			while (r >>= 1)
-				i++;
+			i = HLIST_INDEX(r);
 
 			/* Do the update only if necessary */
 			if (old_i != i) {
@@ -2712,7 +2710,6 @@ rt_shared int chunk_coalesc(struct chunk *c)
 #endif
 
 	return max_size;		/* Maximum size of coalesced block or 0 */
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared int full_coalesc(int chunk_type)
@@ -2722,8 +2719,6 @@ rt_shared int full_coalesc(int chunk_type)
 	 * size of the largest block made available by coalescing, or 0 if
 	 * no coalescing ever occurred.
 	 */
-	EIF_GET_CONTEXT
-
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */
 	register3 int max_coalesced;	/* Size of coalesced block in a chunk */
@@ -2770,8 +2765,6 @@ rt_shared int full_coalesc(int chunk_type)
 #endif
 
 	return max_size;		/* Maximum size of coalesced block or 0 */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
@@ -2862,8 +2855,6 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 #endif
 
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int create_scavenge_zones(void)
@@ -2906,8 +2897,6 @@ rt_private int create_scavenge_zones(void)
 	gen_scavenge = GS_ON;		/* Generation scavenging activated */
 
 	return 0;					/* Allocation was ok */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void explode_scavenge_zone(struct sc_zone *sc)
@@ -3022,40 +3011,35 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		e_data.ml_over += flags;
 
 	SIGRESUME;							/* End of critical section */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void sc_stop(void)
 {
 	/* Stop the scavenging process by freeing the zones */
-	EIF_GET_CONTEXT
 
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
 	xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
-
-	EIF_END_GET_CONTEXT
+	st_reset (&memory_set);
 }
 
 /*
  * Set an Eiffel object for public use.
  */
 
-rt_shared EIF_REFERENCE eif_set(EIF_REFERENCE object, unsigned int nbytes, uint32 type)
+rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type)
 {
 	/* Set an Eiffel object for use: reset the zone with zeros, and try to
 	 * record the object inside the moved set, if necessary. The function
 	 * returns the address of the object (it may move if a GC cycle is raised).
 	 */
 	EIF_GET_CONTEXT
-	register3 union overhead *zone;		/* Malloc info zone */
-	register4 char *(*init)(char *);			/* The optional initialization */
+	register3 union overhead *zone = HEADER(object);		/* Object's header */
+	register4 void *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* The optional initialization */
 
 	SIGBLOCK;					/* Critical section */
-	memset (object, 0, nbytes);		/* All set with zeros */
+	memset (object, 0, zone->ov_size & B_SIZE);		/* All set with zeros */
 
-	zone = HEADER(object);		/* Object's header */
 	zone->ov_size &= ~B_C;		/* Object is an Eiffel one */
 	zone->ov_flags = type;		/* Set dynamic type */
 	
@@ -3070,69 +3054,42 @@ rt_shared EIF_REFERENCE eif_set(EIF_REFERENCE object, unsigned int nbytes, uint3
 	 * is in charge of setting some other flags like EO_COMP and initializing
 	 * of expanded inter-references.
 	 */
-	init = (char *(*) (char *)) XCreate(Deif_bid(type));
-	if (init != (char *(*)(char *)) 0)
-		((void (*)()) init)(object, object);
+
+
+	init = (void *(*) (EIF_REFERENCE, EIF_REFERENCE)) XCreate(Deif_bid(type));
+	if (init) {
+		RT_GC_PROTECT(object);
+		(init)(object, object);
+		RT_GC_WEAN(object);
+	}
 
 	SIGRESUME;					/* End of critical section */
 
 #ifdef DEBUG
 	dprintf(256)("eif_set: %d bytes for DT %d at 0x%lx%s\n",
-		nbytes, type & EO_TYPE, object, type & EO_NEW ? " (new)" : "");
+		zone->ov_size & B_SIZE, type & EO_TYPE, object, type & EO_NEW ? " (new)" : "");
 	flush;
 #endif
 
 	return object;
-	EIF_END_GET_CONTEXT
 }
 
-rt_shared EIF_REFERENCE eif_strset(EIF_REFERENCE object, unsigned int nbytes)
-{
-	EIF_GET_CONTEXT
-	register3 union overhead *zone;		/* Malloc info zone */
-
-	SIGBLOCK;					/* Critical section */
-	memset (object, 0, nbytes);		/* All set with zeros */
-
-
-	zone = HEADER(object);				/* Object's header */
-#ifdef EIF_TID 
-#ifdef EIF_THREADS
-    zone->ovs_tid = eif_thr_id; /* tid from eif_thr_context */
-#else
-    zone->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
-#endif  /* EIF_THREADS */
-#endif  /* EIF_TID */
-
-	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
-	zone->ov_flags = EO_SPEC;	/* Object is special */
-
-	SIGRESUME;					/* End of critical section */
-
-#ifdef EIF_STRSET_DEBUG
-	printf ("EIF_STRSET: %d bytes special at 0x%lx\n", nbytes, object);
-#endif	/* EIF_STRSET_DEBUG */
-
-	return object;
-	EIF_END_GET_CONTEXT
-}
-
-rt_shared EIF_REFERENCE eif_spset(EIF_REFERENCE object, unsigned int nbytes)
+rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge)
 {
 	/* Set the special Eiffel object for use: reset the zone with zeros.
-	 * Also try to remember the object (has to be in the new generation outside
+	 * If special object not allocated in scavenge zone, we also try to
+	 * remember the object (has to be in the new generation outside
 	 * scavenge zone). The dynamic type of the special object is left blank. It
 	 * is up to the caller of spmalloc() to set a proper dynamic type.
 	 * The function returns the location of the object (it may move if a GC
 	 * cycle has been raised to remember the object).
 	 */
 	EIF_GET_CONTEXT
-	register3 union overhead *zone;		/* Malloc info zone */
+	register3 union overhead *zone = HEADER(object);		/* Malloc info zone */
 
 	SIGBLOCK;					/* Critical section */
-	memset (object, 0, nbytes);		/* All set with zeros */
+	memset (object, 0, zone->ov_size & B_SIZE);		/* All set with zeros */
 
-	zone = HEADER(object);				/* Object's header */
 #ifdef EIF_TID 
 #ifdef EIF_THREADS
     zone->ovs_tid = eif_thr_id; /* tid from eif_thr_context */
@@ -3142,1080 +3099,43 @@ rt_shared EIF_REFERENCE eif_spset(EIF_REFERENCE object, unsigned int nbytes)
 #endif  /* EIF_TID */
 
 	zone->ov_size &= ~B_C;				/* Object is an Eiffel one */
-	zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
 
-	if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
-		urgent_plsc(&object);					/* Full collection */
-		if (-1 == epush(&moved_set, object)) 	/* Still failed */
-			enomem(MTC_NOARG);							/* Critical exception */
-	}
+	if (in_scavenge == EIF_FALSE) {
+		zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
+
+		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
+			urgent_plsc(&object);					/* Full collection */
+			if (-1 == epush(&moved_set, object)) 	/* Still failed */
+				enomem(MTC_NOARG);							/* Critical exception */
+		}
+	} else
+		zone->ov_flags = EO_SPEC;	/* Object is special */
 
 	SIGRESUME;					/* End of critical section */
 
 #ifdef DEBUG
-	dprintf(256)("eif_spset: %d bytes special at 0x%lx\n", nbytes, object);
+	dprintf(256)("eif_spset: %d bytes special at 0x%lx\n", zone->ov_size & B_SIZE, object);
 	flush;
 #endif
 
 	return object;
-	EIF_END_GET_CONTEXT
 }
 
-/*
- * Offcial end of malloc.
- */
-
-#ifdef MEMCHK
-
-/*
- * Memck: a memory consistency checker.
- *
- * The following routines are implementing a memory consistency checker. They
- * scan the memory and report inconsistencies on the standard output descriptor.
- * Messages referring to "block" give zone addresses whereas messages referring
- * to "object" give actual object addresses (i.e. the user pointer we got from
- * eif_malloc).
- */
-
-#include <stdio.h>
-#include <signal.h>
-
-#define CHUNK_T		0			/* Scanning a chunk */
-#define ZONE_T		1			/* Scanning a generation scavenging zone */
-
-rt_private int max_dtype;			/* Maximum dynamic type in system */
-rt_private int *obj_use = 0;		/* Object usage table by dynamic type */
-rt_private int c_blocks;			/* Number of C blocks found */
-rt_private int c_size;				/* Amount of memory used by C objects */
-rt_private int mefree;				/* Memory listed in Eiffel free list */
-rt_private int mcfree;				/* Memory listed in C free list */
-
-rt_private void check_chunk(register5 char *, register6 char *, int);
-rt_private void check_free_list(register1 union overhead *);
-rt_private void check_flags(char *, char *);
-rt_private void check_ref(char *);
-
-rt_private void check_free_list(register1 union overhead *next)
-{
-	/* Make sure free block is in the free list */
-	EIF_GET_CONTEXT
-			
-	register2 uint32 i;					/* Hashing list */
-	register3 union overhead *p;		/* To walk along free list */
-	register4 union overhead **hlist;	/* The free list */
-	register5 union overhead **blist;	/* Associated buffer cache */
-	register6 uint32 r;					/* For size hashing */
-	int notfound = 0;					/* Assume block found */
-
-	/* First compute the hashing list from the size information */
-	r = next->ov_size & B_SIZE;
-	i = 0;
-	while (r >>= 1)
-		i++;
-
-	/* As each block carries its type, we are able to determine which free
-	 * list it belongs. This is completely hidden by the interface with
-	 * the outside world, and, as mentionned before, I love it :-)--RAM.
+rt_private int32 compute_hlist_index (int32 size) {
+	/* Quickly compute the index in the hlist array where we have a
+	 * chance to find the right block. The idea is to do a right
+	 * logical shift until the register is zero. The number of shifts
+	 * done is the base 2 logarithm of 'nbytes'.
 	 */
-	hlist = FREE_LIST(next->ov_size & B_CTYPE);		/* Get right list ptr */
-	blist = BUFFER(hlist);							/* And associated cache */
 
-	/* To avoid the cost of an extra variable, look whether it is in hlist[i]
-	 * first. That way, we will be able to test only for the next field in the
-	 * loop and still have a pointer on current, so that we can update the list.
-	 */
-	if (next != hlist[i]) {
-		p = blist[i];				/* Cached value = location of last op */
-		if (!p || next <= p)		/* Is it ok ? */
-			p = hlist[i];			/* No, it is before the cached location */
-		for (; p; p = p->ov_next) {
-			if (p->ov_next == next) {			/* Next block is ok */
-				blist[i] = p;					/* Last operation */
-				break;							/* Exit from loop */
-			}
-		}
-		/* Consistency check: we MUST have found the block */
-		if (p == (union overhead *) 0) {
-			printf("memck: block 0x%lx not found in %s list #%d\n",
-				next, next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
-#ifdef MEMPANIC
-			printf("Dumping of list:\n");
-			for (p = hlist[i]; p; p = p->ov_next)
-				printf("\t0x%lx\n", p);
-#endif
-			notfound = 1;
-			mempanic;
-		}
-	} else
-		blist[i] = hlist[i];		/* Record last operation on free list */
+	int32 i = HLIST_INDEX_LIMIT;
+	int32 n = size;
 
-	if (!notfound) {
-		r = next->ov_size;
-		if (r & B_CTYPE)
-			mcfree += (r & B_SIZE) + OVERHEAD;
-		else
-			mefree += (r & B_SIZE) + OVERHEAD;
-	}
-	EIF_END_GET_CONTEXT
+		/* When we call this routine it means that `size' was bigger or equal to HLIST_SIZE_LIMIT */
+	REQUIRE ("Not a precomputed index", size >= HLIST_SIZE_LIMIT);
+
+	n >>= HLIST_DEFAULT_SHIFT;
+	while (n >>= 1)
+	  i++;
+	return i;
 }
-
-rt_private void check_ref(char *object)
-{
-	/* Make sure the references held in the object are valid */
-	EIF_GET_CONTEXT
-
-	union overhead *zone;
-	uint32 flags;
-	uint32 size;
-	int refs;
-	char *root;
-	int has_expanded = 0;
-
-	/* This is a copy of the scheme used in refers_new_object() */
-
-	size = REFSIZ;
-	zone = HEADER(object);
-	flags = zone->ov_flags;
-
-	if (Deif_bid(flags) > max_dtype) {
-		printf("memck: object 0x%lx exceeds maximum dtype (%d), skipped.\n",
-			object, flags & EO_TYPE);
-		mempanic;
-		return;
-	}
-
-	if (flags & EO_SPEC) {
-		if (!(flags & EO_REF))
-			return;
-		size = (zone->ov_size & B_SIZE) - LNGPAD_2;
-		refs = *(long *) (object + size);
-		if (flags & EO_COMP)
-			size = *(long *) (object + size + sizeof(long)) + OVERHEAD;
-		else
-			size = REFSIZ;
-	} else
-		refs = References(Deif_bid(flags));
-	
-	for (; refs != 0; refs--, object += size) {
-		root = *(EIF_REFERENCE *) object;
-		if (root == (EIF_REFERENCE) 0)
-			continue;
-		if (HEADER(root)->ov_flags & EO_EXP) {
-			check_flags(root, zone + 1);		/* Explore expanded */
-			has_expanded++;
-		} else
-			check_flags(root, zone + 1);
-	}
-
-	if (flags & EO_COMP) {				/* Object advertised some expandeds */
-		if (!has_expanded) {
-			printf("memck: object 0x%lx is EO_COMP but no expanded.", object);
-			mempanic;
-		}
-	} else {
-		if (has_expanded) {
-			printf("memck: object 0x%lx not EO_COMP with %d expanded%s.",
-				object, has_expanded, has_expanded == 1 ? "" : "s");
-			mempanic;
-		}
-	}
-	EIF_END_GET_CONTEXT
-}
-
-rt_private void check_flags(EIF_REFERENCE object, EIF_REFERENCE from)
-{
-	/* Check the flags consistency in object. If from is a non null reference,
-	 * that means the checking is currently being done by exploring the
-	 * references from this object.
-	 */
-	EIF_GET_CONTEXT
-
-	int dtype, dftype;
-	uint32 flags;
-	int num = 0;
-
-	flags  = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dftype = flags & EO_TYPE;
-	dtype  = Deif_bid(dftype);
-
-	if (flags & EO_C)						/* Not an Eiffel object */
-		return;;
-
-	if ((uint32) object % MEM_ALIGNBYTES) {
-		num++;
-		printf("memck: object 0x%lx is mis-aligned.\n", object);
-	}
-
-	if (dtype > max_dtype) {
-		num++;
-		printf("memck: object 0x%lx exceeds maximum dynamic type (%d).\n",
-			object, dtype);
-	} else if (from == (char *) 0)
-		obj_use[Deif_bid(flags)]++;
-
-	if (dtype <= max_dtype && !(flags & EO_SPEC) && !(flags & EO_EXP)) {
-		int mod;
-		int nbytes = EIF_Size(dtype);
-		int size = HEADER(object)->ov_size & B_SIZE;
-
-		mod = nbytes % ALIGNMAX;
-		if (mod != 0)
-			nbytes += ALIGNMAX - mod; 
-
-		if (size != nbytes) {
-			num++;
-			printf("memck: object 0x%lx should be %d bytes (is %d)\n",
-				object, nbytes, size);
-		}
-	}
-
-	if (flags & EO_MARK) {
-		num++;
-		printf("memck: object 0x%lx is marked with EO_MARK.\n", object);
-	}
-
-	if ((flags & EO_OLD) && (flags & EO_NEW)) {
-		num++;
-		printf("memck: object 0x%lx both EO_OLD and EO_NEW.\n", object);
-	}
-	
-	if ((flags & EO_REM) && !(flags & EO_OLD)) {
-		num++;
-		printf("memck: object 0x%lx is EO_REM and not EO_OLD.\n", object);
-	}
-
-	if ((flags & EO_REM) && (flags & EO_NEW)) {
-		num++;
-		printf("memck: object 0x%lx is EO_REM and EO_NEW.\n", object);
-	}
-
-	if ((flags & EO_C) && (flags & EO_SPEC)) {
-		num++;
-		printf("memck: object 0x%lx is EO_C and EO_SPEC.\n", object);
-	}
-
-	if ((flags & EO_EXP) && (flags & EO_SPEC)) {
-		num++;
-		printf("memck: object 0x%lx is EO_EXP and EO_SPEC.\n", object);
-	}
-
-#ifdef WORKBENCH
-	if (flags & EO_STOP) {
-		num++;
-		printf("memck: object 0x%lx is marked with EO_STOP.\n", object);
-	}
-#endif
-
-	if (num && from != (char *) 0) {
-		printf("memck: last %d messages while exploring %s0x%lx (DT %d)\n",
-			num, flags & EO_EXP ? "expanded inside " : "", from,
-			Dtype(from));
-		mempanic;
-	}
-	EIF_END_GET_CONTEXT
-}
-
-rt_public void memck(unsigned int max_dt)
-{
-	/* Perform consistency checks on the memory and report failures by messages
-	 * on stdout. This routine is intended to be used as a debugging tool only.
-	 * The argument max_dt gives the maximum possible dynamic type, which
-	 * may help discover any discrepancy. If not specified (i.e. 0 is given)
-	 * then the maximum possible value is used.
-	 */
-	EIF_GET_CONTEXT
-
-	struct chunk *chunk;		/* Current chunk */
-	char *arena;				/* Arena in chunk */
-
-	if (max_dt == 0)			/* Maximum dtype left unspecified */
-		max_dtype = scount - 1;
-	else
-		max_dtype = max_dt;
-
-	if (max_dtype >= scount) {
-		printf("memck: warning: dtype requested %d, maximum is %d\n",
-			max_dtype, scount - 1);
-		max_dtype = scount - 1;
-	}
-		
-	if (obj_use == (int *) 0) {
-		obj_use = (int *) xmalloc(scount * sizeof(int), C_T, GC_OFF);
-		if (obj_use == (int *) 0) {
-			printf("memck: cannot build object table\n");
-			fflush(stdout);
-			return;
-		}
-	}
-	memset (obj_use, 0, scount * sizeof(int));
-
-	c_blocks = c_size = 0;
-	mefree = mcfree = 0;
-
-	printf("memck: checking memory with maximum type of %d...\n", max_dtype);
-	fflush(stdout);				/* Flush message right away */
-
-	for (chunk = cklst.ck_tail; chunk; chunk = chunk->ck_prev) {
-
-		arena = (char *) (chunk + 1);
-
-		if (arena == ps_to.sc_arena)
-			continue;			/* Skip 'to' zone since it is always empty */
-
-		check_chunk((char *)chunk, arena, CHUNK_T);
-	}
-
-	/* If generation scavenging is active, check 'from' zone */
-
-	if (gen_scavenge & GS_ON)
-		check_chunk((char *)&sc_from, sc_from.sc_arena, ZONE_T);
-
-	printf("memck: checking done.\n", max_dtype);
-	fflush(stdout);				/* Make sure we always see messages */
-	EIF_END_GET_CONTEXT
-}
-
-rt_private void check_chunk(register5 char *chunk, register6 char *arena, int type)
-		/* A struct chunk or struct sc_zone */
-		/* Arena were objects are stored */
-		/* Type is either CHUNK_T or ZONE_T */
-{
-	/* Consistency checks on the chunk's contents */
-	EIF_GET_CONTEXT
-	register1 union overhead *zone;		/* Malloc info zone */
-	register2 uint32 size;				/* Object's size in bytes */
-	register3 char *end;				/* First address beyond chunk */
-	register4 uint32 flags;				/* Eiffel flags */
-
-	switch (type) {
-	case CHUNK_T:
-		end = (char *) arena + ((struct chunk *) chunk)->ck_length;
-		break;
-	case ZONE_T:
-		end = (char *) ((struct sc_zone *) chunk)->sc_top;
-		break;
-	}
-
-	for (
-		zone = (union overhead *) arena;
-		(char *) zone < end;
-		zone = (union overhead *) (((char *) zone) + (size & B_SIZE) + OVERHEAD)
-	) {
-		size = zone->ov_size;			/* Size and flags */
-
-		if (size % MEM_ALIGNBYTES) {
-			printf("memck: block 0x%lx has size %d\n", zone, size);
-			mempanic;
-		}
-
-		/* The first consistency checking is made on the malloc flags. If
-		 * the block is large enough to hit the end of the chunk it must be
-		 * B_LAST. Also its B_CTYPE bit must be correctly set depending on
-		 * the type of the chunk. All the tests are pretty trivial, so I won't
-		 * comment much of them.
-		 */
-
-		if ((char *) zone + (size & B_SIZE) + OVERHEAD > end)
-			if (type == CHUNK_T) {
-				printf("memck: block 0x%lx goes beyond chunk.\n", zone);
-				mempanic;
-			} else {
-				printf("memck: block 0x%lx goes beyond top of zone.\n", zone);
-				mempanic;
-			}
-		
-		if (
-			type == CHUNK_T &&
-			(char *) zone + (size & B_SIZE) + OVERHEAD == end
-		)
-			if (!(size & B_LAST)) {
-				printf("memck: block 0x%lx not marked B_LAST.\n", zone);
-				mempanic;
-			}
-
-		if (type == CHUNK_T) {
-			if (((struct chunk *) chunk)->ck_type == C_T) {
-				if (!(size & B_CTYPE)) {
-					printf("memck: block 0x%lx should be B_CTYPE.\n", zone);
-					mempanic;
-				}
-			} else {
-				if (size & B_CTYPE) {
-					printf("memck: block 0x%lx cannot be B_CTYPE.\n", zone);
-					mempanic;
-				}
-			}
-		}
-
-		if (size & B_FWD) {
-			printf("memck: block 0x%lx marked with B_FWD.\n", zone);
-			mempanic;
-		}
-
-		if (type == CHUNK_T && !(size & B_BUSY)) {
-			check_free_list(zone);	/* Make sure it is in free list */
-			continue;
-		}
-
-		if (size & B_C) {
-			c_blocks++;
-			c_size += (size & B_SIZE) + OVERHEAD;
-		}
-
-		arena = (char *) (zone + 1);	/* Get public object pointer */
-
-		if (!(size & B_BUSY) && type != ZONE_T)		/* Object is free */
-			continue;
-
-		if (zone->ov_flags & EO_C)		/* Not an Eiffel object */
-			continue;
-
-		if (type == CHUNK_T) {			/* Not in scavenge zone */
-
-			if (((struct chunk *) chunk)->ck_type == C_T && size & B_C)
-				continue;
-
-			if (!(zone->ov_flags & EO_OLD) && !(zone->ov_flags & EO_NEW)) {
-				printf("memck: object 0x%lx neither OLD nor NEW.\n", arena);
-				mempanic;
-			}
-		}
-
-		check_flags(arena, (char *) 0);	/* Check flags consistency */
-		check_ref(arena);				/* Make sure references are valid */
-	}
-	EIF_END_GET_CONTEXT
-}
-
-rt_private void output_free_list(FILE *f)
-{
-	EIF_GET_CONTEXT
-	int ncblocks[NBLOCKS];		/* Number of C blocks in free list */
-	int ncsize[NBLOCKS];		/* Size of C free list (with overhead) */
-	int neblocks[NBLOCKS];		/* Number of Eiffel blocks in free list */
-	int nesize[NBLOCKS];		/* Size of Eiffel free list (with overhead) */
-	int tcblocks = 0;			/* Total number of blocks in C list */
-	int tcsize = 0;				/* Size of blocs in free C list */
-	int teblocks = 0;			/* Total number of blocks in Eiffel list */
-	int tesize = 0;				/* Size of blocs in free Eiffel list */
-	int i;
-	union overhead *p;
-
-	for (i = 0; i < NBLOCKS; i++)
-		neblocks[i] = nesize[i] = ncblocks[i] = ncsize[i] = 0;
-
-	for (i = 0; i < NBLOCKS; i++)
-		for (p = e_hlist[i]; p; p = p->ov_next)
-			neblocks[i]++, nesize[i] += (p->ov_size & B_SIZE) + OVERHEAD;
-
-	for (i = 0; i < NBLOCKS; i++)
-		for (p = c_hlist[i]; p; p = p->ov_next)
-			ncblocks[i]++, ncsize[i] += (p->ov_size & B_SIZE) + OVERHEAD;
-
-	for (i = 0; i < NBLOCKS; i++) {
-		tcblocks += ncblocks[i];
-		tcsize += ncsize[i];
-		teblocks += neblocks[i];
-		tesize += nesize[i];
-	}
-
-	fprintf(f, "memck: status of free list:\n");
-
-	for (i = 0; i < NBLOCKS; i++)
-		fprintf(f,
-			"\t#%d: Eiffel %d blocks (%d bytes), C %d blocks (%d bytes)\n",
-			i, neblocks[i], nesize[i], ncblocks[i], ncsize[i]);
-
-	fprintf(f, "memck: summary of free list:\n");
-	fprintf(f, "\tTOTAL: Eiffel %d blocks (%d bytes), C %d blocks (%d bytes)\n",
-			teblocks, tesize, tcblocks, tcsize);
-	EIF_END_GET_CONTEXT
-}
-
-rt_private void output_table(FILE *f)
-{
-	EIF_GET_CONTEXT
-	int i;
-	int use;
-	int usage;
-	int nb_obj = 0;
-	int mem_used = 0;
-
-	fprintf(f, "memck: usage table:\n");;
-	for (i = 0; i < scount; i++) {
-		use = obj_use[i];
-		if (use == 0)
-			continue;
-		usage = use * (EIF_Size(i) + OVERHEAD);
-		fprintf(f, "\t%s: %d (%d bytes)\n", System(i).cn_generator, use, usage);
-		nb_obj += use;
-		mem_used += usage;
-	}
-
-	fprintf(f, "memck: usage summary: %d objects (%d bytes)\n",
-		nb_obj, mem_used);
-	fprintf(f, "memck: C usage: %d blocks (%d bytes)\n",
-		c_blocks, c_size);
-	fprintf(f, "memck: memory in free-list: Eiffel: %d bytes / C: %d bytes\n",
-		mefree, mcfree);
-
-	output_free_list(f);
-
-	fprintf(f, "memck: current state of memory (total, Eiffel, C):\n");
-	fprintf(f, "memck: chunks       : %d, %d, %d\n",
-		m_data.ml_chunk, e_data.ml_chunk, c_data.ml_chunk);
-	fprintf(f, "memck: total memory : %ld, %ld, %ld\n",
-		m_data.ml_total, e_data.ml_total, c_data.ml_total);
-	fprintf(f, "memck: overhead     : %ld, %ld, %ld\n",
-		m_data.ml_over, e_data.ml_over, c_data.ml_over);
-	fprintf(f, "memck: memory used  : %ld, %ld, %ld\n",
-		m_data.ml_used, e_data.ml_used, c_data.ml_used);
-	fprintf(f, "memck: memory free  : %ld, %ld, %ld\n",
-		m_data.ml_total - m_data.ml_used - m_data.ml_over,
-		e_data.ml_total - e_data.ml_used - e_data.ml_over,
-		c_data.ml_total - c_data.ml_used - c_data.ml_over);
-
-	fflush(f);
-	EIF_END_GET_CONTEXT
-}
-
-rt_shared void mem_diagnose(int sig)
-{
-	EIF_GET_CONTEXT
-	printf("diagnosing memory...\n");
-	fflush(stdout);
-	if (sig == SIGUSR1) {
-		printf("\tcollecting...\n");
-		fflush(stdout);
-		mksp();
-	}
-	printf("\tscanning...\n");
-	memck(0);
-	output_table(stdout);
-	EIF_END_GET_CONTEXT
-}
-
-rt_public eif_mem_info(EIF_BOOLEAN flag)
-{
-	EIF_GET_CONTEXT
-	printf("diagnosing memory...\n");
-	if (flag){
-		printf("\tcollecting...\n");
-		fflush(stdout);
-		mksp();
-	}
-	printf("\tscanning...\n");
-	memck(0);
-	output_table(stdout);
-	EIF_END_GET_CONTEXT
-}
-
-#endif /* MEMCHK */
-
-
-#ifndef EIF_THREADS
-rt_private uint32 *type_use = 0;   /* Object usage table by dynamic type */
-rt_private uint32 c_mem = 0;		/* C memory used (bytes) */
-#endif /* EIF_THREADS */
-
-/*rt_private void inspect();    (never defined) */
-rt_private void check_obj(char *object);
-
-
-rt_private void check_obj(char *object)
-{
-	EIF_GET_CONTEXT
-	int dtype;
-	uint32 flags;
-	uint32 mflags;
-
-	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dtype = Deif_bid(flags);
-
-	if (flags & EO_C) {						/* Not an Eiffel object */
-		mflags = HEADER(object)->ov_size;
-		c_mem += (mflags & B_SIZE) + OVERHEAD;
-		return;;
-	}
-
-	if (dtype <= scount)
-		type_use[Deif_bid(flags)]++;
-
-	EIF_END_GET_CONTEXT
-}
-
-
-rt_private void inspect_chunk(register char *chunk, register char *arena, int type)
-					  		/* A struct chunk or struct sc_zone */
-					  		/* Arena were objects are stored */
-		 					/* Type is either CHUNK_T or ZONE_T */
-{
-	/* Consistency checks on the chunk's contents */
-
-	register1 union overhead *zone;		/* Malloc info zone */
-	register2 uint32 size;				/* Object's size in bytes */
-	register3 char *end = (char *) 0;				/* First address beyond chunk */
-
-	switch (type) {
-	case CHUNK_T:
-		end = (char *) arena + ((struct chunk *) chunk)->ck_length;
-		break;
-	case ZONE_T:
-		end = (char *) ((struct sc_zone *) chunk)->sc_top;
-		break;
-	default:
-		eif_panic ("Unknown chunk type");	
-	}
-
-	for (
-		zone = (union overhead *) arena;
-		(char *) zone < end;
-		zone = (union overhead *) (((char *) zone) + (size & B_SIZE) + OVERHEAD)
-	) {
-		size = zone->ov_size;			/* Size and flags */
-
-		if (type == CHUNK_T && !(size & B_BUSY)) {
-			continue;
-		}
-		arena = (char *) (zone + 1);	/* Get public object pointer */
-
-		if (!(size & B_BUSY) && type != ZONE_T)		/* Object is free */
-			continue;
-
-		if (zone->ov_flags & EO_C) {	/* Not an Eiffel object */
-			check_obj(arena);
-			continue;
-		}
-
-		if (type == CHUNK_T) {			/* Not in scavenge zone */
-
-			if (((struct chunk *) chunk)->ck_type == C_T && size & B_C)
-				continue;
-		}
-
-		check_obj(arena);
-	}
-}
-
-
-rt_private void eif_memck(void)
-{
-	EIF_GET_CONTEXT
-	struct chunk *chunk;		/* Current chunk */
-	char *arena;				/* Arena in chunk */
-
-	if (type_use == (uint32 *) 0) {
-		type_use = (uint32 *) xmalloc(scount * sizeof(uint32), C_T, GC_OFF);
-		if (type_use == (uint32 *) 0) {
-			printf("memck: cannot build object table\n");
-			fflush(stdout);
-			return;
-		}
-	}
-	memset (type_use, 0, scount * sizeof(uint32));
-
-	c_mem = 0;					/* Initializes C memory usage */
-
-	for (chunk = cklst.ck_tail; chunk; chunk = chunk->ck_prev) {
-
-		arena = (char *) (chunk + 1);
-
-		if (arena == ps_to.sc_arena)
-			continue;			/* Skip 'to' zone since it is always empty */
-
-		inspect_chunk((char *)chunk, arena, CHUNK_T);
-	}
-
-	/* If generation scavenging is active, check 'from' zone */
-	if (gen_scavenge & GS_ON)
-		inspect_chunk((char *)&sc_from, sc_from.sc_arena, ZONE_T);
-
-	fflush(stdout);				/* Make sure we always see messages */
-
-	EIF_END_GET_CONTEXT
-}
-
-rt_public void eif_trace_types(FILE *f)
-{
-	EIF_GET_CONTEXT
-	int i;
-	uint32 use;
-	uint32 usage;
-
-	eif_memck();
-	for (i = 0; i < scount; i++) {
-		use = type_use[i];
-		if (use == 0)
-			continue;
-		usage = use * (EIF_Size(i) + OVERHEAD);
-		fprintf(f, "\t%s: %d (%d bytes)\n", System(i).cn_generator, use, usage);
-	}
-	fprintf(f, "C memory usage (bytes): %ld\n", (long) c_mem);
-	fflush(f);
-
-	EIF_END_GET_CONTEXT
-}
-
-
-#ifdef TEST
-
-/* This section implements a set of tests for the malloc package.
- * It should not be regarded as a model of C programming :-).
- * To run this, compile the file with -DTEST.
- */
-
-#undef TEST
-#undef DEBUG
-
-#define lint 0					/* Avoid definition of rcsid */
-#include "garcol.c"
-#include "timer.c"
-
-rt_private char *vmalloc(unsigned int);		/* Verbose malloc */
-rt_private char *vcalloc(unsigned int);		/* Verbose calloc */
-rt_private char *vrealloc(char *, unsigned int);/* Verbose realloc */
-rt_private void vfree(char *);			/* Verbose free */
-rt_private void mem_status(void);		/* Print memory status */
-rt_private void mem_reset(void);		/* Reset memory */
-rt_private void run_tests(void);		/* Run all the memory tests */
-
-/* char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
-/* void (**edispose)(); FIXME: SEE EIF_PROJECT.C */
-long nbref[1];
-
-rt_public main(void)
-{
-	/* Tests the memory allocation package */
-
-	printf("> Starting tests for malloc package\n");
-	printf("> Package has been optimized for %s\n",
-		cc_for_speed ? "speed" : "memory");
-	run_tests();
-	mem_reset();
-	printf("> Switching optimizations\n");
-	cc_for_speed = 1 - cc_for_speed;
-	printf("> Package is now optimized for %s\n",
-		cc_for_speed ? "speed" : "memory");
-	run_tests();
-	printf("> End of tests\n");
-	exit(0);
-}
-
-rt_private void run_tests(void)
-{
-	/* Run all the memory tests */
-
-	int i, j;
-	char *p[8];
-	char *p1, *p2, *p3;
-
-	printf(">> Testing malloc(0)\n");
-	(void) vmalloc(0);
-
-	/* Start with intensive mallocs */
-
-	printf(">> Mallocing memory (small blocks)\n");
-	for (j = 1, i = 0; i < 4; i++, j += 32)
-		(void) vmalloc(j);
-
-	printf(">> Mallocing memory (big blocks) with frees\n");
-	for (j = CHUNK_DEFAULT, i = 0; i < 3; i++, j *= 2)
-		vfree(vmalloc(j));
-
-	printf(">> Ensuring big mallocs fail\n");
-	vmalloc(1<<(NBLOCKS + 1));
-	
-	mem_reset();
-
-	/* Test coalescing */
-
-	printf(">> Testing coalsecing (I)\n");
-	p1 = vmalloc(10);
-	p2 = vmalloc(12);
-	printf(">>> Coalescing expected here\n");
-	vfree(p2);
-	printf(">>> And also here\n");
-	vfree(p1);
-
-	printf(">> Testing coalsecing (II)\n");
-	p1 = vmalloc(10);
-	p2 = vmalloc(1);
-	p3 = vmalloc(12);
-	printf(">>> Coalescing expected here\n");
-	vfree(p3);
-	printf(">> But not here\n");
-	vfree(p1);
-	printf(">>> Another coalescing case\n");
-	vfree(p2);
-	
-	mem_reset();
-
-	/* Testing calloc */
-	printf(">> Testing calloc, followed by free\n");
-	printf(">>> Big block...\n");
-	p1 = vcalloc(CHUNK_DEFAULT + 5);
-	printf(">>> Small block...\n");
-	p2 = vcalloc(40);
-	vfree(p2);
-	vfree(p1);
-	printf(">>> Big block again !!\n");
-	p1 = vcalloc(CHUNK_DEFAULT + 5);
-	vfree(p1);
-
-	mem_reset();
-
-	/* Test realloc */
-
-	printf(">> Testing realloc\n");
-	printf(">>> Allocating first block\n");
-	p1 = vmalloc(128);
-	printf(">>> Allocating second block to force moving\n");
-	p2 = vmalloc(128);
-	printf(">>> Extending first block (expect move)\n");
-	p1 = vrealloc(p1, 256);
-	printf(">>> Void reallocating...\n");
-	p1 = vrealloc(p1, 256);
-	printf(">>> Shrinking second block (no move, split -> null size block)\n");
-	p2 = vrealloc(p2, 128 - ALIGNMAX - 1);
-	printf(">>> Re-extending second block (no move)\n");
-	p2 = vrealloc(p2, 128);
-	printf(">>> Shrinking second block (no move, but split)\n");
-	p2 = vrealloc(p2, 40);
-	printf(">>> Shrinking second block again (no move, no split)\n");
-	p2 = vrealloc(p2, 37);
-	printf(">>> Re-extending second block (no move but coalescing)\n");
-	p2 = vrealloc(p2, 128);
-	printf(">>> Extending second block (expect move)\n");
-	p2 = vrealloc(p2, 256);
-	printf(">>> Freeing second block\n");
-	vfree(p2);
-	printf(">>> Extending first block (expect coalescing)\n");
-	p1 = vrealloc(p1, 512);
-	printf(">>> Freeing first block\n");
-	vfree(p1);
-	mem_reset();
-
-	/* Testing full_coalesc */
-
-	printf(">> Testing full coalescing\n");
-	printf(">>> Mallocing 8 blocks (A B C D E F G H)\n");
-	for (i = 0; i < 8; i++) {
-		printf(">>> Mallocing block %c\n", 'A' + i);
-		p[i] = xmalloc(30000, C_T, GC_OFF);
-	}
-	mem_status();
-	printf(">>> Freeing 5 blocks (G, H, C, D, E)\n");
-	printf(">>> Freeing G\n");
-	xfree(p[6]);
-	printf(">>> Freeing H\n");
-	xfree(p[7]);
-	printf(">>> Freeing C\n");
-	xfree(p[2]);
-	printf(">>> Freeing D\n");
-	xfree(p[3]);
-	printf(">>> Freeing E\n");
-	xfree(p[4]);
-	mem_status();
-	printf(">>> Running full coalescing\n");
-	full_coalesc(C_T);
-	mem_status();
-	printf(">>> Freeing remaining blocks\n");
-	printf(">>> Freeing A\n");
-	xfree(p[0]);
-	printf(">>> Freeing B\n");
-	xfree(p[1]);
-	printf(">>> Freeing F\n");
-	xfree(p[5]);
-	mem_status();
-	printf(">>> Running full coalescing again\n");
-	full_coalesc(C_T);
-	mem_status();
-
-	/* Test Eiffel malloc */
-
-	printf(">> Testing emalloc (Eiffel malloc)\n");
-	for (i = 0; i < 8; i++)
-		(void) emalloc(0);
-	mem_status();
-
-	printf(">> Testing spmalloc (Eiffel special objects)\n");
-	for (i = 0; i < 8; i++)
-		(void) spmalloc(i * 40);
-	mem_status();
-
-	/* Test explosion of scavenge space if necessary */
-	if (gen_scavenge & GS_ON) {
-		printf(">> Exploding scavenge zone\n");
-		explode_scavenge_zone(&sc_from);
-		mem_status();
-	}
-}
-
-rt_private char *vmalloc(unsigned int size)
-{
-	char *result;
-	
-	printf(">>>> mallocing %d bytes\n", size);
-	result = xmalloc(size, C_T, GC_OFF);
-	if (result == (char *) 0)
-		printf(">>>> FAILED: malloc (%d bytes)\n", size);
-	mem_status();
-	
-	return result;
-}
-
-rt_private void vfree(char *ptr)
-{
-	union overhead *zone = ((union overhead *) ptr) - 1;
-
-	printf(">>>> freeing %d bytes\n", zone->ov_size & B_SIZE);
-	xfree(ptr);
-	mem_status();
-}
-
-rt_private char *vcalloc(unsigned int size)
-{
-	char *result;
-
-	printf(">>>> callocing %d bytes\n", size);
-	result = xcalloc(size, 1);
-	if (result == (char *) 0)
-		printf(">>>> FAILED: calloc (%d bytes)\n", size);
-	mem_status();
-	
-	return result;
-}
-
-rt_private char *vrealloc(char *ptr, unsigned int size)
-{
-	char *result;
-	unsigned int i = ((union overhead *) ptr - 1)->ov_size & B_SIZE;
-
-	printf(">>>> reallocing %d bytes into %d\n", i, size);
-	result = xrealloc(ptr, size, GC_OFF);
-	if (result == (char *) 0)
-		printf(">>>> FAILED: realloc (%d bytes)\n", size);
-	else if (result == ptr)
-		printf(">>>> block was not moved\n");
-	else
-		printf(">>>> block was moved\n");
-	mem_status();
-	
-	return result;
-}
-
-rt_private void mem_status(void)
-{
-	/* Prints memory status */
-
-	printf(">>>> Current state of memory\n");
-	printf(">>>>> chunks       : %d\n", m_data.ml_chunk);
-	printf(">>>>> total memory : %ld\n", m_data.ml_total);
-	printf(">>>>> overhead     : %ld\n", m_data.ml_over);
-	printf(">>>>> memory used  : %ld\n", m_data.ml_used);
-	printf(">>>>> memory free  : %ld\n",
-		m_data.ml_total - m_data.ml_used - m_data.ml_over);
-	printf(">>>>> C chunks       : %d\n", c_data.ml_chunk);
-	printf(">>>>> C total memory : %ld\n", c_data.ml_total);
-	printf(">>>>> C overhead     : %ld\n", c_data.ml_over);
-	printf(">>>>> C memory used  : %ld\n", c_data.ml_used);
-	printf(">>>>> C memory free  : %ld\n",
-		c_data.ml_total - c_data.ml_used - c_data.ml_over);
-	printf(">>>>> Eiffel chunks       : %d\n", e_data.ml_chunk);
-	printf(">>>>> Eiffel total memory : %ld\n", e_data.ml_total);
-	printf(">>>>> Eiffel overhead     : %ld\n", e_data.ml_over);
-	printf(">>>>> Eiffel memory used  : %ld\n", e_data.ml_used);
-	printf(">>>>> Eiffel memory free  : %ld\n",
-		e_data.ml_total - e_data.ml_used - e_data.ml_over);
-}
-
-rt_private void mem_reset(void)
-{
-	/* Reset memory */
-
-	int i;
-
-	printf(">> Reseting memory\n");
-	mem_status();
-	printf(">>> Releasing core\n");
-		rel_core();
-	mem_status();
-	printf(">>> Resetting internal data structures\n");
-	for (i = 0; i < NBLOCKS; i++) {
-		c_hlist[i] = (union overhead *) 0;
-		e_hlist[i] = (union overhead *) 0;
-	}
-	m_data.ml_chunk = m_data.ml_total = 0;
-	m_data.ml_over = m_data.ml_used = 0;
-	c_data.ml_chunk = c_data.ml_total = 0;
-	c_data.ml_over = c_data.ml_used = 0;
-	e_data.ml_chunk = e_data.ml_total = 0;
-	e_data.ml_over = e_data.ml_used = 0;
-	cklst.ck_head = cklst.ck_tail = 0;
-	cklst.cck_head = cklst.cck_tail = 0;
-	cklst.eck_head = cklst.eck_tail = 0;
-}
-
-/* Functions not provided here */
-rt_public void eraise(char *tag, int val)
-{
-	printf("Exception: %s (code %d)\n", tag, val);
-	exit(1);
-}
-
-rt_public void enomem(void)
-{
-	eraise("Out of memory", 0);
-}
-
-rt_public void eif_panic(char *s)
-{
-	printf("PANIC: %s\n", s);
-	exit(1);
-}
-
-rt_public struct xstack eif_stack = {		/* Calling stack */
-	(struct stxchunk *) 0,				/* st_hd */
-	(struct stxchunk *) 0,				/* st_tl */
-	(struct stxchunk *) 0,				/* st_cur */
-	(struct ex_vect *) 0,				/* st_top */
-	(struct ex_vect *) 0,				/* st_end */
-	(struct ex_vect *) 0,				/* st_bot */
-};
-rt_public struct xstack eif_trace = {		/* Exception trace */
-	(struct stxchunk *) 0,				/* st_hd */
-	(struct stxchunk *) 0,				/* st_tl */
-	(struct stxchunk *) 0,				/* st_cur */
-	(struct ex_vect *) 0,				/* st_top */
-	(struct ex_vect *) 0,				/* st_end */
-	(struct ex_vect *) 0,				/* st_bot */
-};
-
-rt_public struct stack hec_stack = {			/* Indirection table "hector" */
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
-};
-
-#include "eif_sig.h"
-struct s_stack sig_stk;		/* Initialized by initsig() */
-int esigblk = 0;			/* By default, signals are not blocked */
-
-rt_public void ufill(void)
-{
-}
-
-rt_public void esdpch(void)
-{
-}
-
-rt_public void epop(void)
-{
-}
-
-rt_public struct cnode esystem[20];
-
-#endif
-

@@ -1,16 +1,17 @@
-#include            <stdio.h>
-#include            <malloc.h>
-#include            "melted.h"
+#include <stdio.h>
+#include <malloc.h>
+#include "rt_interp.h"
+#include "eif_size.h"
+#include <string.h>
+#include <stdlib.h>
 
 /*------------------------------------------------------------------*/
 
 typedef unsigned    uint32;
-typedef char        *(*fnptr)();
 
 /*------------------------------------------------------------------*/
 
 static  char    *names [] = {
-
 "BC_START" ,
 "BC_PRECOND" ,
 "BC_POSTCOND" ,
@@ -58,7 +59,7 @@ static  char    *names [] = {
 "BC_EXTERN_INV" ,
 "BC_CHAR" ,
 "BC_BOOL" ,
-"BC_INT" ,
+"BC_INT32" ,
 "BC_DOUBLE" ,
 "BC_RESULT" ,
 "BC_LOCAL" ,
@@ -77,7 +78,7 @@ static  char    *names [] = {
 "BC_POWER" ,
 "BC_LE" ,
 "BC_DIV" ,
-"BC_BREAK" ,
+"BC_NHOOK" ,
 "BC_AND" ,
 "BC_SLASH" ,
 "BC_MOD" ,
@@ -90,7 +91,7 @@ static  char    *names [] = {
 "BC_PROTECT" ,
 "BC_RELEASE" ,
 "BC_JMP_T" ,
-"BC_DEBUGABLE" ,
+"UNUSED_79" ,
 "BC_RESCUE" ,
 "BC_END_RESCUE" ,
 "BC_RETRY" ,
@@ -107,7 +108,7 @@ static  char    *names [] = {
 "BC_TRUE_COMPAR" ,
 "BC_STANDARD_EQUAL" ,
 "BC_BIT_STD_EQUAL" ,
-"BC_NEXT" ,
+"BC_HOOK" ,
 "BC_BIT" ,
 "BC_ARRAY" ,
 "BC_RETRIEVE_OLD" ,
@@ -120,7 +121,7 @@ static  char    *names [] = {
 "BC_GOTO_BODY" ,
 "BC_NOT_REC" ,
 "BC_END_PRE" ,
-"BC_END_FST_PRE" ,
+"UNUSED_109" ,
 "BC_CAST_LONG" ,
 "BC_CAST_FLOAT" ,
 "BC_CAST_DOUBLE" ,
@@ -148,12 +149,12 @@ static  char    *names [] = {
 "BC_GEN_PARAM_CREATE" ,
 "BC_CREATE_EXP" ,
 "BC_NULL_POINTER" ,
-"BC_MAX" ,
-"UNUSED_138" ,
-"UNUSED_139" ,
-"UNUSED_140" ,
-"UNUSED_141" ,
-"UNUSED_142" ,
+"BC_BASIC_OPERATIONS" ,
+"BC_INT_BIT_OP" ,
+"BC_WCHAR" ,
+"BC_INT8" ,
+"BC_INT16" ,
+"BC_INT64" ,
 "UNUSED_143" ,
 "UNUSED_144" ,
 "UNUSED_145" ,
@@ -215,6 +216,28 @@ static  char    *names [] = {
 "BC_JAVA_EXTERNAL",
  (char *) 0
 };
+
+static  char    *basic_op_names [] = {
+"",
+"BC_MAX" ,
+"BC_MIN" ,
+"BC_GENERATOR" ,
+"BC_OFFSET" ,
+"BC_ZERO" ,
+"BC_ONE"
+};
+
+static  char    *bit_op_names [] = {
+"",
+"BC_INT_BIT_AND" ,
+"BC_INT_BIT_OR" ,
+"BC_INT_BIT_XOR" ,
+"BC_INT_BIT_NOT" ,
+"BC_INT_BIT_SHIFT_LEFT" ,
+"BC_INT_BIT_SHIFT_RIGHT" ,
+"BC_INT_BIT_TEST" ,
+};
+
 /*------------------------------------------------------------------*/
 
 #define NEWL            fprintf (ofp,"\n")
@@ -222,7 +245,6 @@ static  char    *names [] = {
 /*------------------------------------------------------------------*/
 
 static  int             fpos;
-static  char            java_mode;
 static  char            *byte_path;
 static  FILE            *ifp, *ofp;
 static  char            *body;
@@ -262,15 +284,16 @@ static  char    *rstr (void);
 
 static  char    bbool (void);
 static  unsigned char    bchar (void); /* !!! */
+static  EIF_WIDE_CHAR bwchar (void);
 static  long    blong (void);
 static  short   bshort (void);
 static  uint32  buint32 (void);
 static  double  bdouble (void);
-static  char    *bstr (void);
+static  char    *bstr (int length);
 
 /*------------------------------------------------------------------*/
 
-main (int argc, char **argv)
+int main (int argc, char **argv)
 
 {
 	long    i;
@@ -299,8 +322,6 @@ main (int argc, char **argv)
 	}
 
 	fpos = 0;
-
-	java_mode = rchar ();
 
 	dtype_max = rint ();
 
@@ -347,7 +368,7 @@ main (int argc, char **argv)
 
 	printf ("File \"bytecode.txt\" generated\n");
 
-	exit (0);
+	return 0;
 }
 /*------------------------------------------------------------------*/
 
@@ -383,12 +404,6 @@ static  void    print_byte_code ()
 
 	advance (1);
 
-	if (code == BC_DEBUGABLE)
-	{
-		fprintf (ofp,"%ld\n", blong ());
-		advance (2);
-	}
-
 	NEWL;
 
 	fprintf (ofp,"Body Id      : %ld\n", body_id);
@@ -396,6 +411,9 @@ static  void    print_byte_code ()
 	rid = blong ();
 	fprintf (ofp,"Routine Id   : %ld\n", rid);
 
+	rid = blong ();
+	fprintf (ofp,"Real body Id : %ld\n", rid);
+	
 	fprintf (ofp,"Result Type  : ");
 	rtype = buint32 ();
 
@@ -406,18 +424,6 @@ static  void    print_byte_code ()
 	i = (int) bshort ();
 
 	fprintf (ofp,"Nr. args     : %d\n", i);
-
-	if (java_mode)
-	{
-		/* Argument types are only provided in java mode */
-
-		while (i--)
-		{
-			fprintf (ofp,"  Type : ");
-			print_dtype (0,buint32 ());
-			NEWL;
-		}
-	}
 
 	if (is_once)
 	{
@@ -462,23 +468,14 @@ static  void    print_byte_code ()
 
 	if (rid)
 	{
-		fprintf (ofp,"Routine name : %s\n", bstr ());
+		fprintf (ofp,"Routine name : %s\n", bstr (-1));
 		fprintf (ofp,"Written      : %d\n", (int) bshort ());
-
-		if (java_mode)
-		{
-			/* Classname only supplied for Java */
-			fprintf (ofp,"Classname    : %s\n", bstr());
-
-			/* Is it one of the special routines in TO_SPECIAL and SPECIAL? */
-			if (bchar ())
-				fprintf (ofp,"is_special   : YES\n");
-		}
 	}
 
 	/* Offset of rescue clause - if any */
 
-	if ((rescue = bbool ()))
+	rescue = bbool ();
+	if (rescue)
 	{
 		fprintf (ofp,"Rescue offset: %ld\n", blong ());
 	}
@@ -539,7 +536,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"%d>", (int) cval);
 
 				if (cval == BC_TAG)
-					fprintf (ofp," : \"%s\"", bstr ());
+					fprintf (ofp," : \"%s\"", bstr (-1));
 				break;
 			case  BC_END_ASSERT :
 				break;
@@ -564,7 +561,7 @@ static  void    print_instructions ()
 				
 				while (lval--)
 				{
-					fprintf (ofp,"\"%s\"", bstr ());
+					fprintf (ofp,"\"%s\"", bstr (blong()));
 
 					if (lval)
 						fprintf (ofp, ", ");
@@ -576,10 +573,6 @@ static  void    print_instructions ()
 			case  BC_CREAT_INV :
 				break;
 			case  BC_PRECOND :
-				/* If not enabled jump to 'offset' */
-				fprintf (ofp,"offset %ld", blong ());
-				break;
-			case  BC_END_FST_PRE :
 				/* If not enabled jump to 'offset' */
 				fprintf (ofp,"offset %ld", blong ());
 				break;
@@ -830,7 +823,7 @@ static  void    print_instructions ()
 			case  BC_EXTERN_INV :
 				/* External with invariant check */
 				/* Feature name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Feature id */
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
@@ -839,7 +832,7 @@ static  void    print_instructions ()
 			case  BC_PEXTERN_INV :
 				/* External precompiled with invariant check */
 				/* Feature name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Org. id */
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
@@ -867,7 +860,7 @@ static  void    print_instructions ()
 			case  BC_FEATURE_INV :
 				/* Routine with invariant check */
 				/* Feature name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Feature id */
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
@@ -878,7 +871,7 @@ static  void    print_instructions ()
 			case  BC_PFEATURE_INV :
 				/* Routine precompiled with invariant check */
 				/* Feature name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Org. id */
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
@@ -908,7 +901,7 @@ static  void    print_instructions ()
 			case  BC_ATTRIBUTE_INV :
 				/* Attribute with invariant check */
 				/* Feature name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Feature id */
 				fprintf (ofp,"fid %ld ", blong ());
 				/* Type of class */
@@ -919,7 +912,7 @@ static  void    print_instructions ()
 			case  BC_PATTRIBUTE_INV :
 				/* Attribute precompiled with invariant check */
 				/* Feature name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				/* Org. id */
 				fprintf (ofp,"oid %ld ", blong ());
 				/* Org. offset */
@@ -947,6 +940,7 @@ static  void    print_instructions ()
 
 /* Casts */
 			case  BC_CAST_LONG :
+				fprintf (ofp,"%ld", blong ());
 				break;
 			case  BC_CAST_FLOAT :
 				break;
@@ -1014,8 +1008,6 @@ static  void    print_instructions ()
 				break;
 			case  BC_OR :
 				break;
-			case BC_MAX :
-				break;
 			case  BC_ADDR :
 				/* Address of routine */
 				/* Feature id */
@@ -1037,15 +1029,31 @@ static  void    print_instructions ()
 				fprintf (ofp,"%ld ", buint32 ());
 				break;
 
+			case BC_BASIC_OPERATIONS :
+				/* For basic operations such as min, max, generator.... */
+				fprintf (ofp,"%s",basic_op_names[bchar()]);
+				break;
+
+
+			case BC_INT_BIT_OP:
+				/* For bit manipulations on INTEGERs */
+				fprintf (ofp,"%s",bit_op_names[bchar()]);
+				break;
+
 /* Constants */
 
 			case  BC_CHAR :
 				fprintf (ofp,"%d", (int) bchar ());
 				break;
+			case BC_WCHAR:
+				fprintf (ofp,"%d", (int) bwchar ());
 			case  BC_BOOL :
 				fprintf (ofp,"%d", (int) bchar ());
 				break;
-			case  BC_INT :
+			case BC_INT8:
+			case BC_INT16:
+			case BC_INT32:
+			case BC_INT64:
 				fprintf (ofp,"%ld", blong ());
 				break;
 			case  BC_FLOAT :
@@ -1058,7 +1066,7 @@ static  void    print_instructions ()
 				fprintf (ofp,"%ld", 0);
 				break;
 			case  BC_STRING :
-				fprintf (ofp,"\"%s\"", bstr ());
+				fprintf (ofp,"\"%s\"", bstr (blong()));
 				break;
 			case  BC_BIT :
 				/* True number of bits */
@@ -1107,7 +1115,7 @@ static  void    print_instructions ()
 				break;
 			case  BC_ADD_STRIP :
 				/* Attribute name */
-				fprintf (ofp,"\"%s\" ", bstr ());
+				fprintf (ofp,"\"%s\" ", bstr (-1));
 				break;
 			case  BC_END_STRIP :
 				/* Static type */
@@ -1153,11 +1161,13 @@ static  void    print_instructions ()
 				/* Jump offset */
 				fprintf (ofp,"%ld", blong ());
 				break;
-			case  BC_NEXT :
+			case  BC_HOOK :
 				/* For debugger */
+				fprintf (ofp,"%ld", blong ());
 				break;
-			case  BC_BREAK :
+			case  BC_NHOOK :
 				/* For debugger */
+				fprintf (ofp,"%ld", blong ());
 				break;
 			case  BC_GOTO_BODY :
 				/* Offset */
@@ -1169,17 +1179,17 @@ static  void    print_instructions ()
 				break;
 			case  BC_JAVA_RTYPE :
 				/* Feature name */
-				(void) bstr ();
+				(void) bstr (-1);
 				print_dtype (0,buint32());
 				/* Class name */
-				(void) bstr ();
+				(void) bstr (-1);
 				break;
 			case  BC_JAVA_EXTERNAL :
 				/* External call */
 				/* Eiffel name of external */
-				(void) bstr ();
+				(void) bstr (-1);
 				/* True external C name */
-				fprintf (ofp,"\"%s\"", bstr ());
+				fprintf (ofp,"\"%s\"", bstr (-1));
 				break;
 
 /* NOTE: Separate codes not included yet */
@@ -1209,20 +1219,17 @@ static  void    print_dtype (int cid, uint32 type)
 	{
 		switch (type & SK_HEAD) 
 		{
-			case SK_BOOL:   fprintf (ofp," [BOOLEAN]");
-							break;
-			case SK_CHAR:   fprintf (ofp," [CHARACTER]");
-							break;
-			case SK_INT:    fprintf (ofp," [INTEGER]");
-							break;
-			case SK_FLOAT:  fprintf (ofp," [FLOAT]");
-							break;
-			case SK_DOUBLE: fprintf (ofp," [DOUBLE]");
-							break;
-			case SK_POINTER:fprintf (ofp," [POINTER]");
-							break;
-			case SK_BIT:    fprintf (ofp," [BIT]");
-							break;
+			case SK_BOOL:   fprintf (ofp," [BOOLEAN]"); break;
+			case SK_CHAR:   fprintf (ofp," [CHARACTER]"); break;
+			case SK_WCHAR:   fprintf (ofp," [WIDE_CHARACTER]"); break;
+			case SK_INT8:   fprintf (ofp," [INTEGER_8]"); break;
+			case SK_INT16:   fprintf (ofp," [INTEGER_16]"); break;
+			case SK_INT32:   fprintf (ofp," [INTEGER]"); break;
+			case SK_INT64:   fprintf (ofp," [INTEGER_64]"); break;
+			case SK_FLOAT:  fprintf (ofp," [FLOAT]"); break;
+			case SK_DOUBLE: fprintf (ofp," [DOUBLE]"); break;
+			case SK_POINTER:fprintf (ofp," [POINTER]"); break;
+			case SK_BIT:    fprintf (ofp," [BIT]"); break;
 			case SK_EXP:    fprintf (ofp,"ET %u", type & SK_DTYPE);
 
 							if (dtype <= dtype_max)
@@ -1289,7 +1296,6 @@ static  char    bbool ()
 	return result;
 }
 /*------------------------------------------------------------------*/
-
 static  unsigned char bchar (void)
 
 {
@@ -1297,6 +1303,17 @@ static  unsigned char bchar (void)
 
 	result = *ip;
 	ip    += sizeof (char);
+
+	return result;
+}
+
+static  EIF_WIDE_CHAR bwchar (void)
+
+{
+	EIF_WIDE_CHAR    result; /* !!! */
+
+	result = *ip;
+	ip    += sizeof (EIF_WIDE_CHAR);
 
 	return result;
 }
@@ -1370,13 +1387,15 @@ static  uint32    buint32 (void)
 }
 /*------------------------------------------------------------------*/
 
-static  char    *bstr (void)
-
+static char *bstr (int length)
 {
 	char    *result;
 
 	result  = ip;
-	ip     += strlen (result) + 1;
+	if (length == -1)
+		ip += strlen (result) + 1;
+	else
+		ip += length + 1;
 
 	return result;
 }
@@ -1503,7 +1522,7 @@ static  char    *rbuf (int size)
 		panic ();
 	}
 
-	if (fread (result, sizeof (char), size, ifp) != size)
+	if (fread (result, sizeof (char), size, ifp) != (unsigned int)size)
 	{
 		printf ("Read error (rbuf)\n");
 		free (result);

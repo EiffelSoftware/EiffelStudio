@@ -6,7 +6,7 @@ RM=del
 OUTPUT_CMD= $output_cmd
 LIBRUN = $(TOP)\run-time
 LIBIDR = $(TOP)\idrs
-DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I.
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)\include -I.
 CFLAGS = $(DPFLAGS) -DWORKBENCH
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
@@ -46,7 +46,12 @@ MT_OBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: ipc.$lib mtipc.$lib
+all:: $output_libraries
+
+dll: standard
+mtdll: mtstandard
+standard:: ipc.$lib
+mtstandard:: mtipc.$lib
 
 ipc.$lib: $(OBJECTS)
 	$link_line

@@ -11,15 +11,14 @@
 	$Id$
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"
+#include "eif_lmalloc.h"	/* for eif_malloc, eif_free */
+#include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
 #include <stdio.h>
 #if !defined EIF_VMS && !defined VXWORKS 
 #include <malloc.h>
 #endif
-#include "eif_lmalloc.h"	/* for eif_malloc, eif_free */
-#include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
 #ifdef EIF_VMS_V6_ONLY
  /* define these routines in upr case, cause that's how they are in the lib */
@@ -53,11 +52,7 @@
 #include "eif_plug.h"
 #include "eif_error.h"
 
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 /* %%zs moved EIF_WIN_DIRENT definition block to dir.h from here */
 
@@ -589,19 +584,6 @@ rt_public EIF_BOOLEAN eif_dir_is_deletable(char *name)
 }
 
 
-rt_public void eif_dir_rename (char* from, char* to)
-{
-	/* Rename directory `from' into `to' */
-
-#ifdef VMS
-	int status;			/* System call status */
-	eif_file_rename (from, to);	/* ***VMS FIXME*** */
-	
-#else
-	file_rename (from, to);	
-#endif
-} /* end eif_dir_rename */
-
 rt_public void eif_dir_delete(char *name)
 {
 		/* Delete directory `name' */
@@ -681,8 +663,7 @@ rt_public int eif_vms_closedir (DIR* notadirp)
     EIF_VMS_DIR* evdp = (EIF_VMS_DIR*)notadirp;
     int res = 0;
     if (evdp) {
-	if (evdp->dirp) 
-	    res = DECC$CLOSEDIR (evdp->dirp);
+	if (evdp->dirp) res = DECC$CLOSEDIR (evdp->dirp);
 	eif_free (evdp->prev);
 	eif_free (evdp);
     } else {

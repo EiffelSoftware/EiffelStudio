@@ -11,16 +11,8 @@
 	C-Eiffel Call-In Library.
 */
 
-#include "eif_project.h"
-#include "eif_config.h"
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
-
-#include "eif_malloc.h"
+#include "eif_portable.h"
+#include "rt_malloc.h"
 #include "eif_garcol.h"
 #include "eif_cecil.h"
 #include "eif_hector.h"
@@ -29,9 +21,10 @@
 #include "eif_eiffel.h"				/* Need string header */
 #include "eif_macros.h"
 #include "eif_lmalloc.h"
-#ifdef EIF_THREADS
-#include "eif_threads.h"
-#endif
+#include "eif_project.h"
+#include "rt_threads.h"
+#include "rt_assert.h"
+#include <string.h>
 #ifdef I_STDARG
 #include <stdarg.h>
 #else
@@ -39,7 +32,6 @@
 #include <varargs.h>
 #endif
 #endif
-#include <assert.h>
 
 #define GEN_MAX	8				/* Maximum number of generic parameters */
 
@@ -84,7 +76,9 @@ rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
 rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
-	assert (cecil_lock);
+#ifdef EIF_THREADS
+	REQUIRE ("Cecil mutex created", cecil_lock);
+#endif
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 0;
 	EIF_CECIL_UNLOCK;
@@ -93,7 +87,9 @@ rt_public void eifvisex (void) {
 rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
-	assert (cecil_lock);
+#ifdef EIF_THREADS
+	REQUIRE ("Cecil mutex created", cecil_lock);
+#endif
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 1;
 	EIF_CECIL_UNLOCK;
@@ -131,8 +127,12 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 
         case SK_REF:    return EIF_REFERENCE_TYPE;
         case SK_CHAR:   return EIF_CHARACTER_TYPE;
+        case SK_WCHAR:   return EIF_WIDE_CHAR_TYPE;
         case SK_BOOL:   return EIF_BOOLEAN_TYPE;
-        case SK_INT:    return EIF_INTEGER_TYPE;
+        case SK_INT8:    return EIF_INTEGER_8_TYPE;
+        case SK_INT16:    return EIF_INTEGER_16_TYPE;
+        case SK_INT32:    return EIF_INTEGER_32_TYPE;
+        case SK_INT64:    return EIF_INTEGER_64_TYPE;
         case SK_FLOAT:  return EIF_REAL_TYPE;
         case SK_DOUBLE: return EIF_DOUBLE_TYPE;
         case SK_EXP:    return EIF_EXPANDED_TYPE;
@@ -264,8 +264,7 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 #ifdef WORKBENCH
 	int32 *feature_ptr;
 	int32 rout_id;
-	uint32 body_id;
-	uint16 body_index;
+	uint16 body_id;
 	int32 *cn_routids;
 #else
 	EIF_REFERENCE_FUNCTION *ref;
@@ -298,27 +297,13 @@ rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 		rout_id = cn_routids[*feature_ptr];
 	else /* precompiled routine */
 		rout_id = *feature_ptr;
-	CBodyIdx(body_index,rout_id,dtype);
-	body_id = dispatch[body_index];
+	CBodyId(body_id,rout_id,dtype);
 
-	if (body_id < zeroc)
-		/* Frozen feature */
+	if (egc_frozen [body_id])
 		return egc_frozen[body_id];
 	else
-#ifndef DLE
 		xraise(MTC EN_DOL);
 		return (EIF_REFERENCE_FUNCTION) 0;	/* NOT REACHED */
-#else
-	if (body_id < dle_level)
-			/* Static melted routine */
-		xraise(EN_DOL);
-	else if (body_id < dle_zeroc)
-			/* Dynamic frozen feature */
-		return dle_frozen[body_id];
-	else
-			/* Dynamic melted routine */
-		xraise(EN_DOL);
-#endif
 #endif
 }
 
@@ -582,7 +567,7 @@ rt_public char eifibit(EIF_BIT bit, int i)
 
 	i--;			/* Run-time macros work with index starting at 0 */
 
-	return RTBI(bit, i);			/* Access to bit i */
+	return (char) RTBI(bit, i);			/* Access to bit i */
 }
 
 rt_public int eifsibit(EIF_BIT bit, int i)
@@ -699,16 +684,16 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 #ifdef EIF_THREADS
 rt_shared void eif_cecil_init () {
 	/* Initialize cecil lock for concurrent access. */
-	assert (eif_thr_is_root ());
-	assert (!cecil_lock);
+	REQUIRE ("Root thread", eif_thr_is_root ());
+	REQUIRE ("Cecil mutex not created", !cecil_lock);
 
 	EIF_MUTEX_CREATE (cecil_lock, "Couldn't create cecil lock");
 }
 
 rt_shared void eif_cecil_reclaim () {
 	/* Reclaim cecil lock. */
-	assert (eif_thr_is_root ());
-	assert (cecil_lock);
+	REQUIRE ("Root thread", eif_thr_is_root ());
+	REQUIRE ("Cecil mutex created", cecil_lock);
 
 	EIF_MUTEX_DESTROY (cecil_lock, "Couldn't destroy cecil mutex");
 }
@@ -722,17 +707,14 @@ rt_shared void eif_set_thr_context () {
 
 	EIF_GET_CONTEXT	
 	start_routine_ctxt_t *rout;
-	assert (eif_globals);	
+	REQUIRE ("eif_globals not null", eif_globals);	
 	rout = (start_routine_ctxt_t *) eif_malloc (sizeof (start_routine_ctxt_t));
 	if (rout == NULL) {
-		EIF_END_GET_CONTEXT
 		eif_panic ("Couldn't allocate thread context");
 	}
 	memset (rout, 0, sizeof (start_routine_ctxt_t));
 		/* Fill with NULL, since not allocated from run-time. 
 		 * This avoid some problem when reclaiminhgg. */
 	eif_thr_context = rout;
-
-	EIF_END_GET_CONTEXT
 }
 #endif	/* EIF_THREADS */

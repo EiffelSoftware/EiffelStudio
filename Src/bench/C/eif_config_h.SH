@@ -795,5 +795,12 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
 
 #$d_bsdsig USE_BSD_SIGNALS
 
+/* INTEGER_64 display format:
+ * 	This symbol is used in printf and others to display 64 bits signed
+ *	integers.
+ */
+$inttypes_include
+#define EIF_INTEGER_64_DISPLAY $eif_integer_64_display
+
 #endif
 !GROK!THIS!

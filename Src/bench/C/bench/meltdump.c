@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <memory.h>
-#include "melted.h"
+#include "eif_interp.h"
+
+#define BCDB_TAG    't'
 
 /*------------------------------------------------------------------*/
 
@@ -16,7 +18,6 @@ static  char    *melt_path;
 static  FILE    *ifp, *bfp, *mfp;
 static  char    **melt;
 static  long    msize;
-static  char    java_mode;
 
 /*------------------------------------------------------------------*/
 
@@ -33,8 +34,6 @@ static  void    prepare_types (void);
 static  void    analyze_file (void);
 static  void    analyze_cnodes (void);
 static  void    analyze_routids (void);
-static  void    analyze_dispatch_table (void);
-static  void    analyze_conformance (void);
 static  void    analyze_parents (void);
 static  void    analyze_cecil (void);
 static  void    analyze_options (void);
@@ -56,6 +55,8 @@ static  void    print_dtype (uint32);
 static  void    print_ctype (short);
 
 /*------------------------------------------------------------------*/
+
+#define MAX_TYPE 256
 
 main (int argc, char **argv)
 
@@ -108,18 +109,17 @@ static  void    prepare_types ()
 	short   slen, pcount, dtype;
 	char    *dname;
 
-	(void) rchar ();
-	(void) rchar ();
-	(void) rlong ();
-	(void) rlong ();
-	(void) rlong ();
-	(void) rlong ();
-	(void) rlong ();
-	(void) rlong ();
-	(void) rlong ();
+	(void) rchar ();	/* Is there something to read */
+	(void) rlong ();	/* root_class_updt */
+	(void) rlong ();	/* root_class_updt */
+	(void) rlong ();	/* root_class_updt */
+	(void) rlong ();	/* root_class_updt */
+	(void) rlong ();	/* class types count */
+	(void) rlong ();	/* class count */
+	(void) rlong ();	/* prof enabled */
 
 
-	dtype_size  = 256;
+	dtype_size  = MAX_TYPE;
 	dtype_max   = -1;
 	dtype_names = (char **) malloc (dtype_size * sizeof (char *));
 
@@ -131,7 +131,7 @@ static  void    prepare_types ()
 		memset (dtype_names, 0, dtype_size * sizeof (char *));
 	}
 
-	ctype_size  = 256;
+	ctype_size  = MAX_TYPE;
 	ctype_max   = -1;
 	ctype_names = (char **) malloc (ctype_size * sizeof (char *));
 
@@ -281,15 +281,7 @@ static  void    analyze_file ()
 		return;
 	}
 
-	if ((java_mode = rchar ()))
-	{
-		fprintf (mfp,"Java byte-code : YES\n");
-	}
-	else
-	{
-		fprintf (mfp,"Java byte-code : NO\n");
-	}
-
+	
 	print_line ();
 
 	fprintf (mfp,"Root class origin       : %ld\n", rlong ());
@@ -310,9 +302,7 @@ static  void    analyze_file ()
 
 	analyze_cnodes ();
 	analyze_routids ();
-	analyze_dispatch_table ();
 	read_byte_code ();
-	analyze_conformance ();
 	analyze_parents ();
 	analyze_options ();
 	analyze_routinfo ();
@@ -576,39 +566,6 @@ static  void    analyze_routids ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    analyze_dispatch_table ()
-
-{
-	long    dcount, i, bidx, bid;
-
-	printf ("Analyzing Dispatch table\n");
-
-	dcount = rlong ();
-
-	fprintf (mfp,"Bodyids =");
-
-	for (i=0;;i++)
-	{
-		bidx = rlong ();
-
-		if (bidx == -1)
-			break;
-
-		bid = rlong ();
-
-		if ((i % 8) == 0)
-			fprintf (mfp, "\n  ");
-
-		fprintf (mfp, "%ld: %ld   ", bidx, bid);
-	}
-
-	fprintf (mfp, "\n");
-
-	print_line ();
-
-}
-/*------------------------------------------------------------------*/
-
 static  void    read_byte_code ()
 
 {
@@ -631,14 +588,6 @@ static  void    read_byte_code ()
 	if (melt == (char **) 0)
 	{
 		fprintf (stderr,"Out of memory (read_byte_code)\n");
-		panic ();
-	}
-
-	/* Write java flag */
-
-	if (fwrite (&java_mode, sizeof (char), 1, bfp) != 1)
-	{
-		fprintf (stderr,"Write error\n");
 		panic ();
 	}
 
@@ -715,49 +664,7 @@ static  void    read_byte_code ()
 
 	print_line ();
 }
-/*------------------------------------------------------------------*/
 
-static  void    analyze_conformance ()
-
-{
-	short   dtype, dmin, dmax;
-	int     asize;
-
-	printf ("Analyzing Conformance\n");
-
-	if (rchar ())
-	{
-		fprintf (mfp,"Has conformance table : YES\n");
-	}
-	else
-	{
-		fprintf (mfp,"Has conformance table : NO\n");
-		return;
-	}
-
-	for (;;)
-	{
-		dtype = rshort ();
-
-		if (dtype == -1)
-			break;
-
-		fprintf (mfp,"Dynamic type : %d\n", (int) dtype);
-		
-		dmin  = rshort ();
-		dmax  = rshort ();
-		asize = (((int) (dmax - dmin + 1))/8) * sizeof (char);
-		
-		fprintf (mfp,"Min          : %d\n", (int) dmin);
-		fprintf (mfp,"Max          : %d\n", (int) dmax);
-
-		rseq (asize);
-	}
-
-	print_line ();
-
-	analyze_cecil ();
-}
 /*------------------------------------------------------------------*/
 
 static  void    analyze_parents ()
@@ -813,6 +720,8 @@ static  void    analyze_parents ()
 	}
 
 	print_line ();
+
+	analyze_cecil ();
 }
 /*------------------------------------------------------------------*/
 
@@ -900,7 +809,7 @@ static  void    analyze_options ()
 			break;
 
 		fprintf (mfp,"Dynamic type   : %d\n", (int) dtype);
-		fprintf (mfp,"Assertion kind : %d\n", (int) rchar ());
+		fprintf (mfp,"Assertion kind : %d\n", (int) rshort ());
 
 		dbg_level = rchar ();
 
@@ -1166,20 +1075,17 @@ static  void    print_dtype (uint32 type)
 	{
 		switch (type & SK_HEAD) 
 		{
-			case SK_BOOL:   fprintf (mfp," [BOOLEAN]");
-							break;
-			case SK_CHAR:   fprintf (mfp," [CHARACTER]");
-							break;
-			case SK_INT:    fprintf (mfp," [INTEGER]");
-							break;
-			case SK_FLOAT:  fprintf (mfp," [FLOAT]");
-							break;
-			case SK_DOUBLE: fprintf (mfp," [DOUBLE]");
-							break;
-			case SK_POINTER:fprintf (mfp," [POINTER]");
-							break;
-			case SK_BIT:    fprintf (mfp," [BIT]");
-							break;
+			case SK_BOOL:   fprintf (mfp," [BOOLEAN]"); break;
+			case SK_CHAR:   fprintf (mfp," [CHARACTER]"); break;
+			case SK_WCHAR:   fprintf (mfp," [WIDE_CHARACTER]"); break;
+			case SK_INT8:    fprintf (mfp," [INTEGER_8]"); break;
+			case SK_INT16:    fprintf (mfp," [INTEGER_16]"); break;
+			case SK_INT32:    fprintf (mfp," [INTEGER]"); break;
+			case SK_INT64:    fprintf (mfp," [INTEGER_64]"); break;
+			case SK_FLOAT:  fprintf (mfp," [FLOAT]"); break;
+			case SK_DOUBLE: fprintf (mfp," [DOUBLE]"); break;
+			case SK_POINTER:fprintf (mfp," [POINTER]"); break;
+			case SK_BIT:    fprintf (mfp," [BIT]"); break;
 			case SK_EXP:    fprintf (mfp,"ET %u", type & SK_DTYPE);
 
 							if (dtype <= dtype_max)

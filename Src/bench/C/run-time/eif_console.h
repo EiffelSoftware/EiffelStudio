@@ -14,18 +14,19 @@
 #ifndef _eif_console_h_
 #define _eif_console_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "eif_config.h"
 #include "eif_portable.h"  
 
 #include "eif_file.h"
 
 #ifdef EIF_WIN32
 #include "eif_econsole.h"
-#else
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#ifndef EIF_WIN32
 extern void eif_console_next_line(void);
 #endif
 

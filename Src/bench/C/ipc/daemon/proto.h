@@ -26,7 +26,9 @@ struct d_flags {				/* Daemon flags (protocol with client) */
 	STREAM *d_as;				/* Connected stream with application */
 #ifdef EIF_WIN32
 	HANDLE d_ewb;				/* Workbench pid */
-	HANDLE d_app;				/* Application pid */
+	HANDLE d_app;				/* Application process handle */
+	DWORD d_app_id;				/* Application process id */
+	LPVOID	d_interrupt_flag;	/* pointer to the interruption flag inside application memory space */
 #else
  	int d_ewb;					/* Workbench pid */
 	int d_app;					/* Application pid */

@@ -10,18 +10,11 @@
 	System error handling.
 */
 
-#include "eif_config.h"
-
-#ifdef I_STRING
-#include <string.h>			/* Try to find strerror() there */
-#else
-#include <strings.h>
-#endif
-
 #include "eif_portable.h"
 #include "eif_except.h"
 #include "eif_error.h"
 
+#include <string.h>			/* Try to find strerror() there */
 
 rt_public char *error_tag(int code)
 {

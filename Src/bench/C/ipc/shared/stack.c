@@ -18,7 +18,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_debug.h"
-#include "eif_interp.h"
+#include "rt_interp.h"
 #include "eif_except.h"
 #include "eif_garcol.h"
 #include "eif_malloc.h"
@@ -27,427 +27,392 @@
 #include "request.h"
 #include "eif_macros.h"
 #include "eif_globals.h"
-
-#ifdef EIF_WIN32
-#include "stream.h"
-#endif
+#include <string.h>
 
 #define EIF_IGNORE	-1	/*	We do not want this item sent, but there are still
-					 *	items to send. Useful for getting rid of EX_OSTK
-					 *	pseudo exception vector -- Didier
-					 */
+						 *	items to send. Useful for getting rid of EX_OSTK
+						 *	pseudo exception vector -- Didier
+						 */
+
+#define EIF_NO_ITEM (uint32) 0xFFFFFFFF
 
 /* Record a stack context, while performing dumps, and restore it afterwards.
  * We have a provision here for all the possible stack we may inspect.
  */
-rt_private struct xstack xstk_context;		/* Saved exception stack context */
+rt_private struct xstack xstk_context;	/* Saved exception stack context */
 rt_private struct dbstack dstk_context;	/* Saved calling stack context */
 rt_private struct opstack istk_context;	/* Operational stack (interpreter) */
-rt_private struct stack ostk_context;		/* Once stack */
 
-rt_private int dump_mode;	/* Mode of the active dump we are currently using */
-rt_private int is_first;	/* First item dumped? (matters for pending exception) */
+/* Private Routines declarations */
+rt_private void 		send_dump(eif_stream s, struct dump *dp);	/* Send XDR'ed dumped item to ewb */
+rt_private void 		save_stacks(void);							/* Initialize automaton */
+rt_private void 		restore_stacks(void);						/* Reset saved stack contexts */
+rt_private struct dump 	*get_next_execution_vector(void);			/* List execution stack */
+rt_private struct dump	*get_next_variable(uint32 start);			/* Dump the locals and arguments of current feature */
+rt_private struct dcall *safe_dtop(void);							/* Perform a safe dtop() without eif_panic */
+rt_private void 		init_var_dump(struct dcall *call);			/* Initialize register context */
+rt_private uint32		go_ith_stack_level(int level);				/* Go to the i-th level down the stack */
+rt_private struct dump 	*variable_item(int variable_type, int n, uint32 start); /* Dump a local or an argument of active feature */
 
-/* Every stack has its own way of being dumped. During the initialization
- * process, this pointer is set to the correct function to be called. It may
- * also be temporarily overwritten in some nested operation (like dumping the
- * variables inside a routine, while in fact dumping the whole stack at a
- * higher level).
- */
-rt_private struct dump *(*stk_next)(void);		/* Function used to perform dump */
+/* Public Routines declarations */
+rt_public void 			send_stack(eif_stream s);					/* Dump the application */
+rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, 
+                                     uint32 loc_number, struct item *new_value); /* modify a local value */
+rt_public void			send_stack_variables(eif_stream s, int where);	/* Dump the locals and arguments of a feature */
+rt_public void 			send_once_result(eif_stream s, uint32 body_id, int arg_num); /* dump the results of onces feature */
 
-/* Routine declarations */
-#ifdef EIF_WIN32
-rt_private void send_dump(STREAM *s, struct dump *dp);			/* Send XDR'ed dumped item to ewb */
-#else
-rt_private void send_dump(int s, struct dump *dp);			/* Send XDR'ed dumped item to ewb */
-#endif
+/* extern Routines used */
+extern struct item 	*c_oitem(uint32 n); /* from debug.c - Returns a pointer to the item at position `n' down the stack */
 
-rt_private void stk_start(int what);			/* Initialize automaton */
-rt_private void stk_end(int what);				/* Reset saved stack contexts */
-rt_private struct dump *pending(void);		/* List pending exceptions */
-rt_private struct dump *execution(void);	/* List execution stack */
-rt_private struct dcall *safe_dtop(void);	/* Perform a safe dtop() without eif_panic */
-rt_private void init_var_dump(struct dcall *call);		/* Initialize register context */
-rt_private struct dump *variable(void);	/* Dump variables */
-rt_private struct dump *local(int n);		/* Return local by number */
-rt_private struct dump *argument(int n);	/* Return argument by number */
-rt_private struct dump *once(void);		/* Dump once stack */
+/*-------------------------
+ - Routine implementation -
+ -------------------------*/
 
-rt_private void show_dumped (struct dump d);
-rt_private void show_vector(struct ex_vect *dump);
 
-#ifdef EIF_WIN32
-rt_public void send_stack(STREAM *s, int what)
-#else
-rt_public void send_stack(int s, int what)
-#endif
-      			/* The connected socket */
-         		/* Which stack should be sent */
+/************************************************************************** 
+ * NAME: send_stack                                                       * 
+ * ARGS: s   : the connected socket                                       * 
+ *------------------------------------------------------------------------* 
+ * This is the main routine. It send a whole stack dump to the remote     *
+ * process through the connected socket and via XDR. The end of the dump  *
+ * is indicated by a positive acknowledgment.                             *
+ **************************************************************************/
+ rt_public void send_stack(eif_stream s)
+	{
+	struct dump *dp;			/* Pointer to static data where dump is */
+	
+	save_stacks();				/* Initialize processing */
+	dp = get_next_execution_vector();
+	while (dp) {	/* While still some data to send */
+		if ((int) dp != EIF_IGNORE)
+			send_dump(s, dp);
+		dp = get_next_execution_vector();
+	}
+	restore_stacks();
+	send_ack(s, AK_OK);			/* End of list -- you got everything */
+	}
+
+/************************************************************************** 
+ * NAME: send_stack_variables                                             * 
+ * ARGS: s    : the connected socket                                      * 
+ *       where: level in the stack where the current feature is located   * 
+ *------------------------------------------------------------------------* 
+ * Dump the arguments and the locals of the 'where-th' feature down the   *
+ * stack. where=1 means dumping the locals of the feature located on top  *
+ * of the stack                                                           *
+ **************************************************************************/
+rt_public void send_stack_variables(eif_stream s, int where)
 {
 	/* This is the main routine. It send a whole stack dump to the remote
 	 * process through the connected socket and via XDR. The end of the dump
 	 * is indicated by a positive acknowledgment.
 	 */
-
 	struct dump *dp;			/* Pointer to static data where dump is */
+	uint32 start;				/* start of the frozen operational stack */
 
-	stk_start(what);			/* Initialize processing */
-	while (dp = (stk_next)()){	/* While still some data to send */
-		if ((int) dp != EIF_IGNORE)
-			send_dump(s, dp);
+	save_stacks(); /* preserve stacks */
+
+		/* go to the specified level */
+	start = go_ith_stack_level(where);
+
+		/* then dump the variables */
+	if (start != EIF_NO_ITEM) {
+		dp = get_next_variable (start);
+		while (dp) {	/* While still some data to send */
+			if ((int) dp != EIF_IGNORE)
+				send_dump(s, dp);
+			dp = get_next_variable (start);
+		}
+		send_ack(s, AK_OK);			/* End of list -- you got everything */
 	}
-	stk_end (what);
-	send_ack(s, AK_OK);			/* End of list -- you got everything */
+
+	restore_stacks(); /* restore stacks */
 }
 
-#ifdef EIF_WIN32
-rt_private void send_dump(STREAM *s, struct dump *dp)
-#else
-rt_private void send_dump(int s, struct dump *dp)
-#endif
-      				/* The connected socket */
-                	/* Item to send */
-{
+/************************************************************************** 
+ * NAME: send_dump                                                        * 
+ * ARGS: s: the connected socket                                          * 
+ *       dp: the item to send                                             * 
+ *------------------------------------------------------------------------* 
+ * Send a packed containing the dump item 'dp'                            *
+ **************************************************************************/
+rt_private void send_dump(eif_stream s, struct dump *dp)
+	{
 	Request rqst;					/* What we send back */
 
 	Request_Clean (rqst);
 	rqst.rq_type = DUMPED;			/* A dumped stack item */
 	memcpy (&rqst.rq_dump, dp, sizeof(struct dump));
 	send_packet(s, &rqst);			/* Send to network */
-}
+	}
 
-/*
- * Iterator initialization and final clean up.
- */
-
-rt_private void stk_start(EIF_CONTEXT int what)
-         		/* Dumping status wanted */
-{
-	/* Initialize the dumping procedure. This whole package is nothing more
-	 * than a finite state automaton, though the transition tables are in
-	 * my mind, this program being only an implicit translation. Any typos
-	 * are mine :-) -- RAM
-	 */
+/************************************************************************** 
+ * NAME: save_stacks                                                      * 
+ *------------------------------------------------------------------------* 
+ * Save the appropriate stack context, depending on the operations to     *
+ * be performed...                                                        *
+ **************************************************************************/
+rt_private void save_stacks(void)
+	{
 	EIF_GET_CONTEXT
-	dump_mode = what;	/* Save working mode */
 
 	/* Save the appropriate stack context, depending on the operations to
-	 * be performed...
-	 */
-
-	switch (what) {
-	case ST_PENDING:
-		memcpy (&xstk_context, &eif_trace, sizeof(struct xstack));
-		is_first = 1;
-		stk_next = pending;
-		break;
-	case ST_CALL:
-	case ST_FULL:
-		memcpy (&xstk_context, &eif_stack, sizeof(struct xstack));
-		memcpy (&dstk_context, &db_stack, sizeof(struct dbstack));
-		memcpy (&istk_context, &op_stack, sizeof(struct opstack));
-		stk_next = execution;
-		break;
-	case ST_LOCAL:
-	case ST_ARG:
-	case ST_VAR:
-		memcpy (&istk_context, &op_stack, sizeof(struct opstack));
-		init_var_dump(d_cxt.pg_active);
-		stk_next = variable;
-		break;
-	case ST_ONCE:
-		memcpy (&ostk_context, &once_set, sizeof(struct stack));
-		stk_next = once;
-		break;
-	default:
-		eif_panic("illegal dump request");
+	 * be performed... */
+	memcpy (&xstk_context, &eif_stack, sizeof(struct xstack));
+	memcpy (&dstk_context, &db_stack, sizeof(struct dbstack));
+	memcpy (&istk_context, &op_stack, sizeof(struct opstack));
 	}
-	EIF_END_GET_CONTEXT
-}
+	
+/************************************************************************** 
+ * NAME: restore_stacks                                                   * 
+ *------------------------------------------------------------------------* 
+ * Restore context of all the stack we had to modify/inspect              *
+ **************************************************************************/
+rt_private void restore_stacks(void)
+	{
+	EIF_GET_CONTEXT
 
-rt_private void stk_end(EIF_CONTEXT int what)
-{
 	/* Restore context of all the stack we had to modify/inspect */
-	EIF_GET_CONTEXT
-
-	switch (what) {
-	case ST_PENDING:
-		memcpy (&eif_trace, &xstk_context, sizeof(struct xstack));
-		break;
-	case ST_CALL:
-	case ST_FULL:
-		memcpy (&eif_stack, &xstk_context, sizeof(struct xstack));
-		memcpy (&db_stack, &dstk_context, sizeof(struct dbstack));
-		/* Fall through */
-	case ST_LOCAL:
-	case ST_ARG:
-	case ST_VAR:
-		memcpy (&op_stack, &istk_context, sizeof(struct opstack));
-		break;
-	case ST_ONCE:
-		memcpy (&once_set, &ostk_context, sizeof(struct stack));
-		break;
-	}
-	EIF_END_GET_CONTEXT
-}
-
-/*
- * Dumping the pending exceptions.
- */
-
-rt_private struct dump *pending(void)
-{
-	/* Get the next pending exception record from the exception stack.
-	 * The stack is read from the bottom. A special case is made for the
-	 * very first item dumped, because an implict exception left the faulty
-	 * vector on top of the eif_stack execution stack.
-	 */
-	EIF_GET_CONTEXT
-	struct ex_vect *top;				/* Exception vector */
-	static struct dump dumped;			/* Item returned */
-
-	dumped.dmp_type = DMP_VECT;			/* Structure contains vector */
-
-	if (is_first) {							/* Very first item dumped */
-		is_first = 0;						/* Don't come here twice */
-		if (d_cxt.pg_status == PG_VIOL)	{	/* Implicitely raised exception */
-			top = extop(&eif_stack);		/* Faulty vector */
-			dumped.dmp_vect = top;
-			return &dumped;					/* Pointer to static data */
-		}
+	memcpy (&eif_stack, &xstk_context, sizeof(struct xstack));
+	memcpy (&db_stack, &dstk_context, sizeof(struct dbstack));
+	memcpy (&op_stack, &istk_context, sizeof(struct opstack));
 	}
 
-	/* Normal case: get a new vector from bottom of the stack. The exnext()
-	 * function returns a null pointer when the top of the stack has been
-	 * reached. Note that absolutely no interpretation is done. It is up to
-	 * ewb to correctly reconstruct the missing information by parsing the
-	 * items it gets.
-	 */
-
-	top = exnext();						/* Fetch next vector */
-	if (top == (struct ex_vect *) 0)	/* Reached top of stack */
-		return (struct dump *) 0;		/* Signal end of stack */
-
-	dumped.dmp_vect = top;
-
-	return &dumped;			/* Pointer to static data */
-
-	EIF_END_GET_CONTEXT
-}
-
-/*
- * Dumping of the execution stack.
- */
-
-rt_private struct dump *execution(void)
-{
-	/* Get the next execution vector from the top of eif_stack. Whenever a
-	 * vector associated with a melted routine is reached, we also send
-	 * the arguments (and possibly the locals in ST_FULL mode). This is why
-	 * we keep an internal state about the status of the last vector.
-	 */
+/************************************************************************** 
+ * NAME: execution_without_variables                                      * 
+ * RET : the dump item we should send to EiffelBench                      * 
+ *------------------------------------------------------------------------* 
+ * Dump the call stack - locals and arguments excluded                    *
+ *                                                                        *
+ * Get the next execution vector from the top of eif_stack. Whenever a    *
+ * vector associated with a melted routine is reached, we also send       *
+ * the arguments (and possibly the locals in ST_FULL mode). This is why   *
+ * we keep an internal state about the status of the last vector.         *
+ **************************************************************************/
+rt_private struct dump *get_next_execution_vector(void)
+	{
 	EIF_GET_CONTEXT
-	struct ex_vect *top;				/* Exception vector */
-	static struct ex_vect copy;			/* copy of the exception vector */
-	struct dump *dp;					/* Partial dump pointer */
-	struct dcall *dc;					/* Debugger's calling context */
-	static struct dump dumped;			/* Item returned */
-	static int last_melted = 0;			/* True when last was melted */
-	static int arg_done = 0;			/* True when arguments processed */
-	static int loc_done = 0;			/* True when locals processed */
-	static int argn = 0;				/* Argument number */
-	static int locn = 0;				/* Local number */
-	long hack;							/* Temporary solution: 2 integers sent in one */
 
-	/* When the last exception vector returned was melted, we want to send
-	 * the routine arguments (if any), and maybe the local variables.
-	 * So instead of sending another exception vector, we start returning
-	 * interpreter cells--RAM.
-	 */
+	struct ex_vect *top;		/* Exception vector */
+	static struct ex_vect copy;	/* copy of the exception vector */
+	static struct dump dumped;	/* Item returned */
+	long hack;					/* Temporary solution: 2 integers sent in one */
+	struct dcall *dc;			/* Debugger's calling context */
 
-	if (last_melted) {					/* Last vector was melted */
-		if (!arg_done) {				/* There are still some arguments */
-			dp = argument(argn++);			/* Get next argument */
-			if (dp != (struct dump *) 0){	/* Got it */
-				return dp;					/* An argument dump */
-			}
-			arg_done = 1;					/* No more arguments */
-			argn = 0;						/* Reset number for next vector */
-			dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
-			return &dumped;					/* arguments to be sent. */
-		}
-		if (dump_mode == ST_FULL && !loc_done) {	/* But we need locals */
-			dp = local(locn++);				/* Get next local */
-			if (dp != (struct dump *) 0){	/* Got one */
-				return dp;					/* A local variable dump */
-			}
-			loc_done = 1;
-			locn = 0;						/* Reset for next vector */
-			dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
-			return &dumped;					/* locals to be sent. */
-		}
-		dpop();							/* Remove calling context now */
-		last_melted = 0;				/* A priori, next vector not melted */
-	}
-
-	/* We either finished dealing with previous melted vector, or it was simply
-	 * not associated with a melted feature. So go on and grab next one, unless
+	/* We either finished dealing with previous vector, or it was simply
+	 * not associated with a feature. So go on and grab next one, unless
 	 * the end of the stack has been reached.
 	 */
-	if (eif_stack.st_cur->sk_arena == eif_stack.st_top){
-		return (struct dump *) 0;	/* Reached end of stack */
-	}
-/*	expop(&eif_stack); */				/* Remove top vector logically */
-/*	top = extop(&eif_stack);*/		/* And get a pointer to it (ghost!) */
-/*	printf ("extop done \n"); */
+	if (eif_stack.st_cur->sk_arena == eif_stack.st_top)
+		{
+		/* Reached end of chunck, go to previous chunck if any */
+		if (eif_stack.st_cur->sk_prev == NULL)
+			return NULL; /* no previous chunck ==> end of stack */
+
+		/* There is a previous chunck, switch to it */
+		eif_stack.st_cur = eif_stack.st_cur->sk_prev;
+		eif_stack.st_top = eif_stack.st_cur->sk_end;
+		eif_stack.st_end = eif_stack.st_cur->sk_end;
+		}
 
 	top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
 	expop (&eif_stack);
 
-	if ( !(
-			(top->ex_type == EX_CALL ||		/* A feature call (1st call) */
-			 top->ex_type == EX_RETY ||		/* A retried feature call */
-			 top->ex_type == EX_RESC) &&	/* A rescue clause */
-			 top->exu.exur.exur_id != 0)
-	)
+	if ( !( (top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC) && top->exu.exur.exur_id != 0))
 		return (struct dump *) EIF_IGNORE;		/* This vector should not be sent */
 
-	/* Now check whether by chance the vector associated with the callling
-	 * context on top of the debugger's stack is precisely the one we've just
-	 * popped. That would mean we reached a melted feature...
-	 */
-	dc = safe_dtop();				/* Returns null pointer if empty */
-	if (dc != (struct dcall *) 0){	/* Stack not empty */
-		if (dc->dc_exec == top) {	/* We've reached a melted feature */
-			last_melted = 1;		/* Calling context will be popped later */
-			arg_done = 0;
-			loc_done = 0;
-			init_var_dump(dc);		/* Make this feature "active" */
-		}
-	}
-
-	/* Finally, build up the dumped structure for the current vector. If this
+	/* Build up the dumped structure for the current vector. If this
 	 * vector is associated with a melted feature, the next call to this routine
 	 * will dump the arguments and possibluy the local variables.
 	 */
+	dc = safe_dtop();				/* Returns null pointer if empty */
+	if (dc != NULL && (dc->dc_exec == top))	/* We've reached a melted feature */
+		{
+		init_var_dump(dc);		/* Make this feature "active" */
+		dumped.dmp_type = DMP_MELTED;	/* Structure contains melted feature */
+		dpop();
+		}
+	else
+		dumped.dmp_type = DMP_VECT;	/* Structure contains frozen feature */
 
-	dumped.dmp_type = last_melted ? DMP_MELTED : DMP_VECT;	/* Structure contains vector */
+
 	copy = *top;
-	dumped.dmp_vect = &copy; /* static variable  -- Didier */
+	dumped.dmp_vect = (struct debug_ex_vect *)&copy; /* static variable  -- Didier */
 
 	/* Temporary hack:
 	 * With the time constraints we had it was not an option to change the
 	 * protocol in order to send the origin type and the dynamic type
-	 * sowe use the same integer to send bith values with a 16 bit shift
+	 * so we use the same integer to send both values with a 16 bit shift
 	 */
 
-	if (dumped.dmp_vect -> ex_type){
+	if (dumped.dmp_vect -> ex_type)
+		{
 		hack = dumped.dmp_vect -> exu.exur.exur_orig;
 		hack <<= 16;
 		hack += Dtype(dumped.dmp_vect -> exu.exur.exur_id);
 		dumped.dmp_vect -> exu.exur.exur_orig = hack;
+		}
+	
+	return &dumped;			/* Pointer to static data */
 	}
 
-	return &dumped;			/* Pointer to static data */
-
-	EIF_END_GET_CONTEXT
-}
-
+/************************************************************************** 
+ * NAME: safe_dtop                                                        * 
+ * RET : a pointer to the top of the stack                                * 
+ *------------------------------------------------------------------------* 
+ * This is a wrapper to the dtop() feature, which tests whether the stack *
+ * is empty before calling it: the dtop() routine will raise a eif_panic  *
+ * if there is nothing on the stack. Here, we only return a null pointer. *
+ **************************************************************************/
 rt_private struct dcall *safe_dtop(void)
-{
-	/* This is a wrapper to the dtop() feature, which tests whether the stack
-	 * is empty before calling it: the dtop() routine will raise a eif_panic if
-	 * there is nothing on the stack. Here, we only return a null pointer.
-	 */
-
+	{
 	EIF_GET_CONTEXT
 	if (db_stack.st_top && db_stack.st_top == db_stack.st_hd->sk_arena)
-		return (struct dcall *) 0;
+		return NULL;
 
 	return dtop();		/* Stack is not empty */
-	EIF_END_GET_CONTEXT
-}
+	}
 
 /*
  * Dumping arguments and/or locals.
  */
 
+/************************************************************************** 
+ * NAME: init_var_dump                                                    * 
+ * ARGS: call: Calling context for "active" feature                       *
+ *------------------------------------------------------------------------* 
+ * Initializes the interpreter registers for dumping variables from       *
+ * feature associated with calling context. This has to be done before    *
+ * ivalue() can reliably be called to get local variables.                *
+ **************************************************************************/
 rt_private void init_var_dump(struct dcall *call)
-		/* Calling context for "active" feature */
-{
-	/* Initializes the interpreter registers for dumping variables from feature
-	 * associated with calling context. This has to be done before ivalue()
-	 * can reliably be called to get local variables.
-	 */
-
-	if (call == (struct dcall *) 0)
+	{
+	if (call == NULL)
 		return;
 
-	sync_registers(MTC call->dc_cur, call->dc_top);
-}
+	/* melted feature, synchronize the registers */
+	sync_registers(call->dc_cur, call->dc_top);
+	}
 
-rt_private struct dump *variable(void)
-{
-	/* Dump the variables from the current routine, according to the global
-	 * status flag. The interpreter registers are supposed to be correctly
-	 * synchronized.
-	 */
+/************************************************************************** 
+ * NAME: go_ith_stack_level                                               * 
+ * ARGS: level: where we should go down the stack                         *
+ * RET : position of locals/arguments for active feature if it's frozen   *
+ *       EIF_NO_ITEM otherwise                                            *
+ *------------------------------------------------------------------------* 
+ * Go down the stack. This is done before dumping the locals and the      *
+ * arguments of a feature located on level `level' down the stack         *
+ **************************************************************************/
+rt_private uint32 go_ith_stack_level(int level)
+	{
+	EIF_GET_CONTEXT
 
+	struct ex_vect *top;		/* Exception vector */
+	struct ex_vect copy;		/* copy of the exception vector */
+	struct dcall *dc;			/* Debugger's calling context */
+	uint32 start = 0;			/* start of operation stack for current feature */
+								/* within whole operation stack */
+	int i;						/* Current level */
+
+	for (i=0; i<level; i++)
+		{
+		/* We either finished dealing with previous melted vector, or it was simply
+	   	* not associated with a melted feature. So go on and grab next one, unless
+   		* the end of the stack has been reached.
+   		*/
+		if (eif_stack.st_cur->sk_arena == eif_stack.st_top)
+			return EIF_NO_ITEM;	/* Error...Reached end of stack */
+
+		top = extop (&eif_stack); 		/* Let's do it the right way -- Didier */
+		expop (&eif_stack);
+
+		if ( !( (top->ex_type == EX_CALL ||	top->ex_type == EX_RETY || top->ex_type == EX_RESC) && top->exu.exur.exur_id != 0))
+			{
+			i--;		/* Rewind - This item should not be taken into account. */
+			continue;	/* This vector should be ignored */
+			}
+
+		/* Now check whether by chance the vector associated with the callling
+	   	* context on top of the debugger's stack is precisely the one we've just
+   		* popped. That would mean we reached a melted feature...
+   		*/
+		dc = safe_dtop();				/* Returns null pointer if empty */
+		if (dc != NULL && (dc->dc_exec == top))	/* We've reached a melted feature */
+			{
+			init_var_dump(dc);		/* Make this feature "active" */
+			if (i!=level-1)
+				dpop();
+			}
+		else
+			{
+			copy = *top;
+			if (i!=level-1)
+				start += copy.ex_locnum + copy.ex_argnum + 2; /* + 2 = + Current + result */
+			}
+		}
+	return start;			/* Pointer to static data */
+	}
+
+/************************************************************************** 
+ * NAME: variables                                                        * 
+ * ARGS: start: position of locals/arguments of active feature if it's    *
+ *              frozen                                                    *
+ *------------------------------------------------------------------------* 
+ * Dump the locals and the arguments of the active feature (call go_ith_  *
+ * stack_level to make a given feature active)                            *
+ * (The interpreter registers are supposed to be correctly synchronized)  *
+ **************************************************************************/
+rt_private struct dump *get_next_variable(uint32 start)
+	{
+	static struct dump dumped;			/* Item returned */
 	struct dump *dp;					/* Partial dump pointer */
 	static int arg_done = 0;			/* True when arguments processed */
 	static int argn = 0;				/* Argument number */
 	static int locn = 0;				/* Local number */
 
-	EIF_GET_CONTEXT
-	if (d_cxt.pg_active == (struct dcall *) 0)
-		return (struct dump *) 0;		/* No active routine */
-
-	switch (dump_mode) {
-	case ST_LOCAL:						/* Dump locals only */
-		dp = local(locn++);				/* Fetch next local variable */
-		break;
-	case ST_ARG:						/* Dump arguments only */
-		dp = argument(argn++);			/* Fetch next argument variable */
-		break;
-	case ST_VAR:						/* Dump arguments and locals */
-		if (!arg_done) {				/* There are still some arguments */
-			dp = argument(argn++);		/* Get next argument */
-			if (dp != (struct dump *) 0)
-				break;
-			arg_done = 1;				/* No more arguments */
+	if (!arg_done)						/* There are still some arguments */
+		{
+		dp = variable_item(IV_ARG,argn++,start);	/* Get next argument */
+		if (dp != (struct dump *) 0)
+			return dp;
+		arg_done = 1;					/* No more arguments */
+		dumped.dmp_type = DMP_VOID;		/* Tell ebench there are no more */
+		return &dumped;					/* arguments to be sent. */
 		}
-		dp = local(locn++);				/* Get next local then */
-		break;
-	default:
-		eif_panic("illegal variable request");
-	}
-
-	if (dp == (struct dump *) 0) {		/* Finished: reset static vars */
+	else
+		dp = variable_item(IV_LOCAL,locn++,start);	/* Get next local then */
+			
+	if (dp == (struct dump *) 0)		/* Finished: reset static vars */
+		{
 		arg_done = 0;
 		argn = 0;
 		locn = 0;
-	}
+		}
 
 	return dp;			/* Pointer to static data or null */
-	EIF_END_GET_CONTEXT
-}
+	}
 
-rt_private struct dump *local(int n)
-{
-	/* Return the nth local, or a void pointer if we reached the end of the
-	 * local variable. By convention, if the routine has n declared local
-	 * variable, then n+1 is the Result, provided the routine is not a
-	 * procedure.
-	 */
-
+/************************************************************************** 
+ * NAME: variable_item                                                    * 
+ * ARGS: n: number of the argument to get.                                *
+ *       variable_type: IV_ARG to get an argument,                        *
+ *                      IV_LOCAL to get a local variable                  *
+ *       start: position of locals/arguments of active feature if it's    *
+ *              frozen                                                    *
+ * RET : Return a dumped item containing the asked item or NULL           *
+ *------------------------------------------------------------------------* 
+ * Return the nth argument/local variable, or a void pointer if we        *
+ * reached the end of the argument/local variable list.                   *
+ **************************************************************************/
+rt_private struct dump *variable_item(int variable_type, int n, uint32 start)
+	{
 	uint32 type;
 	struct item *ip;					/* Partial item pointer */
 	static struct dump dumped;			/* Item returned */
 
-	ip = ivalue(MTC IV_LOCAL, n);
-	if (ip == (struct item *) 0)
-		return (struct dump *) 0;
+	ip = ivalue(variable_type, n, start);
+	if (ip == NULL)
+		return NULL;
 
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
@@ -458,93 +423,28 @@ rt_private struct dump *local(int n)
 	 * that item to ewb (which relies on that consistency).
 	 */
 	type = ip->type & SK_HEAD;
-	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
+	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != NULL))
 		ip->type = type | Dtype(ip->it_ref);
 
 	return &dumped;			/* Pointer to static data */
-}
+	}
 
-rt_private struct dump *argument(int n)
-{
-	/* Return the nth argument, or a void pointer if we reached the end of the
-	 * argument list.
-	 */
-
-	uint32 type;
-	struct item *ip;					/* Partial item pointer */
-	static struct dump dumped;			/* Item returned */
-
-	ip = ivalue(MTC IV_ARG, n);
-	if (ip == (struct item *) 0)
-		return (struct dump *) 0;
-
-	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
-	dumped.dmp_item = ip;
-
-	/* Because the interpreter (from time to time) does not care about the
-	 * consistency between SK_DTYPE of an item and EO_TYPE of its referenced
-	 * object, we have to resynchronize these two entities before sending
-	 * that item to ewb (which relies on that consistency).
-	 */
-	type = ip->type & SK_HEAD;
-	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
-		ip->type = type | Dtype(ip->it_ref);
-
-	return &dumped;			/* Pointer to static data */
-}
-
-/*
- * Dumping of the once stack.
- */
-
-rt_private struct dump *once(void)
-{
-	/* Dumping of the once stack */
-	EIF_GET_CONTEXT
-	char *obj;							/* Object in once Result variable */
-	static struct dump dumped;			/* Item returned */
-
-	if (once_set.st_top == (char **) 0)	/* Stack not created yet */
-		return (struct dump *) 0;
-
-	if (once_set.st_top == once_set.st_hd->sk_arena)
-		return (struct dump *) 0;			/* Stack is empty */
-
-	epop(&once_set, 1);						/* Remove item logically */
-	obj = *once_set.st_top;					/* Get it through indirection */
-
-	dumped.dmp_type = DMP_OBJ;				/* We are dumping an object */
-	dumped.dmp_obj.obj_addr = obj;			/* Record object's address */
-	if (obj != (char *) 0)					/* Not void object */
-		dumped.dmp_obj.obj_type =			/* Get its dynamic type */
-			HEADER(obj)->ov_flags & EO_TYPE;
-
-	return &dumped;			/* Pointer to static data */
-	EIF_END_GET_CONTEXT
-}
-
-/*
- * Dumping result of an already called once function
- */
-
-#ifdef EIF_WIN32
-rt_public void send_once_result(STREAM *s, uint32 body_id, int arg_num)
-#else
-rt_public void send_once_result(int s, uint32 body_id, int arg_num)
-#endif
-      				/* The connected socket */
-               		/* body id of the once function */
-            		/* Number of arguments */
-{
-	/* Ask the debugger for the result of already called once function
-	 * and send the result back to ewb.
-	 */
-
+/************************************************************************** 
+ * NAME: send_once_result                                                 * 
+ * ARGS: s      : the connected socket                                    * 
+ *       body_id: body id of the once function                            *
+ *       arg_num: Number of arguments                                     *
+ *------------------------------------------------------------------------* 
+ * Ask the debugger for the result of already called once function        *
+ * and send the result back to EiffelBench                                *
+ **************************************************************************/
+rt_public void send_once_result(eif_stream s, uint32 body_id, int arg_num)
+	{
 	uint32 type;
 	struct item *ip;					/* Partial item pointer */
 	struct dump dumped;					/* Item to send */
 
-	ip = docall(MTC body_id, arg_num);
+	ip = docall(body_id, arg_num);
 	dumped.dmp_type = DMP_ITEM;			/* We are dumping a variable */
 	dumped.dmp_item = ip;
 
@@ -554,34 +454,118 @@ rt_public void send_once_result(int s, uint32 body_id, int arg_num)
 	 * that item to ewb (which relies on that consistency).
 	 */
 	type = ip->type & SK_HEAD;
-	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != (char *)0))
+	if ((type == SK_EXP || type == SK_REF) && (ip->it_ref != NULL))
 		ip->type = type | Dtype(ip->it_ref);
 
 	send_dump(s, &dumped);
-}
-
-
-rt_private void show_dumped (struct dump d)
-{
-	struct ex_vect *dmpu;
-	switch (d.dmp_type) {
-		case DMP_MELTED:
-		case DMP_VECT:
-			printf ("Vector	");
-			dmpu = d.dmpu.dmpu_vect;
-			show_vector (dmpu);
-			return;
-		default:
-			printf ("unknown dump\n");
 	}
-}
 
-rt_private void show_vector (struct ex_vect *dmpu)
-{
-		printf ("VECTOR %lx\n", (char *) dmpu);
-		printf ("type = %i; retry = %i; rescue = %i\n", dmpu -> ex_type,
-			dmpu -> ex_retry, dmpu -> ex_rescue);
-		printf ("obj_id = %i, rout_name = %s orig = %i\n",
-			dmpu -> exu.exur.exur_id, dmpu -> exu.exur.exur_rout,
-			dmpu -> exu.exur.exur_orig);
-}
+/************************************************************************** 
+ * NAME: modify_local                                                     * 
+ * ARGS: loc_depth : Depth where the feature is situated inside callstack * 
+ *       loc_type  : Type of the local. Can be DLT_ARGUMENT=0             * 
+ *                   DLT_LOCALVAR=1 or DLT_RESULT=2                       * 
+ *       loc_number: number of the argument/local variable on the stack   * 
+ *       new_value : new value to assign to the local                     * 
+ * RET:  returns                                                          * 
+ *           0 if the local item has beem successfully modified.          * 
+ *           1 if something else went wrong.                              *  
+ *           2 if you have tried to modify an expanded reference.         * 
+ *           3 if you have passed a bad value for loc_type			      *  
+ *------------------------------------------------------------------------* 
+ * modify the value of a local variable / an argument / the result        * 
+ * of a feature with the given new value                                  * 
+ **************************************************************************/
+rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, struct item *new_value)
+	{
+	EIF_GET_CONTEXT
+
+	struct ex_vect	*top = NULL; 		/* Exception vector */
+	struct item 	*ip = NULL;			/* Partial dump pointer */
+	uint32 			start = 0;			/* start of operation stack for current feature within whole operation stack */
+	char 			*new_object = NULL;	/* new value for the local variable if it's a reference */
+	unsigned char 	error_code = 0;		/* error code - different from zero means that an error occured */
+
+	save_stacks(); /* save context */
+	start = go_ith_stack_level(stack_depth); /* go down the the call stack to set our feature "active" */
+
+	/* get the address of the local item */
+	switch(loc_type)
+		{
+		case DLT_ARGUMENT:
+			ip = ivalue(IV_ARG, loc_number-1, start);
+			break;
+		
+		case DLT_LOCALVAR:
+			ip = ivalue(IV_LOCAL, loc_number-1, start);
+			break;
+
+		case DLT_RESULT:
+			top = extop (&eif_stack);
+			ip = ivalue(IV_LOCAL, top->ex_locnum, start);
+			break;
+		default:
+			error_code = 3; /* bad value for loc_type */
+			goto lblError_restore_context;
+		}
+
+	restore_stacks(); /* restore context (so that RTMS can run properly) */
+
+	/* modify the local item */
+	switch (new_value->type & SK_HEAD)
+		{
+		case SK_BOOL:
+		case SK_CHAR:
+			*(EIF_CHARACTER *)(ip->it_addr) = new_value->it_char;
+			break;
+		case SK_WCHAR:
+			*(EIF_WIDE_CHAR *)(ip->it_addr) = new_value->it_wchar;
+			break;
+		case SK_INT8:
+			*(EIF_INTEGER_8 *)(ip->it_addr) = new_value->it_int8;
+			break;
+		case SK_INT16:
+			*(EIF_INTEGER_16 *)(ip->it_addr) = new_value->it_int16;
+			break;
+		case SK_INT32:
+			*(EIF_INTEGER_32 *)(ip->it_addr) = new_value->it_int32;
+			break;
+		case SK_INT64:
+			*(EIF_INTEGER_64 *)(ip->it_addr) = new_value->it_int64;
+			break;
+		case SK_FLOAT:
+			*(EIF_REAL *)(ip->it_addr) = new_value->it_float;
+			break;
+		case SK_DOUBLE:
+			*(EIF_DOUBLE *)(ip->it_addr) = new_value->it_double;
+			break;
+		case SK_POINTER:
+			*(EIF_POINTER *)(ip->it_addr) = new_value->it_ptr;
+			break;
+		case SK_STRING:
+			*(EIF_REFERENCE *)(ip->it_addr) = RTMS(new_value->it_ref);
+			break;
+		case SK_REF:
+			new_object = (EIF_OBJECT)(&(eif_access((EIF_OBJECT) (new_value->it_ref))));
+			new_object = eif_access(new_object);
+			*(EIF_REFERENCE *)(ip->it_addr) = new_object;
+			break;
+		case SK_BIT:
+			error_code = 1; /* not yet implemented */
+			goto lblError;
+		case SK_EXP:
+			error_code = 2; /* modifying  an expanded reference is not allowed */
+			goto lblError;
+		default:
+			/* unexpected value, error: set the error flag */
+			error_code = 1;
+			goto lblError;
+		}
+
+	/* everything went ok, error_code is equal to 0 */
+lblError_restore_context:
+	restore_stacks(); /* restore context */
+
+lblError:
+	return error_code;
+	}

@@ -26,20 +26,6 @@
 extern "C" {
 #endif
 
-#ifdef VXWORKS
-#define STACK_CHUNK		400		/* Size of a stack chunk */
-#else
-#define STACK_CHUNK		1000	/* Size of a stack chunk */
-#endif
-#define MIN_FREE		100		/* Below that, chunk is nearly full */
-#define TH_ALLOC		65536	/* Allocation threshold (64 K)*/
-#define TH_ALLOC_MIN	8192	/* Minimal allocation threshold (8 K).*/
-#define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
-#define TO_MAX			7		/* Maximum number of allocable 'to' */
-#define CHUNK_MIN		5		/* Minimum Eiffel chunk # to activate plsc() */
-#define PLSC_PER		8		/* Period of plsc in acollect */
-#define SPOILT_TBL		3		/* Size of spoilt chunks recording table */
-
 /*
  * Eiffel flags -- edit with care.
  */
@@ -60,32 +46,12 @@ extern "C" {
 #define EO_UPPER	0xffff0000		/* Mask to get upper half of flags */
 #define EO_MOVED	(EO_NEW | EO_MARK)
 
-/*
- * For aging -- edit with care.
- */
-#define AGE_ONE		0x02000000		/* First birthday time */
-#define AGE_OFFSET	25				/* Age starts at bit 25 and lasts 4 bits */
+/* Exported data-structure declarations */
+RT_LNK EIF_REFERENCE root_obj;	/* Address of `root' object */	
 
-/*
- * Garbage collector's status.
- */
-#define GC_GEN		0x01			/* Full GC with generation scavenging */
-#define GC_PART		0x02			/* Full GC with partial scavenging */
-#define GC_FAST		0x04			/* Fast GC (generation based) */
-#define GC_STOP		0x08			/* Garbage collection is stopped */
-#define GC_SIG		0x10			/* Entered in a signal handler */
+extern int epush(register struct stack *stk, register EIF_REFERENCE value);	/* Push an addess on a run-time stack */
 
-/*
- * Generation scavenging's status.
- */
-#define GS_STOP		0x00000008		/* Generation scavenging is stopped */
-#define GS_SET		0x00000004		/* Generation scavenging to be set */
-#define GS_ON		0x00000002		/* Generation scavenging is set */
-#define GS_OFF		0x00000001		/* Generation scavenging is off */
-
-#ifndef EIF_THREADS
-extern struct stack memory_set;	/* Memory set stack.	*/
-#endif	/* !EIF_THREADS */
+#ifdef ISE_GC
 
 extern int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem-set? */
 extern int is_in_special_rem_set (EIF_REFERENCE obj);	/* Is obj in special_rem_set? */
@@ -95,14 +61,8 @@ extern void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given
 extern void mksp(void);					/* Mark and sweep algorithm */
 RT_LNK void reclaim(void);				/* Reclaim all the objects */
 RT_LNK int collect(void);				/* Generation-based collector */
-extern int epush(register struct stack *stk, register EIF_REFERENCE value);					/* Push an addess on a run-time stack */
-extern char **st_alloc(register struct stack *stk, register int size);			/* Creates an empty stack */
-extern  int st_extend(register struct stack *stk, register int size);         
-/* Extends a stack */
 extern int acollect(void);				/* Automatic garbage collection */
 extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
-extern void st_truncate(register struct stack *stk);			/* Truncate stack if necessary */
-extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
 RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
 RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of eremb */
 RT_LNK void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
@@ -117,6 +77,11 @@ extern int eif_promote_special (register EIF_REFERENCE object);
 extern int is_in_special_rem_set (register EIF_REFERENCE object);
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 RT_LNK char *onceset(void);				/* Recording of once function result */
+RT_LNK void new_onceset(EIF_REFERENCE);				/* Recording of once function result */
+#ifdef EIF_THREADS
+RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result */
+#endif
+
 extern EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
 	/* Get stack address of "once" from "once_set". */
 extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
@@ -125,6 +90,13 @@ RT_LNK void gc_run(void);				/* Restart the garbage collector */
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */
 extern void gfree(register union overhead *zone);	/* Garbage collector's free routine */
 
+#ifdef EIF_THREADS
+#define EIF_GLOBAL_ONCE_MUTEX_LOCK 		eif_thr_mutex_lock(eif_global_once_mutex)
+#define EIF_GLOBAL_ONCE_MUTEX_UNLOCK	eif_thr_mutex_unlock(eif_global_once_mutex)
+extern EIF_MUTEX_TYPE *eif_global_once_mutex;	/* Mutex used to protect insertion of global onces in `global_once_set' */
+#endif
+
+#endif /* ISE_GC */
 
 #ifdef __cplusplus
 }

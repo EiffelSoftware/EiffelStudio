@@ -8,14 +8,14 @@ RM = del
 LIBDIR = ..\shared
 LIBNAME = ipc.$lib
 LIBARCH = $(LIBDIR)\$(LIBNAME)
-LIBRUN = $(TOP)\run-time
+LIBRUN = $(TOP)\run-time -I$(TOP)\run-time\include
 LIBIDR = $(TOP)\idrs
 LIBIDRNAME = idr.$lib
 LIBIDRARCH = $(LIBIDR)\$(LIBIDRNAME)
 LIBS = $(LIBIDRARCH) $(LIBARCH)
 
 CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
-LDFLAGS =
+LDFLAGS = /DEBUG /DEBUGTYPE:BOTH /NOLOGO
 
 # Derived object file names
 OBJECTS = \

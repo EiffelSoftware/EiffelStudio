@@ -6,18 +6,40 @@
 # instead choose to run each of the .SH files by yourself, or "Configure -S".
 #
 
-# Configured by: manuelt 1/31/2000 
+# Configured by: manuelt 02.05.99
 
-optimize=' -O1 -n32 -mips3 '
-wkoptimize=' -O1 -n32 -mips3 '
+binary_fmt='-n32'
+mips_arch='-mips4'
+
+optimize=" -O3 $binary_fmt $mips_arch "
+wkoptimize=" -O3 $binary_fmt $mips_arch "
 
 start_test='if [ ! -f finished ] ; then'
 end_test='; fi'
 create_test='touch finished'
 
+# Variables propagated from previous config.sh file.
+ar='ar'
+concurrent_prefix='c'
+eiflib='finalized'
+ld='ld'
+mtprefix='mt'
+mtccflags='-DLANGUAGE_C -G 0 -DEIF_THREADS -DEIF_POSIX_THREADS -woff 1009,1167,1174,1552 -DEIF_SGI'
+mtcppflags='-DLANGUAGE_C -G 0 -DEIF_THREADS -DEIF_POSIX_THREADS -woff 1009,1167,1174,1552 -DEIF_SGI'
+mtldflags="$binary_fmt $mips_arch "
+mtlibs='-lm -lpthread '
+mtsharedlibs='-lm -lpthread '
+suffix='.a'
+shared_suffix='.so'
+shared_rt_suffix='.so'
+wkeiflib='wkbench'
 command_makefile='make -f'
+
 d_bsdsig='define'
 lngpad_2='8'
+integer_16_size='16'
+integer_64_size='64'
+eif_integer_64_display='"Ld"'
 d_bsd='undef'
 d_eunice='undef'
 d_xenix='undef'
@@ -35,7 +57,7 @@ comm='/usr/bin/comm'
 compress=''
 cp='/sbin/cp'
 cpio=''
-cpp='/usr/lib/cpp'
+cpp='/usr/bin/CC'
 csh=''
 date='/sbin/date'
 echo='/sbin/echo'
@@ -57,7 +79,7 @@ lpr=''
 ls=''
 mail=''
 mailx=''
-make='smake'
+make='make'
 mkdir='/sbin/mkdir'
 more=''
 mv='/sbin/mv'
@@ -113,15 +135,15 @@ bitpbyte='8'
 byteorder='4321'
 cc='cc'
 gccversion=''
-ccflags='-DLANGUAGE_C -G 0 -xansi  -woff 1552,1009,1167,1174 -DEIF_SGI'
-sharedccflags='-DLANGUAGE_C -G 0 -xansi  -woff 1552,1009,1167,1174 -DEIF_SGI'
-cppflags='-DLANGUAGE_C -G 0 -xansi  -woff 1552,1009,1167,1174 -DEIF_SGI'
-sharedcppflags='-DLANGUAGE_C -G 0 -xansi  -woff 1552,1009,1167,1174 -DEIF_SGI'
-ldflags='-multigot -n32 -mips3 '
-ldsharedflags='-multigot -n32 -mips3  -shared -o'
-mtldsharedflags='-multigot -n32 -mips3  -shared -o '
+ccflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174,1552 -DEIF_SGI'
+sharedccflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174,1552 -DEIF_SGI'
+cppflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174,1552 -DEIF_SGI'
+sharedcppflags='-DLANGUAGE_C -G 0 -xansi  -woff 1009,1167,1174,1552 -DEIF_SGI'
+ldflags="-multigot $binary_fmt $mips_arch "
+ldsharedflags="-multigot $binary_fmt $mips_arch  -shared -o"
+mtldsharedflags="-multigot $binary_fmt $mips_arch  -shared -o "
 sharedlink='ld'
-lkflags='-multigot -n32 -mips3 '
+lkflags="-multigot $binary_fmt $mips_arch "
 cf_by='manuelt'
 cf_time='Wed Dec 10 19:31:36 PST 1997'
 charsize='1'
@@ -350,18 +372,4 @@ voidflags='15'
 yacc='yacc'
 yaccflags=''
 CONFIG=true
-# Variables propagated from previous config.sh file.
-ar='ar'
-concurrent_prefix='c'
-eiflib='finalized'
-ld='ld'
-mtprefix='mt'
-mtccflags='-DLANGUAGE_C -G 0 -DEIF_THREADS -DEIF_POSIX_THREADS -woff 1552,1009,1167,1174  -DEIF_SGI'
-mtcppflags='-DLANGUAGE_C -G 0 -DEIF_THREADS -DEIF_POSIX_THREADS -woff 1552,1009,1167,1174 -DEIF_SGI'
-mtldflags='-n32 -mips3 '
-mtlibs='-lm -lpthread '
-mtsharedlibs='-lm -lpthread '
-suffix='.a'
-shared_suffix='.so'
-wkeiflib='wkbench'
 

@@ -11,20 +11,17 @@
 	Interpretor datas update primitives
 */
 
-/* TEMPORARY */
-/*
-#include <stdio.h>
-*/
 
-#include <string.h>
+#include "eif_portable.h"
 #include "eif_project.h"
-#include "eif_config.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include "eif_console.h"
 #include <direct.h>		
 #include <windows.h>
 #endif
+
+#include <string.h>
 
 #ifdef EIF_OS2
 #include <direct.h>
@@ -39,7 +36,7 @@
 #include "eif_misc.h"
 #include "eif_file.h"
 #include "eif_err_msg.h"
-#include "eif_main.h"
+#include "rt_main.h"
 #include "eif_gen_conf.h"
 #include "eif_error.h"					/* for error_tag() */
 #include "eif_path_name.h"				/* for eifrt_vms_has_path_terminator */
@@ -47,6 +44,8 @@
 #ifdef DEBUG
 #include "eif_interp.h"					/* For idump() */
 #endif
+
+#include "rt_assert.h" 				/* For assertions checking. */
 
 rt_private void cecil_updt(void);			/* Cecil update */
 rt_private void parents_updt(void);			/* Partent table update */
@@ -64,20 +63,29 @@ rt_private void write_long(char *where, long int value);				/* Write long consta
 /* TEMPORARY */
 static FILE *fil;
 
+/* Perform safe allocation which raises an exception when not
+ * possible 
+ */
+#define SAFE_ALLOC(v, type, count)	{\
+	v = (type *) cmalloc ((count) * sizeof(type)); \
+	if (v == NULL) \
+		enomem();	\
+	}
+
 rt_public void update(char ignore_updt)
 {
 	/* Update internal structures before execution */
 
 	long count;								/* New size for `esystem' */
-	long body_index;						/* Last body index */
 	long body_id;							/* Last body id */
-	char *bcode;							/* Last byte code */
+	unsigned char *bcode;							/* Last byte code */
 	long bsize;								/* Last byte code size */
 	char c;
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
 	long bonce_idx;
+	fnptr *tmp_frozen;						/* Update of `egc_frozen' */
 /* %%ss bloc moved below*/
 
 	/* Initialize count of bytecode once routines */
@@ -98,11 +106,10 @@ rt_public void update(char ignore_updt)
 		 * ".melted" (7) plus an extra 3 characters needed for the different platform
 		 * directory separators and a nul terminator */
 	if (meltpath) {
-		filename = (char *)cmalloc (strlen (meltpath) + strlen (egc_system_name) + 10);
-	}
-	else {
+		SAFE_ALLOC(filename, char, strlen(meltpath) + strlen (egc_system_name) +10);
+	} else {
 		meltpath = NULL;
-		filename = (char *)cmalloc (UPDTLEN + 10);
+		SAFE_ALLOC(filename, char, UPDTLEN + 10);
 	}
 
 	if (filename == (char *)0){
@@ -139,7 +146,6 @@ rt_public void update(char ignore_updt)
 	strcat (filename, ".melted");
 
 #ifdef DEBUG
-	dprintf(1)("Frozen level = %d\n", zeroc);
 	dprintf(1)("Reading .UPDT in: %s\n", filename);
 #endif
 
@@ -165,18 +171,6 @@ rt_public void update(char ignore_updt)
 		return;
 	}
 
-	wread (&c, 1);				/* down under flag */
-
-	/*
-		The second byte in melted.eif is the java flag. If it is non-
-		zero, the runtime must raise an exception and kill the program.
-		This is because the interpreter cannot (and should not) handle
-		java specific bytecode.
-	*/
-
-	if (c)
-		eraise ("Unable to interpret Java code", EN_EXT);
-
 		/* Update the root class and the creation feature ids */
 	root_class_updt ();
 
@@ -188,23 +182,17 @@ rt_public void update(char ignore_updt)
 		/* Get the Eiffel profiler status */
 	egc_prof_enabled = wlong();
 
-	/* Allocation of variable `esystem' */
+		/* Allocation of variable `esystem' */
 #if CONCURRENT_EIFFEL
-	esystem = (struct cnode *) cmalloc((count+1) * sizeof(struct cnode));
-	if (esystem == (struct cnode *) 0)
-		enomem();				/* Not enough room */
+	SAFE_ALLOC(esystem, struct cnode, count + 1);
 	memcpy (esystem, egc_fsystem, (scount+1) * sizeof(struct cnode));
 #else
-	esystem = (struct cnode *) cmalloc(count * sizeof(struct cnode));
-	if (esystem == (struct cnode *) 0)
-		enomem(MTC_NOARG);				/* Not enough room */
+	SAFE_ALLOC(esystem, struct cnode, count);
 	memcpy (esystem, egc_fsystem, scount * sizeof(struct cnode));
 #endif
 
-	/* Allocation of the variable `ecall' */
-	ecall = (int32 **) cmalloc(count * sizeof(int32 *));
-	if (ecall == (int32 **) 0)
-		enomem(MTC_NOARG);
+		/* Allocation of the variable `ecall' */
+	SAFE_ALLOC(ecall, int32 *, count);
 	memcpy (ecall, egc_fcall, scount * sizeof(int32 *));
 
 	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
@@ -220,7 +208,7 @@ rt_public void update(char ignore_updt)
 	 */
 
 	scount = count;
-	/* Feature table update */
+		/* Feature table update */
 	count = wlong();
 #ifdef DEBUG
 	dprintf(1)("Number of feature tables to update: %d\n", count);
@@ -229,70 +217,47 @@ rt_public void update(char ignore_updt)
 	while (count-- > 0)
 		cnode_updt();
 
-	/* Update possible routine id array */
+		/* Update possible routine id array */
 	routid_updt();
 
-	/* Read the dispatch table new count */
-	count = wlong();
-#ifdef DEBUG
-	dprintf(1)("=== New count for dispatch table: %ld [old = %ld] ===\n", count, dcount);
-#endif
-	/* Allocation of variable `dispatch' */
-	dispatch = (uint32 *) cmalloc(count * sizeof(uint32));
-	if (dispatch == (uint32 *) 0)
-		enomem(MTC_NOARG);
-
-	/* Copy of the frozen dispatch table into `dispatch' */
-	memcpy (dispatch, egc_fdispatch, dcount * sizeof(uint32));
-	dcount = count;
-
-	/* Update of the dispatch table */
-	while ((body_index = wlong()) != -1) {
-		dispatch[body_index] = wlong();
-#ifdef DEBUG
-	dprintf(1)("dispatch[%ld] = %ld\n", body_index, dispatch[body_index]);
-#endif
-	}
-
-	/* Updating of the melting table */
+		/* Updating of the melting table */
 	melt_count = wlong();		/* Read the size of the byte code array */
 #ifdef DEBUG
 	dprintf(1)("=== Size of melted table: %ld ===\n", melt_count);
 #endif
-	/* Allocation of the variable `melt' */
-	melt = (char **) cmalloc(melt_count * sizeof(char *));
-	if (melt == (char **) 0)
-		enomem(MTC_NOARG);
-	/* Allocation of the variable `mpatidtab' */
-	mpatidtab = (int *) cmalloc(melt_count * sizeof(int));
-	if (mpatidtab == (int *) 0)
-		enomem(MTC_NOARG);
+		/* Update of `egc_frozen' array with new total number of Eiffel routines */
+	SAFE_ALLOC(tmp_frozen, fnptr, melt_count);
+	memcpy (tmp_frozen, egc_frozen, eif_nb_features * sizeof (fnptr));
+	memset (tmp_frozen + eif_nb_features, 0, (melt_count - eif_nb_features) * sizeof(fnptr));
+	egc_frozen = tmp_frozen;
+
+		/* Allocation of the variable `melt' */
+	SAFE_ALLOC(melt, unsigned char *, melt_count);
+		/* Allocation of the variable `mpatidtab' */
+	SAFE_ALLOC(mpatidtab, int, melt_count);
 
 	bonce_idx = 0;
 
 	while ((body_id = wlong()) != -1) {
+		CHECK ("Body positive", body_id >= 0);
 		bsize = wlong();
 		pattern_id = wlong();
-		if (body_id >= 0)
-			mpatidtab[body_id] = (int) pattern_id;
-		bcode = cmalloc(bsize * sizeof(char));
-		if (bcode == (char *) 0)
-			enomem(MTC_NOARG);
-		/* Read the byte code */
-		wread(bcode, (int)(bsize * sizeof(char)));
-		if (body_id >= 0)
-		{
-			melt[body_id] = bcode;
+		mpatidtab[body_id] = (int) pattern_id;
 
-			if (*bcode)
-			{
+		SAFE_ALLOC (bcode, unsigned char, bsize);
+
+			/* Read the byte code */
+		wread((char *) bcode, (int)(bsize * sizeof(unsigned char)));
+
+		melt[body_id] = bcode;		/* Assign Byte code array of feature of `body_id' */
+		egc_frozen [body_id] = 0;	/* Reset the frozen feature to force call on new
+									 * melted feature */
+
+		if (*bcode) {
 				/* It's a once routine */
 				/* Assign a key to it  */
-
-				write_long (bcode + 1, bonce_idx);
-
-				++bonce_idx;    /* Increment key */
-			}
+			write_long ((char *) (bcode + 1), bonce_idx);
+			++bonce_idx;    /* Increment key */
 		}
 #ifdef DEBUG
 	dprintf(2)("------------------\n");
@@ -305,25 +270,10 @@ rt_public void update(char ignore_updt)
 #endif
 	}
 
-	/* Record number of bytecode once routines */
-
+		/* Record number of bytecode once routines */
 	EIF_bonce_count = bonce_idx;
 
-	/* Recompute adresses of `melt' and `patidtab' */
-
-	melt -= zeroc;
-	mpatidtab -= zeroc;
-
-	/* Conformance table if any */
-	wread (&c, 1);
-	if (c == '\01') {
-#ifdef DEBUG
-	dprintf(1)("updating conformance table\n");
-#endif
-		conform_updt();
-	}
-
-	/* Parent table if any */
+		/* Parent table and Cecil tables if any */
 	wread (&c, 1);
 	if (c == '\01') {
 #ifdef DEBUG
@@ -332,19 +282,16 @@ rt_public void update(char ignore_updt)
 		parents_updt();
 	}
 	else
-	{
 		eif_gen_conf_init (eif_par_table_size);
-	}
-	/* Option table */
-	eoption = (struct eif_opt *)cmalloc(scount * sizeof(struct eif_opt));
-	if (eoption == (struct eif_opt *) 0)
-		enomem(MTC_NOARG);
+	
+		/* Option table */
+	SAFE_ALLOC(eoption, struct eif_opt, scount);
 	option_updt();
 
-	/* Routine info table */
+		/* Routine info table */
 	routinfo_updt();
 
-	/* Descriptors */
+		/* Descriptors */
 	init_desc();
 	desc_updt();
 
@@ -414,9 +361,7 @@ rt_public void cnode_updt(void)
 		 * in th byte code array read by `wread'. Read first the string,
 		 * and then the character sequence */
 	str_count = wshort();
-	str = cmalloc((str_count + 1) * sizeof(char));
-	if (str == (char *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(str, char, str_count + 1);
 	node->cn_generator = str;
 	wread(str, str_count * sizeof(char));
 	str[str_count] = '\0';
@@ -433,26 +378,18 @@ rt_public void cnode_updt(void)
 
 		/* 4. Attribute names array */
 	if (nbattr > 0) {
-		names = (char **) cmalloc(nbattr * sizeof(char *));
-		if (names == (char **) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(names, char *, nbattr);
 		node->cn_names = names;
-		types = (uint32 *) cmalloc(nbattr * sizeof(uint32));
-		if (types == (uint32 *) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(types, uint32, nbattr);
 		node->cn_types = types;
-		gtypes = (int16 **) cmalloc(nbattr * sizeof(int16 *));
-		if (gtypes == (int16 **) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(gtypes, int16 *, nbattr);
 		node->cn_gtypes = gtypes;
 #ifdef DEBUG
 	dprintf(4)("\tattribute names = ");
 #endif
 		for (i=0; i<nbattr; i++) {
 			str_count = wshort();
-			str = cmalloc((str_count + 1) * sizeof(char));
-			if (str == (char *) 0)
-				enomem(MTC_NOARG);
+			SAFE_ALLOC(str, char, str_count + 1);
 			wread(str, str_count * sizeof(char));
 			str[str_count] = '\0';
 			names[i] = str;
@@ -485,9 +422,7 @@ rt_public void cnode_updt(void)
 		
 		/* 5. Parent dynamic type array */
 	nbparents = wshort();
-	parents = (int *) cmalloc((nbparents + 1) * sizeof(int));
-	if (parents == (int *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(parents, int, nbparents + 1);
 	node->cn_parents = parents;
 #ifdef DEBUG
 	dprintf(4)("\n\tparents = ");
@@ -502,9 +437,7 @@ rt_public void cnode_updt(void)
 
 		/* 6. Attribute routine id array */
 	if (nbattr > 0) {
-		rout_ids = (int32 *) cmalloc(nbattr * sizeof(int32));
-		if (rout_ids == (int32 *) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(rout_ids, int32, nbattr);
 		node->cn_attr = rout_ids;
 		wread((char *)rout_ids, nbattr * sizeof(int32));
 #ifdef DEBUG
@@ -560,9 +493,7 @@ rt_public void routid_updt(void)
 		class_id, array_size);
 #endif
 		if (array_size > 0) {
-			cn_eroutid = (int32 *) cmalloc(array_size * sizeof(int32));
-			if (cn_eroutid == (int32 *) 0)
-				enomem(MTC_NOARG);
+			SAFE_ALLOC(cn_eroutid, int32, array_size);
 			wread((char *) cn_eroutid, array_size * sizeof(int32));
 		} else {
 			 cn_eroutid = (int32 *) 0;
@@ -578,9 +509,7 @@ rt_public void routid_updt(void)
 		if (has_cecil) {
 			size = wlong();		/* Hash table size */
 			names = names_updt((short) size);
-			feature_ids = (uint32 *) cmalloc(size * sizeof(uint32));
-			if (feature_ids == (uint32 *) 0)
-				enomem(MTC_NOARG);
+			SAFE_ALLOC(feature_ids, uint32, size);
 			wread((char *) feature_ids, size * sizeof(uint32));
 		}
 		while ((dtype = wlong()) != -1L) {	/* Dynamic type */
@@ -602,61 +531,20 @@ rt_public void routid_updt(void)
 	}
 }
 
-rt_public void conform_updt(void)
-{
-	/* Update conformance table */
-
-	register1 short dtype;				/* Dynamic type to update */
-	register2 struct conform *new;		/* New conformance table structure */
-	register6 short min;				/* Minimum dyn. type for `new' */
-	register5 short max;				/* Maximum dyn. type for `new' */
-	register3 char *area;				/* Area of `new' */
-	register4 short area_size;			/* Size of `area' */
-
-		/* Allocation of the conformance table */
-	co_table = (struct conform **) cmalloc(scount*sizeof(struct conform *));
-	if (co_table == (struct conform **) 0)
-		enomem(MTC_NOARG);
-
-	while ((dtype = wshort()) != -1) {	/* Get a dynamic type */
-		new = (struct conform *) cmalloc(sizeof(struct conform));
-		if (new == (struct conform *) 0)
-			enomem(MTC_NOARG);
-
-		min = wshort();
-		new->co_min = min;
-		max = wshort();
-		new->co_max = max;
-
-		/* Constant `8' is hardcoded here as in Eiffel: it is the bits
-		 * number of a character */
-		area_size = ((max - min + 1) / 8) * sizeof(char);
-		area = cmalloc(area_size);
-		if (area == (char *) 0)
-			enomem(MTC_NOARG);
-		new->co_tab = area;
-		wread(area, area_size);
-
-		co_table[dtype] = new;
-	}
-	cecil_updt();
-}
-
 rt_private void parents_updt(void)
 {
-	short   dtype, max_dtype, tsize, i;
+	short dtype, max_dtype;
+	long tsize, i;
 	struct  eif_par_types *pt, **pt2, **pt1;
 
-	max_dtype = eif_par_table_size;
+		/* Dynamic types are coded on 2 bytes so we are sure
+		 * we are not loosing any data by casting it to a short */
+	max_dtype = (short) eif_par_table_size;
 	tsize = max_dtype + 32;
 
-	eif_par_table2 = (struct eif_par_types **) cmalloc (tsize*sizeof(struct eif_par_types *));
+	SAFE_ALLOC(eif_par_table2, struct eif_par_types *, tsize);
 
-	if (eif_par_table2 == (struct eif_par_types **)0)
-		enomem(MTC_NOARG);
-
-	/* Copy pointers from `eif_par_table' */
-
+		/* Copy pointers from `eif_par_table' */
 	pt1 = eif_par_table;
 	pt2 = eif_par_table2;
 
@@ -672,7 +560,7 @@ rt_private void parents_updt(void)
 
 	while ((dtype = wshort()) != -1)
 	{
-		pt = (struct eif_par_types *) cmalloc (sizeof (struct eif_par_types));
+		SAFE_ALLOC(pt, struct eif_par_types, 1);
 
 		if (pt == (struct eif_par_types *) 0)
 			enomem(MTC_NOARG);
@@ -724,13 +612,18 @@ rt_private void parents_updt(void)
 
 	eif_par_table2_size = tsize;
 	eif_gen_conf_init (max_dtype);
+
+		/* Cecil Update computed only when parent table has been modified and
+		 * therefore we put it in the same part of code */
+	cecil_updt();
 }
 
 rt_private void cecil_updt(void)
 {
 	/* Update high-level cecil structure. */
 
-	short count, i, nb_generics, nb_types, n;
+	short count, i, nb_generics, nb_types;
+	long n;
 	uint32 *type_val;
 	struct gt_info *gtype_val;
 	int32 *gt_gen;
@@ -743,9 +636,7 @@ rt_private void cecil_updt(void)
 	ce_nogeneric->h_size = count;
 	ce_nogeneric->h_sval = sizeof(uint32);
 	ce_nogeneric->h_keys = names_updt(count);
-	type_val = (uint32 *) cmalloc(count * sizeof(uint32));
-	if (type_val == (uint32 *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(type_val, uint32, count);
 	wread((char *) type_val, count * sizeof(uint32));
 	ce_nogeneric->h_values = (char *) type_val;
 
@@ -754,9 +645,7 @@ rt_private void cecil_updt(void)
 	ce_generic->h_size = count;
 	ce_generic->h_sval = sizeof(struct gt_info);
 	ce_generic->h_keys = names_updt(count);
-	gtype_val = (struct gt_info *) cmalloc(count * sizeof(struct gt_info));
-	if (gtype_val == (struct gt_info *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(gtype_val, struct gt_info, count);
 	ce_generic->h_values = (char *) gtype_val;
 	for (i=0; i<count; gtype_val++,i++) {
 		nb_generics = wshort();				/* Number of generic parameters */
@@ -765,15 +654,11 @@ rt_private void cecil_updt(void)
 		gtype_val->gt_param = nb_generics;
 		nb_types = wshort();				/* Number of class types */
 		n = nb_generics * nb_types;
-		gt_gen = (int32 *) cmalloc((n + 1) * sizeof(int32));
-		if (gt_gen == (int32 *) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(gt_gen, int32, n + 1);
 		wread((char *) gt_gen, n * sizeof(int32));	/* Read meta type desc */
 		gt_gen[n] = SK_INVALID;
 		gtype_val->gt_gen = gt_gen;
-		gt_type = (int16 *) cmalloc(nb_types * sizeof(int16));
-		if (gt_type == (int16 *) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(gt_type, int16, nb_types);
 		wread((char *) gt_type, nb_types * sizeof(int16));
 		gtype_val->gt_type = gt_type;
 	}
@@ -787,18 +672,14 @@ rt_private char **names_updt(short int count)
 	char **result;
 	char *name;
 
-	result = (char **) cmalloc(count * sizeof(char *));
-	if (result == (char **) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(result, char *, count);
 	for (i=0; i<count; i++) {
 		len = wshort();			/* Read string count */
 		if (len == 0) {
 			result[i] = (char *) 0;
 			continue;
 		}
-		name = (char *) cmalloc((len + 1) * sizeof(char));
-		if (name == (char *) 0)
-			enomem(MTC_NOARG);
+		SAFE_ALLOC(name, char, len + 1);
 		wread(name, len);		/* Read string content */
 		name[len] = '\0';
 		result[i] = name;
@@ -812,7 +693,7 @@ rt_public void option_updt(void)
 
 	char c;
 	struct eif_opt *current;	/* Current option structure */
-	int16 as_level, o_level;	/* Assertion & option levels */
+	int16 o_level;	/* Assertion & option levels */
 	struct dbg_opt *debug_opt;	/* Debug structure */
 	int16 debug_level;			/* Debug level */
 	short debug_count;			/* Debug tag count */
@@ -826,18 +707,7 @@ rt_public void option_updt(void)
 		current = eoption + dtype;
 		memset (current, 0, sizeof(struct eif_opt));
 
-		wread(&c, 1);			/* Assertion level byte code */
-		as_level = 0;
-		switch (c) {
-		case BCAS_NO:			as_level = AS_NO; 			break;
-		case BCAS_REQUIRE:		as_level = AS_REQUIRE;		break;
-		case BCAS_ENSURE:		as_level = AS_ENSURE;		break;
-		case BCAS_INVARIANT:	as_level = AS_INVARIANT;	break;
-		case BCAS_LOOP:			as_level = AS_LOOP;			break;
-		case BCAS_CHECK:		as_level = AS_CHECK;		break;
-		default:				eif_panic(MTC "invalid assertion level");
-		}
-		current->assert_level = as_level;
+		current->assert_level = wshort(); 	/* Assertion level byte code */
 
 		wread(&c, 1);			/* Debug level byte code */
 		debug_opt = &current->debug_level;
@@ -850,17 +720,12 @@ rt_public void option_updt(void)
 						break;
 		case BCDB_TAG:	debug_level = OPT_ALL;
 						debug_count = wshort();
-						keys = (char **) cmalloc(debug_count * sizeof(char *));
-						if (keys == (char **) 0)
-							enomem(MTC_NOARG);
+						SAFE_ALLOC(keys, char *, debug_count);
 						debug_opt->keys = keys;
 						debug_opt->nb_keys = debug_count;
 						for (i=0; i<debug_count; i++) {
 							count = wshort();
-							debug_tag =
-								(char *) cmalloc((count + 1) * sizeof(char));
-							if (debug_tag == (char *) 0)
-								enomem(MTC_NOARG);
+							SAFE_ALLOC(debug_tag, char, count + 1);
 							wread(debug_tag, count);
 							debug_tag[count] = '\0';
 							keys[i] = debug_tag;
@@ -903,9 +768,7 @@ rt_public void routinfo_updt(void)
 	struct rout_info ri;
 
 	count = wuint32();
-	eorg_table = (struct rout_info *) cmalloc(count * sizeof(struct rout_info));
-	if (eorg_table == (struct rout_info *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(eorg_table, struct rout_info, count);
 	
 	for (i=0;i<count;i++) {
 		ri.origin = wshort();
@@ -931,10 +794,7 @@ rt_public void desc_updt(void)
 			while (org_count-- > 0) {
 				org_id = wshort();
 				rout_count = wshort();
-				desc_ptr = (struct desc_info *) 
-						cmalloc (rout_count * sizeof(struct desc_info));
-				if (desc_ptr == (struct desc_info *) 0)
-					enomem(MTC_NOARG);
+				SAFE_ALLOC(desc_ptr, struct desc_info, rout_count);
 				for (i=0; i<rout_count;i++) {
 					desc_ptr[i].info = wshort();
 					desc_ptr[i].type = wshort();
@@ -1017,7 +877,7 @@ rt_public int16 *wtype_array(int16 *target)
 		*(tp++) = last = (int16) wshort ();
 		++cnt;
 		if (cnt > MAX_CID_SIZE)
-			eif_panic(MTC "too many generic parameters in compound type id");
+			eif_panic(MTC "too many parameters in compound type id");
 
 	} while (last != -1);
 
@@ -1028,10 +888,7 @@ rt_public int16 *wtype_array(int16 *target)
 	if (cnt == 1)
 		return (int16 *)0;
 
-	tp = (int16 *) cmalloc (cnt * sizeof (int16));
-
-	if (tp == (int16 *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(tp, int16, cnt);
 
 	memcpy (tp,cid,cnt*sizeof(int16));
 
@@ -1059,10 +916,7 @@ rt_public char *wclass_name(void)
 
 	} while (c);
 
-	np = (char *) cmalloc (cnt * sizeof (char));
-
-	if (np == (char *) 0)
-		enomem(MTC_NOARG);
+	SAFE_ALLOC(np, char, cnt);
 
 	memcpy (np,name,cnt*sizeof(char));
 

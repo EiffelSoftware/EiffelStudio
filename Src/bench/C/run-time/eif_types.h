@@ -23,15 +23,19 @@
 #ifndef _eif_types_h_
 #define _eif_types_h_
 
+#include "eif_portable.h"
+#include "eif_constants.h"
+#ifdef EIF_TID
+#include "eif_threads.h"
+#endif	/* EIF_TID */
+#ifdef EIF_THREADS
+#include "eif_threads.h"
+#endif
+#include <setjmp.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_portable.h"
-#include "eif_constants.h"
-#ifdef EIF_TID 
-#include "eif_threads.h"
-#endif	/* EIF_TID */
 
 /* Organized on a per-file basis - the following
  * definitions come from the mentioned files */
@@ -51,9 +55,47 @@ extern "C" {
  * stack (eif_stack) and the exception trace stack (eif_trace).
  */
 struct ex_vect {
-	unsigned char ex_type;		/* Function call, pre-condition, etc... */
-	unsigned char ex_retry;		/* True if function has been retried */
-	unsigned char ex_rescue;	/* True if function entered its rescue clause */
+	unsigned char	ex_type;	/* Function call, pre-condition, etc... */
+	unsigned char	ex_retry;	/* True if function has been retried */
+	unsigned char	ex_rescue;	/* True if function entered its rescue clause */
+#ifdef WORKBENCH
+	int				ex_linenum;	/* current line number (line number <=> breakpoint slot) */
+	int 			ex_bodyid;	/* body id of the feature */
+	unsigned char	ex_locnum;	/* number of local variables in the function */
+	unsigned char	ex_argnum;	/* number of arguments of the function */
+#endif
+	union {
+		unsigned int exu_lvl;	/* Level for multi-branch backtracking */
+		int exu_sig;			/* Signal number */
+		int exu_errno;			/* Error number reported by kernel */
+		struct {
+			char *exua_name;	/* The assertion tag */
+			char *exua_where;	/* The routine name where assertion was found */
+			int exua_from;		/* And its origin (where it was written) */
+			EIF_REFERENCE exua_oid;		/* Value of Current */
+		} exua;					/* Used by assertions */
+		struct {
+			jmp_buf *exur_jbuf;	/* Execution buffer address, null if none */
+			EIF_REFERENCE exur_id;		/* Value of Current */
+			char *exur_rout;	/* The routine name */
+			int exur_orig;		/* Origin of the routine */
+		} exur;					/* Used by routines */
+	} exu;
+};
+
+/* same structure as above. used in a finalized EiffelStudio to retrieve information
+ * about a debugged application (so with line number and so on, even if final mode
+ */
+struct debug_ex_vect {
+	unsigned char	ex_type;	/* Function call, pre-condition, etc... */
+	unsigned char	ex_retry;	/* True if function has been retried */
+	unsigned char	ex_rescue;	/* True if function entered its rescue clause */
+
+	int				dex_linenum;	/* current line number (line number <=> breakpoint slot) */
+	int 			dex_bodyid;	/* body id of the feature */
+	unsigned char	dex_locnum;	/* number of local variables in the function */
+	unsigned char	dex_argnum;	/* number of arguments of the function */
+
 	union {
 		unsigned int exu_lvl;	/* Level for multi-branch backtracking */
 		int exu_sig;			/* Signal number */
@@ -65,7 +107,7 @@ struct ex_vect {
 			char *exua_oid;		/* Object ID (value of Current) */
 		} exua;					/* Used by assertions */
 		struct {
-			char *exur_jbuf;	/* Execution buffer address, null if none */
+			jmp_buf *exur_jbuf;	/* Execution buffer address, null if none */
 			char *exur_id;		/* Object ID (value of Current) */
 			char *exur_rout;	/* The routine name */
 			int exur_orig;		/* Origin of the routine */
@@ -192,22 +234,31 @@ struct stchunk {
 };
 
 
-	/*------------*/
-	/*	interp.h  */
-	/*------------*/
+	/*---------------------*/
+	/*	interp.h & debug.h */
+	/*---------------------*/
 
-	/* Stack data structures */
+	/* Stack data structures for features */
 struct item {
-	uint32 type;				/* Union's discriminent */
+	uint32 type;				/* Type of the item (SK_INT, SK_BOOL, SK_DOUBLE, ...) */
 	union {
-		char itu_char;			/* A character value */
-		long itu_long;			/* An integer value */
-		float itu_float;		/* A real value */
-		double itu_double;		/* A double value */
-		char *itu_ref;			/* A reference value */
-		char *itu_bit;			/* A bit reference value */
-		char *itu_ptr;			/* A routine pointer */
+		/* values (melted feature) */
+		EIF_CHARACTER itu_char;		/* SK_CHAR, SK_BOOL - a character value */
+		EIF_INTEGER_8 itu_int8;		/* SK_INT8 = a 8 bits integer value */
+		EIF_WIDE_CHAR itu_wchar;	/* SK_WCHAR - a unicode character value */
+		EIF_INTEGER_16 itu_int16;	/* SK_INT16 = a 16 bits integer value */
+		EIF_INTEGER_32 itu_int32;	/* SK_INT32 - a 32 bits integer value */
+		EIF_REAL itu_float;			/* SK_FLOAT - a real value */
+		EIF_DOUBLE itu_double;		/* SK_DOUBLE - a double value */
+		EIF_INTEGER_64 itu_int64;	/* SK_INT64 - a 64 bits integer value */
+		EIF_REFERENCE itu_ref;		/* SK_REF / SK_STRING - a reference value */
+		EIF_REFERENCE itu_bit;		/* SK_BIT - a bit reference value */
+		EIF_POINTER itu_ptr;		/* SK_POINTER - a routine pointer */
 	} itu;
+
+	/* address (frozen feature) - should not be part of the union since we are filling */
+	/* the union from the address in the function 'ivalue' */
+	void *it_addr;			/* SK_INT, SK_CHAR, ... - address where value can be found */
 };
 
 	/* Stack used by the interpreter (operational stack) */
@@ -346,16 +397,17 @@ struct s_stack {
 	/*  debug.h  */
 	/*-----------*/
 
-	/* Call context. Each call to a debuggable byte code is recorded into a calling
+/* Call context. Each call to a debuggable byte code is recorded into a calling
  * context, which enable the user to move upwards and downwards and thus fetch
  * the corresponding local variables and parameters. We also record the position
  * of the associated execution vector within the Eiffel stack, which enables
  * easy stack dumps.
  */
 struct dcall {					/* Debug context call */
-	char *dc_start;				/* Start of current byte code */
-	struct stochunk *dc_cur;	/* Current operational stack chunk */
-	struct item *dc_top;		/* Current operational stack top */
+	unsigned char *dc_start;	/* Start of current byte code */
+	void *dc_cur;				/* Current operational stack chunk (struct c_opchunk for frozen features) */
+	void *dc_top;				/* Current operational stack top (type is struct i_item for melted feature,
+								 * and struct c_item for frozen feature) */
 	struct ex_vect *dc_exec;	/* Execution vector on Eiffel stack */
 	int dc_status;				/* Execution status for this routine */
 	int dc_body_id;				/* Body ID of current feature */
@@ -390,22 +442,56 @@ struct id_list {
 /* For fastest reference, the debugging informations for the current routine
  * are held in the debugger status structure.
  */
+
+/* Debugger information (local to a thread) */
 struct dbinfo {
-	char *db_start;				/* Start of current byte code (dcall) */
-	int db_status;				/* Execution status (dcall) */
+	unsigned char *db_start;			/* Start of current byte code (dcall) */
+	int db_status;						/* Execution status (dcall) */
+#ifdef WORKBENCH
+	uint32 db_callstack_depth;			/* number of routines on the eiffel stack */
+	uint32 db_callstack_depth_stop;		/* depth from which we must stop (step-by-step, stepinto..) */
+	char db_stepinto_mode;				/* is stepinto activated ? */
+#endif /* WORKBENCH */
 };
 
-/*
- * Program status (saved when breakpoint reached, restored upon continuation).
- */
+#ifdef WORKBENCH
+/* List of offset. It tells where the breakpoint inside a feature are */
+struct offset_list { 
+	uint32 offset;
+	struct offset_list *next;
+};
 
+/* Breakpoint table. there is one entry per feature where you can find a breakpoint */
+struct db_bpinfo {
+	int body_id;						/* body_id of the feature where breakpoints are located */
+	struct offset_list *first_offset;	/* list of all offset where a breakpoint is enabled */
+										/* (ordered from smaller to bigger one) */
+	struct offset_list *last_offset_list;	/* sublist starting at the last visited offset */
+	uint32 last_offset;
+	struct db_bpinfo *next;				/* next body id in the list */
+};
+
+/* Debugger information (global to all threads) */
+struct dbglobalinfo {
+	char db_discard_breakpoints;		/* when set, discard all breakpoints. used for run-no-stop, */
+										/* and after the end of the root creation. it avoids the    */
+										/* application to stop after its end when garbage collector */
+										/* destroys objects                                         */
+	struct db_bpinfo **db_bpinfo;		/* breakpoints hash table */
+#ifdef EIF_THREADS
+	EIF_MUTEX_TYPE *db_mutex;			/* Mutex to protect `dstop' against concurrent accesses     */
+#endif /* EIF_THREADS */
+};
+#endif /* WORKBENCH */
+
+/* Program status (saved when breakpoint reached, restored upon continuation). */
 struct pgcontext {				/* Program context */
 	struct dbstack pg_debugger;	/* Debugger's context stack */
 	struct opstack pg_interp;	/* Interpreter's operational stack */
 	struct xstack pg_stack;		/* Calling stack */
 	struct xstack pg_trace;		/* Pending exceptions */
 	struct dcall *pg_active;	/* Active routine */
-	char *pg_IC;				/* Current IC value */
+	unsigned char *pg_IC;		/* Current IC value */
 	int pg_status;				/* Cause of suspension */
 	int pg_calls;				/* Amount of calling contexts in stack */
 	int pg_index;				/* Index of active routine within stack */

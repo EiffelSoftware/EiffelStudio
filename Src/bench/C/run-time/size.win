@@ -16,15 +16,17 @@
 #include "eif_config.h"
 
 /* Basic sizes */
-#define ALIGN	4		/* Alignment restrictions */
-#define DBLSIZ	8		/* Size of double */
-#define FLTSIZ	4		/* Size of float */
-#define REFSIZ	4		/* Size of char * */
-#define LNGSIZ	4		/* Size of long */
-#define CHRSIZ	1		/* Size of char */
-#define PTRSIZ	4		/* Size of a function pointer: FIXME */
-#define BYTSIZ	8		/* Size of a byte, in bits */
-#define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
+#define ALIGN		4		/* Alignment restrictions */
+#define DBLSIZ		8		/* Size of double */
+#define I64SIZ		8		/* Size of integer 64 bits */
+#define FLTSIZ		4		/* Size of float */
+#define REFSIZ		4		/* Size of char * */
+#define LNGSIZ		4		/* Size of long */
+#define I16SIZ		2		/* Size of wide char, integer 16 bits */
+#define CHRSIZ		1		/* Size of char, integer 8 bits */
+#define PTRSIZ		4		/* Size of a function pointer: FIXME */
+#define BYTSIZ		8		/* Size of a byte, in bits */
+#define BITLONG		(BYTSIZ * LNGSIZ) /* Number of bits in a long */
 
 /* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
  * This means some garbage bits may be found at the end of the bit field.
@@ -35,14 +37,27 @@
 #define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 #define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
+#define BITOFF(n)		(((BITACS(n)/ALIGN)+((BITACS(n)%ALIGN)?1:0))*ALIGN)
 
 #define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
 #define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
+#define I16PAD(n) (((((n)*I16SIZ)/ALIGN)+((((n)*I16SIZ)%ALIGN)?1:0))*ALIGN)
 #define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
 #define FLTPAD(n) (((((n)*FLTSIZ)/ALIGN)+((((n)*FLTSIZ)%ALIGN)?1:0))*ALIGN)
 #define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
+#define I64PAD(n) (((((n)*I64SIZ)/ALIGN)+((((n)*I64SIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
 #define LNGPAD_2	8	/* Computed version of LNGPAD (2) on Windows */
+
+	/* Macros used to access fields in the object */
+#define REFACS(n) ((n)*REFSIZ)
+#define CHRACS(n) ((n)*CHRSIZ)
+#define I16ACS(n) ((n)*I16SIZ)
+#define LNGACS(n) ((n)*LNGSIZ)
+#define FLTACS(n) ((n)*FLTSIZ)
+#define DBLACS(n) ((n)*DBLSIZ)
+#define I64ACS(n) ((n)*I64SIZ)
+#define PTRACS(n) ((n)*PTRSIZ)
 
 #endif

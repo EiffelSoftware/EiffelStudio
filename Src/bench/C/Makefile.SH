@@ -55,7 +55,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Start of Jmakefile
 
-SUB = idrs ipc run-time parsing platform bench liman
+SUB = idrs ipc run-time platform bench liman minilzo
 
 all::
 

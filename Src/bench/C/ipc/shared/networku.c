@@ -18,11 +18,11 @@
 					((x & 0xff00) >> 8))	
 
 unsigned short ntohs(unsigned short x) {
-	return NTOHS(x);
+	return (unsigned short) NTOHS(x);
 }
 
 unsigned short htons(short x) {
-	return NTOHS(x);
+	return (unsigned short) NTOHS(x);
 }
 
 long ntohl(long x) {

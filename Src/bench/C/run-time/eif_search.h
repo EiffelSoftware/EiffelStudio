@@ -13,11 +13,11 @@
 #ifndef _eif_search_h_
 #define _eif_search_h_
 
+#include "eif_types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_types.h"
 
 /*
  * Search table declarations.

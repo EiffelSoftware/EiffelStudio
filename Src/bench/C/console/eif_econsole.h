@@ -6,14 +6,14 @@
 #ifndef _eif_econsole_h_
 #define _eif_econsole_h_
 
+#include "eif_eiffel.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "eif_eiffel.h"
-
 RT_LNK void get_argcargv (int *argc, char ***argv);
-RT_LNK void free_argv (int argc, char ***argv);
+RT_LNK void free_argv (char ***argv);
 RT_LNK HANDLE ghInstance;
 RT_LNK HINSTANCE eif_hInstance;
 RT_LNK HINSTANCE eif_hPrevInstance;
@@ -26,15 +26,15 @@ extern void eif_console_putint(EIF_INTEGER);
 extern void eif_console_putreal(EIF_REAL);
 extern void eif_console_putdouble(EIF_DOUBLE);
 extern void eif_console_putchar(EIF_CHARACTER);
-extern void eif_console_putstring(EIF_POINTER, EIF_INTEGER);
-extern EIF_INTEGER eif_console_readline(EIF_POINTER, EIF_INTEGER, EIF_INTEGER);
-extern EIF_REAL eif_console_readreal();
-extern EIF_DOUBLE eif_console_readdouble();
-extern EIF_CHARACTER eif_console_readchar();
-extern EIF_INTEGER eif_console_readint();
-extern EIF_INTEGER eif_console_readword(EIF_POINTER, EIF_INTEGER, EIF_INTEGER);
-extern EIF_INTEGER eif_console_readstream(EIF_POINTER, EIF_INTEGER);
-extern EIF_BOOLEAN eif_console_eof();
+extern void eif_console_putstring(EIF_CHARACTER *, EIF_INTEGER);
+extern EIF_INTEGER eif_console_readline(EIF_CHARACTER *, EIF_INTEGER, EIF_INTEGER);
+extern EIF_REAL eif_console_readreal(void);
+extern EIF_DOUBLE eif_console_readdouble(void);
+extern EIF_CHARACTER eif_console_readchar(void);
+extern EIF_INTEGER eif_console_readint(void);
+extern EIF_INTEGER eif_console_readword(EIF_CHARACTER *, EIF_INTEGER, EIF_INTEGER);
+extern EIF_INTEGER eif_console_readstream(EIF_CHARACTER *, EIF_INTEGER);
+extern EIF_BOOLEAN eif_console_eof(void);
 
 #ifdef __cplusplus
 }

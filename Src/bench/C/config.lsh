@@ -1,0 +1,52 @@
+#
+# This is the configuration file for MICROSOFT'S VISUAL C++
+#
+lcc-=''
+include_path='$compiler_path\include'
+lib_path='$compiler_path\lib'
+make='$ms_compiler_path\bin\nmake'
+del='del'
+#
+output_cmd='-Fo'
+input_cmd=''
+resource_compiler='lrc'
+#
+obj='obj'
+lib='lib'
+#
+#
+# Standard runtime:
+#------------------
+ccflags='-W3 $debug'
+mtccflags='-W3 $debug -MT -DEIF_THREADS'
+output_libraries='standard'
+#-- DLL:
+#--------
+#ccflags='-DEIF_MAKE_DLL -W3 $debug'
+#mtccflags='-DEIF_MAKE_DLL -W3 $debug -MT -DEIF_THREADS'
+#output_libraries='dll'
+#
+#
+#Link Lines in non debug mode:
+#-----------------------------
+link_line='$compiler_path\bin\lib /out:$@ $(OBJECTS) $link_debug'
+link_wline='$compiler_path\bin\lib /out:$@ $(WOBJECTS) $link_debug'
+link_eline='$compiler_path\bin\lib /out:$@ $(EOBJECTS) $link_debug'
+link_mtline='$compiler_path\bin\lib /out:$@ $(MT_OBJECTS) $link_debug'
+link_mtwline='$compiler_path\bin\lib /out:$@ $(MT_WOBJECTS) $link_debug'
+#
+#
+optimize='-O2'
+debug=''
+link_debug=''
+#optimize=''
+#debug='-Zi'
+#link_debug=''
+dllflags='-subsystem windows -dll'
+#
+cc='lcc'
+link32='$compiler_path\bin\lcclnk'
+compiler_path='d:\apps\lcc'
+ms_compiler_path='d:\apps\MSVC\VC98'
+all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
+#

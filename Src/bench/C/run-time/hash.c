@@ -10,7 +10,6 @@
 	Hash table source file.
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_tools.h"
 #include "eif_malloc.h"

@@ -18,19 +18,18 @@
 
 */
 
-#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_eiffel.h"
-#include "eif_threads.h"
+#include "rt_threads.h"
 #include "eif_lmalloc.h"
 #include "eif_globals.h"
 #include "eif_err_msg.h"
-#include "eif_hector.h"      /* for efreeze() and eufreeze() */
 #include "eif_sig.h"
-#ifdef I_STRING
+#include "rt_garcol.h"
+#include "rt_macros.h"
+#include "rt_types.h"
+
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 #include <assert.h>
 
 
@@ -44,8 +43,8 @@ rt_public void eif_thr_panic(EIF_REFERENCE);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
-rt_public void eif_thr_create(EIF_OBJECT, EIF_POINTER);
-rt_public void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER,
+rt_public void eif_thr_create(EIF_REFERENCE, EIF_POINTER);
+rt_public void eif_thr_create_with_args(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER,
 										EIF_INTEGER, EIF_BOOLEAN);
 rt_public void eif_thr_exit(void);
 
@@ -55,15 +54,17 @@ rt_public void eif_thr_mutex_unlock(EIF_POINTER);
 rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER);
 rt_public void eif_thr_mutex_destroy(EIF_POINTER);
 
-rt_public EIF_POINTER eif_thr_proxy_set(EIF_REFERENCE);
-rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_POINTER);
-rt_public void eif_thr_proxy_dispose(EIF_POINTER);
-
 rt_private void eif_init_context(eif_global_context_t *);
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
 rt_public EIF_TSD_TYPE eif_global_key;
-/* rt_public EIF_MUTEX_TYPE *eif_rmark_mutex; */
+
+	/* To update GC with thread specific data */
+rt_private void eif_destroy_gc_stacks(void);
+rt_private void eif_init_gc_stacks(eif_global_context_t *);
+rt_private void load_stack_in_gc (struct stack_list *, void *);
+rt_private void remove_stack_from_gc (struct stack_list *, void *);
+rt_private void eif_stack_free (void *stack);
 
 rt_public void eif_thr_init_root(void) 
 {
@@ -74,13 +75,11 @@ rt_public void eif_thr_init_root(void)
 	 * The global key for Thread Specific Data is initialized: this variable
 	 * is shared by all the threads, but it allows them to fetch a pointer
 	 * to their own context (eif_globals structure).
-	 * A mutex "for inter-GC recursive marking" is created: eif_rmark_mutex.
-	 * The mutex that protects the access to the variable n_children is also
-	 * created for our implementation of `join_all' and `join'.--PCV
 	 */
 
 	EIF_TSD_CREATE(eif_global_key,"Couldn't create global key for root thread");
-/* 	EIF_MUTEX_CREATE(eif_rmark_mutex,"Couldn't create inter-GC mutex"); */
+	EIF_MUTEX_CREATE(eif_gc_mutex, "Couldn't create GC mutex");
+	EIF_MUTEX_CREATE(eif_global_once_mutex, "Couldn't create global once mutex");
 	eif_thr_register();
 }
 
@@ -92,8 +91,8 @@ rt_public void eif_thr_register(void)
 	 * Allocates memory for onces (for non-root threads)
 	 */
 
-	static int once = 0;	/* For initial eif_thread, we don't know how
-						 * many once values we have to allocate */
+	static int not_root_thread = 0;	/* For initial eif_thread, we don't know how
+							 		 * many once values we have to allocate */
 
 	eif_global_context_t *eif_globals;
 
@@ -102,10 +101,7 @@ rt_public void eif_thr_register(void)
 	eif_init_context(eif_globals);
 	EIF_TSD_SET(eif_global_key,eif_globals,"Couldn't bind context to TSD.");
 
-	/* Set the default GC parameters. */
-	eif_alloc_init();
-
-	if (once) {
+	if (not_root_thread) {
 	  /*
 	   * Allocate room for once values for all threads but the initial 
 	   * because we do not have the number of onces yet
@@ -119,7 +115,7 @@ rt_public void eif_thr_register(void)
 		memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * REFSIZ);
 	} else 
 	{
-		once = 1;
+		not_root_thread = 1;
 		eif_cecil_init ();				/* Initialize ressources for cecil. */
 		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */
 	}
@@ -134,7 +130,6 @@ rt_public EIF_BOOLEAN eif_thr_is_root()
 
 	EIF_GET_CONTEXT
 	return eif_thr_context ? EIF_FALSE : EIF_TRUE;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public unsigned int eif_thr_is_initialized()
@@ -145,28 +140,28 @@ rt_public unsigned int eif_thr_is_initialized()
 	 */
 
 #ifndef VXWORKS
-  eif_global_context_t *x;
+	eif_global_context_t *x;
 #endif
 
 #ifdef EIF_WIN32
-  /* On windows, GetLastError() yields NO_ERROR if such key was initialized */
-  EIF_TSD_GET0 ((eif_global_context_t *),eif_global_key,x);
-  return (GetLastError() == NO_ERROR);
+	/* On windows, GetLastError() yields NO_ERROR if such key was initialized */
+	EIF_TSD_GET0 ((eif_global_context_t *),eif_global_key,x);
+	return (GetLastError() == NO_ERROR);
 
 #elif defined VXWORKS
-  /* On VXWORKS, eif_global_key holds a pointer to eif_globals. If the
+	/* On VXWORKS, eif_global_key holds a pointer to eif_globals. If the
 	 thread isn't initialized, eif_global_key == 0 */
-  return (eif_global_key != (EIF_TSD_TYPE) 0);
+	return (eif_global_key != (EIF_TSD_TYPE) 0);
 
 #elif defined EIF_POSIX_THREADS
 #ifdef EIF_NONPOSIX_TSD
-  return (EIF_TSD_GET0((void *),eif_global_key,x) == 0); /* FIXME.. not sure */
+	return (EIF_TSD_GET0((void *),eif_global_key,x) == 0); /* FIXME.. not sure */
 #else /* EIF_NONPOSIX_TSD */
-  return (EIF_TSD_GET0(0,eif_global_key,x) != 0);
+	return (EIF_TSD_GET0(0,eif_global_key,x) != 0);
 #endif
 
 #elif defined SOLARIS_THREADS
-  return (EIF_TSD_GET0((void *),eif_global_key,x) == 0);
+	return (EIF_TSD_GET0((void *),eif_global_key,x) == 0);
 #endif
 }
 
@@ -235,70 +230,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 		/*----------*/
 		/* garcol.c */
 		/*----------*/
-	/* `clsc_per'; and `plsc_per', `th_alloc'
-	 * are set in eif_alloc_init (), inherithed from 
-	 * the thread creato, if any. */
-	gc_monitor = 0;
-	root_obj = (EIF_REFERENCE) 0;
-	last_from = (struct chunk *) 0; 
-	spoilt_tbl = (struct s_table *) 0;
-	gc_ran = 0;
-	last_gc_time = 0;
-	gc_running = 0;
-
-#ifdef ITERATIVE_MARKING
-	path_stack.st_hd = 		(struct stchunk *) 0;	
-	path_stack.st_tl = 		(struct stchunk *) 0;	
-	path_stack.st_cur = 		(struct stchunk *) 0;	
-	path_stack.st_top = 		(EIF_REFERENCE *) 0;			
-	path_stack.st_end = 		(EIF_REFERENCE *) 0;			
-
-	parent_expanded_stack.st_hd = 		(struct stchunk *) 0;	
-	parent_expanded_stack.st_tl = 		(struct stchunk *) 0;	
-	parent_expanded_stack.st_cur = 		(struct stchunk *) 0;	
-	parent_expanded_stack.st_top = 		(EIF_REFERENCE *) 0;			
-	parent_expanded_stack.st_end = 		(EIF_REFERENCE *) 0;			
-
-#endif	/* ITERATIVE_MARKING */
-
-	g_data.nb_full = 		0L;			
-	g_data.nb_partial = 		0L;			
-	g_data.mem_used = 		0L;			
-	g_data.gc_to = 		0;			
-	g_data.status = 		(char) 0;	
-
-	g_stat [0].mem_used = 			0L;		
-	g_stat [0].mem_collect = 			0L;			
-	g_stat [0].mem_avg = 	   		0L;		
-	g_stat [0].real_avg = 			0L;					
-	g_stat [0].real_time = 		   	0L;		
-	g_stat [0].real_iavg = 			0L;					 
-	g_stat [0].real_itime = 			0L;		
-	g_stat [0].cpu_avg = 			0.;					 
-	g_stat [0].sys_avg = 			0.;		
-	g_stat [0].cpu_iavg = 			0.;					 
-	g_stat [0].sys_iavg = 			0.;		
-	g_stat [0].cpu_time = 			0.;					
-	g_stat [0].sys_time = 			0.;		
-	g_stat [0].cpu_itime = 			0.;					 
-	g_stat [0].sys_itime = 			0.;		
-
-	g_stat [1].mem_used = 			0L;		
-	g_stat [1].mem_collect = 			0L;			
-	g_stat [1].mem_avg = 	   		0L;		
-	g_stat [1].real_avg = 			0L;					
-	g_stat [1].real_time = 		   	0L;		
-	g_stat [1].real_iavg = 			0L;					 
-	g_stat [1].real_itime = 			0L;		
-	g_stat [1].cpu_avg = 			0.;					 
-	g_stat [1].sys_avg = 			0.;		
-	g_stat [1].cpu_iavg = 			0.;					 
-	g_stat [1].sys_iavg = 			0.;		
-	g_stat [1].cpu_time = 			0.;					
-	g_stat [1].sys_time = 			0.;		
-	g_stat [1].cpu_itime = 			0.;					 
-	g_stat [1].sys_itime = 			0.;		
-
 	loc_stack.st_hd = 		(struct stchunk *) 0;	
 	loc_stack.st_tl = 		(struct stchunk *) 0;	
 	loc_stack.st_cur = 		(struct stchunk *) 0;	
@@ -311,80 +242,16 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	loc_set.st_top = 		(EIF_REFERENCE *) 0;			
 	loc_set.st_end = 		(EIF_REFERENCE *) 0;			
 	
-	rem_set.st_hd = 		(struct stchunk *) 0;	
-	rem_set.st_tl = 		(struct stchunk *) 0;	
-	rem_set.st_cur = 		(struct stchunk *) 0;	
-	rem_set.st_top = 		(EIF_REFERENCE *) 0;			
-	rem_set.st_end = 		(EIF_REFERENCE *) 0;			
-
 #ifdef EIF_REM_SET_OPTIMIZATION
 	special_rem_set = (struct special_table *) 0; 
 					/* Remembered special table for special objects. */ 
 #endif	/* EIF_REM_SET_OPTIMIZATION */
-
-	moved_set.st_hd = 		(struct stchunk *) 0;	
-	moved_set.st_tl = 		(struct stchunk *) 0;	
-	moved_set.st_cur = 		(struct stchunk *) 0;	
-	moved_set.st_top = 		(EIF_REFERENCE *) 0;			
-	moved_set.st_end = 		(EIF_REFERENCE *) 0;			
 
 	once_set.st_hd = 		(struct stchunk *) 0;	
 	once_set.st_tl = 		(struct stchunk *) 0;	
 	once_set.st_cur = 		(struct stchunk *) 0;	
 	once_set.st_top = 		(EIF_REFERENCE *) 0;			
 	once_set.st_end = 		(EIF_REFERENCE *) 0;			
-
-#ifdef EIF_MEMORY_OPTIMIZATION
-
-	memory_set.st_hd = 		(struct stchunk *) 0;	
-	memory_set.st_tl = 		(struct stchunk *) 0;	
-	memory_set.st_cur = 		(struct stchunk *) 0;	
-	memory_set.st_top = 		(EIF_REFERENCE *) 0;			
-	memory_set.st_end = 		(EIF_REFERENCE *) 0;			
-
-#endif	/* EIF_MEMORY_OPTIMIZATION */
-
-
-		/*----------*/
-		/* malloc.c */
-		/*----------*/
-	gen_scavenge = GS_SET;
-	eiffel_usage = 0;
-	type_use = 0;
-	c_mem = 0;
-	/* eif_max_mem is set in eif_alloc_init (); and inherited from
-	 * the thread creator, if any. */
-	m_data.ml_chunk = 		0;		
-	m_data.ml_total = 		0;		
-	m_data.ml_used = 		0;		
-	m_data.ml_over = 		0;		
-
-	/* For each C and Eiffel memory; we keep track of general informations too. This
-	 * enables us to pilot the garbage collector correctly or to call coalescing
-	 * over the memory only if it is has a chance to succeed.
-	 */
-	c_data.ml_chunk = 		0;		
-	c_data.ml_total = 		0;		
-	c_data.ml_used = 		0;		
-	c_data.ml_over = 		0;		
-		
-	e_data.ml_chunk = 		0;		
-	e_data.ml_total = 		0;		
-	e_data.ml_used = 		0;		
-	e_data.ml_over = 		0;		
-
-	cklst.ck_head = 		(struct chunk *) 0;			
-	cklst.ck_tail = 		(struct chunk *) 0;			
-	cklst.cck_head = 		(struct chunk *) 0;			
-	cklst.cck_tail = 		(struct chunk *) 0;			
-	cklst.eck_head = 		(struct chunk *) 0;			
-	cklst.eck_tail = 		(struct chunk *) 0;			
-
-		/*----------*/
-		/* urgent.c */
-		/*----------*/
-
-	urgent_index = -1;
 
 		/*----------*/
 		/* hector.c */
@@ -419,7 +286,7 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	op_stack.st_top = 		(struct item *) 0;          
 	op_stack.st_end = 		(struct item *) 0;          
 
-	IC = (char *) 0;
+	IC = (unsigned char *) 0;
 	iregs = (struct item **) 0;
 	iregsz = 0;  
 	argnum = 0;  
@@ -429,11 +296,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 
 
 #endif	/* WORKBENCH */	
-		/*----------*/
-		/* memory.c */
-		/*----------*/
-
-	m_largest = 0;
 	
 		/*--------*/
 		/* main.c */
@@ -465,11 +327,12 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 		/*-------*/
 	
 	esigblk = 0;
-	
+
+	eif_init_gc_stacks(eif_globals);
 }
 
 
-rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func)
+rt_public void eif_thr_create (EIF_REFERENCE thr_root_obj, EIF_POINTER init_func)
 {
 	/*
 	 * Creates a new Eiffel thread. This function is only called from
@@ -495,7 +358,7 @@ rt_public void eif_thr_create (EIF_OBJECT thr_root_obj, EIF_POINTER init_func)
 }
 
 
-rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj, 
+rt_public void eif_thr_create_with_args (EIF_REFERENCE thr_root_obj, 
 										 EIF_POINTER init_func,
 										 EIF_INTEGER priority,
 										 EIF_INTEGER policy,
@@ -515,19 +378,18 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 	routine_ctxt = (start_routine_ctxt_t *)eif_malloc(sizeof(start_routine_ctxt_t));
 	if (!routine_ctxt)
 		eif_thr_panic("No more memory to launch new thread\n");
-	routine_ctxt->current = hector_addr (efreeze (thr_root_obj));
+	routine_ctxt->current = eif_protect (thr_root_obj);
 	routine_ctxt->routine = init_func;
 	routine_ctxt->tid = tid;
 	routine_ctxt->addr_n_children = &n_children;
-	routine_ctxt->addr_thr_list = &(eif_globals->unfreeze_list);
 
 	if (!eif_children_mutex) {
-	  /* It is the first time this thread creates a subthread (hopefully!), so
-	   * we create a mutex and a condition variable for join and join_all */
-	  EIF_MUTEX_CREATE(eif_children_mutex, "Couldn't create join mutex");
+		/* It is the first time this thread creates a subthread (hopefully!), so
+		* we create a mutex and a condition variable for join and join_all */
+		EIF_MUTEX_CREATE(eif_children_mutex, "Couldn't create join mutex");
 #ifndef EIF_NO_CONDVAR
-	  eif_children_cond = (EIF_COND_TYPE *) eif_malloc (sizeof (EIF_COND_TYPE));
-	  EIF_COND_INIT(eif_children_cond, "Couldn't initialize cond. variable");
+		eif_children_cond = (EIF_COND_TYPE *) eif_malloc (sizeof (EIF_COND_TYPE));
+		EIF_COND_INIT(eif_children_cond, "Couldn't initialize cond. variable");
 #endif /* EIF_NO_CONDVAR */
 	}
 	routine_ctxt->children_mutex = eif_children_mutex;
@@ -544,12 +406,9 @@ rt_public void eif_thr_create_with_args (EIF_OBJECT thr_root_obj,
 								 "Cannot create thread\n");
 		EIF_THR_ATTR_DESTROY(attr);
 	} else { /* We're called from eif_thr_create */
-		EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid,
-					   "Cannot create thread\n");
+		EIF_THR_CREATE(eif_thr_entry, routine_ctxt, *tid, "Cannot create thread\n");
 	}
 	last_child = tid;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
@@ -569,15 +428,15 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 
 		struct ex_vect *exvect;
 		jmp_buf exenv;
+		EIF_PROCEDURE execute = (EIF_PROCEDURE) routine_ctxt->routine;
 
 		eif_thr_context = routine_ctxt;
 		eif_thr_id = routine_ctxt->tid;	/* Initialize here the thread_id */
-/* 		EIF_MUTEX_LOCK(eif_rmark_mutex, "Couldn't lock GC mutex"); */
 		EIF_MUTEX_LOCK(eif_thr_context->children_mutex, "Locking GC mutex");
 		initsig();
 		initstk();
-		exvect = exset((char *) 0, 0, (char *) 0);
-		exvect->ex_jbuf = (char *) exenv;
+		exvect = new_exset((char *) 0, 0, (char *) 0, 0, 0, 0);
+		exvect->ex_jbuf = &exenv;
 
 #ifdef _CRAY
 		if (setjmp(exenv))
@@ -590,18 +449,12 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 #ifdef WORKBENCH
 		xinitint();
 #endif
-		root_obj = edclone(eif_access(routine_ctxt->current));
-/* 		EIF_MUTEX_UNLOCK(eif_rmark_mutex, "Couldn't unlock GC mutex"); */
 		EIF_MUTEX_UNLOCK(eif_thr_context->children_mutex, "Unlocking GC mutex");
-		{
-			/*
-			 * Call the `execute' routine of the thread
-			 */
-			EIF_PROCEDURE execute = (EIF_PROCEDURE) routine_ctxt->routine;
-			(execute)(root_obj);
-		}
-		root_obj = (EIF_REFERENCE) 0;
-		EIF_END_GET_CONTEXT
+
+			/* Call the `execute' routine of the thread */
+		(FUNCTION_CAST(void,(EIF_REFERENCE)) execute)(eif_access(routine_ctxt->current));
+
+		exok();
 	}
 	eif_thr_exit ();
 #if (!defined SOLARIS_THREADS && !defined EIF_WIN32)
@@ -624,6 +477,8 @@ rt_public void eif_thr_exit(void)
 
 	EIF_GET_CONTEXT
 
+	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
+
 		/* We need to keep a reference to the children mutex and 
 		 * the children condition variable after freeing ressources */
 #ifndef EIF_NO_CONDVAR
@@ -631,10 +486,10 @@ rt_public void eif_thr_exit(void)
 #endif /* EIF_NO_CONDVAR */
 	EIF_MUTEX_TYPE *chld_mutex = eif_thr_context->children_mutex;
 
-	thr_list_t *ptr, **thr_list = eif_thr_context->addr_thr_list;
 	int ret;	/* Return Status of "eifaddr". */
 	EIF_REFERENCE terminated = 
 		eifaddr (eif_access (eif_thr_context->current), "terminated", &ret);
+	eif_wean(eif_thr_context->current);
 	if (ret != EIF_CECIL_OK) 
 		eraise ("eif_thr_exit", EN_EXT);
 
@@ -646,63 +501,194 @@ rt_public void eif_thr_exit(void)
 
 	*terminated = EIF_TRUE;
 
-	/* Add the address of the parent's thread object to its list of
-	 * thread objects to unfreeze.
-	 * NB: this has to be done under the protection of a mutex
-	 */
-
-	if (*thr_list == (thr_list_t *) 0) {
-		*thr_list = (thr_list_t *) eif_malloc (sizeof (thr_list_t));
-		(*thr_list)->thread = eif_thr_context->current;
-		(*thr_list)->next = (thr_list_t *) 0;
-	} else {
-		ptr = *thr_list;
-		while (ptr->next)
-			ptr = ptr->next;
-		ptr->next = (thr_list_t *) eif_malloc (sizeof (thr_list_t));
-		ptr->next->thread = eif_thr_context->current;
-		ptr->next->next = (thr_list_t *) 0;
-	}
-
 	/* Decrement the number of child threads of the parent */
 	*(eif_thr_context->addr_n_children) -= 1;
-
-	reclaim ();							/* Free all allocated memory chunks */
 
 #ifndef EIF_NO_CONDVAR
 	EIF_COND_BROADCAST(chld_cond, "Pbl cond_broadcast");
 #endif
 	EIF_MUTEX_UNLOCK(chld_mutex, "Unlock parent mutex");
+
+		/* Clean GC of non-used data that were used to hold objects */
+	eif_destroy_gc_stacks();
+
+	/* 
+	 * Every thread that has created a child thread with eif_thr_create() or
+	 * eif_thr_create_with_args() has created a mutex and a condition 
+	 * variable to be able to do a join_all (or a join). If no children are
+	 * still alive, we destroy eif_children_mutex and eif_children_cond.
+	 * If children are still alive, it is better not to remove the mutex
+	 * because it would cause a crash upon their termination. If it is the
+	 * case, no join_all has been called, which is a bit dangerous--PCV
+	 */
+
+	if (eif_children_mutex) {
+		EIF_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
+		if (!n_children) destroy_mutex = 1; /* No children are alive */
+		EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
+	}
+	if (destroy_mutex) {
+	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
+#ifndef EIF_NO_CONDVAR
+	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
+#endif
+	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
+	}
+
+	/* The TSD is managed in a different way under VxWorks: each thread
+	 * must call taskVarAdd upon initialization and taskVarDelete upon
+	 * termination.  It was impossible to call taskVarDelete using the same
+	 * model as on other platforms unless creating a new macro that would
+	 * be useful only for VxWorks. It is easier to do the following:
+	 */
+
+	if (eif_thr_is_root ())	{	/* Is this the root thread */
+		eif_cecil_reclaim ();
+		eif_free (eif_globals);			
+						/* Global variables specific to the current thread */
+		assert (!eif_thr_context);
+#ifdef LMALLOC_CHECK
+		eif_lm_display ();
+		eif_lm_free ();
+#endif	/* LMALLOC_CHECK */
+	} else {
+		eif_free (eif_thr_context->tid); /* Free id of the current thread */
+		eif_free (eif_thr_context);		/* Thread context passed by parent */
+		eif_free (eif_globals);			
+						/* Global variables specific to the current thread */
+	}	
+#ifdef VXWORKS
+	if (taskVarDelete(0,(int *)&(eif_global_key))) 
+	  eif_thr_panic("Problem with taskVarDelete\n");
+#endif	/* VXWORKS */
+
 	EIF_THR_EXIT(0);
-	EIF_END_GET_CONTEXT
 }	/* eif_thr_exit ().*/
 
 
-rt_private void eif_thr_unfreeze_dead(void)
+/**************************************************************************/
+/* NAME: eif_init_gc_stacks                                               */
+/* ARGS: eif_globals: References to thread specific data                  */
+/*------------------------------------------------------------------------*/
+/* Initialize shared global stacks with thread specific stack. That way   */
+/* the GC holds references to Eiffel objects in each thread               */
+/**************************************************************************/
+
+rt_private void eif_init_gc_stacks(eif_global_context_t *eif_globals)
 {
-	/*
-	 * Unfreezes all the thread objects referenced in the list unfreeze_list
-	 * (every terminating thread adds its corresponding thread object --of
-	 * the parent-- into this list)
-	 * NB: must be called under the protection of a mutex
-	 */
+	EIF_GC_MUTEX_LOCK;
+	load_stack_in_gc (&loc_stack_list, &loc_stack);	
+	load_stack_in_gc (&loc_set_list, &loc_set);	
+	load_stack_in_gc (&once_set_list, &once_set);	
+	load_stack_in_gc (&hec_stack_list, &hec_stack);	
+	load_stack_in_gc (&hec_saved_list, &hec_saved);	
+	load_stack_in_gc (&eif_stack_list, &eif_stack);	
+	load_stack_in_gc (&eif_trace_list, &eif_trace);
+#ifdef WORKBENCH
+	load_stack_in_gc (&opstack_list, &op_stack);
+#endif
+	EIF_GC_MUTEX_UNLOCK;
+}
 
+
+/**************************************************************************/
+/* NAME: eif_destroy_gc_stacks                                            */
+/* ARGS: eif_globals: References to thread specific data                  */
+/*------------------------------------------------------------------------*/
+/* Destroy thread specific stacks and remove them from GC global stack    */
+/**************************************************************************/
+
+rt_private void eif_destroy_gc_stacks(void)
+{
 	EIF_GET_CONTEXT
+	EIF_GC_MUTEX_LOCK;
+	remove_stack_from_gc (&loc_stack_list, &loc_stack);
+	remove_stack_from_gc (&loc_set_list, &loc_set);	
+	remove_stack_from_gc (&once_set_list, &once_set);	
+	remove_stack_from_gc (&hec_stack_list, &hec_stack);	
+	remove_stack_from_gc (&hec_saved_list, &hec_saved);	
+	remove_stack_from_gc (&eif_stack_list, &eif_stack);	
+	remove_stack_from_gc (&eif_trace_list, &eif_trace);
+#ifdef WORKBENCH
+	remove_stack_from_gc (&opstack_list, &op_stack);
+#endif
+	EIF_GC_MUTEX_UNLOCK;
+}
 
-	thr_list_t *ptr, *thr_list = eif_globals->unfreeze_list;
 
-	while (thr_list) {
-		ptr = thr_list;
-		eufreeze (eif_access (thr_list->thread));
-		/* plsc(); */
-		thr_list = thr_list->next;
-		eif_free (ptr);
+/**************************************************************************/
+/* NAME: load_stack_in_gc                                                 */
+/* ARGS: st_list: Global GC stack                                         */
+/*       st: thread specific stack that we are putting in `st_list'.      */
+/*------------------------------------------------------------------------*/
+/* Insert `st' in `st_list->threads_stack' and update `st_list'.          */
+/**************************************************************************/
+
+rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
+{
+	int count = st_list->count + 1;
+	st_list->count = count;
+	if (st_list->capacity < st_list->count) {
+		st_list->threads.stack = (void **) eif_realloc (st_list->threads.stack,
+															count * sizeof(struct stack **));
+		st_list->capacity = count;
+	}
+	st_list->threads.stack[count - 1] = st;
+}
+
+
+/**************************************************************************/
+/* NAME: remove_stack_from_gc                                             */
+/* ARGS: st_list: Global GC stack                                         */
+/*       st: thread specific stack that should be in `st_list'.           */
+/*------------------------------------------------------------------------*/
+/* Remove `st' from `st_list->threads_stack' and update `st_list'         */
+/* accordingly.                                                           */
+/**************************************************************************/
+
+rt_private void remove_stack_from_gc (struct stack_list *st_list, void *st)
+{
+	int count = st_list->count;
+	int i = 0;
+	void **stack = st_list->threads.stack;
+
+	assert(count > 0);	/* Must be something in threads_stack */
+
+		/* Linear search to find `st' in `threads_stack' */
+	while (i < count) {
+		if (stack[i] == st)
+			break;
+		i = i + 1;
 	}
 
-	eif_globals->unfreeze_list = (thr_list_t *) 0;
+	assert (i < count);	/* We must have found entry that holds reference to `st' */
 
-	EIF_END_GET_CONTEXT
+		/* Free memory used by `st'. */
+	eif_stack_free (st);
+
+		/* Remove one element */
+	st_list->count = count - 1;
+	stack [i] = stack [count -1];
+	stack [count - 1] = NULL;
 }
+
+/**************************************************************************/
+/* NAME: eif_stack_free                                                   */
+/* ARGS: st: thread specific stack.                                       */
+/*------------------------------------------------------------------------*/
+/* Free memory used by `st'.                                              */
+/**************************************************************************/
+
+rt_private void eif_stack_free (void *stack){
+	struct stack *st = (struct stack *) stack;
+	struct stchunk *c, *cn;
+
+	for (c = st->st_hd; c != (struct stchunk *) 0; c = cn) {
+		cn = c->sk_next;
+		xfree ((EIF_REFERENCE) c);
+	}
+}
+
 
 rt_public void eif_thr_yield(void)
 {
@@ -723,7 +709,7 @@ rt_public void eif_thr_join_all(void)
 	 * first thread, so we can implement a simpler join_all mechanism 
 	 */
 
-    EIF_THR_JOIN_ALL;
+	EIF_THR_JOIN_ALL;
 }
 #else
 rt_public void eif_thr_join_all(void)
@@ -764,14 +750,9 @@ rt_public void eif_thr_join_all(void)
 #else
 	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join_all");
 	while (n_children)
-	  EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
+		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join_all");
 #endif
-
-	/* Unfreeze all thread objects whose corresponding threads are dead */
-	eif_thr_unfreeze_dead();
-
-	EIF_END_GET_CONTEXT
 }
 #endif
 
@@ -796,7 +777,7 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 #ifdef EIF_NO_CONDVAR
 
 	/* This version is for platforms that don't support condition
-	 * variables.  If the platform doesn't support yield() either, this
+	 * variables. If the platform doesn't support yield() either, this
 	 * function can use much of the CPU time.
 	 */
 
@@ -820,15 +801,10 @@ rt_public void eif_thr_wait (EIF_BOOLEAN *terminated)
 
 	EIF_MUTEX_LOCK(eif_children_mutex, "Failed lock mutex join()");
 	while (*terminated == EIF_FALSE)
-	  EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
+		EIF_COND_WAIT(eif_children_cond, eif_children_mutex, "pb wait");
 	EIF_MUTEX_UNLOCK(eif_children_mutex,"Failed unlock mutex join()");
 
 #endif
-
-	/* Unfreeze all thread objects whose corresponding threads are dead */
-	eif_thr_unfreeze_dead();
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_thr_join (EIF_POINTER tid)
@@ -839,15 +815,11 @@ rt_public void eif_thr_join (EIF_POINTER tid)
 	 * should be used (ie. `join' <-> eif_thr_wait)
 	 */
 
-	EIF_GET_CONTEXT
-
 	if (tid != (EIF_POINTER) 0) {
 		EIF_THR_JOIN(* (EIF_THR_TYPE *) tid);
 	} else {
 		eraise ("Trying to join a thread whose ID is NULL", EN_EXT);
 	}
-
-	EIF_END_GET_CONTEXT
 }
 
 
@@ -880,19 +852,17 @@ rt_public EIF_POINTER eif_thr_thread_id(void) {
 		return (EIF_POINTER) eif_thr_context->tid;
 	} else
 		return (EIF_POINTER) 0; /* Root thread's id is 0 */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_POINTER eif_thr_last_thread(void) {
 	EIF_GET_CONTEXT
 	return (EIF_POINTER) last_child;
-	EIF_END_GET_CONTEXT
 }
 
 
 /*
  * Functions for mutex management:
- *   - creation, locking, unlocking, non-blocking locking and destruction
+ *	- creation, locking, unlocking, non-blocking locking and destruction
  */
  
 rt_public EIF_POINTER eif_thr_mutex_create(void) {
@@ -924,7 +894,7 @@ rt_public void eif_thr_mutex_unlock(EIF_POINTER mutex_pointer) {
 }
 
 rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_POINTER mutex_pointer) {
-	int status;
+	int status = 0;
 	EIF_MUTEX_TYPE *a_mutex_pointer = (EIF_MUTEX_TYPE *) mutex_pointer;
 	if (a_mutex_pointer != (EIF_MUTEX_TYPE *) 0) {
 		EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot trylock mutex\n");
@@ -991,7 +961,7 @@ rt_public void eif_thr_sem_post (EIF_POINTER sem)
 rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 {
 #ifndef EIF_NO_SEM
-	int status;
+	int status = 0;
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
 		EIF_SEM_TRYWAIT(a_sem_pointer, status, "cannot trywait semaphore\n");
@@ -1090,95 +1060,6 @@ rt_public void eif_thr_panic(char *msg)
 	print_err_msg (stderr, "*** Thread panic! ***\n");
 	eif_panic(msg);
 	exit(0);
-}
-
-
-/*
- * Class OBJECT_CONTROL externals
- */
-
-rt_public EIF_POINTER eif_thr_freeze (EIF_OBJECT object)
-{
-	/* This function is used by the class PROXY: the item of the proxy is
-	 * frozen so that it can be accessed by any thread any time. It would
-	 * be better to protect the access to the item with a mutex, and also
-	 * not to freeze it (locking a mutex while the parent's GC is on), but
-	 * the performance wouldn't be as good.
-	 *
-	 * When we return the address of the object, an entry in hec_saved must
-	 * point to it (it will be retrieved using hector_addr).
-	 */
-
- 	char *frozen = efreeze (object);
-
-	if (!frozen) {
-		/* efreeze() refused to freeze the object (probably because it is
-		 * a special object) so we freeze it on location with spfreeze()
-		 */
-		spfreeze (eif_access (object));
-		object = eif_adopt (object);
-		return (eif_access (object));
-	} else {
-		/* efreeze() successfully froze the object and created an entry in
-		 * the hector saved table.
-		 */
-
-		return frozen;
-	}
-}
-
-rt_public void eif_thr_unfreeze (EIF_OBJECT object)
-{
-	/* This function unfreezes an object frozen with eif_thr_freeze()
-	 * It should work even if the object has been frozen by spfreeze() and
-	 * not efreeze()
-	 */
-
-	eufreeze (eif_access (object));
-}
-
-
-/*
- * class PROXY externals
- */
-
-rt_public EIF_POINTER eif_thr_proxy_set(EIF_POINTER object)
-		/* `object' is actually an EIF_REFERENCE and this function
-		 * returns a EIF_OBJECT. However, we keep this signature so as to match the
-		 * one on the Eiffel side. -ET */
-{
-	/* 
-	 * Returns a hec_saved entry pointing to the object given as argument
-	 * through $ (avoid calls to  RTHP and RTHF in the generated C-code)
-	 * and remembers the object in the hector stack so that the GC does not
-	 * collect it. -ET
-	 */
-#ifdef DEBUG
-	printf ("eif_thr_proxy_set(%x) returns %x\n", object, hector_addr(object));
-#endif
-	return  hector_addr(object); /* should it be inlined? -ET */
-}
-
-rt_public EIF_REFERENCE eif_thr_proxy_access(EIF_OBJECT proxy)
-{
-	/*
-	 * Returns the address of the actual proxy item.
-	 */
-
-	return eif_access (proxy);
-}
-
-rt_public void eif_thr_proxy_dispose(EIF_POINTER proxy)
-			/* Once again: it is in fact an EIF_OBJECT */
-{
-	/*
-	 * Frees the entry in the hec_saved stack of the proxy item.
-	 */
-
-#ifdef DEBUG
-	printf("eif_thr_proxy_dispose(%x)\n", proxy);
-#endif
-	eufreeze (eif_access (proxy)); /* unfreeze the object */
 }
 
 #endif /* EIF_THREADS */

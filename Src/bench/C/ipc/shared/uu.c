@@ -20,11 +20,11 @@
 
 void uuencode (char s[], char *Result)
 {
-	// s is 3 characters to be uuencode
-	*Result = ENC(s[0] >> 2);
-	*(Result+1) = ENC(s[0] << 4 & 060 | s[1] >> 4 & 017);
-	*(Result+2) = ENC(s[1] << 2 & 074 | s[2] >> 6 & 03);
-	*(Result+3) = ENC(s[2] & 077);
+	/* s is 3 characters to be uuencode */
+	*Result = (char) (ENC(s[0] >> 2));
+	*(Result+1) = (char) (ENC(s[0] << 4 & 060 | s[1] >> 4 & 017));
+	*(Result+2) = (char) (ENC(s[1] << 2 & 074 | s[2] >> 6 & 03));
+	*(Result+3) = (char) (ENC(s[2] & 077));
 }
 
 #define DEC(c) (((c) - ' ') & 077)
@@ -36,10 +36,10 @@ void uuencode (char s[], char *Result)
 
 void uudecode (char s[], char *Result)
 {
-	// s is 4 characters to be uudecoded
-	*Result = DEC(s[0]) << 2 | DEC(s[1]) >> 4;
-	*(Result+1) = DEC(s[1]) << 4 | DEC(s[2]) >> 2;
-	*(Result+2) = DEC(s[2]) << 6 | DEC(s[3]);
+	/* s is 4 characters to be uudecoded */
+	*Result = (char) (DEC(s[0]) << 2 | DEC(s[1]) >> 4);
+	*(Result+1) = (char) (DEC(s[1]) << 4 | DEC(s[2]) >> 2);
+	*(Result+2) = (char) (DEC(s[2]) << 6 | DEC(s[3]));
 }
 
 

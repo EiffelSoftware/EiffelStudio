@@ -33,34 +33,32 @@
 #include <signal.h>
 #include "eif_logfile.h"
 #include "stream.h"
+#include "child.h"
 #include <stdlib.h>
 
 #ifdef EIF_WIN32
 #include <windows.h>
 #include "shword.h"
-#define EWB		"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */
+#define EWB		"\\bin\\ec.exe -bench"	/* Ewb process within Eiffel dir */
 #elif defined EIF_VMS
 #include "ipcvms.h"	/* for ipcvms_get_progname() */
-/* #define EIFFEL4		"EIFFEL4:"		/* Default installation directory */
-#define EWB		".bin]es4 -bench"	/* Ewb process within Eiffel dir */
+/* #define ISE_EIFFEL		"ISE_EIFFEL:"		*//* Default installation directory */
+#define EWB		".bin]ec -bench"	/* Ewb process within Eiffel dir */
 #else
-#define EIFFEL4	"/usr/lib/Eiffel4"	/* Default installation directory */
-#define EWB		"/bin/es4 -bench"	/* Ewb process within Eiffel dir */
+#define ISE_EIFFEL	"/usr/lib/Eiffel4"	/* Default installation directory */
+#define EWB		"/bin/ec -bench"	/* Ewb process within Eiffel dir */
 #endif
 
 /* Function declaration */
 rt_public void dexit(int code);		/* Daemon's exit */
-rt_private void die(void);		/* A termination signal was trapped */
 rt_private Signal_t handler(int sig);	/* Signal handler */
 rt_private void set_signal(void);	/* Set up the signal handler */
 rt_private void process_name (char *);	/* Compute the name of Eiffel Compiler */
 
 #ifdef EIF_WIN32
-extern  STREAM *spawn_child(char *cmd, HANDLE *child_pid);	/* Start up child with ipc link */
 extern char *win_eif_getenv(char *k, char *app);	/* Get environment variable value */
 rt_private void display_splash(void);
 #else
-extern STREAM *spawn_child(char *cmd, Pid_t *child_pid);	/* Start up child with ipc link */
 extern char *getenv(const char *);			/* Get environment variable value */
 #endif
 
@@ -92,20 +90,20 @@ rt_public void init_bench(int argc, char **argv)
 	Pid_t pid;			/* Pid of the spawned child */
 #endif
 	char *ewb_path;		/* Path leading to the ewb executable */
-	char *eiffel4;		/* Eiffel 4 installation directory */
+	char *eiffel5;		/* Eiffel 4 installation directory */
 	char *platform;
 	char *eif_timeout;	/* Timeout specified in environment variable */
 
 	/* Check if the user wants to override the default timeout value
 	 * required by the children processes to launch and initialize
-	 * themselves. This new value is specified in the EIF_TIMEOUT
+	 * themselves. This new value is specified in the ISE_TIMEOUT
 	 * environment variable
 	 */
 
 #ifdef EIF_WIN32
-	eif_timeout = win_eif_getenv ("EIF_TIMEOUT", "es4");
+	eif_timeout = win_eif_getenv ("ISE_TIMEOUT", "ec");
 #else
-	eif_timeout = getenv ("EIF_TIMEOUT");
+	eif_timeout = getenv ("ISE_TIMEOUT");
 #endif
 
 	if (eif_timeout != (char *) 0)			/* Environment variable set */
@@ -117,9 +115,9 @@ rt_public void init_bench(int argc, char **argv)
 	 * of the executable file.
 	 */
 #ifdef EIF_WIN32
-/*	progname = rindex(argv[0], '\\');	/* Only last name if '\' found */
-/*	if (progname++ == (char *) 0)		/* There were no '\' */
-/*	strcpy (progname,"ebench.exe");		/* This must be the filename then */
+/*	progname = rindex(argv[0], '\\');	*//* Only last name if '\' found */
+/*	if (progname++ == (char *) 0)		*//* There were no '\' */
+/*	strcpy (progname,"ebench.exe");		*//* This must be the filename then */
 #else
 	progname = rindex(argv[0], '/');	/* Only last name if '/' found */
 	if (progname++ == (char *) 0)		/* There were no '/' */
@@ -129,9 +127,9 @@ rt_public void init_bench(int argc, char **argv)
 #ifdef USE_ADD_LOG
 
 #ifdef EIF_WIN32
-  	/* Open a logfile in /tmp */
+	/* Open a logfile in /tmp */
 	(void) open_log("\\tmp\\ised.log");
-/*	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
+/*	set_loglvl(LOGGING_LEVEL);			*//* Set debug level */
 #else
 	progpid = getpid();					/* Program's PID */
 
@@ -156,23 +154,23 @@ rt_public void init_bench(int argc, char **argv)
 #endif
 
 	/* To find out where the ewb process is located, we use the environment
-	 * variable EIFFEL4 to get the path to the Eiffel 3.0 directory. Then the
+	 * variable ISE_EIFFEL to get the path to the Eiffel 3.0 directory. Then the
 	 * ewb process is in the bin/ subdirectory. In the name of standardization,
-	 * the /usr/lib/Eiffel4 path is used when the EIFFEL4 variable is not set.
+	 * the /usr/lib/Eiffel4 path is used when the ISE_EIFFEL variable is not set.
 	 */
 
 #ifdef EIF_WIN32
-	eiffel4 = win_eif_getenv("EIFFEL4", "es4");		/* Installation directory */
-	if ((eiffel4 == (char *) 0) || (strlen (eiffel4) == 0)) {	/* Environment variable not set */
-		MessageBox (NULL, "The ISE EIFFEL4 registry key is not set.\nYou should probably reinstall the software.",
-						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+	eiffel5 = win_eif_getenv("ISE_EIFFEL", "ec");		/* Installation directory */
+	if ((eiffel5 == (char *) 0) || (strlen (eiffel5) == 0)) {	/* Environment variable not set */
+		MessageBox (NULL, "The ISE_EIFFEL registry key is not set.\nYou should probably reinstall the software.",
+							"Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
 		exit (1);
 	}
 #else
-	eiffel4 = getenv("EIFFEL4");		/* Installation directory */
-	if (eiffel4 == (char *) 0) {		/* Environment variable not set */
-		print_err_msg (stderr, "The environment variable EIFFEL4 is not set\n");
+	eiffel5 = getenv("ISE_EIFFEL");		/* Installation directory */
+	if (eiffel5 == (char *) 0) {		/* Environment variable not set */
+		print_err_msg (stderr, "The environment variable ISE_EIFFEL is not set\n");
 		exit (1);
 	}
 #endif
@@ -184,9 +182,9 @@ rt_public void init_bench(int argc, char **argv)
 	}
 
 #ifdef EIF_VMS
-	strcpy(ewb_path, "EIFFEL4:[bench.spec.");	/* VMS system will translate base name */
+	strcpy(ewb_path, "ISE_EIFFEL:[bench.spec.");	/* VMS system will translate base name */
 #else
-	strcpy(ewb_path, eiffel4);			/* Base name */
+	strcpy(ewb_path, eiffel5);			/* Base name */
 #if defined EIF_WIN32
 	strcat(ewb_path, "\\bench\\spec\\");
 #else
@@ -195,17 +193,17 @@ rt_public void init_bench(int argc, char **argv)
 #endif /* (not) EIF_VMS */
 
 #ifdef EIF_WIN32
-	platform = win_eif_getenv ("PLATFORM", "es4");
+	platform = win_eif_getenv ("ISE_PLATFORM", "ec");
 	if ((platform == (char *) 0) || (strlen(platform) == 0)){		/* Environment variable not set */
-		MessageBox (NULL, "The ISE PLATFORM registry key is not set.\nYou should probably reinstall the software.",
-						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		MessageBox (NULL, "The ISE_PLATFORM registry key is not set.\nYou should probably reinstall the software.",
+							"Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
 		exit (1);
 	}
 #else
-	platform = getenv ("PLATFORM");
+	platform = getenv ("ISE_PLATFORM");
 	if (platform == (char *) 0) {		/* Environment variable not set */
-		print_err_msg(stderr, "The environment variable PLATFORM is not set\n");
+		print_err_msg(stderr, "The environment variable ISE_PLATFORM is not set\n");
 		exit (1);
 	}
 #endif
@@ -219,20 +217,30 @@ rt_public void init_bench(int argc, char **argv)
 		strcat (ewb_path, " -project ");
 		strcat (ewb_path, argv [1]);
 	}
-	if ((argc == 3) && strcmp (argv[1], "-create") == 0) {
+	if ((argc >= 5) && (strcmp (argv[1], "-create")==0) && (strcmp (argv[3], "-ace")==0)) {
 			/* It means that we try to create a project from the command line or from
 			 * ebench or with EiffelBench */
 		strcat (ewb_path, " -create ");
 		strcat (ewb_path, argv [2]);
+		strcat (ewb_path, " -ace ");
+		strcat (ewb_path, argv [4]);
+	}
+	if ((argc >= 6) && strcmp (argv[5], "-compile") == 0) {
+			/* It means that we try to compile a project from the command line or from
+			 * ebench or with EiffelBench */
+		strcat (ewb_path, " -compile");
 	}
 
-/* FIXME: check that es4 exists */
+#ifdef EIF_WIN32
+	sp = spawn_child(ewb_path, NULL, 0, &pid, NULL);	/* Bring workbench to life */
+#else
+	sp = spawn_child(ewb_path, NULL, 0, &pid);	/* Bring workbench to life */
+#endif
 
-	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
 #ifdef EIF_WIN32
-		MessageBox (NULL, "The program es4.exe cannot be launched",
-						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		MessageBox (NULL, "The program ec.exe cannot be launched",
+							"Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
 		InvalidateRect (NULL, NULL, FALSE);
 #else
 		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);
@@ -295,14 +303,6 @@ rt_private Signal_t handler(int sig)
 	dexit(0);
 }
 
-rt_private void die(void)
-{
-#ifdef USE_ADD_LOG
-	add_log(9, "going down on termination signal");
-#endif
-	dexit(0);
-}
-
 rt_public void dexit(int code)
 {
 #ifdef USE_ADD_LOG
@@ -327,36 +327,39 @@ rt_public void dexit(int code)
 	exit(code);
 }
 
-/* Create the name of the executable from the macro EWB (always on Windows) */
-/* or from the environment variable ES4_NAME (only on Unix/VMS) */
+/* Create the name of the executable from the macro EWB */
+/* or from the environment variable EC_NAME */
 
 rt_private void process_name (char *ewb_path)
 {
-#ifdef EIF_WIN32
-	strcat (ewb_path, EWB);
-#else
-	char *es4_name;
+	char *ec_name;
 	char *local;
 
-	es4_name = getenv("ES4_NAME");		/* Installation directory */
+	ec_name = getenv("EC_NAME");		/* Installation directory */
 
-	if (es4_name == (char *) 0)			/* Environment variable set */
+	if (ec_name == (char *) 0)			/* Environment variable set */
 		strcat (ewb_path, EWB);
 	else {
 #ifdef EIF_VMS
-			/* for VMS, es4_name is the full path to the es4 executable */
-			strcpy (ewb_path, es4_name);	    /* replace bench/spec/platform */
+			/* for VMS, ec_name is the full path to the ec executable */
+			strcpy (ewb_path, ec_name);		/* replace bench/spec/platform */
 			strcat (ewb_path, " -bench");
 #else
 			/* else its the name in the bench ewb bin/ directory */
 			local = (char *) malloc (50 * sizeof (char));
+#ifndef EIF_WIN32
 			strcpy (local, "/bin/");
-			strcat (local, es4_name);
+			strcat (local, ec_name);
+			strcat (local, " -bench");
+			strcat (ewb_path, local);
+#else
+			strcpy (local, "\\bin\\");
+			strcat (local, ec_name);
 			strcat (local, " -bench");
 			strcat (ewb_path, local);
 #endif
-		}
 #endif
+		}
 }
 
 #ifndef HAS_STRDUP
@@ -376,11 +379,10 @@ rt_public char *strdup (char *s)
 
 	return new;
 }
-#endif  /* HAS_STRDUP */
+#endif	/* HAS_STRDUP */
 
 
 #ifdef EIF_WIN32
-	//extern char **_argv;		/* External declaration for command-line argumnents */
 
 char szAppName [] = "ebench";		/* Window class name for temporary ebench window */
 HANDLE hInst;				/* Application main instance			 */
@@ -400,21 +402,21 @@ HPALETTE CreateDIBPalette (LPBITMAPINFO lpbmi, LPINT lpiNumColors)
 
 	lpbi = (LPBITMAPINFOHEADER)lpbmi;
 	if (lpbi->biBitCount <= 8) *lpiNumColors = (1 << lpbi->biBitCount);
-	else *lpiNumColors = 0;  // No palette needed for 24 BPP DIB
+	else *lpiNumColors = 0;	/* No palette needed for 24 BPP DIB */
 
 	if (*lpiNumColors)
 	{
 		hLogPal = GlobalAlloc (GHND, sizeof (LOGPALETTE) +
 				sizeof (PALETTEENTRY) * (*lpiNumColors));
 		lpPal = (LPLOGPALETTE) GlobalLock (hLogPal);
-		lpPal->palVersion	 = 0x300;
-		lpPal->palNumEntries = *lpiNumColors;
+		lpPal->palVersion	 = (WORD) 0x300;
+		lpPal->palNumEntries = (WORD) *lpiNumColors;
 
-		for (i = 0;  i < *lpiNumColors;  i++)
+		for (i = 0; i < *lpiNumColors; i++)
 		{
-			lpPal->palPalEntry[i].peRed   = lpbmi->bmiColors[i].rgbRed;
+			lpPal->palPalEntry[i].peRed = lpbmi->bmiColors[i].rgbRed;
 			lpPal->palPalEntry[i].peGreen = lpbmi->bmiColors[i].rgbGreen;
-			lpPal->palPalEntry[i].peBlue  = lpbmi->bmiColors[i].rgbBlue;
+			lpPal->palPalEntry[i].peBlue = lpbmi->bmiColors[i].rgbBlue;
 			lpPal->palPalEntry[i].peFlags = 0;
 		}
 		hPal = CreatePalette (lpPal);
@@ -426,20 +428,20 @@ HPALETTE CreateDIBPalette (LPBITMAPINFO lpbmi, LPINT lpiNumColors)
 
 HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR* lphPalette)
 {
-    HRSRC  hRsrc;
+	HRSRC hRsrc;
 	HGLOBAL hGlobal;
-    HBITMAP hBitmapFinal = NULL;
-    LPBITMAPINFOHEADER  lpbi;
-    HDC hdc;
-    int iNumColors;
+	HBITMAP hBitmapFinal = NULL;
+	LPBITMAPINFOHEADER lpbi;
+	HDC hdc;
+	int iNumColors;
 
-    hRsrc = FindResource(hInstance, lpString, RT_BITMAP);
-    if (hRsrc) {
+	hRsrc = FindResource(hInstance, lpString, RT_BITMAP);
+	if (hRsrc) {
 		hGlobal = LoadResource(hInstance, hRsrc);
 		lpbi = (LPBITMAPINFOHEADER)LockResource(hGlobal);
 
 		hdc = GetDC(NULL);
-		*lphPalette =  CreateDIBPalette ((LPBITMAPINFO)lpbi, &iNumColors);
+		*lphPalette = CreateDIBPalette ((LPBITMAPINFO)lpbi, &iNumColors);
 		if (*lphPalette) {
 			SelectPalette(hdc,*lphPalette,FALSE);
 			RealizePalette(hdc);
@@ -454,54 +456,49 @@ HBITMAP LoadResourceBitmap(HINSTANCE hInstance, LPSTR lpString, HPALETTE FAR* lp
 		ReleaseDC(NULL,hdc);
 		FreeResource(hGlobal);
 	}
-    return (hBitmapFinal);
+	return (hBitmapFinal);
 }
 
 void display_splash(void)
 {
-    HDC dc, MemDC;
-    HBITMAP Bitmap, OldBitmap;
-    BITMAP bm;
-    RECT sr;
-    HPALETTE palette;
+	HDC dc, MemDC;
+	HBITMAP Bitmap, OldBitmap;
+	BITMAP bm;
+	RECT sr;
+	HPALETTE palette;
 
-    dc = CreateDC ("DISPLAY", NULL, NULL, NULL);
-    Bitmap = LoadResourceBitmap (hInst, MAKEINTRESOURCE (1024),  &palette);
+	dc = CreateDC ("DISPLAY", NULL, NULL, NULL);
+	Bitmap = LoadResourceBitmap (hInst, MAKEINTRESOURCE (1024), &palette);
 
-    MemDC = CreateCompatibleDC (dc);
-    OldBitmap = SelectObject (MemDC, Bitmap);
-    GetObject (Bitmap, sizeof (BITMAP), &bm);
-    sr.left = (GetSystemMetrics (SM_CXSCREEN) - bm.bmWidth) / 2;
-    sr.top = (GetSystemMetrics (SM_CYSCREEN) - bm.bmHeight) / 2;
-    sr.right = sr.left + bm.bmWidth;
-    sr.bottom = sr.top + bm.bmHeight;
-    SelectPalette (dc, palette, 1);
-    RealizePalette (dc);
-    BitBlt (dc, sr.left, sr.top, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
-    DeleteObject (SelectObject (MemDC, OldBitmap));
-    DeleteDC (MemDC);
-    DeleteDC (dc);
-}
-
-/*** Callback for the temporary ebench window ***/
-LRESULT CALLBACK WndProc (HWND hwnd, UINT message, LONG wParam, LONG lParam)
-{
-	return DefWindowProc (hwnd, message, wParam, lParam);
+	MemDC = CreateCompatibleDC (dc);
+	OldBitmap = SelectObject (MemDC, Bitmap);
+	GetObject (Bitmap, sizeof (BITMAP), &bm);
+	sr.left = (GetSystemMetrics (SM_CXSCREEN) - bm.bmWidth) / 2;
+	sr.top = (GetSystemMetrics (SM_CYSCREEN) - bm.bmHeight) / 2;
+	sr.right = sr.left + bm.bmWidth;
+	sr.bottom = sr.top + bm.bmHeight;
+	SelectPalette (dc, palette, 1);
+	RealizePalette (dc);
+	BitBlt (dc, sr.left, sr.top, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
+	DeleteObject (SelectObject (MemDC, OldBitmap));
+	DeleteDC (MemDC);
+	DeleteDC (dc);
 }
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
-/* Initialize Ebench, launch es4 and establish communications */
+/* Initialize Ebench, launch ec and establish communications */
 
 	int argc;
 	char **argv;
 	char *tmp = strdup (GetCommandLine());	/* Cannot use lpszCmdLine since we need the
-											   application name */
+												application name */
 
+	hInst = hInstance;
 	display_splash ();
 
 	argv = shword (tmp);	/* Create from the string returned by GetCommandLine,
-							   an array of string */
+								an array of string */
 
 		/* Count the number of elements in argv */
 	for (argc = 0; argv[argc] != (char *) 0; (argc)++)
@@ -511,7 +508,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdL
 	return 0L;
 }
 
-#else  /* (not) EIF_WIN32 */
+#else	/* (not) EIF_WIN32 */
 
 rt_public int main (int argc, char **argv)
 {

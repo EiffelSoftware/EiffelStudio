@@ -16,7 +16,6 @@
 	allocated even if the package is optimized for memory.
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_urgent.h"
 #include "eif_malloc.h"
@@ -29,10 +28,8 @@
  * This index is decreased each time the run-time requests a chunk, and it
  * reaches -1 when the array has no more chunks in stock.
  */
-#ifndef EIF_THREADS
 rt_private char *urgent_mem[URGENT_NBR];		/* Array holding urgent chunks */
 rt_private int urgent_index = -1;				/* Last index with free chunk */
-#endif	/* EIF_THREADS */
 /* Getting and releasing chunks */
 rt_shared void ufill(void);			/* Get as many chunks as possible */
 rt_shared char *uchunk(void);			/* Urgent allocation of a stack chunk */
@@ -56,7 +53,6 @@ rt_shared void ufill(void)
 	 * hence we may call cmalloc directly.
 	 */
 
-	EIF_GET_CONTEXT
 	register1 int i;					/* Location to be filled in */
 	register2 char *chunk;				/* Allocated chunk */
 
@@ -68,7 +64,6 @@ rt_shared void ufill(void)
 	}
 
 	urgent_index = i - 1;				/* Points on last available chunk */
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared char *uchunk(void)
@@ -81,16 +76,13 @@ rt_shared char *uchunk(void)
 	 * structure and the arena where data are stored.
 	 */
 	
-	EIF_GET_CONTEXT
 	char *ret;
 	if (urgent_index > 0)					/* A free chunk is available */
 	{
 		ret = urgent_mem[urgent_index--];	/* Return its address */
-		EIF_END_GET_CONTEXT
 		return ret;
 	}
 
-	EIF_END_GET_CONTEXT	
 	return (char *) 0;			/* No chunk is available */
 }
 

@@ -10,13 +10,12 @@
 	Eiffel retrieve mechanism.
 */
 
+#include "eif_portable.h"
 #include "eif_lmalloc.h"
 #include "eif_project.h" /* for egc_ce_gtype, egc_bit_dtype */
-#include "eif_config.h"
-#include "eif_portable.h"
 #include "eif_macros.h"
-#include "eif_malloc.h"
-#include "eif_garcol.h"
+#include "rt_malloc.h"
+#include "rt_garcol.h"
 #include "eif_except.h"
 #include "eif_hector.h"
 #include "eif_cecil.h"
@@ -25,14 +24,13 @@
 #include "eif_bits.h"
 #include "eif_run_idr.h"
 #include "eif_error.h"
-#include "eif_rtlimits.h"
 #include "eif_traverse.h"
-#include "eif_compress.h"
-#include "x2c.header"	/* For macro LNGPAD */
+#include "rt_compress.h"
+#include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <unistd.h>	/* For read () */
 #endif
-#include <assert.h>
+#include "rt_assert.h"
 
 #include <ctype.h>					/* For isspace() */
 
@@ -40,11 +38,7 @@
 #include <io.h>
 #endif
 
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #ifdef EIF_WIN32
 #include <io.h>		/* %%ss added for read */
@@ -58,6 +52,9 @@
 /* Size of the buffer to retrieve an object */
 #define RETRIEVE_BUFFER_SIZE 262144L
 
+#define MAX_GENERICS      4		/* Number of generic parameters that are statically
+								   allocated */
+
 /*
  * Public data declarations 
  */
@@ -65,6 +62,8 @@ rt_public struct htable *rt_table;		/* Table used for solving references */
 rt_public int32 nb_recorded = 0;		/* Number of items recorded in Hector */
 rt_public char rt_kind;			/* Kind of storable */
 rt_public char rt_kind_version;		/* Version of storable */
+rt_public EIF_BOOLEAN eif_discard_pointer_values = EIF_TRUE;/* We do not keep pointer values
+															   when retrieving a pointer object */
 
 /*
  * Private data declaration
@@ -97,7 +96,11 @@ rt_private void rt_update1(register char *old, register EIF_OBJECT new);			/* Re
 rt_private void rt_update2(char *old, char *new, char *parent);			/* Fields updating */
 rt_public char *rt_make(void);				/* Do the retrieve */
 rt_public char *rt_nmake(long int objectCount);			/* Retrieve n objects */
-rt_private void read_header(char rt_type);			/* Read general header */
+rt_private void read_header(char rt_type);
+
+
+
+		/* Read general header */
 rt_private void object_read (char *object, char *parent);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (char *object, char *parent);	/* read the individual attributes of the object*/
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib);
@@ -176,7 +179,6 @@ rt_public char *eretrieve(EIF_INTEGER file_desc)
 	r_fides = file_desc;
 	
 	return portable_retrieve(char_read);
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE stream_eretrieve(char **buffer, long size, long start_pos, EIF_INTEGER *real_size)
@@ -229,7 +231,8 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 			rt_kind = GENERAL_STORE;
 			break;
 		case INDEPENDENT_STORE_4_3:
-		case INDEPENDENT_STORE_4_4:		/* New Independent store */
+		case INDEPENDENT_STORE_4_4:
+		case INDEPENDENT_STORE_5_0:
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = INDEPENDENT_STORE;
 			rt_kind_version = rt_type;
@@ -270,19 +273,58 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 			break;
 		case INDEPENDENT_STORE_4_3:
 		case INDEPENDENT_STORE_4_4:
+		case INDEPENDENT_STORE_5_0:
 			independent_retrieve_reset ();
 			break;
 	}
 	rt_reset_retrieve();
 
 	return retrieved;
-	EIF_END_GET_CONTEXT
 }
+
+rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, int (*retrieve_function) (void))
+{
+	EIF_GET_CONTEXT
+	EIF_REFERENCE retrieved = (char *) 0;
+	char rt_type = (char) 0;
+
+	rt_kind = BASIC_STORE;
+	r_fides = f_desc;
+#ifdef EIF_ALPHA
+		/* The conversion from a FILE pointer to a file descriptor
+		 * does not keep the position correctly in the stream, one has
+		 * to call `fflush' to ensure the validity of the position in
+		 * the stream.
+		 */
+	fflush (NULL);
+#endif
+
+	/* Reset nb_recorded */
+	nb_recorded = 0;
+
+	/* Read the kind of stored hierachy */
+	if (char_read(&rt_type, sizeof (char)) < sizeof (char))
+		eise_io("Retrieve: unable to read type of storable.");
+
+	CHECK ("Valid basic storable type", rt_type == BASIC_STORE_4_0);
+
+	rt_init_retrieve(retrieve_function, char_read, RETRIEVE_BUFFER_SIZE);
+	allocate_gen_buffer ();
+
+	retrieved = rt_make();
+
+	ht_free(rt_table);					/* Free hash table descriptor */
+	epop(&hec_stack, nb_recorded);		/* Pop hector records */
+	rt_reset_retrieve();
+	return retrieved;
+}
+
 
 /* Initialization for retrieving an independent store
  */
 rt_private void independent_retrieve_init (long idrf_size)
 {
+		/* Initialize serialization streams for reading (0 stands for read) */
 	run_idr_init (idrf_size, 0);
 
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
@@ -330,17 +372,18 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	EIF_GET_CONTEXT
 	long nb_byte;
 	EIF_REFERENCE oldadd;
-	EIF_REFERENCE newadd = (EIF_REFERENCE) 0;
+	volatile EIF_REFERENCE newadd = (EIF_REFERENCE) 0;
 	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
+	volatile size_t n = objectCount;
 	char g_status = g_data.status;
 	jmp_buf exenv;
 	RTXD;
 
-	assert (objectCount /= 0);
+	REQUIRE ("Positive count", objectCount > 0);
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -355,7 +398,7 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	if (-1 == ht_create(rt_table, objectCount, sizeof(struct rt_struct)))
 		xraise(EN_MEM);
 	ht_zero(rt_table);
-	for (;objectCount > 0; objectCount--) {
+	for (;n > 0; n--) {
 		/* Read object address */
 
 		buffer_read((char *) &oldadd, sizeof(EIF_REFERENCE));
@@ -377,7 +420,10 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				/* Special object: read the saved size */
 			buffer_read((char *) &spec_size, (sizeof(uint32)));
 			nb_byte = spec_size & B_SIZE;
-			newadd = spmalloc(nb_byte);
+			if (!(flags & EO_REF))
+				newadd = spmalloc(nb_byte, EIF_TRUE);
+			else
+				newadd = spmalloc(nb_byte, EIF_FALSE);
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 				/* Normal object */
@@ -419,8 +465,6 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	}
 	expop(&eif_stack);
 	return newadd;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public char *grt_make(void)
@@ -442,15 +486,18 @@ rt_public char *grt_nmake(long int objectCount)
 	EIF_GET_CONTEXT
 	long nb_byte;
 	char *oldadd;
-	char *newadd = (char *) 0;
+	char * volatile newadd = (char *) 0;
 	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
-	uint32 spec_size = 0;
+	volatile uint32 spec_size = 0;
+	volatile long int n = objectCount;
 	char g_status = g_data.status;
 	jmp_buf exenv;
 	RTXD;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	REQUIRE ("Positive count", objectCount > 0);
+
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -466,7 +513,7 @@ rt_public char *grt_nmake(long int objectCount)
 		xraise(EN_MEM);
 	ht_zero(rt_table);
 
-	for (;objectCount > 0; objectCount--) {
+	for (;n > 0; n--) {
 		/* Read object address */
 		buffer_read((char *) &oldadd, sizeof(EIF_REFERENCE));
 
@@ -496,7 +543,8 @@ rt_public char *grt_nmake(long int objectCount)
 			vis_name = System(spec_type).cn_generator;
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			assert (info != (struct gt_info *) 0);	/* Must be generic. */
+			CHECK ("Must be generic", info != (struct gt_info *) 0);
+
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
@@ -513,11 +561,23 @@ rt_public char *grt_nmake(long int objectCount)
 
 			if (!((dgen & SK_HEAD) == SK_EXP)) {
 				switch (dgen) {
-					case SK_INT:
-						spec_size = sizeof (EIF_INTEGER);
+					case SK_INT8:
+						spec_size = sizeof (EIF_INTEGER_8);
+						break;
+					case SK_INT16:
+						spec_size = sizeof (EIF_INTEGER_16);
+						break;
+					case SK_INT32:
+						spec_size = sizeof (EIF_INTEGER_32);
+						break;
+					case SK_INT64:
+						spec_size = sizeof (EIF_INTEGER_64);
 						break;
 					case SK_CHAR:
 						spec_size = sizeof (EIF_CHARACTER);
+						break;
+					case SK_WCHAR:
+						spec_size = sizeof (EIF_WIDE_CHAR);
 						break;
 					case SK_BOOL:
 						spec_size = sizeof (EIF_BOOLEAN);
@@ -552,7 +612,10 @@ rt_public char *grt_nmake(long int objectCount)
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			newadd = spmalloc(nb_byte);
+			if (!(crflags & EO_REF))
+				newadd = spmalloc(nb_byte, EIF_TRUE);
+			else
+				newadd = spmalloc(nb_byte, EIF_FALSE);
 			{
 				long * o_ref;
 
@@ -598,17 +661,15 @@ rt_public char *grt_nmake(long int objectCount)
 	expop(&eif_stack);
 
 	return newadd;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public char *irt_make(void)
 {
 	/* Make the retrieve of all objects in file */
-	long objectCount;
+	EIF_INTEGER_32 objectCount;
 
 	/* Read the object count in the file header */
-	ridr_multi_int (&objectCount, 1);
+	ridr_multi_int32 (&objectCount, 1);
 
 #if DEBUG & 1
 		printf ("\n %ld", objectCount);
@@ -625,21 +686,18 @@ rt_public char *irt_nmake(long int objectCount)
 	EIF_GET_CONTEXT
 	long nb_byte;
 	char *oldadd;
-	char *newadd = (char *) 0;
+	char * volatile newadd = NULL;
 	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
-	uint32 spec_size = 0;
+	volatile uint32 spec_size = 0;
+	volatile long int n = objectCount;
 	char g_status = g_data.status;
 	jmp_buf exenv;
 	RTXD;
 
-#if DEBUG & 1
-/*	long saved_objectCount = objectCount;
+	REQUIRE ("Positive count", objectCount > 0);
 
-	if (objectCount == 0)
-		eif_panic("no object to retrieve");*/
-#endif
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -655,7 +713,7 @@ rt_public char *irt_nmake(long int objectCount)
 		xraise(EN_MEM);
 	ht_zero(rt_table);
 
-	for (;objectCount > 0; objectCount--) {
+	for (;n > 0; n--) {
 		/* Read object address */
 		ridr_multi_any ((char *) (&oldadd), 1);
 
@@ -686,7 +744,8 @@ rt_public char *irt_nmake(long int objectCount)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			assert (info != (struct gt_info *) 0); /* Must be generic */
+			CHECK ("Must be generic", info != (struct gt_info *) 0);
+
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
@@ -707,11 +766,23 @@ rt_public char *irt_nmake(long int objectCount)
 
 			if (!((dgen & SK_HEAD) == SK_EXP)) {
 				switch (dgen) {
-					case SK_INT:
-						spec_size = sizeof (EIF_INTEGER);
+					case SK_INT8:
+						spec_size = sizeof (EIF_INTEGER_8);
+						break;
+					case SK_INT16:
+						spec_size = sizeof (EIF_INTEGER_16);
+						break;
+					case SK_INT32:
+						spec_size = sizeof (EIF_INTEGER_32);
+						break;
+					case SK_INT64:
+						spec_size = sizeof (EIF_INTEGER_64);
 						break;
 					case SK_CHAR:
 						spec_size = sizeof (EIF_CHARACTER);
+						break;
+					case SK_WCHAR:
+						spec_size = sizeof (EIF_WIDE_CHAR);
 						break;
 					case SK_BOOL:
 						spec_size = sizeof (EIF_BOOLEAN);
@@ -746,7 +817,10 @@ rt_public char *irt_nmake(long int objectCount)
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			newadd = spmalloc(nb_byte);
+			if (!(crflags & EO_REF))
+				newadd = spmalloc(nb_byte, EIF_TRUE);
+			else
+				newadd = spmalloc(nb_byte, EIF_FALSE);
 			{
 				long * o_ref;
 
@@ -791,8 +865,6 @@ rt_public char *irt_nmake(long int objectCount)
 	}
 	expop(&eif_stack);
 	return newadd;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void rt_clean(void)
@@ -854,7 +926,6 @@ rt_private void rt_clean(void)
 	}
 	free_sorted_attributes();
 	rt_reset_retrieve();
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new)
@@ -902,11 +973,13 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new)
 		*(EIF_REFERENCE *)(client + offset) = supplier;	/* Attachment */
 #ifdef EIF_REM_SET_OPTIMIZATION
 		if (((HEADER(client))->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
+			CHECK ("No expanded objects in `new'", !(HEADER (new)->ov_flags & EO_COMP));
 			RTAS_OPT (supplier, offset >> EIF_REFERENCE_BITS, client);	
+					/* Casting with (EIF_REFERENCE *) gives directly the
+					 * index instead of the offset. */
 		} else	{
 			RTAS(supplier, client);					/* Age check */
 		}
-	
 #else	/* EIF_REM_SET_OPTIMIZATION */
 		RTAS(supplier, client);					/* Age check */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
@@ -926,7 +999,7 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE p
 	 * The third argument is needed because of expanded objects:
 	 * if `new' is not an expanded object,parent is equal to it. */
 
-	long nb_references;
+	long nb_references = 0;
 	uint32 flags, fflags;
 	EIF_REFERENCE reference, addr;
 	union overhead *zone = HEADER(new);
@@ -973,7 +1046,8 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new, EIF_REFERENCE p
 		size = EIF_Size(flags & EO_TYPE);
 	}
 
-	assert (nb_references != -1);	/* Must be initialized. */
+	CHECK ("Must be initialized", nb_references != -1);
+
 update:
 	/* Update references */
 	for (addr = new; 	nb_references > 0;
@@ -1019,18 +1093,12 @@ update:
 				supplier = eif_access(rt_info->rt_obj);
 				*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
 #ifdef EIF_REM_SET_OPTIMIZATION
-				if ((HEADER (new)->ov_flags & (EO_SPEC | EO_REF)) 
-						== (EO_SPEC | EO_REF))
-				{
-					assert (!(HEADER (new)->ov_flags & EO_COMP));
-							/* No expanded objects in it. */
-					RTAS_OPT (supplier, 
-						(EIF_REFERENCE *) addr - (EIF_REFERENCE *) new , new);
+				if ((HEADER (new)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
+					CHECK ("No expanded objects in `new'", !(HEADER (new)->ov_flags & EO_COMP));
+					RTAS_OPT (supplier, (EIF_REFERENCE *) addr - (EIF_REFERENCE *) new , new);
 						/* Casting with (EIF_REFERENCE *) gives directly the
 						 * index instead of the offset. */
-				}
-				else	
-				{
+				} else	{
 					RTAS(supplier, new);						/* Age check */
 				}
 #else	/* EIF_REM_SET_OPTIMIZATION */
@@ -1088,7 +1156,7 @@ rt_private void read_header(char rt_type)
 
 	errno = 0;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -1143,9 +1211,18 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			int32 *t;
 			int matched;
 			int j, index;
-			long gtype[MAX_GENERICS];
-			int32 itype[MAX_GENERICS];
+			long *gtype, sgtype[MAX_GENERICS];
+			int32 *itype, sitype[MAX_GENERICS];
 	
+			if (nb_gen > MAX_GENERICS) {
+					/* Not enough space we need to allocate dynamically */
+				gtype = (long *) cmalloc (nb_gen * sizeof(long));
+				itype = (int32 *) cmalloc (nb_gen * sizeof(int32));
+			} else {
+				gtype = sgtype;
+				itype = sitype;
+			}
+
 
 			/* Generic class */
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
@@ -1203,8 +1280,6 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 	xfree (r_buffer);
 	r_buffer = (char *) 0;
 	expop(&eif_stack);
-
-	EIF_END_GET_CONTEXT
 }
 
 
@@ -1219,14 +1294,14 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	char * temp_buf;
 	uint32 num_attrib;
 	long read_attrib;
-	char att_name[IDLENGTH + 1];
-	int *attrib_order = (int *)0;
+	char att_name[512];
+	int * volatile attrib_order = NULL;
 	jmp_buf exenv;
 	RTXD;
 
 	errno = 0;
 
-	excatch((char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
@@ -1279,9 +1354,17 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			int32 *t;
 			int matched;
 			int j, index;
-			long gtype[MAX_GENERICS];
-			int32 itype[MAX_GENERICS];
+			long *gtype, sgtype[MAX_GENERICS];
+			int32 *itype, sitype[MAX_GENERICS];
 	
+			if (nb_gen > MAX_GENERICS) {
+					/* Not enough space we need to allocate dynamically */
+				gtype = (long *) cmalloc (nb_gen * sizeof(long));
+				itype = (int32 *) cmalloc (nb_gen * sizeof(int32));
+			} else {
+				gtype = sgtype;
+				itype = sitype;
+			}
 
 			/* Generic class */
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
@@ -1367,14 +1450,16 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 							== (uint32) read_attrib) {
 
 									/* check attribute names */
-						if (strcmp (att_name, 
-								*(System (new_dtype).cn_names + num_attrib))) {
+						
+
+						if (strcmp (att_name, *(System (new_dtype).cn_names + num_attrib))) {
 							i = 0;
 	
-							while (strcmp(att_name, 
-									*(System (new_dtype).cn_names + i++))) {
-								if (i > chk_attrib){
+							while (strcmp(att_name, *(System (new_dtype).cn_names + i++))) {
+								if (i >= chk_attrib){
 									xfree ((char *) attrib_order);
+									(void) strcat (vis_name + strlen (vis_name), ".");
+									(void) strcat (vis_name + strlen (vis_name), att_name);
 									eraise(vis_name, EN_RETR); 
 										/* non matching attributes */
 								}
@@ -1389,6 +1474,8 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 								*(attrib_order + num_attrib) = i;
 							} else {
 								xfree ((char *) attrib_order);
+								(void) strcat (vis_name + strlen (vis_name), ".");
+								(void) strcat (vis_name + strlen (vis_name), att_name);
 								eraise(vis_name, EN_RETR);
 									/* non matching attributes */
 							}
@@ -1397,6 +1484,8 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 						}
 					} else {
 						xfree ((char *) attrib_order);
+						(void) strcat (vis_name + strlen (vis_name), ".");
+						(void) strcat (vis_name + strlen (vis_name), att_name);
 						eraise(vis_name, EN_RETR);	/* non matching attributes */
 					}
 				}
@@ -1411,8 +1500,6 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	xfree (r_buffer);
 	r_buffer = (char*) 0;
 	expop(&eif_stack);
-
-	EIF_END_GET_CONTEXT
 }
 
 
@@ -1445,25 +1532,6 @@ rt_private int readline (register char *ptr, register int *maxlen)
 }
 		
 			
-rt_private int direct_read (register char *object, int size)
-{
-	EIF_GET_CONTEXT
-	int i, amount = 0;
-	char *buf = object;
-
-	while (amount < size) {
-		i = char_read_func (buf, size - amount);
-		if (i <= 0)
-				/* If we read 0 bytes, it means that we reached the end of file,
-				 * so we are missing something, instead of going further we stop */
-			eio();
-		amount += i;
-		buf += i;
-	}
-	return amount;
-	EIF_END_GET_CONTEXT
-}
-
 rt_private int buffer_read (register char *ptr, int size)
 {
 	register int i;
@@ -1492,9 +1560,8 @@ rt_private int buffer_read (register char *ptr, int size)
 
 rt_public int retrieve_read (void)
 {
-	EIF_GET_CONTEXT
 	char * ptr = general_buffer;
-	short read_size;
+	int read_size;
 	int part_read = 0;
 
 	if ((char_read_func ((char *)&read_size, sizeof (short))) < sizeof (short))
@@ -1512,12 +1579,12 @@ rt_public int retrieve_read (void)
 	}
 	current_position = 0;
 	return (end_of_buffer);
-	EIF_END_GET_CONTEXT
 }
+
+extern long cmp_buffer_size;
 
 rt_public int retrieve_read_with_compression (void)
 {
-	EIF_GET_CONTEXT
 	char* dcmps_in_ptr = (char *)0;
 	char* dcmps_out_ptr = (char *)0;
 	char* pdcmps_in_size = (char *)0;
@@ -1559,7 +1626,6 @@ rt_public int retrieve_read_with_compression (void)
 	current_position = 0;
 	end_of_buffer = dcmps_out_size;
 	return (end_of_buffer);
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void gen_object_read (char *object, char *parent)
@@ -1584,12 +1650,24 @@ rt_private void gen_object_read (char *object, char *parent)
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
-				case SK_INT:
-					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER));
+				case SK_INT8:
+					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_8));
+					break;
+				case SK_INT16:
+					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16));
+					break;
+				case SK_INT32:
+					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32));
+					break;
+				case SK_INT64:
+					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64));
 					break;
 				case SK_BOOL:
 				case SK_CHAR:
 					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER));
+					break;
+				case SK_WCHAR:
+					buffer_read(object + attrib_offset, sizeof(EIF_WIDE_CHAR));
 					break;
 				case SK_FLOAT:
 					buffer_read(object + attrib_offset, sizeof(EIF_REAL));
@@ -1631,8 +1709,13 @@ rt_private void gen_object_read (char *object, char *parent)
 					}
 					break;
 				case SK_REF:
+					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+					break;
 				case SK_POINTER:
 					buffer_read(object + attrib_offset, sizeof(EIF_REFERENCE));
+					if (eif_discard_pointer_values) {
+						*(EIF_POINTER *) (object + attrib_offset) = NULL;
+					}
 					break;
 				default:
 					eise_io("General retrieve: not an Eiffel object.");
@@ -1655,7 +1738,8 @@ rt_private void gen_object_read (char *object, char *parent)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			assert (info != (struct gt_info *) 0); /* Must be generic */
+			CHECK ("Must be generic", info != (struct gt_info *) 0);
+
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
@@ -1672,12 +1756,24 @@ rt_private void gen_object_read (char *object, char *parent)
 	
 			if (!(flags & EO_REF)) {			/* Special of simple types */
 				switch (dgen & SK_HEAD) {
-					case SK_INT:
-						buffer_read(object, count*sizeof(EIF_INTEGER));
+					case SK_INT8:
+						buffer_read(object, count*sizeof(EIF_INTEGER_8));
+						break;
+					case SK_INT16:
+						buffer_read(object, count*sizeof(EIF_INTEGER_16));
+						break;
+					case SK_INT32:
+						buffer_read(object, count*sizeof(EIF_INTEGER_32));
+						break;
+					case SK_INT64:
+						buffer_read(object, count*sizeof(EIF_INTEGER_64));
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
 						buffer_read(object, count*sizeof(EIF_CHARACTER));
+						break;
+					case SK_WCHAR:
+						buffer_read(object, count*sizeof(EIF_WIDE_CHAR));
 						break;
 					case SK_FLOAT:
 						buffer_read(object, count*sizeof(EIF_REAL));
@@ -1709,6 +1805,9 @@ rt_private void gen_object_read (char *object, char *parent)
 						break;
 					case SK_POINTER:
 						buffer_read(object, count*sizeof(EIF_POINTER));
+						if (eif_discard_pointer_values) {
+							memset (object, 0, count * sizeof(EIF_POINTER));
+						}
 						break;
 					default:
    	   			  		eise_io("General retrieve: not an Eiffel object.");
@@ -1761,34 +1860,30 @@ rt_private void object_read (char *object, char *parent)
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
-				case SK_INT:
-					ridr_multi_int ((long int *) (object + attrib_offset), 1);
-#if DEBUG & 1
-					printf (" %lx", *((long *)(object + attrib_offset)));
-#endif
-
+				case SK_INT8:
+					ridr_multi_int8 ((EIF_INTEGER_8 *) (object + attrib_offset), 1);
+					break;
+				case SK_INT16:
+					ridr_multi_int16 ((EIF_INTEGER_16 *) (object + attrib_offset), 1);
+					break;
+				case SK_INT32:
+					ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
+					break;
+				case SK_INT64:
+					ridr_multi_int64 ((EIF_INTEGER_64 *) (object + attrib_offset), 1);
 					break;
 				case SK_BOOL:
 				case SK_CHAR:
-					ridr_multi_char (object + attrib_offset, 1);
-#if DEBUG & 1
-					printf (" %lx", *((char *)(object + attrib_offset)));
-#endif
-
+					ridr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1);
+					break;
+				case SK_WCHAR:
+					ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
 					break;
 				case SK_FLOAT:
-					ridr_multi_float ((float *) (object + attrib_offset), 1);
-#if DEBUG & 1
-					printf (" %f", *((float *)(object + attrib_offset)));
-#endif
-
+					ridr_multi_float ((EIF_REAL *) (object + attrib_offset), 1);
 					break;
 				case SK_DOUBLE:
-					ridr_multi_double ((double *) (object + attrib_offset), 1);
-#if DEBUG & 1
-					printf (" %lf", *((double *)(object + attrib_offset)));
-#endif
-
+					ridr_multi_double ((EIF_DOUBLE *) (object + attrib_offset), 1);
 					break;
 				case SK_BIT:
 						{
@@ -1838,11 +1933,16 @@ rt_private void object_read (char *object, char *parent)
 					}
 					break;
 				case SK_REF:
-				case SK_POINTER:
 					ridr_multi_any (object + attrib_offset, 1);
 #if DEBUG & 1
 					printf (" %lx", *((char **)(object + attrib_offset)));
 #endif
+					break;
+				case SK_POINTER:
+					ridr_multi_any (object + attrib_offset, 1);
+					if (eif_discard_pointer_values) {
+						*(EIF_POINTER *) (object + attrib_offset) = NULL;
+					}
 					break;
 
 				default:
@@ -1866,7 +1966,8 @@ rt_private void object_read (char *object, char *parent)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			assert (info != (struct gt_info *) 0);	/* Must be generic.*/
+			CHECK ("Must be generic", info != (struct gt_info *) 0);
+
 			/* Generic type, :
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
@@ -1887,11 +1988,41 @@ rt_private void object_read (char *object, char *parent)
 	
 			if (!(flags & EO_REF)) {			/* Special of simple types */
 				switch (dgen & SK_HEAD) {
-					case SK_INT:
-						ridr_multi_int ((long *)object, count);
+					case SK_INT8:
+						ridr_multi_int8 ((EIF_INTEGER_8 *)object, count);
 #if DEBUG & 1
 						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((long *)object) + z));
+							printf (" %lx", *(((EIF_INTEGER_8 *)object) + z));
+							if (!(z % 40))
+								printf ("\n");
+						}
+#endif
+						break;
+					case SK_INT16:
+						ridr_multi_int16 ((EIF_INTEGER_16 *)object, count);
+#if DEBUG & 1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *(((EIF_INTEGER_16 *)object) + z));
+							if (!(z % 40))
+								printf ("\n");
+						}
+#endif
+						break;
+					case SK_INT32:
+						ridr_multi_int32 ((EIF_INTEGER_32 *)object, count);
+#if DEBUG & 1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *(((EIF_INTEGER_32 *)object) + z));
+							if (!(z % 40))
+								printf ("\n");
+						}
+#endif
+						break;
+					case SK_INT64:
+						ridr_multi_int64 ((EIF_INTEGER_64 *)object, count);
+#if DEBUG & 1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *(((EIF_INTEGER_64 *)object) + z));
 							if (!(z % 40))
 								printf ("\n");
 						}
@@ -1900,10 +2031,21 @@ rt_private void object_read (char *object, char *parent)
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
-						ridr_multi_char (object, count);
+						ridr_multi_char ((EIF_CHARACTER *) object, count);
 #if DEBUG & 1
 						for (z = 0; z < count; z++) {
-							printf (" %lx", *((char *)(object + z)));
+							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
+							if (!(z % 40))
+								printf ("\n");
+						}
+#endif
+
+						break;
+					case SK_WCHAR:
+						ridr_multi_int32 ((EIF_INTEGER_32 *) object, count);
+#if DEBUG & 1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
 							if (!(z % 40))
 								printf ("\n");
 						}
@@ -1911,10 +2053,10 @@ rt_private void object_read (char *object, char *parent)
 
 						break;
 					case SK_FLOAT:
-						ridr_multi_float ((float *)object, count);
+						ridr_multi_float ((EIF_REAL *)object, count);
 #if DEBUG & 1
 						for (z = 0; z < count; z++) {
-							printf (" %f", *(((float *)object) + z));
+							printf (" %f", *(((EIF_REAL *)object) + z));
 							if (!(z % 40))
 								printf ("\n");
 						}
@@ -1922,10 +2064,10 @@ rt_private void object_read (char *object, char *parent)
 
 						break;
 					case SK_DOUBLE:
-						ridr_multi_double ((double *)object, count);
+						ridr_multi_double ((EIF_DOUBLE *)object, count);
 #if DEBUG & 1
 						for (z = 0; z < count; z++) {
-							printf (" %lf", *(((double *)object) + z));
+							printf (" %lf", *(((EIF_DOUBLE *)object) + z));
 							if (!(z % 40))
 								printf ("\n");
 						}
@@ -1974,14 +2116,9 @@ rt_private void object_read (char *object, char *parent)
 						break;
 					case SK_POINTER:
 						ridr_multi_any (object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((char *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
+						if (eif_discard_pointer_values) {
+							memset (object, 0, count * sizeof(EIF_POINTER));
 						}
-#endif
-
 						break;
 
 					default:
@@ -2021,16 +2158,16 @@ rt_private void object_read (char *object, char *parent)
 	}
 }
 
-#ifdef SYMANTEC_CPP
-rt_private long dbl_off(long v, long w, long x, long y, long z)
+rt_private long dbl_off(long t, long u,long v, long w, long x, long y, long z)
 {
-	return (PTROFF(v,w,x,y)+(z)*PTRSIZ+PADD(PTROFF(v,w,x,y)+(z)*PTRSIZ,DBLSIZ));
+	long add = I64OFF(t,u,v,w,x,y) + z*I64SIZ;
+	return add + PADD(add,DBLSIZ);
 }
-rt_private long obj_size(long u, long v, long w, long x, long y, long z)
+rt_private long obj_size(long s, long t, long u, long v, long w, long x, long y, long z)
 {
-	return (dbl_off(u,v,w,x,y)+(z)*DBLSIZ+REMAINDER(dbl_off(u,v,w,x,y)+(z)*DBLSIZ));
+	long add = dbl_off (s,t,u,v,w,x,y)+ z*DBLSIZ;
+	return add+REMAINDER(add);
 }
-#endif
 
 rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 {
@@ -2038,6 +2175,7 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 	int numb, counter, bit_size = 0;
 	int num_ref = 0, num_char = 0, num_float = 0, num_double = 0;
 	int num_pointer = 0, num_int = 0, exp_size = 0; 
+	int num_int16 = 0, num_int64 = 0;
 	uint32 types_cn;
 
 	numb = System(o_type).cn_nbattr;
@@ -2055,11 +2193,19 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 			case SK_POINTER:
 				num_pointer++;
 				break;
-			case SK_INT:
+			case SK_INT32:
+			case SK_WCHAR:
 				num_int++;
+				break;
+			case SK_INT16:
+				num_int16++;
+				break;
+			case SK_INT64:
+				num_int64++;
 				break;
 			case SK_BOOL:
 			case SK_CHAR:
+			case SK_INT8:
 				num_char++;
 				break;
 			case SK_FLOAT:
@@ -2075,24 +2221,17 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 				eise_io("Retrieve: incorrect expanded object.");
 		}
 	}
-#ifdef SYMANTEC_CPP
-	return (obj_size(num_ref,num_char,num_int,num_float,num_pointer,num_double)+bit_size+exp_size+OVERHEAD);
-#else
-	return ((long) OBJSIZ(num_ref,num_char,num_int,num_float,num_pointer,num_double)+bit_size+exp_size+OVERHEAD);
-#endif
+	return (obj_size(num_ref,num_char,num_int16,num_int,num_float,num_pointer,num_int64,num_double)+bit_size+exp_size+OVERHEAD);
 }
 
 rt_private int char_read(char *pointer, int size)
 {
 	EIF_GET_CONTEXT
 	return read(r_fides, pointer, size);
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int stream_read(char *pointer, int size)
 {
-	EIF_GET_CONTEXT
-
 	if (stream_buffer_size - stream_buffer_position < size) {
 		stream_buffer_size += buffer_size;
 		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
@@ -2101,7 +2240,6 @@ rt_private int stream_read(char *pointer, int size)
 	memcpy (pointer, (stream_buffer + stream_buffer_position), size);
 	stream_buffer_position += size;
 	return size;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void rt_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
@@ -2158,7 +2296,7 @@ rt_private void rt_id_read_cid (uint32 *crflags, uint32 *nflags, uint32 oflags)
 	if (count < 2)  /* Nothing to read */
 		return;
 
-	*cidarr = count;
+	*cidarr = (int16) count;
 	ip = cidarr + 1;
 
 	for (i = count; i; --i, ++ip)

@@ -34,10 +34,15 @@
 #endif
 
 /* Define a certain kind of optimization */
-/*#define EIF_MEMORY_OPTIMIZATION */
+#define EIF_MEMORY_OPTIMIZATION
+#define EIF_GSZ_ALLOC_OPTIMIZATION
 #ifndef VXWORKS	/* VXWORKS use ITERATIVE_MARKING, which does not
 				 * support this optimization yet. */
-#define EIF_REM_SET_OPTIMIZATION
+/*#define EIF_REM_SET_OPTIMIZATION */
+#endif
+
+#ifndef NO_ISE_GC
+#define ISE_GC
 #endif
 
 /* Do not compile with assertions, by default. */

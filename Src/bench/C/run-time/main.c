@@ -10,21 +10,16 @@
 	Therein lie paths I would not have dared treading alone.
 */
 
-#include "eif_portable.h"	/* Must be first include (gets eif_config.h) */
+#include "eif_portable.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include <assert.h>
+#include "rt_assert.h"
 
 #include "eif_project.h"
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 #include "eif_urgent.h"
-#include "eif_garcol.h"
 #include "eif_except.h"
 #include "eif_sig.h"
 #include "eif_gen_conf.h"
@@ -53,11 +48,16 @@
 #include "eif_argv.h"
 #endif
 
-#include "eif_malloc.h"
 #include "eif_lmalloc.h"
-#include "eif_main.h"
+#include "rt_malloc.h"
+#include "rt_garcol.h"
+#include "rt_main.h"
 
 #define null (char *) 0					/* Null pointer */
+
+#ifdef WORKBENCH
+extern void dbreak_create_table(void); /* defined in debug.c */
+#endif
 
 rt_public int eif_no_reclaim = 0;			/* Call reclaim on termination. */
 #if defined VXWORKS
@@ -80,35 +80,26 @@ rt_public char *ename;						/* Eiffel program's name */
 rt_public int scount;						/* Number of dynamic types */
 #endif
 
-#ifndef EIF_THREADS
-rt_public int in_assertion = 0;			/* Is an assertion being evaluated ? */
-#endif
+rt_public struct cnode *esystem;			/* Eiffel system */
+rt_public struct conform **co_table;		/* Eiffel conformance table */
 
 #ifdef WORKBENCH
 rt_public int ccount;						/* Number of classes */
 rt_public int fcount;						/* Number of frozen dynamic types */
-rt_public struct cnode *esystem;			/* Updated Eiffel system */
-rt_public struct conform **co_table;		/* Updated Eiffel conformance table */
 rt_public int32 **ecall;					/* Routine id arrays */
 rt_public struct rout_info *eorg_table;	/* Routine origin/offset table */
-rt_public long dcount;						/* Count of `dispatch' */
-rt_public uint32 *dispatch;				/* Update dispatch table */
-rt_public uint32 zeroc;					/* Frozen level */
-rt_public char **melt;						/* Byte code array */
+rt_public unsigned char **melt;						/* Byte code array */
+rt_public uint32 eif_nb_features;				/* Nb of features in frozen system */
 rt_public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 rt_public struct eif_opt *eoption;			/* Option table */
 rt_public struct p_interface *pattern;		/* Pattern table */
-
-#define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
-rt_public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
-rt_public struct conform **co_table;		/* Eiffel conformance table (updated DLE) */
-rt_public long *esize;						/* Size of objects (updated by DLE) */
-rt_public long *nbref;						/* Gives # of references (updated by DLE) */
-
+rt_public long *esize;						/* Size of objects */
+rt_public long *nbref;						/* Gives # of references */
 /*#define exvec() exft()		*/			/* No stack dump in final mode */
-#define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
+
+#define exvec() exset(null, 0, null)	/* How to get an execution vector */
 
 rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
@@ -118,11 +109,17 @@ long EIF_once_count = 0;	/* Total nr. of once routines */
 long EIF_bonce_count = 0;	/* Nr. of once routines in bytecode */
 
 #ifndef EIF_THREADS
-EIF_REFERENCE *EIF_once_values = (EIF_REFERENCE *) 0;	/* Array to save the value of each computed once */
-#endif
+rt_public int in_assertion = 0;			/* Is an assertion being evaluated ? */
+rt_public EIF_REFERENCE *EIF_once_values = (EIF_REFERENCE *) 0;	/* Array to save value of
+																   each computed once */
+#endif /* EIF_THREADS */
 
-char *starting_working_directory;	/* Store the working directory during the session, */
-							/* ie where to put output files from the runtime */
+/* This variable records whether the workbench application was launched via
+ * the ised wrapper (i.e. in debug mode) or not.  */
+rt_public int debug_mode = 0;	/* Assume not in debug mode */
+
+rt_public char *starting_working_directory;	/* Store working directory during session,
+											   ie where to put output files from runtime */
 
 rt_private void display_reminder (void);	/* display reminder of license */
 
@@ -153,8 +150,6 @@ rt_public void once_init (void)
 		enomem();
 
 	memset (EIF_once_values, 0, EIF_once_count * sizeof (char *));
-	
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_alloc_init(void)
@@ -167,15 +162,15 @@ rt_public void eif_alloc_init(void)
 	 * The constant GS_ZONE_SZ has been replaced with eif_scavenge_size.
 	 * The constant TENURE_MAX is replaced by eif_tenure_max.
 	 * The constant GS_LIMIT is replaced by eif_gs_limit. 
+	 * The constant STACK_CHUNK is replaced by eif_stack_chunk. 
 	 * The constant PLSC_PER is replaced by plsc_per.
 	 * The constant CLSC_PER is replaced by clsc_per.
 	 * The constants TH_ALLOC is replaced by th_alloc. 
 	 */
 
-	EIF_GET_CONTEXT
-
 	char *env_var;						/* Environment variable recipient. */
 	static int chunk_size = 0;
+	static int stack_chunk = 0;
 	static int scavenge_size = 0;		/* Generational scavenge zone size. */
 	static int tenure_max	= 0;		/* Maximum age of tenuring. */
 	static int gs_limit	= 0;			/* Maximum size (bytes) of 
@@ -250,7 +245,17 @@ rt_public void eif_alloc_init(void)
 	eif_gs_limit = gs_limit;	
 								/* Reasonable gs_limit. */
 				
-
+	/* Set Size of local stack chunk. */
+	if (!stack_chunk)	/* Is maximum size of objects in GSZ not set yet? */
+	{
+		env_var = getenv ("EIF_STACK_CHUNK");
+		if (env_var != (char *) 0)	/* Has user specified it? */
+			stack_chunk = atoi (env_var);
+		else
+			stack_chunk = STACK_CHUNK;	/* RT default setting. */
+	}
+	eif_stack_chunk = stack_chunk;	
+	
 	/* Set full coalesce period. */
 	if (!c_per)	/* Is full coalesce period not set yet? */
 	{
@@ -285,19 +290,14 @@ rt_public void eif_alloc_init(void)
 	th_alloc = thd >= TH_ALLOC_MIN ? thd : TH_ALLOC_MIN;	
 
 	/******************* Postconditions *******************/
-	assert (eif_chunk_size >= CHUNK_SZ_MIN);	/* Chunk size must be over that. */
-	assert (eif_scavenge_size >= GS_SZ_MIN);	/* GSZ size must be over that. */
-	assert (eif_tenure_max >= 0 && eif_tenure_max <= TENURE_MAX);
-									   /* Max tenure age in bounds. */
-	assert (eif_gs_limit >= 0 && eif_gs_limit <= GS_FLOATMARK);
-									/* Reasonable max size of objects in GSZ. */	
-	assert (clsc_per >= 0);			/* Full coelesc period must be positive. */
-	assert (plsc_per >= 0);			/* Full collection period must be postive.*/ 
-	assert (th_alloc >= TH_ALLOC_MIN);		/* Threshold of allocation must
-										   	 * be positive.*/ 
+	ENSURE ("Chunk size must be over that", eif_chunk_size >= CHUNK_SZ_MIN);
+	ENSURE ("GSZ size must be over that", eif_scavenge_size >= GS_SZ_MIN);
+	ENSURE ("Max tenure age in bounds", eif_tenure_max >= 0 && eif_tenure_max <= TENURE_MAX);
+	ENSURE ("Reasonable max size of objects in GSZ.", eif_gs_limit >= 0 && eif_gs_limit <= GS_FLOATMARK);
+	ENSURE ("Full coelesc period must be positive.", clsc_per >= 0);
+	ENSURE ("Full collection period must be postive.", plsc_per >= 0);
+	ENSURE ("Threshold of allocation must be positive", th_alloc >= TH_ALLOC_MIN);
 	/*************** End of Postconditions. ******************/
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
@@ -354,9 +354,9 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 	/* Check if the user wants to override the default timeout value
 	 * for interprocess communications. This new value is specified in
-	 * the EIF_TIMEOUT environment variable
+	 * the ISE_TIMEOUT environment variable
 	 */
-	eif_timeout = getenv("EIF_TIMEOUT");
+	eif_timeout = getenv("ISE_TIMEOUT");
 	if (eif_timeout != (char *) 0)		/* Environment variable set */
 		TIMEOUT = (unsigned) atoi(eif_timeout);
 	else
@@ -364,7 +364,6 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */
-	dispatch = egc_fdispatch;				/* Initialize run-time table pointers */
 	esystem = egc_fsystem;
 	ecall = egc_fcall;
 	eoption = egc_foption;
@@ -374,9 +373,21 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	eorg_table = egc_forg_table;
 	pattern = egc_fpattern;
 
-	/* Initialize dynamically computed variables (i.e. system dependent) like
-	 * 'zeroc' which is the melting temperature -- the last body id in the
-	 * whole system. Then we may call update. Eventually, when debugging the
+	/* In workbench mode, we have a slight problem: when we link ewb in
+	 * workbench mode, since ewb is a child from ised, the run-time will
+	 * assume, wrongly, that the executable is started in debug mode. Therefore,
+	 * we need a special run-time, with no debugging hooks involved.
+	 */
+
+#ifdef WORKBENCH
+	dbreak_create_table();		/* create the structure used to store breakpoints information */
+#endif
+#ifndef NOHOOK
+	winit();					/* Did we start under ewb control? */
+#endif
+
+	/* Initialize dynamically computed variables (i.e. system dependent)
+	 * Then we may call update. Eventually, when debugging the
 	 * application, the values loaded from the update file will be overridden
 	 * by the workbench (via winit).
 	 */
@@ -403,21 +414,10 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 
 	create_desc();						/* Create descriptor (call) tables */
 	
-	/* In workbench mode, we have a slight problem: when we link ewb in
-	 * workbench mode, since ewb is a child from ised, the run-time will
-	 * assume, wrongly, that the executable is started in debug mode. Therefore,
-	 * we need a special run-time, with no debugging hooks involved.
-	 */
-
-#ifndef NOHOOK
-	winit();							/* Did we start under ewb control? */
-#endif
-
 #else
 
 	/*
 	 * Initialize the finalized system with the static data structures.
-	 * These may be updated later on by loading DLE system.
 	 */
 	esystem = egc_fsystem;
 	co_table = egc_fco_table;
@@ -485,7 +485,7 @@ rt_private Signal_t emergency(int sig)
  */
 
 rt_public void dserver(void) {}
-rt_public void dinterrupt(void) {}
+rt_public char dinterrupt(void) { return 0; }
 #endif
 
 rt_public void dexit(int code)
@@ -503,8 +503,7 @@ rt_private void display_reminder(void)
 {
 	char *msg;
 
-	msg = "This program has been produced with EiffelDemo, the demo version\nof ISE Eiffel, the roundtrip object-oriented software development\nenvironment from Interactive Software Engineering (ISE).\nEiffelDemo is reserved for evaluation of Eiffel. Any other use,\ncommercial or academic, requires purchase of a license.\n\nISE offers a variety of personal and professional licenses and\nsupport/maintenance contracts covering the diverse needs of\ncommercial and academic users.\n\nISE Eiffel was developed without funding from any government\nagency, or other costs to taxpayers of any country. Since the\noriginal introduction of Eiffel we have entirely depended\non our loyal customers for developing the environment.\nBy purchasing your version, you participate in furthering the\nconstruction of the best possible software technology for\nthe 21st century.\n\nFor more information please contact\nISE at the address below or consult the Eiffel products page\nat http://eiffel.com/products/.\n\n\tInteractive Software Engineering\n\tISE Building, 270 Storke Road, second floor\n\tGoleta CA 93117 USA \n\tTelephone 805-685-1006, Fax 805-685-6869\n\tE-mail sales@eiffel.com\n\thttp://eiffel.com\n";
-
+	msg = "This program has been produced with a demo or non-commercial version\nof ISE EiffelStudio, the full lifecycle object-oriented development\nenvironment from Interactive Software Engineering (ISE).\nThis version is reserved for non-production use of Eiffel. Any other\nuse requires purchase of a license.\n\nISE offers commercial and academic licenses and\nsupport/maintenance contracts covering diverse needs.\n\nFor more information please contact\nISE at the address below or consult the Eiffel products page\nat http://www.eiffel.com/products/.\n\n\tInteractive Software Engineering\n\tISE Building, 360 Storke Road\n\tGoleta CA 93117 USA \n\tTelephone 805-685-1006, Fax 805-685-6869\n\tE-mail sales@eiffel.com\n\thttp://www.eiffel.com\n";
 
 #ifdef EIF_WIN32
 	MessageBox (NULL, msg, 

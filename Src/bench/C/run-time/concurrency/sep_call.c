@@ -251,7 +251,13 @@ dprintf(1)("%d(%s) Got Attrib type 0x%x with rout_id %d\n", _concur_pid, _concur
 						CURSQRB(*((EIF_BOOLEAN *)(CUROBJ+offset))); break;
 					case SK_CHAR:
 						CURSQRC(*((EIF_CHARACTER *)(CUROBJ+offset))); break;
-					case SK_INT:
+					case SK_WCHAR:
+					case SK_INT8:
+					case SK_INT16:
+					case SK_INT64:
+						to_be_implemented
+						break;
+					case SK_INT32:
 						CURSQRI(*((EIF_INTEGER *)(CUROBJ+offset))); break;
 					case SK_FLOAT:
 						CURSQRR(*((EIF_REAL *)(CUROBJ+offset))); break;

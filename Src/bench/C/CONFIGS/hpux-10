@@ -9,7 +9,31 @@
 # Configuration time: Fri May  8 23:24:41 METDST 1998
 # Configured by: lully
 # Target system: hp-ux phaeton b.10.20 c 9000800 156868352 32-user license 
+
+mt_prefix='mt'
+prefix='lib'
+concurrent_prefix='c'
+eiflib='finalized'
+wkeiflib='wkbench'
 command_makefile='make -f'
+
+mtccflags='-DEIF_THREADS'
+mtlibs=''
+mtsharedlibs=''
+ 
+optimize='-O'
+wkoptimize='-O'
+
+start_test='if [ ! -f finished ] ; then'
+end_test='; fi'
+create_test='touch finished'
+
+suffix='.a'
+shared_suffix='.so'
+shared_rt_suffix='.so'
+shared_prefix='lib'
+sharedlibversion='.1.0'
+w
 d_bsdsig='undef'
 ld='ld'
 ar='ar'
@@ -113,7 +137,6 @@ ccflags='-Aa -D_HPUX_SOURCE'
 cppflags=''
 ldflags=''
 lkflags=''
-optimize='-O'
 cf_by='lully'
 cf_time='Fri May  8 23:24:41 METDST 1998'
 charsize='1'
@@ -293,7 +316,6 @@ package='Eiffel4'
 spackage='Eiffel4'
 d_maypanic='undef'
 pidtype='pid_t'
-prefix='lib'
 prefixexp='lib'
 prototype='undef'
 ptrsize='4'
@@ -339,12 +361,4 @@ voidflags='15'
 yacc='yacc'
 yaccflags=''
 CONFIG=true
-mtlibs=''
- 
-prefix='lib'
-mt_prefix='mt'
-concurrent_prefix='c'
-eiflib='finalized'
-wkeiflib='wkbench'
-suffix='.a'
 

@@ -45,6 +45,13 @@
 #define INTERRUPT_NO	29		/* Application can resume execution */
 #define SP_LOWER		30		/* Bounds for special objects inspection */
 #define SP_UPPER		31		/* Bounds for special objects inspection */
+#define APP_INTERRUPT_FLAG	32	/* Application sends the address of its interruption flag to daemon */
+#define EWB_NEWBREAKPOINT	33	/* Application sends the address of its interruption flag to daemon */
+#define MODIFY_LOCAL	34		/* `ec' asks the æpplication to change the value of a local variable */
+#define MODIFY_ATTR		35		/* `ec' asks the application to change the value of an object attribute */
+#define DYNAMIC_EVAL	36		/* `ec' asks the application to execute a given feature on a given object */
+#define DUMP_VARIABLES	37		/* Send the locals and the arguments of a feature on the call stack */
+#define APPLICATION_CWD	38		/* Send current directory to launch application */
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */

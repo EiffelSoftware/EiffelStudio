@@ -17,18 +17,13 @@
 #	define _BSD_SIGNALS /* For sgi */
 #endif
 
-#include <signal.h>
-#include "eif_config.h"
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 #include "eif_portable.h"
 #include "eif_except.h"
 #include "eif_sig.h"
+#include <signal.h>
 #include <errno.h>
 #include <stdio.h>				/* For sprintf() */
+#include <string.h>
 
 #if !defined sigmask
 #define sigmask(m)	(1<<((m)-1))
@@ -150,8 +145,6 @@ rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
 		echsig = sig;				/* Signal's number */
 		xraise(EN_SIG);				/* Operating system signal */
 	}
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public Signal_t exfpe(int sig)
@@ -171,6 +164,10 @@ rt_public Signal_t exfpe(int sig)
 		oldmask = sigsetmask(0xffffffff);	/* Fetch old signal mask */
 		oldmask &= ~sigmask(sig);			/* Unblock signal */
 		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
+#endif
+
+#ifndef SIGNALS_KEPT
+	(void) signal(sig, exfpe);	/* Restore catching if disarmed */
 #endif
 
 	if (sig_ign[sig])				/* If signal is to be ignored */
@@ -323,7 +320,6 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 			xraise(EN_SIG);			/* Operating system signal */
 		}
 	}
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -372,7 +368,6 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 		oldfunc = SIG_DFL;
 
 	return oldfunc;				/* Previous signal handler */
-	EIF_END_GET_CONTEXT
 }
 
 #ifndef HAS_SIGVEC
@@ -444,7 +439,6 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 		ovec->sv_handler = oldfunc;
 
 	return 0;		/* Call succeeded */
-	EIF_END_GET_CONTEXT
 }
 #endif
 
@@ -550,7 +544,6 @@ rt_shared void initsig(void)
 #endif
 				old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 #endif	/* EIF_THREADS */
-
 		if (old == SIG_IGN)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
 		else
@@ -642,8 +635,6 @@ rt_shared void initsig(void)
 
 	for (sig = 1; sig < EIF_NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -700,7 +691,6 @@ rt_private void spush(int sig)
 #ifdef HAS_SIGSETMASK
 	(void) sigsetmask(oldmask);			/* Restore old mask */
 #endif
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int spop(void)
@@ -752,7 +742,6 @@ rt_private int spop(void)
 #endif
 
 	return cursig;			/* Signal to be dealt with */
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -946,8 +935,6 @@ rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 	EIF_GET_CONTEXT
 
 	return (long) echsig;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void esigcatch(long int sig)
@@ -1012,7 +999,6 @@ rt_public void esigcatch(long int sig)
 		return;
 	}
 #endif
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void esigignore(long int sig)
@@ -1073,7 +1059,6 @@ rt_public void esigignore(long int sig)
 		return;
 	}
 #endif
-	EIF_END_GET_CONTEXT
 }
 
 rt_public char esigiscaught(long int sig)
@@ -1087,7 +1072,6 @@ rt_public char esigiscaught(long int sig)
 		return ((sig_ign[sig] == 1)?(char)0:(char)1);
 	else
 		return (char) 0;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public char esigdefined (long int sig)
@@ -1143,7 +1127,6 @@ void esigresall(void)
 #ifdef SIGFPE
 	(void) signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
 #endif
-	EIF_END_GET_CONTEXT
 }
 
 void esigresdef(long int sig)
@@ -1206,7 +1189,6 @@ void esigresdef(long int sig)
 		return;
 	}
 #endif
-	EIF_END_GET_CONTEXT
 }
 
 #ifdef TEST

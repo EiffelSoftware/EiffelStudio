@@ -14,10 +14,6 @@
 #ifndef _eif_file_h_
 #define _eif_file_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>		/* %%zs moved from file.c */
 #include <limits.h>							/* For PATH_MAX */
 
@@ -26,7 +22,7 @@ extern "C" {
 #endif
 
 #ifdef EIF_WIN32
-
+#include <time.h>
 #ifndef PATH_MAX
 #define PATH_MAX 260	/* Maximum length of full path name */
 #endif
@@ -51,6 +47,10 @@ extern "C" {
 
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #ifndef S_IRUSR
 #define S_IRUSR 0000400

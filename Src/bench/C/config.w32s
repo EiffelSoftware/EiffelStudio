@@ -672,6 +672,11 @@
  *	free-list consistency check, stack overflow or underflow, etc...
  */
 
+/* INTEGER_64 display format:
+ * 	This symbol is used in printf and others to display 64 bits signed
+ *	integers.
+ */
+#define EIF_INTEGER_64_DISPLAY "I64d"
 
 #define HAS_UNLINK
 

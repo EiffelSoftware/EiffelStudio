@@ -13,10 +13,11 @@
 #ifndef _eif_copy_h_
 #define _eif_copy_h_
 
+#include "eif_globals.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "eif_globals.h"
 
 /* 
  * Functions declarations
@@ -31,8 +32,6 @@ RT_LNK void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFEREN
 RT_LNK EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b);
 RT_LNK void spsubcopy(EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr);		/* Copy special objects' slices */
 RT_LNK void spclearall(EIF_REFERENCE spobj);		/* Reset special object's items to default */
-
-#define safe_bcopy(s,d,l) memmove((d),(s),(l))
 
 #ifdef __cplusplus
 }

@@ -13,17 +13,15 @@
 #ifndef _eif_struct_h_
 #define _eif_struct_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "eif_globals.h"
-#include "eif_config.h"
 #include "eif_portable.h"
+#include "eif_cecil.h"
 
 #ifdef WORKBENCH
 #include "eif_hashin.h"
-#include "eif_cecil.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /* Cnode structure: definition of a class by its name and attributes.
@@ -83,19 +81,33 @@ struct cnode {
  * been especially computed for the interpreter, so it should not be wise
  * modifying them: (value >> 27) - 1 directly yields the corresponding IT_xxxx
  * value--RAM.
+ * 
+ * However, if you change (or add) a value, do not forget to update the Eiffel
+ * counterpart (class SK_CONST) -- Arnaud.
+ *
+ * SK_ for basic types are ordered their value and not following their
+ * run-time representation in Eiffel objects. They are some holes so if you
+ * add a new basic types, do not forget to fill the holes first. Values
+ * go from 0x04 to 0x7C
  */
 
 #define SK_EXP		0x80000000			/* Type is an expanded */
 #define SK_MASK		0x7fffffff			/* Mask to get real type */
 #define SK_BOOL		0x04000000			/* Simple boolean type */
 #define SK_CHAR		0x08000000			/* Simple character type */
+#define SK_INT8		0x0c000000			/* Simple integer 8 type */
 #define SK_INT		0x10000000			/* Simple integer type */
+#define SK_INT32	0x10000000			/* Simple integer 32 type */
+#define SK_INT16	0x14000000			/* Simple integer 16 type */
 #define SK_FLOAT	0x18000000			/* Simple float type */
+#define SK_WCHAR	0x1c000000			/* Simple unicode character type */
 #define SK_DOUBLE	0x20000000			/* Simple double type */
+#define SK_INT64	0x24000000			/* Simple integer 64 types */
 #define SK_BIT		0x28000000			/* Signals bits type */
-#define SK_POINTER	0x40000000			/* Signals pointer type */
+#define SK_STRING	0x2c000000			/* String type / Use for debugging only */
+#define SK_POINTER	0x40000000			/* Simple pointer type */
 #define SK_BMASK	0x07ffffff			/* Bits number (coded on 27 bits) */
-#define SK_SIMPLE	0x78000000			/* Mask to test for simple type */
+#define SK_SIMPLE	0x7c000000			/* Mask to test for simple type */
 #define SK_REF		0xf8000000			/* Mask to test for reference type */
 #define SK_VOID		0x00000000			/* Mask for void type */
 #define SK_DTYPE	0x0000ffff			/* Value of reference type */
@@ -137,16 +149,14 @@ struct rout_info {						/* Routine information */
 };
 #endif
 
-/* Invalid body index used to mark empty invariants (= max uint16) */
-#define INVALID_INDEX 0xFFFF
+/* Invalid body id used to mark empty invariants (= max uint16) */
+#define INVALID_ID 0xFFFF
 
 /* Array of class node (indexed by dynamic type). It is statically allocated
  * in production mode and dynamically in workbench mode.
  */
-#ifndef WORKBENCH
-extern struct cnode *esystem;	/* Describes a full Eiffel system (with DLE) */
-#else
-extern struct cnode *esystem;			/* Pointer to updated Eiffel system */
+extern struct cnode *esystem;	/* Describes a full Eiffel system */
+#ifdef WORKBENCH
 extern int32 **ecall;					/* Updated pointer */
 extern struct rout_info *eorg_table;	/* Updated pointer */
 extern struct desc_info ***desc_tab;	/* Global descriptor table */
@@ -168,7 +178,6 @@ extern struct conform **co_table;
 typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 
 #ifdef WORKBENCH
-#include "eif_option.h"
 
 /* Flags for for raising an exception when a precondition is violated */
 #define PRAISE		1
@@ -183,28 +192,14 @@ struct p_interface {
 };
 
 RT_LNK int ccount;				/* Number of classes */
-RT_LNK long dcount;				/* Size of `dispatch' */
 extern long melt_count;			/* Size of `melt' table */
-extern long dle_melt_count;		/* Size of `dle_melt' table */
-
-/*
- * Dispatch table: array of body ids indexed by body indexes
- */
-extern uint32 *dispatch;		/* Updated dispatch table */
 
 /*
  * Melting ice technology heart.
  */
-extern char **melt;				/* Byte code array of melted eiffel features */
-extern fnptr *dle_frozen;		/* DLE C routine array (frozen routines) */
-extern char **dle_melt;			/* Byte code array of DLE melted features */
-RT_LNK uint32 zeroc;			/* Frozen level */
-RT_LNK uint32 dle_level;		/* DLE level */
-RT_LNK uint32 dle_zeroc;		/* DLE frozen level */
-
+extern unsigned char **melt;				/* Byte code array of melted eiffel features */
+RT_LNK uint32 eif_nb_features;	/* Nb of features in frozen system */
 extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
-extern int *dle_mpatidtab;		/* Table of pattern id's indexed by body id's */
-extern int *dle_fpatidtab;		/* Table of pattern id's indexed by body id's */
 
 /*
  * Pattern table for interface between C code and the interpreter

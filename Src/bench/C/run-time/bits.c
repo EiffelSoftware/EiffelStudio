@@ -13,25 +13,20 @@
 	executable.
 */
 
-#include "eif_project.h"
-#include "eif_config.h"
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
-
-
+#include "eif_portable.h"
 #include "eif_garcol.h"
 #include "eif_malloc.h"
 #include "eif_cecil.h"
-#include "eif_macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */
+#include "rt_macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */
 #include "eif_bits.h"
 #include "eif_local.h"
 #include "eif_plug.h"
 #include "eif_except.h"
 #include "eif_lmalloc.h"				/* for eif_malloc() */
+#include "eif_project.h"
+#include <assert.h>
+
+#include <string.h>
 
 /* Bit shifting */
 rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s);		/* Shift bit field to the left */
@@ -48,7 +43,8 @@ rt_private EIF_REFERENCE b_right_rotate(EIF_REFERENCE bit, long int s);		/* Rota
 rt_public EIF_REFERENCE b_eout(EIF_REFERENCE bit)
 {
 	/* Eiffel string for out representation of a bit */
-	EIF_REFERENCE c_string, result;
+	char *c_string;
+	EIF_REFERENCE result;
 
 	c_string = b_out(bit);					/* Build C string */
 	result = makestr(c_string, strlen (c_string));	/* Build Eiffel string */
@@ -57,11 +53,11 @@ rt_public EIF_REFERENCE b_eout(EIF_REFERENCE bit)
 	return result;
 }
 	
-rt_public EIF_REFERENCE b_out(EIF_REFERENCE bit)
+rt_public char *b_out(EIF_REFERENCE bit)
 {
 	/* String value for bit attribute `bit' */
 	uint32 len, val;
-	EIF_REFERENCE result, ptr;
+	char * result, *ptr;
 	uint32 *last, *arena;
 	int i;
 
@@ -89,47 +85,6 @@ rt_public EIF_REFERENCE b_out(EIF_REFERENCE bit)
 rt_public long b_count(EIF_REFERENCE bit)
 {
 	return ((struct bit *) bit)->b_length;		/* Size of a BIT object */
-}
-
-rt_public EIF_REFERENCE bmalloc(long int size)
-{
-	/* Memory allocation for an Eiffel bit structure. It either succeeds
-	 * or raises the "No more memory" exception. `size' is the required size
-	 * of the bit type, in bits.
-	 */
-
-	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
-	long nbytes;			/* Object's size */
-
-	(void) eif_register_bit_type (size);
-#ifdef DEBUG
-	printf ("bmalloc: %d bits requested.\n", size);
-#endif
-
-	/* A BIT object has a length field (the number of bits in the object), and
-	 * an arena where the bits are stored, from left to right, as an array of
-	 * booleans (i.e. the first bit is the rightmost one, as opposed to the
-	 * usual conventions).
-	 */
-	nbytes = BIT_NBPACK(size) * BIT_PACKSIZE + sizeof(uint32);
-	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
-
-	/* As in the memory allocation routines located in eif_malloc.c, a new
-	 * BIT object has to be marked after being allocated in the eif_free
-	 * list. Otherwise the GC will be lost. 
-	 * Fixes negate-big-bit-local.
-	 * -- Fabrice
-	 */
-
-	if (object != (EIF_REFERENCE ) 0) {
-		EIF_REFERENCE result = eif_set(object, nbytes, egc_bit_dtype | EO_NEW);
-
-		LENGTH(result) = (uint32) size;				/* Record size */
-		return result;
-	}
-
-	eraise(MTC "object allocation", EN_MEM);	/* Signals no more memory */
-	return (0); /* NOTREACHED */
 }
 
 EIF_REFERENCE makebit(EIF_REFERENCE bit, long int bit_count)
@@ -174,7 +129,9 @@ rt_public EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b)
 	register5 uint32 *last;		/* Last bit unit in 'a' */
 	EIF_REFERENCE bita;
 	EIF_REFERENCE bitb;
-	
+
+	assert(a);
+	assert(b);
 
 	if (a == b)					/* Pointer to the same object */
 		return EIF_TRUE;			/* Means objects are identical */
@@ -288,13 +245,12 @@ rt_public EIF_REFERENCE b_clone(EIF_REFERENCE bit)
 	EIF_GET_CONTEXT
 	EIF_REFERENCE new;						/* Address of newly allocated object */
 
-	epush(&loc_stack, (EIF_REFERENCE ) &bit);	/* Ensure address is updated by GC */
+	RT_GC_PROTECT(bit);	/* Ensure address is updated by GC */
 	new = bmalloc(LENGTH(bit));		/* Create new bit field */
-	epop(&loc_stack, 1);			/* It's safe now, object won't move */
+	RT_GC_WEAN(bit);			/* It's safe now, object won't move */
 	b_copy(bit, new);				/* Copy into newly allocated bits */
 
 	return new;			/* Freshly allocated bit field object */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void b_put(EIF_REFERENCE bit, char value, int at)
@@ -387,9 +343,9 @@ rt_private EIF_REFERENCE b_right_shift(EIF_REFERENCE bit, long int s)
 	EIF_REFERENCE new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
-	epush(&loc_stack, (EIF_REFERENCE ) &bit);
+	RT_GC_PROTECT(bit);
 	new = bmalloc(len);			/* Returned bit object */
-	epop(&loc_stack,1);
+	RT_GC_WEAN(bit);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Amount of bit units needed */
 
@@ -427,7 +383,6 @@ rt_private EIF_REFERENCE b_right_shift(EIF_REFERENCE bit, long int s)
 	}
 
 	return new;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
@@ -446,9 +401,9 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	EIF_REFERENCE new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
-	epush(&loc_stack, (EIF_REFERENCE ) &bit);
+	RT_GC_PROTECT(bit);
 	new = bmalloc(len);			/* Returned bit object */
-	epop(&loc_stack,1);
+	RT_GC_WEAN(bit);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
@@ -495,7 +450,6 @@ rt_private EIF_REFERENCE b_left_shift(EIF_REFERENCE bit, long int s)
 	}
 
 	return new;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE b_rotate(EIF_REFERENCE bit, long int s)
@@ -538,9 +492,9 @@ rt_private EIF_REFERENCE b_right_rotate(EIF_REFERENCE bit, long int s)
 	if (s > (len / 2))		/* Rotating more than half the length */
 		return b_left_rotate(bit, len - s);
 
-	epush(&loc_stack, (EIF_REFERENCE ) &bit);
+	RT_GC_PROTECT(bit);
 	new = bmalloc(len);			/* The bit object which will be rotated */
-	epop(&loc_stack,1);
+	RT_GC_WEAN(bit);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
@@ -617,7 +571,6 @@ rt_private EIF_REFERENCE b_right_rotate(EIF_REFERENCE bit, long int s)
 	}
 
 	return new;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE b_left_rotate(EIF_REFERENCE bit, long int s)
@@ -645,9 +598,9 @@ rt_private EIF_REFERENCE b_left_rotate(EIF_REFERENCE bit, long int s)
 	if (s > (len / 2))		/* Rotating more than half the length */
 		return b_right_rotate(bit, len - s);
 
-	epush(&loc_stack, (EIF_REFERENCE ) &bit);
+	RT_GC_PROTECT(bit);
 	new = bmalloc(len);			/* The new bit object which will be rotated */
-	epop(&loc_stack,1);
+	RT_GC_WEAN(bit);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
@@ -723,7 +676,6 @@ rt_private EIF_REFERENCE b_left_rotate(EIF_REFERENCE bit, long int s)
 	}
 
 	return new;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE b_and (EIF_REFERENCE a, EIF_REFERENCE b)
@@ -742,9 +694,9 @@ rt_public EIF_REFERENCE b_and (EIF_REFERENCE a, EIF_REFERENCE b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack, (EIF_REFERENCE ) &b);
+	RT_GC_PROTECT(b);
 	a = b_clone(a);
-	epop(&loc_stack,1);
+	RT_GC_WEAN(b);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -778,7 +730,6 @@ rt_public EIF_REFERENCE b_and (EIF_REFERENCE a, EIF_REFERENCE b)
 		*addr_a = 0;
 
 	return a;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE b_implies(EIF_REFERENCE a, EIF_REFERENCE b)
@@ -797,9 +748,9 @@ rt_public EIF_REFERENCE b_implies(EIF_REFERENCE a, EIF_REFERENCE b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack, (EIF_REFERENCE ) &b);
+	RT_GC_PROTECT(b);
 	a = b_clone(a);
-	epop(&loc_stack,1);
+	RT_GC_WEAN(b);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -836,7 +787,6 @@ rt_public EIF_REFERENCE b_implies(EIF_REFERENCE a, EIF_REFERENCE b)
 		*addr_a = ~(*addr_a);
 
 	return a;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
@@ -855,9 +805,9 @@ rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack, (EIF_REFERENCE ) &b);
+	RT_GC_PROTECT(b);
 	a = b_clone(a);
-	epop(&loc_stack,1);
+	RT_GC_WEAN(b);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -887,7 +837,6 @@ rt_public EIF_REFERENCE b_or(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	return a;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE b_xor(EIF_REFERENCE a, EIF_REFERENCE b)
@@ -905,9 +854,9 @@ rt_public EIF_REFERENCE b_xor(EIF_REFERENCE a, EIF_REFERENCE b)
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
-	epush(&loc_stack, (EIF_REFERENCE ) &b);
+	RT_GC_PROTECT(b);
 	a = b_clone(a);
-	epop(&loc_stack,1);
+	RT_GC_WEAN(b);
 	len_b = LENGTH(b);
 
 	addr_a = ARENA(a);
@@ -936,7 +885,6 @@ rt_public EIF_REFERENCE b_xor(EIF_REFERENCE a, EIF_REFERENCE b)
 	 */
 
 	return a;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE b_not(EIF_REFERENCE a)

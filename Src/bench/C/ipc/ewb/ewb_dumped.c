@@ -15,17 +15,22 @@
 		Simplified version from Unix using STREAM *sp from transfer.c:tpipe().
 */
 
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_interp.h"
 #include "request.h"
 #include "stack.h"
 #include "eif_io.h"
 #include "eif_in.h"
+#include <string.h>
 
 EIF_PROC set_rout;
-EIF_PROC set_integer;
+EIF_PROC set_integer_8;
+EIF_PROC set_integer_16;
+EIF_PROC set_integer_32;
+EIF_PROC set_integer_64;
 EIF_PROC set_bool;
 EIF_PROC set_char;
+EIF_PROC set_wchar;
 EIF_PROC set_real;
 EIF_PROC set_double;
 EIF_PROC set_ref;
@@ -50,6 +55,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
  */
 
 {
+	EIF_GET_CONTEXT
 	Request pack;
 #ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd [EWBOUT];
@@ -60,6 +66,7 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 	EIF_REFERENCE eif_rout_name, obj_addr;
 	uint32 hack;		/* Temporary solution: 2 integers sent in one */
 	uint32 orig, dtype;
+	int line_number;	/* line number (i.e. break index) where application is stopped within feature */
 
 	Request_Clean (pack);
 #ifdef EIF_WIN32
@@ -74,15 +81,18 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 
 					case DMP_VECT:
 					case DMP_MELTED:
-						c_rout_name = dump.dmp_vect -> ex_rout;
+						c_rout_name = dump.dmp_vect->ex_rout;
 						eif_rout_name = RTMS (c_rout_name);
 							/* Protect just created object */
-						epush(&loc_stack, (EIF_REFERENCE) (&eif_rout_name));
+						RT_GC_PROTECT(eif_rout_name);
 
-						sprintf (ptr, "%lX\0", dump.dmp_vect -> ex_id);
+						sprintf (ptr, "%lX\0", (unsigned long) dump.dmp_vect -> ex_id);
 						obj_addr = RTMS (ptr);
+
 							/* Protect just created object */
-						epush(&loc_stack, (EIF_REFERENCE) (&obj_addr));
+						RT_GC_PROTECT(obj_addr);
+
+						line_number = dump.dmp_vect->dex_linenum;
 
 						hack = (uint32) dump.dmp_vect -> ex_orig;
 						orig = hack >> 16;
@@ -90,27 +100,28 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
 						dtype >>= 16;
 
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
-											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE)) set_rout)
+											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER)) set_rout)
 							(eif_access (target),
 							(EIF_BOOLEAN) (dump.dmp_type == DMP_MELTED),
 							(EIF_BOOLEAN) 0,
 							obj_addr,
 							orig, dtype,
-							eif_rout_name);
+							eif_rout_name,
+							line_number);
 
-							/* Remove protection */
-						epop(&loc_stack, 2);
+							/* Remove 2 protections */
+						RT_GC_WEAN_N(2);
 						return;
 					default:
 						break; /* send error */
 				}
 			case ACKNLGE:	/* send exhausted */
 				(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_BOOLEAN, EIF_BOOLEAN, EIF_REFERENCE,
-											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE)) set_rout)
+											EIF_INTEGER, EIF_INTEGER, EIF_REFERENCE, EIF_INTEGER)) set_rout)
 					(eif_access (target),
 					(EIF_BOOLEAN) 0,
 					(EIF_BOOLEAN) 1, /* exhausted is true */
-					(EIF_REFERENCE) 0, 0L, 0L, (EIF_REFERENCE) 0);
+					(EIF_REFERENCE) 0, 0L, 0L, (EIF_REFERENCE) 0, 0L);
 				return;
 			default:
 				request_dispatch (pack); /* treat asynchronous request */
@@ -135,8 +146,8 @@ rt_public void c_recv_value (EIF_OBJ target)
 #ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd [EWBOUT];
 #endif
-	struct item item;
-	uint32 type_flag;
+	struct  item item;
+	uint32  type_flag;
 
 	Request_Clean (pack);
 #ifdef EIF_WIN32
@@ -155,8 +166,20 @@ rt_public void c_recv_value (EIF_OBJ target)
 					case SK_CHAR:
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_CHARACTER)) set_char) (eif_access (target), item.it_char);
 						return;
-					case SK_INT:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER)) set_integer) (eif_access (target), item.it_long);
+					case SK_WCHAR:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_WIDE_CHAR)) set_wchar) (eif_access (target), item.it_wchar);
+						return;
+					case SK_INT8:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_8)) set_integer_8) (eif_access (target), item.it_int8);
+						return;
+					case SK_INT16:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_16)) set_integer_16) (eif_access (target), item.it_int16);
+						return;
+					case SK_INT32:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_32)) set_integer_32) (eif_access (target), item.it_int32);
+						return;
+					case SK_INT64:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64);
 						return;
 					case SK_FLOAT:
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL)) set_real) (eif_access (target), item.it_float);
@@ -197,14 +220,18 @@ rt_public void c_recv_value (EIF_OBJ target)
 }
 
 
-rt_public void c_pass_recv_routines (EIF_PROC d_int, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
+rt_public void c_pass_recv_routines (EIF_PROC d_int_8, EIF_PROC d_int_16, EIF_PROC d_int_32, EIF_PROC d_int_64, EIF_PROC d_bool, EIF_PROC d_char, EIF_PROC d_wchar, EIF_PROC d_real, EIF_PROC d_double, EIF_PROC d_ref, EIF_PROC d_point, EIF_PROC d_bits, EIF_PROC d_error, EIF_PROC d_void)
 /*
  *	Register the routines to communicate with a RECV_VALUE
  */
 {
-	set_integer = d_int;
+	set_integer_8 = d_int_8;
+	set_integer_16 = d_int_16;
+	set_integer_32 = d_int_32;
+	set_integer_64 = d_int_64;
 	set_bool = d_bool;
 	set_char = d_char;
+	set_wchar = d_wchar;
 	set_real = d_real;
 	set_double = d_double;
 	set_ref = d_ref;

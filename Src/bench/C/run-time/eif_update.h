@@ -23,12 +23,6 @@ extern "C" {
  * These values have to match with Eiffel values in classes AS_CONST/DB_CONST
  */
 
-#define BCAS_NO			'n'
-#define BCAS_REQUIRE		'r'
-#define BCAS_ENSURE		'e'
-#define BCAS_INVARIANT		'i'
-#define BCAS_LOOP		'l'
-#define BCAS_CHECK		'c'
 #define BCDB_NO			'n'
 #define BCDB_YES		'y'
 #define BCDB_TAG		't'

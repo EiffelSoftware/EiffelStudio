@@ -18,6 +18,7 @@
 #include "idrf.h"
 #include "rqst_idrs.h"
 #include "proto.h"
+#include "eif_network.h"
 #include "eif_logfile.h"
 
 #ifdef EIF_WIN32

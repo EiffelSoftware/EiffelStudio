@@ -10,18 +10,14 @@
 	Hash table handling (indexed by integer keys).
 */
 
-#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_tools.h"
 #include "eif_hashin.h"
 #include "eif_malloc.h"
 #include "eif_lmalloc.h"    /* for eif_calloc, eif_malloc, eif_free */
 #include "eif_except.h"	/* for eif_panic() */
 
-#ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */
-#else
-#include <strings.h>
-#endif
 
 #ifndef lint
 rt_private char *rcsid =

@@ -14,16 +14,18 @@
 */
 
 
+#include "eif_portable.h"
 #include "eif_project.h" /* for egc_prof_enabled */
-#include "eif_config.h"
-#include "eif_once.h"
 #include "eif_eiffel.h"		/* For bcopy/memcpy */
 #include "eif_globals.h"
 #include "eif_misc.h"	
 #include "eif_size.h"
-#include "eif_malloc.h"
-#include "eif_garcol.h"
-#include "eif_lmalloc.h"    /* for eif_free */
+#include "rt_malloc.h"
+#include "rt_garcol.h"
+#include "rt_types.h"
+#include "rt_threads.h"
+#include "eif_lmalloc.h"	/* for eif_free */
+#include "eif_memory.h"
 #if ! defined CUSTOM || defined NEED_TIMER_H
 #include "eif_timer.h"
 #endif
@@ -33,18 +35,14 @@
 #include "eif_search.h"
 #include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
 #include "eif_cecil.h"
-#include "x2c.header"		/* For macro LNGPAD */
+#include "x2c.h"		/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <string.h>
 #endif
 
-#ifdef EIF_THREADS
-#include "eif_once.h"
-#endif
-
 #include <stdio.h>		/* For stream flushing */
 
-#include <assert.h> 				/* For assertions checking. */
+#include "rt_assert.h" 				/* For assertions checking. */
 #ifdef EIF_REM_SET_OPTIMIZATION
 #include "eif_special_table.h" 		/* For special table interface. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
@@ -55,9 +53,7 @@
 #include "eif_object_id.h"	/* For the object id and separate stacks */
 #endif
 #include "eif_hector.h"
-#ifndef TEST
-#include "eif_main.h"
-#endif
+#include "rt_main.h"
 
 #ifdef WORKBENCH
 #include "eif_interp.h"
@@ -65,6 +61,10 @@
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef EIF_ASSERTIONS
+extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
 #endif
 
 #ifdef EIF_WIN32
@@ -133,7 +133,6 @@ rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */
  * collection process and help the auto-adaptative algorithm in its
  * decisions (heuristics).
  */
-#ifndef EIF_THREADS
 rt_shared struct gacinfo g_data = {			/* Global status */
 	0L,			/* nb_full */
 	0L,			/* nb_partial */
@@ -170,6 +169,7 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * the garbage collector or the memory management routines.
  */
 
+#ifndef EIF_THREADS
 rt_shared struct stack loc_stack = {			/* Local indirection stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -184,6 +184,74 @@ rt_public struct stack loc_set = {				/* Local variable stack */
 	(EIF_REFERENCE *) 0,			/* st_top */
 	(EIF_REFERENCE *) 0,			/* st_end */
 };
+rt_public struct stack once_set = {			/* Once functions */ 
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
+};
+#else
+	/* Same as above except that GC keeps track of all thread specific stack to
+	 * perform a GC cycle among all threads */
+rt_public struct stack_list loc_stack_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+rt_public struct stack_list loc_set_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+rt_public struct stack_list once_set_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+rt_public struct stack global_once_set = {			/* Once functions */ 
+	(struct stchunk *) 0,	/* st_hd */
+	(struct stchunk *) 0,	/* st_tl */
+	(struct stchunk *) 0,	/* st_cur */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
+};
+
+	/* Other containers needed by GC but are not specific to garcol */
+	/* hector.c */
+rt_public struct stack_list hec_stack_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+rt_public struct stack_list hec_saved_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+
+	/* except.c */
+rt_public struct stack_list eif_stack_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+rt_public struct stack_list eif_trace_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+
+#ifdef WORKBENCH
+rt_public struct stack_list opstack_list = {
+	(int) 0,	/* count */
+	(int) 0,	/* capacity */
+	{NULL}		/* threads_stack */
+};
+#endif
+
+#endif
+
 rt_private struct stack rem_set = {			/* Remembered set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
@@ -193,19 +261,11 @@ rt_private struct stack rem_set = {			/* Remembered set */
 };
 
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_private struct special_table *special_rem_set = 
-		(struct special_table *) 0; 
-				/* Remembered special table for special objects. */ 
-#endif	/* EIF_REM_SET_OPTIMIZATION */
+rt_private struct special_table *special_rem_set = NULL;
+			/* Remembered special table for special objects. */ 
+#endif
 
 rt_shared struct stack moved_set = {			/* Moved objects set */ 
-	(struct stchunk *) 0,	/* st_hd */
-	(struct stchunk *) 0,	/* st_tl */
-	(struct stchunk *) 0,	/* st_cur */
-	(EIF_REFERENCE *) 0,			/* st_top */
-	(EIF_REFERENCE *) 0,			/* st_end */
-};
-rt_public struct stack once_set = {			/* Once functions */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -228,6 +288,10 @@ rt_public struct stack memory_set =
 };
 #endif	/* EIF_MEMORY_OPTIMIZATION */
 
+#ifdef EIF_THREADS
+rt_public EIF_MUTEX_TYPE *eif_gc_mutex = NULL;	/* Mutex used to protect GC collection or allocation */
+rt_public EIF_MUTEX_TYPE *eif_global_once_mutex = NULL;	/* Mutex used to protect insertion and computation of global onces. */
+#endif
 
 /* Array used to store the number of objects used, indexed by object's age.
  * This is used when computing the demographic feedback-mediated tenuring
@@ -238,15 +302,15 @@ rt_public struct stack memory_set =
 rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ 
 rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ 
 rt_shared int tenure;				/* Maximum age for tenuring.
-									     * Initialized in main.c	*/ 
+									 * Initialized in main.c	*/ 
 											
-rt_public long plsc_per;				/* Period of plsc in acollect  
+rt_public long plsc_per;				/* Period of plsc in acollect
 										 * Initialized in main.c. */
 rt_public int gc_running = 0;			/* Is the GC running */ 
 rt_public double last_gc_time = 0; 		/* The time spent on the last collect, 
 										 * sweep or whatever the GC did */ 
 rt_public int gc_ran = 0;				/* Has the GC been running */ 
-
+rt_public EIF_INTEGER clsc_per;			/* Period of full coalescing: 0 => never. */
 
 /* Spoilt chunks are put into a search table, to avoid taking them as 'from'
  * space more than once: for each spoilt chunk we find, we have to allocate a
@@ -261,13 +325,11 @@ rt_shared struct sc_zone ps_to;		/* To zone */
 rt_shared struct chunk *last_from =
 	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */ 
 
-rt_public long th_alloc;		/* Allocation threshold before calling GC.  
-						   		 * Initialized in main.c */
+rt_public long th_alloc;		/* Allocation threshold before calling GC.
+								 * Initialized in main.c */
 rt_public int gc_monitor = 0;		/* Disable GC time-monitoring by default */ 
-rt_public EIF_REFERENCE root_obj = (EIF_REFERENCE) 0;	
+rt_public EIF_REFERENCE root_obj = NULL;	
 									/* Address of the 'root' object */ 
-
-#endif /* !EIF_THREADS */
 
 #ifdef DEBUG
 rt_private int nb_items(register1 struct stack *);	
@@ -302,7 +364,7 @@ rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE 
 #ifdef EIF_REM_SET_OPTIMIZATION
 rt_private void mark_special_table (register struct special_table *spt, 
 									register EIF_REFERENCE (*marker) (EIF_REFERENCE),
-								   	register int move);
+									register int move);
 										/* Mark special table. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
@@ -322,7 +384,9 @@ rt_private void split_to_block(void);		/* Keep only needed space in 'to' block *
 rt_private int sweep_from_space(void);		/* Clean space after the scavenging */
 rt_private int find_scavenge_spaces(void);	/* Find a pair of scavenging spaces */
 rt_private struct chunk *find_std_chunk(register struct chunk *start);	/* Look for a standard-size chunk */
+#if !(defined EIF_NO_SCAVENGING  || defined EIF_THREADS)
 rt_private void find_to_space(struct sc_zone *to);		/* Find standard-size 'to' chunks */
+#endif
 
 /* Generation based collector */
 rt_public int collect(void);				/* Generation based collector main entry */
@@ -347,10 +411,12 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all,
 rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE));		/* Marks expanded reference in stack */
 rt_private void update_moved_set(void);	/* Update the moved set (young objects) */
 rt_private void update_rem_set(void);		/* Update remembered set */
-#ifndef NDEBUG
+#ifdef EIF_ASSERTIONS
 rt_private int refers_new_object_not_updated(register EIF_REFERENCE object);
+#ifdef EIF_EXPENSIVE_ASSERTIONS
 rt_private int	all_subreferences_processed (EIF_REFERENCE root);
-#endif	/* !NDEBUG */
+#endif
+#endif
 rt_shared int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
 rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root);			/* Generation scavenging on an object */
 rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
@@ -365,11 +431,6 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
 rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
-rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
-
-#ifdef DEBUG
-rt_private int reset(register1 struct stack *);				/* Reset stack to its initial state */
-#endif
 
 /* Marking algorithm */
 #ifdef RECURSIVE_MARKING
@@ -392,7 +453,7 @@ rt_private EIF_REFERENCE nget(register1 struct stack *stk);	/* Pops the top elem
 rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);		/* Marks the exception stacks */
 
 #ifdef WORKBENCH
-rt_private void mark_op_stack(register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move);		/* Marks operational stack */
+rt_private void mark_op_stack(struct opstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move);		/* Marks operational stack */
 
 #ifdef CONCURRENT_EIFFEL
 #define DISP(x,y) \
@@ -470,7 +531,6 @@ rt_public int acollect(void)
 	 * once every 'plsc_per' (aka the period) calls.
 	 * The function returns 0 if collection was done, -1 otherwise.
 	 */
-	EIF_GET_CONTEXT
 	static long nb_calls = 0;		/* Number of calls to function */
 	static long eif_total = 0;		/* Total Eiffel memory allocated */
 	int status;						/* Status returned by scollect() */
@@ -530,13 +590,13 @@ rt_public int acollect(void)
 	{
 		if (0 == nb_calls % plsc_per) {	/* Full collection required */
 			plsc();
-			status =  0;
+			status = 0;
 			eif_total = e_data.ml_total;
 		} else							/* Generation-base collector */
-			status =  collect();
+			status = collect();
 	} else							/* Generation-base collector called, since
 									 * there is no Full Collection. */
-		status =  collect();
+		status = collect();
 
 
 	/* We may want to run periodically a full coalescing (Eiffel and C objects).
@@ -556,13 +616,11 @@ rt_public int acollect(void)
 	nb_calls++;			/* Records the call */
 
 	return status;		/* Collection done, forward status */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public int scollect(int (*gc_func) (void), int i)
 				 		/* The collection function to be called */
-	  					/* Index in g_stat array where statistics are kept */
+						/* Index in g_stat array where statistics are kept */
 {
 	/* Run a garbage collection cycle with statistics updating. We monitor
 	 * both the time spent in the collection and the memory released,
@@ -570,7 +628,6 @@ rt_public int scollect(int (*gc_func) (void), int i)
 	 * Return the status given by the collection function.
 	 */
 
-	EIF_GET_CONTEXT
 	static uint32 nb_stats[GST_NBR];	/* For average computation */
 #ifndef FAST_RUNTIME
 	static Timeval lastreal[GST_NBR];	/* Last real time of invocation */
@@ -728,8 +785,6 @@ rt_public int scollect(int (*gc_func) (void), int i)
 #endif
 
 	return status;		/* Forward status report */
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -745,10 +800,8 @@ rt_public void gc_stop(void)
 	 * signal handler).
 	 */
 
-	EIF_GET_CONTEXT
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status |= GC_STOP;		/* Stop GC */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void gc_run(void)
@@ -762,10 +815,8 @@ rt_public void gc_run(void)
 	 * reference problem--RAM.
 	 */
 
-	EIF_GET_CONTEXT
 	if (!(g_data.status & GC_SIG))		/* If not in signal handler */
 		g_data.status &= ~GC_STOP;		/* Restart GC */
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -778,14 +829,10 @@ rt_public void mksp(void)
 	 * maintain statistics on every call.
 	 */
 
-	EIF_GET_CONTEXT
-
 	if (g_data.status & GC_STOP)
 		return;						/* Garbage collection stopped */
 
 	(void) scollect(mark_and_sweep, GST_PART);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int mark_and_sweep(void)
@@ -805,14 +852,12 @@ rt_private int mark_and_sweep(void)
 	 * this afternoon after lunch. Just to say it's not "clean", but it does
 	 * avoid code duplication--RAM.
 	 */
-	g_data.status = (gen_scavenge & GS_ON) ? GC_GEN : 0;
+	g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_GEN : 0);
 
 	run_collector();		/* Call a wrapper to do the job */
 	clean_up();				/* Restore signals, release core, etc... */
 
 	return 0;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void clean_up(void)
@@ -825,7 +870,6 @@ rt_private void clean_up(void)
 
 	rel_core();				/* We may give some core back to the kernel */
 	SIGRESUME;				/* Dispatch any signal which has been queued */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void reclaim(void)
@@ -841,37 +885,31 @@ rt_public void reclaim(void)
 	EIF_GET_CONTEXT
 
 	struct chunk *c, *cn;
-#ifdef EIF_THREADS
-	int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
-#endif
 
-#ifdef RECLAIM_DEBUG
-	fprintf(stderr, "reclaim: collecting all objects...\n");
-#endif
+	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
+		sc_stop();					/* Free 'to' and explode 'from' space */
 
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	if (egc_prof_enabled)
 		exitprf();			/* Store profile information */
 #endif
 
-	if (eif_no_reclaim)	/* Does user want no reclaim? */
+	if (eif_no_reclaim || (g_data.status & GC_STOP))	/* Does user want no reclaim? */
 		return;	
+#ifdef RECLAIM_DEBUG
+	fprintf(stderr, "reclaim: collecting all objects...\n");
+#endif
+		/* Call for the last time the GC through a `full_collect'. It enables
+		 * the call to `dispose' routine of remaining objects which defines
+		 * the dispose routine. */
+	plsc ();
+
 	/* Reset GC status otherwise full_sweep() might skip some memory blocks
 	 * (those previously used as partial scavenging areas).
 	 */
-	g_data.status = 0;
-
+	g_data.status = (char) 0;
+	
 	full_sweep();				/* Reclaim ALL the objects in the system */
-#ifdef EIF_THREADS
-		/* Call it once more:
-		 * the first `full_sweep' cannot call a dispose routine on
-		 * frozen objects. If the code is 	
-		 * correctly written, they must be ALL unfrozen at the end of the
-		 * first `full_sweep()', so that the run-time can call some dispose
-		 * routine on them without requiring another third call.
-		 */
-	full_sweep();				
-#endif
 
 #ifdef EIF_REM_SET_OPTIMIZATION
 	if (special_rem_set)
@@ -879,7 +917,7 @@ rt_public void reclaim(void)
 #endif
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
 #ifdef EIF_THREADS 
-	if (eif_thr_is_root ())
+	CHECK ("Root thread", eif_thr_is_root ());
 #endif	/* EIF_THREADS */
 	{
 		eif_free (starting_working_directory);
@@ -888,9 +926,6 @@ rt_public void reclaim(void)
 		eif_cleanup(); 
 #endif /* EIF_WIN32 */
 
-#if defined EIF_THREADS && !defined VXWORKS
-		eif_destroy_once_per_process (); /* remove the tables and mutex for once per process */
-#endif /* EIF_THREADS && !VXWORKS */
 	}	/* if eif_thr_is_root () */
 
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
@@ -908,66 +943,10 @@ rt_public void reclaim(void)
 #endif
 
 
-#ifdef EIF_THREADS
-
-	/* 
-	 * Every thread that has created a child thread with eif_thr_create() or
-	 * eif_thr_create_with_args() has created a mutex and a condition 
-	 * variable to be able to do a join_all (or a join). If no children are
-	 * still alive, we destroy eif_children_mutex and eif_children_cond.
-	 * If children are still alive, it is better not to remove the mutex
-	 * because it would cause a crash upon their termination. If it is the
-	 * case, no join_all has been called, which is a bit dangerous--PCV
-	 */
-
-	if (eif_children_mutex) {
-		EIF_MUTEX_LOCK (eif_children_mutex, "Locking problem in reclaim()");
-		if (!n_children) destroy_mutex = 1; /* No children are alive */
-		EIF_MUTEX_UNLOCK (eif_children_mutex, "Unlocking problem in reclaim()");
-	}
-	if (destroy_mutex) {
-	  EIF_MUTEX_DESTROY(eif_children_mutex, "Couldn't destroy join mutex.");
-#ifndef EIF_NO_CONDVAR
-	  EIF_COND_DESTROY(eif_children_cond, "Couldn't destroy join cond. var");
-#endif
-	  eif_children_mutex = (EIF_MUTEX_TYPE *) 0;
-	}
-
-	/* The TSD is managed in a different way under VxWorks: each thread
-	 * must call taskVarAdd upon initialization and taskVarDelete upon
-	 * termination.  It was impossible to call taskVarDelete using the same
-	 * model as on other platforms unless creating a new macro that would
-	 * be useful only for VxWorks. It is easier to do the following:
-	 */
-
-	if (eif_thr_is_root ())	{	/* Is this the root thread */
-		eif_cecil_reclaim ();
-		eif_free (eif_globals);			
-						/* Global variables specific to the current thread */
-		assert (!eif_thr_context);
-#ifdef LMALLOC_CHECK
-		eif_lm_display ();
-		eif_lm_free ();
-#endif	/* LMALLOC_CHECK */
-	} else {
-		eif_free (eif_thr_context->tid); /* Free id of the current thread */
-		eif_free (eif_thr_context);		/* Thread context passed by parent */
-		eif_free (eif_globals);			
-						/* Global variables specific to the current thread */
-	}	
-#ifdef VXWORKS
-	if (taskVarDelete(0,(int *)&(eif_global_key))) 
-	  eif_thr_panic("Problem with taskVarDelete\n");
-#endif	/* VXWORKS */
-#else	/* EIF_THREADS */
 #ifdef LMALLOC_CHECK
 	eif_lm_display ();
 	eif_lm_free ();
 #endif	/* LMALLOC_CHECK */
-#endif	/* EIF_THREADS */
-
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void run_collector(void)
@@ -977,7 +956,6 @@ rt_private void run_collector(void)
 	 * collected excepted by using a scavenging algorithm (with no aging).
 	 */
 
-	EIF_GET_CONTEXT
 	g_data.nb_full++;	/* One more full collection */
 
 #ifdef DEBUG
@@ -994,10 +972,8 @@ rt_private void run_collector(void)
 	 * sense--RAM.
 	 */
 
-	if (root_obj != (EIF_REFERENCE) 0) {
-		full_mark(MTC_NOARG);		/* Mark phase */
-		full_update();		/* Update moved and remembered set (BEFORE sweep) */
-	}
+	full_mark(MTC_NOARG);		/* Mark phase */
+	full_update();		/* Update moved and remembered set (BEFORE sweep) */
 	full_sweep();			/* Sweep phase */
 
 	/* After a full collection (this routine is only called for a full mark
@@ -1016,8 +992,6 @@ rt_private void run_collector(void)
 #ifdef DEBUG
 	fdone = 0;		/* Do not trace any further */
 #endif
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void full_mark(EIF_CONTEXT_NOARG)
@@ -1027,16 +1001,19 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * objects. At the beginning of this phase, it is assumed that no
 	 * object is marked.
 	 */
-	EIF_GET_CONTEXT
+#ifdef EIF_THREADS
+	int i;
+#endif
 	int moving = g_data.status & (GC_PART | GC_GEN);	/* Objects may move? */
 
 	root_obj = MARK_SWITCH(root_obj);	/* Primary root */
 
+#ifndef EIF_THREADS
 	/* The regular Eiffel variables have their values stored directly within
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_simple_stack(&loc_set, MARK_SWITCH, moving);
+	mark_stack(&loc_set, MARK_SWITCH, moving);
 
 	/* The stack of local variables holds the addresses of variables
 	 * in the process's stack which refers to the objects, hence the
@@ -1049,7 +1026,11 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * generation (thus they are allocated from the free-list). As with
 	 * locals, a double indirection is necessary.
 	 */
+#if defined WORKBENCH
 	mark_simple_stack(&once_set, MARK_SWITCH, moving);
+#else
+	mark_stack(&once_set, MARK_SWITCH, moving);
+#endif
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
@@ -1057,23 +1038,11 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	mark_simple_stack(&hec_stack, MARK_SWITCH, moving);
 	mark_simple_stack(&hec_saved, MARK_SWITCH, moving);
 
-#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-#ifdef CONCURRENT_EIFFEL
-	/* The separate_object_id_set records object referenced by other processors */
-	mark_simple_stack(&separate_object_id_set, MARK_SWITCH, moving);
-#endif
-
-	/* The object id stacks record the objects referenced by an identifier. Those objects
-	 * are not necessarily alive. Thus only an update after a move is needed.
-	 */
-	if (moving) update_object_id_stack();
-#endif
-
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
 	 * must be marked and/or updated.
 	 */
-	mark_op_stack(MARK_SWITCH, moving);
+	mark_op_stack(&op_stack, MARK_SWITCH, moving);
 
 	/* The exception stacks are scanned. It is more to update the references on
 	 * objects than to ensure these objects are indeed alive...
@@ -1090,12 +1059,56 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 		mark_ex_stack(&eif_trace, MARK_SWITCH, moving);
 	}
 #endif
+#else /* EIF_THREADS */
+	for (i = 0; i < loc_set_list.count; i++)
+		mark_stack(loc_set_list.threads.sstack[i], MARK_SWITCH, moving);
 
-	EIF_END_GET_CONTEXT
+	for (i = 0; i < loc_stack_list.count; i++)
+		mark_stack(loc_stack_list.threads.sstack[i], MARK_SWITCH, moving);
+
+	mark_stack(&global_once_set, MARK_SWITCH, moving);
+
+	for (i = 0; i < once_set_list.count; i++)
+		mark_simple_stack(once_set_list.threads.sstack[i], MARK_SWITCH, moving);
+
+	for (i = 0; i < hec_stack_list.count; i++)
+		mark_simple_stack(hec_stack_list.threads.sstack[i], MARK_SWITCH, moving);
+	for (i = 0; i < hec_saved_list.count; i++)
+		mark_simple_stack(hec_saved_list.threads.sstack[i], MARK_SWITCH, moving);
+
+#ifdef WORKBENCH
+	for (i = 0; i < opstack_list.count; i++)
+		mark_op_stack(opstack_list.threads.opstack[i], MARK_SWITCH, moving);
+	for (i = 0; i < eif_stack_list.count; i++)
+		mark_ex_stack(eif_stack_list.threads.xstack[i], MARK_SWITCH, moving);
+	for (i = 0; i < eif_trace_list.count; i++)
+		mark_ex_stack(eif_trace_list.threads.xstack[i], MARK_SWITCH, moving);
+
+#else
+	if (exception_stack_managed) {
+		for (i = 0; i < eif_stack_list.count; i++)
+			mark_ex_stack(eif_stack_list.threads.xstack[i], MARK_SWITCH, moving);
+		for (i = 0; i < eif_trace_list.count; i++)
+			mark_ex_stack(eif_trace_list.threads.xstack[i], MARK_SWITCH, moving);
+	}
+#endif
+
+#endif /* EIF_THREADS */
+
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
+#ifdef CONCURRENT_EIFFEL
+	/* The separate_object_id_set records object referenced by other processors */
+	mark_simple_stack(&separate_object_id_set, MARK_SWITCH, moving);
+#endif
+
+	/* The object id stacks record the objects referenced by an identifier. Those objects
+	 * are not necessarily alive. Thus only an update after a move is needed.
+	 */
+	if (moving) update_object_id_stack();
+#endif
 }
-
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_private void mark_special_table (register struct special_table *spt, register EIF_REFERENCE (*marker) (EIF_REFERENCE),  register int move)
+rt_private void mark_special_table (register struct special_table *spt, register EIF_REFERENCE (*marker) (EIF_REFERENCE), register int move)
 {
 	/* 
 	 * Mark the special table: The special table is an optmized rem_set
@@ -1107,9 +1120,8 @@ rt_private void mark_special_table (register struct special_table *spt, register
  
 	EIF_GET_CONTEXT
 
-	EIF_REFERENCE	*container;			/* Special object. */
+	EIF_REFERENCE	*container, ref;			/* Special object. */
 	union overhead	*zone;				/* Special object malloc info zone. */
-	union overhead	*iz;				/* Item header. */
 	EIF_INTEGER	ofst;				/* Index of item in special. */
 	int		i;				/* Index. */
 
@@ -1117,8 +1129,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 #ifndef NDEBUG
 	int old_count;			/* For postcondition checking */
 #endif	/* !NDEBUG */
-	/*** Preconditions ***/
-	assert (g_data.status & GC_FAST);
+	REQUIRE ("GC_FAST mode", g_data.status & GC_FAST);
 
 	if (spt == (struct special_table *) 0)	/* Table not created yet. */
 		return;
@@ -1128,9 +1139,9 @@ rt_private void mark_special_table (register struct special_table *spt, register
 #endif
 	/* Initialization. */
 
-	assert (spt->h_keys != (EIF_INTEGER *) 0);		/* Cannot be empty. */
-	assert (spt->h_values != (EIF_REFERENCE *) 0);	/* Cannot be empty. */
-	assert (spt->count <= spt->h_size);		/* Special table must be coherent. */
+	REQUIRE ("Not empty", spt->h_keys != (EIF_INTEGER *) 0);
+	REQUIRE ("Not empty", spt->h_values != (EIF_REFERENCE *) 0);
+	REQUIRE ("Special table coherent", spt->count <= spt->h_size);
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
 	printf ("MARK_SPECIAL_TABLE: count = %d\n", spt->count);
@@ -1143,22 +1154,22 @@ rt_private void mark_special_table (register struct special_table *spt, register
 			 * -- ET
 		 	 */
 	{
-		zone = HEADER (spt->h_values [i]);
-		assert (spt->h_values [i] != (EIF_REFERENCE) 0);
+		ref = spt->h_values [i];
+		CHECK ("ref_not_null", ref != (EIF_REFERENCE) 0);
+		zone = HEADER (ref);
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
-	printf ("MARK_SPECIAL_TABLE: object %x\n", spt->h_values [i]);
+	printf ("MARK_SPECIAL_TABLE: object %x\n", ref);
 #endif	/* MARK_SPECIAL_TABLE_DEBUG */
 
-
-		assert (zone->ov_flags & EO_REF);		/* Must be full of references.*/
-		assert (zone->ov_flags & EO_SPEC);		/* Must be a special object. */
-		assert (!(zone->ov_size & B_FWD));		/* Not forwarded. */
-		assert (!(zone->ov_flags & EO_EXP));	/* Not expanded. */
-		assert (!(zone->ov_flags & EO_COMP));	/* Not composite. */
-		assert (zone->ov_flags & EO_OLD);		/* Must be old. */
-		assert (zone->ov_flags & EO_REM);		/* Must be remembered. */
-		assert (!(zone->ov_flags & EO_C));		/* Not C object. */
+		CHECK ("Full of references", zone->ov_flags & EO_REF);
+		CHECK ("Special object", zone->ov_flags & EO_SPEC);
+		CHECK ("Not forwarded", !(zone->ov_size & B_FWD));
+		CHECK ("Not expanded", !(zone->ov_flags & EO_EXP));
+		CHECK ("Not composite", !(zone->ov_flags & EO_COMP));
+		CHECK ("Old object", zone->ov_flags & EO_OLD);
+		CHECK ("Remembered object", zone->ov_flags & EO_REM);
+		CHECK ("Eiffel object", !(zone->ov_flags & EO_C));
 		
 
 	/***************************************
@@ -1170,8 +1181,8 @@ rt_private void mark_special_table (register struct special_table *spt, register
 			 * It must be referenced from an old object. */
 		{
 			zone->ov_flags |= EO_MARK;	/* Mark it. */	
-			assert (HEADER (spt->h_values [i])->ov_flags & EO_MARK);
-			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
+			CHECK ("Object marked", HEADER (spt->h_values [i])->ov_flags & EO_MARK);
+			CHECK ("Object marked", HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
 		}
 		
 			
@@ -1185,14 +1196,15 @@ rt_private void mark_special_table (register struct special_table *spt, register
 		ofst = spt->h_keys [i];
 		if (ofst == -1)
 			continue;				/* No new reference, pass it. */
-		container = (EIF_REFERENCE *) (spt->h_values [i] + ofst * sizeof (EIF_REFERENCE));
+		container = (EIF_REFERENCE *) (ref + ofst * sizeof (EIF_REFERENCE));
 		if (*container == (EIF_REFERENCE) 0)
 			continue;				/* Skip Void elements. */
 
-		iz = HEADER (*container);	/* Fetch malloc info zone for item. */
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
 /****************************** Debug. *************************************/
+		iz = HEADER (*container);	/* Fetch malloc info zone for item. */
+
 		printf("MARK_SPECIAL_TABLE: marking at 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, \n\t\t\twith item %x, offset %ld (type %d, %d bytes) %s age %ld, %s %s%s %s %s %s\n",
 			spt->h_values [i],
 			HEADER(
@@ -1215,7 +1227,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 			iz->ov_size & B_FWD ? "forwarded" : "",
 			((HEADER (
 				iz->ov_size & B_FWD ? iz->ov_fwd : *container
-			)->ov_flags & EO_AGE)  >> 24) / 2,
+			)->ov_flags & EO_AGE) >> 24) / 2,
 			HEADER (
 				iz->ov_size & B_FWD ? iz->ov_fwd : *container
 			)->ov_flags & EO_OLD ? "old " : "",
@@ -1258,57 +1270,55 @@ rt_private void mark_special_table (register struct special_table *spt, register
 				printf ("MARK_SPECIAL_TABLE:Item %x is already processed!\n", *container);
 #endif	/* MARK_SPECIAL_TABLE_DEBUG */
 
-				assert (!(HEADER (*container)->ov_size & B_FWD));	
-									/* Not forwarded twice. */
-				assert (!(HEADER (*container)->ov_flags & EO_MARK));	
-									/* Not marked and still in scavenge zone. */
+				CHECK ("Not forwarded twice", !(HEADER (*container)->ov_size & B_FWD));	
+				CHECK ("Not marked and still in scavenge zone", !(HEADER (*container)->ov_flags & EO_MARK));	
 				spt->h_keys [i] = -2;		/* Mark it as a twin, -2 by convention. */
 				continue;			/* Next reference. */
 			}
 			else		/* Not a twin, then mark it. */
 			{
 				*container = marker (*container);
-							
-				iz = HEADER (*container);	/* Update item's info zone. */
 			}
 		}
 		else 				/* Then, Item does not move. */
 		{
 			(void) marker(*container);			/* Mark it. */
-			assert (HEADER (*container)->ov_flags & EO_MARK);	/* Item is marked. */
+			CHECK ("Object marked", HEADER (*container)->ov_flags & EO_MARK);
 		}
 
-		assert ((HEADER (*container)->ov_flags & EO_MARK) 
+		CHECK ("Must be marked or not forwarded.",
+				(HEADER (*container)->ov_flags & EO_MARK)
 				|| !(HEADER (*container)->ov_size & B_FWD));
-									/* Must be marked or not forwarded. */
-		assert (!(HEADER (*container)->ov_flags & EO_SPEC));
-								/* Special cannot reference a special directly. */
-		
+		CHECK ("Special cannot reference a special directly.",
+			!(HEADER (*container)->ov_flags & EO_SPEC));
 	}	/* for ... */
 
 #ifndef NDEBUG
-	/************************ Postconditions. **********************/
-	assert (spt == special_rem_set);	
-	assert (old_count <= spt->count);	/* Special table must have grown or
-										 * kept the same size during marking.*/
-					/* `special_rem_set' must not move. */
+	ENSURE ("Table kept", spt == special_rem_set);	
+
+		/* Special table must have grown or
+		 * kept the same size during marking.*/
+	ENSURE ("Has grown", old_count <= spt->count);
+
+		/* `special_rem_set' must not move. */
 	for (i = 0; i < spt->count; i ++)
 	{
-		assert ((spt->h_values [i]) != (EIF_REFERENCE) 0);
-		assert ((spt->h_values [i]) == (special_rem_set->h_values) [i]);
-		assert (!(HEADER ((special_rem_set->h_values) [i])->ov_size & B_FWD));
-		if ((spt->h_keys [i] >= 0) && ((*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + spt->h_keys [i]*sizeof (EIF_REFERENCE))) != (EIF_REFERENCE) 0))
-				assert (!(HEADER (*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + spt->h_keys [i]*sizeof (EIF_REFERENCE)))->ov_size & B_FWD));
-		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
-		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_SPEC);
-			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_REF);
+		ref = spt->h_values [i];
+		ENSURE ("ref not null", ref != (EIF_REFERENCE) 0);
+		ENSURE ("ref is in special_rem_set", ref == (special_rem_set->h_values) [i]);
+		ENSURE ("ref is not forwarded", !(HEADER(ref)->ov_size & B_FWD));
+		ENSURE ("ref is marked", HEADER (ref)->ov_flags & EO_MARK);
+		ENSURE ("ref is special", HEADER (ref)->ov_flags & EO_SPEC);
+		ENSURE ("ref is full of references", HEADER (ref)->ov_flags & EO_REF);
+		if (spt->h_keys [i] >= 0) {
+			ref = (EIF_REFERENCE) (ref + spt->h_keys [i] * sizeof (EIF_REFERENCE));
+			ref = * (EIF_REFERENCE *) ref;
+			if (ref)
+				ENSURE ("*ref is not forwarded", !(HEADER (ref)->ov_size & B_FWD));	
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-		if (spt->h_keys [i] >= 0) 
-		{
-			assert (all_subreferences_processed ((special_rem_set->h_values) [i]));	
+			ENSURE (all_subreferences_processed (special_rem_set->h_values [i]));	/* Checking coherence. */
+#endif
 		}
-							/* Checking coherence. */
-#endif	/* EIF_EXPENSIVE_ASSERTIONS */
 	}
 	/*********************** End of postconditions. ****************/
 #endif
@@ -1320,7 +1330,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
-				   					/* Are the objects expected to move? */
+				 					/* Are the objects expected to move? */
 {
 	/* Loop over the specified stack, using the supplied marker to recursively
 	 * mark the objects. The 'move' flag is a flag which tells us whether the
@@ -1363,7 +1373,7 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REF
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, *obj);
+				printf("%d: 0x%lx\n", i, *obj);
 		}
 		flush;
 #endif
@@ -1387,14 +1397,11 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REF
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, *obj);
+				printf("%d: 0x%lx\n", i, *obj);
 		}
 		flush;
 #endif
 	}
-#ifdef DEBUG
-	EIF_END_GET_CONTEXT
-#endif
 }
 
 #if ! defined CUSTOM || defined NEED_OBJECT_ID_H
@@ -1438,7 +1445,7 @@ rt_private void update_object_id_stack(void)
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, *obj);
+				printf("%d: 0x%lx\n", i, *obj);
 		}
 		flush;
 #endif
@@ -1464,7 +1471,7 @@ rt_private void update_object_id_stack(void)
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, *obj);
+				printf("%d: 0x%lx\n", i, *obj);
 		}
 		flush;
 #endif
@@ -1475,7 +1482,7 @@ rt_private void update_object_id_stack(void)
 rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
-				   					/* Are the objects expected to move? */
+				 					/* Are the objects expected to move? */
 {
 	/* Loop over the specified stack, using the supplied marker to recursively
 	 * mark the objects. The 'move' flag is a flag which tells us whether the
@@ -1517,7 +1524,7 @@ rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE 
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, *(EIF_REFERENCE *) *obj);
+				printf("%d: 0x%lx\n", i, *(EIF_REFERENCE *) *obj);
 		}
 		flush;
 #endif
@@ -1537,19 +1544,16 @@ rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE 
 		if (DEBUG & 2 && debug_ok(2)) {
 			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, * (EIF_REFERENCE *) *obj);
+				printf("%d: 0x%lx\n", i, * (EIF_REFERENCE *) *obj);
 		}
 		flush;
 #endif
 	}
-#ifdef DEBUG
-	EIF_END_GET_CONTEXT
-#endif
 }
 
 rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE))
-		   				/* Expanded reference to be marked */
-				  		/* The routine used to mark objects */
+		 				/* Expanded reference to be marked */
+						/* The routine used to mark objects */
 {
 	/* The main invariant from the GC is: "expanded objects are only referenced
 	 * once, therefore they are not marked and must be traversed only once".
@@ -1570,7 +1574,7 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marke
 	zone = HEADER(root);			/* Malloc info zone */
 
 	if (zone->ov_size & B_FWD)
-		return zone->ov_fwd;		/* Already forwarded, i.e. traversed  */
+		return zone->ov_fwd;		/* Already forwarded, i.e. traversed */
 
 	if (!(zone->ov_flags & EO_EXP))
 		return (marker)(root);		/* Mark non-expanded objects directly */
@@ -1587,15 +1591,14 @@ rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marke
 
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
-rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move)
+rt_private void mark_op_stack(struct opstack *stk, EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move)
 									/* The routine used to mark objects */
-				   					/* Are the objects expected to move? */
+				 					/* Are the objects expected to move? */
 {
 	/* Loop over the operational stack (the one used by the interpreter) and
 	 * mark all the references found.
 	 */
 
-	EIF_GET_CONTEXT
 	register1 struct item *last;	/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stochunk *s;	/* To walk through each stack's chunk */
@@ -1612,12 +1615,12 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF
 	 * we know it has already been created.
 	 */
 
-	for (s = op_stack.st_hd; s && !done; s = s->sk_next) {
+	for (s = stk->st_hd; s && !done; s = s->sk_next) {
 		last = s->sk_arena;						/* Start of stack */
-		if (s != op_stack.st_cur)				/* Before current pos? */
+		if (s != stk->st_cur)				/* Before current pos? */
 			roots = s->sk_end - last;			/* The whole chunk */
 		else {
-			roots = op_stack.st_top - last;		/* Stop at the top */
+			roots = stk->st_top - last;		/* Stop at the top */
 			done = 1;							/* Reached end of stack */
 		}
 
@@ -1630,38 +1633,50 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
 				case SK_EXP:
-					printf("    %d: expanded 0x%lx\n", i, lst->it_ref);
+					printf("\t%d: expanded 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_REF:
-					printf("    %d: 0x%lx\n", i, lst->it_ref);
+					printf("\t%d: 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_BOOL:
-					printf("    %d: bool %s\n", i,
+					printf("\t%d: bool %s\n", i,
 						lst->it_char ? "true" : "false");
 					break;
 				case SK_CHAR:
-					printf("    %d: char %d\n", i, lst->it_char);
+					printf("\t%d: char %d\n", i, lst->it_char);
 					break;
-				case SK_INT:
-					printf("    %d: int %ld\n", i, lst->it_long);
+				case SK_WCHAR:
+					printf("\t%d: wide char %lu\n", i, lst->it_wchar);
+					break;
+				case SK_INT8:
+					printf("\t%d: int %ld\n", i, lst->it_int8);
+					break;
+				case SK_INT16:
+					printf("\t%d: int %ld\n", i, lst->it_int16);
+					break;
+				case SK_INT32:
+					printf("\t%d: int %ld\n", i, lst->it_int32);
+					break;
+				case SK_INT64:
+					printf("\t%d: int %ld\n", i, lst->it_int64);
 					break;
 				case SK_FLOAT:
-					printf("    %d: float %f\n", i, lst->it_float);
+					printf("\t%d: float %f\n", i, lst->it_float);
 					break;
 				case SK_DOUBLE:
-					printf("    %d: double %lf\n", i, lst->it_double);
+					printf("\t%d: double %lf\n", i, lst->it_double);
 					break;
 				case SK_BIT:
-					printf("    %d: BITS\n", i);
+					printf("\t%d: BITS\n", i);
 					break;
 				case SK_POINTER:
-					printf("    %d: pointer 0x%lx\n", i, lst->it_ref);
+					printf("\t%d: pointer 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_VOID:
-					printf("    %d: void\n", i);
+					printf("\t%d: void\n", i);
 					break;
 				default:
-					printf("    %d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
+					printf("\t%d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
 				}
 			}
 		}
@@ -1697,38 +1712,50 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF
 			for (i = 0; i < roots; i++, lst++) {
 				switch (lst->type & SK_HEAD) {
 				case SK_EXP:
-					printf("    %d: expanded 0x%lx\n", i, lst->it_ref);
+					printf("\t%d: expanded 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_REF:
-					printf("    %d: 0x%lx\n", i, lst->it_ref);
+					printf("\t%d: 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_BOOL:
-					printf("    %d: bool %s\n", i,
+					printf("\t%d: bool %s\n", i,
 						lst->it_char ? "true" : "false");
 					break;
 				case SK_CHAR:
-					printf("    %d: char %d\n", i, lst->it_char);
+					printf("\t%d: char %d\n", i, lst->it_char);
 					break;
-				case SK_INT:
-					printf("    %d: int %ld\n", i, lst->it_long);
+				case SK_WCHAR:
+					printf("\t%d: wide char %lu\n", i, lst->it_wchar);
+					break;
+				case SK_INT8:
+					printf("\t%d: int %ld\n", i, lst->it_int8);
+					break;
+				case SK_INT16:
+					printf("\t%d: int %ld\n", i, lst->it_int16);
+					break;
+				case SK_INT32:
+					printf("\t%d: int %ld\n", i, lst->it_int32);
+					break;
+				case SK_INT64:
+					printf("\t%d: int %ld\n", i, lst->it_int64);
 					break;
 				case SK_FLOAT:
-					printf("    %d: float %f\n", i, lst->it_float);
+					printf("\t%d: float %f\n", i, lst->it_float);
 					break;
 				case SK_DOUBLE:
-					printf("    %d: double %lf\n", i, lst->it_double);
+					printf("\t%d: double %lf\n", i, lst->it_double);
 					break;
 				case SK_BIT:
-					printf("    %d: BITS\n", i);
+					printf("\t%d: BITS\n", i);
 					break;
 				case SK_POINTER:
-					printf("    %d: pointer 0x%lx\n", i, lst->it_ref);
+					printf("\t%d: pointer 0x%lx\n", i, lst->it_ref);
 					break;
 				case SK_VOID:
-					printf("    %d: void\n", i);
+					printf("\t%d: void\n", i);
 					break;
 				default:
-					printf("    %d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
+					printf("\t%d: UNKNOWN TYPE 0x%lx\n", i, lst->type);
 				}
 			}
 		}
@@ -1736,7 +1763,6 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF
 #endif
 
 	}
-	EIF_END_GET_CONTEXT
 }
 #endif
 /* End of workbench-specific marking functions */
@@ -1744,7 +1770,7 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF
 rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
 							 		/* The stack which is to be marked */
 									/* The routine used to mark objects */
-				   					/* Are the objects expected to move? */
+				 					/* Are the objects expected to move? */
 {
 	/* Loop over the exception stacks (the one used by the exception handling
 	 * mechanism) and update all the references found. Those references are
@@ -1829,9 +1855,6 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERE
 				}
 			
 	}
-#ifdef DEBUG
-	EIF_END_GET_CONTEXT
-#endif
 }
 
 #ifdef RECURSIVE_MARKING
@@ -2046,7 +2069,6 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root)
 	 * recursively marked, except the last one. This brings a noticeable
 	 * improvement with structures like LINKED_LIST.
 	 */
-	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
@@ -2136,7 +2158,7 @@ rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root)
 				goto marked;
 			} else
 				if (offset & GC_PART &&
-				  current > ps_from.sc_arena && current <= ps_from.sc_end) {
+				current > ps_from.sc_arena && current <= ps_from.sc_end) {
 					current = scavenge(current, &ps_to);/* Partial scavenge */
 					zone = HEADER(current);				/* Update zone */
 					flags = zone->ov_flags;				/* And Eiffel flags */
@@ -2266,8 +2288,6 @@ done:
 	/* Return the [new] address of the root object */
 	zone = HEADER(root);
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
-
-	EIF_END_GET_CONTEXT
 }
 #endif /* HYBRID_MARKING */
 
@@ -2361,7 +2381,7 @@ rt_private EIF_REFERENCE iterative_mark(EIF_REFERENCE root)
 			/* If we enter here, then we are currently running a scavenging
 			 * algorithm of some sort. Depending on the garbage collector's
 			 * flag, we are able to see if the current object is in a 'from'
-			 * zone (i.e.  has to be scavenged). Note that the generation
+			 * zone (i.e. has to be scavenged). Note that the generation
 			 * scavenging process does not usually call this routine (tenuring
 			 * can fail, and we are in a process that is not allowed to fail).
 			 * Here, the new generation is simply scavenged, with no tenuring.
@@ -2602,7 +2622,6 @@ not_explorable:
 		return zone->ov_fwd;
 	else
 		return root;
-	EIF_END_GET_CONTEXT
 }
 
 EIF_REFERENCE nget(register1 struct stack *stk)
@@ -2658,7 +2677,6 @@ EIF_REFERENCE nget(register1 struct stack *stk)
 #endif
 		return (EIF_REFERENCE) 0;
 	}
-	EIF_END_GET_CONTEXT
 }
 
 EIF_REFERENCE ntop (register1 struct stack *stk)
@@ -2698,7 +2716,6 @@ rt_private void full_sweep(void)
 	 * the 'from' and 'to' spaces are left untouched (the objects in the
 	 * 'to' space are unmarked but alive...).
 	 */
-	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
 	register3 EIF_REFERENCE end;				/* First address beyond chunk */
@@ -2709,7 +2726,7 @@ rt_private void full_sweep(void)
 	/* We start the sweeping at the end of the memory, and we walk
 	 * backawrds along the chunk list. That way, the freed objects
 	 * are inserted at the beginning of the free list (which is kept
-	 * in increasing order).  If I did it the other way round, then
+	 * in increasing order). If I did it the other way round, then
 	 * the first freed objects would be inserted at the beginning but
 	 * the last one would take much more time to get inserted, not to
 	 * mention all the paging problems that could be involved--RAM.
@@ -2790,6 +2807,7 @@ rt_private void full_sweep(void)
 			 * reference)--RAM.
 			 */
 
+			gfree(zone);		/* Object is freed */
 #ifdef FULL_SWEEP_DEBUG
 		printf("FULL_SWEEP: Removing 0x%x (type %d, %d bytes) %s %s %s %s %s %s %s, age %ld\n",
 			(union overhead *) zone + 1,
@@ -2807,7 +2825,6 @@ rt_private void full_sweep(void)
 		
 
 #endif	/* FULL_SWEEP_DEBUG */
-			gfree(zone);		/* Object is freed */
 		}
 	}
 
@@ -2815,8 +2832,6 @@ rt_private void full_sweep(void)
 	 * Standard dispose traversal checks for Eiffel objects, frozen obj are 
 	 * marked as C obj thus ignored. The other stacks are referencing "moving" 
 	 * objects so there's no problem */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void full_update(void)
@@ -2830,7 +2845,6 @@ rt_private void full_update(void)
 	 * proper job.
 	 */
 
-	
 	update_moved_set();
 	update_rem_set();		/* Must be done after moved set (for GC_FAST) */
 #ifdef EIF_REM_SET_OPTIMIZATION 
@@ -2852,13 +2866,10 @@ rt_public void plsc(void)
 	 * updating (available to the user via MEMORY).
 	 */
 
-	EIF_GET_CONTEXT
 	if (g_data.status & GC_STOP)
 		return;				/* Garbage collection stopped */
 
 	(void) scollect(partial_scavenging, GST_PART);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int partial_scavenging(void)
@@ -2879,7 +2890,6 @@ rt_private int partial_scavenging(void)
 	run_plsc();				/* Normal sequence */
 
 	return 0;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void run_plsc(void)
@@ -2914,8 +2924,6 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	*object = MARK_SWITCH(*object);	/* Ensure object is alive */
 
 	run_plsc();				/* Normal sequence */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void clean_zones(void)
@@ -2927,8 +2935,6 @@ rt_private void clean_zones(void)
 	 * is kept for the next partial scavenge (this should be the case all the
 	 * time, but some C blocks may pollute the zones if we are low in memory).
 	 */
-
-	EIF_GET_CONTEXT
 
 #ifdef DEBUG
 	dprintf(1)("clean_zones: entering function..\n");
@@ -3026,7 +3032,6 @@ rt_private void clean_zones(void)
 		return;
 
 	ps_to.sc_arena = (EIF_REFERENCE) 0;		/* Signals: no valid 'to' space */
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void init_plsc(void)
@@ -3035,12 +3040,11 @@ rt_private void init_plsc(void)
 	 * mark process knows about what we are doing. If we are unable to get
 	 * a valid 'to' zone for the scavenge, a simple mark and sweep will be done.
 	 */
-	EIF_GET_CONTEXT
 
 	if (0 == find_scavenge_spaces())
-		g_data.status = (gen_scavenge & GS_ON) ? GC_PART | GC_GEN : GC_PART;
+		g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_PART | GC_GEN : GC_PART);
 	else
-		g_data.status = (gen_scavenge & GS_ON) ? GC_GEN : 0;
+		g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_GEN : 0);
 
 	/* If partial scavenging was not activated, make sure no scavenge space is
 	 * recorded at all, to avoid problems with malloc and core releasing.
@@ -3058,7 +3062,6 @@ rt_private void init_plsc(void)
 			ps_to.sc_arena = (EIF_REFERENCE) 0;	/* No to zone yet */
 		}
 	}
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void split_to_block(void)
@@ -3075,7 +3078,6 @@ rt_private void split_to_block(void)
 	 * its original state. The block will then be kept for the next scavenging,
 	 * only the 'from' space will change.
 	 */
-	EIF_GET_CONTEXT
 	union overhead *base;	/* Base address */
 	uint32 size;			/* Amount of bytes used (malloc point's of view) */
 	uint32 old_size;		/* To save the old size for the leading object */
@@ -3132,8 +3134,6 @@ rt_private void split_to_block(void)
 	dprintf(1)("split_to_block: no object was scavenged ('to' empty)\n");
 	flush;
 #endif
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int sweep_from_space(void)
@@ -3152,7 +3152,6 @@ rt_private int sweep_from_space(void)
 	 * caller because there is no reason this should be true if we did not use
 	 * standard chunks.
 	 */
-	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Currently inspected block */
 	register2 union overhead *next;		/* Address of next block */
 	register3 uint32 flags;				/* Malloc flags and size infos */
@@ -3160,7 +3159,7 @@ rt_private int sweep_from_space(void)
 	register5 uint32 dtype;				/* Dynamic type of object */
 	EIF_REFERENCE base;							/* First address of 'from' space */
 	int size;							/* Size of current object */
-	char gc_status;                     /* Saved GC status */
+	char gc_status;						/* Saved GC status */
 
 	base = ps_from.sc_arena;
 	zone = (union overhead *) base;		/* Start of from space */
@@ -3245,11 +3244,13 @@ rt_private int sweep_from_space(void)
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
 				dtype = Deif_bid(zone->ov_flags);		/* Dispose ptr */
 				if (Disp_rout(dtype)) {					/* Exists ? */
-					gc_status = g_data.status;      	/* Save GC current status */
+					gc_status = g_data.status;			/* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
 					DISP(dtype, (EIF_REFERENCE) (zone + 1));	/* Call it */
 					g_data.status = gc_status;			/* Restart GC */
 				}
+				CHECK ("Cannot be in object ID stack",
+					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
 			}
 		} else {
 			lxtract(zone);			/* Extract it from free list */
@@ -3320,11 +3321,13 @@ rt_private int sweep_from_space(void)
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
 					dtype = Deif_bid(next->ov_flags);	/* Dispose ptr */
 					if (Disp_rout(dtype)) {				/* Exists ? */
-						gc_status = g_data.status;      /* Save GC current status */
+						gc_status = g_data.status;		/* Save GC current status */
 						g_data.status |= GC_STOP;		/* Stop GC */
 						DISP(dtype,(EIF_REFERENCE) (next + 1));/* Call it */
 						g_data.status = gc_status;		/* Restore previous GC status */
 					}
+					CHECK ("Cannot be in object ID stack",
+						!has_object (&object_id_stack, (EIF_REFERENCE) next + 1));
 
 					m_data.ml_over -= OVERHEAD;		/* Memory accounting */
 					m_data.ml_used += OVERHEAD;		/* Overhead is used */
@@ -3408,7 +3411,6 @@ rt_private int sweep_from_space(void)
 		zone = next;					/* Reset coalescing base */
 	}
 	/* NOTREACHED */
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int find_scavenge_spaces(void)
@@ -3423,7 +3425,7 @@ rt_private int find_scavenge_spaces(void)
 	 * disgusting to be revealed here--RAM.
 	 * The function returns 0 if all is ok, -1 otherwise.
 	 */
-#if defined EIF_NO_SCAVENGING  || defined EIF_THREADS
+#if defined EIF_NO_SCAVENGING || defined EIF_THREADS
 	/* In MT mode, we do not want the object out of the scavenge zone 
 	 * to move. */
 	return -1;
@@ -3539,8 +3541,6 @@ rt_private int find_scavenge_spaces(void)
 #endif
 
 	return 0;		/* Ok, we got a 'to' space */
-
-	EIF_END_GET_CONTEXT
 #endif	/* EIF_NO_SCAVENGING */
 }
 
@@ -3551,7 +3551,6 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	 * if none was found in the Eiffel list.
 	 */
 
-	EIF_GET_CONTEXT
 	register2 int std_size = eif_chunk_size - sizeof(struct chunk);
 
 	for (/* empty */; start != (struct chunk *) 0; start = start->ck_lprev) {
@@ -3580,11 +3579,11 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 	}
 
 	return (struct chunk *) 0;		/* No standard size chunk found */
-	EIF_END_GET_CONTEXT
 }
 
+#if !(defined EIF_NO_SCAVENGING  || defined EIF_THREADS)
 rt_private void find_to_space(struct sc_zone *to)
-				   		/* The zone structure we want to fill in */
+					/* The zone structure we want to fill in */
 {
 	/* Look for a suitable space which could be used by partial scanvenging
 	 * as a 'to' zone. We are starting by looking at the end of the memory,
@@ -3592,7 +3591,6 @@ rt_private void find_to_space(struct sc_zone *to)
 	 * in the chunk is free but not equal to the whole chunk, we even attempt
 	 * block coalescing.
 	 */
-	EIF_GET_CONTEXT
 	register1 int std_size = eif_chunk_size - sizeof(struct chunk);
 	register2 struct chunk *cur;	/* Current chunk we are considering */
 	register3 uint32 flags = 0;		/* Malloc info flags */
@@ -3617,8 +3615,8 @@ rt_private void find_to_space(struct sc_zone *to)
 
 	if (cur == (struct chunk *) 0)		/* Did not find any suitable chunk */
 		return;
-	assert (flags != 0); 	/* flags must be initailized. */
-	assert (arena != (EIF_REFERENCE) 0);	/* Arena must be initialized. */ 
+	CHECK ("Flags must be initialized", flags != 0);
+	CHECK ("Arena must be initialized", arena != (EIF_REFERENCE) 0);
 
 	/* Initialize scavenging zone. Note that the arena of the zone starts at
 	 * the header of the first block, but we save the malloc flags so that we
@@ -3652,8 +3650,8 @@ rt_private void find_to_space(struct sc_zone *to)
 		ps_to.sc_arena, ps_to.sc_end - 1);
 	flush;
 #endif
-	EIF_END_GET_CONTEXT
 }
+#endif
 
 rt_shared EIF_REFERENCE to_chunk(void)
 {
@@ -3663,12 +3661,10 @@ rt_shared EIF_REFERENCE to_chunk(void)
 	 * which will be used, i.e. the start of the header block.
 	 */
 
-	EIF_GET_CONTEXT
 	if (ps_to.sc_arena == (EIF_REFERENCE) 0)
 		return (EIF_REFERENCE) 0;
 
 	return ps_to.sc_arena;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *to)
@@ -3678,24 +3674,12 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	 * scavenged as part of the object that holds it). The function returns the
 	 * pointer to the new object's location, in the 'to' space.
 	 */
-	EIF_GET_CONTEXT
 	register2 union overhead *zone;	/* Malloc info header */
 	int length;						/* Length of scavenged object */
 
-	assert (g_data.status & (GC_GEN | GC_PART) || 
-			g_data.status & GC_FAST);
-									/* Algorithm moves objects. */
+	REQUIRE ("Algorithm moves objects",
+			g_data.status & (GC_GEN | GC_PART) || g_data.status & GC_FAST);
 
-	assert (						/* Not in Generation Scavenge TO zone. */
-		!((g_data.status & GC_FAST) &&
-		(root > sc_to.sc_arena) && 
-		(root <= sc_to.sc_end))
-	);				
-	assert (						/* Not in Partial Scavenge TO zone. */
-		!((g_data.status & GC_PART) &&
-		(root > ps_to.sc_arena) && 
-		(root <= ps_to.sc_end))
-	);
 	zone = HEADER(root);
 
 	/* Expanded objects are held in one object, and a pseudo-reference field
@@ -3710,7 +3694,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	 * Then the address of the scavenged expanded is A'+(P-A).
 	 */
 	if (zone->ov_flags & EO_EXP) {
-		/* Compute original object's address (before scavenge) */
+			/* Compute original object's address (before scavenge) */
 		EIF_REFERENCE exp;					/* Expanded data space */
 		EIF_REFERENCE new;					/* New object's address */
 		zone = (union overhead *) ((EIF_REFERENCE) zone - (zone->ov_size & B_SIZE));
@@ -3720,6 +3704,17 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 		exp = new + (root - (EIF_REFERENCE) (zone + 1));	/* New data space */
 		return exp;					/* This is the new location of expaded */
 	}
+
+	CHECK ("Not in Generation Scavenge TO zone",
+		!((g_data.status & GC_GEN) &&
+		(root > sc_to.sc_arena) && 
+		(root <= sc_to.sc_end))
+	);				
+	CHECK ("Not in Partial Scavenge TO zone.",
+		!((g_data.status & GC_PART) &&
+		(root > ps_to.sc_arena) && 
+		(root <= ps_to.sc_end))
+	);
 
 	/* If an Eiffel object holds the B_C mark (we know it's an Eiffel object
 	 * because it is referenced by an Eiffel object), then simply ignore it.
@@ -3736,7 +3731,7 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	root = to->sc_top;						/* New location in 'to' space */
 	length = (zone->ov_size & B_SIZE) + OVERHEAD;
 	to->sc_top += length;					/* Update free-location pointer */
-	memcpy (root, zone, length);/* The scavenge process itself */
+	memcpy (root, zone, length);			/* The scavenge process itself */
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
 #ifdef EIF_NO_SCAVENGING
 	eif_panic ("Scavenging is not disabled");
@@ -3775,8 +3770,6 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 #endif
 
 	return root + OVERHEAD;			/* New object's location */
-
-	EIF_END_GET_CONTEXT
 }
 
 /* Generation-based collector. This is a non incremental fast collector, which
@@ -3791,11 +3784,9 @@ rt_public int collect(void)
 	 * to the user via MEMORY primitives.
 	 */
 
-	EIF_GET_CONTEXT
 	int result;
 	result = scollect(generational_collect, GST_GEN);
 	return result;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int generational_collect(void)
@@ -3824,7 +3815,7 @@ rt_private int generational_collect(void)
 #endif
 
 	mark_new_generation(MTC_NOARG);		/* Mark all new reachable objects */
-	full_update();				/* Sweep the yougest generation */
+	full_update();				/* Sweep the youngest generation */
 	if (gen_scavenge & GS_ON)
 		swap_gen_zones();		/* Swap generation scavenging spaces */
 
@@ -3906,8 +3897,6 @@ rt_private int generational_collect(void)
 	SIGRESUME;			/* Restore signal handling and dispatch queued ones */
 
 	return (gen_scavenge & GS_STOP) ? -1 : 0;	/* Signals error if stopped */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
@@ -3919,7 +3908,9 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * I am aware of the code duplication, but this is a trade for speed over
 	 * run-time size and maintainability--RAM.
 	 */
-	EIF_GET_CONTEXT
+#ifdef EIF_THREADS
+	int i;
+#endif
 	register1 int age;					/* Object's age */
 	int moving = gen_scavenge & GS_ON;	/* May objects be moved? */
 
@@ -3933,11 +3924,12 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	if (!(HEADER(root_obj)->ov_flags & EO_OLD))
 		root_obj = GEN_SWITCH(root_obj);
 
+#ifndef EIF_THREADS
 	/* The regular Eiffel variables have their values stored directly within
 	 * the loc_set stack. Those variables are the local roots for the garbage
 	 * collection process.
 	 */
-	mark_simple_stack(&loc_set, GEN_SWITCH, moving);
+	mark_stack(&loc_set, GEN_SWITCH, moving);
 
 	/* Then deal with remembered set, which records the addresses of all the
 	 * old objects pointing to new ones.
@@ -3955,7 +3947,11 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * generation (thus they are allocated from the free-list). As with
 	 * locals, a double indirection is necessary.
 	 */
- 	mark_simple_stack(&once_set, GEN_SWITCH, moving);
+#if defined WORKBENCH
+	mark_simple_stack(&once_set, GEN_SWITCH, moving);
+#else
+	mark_stack(&once_set, GEN_SWITCH, moving);
+#endif
 
 	/* The hector stacks record the objects which has been given to C and may
 	 * have been kept by the C side. Those objects are alive, of course.
@@ -3963,22 +3959,11 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	mark_simple_stack(&hec_stack, GEN_SWITCH, moving);
 	mark_simple_stack(&hec_saved, GEN_SWITCH, moving);
 
-#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
-#ifdef CONCURRENT_EIFFEL
-	/* The separate_object_id_set records object referenced by other processors */
-	mark_simple_stack(&separate_object_id_set, GEN_SWITCH, moving);
-#endif
-
-	/* The object id stacks record the objects referenced by an identifier. Those objects
-	 * are not necessarily alive. Thus only an update after a move is needed.
-	 */
-	if (moving) update_object_id_stack();
-#endif
 #ifdef WORKBENCH
 	/* The operational stack of the interpreter holds some references which
 	 * must be marked and/or updated.
 	 */
-	mark_op_stack(GEN_SWITCH, moving);
+	mark_op_stack(&op_stack, GEN_SWITCH, moving);
 
 	/* The exception stacks are scanned. It is more to update the references on
 	 * objects than to ensure these objects are indeed alive...
@@ -3994,6 +3979,43 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 		mark_ex_stack(&eif_trace, GEN_SWITCH, moving);
 	}
 #endif
+#else /* EIF_THREADS */
+	for (i = 0; i < loc_set_list.count; i++)
+		mark_stack(loc_set_list.threads.sstack[i], GEN_SWITCH, moving);
+
+	mark_simple_stack(&rem_set, GEN_SWITCH, moving);
+
+	for (i = 0; i < loc_stack_list.count; i++)
+		mark_stack(loc_stack_list.threads.sstack[i], GEN_SWITCH, moving);
+
+	mark_stack(&global_once_set, GEN_SWITCH, moving);
+
+	for (i = 0; i < once_set_list.count; i++)
+		mark_simple_stack(once_set_list.threads.sstack[i], GEN_SWITCH, moving);
+
+	for (i = 0; i < hec_stack_list.count; i++)
+		mark_simple_stack(hec_stack_list.threads.sstack[i], GEN_SWITCH, moving);
+	for (i = 0; i < hec_saved_list.count; i++)
+		mark_simple_stack(hec_saved_list.threads.sstack[i], GEN_SWITCH, moving);
+
+#ifdef WORKBENCH
+	for (i = 0; i < opstack_list.count; i++)
+		mark_op_stack(opstack_list.threads.opstack[i], GEN_SWITCH, moving);
+	for (i = 0; i < eif_stack_list.count; i++)
+		mark_ex_stack(eif_stack_list.threads.xstack[i], GEN_SWITCH, moving);
+	for (i = 0; i < eif_trace_list.count; i++)
+		mark_ex_stack(eif_trace_list.threads.xstack[i], GEN_SWITCH, moving);
+
+#else
+	if (exception_stack_managed) {
+		for (i = 0; i < eif_stack_list.count; i++)
+			mark_ex_stack(eif_stack_list.threads.xstack[i], GEN_SWITCH, moving);
+		for (i = 0; i < eif_trace_list.count; i++)
+			mark_ex_stack(eif_trace_list.threads.xstack[i], GEN_SWITCH, moving);
+	}
+#endif
+
+#endif /* EIF_THREADS */
 
 #ifdef EIF_REM_SET_OPTIMIZATION 
 	/* Finally, deal with special remembered objects set, which records 
@@ -4004,8 +4026,17 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	mark_special_table(special_rem_set, GEN_SWITCH, moving);
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
+#if ! defined CUSTOM || defined NEED_OBJECT_ID_H
+#ifdef CONCURRENT_EIFFEL
+	/* The separate_object_id_set records object referenced by other processors */
+	mark_simple_stack(&separate_object_id_set, GEN_SWITCH, moving);
+#endif
 
-	EIF_END_GET_CONTEXT
+	/* The object id stacks record the objects referenced by an identifier. Those objects
+	 * are not necessarily alive. Thus only an update after a move is needed.
+	 */
+	if (moving) update_object_id_stack();
+#endif
 }
 
 #ifdef RECURSIVE_MARKING
@@ -4183,7 +4214,6 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 	 * to hybrid_gen_mark() while the last one is treated in the main loop
 	 * (suppression of tail recursion).
 	 */
-	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc info zone fields */
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
@@ -4256,7 +4286,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 				if ((flags & EO_SPEC) && (flags & EO_REF))	
 									/* Is Object special and full of refs? */
 				{
-					assert (is_in_spt (special_rem_set, current));
+					CHECK ("Is in special rem set", is_in_spt (special_rem_set, current));
 					goto done;			
 						/* Skip it. it will be processed later in 
 						 * "mark_special_rem_set()". 
@@ -4286,21 +4316,18 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 			if (prev)						/* Update referencing pointer */
 				*prev = current;
 #ifdef EIF_REM_SET_OPTIMIZATION
-			if ((flags & (EO_SPEC | EO_REF | EO_OLD)) == (EO_SPEC | EO_REF | EO_OLD))
+			if ((flags & (EO_SPEC | EO_REM | EO_REF | EO_OLD)) == (EO_REM | EO_SPEC | EO_REF | EO_OLD))
 				/* It has been tenured and may be in the special remembered set. 
-				 * Skip it-- Only the new references will  be processed in 
+				 * Skip it-- Only the new references will be processed in 
 				 * "mark_special_table()". */
 			{
-#ifndef NDEBUG
-				assert (flags & EO_OLD);
-				assert (flags & EO_MARK);
-				assert (1 == is_in_spt (special_rem_set, current));
-#endif	/* !NDEBUG */
+				CHECK ("Is old", flags & EO_OLD);
+				CHECK ("Is marked", flags & EO_MARK);
+				CHECK ("Is in special rem set", is_in_spt (special_rem_set, current));
 				goto done;	/* Skip it. */
 			}
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 		}
-
 
 		/* It's useless to mark an expanded, because it has only one reference
 		 * on itself, in the object which holds it. Scavengend objects need not
@@ -4401,8 +4428,6 @@ done:
 	/* Return the [new] address of the root object */
 	zone = HEADER(root);
 	return ((zone->ov_size & B_FWD) ? zone->ov_fwd : root);
-
-	EIF_END_GET_CONTEXT
 }
 #endif /* HYBRID_MARKING */
 
@@ -4706,7 +4731,6 @@ not_explorable:
 		return zone->ov_fwd;
 	else
 		return root;
-	EIF_END_GET_CONTEXT
 }
 #endif /* ITERATIVE_MARKING */
 
@@ -4717,7 +4741,6 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 	 * Whenever tenuring fails, the flag GS_STOP is set which means that
 	 * scavenging is to be done without tenuring.
 	 */
-	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc header zone */
 	register2 int age;				/* Object's age */
 	register3 uint32 flags;				/* Eiffel flags */
@@ -4769,14 +4792,13 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 				 * So we scan the young object reference that
 				 * it contains.
 				 */
-				
 			{
 #ifdef GSCAVENGE_DEBUG
-				printf ("GSCAVENGE: Pushing  %x in a special remembered table\n", root);
+				printf ("GSCAVENGE: Pushing %x in a special remembered table\n", root);
 #endif	/* GSCAVENGE_DEBUG */
 				ret = eif_promote_special (root);
 			}
-			else	/* Not a special object */
+			else	/* Not a special object full of reference*/
 				ret = epush (&rem_set, root);
 
 #else	/* EIF_REM_SET_OPTIMIZATION */
@@ -4803,19 +4825,18 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 
 		} else {					/* Object is inside scavenge zone */
 
-			/* Try tenuring after having marked the object as old. There cannot
-			 * be any special objects in the scavenge zone, so we can fetch the
-			 * size of the object with the ov_size flag (I could also fetch it
-			 * via the dynamic type, but this would certainly load the big table
-			 * from swap space--RAM).
+			/* Try tenuring after having marked the object as old. We get the size
+			 * from the object to perform the copy.
+			 * Addition: now it can be a special object if the EIF_GSZ_ALLOC_OPTIMIZATION
+			 * has been enabled, because we try to allocate them in the GSZ
+			 * as much as possible (70% speed improvement on the eiffel compiler).
 			 */
 
-#ifdef EIF_STRING_OPTIMIZATION
-			assert (!(HEADER (root)->ov_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF) ); /* Cannot be a special AND full of refs. */
-#else
-			assert (!(HEADER (root)->ov_flags & EO_SPEC));	/* Cannot be a special. */
-#endif	/* EIF_STRING_OPTIMIZATION */
+#ifndef EIF_GSZ_ALLOC_OPTIMIZATION
+			CHECK ("Not a special", !(HEADER (root)->ov_flags & EO_SPEC));
+#endif
 			size = zone->ov_size & B_SIZE;		/* Size without header */
+
 			new = gmalloc(size);				/* Try in Eiffel chunks first */
 			if ((EIF_REFERENCE) 0 == new) {			/* Out of memory */
 				gen_scavenge |= GS_STOP;		/* Stop generation scavenging */
@@ -4827,7 +4848,22 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * be removed--object does not reference any young ones any more).
 			 */
 
-			if (-1 == epush(&rem_set, new)) {	/* Cannot record it */
+#ifdef EIF_REM_SET_OPTIMIZATION
+			if ((flags & EO_SPEC) && (flags & EO_REF)) {
+				/* We need to push it into the special_rem_set
+				 * So we scan the young object reference that
+				 * it contains.
+				 */
+				memcpy (new, root, size);	/* Copy content of area to enable the
+											call to `eif_promote_special' */
+				HEADER(new)->ov_flags = flags | EO_OLD;	/* Copy flags for new object */
+				ret = eif_promote_special (new);
+			} else	/* Not a special object full of reference*/
+				ret = epush (&rem_set, new);
+#else
+			ret = epush (&rem_set, new);
+#endif
+			if (ret == -1) {	/* Cannot record it */
 				gen_scavenge |= GS_STOP;		/* Mark failure */
 				xfree(new);						/* Back where we found it */
 				return scavenge(root, &sc_to);	/* Simple scavenge */
@@ -4850,7 +4886,13 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			 * dealt with EO_MARK, so it is our responsability... This was a bug
 			 * I spent three days tracking--RAM.
 			 */
-			memcpy (new, root, size);		/* Copy data part */
+#ifdef EIF_REM_SET_OPTIMIZATION
+				/* It is a special full of reference the copy has already
+				 * been done */
+			if (!((flags & EO_SPEC) && (flags & EO_REF))) 
+#endif
+				memcpy (new, root, size);		/* Copy data part */
+
 #ifdef EIF_NO_SCAVENGING
 			eif_panic ("Generation Scavenging is not disabled");
 #endif	/* EIF_NO_SCAVENGING */
@@ -4890,7 +4932,6 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 		return scavenge(root, &sc_to);	/* Move object */
 	}
 	/* NOTREACHED */
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void update_moved_set(void)
@@ -4906,7 +4947,6 @@ rt_private void update_moved_set(void)
 	 * outside the scavenge zone (those in the moved set, precisely).
 	 */
 
-	EIF_GET_CONTEXT
 	register1 EIF_REFERENCE *obj;			/* Pointer to objects held in a stack */
 	register2 int i;				/* Number of items in stack chunk */
 	register3 union overhead *zone;	/* Referenced object's header */
@@ -5008,7 +5048,6 @@ rt_private void update_moved_set(void)
 	 */
 
 	st_truncate(&moved_set);
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void update_rem_set(void)
@@ -5022,7 +5061,6 @@ rt_private void update_rem_set(void)
 	 * which means they are not affected by generation collections.
 	 */
 
-	EIF_GET_CONTEXT
 	EIF_REFERENCE *object;					/* Current inspected object */
 	int n;							/* Number of objects to be dealt with */
 	struct stack new_stack;			/* The new stack built from the old one */
@@ -5144,7 +5182,6 @@ rt_private void update_rem_set(void)
 	 */
 	
 	st_truncate(&rem_set);
-	EIF_END_GET_CONTEXT
 }
 
 #ifdef EIF_MEMORY_OPTIMIZATION
@@ -5169,11 +5206,7 @@ rt_private void update_memory_set ()
 	int dtype;						/* Dynamic type of Current object.	*/
 	int done = 0;					/* Top of stack not reached yet */
 
-	/************************ Preconditions. ******************************/
-
-	assert (!(g_data.status & GC_STOP)); 	/* GC Cannot be stopped.	*/
-
-	/************************* End of postconditions. **********************/
+	REQUIRE ("GC is not stopped", !(g_data.status & GC_STOP));
 
 	memcpy (&new_stack, &memory_set, sizeof(struct stack));
 	s = new_stack.st_cur = memory_set.st_hd;		/* New empty stack */
@@ -5223,17 +5256,14 @@ rt_private void update_memory_set ()
 			 * dispose routine on it and remove it from the stack. 
 			 */
 
-			assert (!(zone->ov_size & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
-								/* Those objects cannot be in the GSZ.	*/
+			CHECK ("Objects not in GSZ", !(zone->ov_size & (EO_OLD | EO_NEW | EO_MARK | EO_SPEC)));	
 
 			if (zone->ov_size & B_FWD)	/* Object survived GS collection. */
 			{
 				current = zone->ov_fwd;		/* Update entry. */
 
-				assert (Disp_rout (Dtype (HEADER (current) + 1)));
-							/* Forwarded object must have a dispose routine.*/
-				assert (!(HEADER (current)->ov_size & B_FWD));
-										/* Cannot be forwarded twice.	*/
+				CHECK ("Has dispose routine", Disp_rout (Dtype (HEADER (current) + 1)));
+				CHECK ("Not forwarded twice", !(HEADER (current)->ov_size & B_FWD));
 
 				if (!(HEADER (current)->ov_flags & (EO_OLD | EO_NEW)))
 										/* Forwarded object is still in GSZ. */
@@ -5241,10 +5271,9 @@ rt_private void update_memory_set ()
 			}
 			else 									/* Object is dead. */
 			{										/* Call dispose routine.*/
-				dtype = zone->ov_flags & EO_TYPE;	/* Need it for dispose.	*/ 
+				dtype = Deif_bid(zone->ov_flags);	/* Need it for dispose.	*/ 
 
-				assert (Disp_rout (dtype) != 0);
-								/* Object must have a dispose routine.	*/
+				CHECK ("Has with dispose routine", Disp_rout (dtype));
 
 				gc_status = g_data.status;			/* Save GC status. */
 				g_data.status |= GC_STOP;			/* Stop GC. */
@@ -5257,6 +5286,8 @@ rt_private void update_memory_set ()
 				DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose'. */
 				in_assertion = saved_in_assertion;	/* Set in_assertion back. */
 				g_data.status = gc_status;		/* Restore previous GC status.*/
+				CHECK ("Cannot be in object ID stack",
+					!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
 			}
 
 #ifdef DEBUG_UPDATE_MEMORY_SET
@@ -5286,8 +5317,6 @@ rt_private void update_memory_set ()
 	
 	st_truncate(&memory_set);
 
-	EIF_END_GET_CONTEXT			/* In MT-mode only.	*/
-
 }	/* update_memory_set() */	
 #endif	/* EIF_MEMORY_OPTIMIZATION */
 
@@ -5316,14 +5345,14 @@ rt_private int update_special_rem_set(void)
 	int						hsize;
 	int						count;			
 	int						i;			/* Index for loop. */
-	long 					*hkeys;		/* Index of remembered items table. */
+	EIF_INTEGER_32			*hkeys;		/* Index of remembered items table. */
 	char 					**hvalues;	/* Special old object pointers table. */
 	long 					offset;		/* Index of item. */
 
 	/* Initializations. */
 
 #ifdef UPDATE_SPECIAL_REM_SET_DEBUG
-	printf ("In update_special_rem_set ()  : special_rem_set %x\n", special_rem_set);
+	printf ("In update_special_rem_set () : special_rem_set %x\n", special_rem_set);
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
 	if (!special_rem_set)			 	/* No special_rem_set . */
@@ -5343,7 +5372,7 @@ rt_private int update_special_rem_set(void)
 	moving = g_data.status;				/* Garbage collector's status */
 	generational = moving & GC_FAST;	/* Is this a collect() cycle? */
 	moving &= GC_PART | GC_GEN ;		/* Is this a Full collection,
-										   which moves objects?	*/
+										 which moves objects?	*/
 
 	new_table = (struct special_table *) eif_malloc (sizeof (struct special_table));
 	if (new_table == (struct special_table *) 0)	
@@ -5369,32 +5398,32 @@ rt_private int update_special_rem_set(void)
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
 
-#ifndef NDEBUG
+#ifdef EIF_ASSERTION
 	/************************ Checks. *********************************/
-	assert (count <= hsize);			/* Table must be coherent. */
+	CHECK ("Table is coherent", count <= hsize);
 	{
 		int32	old_count = count;		/* For postcondittions. */
-	for (i = 0 ; i < count  ; i++)
+	for (i = 0 ; i < count ; i++)
 	{
 		union overhead 	*zone = HEADER (hvalues [i]);
 									/* Current special's Malloc info zone. */
-		uint32 		flags;	
+		uint32 flags;	
 									/* Fetch curennt special Eiffel flags. */
 		if (zone->ov_size & B_FWD)		/* Is object forwarded? */
 			zone = HEADER (zone->ov_fwd);	/* Update Malloc info zone. */
 		flags = zone->ov_flags;			/* fetch Eiffel flags. */
 
-		assert (!(flags & EO_COMP));	/* Not a Composite one. */
-		assert (!(flags & EO_C));		/* Not a C object. */
-		assert (flags & EO_REM);		/* Must be remembered. */
-		assert (!(flags & EO_EXP));		/* Must be a reference. */
-		assert (flags & EO_OLD);		/* Must be old. */
-		assert (flags & EO_REF);		/* Must be full of references. */
-		assert (flags & EO_SPEC);		/* Must be a special object. */
+		CHECK ("Not composite", !(flags & EO_COMP));
+		CHECK ("Not C", !(flags & EO_C));
+		CHECK ("Remembered", flags & EO_REM);
+		CHECK ("Not expanded", !(flags & EO_EXP));
+		CHECK ("Old", flags & EO_OLD);
+		CHECK ("Full of references", flags & EO_REF);
+		CHECK ("Special", flags & EO_SPEC);
 		if (generational)
 		{
-			assert (!(zone->ov_size  & B_FWD));	/* Not forwarded. */
-			assert (zone->ov_flags  & EO_MARK);	/* Must be marked. */
+			CHECK ("Not forwarded", !(zone->ov_size & B_FWD));
+			CHECK ("Marked", zone->ov_flags & EO_MARK);
 		}
 		
 	}
@@ -5402,7 +5431,7 @@ rt_private int update_special_rem_set(void)
 #endif /* !NDEBUG */
 
 	/* First, we remove the EO_REM flags from all the special object inside the 
-	 * table. Later on, we will process this flag with  `| EO_REM' if it really 
+	 * table. Later on, we will process this flag with `| EO_REM' if it really 
 	 * has to be remembered or `| ~EO_REM' if it does not references a young 
 	 * item any longer. This way, if at least one remembered reference has to
 	 * be remembered the enclosing special will remain remembered. This is 
@@ -5414,16 +5443,14 @@ rt_private int update_special_rem_set(void)
 	for (i = 0 ; i < count; i++)
 	{
 		union overhead *tzone = HEADER (hvalues [i]);	/* Fetch zone. */
-		if (tzone->ov_size & B_FWD)	{
-				/* Is object forwarded? */
+		if (tzone->ov_size & B_FWD)	{ /* Is object forwarded? */
 				tzone = HEADER (tzone->ov_fwd);	
 					/* Update zone, but not object, We must keep
 					 *the B_FWD flag to check if object is alive later on. */
 		}
 		tzone->ov_flags &= ~EO_REM;	/* Remove remembered flag. */
-		assert (!(tzone->ov_flags & EO_REM));	
-											/* This flag must be unset. */
-	}	/* for ... */
+		CHECK ("Flag EO_REM is unset", !(tzone->ov_flags & EO_REM));	
+	}
 
 
 	/* We check whether the special object references any new objects. 
@@ -5444,11 +5471,11 @@ rt_private int update_special_rem_set(void)
 
 		{
 		int32 ofst = hkeys [i];
-		if (ofst  >= 0)
+		if (ofst >= 0)
 		{
 		EIF_REFERENCE itm;
 		union overhead *iz;
-		itm =  *(EIF_REFERENCE *) (object + ofst * REFSIZ);
+		itm = *(EIF_REFERENCE *) (object + ofst * REFSIZ);
 		if (itm != (EIF_REFERENCE) 0)
 		{
 		iz = HEADER (itm);
@@ -5473,7 +5500,7 @@ rt_private int update_special_rem_set(void)
 			iz->ov_size & B_FWD ? "forwarded" : "",
 			((HEADER (
 				iz->ov_size & B_FWD ? iz->ov_fwd : itm
-			)->ov_flags & EO_AGE)  >> 24) / 2,
+			)->ov_flags & EO_AGE) >> 24) / 2,
 			HEADER (
 				iz->ov_size & B_FWD ? iz->ov_fwd : itm
 			)->ov_flags & EO_OLD ? "old " : "",
@@ -5520,7 +5547,7 @@ rt_private int update_special_rem_set(void)
 				hvalues [i] = zone->ov_fwd;	/* Update object now. */
 				object = hvalues [i];
 				zone = HEADER (object);
-				assert (!(zone->ov_size & B_FWD));
+				CHECK ("Object forwarded", !(zone->ov_size & B_FWD));
 			}
 			else if (!(zone->ov_flags & EO_MARK))	/* Object is dead */
 #ifdef UPDATE_SPECIAL_REM_SET_DEBUG
@@ -5545,7 +5572,7 @@ rt_private int update_special_rem_set(void)
 		 * We deal only with the subreferences recorded in the table. 
 		 */
 		
-		assert (!(HEADER (object)->ov_size & B_FWD));	/* Must be updated. */
+		CHECK ("Object not forwarded anymore", !(HEADER (object)->ov_size & B_FWD));
 
 		/* Initializations for item. */
 		offset 	= hkeys [i];
@@ -5566,7 +5593,7 @@ rt_private int update_special_rem_set(void)
 				int twin = 0;
 				for (j = 0; j < count; j++)
 				{
-					if  (hvalues [j] == hvalues [i])
+					if (hvalues [j] == hvalues [i])
 					{
 						present = 1;	
 						if (hkeys [j] == hkeys [i])
@@ -5576,8 +5603,8 @@ rt_private int update_special_rem_set(void)
 						}
 					}	
 				}
-				assert (present == 1);
-				assert (twin == 1);
+				CHECK ("present", present == 1);
+				CHECK ("twin", twin == 1);
 			}
 #endif	/* EIF_EXPENSIVE_ASSERTIONS */
 #endif	/* !NDEBUG */		
@@ -5605,7 +5632,7 @@ rt_private int update_special_rem_set(void)
 		);
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
-		assert (!(HEADER (item)->ov_size & B_FWD));		/* Must be updated. */
+		CHECK ("Must be updated", !(HEADER (item)->ov_size & B_FWD));
 
 
 		/* Look for the new item only. */
@@ -5643,12 +5670,13 @@ rt_private int update_special_rem_set(void)
 	{
 		for (i = 0; i < new_table->old_count; i ++)
 		{
-			assert (!(HEADER(new_table->old_values [i])->ov_size & B_FWD));	
-					/* The old object do not move during generational collect. */
+			CHECK ("Object did not move during generational collect",
+				!(HEADER(new_table->old_values [i])->ov_size & B_FWD));	
+
+				/* Unmark object */
 			HEADER (new_table->old_values [i])->ov_flags &=~EO_MARK;
-										/* Unmark object */
-			assert (!(HEADER (new_table->old_values [i])->ov_flags & EO_MARK));	
-										/* Must be unmarked. */
+
+			CHECK ("Unmarked", !(HEADER (new_table->old_values [i])->ov_flags & EO_MARK));	
 		}
 	}
 
@@ -5672,20 +5700,18 @@ rt_private int update_special_rem_set(void)
 	printf ("UPDATE_REM_SET: %ld couples kicked out\n", old_count - special_rem_set->count);
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
-#ifndef NDEBUG
-	assert (special_rem_set->count == new_table->count );	
-	assert (special_rem_set->h_size == new_table->h_size );	
-	assert (special_rem_set->h_values == new_table->h_values);	
-	assert (special_rem_set->h_keys == new_table->h_keys);	
-	assert (special_rem_set->count <= old_count);			/* Must be less elements in new special set. */
-#endif	/* !NDEBUG */
+	CHECK ("consistent count", special_rem_set->count == new_table->count );	
+	CHECK ("consistence size", special_rem_set->h_size == new_table->h_size );	
+	CHECK ("consistence content", special_rem_set->h_values == new_table->h_values);	
+	CHECK ("consistent keys", special_rem_set->h_keys == new_table->h_keys);	
+	CHECK ("less items than before", special_rem_set->count <= old_count);
 
 	eif_free (new_table);
 
 #ifndef NDEBUG
 	 /**************************** Postconditions *********************/
 
-	for (i = 0;  i < special_rem_set->count ; i++)			/* All still remembered.	*/
+	for (i = 0; i < special_rem_set->count ; i++)			/* All still remembered.	*/
 	{
 		
 		uint32 flags = HEADER (special_rem_set->h_values [i])->ov_flags;
@@ -5696,24 +5722,21 @@ rt_private int update_special_rem_set(void)
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-		assert (refers_new_object (special_rem_set->h_values [i]));
+		ENSURE ("Refers new object", refers_new_object (special_rem_set->h_values [i]));
 #endif	/* EIF_EXPENSIVE_ASSERTIONS */
 
-		assert (flags & EO_REM);	/* Must be remembered. */
-		assert (!(HEADER (special_rem_set->h_values [i])->ov_size & B_FWD));	
-									/* Must be updated. */
-		assert (!(flags & EO_EXP));	/* Must be a reference. */
-		assert (flags & EO_OLD);	/* Must be old. */
-		assert (flags & EO_REF);	/* Must be full of references. */
-		assert (flags & EO_SPEC);	/* Must be a special object. */
+		ENSURE ("Remembered", flags & EO_REM);
+		ENSURE ("Updated", !(HEADER (special_rem_set->h_values [i])->ov_size & B_FWD));	
+		ENSURE ("Not expanded", !(flags & EO_EXP));
+		ENSURE ("Old", flags & EO_OLD);	
+		ENSURE ("Full of references", flags & EO_REF);
+		ENSURE ("Special", flags & EO_SPEC);
 		if (generational)
-			assert (!(flags & EO_MARK));	/* Must be unmarked. */
+			ENSURE ("Not marked", !(flags & EO_MARK));
 	}
 	}	/* (bracket open in Preconditions.) */
 	 /******************** End of Postconditions *****************************/
 #endif 	/* !NDEBUG */
-
-	EIF_END_GET_CONTEXT
 
 	return 0;						/* Always returns 0. */
 
@@ -5730,7 +5753,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 	 * Return value:
 	 *	-2: no young references found, but object put in special
 	 * 		table with index -1.
-	 *  -1: Error, could not push it into special_table, not implemented yey.
+	 *	-1: Error, could not push it into special_table, not implemented yey.
 	 * 	+1: Young references found, and recorded in special table.
 	 */
 {
@@ -5750,21 +5773,16 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 	printf ("EIF_PROMOTE_SPECIAL: promoting special %x\n", object);
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
 
-	/************************ Preconditions. *********************************/
-
-	assert (object != (EIF_REFERENCE) 0);		/* Not void. */
-	assert (HEADER (object)->ov_flags & EO_SPEC);
-	assert (HEADER (object)->ov_flags & EO_REF);
-	assert (!(HEADER (object)->ov_size & B_FWD));	
-
-	/********************** End of preconditions. ****************************/
-
+	REQUIRE ("object not null", object != (EIF_REFERENCE) 0);
+	REQUIRE ("object is special", HEADER (object)->ov_flags & EO_SPEC);
+	REQUIRE ("object is full of references", HEADER (object)->ov_flags & EO_REF);
+	REQUIRE ("object is not forwarded", !(HEADER (object)->ov_size & B_FWD));	
 
 	/* Initializations. */
 
 	flags = HEADER(object)->ov_flags;			/* Fetch Eiffel flags */
 	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
-	refs = *(long *) (object + size);
+	refs = *(EIF_INTEGER *) (object + size);
 
 
 	/* Loop over the referenced objects to check 
@@ -5804,7 +5822,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 
 			item = zone->ov_fwd;						/* Update. */
 			flags = HEADER (item)->ov_flags;			/* Fetch new flags. */
-			assert (!(HEADER (item)->ov_size & B_FWD));	/* Not twice forwarded. */
+			CHECK ("Not forwarded twice", !(HEADER (item)->ov_size & B_FWD));
 			if (!(flags & EO_OLD))						/* Is item young? */
 			{
 				ret = 1;					/* We found a new reference. */
@@ -5828,7 +5846,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 			continue;									/* Process next item. */
 		}
 			
-		assert (!(HEADER (item)->ov_size & B_FWD));		/* Not forwarded. */
+		CHECK ("Not forwarded", !(HEADER (item)->ov_size & B_FWD));
 		if (!(flags & EO_OLD))							/* Is item young? */
 		{
 			ret = 1;								/* We found a new reference. */
@@ -5836,8 +5854,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 #ifdef EIF_PROMOTE_SPECIAL_DEBUG
 	printf ("EIF_PROMOTE_SPECIAL: inserting item in special rem set %x with index %d\n", item, i);
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-				/* Check that the object is valid. */
-			assert ((*(EIF_REFERENCE *) (object + REFSIZ * i)) == (EIF_REFERENCE) item);
+			CHECK ("Object valid", (*(EIF_REFERENCE *) (object + REFSIZ * i)) == (EIF_REFERENCE) item);
 			special_erembq (object, i);		/* Remember young reference. */
 		}
 			
@@ -5846,7 +5863,7 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 	if (ret == -2)							/* No young reference found. */
 	{
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-		assert (!(refers_new_object (object)));	
+		CHECK ("Not refers new object", !(refers_new_object (object)));	
 #endif	/* EIF_EXPENSIVE_ASSERTIONS */
 #ifdef EIF_PROMOTE_SPECIAL_DEBUG
 		printf ("EIF_PROMOTE_SPECIAL: no item to be inserted");
@@ -5859,24 +5876,21 @@ rt_shared int eif_promote_special (register EIF_REFERENCE object)
 		special_erembq (object, -1);		
 	}
 
-	/************************ Postconditions. *****************************/
-
-	assert (HEADER (object)->ov_flags & EO_SPEC);	/* No header corruption. */
-	assert (HEADER (object)->ov_flags & EO_REF);	/* No header corruption. */
+	ENSURE ("Object is still special", HEADER (object)->ov_flags & EO_SPEC);
+	ENSURE ("Object is still full of references", HEADER (object)->ov_flags & EO_REF);
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-	assert (is_in_spt (special_rem_set, object));	/* Has been pushed. */
+	ENSURE ("Has been pushed", is_in_spt (special_rem_set, object));
 #endif
 
 	/*********************** End of Postconditions. ************************/
 
-	EIF_END_GET_CONTEXT
 	return ret;		/* Object does not reference any new object */
 
 }	/* eif_promote_special () */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
-#ifndef NDEBUG
-rt_private int	all_subreferences_processed (EIF_REFERENCE root)
+#ifdef EIF_EXPENSIVE_ASSERTIONS
+rt_private int all_subreferences_processed (EIF_REFERENCE root)
 	/* Check that all the subreferences under root (root included)
 	 * have been processed by some marking. Check is done at the first
 	 * level only.
@@ -5888,29 +5902,22 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 	int				i;
 	char			*subref;	/* Subreference in root. */
 
-	EIF_GET_CONTEXT						/* For MT-mode: special_rem_set. */
-
 
 	if (root == (EIF_REFERENCE) 0)
 		return 1;
 
-
 	zone = HEADER (root);
 	
 	if (zone->ov_size & B_FWD)
-	{
-		EIF_END_GET_CONTEXT 
 		return 0;	/* Not updated. */
-	}
 
-	assert (!(HEADER (root)->ov_size & B_FWD));
-	assert (HEADER (root)->ov_flags & EO_SPEC);
-	assert (HEADER (root)->ov_flags & EO_REF);
+	CHECK ("Not forwarded", !(HEADER (root)->ov_size & B_FWD));
+	CHECK ("Special", HEADER (root)->ov_flags & EO_SPEC);
+	CHECK ("Full of references", HEADER (root)->ov_flags & EO_REF);
 
 	if ((zone->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
 	{
-		assert (!(refers_new_object (root)));
-		EIF_END_GET_CONTEXT
+		CHECK ("Not in spec rem set", !(refers_new_object (root)));
 		return 1;
 	}
 	
@@ -5924,7 +5931,6 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 			continue;			/* Skip it - Next reference. */
 		if (szone->ov_size & B_FWD)
 		{
-			EIF_END_GET_CONTEXT
 			return 0;	/* Not updated. */
 		}
 		if (szone->ov_flags & EO_MARK)
@@ -5945,17 +5951,15 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 					/* Still in FROM zone. */
 				return 0;		/* Object not updated. */
 		}
-		EIF_END_GET_CONTEXT
 		return 0;
 	}	
 
-	EIF_END_GET_CONTEXT
 	return 1;	/* Passed successfully. */	
 }	/* all_subreferences_processed () */
-#endif	/* !NDEBUG */
+#endif
 
 
-#ifndef NDEBUG
+#ifdef EIF_EXPANSIVE_ASSERTIONS
 rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
@@ -5968,11 +5972,9 @@ rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 	register4 EIF_REFERENCE root;			/* Address of referred object */
 	register5 uint32 size;			/* Size in bytes of an item */
 
-	if (object == (EIF_REFERENCE) 0)
-		eif_panic("special remembered set botched");
-
-	assert (HEADER (object)->ov_flags & EO_SPEC);
-	assert (HEADER (object)->ov_flags & EO_REF);
+	REQUIRE ("Special rememvered set valid", object);
+	REQUIRE ("Special", HEADER (object)->ov_flags & EO_SPEC);
+	REQUIRE ("Full of references", HEADER (object)->ov_flags & EO_REF);
 
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
 	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
@@ -6056,7 +6058,6 @@ rt_private void swap_gen_zones(void)
 	 * with a dispose procedure are allowed to be allocated there.
 	 */
 
-	EIF_GET_CONTEXT
 	struct sc_zone temp;				/* For swapping */
 
 	/* Before swapping, we have to compute the amount of bytes we copied and
@@ -6073,8 +6074,6 @@ rt_private void swap_gen_zones(void)
 	memcpy (&sc_to, &temp, sizeof(struct sc_zone));
 
 	sc_to.sc_top = sc_to.sc_arena;	/* Make sure 'to' is empty */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void eremb(EIF_REFERENCE obj)
@@ -6082,10 +6081,9 @@ rt_public void eremb(EIF_REFERENCE obj)
 	/* Remembers the object 'obj' by pushing it in the remembered set.
 	 * It is up to the caller to ensure that 'obj' is not already remembered
 	 * by testing the EO_REM bit in the header. In affectations, it is
-	 * normally done by the RTAP macro.
+	 * normally done by the RTAR macro.
 	 */
 
-	EIF_GET_CONTEXT
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
 		urgent_plsc(&obj);					/* Compacting garbage collection */
 		if (-1 == epush(&rem_set, obj))		/* Still low on memory */
@@ -6104,7 +6102,6 @@ rt_public void eremb(EIF_REFERENCE obj)
 	/* If we come here, the object was successfully pushed in the stack */
 	
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark it as remembered */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void erembq(EIF_REFERENCE obj)
@@ -6114,12 +6111,10 @@ rt_public void erembq(EIF_REFERENCE obj)
 	 * on every 'put' operation).
 	 */
 
-	EIF_GET_CONTEXT
 	if (-1 == epush(&rem_set, obj))		/* Cannot record object */
 		enomem(MTC_NOARG);						/* Critical exception */
 
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
-	EIF_END_GET_CONTEXT
 }
 
 #ifdef EIF_REM_SET_OPTIMIZATION
@@ -6139,7 +6134,7 @@ rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val)
 
 rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 {
-	/*  	
+	/*
 	 * Special version of erembq() for special objects full of references
 	 */
 
@@ -6148,13 +6143,9 @@ rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 #ifdef SPECIAL_EREMBQ_DEBUG
 	printf ("Remembering special object %x, with offset %d\n", obj, offst);
 #endif	/* SPECIAL_EREMBQ_DEBUG */
-	/************************ Preconditions. ******************************/
 
-	assert (HEADER (obj)->ov_flags & EO_SPEC);	/* Necessarily an special object. */
-	assert (HEADER (obj)->ov_flags & EO_REF);	
-									/* Necessarily an object full of references. */
-	
-	/********************* End of preconditions. **************************/
+	REQUIRE ("Special", HEADER (obj)->ov_flags & EO_SPEC);
+	REQUIRE ("Full of references", HEADER (obj)->ov_flags & EO_REF);	
 
 	if (special_rem_set == (struct special_table *)	0)
 			/* Initialize it. */
@@ -6166,11 +6157,11 @@ rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 		if (-1 == spt_create (special_rem_set, EIF_SPT_SZ))
 			eif_panic ("Could not create special remembered special table");
 		else
-			/* Fill it  with zero. */
+			/* Fill it with zero. */
 			spt_zero (special_rem_set);
 	}
 
-	assert (special_rem_set != (struct special_table *) 0);	
+	CHECK ("special_rem_set created", special_rem_set != (struct special_table *) 0);	
 
 	/* Push the old object in it with corresponding offset as a key. *
 	 * With resizing of the special-table when needed.			 */
@@ -6179,12 +6170,7 @@ rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 	
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered. */
 	
-	/************************ Postconditions. ************************/
-
-	assert (HEADER(obj)->ov_flags & EO_REM);	/* Should be now remembered. */
-
-	/************************ End of assertions.***********************/
-		
+	ENSURE ("Should be remembered", HEADER(obj)->ov_flags & EO_REM);
 }	/* special_erembq () */
 #else
 	
@@ -6213,7 +6199,7 @@ rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
  */
 
 rt_shared void gfree(register union overhead *zone)
-							   		/* Pointer on malloc info zone */
+							/* Pointer on malloc info zone */
 {
 	/* The entry Dispose(type) holds a pointer to the dispose function to
 	 * be called when freeing an entity of dynamic type 'type'. A void entry
@@ -6238,8 +6224,8 @@ rt_shared void gfree(register union overhead *zone)
 */
 							
 	if (!(zone->ov_size & B_FWD)) {	/* If object has not been forwarded
-									   then call the dispose routine */
-		dtype = Dtype((zone + 1)); 
+									then call the dispose routine */
+		dtype = Deif_bid(zone->ov_flags);
 		if (Disp_rout(dtype)) { 
 			gc_status = g_data.status;			/* Save GC status */
 			g_data.status |= GC_STOP;			/* Stop GC */
@@ -6251,6 +6237,9 @@ rt_shared void gfree(register union overhead *zone)
 		}
 	}
 
+	CHECK ("Cannot be in object ID stack",
+		!has_object (&object_id_stack, (EIF_REFERENCE) zone + 1));
+
 #ifdef DEBUG
 	dprintf(8)("gfree: freeing object 0x%lx, DT = %d\n",
 		zone + 1, dtype);
@@ -6258,7 +6247,6 @@ rt_shared void gfree(register union overhead *zone)
 #endif
 
 	xfree((EIF_REFERENCE) (zone + 1));		/* Put object back to free-list */
-	EIF_END_GET_CONTEXT
 }
 
 /* Once functions need to be kept in a dedicated stack, so that they are
@@ -6283,43 +6271,32 @@ rt_public EIF_REFERENCE onceset(void)
 		eraise("once function recording", EN_MEM);
 
 	return (EIF_REFERENCE) (once_set.st_top - 1);
-	EIF_END_GET_CONTEXT
 }
 
-rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once) 
+rt_public void new_onceset(EIF_REFERENCE address)
 {
-	/* Similar to "hector_addr" from hector.c. This returns 
-	 * the indirection pointer from "once_set" corresponding to 
-	 * the once object "once". Maybe we should implement a generic
-	 * function instead. 
+	/* Record result of once functions onto the once_set stack, so that the
+	 * run-time may update the address should the result be moved around by
+	 * the garbage collector (we are storing the address of a C static variable.
 	 */
 
-	EIF_GET_CONTEXT	/* MT-safe */
-	register1 int nb_items;			/* Number of items in arena */
-	register2 struct stchunk *s;	/* To walk through each stack's chunk */
-	register3 EIF_REFERENCE *arena;			/* Current arena in chunk */
-	int done = 0;					/* Top of stack not reached yet */
+	EIF_GET_CONTEXT
+	if (-1 == epush(&once_set, (EIF_REFERENCE) address))
+		eraise("once function recording", EN_MEM);
+}
 
-	for (s = once_set.st_hd; s && !done; s = s->sk_next) 
-	{
-		arena = s->sk_arena;				/* Start of stack */
-		if (s != once_set.st_cur)			/* Before current position? */
-			nb_items = s->sk_end - arena;	/* Take the whole chunk */
-		else {
-			nb_items = once_set.st_top - arena;	/* Stop at the top */
-			done = 1;								/* Reached end of stack */
-		}
-		for (; nb_items > 0; nb_items--, arena++)
-			if (*arena == once)						/* Found indirection */
-			{
-				EIF_END_GET_CONTEXT	/* MT-safe */
-				return (EIF_REFERENCE *) arena;		/* Return indirection ptr */
-			}
-	}	
-	
-	EIF_END_GET_CONTEXT				/* MT-safe */
-	return (EIF_REFERENCE *) 0;		/* Could not find indirection pointer. */
-} /* eif_once_set_addr */
+#ifdef EIF_THREADS
+rt_public void globalonceset(EIF_REFERENCE address)
+{
+	/* Record result of once functions onto the global global_once_set stack, so that the
+	 * run-time may update the address should the result be moved around by
+	 * the garbage collector (we are storing the address of a C static variable.
+	 */
+
+	if (-1 == epush(&global_once_set, address))
+		eraise("once function recording", EN_MEM);
+}
+#endif
 
 /*
  * Stack handling routines. Each of these require the address of the
@@ -6331,7 +6308,7 @@ rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once)
 
 rt_shared int epush(register struct stack *stk, register EIF_REFERENCE value)
 									/* The stack */
-					  				/* Value to be pushed */
+									/* Value to be pushed */
 {
 	/* Push 'value' on top of the given stack 'stk'. If the stack is
 	 * full, we try to allocate a new chunk. If this fails, nothing is done,
@@ -6376,12 +6353,11 @@ rt_shared int epush(register struct stack *stk, register EIF_REFERENCE value)
 	stk->st_top = top;		/* Points to next free location */
 
 	return 0;		/* Value was successfully pushed on the stack */
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 									/* The stack */
-				   					/* Initial size */
+				 					/* Initial size */
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
 	EIF_GET_CONTEXT
@@ -6406,12 +6382,11 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 	SIGRESUME;							/* End of critical section */
 
 	return arena;			/* Stack allocated */
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared int st_extend(register struct stack *stk, register int size)
 									/* The stack */
-				   					/* Size of new chunk to be added */
+				 					/* Size of new chunk to be added */
 {
 	/* The stack 'stk' is extended and the 'stk' structure updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -6438,7 +6413,6 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	SIGRESUME;								/* End of critical section */
 
 	return 0;			/* Everything is ok */
-	EIF_END_GET_CONTEXT
 }
 
 rt_shared void st_truncate(register struct stack *stk)
@@ -6469,7 +6443,7 @@ rt_shared void st_truncate(register struct stack *stk)
 }
 
 rt_shared void st_wipe_out(register struct stchunk *chunk)
-							   		/* First chunk to be freed */
+							 		/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
 
@@ -6488,8 +6462,7 @@ rt_shared void st_wipe_out(register struct stchunk *chunk)
 		xfree((EIF_REFERENCE) chunk);
 }
 
-#ifdef DEBUG
-rt_private int reset(register1 struct stack *stk)
+rt_public void st_reset(register1 struct stack *stk)
 		/* The stack */
 {
 	/* Reset the stack 'stk' to its minimal state and disgard all its
@@ -6506,10 +6479,7 @@ rt_private int reset(register1 struct stack *stk)
 	}
 
 	memset (stk, 0, sizeof(struct stack));
-	return 0;
 }
-#endif
-
 
 #ifdef EIF_REM_SET_OPTIMIZATION
 rt_shared int is_in_special_rem_set (EIF_REFERENCE obj)
@@ -6517,7 +6487,6 @@ rt_shared int is_in_special_rem_set (EIF_REFERENCE obj)
 	EIF_GET_CONTEXT
 	int ret;
 	ret = is_in_spt (special_rem_set, obj);
-	EIF_END_GET_CONTEXT 
 	return ret;
 }
 #endif	/* EIF_REM_SET_OPTIMIZATION */
@@ -6529,8 +6498,6 @@ rt_shared int is_in_rem_set (EIF_REFERENCE obj)
 	register4 int 				done = 0;	/* Top of stack not reached yet */
 	char 						**object;
 	
-
-	EIF_GET_CONTEXT
 	for (s = rem_set.st_hd; s && !done; s = s->sk_next) 
 	{
 		object = s->sk_arena;				/* Start of stack */
@@ -6548,10 +6515,10 @@ rt_shared int is_in_rem_set (EIF_REFERENCE obj)
 			continue;
 		}
 	}
-	EIF_END_GET_CONTEXT
 	return 0;
 }
-#ifndef NDEBUG
+
+#ifdef DEBUG
 rt_private int nb_items(register1 struct stack *stk)
 		/* The stack */
 {
@@ -6604,8 +6571,8 @@ rt_public main(void)
 	/* Generation scavenging is going to be turned off. The garbage collector
 	 * can only run correctly if the remembered set is reset.
 	 */
-	reset(&rem_set);
-	reset(&moved_set);
+	st_reset(&rem_set);
+	st_reset(&moved_set);
 
 	printf("> Switching optimizations\n");
 	cc_for_speed = 1 - cc_for_speed;

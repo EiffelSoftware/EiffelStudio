@@ -10,7 +10,7 @@
 	Multiple copy routines.
 */
 
-#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "eif_copy.h"
 #include "eif_traverse.h"		/* For deep copies */
@@ -24,13 +24,11 @@
 #include "eif_local.h"
 #include "eif_hector.h"
 #include "eif_garcol.h"
-#include "x2c.header"		/* For macro LNGPAD */
-#ifdef I_STRING
+#include "rt_macros.h"
+#include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
-#else
-#include <strings.h>
-#endif
-#include <assert.h>
+#include "rt_assert.h"
+
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */
 
@@ -56,10 +54,11 @@ rt_private char *rcsid =
 
 rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 {
-	/* Clone an of Eiffel object `source'. Assumes that source is not a
-	 * special object.
-	 */
+	/* Clone an of Eiffel object `source'. Might move `source' */
+
 	register uint32 flags = HEADER(source)->ov_flags;
+
+  	REQUIRE ("source not null", source);
 
 	if (flags & EO_SPEC) 
 		return spclone (source);
@@ -74,11 +73,13 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	/* Copy Eiffel object `source' into Eiffel object `target'.
 	 * Problem: updating intra-references on expanded object
 	 * because the garbage collector needs to explore those references.
-	 * Dynamic type of `source' is supposed to be the same as dynamic type
-	 * of `target'.
 	 */
 
 	register uint32 flags = HEADER(source)->ov_flags;
+
+	REQUIRE ("source_not_null", source);
+	REQUIRE ("target_not_null", target);
+	REQUIRE ("Same type", Dftype(source) == Dftype(target));
 
 	if (flags & EO_SPEC)
 		spcopy(source, target);
@@ -86,6 +87,8 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 		b_copy(source, target);
 	else
 		eif_std_ref_copy(source, target);
+
+	ENSURE ("equals", eequal (target, source));
 }
 
 rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
@@ -104,12 +107,15 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	if ((EIF_REFERENCE) 0 == source)
 		return (EIF_REFERENCE) 0;				/* Void source */
 
-	epush(&loc_stack, (EIF_REFERENCE)(&source));			/* Protection against GC */
+	RT_GC_PROTECT(source);			/* Protection against GC */
 
 	zone = HEADER(source);				/* Allocation of a new object */
 	flags = zone->ov_flags;
 	size = zone->ov_size & B_SIZE;
-	result = spmalloc(size);			/* Special object */
+	if (!(flags & EO_REF))
+		result = spmalloc(size, EIF_TRUE);	/* Special object without references in it */
+	else
+		result = spmalloc(size, EIF_FALSE);	/* Special object with references */
 
 		/* Keep the reference flag and the composite one and the type */
 	HEADER(result)->ov_flags |= flags & (EO_REF | EO_COMP | EO_TYPE);
@@ -119,10 +125,9 @@ rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
 	*(long *) r_ref = *(long *) s_ref;
 	*(long *) (r_ref + sizeof(long)) = *(long *) (s_ref + sizeof(long));
 
-	epop(&loc_stack, 1);				/* Remove GC protection */
+	RT_GC_WEAN(source);				/* Remove GC protection */
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
@@ -153,7 +158,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	if (0 == source)
 		return (EIF_REFERENCE) 0;			/* Void source */
 
-	epush(&loc_stack, (EIF_REFERENCE) &source);	/* Protect source: allocation will occur */
+	RT_GC_PROTECT(source);	/* Protect source: allocation will occur */
 
 #ifdef DEBUG
 	xobjs = nomark(source);
@@ -167,7 +172,7 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 
 	{
 	RTXD;							/* Save stack contexts */
-	excatch(MTC (char *) exenv);		/* Record pseudo-execution vector */
+	excatch(&exenv);		/* Record pseudo-execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;						/* Restore stack contexts */
 		map_reset(1);				/* Reset in emergency situation */
@@ -212,12 +217,11 @@ rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 	printf("Result has %d objects\n", xobjs);
 #endif
 
-	epop(&loc_stack, 1);		/* Release GC protection */
+	RT_GC_WEAN(source);			/* Release GC protection */
 	expop(&eif_stack);			/* Remove pseudo execution vector */
 	}
 
 	return anchor.boot;			/* The cloned object tree */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE rtclone(EIF_REFERENCE source)
@@ -225,25 +229,22 @@ rt_public EIF_REFERENCE rtclone(EIF_REFERENCE source)
 	/* Clone source, copy the source in the clone and return the clone */
 
 	EIF_GET_CONTEXT
-	EIF_REFERENCE result;					/* Address of the cloned object */
+	EIF_REFERENCE result = NULL;					/* Address of the cloned object */
 
 	if (source == (EIF_REFERENCE) 0)
 		return (EIF_REFERENCE) 0;
 
-	epush(&loc_stack, (EIF_REFERENCE) &source);	/* In case object is going to move */
+		/* Object protections in case of GC cycle */
+	RT_GC_PROTECT(source);
+	RT_GC_PROTECT(result);
 
-	if (HEADER(source)->ov_flags & EO_SPEC) {
-		result = spclone(source);	/* Special object cloning */
-		spcopy(source, result);
-	} else {
-		result = eclone(source);	/* Usual Eiffel object cloning */
-		eif_std_ref_copy(source, result);
-	}
+	result = eclone (source);	/* Clone object */
+	ecopy (source, result);		/* Performs copy from `source' to `result' */
 
-	epop(&loc_stack, 1);			/* Remove the source object */
+	RT_GC_WEAN_N(2);				/* Remove protection */
 
+	ENSURE ("result_created", result);
 	return result;					/* Pointer to the cloned object */
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset)
@@ -280,6 +281,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	memcpy (clone, source, size);				/* Block copy */
 	*hash_zone = clone;					/* Fill it in with the clone address */
 
+#ifdef ISE_GC
 	/* Once the duplication is done, the receiving object might refer to a new
 	 * object (a newly allocated object is always new), and thus aging tests
 	 * must be performed, to eventually remember the enclosing object of the
@@ -294,18 +296,18 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 	if (HEADER (clone)->ov_flags & EO_OLD)		/* Old object with old reference.*/
 		return clone;					/* No further action necessary */
 
-	/* Then, the object is old and has a new reference in it. */
-	assert ((flags & EO_OLD) && !(HEADER (clone)->ov_flags & EO_OLD));
+	CHECK ("Object is old and has reference to new one",
+		   (flags & EO_OLD) && !(HEADER (clone)->ov_flags & EO_OLD));
 
 #ifdef EIF_REM_SET_OPTIMIZATION
-	if ((flags & EO_SPEC) && (flags & EO_REF))
+	if ((flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF))
 		/* In this special case, we have to remember 
 		 * the couple (special<->item index)
 		 * in the special_rem_table.	-- ET
 		 */
 	{
 		special_erembq (enclosing, offset >> EIF_REFERENCE_BITS);
-		assert (*(EIF_REFERENCE *) (enclosing + offset) == clone);
+		CHECK ("clone is referenced from enclosing", *(EIF_REFERENCE *) (enclosing + offset) == clone);
 	}
 	else if (flags & EO_REM)			/* Old object is already remembered */
 			return clone;				/* No further action necessary */
@@ -318,6 +320,7 @@ rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing
 		erembq(enclosing);				/* Then remember the enclosing object */
 		
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif /* ISE_GC */
 	
 	return clone;
 }
@@ -351,19 +354,18 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int o
 
 		clone = *hash_search(&hclone, source);
 		*(EIF_REFERENCE *) (enclosing + offset) = clone;
-		assert (!(HEADER (enclosing)->ov_size & B_FWD));/* Not forwarded. */
+		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
+#ifdef ISE_GC
 #ifdef EIF_REM_SET_OPTIMIZATION
-		if ((HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC)) == (EO_REF | EO_SPEC))
-		{
+		if ((HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC)) == (EO_REF | EO_SPEC)) {
 			RTAS_OPT (clone, offset >> EIF_REFERENCE_BITS, enclosing);
-		}	
-		else
-		{
+		} else {
 			RTAS(clone, enclosing);
 		}
 #else	/* EIF_REM_SET_OPTIMIZATION */
 		RTAS(clone, enclosing);
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif /* ISE_GC */
 		return;
 	}
 
@@ -457,13 +459,14 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 		 * with same dynamic type. Block copy here, but references on
 		 * expanded must be updated and special objects reallocated.
 		 */
-		safe_bcopy(source, target, size);
+		memmove(target, source, size);
 
+#ifdef ISE_GC
 		/* Perform aging tests. We need the address of the enclosing object to
 		 * update the flags there, in case the target is to be memorized.
 		 */
 		t_flags = HEADER(enclosing)->ov_flags;
-		assert (!(HEADER (enclosing)->ov_size & B_FWD));/* Not forwarded. */
+		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
 
 #ifdef EIF_REM_SET_OPTIMIZATION
 		if (
@@ -471,17 +474,12 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 			refers_new_object(target)	/* And copied refers to new objects */
 		)
 		{
-			if ((HEADER(enclosing)->ov_flags & EO_SPEC) && 
-					(HEADER (enclosing)->ov_flags & EO_REF))
-			{
-				/* Only remember the couple (special<->new object index). */
+			if ((t_flags & (EO_SPEC | EO_REF)) == (EO_SPEC | EO_REF)) {
+					/* Only remember the couple (special<->new object index). */
 				if (-2 == eif_promote_special (enclosing))
 					eif_panic ("There must be a young reference.");
-			}
-			else if (!(t_flags & EO_REM))	/* normal object not remembered. */
-			{
+			} else if (!(t_flags & EO_REM))	/* normal object not remembered. */
 				erembq(enclosing);		/* Then remember the enclosing object */
-			}
 		}
 #else	/* EIF_REM_SET_OPTIMIZATION */
 		if (
@@ -491,6 +489,7 @@ rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFE
 		)
 			erembq(enclosing);			/* Then remember the enclosing object */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif /* ISE_GC */
 
 		if (s_flags & EO_COMP) {
 			/* Case of composite object: updating of references on expanded
@@ -512,16 +511,15 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	uint32 field_size;
 	uint32 flags;
 
-	/*** Preconditions ***/
-	assert (source != (EIF_REFERENCE) 0);	/* Must be not NULL. */
-	assert (target != (EIF_REFERENCE) 0);	/* Must be not NULL. */
-	/*** End of preconditions. ***/
+	REQUIRE ("source not null", source);
+	REQUIRE ("target not null", target);
 
 	/* Evaluation of the size field to copy */
 	field_size = (HEADER(target)->ov_size & B_SIZE) - LNGPAD_2;
 
-	safe_bcopy(source, target, field_size);			/* Block copy */
+	memmove(target, source, field_size);			/* Block copy */
 
+#ifdef ISE_GC
 	/* Ok, normally we would have to perform age tests, by scanning the special
 	 * object, looking for new objects. But a special object can be really big,
 	 * and can also contain some expanded objects, which should be traversed
@@ -533,7 +531,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	 */
 
 	flags = HEADER(target)->ov_flags;
-	assert (!(HEADER (target)->ov_flags & B_FWD));	/* Not forwarded. */
+	CHECK ("Not forwarded", !(HEADER (target)->ov_flags & B_FWD));
 #ifdef EIF_REM_SET_OPTIMIZATION
 	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF)) 
 			/* Do we need to check if it holds young references? */
@@ -544,6 +542,7 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 			eremb(target);	/* Remember it, even if not needed, to fasten
 								copying process. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif /* ISE_GC */
 }
 
 rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int shallow_or_deep)
@@ -670,11 +669,10 @@ rt_public EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 	EIF_GET_CONTEXT
 	EIF_BOOLEAN temp;
 
-	temp = ((in_assertion != (int) 0)?(EIF_BOOLEAN)0:(EIF_BOOLEAN)1);
+	temp = (EIF_BOOLEAN) ((in_assertion != (int) 0)? 0: 1);
 	in_assertion = ((b != (EIF_BOOLEAN) 0)?0:~0);
 
 	return ((EIF_BOOLEAN) temp);
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
@@ -689,15 +687,14 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	EIF_REFERENCE ref; /* %%ss removed , *src_ref; */
 	uint32 flags;
 
-	/*** Preconditions ***/
-	assert (HEADER (source)->ov_flags & EO_SPEC);	/* Is a special object. */
-	/*** End of Preconditions ***/
+	REQUIRE ("Special object", HEADER (source)->ov_flags & EO_SPEC);
 
 	count = end - start + 1;
 	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
 	esize = *(long *) (ref + sizeof(long));
-	safe_bcopy(source+start*esize, target+index*esize, count*esize);
+	memmove(target+index*esize,source+start*esize, count*esize);
 
+#ifdef ISE_GC
 	/* Ok, normally we would have to perform age tests, by scanning the special
 	 * object, looking for new objects. But a special object can be really big,
 	 * and can also contain some expanded objects, which should be traversed
@@ -719,6 +716,7 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 			eremb(target);	/* Remember it, even if not needed, to fasten
 								copying process. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
+#endif /* ISE_GC */
 
 }	/* spsubcopy () */
 
@@ -729,8 +727,10 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	 * composite.
 	 */
 
+	EIF_GET_CONTEXT
+
 	union overhead *zone;			/* Malloc information zone */
-	char  *(*init)(EIF_REFERENCE); 				/* Initialization routine to be called */
+	void  *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* Initialization routine to be called */
 	long i, count, elem_size;
 	int dtype, dftype;
 	EIF_REFERENCE ref;
@@ -747,16 +747,16 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 		dtype = Deif_bid(dftype);
 		memset (spobj, 0, count * elem_size);
 			/* Initialize new expanded elements, if any */
-		init = (char *(*)(EIF_REFERENCE)) (XCreate(dtype)); /* %%ss cast? added */
-#ifdef MAY_PANIC
-		if ((char *(*)(EIF_REFERENCE)) 0 == init)		/* There MUST be a routine */
-			eif_panic("Init routine lost");
-#endif
+		init = (void *(*)(EIF_REFERENCE, EIF_REFERENCE)) (XCreate(dtype));
 		for (i = 0; i < count; i++, ref += elem_size) {
 			zone = HEADER(ref);
 			zone->ov_size = ref - spobj;	/* For GC */
-			zone->ov_flags = dftype;			/* Expanded type */
-			(init)(ref);					/* Call initialization routine */
+			zone->ov_flags = dftype;		/* Expanded type */
+			if (init) {
+				RT_GC_PROTECT(ref);
+				(init)(ref, ref);			/* Call initialization routine if any */
+				RT_GC_WEAN(ref);
+			}
 		}
 	} else
 		memset (spobj, 0, count * elem_size);

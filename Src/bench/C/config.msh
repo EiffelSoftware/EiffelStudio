@@ -5,7 +5,7 @@ microsoft-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\nmake'
-del='del'
+del='-del'
 #
 output_cmd='-Fo'
 input_cmd='-Fd$(INDIR)\\'
@@ -19,12 +19,12 @@ lib='lib'
 #------------------
 ccflags='-W3 $debug -nologo'
 mtccflags='-W3 $debug -nologo -MT -DEIF_THREADS'
-output_libraries='standard'
+output_libraries='standard mtstandard'
 #-- DLL:
 #--------
-#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug'
-#mtccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS'
-#output_libraries='dll'
+#ccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -DISE_GC'
+#mtccflags='-DEIF_MAKE_DLL -W3 -nologo $debug -MT -DEIF_THREADS -DISE_GC'
+#output_libraries='dll mtdll'
 #
 #
 #Link Lines in non debug mode:

@@ -11,10 +11,6 @@
 
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "eif_except.h"		/* Exception vectors definition */
 #include "eif_sig.h"		/* initsig() */
 #include "eif_local.h"		/* initstk(), local stacks */
@@ -22,6 +18,10 @@ extern "C" {
 
 #ifdef WORKBENCH
 #include "eif_interp.h"		/* xinitint(), interpreter initialization */
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /*
@@ -87,28 +87,28 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
 
 #ifndef _CRAY
 #define EIF_RT_BASIC_SETUP(fail_func) \
-	GTCX \
+	EIF_GET_CONTEXT \
 	struct ex_vect *exvect; \
 	jmp_buf exenv; \
 	egc_init_plug(); \
 	initsig(); \
 	initstk(); \
 	exvect = exset((char *) 0, 0, (char *) 0); \
-	(exvect->ex_jbuf) = (char *) exenv; \
+	(exvect->ex_jbuf) = &exenv; \
 	if ( ((echval) = setjmp(exenv)) ) \
 		fail_func(); \
 	if (root_obj == (char *)0) \
 		root_obj = cmalloc(1);
 #else	/* !_CRAY */
 #define EIF_RT_BASIC_SETUP(fail_func) \
-	GTCX \
+	EIF_GET_CONTEXT \
 	struct ex_vect *exvect; \
 	jmp_buf exenv; \
 	egc_init_plug(); \
 	initsig(); \
 	initstk(); \
 	exvect = exset((char *) 0, 0, (char *) 0); \
-	(exvect->ex_jbuf) = (char *) exenv; \
+	(exvect->ex_jbuf) = &exenv; \
 	if ( setjmp(exenv)) \
 		fail_func(); \
 	if (root_obj == (char *)0) \
@@ -116,8 +116,7 @@ extern void egc_init_plug ();		/* Defined in E1/eplug.c, and
 #endif	/* !_CRAY */
 
 #define EIF_RT_BASIC_CLEANUP \
-	reclaim(); \
-	EDCX
+	reclaim();
 
 
 #ifdef EIF_THREADS

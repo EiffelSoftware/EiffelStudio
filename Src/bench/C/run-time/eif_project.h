@@ -15,7 +15,9 @@ generated in a system
 #ifndef _EIF_PROJECT_H_
 #define _EIF_PROJECT_H_
 
+#include "eif_portable.h"
 #include "eif_struct.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -30,7 +32,7 @@ extern "C" {
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER);	/* STRING `set_count' feature */
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
-	RT_LNK void (*egc_routdisp)(char *, char *, char *, char *, char *);		/* ROUTINE `set_rout_disp' feature */
+	RT_LNK void (*egc_routdisp)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE);		/* ROUTINE `set_rout_disp' feature */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 	RT_LNK int egc_tup_dtype;				/* Dynamic type for TUPLE */
@@ -40,16 +42,24 @@ extern "C" {
 
 	RT_LNK int egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
 	RT_LNK int egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
-	RT_LNK int egc_sp_int;			/* Dynamic type of SPECIAL[INTEGER] */
+	RT_LNK int egc_sp_wchar;		/* Dynamic type of SPECIAL[WIDE_CHARACTER] */
+	RT_LNK int egc_sp_int8;			/* Dynamic type of SPECIAL[INTEGER_8] */
+	RT_LNK int egc_sp_int16;		/* Dynamic type of SPECIAL[INTEGER_16] */
+	RT_LNK int egc_sp_int32;		/* Dynamic type of SPECIAL[INTEGER_32] */
+	RT_LNK int egc_sp_int64;		/* Dynamic type of SPECIAL[INTEGER_64] */
 	RT_LNK int egc_sp_real;			/* Dynamic type of SPECIAL[REAL] */
 	RT_LNK int egc_sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
 	RT_LNK int egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
 
-	RT_LNK int egc_int_ref_dtype;	/* Dynamic type of INTEGER_REF */
+	RT_LNK int egc_int8_ref_dtype;	/* Dynamic type of INTEGER_8_REF */
+	RT_LNK int egc_int16_ref_dtype;	/* Dynamic type of INTEGER_16_REF */
+	RT_LNK int egc_int32_ref_dtype;	/* Dynamic type of INTEGER_32_REF */
+	RT_LNK int egc_int64_ref_dtype;	/* Dynamic type of INTEGER_64_REF */
 	RT_LNK int egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
 	RT_LNK int egc_real_ref_dtype;	/* Dynamic type of REAL_REF */
 	RT_LNK int egc_doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
 	RT_LNK int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
+	RT_LNK int egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
 	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
 
 	RT_LNK struct ctable egc_ce_type;			/* Class name -> type ID */
@@ -66,7 +76,6 @@ extern "C" {
 	RT_LNK int *egc_fpatidtab;			/* Table of pattern id's indexed by body id's */
 	RT_LNK struct eif_opt *egc_foption;	/* Frozen option table */
 	RT_LNK fnptr **egc_address_table;		/* Table of $ operator encapsulation functions */
-	RT_LNK uint32 *egc_fdispatch;		/* Frozen disaptch table */
 	RT_LNK struct p_interface *egc_fpattern;
 
 	RT_LNK void (*egc_einit)(void);		/* System-dependent initializations, E1/einit.c */
@@ -91,6 +100,7 @@ extern "C" {
 
 	RT_LNK char *egc_system_name;		/* Name of the generated system */
 	RT_LNK EIF_INTEGER egc_compiler_tag;	/* Tag corresponding to the compiler version */
+	RT_LNK EIF_INTEGER egc_project_version;	/* Tag corresponding to the project version */
 
 	RT_LNK int egc_platform_level;
 	 

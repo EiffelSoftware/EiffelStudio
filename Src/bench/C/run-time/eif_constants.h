@@ -21,11 +21,11 @@
 #ifndef _eif_constants_h_
 #define _eif_constants_h_
 
+#include <signal.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <signal.h>
 
 	/*----------------*/
 	/*  eif_memory.h  */
@@ -34,7 +34,7 @@ extern "C" {
 	/*------------*/
 	/*  except.h  */
 	/*------------*/
-#define EN_NEX		27			/* Number of internal exceptions */
+#define EN_NEX		28			/* Number of internal exceptions */
 
 	/*------------*/
 	/*  garcol.h  */
@@ -63,14 +63,8 @@ stats */
 								     * Do >> EIF_REFERENCE_BITS instead. 
 									 * FIXME: is 3 in 64 bits platforms. */
 
-#define AGE_BITS	2		/* Number of bits to represents the age. */
+#define AGE_BITS	4		/* Number of bits to represents the age. */
 #define TENURE_MAX	(1<<AGE_BITS)	/* Non reached age */
-
-
-	/*------------*/
-	/*  malloc.c  */
-	/*------------*/
-#define NBLOCKS			27		/* Number of block lists (max size is 2^27-1) */
 
 
 	/*-------------*/
@@ -111,6 +105,13 @@ stats */
 #endif	/* !NSIG */
 
 #define SIGSTACK	200		/* Size of FIFO stack for signal buffering */
+
+	/*---------*/
+	/* debug.c */
+	/*---------*/
+#ifdef WORKBENCH
+#define BP_TABLE_SIZE 1024 /* size of the hash table used to store enabled breakpoints */
+#endif
 
 #ifdef __cplusplus
 }

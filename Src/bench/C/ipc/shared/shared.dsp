@@ -1,5 +1,5 @@
 # Microsoft Developer Studio Project File - Name="shared" - Package Owner=<4>
-# Microsoft Developer Studio Generated Build File, Format Version 5.00
+# Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
@@ -23,9 +23,11 @@ CFG=shared - Win32 Debug
 !MESSAGE 
 
 # Begin Project
+# PROP AllowPerConfigDependencies 0
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
+RSC=rc.exe
 
 !IF  "$(CFG)" == "shared - Win32 Debug"
 
@@ -41,6 +43,8 @@ CPP=cl.exe
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /nologo /W3 /GX /Z7 /Od /I "..\.." /I "..\..\run-time" /I "..\..\idrs" /D "_DEBUG" /YX /FD /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -62,6 +66,8 @@ LIB32=link.exe -lib
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
 # ADD CPP /nologo /GX /Ox /I "..\.." /I "..\..\run-time" /I "..\..\idrs" /D "WORKBENCH" /YX /FD /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
@@ -82,7 +88,9 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "mt"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /GX /O2 /I "..\.." /I "..\..\run-time" /I "..\..\idrs" /D "WORKBENCH" /D "EIF_THREADS" /YX /FD /c
+# ADD CPP /nologo /MT /O2 /I "..\.." /I "..\..\run-time" /I "..\..\idrs" /D "WORKBENCH" /D "EIF_THREADS" /D "ISE_GC" /FD /c
+# ADD BASE RSC /l 0x409
+# ADD RSC /l 0x409
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo /o"mtshared.bsc"
@@ -100,10 +108,6 @@ LIB32=link.exe -lib
 # Begin Source File
 
 SOURCE=.\com.c
-# End Source File
-# Begin Source File
-
-SOURCE=.\env.c
 # End Source File
 # Begin Source File
 

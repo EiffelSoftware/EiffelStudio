@@ -18,10 +18,7 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "shword.h"
-
-#ifdef EIF_WIN32
 #include <string.h>
-#endif
 
 #define ARGV_NUMBER		5		/* Initial number of arguments expected */
 #define ARGV_INCREASE	10		/* Amount by which argument array increases */

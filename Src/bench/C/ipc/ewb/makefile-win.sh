@@ -2,9 +2,11 @@ TOP = ..\..
 OUTDIR = .
 INDIR = .
 CC = $cc
-RUN_TIME = $(TOP)\run-time 
-CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(TOP)\console -I$(LIBIDR)
+OUTPUT_CMD = $output_cmd
+RUN_TIME = $(TOP)\run-time
+CFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(RUN_TIME)\include -I$(TOP)\console -I$(LIBIDR)
 JCFLAGS = $(CFLAGS) $ccflags $optimize
+JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 MAKE = make
 MV = copy
 RM = del
@@ -25,10 +27,46 @@ OBJECTS = \
 	eif_out.$obj \
 	ewb_init.$obj
 
+MT_OBJECTS = \
+	MTewb_dumped.$obj \
+	MTewb_proto.$obj \
+	MTeproto.$obj \
+	MTeif_in.$obj \
+	MTeif_out.$obj \
+	MTewb_init.$obj
+
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: ewb.$lib
+all:: $output_libraries
+
+dll: standard
+mtdll: mtstandard
+standard: ewb.$lib
+mtstandard: mtewb.$lib
 
 ewb.$lib: $(OBJECTS)
 	$link_line
+
+mtewb.$lib: $(MT_OBJECTS)
+	$link_mtline
+
+MTewb_dumped.$obj: ewb_dumped.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTewb_proto.$obj: ewb_proto.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTewb_init.$obj: ewb_init.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTeproto.$obj: eproto.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTeif_in.$obj: eif_in.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+MTeif_out.$obj: eif_out.c
+	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
+
+

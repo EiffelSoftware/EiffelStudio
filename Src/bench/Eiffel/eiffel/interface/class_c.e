@@ -31,7 +31,10 @@ inherit
 
 	SHARED_GENERATION
 
-	PART_COMPARABLE
+	COMPARABLE
+		undefine
+			is_equal
+		end
 
 	PROJECT_CONTEXT
 
@@ -5025,7 +5028,7 @@ feature {DEGREE_1} -- Degree 1
 			-- Does current class need to be
 			-- processed in Degree 1?
 
-feature {DEGREE_MINUS_1} -- Degree -1
+feature {DEGREE_MINUS_1, IL_GENERATOR} -- Degree -1
 
 	add_to_degree_minus_1 is
 			-- Add current class to Degree -1.

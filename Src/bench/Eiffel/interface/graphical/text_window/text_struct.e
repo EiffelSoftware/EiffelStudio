@@ -55,7 +55,7 @@ feature
 				upper := other.upper
 				clickable_count := upper - lower + 1
 			else
-				wipe_out
+				discard_items
 				clickable_count := 0
 			end
 		ensure

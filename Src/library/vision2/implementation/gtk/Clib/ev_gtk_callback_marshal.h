@@ -32,7 +32,7 @@ guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
 void* gtk_value_pointer (void*);
 
-int* gtk_value_int (void*);
+int gtk_value_int (void*);
 
 #endif
 
@@ -41,6 +41,9 @@ int* gtk_value_int (void*);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.4  2000/02/18 19:32:23  oconnor
+// fixed type of gtk_value_int
+//
 // Revision 1.3  2000/02/18 19:11:52  oconnor
 // added GTK_VALUE_INT wrapper
 //

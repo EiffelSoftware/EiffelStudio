@@ -194,7 +194,7 @@ feature -- Iteration
 	iterate is
 			-- Loop the application.
 		do
-			application_context.iterate
+			application_context.main_loop
 		end;
 
 feature -- Status setting

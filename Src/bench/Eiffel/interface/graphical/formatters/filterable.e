@@ -30,8 +30,8 @@ feature -- Filtering; Implementation
 				if new_text /= Void then
 					text_window.clear_text;
 					tool.set_editable_text;
-					tool.show_editable_text;
 					text_window.set_text (new_text);
+					tool.show_editable_text;
 					display_filter_header (root_stone, filtername);
 					tool.set_file_name (filtered_file_name 
 							(root_stone, filtername))

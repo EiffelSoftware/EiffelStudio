@@ -108,7 +108,7 @@ feature {GB_XML_STORE} -- Output
 			if window.maximum_height /= first.maximum_height then
 				add_element_containing_integer (element, Maximum_height_string, first.maximum_height)
 			end
-			if window.title /= first.title then
+			if window.title /= first.title and not objects.first.title.is_empty then
 				add_element_containing_string (element, Title_string, first.title)
 			end
 		end
@@ -141,7 +141,7 @@ feature {GB_XML_STORE} -- Output
 			end
 			
 			element_info := full_information @ (title_string)
-			if element_info /= Void then
+			if element_info /= Void and then element_info.data /= Void and then element_info.data.count /= 0 then
 				for_first_object (agent {EV_WINDOW}.set_title (element_info.data))
 			end
 		end

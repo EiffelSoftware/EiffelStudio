@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?><application xmlns="" xmlns:ns1="" xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"><Constant><type>PIXMAP</type>
 		<Name>eiffel_software_png</Name>
-		<Value>E:\dotnet\codedom_provider\manager\icons\eiffel_software.png</Value>
+		<Value>E:\dotnet\codedom_provider\tools\manager\icons\eiffel_software.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>manager_icons_dir</Directory>
 		<Filename>eiffel_software.png</Filename>
 		</Constant>
 	<Constant><type>DIRECTORY</type>
 		<Name>manager_icons_dir</Name>
-		<Value>E:\dotnet\codedom_provider\manager\icons</Value>
+		<Value>E:\dotnet\codedom_provider\tools\manager\icons</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>help_png</Name>
-		<Value>E:\dotnet\codedom_provider\manager\icons\help.png</Value>
+		<Value>E:\dotnet\codedom_provider\tools\manager\icons\help.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>manager_icons_dir</Directory>
 		<Filename>help.png</Filename>
@@ -97,7 +97,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[About]]></Text>
+<EV_TEXTABLE><Text><![CDATA[About eSplitter]]></Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_about</Event>

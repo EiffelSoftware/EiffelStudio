@@ -164,6 +164,8 @@ feature -- Access -- 2
 
 	Implemented_word: STRING is "implemented"
 
+	implemented_coclass_extension: STRING is "_IMP"
+
 feature -- C keywords -- 3
 
 	C_open_comment_line: STRING is "/*-----------------------------------------------------------"

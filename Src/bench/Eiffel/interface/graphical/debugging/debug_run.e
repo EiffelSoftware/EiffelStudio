@@ -177,6 +177,8 @@ end;
 					Window_manager.object_win_mgr.hang_on;
 					if status.e_feature /= Void then
 						Window_manager.routine_win_mgr.show_stoppoint 
+							(status.e_feature, status.break_index);
+						Project_tool.show_stoppoint
 							(status.e_feature, status.break_index)
 					end;
 					debug_window.clear_window;

@@ -355,6 +355,30 @@ feature -- Execution Implementation
 			end
 		end;
 
+	show_stoppoint (e_feature: E_FEATURE; index: INTEGER) is
+			-- Show breakable mark in the feature part if
+			-- the part is displayed
+		local
+			display_cmd: DISPLAY_ROUTINE_PORTION;
+			new_stone: FEATURE_STONE;
+			text_w: ROUTINE_TEXT
+		do
+			display_cmd ?= display_feature_cmd_holder.associated_command
+			if display_cmd /= Void then
+				if display_cmd.is_shown then
+					text_w := feature_part.text_window
+					if (text_w.root_stone /= Void) and then
+							text_w.root_stone.e_feature /= Void and then
+							not equal (text_w.root_stone.e_feature.body_id, e_feature.body_id) then
+						!! new_stone.make (e_feature, e_feature.written_class)
+						feature_part.process_feature (new_stone)
+						--feature_part.text_window.redisplay_breakable_mark (index)
+					end;
+					feature_part.text_window.redisplay_breakable_mark (index)
+				end
+			end
+		end
+
 feature -- Graphical Interface
 
 	build_widgets is

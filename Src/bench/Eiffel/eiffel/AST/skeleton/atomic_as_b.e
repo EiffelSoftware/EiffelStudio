@@ -28,6 +28,8 @@ feature -- Type check and dead code removal
 			-- Do nothing
 		end;
 
+feature {COMPILER_EXPORTER} -- Type check and dead code removal
+
 	make_integer: INT_VAL_B is
 			-- Integer value.
 		require

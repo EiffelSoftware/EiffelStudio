@@ -20,6 +20,18 @@ creation
 
 feature
 
+	once_index : INTEGER        -- Index of current once routine
+
+	set_once_index (idx : INTEGER) is
+			-- Set `once_index' to `idx'
+		require
+			valid_index : idx >= 0
+		do
+			once_index := idx
+		ensure
+			index_set : once_index = idx
+		end
+
 	generation_mode: BOOLEAN;
 			-- Mode of generation: if set to True, generation of C code
 			-- for the workbench otherwise generation of C code in final
@@ -1115,7 +1127,7 @@ feature -- Concurrent Eiffel
 			generated_file.putstring ("cur_label_");
 			generated_file.putint (label);
 		end
-                                                          
+
 	reset_added_gc_hooks is 
 		local
 			i: INTEGER;

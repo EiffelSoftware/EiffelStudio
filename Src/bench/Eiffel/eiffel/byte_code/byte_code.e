@@ -532,6 +532,18 @@ feature -- Byte code generation
 			end;
 
 			Temp_byte_code_array.clear;
+
+				-- Once mark and reserved space for once key.
+
+			if is_once then
+					-- The once mark
+				Temp_byte_code_array.append ('%/001/');
+					-- Allocate space for once key
+				Temp_byte_code_array.allocate_space (Long_c_type);
+			else
+					-- Not a once routine
+				Temp_byte_code_array.append ('%U');
+			end;
 			
 				-- Header for debuggable byte code.
 			if context.debug_mode then
@@ -565,22 +577,12 @@ feature -- Byte code generation
 				end
 			end
 
-				-- Once mark
 			if is_once then
-				Temp_byte_code_array.append ('%/001/');
-					-- Once not done
-				Temp_byte_code_array.append ('%U');
 					-- Real body id to be stored in the id list of already 
 					-- called once routines to prevent supermelting them
 					-- (losing in that case their memory (already called and
 					-- result)) and to allow result inspection.
 				Temp_byte_code_array.append_integer (real_body_id.id - 1);
-					-- once routines real_body_ids
-					-- Allocate space for storeing a result instance in
-					-- the byte code itself
-				Temp_byte_code_array.allocate_space (r_type);
-			else
-				Temp_byte_code_array.append ('%U');
 			end;
 
 				-- Set up the local variables

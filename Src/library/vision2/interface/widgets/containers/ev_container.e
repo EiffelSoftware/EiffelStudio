@@ -47,11 +47,6 @@ inherit
 			changeable_comparison_criterion
 		end
 
-	EV_CONTAINER_ACTION_SEQUENCES
-		redefine
-			implementation
-		end
-
 feature -- Access
 
 	item: EV_WIDGET is

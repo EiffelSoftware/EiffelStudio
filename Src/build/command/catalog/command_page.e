@@ -42,7 +42,7 @@ creation
 	make
 
 	
-feature {NONE}
+feature {CAT_COM_IS}
 
 	associated_catalog: CMD_CATALOG;
 

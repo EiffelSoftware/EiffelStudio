@@ -228,6 +228,8 @@ feature {NONE}
 			!!output_frame.make (F_rame1, output_form);
 			!!input_list.make (R_ow_column, input_frame, Current);
 			!!output_list.make (R_ow_column1, output_frame, Current);
+			row_label.set_text ("(rows: 0)  ");
+			page_label.set_text ("Page 1 of 1");
 
 				-- ******
 				-- Values
@@ -241,35 +243,35 @@ feature {NONE}
 				-- ***********
 
 			form.set_fraction_base (2);
-			form.attach_top (menu_bar, 0);
-			form.attach_left (menu_bar, 0);
-			form.attach_right (menu_bar, 0);
-			form.attach_top_widget (menu_bar, input_form, 0);
-			form.attach_top_widget (menu_bar, output_form, 0);
+			form.attach_top (menu_bar, 1);
+			form.attach_left (menu_bar, 1);
+			form.attach_right (menu_bar, 1);
+			form.attach_top_widget (menu_bar, input_form, 3);
+			form.attach_top_widget (menu_bar, output_form, 3);
 			form.attach_bottom_widget (button_form,input_form, 5);
 			form.attach_bottom_widget (button_form,output_form,  5);
-			form.attach_left (input_form, 0);
-			form.attach_right (output_form, 0);
+			form.attach_left (input_form, 1);
+			form.attach_right (output_form, 1);
 			form.attach_right_position (input_form, 1);
 			form.attach_left_position (output_form, 1);
-			form.attach_left (button_form, 5);
-			form.attach_right (button_form, 5);
-			form.attach_bottom (button_form, 5);
+			form.attach_left (button_form, 1);
+			form.attach_right (button_form, 1);
+			form.attach_bottom (button_form, 1);
 
-			input_form.attach_top (input_hole, 0);
-			input_form.attach_top (input_stone, 0);
+			input_form.attach_top (input_hole, 1);
+			input_form.attach_top (input_stone, 1);
 			input_form.attach_bottom (input_frame, 3);
-			input_form.attach_top_widget (input_stone, input_frame, 3);
+			--input_form.attach_top_widget (input_stone, input_frame, 3);
 			input_form.attach_top_widget (input_hole, input_frame, 3);
 			input_form.attach_left_widget (input_hole, input_stone, 3);
 			input_form.attach_right (input_frame, 3);
 			input_form.attach_left (input_frame, 3);
 			input_form.attach_left (input_hole, 3);
 
-			output_form.attach_top (output_hole, 0);
-			output_form.attach_top (output_stone, 0);
+			output_form.attach_top (output_hole, 1);
+			output_form.attach_top (output_stone, 1);
 			output_form.attach_bottom (output_frame, 3);
-			output_form.attach_top_widget (output_stone, output_frame, 3);
+			--output_form.attach_top_widget (output_stone, output_frame, 3);
 			output_form.attach_top_widget (output_hole, output_frame, 3);
 			output_form.attach_left_widget (output_hole, output_stone, 3);
 			output_form.attach_right (output_frame, 3);
@@ -277,10 +279,15 @@ feature {NONE}
 			output_form.attach_left (output_hole, 3);
 
 
-			button_form.attach_right (arrow_b1, 5);
-			button_form.attach_right_widget (arrow_b1, arrow_b, 0);
-			button_form.attach_left (page_label, 5);
-			button_form.attach_left_widget (page_label, row_label, 5);
+			button_form.attach_right (arrow_b1, 2);
+			button_form.attach_bottom (arrow_b, 5);
+			button_form.attach_bottom (arrow_b, 5);
+			button_form.attach_right_widget (arrow_b1, arrow_b, 4);
+			button_form.attach_left (page_label, 1);
+			button_form.attach_top (page_label, 5);
+			button_form.attach_top (row_label, 5);
+			button_form.attach_bottom (page_label, 5);
+			button_form.attach_bottom (row_label, 5);
 
 				-- *********
 				-- Callbacks
@@ -288,7 +295,6 @@ feature {NONE}
 
 			arrow_b.add_activate_action (Current, First);
 			arrow_b1.add_activate_action (Current, Second);
-			row_label.set_text ("(rows: 0)");
 			display_page_number;
 		end;
 

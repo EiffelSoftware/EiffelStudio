@@ -53,9 +53,19 @@ feature
 			disable_resize_policy (False);
 			widget_set_title (entity_name);
 			set_size (300, 300);
-			widget.parent.set_action ("<Configure>", Current, Fourth);
 			set_default_pixmap;
+			add_window_geometry_action;
 		end;
+
+	add_window_geometry_action is 
+		do
+			widget.set_action ("<Configure>", Current, Fourth);
+		 end;
+
+	remove_window_geometry_action is 
+		do
+			widget.remove_action ("<Configure>");
+ 		end;
 
 
 	widget: TEMP_WIND;

@@ -89,19 +89,23 @@ feature
 			text_field_width.set_width (50);
 			text_field_height.set_width (50);
 
-			attach_left (label_x, 20);
+			attach_left (label_x, 2);
+			attach_right_widget(text_field_x, label_x,5);
 			attach_right (text_field_x, 20);
 			attach_left (text_field_x, 200);
 
-			attach_left (label_y, 20);
+			attach_left (label_y, 2);
+			attach_right_widget(text_field_y, label_y,5);
 			attach_right (text_field_y, 20);
 			attach_left (text_field_y, 200);
 
-			attach_left (label_width, 20);
+			attach_left (label_width, 2);
+			attach_right_widget(text_field_width, label_width,5);
 			attach_right (text_field_width, 20);
 			attach_left (text_field_width, 200);
 
-			attach_left (label_height, 20);
+			attach_left (label_height, 2);
+			attach_right_widget(text_field_height, label_height,5);
 			attach_right (text_field_height, 20);
 			attach_left (text_field_height, 200);
 	

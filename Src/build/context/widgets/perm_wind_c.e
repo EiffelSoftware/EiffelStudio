@@ -52,11 +52,24 @@ feature
 			widget_set_title (entity_name);
 			title := entity_name;
 			set_size (400, 500);
-			widget.top_shell.set_action ("<Configure>", Current, Fourth);
 			set_default_pixmap;
+			add_window_geometry_action;
 			!!contin_command;
 			widget.top_shell.set_delete_command (contin_command);
 		end;
+
+	add_window_geometry_action is 
+		do
+			widget.top_shell.set_action ("<Configure>", Current, Fourth);
+		 end;
+
+	remove_window_geometry_action is 
+		do
+			widget.top_shell.remove_action ("<Configure>");
+ 		end;
+	
+
+
 
 	
 feature {NONE}

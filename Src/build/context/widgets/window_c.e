@@ -256,6 +256,17 @@ feature
 			context_catalog.clear_editors (Current);
 		end;
 
+	add_window_geometry_action is 
+		require
+			widget_not_void: widget /= Void;
+		deferred 
+		end;
+
+	remove_window_geometry_action is 
+		require 
+			widget_not_void: widget /= Void;
+		deferred 
+		end;
 	
 	execute (argument: like Current) is
 		do

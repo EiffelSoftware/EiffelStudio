@@ -306,7 +306,7 @@ feature {NONE} -- State and transition list
 			source ?= l.source.original_stone;
 			dest ?= l.destination.original_stone;
 			if
-				not (source = Void) and (not (dest = Void))
+				not (source = Void) and (not (dest = Void)) and not labels_wnd.is_poped_up
 			then
 				labels_wnd.popup (transitions.selected_labels (source, dest));
 			end

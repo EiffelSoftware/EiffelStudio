@@ -10,23 +10,24 @@ inherit
 		rename
 			make as shell_make,
 			realize as shell_realize,
-			show as shell_show
-		export
-			{NONE} all;
-			{ANY} hide, raise
+			show as shell_show,
+			hide as shell_hide
 		undefine
 			init_toolkit
 		redefine
 			delete_window_action
 		end;
 	TOP_SHELL
+		export
+			{NONE} all;
+			{ANY} hide, raise
 		undefine
 			init_toolkit
 		redefine
-			realize, make, show,
+			realize, make, show, hide, 
 			delete_window_action
 		select
-			realize, make, show
+			realize, make, show, hide
 		end;
 	WINDOWS
 
@@ -36,7 +37,6 @@ creation
 	
 feature {NONE}
 
-	--icon: CON_EDIT_STONE;
 
 	context_hole: CON_EDIT_HOLE;
 	
@@ -117,7 +117,7 @@ feature
 			!!form_list.make (1, form_number);
 
 			shell_make (a_name, a_screen);
-			set_size (260, 480);
+			--set_size (260, 480);
 			!!top_form.make (F_orm, Current);
 
 			!!context_hole.make (Current);
@@ -131,6 +131,7 @@ feature
 			second_separator.set_horizontal (True);
 			!!close_button.make (Current, Current);
 			close_button.make_visible (top_form);
+			menu_button.set_text ("Options");
 
 			top_form.set_fraction_base (20);
 
@@ -182,14 +183,25 @@ feature
 
 	realize is
 		do
+			menu_button.set_insensitive;
 			shell_realize;
-			menu_button.option_button.hide;
+			
 		end;
 
 	show is
 		do
+			if context_hole.original_stone /= Void then
+				menu_button.set_sensitive;
+			else
+				menu_button.set_insensitive;
+			end;
 			shell_show;
-			menu_button.option_button.show;
+		end;
+
+	hide is
+		do
+			menu_button.set_insensitive;
+			shell_hide;
 		end;
 
 
@@ -217,11 +229,11 @@ feature
 			end;
 			if other_editor = Void then
 				if new_context /= edited_context then
+					menu_button.set_insensitive;
 					old_edited_context := edited_context;
 					edited_context := new_context;
 					context_hole.set_context (edited_context);
 					option_list := edited_context.option_list;
-					menu_button.set_managed (False);
 					menu_button.update (option_list);
 					if edited_context.is_bulletin then
 						menu_button.add_button (alignment_form_number);
@@ -235,7 +247,6 @@ feature
 						menu_button.add_button (font_form_number);
 					end;
 					menu_button.add_button (behavior_form_number);
-					menu_button.set_managed (True);
 					if edited_context.editor_form = 0 then
 						edited_context.set_editor_form (option_list.item (1));
 					end;
@@ -287,6 +298,7 @@ feature
 						set_form (edited_context.editor_form);
 					end;
 				end;
+				menu_button.set_sensitive;
 			else
 				other_editor.raise
 			end;
@@ -313,6 +325,7 @@ feature
 			mp: MOUSE_PTR;
 			msg: STRING;
 		do
+			unmanage;
 			current_form_number := a_form_number;
 			edited_context.set_editor_form (a_form_number);
 			menu_button.set_form (edited_context.editor_form);
@@ -331,14 +344,9 @@ feature
 			end;
 			current_form := new_form;
 			current_form.reset_form;
-			if not menu_button.managed then
-				menu_button.set_managed (True);
-			end;
 			current_form.show;
 			current_form.set_managed (True);
-			if not menu_button.shown then
-				menu_button.show;
-			end;
+			manage;
 		end;
 
 	behavior_form_shown: BOOLEAN is
@@ -373,18 +381,16 @@ feature -- Reseting
 				reset_behavior_editor;
 				edited_context.set_editor_form (current_form_number);
 				edited_context := Void;
-				menu_button.option_button.hide;
+				menu_button.option_button.set_insensitive;
 				current_form.hide;
 				current_form := Void;
 				current_form_number := 0;
-				--icon.reset;
 				context_hole.reset;
 			end;
 		end;
 
 	update_icon_name is
 		do
-			--icon.update_name;
 			context_hole.update_name;
 		end;
 

@@ -5,7 +5,8 @@ inherit
 
 	ICON_HOLE
 		export
-			{NONE} all
+			{NONE} all;
+			{ANY} set_managed;
 		end;
 
 	REMOVABLE

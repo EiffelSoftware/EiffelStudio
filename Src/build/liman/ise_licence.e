@@ -44,7 +44,7 @@ feature
 			filename.append (licence_file);
 			filename.append ("/dhost");
 			!!info_file.make (filename);
-			if info_file.exists then
+			if info_file.exists and then info_file.is_readable then
 				info_file.open_read;
 				info_file.readline;
 				licence_host := clone (info_file.laststring);
@@ -64,7 +64,7 @@ feature
 			else
 				io.putstring ("License host file: ");
 				io.putstring (filename);
-				io.putstring (" does not exist.%N");
+				io.putstring (" does not exist or is not readable.%N");
 			end;
             if over_ride_time = Void then
                 override := false;

@@ -161,11 +161,33 @@ feature {NONE} -- Implementation
 				if txt = Void then
 					txt := ""
 				end
-				set_cell_text (list.index, a_row, txt)
+				set_cell_text (list.index - 1, a_row - 1, txt)
+				list.forth
+			end
+			from
+			until
+				list.after
+			loop
+				txt := list.item
+				if txt = Void then
+					txt := ""
+				end
+				add_column
+				set_cell_text (list.index - 1, a_row - 1, txt)
 				list.forth
 			end
 			list.go_to (cur)
 			child.update_performed
+		end
+
+	add_column is
+		local
+			wel_column: WEL_LIST_VIEW_COLUMN
+		do
+			create wel_column.make
+			wel_column.set_cx (80)
+			wel_column.set_text ("")
+			append_column (wel_column)
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
@@ -979,6 +1001,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/03/24 18:15:45  brendel
+--| Now adds columns if necessary. Seems to work.
+--|
 --| Revision 1.61  2000/03/24 18:00:42  brendel
 --| Move update_child back.
 --|

@@ -71,7 +71,7 @@ feature {EB_PRINTER} -- Basic operations
 			sent_text: STRING
 		do
 			if not retried then
-				cmd := "lpr "
+				cmd := "lp -d "
 				name := interface.context.printer_name
 				cmd.append (name)
 				
@@ -85,6 +85,7 @@ feature {EB_PRINTER} -- Basic operations
 				end
 				sent_text := interface.text.image
 				sent_text.prune_all ('%R')
+				sent_text.replace_substring_all ("%N", "%R%N")
 				file.putstring (sent_text)
 				file.close
 				

@@ -33,7 +33,7 @@ bitpbyte='8'
 lngpad_2='LNGPAD(2)'
 
 #Formatting
-#Check value for next 3
+#Check value for next 4
 inttypes_include=''
 eif_integer_64_display='"lld"'
 eif_pointer_display='"X"'
@@ -101,6 +101,7 @@ i_tmvlsyss='undef'
 abortsig='SIGABRT'
 signal_t='void'
 d_bsdjmp='define'
+#Check value for next 1
 d_bsdsig='undef'
 d_keepsig='define'
 d_siglist='define'
@@ -134,25 +135,28 @@ spitshell='cat'
 
 #Compiler/Preprocessor
 add_log='undef'
+binary_format=''
 cc='gcc'
 ccflags='-pipe'
 cpp='g++'
 cppflags='-pipe'
 cpp_stuff='42'
 defvoidused='15'
-#Check value for next 2
+#Check value for next 4
 eif_sgi='undef'
 eif_solaris='undef'
 eif_win32='undef'
 eif_windows='undef'
 Mcc='Mcc'
-mtccflags='-pipe -DEIF_THREADS -DEIF_LINUXTHREADS'
-mtcppflags='-pipe -DEIF_THREADS -DEIF_LINUXTHREADS'
-optimize='-O3'
-sharedccflags='-fPIC'
+#Check value for next 2
+mtccflags="$ccflags -DEIF_THREADS -DEIF_LINUXTHREADS"
+mtcppflags="$cppflags -DEIF_THREADS -DEIF_LINUXTHREADS"
+optimize="-O3 $binary_format $platform_arch"
+platform_arch=''
 voidflags='15'
+#Check value for next 1
 warning_level='-Wall'
-wkoptimize='-O0'
+wkoptimize="-O0 $binary_format $platform_arch"
 
 #Makefiles
 ar='ar'
@@ -161,14 +165,15 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
-ldflags=''
+ldflags=" $binary_format $platform_arch"
+ldsharedflags="$ldflags -shared -o"
 libs='-lm'
-ldsharedflags='-shared -o'
 ln='/bin/ln'
 make='make'
 mkdep='/home/manus/local/56dev/C/mkdep'
-mtlibs='-lnsl -lm'
-mtldsharedflags='-shared -o'
+mtldflags="$ldflags"
+mtldsharedflags="$ldsharedflags"
+mtlibs="$libs -lpthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'
@@ -176,7 +181,7 @@ ranlib=':'
 shared_prefix='lib'
 shared_suffix='.so'
 shared_rt_suffix='.so'
-sharedlibs='-lnsl -lm'
+sharedlibs='-lm'
 sharedlibversion='.5.6'
 sharedlink='ld'
 suffix='.a'

@@ -49,7 +49,7 @@ inherit
 		redefine
 			set_minimum_width_in_characters,
 			set_default_minimum_size,
-			move_and_resize,
+			wel_move_and_resize,
 			set_editable,
 			on_key_down,
 --			on_key_up
@@ -73,7 +73,11 @@ inherit
 			insert_item as wel_insert_item,
 			set_limit_text as set_text_limit,
 			set_text as wel_set_text,
-			move as move_to,
+			move as wel_move,
+			x as x_position,
+			y as y_position,
+			resize as wel_resize,
+			move_and_resize as wel_move_and_resize,
 			item as wel_item,
 			enabled as is_sensitive
 		export
@@ -103,7 +107,6 @@ inherit
 			on_cbn_editchange,
 			on_cbn_selchange,
 			on_cbn_dblclk,
-			move_and_resize,
 			default_style
 		end
 
@@ -272,7 +275,7 @@ feature -- Status setting
 	set_extended_height (value: INTEGER) is
 			-- Make `value' the new extended-height of the box.
 		do
-			resize (width, value)
+			wel_resize (width, value)
 		end
 
 	internal_set_caret_position (pos: INTEGER) is
@@ -357,7 +360,9 @@ feature {NONE} -- Implementation
 			if is_editable then
 				-- We keep some useful informations
 				par_imp ?= parent_imp
-				a := x; b := y; c := width
+				a := x_position
+				b := y_position
+				c := width
 
 				-- We destroy the old combo
 				wel_destroy
@@ -383,7 +388,9 @@ feature {NONE} -- Implementation
 			if not is_editable then
 				-- We keep some useful informations
 				par_imp ?= parent_imp
-				a := x; b := y; c := width
+				a := x_position
+				b := y_position
+				c := width
 
 				-- We destroy the old combo
 				wel_destroy
@@ -440,6 +447,9 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					(virtual_key /= 40) and (virtual_key /= 38) then
 					t_item ?= selected_item.implementation
 					unselect
+					--|FIXME two lines below are to stop a compiler bug. Remove as soon as possible.
+					if selected then
+					end
 					(ev_children @ t_item.index).interface.deselect_actions.call ([])
 						-- Call deselect events on child.
 					interface.deselect_actions.call ([(ev_children @ t_item.index).interface])
@@ -476,7 +486,8 @@ feature {NONE} -- WEL Implementation
 			-- The selection is about to be changed.
 		do
 			if selected and then wel_selected_item /= Void then
-				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+				if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1))
+				then
 					if old_selected_item /= Void then
 						old_selected_item.interface.deselect_actions.call ([])
 							-- Call deselect events on child.
@@ -490,7 +501,8 @@ feature {NONE} -- WEL Implementation
 						-- Call select events on child.
 					interface.select_actions.call ([(ev_children @ (wel_selected_item + 1)).interface])
 						-- Must now manually inform combo box that a selection is taking place
-				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+				elseif wel_selected_item/= Void and then not equal (old_selected_item,
+				ev_children.i_th (wel_selected_item + 1)) then
 					old_selected_item := Void
 				end
 			end
@@ -626,11 +638,21 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/03/22 20:16:19  rogers
+--| Renamed
+--| 	move_and_resize -> wel_move_and_resize,
+--| 	move -> wel_move,
+--| 	x -> x_position,
+--| 	y -> y_position,
+--| 	resize -> wel_Resize.
+--| Fixed any references to these old names.
+--|
 --| Revision 1.60  2000/03/07 00:19:55  rogers
 --| Corrected all select and deselect actions which did not previously call the child's events first.
 --|
 --| Revision 1.59  2000/03/06 20:51:32  rogers
---| The list select and deselect action sequences now only return the selected item, so any calls to these action sequences have been modified.
+--| The list select and deselect action sequences now only return the selected item, so any calls
+--| to these action sequences have been modified.
 --|
 --| Revision 1.58  2000/03/02 18:10:33  rogers
 --| Corrected two non working calls to a child's selection events.
@@ -639,7 +661,8 @@ end -- class EV_COMBO_BOX_IMP
 --| Added calls to the children's select and deselect events.
 --|
 --| Revision 1.55  2000/03/02 16:38:35  rogers
---| Is selected and selected_item have had checks added, to limit the wel calls when unecessary. Fixed the call to deselect_actions in on_key_down.
+--| Is selected and selected_item have had checks added, to limit the wel calls when unecessary.
+--| Fixed the call to deselect_actions in on_key_down.
 --|
 --| Revision 1.54  2000/03/01 16:39:10  rogers
 --| Redfined initialize, commented out old command association.

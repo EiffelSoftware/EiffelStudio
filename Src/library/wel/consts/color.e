@@ -156,6 +156,34 @@ feature -- Access
 			"COLOR_BTNHIGHLIGHT"
 		end
 
+feature -- Status report
+
+	valid_color_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid color constant?
+		do
+			Result := c = Color_scrollbar or else
+				c = Color_background or else
+				c = Color_activecaption or else
+				c = Color_inactivecaption or else
+				c = Color_menu or else
+				c = Color_window or else
+				c = Color_windowframe or else
+				c = Color_menutext or else
+				c = Color_windowtext or else
+				c = Color_captiontext or else
+				c = Color_activeborder or else
+				c = Color_inactiveborder or else
+				c = Color_appworkspace or else
+				c = Color_highlight or else
+				c = Color_highlighttext or else
+				c = Color_btnface or else
+				c = Color_btnshadow or else
+				c = Color_graytext or else
+				c = Color_btntext or else
+				c = Color_inactivecaptiontext or else
+				c = Color_btnhighlight
+		end
+
 end -- class WEL_COLOR_CONSTANTS
 
 --|-------------------------------------------------------------------------

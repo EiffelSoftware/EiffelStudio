@@ -23,7 +23,7 @@
 #include <signal.h>
 #include "logfile.h"
 #include "stream.h"
-#include "stdlib.h"
+#include <stdlib.h>
 
 
 #define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */

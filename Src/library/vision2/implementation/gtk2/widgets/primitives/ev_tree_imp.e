@@ -36,20 +36,12 @@ inherit
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
-		rename
-			list_widget as tree_view
-		undefine
-			destroy
 		redefine
 			interface,
 			insert_i_th,
 			remove_i_th,
-			reorder_child,
-			add_to_container,
-			tree_view,
 			append,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -629,10 +621,8 @@ feature {NONE} -- Implementation
 			child_array.put_left (v)	
 
 			item_imp.add_item_and_children_to_parent_tree (Current, Void, i)
-			
-			if v.pixmap /= Void then
-				set_row_pixmap (item_imp, v.pixmap)
-			end
+			update_row_pixmap (item_imp)
+			item_imp.remove_internal_text
 			
 			if item_imp.is_transport_enabled_iterator then
 				update_pnd_connection (True)
@@ -646,33 +636,12 @@ feature {NONE} -- Implementation
 		do
 			item_imp ?= (child_array @ (a_position)).implementation
 				-- Remove from tree if present
+			item_imp.set_internal_text (get_text_from_position (item_imp))
 			feature {EV_GTK_EXTERNALS}.gtk_tree_store_remove (tree_store, item_imp.list_iter.item)
 			item_imp.set_parent_imp (Void)
 			child_array.go_i_th (a_position)
 			child_array.remove
 			update_pnd_status
-		end
-		
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to tree.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		do
-			check  do_not_call: False end
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation
@@ -680,10 +649,12 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING is
 			-- Retrieve cell text from `a_tree_node_imp`
 		local
-			str_value: POINTER
+			a_g_value_string_struct: POINTER
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_node_imp.list_iter.item, 1, $str_value)
-			create Result.make_from_c (str_value)
+			a_g_value_string_struct := g_value_string_struct
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (a_g_value_string_struct)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_node_imp.list_iter.item, 1, a_g_value_string_struct)
+			create Result.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
 		end
 
 	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING) is
@@ -692,26 +663,23 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			str_value: POINTER
 		do
-			--create a_cs.make (a_text)
-			a_cs := a_text
-				-- Replace when we have UTF16 support
-			str_value := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
+			create a_cs.make_shared (a_text)
+			str_value := g_value_string_struct
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_take_string (str_value, a_cs.item)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, a_tree_node_imp.list_iter.item, 1, str_value)
-			str_value.memory_free
 		end
 
-	set_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP; a_pixmap: EV_PIXMAP) is
-			-- Set row `a_row' pixmap to `a_pixmap'.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
-			a_pixbuf: POINTER
+	g_value_string_struct: POINTER is
+			-- Optimization for GValue struct access
+		once
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
+		end
+
+	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP) is
+			-- Set the pixmap for `a_tree_node_imp'
 		do
-			pixmap_imp ?= a_pixmap.implementation
-			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_pixbuf)
-			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_tree_node_imp.gdk_pixbuf)
 		end
 
 	tree_store: POINTER

@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Figures consisting of two points."
-	status: "See notive at end of class"
+	status: "See notice at end of class"
 	keywords: "figure, points"
 	date: "$Date$"
 	revision: "$Revision$"

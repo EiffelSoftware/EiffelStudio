@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Pixels on `point' with size `line_width'."
-	status: "See notive at end of class"
+	status: "See notice at end of class"
 	keywords: "figure, dot, point, pixel"
 	date: "$Date$"
 	revision: "$Revision$"

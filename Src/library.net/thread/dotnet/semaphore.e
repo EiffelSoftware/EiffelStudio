@@ -23,6 +23,7 @@ feature -- Initialization
 		end
 
 	count: INTEGER
+			-- Semaphore count
 
 	wait is
 			-- Decrement semaphore count, waiting if necessary until 
@@ -100,16 +101,5 @@ feature -- Access
 		do
 			Result := True
 		end
-
---feature -- Status setting
---
---	try_wait, trywait: BOOLEAN is
-
---		require
---			valid_semaphore: is_set
---		do
---			Result := eif_thr_sem_trywait (sem_pointer)
---		end
-
 
 end -- class SEMAPHORE

@@ -51,19 +51,9 @@ extern int in_assertion;
 #define EIF_FALSE (EIF_BOOLEAN) '\0'
 #define EIF_TEST(x) ((EIF_BOOLEAN)((x)?EIF_TRUE:EIF_FALSE))
 
-/* ANSI/K&R/C++ protection macros */
-
 #define EXTERN_DECL(r_type, name, args) extern r_type name args
 #define STATIC_DECL(r_type, name, args) static r_type name args
 #define FUNCTION_CAST(r_type, arg_types) (r_type (*) arg_types)
-
-#ifdef __cplusplus
-#define CPP_WRAPPER_START extern "C" {
-#define CPP_WRAPPER_END }
-#else
-#define CPP_WRAPPER_START
-#define CPP_WRAPPER_END
-#endif
 
 /* Macro used for initialization of GC profiling:
  *  RTGC calls initialization of GC profiling
@@ -276,7 +266,8 @@ extern int fcount;
 /* Macro used to record once functions:
  *  RTOC calls onceset to record the address of Result (static variable)
  */
-#define RTOC(x)		onceset(x)
+/*#define RTOC(x)		onceset(x)*/
+#define RTOC(x)			henter(Result)
 
 /* Dynamic type of object. The name is not RTDT for historical reasons. */
 #define Dtype(x) (HEADER(x)->ov_flags & EO_TYPE)

@@ -19,15 +19,14 @@ feature {NONE} -- Initialization
 	make_with_name_and_value (a_name: STRING; a_value: INTEGER) is
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
-			a_name_valid: a_name /= Void and then a_value /= Void
-			a_value_valid: a_value /= Void and then a_value /= Void
+			a_name_valid: a_name /= Void
 		do
 			name := a_name.twin
 			value := a_value
 			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
-			value_set: value.is_equal (a_value)
+			value_set: value = a_value
 		end
 
 feature -- Access
@@ -120,6 +119,6 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 		end
 
 invariant
-	value_not_void: value /= Void
+	name_not_void: name /= Void
 
 end -- class GB_INTEGER_CONSTANT

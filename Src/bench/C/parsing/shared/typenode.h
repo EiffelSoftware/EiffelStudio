@@ -119,6 +119,7 @@
 #define POINTER_TYPE_AS		154
 #define ADDRESS_CURRENT_AS	155
 #define ADDRESS_RESULT_AS	156
+#define EXTERNAL_LANG_AS	158
 
 /* Lace nodes */ 
 
@@ -165,5 +166,5 @@
 #define CLICK_ELEM_SD			141
 #define EXECUTABLE_NAME_SD		157
 
-#define MAX_CONSTRUCT_TYPE		158
+#define MAX_CONSTRUCT_TYPE		159
 

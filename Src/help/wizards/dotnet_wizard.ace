@@ -31,7 +31,7 @@ default
 	dead_code_removal (yes)
 	exception_trace (yes)
 	inlining (no)
-	arguments ("E:\cvs\Delivery\studio\wizards\new_projects\dotnet -callback E:\cvs\Delivery\studio\wizards\new_projects\dotnet\resources\template_callback_filename")
+	arguments ("C:\Eiffel55\studio\wizards\new_projects\dotnet -callback D:\Delivery\studio\wizards\new_projects\dotnet\resources\template_callback_filename")
 
 
 cluster
@@ -41,12 +41,29 @@ cluster
 
 	bench_common (root_cluster):		"$\bench_common"
 
-	library base:		"$EIFFEL_SRC\library\base"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"desc"; "table_eiffel3"; "CVS"; 
+		visible
+			integer_ref
+		end
+			character_ref
+		end
+			boolean_ref
+		end
+			real_ref
+		end
+			double_ref
+		end
+			cell
+		end
+			string
+		end
+			array
+		end
 		end
 
-	library wel:		"$EIFFEL_SRC\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
 		end
@@ -56,12 +73,68 @@ cluster
 			"gtk"; "gtk2"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
 		end
 
-	library wizard_library:		"$EIFFEL_SRC\library\wizard"
+	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 		exclude
 			"unix"; "CVS"; 
 		end
 
-	library assembly_retriver:		"$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows"
+	all com:		"$EIFFEL_SRC\library\com"
+		exclude
+			"CVS"; 
+		visible
+			ecom_decimal
+				end
+			ecom_currency
+				end
+			ecom_array
+				end
+			ecom_variant
+				end
+			ecom_guid
+				end
+			ecom_excep_info
+				end
+			ecom_disp_params
+				end
+			ecom_statstg
+				end
+			ecom_stream
+				end
+			ecom_storage
+				end
+			ecom_root_storage
+				end
+			ecom_enum_statstg
+				end
+			ecom_hresult
+				end
+			ecom_wide_string
+				end
+			ecom_large_integer
+				end
+			ecom_ularge_integer
+				end
+			ecom_unknown_interface
+				end
+			ecom_automation_interface
+				end
+			ecom_stub
+				end
+			ecom_queriable
+				end
+		end
+
+	all time:		"$EIFFEL_SRC\library\time"
+		exclude
+			"french"; "german"; "Clib"; "CVS"; 
+		visible
+			date_time
+				end
+		end
+
+	all assembly_retriever:		"$EIFFEL_SRC\Eiffel\eiffel\il_generation\windows"
+
+	all fusion:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
@@ -73,6 +146,7 @@ external
 	include_path:
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\vision2\spec\include",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
@@ -81,6 +155,8 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\$(ISE_C_COMPILER)\lib\cli_writer.lib",
 		"corguids.lib"

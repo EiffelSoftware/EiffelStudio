@@ -42,12 +42,8 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			a_class: CLASS_I;
 			vd04: VD04;
 			ok: BOOLEAN;
---			warning: REN_WARN;
 
 		do
---			!!warning;
---			warning.set_cluster (context.current_cluster);
---			Error_handler.insert_error (warning);
 
 				-- Check first existence of cluster named `cluster_name'.
 			ok := good_cluster;

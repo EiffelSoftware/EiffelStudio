@@ -58,27 +58,72 @@ feature -- Default values
 	Minimum_width_of_object_editor: INTEGER is 120
 		-- The minimum width allowed for a GB_OBJECT_EDITOR
 		
-feature -- Pixmaps
 
-	insert_in_pixmap: EV_CURSOR is
-			-- Cursor used for insert in container pick and drop.
-		local
-			pixmap: EV_PIXMAP
+feature -- Generation constants
+
+	template_file_name: STRING is
+			-- `Result' is location of build template file,
+			-- including the name.
 		once
-			create pixmap
-			pixmap.set_with_named_file ("C:\insert_in_icon.ico")
-			create Result.make_with_pixmap (pixmap, 16, 16)
+			Result := "D:\work\build2\templates\build_template.e"
 		end
 		
-	insert_before_pixmap: EV_CURSOR is
-			-- Cursor used for insert before during pick and drop.
-		local
-			pixmap: EV_PIXMAP
+	class_name_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the class name.
 		once
-			create pixmap
-			pixmap.set_with_named_file ("C:\insert_before_icon.ico")
-			create Result.make_with_pixmap (pixmap, 16, 16)
+			Result := "<CLASS_NAME>"
 		end
 		
+	create_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the creation of widgets.
+		once
+			Result := "<CREATE>"
+		end
+		
+	build_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for buiilding of the widget heirarchy.
+		once
+			Result := "<BUILD>"
+		end
+		
+	set_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the setting of widgets properties.
+		once
+			Result := "<SET>"
+		end
+		
+	local_tag: STRING is
+			-- `Result' is tag used in tamplates
+			-- for local definitions.
+		once
+			Result := "<LOCAL>"
+		end
+		
+	indent: STRING is
+			-- String representing standard indent
+			-- for code generation.
+		once
+			Result := "%N%T%T%T"
+		end
+		
+		
+		
+feature -- Xml constants
+
+
+	True_string: STRING is "True"
+		-- String constant representing True.
+		
+	False_string: STRING is "False"
+		-- String constant representing False.
+		
+	Item_string: STRING is "item"
+		-- String constant representing "item".
+		
+	Name_string: STRING is "name"
 
 end -- class GB_CONSTANTS

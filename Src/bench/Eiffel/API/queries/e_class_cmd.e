@@ -17,23 +17,22 @@ inherit
 		export
 			{NONE} cmd_make
 		redefine
-			executable
+			executable, execute
 		end
 
 feature -- Initialization
 
-	set, make (a_class: E_CLASS; st: like structured_text) is
+	make (a_class: E_CLASS) is
 			-- Make current command with current_class as
 			-- `a_class'.
 		require
-			valid_a_class_c: a_class /= Void;
-			valid_st: st /= Void
+			valid_a_class_c: a_class /= Void
 		do
 			current_class := a_class;	
-			set_structured_text (st)
+			!! structured_text.make
 		ensure
 			class_set: current_class = a_class;
-			structured_text_set: structured_text = st
+			structured_text_not_void: structured_text /= Void
 		end;
 
 feature -- Property
@@ -53,7 +52,17 @@ feature -- Property
 feature -- Execution
 
 	execute is
-			-- Execute Current command.
+			-- Execute the current command. Add a before and after
+			-- declaration to `structured_text'
+			-- and invoke `work'.
+		do
+			structured_text.add (ti_Before_class_declaration);
+			work;
+			structured_text.add (ti_After_class_declaration);
+		end;
+
+	work is
+			-- Perform the command only.
 		deferred
 		end;
 

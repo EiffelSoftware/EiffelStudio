@@ -22,6 +22,9 @@
  * it seems better to provide them here...--RAM.
  */
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #ifndef S_IRUSR
 #define S_IRUSR 0000400
 #endif

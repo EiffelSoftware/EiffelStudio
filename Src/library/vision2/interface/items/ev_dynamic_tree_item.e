@@ -323,20 +323,22 @@ feature {NONE} -- Implementation
 			if subtree_function /= Void then
 				subtree_function_call
 				linear := subtree_function.last_result
-				cs ?= linear
-				if cs /= Void then
-					c := cs.cursor
-				end
-				from
-					linear.start
-				until
-					linear.off
-				loop
-					implementation.extend (linear.item)
-					linear.forth
-				end
-				if cs /= Void then
-					cs.go_to (c)
+				if linear /= Void then
+					cs ?= linear
+					if cs /= Void then
+						c := cs.cursor
+					end
+					from
+						linear.start
+					until
+						linear.off
+					loop
+						implementation.extend (linear.item)
+						linear.forth
+					end
+					if cs /= Void then
+						cs.go_to (c)
+					end
 				end
 				implementation.start
 				implementation.remove

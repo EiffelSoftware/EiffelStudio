@@ -38,35 +38,53 @@ feature {NONE}
 			end
 		end;
 
+	not_saved: BOOLEAN is
+			-- Has the text of some tool been edited and not saved?
+		do
+			Result := window_manager.class_win_mgr.changed or
+				system_tool.text_window.changed
+		end;
+
 	compile (argument: ANY) is
 		local
+			rescued: BOOLEAN;
 			temp: STRING
 		do
-			set_global_cursor (watch_cursor);
-			project_tool.set_changed (true);
-			Workbench.recompile;
-			if Workbench.successfull then
-				freezing_actions;
-				project_tool.set_changed (false);
-				system.server_controler.wipe_out; -- ???
-				save_failed := False;
-				save_workbench_file;
-				if save_failed then
-					!! temp.make (0);
-					temp.append ("Could not write to ");
-					temp.append (Project_file_name);
-					temp.append ("%NPlease check permissions and disk space%
-								%%NThen press ");
-					temp.append (command_name);
-					temp.append (" again%N");
-					error_window.put_string (temp);
-				else
-					finalization_actions (argument);
-					launch_c_compilation (argument);
+			if not rescued then
+				reset_debugger;
+				set_global_cursor (watch_cursor);
+				error_window.clear_window;
+				project_tool.set_changed (true);
+				Workbench.recompile;
+				if Workbench.successfull then
+					freezing_actions;
+					project_tool.set_changed (false);
+					system.server_controler.wipe_out; -- ???
+					save_failed := False;
+					save_workbench_file;
+					if save_failed then
+						!! temp.make (0);
+						temp.append ("Could not write to ");
+						temp.append (Project_file_name);
+						temp.append ("%NPlease check permissions and disk space%
+									%%NThen press ");
+						temp.append (command_name);
+						temp.append (" again%N");
+						error_window.put_string (temp);
+					else
+						finalization_actions (argument);
+						launch_c_compilation (argument);
+					end;
 				end;
+				tool_resynchronization (argument)
+			else
+				warner (text_window).gotcha_call (w_Project_may_be_corrupted)
 			end;
-			tool_resynchronization (argument);
-			restore_cursors;
+			error_window.display;
+			restore_cursors
+		rescue
+			rescued := true;
+			retry
 		end;
 
 	tool_resynchronization (argument: ANY) is
@@ -118,8 +136,22 @@ feature {NONE}
 
 	confirm_and_compile (argument: ANY) is
 		do
-			compile (argument)
+			if 
+				not Run_info.is_running or else
+				(argument /= Void and 
+				argument = last_confirmer and end_run_confirmed)
+			then
+				compile (argument)
+			else
+				confirmer (text_window).call (Current, 
+						"Recompiling project will end current run.%N%
+						%Start compilation anyway?", "Compile");
+				end_run_confirmed := true
+			end
 		end;
+
+	end_run_confirmed: BOOLEAN;
+			-- Was the last confirmer popped up to confirm the end of run?
 
 	work (argument: ANY) is
 			-- Recompile the project.
@@ -128,38 +160,42 @@ feature {NONE}
 			f: PLAIN_TEXT_FILE;
 			temp: STRING
 		do
-			reset_debugger;
-			if project_tool.initialized then
-				error_window.clear_window;
-				if Lace.file_name /= Void then
-					confirm_and_compile (argument);
-					error_window.display;
-					project_tool.raise
-				elseif argument = warner then
-					name_chooser.set_window (text_window);
-					name_chooser.call (Current)
-				elseif argument = void then
-					system_tool.display;	
-					load_default_ace;	
-				elseif argument = name_chooser then
-					fn := clone (name_chooser.selected_file);
-					!! f.make (fn);
-					if
-						f.exists and then f.is_readable and then f.is_plain
-					then
-						Lace.set_file_name (fn);
-						work (Current)
+			if Project_read_only.item then
+				warner (text_window).gotcha_call (w_Cannot_compile)
+			elseif project_tool.initialized then
+				if not_saved and  argument = text_window then
+					confirmer (text_window).call (Current, 
+						"Some files have not been saved.%N%
+						%Start compilation anyway?", "Compile");
+					end_run_confirmed := false
+				else
+					if Lace.file_name /= Void then
+						confirm_and_compile (argument);
+						project_tool.raise
+					elseif argument = Void then
+						system_tool.display;	
+						load_default_ace;	
+					elseif argument = last_warner then
+						name_chooser.set_window (text_window);
+						name_chooser.call (Current)
+					elseif argument = name_chooser then
+						fn := clone (name_chooser.selected_file);
+						!! f.make (fn);
+						if
+							f.exists and then f.is_readable and then f.is_plain
+						then
+							Lace.set_file_name (fn);
+							work (Current)
+						else
+							warner (text_window).custom_call 
+								(Current, w_Cannot_read_file_retry (fn), 
+								" OK ", Void, "Cancel");
+						end
 					else
-						warner.set_window (text_window);
-						warner.custom_call 
-							(Current, w_Cannot_read_file_retry (fn), 
-							" OK ", Void, "Cancel");
-					end
-				elseif argument = text_window then
-					warner.set_window (text_window);
-					warner.custom_call (Current, l_Specify_ace,
-						"Choose", "Template", "Cancel");
-				end;
+						warner (text_window).custom_call (Current, 
+							l_Specify_ace, "Choose", "Template", "Cancel");
+					end;
+				end
 			end;
 		end;
 

@@ -10,6 +10,9 @@ interface IFolderBrowser : IUnknown
 {
 	[helpstring ("Folder chosen by the user.")]
 	HRESULT FolderName ([out] LPTSTR* result);
+	
+	[helpstring ("Set initial folder name.")]
+	HRESULT SetStartingFolder ([in] LPTSTR* result);
 };
 
 [

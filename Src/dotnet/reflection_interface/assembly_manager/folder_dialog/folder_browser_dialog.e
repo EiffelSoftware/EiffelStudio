@@ -21,7 +21,7 @@ feature -- Basic operations
 		do
 			selected := False
 			id_list := cwin_sh_browse_for_folder (item)
-			if id_list /= default_pointer then
+			if not (id_list = default_pointer) then
 				cwin_sh_get_path_from_id_list (id_list, str_folder_name.item)
 				imalloc.free_buffer (id_list)
 				if not str_folder_name.string.is_empty then
@@ -29,7 +29,7 @@ feature -- Basic operations
 				end
 			else
 				str_folder_name.set_string ("")
-			end			
+			end
 		end
 
 end -- class FOLDER_BROWSER_DIALOG

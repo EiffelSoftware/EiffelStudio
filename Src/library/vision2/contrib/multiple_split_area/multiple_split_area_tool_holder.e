@@ -115,6 +115,9 @@ feature {NONE} -- Initialization
 			original_position, new_position: INTEGER
 			original_parent_window: EV_WINDOW
 			locked_in_here: BOOLEAN
+			minimized_count: INTEGER
+			tool_holder: like Current
+			parent_rep: LINEAR [EV_WIDGET]
 		do
 			parent_area.store_positions
 			original_position := parent_area.all_holders.index_of (Current, 1)
@@ -128,13 +131,18 @@ feature {NONE} -- Initialization
 
 			dialog := parent_dockable_dialog (tool)
 			if dialog /= Void then
+				check
+					parent_area_not_void: parent_area /= Void
+				end
 				if is_minimized then
 						-- Remove minimized state from `Current' as it has
 						-- been docked out of the multiple split area.
 					disable_minimized
+					minimize_button.set_pixmap (parent_area.minimize_pixmap)
 					tool.show
 					dialog.set_height (default_external_docked_height)
 				end
+
 				dialog.close_request_actions.wipe_out
 				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
 				position_docked_from := parent_area.linear_representation.index_of (tool, 1)
@@ -142,6 +150,28 @@ feature {NONE} -- Initialization
 				if not parent_area.is_item_external (tool) then
 					parent_area.external_representation.extend (tool)
 				end
+					-- Now must check that the number of minimized items is not equal
+					-- to the number of items still remaining. If this is the case,
+					-- one must be removed from its minimized state.
+				parent_rep := parent_area.linear_representation
+				from
+					parent_rep.start
+				until
+					parent_rep.off
+				loop
+					if parent_area.holder_of_widget (parent_rep.item).is_minimized then
+						minimized_count := minimized_count + 1
+					end
+					parent_rep.forth
+				end
+				if minimized_count = parent_area.count then
+					parent_rep.start
+					tool_holder := parent_area.holder_of_widget (parent_rep.item)
+					tool_holder.disable_minimized
+					tool_holder.minimize_button.set_pixmap (parent_area.minimize_pixmap)
+					tool_holder.tool.show
+				end
+				
 					-- This ensures that we only set the height when `Current' has just been docked from
 					-- `parent_area'.
 				if not (original_height = 0 and original_width = 0) then
@@ -221,7 +251,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	is_maximized: BOOLEAN
 		-- Is `Current' maximized?
 
-feature {MULTIPLE_SPLIT_AREA}-- Access
+feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 
 	command_tool_bar: EV_TOOL_BAR
 		-- A toolbar with specific commands related to `tool',

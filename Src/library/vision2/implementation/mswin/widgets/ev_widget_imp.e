@@ -27,6 +27,9 @@ inherit
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
 	WEL_WM_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -42,6 +45,7 @@ feature {NONE} -- Initialization
 				parent_not_void: par_imp /= Void
 			end
 			!! child_cell
+			set_top_level_window_imp (par_imp.top_level_window_imp)
 			initialize_list (command_count)
 			par_imp.add_child (Current)
 			plateform_build (par_imp)
@@ -74,6 +78,15 @@ feature -- Access
 			else
 				Result := Void
 			end
+		end
+
+	top_level_window: EV_WINDOW is
+			-- Top level window that contains the current widget.
+		local
+			ev_imp: EV_WINDOW_IMP
+		do
+			ev_imp ?= top_level_window_imp
+			Result ?= ev_imp.interface
 		end
 
 feature -- Status report
@@ -418,8 +431,20 @@ feature {NONE} -- Implementation, key events
 			execute_command (Cmd_key_release, data)
 		end
 
-feature -- Implementation : deferred features of WEL_WINDOW that are used
-		-- here but not defined
+feature {EV_WIDGET_IMP} -- WEL Implementation
+
+	top_level_window_imp: WEL_WINDOW is
+			-- Top level window that contains the current widget.
+		deferred
+		end
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		deferred
+		end
+
+feature -- Deferred features
 
 	exists: BOOLEAN is
 			-- Does the window exist?

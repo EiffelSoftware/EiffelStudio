@@ -25,14 +25,6 @@ creation {SOCKET}
 
 	create_from_descriptor
 
-feature -- Status report
-
-	support_storable: BOOLEAN is
-			-- Can medium be used to store an Eiffel structure?
-		do
-			Result := False
-		end
-
 feature -- Access
  
 	retrieved: ANY is
@@ -52,6 +44,22 @@ feature -- Access
 			end
 		end
  
+feature -- Status report
+
+	support_storable: BOOLEAN is
+			-- Can medium be used to store an Eiffel structure?
+		do
+			Result := False
+		end
+
+	is_valid_peer_address (addr: SOCKET): BOOLEAN is
+			-- Is `addr' a valid peer address?
+		require
+			address_exists: addr /= Void
+		do
+			Result := True
+		end
+
 feature -- Element change
  
 	basic_store (object: ANY) is
@@ -195,7 +203,8 @@ feature -- Basic commands
 	set_peer_address (addr: like address) is
 			-- Set peer address to `addr'.
 		require
-			addr_not_void: addr /= Void
+			address_exists: addr /= Void
+			address_valid: is_valid_peer_address (addr)
 		do
 			peer_address := addr
 		ensure

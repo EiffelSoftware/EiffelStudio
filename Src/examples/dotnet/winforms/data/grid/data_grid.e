@@ -15,7 +15,6 @@ feature -- Initialization
 	make is
 			-- Initialize
 		local
-			size: DRAWING_SIZE
 			handler: EVENT_HANDLER
 		do
 			create main_window.make

@@ -37,7 +37,13 @@ feature -- Access
 		end
 
 	last_error_message: STRING is
-			-- Last error message.
+			-- Last error message
+		do
+			-- Put Implementation here.
+		end
+
+	last_exception: IEIFFEL_EXCEPTION_INTERFACE is
+			-- Last exception raised
 		do
 			-- Put Implementation here.
 		end
@@ -86,8 +92,23 @@ feature -- Access
 
 feature -- Basic Operations
 
+	retrieve_eiffel_project (a_project_file_name: STRING) is
+			-- Retrieve Eiffel Project
+			-- `a_project_file_name' [in].  
+		do
+			-- Put Implementation here.
+		end
+
+	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
+			-- Create new Eiffel project.
+			-- `a_ace_file_name' [in].  
+			-- `a_project_directory_path' [in].  
+		do
+			-- Put Implementation here.
+		end
+
 	retrieve_project (a_project_file_name: STRING) is
-			-- Retrieve project.
+			-- Retrieve project. Obsolete
 			-- `a_project_file_name' [in].  
 		do
 			-- Put Implementation here.

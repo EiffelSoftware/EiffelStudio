@@ -43,53 +43,48 @@ feature -- Access
 			Result := ccom_creation_routine (initializer)
 		end
 
-	compilation_type: INTEGER is
-			-- Compilation type.
-			-- See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `Result' values.
+	namespace_generation: INTEGER is
+			-- Namespace generation for cluster
+			-- See ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `Result' values.
 		do
-			Result := ccom_compilation_type (initializer)
+			Result := ccom_namespace_generation (initializer)
 		end
 
-	console_application: BOOLEAN is
-			-- Is console application?
+	default_namespace: STRING is
+			-- Default namespace.
 		do
-			Result := ccom_console_application (initializer)
+			Result := ccom_default_namespace (initializer)
 		end
 
-	evaluate_require: BOOLEAN is
-			-- Should preconditions be evaluated?
+	project_type: INTEGER is
+			-- Project type
+			-- See ECOM_TAG_EIF_PROJECT_TYPES_ENUM for possible `Result' values.
 		do
-			Result := ccom_evaluate_require (initializer)
+			Result := ccom_project_type (initializer)
 		end
 
-	evaluate_ensure: BOOLEAN is
-			-- Should postconditions be evaluated?
+	dot_net_naming_convention: BOOLEAN is
+			-- .NET Naming convention
 		do
-			Result := ccom_evaluate_ensure (initializer)
+			Result := ccom_dot_net_naming_convention (initializer)
 		end
 
-	evaluate_check: BOOLEAN is
-			-- Should check assertions be evaluated?
-		do
-			Result := ccom_evaluate_check (initializer)
-		end
-
-	evaluate_loop: BOOLEAN is
-			-- Should loop assertions be evaluated?
-		do
-			Result := ccom_evaluate_loop (initializer)
-		end
-
-	evaluate_invariant: BOOLEAN is
-			-- Should class invariants be evaluated?
-		do
-			Result := ccom_evaluate_invariant (initializer)
-		end
-
-	debug_info: BOOLEAN is
+	generate_debug_info: BOOLEAN is
 			-- Generate debug info?
 		do
-			Result := ccom_debug_info (initializer)
+			Result := ccom_generate_debug_info (initializer)
+		end
+
+	precompiled_library: STRING is
+			-- Precompiled file.
+		do
+			Result := ccom_precompiled_library (initializer)
+		end
+
+	assertions: INTEGER is
+			-- Project assertions
+		do
+			Result := ccom_assertions (initializer)
 		end
 
 	clusters: IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
@@ -104,22 +99,10 @@ feature -- Access
 			Result := ccom_externals (initializer)
 		end
 
-	default_namespace: STRING is
-			-- Default namespace.
-		do
-			Result := ccom_default_namespace (initializer)
-		end
-
 	assemblies: IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE is
 			-- Assemblies.
 		do
 			Result := ccom_assemblies (initializer)
-		end
-
-	precompiled: STRING is
-			-- Precompiled file.
-		do
-			Result := ccom_precompiled (initializer)
 		end
 
 	title: STRING is
@@ -164,16 +147,22 @@ feature -- Access
 			Result := ccom_copyright (initializer)
 		end
 
+	culture: STRING is
+			-- Asembly culture.
+		do
+			Result := ccom_culture (initializer)
+		end
+
 	key_file_name: STRING is
 			-- Asembly signing key file name.
 		do
 			Result := ccom_key_file_name (initializer)
 		end
 
-	culture: STRING is
-			-- Asembly culture.
+	working_directory: STRING is
+			-- Project working directory
 		do
-			Result := ccom_culture (initializer)
+			Result := ccom_working_directory (initializer)
 		end
 
 feature -- Status Report
@@ -225,60 +214,11 @@ feature -- Basic Operations
 			ccom_set_creation_routine (initializer, return_value)
 		end
 
-	set_compilation_type (return_value: INTEGER) is
-			-- Compilation type.
-			-- `return_value' [in]. See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `return_value' values. 
+	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
+			-- Namespace generation for cluster
+			-- `penu_cluster_namespace_generation' [in]. See ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
 		do
-			ccom_set_compilation_type (initializer, return_value)
-		end
-
-	set_console_application (return_value: BOOLEAN) is
-			-- Is console application?
-			-- `return_value' [in].  
-		do
-			ccom_set_console_application (initializer, return_value)
-		end
-
-	set_evaluate_require (return_value: BOOLEAN) is
-			-- Should preconditions be evaluated?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_require (initializer, return_value)
-		end
-
-	set_evaluate_ensure (return_value: BOOLEAN) is
-			-- Should postconditions be evaluated?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_ensure (initializer, return_value)
-		end
-
-	set_evaluate_check (return_value: BOOLEAN) is
-			-- Should check assertions be evaluated?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_check (initializer, return_value)
-		end
-
-	set_evaluate_loop (return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_loop (initializer, return_value)
-		end
-
-	set_evaluate_invariant (return_value: BOOLEAN) is
-			-- Should class invariants be evaluated?
-			-- `return_value' [in].  
-		do
-			ccom_set_evaluate_invariant (initializer, return_value)
-		end
-
-	set_debug_info (return_value: BOOLEAN) is
-			-- Generate debug info?
-			-- `return_value' [in].  
-		do
-			ccom_set_debug_info (initializer, return_value)
+			ccom_set_namespace_generation (initializer, penu_cluster_namespace_generation)
 		end
 
 	set_default_namespace (return_value: STRING) is
@@ -288,11 +228,39 @@ feature -- Basic Operations
 			ccom_set_default_namespace (initializer, return_value)
 		end
 
-	set_precompiled (return_value: STRING) is
+	set_project_type (penum_project_type: INTEGER) is
+			-- Project type
+			-- `penum_project_type' [in]. See ECOM_TAG_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
+		do
+			ccom_set_project_type (initializer, penum_project_type)
+		end
+
+	set_dot_net_naming_convention (pvb_naming_convention: BOOLEAN) is
+			-- .NET Naming convention
+			-- `pvb_naming_convention' [in].  
+		do
+			ccom_set_dot_net_naming_convention (initializer, pvb_naming_convention)
+		end
+
+	set_generate_debug_info (return_value: BOOLEAN) is
+			-- Generate debug info?
+			-- `return_value' [in].  
+		do
+			ccom_set_generate_debug_info (initializer, return_value)
+		end
+
+	set_precompiled_library (return_value: STRING) is
 			-- Precompiled file.
 			-- `return_value' [in].  
 		do
-			ccom_set_precompiled (initializer, return_value)
+			ccom_set_precompiled_library (initializer, return_value)
+		end
+
+	set_assertions (p_assertions: INTEGER) is
+			-- Project assertions
+			-- `p_assertions' [in].  
+		do
+			ccom_set_assertions (initializer, p_assertions)
 		end
 
 	set_title (return_value: STRING) is
@@ -344,6 +312,13 @@ feature -- Basic Operations
 			ccom_set_copyright (initializer, return_value)
 		end
 
+	set_culture (return_value: STRING) is
+			-- Asembly culture.
+			-- `return_value' [in].  
+		do
+			ccom_set_culture (initializer, return_value)
+		end
+
 	set_key_file_name (return_value: STRING) is
 			-- Asembly signing key file name.
 			-- `return_value' [in].  
@@ -351,11 +326,11 @@ feature -- Basic Operations
 			ccom_set_key_file_name (initializer, return_value)
 		end
 
-	set_culture (return_value: STRING) is
-			-- Asembly culture.
-			-- `return_value' [in].  
+	set_working_directory (pbstr_working_directory: STRING) is
+			-- Project working directory
+			-- `pbstr_working_directory' [in].  
 		do
-			ccom_set_culture (initializer, return_value)
+			ccom_set_working_directory (initializer, pbstr_working_directory)
 		end
 
 	apply is
@@ -410,112 +385,16 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_compilation_type (cpp_obj: POINTER): INTEGER is
-			-- Compilation type.
+	ccom_namespace_generation (cpp_obj: POINTER): INTEGER is
+			-- Namespace generation for cluster
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_INTEGER"
 		end
 
-	ccom_set_compilation_type (cpp_obj: POINTER; return_value: INTEGER) is
-			-- Compilation type.
+	ccom_set_namespace_generation (cpp_obj: POINTER; penu_cluster_namespace_generation: INTEGER) is
+			-- Namespace generation for cluster
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_INTEGER)"
-		end
-
-	ccom_console_application (cpp_obj: POINTER): BOOLEAN is
-			-- Is console application?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_console_application (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Is console application?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_evaluate_require (cpp_obj: POINTER): BOOLEAN is
-			-- Should preconditions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_require (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should preconditions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_evaluate_ensure (cpp_obj: POINTER): BOOLEAN is
-			-- Should postconditions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_ensure (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should postconditions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_evaluate_check (cpp_obj: POINTER): BOOLEAN is
-			-- Should check assertions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_check (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should check assertions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_evaluate_loop (cpp_obj: POINTER): BOOLEAN is
-			-- Should loop assertions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_loop (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_evaluate_invariant (cpp_obj: POINTER): BOOLEAN is
-			-- Should class invariants be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_evaluate_invariant (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Should class invariants be evaluated?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_debug_info (cpp_obj: POINTER): BOOLEAN is
-			-- Generate debug info?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
-		end
-
-	ccom_set_debug_info (cpp_obj: POINTER; return_value: BOOLEAN) is
-			-- Generate debug info?
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
-		end
-
-	ccom_clusters (cpp_obj: POINTER): IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
-			-- Project Clusters.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_externals (cpp_obj: POINTER): IEIFFEL_SYSTEM_EXTERNALS_INTERFACE is
-			-- Externals.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_default_namespace (cpp_obj: POINTER): STRING is
@@ -530,22 +409,82 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
+	ccom_project_type (cpp_obj: POINTER): INTEGER is
+			-- Project type
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_INTEGER"
+		end
+
+	ccom_set_project_type (cpp_obj: POINTER; penum_project_type: INTEGER) is
+			-- Project type
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_INTEGER)"
+		end
+
+	ccom_dot_net_naming_convention (cpp_obj: POINTER): BOOLEAN is
+			-- .NET Naming convention
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_set_dot_net_naming_convention (cpp_obj: POINTER; pvb_naming_convention: BOOLEAN) is
+			-- .NET Naming convention
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
+		end
+
+	ccom_generate_debug_info (cpp_obj: POINTER): BOOLEAN is
+			-- Generate debug info?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_set_generate_debug_info (cpp_obj: POINTER; return_value: BOOLEAN) is
+			-- Generate debug info?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_BOOLEAN)"
+		end
+
+	ccom_precompiled_library (cpp_obj: POINTER): STRING is
+			-- Precompiled file.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_precompiled_library (cpp_obj: POINTER; return_value: STRING) is
+			-- Precompiled file.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_assertions (cpp_obj: POINTER): INTEGER is
+			-- Project assertions
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_INTEGER"
+		end
+
+	ccom_set_assertions (cpp_obj: POINTER; p_assertions: INTEGER) is
+			-- Project assertions
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_INTEGER)"
+		end
+
+	ccom_clusters (cpp_obj: POINTER): IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
+			-- Project Clusters.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_externals (cpp_obj: POINTER): IEIFFEL_SYSTEM_EXTERNALS_INTERFACE is
+			-- Externals.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
 	ccom_assemblies (cpp_obj: POINTER): IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE is
 			-- Assemblies.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_precompiled (cpp_obj: POINTER): STRING is
-			-- Precompiled file.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_set_precompiled (cpp_obj: POINTER; return_value: STRING) is
-			-- Precompiled file.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_title (cpp_obj: POINTER): STRING is
@@ -632,6 +571,18 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
+	ccom_culture (cpp_obj: POINTER): STRING is
+			-- Asembly culture.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_set_culture (cpp_obj: POINTER; return_value: STRING) is
+			-- Asembly culture.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
 	ccom_key_file_name (cpp_obj: POINTER): STRING is
 			-- Asembly signing key file name.
 		external
@@ -644,14 +595,14 @@ feature {NONE}  -- Externals
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_culture (cpp_obj: POINTER): STRING is
-			-- Asembly culture.
+	ccom_working_directory (cpp_obj: POINTER): STRING is
+			-- Project working directory
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
-	ccom_set_culture (cpp_obj: POINTER; return_value: STRING) is
-			-- Asembly culture.
+	ccom_set_working_directory (cpp_obj: POINTER; pbstr_working_directory: STRING) is
+			-- Project working directory
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelProjectProperties_impl_proxy_s.h%"](EIF_OBJECT)"
 		end

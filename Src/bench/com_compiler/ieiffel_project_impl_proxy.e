@@ -50,9 +50,15 @@ feature -- Access
 		end
 
 	last_error_message: STRING is
-			-- Last error message.
+			-- Last error message
 		do
 			Result := ccom_last_error_message (initializer)
+		end
+
+	last_exception: IEIFFEL_EXCEPTION_INTERFACE is
+			-- Last exception raised
+		do
+			Result := ccom_last_exception (initializer)
 		end
 
 	compiler: IEIFFEL_COMPILER_INTERFACE is
@@ -99,8 +105,23 @@ feature -- Access
 
 feature -- Basic Operations
 
+	retrieve_eiffel_project (a_project_file_name: STRING) is
+			-- Retrieve Eiffel Project
+			-- `a_project_file_name' [in].  
+		do
+			ccom_retrieve_eiffel_project (initializer, a_project_file_name)
+		end
+
+	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
+			-- Create new Eiffel project.
+			-- `a_ace_file_name' [in].  
+			-- `a_project_directory_path' [in].  
+		do
+			ccom_create_eiffel_project (initializer, a_ace_file_name, a_project_directory_path)
+		end
+
 	retrieve_project (a_project_file_name: STRING) is
-			-- Retrieve project.
+			-- Retrieve project. Obsolete
 			-- `a_project_file_name' [in].  
 		do
 			ccom_retrieve_project (initializer, a_project_file_name)
@@ -124,8 +145,20 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
+	ccom_retrieve_eiffel_project (cpp_obj: POINTER; a_project_file_name: STRING) is
+			-- Retrieve Eiffel Project
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT)"
+		end
+
+	ccom_create_eiffel_project (cpp_obj: POINTER; a_ace_file_name: STRING; a_project_directory_path: STRING) is
+			-- Create new Eiffel project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
+		end
+
 	ccom_retrieve_project (cpp_obj: POINTER; a_project_file_name: STRING) is
-			-- Retrieve project.
+			-- Retrieve project. Obsolete
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
@@ -161,7 +194,13 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_last_error_message (cpp_obj: POINTER): STRING is
-			-- Last error message.
+			-- Last error message
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_last_exception (cpp_obj: POINTER): IEIFFEL_EXCEPTION_INTERFACE is
+			-- Last exception raised
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

@@ -52,127 +52,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	compilation_type_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `compilation_type'.
+	namespace_generation_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `namespace_generation'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_compilation_type_user_precondition (return_value: INTEGER): BOOLEAN is
-			-- User-defined preconditions for `set_compilation_type'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	console_application_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `console_application'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_console_application_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_console_application'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	evaluate_require_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `evaluate_require'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_require_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_require'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	evaluate_ensure_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `evaluate_ensure'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_ensure_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_ensure'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	evaluate_check_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `evaluate_check'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_check_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_check'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	evaluate_loop_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `evaluate_loop'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_loop_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_loop'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	evaluate_invariant_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `evaluate_invariant'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_evaluate_invariant_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_evaluate_invariant'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	debug_info_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `debug_info'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_debug_info_user_precondition (return_value: BOOLEAN): BOOLEAN is
-			-- User-defined preconditions for `set_debug_info'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	clusters_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `clusters'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	externals_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `externals'.
+	set_namespace_generation_user_precondition (penu_cluster_namespace_generation: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_namespace_generation'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -192,22 +80,92 @@ feature -- Status Report
 			Result := True
 		end
 
+	project_type_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `project_type'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_project_type_user_precondition (penum_project_type: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_project_type'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	dot_net_naming_convention_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `dot_net_naming_convention'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_dot_net_naming_convention_user_precondition (pvb_naming_convention: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_dot_net_naming_convention'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_debug_info_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `generate_debug_info'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_generate_debug_info_user_precondition (return_value: BOOLEAN): BOOLEAN is
+			-- User-defined preconditions for `set_generate_debug_info'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	precompiled_library_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `precompiled_library'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_precompiled_library_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_precompiled_library'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	assertions_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `assertions'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_assertions_user_precondition (p_assertions: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_assertions'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	clusters_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `clusters'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	externals_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `externals'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	assemblies_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `assemblies'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	precompiled_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `precompiled'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_precompiled_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_precompiled'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -311,6 +269,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	culture_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `culture'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	set_culture_user_precondition (return_value: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_culture'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	key_file_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `key_file_name'.
 			-- Redefine in descendants if needed.
@@ -325,15 +297,15 @@ feature -- Status Report
 			Result := True
 		end
 
-	culture_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `culture'.
+	working_directory_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `working_directory'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_culture_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_culture'.
+	set_working_directory_user_precondition (pbstr_working_directory: STRING): BOOLEAN is
+			-- User-defined preconditions for `set_working_directory'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -399,155 +371,20 @@ feature -- Basic Operations
 
 		end
 
-	compilation_type: INTEGER is
-			-- Compilation type.
-			-- See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `Result' values.
+	namespace_generation: INTEGER is
+			-- Namespace generation for cluster
+			-- See ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `Result' values.
 		require
-			compilation_type_user_precondition: compilation_type_user_precondition
+			namespace_generation_user_precondition: namespace_generation_user_precondition
 		deferred
 
 		end
 
-	set_compilation_type (return_value: INTEGER) is
-			-- Compilation type.
-			-- `return_value' [in]. See ECOM_X__EIF_COMPILATION_TYPES_ENUM for possible `return_value' values. 
+	set_namespace_generation (penu_cluster_namespace_generation: INTEGER) is
+			-- Namespace generation for cluster
+			-- `penu_cluster_namespace_generation' [in]. See ECOM_TAG_EIF_CLUSTER_NAMESPACE_GENERATION_ENUM for possible `penu_cluster_namespace_generation' values. 
 		require
-			set_compilation_type_user_precondition: set_compilation_type_user_precondition (return_value)
-		deferred
-
-		end
-
-	console_application: BOOLEAN is
-			-- Is console application?
-		require
-			console_application_user_precondition: console_application_user_precondition
-		deferred
-
-		end
-
-	set_console_application (return_value: BOOLEAN) is
-			-- Is console application?
-			-- `return_value' [in].  
-		require
-			set_console_application_user_precondition: set_console_application_user_precondition (return_value)
-		deferred
-
-		end
-
-	evaluate_require: BOOLEAN is
-			-- Should preconditions be evaluated?
-		require
-			evaluate_require_user_precondition: evaluate_require_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_require (return_value: BOOLEAN) is
-			-- Should preconditions be evaluated?
-			-- `return_value' [in].  
-		require
-			set_evaluate_require_user_precondition: set_evaluate_require_user_precondition (return_value)
-		deferred
-
-		end
-
-	evaluate_ensure: BOOLEAN is
-			-- Should postconditions be evaluated?
-		require
-			evaluate_ensure_user_precondition: evaluate_ensure_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_ensure (return_value: BOOLEAN) is
-			-- Should postconditions be evaluated?
-			-- `return_value' [in].  
-		require
-			set_evaluate_ensure_user_precondition: set_evaluate_ensure_user_precondition (return_value)
-		deferred
-
-		end
-
-	evaluate_check: BOOLEAN is
-			-- Should check assertions be evaluated?
-		require
-			evaluate_check_user_precondition: evaluate_check_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_check (return_value: BOOLEAN) is
-			-- Should check assertions be evaluated?
-			-- `return_value' [in].  
-		require
-			set_evaluate_check_user_precondition: set_evaluate_check_user_precondition (return_value)
-		deferred
-
-		end
-
-	evaluate_loop: BOOLEAN is
-			-- Should loop assertions be evaluated?
-		require
-			evaluate_loop_user_precondition: evaluate_loop_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_loop (return_value: BOOLEAN) is
-			-- Should loop assertions be evaluated?
-			-- `return_value' [in].  
-		require
-			set_evaluate_loop_user_precondition: set_evaluate_loop_user_precondition (return_value)
-		deferred
-
-		end
-
-	evaluate_invariant: BOOLEAN is
-			-- Should class invariants be evaluated?
-		require
-			evaluate_invariant_user_precondition: evaluate_invariant_user_precondition
-		deferred
-
-		end
-
-	set_evaluate_invariant (return_value: BOOLEAN) is
-			-- Should class invariants be evaluated?
-			-- `return_value' [in].  
-		require
-			set_evaluate_invariant_user_precondition: set_evaluate_invariant_user_precondition (return_value)
-		deferred
-
-		end
-
-	debug_info: BOOLEAN is
-			-- Generate debug info?
-		require
-			debug_info_user_precondition: debug_info_user_precondition
-		deferred
-
-		end
-
-	set_debug_info (return_value: BOOLEAN) is
-			-- Generate debug info?
-			-- `return_value' [in].  
-		require
-			set_debug_info_user_precondition: set_debug_info_user_precondition (return_value)
-		deferred
-
-		end
-
-	clusters: IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
-			-- Project Clusters.
-		require
-			clusters_user_precondition: clusters_user_precondition
-		deferred
-
-		end
-
-	externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE is
-			-- Externals.
-		require
-			externals_user_precondition: externals_user_precondition
+			set_namespace_generation_user_precondition: set_namespace_generation_user_precondition (penu_cluster_namespace_generation)
 		deferred
 
 		end
@@ -569,27 +406,112 @@ feature -- Basic Operations
 
 		end
 
+	project_type: INTEGER is
+			-- Project type
+			-- See ECOM_TAG_EIF_PROJECT_TYPES_ENUM for possible `Result' values.
+		require
+			project_type_user_precondition: project_type_user_precondition
+		deferred
+
+		end
+
+	set_project_type (penum_project_type: INTEGER) is
+			-- Project type
+			-- `penum_project_type' [in]. See ECOM_TAG_EIF_PROJECT_TYPES_ENUM for possible `penum_project_type' values. 
+		require
+			set_project_type_user_precondition: set_project_type_user_precondition (penum_project_type)
+		deferred
+
+		end
+
+	dot_net_naming_convention: BOOLEAN is
+			-- .NET Naming convention
+		require
+			dot_net_naming_convention_user_precondition: dot_net_naming_convention_user_precondition
+		deferred
+
+		end
+
+	set_dot_net_naming_convention (pvb_naming_convention: BOOLEAN) is
+			-- .NET Naming convention
+			-- `pvb_naming_convention' [in].  
+		require
+			set_dot_net_naming_convention_user_precondition: set_dot_net_naming_convention_user_precondition (pvb_naming_convention)
+		deferred
+
+		end
+
+	generate_debug_info: BOOLEAN is
+			-- Generate debug info?
+		require
+			generate_debug_info_user_precondition: generate_debug_info_user_precondition
+		deferred
+
+		end
+
+	set_generate_debug_info (return_value: BOOLEAN) is
+			-- Generate debug info?
+			-- `return_value' [in].  
+		require
+			set_generate_debug_info_user_precondition: set_generate_debug_info_user_precondition (return_value)
+		deferred
+
+		end
+
+	precompiled_library: STRING is
+			-- Precompiled file.
+		require
+			precompiled_library_user_precondition: precompiled_library_user_precondition
+		deferred
+
+		end
+
+	set_precompiled_library (return_value: STRING) is
+			-- Precompiled file.
+			-- `return_value' [in].  
+		require
+			set_precompiled_library_user_precondition: set_precompiled_library_user_precondition (return_value)
+		deferred
+
+		end
+
+	assertions: INTEGER is
+			-- Project assertions
+		require
+			assertions_user_precondition: assertions_user_precondition
+		deferred
+
+		end
+
+	set_assertions (p_assertions: INTEGER) is
+			-- Project assertions
+			-- `p_assertions' [in].  
+		require
+			set_assertions_user_precondition: set_assertions_user_precondition (p_assertions)
+		deferred
+
+		end
+
+	clusters: IEIFFEL_SYSTEM_CLUSTERS_INTERFACE is
+			-- Project Clusters.
+		require
+			clusters_user_precondition: clusters_user_precondition
+		deferred
+
+		end
+
+	externals: IEIFFEL_SYSTEM_EXTERNALS_INTERFACE is
+			-- Externals.
+		require
+			externals_user_precondition: externals_user_precondition
+		deferred
+
+		end
+
 	assemblies: IEIFFEL_SYSTEM_ASSEMBLIES_INTERFACE is
 			-- Assemblies.
 		require
 			assemblies_user_precondition: assemblies_user_precondition
-		deferred
-
-		end
-
-	precompiled: STRING is
-			-- Precompiled file.
-		require
-			precompiled_user_precondition: precompiled_user_precondition
-		deferred
-
-		end
-
-	set_precompiled (return_value: STRING) is
-			-- Precompiled file.
-			-- `return_value' [in].  
-		require
-			set_precompiled_user_precondition: set_precompiled_user_precondition (return_value)
 		deferred
 
 		end
@@ -713,6 +635,23 @@ feature -- Basic Operations
 
 		end
 
+	culture: STRING is
+			-- Asembly culture.
+		require
+			culture_user_precondition: culture_user_precondition
+		deferred
+
+		end
+
+	set_culture (return_value: STRING) is
+			-- Asembly culture.
+			-- `return_value' [in].  
+		require
+			set_culture_user_precondition: set_culture_user_precondition (return_value)
+		deferred
+
+		end
+
 	key_file_name: STRING is
 			-- Asembly signing key file name.
 		require
@@ -730,19 +669,19 @@ feature -- Basic Operations
 
 		end
 
-	culture: STRING is
-			-- Asembly culture.
+	working_directory: STRING is
+			-- Project working directory
 		require
-			culture_user_precondition: culture_user_precondition
+			working_directory_user_precondition: working_directory_user_precondition
 		deferred
 
 		end
 
-	set_culture (return_value: STRING) is
-			-- Asembly culture.
-			-- `return_value' [in].  
+	set_working_directory (pbstr_working_directory: STRING) is
+			-- Project working directory
+			-- `pbstr_working_directory' [in].  
 		require
-			set_culture_user_precondition: set_culture_user_precondition (return_value)
+			set_working_directory_user_precondition: set_working_directory_user_precondition (pbstr_working_directory)
 		deferred
 
 		end

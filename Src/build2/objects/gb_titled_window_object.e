@@ -77,7 +77,7 @@ feature -- Access
 			if menu_bar_object /= Void then
 					-- We must add a menu bar in a different way to
 					-- a normal object, as the window may be full and
-					-- have a msnu bar added.
+					-- have a menu bar added.
 				add_menu_bar (menu_bar_object)
 			else
 				create env

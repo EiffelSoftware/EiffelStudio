@@ -23,6 +23,7 @@ BOOL CALLBACK EnumChildProc(HWND hwnd, LPARAM lparam)
 	pEif_callback = (EiffelCallback*)lparam;
 	EnumChildWindowsAdd = (void (*) (void*, HWND)) pEif_callback->fnptr;
 	EnumChildWindowsAdd(pEif_callback->pCurrObject, hwnd);
+	return TRUE; // TRUE => Continue enumeration.
 	}
 
 void cwel_enum_child_windows_procedure (void *pCurrObject, void *fnptr, HWND hWndParent)

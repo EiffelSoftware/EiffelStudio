@@ -69,14 +69,26 @@ feature -- Access
 			success: last_call_success = 0
 		end
 		
+	is_in_gac: BOOLEAN is
+			-- Was assembly consumed in GAC
+		local
+			l_res: BOOLEAN
+		do
+			last_call_success := c_is_in_gac (item, $l_res)
+			Result := l_res
+		ensure
+			success: last_call_success = 0
+		end
+		
 	is_consumed: BOOLEAN is
 			-- has assembly been consumed?
 		local
-			res: reference BOOLEAN
+			l_res: BOOLEAN
 		do
-			create res
-			last_call_success := c_is_consumed (item, res)
-			Result := res
+			last_call_success := c_is_consumed (item, $l_res)
+			Result := l_res
+		ensure
+			success: last_call_success = 0
 		end	
 		
 	consumed_folder_name: STRING is
@@ -126,7 +138,15 @@ feature {NONE} -- Implementation
 			"public_key_token"
 		end
 
-	c_is_consumed (ap:POINTER; aret_val: reference BOOLEAN): INTEGER is
+	c_is_in_gac (ap:POINTER; aret_val: POINTER): INTEGER is
+			-- was assembly consumed in GAC
+		external
+			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
+		alias
+			"is_in_gac"
+		end
+
+	c_is_consumed (ap:POINTER; aret_val: POINTER): INTEGER is
 			-- assembly consumed folder name
 		external
 			"C++ EiffelSoftware_MetadataConsumer_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""

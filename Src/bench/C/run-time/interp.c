@@ -2817,8 +2817,8 @@ int code;
 		case SK_INT:
 			first->type = second->type;
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_float = (float) f->it_long / s->it_long;	
-						f->type = SK_FLOAT; b;
+			case SK_INT: f->it_double = (double) f->it_long / s->it_long;	
+						f->type = SK_DOUBLE; b;
 			case SK_FLOAT: f->it_float = (float) f->it_long / s->it_float; b;
 			case SK_DOUBLE: f->it_double = (double) f->it_long / s->it_double; b;
 			default: panic(botched);

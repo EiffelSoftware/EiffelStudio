@@ -658,7 +658,7 @@ feature {NONE} -- Basic text
 	ti_Breakpoint: BREAKPOINT_ITEM is
 			-- Breakpoint item 
 		once
-			!! Result.do_nothing
+			!! Result
 		end;
 
 	ti_Current: BASIC_TEXT is

@@ -28,7 +28,7 @@ feature -- Initialization
 			-- Initialize the filter window, and add a 
 			-- button click action for button number 3.
 		do
-			init_from_tool (a_tool);
+			init (a_tool);
 		end;
 
 feature -- Callbacks

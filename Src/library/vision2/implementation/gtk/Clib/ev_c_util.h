@@ -13,7 +13,6 @@
 
 EIF_REAL double_array_i_th (double* double_array, int index);
 GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
-char* string_pointer_deref (char** pointer);
 
 void enable_ev_gtk_log (int a_mode);
 
@@ -974,6 +973,9 @@ static char *wait_cursor_xpm[] = {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.8  2001/08/24 20:50:08  king
+// Removed unused external
+//
 // Revision 1.7  2001/08/03 18:41:26  king
 // Removed no longer needed externals
 //

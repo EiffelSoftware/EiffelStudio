@@ -31,6 +31,9 @@ feature -- eStudio callback
 		end
 
 feature -- Synchro Timer
+
+	dbg_timer_active: BOOLEAN
+			-- Is dbg timer active ?
 	
 	start_dbg_timer is
 			-- 
@@ -46,6 +49,7 @@ feature -- Synchro Timer
 					io.put_string ("[EIFFEL] Start dbg timer%N")
 				end
 				c_start_dbg_timer
+				dbg_timer_active := True
 			end
 		end
 		
@@ -62,7 +66,8 @@ feature -- Synchro Timer
 				debug ("DBG_SYNCHRO")
 					io.put_string ("[EIFFEL] Stop dbg timer%N")
 				end
-				c_stop_dbg_timer			
+				c_stop_dbg_timer
+				dbg_timer_active := False
 			end
 		end	
 

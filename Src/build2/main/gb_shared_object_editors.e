@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 					-- We must only update the other editors referencing `vision2_object', not `calling_object_editor'.
 					-- If `local_item' `object' is `Void' then the editor is empty, so there is nothing to do.
 				if local_item /= calling_object_editor and then local_item.object /= Void and then local_item.object.object = vision2_object then
-					local_all_editors.item.replace_object_editor_item (property_type)
+					local_item.replace_object_editor_item (property_type)
 				end
 				local_all_editors.forth
 			end

@@ -24,7 +24,9 @@ inherit
 		redefine
 			make,
 			client_width,
-			client_height
+			client_height,
+			set_focus,
+			has_focus
 		end
 
 feature {NONE} -- Initialization
@@ -105,7 +107,22 @@ feature -- Status report
 			end
 		end
 
+	has_focus: BOOLEAN is
+			-- Does box have focus?
+		do
+			Result := True
+		end
+
 feature -- Status setting
+
+	set_focus is
+			-- When current widget recieves focus, pass
+			-- focus to the first child.
+		do
+			if not ev_children.empty then
+				ev_children.first.set_focus
+			end
+		end
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
 			-- Make the child corresponding to `index' expandable if `flag',

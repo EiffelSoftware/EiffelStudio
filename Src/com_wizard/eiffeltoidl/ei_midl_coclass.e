@@ -82,7 +82,7 @@ feature -- Output
 			-- interface I'name';
 			Result.append ("%N%T{%N%T%T")
 			Result.append ("interface I")
-			Result.append (name)
+			Result.append (l_name)
 			Result.append (";%N%T}%N")
 		ensure
 			output_generated: code /= Void

@@ -12,6 +12,11 @@
 extern int debug_mode;			/* Status of debugger */
 static int saved_debug_mode;	/* Saved status of debugger when enabling
 								   heavy_capture */
+static HINSTANCE hLibrary;		/* HINSTANCE of loaded DLL */
+static int is_library_loaded;	/* Is `hLibrary' loaded */
+
+static void load_library ();
+static void free_library ();
 
 /*---------------------------------------------------------------------------*/
 /* FUNC: cwel_get_hook_window                                                */
@@ -21,11 +26,9 @@ static int saved_debug_mode;	/* Saved status of debugger when enabling
 /*---------------------------------------------------------------------------*/
 HWND cwel_get_hook_window()
 	{
-	HINSTANCE hLibrary;
 	FARPROC get_hook_window_func;
 	
-	// Get the module of the library WITHOUT loading it.
-	hLibrary = GetModuleHandle("wel_hook.dll");
+	load_library();
 
 	// The library is not loaded, so no hook is defined..
 	if (hLibrary == NULL)
@@ -53,14 +56,14 @@ HWND cwel_get_hook_window()
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	{
-	HINSTANCE hLibrary;
 	FARPROC hook_mouse_func;
 	
 		/* Disable debugger otherwise everything is blocked */
 	saved_debug_mode = debug_mode;
 	debug_mode = 0;
 	
-	hLibrary = LoadLibrary("wel_hook.dll");
+	load_library();
+
 	if (hLibrary == NULL)
 		{
 		// Display an error box
@@ -86,15 +89,13 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwel_unhook_mouse()
 	{
-	HINSTANCE hLibrary;
 	FARPROC unhook_mouse_func;
 	EIF_BOOLEAN bRes;
 	
 		/* Restore status of debugger */
 	debug_mode = saved_debug_mode;
 
-	// Get the module of the library WITHOUT loading it.
-	hLibrary = GetModuleHandle("wel_hook.dll");
+	load_library();
 
 	// The library is not loaded, so no hook is defined.. do nothing
 	// and return an error
@@ -108,6 +109,36 @@ EIF_BOOLEAN cwel_unhook_mouse()
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
 	bRes = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, ()) unhook_mouse_func)());
-	FreeLibrary(hLibrary);
+
+	free_library();
 	return bRes;
 	}
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: load_library                                                        */
+/* ARGS:                                                                     */
+/*---------------------------------------------------------------------------*/
+/* Load "wel_hook.dll"                                                       */
+/*---------------------------------------------------------------------------*/
+
+static void load_library () {
+	if (!is_library_loaded) {
+			// Get the module of the library WITHOUT loading it.
+		hLibrary = LoadLibrary ("wel_hook.dll");
+		is_library_loaded = 1;
+	}
+}
+
+/*---------------------------------------------------------------------------*/
+/* FUNC: free_library                                                        */
+/* ARGS:                                                                     */
+/*---------------------------------------------------------------------------*/
+/* UnLoad "wel_hook.dll"                                                     */
+/*---------------------------------------------------------------------------*/
+
+static void free_library () {
+	FreeLibrary (hLibrary);
+	hLibrary = NULL;
+	is_library_loaded = 0;
+}
+

@@ -5,7 +5,7 @@
 #include "ecom_EiffelCompiler_Core.h"
 static const CLSID CLSID_Core_ = {0x9daf83a1,0x15d7,0x3a80,{0xab,0x8f,0x0e,0x03,0x4f,0x47,0x9c,0x3f}};
 
-static const IID IID_ICore_ = {0x75fa3a63,0xb835,0x3feb,{0x9a,0x33,0x34,0x79,0xc1,0x93,0x78,0xcf}};
+static const IID IID_ICore_ = {0xe5450bb3,0x943c,0x347c,{0xa8,0xfa,0xff,0x3b,0x6f,0x51,0xa3,0x43}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -373,7 +373,7 @@ rt_ce.free_memory_bstr (tmp_element_type_name);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelCompiler::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN deferred1,  /* [in] */ EIF_BOOLEAN is_frozen,  /* [in] */ EIF_BOOLEAN expanded1,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id )
+void ecom_EiffelCompiler::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOLEAN is_interface,  /* [in] */ EIF_BOOLEAN is_deferred,  /* [in] */ EIF_BOOLEAN is_frozen,  /* [in] */ EIF_BOOLEAN is_expanded,  /* [in] */ EIF_BOOLEAN is_external,  /* [in] */ EIF_INTEGER type_id )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -392,18 +392,18 @@ void ecom_EiffelCompiler::Core::ccom_generate_class_header(  /* [in] */ EIF_BOOL
 	};
 	VARIANT_BOOL tmp_is_interface = 0;
 	tmp_is_interface = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_interface);
-	VARIANT_BOOL tmp_deferred1 = 0;
-	tmp_deferred1 = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (deferred1);
+	VARIANT_BOOL tmp_is_deferred = 0;
+	tmp_is_deferred = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_deferred);
 	VARIANT_BOOL tmp_is_frozen = 0;
 	tmp_is_frozen = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_frozen);
-	VARIANT_BOOL tmp_expanded1 = 0;
-	tmp_expanded1 = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (expanded1);
+	VARIANT_BOOL tmp_is_expanded = 0;
+	tmp_is_expanded = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_expanded);
 	VARIANT_BOOL tmp_is_external = 0;
 	tmp_is_external = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (is_external);
 	LONG tmp_type_id = 0;
 	tmp_type_id = (LONG)type_id;
 	
-	hr = p_ICore->GenerateClassHeader(tmp_is_interface,tmp_deferred1,tmp_is_frozen,tmp_expanded1,tmp_is_external,tmp_type_id);
+	hr = p_ICore->GenerateClassHeader(tmp_is_interface,tmp_is_deferred,tmp_is_frozen,tmp_is_expanded,tmp_is_external,tmp_type_id);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -3682,7 +3682,7 @@ void ecom_EiffelCompiler::Core::ccom_put_integer32_constant(  /* [in] */ EIF_INT
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_EiffelCompiler::Core::ccom_put_integer64_constant(  /* [in] */ EIF_INTEGER i )
+void ecom_EiffelCompiler::Core::ccom_put_integer64_constant(  /* [in] */ EIF_INTEGER_64 i )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -3699,8 +3699,8 @@ void ecom_EiffelCompiler::Core::ccom_put_integer64_constant(  /* [in] */ EIF_INT
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	LONG tmp_i = 0;
-	tmp_i = (LONG)i;
+	LONGLONG tmp_i = 0;
+	tmp_i = (LONGLONG)i;
 	
 	hr = p_ICore->PutInteger64Constant(tmp_i);
 	if (FAILED (hr))

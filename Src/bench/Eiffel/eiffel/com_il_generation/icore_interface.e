@@ -73,7 +73,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	generate_class_header_user_precondition (is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER): BOOLEAN is
+	generate_class_header_user_precondition (is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_class_header'.
 			-- Redefine in descendants if needed.
 		do
@@ -808,7 +808,7 @@ feature -- Status Report
 			Result := True
 		end
 
-	put_integer64_constant_user_precondition (i: INTEGER): BOOLEAN is
+	put_integer64_constant_user_precondition (i: INTEGER_64): BOOLEAN is
 			-- User-defined preconditions for `put_integer64_constant'.
 			-- Redefine in descendants if needed.
 		do
@@ -1160,16 +1160,16 @@ feature -- Basic Operations
 
 		end
 
-	generate_class_header (is_interface: BOOLEAN; deferred1: BOOLEAN; is_frozen: BOOLEAN; expanded1: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
+	generate_class_header (is_interface: BOOLEAN; is_deferred: BOOLEAN; is_frozen: BOOLEAN; is_expanded: BOOLEAN; is_external: BOOLEAN; type_id: INTEGER) is
 			-- No description available.
 			-- `is_interface' [in].  
-			-- `deferred1' [in].  
+			-- `is_deferred' [in].  
 			-- `is_frozen' [in].  
-			-- `expanded1' [in].  
+			-- `is_expanded' [in].  
 			-- `is_external' [in].  
 			-- `type_id' [in].  
 		require
-			generate_class_header_user_precondition: generate_class_header_user_precondition (is_interface, deferred1, is_frozen, expanded1, is_external, type_id)
+			generate_class_header_user_precondition: generate_class_header_user_precondition (is_interface, is_deferred, is_frozen, is_expanded, is_external, type_id)
 		deferred
 
 		end
@@ -2127,7 +2127,7 @@ feature -- Basic Operations
 
 		end
 
-	put_integer64_constant (i: INTEGER) is
+	put_integer64_constant (i: INTEGER_64) is
 			-- No description available.
 			-- `i' [in].  
 		require

@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(75FA3A63-B835-3FEB-9A33-3479C19378CF),
+      uuid(E5450BB3-943C-347C-A8FA-FF3B6F51A343),
       version(1.0),
       oleautomation
     ]
@@ -42,9 +42,9 @@ library EiffelCompiler
                         [in] BSTR ElementTypeName);
         HRESULT _stdcall GenerateClassHeader(
                         [in] VARIANT_BOOL IsInterface, 
-                        [in] VARIANT_BOOL Deferred, 
+                        [in] VARIANT_BOOL IsDeferred, 
                         [in] VARIANT_BOOL IsFrozen, 
-                        [in] VARIANT_BOOL Expanded, 
+                        [in] VARIANT_BOOL IsExpanded, 
                         [in] VARIANT_BOOL IsExternal, 
                         [in] long TypeID);
         HRESULT _stdcall EndClass();
@@ -219,7 +219,7 @@ library EiffelCompiler
         HRESULT _stdcall PutInteger8Constant([in] long i);
         HRESULT _stdcall PutInteger16Constant([in] long i);
         HRESULT _stdcall PutInteger32Constant([in] long i);
-        HRESULT _stdcall PutInteger64Constant([in] long i);
+        HRESULT _stdcall PutInteger64Constant([in] int64 i);
         HRESULT _stdcall PutDoubleConstant([in] double d);
         HRESULT _stdcall PutRealConstant([in] float d);
         HRESULT _stdcall PutCharacterConstant([in] unsigned short c);

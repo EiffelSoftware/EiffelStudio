@@ -540,7 +540,7 @@ public class Core : ICore {
 		core.PutInteger32Constant (i);
 	}
 
-	public void PutInteger64Constant (int i ) {
+	public void PutInteger64Constant (long i ) {
 		core.PutInteger64Constant (i);
 	}
 

@@ -1513,7 +1513,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	}
 
 	// Put `i' on IL stack.
-	public void PutInteger64Constant (Int32 i ) {
+	public void PutInteger64Constant (long i ) {
 		MethodIL.Emit (OpCodes.Ldc_I8, i);
 	}
 

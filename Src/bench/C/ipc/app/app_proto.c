@@ -54,7 +54,7 @@ extern STREAM *sp;
 
 rt_public int rqstcnt = 0;			/* Request count */
 rt_private char gc_stopped;
-rt_private IDRF idrf;				/* IDR filter for serialize communications */
+rt_private IDRF app_idrf;				/* IDR filter for serialize communications */
 
 #ifdef EIF_WIN32
 rt_private void adopt(EIF_LPSTREAM s, Opaque *what);
@@ -103,7 +103,7 @@ extern int already_warned; /* Have we already warned the user concerning a possi
 
 rt_public void prt_init(void)
 {
-	if (-1 == idrf_create(&idrf, IDRF_SIZE))
+	if (-1 == idrf_create(&app_idrf, IDRF_SIZE))
 		fatal_error("cannot initialize streams");		/* Run-time routine */
 }
 
@@ -326,10 +326,10 @@ rt_public void send_packet(int s, Request *rqst)
 	/* Sends an answer to the client */
 
 	rqstcnt++;			/* One more request sent to daemon */
-	idrf_pos(&idrf);	/* Reposition IDR streams */
+	idrf_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Serialize the request */
-	if (!idr_Request(&idrf.i_encode, rqst)) {
+	if (!idr_Request(&app_idrf.i_encode, rqst)) {
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR unable to serialize request %d", rqst->rq_type);
 #endif
@@ -338,7 +338,7 @@ rt_public void send_packet(int s, Request *rqst)
 	}
 
 	/* Send the answer and propagate error report */
-	if (-1 == net_send(s, idrs_buf(&idrf.i_encode), IDRF_SIZE)) {
+	if (-1 == net_send(s, idrs_buf(&app_idrf.i_encode), IDRF_SIZE)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR send: %m (%e)");
 #endif
@@ -372,16 +372,16 @@ rt_public int recv_packet(int s, Request *dans)
 
 	/* Wait for request */
 #ifdef EIF_WIN32
-	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE, reset))
+	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE, reset))
 #else
-	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE))
+	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE))
 #endif
 		esdie(1);		/* Connection lost, probably */
 
-	idrf_pos(&idrf);	/* Reposition IDR streams */
+	idrf_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Deserialize request */
-	if (!idr_Request(&idrf.i_decode, dans))
+	if (!idr_Request(&app_idrf.i_decode, dans))
 		esdie(1);
 
 #ifdef DEBUG

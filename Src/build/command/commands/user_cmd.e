@@ -672,18 +672,18 @@ feature  -- Generation
 						labels.forth
 					end
 				end
-				Result.append ("%T%Tend%N%N")
+				Result.append ("%T%Tend")
 			else
 				Result.append (parent_type.eiffel_body_text)
 			end
 
 			if undoable then
-				Result.append ("%Tundo is%N%T%Tdo%N%T%Tend%N%N")
-				Result.append ("%Tredo is%N%T%Tdo%N%T%Tend%N%N")
+				Result.append ("%Tundo is%N%T%Tdo%N%T%Tend")
+				Result.append ("%Tredo is%N%T%Tdo%N%T%Tend")
 			end
 
 				--| End of the class	
-			Result.append ("end")
+			Result.append ("%N%Nend")
 		end
 
 feature -- Arguments 

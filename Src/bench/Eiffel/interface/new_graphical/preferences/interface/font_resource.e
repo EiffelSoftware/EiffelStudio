@@ -53,7 +53,7 @@ feature -- Access
 				i := j + 1
 				j := faces.index_of (',', i)
 			end
-			Result.preferred_faces.extend (faces.substring (i, j))
+			Result.preferred_faces.extend (faces.substring (i, faces.count))
 		end
 
 	valid_actual_value: EV_FONT is

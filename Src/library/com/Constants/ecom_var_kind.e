@@ -1,51 +1,59 @@
 indexing
-
-	description: "IStorage and IStream Seek flags"
+	description: "VARKIND contants"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	ECOM_STREAM_SEEK
+	ECOM_VAR_KIND
 
-feature -- Access
+feature 
 
-	Stream_seek_set: INTEGER is
-			-- Sets seek position relative to
-			-- beginning of stream
+	Var_perinstance: INTEGER is
+			-- Variable is field or member of type
+			-- it exists at fixed offset within each instance of type.
 		external
-			"C [macro <objidl.h>]"
+			"C [macro <oaidl.h>]"
 		alias
-			"STREAM_SEEK_SET"
-		end
-		
-	Stream_seek_cur: INTEGER is
-			-- Sets seek position relative to
-			-- current position of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_CUR"
-		end
-		
-	Stream_seek_end: INTEGER is
-			-- Sets seek position relative to
-			-- current end of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_END"
+			"VAR_PERINSTANCE"
 		end
 
-	is_valid_seek (seek: INTEGER): BOOLEAN is
-			-- Is `seek' a valid IStorage and IStream seek flag?
+	Var_static: INTEGER is
+			-- Only one instance of variable
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VAR_STATIC"
+		end
+
+	Var_const: INTEGER is
+			-- VARDESC describes symbolic constant
+			-- There is no memory associated with it.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VAR_CONST"
+		end
+
+	Var_dispatch: INTEGER is
+			-- Variable can only be accessed via feature
+			-- `invoke' of class EOLE_DISPATCH.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"VAR_DISPATCH"
+		end
+
+	is_valid_var_kind (kind: INTEGER): BOOLEAN is
+			-- Is `kind' a valid variable kind?
 		do
-			Result := seek = Stream_seek_set or
-						seek = Stream_seek_cur or
-						seek = Stream_seek_end
+			Result := kind = Var_perinstance or
+			kind = Var_static or
+			kind = Var_const or
+			kind = Var_dispatch
 		end
 		
-end -- class EOLE_STREAM_SEEK
+end -- class ECOM_VAR_KIND
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

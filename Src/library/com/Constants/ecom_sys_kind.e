@@ -1,51 +1,51 @@
 indexing
 
-	description: "IStorage and IStream Seek flags"
+	description: "SYSKIND values"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	ECOM_STREAM_SEEK
+	ECOM_SYS_KIND 
 
 feature -- Access
 
-	Stream_seek_set: INTEGER is
-			-- Sets seek position relative to
-			-- beginning of stream
+	Sys_win16: INTEGER is
+			-- Target operating system for the type 
+			-- library is 16-bit Windows systems.
 		external
-			"C [macro <objidl.h>]"
+			"C [macro <oaidl.h>]"
 		alias
-			"STREAM_SEEK_SET"
-		end
-		
-	Stream_seek_cur: INTEGER is
-			-- Sets seek position relative to
-			-- current position of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_CUR"
-		end
-		
-	Stream_seek_end: INTEGER is
-			-- Sets seek position relative to
-			-- current end of stream
-		external
-			"C [macro <objidl.h>]"
-		alias
-			"STREAM_SEEK_END"
+			"SYS_WIN16"
 		end
 
-	is_valid_seek (seek: INTEGER): BOOLEAN is
-			-- Is `seek' a valid IStorage and IStream seek flag?
+	Sys_win32: INTEGER is
+			-- Target operating system for the type 
+			-- library is 32-bit Windows systems. 
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"SYS_WIN32"
+		end
+
+	Sys_mac: INTEGER is
+			-- Target operating system for the type 
+			-- library is Apple Macintosh.
+		external
+			"C [macro <oaidl.h>]"
+		alias
+			"SYS_MAC"
+		end
+
+	is_valid_sys_kind (flag: INTEGER): BOOLEAN is
+			-- Is `flag' a valid SYSKIND value?
 		do
-			Result := seek = Stream_seek_set or
-						seek = Stream_seek_cur or
-						seek = Stream_seek_end
+			Result := flag = Sys_win16 or
+						flag = Sys_win32 or
+						flag = Sys_mac
 		end
 		
-end -- class EOLE_STREAM_SEEK
+end -- class ECOM_SYS_KIND
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

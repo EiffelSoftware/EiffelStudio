@@ -488,7 +488,7 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 				else
  					il_generator.generate_feature_return_type (byte_context.real_type (type_i))
 				end
-			elseif feat.is_formal_attribute then
+			elseif feat.is_type_feature then
 				il_generator.generate_type_info_return_type
 			end
 		end

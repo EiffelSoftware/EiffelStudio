@@ -54,17 +54,17 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	a_class: CLASS_C
-			-- Current analyzed a_class
+	current_class: CLASS_C
+			-- Current analyzed class.
 
 	actual_class_type: CL_TYPE_A
-			-- Actual type of `a_class'
+			-- Actual type of `current_class'.
 
 	feature_table: FEATURE_TABLE
-			-- Current a_feature table
+			-- Current feature table
 
-	a_feature: FEATURE_I
-			-- Current analyzed a_feature
+	current_feature: FEATURE_I
+			-- Current analyzed feature.
 
 	locals: EXTEND_TABLE [LOCAL_INFO, STRING]
 			-- Current local variables of the analyzed feature
@@ -127,19 +127,27 @@ feature -- Access
 
 feature -- Setting
 
-	set_a_class (cl: CLASS_C) is
-			-- Assign `cl' to `a_class'.
+	set_current_class (cl: CLASS_C) is
+			-- Assign `cl' to `current_class'.
+		require
+			cl_not_void: cl /= Void
 		do
-			a_class := cl;
-			actual_class_type := cl.actual_type;
-			feature_table := cl.feature_table;
-		end;
+			current_class := cl
+			actual_class_type := cl.actual_type
+			feature_table := cl.feature_table
+		ensure
+			current_class_set: current_class = cl
+		end
 
-	set_a_feature (f: FEATURE_I) is
-			-- Assign `f' to `a_feature'.
+	set_current_feature (f: FEATURE_I) is
+			-- Assign `f' to `current_feature'.
+		require
+			f_not_void: f /= Void
 		do
-			a_feature := f;
-		end;
+			current_feature := f
+		ensure
+			current_feature_set: current_feature = f
+		end
 
 	set_level1 (b: BOOLEAN) is
 			-- Assign `b' to `level1'.
@@ -210,11 +218,11 @@ feature -- Setting
 	feature_name_id: INTEGER is
 			-- Name of the current feature analyzed
 		require
-			feature_exists: a_feature /= Void or else level2
+			feature_exists: current_feature /= Void or else level2
 		do
 			if not level2 then
 					-- Not checking invariant
-				Result := a_feature.feature_name_id
+				Result := current_feature.feature_name_id
 			else
 				Result := Names_heap.invariant_name_id
 			end;
@@ -223,7 +231,7 @@ feature -- Setting
 	feature_type: TYPE_A is
 			-- Type of the current analyzed feature
 		do
-			Result := a_feature.type.actual_type;
+			Result := current_feature.type.actual_type;
 		end;
 
 	last_class: CLASS_C is
@@ -244,7 +252,7 @@ feature -- Setting
 	expression_begining: BOOLEAN is
 			-- Is the analysis on the beginning of an expression ?
 		do
-			Result := last_class = a_class
+			Result := last_class = current_class
 		end
 
 	last_constrained_type: TYPE_A is
@@ -255,7 +263,7 @@ feature -- Setting
 			Result := item
 			if Result.is_formal then
 				formal_type ?= Result
-				Result := a_class.constraint (formal_type.position)
+				Result := current_class.constraint (formal_type.position)
 			end
 		end
 
@@ -264,16 +272,16 @@ feature -- Setting
 		require
 			good_argument: not (e = Void)
 		do
-			e.set_class (a_class)
-			if a_feature /= Void then
-				e.set_feature (a_feature)
+			e.set_class (current_class)
+			if current_feature /= Void then
+				e.set_feature (current_feature)
 			end
 		end
 
 	init_byte_code (byte_code: BYTE_CODE) is
 			-- Initialiaze `byte_code'.
 		require
-			a_feature /= Void;
+			current_feature /= Void;
 		local
 			local_dec: ARRAY [TYPE_I]
 			local_info: LOCAL_INFO
@@ -285,23 +293,23 @@ feature -- Setting
 			escaped: STRING
 		do
 				-- Name
-			if a_feature.is_infix or a_feature.is_prefix then
-				create escaped.make (a_feature.feature_name.count + 5)
-				(create {STRING_CONVERTER}).escape_string (escaped, a_feature.feature_name)
+			if current_feature.is_infix or current_feature.is_prefix then
+				create escaped.make (current_feature.feature_name.count + 5)
+				(create {STRING_CONVERTER}).escape_string (escaped, current_feature.feature_name)
 				Names_heap.put (escaped)
 				byte_code.set_feature_name_id (Names_heap.found_item)
 			else
 				byte_code.set_feature_name_id (feature_name_id)
 			end
 				-- Feature id
-			byte_code.set_body_index (a_feature.body_index)
+			byte_code.set_body_index (current_feature.body_index)
 				-- Result type if any
-			byte_code.set_result_type (a_feature.type.actual_type.type_i)
+			byte_code.set_result_type (current_feature.type.actual_type.type_i)
 				-- Routine id
-			rout_id := a_feature.rout_id_set.first
+			rout_id := current_feature.rout_id_set.first
 			byte_code.set_rout_id (rout_id)
 				-- Pattern id
-			byte_code.set_pattern_id (a_feature.pattern_id)
+			byte_code.set_pattern_id (current_feature.pattern_id)
 				-- Local variable declarations
 			local_count := locals.count
 			if local_count > 0 then
@@ -318,10 +326,10 @@ feature -- Setting
 				byte_code.set_locals (local_dec)
 			end
 				-- Arguments declarations
-			argument_count := a_feature.argument_count
+			argument_count := current_feature.argument_count
 			if argument_count > 0 then
 				from
-					arguments := a_feature.arguments
+					arguments := current_feature.arguments
 					i := 1
 					create local_dec.make (1, argument_count)
 				until
@@ -388,19 +396,19 @@ feature -- Managing the type stack
 
 	clear1 is
 			-- Clear the structure: to use while changing of analyzed 
-			-- a_class.
+			-- current_class.
 		do
-			a_class := Void;
+			current_class := Void;
 			actual_class_type := Void;
 			feature_table := Void;
 			clear2;
 		end;
 
 	clear2 is
-			-- Clear a_feature context: to use while changing of current
-			-- analyzed a_feature
+			-- Clear `current_feature' context: to use while changing of current
+			-- analyzed feature.
 		do
-			a_feature := Void;
+			current_feature := Void;
 			locals.clear_all;
 			access_line.wipe_out;
 			array_line.wipe_out;
@@ -432,9 +440,9 @@ feature -- Concurrent Eiffel
 	set_separate_call_on_argument (arg_name: ID_AS) is
 			-- Record argument `i' as been used in separate call.
 		require
-			feature_has_argument: a_feature.argument_position (arg_name) /= 0
+			feature_has_argument: current_feature.argument_position (arg_name) /= 0
 		do
-			separate_calls.force (True, a_feature.argument_position (arg_name))
+			separate_calls.force (True, current_feature.argument_position (arg_name))
 		end
 
 feature {STD_BYTE_CODE} -- Concurrent Eiffel

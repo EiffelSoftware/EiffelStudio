@@ -98,6 +98,9 @@ feature
 			when User_stop_points then
 					-- Execution with no stop points set.
 				Debug_info.set_all_breakpoints
+			when All_breakable_points then
+					-- Execution with all breakable points set.
+				Debug_info.set_all_breakables
 			when Routine_breakables then
 					-- Execution with only breakable points of current 
 					-- routine set.
@@ -154,6 +157,15 @@ feature
 					then
 						Debug_info.set_routine_last_breakable (routine)
 					end
+				end
+			when Out_of_routine then
+					-- Execution with all breakable points set except
+					-- those of the current routine.
+				routine := Run_info.feature_i;
+				if Run_info.is_running and then routine /= Void then 
+					Debug_info.set_out_of_routine_breakables (routine)
+				else
+					Debug_info.set_all_breakables
 				end
 			else
 					-- Unknown execution mode. Do nothing.

@@ -81,7 +81,7 @@ feature -- Access
 			-- Void if it has not been specified in the filter specification
 		do
 			if format_table.has (f_Suffix) then
-				Result := format_table.item (f_Suffix).item1
+				Result := format_table.found_item.item1
 			end
 		end;
 
@@ -125,9 +125,9 @@ feature {NONE} -- Text processing
 			text_image := text.image;
 			text_image.to_lower;
 			if format_table.has (text_image) then
-				format := format_table.item (text.image)
+				format := format_table.found_item
 			elseif format_table.has (f_Symbol) then
-				format := format_table.item (f_Symbol)
+				format := format_table.found_item
 			end
 			if format /= Void then
 				image.append (format.item1);
@@ -149,9 +149,9 @@ feature {NONE} -- Text processing
 			text_image := text.image;
 			text_image.to_lower;
 			if format_table.has (text_image) then
-				format := format_table.item (text.image)
+				format := format_table.found_item
 			elseif format_table.has (f_Keyword) then
-				format := format_table.item (f_Keyword)
+				format := format_table.found_item
 			end
 			if format /= Void then
 				image.append (format.item1);
@@ -174,11 +174,11 @@ feature {NONE} -- Text processing
 				text_image := text.image;
 				text_image.to_lower;
 				if format_table.has (text_image) then
-					format := format_table.item (text.image)
+					format := format_table.found_item
 				elseif text.is_keyword and format_table.has (f_Keyword) then
-					format := format_table.item (f_Keyword)
+					format := format_table.found_item
 				elseif text.is_symbol and format_table.has (f_Symbol) then
-					format := format_table.item (f_Symbol)
+					format := format_table.found_item
 				end
 			end;
 			if format /= Void then
@@ -204,7 +204,7 @@ feature {NONE} -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if format_table.has (f_Comment) then
-				format := format_table.item (f_Comment)
+				format := format_table.found_item
 				image.append (format.item1);
 				if format.item2 /= Void then
 					print_escaped_text (text.image);
@@ -230,7 +230,7 @@ feature {NONE} -- Text processing
 			i, format_item_count: INTEGER
 		do
 			if format_table.has (f_Cluster_name) then
-				format := format_table.item (f_Cluster_name);
+				format := format_table.found_item
 				from
 					format_item := format.item1;
 					format_item_count := format_item.count;
@@ -307,7 +307,7 @@ feature {NONE} -- Text processing
 			i, format_item_count: INTEGER
 		do
 			if format_table.has (f_Class_name) then
-				format := format_table.item (f_Class_name);
+				format := format_table.found_item
 				from
 					format_item := format.item1;
 					format_item_count := format_item.count;
@@ -380,7 +380,7 @@ feature {NONE} -- Text processing
 			format: CELL2 [STRING, STRING]
 		do
 			if format_table.has (f_New_line) then
-				format := format_table.item (f_New_line);
+				format := format_table.found_item
 				image.append (format.item1);
 				if format.item2 /= Void then
 					image.append ("%N");
@@ -397,7 +397,7 @@ feature {NONE} -- Text processing
 			i: INTEGER
 		do
 			if format_table.has (f_Tab) then
-				format := format_table.item (f_Tab);
+				format := format_table.found_item
 				from 
 					i := 1
 				until
@@ -425,7 +425,7 @@ feature {NONE} -- Text processing
 		do
 			construct := text.construct;
 			if format_table.has (construct) then
-				format := format_table.item (construct);
+				format := format_table.found_item
 				if text.is_before then
 					image.append (format.item1)
 					if format.item2 = Void then

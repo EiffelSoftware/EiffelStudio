@@ -11,7 +11,8 @@ class
 inherit
 	EV_TREE_I
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_PRIMITIVE_IMP
@@ -68,6 +69,7 @@ feature {NONE} -- Initialization
 
 		do
 			{EV_PRIMITIVE_IMP} Precursor
+			{EV_TREE_I} Precursor
 
 			real_signal_connect (
 				list_widget,
@@ -229,6 +231,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/04/26 00:13:42  king
+--| Made compilable with initialize in _I
+--|
 --| Revision 1.40  2000/04/06 23:52:37  brendel
 --| Added list_widget.
 --|

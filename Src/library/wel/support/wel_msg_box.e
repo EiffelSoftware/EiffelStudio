@@ -29,7 +29,6 @@ feature -- Basic operations
 		do
 			language := LANG_ENGLISH
 			sublanguage := SUBLANG_ENGLISH_US
-			 
 		end
 
 	information_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING) is

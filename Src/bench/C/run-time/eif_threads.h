@@ -76,6 +76,7 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Tuning for CRAY */
 #ifdef _CRAY
+#include <unistd.h>	/* Avoid warnings on C90, when also including <sched.h> */
 #define EIF_NO_SEM
 #define EIF_NO_POSIX_SEM
 #define HASNT_SCHED_H

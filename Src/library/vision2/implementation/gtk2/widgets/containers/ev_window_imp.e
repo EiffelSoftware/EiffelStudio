@@ -28,7 +28,6 @@ inherit
 			screen_y,
 			interface,
 			initialize,
-			destroy,
 			make,
 			on_key_event,
 			width,
@@ -37,7 +36,8 @@ inherit
 			show,
 			hide,
 			internal_set_minimum_size,
-			on_widget_mapped
+			on_widget_mapped,
+			destroy
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -296,21 +296,6 @@ feature -- Status setting
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0)
 		end
-
-	destroy is
-			-- Render `Current' unusable.
-		do
-			if not in_destroy then
-				in_destroy := True
-				lower_bar.wipe_out
-				upper_bar.wipe_out
-				remove_menu_bar
-				Precursor {EV_CONTAINER_IMP}
-			end
-		end
-
-	in_destroy: BOOLEAN
-		-- Is destroy in the process of being called?
 		
 	show is
 			-- Map the Window to the screen.
@@ -457,6 +442,13 @@ feature -- Element change
 		end
 
 feature {EV_ANY_IMP} -- Implementation
+
+	destroy is
+			-- Destroy `Current'
+		do
+			hide
+			Precursor {EV_CONTAINER_IMP}
+		end
 
 	set_focus_widget (a_focus_wid: EV_WIDGET_IMP) is
 			-- Set `a_focus_wid' to query for keyboard navigation blocking

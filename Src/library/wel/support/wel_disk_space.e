@@ -165,7 +165,6 @@ feature {NONE} -- Implementation
 
 			if integer_part < 100 then
 					-- We display the fractional part
-				Result.append_character('.')
 				if integer_part < 10 then
 						-- 2 digit fractional part
 					fractional_part := ((value \\ divisor) * 100 ) // divisor
@@ -173,7 +172,10 @@ feature {NONE} -- Implementation
 						-- 1 digit fractional part
 					fractional_part := (((value \\ divisor) * 100 ) // divisor) // 10
 				end
-				Result.append(fractional_part.out)
+				if fractional_part /= 0 then
+					Result.append_character('.')
+					Result.append(fractional_part.out)
+				end
 			end
 			Result.append_character(' ')
 			Result.append(extension)

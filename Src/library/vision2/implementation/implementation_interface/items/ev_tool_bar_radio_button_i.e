@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		" EiffelVision tool-bar radio button. implementation%
@@ -48,6 +47,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/26 22:22:15  rogers
+--| Removed FIXME NOT_REVIEWED.
+--|
 --| Revision 1.6  2000/04/04 17:12:35  rogers
 --| Now inherits EV_TOOL_BAR_SELECT_BUTTON_I, EV_RADIO_PEER_I.
 --| Removed is_peer and set_peer.

@@ -16,6 +16,10 @@ feature -- Access
 	type: TYPE_A
 			-- Local type
 
+	is_used: BOOLEAN
+			-- Is local variable used?
+			-- Set during type checking.
+
 	actual_type: TYPE_A is
 			-- Actual type of `type'.
 		require
@@ -42,4 +46,10 @@ feature -- Setting
 			type := t
 		end
 
+	set_is_used (v: like is_used) is
+			-- Assign `v' to `is_used'.
+		do
+			is_used := v
+		end
+		
 end

@@ -83,12 +83,6 @@ struct cnode {
 #define SK_HEAD		0xff000000			/* Mask for header value */
 #define SK_INVALID	0xffffffff			/* Invalid value, may be used as flag */
 
-/* Structure used to store call informations in tables */
-struct ca_info {				/* Call structure */
-	int16 ca_id;				/* Feature body index */
-	int16 ca_pattern_id;		/* Pattern id */
-};
-
 /*
  * Conformance table
  */
@@ -101,26 +95,33 @@ struct conform {
 
 extern int scount;				/* Number of dynamic types */
 
+#ifdef WORKBENCH
+struct desc_info {						/* Descriptor information */
+	int16 info;							/* Body index or attribute offset */
+	int16 type;							/* Feature type */
+};
+
+struct rout_info {						/* Routine information */
+	int16 origin;						/* Routine origin */
+	int16 offset;						/* Routine offset in origin */
+};
+#endif
+
 /* Array of class node (indexed by dynamic type). It is statically allocated
  * in production mode and dynamically in workbench mode.
  */
 #ifndef WORKBENCH
 extern struct cnode esystem[];	/* Describes a full Eiffel system */
 #else
-extern struct cnode fsystem[];	/* Describes the full frozen Eiffel system */
-extern struct cnode *esystem;	/* Pointer to updated Eiffel system */
-extern char *ftable[];			/* Describes the full frozen tables */
-extern char **etable;			/* Pointer to updated table array */
-extern int32 *fcall[];			/* Routine id arrays indexed by feature id's */
-extern int32 **ecall;			/* Updated pointer */
-extern int16 *ftypes[];			/* Describes the full type tables */
-extern int16 **etypes;			/* Pointer to update array `ftypes' */
-extern long tbcount;			/* Count of `ftable' */
-extern int16 fdtypes[];			/* Dynamic type  array indexed by old
-								 * dynamic types (for re-freezing) */
-
-#define Table(x) etable[x]		/* Access to table of routine id `x' */
-#define Type(x)	 etypes[x]		/* Access to type table of rout id `x' */
+extern struct cnode fsystem[];			/* Describes the full frozen Eiffel system */
+extern struct cnode *esystem;			/* Pointer to updated Eiffel system */
+extern int32 *fcall[];					/* Routine id arrays indexed by feature id's */
+extern int32 **ecall;					/* Updated pointer */
+extern struct rout_info forg_table[];	/* Routine origin/offset table */
+extern struct rout_info *eorg_table;	/* Updated pointer */
+extern struct desc_info ***desc_tab;	/* Global descriptor table */
+extern int16 fdtypes[];					/* Dynamic type  array indexed by old
+								 		 * dynamic types (for re-freezing) */
 
 #define Routids(x)	ecall[x]	/* Routine id array */
 #endif
@@ -171,9 +172,11 @@ extern uint32 *dispatch;		/* Updated dispatch table */
 /*
  * Melting ice technology heart.
  */
-extern fnptr frozen[];		/* C routine array (frozen routines) */
-extern char **melt;			/* Byte code array of melted eiffel features */
-extern uint32 zeroc;		/* Frozen level */
+extern fnptr frozen[];			/* C routine array (frozen routines) */
+extern char **melt;				/* Byte code array of melted eiffel features */
+extern uint32 zeroc;			/* Frozen level */
+extern int *mpatidtab;			/* Table of pattern id's indexed by body id's */
+extern int fpatidtab[];			/* Table of pattern id's indexed by body id's */
 
 /*
  * Pattern table for interface between C code and the interpreter

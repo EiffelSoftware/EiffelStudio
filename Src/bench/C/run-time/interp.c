@@ -1906,11 +1906,10 @@ int where;					/* Invariant after or before */
 	/* Invariant check */
 	{
 		uint32 body_id;
-		uint32 body_index;
+		int16 body_index;
 		struct item *last;
 
-		body_index =
-			((struct ca_info *) Table(INVARIANT_ID))[dtype].ca_id;
+		CBodyIdx(body_index,INVARIANT_ID,dtype);	
 		body_id = dispatch[body_index];
 		if (body_id < zeroc) { 				/* Frozen invariant */
 			unsigned long stagval = tagval;	/* Tag value backup */
@@ -1924,7 +1923,7 @@ int where;					/* Invariant after or before */
 			last = iget();					/* Push `obj' */
 			last->type = SK_REF;
 			last->it_ref = obj;
-			IC = melt[body_id - zeroc];
+			IC = melt[body_id];
 			interpret(INTERP_INVA, where);	/* Interpret invariant code */
 			sync_registers(scur, stop);		/* Resynchronize registers */
 		}
@@ -2498,26 +2497,25 @@ int is_extern;			/* Is it an external or an Eiffel feature */
 	 * resynchronization of registers is needed.
 	 */
 
-	struct ca_info *routinfo;		/* Routine info structure */
 	uint32 body;					/* Value of selected body ID */
 	unsigned long stagval = tagval;	/* Save tag value */
 	char *old_IC;					/* IC back-up */
 	int result = 0;					/* A priori, no need for sync_registers */
 	uint32 pid;						/* Pattern id of the frozen feature */
 	int32 rout_id;
+	int16 body_index;
 
 	rout_id = Routids(stype)[fid];
-	routinfo =
-		&((struct ca_info *) Table(rout_id))[Dtype(otop()->it_ref)];
-	body = dispatch[routinfo->ca_id];	/* Body id of the eiffel routine */
+	CBodyIdx(body_index,rout_id,Dtype(otop()->it_ref));
+	body = dispatch[body_index];	/* Body id of the eiffel routine */
 	old_IC = IC;				/* IC back up */
 	if (body < zeroc) {			/* We are below zero Celsius, i.e. ice */
-		pid = routinfo->ca_pattern_id;	/* Pattern id */
+		pid = (uint32) FPatId(body);
 		(pattern[pid].toc)(frozen[body], is_extern); /* Call pattern */
 		if (tagval != stagval)		/* Interpreted function called */
 			result = 1;				/* Resynchronize registers */
 	} else {
-		IC = melt[body - zeroc];			/* Melted byte code */
+		IC = melt[body];					/* Melted byte code */
 		interpret(INTERP_CMPD, 0);			/* Interpret (tagval not set) */
 		result = 1;							/* Compulsory synchronisation */
 	}
@@ -2650,12 +2648,14 @@ int stype;				/* Static type (entity where feature is applied) */
 	 * stack. The value of Current is removed and replaced with the address.
 	 */
 
-	struct ca_info *routinfo;		/* Routine info structure */
 	uint32 body;					/* Body ID of routine */
 	struct item *last;				/* Built melted routine address */
+	int16 body_index;				/* Body index of routine */
+	int32 rout_id;					/* Routine id of routine */
 
-	routinfo = RTWI(stype, fid, icur_dtype);
-	body = dispatch[routinfo->ca_id];
+	rout_id = Routids(stype)[fid];
+	CBodyIdx(body_index,rout_id,icur_dtype);
+	body = dispatch[body_index];
 
 	if (body >= zeroc)
 		xraise(EN_DOL);				/* $ applied to melted feature */

@@ -33,18 +33,18 @@
 public int cc_for_speed = 1;			/* Fast memory allocation */
 public char *ename;						/* Eiffel program's name */
 public int scount;						/* Number of dynamic types */
+public int fcount;						/* Number of frozen dynamic types */
 
 #ifdef WORKBENCH
 public struct cnode *esystem;			/* Updated Eiffel system */
 public struct conform **co_table;		/* Updated Eiffel conformance table */
-public char **etable;					/* Eiffel call/access table */
-public int16 **etypes;					/* Eiffel type tables */
 public int32 **ecall;					/* Routine id arrays */
-public long tbcount;					/* Size of 'ftable' */
+public struct rout_info *eorg_table;	/* Routine origin/offset table */
 public long dcount;						/* Count of `fdispatch' */
 public uint32 *dispatch;				/* Update dispatch table */
 public uint32 zeroc;					/* Frozen level */
 public char **melt;						/* Byte code array */
+public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 public struct eif_opt *eoption;			/* Option table */
 extern void winit();					/* Workbench debugger initialization */
 extern void einit();					/* System-dependent initializations */
@@ -108,11 +108,10 @@ char **envp;
 	xinitint();							/* Interpreter initialization */
 	dispatch = fdispatch;				/* Initialize run-time table pointers */
 	esystem = fsystem;
-	etable = ftable;
-	etypes = ftypes;
 	ecall = fcall;
 	eoption = foption;
 	co_table = fco_table;
+	eorg_table = forg_table;
 
 	/* Initialize dynamically computed variables (i.e. system dependent) like
 	 * 'zeroc' which is the melting temperature -- the last body id in the
@@ -122,8 +121,14 @@ char **envp;
 	 */
 
 	einit();							/* Various static initializations */
-	update();							/* Read melted information */
-
+	fcount = scount;
+	update();							/* Read melted information 
+										 * Note: the `update' function takes
+										 * care of the initialization of the 
+										 * temporary descriptor structures
+										 */
+	create_desc();						/* Create descriptor (call) tables */
+	
 	/* In workbench mode, we have a slight problem: when we link ewb in
 	 * workbench mode, since ewb is a child from ised, the run-time will
 	 * assume, wrongly, that the executable is started in debug mode. Therefore,

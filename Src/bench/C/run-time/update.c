@@ -21,15 +21,15 @@ extern char *getenv();
 #include "update.h"
 #include "cecil.h"
 
-
 private void cnode_updt();			/* Update a cnode structure */
 private void routid_updt();			/* Update routine id array */
-private void routtbl_updt();		/* Update of the routine tables */
 private void conform_updt();		/* Update a conformance table */
 private void option_updt();			/* Update the option table */
 private void cecil_updt();			/* Cecil update */
 private char **names_updt();		/* String array */
 private void root_class_updt();		/* Update the root class info */
+private void routinfo_updt();		/* Update the rout info table */
+private void desc_updt();			/* Update the descriptors */
 
 public long mcount;					/* Size of melting table */
 
@@ -58,15 +58,17 @@ public void update()
 	char c;
 	char *meltpath;							/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
+	long pattern_id;
+
 
 /* TEMPORARY */
 meltpath = getenv ("MELT_PATH");
 if (meltpath) 
-	filename = (char *)malloc (strlen (meltpath) + 7);
+	filename = (char *)cmalloc (strlen (meltpath) + 7);
 else
-	filename = (char *)malloc (8);
+	filename = (char *)cmalloc (8);
 if (filename == (char *)0){
-	printf ("out of memory\n");
+	enomem();	
 	exit (0);	
 }
 if (meltpath) strcpy (filename, meltpath);
@@ -77,10 +79,12 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	printf("Error while opening\n");
 	exit(0);
 }
-	free (filename);
+	xfree (filename);
 	wread(&c, 1);				/* Is there something to update ? */
-	if (c == '\0')
+	if (c == '\0') {
+		init_desc();
 		return;
+	}
 
 		/* Update the root class and the creation feature ids */
 	root_class_updt ();
@@ -146,9 +150,15 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	melt = (char **) cmalloc(mcount * sizeof(char *));
 	if (melt == (char **) 0)
 		enomem();
+	/* Allocation of the variable `mpatidtab' */
+	mpatidtab = (int *) cmalloc(mcount * sizeof(int));
+	if (mpatidtab == (int *) 0)
+		enomem();
 
 	while ((body_id = wlong()) != -1) {
 		bsize = wlong();
+		pattern_id = wlong();
+		mpatidtab[body_id] = (int) pattern_id;
 		bcode = cmalloc(bsize * sizeof(char));
 		if (bcode == (char *) 0)
 			enomem();
@@ -163,8 +173,10 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 #endif
 	}
 
-	/* Routine table update */
-	routtbl_updt();
+	/* Recompute adresses of `melt' and `patidtab' */
+
+	melt -= zeroc;
+	mpatidtab -= zeroc;
 
 	/* Conformance table if any */
 	wread (&c, 1);
@@ -177,6 +189,13 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	}
 	/* Option table */
 	option_updt(new_count);
+
+	/* Routine info table */
+	routinfo_updt();
+
+	/* Descriptors */
+	init_desc();
+	desc_updt();
 
 /* TEMPORARY */
 fclose(fil);
@@ -238,11 +257,9 @@ private void cnode_updt()
 	long feat_count;		/* Feature id array count */
 	struct htable *htbl;	/* Hash table for calls */
 	int32 call_size;		/* Hash table call size */
-	struct ca_info *info;	/* Call info */
 	char is_attribute;
 	int i;
 	char c;
-	uint32 mask;			/* Mask for creation type in call info */
 	short level;			/* Attribute meta-type level */
 	int32 feature_id;		/* Key for access table */
 
@@ -423,103 +440,6 @@ private void routid_updt()
 				ce->h_keys = names;
 				ce->h_values = (char *) feature_ids;
 			}
-		}
-	}
-}
-
-private void routtbl_updt()
-{
-	/* Update routine table */
-	
-	long max, count, offset;
-	int32 rout_id;
-	char c;
-	int min_dtype, max_dtype, entry_count, size, dtype, i;
-	struct ca_info *call_table, *call_info;
-	long *access_table;
-	int16 *type_table;
-	short pattern_id;
-
-	max = wlong() + 1;	/* Size of new routine table array */
-	count = wlong();    /* Number of routine table to update */
-	if (count == 0L)
-		return;
-#ifdef DEBUG
-	dprintf(1)("Size of `etable' = %ld [old = %ld]\n", max, tbcount);
-#endif
-	etable = (char **) cmalloc(max * sizeof(char *));
-	if (etable == (char **) 0)
-		enomem();
-	bcopy(ftable, etable, (tbcount + 1) * sizeof(char *));
-	etypes = (int16 **) cmalloc(max * sizeof(int16 *));
-	if (etypes == (int16 **) 0)
-		enomem();
-	bcopy(ftypes, etypes, (tbcount + 1) * sizeof(int16 **));
-
-#ifdef DEBUG
-	dprintf(1)("%ld routine table to update\n", count);
-#endif
-	while(count--) {
-		rout_id = wint32();
-		wread(&c, 1);				/* Is it a call or access table ? */
-		min_dtype = wshort();		/* Minimum dynamic type */
-		max_dtype = wshort();		/* Maximum dynamic type */
-		size = max_dtype - min_dtype + 1;
-		entry_count = wshort();		/* Number of entries to put in the table */
-#ifdef DEBUG
-	dprintf(2)("rout_id = %ld min = %d max =  %d count = %d\n", 
-		rout_id, min_dtype, max_dtype, entry_count);
-#endif
-		if (c) {					/* If routine table */
-			call_table = (struct ca_info *)
-									cmalloc(size * sizeof(struct ca_info));
-			if (call_table == (struct ca_info *) 0)
-				enomem();
-			i = entry_count;
-			while (i--) {
-				dtype = wshort();
-				call_info = &call_table [dtype - min_dtype];
-				call_info->ca_id = (int16) wshort();			/* Body index */
-				call_info->ca_pattern_id = (int16) wshort();	/* Pattern id */
-#ifdef DEBUG
-	dprintf(2)("\tca_info[%d]: ca_id = %d ca_pattern_id = %d\n",
-		dtype - min_dtype, call_info->ca_id, call_info->ca_pattern_id);
-#endif
-			}
-			Table(rout_id) = (char *) (call_table - min_dtype);
-		} else {					/* Else access table */
-			access_table = (long *) cmalloc(size * sizeof(long));
-			if (access_table == (long *) 0)
-				enomem();
-			i = entry_count;
-			while (i--) {
-				dtype = wshort();
-				offset = wlong();
-				access_table[dtype - min_dtype] = offset;
-#ifdef DEBUG
-	dprintf(2)("\toffset[%d] = %ld\n", dtype - min_dtype, offset);
-#endif
-			}
-			Table(rout_id) = (char *) (access_table - min_dtype);
-		}
-	
-		wread(&c, 1);			/* Is there an associated type table ? */
-		if (c) {
-#ifdef DEBUG
-	dprintf(2)("type_table:\n");
-#endif
-			type_table = (int16 *) cmalloc(size * sizeof(int16));
-			if (type_table == (int16 *) 0)
-				enomem();
-			i = entry_count;
-			while (i--) {
-				dtype = wshort();
-				type_table[dtype - min_dtype] = (int16) wshort();
-#ifdef DEBUG
-	dprintf(2)("\t\t%d: %d\n", dtype - min_dtype, type_table[dtype - min_dtype]);
-#endif
-			}
-			Type(rout_id) = type_table - min_dtype;
 		}
 	}
 }
@@ -715,6 +635,59 @@ long new_count;
 		default:		panic("invalid debug level");
 		}
 		debug_opt->debug_level = debug_level;
+	}
+}
+
+private void routinfo_updt()
+{
+
+	/* Update the routine information table */
+
+	uint32 count;
+	int i;
+	struct rout_info ri;
+
+	count = wuint32();
+	eorg_table = (struct rout_info *) cmalloc(count * sizeof(struct rout_info));
+	if (eorg_table == (struct rout_info *) 0)
+		enomem();
+	
+	for (i=0;i<count;i++) {
+		ri.origin = wshort();
+		ri.offset = wshort();
+		eorg_table[i] = ri;
+	}
+}
+
+private void desc_updt()
+{
+	
+	long count;
+	short desc_size;
+	short org_count, rout_count;
+	short type_id, org_id;
+	struct desc_info *desc_ptr;
+	int i;
+
+	while ((count = wlong()) != -1L) {
+		while (count-- > 0) {
+			type_id = wshort();
+			org_count = wshort();
+			while (org_count-- > 0) {
+				org_id = wshort();
+				rout_count = wshort();
+				desc_ptr = (struct desc_info *) 
+						cmalloc (rout_count * sizeof(struct desc_info));
+				if (desc_ptr == (struct desc_info *) 0)
+					enomem();
+				for (i=0; i<rout_count;i++) {
+					desc_ptr[i].info = wshort();
+					desc_ptr[i].type = wshort();
+				}
+				IMDSC(desc_ptr, org_id, RTUD(type_id-1));
+			}
+
+		}
 	}
 }
 

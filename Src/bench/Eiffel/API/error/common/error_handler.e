@@ -201,6 +201,7 @@ feature -- Debug purpose
 				io.error.putstring ("------------------------------%N");
 				warning_list.forth;
 			end;
+			warning_list.wipe_out;
 		end;
 
 feature {NONE} -- Externals

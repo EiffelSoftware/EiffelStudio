@@ -450,6 +450,7 @@ uint32 s_flags;
 	int32 *tcn_attr;     		/* Array of attribute keys for target object */
 	int32 *scn_attr;			/* Array of attribute keys for source object */
 	int32 attr_key;				/* Attribute key */
+	long offset;
 #endif
 	register5 long t_index;		/* Target attribute index */
 	register6 long s_index;		/* Source attribute index */
@@ -491,10 +492,12 @@ uint32 s_flags;
 		attr_key = tcn_attr[t_index];
 
 		/* Evaluation of the target attribute offset */
-		t_ref = target + ((long *) Table(attr_key))[t_type];
+		CAttrOffs(offset,attr_key,t_type);
+		t_ref = target + offset;
 
 		/* Evaluation of the source attribute offset */
-		s_ref = source + ((long *) Table(attr_key))[s_type];
+		CAttrOffs(offset,attr_key,s_type);
+		s_ref = target + offset;
 
 		for (s_index = 0; scn_attr[s_index] != attr_key; s_index++)
 			;
@@ -564,6 +567,7 @@ uint32 s_flags;
 	int32 *tcn_attr;				/* Array of attribute keys for target object */
 	int32 *scn_attr;                /* Array of attribute keys for source object */
 	int32 attr_key;				/* Attribute key */
+	long offset;
 #endif
 	register5 long t_index;		/* Target attribute index */
 	register6 long s_index;		/* Source attribute index */
@@ -603,10 +607,12 @@ uint32 s_flags;
 		attr_key = tcn_attr[t_index];
 
 		/* Evaluation of the target attribute offset */
-		t_ref = target + ((long *) Table(attr_key))[t_type];
+		CAttrOffs(offset,attr_key,t_type);
+		t_ref = target + offset;
 
 		/* Evaluation of the source attribute offset */
-		s_ref = source + ((long *) Table(attr_key))[s_type];
+		CAttrOffs(offset,attr_key,s_type);
+		s_ref = target + offset;
 
 		for(s_index=0; scn_attr[s_index] != attr_key; s_index++)
 			;

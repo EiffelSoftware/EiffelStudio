@@ -66,6 +66,7 @@ cluster
 		skeleton:			"$EBENCH/Eiffel/eiffel/skeleton";
 		structures:			"$EBENCH/Eiffel/eiffel/structures";
 		tables:				"$EBENCH/Eiffel/eiffel/tables";
+		descriptor:         "$EBENCH/Eiffel/eiffel/descriptor";
 		debuggable:			"$EBENCH/Eiffel/debug";
 
 -- SHARED BETWEEN COMPILER AND INTERFACE:

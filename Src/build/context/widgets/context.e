@@ -743,9 +743,7 @@ feature -- EiffelVision attributes
 				end
 			else
 				if pix.is_valid then
-					widget.unmanage;
 					widget.set_background_pixmap (pix)
-					widget.manage
 				end
 			end
 		end;
@@ -859,15 +857,25 @@ feature -- Font
 	set_font_named (s: STRING) is
 		local
 			fontable: FONTABLE;
+			old_w, old_h: INTEGER;
+			was_managed: BOOLEAN;
 		do
 			font_name_modified := False;
 			if is_fontable then
 				fontable ?= widget;
 				if s = Void or else s.empty then
 					if default_font /= Void then
-						widget.unmanage;
+						was_managed := widget.managed;
+						if was_managed then
+							widget.unmanage;
+							old_w := widget.width;
+							old_h := widget.height;
+						end;
 						fontable.set_font (default_font);		
-						widget.manage;
+						if was_managed then
+							widget.set_size (old_w, old_h);
+							widget.manage;
+						end
 					end
 					font_name_modified := False;
 					font_name := s
@@ -877,8 +885,17 @@ feature -- Font
 					end;
 					font_name := s;
 					font_name_modified := True;
-					widget.unmanage;
+					was_managed := widget.managed;
+					if was_managed then
+						widget.unmanage;
+						old_w := widget.width;
+						old_h := widget.height;
+					end;
 					fontable.set_font_name (s);
+					if was_managed then
+						widget.set_size (old_w, old_h);
+						widget.manage;
+					end;
 					widget.manage;
 				end
 			end;			

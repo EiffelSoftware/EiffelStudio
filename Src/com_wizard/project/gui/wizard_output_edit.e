@@ -114,6 +114,10 @@ feature -- Basic Operations
 			retried: BOOLEAN
 			old_height, new_height: INTEGER
 		do
+			if output_edit.position_from_character_index (output_edit.count).y > Max_height then
+				clear
+				output_edit.insert_text (Continued)
+			end
 			if not retried then
 				old_height := output_edit.position_from_character_index (output_edit.count).y
 				if is_title_format then
@@ -177,6 +181,12 @@ feature -- Basic Operations
 			process_messages
 		end
 
+	refresh is
+			-- Process messages.
+		do
+			process_messages
+		end
+
 feature {NONE} -- Behavior
 
    	on_wm_erase_background (wparam: INTEGER) is
@@ -220,9 +230,23 @@ feature {NONE} -- Implementation
 			output_edit.set_character_format_all (Text_format)
 			output_edit.disable
 			output_edit.set_text (Empty_text)
-			output_edit.set_height (4_000_000)
+			output_edit.set_height (Max_output_edit_height)
+			output_edit.set_text_limit (Max_text_limit)
 			output_edit.set_width (width)
 		end
+
+	Continued: STRING is "...%N"
+			-- Text displayed when output is cleared
+			-- after height was greater than `Max_height'
+
+	Max_output_edit_height: INTEGER is 32500
+			-- Maximum output edit lines
+
+	Max_height: INTEGER is 32000
+			-- Maximum height before cleaning
+
+	Max_text_limit: INTEGER is 4_000_000
+			-- Maximum text length
 
 	process_messages is
 			-- Process messages in queue.

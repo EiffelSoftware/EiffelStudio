@@ -139,7 +139,7 @@ feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Initialization
 	init_drop_actions (a_drop_actions: EV_PND_ACTION_SEQUENCE) is
 			-- Setup drop action sequence.
 		local
-			pnd_targets: LINKED_LIST [INTEGER]
+			pnd_targets: ARRAYED_LIST [INTEGER]
 		do
 			pnd_targets := (create {EV_ENVIRONMENT})
 				.application.implementation.pnd_targets

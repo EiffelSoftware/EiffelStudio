@@ -194,6 +194,8 @@ end_transport (a_x, a_y, a_button: INTEGER) is do end
 
 pointed_target: EV_PICK_AND_DROPABLE is do check to_be_implemented: False end end
 
+set_pointer_style (curs: EV_CURSOR) is do end
+
 feature -- Element Change
 
 	set_cell_text (column: INTEGER; a_text: STRING) is
@@ -351,6 +353,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/17 23:23:45  king
+--| Added set_pointer_style as it doesnt inherit from widget
+--|
 --| Revision 1.36  2000/03/15 22:43:09  king
 --| check falsed PND features
 --|

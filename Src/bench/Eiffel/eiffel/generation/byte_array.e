@@ -224,7 +224,7 @@ feature -- Element change
 			position := new_position
 		end
 
-	append_real (r: DOUBLE) is
+	append_double (r: DOUBLE) is
 			-- Append real value `r'.
 		local
 			new_position: INTEGER

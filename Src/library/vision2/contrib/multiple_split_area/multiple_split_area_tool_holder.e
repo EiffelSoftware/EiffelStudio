@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			label_box.extend (label)
 			label_box.disable_item_expand (label)
 			create temp_cell
-			temp_cell.set_minimum_width (8)--spacing_to_holder_tool_bar)
+			temp_cell.set_minimum_width (8)
 			label_box.extend (temp_cell)
 			label_box.disable_item_expand (temp_cell)
 			create customizeable_area
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			parent_rep: LINEAR [EV_WIDGET]
 		do
 			parent_area.store_positions
-			original_position := parent_area.all_holders.index_of (Current, 1)
+			original_position := parent_area.linear_representation.index_of (tool, 1)
 			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
 			if locked_in_here then
 				original_parent_window := parent_window (parent_area)
@@ -433,9 +433,21 @@ feature {NONE} -- Implementation
 					main_box.parent.prune_all (main_box)
 					extend (main_box)
 				end
-				parent_area.update_for_holder_position_change (original_position, new_position)
-				parent_area.rebuild
-				parent_area.restore_stored_positions
+					-- If `original_position' = 0, the tool is being docked back from
+					-- a dockable dialog via the docking mechanism, not by closing the
+					-- dialog via the cross.
+				if original_position = 0 then
+					parent_area.all_holders.prune_all (Current)
+						-- FIXME Need to insert the tool back at its current size.
+						-- However, at this point, we have no access to its previous size. If
+						-- the size was stored when a dock began (`dock_started_actions'), then it could be
+						-- restored here. Julian 09/15/03
+					parent_area.insert_widget (tool, display_name, new_position, tool.minimum_height.max (100))
+				else
+					parent_area.update_for_holder_position_change (Current, new_position)
+					parent_area.rebuild
+					parent_area.restore_stored_positions
+				end			
 				parent_area.docked_in_actions.call (Void)
 			end
 			parent_area.remove_docking_areas

@@ -1484,6 +1484,7 @@ feature {NONE} -- Implementation
 			Result.put ([11, 8], "icon_uml_color")
 			Result.put ([11, 9], "icon_pin_closed_color")
 			Result.put ([11, 10], "icon_pin_open_color")
+			Result.put ([11, 11], "icon_arrow_empty")
 
 			Result.compare_objects
 		end

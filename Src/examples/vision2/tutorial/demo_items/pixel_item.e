@@ -27,7 +27,6 @@ feature -- Access
 	figure: EV_PIXEL is
 		do
 			!! Result.set (150, 150)
-			Result.set_line_width (3)
 		end
 
 end -- class PIXEL_ITEM

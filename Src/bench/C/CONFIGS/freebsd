@@ -10,8 +10,8 @@ ld='ld'
 mt_prefix='mt'
 
 mtccflags='-DEIF_THREADS -DEIF_POSIX_THREADS'
-mtlibs='-lm -lpthread'
-mtsharedlibs='-lm -lpthread'
+mtlibs='-lm -lcompat -lpthread'
+mtsharedlibs='-lm -lcompat -lpthread'
 
 optimize='-O2 -m486'
 wkoptimize='-O'
@@ -20,12 +20,8 @@ start_test='if [ ! -f finished ] ; then'
 end_test='; fi'
 create_test='touch finished'
 
-# flags libs and mtlibs for graphical application (needs motif)
-#libs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lm'
-#mtlibs='-L/usr/X11R6/lib -lXm -lXt -lXext -lX11 -lXpm -lSM -lICE -lm -lpthread'
-
-libs='-lm'
-sharedlibs='-lm'
+libs='-lm -lcompat '
+sharedlibs='-lm -lcompat '
 ccflags=''
 sharedccflags='-fPIC'
 

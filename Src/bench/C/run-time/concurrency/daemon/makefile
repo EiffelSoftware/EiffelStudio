@@ -3,8 +3,8 @@ LIBS = -lsocket -lnsl -lm $(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a
 OBJS = dog.o subs.o 
 CC = cc
 
-lannion: $(OBJS)
-		$(CC) -o lannion $(OBJS) $(LIBS)
+concurrent_daemon: $(OBJS)
+		$(CC) -o concurrent_daemon $(OBJS) $(LIBS)
 		rm -f dog.o
 		rm -f subs.o
 

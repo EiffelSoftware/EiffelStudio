@@ -13,9 +13,10 @@ class
 inherit
 	CLASS_I
 		rename
-			make as old_make
+			make as old_make,
+			cluster as assembly
 		redefine
-			external_name, file_name, is_external_class, cluster
+			external_name, file_name, is_external_class, assembly
 		end
 
 create
@@ -50,7 +51,7 @@ feature -- Access
 	file_name: FILE_NAME
 			-- File where XML data of current class is stored.
 
-	cluster: ASSEMBLY_I
+	assembly: ASSEMBLY_I
 			-- Cluster is an assembly.
 
 feature -- Status Report
@@ -73,7 +74,7 @@ feature -- Status Report
 			l_array_type: CONSUMED_ARRAY_TYPE
 --			l_gen_type: GEN_TYPE_I
 		do
-			l_assembly := cluster.referenced_assemblies.item (c.assembly_id)
+			l_assembly := assembly.referenced_assemblies.item (c.assembly_id)
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then

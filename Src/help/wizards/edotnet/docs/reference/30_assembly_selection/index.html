@@ -1,0 +1,57 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+	<head>
+		<TITLE>Assembly selection</TITLE>
+		<LINK REL="StyleSheet" HREF="../../default.css">
+		<META NAME="MS-HKWD" CONTENT="assembly selection, assembly manager">
+	</head>
+
+	<body>
+		<br>
+		<center>
+			<h1>Assembly selection screen</h1>
+		</center>
+		<br>
+
+		<h2>Select external assemblies</h2>
+		<p>
+			The fourth screen of the .NET wizard enables you to select the external assemblies you want to add to your .NET application.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/assembly_selection_screen.png" no border>
+			</center>
+		</p>
+		<p>
+			A list of available assemblies appear at the top of the window. <br>
+			To add an assembly to your application, just select the assembly by simple-clicking on the corresponding row in the list and click on `Add': the selected assembly will appear in the list of selected assemblies and be removed from the list of available imported assemblies.
+		</p>
+		<p>
+			<center>
+				<img src = "../../images/assembly_selection_screen_with_selected_assemblies.png" no border>
+			</center>
+		</p>
+		<p class = "note">
+			<b>Note</b> that the kernel assembly (`mscorlib.dll') does not appear, neither in the list of available assemblies, nor in the selected ones. In fact, the wizard automatically includes it for every application, since it would not compile otherwise.
+		</p>
+
+		<a name = import></a>
+		<h2>Import external assemblies</h2>
+		<p>
+			There is still a button at the bottom of the window we have not mentioned yet: the `ISE Assembly Manager' button. As you probably already guessed, it enables you to launch ISE Assembly Manager executable. Thus you will be able to import other assemblies if you do not find the one you are looking for in the list of available assemblies.<br>
+			For more information about ISE Assembly Manager, see the corresponding help topics by clicking <a href = "../../../../../../dotnet/reflection_interface/docs/index.html">here</a>. Among others, the following topics should help you:
+		</p>
+		<ul>
+			<li><a href = "../../../../../../dotnet/reflection_interface/docs/how_to_s/01_import_a_signed_assembly_to_the_EAC/index.html">How to import a signed assembly to the Eiffel assembly cache?</a></li><br>
+			<li><a href = "../../../../../../dotnet/reflection_interface/docs/reference/60_import_tool/index.html">The import tool</a></li><br>
+			<li><a href = "../../../../../../dotnet/reflection_interface/docs/reference/70_import_dialog/index.html">The import dialog</a></li><br>
+			<li><a href = "../../../../../../dotnet/reflection_interface/docs/reference/80_open_assembly_dialog/index.html">The open assembly dialog</a></li><br>
+		</ul>
+		<p>
+			When you close ISE Assembly Manager, the .NET Wizard will check for newly imported assemblies and automatically select them if any. Of course, you can choose to unselect them. To do so, just select the row you want to remove in the selected assemblies and click `Remove': the assembly will be removed from the list of selected assemblies and reappear among the available assemblies.
+		</p>
+		<br>
+		<p align = right><a href = "../40_settings_summary/index.html">>> NEXT</a></p>
+	</body>
+</html>

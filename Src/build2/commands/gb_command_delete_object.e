@@ -37,14 +37,15 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (parent, child: GB_OBJECT; a_position: INTEGER) is
-			-- Create `Current' with `child' to be removed from `parent' at
-			-- position `position'.
+	make (an_object: GB_OBJECT) is
+			-- Create `Current' with `an_object' to be deleted.
+		require
+			an_object_not_void: an_object /= Void
 		do
 			history.cut_off_at_current_position
-			original_id := child.id
-			parent_id := parent.id
-			position := a_position
+			original_id := an_object.id
+			parent_id := an_object.parent_object.id
+			position := an_object.parent_object.layout_item.index_of (an_object.layout_item, 1)
 		end
 
 feature -- Basic Operation

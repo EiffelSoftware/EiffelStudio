@@ -28,6 +28,7 @@ feature {NONE}
 feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 
 	clusters: LINKED_LIST [CASE_CLUSTER_INFO];
+			-- Sub clusters info
 
 	cluster_i: CLUSTER_I;
 			-- Cluster_i associated with path name `name'	
@@ -38,9 +39,6 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 	file_name: STRING;
 			-- Cluster file name (not including path)
 
-	full_path_name: STRING;
-			--  Cluster file name (including path)
-
 	set_file_name (n: STRING) is
 			-- Set file_name to `n'.
 		require
@@ -50,17 +48,6 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			file_name.append (n);
 		ensure
 			file_name_set: file_name.is_equal (n)
-		end;
-
-	set_full_path_name (n: STRING) is
-			-- Set full_path_name to `n'.
-		require
-			valid_name: n /= Void and then not n.empty
-		do
-			!! full_path_name.make (n.count);
-			full_path_name.append (n);
-		ensure
-			full_path_name_name_set: full_path_name.is_equal (n)
 		end;
 
 	set_name (n: STRING) is
@@ -90,25 +77,6 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			valid_cluster: cluster /= Void;
 		do
 			clusters.extend (cluster)
-		end;
-
-	cluster_item (path_element: STRING): CASE_CLUSTER_INFO is
-			-- Cluster info with path `path_element'?
-		require
-			valid_path_element: path_element /= Void
-		do
-			if path_element.is_equal (full_path_name) then
-				Result := Current
-			else
-				from
-					clusters.start
-				until
-					Result /= Void or else clusters.after 
-				loop
-					Result := clusters.item.cluster_item (path_element)
-					clusters.forth
-				end
-			end
 		end;
 
 	storage_info: S_CLUSTER_DATA_R332 is

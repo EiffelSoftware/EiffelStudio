@@ -694,6 +694,11 @@ feature {NONE} -- Implementation
 	oui_widget: SCROLL_LIST
 			-- Widget for context data
 
+	is_destroyed: BOOLEAN is
+		do
+			Result := not exists 
+		end
+
 end -- class SCROLL_LIST_WINDOWS
 
 --|----------------------------------------------------------------

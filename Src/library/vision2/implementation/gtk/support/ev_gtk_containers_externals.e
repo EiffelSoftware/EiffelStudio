@@ -40,16 +40,44 @@ feature {NONE} -- GTK C functions for general containers
 
 feature {NONE} -- GTK C functions for windows
 
-	gtk_window_new (opt: INTEGER): POINTER is
-		external "C | %"gtk/gtk.h%""
+	c_gtk_window_maximum_height (window: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
-	gtk_window_set_title (widget: POINTER; t: POINTER) is
-		external "C | %"gtk/gtk.h%""
+	c_gtk_window_maximum_width (window: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	gdk_window_set_hints (widget: POINTER; x: INTEGER; y: INTEGER; min_width: INTEGER; min_height: INTEGER; max_width: INTEGER; max_height: INTEGER; flags: BOOLEAN) is
+		external
+			"C | %"gdk/gdk.h%""
+		end
+
+	gdk_window_set_icon_name (widget: POINTER; name: STRING) is
+		external
+			"C | %"gdk/gdk.h%""
+		end
+
+	gtk_window_new (opt: INTEGER): POINTER is
+		external
+			"C | %"gtk/gtk.h%""
 		end
 
 	gtk_window_set_policy (w:POINTER; allow_shrink, allow_grow, auto_shrink: BOOLEAN) is
-		external "C | %"gtk/gtk.h%""
+		external
+			"C | %"gtk/gtk.h%""
+		end
+	
+	gtk_window_set_title (widget: POINTER; t: POINTER) is
+		external
+			"C | %"gtk/gtk.h%""
+		end
+	c_gtk_window_title (window: POINTER): POINTER is
+
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 	c_gtk_window_x (window: POINTER): INTEGER is

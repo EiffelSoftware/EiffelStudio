@@ -3,14 +3,15 @@ indexing
 	description: "Registry keys constants"
 	status: "See notice at end of class"
 	date: "$Date$"
-	revision: "$Revision$"
+	revision: "$Revision$";
+	note: "Changed the type of Keys from INTEGER to POINTER"
 	
 class
 	WEL_HKEY
 
 feature -- Status
 
-	basic_valid_value_for_HKEY(value: INTEGER): BOOLEAN is
+	basic_valid_value_for_HKEY(value: POINTER): BOOLEAN is
 		-- Return TRUE if 'value' is one of the basic following values.
 		do
 			if value=Hkey_classes_root
@@ -42,7 +43,7 @@ feature -- Status
 			end
 		end
 
-	index_value_for_root_keys(name: STRING): INTEGER is
+	index_value_for_root_keys(name: STRING): POINTER is
 			-- Return the index corresponding to a root key.
 		require
 				name_possible: name /= Void and then basic_valid_name_for_HKEY(name)
@@ -67,51 +68,51 @@ feature -- Status
 
 feature -- Access
 
-	Hkey_classes_root: INTEGER is
+	Hkey_classes_root: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CLASSES_ROOT"
 		end
 
-	Hkey_current_user: INTEGER is
+	Hkey_current_user: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_USER"
 		end
 
-	Hkey_local_machine: INTEGER is
+	Hkey_local_machine: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_LOCAL_MACHINE"
 		end
 
-	Hkey_users: INTEGER is
+	Hkey_users: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_USERS"
 		end
 
-	Hkey_performance_data: INTEGER is
+	Hkey_performance_data: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_PERFORMANCE_DATA"
 		end
 
-	Hkey_current_config: INTEGER is
+	Hkey_current_config: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_CONFIG"
 		end
 
-	Hkey_dyn_data: INTEGER is
+	Hkey_dyn_data: POINTER is
 		external
-			"C [macro %"winreg.h%"]"
+			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_DYN_DATA"
 		end

@@ -228,7 +228,7 @@ feature {NONE} -- Externals
 
 	cwel_logbitmap_get_bits (ptr: POINTER): POINTER is
 		external
-			"C [macro <logbmp.h>]"
+			"C [macro <logbmp.h>] : EIF_POINTER"
 		end
 
 	cwel_logbitmap_set_type (ptr: POINTER; value: INTEGER) is

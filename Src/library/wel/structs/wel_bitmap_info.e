@@ -183,7 +183,7 @@ feature {NONE} -- Externals
 
 	cwel_bitmap_info_get_header (ptr: POINTER): POINTER is
 		external
-			"C [macro <bmpinfo.h>]"
+			"C [macro <bmpinfo.h>] (BITMAPINFO*): EIF_POINTER"
 		end
 
 	cwel_bitmap_info_get_rgb_quad (ptr: POINTER; i: INTEGER): POINTER is

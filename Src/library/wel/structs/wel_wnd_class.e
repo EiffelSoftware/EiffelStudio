@@ -500,37 +500,37 @@ feature {NONE} -- Externals
 
 	cwel_wnd_class_get_instance (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER" 
 		end
 
 	cwel_wnd_class_get_wnd_proc (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwel_wnd_class_get_icon (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwel_wnd_class_get_cursor (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwel_wnd_class_get_background (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwel_wnd_class_get_menu_name (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwel_wnd_class_get_class_name (ptr: POINTER): POINTER is
 		external
-			"C [macro <wndclass.h>]"
+			"C [macro <wndclass.h>] (WNDCLASS*): EIF_POINTER"
 		end
 
 	cwin_register_class (ptr: POINTER) is

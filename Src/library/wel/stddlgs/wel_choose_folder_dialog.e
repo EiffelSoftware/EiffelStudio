@@ -224,7 +224,7 @@ feature {NONE} -- External
 
 	cwin_sh_browse_for_folder (browse_info: POINTER): POINTER is
 			external
-				"C [macro %"wel.h%"] (LPBROWSEINFO): LPITEMIDLIST"
+				"C [macro %"wel.h%"] (LPBROWSEINFO): EIF_POINTER"
 			alias
 				"SHBrowseForFolder"
 			end

@@ -21,6 +21,19 @@
 #ifndef __WEL_GLOBALS__
 #define __WEL_GLOBALS__
 
+
+#ifndef __WEL_DISPATCHER__
+#	include "disptchr.h"
+#endif
+
+#ifndef __WEL_ENUMFONT__
+#	include "enumfont.h"
+#endif
+
+#ifndef __WEL_EDITSTREAM__
+#	include "estream.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,17 +47,6 @@ extern "C" {
 #	include "eif_threads.h"
 #endif
 
-#ifndef __WEL_DISPATCHER__
-#	include "disptchr.h"
-#endif
-
-#ifndef __WEL_ENUMFONT__
-#	include "enumfont.h"
-#endif
-
-#ifndef __WEL_EDITSTREAM__
-#	include "estream.h"
-#endif
 
 
 

@@ -133,22 +133,22 @@ feature {NONE} -- Externals
 
 	cwel_minmaxinfo_get_maxsize (ptr: POINTER): POINTER is
 		external
-			"C [macro <minmaxi.h>]"
+			"C [macro <minmaxi.h>] (LPMINMAXINFO): EIF_POINTER"
 		end
 
 	cwel_minmaxinfo_get_maxposition (ptr: POINTER): POINTER is
 		external
-			"C [macro <minmaxi.h>]"
+			"C [macro <minmaxi.h>] (LPMINMAXINFO): EIF_POINTER"
 		end
 
 	cwel_minmaxinfo_get_mintracksize (ptr: POINTER): POINTER is
 		external
-			"C [macro <minmaxi.h>]"
+			"C [macro <minmaxi.h>] (LPMINMAXINFO): EIF_POINTER"
 		end
 
 	cwel_minmaxinfo_get_maxtracksize (ptr: POINTER): POINTER is
 		external
-			"C [macro <minmaxi.h>]"
+			"C [macro <minmaxi.h>] (LPMINMAXINFO): EIF_POINTER"
 		end
 
 end -- class WEL_MIN_MAX_INFO

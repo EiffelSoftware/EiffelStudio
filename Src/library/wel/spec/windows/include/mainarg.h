@@ -5,9 +5,15 @@
 #ifndef __WEL_MAINARG__
 #define __WEL_MAINARG__
 
+
 #ifndef __WEL__
-#	include <wel.h>
+#include <wel.h>
 #endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* Eiffel run-time global variables */
 extern HINSTANCE eif_hInstance;
@@ -19,6 +25,10 @@ extern int eif_nCmdShow;
 #define cwel_previous_hinstance eif_hPrevInstance
 #define cwel_command_line eif_lpCmdLine
 #define cwel_command_show eif_nCmdShow
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __WEL_MAINARG__ */
 

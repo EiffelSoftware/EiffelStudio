@@ -236,7 +236,7 @@ feature {NONE} -- Externals
 
 	cwel_mdi_cs_get_owner (ptr: POINTER): POINTER is
 		external
-			"C [macro <mdics.h>]"
+			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
 	cwel_mdi_cs_set_x (ptr: POINTER; value: INTEGER) is
@@ -246,12 +246,12 @@ feature {NONE} -- Externals
 
 	cwel_mdi_cs_get_class_name (ptr: POINTER): POINTER is
 		external
-			"C [macro <mdics.h>]"
+			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
 	cwel_mdi_cs_get_class_title (ptr: POINTER): POINTER is
 		external
-			"C [macro <mdics.h>]"
+			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
 	cwel_mdi_cs_get_x (ptr: POINTER): INTEGER is
@@ -306,7 +306,7 @@ feature {NONE} -- Externals
 
 	cwel_mdi_cs_get_lparam (ptr: POINTER): POINTER is
 		external
-			"C [macro <mdics.h>]"
+			"C [macro <mdics.h>] (MDICREATESTRUCT*): EIF_POINTER"
 		end
 
 end -- class WEL_MDI_CREATE_STRUCT

@@ -103,17 +103,17 @@ feature {NONE} -- Externals
 
 	cwel_findargument_get_range (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_find_argument.h%"]"
+			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
 
 	cwel_findargument_get_string_to_find (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_find_argument.h%"]"
+			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
 
 	cwel_findargument_get_range_out (ptr: POINTER): POINTER is
 		external
-			"C [macro %"wel_find_argument.h%"]"
+			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
 		
 end -- class WEL_FIND_ARGUMENT

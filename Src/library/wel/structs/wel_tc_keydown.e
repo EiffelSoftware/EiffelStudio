@@ -67,7 +67,7 @@ feature {NONE} -- Externals
 
 	cwel_tc_keydown_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"tckeydown.h%"]"
+			"C [macro %"tckeydown.h%"] (TC_KEYDOWN*): EIF_POINTER"
 		end
 
 	cwel_tc_keydown_get_wvkey (ptr: POINTER): INTEGER is

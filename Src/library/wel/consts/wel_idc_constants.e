@@ -3,111 +3,112 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	note: "Constants changed from INTEGER to POINTER."
 
 class
 	WEL_IDC_CONSTANTS
 
 feature -- Access
 
-	Idc_appstarting: INTEGER is
+	Idc_appstarting: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDC_APPSTARTING"
 		end
 
-	Idc_arrow: INTEGER is
+	Idc_arrow: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_ARROW"
 		end
 
-	Idc_help: INTEGER is
+	Idc_help: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_HELP"
 		end
 
-	Idc_ibeam: INTEGER is
+	Idc_ibeam: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_IBEAM"
 		end
 
-	Idc_no: INTEGER is
+	Idc_no: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_NO"
 		end
 
-	Idc_wait: INTEGER is
+	Idc_wait: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_WAIT"
 		end
 
-	Idc_cross: INTEGER is
+	Idc_cross: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_CROSS"
 		end
 
-	Idc_uparrow: INTEGER is
+	Idc_uparrow: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_UPARROW"
 		end
 
-	Idc_sizeall: INTEGER is
+	Idc_sizeall: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZEALL"
 		end
 
-	Idc_sizenwse: INTEGER is
+	Idc_sizenwse: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZENWSE"
 		end
 
-	Idc_sizenesw: INTEGER is
+	Idc_sizenesw: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZENESW"
 		end
 
-	Idc_sizewe: INTEGER is
+	Idc_sizewe: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZEWE"
 		end
 
-	Idc_sizens: INTEGER is
+	Idc_sizens: POINTER is
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZENS"
 		end
 
 feature -- Obsolete
 
-	Idc_size: INTEGER is obsolete "Use ``Idc_sizeall''"
+	Idc_size: POINTER is obsolete "Use ``Idc_sizeall''"
 		do
 			Result := Idc_sizeall
 		end
 
-	Idc_icon: INTEGER is obsolete "Use ``Idc_arrow''"
+	Idc_icon: POINTER is obsolete "Use ``Idc_arrow''"
 		do
 			Result := Idc_arrow
 		end

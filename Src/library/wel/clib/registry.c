@@ -14,11 +14,11 @@
 // Creation of a key if it does not exists. If it does, just
 // open it. 
 // This function returns the reference to the created/opened\
-// key (0 if it failed).
+// key (default_pointer if it failed).
 
 
-EIF_INTEGER cwin_reg_create_key(
-		EIF_INTEGER parent_key,
+EIF_POINTER cwin_reg_create_key(
+		EIF_POINTER parent_key,
         	EIF_POINTER keyName,
         	EIF_INTEGER access_mode )
 {
@@ -44,16 +44,16 @@ EIF_INTEGER cwin_reg_create_key(
 
 	// Result
     	if( result = ERROR_SUCCESS )
-		return (EIF_INTEGER) phkResult;
-        return 0;
+		return (EIF_POINTER) phkResult;
+        return NULL;
 }
 
 //////////////////////////////////////////////////////////////
 //  Opening of a key. This function returns the reference to
-//  the opened key ( 0 if it failed ).
+//  the opened key ( default_pointer if it failed ).
 
-EIF_INTEGER cwin_reg_open_key(
-        EIF_INTEGER parent_key,
+EIF_POINTER cwin_reg_open_key(
+        EIF_POINTER parent_key,
         EIF_POINTER keyName,
         EIF_INTEGER access_mode )
 {
@@ -69,8 +69,8 @@ EIF_INTEGER cwin_reg_open_key(
             (REGSAM)access_mode,
             (PHKEY)&key);
     if( result == ERROR_SUCCESS )
-	    return (EIF_INTEGER)key;
-	return 0;
+	    return (EIF_POINTER)key;
+	return NULL;
 }
 
 //////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ EIF_INTEGER cwin_reg_open_key(
 //  Return TRUE whether the deletion worked.
 
 EIF_BOOLEAN cwin_reg_delete_key(
-		EIF_INTEGER parent_key,
+		EIF_POINTER parent_key,
 		EIF_POINTER keyName )
 {
 	LONG result;
@@ -97,7 +97,7 @@ EIF_BOOLEAN cwin_reg_delete_key(
 //
 
 void cwin_reg_set_key_value(
-        EIF_INTEGER key,
+        EIF_POINTER key,
         EIF_POINTER keyname,
         EIF_POINTER keyvalue )
 {
@@ -120,7 +120,7 @@ void cwin_reg_set_key_value(
 //
 
 EIF_POINTER cwin_reg_enum_key(
-		EIF_INTEGER key,
+		EIF_POINTER key,
 		EIF_INTEGER index )
 {
 	TCHAR key_name[64];
@@ -158,12 +158,12 @@ EIF_POINTER cwin_reg_enum_key(
 		memcpy (pRK->name, key_name, key_size);
 		pRK->name[key_size] = '\0';
 
-		pRK->class = (EIF_POINTER) malloc (class_size + 1);
-		if (! pRK->class)
+		pRK->KeyClass = (EIF_POINTER) malloc (class_size + 1);
+		if (! pRK->KeyClass)
 			goto error_name;
 
-		memcpy (pRK->class, class_name, class_size + 1);
-		pRK->class[class_size] = '\0';
+		memcpy (pRK->KeyClass, class_name, class_size + 1);
+		pRK->KeyClass[class_size] = '\0';
 
 		return (EIF_POINTER) pRK;
 	}
@@ -178,10 +178,10 @@ EIF_POINTER cwin_reg_enum_key(
 		}
 
 		if (class_size != last_class_size)	{
-			pRK->class = malloc (class_size + 1);
-			if (! pRK->class)
+			pRK->KeyClass = malloc (class_size + 1);
+			if (! pRK->KeyClass)
 				goto error_class;
-			strcpy (pRK->class, class_name);
+			strcpy (pRK->KeyClass, class_name);
 		}
 
 		do	{
@@ -197,10 +197,10 @@ EIF_POINTER cwin_reg_enum_key(
 
 			if (class_size == last_class_size)	{
 				class_size += class_size_increment;
-				if (pRK->class)
-					free (pRK->class);
-				pRK->class = malloc (class_size);
-				if (! pRK->class)
+				if (pRK->KeyClass)
+					free (pRK->KeyClass);
+				pRK->KeyClass = malloc (class_size);
+				if (! pRK->KeyClass)
 					goto error_class;
 				last_class_size = class_size;
 			}
@@ -210,7 +210,7 @@ EIF_POINTER cwin_reg_enum_key(
 														pRK->name,
 														&key_size,
 														NULL,
-														pRK->class,
+														pRK->KeyClass,
 														&class_size,
 														pRK->LastWriteTime);
 		} while (result == ERROR_MORE_DATA);
@@ -219,8 +219,8 @@ EIF_POINTER cwin_reg_enum_key(
 			return (EIF_POINTER) pRK;
 	}
 
-	if (pRK->class)
-		free (pRK->class);
+	if (pRK->KeyClass)
+		free (pRK->KeyClass);
 	if (pRK->name)
 		free (pRK->name);
 	free (pRK->LastWriteTime);
@@ -229,8 +229,8 @@ EIF_POINTER cwin_reg_enum_key(
 	return 0;
 
 error_class:
-	if (pRK->class)
-		free (pRK->class);
+	if (pRK->KeyClass)
+		free (pRK->KeyClass);
 error_name:
 	if (pRK->name)
 		free (pRK->name);
@@ -252,7 +252,7 @@ error:
 // we are enumerating.
 
 EIF_POINTER cwin_reg_enum_value(
-		EIF_INTEGER key,
+		EIF_POINTER key,
 		EIF_INTEGER index )
 {
 	REG_VALUE* RK;
@@ -286,7 +286,7 @@ EIF_POINTER cwin_reg_enum_value(
 /// Deleting a key value
 //////////////////////////////////////////////////////////////
 
-EIF_BOOLEAN cwin_reg_delete_value(EIF_INTEGER key, EIF_POINTER value_name)
+EIF_BOOLEAN cwin_reg_delete_value(EIF_POINTER key, EIF_POINTER value_name)
 {
 
 	long result;
@@ -305,7 +305,7 @@ EIF_BOOLEAN cwin_reg_delete_value(EIF_INTEGER key, EIF_POINTER value_name)
 //  Closing of a key.
 //
 
-EIF_BOOLEAN cwin_reg_close_key( EIF_INTEGER key )
+EIF_BOOLEAN cwin_reg_close_key( EIF_POINTER key )
 {
     long result;
 	
@@ -321,7 +321,7 @@ EIF_BOOLEAN cwin_reg_close_key( EIF_INTEGER key )
 //
 
 EIF_POINTER cwin_reg_query_value(
-        EIF_INTEGER key, EIF_POINTER value_name )
+        EIF_POINTER key, EIF_POINTER value_name )
 {
     LONG result;
     LONG charCount;
@@ -357,7 +357,7 @@ EIF_POINTER cwin_reg_query_value(
 //
 
 EIF_POINTER cwin_reg_def_query_value(
-        EIF_INTEGER key, EIF_POINTER value_name )
+        EIF_POINTER key, EIF_POINTER value_name )
 {
     LONG result;
     LONG charCount;
@@ -385,7 +385,7 @@ EIF_POINTER cwin_reg_def_query_value(
 }
 
 EIF_INTEGER cwin_reg_subkey_number(
-        EIF_INTEGER key)
+        EIF_POINTER key)
 {
 	LONG result;
 	DWORD nbkeys;
@@ -414,7 +414,7 @@ EIF_INTEGER cwin_reg_subkey_number(
 }
 
 EIF_INTEGER cwin_reg_value_number(
-        EIF_INTEGER key)
+        EIF_POINTER key)
 {
 	LONG result;
 	DWORD nbkeys;
@@ -442,6 +442,7 @@ EIF_INTEGER cwin_reg_value_number(
 
 }
 
+
 void cwin_reg_value_destroy(EIF_POINTER reg_value)
 {
 	REG_VALUE* pRV = (REG_VALUE*) reg_value;
@@ -449,8 +450,8 @@ void cwin_reg_value_destroy(EIF_POINTER reg_value)
 	free (pRV);
 }
 
-EIF_INTEGER cwin_reg_connect_key(EIF_POINTER hostname,
-        EIF_INTEGER key)
+EIF_POINTER cwin_reg_connect_key(EIF_POINTER hostname,
+        EIF_POINTER key)
 {
 	LONG result;
 	HKEY *phkResult;  // address of buffer for remote registry handle 

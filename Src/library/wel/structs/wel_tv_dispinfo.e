@@ -63,12 +63,12 @@ feature {NONE} -- Externals
 
 	cwel_tv_dispinfo_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvdispinfo.h>]"
+			"C [macro <tvdispinfo.h>] (TV_DISPINFO*): EIF_POINTER"
 		end
 
 	cwel_tv_dispinfo_get_item (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvdispinfo.h>]"
+			"C [macro <tvdispinfo.h>] (TV_DISPINFO*): EIF_POINTER"
 		end
 
 end -- class WEL_TV_DISPINFO

@@ -100,7 +100,7 @@ feature {NONE} -- Externals
 
 	cwel_client_cs_get_window_menu (ptr: POINTER): POINTER is
 		external
-			"C [macro <clientcs.h>]"
+			"C [macro <clientcs.h>] (CLIENTCREATESTRUCT*): EIF_POINTER"
 		end
 
 	cwel_client_cs_get_first_child (ptr: POINTER): INTEGER is

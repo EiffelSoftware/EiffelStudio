@@ -119,13 +119,13 @@ feature {NONE} -- Externals
 	cwel_pointer_to_integer (p: POINTER): INTEGER is
 			-- Converts a pointer `p' to an integer
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (EIF_POINTER): EIF_INTEGER"
 		end
 
 	cwel_integer_to_pointer (i: INTEGER): POINTER is
 			-- Converts an integer `i' to a pointer
 		external
-			"C [macro <wel.h>]"
+			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		end
 
 end -- class WEL_ANY

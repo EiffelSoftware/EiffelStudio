@@ -286,7 +286,7 @@ feature {NONE} -- Externals
 
 	cwel_msg_get_hwnd (ptr: POINTER): POINTER is
 		external
-			"C [macro <msg.h>]"
+			"C [macro <msg.h>] (MSG*): EIF_POINTER"
 		end
 
 	cwel_msg_get_message (ptr: POINTER): INTEGER is

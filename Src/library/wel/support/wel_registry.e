@@ -3,7 +3,8 @@ indexing
 	description: "Registry manager"
 	status: "See notice at end of class";
 	date: "$Date$";
-	revision: "$Revision$"
+	revision: "$Revision$";
+	note: "Changed the type of Keys from INTEGER to POINTER"
 
 class
 	WEL_REGISTRY
@@ -27,7 +28,7 @@ feature -- Actions
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
 			node_list: LINKED_LIST [ STRING ]
-			index_value,i: INTEGER
+			index_value, i: POINTER
 		do
 			node_list := value_keys_list(key_path)
 			check
@@ -42,7 +43,7 @@ feature -- Actions
 				node_list.after
 			loop
 				i := open_key (index_value,node_list.item,Key_create_sub_key)
-				if i=0 then
+				if i = default_pointer then
 					i := create_key (index_value, node_list.item, 4)
 				end
 				index_value := i
@@ -50,15 +51,15 @@ feature -- Actions
 			end
 		end
 
-	open_key_with_access(key_path: STRING;sam: INTEGER):INTEGER is
+	open_key_with_access(key_path: STRING;sam: INTEGER):POINTER is
 				-- Open the key relative to the path 'key_path', with
 				-- the access 'sam'.
-				-- Return the key reference (0 if the operation failed).
+				-- Return the key reference (defaul_pointer if the operation failed).
 		require
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
 			node_list: LINKED_LIST [ STRING ]
-			index_value,i: INTEGER
+			index_value, i: POINTER
 		do
 
 			node_list := value_keys_list(key_path)
@@ -71,7 +72,7 @@ feature -- Actions
 			from
 				node_list.forth
 			until
-				node_list.after or index_value=0
+				node_list.after or index_value = default_pointer
 			loop
 				i := open_key (index_value,node_list.item,sam)
 				index_value := i
@@ -92,7 +93,7 @@ feature -- Actions
 			at_least_one_back_slash: key_path /= Void and then key_path.has('\')
 		local
 			node_list: LINKED_LIST [ STRING ]
-			index_value,i: INTEGER
+			index_value,i: POINTER
 			stop: BOOLEAN
 		do
 			node_list := value_keys_list(key_path)
@@ -108,7 +109,7 @@ feature -- Actions
 				node_list.after or stop
 			loop
 				i := open_key (index_value,node_list.item,16)
-				if i=0 then
+				if i = default_pointer then
 					stop := TRUE
 				end
 				index_value := i
@@ -155,7 +156,7 @@ feature {NONE} -- Internal Results
 
 feature -- Access
 
-	key_from_remote_host(host_name: STRING; root_key: INTEGER):INTEGER is
+	key_from_remote_host(host_name: STRING; root_key: POINTER):POINTER is
 			-- Connect the computer designed by its name 'host_name'.
 			-- 'Host_name' should be under the format: \\computer_name
 			-- 'root_key' is the key from where we want to start the 
@@ -177,7 +178,7 @@ feature -- Access
 			end
 		end
 
-	enumerate_key (key, index: INTEGER): WEL_REGISTRY_KEY is
+	enumerate_key (key: POINTER; index: INTEGER): WEL_REGISTRY_KEY is
 			-- class WEL_REGISTRY
 		require
 			key_possible:valid_value_for_hkey(key)
@@ -191,7 +192,7 @@ feature -- Access
 			end
 		end
 
-	default_key_value (key: INTEGER; path: STRING): WEL_REGISTRY_KEY_VALUE is
+	default_key_value (key: POINTER; path: STRING): WEL_REGISTRY_KEY_VALUE is
 			-- Retrieve value of `value_name' associated with open
 			-- `key'.
 		require
@@ -213,7 +214,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_key_value (key: INTEGER; value_name: STRING; value: WEL_REGISTRY_KEY_VALUE) is
+	set_key_value (key: POINTER; value_name: STRING; value: WEL_REGISTRY_KEY_VALUE) is
 			-- Change value defined by `key' and `value_name' to `value'.
 	     	-- The key identified by the hKey parameter must have been 
 			-- opened with KEY_SET_VALUE access
@@ -234,9 +235,9 @@ feature -- Settings
 
 feature -- Basic Actions 
 
-	create_key (parent_key: INTEGER; key_name: STRING; sam: INTEGER): INTEGER is
+	create_key (parent_key: POINTER; key_name: STRING; sam: INTEGER): POINTER is
 			-- Create `key_name' under `parent_key' according to `sam'.
-			-- Return handle to created key or 0 on failure.
+			-- Return handle to created key or default_pointer on failure.
 		require
 				key_name_possible: key_name /= Void and then not key_name.empty
 				parent_key_possible:valid_value_for_hkey(parent_key)
@@ -247,9 +248,9 @@ feature -- Basic Actions
 			Result := cwin_reg_create_key (parent_key, wel_string.item, sam)
 		end
 
-	open_key (parent_key: INTEGER; key_name: STRING; access_mode: INTEGER): INTEGER is
+	open_key (parent_key: POINTER; key_name: STRING; access_mode: INTEGER): POINTER is
 			-- Open subkey `key_name' of `parent_key' according to `access_mode'.
-			-- Return handle to created key or 0 on failure.
+			-- Return handle to created key or default_pointer on failure.
 		require
 			key_name_possible: key_name /= Void and then not key_name.empty
 			parent_key_possible:valid_value_for_hkey(parent_key)
@@ -260,7 +261,7 @@ feature -- Basic Actions
 			Result := cwin_reg_open_key (parent_key, wel_string.item, access_mode)
 		end
 
-	close_key (key: INTEGER): BOOLEAN is
+	close_key (key: POINTER): BOOLEAN is
 			-- Close `key'.
 		require
 			key_possible:valid_value_for_hkey(key)
@@ -268,7 +269,7 @@ feature -- Basic Actions
 			Result := cwin_reg_close_key (key)
 		end
 
-	delete_key (parent_key: INTEGER; key_name: STRING): BOOLEAN is
+	delete_key (parent_key: POINTER; key_name: STRING): BOOLEAN is
 			-- Delete subkey `key_name' of `parent_key'.
 			-- Return True if succeeded, False otherwise.
 			-- Under Windows 95, all subkeys are deleted.
@@ -284,7 +285,7 @@ feature -- Basic Actions
 			Result := cwin_reg_delete_key (parent_key, wel_string.item)
 		end
 
-	enumerate_values(key: INTEGER):LINKED_LIST[STRING] is
+	enumerate_values(key: POINTER):LINKED_LIST[STRING] is
 		-- Find the names of the key values within the
 		-- key referenced by 'key'.
 		local
@@ -309,7 +310,7 @@ feature -- Basic Actions
 
 feature  -- New actions
 
-	delete_value(parent_key: INTEGER; name: STRING):BOOLEAN is
+	delete_value(parent_key: POINTER; name: STRING):BOOLEAN is
 		require
 			key_possible: valid_value_for_hkey(parent_key)
 			name_possible: name /= Void
@@ -320,7 +321,7 @@ feature  -- New actions
 			Result := cwin_reg_delete_value(parent_key, wel_string.item)
 		end
 
-	enumerate_value(key,index: INTEGER): STRING is
+	enumerate_value(key: POINTER; index: INTEGER): STRING is
 				-- Find the name of the key_value corresponding
 				-- to the key 'key and the index 'index'.
 			local
@@ -333,25 +334,25 @@ feature  -- New actions
 				end	
 			end
 
-	number_of_subkeys(key: INTEGER):INTEGER is
+	number_of_subkeys(key: POINTER):INTEGER is
 			do
 				Result := cwin_reg_subkey_number(key)
 			end
 
-	number_of_values(key: INTEGER):INTEGER is
+	number_of_values(key: POINTER):INTEGER is
 			do
 				Result := cwin_reg_value_number(key)
 			end
 
-	valid_value_for_hkey (key: INTEGER):BOOLEAN is
+	valid_value_for_hkey (key: POINTER):BOOLEAN is
 			-- Does key pointed by 'key' exists 
 			do
-				Result := (key /= 0)
+				Result := (key /= default_pointer)
 			end
 		
 feature -- Access
 
-	key_value (key: INTEGER; value_name: STRING): WEL_REGISTRY_KEY_VALUE is
+	key_value (key: POINTER; value_name: STRING): WEL_REGISTRY_KEY_VALUE is
 			-- Retrieve value of `value_name' associated with open 
 			-- `key'. 
 			-- The identifier 'key' relative to the parent key must
@@ -372,72 +373,72 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_reg_create_key (parent_key: INTEGER; key_name: POINTER; sam: INTEGER): INTEGER is
+	cwin_reg_create_key (parent_key: POINTER; key_name: POINTER; sam: INTEGER): POINTER is
 		external
 			"C | %"registry.h%""
 		end
 		
-	cwin_reg_open_key (parent_key: INTEGER; key_name: POINTER; access_mode: INTEGER): INTEGER is
+	cwin_reg_open_key (parent_key: POINTER; key_name: POINTER; access_mode: INTEGER): POINTER is
 		external
 			"C | %"registry.h%""
 		end
 		
-	cwin_reg_delete_key (key: INTEGER; subkey: POINTER): BOOLEAN is
+	cwin_reg_delete_key (key: POINTER; subkey: POINTER): BOOLEAN is
 		external
 			"C"
 		end
 
-	cwin_reg_enum_key (key, index: INTEGER): POINTER is
+	cwin_reg_enum_key (key: POINTER; index: INTEGER): POINTER is
 			-- (export status {NONE})
 		external
 			"C | %"registry.h%""
 		end;
 
-	cwin_reg_set_key_value (key: INTEGER; keyname: POINTER; keyvalue: POINTER) is
+	cwin_reg_set_key_value (key: POINTER; keyname: POINTER; keyvalue: POINTER) is
 		external
 			"C | %"registry.h%""
 		end
 
-	cwin_reg_close_key (key: INTEGER):BOOLEAN is
+	cwin_reg_close_key (key: POINTER):BOOLEAN is
 		external
 			"C | %"registry.h%""
 		end
 
-	cwin_reg_query_value (key: INTEGER; value_name: POINTER): POINTER is
+	cwin_reg_query_value (key: POINTER; value_name: POINTER): POINTER is
 		external
 			"C | %"registry.h%""
 		end
 
-	cwin_reg_delete_value (key: INTEGER; value_name: POINTER): BOOLEAN is
+	cwin_reg_delete_value (key: POINTER; value_name: POINTER): BOOLEAN is
 		external
 			"C | %"registry.h%""
 		end
 
-	cwin_reg_def_query_value (key: INTEGER; value_name: POINTER): POINTER is
+	cwin_reg_def_query_value (key: POINTER; value_name: POINTER): POINTER is
 			-- (export status {NONE})
 		external
 			"C | %"registry.h%""
 		end;
 
-	cwin_reg_enum_value (key, index: INTEGER): POINTER is
+	cwin_reg_enum_value (key: POINTER; index: INTEGER): POINTER is
 			-- (export status {NONE})
 		external
 			"C | %"registry.h%""
 		end;
 
-	cwin_reg_subkey_number(key: INTEGER) : INTEGER is
+	cwin_reg_subkey_number(key: POINTER) : INTEGER is
 		-- (export status {NONE})
 		external
 			"C | %"registry.h%""
 		end;
 
-	cwin_reg_value_number(key:INTEGER) : INTEGER is
+	cwin_reg_value_number(key:POINTER) : INTEGER is
 		-- (export status {NONE})
 		external
 			"C | %"registry.h%""
 		end;
 
-	cwin_reg_connect_key(name: POINTER; key: INTEGER): INTEGER is
+	cwin_reg_connect_key(name: POINTER; key: POINTER): POINTER is
 		-- (export status {NONE})
 		external
 			"C | %"registry.h%""

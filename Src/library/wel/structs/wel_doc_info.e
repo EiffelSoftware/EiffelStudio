@@ -134,12 +134,12 @@ feature {NONE} -- Externals
 
 	cwel_doc_info_get_lpszdocname (ptr: POINTER): POINTER is
 		external
-			"C [macro <docinfo.h>]"
+			"C [macro <docinfo.h>] (DOCINFO*): EIF_POINTER"
 		end
 
 	cwel_doc_info_get_lpszoutput (ptr: POINTER): POINTER is
 		external
-			"C [macro <docinfo.h>]"
+			"C [macro <docinfo.h>] (DOCINFO*): EIF_POINTER"
 		end
 
 end -- class WEL_DOC_INFO

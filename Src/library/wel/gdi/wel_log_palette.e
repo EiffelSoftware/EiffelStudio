@@ -168,7 +168,7 @@ feature {NONE} -- Externals
 
 	cwel_log_palette_get_pal_entry (ptr: POINTER; i: INTEGER): POINTER is
 		external
-			"C [macro <logpal.h>]"
+			"C [macro <logpal.h>]  (LOGPALETTE*, int): EIF_POINTER"
 		end
 
 end -- class WEL_LOG_PALETTE

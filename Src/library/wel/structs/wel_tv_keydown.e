@@ -61,12 +61,12 @@ feature {NONE} -- Externals
 
 	cwel_tv_keydown_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro <tvkeydown.h>]"
+			"C [macro <tvkeydown.h>] (TV_KEYDOWN *): EIF_POINTER"
 		end
 
 	cwel_tv_keydown_get_wvkey (ptr: POINTER): INTEGER is
 		external
-			"C [macro <tvkeydown.h>]"
+			"C [macro <tvkeydown.h>] (TV_KEYDOWN *): EIF_INTEGER"
 		end
 
 end -- class WEL_TV_KEYDOWN

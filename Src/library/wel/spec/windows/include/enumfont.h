@@ -9,6 +9,11 @@
 #	include "wel.h"
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 	(EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
 	 EIF_POINTER, /* ENUMLOGFONT * */
@@ -17,9 +22,28 @@ typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
 	 EIF_POINTER  /* user-data */
 	 );
 
+#ifdef __cplusplus
+}
+#endif
+
+
 #ifndef __WEL_GLOBALS__
 #	include "wel_globals.h"
 #endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+typedef void (* EIF_ENUM_FONT_FAMILY_PROCEDURE)
+	(EIF_OBJ,     /* WEL_FONT_FAMILY_ENUMERATOR Eiffel object */
+	 EIF_POINTER, /* ENUMLOGFONT * */
+	 EIF_POINTER, /* NEWTEXTMETRIC * */
+	 EIF_INTEGER, /* Font type */
+	 EIF_POINTER  /* user-data */
+	 );
+
 
 /* Eiffel routine signature for `converter' */
 int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);
@@ -49,6 +73,10 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, 
 #	define cwel_release_font_family_enumerator_object (eif_wean (font_family_enumerator))
 		/* Release `font_family_enumerator' with `addr' */
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* __WEL_ENUMFONT__ */

@@ -233,7 +233,7 @@ feature {NONE} -- Externals
 
 	cwel_windowpos_get_hwndinsertafter (ptr: POINTER): POINTER is
 		external
-			"C [macro <winpos.h>]"
+			"C [macro <winpos.h>] (WINDOWPOS*): EIF_POINTER"
 		end
 
 	cwel_windowpos_get_x (ptr: POINTER): INTEGER is

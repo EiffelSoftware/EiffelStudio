@@ -172,7 +172,7 @@ feature {NONE} -- Externals
 			--| Special case since the parameter is a POINT and not
 			--| a POINT *. So a macro is used.
 		external
-			"C [macro <point.h>]"
+			"C [macro <point.h>] (POINT*): EIF_POINTER"
 		end
 
 	cwin_client_to_screen (hwnd, ptr: POINTER) is

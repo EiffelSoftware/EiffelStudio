@@ -98,7 +98,7 @@ feature {NONE} -- Externals
 
 	cwin_progress_class: POINTER is
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"PROGRESS_CLASS"
 		end

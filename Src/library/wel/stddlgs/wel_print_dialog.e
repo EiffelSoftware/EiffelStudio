@@ -520,7 +520,7 @@ feature {NONE} -- Externals
 
 	cwel_print_dlg_get_hdc (ptr: POINTER): POINTER is
 		external
-			"C [macro <printdlg.h>]"
+			"C [macro <printdlg.h>] (PRINTDLG *): EIF_POINTER"
 		end
 
 	cwin_print_dlg (ptr: POINTER): BOOLEAN is

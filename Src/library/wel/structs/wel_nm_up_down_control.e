@@ -96,17 +96,17 @@ feature {NONE} -- Externals
 
 	cwel_nm_updown_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro <nmupdown.h>]"
+			"C [macro <nmupdown.h>] (NM_UPDOWN*): EIF_POINTER"
 		end
 
 	cwel_nm_updown_get_ipos (ptr: POINTER): INTEGER is
 		external
-			"C [macro <nmupdown.h>]"
+			"C [macro <nmupdown.h>] (NM_UPDOWN*): EIF_POINTER"
 		end
 
 	cwel_nm_updown_get_idelta (ptr: POINTER): INTEGER is
 		external
-			"C [macro <nmupdown.h>]"
+			"C [macro <nmupdown.h>] (NM_UPDOWN*): EIF_POINTER"
 		end
 
 end -- class WEL_NM_UP_DOWN_CONTROL

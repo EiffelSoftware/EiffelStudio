@@ -64,12 +64,12 @@ feature {NONE} -- Externals
 
 	cwel_lv_dispinfo_get_hdr (ptr: POINTER): POINTER is
 		external
-			"C [macro %"lvdispinfo.h%"]"
+			"C [macro %"lvdispinfo.h%"] (LV_DISPINFO*): EIF_POINTER"
 		end
 
 	cwel_lv_dispinfo_get_item (ptr: POINTER): POINTER is
 		external
-			"C [macro %"lvdispinfo.h%"]"
+			"C [macro %"lvdispinfo.h%"] (LV_DISPINFO*): EIF_POINTER"
 		end
 
 end -- class WEL_LV_DISPINFO

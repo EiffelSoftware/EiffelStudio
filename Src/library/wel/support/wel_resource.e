@@ -3,6 +3,10 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	note: "`make_by_predefined_id' does now take a POINTER as argument.%
+		   %Please change any external clauses of existing prefedefined%
+		   %IDs to POINTER too. Predefined IDs are correctly casted on%
+		   %the C-side already"
 
 deferred class
 	WEL_RESOURCE
@@ -37,11 +41,10 @@ feature {NONE} -- Initialization
 			not_shared: not shared
 		end
 
-	make_by_predefined_id (id: INTEGER) is
+	make_by_predefined_id (id: POINTER) is
 			-- Load the resource by an `id', predefined by Windows
 		do
-			load_item (default_pointer,
-				cwin_make_int_resource (id))
+			load_item (default_pointer, id)
 			shared := True
 		ensure
 			shared: shared

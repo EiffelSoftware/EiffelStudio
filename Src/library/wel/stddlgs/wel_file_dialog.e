@@ -396,12 +396,12 @@ feature {NONE} -- Externals
 
 	cwel_open_file_name_get_hwndowner (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 	cwel_open_file_name_get_lpstrfilter (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 	cwel_open_file_name_get_nfilterindex (ptr: POINTER): INTEGER is
@@ -411,7 +411,7 @@ feature {NONE} -- Externals
 
 	cwel_open_file_name_get_lpstrfile (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 	cwel_open_file_name_get_nmaxfile (ptr: POINTER): INTEGER is
@@ -421,7 +421,7 @@ feature {NONE} -- Externals
 
 	cwel_open_file_name_get_lpstrfiletitle (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 	cwel_open_file_name_get_nmaxfiletitle (ptr: POINTER): INTEGER is
@@ -431,12 +431,12 @@ feature {NONE} -- Externals
 
 	cwel_open_file_name_get_lpstrinitialdir (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 	cwel_open_file_name_get_lpstrtitle (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 	cwel_open_file_name_get_flags (ptr: POINTER): INTEGER is
@@ -456,7 +456,7 @@ feature {NONE} -- Externals
 
 	cwel_open_file_name_get_lpstrdefext (ptr: POINTER): POINTER is
 		external
-			"C [macro <ofn.h>]"
+			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
 invariant

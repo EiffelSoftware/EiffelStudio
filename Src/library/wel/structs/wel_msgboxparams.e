@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 			-- Set the fields of
 			-- MSGBOXPARAMS
 		external
-			"C [macro <msgboxpa.h>]"
+			"C [macro <msgboxpa.h>] (LPMSGBOXPARAMS, HWND, HINSTANCE, LPCSTR, LPCSTR, DWORD, LPCSTR, DWORD)"
 		end
 
 	c_size_of_msgboxparams: INTEGER is

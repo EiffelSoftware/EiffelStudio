@@ -144,7 +144,7 @@ feature {NONE} -- Externals
 		
 	cwin_reg_value_get_data (ptr: POINTER): POINTER is
 		external
-			"C [macro <wel_reg_value.h>]"
+			"C [macro <wel_reg_value.h>] (REG_VALUE *): EIF_POINTER"
 		end
 		
 	cwin_reg_value_get_data_dword (ptr: POINTER): INTEGER is
@@ -174,7 +174,8 @@ feature {NONE} -- Externals
 		
 	cwin_reg_value_destroy (ptr: POINTER) is
 		external
-			"C [macro <wel_reg_value.h>]"
+--			"C [macro <wel_reg_value.h>]"
+			"C | %"registry.h%""
 		end
 		
 invariant

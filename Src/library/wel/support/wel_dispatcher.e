@@ -145,7 +145,7 @@ feature {NONE} -- Externals
 	cwel_integer_to_pointer (i: INTEGER): POINTER is
 			-- Converts an integer `i' to a pointer
 		external
-			"C [macro %"wel.h%"]"
+			"C [macro %"wel.h%"] (EIF_INTEGER): EIF_POINTER"
 		end
 
 	cwel_temp_dialog_value: POINTER is

@@ -148,17 +148,17 @@ feature {NONE} -- Externals
 
 	cwel_formatrange_get_rc (ptr: POINTER): POINTER is
 		external
-			"C [macro <frange.h>]"
+			"C [macro <frange.h>] (FORMATRANGE*): EIF_POINTER"
 		end
 
 	cwel_formatrange_get_rcpage (ptr: POINTER): POINTER is
 		external
-			"C [macro <frange.h>]"
+			"C [macro <frange.h>] (FORMATRANGE*): EIF_POINTER"
 		end
 
 	cwel_formatrange_get_chrg (ptr: POINTER): POINTER is
 		external
-			"C [macro <frange.h>]"
+			"C [macro <frange.h>] (FORMATRANGE*): EIF_POINTER"
 		end
 
 end -- class WEL_FORMAT_RANGE

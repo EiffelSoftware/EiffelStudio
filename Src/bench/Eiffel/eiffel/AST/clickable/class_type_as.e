@@ -128,7 +128,11 @@ feature -- Conveniences
 						create actual_generic.make (1, 0)
 						create {TUPLE_TYPE_A} Result.make (l_class.class_id, actual_generic)
 					else
-						Result := l_class.actual_type
+						if not l_class.is_generic then
+							Result := l_class.actual_type
+						else
+							create Result.make (l_class.class_id)
+						end
 					end
 				end
 
@@ -178,7 +182,11 @@ feature -- Conveniences
 			end
 
 			if Result = Void then
-				Result := l_class.actual_type
+				if not l_class.is_generic then
+					Result := l_class.actual_type
+				else
+					create Result.make (l_class.class_id)
+				end
 			end
 
 				-- Base type class is expanded
@@ -236,7 +244,11 @@ feature -- Conveniences
 				end
 
 				if Result = Void then
-					Result := l_class.actual_type
+					if not l_class.is_generic then
+						Result := l_class.actual_type
+					else
+						create Result.make (l_class.class_id)
+					end
 				end
 
 						-- Base type class is expanded

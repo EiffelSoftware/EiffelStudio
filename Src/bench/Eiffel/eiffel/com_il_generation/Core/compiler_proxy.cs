@@ -142,9 +142,9 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.generate_formal_type_class_mapping (type_id);
 	}
 
-	public void generate_anchored_type_class_mapping (int type_id)
+	public void generate_none_type_class_mapping (int type_id)
 	{
-		core.generate_anchored_type_class_mapping (type_id);
+		core.generate_none_type_class_mapping (type_id);
 	}
 
 	public void generate_basic_type_class_mapping (int type_id)
@@ -171,8 +171,8 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.AddInterface (TypeID);
 	}
 
-	public void AddEiffelInterface (int TypeID) {
-		core.AddEiffelInterface (TypeID);
+	public void set_implementation_class () {
+		core.set_implementation_class ();
 	}
 
 	public void EndParentsList() {
@@ -330,8 +330,8 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.GenerateImplementationFeatureIL (FeatureID);
 	}
 
-	public void generate_formal_feature (int feature_id) {
-		core.generate_formal_feature (feature_id);
+	public void generate_type_feature (int feature_id) {
+		core.generate_type_feature (feature_id);
 	}
 	public void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID) {
 		core.GenerateFeatureIL (FeatureID, TypeID, CodeFeatureID);

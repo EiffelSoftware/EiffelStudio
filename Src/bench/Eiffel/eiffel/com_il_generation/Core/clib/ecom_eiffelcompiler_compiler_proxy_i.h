@@ -120,7 +120,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP generate_anchored_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
+	virtual STDMETHODIMP generate_none_type_class_mapping(  /* [in] */ LONG type_id ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -156,7 +156,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP AddEiffelInterface(  /* [in] */ LONG type_id ) = 0;
+	virtual STDMETHODIMP set_implementation_class( void ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -342,7 +342,7 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP generate_formal_feature(  /* [in] */ LONG feature_id ) = 0;
+	virtual STDMETHODIMP generate_type_feature(  /* [in] */ LONG feature_id ) = 0;
 
 
 	/*-----------------------------------------------------------

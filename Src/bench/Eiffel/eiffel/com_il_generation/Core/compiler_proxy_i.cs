@@ -59,8 +59,8 @@ public interface COMPILER_PROXY_I
 	void generate_formal_type_class_mapping (int type_id);
 		// Generate mapping between `ISE.Runtime.FORMAL_TYPE and `type_id'.
 
-	void generate_anchored_type_class_mapping (int type_id);
-		// Generate mapping between `ISE.Runtime.ANCHORED_TYPE and `type_id'.
+	void generate_none_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.NONE_TYPE and `type_id'.
 
 	void generate_basic_type_class_mapping (int type_id);
 		// Generate mapping between `ISE.Runtime.BASIC_TYPE and `type_id'.
@@ -79,7 +79,9 @@ public interface COMPILER_PROXY_I
 
 	// Add interface with id `TypeID' into list of parents of current tyep.
 	void AddInterface (int TypeID);
-	void AddEiffelInterface (int TypeID);
+
+	void set_implementation_class ();
+		// Make class of `CurrentTypeID' an implementation one.
 
 	// Finish inheritance part description
 	// `StartParentsList' should have been called before.
@@ -213,7 +215,7 @@ public interface COMPILER_PROXY_I
 	void StartIlGeneration( int TypeID );
 	
 	// Generate info about current feature.
-	void generate_formal_feature (int feature_id);
+	void generate_type_feature (int feature_id);
 	void GenerateFeatureIL (int FeatureID, int TypeID, int CodeFeatureID);
 	void GenerateFeatureInternalClone (int FeatureID);
 	void GenerateImplementationFeatureIL (int FeatureID);

@@ -6,6 +6,7 @@
 
 
 import "oaidl.idl";
+import "common_enums.idl"
 
 interface IEiffelProject;
 interface IEiffelCompiler;
@@ -17,13 +18,6 @@ interface IEiffelFeatureDescriptor;
 interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
 
-typedef enum __EIF_COMPILATION_TYPES
-{
-    is_application,
-    is_library,
-    is_precompilation
-    
-} EIF_COMPILATION_TYPES;
 
 [
   oleautomation,
@@ -93,6 +87,9 @@ interface IEiffelCompilerEvents: IUnknown
     
   [helpstring ("Output string.")]
   HRESULT output_string ([in] BSTR a_string);
+  
+  [helpstring ("Last error.")]
+  HRESULT last_error ([in] BSTR error_message, [in] BSTR file_name, [in] ULONG line_number);
 };
 
 [
@@ -334,8 +331,11 @@ interface IEiffelFeatureDescriptor: IUnknown
 ]
 interface IEiffelProjectProperties: IDispatch
 {
-  [id (101), propget, helpstring ("Apply changes")]
-  HRESULT apply ();
+  [helpstring ("Apply changes")]
+  HRESULT Apply ();
+  
+  [id (101), propget, helpstring ("Open Ace file.")]
+  HRESULT open_ace_file ([in] BSTR ace_file_name);
   
   [id (DISPID_VALUE), propget, helpstring ("System name.")]
   HRESULT system_name ([out, retval] BSTR * return_value);

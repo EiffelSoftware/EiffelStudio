@@ -22,4 +22,9 @@ feature
 		do
 		end;
 
+    has_debugging_information: BOOLEAN is
+            -- Has Current have any debug information?
+        do
+        end
+
 end -- class APPLICATION_EXECUTION

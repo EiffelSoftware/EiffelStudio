@@ -27,7 +27,7 @@ class_declaration		|<HTML>%N<HEAD>%N%
 						%</BODY>%N%
 						%</HTML>%N
 
-feature_declaration		|<A NAME="f_$feature$">*</A>
+feature_declaration		|<A NAME="f_$feature$"></A>*
 
 -- Hyperlinking items:
 menu_bar				|<FORM ONSUBMIT="go_to('$root$'%,this.c.value);return false;">%N%

@@ -65,17 +65,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	address: STRING
-
---	icd_frame: ICOR_DEBUG_FRAME
---
---	referenced_value: ICOR_DEBUG_VALUE
---			-- Original ICorDebugValue from Debugger
---			-- not dereferenced !
---			-- may be useful to ICorDebugEval::CallFunction ...
---	value: ICOR_DEBUG_VALUE
---			-- Value of object.
---
---	value_info: EIFNET_DEBUG_VALUE_INFO
+			-- Object's address.
 
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.

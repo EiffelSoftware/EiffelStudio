@@ -130,8 +130,10 @@ feature -- Status setting
 			-- Set `icon_name' to `a_name'.
 		do
 			icon_name := clone (a_name)
-			if minimized then
-				set_title (a_name)
+			if exists then
+				if minimized then
+					set_title (a_name)
+				end
 			end
 		end
 

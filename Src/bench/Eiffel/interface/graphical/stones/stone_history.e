@@ -52,6 +52,11 @@ feature -- Initialization
 			General_resources.add_user (Current)
 		end
 
+feature -- Access
+
+	do_not_update: BOOLEAN
+			-- Update the stone history?	
+
 feature -- Resource Update
 
 	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
@@ -67,6 +72,14 @@ feature -- Resource Update
 			end
 		end
 
+feature -- Status setting
+
+	set_do_not_update (b: BOOLEAN) is
+			-- Set `do_not_update' to `b'.
+		do
+			do_not_update := b
+		end;
+
 feature -- Element change
 
 	extend (v: like item) is
@@ -76,7 +89,8 @@ feature -- Element change
 			-- Move the cursor to the last inserted stone.
 		do
 			if
-				v /= Void and
+				not do_not_update and then
+				v /= Void and then
 				(empty or else
 				not v.same_as (last) or else
 				not equal (v.signature, item.signature))

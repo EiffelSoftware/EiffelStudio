@@ -14,6 +14,8 @@ inherit
  	WEL_APPLICATION
  		rename
  			make as wel_make
+		redefine
+			init_application
  		end
 
 	EV_APPLICATION_I
@@ -21,14 +23,23 @@ inherit
 creation
 	make
 
+feature {NONE} -- Implemenation dlls
+
+	common_control_dll: WEL_COMMON_CONTROLS_DLL
+			-- Needed for the tab controls
+
 feature {NONE} -- Implementation
 
-
 	make (interf: EV_APPLICATION) is
-
 		do
 			interface := interf
 			wel_make
+		end
+
+	init_application is
+			-- Load the dll needed sometimes
+		do
+			!! common_control_dll.make
 		end
 
 	iterate is
@@ -44,7 +55,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-interface: EV_APPLICATION
+	interface: EV_APPLICATION
 
 feature -- Implementation
 	

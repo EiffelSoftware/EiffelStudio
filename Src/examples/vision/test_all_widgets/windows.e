@@ -19,9 +19,8 @@ feature
 			!!Result.make ("");
 		end;
 
-	init_toolkit: MOTIF is
-			-- The demo uses the
-			-- Motif toolkit
+	init_toolkit: TOOLKIT_IMP is
+			-- Toolkit for the program
 		once
 			!!Result.make ("");
 		end;

@@ -19,7 +19,8 @@ inherit
 			set_actual_drop_target_agent,
 			save_to_named_file,
 			set_pebble_function,
-			draw_straight_line
+			draw_straight_line,
+			disable_initialized
 		end
 
 	EV_PIXMAP_IMP_STATE
@@ -32,6 +33,11 @@ inherit
 		rename
 			raise as exception_raise,
 			class_name as exception_class_name
+		end
+		
+	EV_PIXMAP_IMP_LOADER
+		export
+			{NONE} all
 		end
 
 create
@@ -121,7 +127,8 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 			bmp_format: EV_BMP_FORMAT
 			mem_dc: WEL_MEMORY_DC
 			a_wel_bitmap: WEL_BITMAP
-			a_fn, char_array: ANY
+			a_fn: WEL_STRING
+			char_array: WEL_CHARACTER_ARRAY
 			a_width, a_height: INTEGER
 		do
 			bmp_format ?= a_format
@@ -135,8 +142,8 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 				mem_dc.delete
 				a_wel_bitmap.decrement_reference
 			elseif png_format /= Void then
-				a_fn := a_filename.to_c
-				char_array := raw_image_data.to_c
+				create a_fn.make (a_filename)
+				create char_array.make (raw_image_data)
 				if png_format.scale_height /= 0 then
 					a_height := png_format.scale_height
 				else
@@ -148,7 +155,7 @@ feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 				else
 					a_width := raw_image_data.width
 				end
-				c_ev_save_png ($char_array, $a_fn, raw_image_data.width, raw_image_data.height, a_width, a_height, png_format.color_mode)
+				c_ev_save_png (char_array.item, a_fn.item, raw_image_data.width, raw_image_data.height, a_width, a_height, png_format.color_mode)
 			end
 							
 			a_format.save (raw_image_data, a_filename)
@@ -1357,24 +1364,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	effective_load_file is
-			-- Really load the file.
-		require
-			filename_exists: pixmap_filename /= Void
-		local
-			filename_ptr: ANY
-		do
-				-- Disable invariant checking.
-			is_initialized := False
-
-			if pixmap_filename.is_empty then
-				c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
-			else
-				filename_ptr := pixmap_filename.to_c
-				c_ev_load_pixmap ($Current, $filename_ptr, $update_fields)
-			end
-		end
-
 	promote_to_drawable is
 			-- Promote the current implementation to
 			-- EV_PIXMAP_IMP_DRAWABLE which allows
@@ -1620,6 +1609,13 @@ feature {NONE} -- Implementation
 			private_mask_bitmap_not_void: private_mask_bitmap /= Void
 			has_mask: has_mask
 		end
+		
+	disable_initialized is
+			-- Ensure `is_initialized' = False.
+		do
+			is_initialized := False
+		end
+		
 
 feature {NONE} -- Constants
 
@@ -1662,15 +1658,6 @@ feature {
 	interface: EV_PIXMAP
 
 feature {NONE} -- Externals
-
-	c_ev_load_pixmap(
-		curr_object: POINTER; 
-		file_name: POINTER; 
-		update_fields_routine: POINTER
-		) is
-		external
-			"C signature (void *, char *, void *) use %"load_pixmap.h%""
-		end
 
 	c_ev_save_png (char_array, path: POINTER;
 			array_width,

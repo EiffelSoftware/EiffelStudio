@@ -184,11 +184,67 @@ feature -- Common window styles
 
 feature -- Extended window styles
 
+	Ws_ex_acceptfiles: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_ACCEPTFILES"
+		end
+		
+	Ws_ex_clientedge: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_CLIENTEDGE"
+		end
+
+	Ws_ex_contexthelp: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_CONTEXTHELP"
+		end
+
+	Ws_ex_controlparent: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_CONTROLPARENT"
+		end
+
 	Ws_ex_dlgmodalframe: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
 			"WS_EX_DLGMODALFRAME"
+		end
+
+	Ws_ex_left: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_LEFT"
+		end
+
+	Ws_ex_leftscrollbar: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_LEFTSCROLLBAR"
+		end
+
+	Ws_ex_ltrreading: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_LTRREADING"
+		end
+
+	Ws_ex_mdichild: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_MDICHILD"
 		end
 
 	Ws_ex_noparentnotify: INTEGER is
@@ -198,18 +254,60 @@ feature -- Extended window styles
 			"WS_EX_NOPARENTNOTIFY"
 		end
 
+	Ws_ex_overlappedwindow: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_OVERLAPPEDWINDOW"
+		end
+
+	Ws_ex_palettewindow: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_PALETTEWINDOW"
+		end
+
+	Ws_ex_right: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_RIGHT"
+		end
+
+	Ws_ex_rightscrollbar: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_RIGHTSCROLLBAR"
+		end
+
+	Ws_ex_rtlreading: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_RTLREADING"
+		end
+
+	Ws_ex_staticedge: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_STATICEDGE"
+		end
+
+	Ws_ex_toolwindow: INTEGER is
+		external
+			"C [macro <wel.h>]"
+		alias
+			"WS_EX_TOOLWINDOW"
+		end
+
 	Ws_ex_topmost: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
 			"WS_EX_TOPMOST"
-		end
-
-	Ws_ex_acceptfiles: INTEGER is
-		external
-			"C [macro <wel.h>]"
-		alias
-			"WS_EX_ACCEPTFILES"
 		end
 
 	Ws_ex_transparent: INTEGER is
@@ -218,12 +316,12 @@ feature -- Extended window styles
 		alias
 			"WS_EX_TRANSPARENT"
 		end
-		
-	Ws_ex_clientedge: INTEGER is
+
+	Ws_ex_windowedge: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
-			"WS_EX_CLIENTEDGE"
+			"WS_EX_WINDOWEDGE"
 		end
 
 feature -- Miscellaneous

@@ -24,7 +24,7 @@ feature
 			class_c: CLASS_C
 		do 
 			if address = Void then
-				cw.put_string (" Void")
+				cw.put_string ("NONE = Void")
 			else
 					-- Extra safe test. The dynamic type should be known
 					-- from the system, but somehow Dino managed to crash

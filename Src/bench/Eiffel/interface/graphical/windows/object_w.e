@@ -22,7 +22,7 @@ inherit
 			close, set_default_size,
 			update_boolean_resource,
 			update_integer_resource,
-			set_title
+			set_title, resources
 		end;
 	BAR_AND_TEXT
 		rename
@@ -34,7 +34,7 @@ inherit
 			build_basic_bar, close, make_shell, reset,
 			update_boolean_resource, set_default_size,
 			update_integer_resource,
-			set_title
+			set_title, resources
 		select
 			close_windows, make_shell, reset
 		end;
@@ -67,9 +67,9 @@ feature {NONE} -- Initialization
 			special_menu := special_m;
 			make_form (a_form);
 			set_composite_attributes (a_form);
-            set_composite_attributes (edit_m);
-            set_composite_attributes (format_m);
-            set_composite_attributes (special_m)
+			set_composite_attributes (edit_m);
+			set_composite_attributes (format_m);
+			set_composite_attributes (special_m)
 		end;
 
 feature -- Resource Update
@@ -78,9 +78,9 @@ feature -- Resource Update
 			-- Update `old_res' with the value of `new_res',
 			-- if the value of `new_res' is applicable.
 		local
-			otr: like Object_tool_resources
+			otr: like Object_resources
 		do
-			otr := Object_tool_resources
+			otr := Object_resources
 			if old_res = otr.command_bar then
 				if new_res.actual_value then
 					edit_bar.add
@@ -102,9 +102,9 @@ feature -- Resource Update
 			-- if the value of `new_res' is applicable.
 			-- Also update the interface.
 		local
-			otr: like Object_tool_resources
+			otr: like Object_resources
 		do
-			otr := Object_tool_resources;
+			otr := Object_resources;
 			if new_res.actual_value > 0 then
 				if old_res = otr.tool_height then
 					if old_res.actual_value /= new_res.actual_value then
@@ -124,6 +124,12 @@ feature -- Window Properties
 	tool_name: STRING is
 		do
 			Result := Interface_names.t_Empty_object
+		end;
+
+	resources: like Object_resources is 
+			-- Resource page for current tool
+		do
+			Result := object_resources
 		end;
 
 	stone: OBJECT_STONE
@@ -294,8 +300,8 @@ feature -- Settings
 		do
 			if eb_shell /= Void then
 				eb_shell.set_size 
-					(Object_tool_resources.tool_width.actual_value,
-					Object_tool_resources.tool_height.actual_value)
+					(Object_resources.tool_width.actual_value,
+					Object_resources.tool_height.actual_value)
 			end
 		end;
 		
@@ -405,10 +411,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			if create_menus then
 				build_menus
 			end
-			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if create_menus then
@@ -417,10 +423,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			build_toolbar_menu
 			set_last_format (default_format);
 
-			if Object_tool_resources.command_bar.actual_value = False then
+			if Object_resources.command_bar.actual_value = False then
 				edit_bar.remove
 			end;
-			if Object_tool_resources.format_bar.actual_value = False then
+			if Object_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 

@@ -17,7 +17,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			build_toolbar_menu,
-			close, set_title
+			close, set_title, resources
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -26,7 +26,7 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			build_toolbar_menu,
-			close, set_title
+			close, set_title, resources
 		end;
 	EB_CONSTANTS
 
@@ -40,9 +40,9 @@ feature -- Resource Update
 			-- Update `old_res' with the value of `new_res',
 			-- if the value of `new_res' is applicable.
 		local
-			er: like Explain_tool_resources
+			er: like Explain_resources
 		do
-			er := Explain_tool_resources
+			er := Explain_resources
 			if old_res = er.command_bar then
 				if new_res.actual_value then
 					edit_bar.add
@@ -64,9 +64,9 @@ feature -- Resource Update
 			-- if the value of `new_res' is applicable.
 			-- Also update the interface.
 		local
-			er: like Explain_tool_resources
+			er: like Explain_resources
 		do
-			er := Explain_tool_resources;
+			er := Explain_resources;
 			if new_res.actual_value > 0 then
 				if old_res = er.tool_height then
 					if old_res.actual_value /= new_res.actual_value then
@@ -82,6 +82,11 @@ feature -- Resource Update
 		end
 
 feature -- Properties
+
+	resources: like Explain_resources is
+		do	
+			Result := Explain_resources
+		end;
 
 	stone_type: INTEGER is
 			-- Accept any type stone
@@ -151,11 +156,11 @@ feature -- Graphical Interface
 			format_bar.attach_top (showtext_button, 0);
 			format_bar.attach_left (showtext_button, 0);
 
-			if Explain_tool_resources.format_bar.actual_value = False then
+			if Explain_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 
-			if Explain_tool_resources.command_bar.actual_value = False then
+			if Explain_resources.command_bar.actual_value = False then
 				edit_bar.remove
 			end;
 		end;
@@ -183,8 +188,8 @@ feature -- Graphical Interface
 			-- Default size of the windows.
 		do
 			eb_shell.set_size
-				(Explain_tool_resources.tool_width.actual_value,
-				Explain_tool_resources.tool_height.actual_value)
+				(Explain_resources.tool_width.actual_value,
+				Explain_resources.tool_height.actual_value)
 		end;
 
 feature -- Window Properties

@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 	make_with_text (txt: STRING) is
 			-- Create the label with `txt' as label.
 		do
-			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
+			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 			extra_width := 20
 			set_default_minimum_size	
 		end

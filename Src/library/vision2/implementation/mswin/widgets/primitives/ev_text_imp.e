@@ -73,7 +73,7 @@ feature -- Initialization
 	make_with_text (txt: STRING) is
 			-- Create a text area with `txt' as label.
 		do
-			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
+			wel_make (default_parent, txt, 0, 0, 0, 0, 0)
 		end
 
 feature -- Basic operation

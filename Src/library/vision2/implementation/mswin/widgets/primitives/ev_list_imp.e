@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			-- use set_selection to change it into a multiple
 			-- selection list.
 		do
-			internal_window_make (default_parent.item, Void,
+			internal_window_make (default_parent, Void,
 				default_style, 0, 0, 0, 0, 0, default_pointer)
 			id := 0
 			!! ev_children.make (2)

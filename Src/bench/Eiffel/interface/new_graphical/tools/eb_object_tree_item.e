@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			Result.put (Pixmaps.Icon_external_symbol, External_reference_value)			
 			Result.put (Pixmaps.Icon_static_external_symbol, Static_external_reference_value)
 			Result.put (Pixmaps.Icon_static_object_symbol, Static_reference_value)
-			Result.put (Pixmaps.Icon_exception, Error_message_value)
+			Result.put (Pixmaps.Icon_dbg_error, Error_message_value)
 		end
 
 	hexa_mode_enabled: BOOLEAN is

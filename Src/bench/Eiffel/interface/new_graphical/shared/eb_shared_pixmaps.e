@@ -187,7 +187,12 @@ feature -- Icons
 	Icon_external_symbol: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_external_symbol")
-		end		
+		end
+		
+	Icon_dbg_error: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_dbg_error")
+		end
 
 	Icon_static_external_symbol: EV_PIXMAP is
 		once

@@ -61,6 +61,13 @@ o New WEL Examples
   `Timer', `Fontenum', `Stddlgs', `Comctrls', `Magnify', `Richedit', `Commands'.
 
 
+Important note for WEL 1.x users
+--------------------------------
+
+If you use `default_process_message' to process Wm_notify message, you have to
+use now `on_notify'.
+
+
 What WEL does not include yet?
 ------------------------------
 

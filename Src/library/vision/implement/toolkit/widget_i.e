@@ -104,6 +104,8 @@ feature
 	background_color: COLOR is
 			-- Background color of widget
 		deferred
+		ensure
+			valid_result: Result /= Void
 		end; -- background_color
 
 	background_pixmap: PIXMAP is
@@ -318,21 +320,19 @@ feature
 	set_background_color (new_color: COLOR) is
 			-- Set background color to `new_color'.
 		require
-			argument_not_void: not (new_color = Void)
+			argument_not_void: new_color /= Void
 		deferred
 		ensure
-			background_color = new_color;
-			(background_pixmap = Void)
+			background_color_set: background_color = new_color;
 		end; -- set_background_color
 
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set background pixmap to `a_pixmap'.
 		require
-			argument_not_void: not (a_pixmap = Void)
+			argument_not_void: a_pixmap /= Void
 		deferred
 		ensure
-			background_pixmap = a_pixmap;
-			(background_color = Void)
+			background_pixmap_set: background_pixmap = a_pixmap;
 		end; -- set_background_pixmap
 
 	set_cursor (a_cursor: SCREEN_CURSOR) is
@@ -478,10 +478,6 @@ feature
 			positive_value: index > 0
         deferred
         end;
-
-invariant
-
-	(background_color = Void) or (background_pixmap = Void)
 
 end -- class WIDGET_I
 

@@ -103,7 +103,7 @@ rt_private void rt_read_cid (uint32 *, uint32 *, uint32);
 rt_private void rt_id_read_cid (uint32 *, uint32 *, uint32);
 
 /* Initialization and Resetting for retrieving an independent store */
-rt_private void independent_retrieve_init (long idrf_size, EIF_BOOLEAN is_limited_by_short);
+rt_private void independent_retrieve_init (long idrf_size);
 rt_private void independent_retrieve_reset (void);
 
 /* Functions to write on the specified IO_MEDIUM */
@@ -112,9 +112,7 @@ rt_private int (stream_read) (char *, int);
 
 /* read function declarations */
 int retrieve_read (void);
-int old_retrieve_read (void);
 int retrieve_read_with_compression (void);
-int old_retrieve_read_with_compression (void);
 
 int (*retrieve_read_func)(void) = retrieve_read_with_compression;
 int (*char_read_func)(char *, int) = char_read;
@@ -215,53 +213,22 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 	/* set rt_kind depending on the type to be retrieved */
 
 	switch (rt_type) {
-		case BASIC_STORE_3_1:			/*old basic store */
-			rt_init_retrieve(old_retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
-			allocate_gen_buffer ();
-			rt_kind = BASIC_STORE;
-			break;
-		case BASIC_STORE_3_2:			/* New basic store */
-			rt_init_retrieve(retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
-			allocate_gen_buffer ();
-			rt_kind = BASIC_STORE;
-			break;
-		case BASIC_STORE_4_0:
+		case BASIC_STORE_4_0:			/* New Basic store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
-			break;
-		case GENERAL_STORE_3_1:			/* Old general store */
-			rt_init_retrieve(old_retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
-			allocate_gen_buffer ();
-			rt_kind = GENERAL_STORE;
-			break;
-		case GENERAL_STORE_3_2:			/* New General store */
-		case GENERAL_STORE_3_3:			/* New General store 3.3 */
-			rt_init_retrieve(retrieve_read, char_read_function, RETRIEVE_BUFFER_SIZE);
-			allocate_gen_buffer ();
-			rt_kind = GENERAL_STORE;
 			break;
 		case GENERAL_STORE_4_0:			/* New General store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
-		case INDEPENDENT_STORE_3_2:		/* New Independent store */
-			rt_init_retrieve(retrieve_read, char_read_function, 4096);
-			rt_kind = INDEPENDENT_STORE;
-			independent_retrieve_init (4096, 1);
-			break;
-		case INDEPENDENT_STORE_4_0:		/* New Independent store */
-			rt_init_retrieve(retrieve_read_with_compression, char_read_function, 4096);
-			rt_kind = INDEPENDENT_STORE;
-			independent_retrieve_init (4096, 1);
-			break;
 		case INDEPENDENT_STORE_4_3:
 		case INDEPENDENT_STORE_4_4:		/* New Independent store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = INDEPENDENT_STORE;
 			rt_kind_version = rt_type;
-			independent_retrieve_init (RETRIEVE_BUFFER_SIZE, 0);
+			independent_retrieve_init (RETRIEVE_BUFFER_SIZE);
 			break;
 		default: 			/* If not one of the above, error!! */
 			eraise("invalid retrieve type", EN_RETR);	
@@ -274,7 +241,7 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 	if (rt_kind == INDEPENDENT_STORE) {
 		iread_header(MTC_NOARG);			/* Make correspondance table */
 		retrieved = irt_make();
-	} else if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3)) {
+	} else if (rt_type == GENERAL_STORE_4_0) {
 		read_header(MTC rt_type);					/* Make correspondance table */
 		retrieved = grt_make();
 	} else {
@@ -293,12 +260,9 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 	switch (rt_type) {
-		case GENERAL_STORE_3_3: 
 		case GENERAL_STORE_4_0: 
 			free_sorted_attributes();
 			break;
-		case INDEPENDENT_STORE_3_2:
-		case INDEPENDENT_STORE_4_0:
 		case INDEPENDENT_STORE_4_3:
 		case INDEPENDENT_STORE_4_4:
 			independent_retrieve_reset ();
@@ -311,13 +275,10 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 }
 
 /* Initialization for retrieving an independent store
- * We need to give the size of the buffer since it can now be more than SHORT_MAX
- * For compatibility reason, it is 32767 bytes for version previous INDEPENDENT_STORE_4_3
- * and it is now RETRIEVE_BUFFER_SIZE.
  */
-rt_private void independent_retrieve_init (long idrf_size, EIF_BOOLEAN is_limited_by_short)
+rt_private void independent_retrieve_init (long idrf_size)
 {
-	run_idr_init (idrf_size, is_limited_by_short);
+	run_idr_init (idrf_size);
 
 	idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
 	if (idr_temp_buf == (char *)0)
@@ -1204,7 +1165,7 @@ rt_private void read_header(EIF_CONTEXT char rt_type)
 	if (dtypes == (int *) 0)
 		xraise(EN_MEM);
 
-	if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3)) {
+	if (rt_type == GENERAL_STORE_4_0) {
 		sorted_attributes = (unsigned int **) xmalloc(scount * sizeof(unsigned int *), C_T, GC_OFF);
 #ifdef DEBUG_GENERAL_STORE
 printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attributes);
@@ -1293,7 +1254,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		}
 		dtypes[dtype] = new_dtype;
 
-		if ((rt_type == GENERAL_STORE_4_0) || (rt_type == GENERAL_STORE_3_3))
+		if (rt_type == GENERAL_STORE_4_0)
 			sort_attributes(new_dtype);
 	}
 	xfree (r_buffer);
@@ -1616,70 +1577,6 @@ rt_private int new_buffer_read (register char *object, int size)
 		current_position += size;
 		return size;
 	}
-}
-
-rt_public int old_retrieve_read (void)
-{
-	EIF_GET_CONTEXT
-	char * ptr = general_buffer;
-
-	end_of_buffer = char_read_func (ptr, buffer_size);
-	if (end_of_buffer <= 0)
-			/* If we read 0 bytes, it means that we reached the end of file,
-			 * so we are missing something, instead of going further we stop */
-		eio();
-
-	current_position = 0;
-	return (end_of_buffer);
-	EIF_END_GET_CONTEXT
-}
-
-rt_public int old_retrieve_read_with_compression (void)
-{
-	EIF_GET_CONTEXT
-	  char* dcmps_in_ptr = (char *)0;
-	  char* dcmps_out_ptr = (char *)0;
-	  char* pdcmps_in_size = (char *)0;
-	  int dcmps_in_size = 0;
-	  int dcmps_out_size = 0;
-	  char cmps_head [EIF_CMPS_HEAD_SIZE];
-	  char* ptr = (char *)0;
-	  int read_size = 0;
-	  int part_read = 0;
-	  int total_read = 0;
-
-	  if ((char_read_func (cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
-			eise_io("Retrieve: compression header mismatch.");
-	  pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
-	  eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
-
-	  ptr = cmps_general_buffer;
-	  memcpy(ptr, cmps_head, EIF_CMPS_HEAD_SIZE);
-	  ptr += EIF_CMPS_HEAD_SIZE;
-	  read_size = dcmps_in_size;
-
-	  while (read_size > 0) {
-			  part_read = char_read_func (ptr, read_size);
-			  if (part_read <= 0)
-				/* If we read 0 bytes, it means that we reached the end of file,
-				 * so we are missing something, instead of going further we stop */
-					eio();
-			  read_size -= part_read;
-			  ptr += part_read;
-	  }
-
-	  dcmps_in_ptr = cmps_general_buffer;
-	  dcmps_out_ptr = general_buffer;
-
-	  eif_decompress ((unsigned char*)dcmps_in_ptr,
-									  (unsigned long)dcmps_in_size,
-									  (unsigned char*)dcmps_out_ptr,
-									  (unsigned long*)&dcmps_out_size);
-
-	  current_position = 0;
-	  end_of_buffer = dcmps_out_size;
-	  return (end_of_buffer);
-	EIF_END_GET_CONTEXT
 }
 
 rt_public int retrieve_read (void)

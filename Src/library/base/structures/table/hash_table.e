@@ -484,29 +484,6 @@ feature -- Duplication
 			set_deleted_marks (clone (other.deleted_marks))
 		end;
 
-feature -- Obsolete
-
-	max_size: INTEGER is obsolete "Use ``capacity'' instead"
-		do
-			Result := keys.count
-		end;
-
-
-	change_key (new_key: H; old_key: H) is obsolete "Use ``replace_key'' instead"
-		do
-			replace_key (new_key, old_key)
-		end;
-
-	change_item (new: G; access_key: H) is obsolete "Use ``replace'' instead"
-		do
-			replace (new, access_key)
-		end;
-
-	over: BOOLEAN is obsolete "Use ``off'' instead"
-		do
-			Result := off
-		end;
-
 feature {HASH_TABLE} -- Implementation
 
 	content: ARRAY [G];
@@ -631,7 +608,6 @@ feature {NONE} -- Implementation
 	Not_found_constant: INTEGER is unique;
 			-- Key not found
 
-
 	add_space is
 			-- Increase capacity.
 		local
@@ -656,14 +632,12 @@ feature {NONE} -- Implementation
 			deleted_marks := other.deleted_marks
 		end;
 
-
 	soon_full: BOOLEAN is
 			-- Is table close to being filled to current capacity?
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
 			Result := (keys.count * Size_threshold <= 100 * count)
 		end;
-
 
 	control: INTEGER;
 			-- Control code set by operations that may produce

@@ -10,7 +10,7 @@ inherit
 		rename
 			context as ast_context
 		undefine
-			is_character, is_equal
+			is_character
 		redefine
 			is_integer, good_integer, is_equivalent,
 			type_check, byte_node, value_i, make_integer
@@ -18,7 +18,7 @@ inherit
 
 	VALUE_I
 		undefine
-			string_value, is_equal
+			string_value
 		redefine
 			generate, is_integer,
 			set_real_type, unary_minus
@@ -32,14 +32,12 @@ inherit
 		export
 			{NONE} byte_real_type, byte_generate, byte_size
 		undefine
-			line_number, is_equal
+			line_number
 		redefine
 			print_register, make_byte_code,
 			is_simple_expr, is_predefined, generate_il,
 			evaluate
-		end
-
-	COMPARABLE
+		end;
 
 create
 	make_default
@@ -90,12 +88,7 @@ feature -- Properties
 		require
 			valid_size: size <= 32
 		do
-			inspect size
-			when 8 then Result := lower.to_integer_8
-			when 16 then Result := lower.to_integer_16
-			else
-				Result := lower
-			end
+			Result := lower
 		end
 
 	lower, upper: INTEGER
@@ -151,7 +144,7 @@ feature {INTEGER_CONSTANT} -- Operations
 			i: INTEGER_64
 		do
 			if size <= 32 then
-				lower := -value
+				lower := -lower
 			else
 				i := -to_integer_64
 				lower := (i & 0x00000000FFFFFFFF).to_integer
@@ -166,15 +159,6 @@ feature -- Comparison
 		do
 			Result := lower = other.lower and then upper = other.upper and then size = other.size
 				and then compatibility_size = other.compatibility_size
-		end
-
-	infix "<" (other: like Current): BOOLEAN is
-			-- Is `Current' smaller than `other'?
-		do
-			inspect size
-			when 8, 16, 32 then Result := value < other.value
-			when 64 then Result := to_integer_64 < other.to_integer_64
-			end
 		end
 
 feature -- Type checking
@@ -207,7 +191,7 @@ feature -- Type checking
 	make_integer: INT_VAL_B is
 			-- Integer value for Intervals.
 		do
-			create Result.make (value)
+			create Result.make (lower)
 		end
 
 feature -- Conveniences
@@ -275,6 +259,11 @@ feature -- Settings
 				compatible: t.compatibility_size >= compatibility_size
 			end
 			size := t.compatibility_size
+			inspect	size
+			when 8 then lower := lower.to_integer_8
+			when 16 then lower := lower.to_integer_16
+			else
+			end
 		ensure then
 			size_set: size = t.compatibility_size
 		end
@@ -314,20 +303,18 @@ feature -- Generation
 			-- The '()' are present for the case where lower=INT32_MIN,
 			-- ie: if we printed -INT32_MIN in Eiffel, we would get --INT32_MIN in C.
 		do
-			if compatibility_size /= size then 
-				inspect size
-				when 8 then buf.putstring (integer_8_cast)
-				when 16 then buf.putstring (integer_16_cast)
-				when 32 then buf.putstring (integer_32_cast)
-				when 64 then buf.putstring (integer_64_cast)
-				end
+			buf.putchar ('(')
+			inspect size
+			when 8 then buf.putstring (integer_8_cast)
+			when 16 then buf.putstring (integer_16_cast)
+			when 32 then buf.putstring (integer_32_cast)
+			when 64 then buf.putstring (integer_64_cast)
 			end
 
-			buf.putchar ('(')
 			if compatibility_size = 64 then
 				buf.putstring (to_integer_64.out)
 			else
-				buf.putint (value)
+				buf.putint (lower)
 			end
 			buf.putchar ('L')
 			buf.putchar (')')
@@ -338,11 +325,11 @@ feature -- Generation
 		do
 			inspect compatibility_size
 			when 8 then
-				il_generator.put_integer_8_constant (value)
+				il_generator.put_integer_8_constant (lower)
 			when 16 then
-				il_generator.put_integer_16_constant (value)
+				il_generator.put_integer_16_constant (lower)
 			when 32 then
-				il_generator.put_integer_32_constant (value)
+				il_generator.put_integer_32_constant (lower)
 			when 64 then
 				il_generator.put_integer_64_constant (to_integer_64)
 			end
@@ -389,7 +376,7 @@ feature -- Trace
 
 	dump: STRING is
 		do
-			Result := value.out
+			Result := lower.out
 		end
 	
 feature {COMPILER_EXPORTER}

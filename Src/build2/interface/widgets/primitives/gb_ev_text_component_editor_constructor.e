@@ -81,8 +81,10 @@ feature {NONE} -- Implementation
 			-- Update the display window representation of
 			-- the gauge, to reflect change from user.
 		do
-			objects.first.set_text (user_event_widget.text)
-			update_editors
+			if user_event_widget.has_focus and then not user_event_widget.text.is_equal (objects.first.text) then
+				objects.first.set_text (user_event_widget.text)
+				update_editors
+			end
 		end
 		
 	user_event_widget: like ev_type

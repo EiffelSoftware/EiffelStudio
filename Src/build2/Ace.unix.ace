@@ -51,7 +51,7 @@ cluster
 			"ev_button"; 
 		exclude
 			"new_figures"; "mswin"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e";
-			"ev_dialog_imp.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; "ev_pixmap.e";
+			"ev_sensitive.e"; "ev_sensitive_i.e"; "ev_widget_projector.e"; "ev_pixmap.e";
 		default
 			assertion (require)
 		end

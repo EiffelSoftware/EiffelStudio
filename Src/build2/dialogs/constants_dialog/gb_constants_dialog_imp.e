@@ -48,7 +48,6 @@ feature {NONE}-- Initialization
 			create string_item
 			create integer_item
 			create directory_item
-			create file_name_item
 			create pixmap_item
 			create l_vertical_box_4
 			create l_horizontal_box_5
@@ -87,7 +86,6 @@ feature {NONE}-- Initialization
 			type_combo_box.extend (string_item)
 			type_combo_box.extend (integer_item)
 			type_combo_box.extend (directory_item)
-			type_combo_box.extend (file_name_item)
 			type_combo_box.extend (pixmap_item)
 			l_horizontal_box_3.extend (l_vertical_box_4)
 			l_vertical_box_4.extend (l_horizontal_box_5)
@@ -140,7 +138,6 @@ feature {NONE}-- Initialization
 			integer_item.set_text ("INTEGER")
 			directory_item.enable_select
 			directory_item.set_text ("DIRECTORY")
-			file_name_item.set_text ("FILE_NAME")
 			pixmap_item.set_text ("PIXMAP")
 			l_vertical_box_4.set_padding_width (small_padding)
 			l_vertical_box_4.disable_item_expand (l_horizontal_box_5)
@@ -178,7 +175,6 @@ feature {NONE}-- Initialization
 			string_item.select_actions.extend (agent string_item_selected)
 			integer_item.select_actions.extend (agent integer_item_selected)
 			directory_item.select_actions.extend (agent directory_item_selected)
-			file_name_item.select_actions.extend (agent file_name_item_selected)
 			pixmap_item.select_actions.extend (agent pixmap_item_selected)
 			name_field.change_actions.extend (agent validate_constant_name)
 			new_button.select_actions.extend (agent new_button_selected)
@@ -217,7 +213,7 @@ feature {NONE} -- Implementation
 	l_cell_1, l_cell_2, l_cell_3, entry_selection_parent, l_cell_4, l_cell_5, l_cell_6: EV_CELL
 	l_label_1, l_label_2, l_label_3: EV_LABEL
 	type_combo_box: EV_COMBO_BOX
-	string_item, integer_item, directory_item, file_name_item, pixmap_item: EV_LIST_ITEM
+	string_item, integer_item, directory_item, pixmap_item: EV_LIST_ITEM
 	name_field: EV_TEXT_FIELD
 	new_button, modify_button, remove_button, ok_button: EV_BUTTON
 	
@@ -253,11 +249,6 @@ feature {NONE} -- Implementation
 	
 	directory_item_selected is
 			-- Called by `select_actions' of `directory_item'.
-		deferred
-		end
-	
-	file_name_item_selected is
-			-- Called by `select_actions' of `file_name_item'.
 		deferred
 		end
 	

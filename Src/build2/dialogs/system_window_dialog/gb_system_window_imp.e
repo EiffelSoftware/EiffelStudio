@@ -139,6 +139,9 @@ feature {NONE}-- Initialization
 			cancel_button.set_minimum_width (default_button_width)
 			
 			show_actions.extend (agent display_project_information)
+			show_actions.extend (agent display_project_information)
+			show_actions.extend (agent display_project_information)
+			show_actions.extend (agent display_project_information)
 			project_radio_button.select_actions.extend (agent project_build_type_selected)
 			class_radio_button.select_actions.extend (agent class_build_type_selected)
 			ok_button.select_actions.extend (agent ok_pressed)

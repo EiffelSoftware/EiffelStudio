@@ -117,7 +117,8 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 			absolute_constant_radio_button.enable_select
 			pixmap_list.set_pixmaps_size (32, 32)
-			
+			check_buttons_box.hide
+			check_buttons_cell.hide
 			all_object_and_event_names := object_handler.all_object_and_event_names
 		end
 
@@ -615,8 +616,9 @@ feature {NONE} -- Implementation
 					end
 					files.forth
 				end
-				if not pixmap_list.is_empty then
-					check_buttons_box.enable_sensitive
+				if pixmap_list.count > 1 then
+					check_buttons_box.show
+					check_buttons_cell.show
 					pixmap_list.check_actions.block
 					pixmap_list.i_th (1).enable_select
 				else

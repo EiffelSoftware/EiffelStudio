@@ -153,6 +153,11 @@ feature {NONE} -- Implementation
 			else
 				client_check_button.disable_select
 			end
+			if project_settings.load_constants then
+				load_constants_check_button.enable_select
+			else
+				load_constants_check_button.disable_select
+			end
 		end
 		
 	store_project_information is
@@ -196,6 +201,11 @@ feature {NONE} -- Implementation
 				project_settings.enable_client_of_window
 			else
 				project_settings.disable_client_of_window
+			end
+			if load_constants_check_button.is_selected then
+				project_settings.enable_constant_loading
+			else
+				project_settings.disable_constant_loading
 			end
 		end
 

@@ -355,23 +355,23 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	file_name_item_selected is
-			-- Called by `select_actions' of `file_name_item'.
-		do
-			name_field.enable_edit
-			name_field.remove_text
-			new_button.disable_sensitive
-			new_button.set_text (New_button_text)
-			if not directory_item.select_actions.state.is_equal (directory_item.select_actions.blocked_state) then
-				constants_list.remove_selection
-				filename_input.remove_text
-			end
-			remove_displayed_input_field
-			entry_selection_parent.extend (filename_input)
-			if not display_all_types.is_selected then
-				rebuild_for_selected_type (file_name_item.text)
-			end
-		end
+--	file_name_item_selected is
+--			-- Called by `select_actions' of `file_name_item'.
+--		do
+--			name_field.enable_edit
+--			name_field.remove_text
+--			new_button.disable_sensitive
+--			new_button.set_text (New_button_text)
+--			if not directory_item.select_actions.state.is_equal (directory_item.select_actions.blocked_state) then
+--				constants_list.remove_selection
+--				filename_input.remove_text
+--			end
+--			remove_displayed_input_field
+--			entry_selection_parent.extend (filename_input)
+--			if not display_all_types.is_selected then
+--				rebuild_for_selected_type (file_name_item.text)
+--			end
+--		end
 	
 	pixmap_item_selected is
 			-- Called by `select_actions' of `pixmap_item'.
@@ -395,13 +395,6 @@ feature {NONE} -- Implementation
 			-- `new_button' has been selected, so add a new constant accordingly.
 		local
 			add_constant_command: GB_COMMAND_ADD_CONSTANT
-			an_integer_constant: GB_INTEGER_CONSTANT
-			a_string_constant: GB_STRING_CONSTANT
-			error_dialog: EV_ERROR_DIALOG
-			row: EV_MULTI_COLUMN_LIST_ROW
-			pixmap_constant: GB_PIXMAP_CONSTANT
-			pixmap_dialog: GB_PIXMAP_SETTINGS_DIALOG
-			directory_constant: GB_DIRECTORY_CONSTANT
 			directory_dialog: EV_DIRECTORY_DIALOG
 		do
 				-- As only one entry field may be parented, we check the
@@ -433,7 +426,6 @@ feature {NONE} -- Implementation
 	modify_button_selected is
 			-- Called by `select_actions' of `add_button'.
 		local
-			add_constant_command: GB_COMMAND_ADD_CONSTANT
 			an_integer_constant: GB_INTEGER_CONSTANT
 			a_string_constant: GB_STRING_CONSTANT
 			error_dialog: EV_ERROR_DIALOG
@@ -491,7 +483,6 @@ feature {NONE} -- Implementation
 			constant: GB_CONSTANT
 			selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			delete_constant_command: GB_COMMAND_DELETE_CONSTANT
-			dialog: EV_CONFIRMATION_DIALOG
 			cross_referer_dialog: EV_WARNING_DIALOG
 			cancelled: BOOLEAN_REF
 			referers_dialog_already_displayed: BOOLEAN

@@ -64,15 +64,11 @@ feature {NONE} -- Initialization
 		end
 		
 feature -- Access
-		
-	maximum_character_width: INTEGER is
-			-- Maximum width of a single character in `Current'.
-		do
-		end
 
 	clipboard_content: STRING is
 			-- `Result' is current clipboard content.
 		do
+			Result := App_implementation.clipboard.text
 		end
 
 feature -- Status report
@@ -140,14 +136,6 @@ feature -- Status setting
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
 		end
 
-feature -- Resizing
-
-	set_minimum_width_in_characters (nb: INTEGER) is
-			-- Make a minimum of `nb' of the widest character visible
-			-- on one line.
-		do
-		end
-
 feature -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
@@ -201,20 +189,39 @@ feature -- Basic operation
 			-- Cut `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard to paste it later.
 			-- If `selectd_region' is empty, it does nothing.
+		local
+			clip_imp: EV_CLIPBOARD_IMP
 		do
+			if has_selection then
+				clip_imp ?= App_implementation.clipboard.implementation
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_cut_clipboard (text_buffer, clip_imp.clipboard, True)
+			end
 		end
 
 	copy_selection is
 			-- Copy `selected_region' into the Clipboard.
 			-- If the `selected_region' is empty, it does nothing.
+		local
+			clip_imp: EV_CLIPBOARD_IMP
 		do
+			if has_selection then
+				clip_imp ?= App_implementation.clipboard.implementation
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)				
+			end
 		end
 
 	paste (index: INTEGER) is
 			-- Insert the contents of the clipboard 
 			-- at `index' postion of `text'.
-			-- If the Clipboard is empty, it does nothing. 
+			-- If the Clipboard is empty, it does nothing.
+		local
+			clip_imp: EV_CLIPBOARD_IMP
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
+			clip_imp ?= App_implementation.clipboard.implementation
+			create a_iter.make
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_paste_clipboard (text_buffer, clip_imp.clipboard, a_iter.item, True)
 		end		
 
 feature -- Access
@@ -376,7 +383,7 @@ feature -- Basic operation
 			-- Make sure only vertical scrollbar is showing
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				c_object, 
-				feature {EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
+				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
 			)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_word_enum)

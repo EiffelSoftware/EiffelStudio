@@ -98,6 +98,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 		/* eif_threads.c */
 	start_routine_ctxt_t *eif_thr_context_cx;
+	EIF_THR_TYPE *eif_thr_id_cx;	/* thread id of current thread */
 
 		/* except.c */
 	struct xstack eif_stack_cx;		/* Calling stack (rt_public) */
@@ -241,6 +242,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 	/* eif_threads.c */
 #define eif_thr_context	(eif_globals->eif_thr_context_cx)	/* rt_public */
+#define eif_thr_id	(eif_globals->eif_thr_id_cx)	/* rt_public */
 
 	/* except.c */
 /* Exported data structures (used by the generated C code) */

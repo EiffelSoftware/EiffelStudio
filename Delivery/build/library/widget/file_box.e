@@ -36,7 +36,7 @@ feature
 			set_exclusive_grab
 		end;
 
-	popup (com: CMD) is
+	popup (com: BUILD_CMD) is
 			-- Set caller to `com' and popup Current
 			-- file box.
 		do
@@ -44,7 +44,7 @@ feature
 			old_popup
 		end;
 
-	caller: CMD;
+	caller: BUILD_CMD;
 			-- Command calling Curren file_box
 
 	canceled: BOOLEAN;

@@ -56,13 +56,14 @@ feature {NONE}
 		do
 			if not rescued then
 				reset_debugger;
-				set_global_cursor (watch_cursor);
 				error_window.clear_window;
+				set_global_cursor (watch_cursor);
 				project_tool.set_changed (true);
 				Workbench.recompile;
 				if Workbench.successfull then
 					freezing_actions;
 					project_tool.set_changed (false);
+					project_tool.set_icon_name (System.system_name);
 					system.server_controler.wipe_out; -- ???
 					save_failed := False;
 					save_workbench_file;

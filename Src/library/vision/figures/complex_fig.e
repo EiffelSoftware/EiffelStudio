@@ -26,19 +26,19 @@ inherit
 	LINKED_LIST [FIGURE]
 		rename
 			extend as list_add,
-			add_left as list_add_left,
-			add_right as list_add_right,
+			put_left as list_put_left,
+			put_right as list_put_right,
 			duplicate as list_duplicate,
 			merge_left as list_merge_left,
 			merge_right as list_merge_right,
 			put as list_put,
 			put_i_th as list_put_i_th,
-           	make as linked_list_make
+			make as linked_list_make
 		end;
 
 	LINKED_LIST [FIGURE]
 		rename
-            make as linked_list_make,
+			make as linked_list_make,
 			extend as add
 		redefine
 			put_i_th, 
@@ -46,8 +46,8 @@ inherit
 			merge_right, 
 			merge_left, 
 			duplicate, 
-			add_right, 
-			add_left,
+			put_right, 
+			put_left,
 			add
 		select
 			put_i_th, 
@@ -55,8 +55,8 @@ inherit
 			merge_right, 
 			merge_left, 
 			duplicate, 
-			add_right, 
-			add_left,
+			put_right, 
+			put_left,
 			add
 		end
 
@@ -124,32 +124,29 @@ feature -- Modification & Insertion
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	add_left (v: like first) is
+	put_left (v: like first) is
 			-- Put item `v' to the left of cursor position.
 			-- Do not move cursor.
-			-- Synonym for `put_left'.
 		do
 			v.set_conf_not_notify;
 			v.attach_drawing_imp_with_parent (Current, drawing);
-			list_add_left (v);
+			list_put_left (v);
 			v.set_conf_notify;
 			v.conf_recompute;
 			set_conf_modified_with (v.surround_box)
 		end;
 
-	add_right (v: like first) is
+	put_right (v: like first) is
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
-			-- Synonym for `put_right'.
 		do
 			v.set_conf_not_notify;
 			v.attach_drawing_imp_with_parent (Current, drawing);
-			list_add_right (v);
+			list_put_right (v);
 			v.set_conf_notify;
 			v.conf_recompute;
 			set_conf_modified_with (v.surround_box)
 		end;
-
 
 	merge_left (other: like Current) is
 			-- Merge `other' into the current list before

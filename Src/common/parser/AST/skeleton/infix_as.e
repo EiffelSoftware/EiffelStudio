@@ -11,7 +11,7 @@ inherit
 
 	FEATURE_NAME
 		redefine
-			is_infix, is_valid, offset, simple_format
+			is_infix, is_valid, offset, simple_format, visual_name
 		end
 
 feature {NONE} -- Initialization
@@ -39,6 +39,12 @@ feature -- Properties
 		end; -- is_infix
 
 feature -- Access
+
+	visual_name: STRING is
+			-- Visual name of fix operator
+		do
+			Result := fix_operator.value
+		end;
 
 	internal_name: ID_AS is
 			-- Internal name used by the compiler

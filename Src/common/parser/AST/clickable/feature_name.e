@@ -52,6 +52,12 @@ feature -- Properties
 		deferred
 		end;
 
+	visual_name: STRING is
+			-- Named used in Eiffel code
+		do	
+			Result := internal_name
+		end
+
 feature -- Comparison
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is

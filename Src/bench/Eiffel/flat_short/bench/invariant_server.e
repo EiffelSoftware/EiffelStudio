@@ -9,7 +9,7 @@ creation
 
 feature
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 		local
 			is_not_first: BOOLEAN;
 			target_class: CLASS_C;

@@ -5,9 +5,9 @@ creation
 	
 feature
 
-	precondition: REQUIRE_AS;
+	precondition: REQUIRE_AS_B;
 
-	postcondition: ENSURE_AS;
+	postcondition: ENSURE_AS_B;
 		
 	origin: FEATURE_I;
 
@@ -18,9 +18,9 @@ feature
 			origin := ast.adapter.old_feature;
 		end;
 
-	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS) is
+	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS_B) is
 		local
-			rout_as: ROUTINE_AS
+			rout_as: ROUTINE_AS_B
 		do
 			rout_as ?= ast.body.content;
 			if rout_as /= Void then
@@ -30,7 +30,7 @@ feature
 			origin := feat;
 		end;
 
-	format_precondition (ctxt: FORMAT_CONTEXT) is
+	format_precondition (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.begin;
 			ctxt.set_source_context (origin);
@@ -39,7 +39,7 @@ feature
 			ctxt.commit
 		end;
 
-	format_postcondition (ctxt: FORMAT_CONTEXT) is
+	format_postcondition (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.begin;
 			ctxt.set_source_context (origin);

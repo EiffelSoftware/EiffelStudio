@@ -65,6 +65,7 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			set_foreground_color,
+			set_background_color,
 			tooltip_window
 		end
 		
@@ -739,6 +740,18 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'.
+		do
+			precursor {EV_TEXT_COMPONENT_IMP} (color)
+			if is_displayed then
+				if is_editable then
+					text_field.invalidate
+				end
+				combo.invalidate
+			end
+		end
+
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do

@@ -7,14 +7,13 @@ class
 	CLICK_LIST
 
 inherit
-	CONSTRUCT_LIST [CLICK_AST]
+	ARRAYED_LIST [CLICK_AST]
 		export
 			{ANY} area, lower, upper
 		end
 
 create
-	make,
-	make_filled
+	make
 	
 feature -- Access
 

@@ -24,7 +24,9 @@ feature -- Basic operations
 		do
 			timer_counter := 0
 			timer_counter_at_last_press := 0
-			timer.destroy
+			if timer /= Void and then not timer.is_destroyed then
+				timer.destroy
+			end
 		end
 
 feature -- Status report

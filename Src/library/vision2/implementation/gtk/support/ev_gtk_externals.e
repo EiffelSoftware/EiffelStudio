@@ -151,10 +151,6 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_hbox_new (homegenous: BOOLEAN; spacing: INTEGER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
 	gtk_hseparator_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
@@ -163,19 +159,11 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 		
-	gtk_vbox_new (homegenous: BOOLEAN; spacing: INTEGER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-	
 	gtk_fixed_new: POINTER is
 		external "C | <gtk/gtk.h>"
 		end
 	
 	gtk_dialog_new: POINTER is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_box_pack_start (box, widget: POINTER; e, f: BOOLEAN; p: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -261,6 +249,29 @@ feature {NONE} -- GTK C functions
 		external "C | <gtk/gtk.h>"
 		end
 			
+	--gtkbox
+	
+	gtk_hbox_new (homegenous: BOOLEAN; spacing: INTEGER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_vbox_new (homegenous: BOOLEAN; spacing: INTEGER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+		
+	gtk_box_pack_start (box, widget: POINTER; e, f: BOOLEAN; p: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_box_set_homogeneous (box: POINTER; homogeneous: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_box_set_spacing (box: POINTER; spacing: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	
 	-- gtkframe
 	gtk_frame_new (l: POINTER): POINTER is
 		external "C | <gtk/gtk.h>"
@@ -414,6 +425,17 @@ feature {NONE} -- code in the glue library
 		end
 
 	c_gtk_widget_sensitive (w: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+	
+	c_gtk_widget_set_size (w: POINTER; width, height: INTEGER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+	
+	c_gtk_widget_minimum_width (w: POINTER): INTEGER is
+		external "C | %"gtk_eiffel.h%""
+		end
+	c_gtk_widget_minimum_height (w: POINTER): INTEGER is
 		external "C | %"gtk_eiffel.h%""
 		end
 	

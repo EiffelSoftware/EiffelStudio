@@ -109,10 +109,10 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "Drawing area")
 			create screen_dc.make (Current)
 			internal_paint_dc := screen_dc
-			dc.get
+			internal_paint_dc.get
 			{EV_DRAWABLE_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
-			dc.release
+			internal_paint_dc.release
 		end	
 
 feature -- Access
@@ -124,7 +124,7 @@ feature -- Access
 		end
 
 	internal_paint_dc: WEL_DC
-			-- dc we use when painting on a WM_PAINT message
+			-- dc we use when painting
 
 	screen_dc: WEL_CLIENT_DC
 			-- dc we use when painting outside a WM_PAINT message
@@ -541,6 +541,11 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/02/23 04:53:04  pichery
+--| fixed a postcondition violation when executing dc.get (we can only call "dc"
+--| when the internal_dc has been allocated by windows, that is after the
+--| execution of internal_dc.get)
+--|
 --| Revision 1.32  2000/02/22 18:21:01  pichery
 --| added 4 times the same small hack with `wel_parent' in order to
 --| avoid a Segmentation Violation with EiffelBench 4.6.008

@@ -165,16 +165,19 @@ feature -- Status setting
 		end
 	
 	set_focus is
+			-- Set focus on Current.
 		do
 			C.gtk_widget_grab_focus (entry_widget)
 		end
 
 	set_maximum_text_length (len: INTEGER) is
+			-- Set the length of the longest 
 		do
 			C.gtk_entry_set_max_length (entry_widget, len)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
+			-- Set foreground color to `a_color'.
 		do
 			real_set_foreground_color (list_widget, a_color)
 		end
@@ -209,24 +212,12 @@ feature {NONE} -- Implementation
 			temp_sig_id: INTEGER
 		do
 			imp ?= v.implementation
-			C.gtk_combo_set_item_string (container_widget,
-				imp.c_object,
-				eiffel_to_c (imp.text)
-			)
+			C.gtk_combo_set_item_string (container_widget, imp.c_object, eiffel_to_c (imp.text))
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_parent_imp (Current)
-			temp_sig_id := c_signal_connect (
-				imp.c_object,
-				eiffel_to_c ("button-press-event"),
-				~on_item_clicked
-				)
-			real_signal_connect (
-				imp.c_object,
-				"key-press-event",
-				~on_key_pressed,
-				~key_event_translate
-			)
-			if count = 1 then
+			temp_sig_id := c_signal_connect (imp.c_object, eiffel_to_c ("button-press-event"), agent on_item_clicked)
+			real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, agent key_event_translate)
+			if count = 1 and is_sensitive then
 				imp.enable_select
 			end
 		end
@@ -248,17 +239,13 @@ feature {NONE} -- Implementation
 			-- Reorder `a_child' to `an_index' in `c_object'.
 			-- `a_container' is ignored.
 		do
-			C.gtk_box_reorder_child (container_widget,
-				a_child,
-				an_index - 1
-			)
+			C.gtk_box_reorder_child (container_widget, a_child, an_index - 1)
 		end
 
 	foreground_color_pointer: POINTER is
+			-- Pointer on the C object representing the foreground color of Current
 		do
-			Result := C.gtk_style_struct_fg (
-				C.gtk_widget_struct_style (list_widget)
-			)
+			Result := C.gtk_style_struct_fg (C.gtk_widget_struct_style (list_widget))
 		end
 		
 	timer: EV_TIMEOUT
@@ -266,13 +253,13 @@ feature {NONE} -- Implementation
 	triggering_item: EV_LIST_ITEM_IMP
 	
 	container_widget: POINTER
-		-- Gtk combo struct
+			-- Gtk combo struct
 	
 	activate_id: INTEGER
-		-- Activate event handler id
+			-- Activate event handler id
 
 	avoid_callback: BOOLEAN
-		-- Flag used to avoid repeated emission of select signal from combo box.
+			-- Flag used to avoid repeated emission of select signal from combo box.
 
 	select_callback (n: INTEGER; an_item: POINTER) is
 			-- Redefined to counter repeated select signal of combo box. 
@@ -280,20 +267,14 @@ feature {NONE} -- Implementation
 			popwin: POINTER
 		do
 			if not avoid_callback then
-			--	Precursor (n, an_item)
+					--	Precursor (n, an_item)
 				if select_actions_internal /= Void and then select_actions_internal.count > 0 then
-				 	triggering_item ?= eif_object_from_c (
-						gtk_value_pointer (an_item)
-					)
+				 	triggering_item ?= eif_object_from_c (gtk_value_pointer (an_item))
 					timer.set_interval (1)
 				 	if not button_pressed then
 						popwin := C.gtk_combo_struct_popwin (container_widget)
 						C.gtk_widget_hide (popwin)
-						if ((
-							(C.gtk_object_struct_flags (visual_widget)
-							// C.GTK_HAS_GRAB_ENUM) \\ 2)
-							) = 1
-						then
+						if (((C.gtk_object_struct_flags (visual_widget) // C.GTK_HAS_GRAB_ENUM) \\ 2)) = 1 then
 							C.gtk_grab_remove (popwin)
 							C.gdk_pointer_ungrab (0)
 						end
@@ -316,9 +297,9 @@ feature {NONE} -- Implementation
 		end
 		
 	button_pressed: BOOLEAN
-	
 
 	on_item_clicked is
+			-- The user has clicked on an item.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 			button_pressed := True
@@ -349,7 +330,7 @@ feature {NONE} -- Implementation
 		end
 	
 	destroy is
-			-- 
+			-- Destroy Current
 		do
 			timer.destroy
 			timer := Void

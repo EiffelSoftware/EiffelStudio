@@ -42,10 +42,18 @@ feature -- Basic operations
 			if l_interface /= Void then
 				l_coclass ?= component
 				if l_coclass /= Void then
-					l_already_generated := l_interface.is_implementing_coclass (l_coclass)
+					l_already_generated := l_interface.is_implementing_coclass (l_coclass) or
+											is_interface_generated_for_coclass (l_interface, l_coclass)
 				end
 			
 				if not l_already_generated and not l_interface.is_iunknown and not l_interface.is_idispatch then
+					if l_coclass /= Void then
+						-- Now register the fact that this interface was already generated for that coclass
+						-- This is necessary because two interfaces may inherit from a common interface that
+						-- is not implemented by the coclass (the feature names will be identical because we 
+						-- want to merge).
+						add_generated_interface_for_coclass (l_interface, l_coclass)
+					end
 					generate_functions_and_properties (l_interface)
 				end
 			end		
@@ -100,10 +108,51 @@ feature {NONE} -- Implementation
 			finished: finished
 		deferred
 		end
+	
+	is_interface_generated_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR): BOOLEAN is
+			-- Was interface `a_interface' already generated in context of coclass `a_coclass'?
+		require
+			non_void_interface: a_interface /= Void
+			non_void_coclass: a_coclass /= Void
+		do
+			generated_coclasses.search (a_coclass.guid.out)
+			if generated_coclasses.found then
+				Result := generated_coclasses.found_item.has (a_interface.guid.out)
+			end
+		end
+
+	add_generated_interface_for_coclass (a_interface: WIZARD_INTERFACE_DESCRIPTOR; a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Add interface `a_interface' in list of generated interfaces for coclass `a_coclass'.
+		require
+			non_void_interface: a_interface /= Void
+			non_void_coclass: a_coclass /= Void
+		local
+			l_interfaces: HASH_TABLE [STRING, STRING]
+			l_interface_guid, l_coclass_guid: STRING
+		do
+			l_interface_guid := a_interface.guid.out
+			l_coclass_guid := a_coclass.guid.out
+			generated_coclasses.search (l_coclass_guid)
+			if generated_coclasses.found then
+				l_interfaces := generated_coclasses.found_item
+				l_interfaces.put (l_interface_guid, l_interface_guid)
+			else
+				create l_interfaces.make (10)
+				l_interfaces.put (l_interface_guid, l_interface_guid)
+				generated_coclasses.put (l_interfaces, l_coclass_guid)
+			end
+		ensure
+			added: generated_coclasses.has (a_coclass.guid.out) and then
+						generated_coclasses.item (a_coclass.guid.out).has (a_interface.guid.out)
+		end
+		
+	generated_coclasses: HASH_TABLE [HASH_TABLE [STRING, STRING], STRING]
+			-- Table of table of generated interfaces guids indexed by coclass guids
 
 invariant
 	non_void_interface: not finished implies interface /= Void
 	non_void_component: not finished implies component /= Void
+	non_void_generated_coclasses: generated_coclasses /= Void
 
 end -- class WIZARD_COMPONENT_INTERFACE_GENERATOR
 

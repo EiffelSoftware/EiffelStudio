@@ -15,6 +15,11 @@ inherit
 			generate
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	default_dispinterface (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
@@ -28,7 +33,6 @@ feature -- Basic operations
 	generate (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Generate C server for implemented interface.
 		local
-			l_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			Precursor {WIZARD_COMPONENT_C_SERVER_GENERATOR} (a_interface)
@@ -52,8 +56,8 @@ feature -- Basic operations
 			end
 
 			l_interface := a_interface.interface_descriptor
-			create l_generator.make (a_interface, l_interface, cpp_class_writer)
-			l_generator.generate_functions_and_properties (l_interface)
+			C_server_generator.initialize (a_interface, l_interface, cpp_class_writer)
+			C_server_generator.generate_functions_and_properties (l_interface)
 
 			dispatch_interface := a_interface.interface_descriptor.is_idispatch_heir
 

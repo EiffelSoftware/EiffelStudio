@@ -14,6 +14,11 @@ inherit
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	generate (a_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -22,7 +27,6 @@ feature -- Basic operations
 			l_class_name: STRING
 			l_clause: WIZARD_WRITER_INHERIT_CLAUSE
 			l_visible: WIZARD_WRITER_VISIBLE_CLAUSE
-			l_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_SERVER_GENERATOR
 		do
 			l_class_name := a_interface.impl_eiffel_class_name (False)
 
@@ -42,12 +46,13 @@ feature -- Basic operations
 			l_clause.set_name (a_interface.interface_descriptor.eiffel_class_name)
 
 			if a_interface.source then
-				create {WIZARD_COMPONENT_INTERFACE_SOURCE_EIFFEL_SERVER_GENERATOR}
-					l_generator.make (a_interface, a_interface.interface_descriptor, eiffel_writer, l_clause)
+				Source_eiffel_server_generator.initialize (a_interface, a_interface.interface_descriptor, eiffel_writer, l_clause)
+				Source_eiffel_server_generator.generate_functions_and_properties (a_interface.interface_descriptor)
 			else 
-				create l_generator.make (a_interface, a_interface.interface_descriptor, eiffel_writer, l_clause)
+				Eiffel_server_generator.initialize (a_interface, a_interface.interface_descriptor, eiffel_writer, l_clause)
+				Eiffel_server_generator.generate_functions_and_properties (a_interface.interface_descriptor)
 			end
-			l_generator.generate_functions_and_properties (a_interface.interface_descriptor)
+
 			eiffel_writer.add_inherit_clause (l_clause)
 			set_default_ancestors (eiffel_writer)
 			add_creation

@@ -10,6 +10,11 @@ class
 inherit
 	WIZARD_COCLASS_INTERFACE_C_PROCESSOR
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -17,8 +22,6 @@ feature -- Basic operations
 
 	generate_interface_features (a_interface: WIZARD_INTERFACE_DESCRIPTOR) is
 			-- Generate interface features.
-		local
-			l_generator: WIZARD_COMPONENT_INTERFACE_C_SERVER_GENERATOR
 		do
 			if not a_interface.is_iunknown and not a_interface.is_idispatch then
 				coclass_generator.cpp_class_writer.add_other_source (iid_definition (a_interface.name, a_interface.guid))
@@ -37,8 +40,8 @@ feature -- Basic operations
 					dispatch_interface := True
 				end
 
-				create l_generator.make (coclass, a_interface, coclass_generator.cpp_class_writer)
-				l_generator.generate_functions_and_properties (a_interface)
+				C_server_generator.initialize (coclass, a_interface, coclass_generator.cpp_class_writer)
+				C_server_generator.generate_functions_and_properties (a_interface)
 			end
 		end
 

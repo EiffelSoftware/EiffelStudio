@@ -10,6 +10,11 @@ class
 inherit
 	WIZARD_COCLASS_INTERFACE_C_PROCESSOR
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -20,7 +25,6 @@ feature -- Basic operations
 		local
 			l_name, l_variable_name, l_type: STRING
 			l_member: WIZARD_WRITER_C_MEMBER
-			l_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 			l_writer: WIZARD_WRITER_CPP_CLASS
 		do
 			if a_interface.is_implementing_coclass (coclass) and
@@ -54,8 +58,8 @@ feature -- Basic operations
 
 				dispatch_interface := a_interface.dispinterface or a_interface.dual
 
-				create l_generator.make (coclass, a_interface, l_writer)
-				l_generator.generate_functions_and_properties (a_interface)
+				C_client_generator.initialize (coclass, a_interface, l_writer)
+				C_client_generator.generate_functions_and_properties (a_interface)
 			end
 		end
 

@@ -17,6 +17,10 @@ inherit
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
 
 feature -- Basic operations
 
@@ -26,7 +30,6 @@ feature -- Basic operations
 			a_class_name: STRING
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
-			interface_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
 			create a_visible.make
 
@@ -49,8 +52,8 @@ feature -- Basic operations
 			create inherit_clause.make
 			inherit_clause.set_name (a_descriptor.interface_descriptor.eiffel_class_name)
 
-			create interface_generator.make (a_descriptor, a_descriptor.interface_descriptor, eiffel_writer, inherit_clause)
-			interface_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
+			Eiffel_client_generator.initialize (a_descriptor, a_descriptor.interface_descriptor, eiffel_writer, inherit_clause)
+			Eiffel_client_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
 			eiffel_writer.add_inherit_clause (inherit_clause)
 
 			set_default_ancestors (eiffel_writer)

@@ -14,9 +14,6 @@ inherit
 			process_function
 		end
 
-create
-	make
-
 feature -- Basic operations
 
 	process_property (a_property: WIZARD_PROPERTY_DESCRIPTOR) is

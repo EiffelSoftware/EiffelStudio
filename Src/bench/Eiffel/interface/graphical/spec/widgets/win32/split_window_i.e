@@ -63,15 +63,15 @@ inherit
 			on_key_up,
 			on_key_down,
 			on_destroy,
-			on_draw_item
+			on_draw_item,
+			class_background
 		redefine
 			on_left_button_down,
 			on_left_button_up,
 			on_mouse_move,
 			on_paint,
 			on_size,
-			on_set_cursor,
-			class_background
+			on_set_cursor
 		end;
 	WEL_IDC_CONSTANTS
 		export
@@ -697,12 +697,6 @@ feature {NONE} -- Implementation
 
 	splitting_bottom: BOOLEAN
 			-- Is `button_down' and `on_bottom_split' True?
-
-	class_background: WEL_BRUSH is
-			-- Class background brush
-		do
-			!WEL_NULL_BRUSH! Result.make
-		end;
 
 	top_split_visible: BOOLEAN;
 			-- Is the highest split visible?

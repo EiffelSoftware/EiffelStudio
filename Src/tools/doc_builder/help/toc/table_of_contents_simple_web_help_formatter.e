@@ -110,15 +110,17 @@ feature {NONE} -- Implementation
 			Result.append (spacer_html (number_of_parents (l_parent)))
 
 			l_url := friendly_node_url (l_parent)
-			l_url.prepend ("../")
+			if l_url /= Void then
+				l_url.prepend ("../")
 			
-				-- Add parent node
-			l_title := l_parent.title.twin
-			if not l_title.is_equal ("table_of_contents") then
-				Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">" + l_title + "</a>")
-			else
-				Result.append ("<a href=%"" + "0.html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">Documentation Home</a>")
-			end			
+					-- Add parent node
+				l_title := l_parent.title.twin
+				if not l_title.is_equal ("table_of_contents") then
+					Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">" + l_title + "</a>")
+				else
+					Result.append ("<a href=%"" + "0.html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a><a href=%"" + l_url + "%" target=%"content_frame%">Documentation Home</a>")
+				end			
+			end
 		end		
 
 	spacer_html (cnt: INTEGER): STRING is

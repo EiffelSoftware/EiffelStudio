@@ -49,7 +49,7 @@ feature
 				%%T$(RM) $*.c%N%N%
 				%.xpp.o:%N%
 				%%T$(EIFFEL4)/bench/spec/$(PLATFORM)/bin/x2c $< $*.cpp%N%
-				%%T$(CC) $(CFLAGS) -c $*.cpp%N%
+				%%T$(CPP) $(CFLAGS) -c $*.cpp%N%
 				%%T$(RM) $*.cpp%N%N")
 			Make_file.putstring ("%
 				%.x.c:%N%

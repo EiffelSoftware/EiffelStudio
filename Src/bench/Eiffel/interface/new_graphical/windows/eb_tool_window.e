@@ -71,10 +71,11 @@ feature {EB_TOOL} -- Tool management
 	raise_tool (t: like tool) is
 			-- shows the tool in the foreground.
 			-- it implies showing Current
+			-- not implemented yet; does the same as `show_tool'
 		do
 			t.show_imp
 			show
-			set_focus
+--			set_focus
 		ensure then
 			shown: shown
 		end

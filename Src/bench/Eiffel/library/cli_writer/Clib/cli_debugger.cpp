@@ -72,7 +72,7 @@ const IID IID_ICorDebugArrayValue = {0x0405B0DF,0xA660,0x11d2,0xBD,0x02,0x00,0x0
 /****************************************/
 
 rt_private BOOL dbg_last_callback_is_about_eval;
-
+rt_private HANDLE estudio_thread_handle;
 rt_private LONG dbg_state;
 
 rt_private char message [1024];
@@ -139,9 +139,19 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
 {
   FILE *out;
   out=fopen("eif_debugger.out","a+");
-  fprintf(out,"<HR=%d> %s \n",
-					hr,
-					mesg
+  fprintf(out,"%s <HR=%d>\n",
+					mesg,
+					hr
+					);
+  fclose(out);
+}
+rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
+{
+  FILE *out;
+  out=fopen("eif_debugger.out","a+");
+  fprintf(out,"%s %d \n",
+					mesg,
+					dw
 					);
   fclose(out);
 }
@@ -151,35 +161,16 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
 #define DBGTRACE(msg) trace_event(msg);
 #define DBGTRACE2(msg,msg2) trace_event(msg, msg2);
 #define DBGTRACE_HR(msg1,hr) trace_event_dbg_hr(msg1, hr);
+#define DBGTRACE_DWORD(msg1,dw) trace_event_dbg_dword(msg1, dw);
 #else
 #define DBGTRACE(msg)
 #define DBGTRACE2(msg,msg2)
 #define DBGTRACE_HR(msg,hr)
+#define DBGTRACE_DWORD(msg,dw)
 #endif
 
 ////////////////////////////////////////////////////////////////////////////
 
-//CorDebug------------------------------------------------------------------
-
-rt_public EIF_POINTER new_cordebug ()
-	/* Create new instance of ICorDebug */
-{
-	HRESULT hr;
-	ICorDebug *icd;
-
-//    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-//COINIT_MULTITHREADED
-	
-	hr = CoCreateInstance (CLSID_CorDebug, NULL,
-		CLSCTX_INPROC_SERVER, IID_ICorDebug, (void **) & icd);
-
-//	CHECK (hr, "Could not create ICorDebug")
-
-	DBGTRACE_HR("@@@ [DEBUGGER] New ICorDebug ", hr);
-
-	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorDebug");
-	return icd;
-}
 
 /**************************************************************************/
 /* Synchronisation */
@@ -187,6 +178,44 @@ rt_public EIF_POINTER new_cordebug ()
 rt_private UINT once_enter_cb;
 rt_private UINT once_enter_ec_cb;
 rt_private UINT dbg_timer;
+
+
+rt_public void dbg_init_estudio_thread_handle () {
+	DWORD th_id;
+ 	th_id = GetCurrentThreadId(); 
+	DBGTRACE_DWORD("GetCurrentThreadId() : result =", th_id);
+	estudio_thread_handle = OpenThread (THREAD_SUSPEND_RESUME, FALSE, th_id);
+}
+
+rt_public void dbg_suspend_estudio_thread () {
+	DWORD result;
+ 	HANDLE thread_hdl;
+	thread_hdl = estudio_thread_handle;
+
+
+	DBGTRACE_HR("[Debugger] going to suspend eStudio Thread : handle = ", (HRESULT)thread_hdl);/*D*/
+	result = SuspendThread (thread_hdl);
+	DBGTRACE_DWORD("[Debugger] SuspendThread : result = ", result); /*D*/
+}
+
+rt_public void dbg_resume_estudio_thread () {
+	DWORD result;
+ 	HANDLE thread_hdl;
+	thread_hdl = estudio_thread_handle;
+
+	DBGTRACE("[Debugger] going to resume eStudio Thread");/*D*/
+	DBGTRACE_HR("[Debugger] thread_hdl : handle = ", (HRESULT)thread_hdl);/*D*/
+	result = ResumeThread (thread_hdl);
+	DBGTRACE_DWORD ("[Debugger] ResumeThread : result = ", result); /*D*/
+}
+
+#define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ()
+#define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread ()
+
+//#define DBG_SUSPEND_ESTUDIO_THREAD 
+//#define DBG_RESUME_ESTUDIO_THREAD
+
+
 	// Timer ID for dbg synchro
 
 //rt_private LONG dbg_state;
@@ -207,6 +236,7 @@ rt_public void dbg_start_timer () {
 	once_enter_ec_cb = 0;/*D*/
 	once_enter_cb = 0;/*D*/
 #endif	/*D*/
+
 	dbg_timer = SetTimer (NULL, 0 /* ignored with HWnd NULL */, 
 			10 /* millisecond */, (TIMERPROC) dbg_timer_callback);
 	CHECK (dbg_timer == 0, "Could not create dbg_timer")
@@ -226,6 +256,10 @@ rt_public void dbg_stop_timer () {
 
 	CHECK (hr == 0, "Could not kill dbg_timer")
 }
+
+///////////////////////////////////////////////////////////
+/// dbg_timer_callback :: eStudio running               ///
+///////////////////////////////////////////////////////////
 
 rt_public void dbg_timer_callback () {
 //	DBGTRACE("[Debugger|EC] timer callback");
@@ -248,6 +282,7 @@ rt_public void dbg_timer_callback () {
 
 		DBGTRACE("4 - [Debugger|EC] ec give hand to dbg");/*D*/
 		InterlockedIncrement (&dbg_state);
+		DBG_SUSPEND_ESTUDIO_THREAD;
 //<2>---< give hand to dbg >-------------------------------------//
 		DBGTRACE("4 - [Debugger|EC] ec waiting while dbg_state = 2");/*D*/
 		while (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
@@ -259,6 +294,7 @@ rt_public void dbg_timer_callback () {
 				once_enter_ec_cb = (once_enter_ec_cb + 1) % 100;/*D*/
 			}/*D*/
 #endif	/*D*/
+
 			Sleep (1); // maybe useless, spinlock instead ..
 		}
 //<3>------------------------------------------------------------//
@@ -270,19 +306,16 @@ rt_public void dbg_timer_callback () {
 	}
 }
 
+///////////////////////////////////////////////////////////
+/// dbg_lock_and_wait_callback :: eStudio evaluation    ///
+///////////////////////////////////////////////////////////
+
 rt_public void dbg_lock_and_wait_callback () {
 	/*** Local  ***/
 	UINT once_enter;
 	BOOL eval_callback_proceed;
-
 	/*** Require  ***/
 	CHECK (dbg_timer != 0, "Require : Timer should be disable in this context (evaluating)")
-	if (dbg_timer == 0) {/*D*/
-		DBGTRACE("?EVAL? Timer is OFF => OK");/*D*/
-	} else {/*D*/
-		DBGTRACE("?EVAL? Timer is ON => ERROR");/*D*/
-	}/*D*/
-
 	/*** Do  ***/
 
 	DBGTRACE("?EVAL?========================================");/*D*/
@@ -291,7 +324,6 @@ rt_public void dbg_lock_and_wait_callback () {
 	// Initialize data
 	// at begining we don't care about past
 	eval_callback_proceed = false;
-
 
 	while (!eval_callback_proceed) {
 		// While we haven't reach "eval callback", and proceed it 
@@ -313,7 +345,7 @@ rt_public void dbg_lock_and_wait_callback () {
 
 		DBGTRACE("?EVAL? - [Debugger|EC] call back arrived, dbg waiting");/*D*/
 		InterlockedIncrement (&dbg_state);
-
+		DBG_SUSPEND_ESTUDIO_THREAD;
 		once_enter = 0;/*D*/
 		while (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
 			if (once_enter == 0) {/*D*/
@@ -335,6 +367,11 @@ rt_public void dbg_lock_and_wait_callback () {
 	CHECK (!dbg_last_callback_is_about_eval, "Ensure : Last callback should be about evaluating")
 	/*** End  ***/
 }
+
+
+///////////////////////////////////////////////////////////
+/// dbg_debugger_..._callback :: .NET Dbg Callback      ///
+///////////////////////////////////////////////////////////
 
 rt_public void dbg_debugger_before_callback (char* callback_id, BOOL is_eval_callback) {
 	if (is_eval_callback) { DBGTRACE("<< is_eval_callback  >>"); }/*D*/
@@ -372,6 +409,7 @@ rt_public void dbg_debugger_before_callback (char* callback_id, BOOL is_eval_cal
 		}/*D*/
 #endif	/*D*/
 	}
+
 	once_enter_cb = 0;/*D*/
 //<2>---< ec waiting >-------------------------------------------//
 	DBGTRACE("6 - [Debugger|DBG] start execution callback");/*D*/
@@ -387,8 +425,38 @@ rt_public void dbg_debugger_after_callback (char * callback_id) {
 	InterlockedIncrement (&dbg_state);
 //<3>---< give back the hand to ec >-----------------------------//
 	// Callback done
+
+	DBG_RESUME_ESTUDIO_THREAD;
+
 	DBGTRACE("8 - [Debugger|DBG] exit callback");/*D*/
 	DBGTRACE(">>>>>>>>>>>>>>>>>>>>>>>>");/*D*/
+}
+
+/**************************************************************************/
+/* ICorDebug  */
+
+rt_public EIF_POINTER new_cordebug ()
+	/* Create new instance of ICorDebug */
+{
+	HRESULT hr;
+	ICorDebug *icd;
+
+//    CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+//COINIT_MULTITHREADED
+	
+	hr = CoCreateInstance (CLSID_CorDebug, NULL,
+		CLSCTX_INPROC_SERVER, IID_ICorDebug, (void **) & icd);
+
+//	CHECK (hr, "Could not create ICorDebug")
+
+	DBGTRACE_HR("@@@ [DEBUGGER] New ICorDebug ", hr);
+
+
+	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorDebug");
+
+	dbg_init_estudio_thread_handle ();
+
+	return icd;
 }
 
 #ifdef _cplusplus

@@ -32,6 +32,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_ICONABLE_TOOL
+		undefine
+			default_create, copy
+		end
 
 feature -- Initialization
 
@@ -44,7 +49,15 @@ feature -- Initialization
 			set_title (gb_display_window_title)
 				-- Set up cancel actions on `Current'.
 			fake_cancel_button (Current, agent show_hide_display_window_command.execute)			
-			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_display_window @ 1)
+			set_icon_pixmap (icon)
+		end
+		
+feature -- Access
+
+	icon: EV_PIXMAP is
+			-- Icon displayed in title of `Current'.
+		once
+			Result := (create {GB_SHARED_PIXMAPS}).Icon_display_window @ 1
 		end
 
 end -- class GB_DISPLAY_WINDOW

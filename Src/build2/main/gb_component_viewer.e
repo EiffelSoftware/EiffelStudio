@@ -56,7 +56,10 @@ inherit
 			copy, default_create
 		end
 		
-	
+	GB_ICONABLE_TOOL
+		undefine
+			default_create, copy
+		end
 
 feature {NONE} -- Implementation
 
@@ -95,7 +98,7 @@ feature {NONE} -- Implementation
 			display_button.select_actions.extend (agent set_display_view)
 			
 			create builder_button
-			builder_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_build_view)
+			builder_button.set_pixmap (icon)
 			builder_button.select_actions.extend (agent set_build_view)
 			builder_button.set_tooltip ("Builder view")
 			tool_bar.extend (builder_button)
@@ -135,6 +138,11 @@ feature -- Access
 			Result := not display_view_enabled
 		end
 		
+	icon: EV_PIXMAP is
+			-- Icon displayed in title of `Current'.
+		once
+			Result := ((create {GB_SHARED_PIXMAPS}).Icon_component_viewer @ 1)
+		end
 		
 feature -- Basic operation
 		

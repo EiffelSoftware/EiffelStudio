@@ -29,6 +29,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_ICONABLE_TOOL
+		undefine
+			default_create, copy
+		end
 	
 create
 	default_create
@@ -57,8 +62,17 @@ feature -- Initialization
 			horizontal_box.extend (close_button)
 			set_default_push_button (close_button)
 			close_button.select_actions.extend (agent show_hide_history_command.execute)
+			set_icon_pixmap (icon)
 			set_default_cancel_button (close_button)
 			set_minimum_size (250, 250)
+		end
+		
+feature -- Access
+
+	icon: EV_PIXMAP is
+			-- Icon displayed in title of `Current'.
+		once
+			Result := ((create {GB_SHARED_PIXMAPS}).Icon_cmd_history @ 1)
 		end
 		
 feature -- Basic operation

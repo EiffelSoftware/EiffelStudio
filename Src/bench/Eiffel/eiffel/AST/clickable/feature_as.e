@@ -31,6 +31,8 @@ inherit
 			is_feature, associated_feature_name
 		end
 
+	REFACTORING_HELPER
+
 feature {AST_FACTORY} -- Initialization
 
 	initialize (f: like feature_names; b: like body; i: like indexes; l, s, e: INTEGER) is
@@ -362,8 +364,18 @@ feature -- Type check, byte code and dead code removal
 
 	new_feature: FEATURE_I is
 			-- New Eiffel feature description
+		local
+			once_proc: ONCE_PROC_I
 		do
 			Result := body.new_feature
+			if Result.is_once and then indexes /= Void then
+				once_proc ?= Result
+				if once_proc /= Void then
+					once_proc.set_is_process_relative (indexes.has_global_once)
+				else
+					fixme ("support process-relative constants (e.g., string constants)")
+				end
+			end
 		end
 
 	local_table (f: FEATURE_I): HASH_TABLE [LOCAL_INFO, STRING] is
@@ -395,8 +407,20 @@ feature {COMPILER_EXPORTER} -- Incrementality
 			-- Is the current feature equivalent to `other' ?
 		require
 			valid_body: body /= Void
+		local
+			is_process_context: BOOLEAN
+			other_is_process_context: BOOLEAN
 		do
 			Result := body.is_body_equiv (other.body)
+			if Result then
+				if indexes /= Void then
+					is_process_context := indexes.has_global_once
+				end
+				if other.indexes /= Void then
+					other_is_process_context := other.indexes.has_global_once
+				end
+				Result := is_process_context = other_is_process_context
+			end
 		end
  
 	is_assertion_equiv (other: like Current): BOOLEAN is

@@ -26,12 +26,6 @@ feature -- Access
 			"dir_current"
 		end
 
-	change_working_directory (path: STRING) is
-			-- Set the current directory to `path'
-		do
-			return_code := eif_chdir (path.to_c)
-		end
-
 	default_shell: STRING is
 		once
 			Result := get ("SHELL")
@@ -81,6 +75,12 @@ feature -- Status
 
 feature -- Status setting
 
+	change_working_directory (path: STRING) is
+			-- Set the current directory to `path'
+		do
+			return_code := eif_chdir (path.to_c)
+		end
+
 	put (value,key: STRING) is
 			-- Set the environment variable `key' to `value'.
 		require
@@ -98,7 +98,7 @@ feature -- Status setting
 		end
 
 	system (s: STRING) is
-			 -- Pass to the operating system a request to to execute `s'.
+			-- Pass to the operating system a request to execute `s'.
 			-- If `s' is empty, use the default shell as command.
 		require
 			s_exists: s /= Void

@@ -21,7 +21,7 @@ feature {NONE} -- Initialize
 		end
 		
 	make_from_string (data: STRING) is
-			-- Initialize `item' with content of `data'.
+			-- Initialize `item' with content of `data' expressed in hexadecimal.
 		require
 			data_not_void: data /= Void
 			valid_count: data.count \\ 2 = 0
@@ -31,7 +31,7 @@ feature {NONE} -- Initialize
 			i, nb: INTEGER
 		do
 			nb := data.count
-			create l_data.make (1, 8)
+			create l_data.make (1, data.count // 2)
 			from
 				i := 1
 			until
@@ -48,7 +48,7 @@ feature {NONE} -- Initialize
 			-- Convert `s' hexadecimal value into an integer representation.
 		require
 			s_not_void: s /= Void
-			s_large_enough: s.count > 2
+			s_large_enough: s.count >= 1 and s.count <= 8
 		local
 			i, j: INTEGER
 			last_integer: INTEGER

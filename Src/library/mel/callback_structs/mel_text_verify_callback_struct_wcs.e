@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 
 	makestr (ptr: POINTER; l: INTEGER): STRING is
 		external
-			"C"
+			"C (char *, int): EIF_REFERENCE | %"eif_plug.h%""
 		end;
 
 	c_text_wcs_set_do_it (b: BOOLEAN; ptr: POINTER) is

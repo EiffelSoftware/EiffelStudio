@@ -25800,42 +25800,11 @@ feature -- External C structs
 	
 feature -- Externals
 
-	frozen c_gdk_colormap_query_color (a_colormap: POINTER; a_pixel: INTEGER; a_gdkcolor_result: POINTER) is
-			-- Retrieve `a_gdkcolor_result' values from `a_pixel' using `a_colormap'.
-			-- (from EV_C_GTK)
-		external
-			" C (GdkColormap *, gulong, GdkColor *)| %"gtk_eiffel.h%""
-		end
-
-	frozen c_gdk_window_deiconify (a_window: POINTER) is
-			-- (from EV_C_GTK)
-		external
-			"C (GdkWindow *) | %"ev_titled_window_imp.h%""
-		end
-
-	frozen c_gdk_window_iconify (a_window: POINTER) is
-			-- (from EV_C_GTK)
-		external
-			"C (GdkWindow *) | %"ev_titled_window_imp.h%""
-		end
-
-	frozen c_gdk_window_is_iconified (a_window: POINTER): BOOLEAN is
-			-- (from EV_C_GTK)
-		external
-			"C (GdkWindow *): gboolean | %"ev_titled_window_imp.h%""
-		end
-
 	frozen c_gtk_menu_popup (menu: POINTER; x, y: INTEGER) is
 			-- Show `menu' on (`x', `y').
 			-- (from EV_C_GTK)
 		external
 			"C | %"ev_menu_imp.h%""
-		end
-
-	frozen c_gtk_window_set_modal (a_window: POINTER; a_modal: BOOLEAN) is
-			-- (from EV_C_GTK)
-		external
-			" C | %"gtk_eiffel.h%""
 		end
 
 	frozen gdk_current_time: INTEGER is

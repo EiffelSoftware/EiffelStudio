@@ -1,11 +1,11 @@
 indexing
 
 	description: 
-		"Formats routine text.";
+		"Formats feature text.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class ROUTINE_TEXT_FORMATTER
+class FEATURE_TEXT_FORMATTER
 
 inherit
 
@@ -18,16 +18,15 @@ feature -- Properties
 
 feature -- Execution
 
-	format_debuggable (routine: E_FEATURE; c: E_CLASS) is
-			-- Format text for eiffel `routine' in class
-			-- `c' to show debuggable information.
+	format_debuggable (routine: E_FEATURE) is
+			-- Format text for eiffel `routine' and take
+			-- into consideration renaming.
 		require
-			valid_routine: routine /= Void;
-			valid_c: c /= Void
+			valid_routine: routine /= Void
 		local
 			f: DEBUG_CONTEXT
 		do
-			!! f.make (c);
+			!! f.make (routine.associated_class);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
@@ -36,16 +35,29 @@ feature -- Execution
 			error := f.execution_error
 		end;
 
-	format (routine: E_FEATURE; c: E_CLASS) is
-			-- Format text for eiffel `routine' in
-			-- class `c'.
+	simple_format_debuggable (routine: E_FEATURE) is
+			-- Do a simple format for eiffel `routine' 
+			-- which doesn't only formats the text and doesn't
+			-- take into consideration renaming.
 		require
 			valid_routine: routine /= Void
-			valid_c: c /= Void
+		local
+			f: SIMPLE_DEBUG_CONTEXT
+		do
+			!! f.make (routine);
+			text := f.text;
+			error := f.execution_error
+		end;
+
+	format (routine: E_FEATURE) is
+			-- Format text for eiffel `routine' and take
+			-- into consideration renaming.
+		require
+			valid_routine: routine /= Void
 		local
 			f: FORMAT_FEAT_CONTEXT
 		do
-			!! f.make (c);
+			!! f.make (routine.associated_class);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
@@ -54,4 +66,4 @@ feature -- Execution
 			error := f.execution_error
 		end;
 
-end -- class ROUTINE_TEXT_FORMATTER
+end -- class FEATURE_TEXT_FORMATTER

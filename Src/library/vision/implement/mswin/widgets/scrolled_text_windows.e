@@ -17,7 +17,9 @@ inherit
 			realize,
 			set_single_line_mode,
 			set_multi_line_mode,
-			default_style
+			default_style,
+			form_height,
+			form_width
 		end
 
 	SCROLLED_T_I
@@ -117,6 +119,16 @@ feature -- Status report
 
 	is_vertical_scrollbar: BOOLEAN 
 			-- Is vertical scrollbar visible ?
+
+	form_height: integer is
+		do
+			Result := height
+		end
+
+	form_width: integer is
+		do
+			Result := width
+		end
 
 feature -- Status setting
 

@@ -85,7 +85,7 @@ X   complete but found to have bugs
     properties/ev_drawable_constants.e                  *    *     *     .
     properties/ev_fontable.e                            *    *     o     .
     properties/ev_pick_and_dropable.e                   o    o 2   o 1   .
-    properties/ev_pixmapable.e                          *    o .5  *     .
+    properties/ev_pixmapable.e                          *    *     *     .
     properties/ev_textable.e                            *    *     *     .
     support/ev_dynamic_list.e                           *    *     *     .
     widgets/ev_widget.e                                 o    o 3   o 1   .

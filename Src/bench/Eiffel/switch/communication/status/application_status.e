@@ -39,7 +39,19 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize Current
 		do
-			create call_stack_list.make (5)
+			reset_call_stack_list
+		end
+
+feature -- Call Stack List management
+	
+	reset_call_stack_list is
+			-- Reset `call_stack_list' or create it
+		do
+			if call_stack_list = Void then
+				create call_stack_list.make (5)
+			else
+				call_stack_list.wipe_out
+			end
 		end
 
 feature -- Callstack
@@ -47,12 +59,18 @@ feature -- Callstack
 	reload_current_call_stack is
 			-- reload the call stack from application (after having edited an
 			-- object for example to make sure the modification was successful).
+		local
+			ecs: EIFFEL_CALL_STACK
 		do
 				-- re-create the call stack
-			create_current_callstack_with (stack_max_depth)
+			ecs := new_current_callstack_with (stack_max_depth)
+			set_call_stack (current_thread_id, ecs)
+			get_current_call_stack			
 		end
+		
+feature {NONE} -- CallStack Impl
 
-	create_current_callstack_with (a_stack_max_depth: INTEGER) is
+	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK is
 		deferred
 		end
 
@@ -85,74 +103,97 @@ feature -- Values
 	object_address: STRING
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
-
-	current_thread_id: INTEGER
-	
-	all_thread_ids: ARRAY [INTEGER]
-	
-	set_current_thread_id (tid: INTEGER) is
-		require
-			id_valid: tid > 0
-		do
-			current_thread_id := tid
-		end
 		
-	refresh_current_thread_id is
-		deferred
-		end		
-		
-	set_thread_ids (a: ARRAY [INTEGER]) is
-			-- 
-		require
-			a_not_empty: a /= Void and then not a.is_empty
-		do
-			all_thread_ids := a.twin
-		end
-		
-	set_call_stack (tid: INTEGER; ecs: EIFFEL_CALL_STACK) is
-		require
-			id_valid: tid > 0
-			callstack_not_void: ecs /= Void
-		do
-			call_stack_list.force (ecs, tid)
-		end
-		
-	call_stack_list: HASH_TABLE [EIFFEL_CALL_STACK, INTEGER]
-
 	exception_code: INTEGER
 			-- Exception code if any
 
 	exception_tag: STRING
 			-- Exception tag if any
 
-	call_stack (tid: INTEGER): EIFFEL_CALL_STACK is
+feature -- Call Stack related
+
+	current_call_stack: like call_stack
+			-- Current Call Stack regarding Thread Id.
+			
+	get_current_call_stack is
+			-- set `current_call_stack' value
 		do
-			if tid > 0 and then call_stack_list.has (tid) then
-				Result := call_stack_list.item (tid)
-			end
-		ensure
-			Result /= Void implies tid > 0
-		end
-		
-	current_call_stack: like call_stack is
-		do
-			Result := call_stack (current_thread_id)
+			current_call_stack := call_stack (current_thread_id)
 		end
 
 	current_call_stack_element: CALL_STACK_ELEMENT is
-			-- Current call stack element being displayed
+			-- Current call stack element being displayed.
 		do
 			Result := current_call_stack.i_th (Application.current_execution_stack_number)
 		end
 		
+	stack_max_depth: INTEGER
+			-- Maximum number of stack elements that we retrieve from the application.
+			
+feature -- Thread related access
+
+	current_thread_id: INTEGER
+			-- Thread ID of the Current call stack.
+	
+	all_thread_ids: ARRAY [INTEGER]
+			-- All available threads' ids
+	
+
+feature -- Thread related change
+
+	set_call_stack (tid: INTEGER; ecs: EIFFEL_CALL_STACK) is
+			-- Associate `ecs' with thread id `tid'
+		require
+			id_valid: tid > 0
+			callstack_not_void: ecs /= Void
+		do
+			call_stack_list.force (ecs, tid)
+		end
+
+	refresh_current_thread_id is
+			-- Get fresh value of Thread ID from debugger
+		deferred
+		end		
+
+	set_current_thread_id (tid: INTEGER) is
+			-- Set current thread id, and refresh `current_call_stack'
+		require
+			id_valid: tid > 0
+		do
+			current_thread_id := tid
+			get_current_call_stack			
+		end
+		
+	set_thread_ids (a: ARRAY [INTEGER]) is
+			-- set thread's ids with `a'
+		require
+			a_not_empty: a /= Void and then not a.is_empty
+		do
+			all_thread_ids := a.twin
+		end
+		
+
+feature {NONE} -- Call stack implementation
+
 	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed
 		do
 			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
 		end
-		
-	stack_max_depth: INTEGER
-			-- Maximum number of stack elements that we retrieve from the application.
+
+	
+	call_stack (tid: INTEGER): EIFFEL_CALL_STACK is
+			-- Call stack associated with thread id `tid'.
+		do
+			if tid > 0 then
+				Result := call_stack_list.item (tid)
+			end
+		ensure
+			Result /= Void implies tid > 0
+		end
+	
+	call_stack_list: HASH_TABLE [EIFFEL_CALL_STACK, INTEGER]	
+			-- Call Stack list, associating Call Stack and their Thread Id.
 
 feature -- Access
 
@@ -252,6 +293,11 @@ feature -- Setting
 	set_is_stopped (b: BOOLEAN) is
 			-- set is_stopped to `b'
 		do
+			if b and then not is_stopped then
+					--| When we switch from running to stopped state
+					--| we reset the call stack list
+				reset_call_stack_list
+			end
 			is_stopped := b
 		end
 

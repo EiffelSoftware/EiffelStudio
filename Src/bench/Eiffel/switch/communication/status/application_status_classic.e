@@ -77,15 +77,12 @@ feature {STOPPED_HDLR} -- Initialization
 			valid_efeature: e_feature /= Void
 		end
 
-feature -- Class stack creation
+feature {NONE} -- CallStack Impl
 
-	create_current_callstack_with (a_stack_max_depth: INTEGER) is
+	new_current_callstack_with (a_stack_max_depth: INTEGER): EIFFEL_CALL_STACK_CLASSIC is
 			-- Create Eiffel Callstack with a maximum depth of `a_stack_max_depth'
-		local
-			ecs: EIFFEL_CALL_STACK_CLASSIC
 		do
-			create ecs.make (a_stack_max_depth)
-			set_call_stack (current_thread_id, ecs)
+			create Result.make (a_stack_max_depth)
 		end		
 
 feature -- Values

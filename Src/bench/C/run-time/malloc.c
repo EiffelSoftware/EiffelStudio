@@ -390,7 +390,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	/* Reallocation of a special object `ptr' for new count `nbitems' */
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
-	char  *(*init)();			/* Initialization routine to be called */
+	char  *(*init)(char *);			/* Initialization routine to be called */
 	char *ref, *object;
 	long count, elem_size;
 	int dtype;
@@ -457,10 +457,10 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 		 /* case of a special object of expanded structures */
 		char *addr = object + OVERHEAD;		/* Needed for that stupid gcc */
 		dtype = HEADER(addr)->ov_flags & EO_TYPE;
-		init = XCreate(dtype);
+		init = (char *(*) (char *)) XCreate(dtype);
 
 #ifdef MAY_PANIC
-		if ((char *(*)()) 0 == init)		/* There MUST be a routine */
+		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
 			eif_panic("init routine lost");
 #endif
 
@@ -2776,7 +2776,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 	 */
 	EIF_GET_CONTEXT
 	register3 union overhead *zone;		/* Malloc info zone */
-	register4 char *(*init)();			/* The optional initialization */
+	register4 char *(*init)(char *);			/* The optional initialization */
 
 	SIGBLOCK;					/* Critical section */
 	bzero(object, nbytes);		/* All set with zeros */
@@ -2796,8 +2796,8 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 	 * is in charge of setting some other flags like EO_COMP and initializing
 	 * of expanded inter-references.
 	 */
-	init = XCreate(type & EO_TYPE);
-	if (init != (char *(*)()) 0)
+	init = (char *(*) (char *)) XCreate(type & EO_TYPE);
+	if (init != (char *(*)(char *)) 0)
 		((void (*)()) init)(object, object);
 
 	SIGRESUME;					/* End of critical section */

@@ -50,7 +50,6 @@ extern "C" {
 #endif
 
 
-
 #ifdef EIF_THREADS
 
 /***************************************e
@@ -58,26 +57,6 @@ extern "C" {
  *    Reentrant run-time definitions    *
  *                                      *
  ****************************************/
-
-
-	/*
-	 * Definition of the macros WEL_GET_CONTEXT and WEL_END_GET_CONTEXT
-	 *
-	 * WEL_GET_CONTEXT used to contain an opening curly brace `{'. It is
-	 * now changed in order not to need it anymore: it is part of the local
-	 * variables declarations.
-	 * WEL_END_GET_CONTEXT is now empty
-	 */
-
-void wel_thr_register(void);
-
-#define WGTCX \
-	wel_global_context_t *wel_globals; \
-	wel_thr_register(); \
-	wel_globals = (wel_global_context_t *) TlsGetValue (wel_global_key);
-
-#define WEDCX 
-	
 
 typedef struct tag_wel_globals		
 /* Structure containing all global variables to the run-time */
@@ -118,6 +97,20 @@ typedef struct tag_wel_globals
 	 * (class WEL_EDIT_STREAM_OUT) */
 
 } wel_global_context_t;
+
+	/*
+	 * Definition of the macros WEL_GET_CONTEXT and WEL_END_GET_CONTEXT
+	 *
+	 * WEL_GET_CONTEXT used to contain an opening curly brace `{'. It is
+	 * now changed in order not to need it anymore: it is part of the local
+	 * variables declarations.
+	 * WEL_END_GET_CONTEXT is now empty
+	 */
+
+extern wel_global_context_t * wel_thr_context(void);
+
+#define WGTCX wel_global_context_t *wel_globals = wel_thr_context();
+#define WEDCX 
 
 
 /* disptchr.c */

@@ -458,9 +458,7 @@ feature -- Input
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
-			if last_string = Void then
-				!!last_string.make (512)
-			end
+			!!last_string.make (512)
 			read_character
 			from
 			until

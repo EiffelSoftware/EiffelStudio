@@ -23,7 +23,7 @@ inherit
 			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
 			destroy, interface, initialize, on_left_button_double_click,
 			x_position, y_position, disable_sensitive, enable_sensitive,
-			update_for_pick_and_drop
+			update_for_pick_and_drop, is_dockable_source
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -435,6 +435,19 @@ feature -- Basic operation
 			remove_item (but)
 			insert_item (but, an_index)
 		end
+		
+	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
+			-- Is `Current' at position `x_pos', `y_pos' a dockable source?
+		local
+			tool_bar_button: EV_TOOL_BAR_BUTTON_IMP
+		do
+			Result := is_dockable
+			tool_bar_button ?= find_item_at_position (x_pos, y_pos)
+			if tool_bar_button /= Void and then tool_bar_button.is_dockable then
+				Result := True
+			end
+		end
+		
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_ITEM_IMP is
 			-- Find the item at `x_pos', `y_pos'.
@@ -480,18 +493,19 @@ feature -- Basic operation
 				--| was originally clicked on, has not been removed during the press actions.
 				--| If the parent is now void then it has, and there is no need to continue
 				--| with `pnd_press'.
-			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
-				not parent_is_pnd_source and pre_drop_it.parent /= Void then
-				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then
-				pnd_item_source.pnd_press (
-					x_pos, y_pos, button, pt.x, pt.y)
+			if not item_is_dockable_source then
+				if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
+					not parent_is_pnd_source and pre_drop_it.parent /= Void then
+					pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				elseif pnd_item_source /= Void then
+					pnd_item_source.pnd_press (
+						x_pos, y_pos, button, pt.x, pt.y)
+				end
+	
+				if item_is_pnd_source_at_entry = item_is_pnd_source then
+					pnd_press (x_pos, y_pos, button, pt.x, pt.y)
+				end
 			end
-
-			if item_is_pnd_source_at_entry = item_is_pnd_source then
-				pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			end
-
 			if not press_actions_called then
 				interface.pointer_button_press_actions.call
 					([x_pos, y_pos, button, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -787,7 +801,7 @@ feature {NONE} -- WEL Implementation
 				y_pos, 0.0, 0.0, 0.0,
 				pt.x, pt.y])
 			end
-			if pnd_item_source /= Void then
+			if pnd_item_source /= Void and application_imp.dockable_source = Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)

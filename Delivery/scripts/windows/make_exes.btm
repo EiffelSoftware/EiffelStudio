@@ -4,7 +4,6 @@ cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
 exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
 exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
-exprt -r %DEFAULT_CVS_TAG -d com_compiler "Src/bench/com_compiler"
 
 remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
@@ -176,10 +175,6 @@ safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 remtrace CLI writer
 cd %EIFFEL_SRC\Eiffel\library\cli_writer\Clib
 call nmake
-
-remtrace COM compiler Clib
-cd %EIFFEL_SRC\com_compiler
-call make.bat
 
 remtrace Compiling .NET components
 cdd %INIT_DIR

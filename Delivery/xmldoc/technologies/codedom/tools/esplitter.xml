@@ -17,13 +17,15 @@
 		<code_block>
 Usage: esplit -f=FOLDER [-s -d=DESTINATION -v -h -m=REGEXP -n]
   -d, --destination=DESTINATION
-       Folder where generated Eiffel class files should be created.<line_break/>       If not specified, creates Eiffel class files in same folder as<line_break/>       corresponding Eiffel multi-class file.
+       Folder where generated Eiffel class files should be created.
+	   If not specified, creates Eiffel class files in same folder as
+       corresponding Eiffel multi-class file.
   -f, --folder=FOLDER
        Folder containing Eiffel multi-class files.
   -h, --help
        Help on using this program.
   -m, --match=REGEXP
-       Regular expression that file name must match to be processed,<line_break/>       by default matches all files with extension '.es'.
+       Regular expression that file name must match to be processed, by default matches all files with extension '.es'.
   -n, --nologo
        Do not display copyright notice.
   -s, --subfolders
@@ -79,7 +81,7 @@ esplit -f "source" -m "C.*\.es" -d "destination" -s</code_block>
 		Clicking on the <bold>Generate</bold> button switches to the output pane and starts the Eiffel class file generation. 
 		The output pane contains the text output resulting from the execution of the tool. It also contains two buttons:
 	
-		<list orderd="false">
+		<list ordered="false">
 			<item>
 				<bold>Open Folder</bold>: clicking on this button will open Windows Explorer in the folder where the Eiffel source files 
 				were generated.

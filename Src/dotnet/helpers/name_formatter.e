@@ -14,7 +14,6 @@ feature -- Basic Operations
 			used_names_not_void: used_names /= Void
 		local
 			i, index, pos, count: INTEGER
-			sb: SYSTEM_STRING
 		do
 			index := name.occurrences ('.')
 			if index > 0 then
@@ -39,9 +38,7 @@ feature -- Basic Operations
 				until
 					not used_names.has (Result)
 				loop
-					sb := Result.to_cil.trim_end (Digits)
-					create Result.make_from_cil (sb)
-					Result.append ("_")
+					trim_end_digits (Result)
 					Result.append (count.out)
 					count := count + 1
 				end
@@ -275,6 +272,30 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
+	trim_end_digits (s: STRING) is
+			-- 	Remove end digits from `s'.
+		require
+			non_void_string: s /= Void
+		local
+			i: INTEGER
+			done: BOOLEAN
+		do
+			from
+				i := s.count
+			until
+				done or i < 1
+			loop
+				inspect
+					s.item (i)
+				when '0'..'9' then
+					s.keep_head (s.count - 1)
+				else
+					done := True
+				end
+				i := i - 1
+			end
+		end
+		
 	eiffel_format (s: STRING): STRING is
 			-- Format from CamelCase to eiffel_case
 		require
@@ -514,12 +535,6 @@ feature {NONE} -- Constants
 	native_array_string: STRING is "NATIVE_ARRAY ["
 	in_string: STRING is "_IN_"
 			-- To save time in creating those strings in current class.
-
-	Digits: NATIVE_ARRAY [CHARACTER] is
-			-- Digits
-		once
-			Result := (<<'0','1','2','3','4','5','6','7','8','9','_'>>).to_cil
-		end
 
 end -- class NAME_FORMATTER
 

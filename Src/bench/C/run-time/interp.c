@@ -209,16 +209,16 @@ char *icval;
 	jmp_buf exenv;			/* C code call to interpreter exec. vector */
 	STACK_PRESERVE;			/* Stack contextual informations */
 
-	IC = icval;					/* Where interpretation starts */
-	tagval++;					/* One more call to interpreter */
+	IC = icval;				/* Where interpretation starts */
+	tagval++;				/* One more call to interpreter */
 
 	/* Initialization of the calling context. This is used by the debugger to
 	 * actually fetch local context and get values of parameters and locals out
 	 * of the operational stack.
 	 */
 
-	/*dstart();*/					/* Get calling record */
-	/*SAVE(db_stack, dcur, dtop);*/	/* Save debugger stack */
+	dstart();					/* Get calling record */
+	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
 	SAVE(op_stack, scur, stop);	/* Save operation stack */
 
 	/* Recoding a pseudo execution vector in the Eiffel execution stack gives
@@ -236,9 +236,9 @@ char *icval;
 	 */
 
 	if (setjmp(exenv)) {
-		/*RESTORE(db_stack, dcur, dtop);*/	/* Restore debugger stack */
+		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
-		/*dpop();*/ 							/* Pop off our own record */
+		dpop();							/* Pop off our own record */
 		ereturn();						/* Propagate exception */			
 	}
 
@@ -254,7 +254,7 @@ char *icval;
 
 	(void) interpret(INTERP_CMPD, 0);	/* Start interpretation */
 	expop(&eif_stack);					/* Pop pseudo vector */
-	/*dpop();*/								/* Remove calling context */
+	dpop();								/* Remove calling context */
 }
 
 public void xiinv(icval, where)
@@ -268,7 +268,7 @@ int where;		/* Invariant checked after or before ? */
 
 	IC = icval;					/* Where interpretation starts */
 	tagval++;					/* One more call to interpreter */
-	/*dstart();*/					/* Get calling record */
+	dstart();					/* Get calling record */
 	SAVE(db_stack, dcur, dtop);	/* Save debugger stack */
 	SAVE(op_stack, scur, stop);	/* Save operation stack */
 	excatch((char *) exenv);	/* Record pseudo execution vector */
@@ -276,13 +276,13 @@ int where;		/* Invariant checked after or before ? */
 	if (setjmp(exenv)) {
 		RESTORE(db_stack, dcur, dtop);	/* Restore debugger stack */
 		RESTORE(op_stack, scur, stop);	/* Restore operation stack */
-		/*dpop();*/							/* Remove calling context */
+		dpop();							/* Remove calling context */
 		ereturn();						/* Propagate exception */
 	}
 
 	(void) interpret(INTERP_INVA, where);
 	expop(&eif_stack);					/* Pop pseudo vector */
-	/*dpop();*/								/* Remove calling context */
+	dpop();								/* Remove calling context */
 }
 
 public void xinitint()
@@ -345,7 +345,7 @@ int where;			/* Are we checking invariant before or after compound? */
 		dprintf(2)("0x%X: ", IC + sizeof(long) - 1);
 #endif
 		offset = get_long();	/* Get the body ID */
-		/*drun(offset);*/			/* Initialize debugger for this feature */
+		drun(offset);			/* Initialize debugger for this feature */
 		/* Fall through */
 
 	/*
@@ -361,7 +361,7 @@ int where;			/* Are we checking invariant before or after compound? */
 	
 		if (*IC++) {				/* If it is a once */
 			once_done = IC++;
-			rvar = IC;				/* Result address */
+			rvar = IC;					/* Result address */
 			if (*once_done) {			/* Once already done */
 				npop(argnum + 1);		/* Pop Current and the arguments */
 				if ((rtype & SK_HEAD) != SK_VOID) {
@@ -388,6 +388,18 @@ int where;			/* Are we checking invariant before or after compound? */
 					}
 				}
 				return;
+			}
+
+			/* When dealing with a reference-type once, we need to record its
+			 * address for the garbage collector to enventually update the
+			 * value should the object be moved. We cannot use onceset() here
+			 * since the once 'rvar' pointer is within the byte code and might
+			 * not be suitably aligned. Therefore, we get an EIF_OBJ pointer
+			 * and write it in place--RAM.
+			 */
+			if  ((rtype & SK_HEAD) == SK_REF) {
+				EIF_OBJ ptr = henter((char *) 0);	/* Now always alive */
+				write_address(rvar, (char *) ptr);	/* Write hector address */
 			}
 
 			*once_done = '\01';	/* Mark the once done */
@@ -442,7 +454,7 @@ int where;			/* Are we checking invariant before or after compound? */
 			 * stack).
 			 */
 			RTEA(string, code, icurrent->it_ref);
-			/*dexset(exvect);*/
+			dexset(exvect);
 
 #ifdef DEBUG
 			dprintf(1)("\tFeature %s written in %s on 0x%x [%s]\n",
@@ -464,7 +476,7 @@ int where;			/* Are we checking invariant before or after compound? */
 		
 		scur = op_stack.st_cur;		/* Save stack context */
 		stop = op_stack.st_top;		/* needed for setjmp() and calls */
-		/*dostk();*/					/* Record position in calling context */
+		dostk();					/* Record position in calling context */
 
 		rescue = (char *) 0;		/* No rescue */
 		if (*IC++) {
@@ -599,6 +611,31 @@ end:
 		dprintf(2)("BC_RASSIGN\n");
 #endif
 		bcopy(opop(), iresult, ITEM_SZ);
+		/* Register once function if needed. This has to be done constantly
+		 * whenever the Result is changed, in case the once calls another
+		 * feature which is going to call this once feature again.
+		 */
+		if (once_done != (char *) 0) {
+			last = iresult;
+			switch (rtype & SK_HEAD) {	/* Result type held in rtype */
+			case SK_BOOL:
+			case SK_CHAR: 	*rvar = last->it_char; break;
+			case SK_INT:	write_long(rvar, last->it_long); break;
+			case SK_FLOAT:	write_float(rvar, last->it_float); break;
+			case SK_DOUBLE:	write_double(rvar, last->it_double); break;
+			case SK_POINTER:write_fnptr(rvar, last->it_ptr); break;
+			case SK_EXP:
+			case SK_REF:	/* See below */; break;
+			case SK_BIT:	/* FIXME */break;
+			}
+			/* If the Result is a reference, then we have an hector pointer
+			 * in place of the result.
+			 */
+			string = IC;	/* Save IC value */
+			IC = rvar;		/* Where hector pointer is recorded */
+			eif_access(get_address()) = last->it_ref;
+			IC = string;	/* Restore IC value */
+		}
 		break;
 
 	/*
@@ -1531,32 +1568,6 @@ end:
 		if (rescue != (char *) 0)
 			RTOK;
 null:
-		/* Register once function if needed */
-		if (once_done != (char *) 0) {
-			last = iresult;
-			switch (rtype & SK_HEAD) {	/* Result type held in rtype */
-			case SK_BOOL:
-			case SK_CHAR: 	*rvar = last->it_char; break;
-			case SK_INT:	write_long(rvar, last->it_long); break;
-			case SK_FLOAT:	write_float(rvar, last->it_float); break;
-			case SK_DOUBLE:	write_double(rvar, last->it_double); break;
-			case SK_POINTER:write_fnptr(rvar, last->it_ptr); break;
-			case SK_EXP:
-			case SK_REF:	/* See below */; break;
-			case SK_BIT:	/* FIXME */break;
-			}
-			/* When dealing with a reference-type once, we need to record its
-			 * address for the garbage collector to enventually update the
-			 * value should the object be moved. We cannot use onceset() here
-			 * since the once 'rvar' pointer is within the byte code and might
-			 * not be suitably aligned. Therefore, we get an EIF_OBJ pointer
-			 * and write it in place--RAM.
-			 */
-			if  ((rtype & SK_HEAD) == SK_REF) {
-				EIF_OBJ ptr = henter(last->it_ref);	/* Now always alive */
-				write_address(rvar, (char *) ptr);	/* Write hector address */
-			}
-		}
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(icurrent->it_ref, scur, stop, 1);	/* Invariant */
 
@@ -2807,7 +2818,7 @@ struct item *stack_top;			/* Saved top of op stack */
 	 * debugging cached information have been disturbed.
 	 */
 	
-	/*dsync();*/						/* Resynchronize cached status */
+	dsync();						/* Resynchronize cached status */
 }
 
 private void pop_registers()

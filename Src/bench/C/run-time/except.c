@@ -110,9 +110,8 @@ public void exfail();			/* Signals: reached end of a rescue clause */
 public void panic();			/* Run-time raised panic */
 public void fatal();			/* Run-time raised fatal errors */
 shared void xraise();			/* Raises an exception with no tag */
-#ifdef WORKBENCH
 public struct ex_vect *exset();	/* Set execution stack on routine entrance */
-#else
+#ifndef WORKBENCH
 public struct ex_vect *exft();	/* Entry in feature with rescue clause */
 #endif
 
@@ -132,21 +131,17 @@ shared struct ex_vect *exget();		/* Get a new vector on stack */
 private int stack_extend();			/* Extends size of stack */
 private struct ex_vect *stack_allocate();	/* Creates an empty stack */
 shared struct ex_vect *extop();		/* Top of Eiffel stack */
-#ifdef WORKBENCH
 shared struct ex_vect *exnext();	/* Next item at bottom of trace stack */
 private int exend();				/* True if end of trace stack reached */
-#endif
 
 /* User-level dumps */
 public void esfail();				/* Eiffel system failure */
 private void dump_core();			/* Dumps a core for debugging infos */
 private char *exception_string();	/* Name of an exception */
-#ifdef WORKBENCH
 private void dump_trace_stack();	/* Dumps the Eiffel trace stack */
 private struct ex_vect *find_call();	/* Find enclosing call ID */
 private void recursive_dump();		/* Dump the stack at a given level */
 private void print_top();			/* Prints top value of the stack */
-#endif
 
 /* Pre-defined exception tags (29 chars max please, otherwise truncated).
  * A final point is added at the end. Here is a 29 chars string template:
@@ -279,7 +274,6 @@ public void enomem()
 	xraise(EN_OMEM);		/* The "Out of memory" stuff */
 }
 
-#ifdef WORKBENCH
 public struct ex_vect *exset(name, origin, object)
 char *name;				/* The routine name */
 int origin;				/* The origin of the routine */
@@ -316,7 +310,8 @@ char *object;			/* The object on which the routine is applied */
 
 	return vector;		/* Execution vector of current Eiffel routine */
 }
-#else
+
+#ifndef WORKBENCH
 public struct ex_vect *exft()
 {
 	/* Get an execution vector, in final mode. We don't bother setting the
@@ -435,10 +430,7 @@ register3 char *object;		/* The object on which invariant is checked */
 
 	vector->ex_type = EX_CINV;		/* Class invariant checking */
 	vector->ex_name = tag;			/* The associated assertion tag */
-
-#ifdef WORKBENCH
 	vector->ex_oid = object;		/* The value of Current (object ID) */
-#endif
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 }
@@ -722,9 +714,7 @@ long num;			/* May be called from Eiffel, and INTEGER is long */
 				break;
 			default:
 				trace->ex_name = tag;	/* Record its tag */
-#ifdef WORKBENCH
 				trace->ex_where = 0;	/* Unknown location (yet) */
-#endif
 			}
 		}
 	}
@@ -895,18 +885,18 @@ private char *backtrack()
 			if (top->ex_jbuf && !(echmem & MEM_SPEC)) 	/* Not in panic */
 				return top->ex_jbuf;		/* We found a valid setjmp buffer */
 			break;
-#ifdef WORKBENCH
 		case EX_OSTK:					/* Exception catcher */
 			/* Here we are: we caught the exception from the interpreter. There
 			 * must be a valid setjmp buffer attached to that vector. Returning
 			 * to that point will enable the run-time to clean-up the stack
 			 * filled in by the (failed) melted routines.
+			 * This has been enhanced to make a general exception catcher, hence
+			 * it is also defined in final mode.
 			 */
 			expop(&eif_trace);			/* Catching must remain invisible */
 			if (!(echmem & MEM_SPEC))	/* Not in panic */
 				return top->ex_jbuf;	/* Setjmp buffer exists */
 			break;
-#endif
 		case EX_RESC:					/* A rescue clause (failed) */
 			/* We reached the end of an execution level. Push an "end of level"
 			 * pseudo-record on the exception trace stack BEFORE the EX_RESC
@@ -988,11 +978,9 @@ private char *backtrack()
 #ifdef MAY_PANIC
 			switch (top->ex_type) {
 			case EX_CALL:			/* Precondition violated in a call */
-#ifdef WORKBENCH
 				trace->ex_where = top->ex_rout;	/* Save routine name */
 				trace->ex_from = top->ex_orig;	/* Where it comes from */
 				trace->ex_oid = top->ex_id;		/* And object ID */
-#endif
 				expop(&eif_stack);				/* Exception raised in caller */
 				break;
 			default:
@@ -1000,11 +988,9 @@ private char *backtrack()
 				/* NOTREACHED */
 			}
 #else
-#ifdef WORKBENCH
 			trace->ex_where = top->ex_rout;	/* Save routine name */
 			trace->ex_from = top->ex_orig;	/* Where it comes from */
 			trace->ex_oid = top->ex_id;		/* And object ID */
-#endif
 			expop(&eif_stack);				/* Exception raised in caller */
 #endif
 #ifdef WORKBENCH
@@ -1245,8 +1231,6 @@ struct ex_vect *trace;		/* Faulty vector on trace stack */
 	}
 }
 
-/* Start of workbench-specific functions, doing nothing in final mode */
-#ifdef WORKBENCH
 public void esfail()
 {
 	/* Produces immediate failure of the Eiffel system followed by an exception
@@ -1290,6 +1274,7 @@ public void esfail()
 	dump_trace_stack();			/* Print the stack */
 }
 
+#ifdef WORKBENCH
 private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {
@@ -1309,17 +1294,6 @@ int how;		/* Implicit or explicit exception? */
 	dbreak(how);			/* Stop execution */
 }
 #else
-public void esfail()
-{
-	/* This is a no-operation call in final mode (no stack dump). If the
-	 * program fails due to an exception, it will exit with a non-zero status.
-	 * We print a little error message before exiting, so that the user knows
-	 * something went wrong.
-	 */
-
-	fprintf(stderr, "%s: system execution failed.\n", ename);
-}
-
 private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {
@@ -1329,7 +1303,6 @@ int how;		/* Implicit or explicit exception? */
 	 */
 }
 #endif
-/* End of workbench-specific functions, doing nothing in final mode */
 
 public void panic(msg)
 char *msg;
@@ -1459,8 +1432,6 @@ int code;
 	/* NOTREACHED */
 }
 
-/* Start of stack dump block (only in workbench mode) */
-#ifdef WORKBENCH
 private struct ex_vect *find_call()
 {
 	/* The Eiffel exception trace stack was built upside-down. So we have to
@@ -1784,8 +1755,6 @@ private void print_top()
 	} else
 		fprintf(stderr, "Pass\n%s\n", failed);
 }
-#endif
-/* End of stack dump block (only in workbench mode) */
 
 /* Stack handling routine. The following code has been cut/paste from the one
  * found in garcol.c and local.c as of this day. Hence the similarities and the
@@ -2014,8 +1983,6 @@ register1 struct xstack *stk;		/* The stack */
 	return last_item;
 }
 
-/* Start of stack dumping functions (only in workbench mode) */
-#ifdef WORKBENCH
 shared struct ex_vect *exnext()
 {
 	/* This function is only used when dumping the execution stack (i.e. after
@@ -2074,8 +2041,6 @@ private int exend()
 
 	return 0;
 }
-#endif
-/* End of dumping functions (only in workbench mode) */
 
 /*
  * Translation functions. Giver a code or a signal number, return a pointer
@@ -2120,9 +2085,7 @@ struct ex_vect *vector;	/* The vector to be dumped */
 	switch (vector->ex_type) {
 	case EX_CINV: case EN_CINV:
 		printf("\texua_name = \"%s\"\n", vector->ex_name);
-#ifdef WORKBENCH
 		printf("\texua_oid = %d\n", vector->ex_oid);
-#endif
 		break;
 	case EX_PRE: case EN_PRE:
 	case EX_POST: case EN_POST:
@@ -2130,21 +2093,17 @@ struct ex_vect *vector;	/* The vector to be dumped */
 	case EX_VAR: case EN_VAR:
 	case EX_CHECK: case EN_CHECK:
 		printf("\texua_name = \"%s\"\n", vector->ex_name);
-#ifdef WORKBENCH
 		printf("\texua_where = \"%s\"\n", vector->ex_where);
 		printf("\texua_from = %d\n", vector->ex_from);
 		printf("\texua_oid = %d\n", vector->ex_oid);
-#endif
 		break;
 	case EX_CALL: case EN_FAIL:
 	case EX_RESC: case EN_RESC:
 	case EX_RETY: case EN_RES:
 		printf("\texur_jbuf = 0x%x\n", vector->ex_jbuf);
-#ifdef WORKBENCH
 		printf("\texur_id = 0x%x\n", vector->ex_id);
 		printf("\texur_rout = \"%s\"\n", vector->ex_rout);
 		printf("\texur_orig = %d\n", vector->ex_orig);
-#endif
 		break;
 	}
 }

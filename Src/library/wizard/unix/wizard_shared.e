@@ -20,6 +20,7 @@ feature -- Access
 			-- Main Window ( i.e. the wizard window frame )
 		once
 			create Result.make
+			Result.load_first_state
 		ensure	
 			exists: Result /= Void
 		end

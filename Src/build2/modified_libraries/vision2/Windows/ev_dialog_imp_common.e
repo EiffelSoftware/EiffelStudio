@@ -78,8 +78,7 @@ inherit
 			setup_dialog,
 			process_message,
 			wel_move_and_resize,
-			on_wm_destroy,
-			register_current_window
+			on_wm_destroy
 		end
 			
 	WEL_ID_CONSTANTS
@@ -582,8 +581,6 @@ feature {NONE} -- Implementation
 		
 	window_on_wm_activate (wparam, lparam: INTEGER) is
 			-- `Wm_activate' message recieved form Windows by `Current'.
-		local
-			titled_window: EV_TITLED_WINDOW_IMP
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
 			if wparam = Wel_window_constants.Wa_inactive then

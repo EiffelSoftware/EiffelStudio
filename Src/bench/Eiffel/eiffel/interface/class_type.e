@@ -150,11 +150,10 @@ feature -- Conveniences
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent_type: CL_TYPE_I
 			already_in: BOOLEAN
-			parent_class_type: CLASS_TYPE
 			gen_type: GEN_TYPE_I
 		do
 			from
-				!!Result.make
+				!! Result.make
 				parents := associated_class.parents
 				parents.start
 			until
@@ -177,10 +176,7 @@ feature -- Conveniences
 					Result.forth
 				end
 				if not already_in then
-					Result.start
-					parent_class_type := System.class_type_of_id
-												(parent_type.type_id)
-					Result.extend (parent_class_type)
+					Result.extend (System.class_type_of_id (parent_type.type_id))
 				end
 			
 				parents.forth

@@ -416,7 +416,9 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 							Error_handler.insert_error (vd38)
 							Error_handler.raise_error
 						else
-							value := d_precompiled_option.value;
+							d_precompiled_option.process_system_level_options
+							Error_handler.checksum
+							value := d_precompiled_option.value
 							if value.is_name then
 								create Result
 									-- If it is not a NAME_SD, the normal

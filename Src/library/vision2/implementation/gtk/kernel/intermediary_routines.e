@@ -505,9 +505,11 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 		local
 			widget: EV_WIDGET_IMP
 		do
-			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			widget.pointer_button_release_actions.call 
-				([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			if a_button >= 1 and a_button <=3 then
+				widget ?= c_get_eif_reference_from_object_id (a_c_object)
+				widget.pointer_button_release_actions.call 
+					([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])				
+			end
 		end
 		
 	pointer_leave_action_intermediary (a_c_object: POINTER) is

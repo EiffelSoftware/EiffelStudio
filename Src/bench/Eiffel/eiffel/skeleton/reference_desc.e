@@ -1,8 +1,9 @@
 class REFERENCE_DESC 
 
 inherit
-
 	ATTR_DESC
+		rename
+			Reference_level as level
 		redefine
 			is_reference, real_sk_value
 		end
@@ -20,26 +21,19 @@ feature
 			set: class_type_i = i
 		end;
 
+	sk_value: INTEGER is
+		do
+			Result := Sk_ref
+		end
+
 	is_reference: BOOLEAN is True;
 			-- Is the attribute a reference ?
-
-	level: INTEGER is
-			-- Level descritpion
-		once
-			Result := Reference_level;
-		end;
 
 	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
 			buffer.putstring ("SK_REF");
-		end;
-
-	sk_value: INTEGER is
-			-- Sk value
-		once
-			Result := Sk_ref
 		end;
 
 	real_sk_value : INTEGER is

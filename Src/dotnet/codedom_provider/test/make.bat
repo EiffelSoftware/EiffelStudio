@@ -27,7 +27,14 @@ ECHO Error: could not find Visual Studio installation...
 GOTO END
 
 :COMPILE
-@REM First compile Eiffel Codedom Serializer Provider:
+@REM Compile provider if not done
+IF EXIST ..\build_studio GOTO PROVIDER
+CD ..
+CALL build_studio.bat
+CD test
+
+:PROVIDER
+@REM Compile Eiffel Codedom Serializer Provider:
 ECHO Compiling Eiffel Codedom Serializer Provider...
 CD serializer\provider
 IF EXIST EIFGEN RD /q /s EIFGEN
@@ -37,7 +44,7 @@ CD EIFGEN\W_code
 gacutil -if 
 CD ..\..
 
-@REM Then compile serializer gui:
+@REM Compile serializer gui:
 ECHO Compiling Eiffel Codedom Serializer GUI...
 CD ..\gui
 IF EXIST EIFGEN RD /q /s EIFGEN
@@ -45,12 +52,15 @@ DEL /f /q *.epr
 ec -finalize -ace ace.ace -c_compile
 
 @REM Finally compile tester:
-@REM ECHO Compiling Eiffel Codedom Tester...
-@REM CD ..\..\gui
-@REM IF EXIST EIFGEN RD /q /s EIFGEN
-@REM DEL /f /q *.epr
-@REM ec -finalize -ace ace.ace
+ECHO Compiling Eiffel Codedom Tester...
+CD ..\..\tester
+IF EXIST EIFGEN RD /q /s EIFGEN
+DEL /f /q *.epr
+ec -finalize -ace ace.ace
+IF EXIST EIFGEN\F_Code\ecd_test.exe ECHO Compilation successful, ecd_test.exe created in EIFGEN\F_code.
+IF EXIST EIFGEN\F_Code\ecd_test.exe GOTO END
+ECHO Compilation failed (no ecd_test.exe was created in EIFGEN\F_Code)
+CD ..
 
 :END
-ECHO -----
 ECHO Done.

@@ -126,7 +126,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.valid_cursor (p)
 		end
 
-	full: BOOLEAN is false
+	Full: BOOLEAN is False
 		-- Is structured filled to capacity? (Answer: no.)
 
 feature -- Cursor movement

@@ -31,12 +31,12 @@ numerical keypad "6", numpad_6, NumPad 6, GDK_KP_6, Vk_numpad6
 numerical keypad "7", numpad_7, NumPad 7, GDK_KP_7, Vk_numpad7
 numerical keypad "8", numpad_8, NumPad 8, GDK_KP_8, Vk_numpad8
 numerical keypad "9", numpad_9, NumPad 9, GDK_KP_9, Vk_numpad9
-numerical keypad "+", numpad_add, NumPad 0, GDK_KP_add, Vk_add
-numerical keypad "/", numpad_divide, NumPad /, GDK_KP_divide, Vk_divide
-numerical keypad "*", numpad_multiply, NumPad *, GDK_KP_multiply, Vk_multiply
-num lock, num_lock, NumLock, GDK_num_lock, Vk_numlock
-numerical keypad "-", numpad_subtract, NumPad -, GDK_KP_subtract, Vk_subtract
-numerical keypad ".", numpad_decimal, NumPad ., GDK_KP_decimal, Vk_decimal
+numerical keypad "+", numpad_add, NumPad 0, GDK_KP_Add, Vk_add
+numerical keypad "/", numpad_divide, NumPad /, GDK_KP_Divide, Vk_divide
+numerical keypad "*", numpad_multiply, NumPad *, GDK_KP_Multiply, Vk_multiply
+num lock, num_lock, NumLock, GDK_Num_Lock, Vk_numlock
+numerical keypad "-", numpad_subtract, NumPad -, GDK_KP_Subtract, Vk_subtract
+numerical keypad ".", numpad_decimal, NumPad ., GDK_KP_Decimal, Vk_decimal
 F1, f1, F1, GDK_F1, Vk_f1
 F2, f2, F2, GDK_F2, Vk_f2
 F3, f3, F3, GDK_f3, Vk_f3
@@ -49,14 +49,14 @@ F9, f9, F9, GDK_F9, Vk_f9
 F10, f10, F10, GDK_F10, Vk_f10
 F11, f11, F11, GDK_F11, Vk_f11
 F12, f12, F12, GDK_F12, Vk_f12
-the spacebar, space, Space, GDK_space, Vk_space
-back space, back_space, BackSpace, GDK_backspace, Vk_back
-enter, enter, Enter, GDK_return, Vk_return
-escape, escape, Esc, GDK_escape, Vk_escape
-tab, tab, Tab, GDK_tab, Vk_tab
-pause (break), pause, Pause, GDK_pause, Vk_pause
-caps lock, caps_lock, CapsLock, GDK_caps_lock, Vk_capital
-scroll lock, scroll_lock, ScrollLock, GDK_scroll_lock, Vk_scroll
+the spacebar, space, Space, GDK_Space, Vk_space
+back space, back_space, BackSpace, GDK_BackSpace, Vk_back
+enter, enter, Enter, GDK_Return, Vk_return
+escape, escape, Esc, GDK_Escape, Vk_escape
+tab, tab, Tab, GDK_Tab, Vk_tab
+pause (break), pause, Pause, GDK_Pause, Vk_pause
+caps lock, caps_lock, CapsLock, GDK_Caps_Lock, Vk_capital
+scroll lock, scroll_lock, ScrollLock, GDK_Scroll_Lock, Vk_scroll
 "%," (or "<"), comma, %,, GDK_comma, 188
 "=" (or "+"), equal, =, GDK_equal, 187
 "." (or ">"), period, ., GDK_period, 190
@@ -72,12 +72,12 @@ the up-arrow, up, Up, GDK_uparrow, Vk_up
 the down-arrow, down, Down, GDK_downarrow, Vk_down
 the left-arrow, left, Left, GDK_leftarrow, Vk_left
 the right-arrow, right, Right, GDK_rightarrow, Vk_right
-page up, page_up, PageUp, GDK_KP_page_up, Vk_prior
-page down, page_down, PageDown, GDK_KP_page_down, Vk_next
-home, home, Home, GDK_KP_home, Vk_home
-end, end, End, GDK_KP_end, Vk_end
-insert, insert, Insert, GDK_KP_insert, Vk_insert
-delete, delete, Delete, GDK_KP_delete, Vk_delete
+page up, page_up, PageUp, GDK_KP_Page_up, Vk_prior
+page down, page_down, PageDown, GDK_KP_Page_down, Vk_next
+home, home, Home, GDK_KP_Home, Vk_home
+end, end, End, GDK_KP_End, Vk_end
+insert, insert, Insert, GDK_KP_Insert, Vk_insert
+delete, delete, Delete, GDK_KP_Delete, Vk_delete
 "a", a, a, GDK_a, 65
 "b", b, a, GDK_b, 66
 "c", c, b, GDK_c, 67
@@ -110,8 +110,8 @@ delete, delete, Delete, GDK_KP_delete, Vk_delete
 #-------------------------------------------------------------------------------
 #
 # $Log$
-# Revision 1.6  2000/03/17 18:34:57  brendel
-# Changed case of GDK externals.
+# Revision 1.7  2000/03/17 18:50:12  brendel
+# Fixed cases in GDK externals.
 #
 # Revision 1.5  2000/03/17 16:50:19  brendel
 # Stripped C.*_enum from GDK externals.

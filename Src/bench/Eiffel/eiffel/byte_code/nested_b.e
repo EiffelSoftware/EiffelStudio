@@ -71,7 +71,7 @@ feature
 	sub_enlarged (p: NESTED_BL): NESTED_BL is
 			-- Enlarge node and set parent to `p'
 		do
-			!!Result;
+			create Result;
 			Result.set_parent (p);
 			Result.set_target (target.sub_enlarged (Result));
 			Result.set_message (message.sub_enlarged (Result));
@@ -233,7 +233,7 @@ feature -- Array optimization
 			if optimize then
 				optimizer.set_current_feature_optimized;
 
-				!!opt_feat_b;
+				create opt_feat_b;
 				opt_feat_b.set_array_target (target);
 				opt_feat_b.set_access_area (access_area);
 				m := message;
@@ -303,12 +303,12 @@ feature -- Inlining
 						-- Current.feature
 						-- (Current is in fact inlined_current_b)
 
-					!!nested_b;
+					create nested_b;
 
 					nested_b.set_message (Current);
 					parent := nested_b;
 
-					!!inlined_current_b;
+					create inlined_current_b;
 					nested_b.set_target (inlined_current_b);
 					inlined_current_b.set_parent (nested_b);
 
@@ -330,7 +330,12 @@ feature -- Inlining
 				-- Done to avoid a bug when both a and f are inlined
 				-- in a a.f call.
 				-- Xavier
-			--target := target.inlined_byte_code;
+				-- Note: Manu 4/10/2003: I don't know what was the bug, but it seems
+				-- to work with inlining size of `0' that inline calls to `item' from
+				-- SPECIAL.
+			if System.inlining_size = 0 then
+				target := target.inlined_byte_code
+			end
 			message := message.inlined_byte_code;
 		end
 

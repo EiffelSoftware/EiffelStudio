@@ -361,17 +361,15 @@ feature -- IL code generation
 
 			if cl_type.base_class.is_native_array then
 				native_array_class_type ?= class_type
-				if native_array_class_type /= Void then
-					need_generation := False
-					native_array_class_type.generate_il (feature_name_id)
-					if System.il_verifiable then
-						if 
-							not return_type.is_expanded and then
-							not return_type.is_none and then
-							not return_type.is_void
-						then
-							il_generator.generate_check_cast (return_type, return_type)
-						end
+				need_generation := False
+				native_array_class_type.generate_il (feature_name_id, cl_type)
+				if System.il_verifiable then
+					if 
+						not return_type.is_expanded and then
+						not return_type.is_none and then
+						not return_type.is_void
+					then
+						il_generator.generate_check_cast (return_type, return_type)
 					end
 				end
 			end

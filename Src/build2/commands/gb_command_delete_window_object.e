@@ -70,13 +70,13 @@ feature {NONE} -- Initialization
 			object_not_void: an_object /= Void
 			object_is_top_level: an_object.is_top_level_object 
 		local
-			parent_item: EV_TREE_ITEM
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			History.cut_off_at_current_position
-			parent_item ?= an_object.window_selector_item.parent
-			if parent_item /= Void then
+			directory_item ?= an_object.window_selector_item.parent
+			if directory_item /= Void then
 					-- If held in a directory, store the directory name.
-				parent_directory := parent_item.text
+				parent_directory := directory_item.path
 			end
 			original_id := an_object.id
 		end
@@ -178,7 +178,7 @@ feature -- Basic Operation
 	
 feature {NONE} -- Implementation
 
-	parent_directory: STRING
+	parent_directory: ARRAYED_LIST [STRING]
 		-- Orignal directory containing object referenced by `original_id' before deletion.
 
 	original_id: INTEGER

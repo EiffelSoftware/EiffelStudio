@@ -14,11 +14,6 @@ inherit
 		end
 
 	EV_VIEWPORT_IMP
-		rename
-			show_horizontal_scroll_bar as show_horizontal_scrollbar,
-			show_vertical_scroll_bar as show_vertical_scrollbar,
-			hide_horizontal_scroll_bar as hide_horizontal_scrollbar,
-			hide_vertical_scroll_bar as hide_vertical_scrollbar
 		redefine
 			interface,	
 			make,
@@ -62,13 +57,13 @@ feature -- Access
 			Result := scroller.vertical_line
 		end
 
-	is_horizontal_scrollbar_visible: BOOLEAN is
-			-- Should horizontal scrollbar be displayed?
+	is_horizontal_scroll_bar_visible: BOOLEAN is
+			-- Should horizontal scroll bar be displayed?
 		do
 			Result := minimal_horizontal_position /= maximal_horizontal_position
 		end
 
-	is_vertical_scrollbar_visible: BOOLEAN is
+	is_vertical_scroll_bar_visible: BOOLEAN is
 			-- Should vertical scrollbar be displayed?
 		do
 			Result := minimal_vertical_position /= maximal_vertical_position
@@ -141,7 +136,7 @@ feature {NONE} -- Implementation
 			wel_cw_move_and_resize (a_x, a_y, a_width, a_height, repaint)
 	
 			if child /= Void then
-				child.set_move_and_size (0, 0, client_width, client_height)
+				child.parent_ask_resize (client_width, client_height)
 				cw := child.width - client_width
 				ch := child.height - client_height
 
@@ -186,6 +181,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/21 23:07:57  brendel
+--| scrollbar -> scroll_bar.
+--|
 --| Revision 1.22  2000/04/21 22:02:49  brendel
 --| Removed FIXME.
 --|

@@ -9,6 +9,8 @@ class
 inherit	
 	XML_ROUTINES
 
+	UTILITY_FUNCTIONS
+
 	SHARED_OBJECTS
 		undefine
 			copy, is_equal
@@ -124,8 +126,14 @@ feature -- Status Setting
 		require
 			css_not_void: a_css /= Void
 			css_exists: (create {PLAIN_TEXT_FILE}.make (a_css)).exists
+		local
+			l_src, l_target: PLAIN_TEXT_FILE
 		do
 			stylesheet_file := a_css
+			create l_target.make_create_read_write (temporary_html_location (stylesheet_file, True))
+			l_target.close
+			create l_src.make (stylesheet_file)
+			copy_file (l_src, l_target)
 		ensure
 			style_set: stylesheet_file /= Void
 		end

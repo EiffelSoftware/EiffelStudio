@@ -11,7 +11,7 @@ inherit
 		rename
 			text as file_text,
 			title as default_title
-		end		
+		end
 
 create
 	make
@@ -22,18 +22,26 @@ feature {FILTER_MANAGER} -- Creation
 			-- Make from filter
 		require
 			filter_not_void: a_filter /= Void
-		do		
-			document := a_doc
-			if document.is_persisted then
-				make_from_file (document.file)
+			document_valid_xml: a_doc.is_valid_xml
+		do
+			if a_doc.is_persisted then
+				make_from_file (a_doc.file)
 			else
-				make_new (document.name)
+				make_new (a_doc.name)
 			end			
 			filter := a_filter
+			
+			if True then
+					-- TODO: put options here for custom xml formatting
+				xml.add_custom_elements
+				text := xml.text
+				xml.remove_custom_elements
+			else
+				text := xml.text
+			end
+			
 			if not filter.description.is_equal ("Unfiltered") then
 				filter_document
-			else
-				text := file_text
 			end
 		ensure
 			has_filter: filter /= Void
@@ -41,11 +49,8 @@ feature {FILTER_MANAGER} -- Creation
 
 feature -- Access
 
-	document: DOCUMENT
-			-- Unfiltered document
-
 	text: STRING
-			-- Text
+			-- Filtered text
 
 	title: STRING is
 			-- Title	
@@ -92,7 +97,7 @@ feature {NONE} -- Commands
 			l_parser: XM_EIFFEL_PARSER
 		do
 			if not retried then
-				l_string := file_text
+				l_string := xml.text
 				if l_string.is_empty then
 					-- error
 				else
@@ -143,7 +148,6 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	has_source_document: document /= Void
 	has_filter: filter /= Void
 
 end -- class FILTERED_DOCUMENT

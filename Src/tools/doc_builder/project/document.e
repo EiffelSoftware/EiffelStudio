@@ -29,12 +29,6 @@ inherit
 			default_create		
 		end
 		
-	HASHABLE
-		undefine 
-			copy,
-			default_create
-		end
-		
 create
 	make_new,
 	make_from_file
@@ -79,18 +73,14 @@ feature -- Access
 	
 	name: STRING
 			-- Name
-	
-	file: PLAIN_TEXT_FILE
-			-- File on disk
 			
 	text: STRING
-			-- Text	
-			
-	hash_code: INTEGER is
-			-- Hashable code
-		do
-			Result := Shared_document_manager.hash_code			
-		end		
+			-- Text			
+
+feature -- File
+
+	file: PLAIN_TEXT_FILE
+			-- File on disk
 
 feature --Validation
 
@@ -117,12 +107,12 @@ feature --Validation
 		
 feature -- XML
 
-	xml: XM_DOCUMENT is
+	xml: DOCUMENT_XML is
 			-- XML Document built from `text'.  Void if text is not valid.
 		do
 			Result := internal_xml
 			if Result = Void or is_modified then				
-				Result := deserialize_text (text)
+				create Result.make_from_document (Current)
 				internal_xml := Result
 			end
 		end
@@ -292,7 +282,7 @@ feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
 			-- Links in Current	
 
 	invalid_links: ERROR_REPORT
-			-- Invalid link errors
+			-- Invalid link errors	
 
 	check_links is
 			-- Check links.  Put invalid links into `invalid_links'.
@@ -307,7 +297,6 @@ feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
 			end
 			create l_formatter.make_with_document (Current)
 			l_formatter.process_document (xml)
---			save_xml_document (l_doc, create {FILE_NAME}.make_from_string (name))
 			if not links.is_empty then
 				create invalid_links.make_empty ("Invalid Links")
 				from
@@ -329,17 +318,13 @@ feature {DOCUMENT_LINK, LINK_MANAGER} -- Links
 			old_link_not_void: a_old /= Void
 			new_link_not_void: a_new /= void
 		local
-			l_doc: XM_DOCUMENT
 			l_formatter: XM_DOCUMENT_FORMATTER
 		do
 			do_update_link := True
-			l_doc := deserialize_document (create {FILE_NAME}.make_from_string (name))
-			if l_doc /= Void then
-				create l_formatter.make_with_document (Current)
-				l_formatter.set_links (a_old, a_new)
-				l_formatter.process_document (l_doc)
-				save_xml_document (l_doc, create {FILE_NAME}.make_from_string (name))
-			end
+			create l_formatter.make_with_document (Current)
+			l_formatter.set_links (a_old, a_new)
+			l_formatter.process_document (xml)
+			save_xml_document (xml, create {FILE_NAME}.make_from_string (name))
 			do_update_link := False
 		end			
 

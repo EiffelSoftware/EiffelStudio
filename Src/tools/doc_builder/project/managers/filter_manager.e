@@ -89,6 +89,7 @@ feature -- Conversion
 				l_string := a_doc.text
 				if not l_string.is_empty then					
 					create l_html_filter.make (next_unique_id)
+					l_html_filter.clear
 					create l_parser.make
 					l_parser.set_callbacks (l_html_filter)
 					l_parser.parse_from_string (l_string)
@@ -113,11 +114,7 @@ feature -- Conversion
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			if error then
-				create f.make ("C:\no_html_convert.html")
-			else
-				create f.make ("C:\html_file.html")
-			end
+			create f.make ("C:\no_html_convert.html")
 			
 			if not f.exists then
 				f.create_read_write

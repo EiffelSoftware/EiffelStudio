@@ -149,6 +149,13 @@ feature -- Properties
 		do
 			-- Do nothing
 		end;
+		
+	is_il_external: BOOLEAN is
+			-- Is current feature an IL external one?
+		do
+			-- Do nothing
+		end
+		
 
 	is_obsolete: BOOLEAN is
 			-- Is Current feature obsolete?

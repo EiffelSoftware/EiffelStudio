@@ -47,7 +47,7 @@ feature -- Basic Operations
 			create a_visible.make
 			a_visible.set_name (alias_descriptor.eiffel_class_name)
 			a_visible.add_feature ("make_from_other")
-			system_descriptor.add_visible_class (a_visible)
+			system_descriptor.add_visible_class_common (a_visible)
 			create eiffel_writer.make
 
 			eiffel_writer.set_class_name (alias_descriptor.eiffel_class_name)

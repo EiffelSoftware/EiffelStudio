@@ -46,7 +46,7 @@ feature -- Initialization
 			tab_length := 6
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
-			set_maximum_size (131072)	-- 131072 = 128 * 1024
+			set_maximum_size (256 * 1024)	-- 131072 = 128 * 1024
 		end
 
 	realize is
@@ -71,7 +71,7 @@ feature -- Initialization
 				wel_make (wc, text, x, y, width, height, id_default)
 
 				set_control_options
-				set_text_limit (131072)	-- 131072 = 128 * 1024
+				set_maximum_size (maximum_size)
 				set_tab_length (tab_length)
 
 				if private_background_color /= Void then

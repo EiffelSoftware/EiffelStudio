@@ -78,6 +78,9 @@ feature -- Access
 	uses_ise_gc_runtime: BOOLEAN
 			-- Does generated application uses ISE's GC.
 
+	generate_eac_metadata: BOOLEAN
+			-- Will Eiffel Assembly Cache metadata be generated?
+
 feature -- Update
 
 	set_java_generation (v: BOOLEAN) is
@@ -170,6 +173,14 @@ feature -- Update
 			msil_assembly_compatibility := comp
 		ensure
 			msil_assembly_compatibility_set: msil_assembly_compatibility = comp
+		end
+
+	set_generate_eac_metadata (b: BOOLEAN) is
+			-- Set `generate_eac_metadata' with `b'.
+		do
+			generate_eac_metadata := b
+		ensure
+			generate_eac_metadata_set: generate_eac_metadata = b
 		end
 
 	set_do_not_check_vape (b: BOOLEAN) is

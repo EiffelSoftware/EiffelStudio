@@ -14,13 +14,6 @@ inherit
 		end
 		
 	EV_GTK_KEY_CONVERSION
-	
-feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
-
-	empty_tuple: TUPLE is
-		once
-			Result := []
-		end
 
 feature {EV_ANY_I} -- Implementation
 

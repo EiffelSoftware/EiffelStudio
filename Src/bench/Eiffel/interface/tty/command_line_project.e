@@ -227,23 +227,33 @@ feature -- Project retrieval
 		do	
 			io.error.put_string ("Retrieving project...%N")
 				-- Retrieve the project
-			Eiffel_project.make (project_dir)
-
-			if Eiffel_project.retrieval_error then
-				if Eiffel_project.is_incompatible then
-					msg := Warning_messages.w_Project_incompatible (project_dir.name, 
-						version_number, Eiffel_project.incompatible_version_number)
-				else
-					if Eiffel_project.is_corrupted then
-						msg := Warning_messages.w_Project_corrupted (project_dir.name)
-					elseif Eiffel_project.retrieval_interrupted then
-						msg := Warning_messages.w_Project_interrupted (project_dir.name)
-					end
-				end
-			elseif Eiffel_project.incomplete_project then
+			if not project_dir.exists or else project_dir.is_new then
 				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
-			elseif Eiffel_project.read_write_error then
+			elseif 
+				not project_dir.is_base_readable or else 
+				not project_dir.is_base_writable or else
+				not project_dir.is_base_executable
+			then
 				msg := Warning_messages.w_Cannot_open_project
+			else
+				Eiffel_project.make (project_dir)
+	
+				if Eiffel_project.retrieval_error then
+					if Eiffel_project.is_incompatible then
+						msg := Warning_messages.w_Project_incompatible (project_dir.name, 
+							version_number, Eiffel_project.incompatible_version_number)
+					else
+						if Eiffel_project.is_corrupted then
+							msg := Warning_messages.w_Project_corrupted (project_dir.name)
+						elseif Eiffel_project.retrieval_interrupted then
+							msg := Warning_messages.w_Project_interrupted (project_dir.name)
+						end
+					end
+				elseif Eiffel_project.incomplete_project then
+					msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
+				elseif Eiffel_project.read_write_error then
+					msg := Warning_messages.w_Cannot_open_project
+				end
 			end
 
 			if msg /= Void then

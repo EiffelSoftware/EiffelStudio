@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			initialize_checker
-			definition_file_box.setup ("Component definition file:", "definition_key", agent definition_file_validity (?), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
+			definition_file_box.setup ("Component definition file:", "definition_key", agent definition_file_validity (?), create {ARRAYED_LIST [TUPLE [STRING, STRING]]}.make_from_array (<<["*.idl", "IDL file (*.idl)"], ["*.tlb", "Type Library (*.tlb)"], ["*.olb", "Object Library (*.olb)"], ["*.dll", "DLL file (*.dll)"], ["*.exe", "Executable (*.exe)"], ["*.ocx", "Component (*.ocx)"], ["*.*", "All Files (*.*)"]>>), "Browse for COM definition file")
 		end
 
 feature -- Basic Operations

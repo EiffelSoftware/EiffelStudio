@@ -42,7 +42,7 @@ feature -- Processing
 	execute is
 			-- Process all classes.
 		local
-			i, nb: INTEGER
+			i: INTEGER
 			classes: ARRAY [CLASS_C]
 			class_counter: CLASS_COUNTER
 			a_class: CLASS_C
@@ -71,8 +71,19 @@ feature -- Processing
 					i := i + 1
 				end
 			end
-				-- Initialize `parents' for all recompiled classes.
+			Degree_output.put_end_degree
+		end
+
+	post_degree_5_execute is
+			-- Initialize `parents' for all recompiled classes.
+			-- It needs to be done after all VTCT errors have been reported.
+		local
+			i, nb: INTEGER
+			classes: ARRAY [CLASS_C]
+			a_class: CLASS_C
+		do
 			from
+				classes := system.classes
 				i := classes.lower
 				nb := classes.upper
 			until
@@ -90,7 +101,6 @@ feature -- Processing
 				i := i + 1
 			end
 			System.set_current_class (Void)
-			Degree_output.put_end_degree
 		end
 
 feature {NONE} -- Processing

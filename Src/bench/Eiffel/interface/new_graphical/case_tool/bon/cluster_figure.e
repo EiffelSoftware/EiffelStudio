@@ -477,8 +477,8 @@ feature {LINKABLE_FIGURE_GROUP} -- XML
 				Result.put_last (xml_node (Result, "WIDTH", old_width.out))
 				Result.put_last (xml_node (Result, "HEIGHT", old_height.out))
 			else
-				Result.put_last (xml_node (Result, "WIDTH", width.out))
-				Result.put_last (xml_node (Result, "HEIGHT", height.out))
+				Result.put_last (xml_node (Result, "WIDTH", body_width.out))
+				Result.put_last (xml_node (Result, "HEIGHT", body_height.out))
 			end
 		end
 
@@ -589,6 +589,16 @@ feature {NONE} -- Implementation
 
 	old_height: INTEGER is
 			-- Backup of `height' for iconifying.
+		deferred
+		end
+
+	body_width: INTEGER is
+			-- width of cluster figure body.
+		deferred
+		end
+
+	body_height: INTEGER is
+			-- height of cluster figure body.
 		deferred
 		end
 

@@ -57,13 +57,14 @@
 			<TEXT DESCRIPTION="Special mode (if selected above) : True = Vi, False = Emacs">special_mode_is_vi<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Automatic update when the file has not been modified">automatic_update<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Underscore %'_%' is a word separator">underscore_is_separator<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds require in the new feature structure">autocomplete_feature_adds_require<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds local in the new feature structure">autocomplete_feature_adds_local<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds ensure in the new feature structure">autocomplete_feature_adds_ensure<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds rescue in the new feature structure">autocomplete_feature_adds_rescue<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds else in the new if...then structure">autocomplete_if_with_else<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds variant in the loop structure">autocomplete_loop_with_variant<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT DESCRIPTION="The autocomplete adds invariant in the loop structure">autocomplete_loop_with_invariant<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete creates new feature structure">autocomplete_feature<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds require in the new feature structure">autocomplete_feature_adds_require<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds local in the new feature structure">autocomplete_feature_adds_local<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds ensure in the new feature structure">autocomplete_feature_adds_ensure<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds rescue in the new feature structure">autocomplete_feature_adds_rescue<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds else in the new if...then structure">autocomplete_if_with_else<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds variant in the loop structure">autocomplete_loop_with_variant<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Autocomplete adds invariant in the loop structure">autocomplete_loop_with_invariant<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Brackets and parenthesis are closed automatically">autocomplete_brackets_and_parenthesis<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Quotes are closed automatically">autocomplete_quotes<BOOLEAN>False</BOOLEAN></TEXT>
 		</TOPIC>

@@ -79,7 +79,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 rt_private void eif_destroy_gc_stacks(rt_global_context_t *);
 rt_private void eif_init_gc_stacks(rt_global_context_t *);
 rt_private void load_stack_in_gc (struct stack_list *, void *);
-rt_private void remove_stack_from_gc (struct stack_list *, void *);
+rt_private void remove_data_from_gc (struct stack_list *, void *);
 rt_private void eif_stack_free (void *stack);
 
 /*
@@ -715,16 +715,32 @@ rt_private void eif_destroy_gc_stacks(rt_global_context_t *rt_globals)
 {
 #ifdef ISE_GC
 	eif_global_context_t *eif_globals = rt_globals->eif_globals;
-	remove_stack_from_gc (&rt_globals_list, rt_globals);
-	remove_stack_from_gc (&loc_stack_list, &loc_stack);
-	remove_stack_from_gc (&loc_set_list, &loc_set);	
-	remove_stack_from_gc (&once_set_list, &once_set);	
-	remove_stack_from_gc (&hec_stack_list, &hec_stack);	
-	remove_stack_from_gc (&hec_saved_list, &hec_saved);	
-	remove_stack_from_gc (&eif_stack_list, &eif_stack);	
-	remove_stack_from_gc (&eif_trace_list, &eif_trace);
+	remove_data_from_gc (&rt_globals_list, rt_globals);
+	remove_data_from_gc (&loc_stack_list, &loc_stack);
+	remove_data_from_gc (&loc_set_list, &loc_set);	
+	remove_data_from_gc (&once_set_list, &once_set);	
+	remove_data_from_gc (&hec_stack_list, &hec_stack);	
+	remove_data_from_gc (&hec_saved_list, &hec_saved);	
+	remove_data_from_gc (&eif_stack_list, &eif_stack);	
+	remove_data_from_gc (&eif_trace_list, &eif_trace);
 #ifdef WORKBENCH
-	remove_stack_from_gc (&opstack_list, &op_stack);
+	remove_data_from_gc (&opstack_list, &op_stack);
+#endif
+	eif_stack_free (&loc_stack);
+	eif_stack_free (&loc_set);
+	eif_stack_free (&once_set);
+	eif_stack_free (&hec_stack);
+	eif_stack_free (&hec_saved);
+		/* The two stacks below are not properly cleaned up with `eif_stack_free'
+		 * as they have one more attribute than the `struct stack' structure, thus
+		 * the extra attribute is not reset. */
+	eif_stack_free (&eif_stack);
+	eif_stack_free (&eif_trace);
+#ifdef WORKBENCH
+		/* Although the stack below is made of 5 pointers like `struct stack' it
+		 * is not exactly the same structure, but the call to `eif_stack_free'
+		 * should do the job properly. */
+	eif_stack_free (&op_stack);
 #endif
 	eif_stack_free (&free_stack);
 #endif
@@ -753,15 +769,15 @@ rt_private void load_stack_in_gc (struct stack_list *st_list, void *st)
 
 
 /**************************************************************************/
-/* NAME: remove_stack_from_gc                                             */
+/* NAME: remove_data_from_gc                                              */
 /* ARGS: st_list: Global GC stack                                         */
-/*       st: thread specific stack that should be in `st_list'.           */
+/*       st: thread specific data that should be in `st_list'.            */
 /*------------------------------------------------------------------------*/
 /* Remove `st' from `st_list->threads_stack' and update `st_list'         */
 /* accordingly.                                                           */
 /**************************************************************************/
 
-rt_private void remove_stack_from_gc (struct stack_list *st_list, void *st)
+rt_private void remove_data_from_gc (struct stack_list *st_list, void *st)
 {
 	int count = st_list->count;
 	int i = 0;
@@ -777,9 +793,6 @@ rt_private void remove_stack_from_gc (struct stack_list *st_list, void *st)
 	}
 
 	CHECK("Is found", i < count);	/* We must have found entry that holds reference to `st' */
-
-		/* Free memory used by `st'. */
-	eif_stack_free (st);
 
 		/* Remove one element */
 	st_list->count = count - 1;

@@ -45,7 +45,11 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-
+		
+	small_pixmap: EV_PIXMAP
+			-- Representation of `Current' as a small pixmap. Used in representations
+			-- of `Current'. May be Void for some descendents.
+			
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
 		deferred

@@ -75,7 +75,6 @@ feature {NONE} -- Initialization
 			initialized: Eiffel_project.initialized
 		local
 			sys_name: STRING
-			f: RAW_FILE
 			retried: BOOLEAN
 		do
 			create ace.make (Eiffel_ace.file_name)

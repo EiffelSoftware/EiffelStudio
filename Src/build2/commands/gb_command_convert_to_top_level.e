@@ -179,7 +179,7 @@ feature -- Basic Operation
 			parent_directory_item.add_alphabetically (new_object.window_selector_item)
 			parent_directory_item.expand
 			
-			rebuild_associated_editors (child_object.object)
+			rebuild_associated_editors (child_object.id)
 
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
@@ -278,7 +278,7 @@ feature -- Basic Operation
 			child_object.update_representations_for_name_or_type_change
 			child_object.add_client_representation_recursively
 					
-			rebuild_associated_editors (child_object.object)
+			rebuild_associated_editors (child_object.id)
 
 			command_handler.update
 		ensure then

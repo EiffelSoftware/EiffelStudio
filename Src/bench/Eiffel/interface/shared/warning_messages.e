@@ -894,7 +894,7 @@ feature -- Warning messages
 
 	w_No_feature_matches: STRING is "No feature in this class matches this name."
 
-	w_No_feature_to_display: STRING is "No feature in this file"
+	w_No_feature_to_display: STRING is "No features in this file"
 
 	w_No_such_feature_in_this_class (feature_name, class_name: STRING): STRING is
 		do

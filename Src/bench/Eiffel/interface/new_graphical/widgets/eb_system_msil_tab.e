@@ -42,8 +42,8 @@ feature -- MSIL options
 	cls_compliant_check: EV_CHECK_BUTTON
 			-- Will generated assembly be CLS compliant?
 			
-	cls_compliant_name_check: EV_CHECK_BUTTON
-			-- Will names generated in assembly follow the CLS guideline?
+	dotnet_naming_convention_check: EV_CHECK_BUTTON
+			-- Will names generated in assembly follow the .NET guideline?
 
 feature -- Assembly information
 
@@ -88,7 +88,7 @@ feature -- Store/Retrieve
 
 			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.il_verifiable, Void, verifiable_check.is_selected))
 			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant, Void, cls_compliant_check.is_selected))
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.cls_compliant_name, Void, cls_compliant_name_check.is_selected))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.dotnet_naming_convention, Void, dotnet_naming_convention_check.is_selected))
 			
 			if dll_check.is_selected then
 				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.msil_generation_type, "dll", False))
@@ -213,8 +213,8 @@ feature {NONE} -- Filling
 					set_selected (dll_check, val.value.is_equal (new_id_sd ("dll", True))) 
 				when feature {FREE_OPTION_SD}.Cls_compliant then
 					set_selected (cls_compliant_check, val.is_yes)
-				when feature {FREE_OPTION_SD}.Cls_compliant_name then
-					set_selected (cls_compliant_name_check, val.is_yes)
+				when feature {FREE_OPTION_SD}.Dotnet_naming_convention then
+					set_selected (dotnet_naming_convention_check, val.is_yes)
 				else
 					is_item_removable := False
 				end
@@ -238,7 +238,7 @@ feature -- Initialization
 		do
 			Precursor {EB_SYSTEM_TAB}
 			enable_select (cls_compliant_check)
-			enable_select (cls_compliant_name_check)
+			enable_select (dotnet_naming_convention_check)
 			enable_select (verifiable_check)
 			disable_select (dll_check)
 			assembly_list.reset
@@ -252,7 +252,7 @@ feature -- Initialization
 			verifiable_check_selected: verifiable_check.is_selected
 			dll_check_not_selected: not dll_check.is_selected
 			cls_compliant_check_selected: cls_compliant_check.is_selected
-			cls_compliant_name_check_selected: cls_compliant_name_check.is_selected
+			dotnet_naming_convention_check_selected: dotnet_naming_convention_check.is_selected
 			assembly_list_empty: assembly_list.is_empty
 		end
 
@@ -358,7 +358,7 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 
 			cls_compliant_check := new_check_button (vbox, "CLS compliant")
-			cls_compliant_name_check := new_check_button (vbox, "Follow CLS naming guidelines")
+			dotnet_naming_convention_check := new_check_button (vbox, "Follow .NET naming guidelines")
 			verifiable_check := new_check_button (vbox, "Verifiable")
 			dll_check := new_check_button (vbox, "Generate DLL")
 

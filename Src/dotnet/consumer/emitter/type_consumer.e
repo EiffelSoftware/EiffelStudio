@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			end
 			create dotnet_name.make_from_cil (info.get_name)
 			create Result.make (
-				formatted_feature_name (dotnet_name),
+				unique_feature_name (dotnet_name),
 				dotnet_name,
 				info.get_can_read,
 				info.get_can_write,
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 				end
 				create dotnet_name.make_from_cil (l_raise_method.get_name)
 				create l_raiser.make (
-					formatted_feature_name (dotnet_name),
+					unique_feature_name (dotnet_name),
 					dotnet_name,
 					l_args,
 					l_raise_method.get_is_final,

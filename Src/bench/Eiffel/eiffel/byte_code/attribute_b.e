@@ -37,14 +37,12 @@ feature
 			is_attribute: a.is_attribute
 		do
 			attribute_name_id := a.feature_name_id
-			attribute_id := a.feature_id
 			routine_id := a.rout_id_set.first
 			if System.il_generation then
-				written_in := a.implemented_in
-				if written_in = 0 then
-					print ("Attribute not implemented!%N")
-				end
+				attribute_id := a.origin_feature_id
+				written_in := a.origin_class_id
 			else
+				attribute_id := a.feature_id
 				written_in := a.written_in
 			end
 		end
@@ -97,8 +95,6 @@ feature -- IL code generation
 		local
 			r_type: TYPE_I
 			cl_type: CL_TYPE_I
-			feat_tbl: FEATURE_TABLE
-			feat: FEATURE_I
 			class_c: CLASS_C
 		do
 				-- Type of attribute in current context
@@ -140,14 +136,12 @@ feature -- IL code generation
 
 					-- We push code to access Current attribute.
 				class_c := System.class_of_id (written_in)
-				feat_tbl := class_c.feature_table
-				feat := feat_tbl.item_id (attribute_name_id)
 				if class_c.is_frozen then
 					il_generator.generate_attribute (
-						il_generator.implemented_type (written_in, cl_type), feat.feature_id)
+						il_generator.implemented_type (written_in, cl_type), attribute_id)
 				else
 					il_generator.generate_feature_access (
-						il_generator.implemented_type (written_in, cl_type), feat.feature_id, True)
+						il_generator.implemented_type (written_in, cl_type), attribute_id, True)
 				end
 
 					-- Generate cast if we have to generate verifiable code

@@ -21,8 +21,13 @@ feature  -- Initialization
 			valid_type: r_type /= Void
 			valid_maps: omap /= Void or cmap /= Void
 		do
-			class_type := cl_type
-			feature_id := f.feature_id
+			if System.il_generation then
+				class_type := il_generator.implemented_type (f.origin_class_id, cl_type)
+				feature_id := f.origin_feature_id
+			else
+				class_type := cl_type
+				feature_id := f.feature_id
+			end
 			rout_id := f.rout_id_set.first
 			type := r_type
 			arguments := args
@@ -168,6 +173,7 @@ feature -- IL code generation
 		local
 			set_rout_disp_feat: FEATURE_I
 			real_ty: GEN_TYPE_I
+			l_decl_type: CL_TYPE_I
 		do
 			real_ty ?= context.real_type (type)
 			il_generator.create_object (real_ty)
@@ -175,6 +181,8 @@ feature -- IL code generation
 
 			set_rout_disp_feat := real_ty.base_class.feature_table.
 				item_id (feature {PREDEFINED_NAMES}.set_rout_disp_name_id)
+			l_decl_type := il_generator.implemented_type (set_rout_disp_feat.origin_class_id,
+				real_ty)
 			il_generator.put_method_token (class_type, feature_id)
 
 				-- Arguments
@@ -198,7 +206,7 @@ feature -- IL code generation
 				il_generator.put_void
 			end
 
-			il_generator.generate_feature_access (real_ty, set_rout_disp_feat.feature_id, True)
+			il_generator.generate_feature_access (l_decl_type, set_rout_disp_feat.origin_feature_id, True)
 		end
 
 feature -- Byte code generation

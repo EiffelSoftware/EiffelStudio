@@ -7,7 +7,7 @@ class
 	EBENCH_MS_WINDOWS
 
 inherit
-	MS_WINDOWS
+	TOOLKIT_IMP
 		redefine
 			message_loop, make
 		end
@@ -22,7 +22,7 @@ feature -- Initialization
 		local
 			wel_window_manager: WEL_WINDOW_MANAGER
 		do
-			{MS_WINDOWS} precursor (application_class)
+			{TOOLKIT_IMP} Precursor (application_class)
 
 			!! wel_window_manager
 			windows := wel_window_manager.windows

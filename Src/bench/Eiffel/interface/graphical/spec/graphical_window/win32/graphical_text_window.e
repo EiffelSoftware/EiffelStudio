@@ -33,7 +33,7 @@ creation
 
 feature -- Access
 
-	implementation: SCROLLED_TEXT_WINDOWS
+	implementation: SCROLLED_T_IMP
 
 	dummy_text: WEL_RICH_EDIT
 

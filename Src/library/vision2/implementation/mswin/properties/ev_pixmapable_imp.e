@@ -7,10 +7,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_PIXMAP_CONTAINER_IMP
+	EV_PIXMAPABLE_IMP
 
 inherit
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 
 	WEL_RASTER_OPERATIONS_CONSTANTS
 		export
@@ -75,7 +75,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		deferred
 		end
 
-end -- class EV_PIXMAP_CONTAINER_IMP
+end -- class EV_PIXMAPABLE_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

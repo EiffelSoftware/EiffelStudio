@@ -63,7 +63,14 @@ feature -- Properties
 			l_base_class := associated_class
 			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
 		end
-		
+
+	is_system_object: BOOLEAN is
+			-- Does current type represent SYSTEM_OBJECT?
+		require
+			il_generation: System.il_generation
+		do
+			Result := class_id = System.system_object_class.compiled_class.class_id
+		end
 
 feature -- Comparison
 

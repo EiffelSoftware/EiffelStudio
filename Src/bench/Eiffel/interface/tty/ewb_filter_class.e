@@ -2,15 +2,15 @@ indexing
 
 	description: 
 		"Build a filtered version (troff, ..) of the class text%
-		%and display the result in output_window.";
-	date: "$Date$";
-	revision: "$Revision $"
+		%and display the result in output_window."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class EWB_FILTER_CLASS
 
 inherit
 
-	EWB_FILTER;
+	EWB_FILTER
 	EWB_CLASS
 		rename
 			make as class_make
@@ -26,9 +26,9 @@ feature -- Initialization
 		require
 			cn_not_void: cn /= Void
 		do
-			class_make (cn);
-			init (filter);
-		end;
+			class_make (cn)
+			init (filter)
+		end
 
 feature {NONE} -- Execution
 
@@ -36,36 +36,36 @@ feature {NONE} -- Execution
 			-- Command to be executed after successful
 			-- retrieving of the class text.
 		deferred
-		end;
+		end
 
 	process_compiled_class (e_class: E_CLASS) is
 			-- Execute associated command
 		local
-			cmd: like associated_cmd;
+			cmd: like associated_cmd
 			filter: TEXT_FILTER
 		do
-			cmd := associated_cmd;
-			cmd.make (e_class);
-			cmd.execute;
+			cmd := associated_cmd
+			cmd.make (e_class)
+			cmd.execute
 			if filter_name /= Void and then not filter_name.empty then
-				!! filter.make (filter_name);
-				filter.process_text (cmd.structured_text);
+				!! filter.make (filter_name)
+				filter.process_text (cmd.structured_text)
 				output_window.put_string (filter.image)
 			else
 				output_window.put_string (cmd.structured_text.image)
-			end;
+			end
 			output_window.new_line
-		end;
+		end
 
 	loop_action is
 			-- Execute Current command from loop.
 		do
-			command_line_io.get_class_name;
-			class_name := command_line_io.last_input;
-			command_line_io.get_filter_name;
-			filter_name := command_line_io.last_input;
+			command_line_io.get_class_name
+			class_name := command_line_io.last_input
+			command_line_io.get_filter_name
+			filter_name := command_line_io.last_input
 			check_arguments_and_execute
-		end;
+		end
 
 invariant
 

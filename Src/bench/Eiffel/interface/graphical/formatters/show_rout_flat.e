@@ -1,8 +1,7 @@
 indexing
 
-	description:	
-		"Command to flat of routine.";
-	date: "$Date$";
+	description: "Command to flat of routine."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class SHOW_ROUT_FLAT
@@ -14,8 +13,8 @@ inherit
 			create_structured_text as rout_flat_context_text
 		redefine
 			display_temp_header
-		end;
-	SHARED_SERVER;
+		end
+	SHARED_SERVER
 	SHARED_FORMAT_TABLES
 
 creation
@@ -27,30 +26,30 @@ feature -- Properties
 	symbol: PIXMAP is
 		once
 			Result := Pixmaps.bm_Showflat
-		end;
+		end
 
 feature {NONE} -- Properties
 
 	title_part: STRING is
 		do
 			Result := Interface_names.t_Feature_flat_form_of
-		end;
+		end
 
 	name: STRING is
 		do
 			Result := Interface_names.f_Showflat
-		end;
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Showflat
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -58,6 +57,6 @@ feature {NONE} -- Implementation
 			-- Display a temporary header during the format processing.
 		do
 			tool.set_title ("Exploring ancestors to produce flat form...")
-		end;
+		end
 
 end -- class SHOW_ROUT_FLAT

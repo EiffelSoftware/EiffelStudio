@@ -2,8 +2,8 @@ indexing
 
 	description: 
 		"Abstract notion of command selected from class batch menu%
-		%which is compiled.";
-	date: "$Date$";
+		%which is compiled."
+	date: "$Date$"
 	revision: "$Revision $"
 
 deferred class EWB_COMPILED_CLASS
@@ -22,6 +22,6 @@ feature {NONE} -- Properties
 			-- (True)
 		do
 			Result := True
-		end;
+		end
 
 end -- class EWB_COMPILED_CLASS

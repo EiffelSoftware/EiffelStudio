@@ -29,6 +29,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	cancel_button_text: STRING is "Cancel"
+		-- `Result' is STRING constant named cancel_button_text.
+
+	ok_button_text: STRING is "OK"
+		-- `Result' is STRING constant named ok_button_text.
+
+
+feature -- Access
+
+--| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
+--| constants is complete. They are required for the pixmaps at the moment.
+
 	constants_initialized: BOOLEAN is
 			-- Have constants been initialized from file?
 		do
@@ -36,7 +48,7 @@ feature -- Access
 		end
 
 	constant_by_name (a_name: STRING): STRING is
-			--
+			-- `Result' is STRING 
 		require
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
@@ -59,12 +71,11 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	initialized_cell: CELL [BOOLEAN] is
-			--
+			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result
 		end
 		
-
 	all_constants: HASH_TABLE [STRING, STRING] is
 			-- All constants loaded from constants file.
 		once

@@ -26,7 +26,7 @@ rt_private EIF_INTEGER private_general_object_id(EIF_REFERENCE object, struct st
 rt_private EIF_REFERENCE private_id_object(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
 rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INTEGER max_value);
 #ifdef EIF_ASSERTIONS
-rt_private EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
+rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object);
 #endif
 
 #ifdef EIF_THREADS
@@ -343,7 +343,7 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 }
 
 #ifdef EIF_ASSERTIONS
-rt_public EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
+rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 {
 	struct stchunk *ck;
 	unsigned int i = 0;

@@ -35,7 +35,7 @@
         <p>The discussion concentrates on using C++ software from Eiffel. In the
         other direction, you can use the
         Cecil library (C-Eiffel Call-In Library) described in chapter 24 of <a href="http://www.eiffel.com/doc/eiffel/books.html"><i>Eiffel:
-        The Language</i></a> with important complements in the <a href="../40_advanced_topics/50_cecil_library/index.html">Cecil manual</a> and at ftp://ftp.eiffel.com.
+        The Language</i></a> with important complements in the <a href="../40_advanced_topics/40_cecil_library/index.html">Cecil manual</a> and at ftp://ftp.eiffel.com.
         <h2>Syntax specification</h2>
         <p>In the following specification, the syntax for <font color="#aa00ff">External</font>
         and <font color="#aa00ff">External_name</font> is retained unchanged
@@ -146,7 +146,7 @@
             corresponding constructor function.
           <li>If the declaration starts with <b><font color="#000080">delete</font></b>,
             it indicates a call to a destructor from the C++ class. In this case
-            the Eiffel class may inherit <a href="/library/base/reference/kernel/memory.e"><span class="eclass">MEMORY</span></a> and redefine the
+            the Eiffel class may inherit <a href="/libraries/base/reference/kernel/memory.html"><span class="eclass">MEMORY</span></a> and redefine the
             dispose procedure to execute the destructor operations whenever the
             Eiffel objects are garbage-collected.
           <li>If the declaration starts with <b><font color="#000080">data_member</font></b>,
@@ -185,7 +185,7 @@
 		<span class="efeature">cpp_add</span> (object_ptr, new_int)
 	<span class="ekeyword">end</span></pre>
         </code>
-        <p>where <i>object_ptr</i> is a secret attribute of type <a href="/library/base/reference/kernel/pointer.html"><span class="eclass">POINTER</span></a>,
+        <p>where <i>object_ptr</i> is a secret attribute of type <a href="/libraries/base/reference/kernel/pointer.html"><span class="eclass">POINTER</span></a>,
         initialized by the creation procedures of the class. To the Eiffel
         developer, add looks like a normal object-oriented feature, which takes
         only the expected argument. Further examples appear below. This
@@ -242,9 +242,9 @@
         also produce a public feature with the same number of arguments as the
         C++ function, relying on a call to the secret feature, as illustrated
         for add and cpp_add above.
-        <p>The char* type is translated into <a href="/library/base/reference/kernel/string.html"><span class="eclass">STRING</span></a>. Pointer types, as
+        <p>The char* type is translated into <a href="/libraries/base/reference/kernel/pointer.html"><span class="eclass">STRING</span></a>. Pointer types, as
         well as reference types corresponding to classes and types that Legacy++
-        has processed, will be translated into <a href="/library/base/reference/kernel/pointer.html"><span class="eclass">POINTER</span></a>. Other types will
+        has processed, will be translated into <a href="/libraries/base/reference/kernel/pointer.html"><span class="eclass">POINTER</span></a>. Other types will
         yield the type <span class="eclass">UNRESOLVED_TYPE</span>.
         <h3><i>Legacy++ limitations</i></h3>
         <p>It is up to you to supply Eiffel equivalents of all the needed types.

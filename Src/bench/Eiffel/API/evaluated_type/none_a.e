@@ -7,7 +7,7 @@ inherit
 	BASIC_A
 		redefine
 			is_none, dump, type_i, associated_class, same_as,
-			internal_conform_to, append_clickable_signature,
+			internal_conform_to, append_to,
 			storage_info, storage_info_with_name, associated_eclass
 		end
 
@@ -19,9 +19,17 @@ feature -- Properties
 			Result := True;
 		end;
 
+feature -- Access
+
 	associated_eclass: E_CLASS is
 			-- No associated class
 		do
+		end;
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		do
+			Result := other.is_none;
 		end;
 
 feature -- Output
@@ -29,12 +37,12 @@ feature -- Output
 	dump: STRING is "NONE";
 			-- Dumped trace
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("NONE");
+			ow.put_string ("NONE");
 		end;
 
-feature
+feature {COMPILER_EXPORTER}
 
 	type_i: NONE_I is
 			-- Void C type
@@ -47,12 +55,6 @@ feature
 			True
 		do
 			-- No associated class
-		end;
-
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		do
-			Result := other.is_none;
 		end;
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is

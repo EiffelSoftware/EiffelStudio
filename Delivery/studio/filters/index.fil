@@ -3,7 +3,7 @@
 file_separator			|/
 suffix				|index
 class_declaration		|<LI><OBJECT type="text/sitemap"><param name=%"Name%" value=%"$class$%">%
-						%<param name=%"Local%" value=%"_PATH_%"></OBJECT>%N<UL>%N%
+						%<param name=%"Local%" value=%"_CHART_PATH_%"></OBJECT>%N<UL>%N%
 						%*%
 						%</UL>%N
 feature_declaration		|<LI><OBJECT type="text/sitemap"><param name=%"Name%" value=%"$feature$%">%

@@ -1,17 +1,17 @@
 class SHARED_BENCH_LICENSES
 
 inherit
-	EXCEPTIONS
-		rename
-			raise as raise_exception
-		end
-	SHARED_WORKBENCH
-	SHARED_ERROR_HANDLER
-	COMPILER_EXPORTER
 	SHARED_LICENSE
 		redefine
-			new_license, lic_die
+			new_license,
+			lic_die
 		end
+
+	SHARED_WORKBENCH
+
+	SHARED_ERROR_HANDLER
+
+	COMPILER_EXPORTER
 
 feature {NONE}
 

@@ -20,215 +20,97 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_result_type_and_signature: STRING is
-			-- set result type and return signature of feature
-		require
-			non_void_feature_writer: ccom_feature_writer /= Void
-			non_void_arguments: func_desc.arguments /= Void
-			has_arguments: not func_desc.arguments.empty
-		local
-			arguments: LINKED_LIST[WIZARD_PARAM_DESCRIPTOR]
-			pointed_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
-			visitor: WIZARD_DATA_TYPE_VISITOR
-		do
-			create Result.make (1000)
-			arguments := func_desc.arguments
-			from
-				arguments.start
-			until
-				arguments.off
-			loop
-				visitor := arguments.item.type.visitor
-
-				if is_paramflag_fretval (arguments.item.flags) then
-					pointed_descriptor ?= arguments.item.type
-					if pointed_descriptor /= Void then
-						visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
-						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
-							ccom_feature_writer.set_result_type (visitor.cecil_type)
-						else
-							ccom_feature_writer.set_result_type (Eif_reference)
-						end
-					else
-						if visitor.is_basic_type or visitor.is_enumeration or (visitor.vt_type = Vt_bool) then
-							ccom_feature_writer.set_result_type (visitor.cecil_type)
-						else
-							ccom_feature_writer.set_result_type (Eif_reference)
-						end
-					end
-
-				elseif is_paramflag_fout (arguments.item.flags) then
-					Result.append (Beginning_comment_paramflag)
-					if is_paramflag_fin (arguments.item.flags) then
-						Result.append ("in, ")
-					end
-					Result.append ("out")
-					Result.append (End_comment_paramflag)
-					if visitor.is_basic_type then
-						Result.append (visitor.cecil_type)
-						Result.append (Space)
-						Result.append (arguments.item.name)
-
-					elseif 
-						visitor.is_array_basic_type or 
-						visitor.is_interface_pointer or 
-						visitor.is_coclass_pointer or 
-						visitor.is_structure_pointer 
-					then
-						Result.append (visitor.c_type)
-						Result.append (Space)
-						Result.append (arguments.item.name)
-						Result.append (visitor.c_post_type)
-					elseif visitor.is_interface or visitor.is_structure then
-						Result.append (Eif_pointer)
-						Result.append (Space)
-						Result.append (arguments.item.name)
-
-					else
-						Result.append (Eif_object)
-						Result.append (Space)
-						Result.append (arguments.item.name)
-					end
-					if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
-						c_header_files.extend (visitor.c_header_file)
-					end
-					Result.append (Comma_space)
-
-				else
-					Result.append (Beginning_comment_paramflag)
-					Result.append ("in")
-					Result.append (End_comment_paramflag)
-					if visitor.is_basic_type or visitor.is_enumeration then
-						Result.append (visitor.cecil_type)
-					elseif 
-						visitor.is_array_basic_type or 
-						visitor.is_interface_pointer or 
-						visitor.is_coclass_pointer or 
-						visitor.is_structure_pointer 
-					then
-						Result.append (visitor.c_type)
-
-					elseif (visitor.vt_type = Vt_bool) then
-						Result.append (Eif_boolean)
-
-					elseif visitor.is_interface or visitor.is_structure then
-						Result.append (visitor.c_type)
-						Result.append (Space)
-						Result.append (Asterisk)
-
-					else
-						Result.append (Eif_object)
-					end
-
-					Result.append (Space)
-					Result.append (arguments.item.name)
-
-					if visitor.is_array_basic_type then
-						Result.append (visitor.c_post_type)
-					end
-
-					if not (visitor.c_header_file = Void or else visitor.c_header_file.empty) then
-						c_header_files.extend (visitor.c_header_file)
-					end
-
-					Result.append (Comma_space)
-
-				end
-				visitor := Void
-				arguments.forth
-			end
-
-			if Result.count > 0  then
-				Result.remove (Result.count)
-				Result.remove (Result.count)
-			end
-		ensure
-			valid_result: Result /= Void
-		end
-
-	set_client_result_type_and_signature is
-			-- Set ccom client feature signature
-		require
-			non_void_func_desc: func_desc /= Void
-			non_void_ccom_feature_writer: ccom_feature_writer /= Void
+	set_vtable_function_return_type is
+			-- Set return type of Vtable function.
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
+			a_result_type: STRING
 		do
-			if func_desc.arguments /= Void and not func_desc.arguments.empty then
-				ccom_feature_writer.set_signature (set_result_type_and_signature)
-			end
-
-			if not (func_desc.return_type.type = Vt_hresult) then
+			if func_desc.return_type /= Void then
 				visitor := func_desc.return_type.visitor
-
-				if visitor.is_basic_type or visitor.is_enumeration then
-					ccom_feature_writer.set_result_type (visitor.cecil_type)
-				elseif (visitor.vt_type = Vt_bool) then
-					ccom_feature_writer.set_result_type (Eif_boolean)
+				if 
+					visitor.vt_type = Vt_hresult
+				then
+					ccom_feature_writer.set_result_type (Std_method_imp)
 				else
-					ccom_feature_writer.set_result_type (Eif_reference)
+					create a_result_type.make (100)
+					a_result_type.append (Std_method_imp)
+					a_result_type.append (Underscore)
+					a_result_type.append (Open_parenthesis)
+					a_result_type.append (visitor.c_type)
+					a_result_type.append (Close_parenthesis)
+					ccom_feature_writer.set_result_type (a_result_type)
 				end
+			else
+				create a_result_type.make (100)
+				a_result_type.append (Std_method_imp)
+				a_result_type.append (Underscore)
+				a_result_type.append (Open_parenthesis)
+				a_result_type.append (Void_c_keyword)
+				a_result_type.append (Close_parenthesis)
+				ccom_feature_writer.set_result_type (a_result_type)
 			end
-
 		end
 
-	cecil_feature_set_up (arg_name, cecil_feature_type, feature_name, object_type: STRING): STRING is
-			-- Code to set up cecil access to Eiffel object
-		require
-			Non_void_string: arg_name /= Void
-			Non_void_string: cecil_feature_type /= Void
-			Non_void_string: feature_name /= Void
-			Non_void_string: object_type /= Void
+	vtable_signature: STRING is
+			-- Set server signature
 		local
-			cecil_feature_name: STRING
+			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			cecil_feature_name := clone (cecil_feature_type)
-			cecil_feature_name.to_lower
-
-			-- EIF_TYPE_ID 'arg_name'_tid;
-			-- 'cecil_feature_type' 'feature_name'_feature;
 			create Result.make (1000)
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append (arg_name)
-			Result.append (Append_tid_clause)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-			Result.append (cecil_feature_type)
-			Result.append (Space)
-			Result.append (feature_name)
-			Result.append (Feature_clause)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+			if not func_desc.arguments.empty then
+				from
+					func_desc.arguments.start
+				until
+					func_desc.arguments.off
+				loop
+					visitor := func_desc.arguments.item.type.visitor
 
-			-- 'arg_name'_tid = eif_type_id ("'object_type'");
-			-- 'feature_name'_feature = 'cecil_feature_name' ('feature_name', 'arg_name'_tid);
-			Result.append (arg_name)
-			Result.append (Append_tid_clause)
-			Result.append (Space_equal_space)
-			Result.append (Eif_type_id_function_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (object_type)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
-			Result.append (feature_name)
-			Result.append (Feature_clause)
-			Result.append (Space_equal_space)
-			Result.append (cecil_feature_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (feature_name)
-			Result.append (Double_quote)
-			Result.append (Comma_space)
-			Result.append (arg_name)
-			Result.append (Append_tid_clause)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab_tab)
+					Result.append (Beginning_comment_paramflag)
+
+					if is_paramflag_fretval (func_desc.arguments.item.flags) then
+						Result.append (Out_keyword)
+						Result.append (Comma_space)
+						Result.append (Retval)
+					elseif is_paramflag_fout (func_desc.arguments.item.flags) then
+						if is_paramflag_fin (func_desc.arguments.item.flags) then
+							Result.append (Inout)
+						else
+							Result.append (Out_keyword)
+						end
+					else
+						Result.append (In)
+					end
+					Result.append (End_comment_paramflag)
+
+					Result.append (visitor.c_type)
+					Result.append (Space)
+
+					if visitor.is_array_basic_type or visitor.is_array_type then
+						Result.append (Asterisk)
+					end
+
+					Result.append (func_desc.arguments.item.name)
+
+					Result.append (Comma)
+					add_header_file (visitor)
+
+					func_desc.arguments.forth
+				end
+
+				if Result.item (Result.count).is_equal (',') then
+					Result.remove (Result.count)
+				end
+			else
+				Result.append (Void_c_keyword)					
+			end
 		end
+
+	add_header_file (a_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Add header file to list of header files if needed.
+		do
+		end
+
 
 end -- class WIZARD_CPP_FUNCTION_GENERATOR
 --|----------------------------------------------------------------

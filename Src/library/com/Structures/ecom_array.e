@@ -27,7 +27,8 @@ inherit
 			make_from_array as array_make_from_array
 		export
 			{NONE} all
-			{ANY} area, array_item, count
+			{ECOM_ARRAY} lower, upper, subarray, object_comparison
+			{ANY} area, array_item, count, valid_index
 		redefine
 			discard_items
 		end

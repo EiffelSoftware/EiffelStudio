@@ -30,6 +30,10 @@ feature {NONE} -- GUI
 			!! procedure_label.make ("Procedure:", Current)
 			!! separator.make ("", Current)
 
+			!! test_toggle_b.make ("Precondition test", Current)
+			!! test_label.make("Error message:", Current)
+			!! test_text_field.make ("", Current)
+
 			!! select_label.make ("Select through:", bottom_form)
 			!! select_radio_box.make ("", bottom_form)
 			!! field_toggle_b.make ("Field", select_radio_box)
@@ -50,7 +54,7 @@ feature {NONE} -- GUI
 		local
 			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			set_size (300, 135)
+			set_size (300, 165)
 			!! set_colors
 			set_colors.execute (Current)
 			query_label.set_left_alignment
@@ -58,6 +62,7 @@ feature {NONE} -- GUI
 			field_toggle_b.set_toggle_on
 			menu_choice_sc_l.set_visible_item_count (4)
 			deactivate_menu_fields
+			test_text_field.set_insensitive
 		end
 
 	attach_all is
@@ -70,41 +75,46 @@ feature {NONE} -- GUI
 			attach_right (procedure_opt_pull, 0)
 			attach_right_widget (procedure_opt_pull, procedure_label, 5)
 			attach_right_widget (procedure_label, query_label, 0)
-			attach_top_widget (query_label, bottom_form, 0)
-			attach_top_widget (procedure_label, bottom_form, 0)
-			attach_top_widget (procedure_opt_pull, bottom_form, 5)
+			
+			attach_left (test_toggle_b, 5)
+	   		attach_top_widget (query_label, test_toggle_b, 5)
+			attach_top_widget (procedure_label, test_text_field, 0)
+			attach_top_widget (procedure_label, test_label, 10) 
+			attach_left_widget (test_toggle_b, test_label, 0)
+			attach_left_widget (test_label, test_text_field, 10)
+			attach_right (test_text_field, 0)
+			attach_top_widget (procedure_opt_pull, test_text_field, 0) 
+
+			attach_top_widget (test_toggle_b, bottom_form, 10)
+			attach_top_widget (test_text_field, bottom_form, 10)						
 			attach_left (bottom_form, 0)
 			attach_right (bottom_form, 0)
---			attach_bottom (bottom_form, 0)
+
  			attach_top_widget (bottom_form, separator, 0)
  			attach_left (separator, 0)
  			attach_right (separator, 0)
  			attach_bottom (separator, 0)
 			
-			bottom_form.attach_top (select_label, 0)
-			bottom_form.attach_top (select_radio_box, 0)
-			bottom_form.attach_top (add_menu_label, 2)
-			bottom_form.attach_top (menu_text_field, 0)
+			bottom_form.attach_left (select_label, 5)
+			bottom_form.attach_top (select_label, 5)
+			bottom_form.attach_top (add_menu_label, 5)
+			bottom_form.attach_left_widget (select_label, add_menu_label, 50)
+			bottom_form.attach_top_widget (select_label, select_radio_box, 0)		
+			bottom_form.attach_left (select_radio_box, 20)
+			bottom_form.attach_top (menu_text_field, 5)
 			bottom_form.attach_top_widget (add_menu_label, menu_choice_label, 10)
 			bottom_form.attach_top_widget (add_menu_label, menu_choice_sc_l, 10)
 			bottom_form.attach_top_widget (menu_text_field, menu_choice_sc_l, 10)
 			bottom_form.attach_top_widget (menu_text_field, menu_choice_label, 10)
 			bottom_form.attach_top_widget (menu_choice_label, delete_button, 10)
 			bottom_form.attach_left (select_label, 10)
-			bottom_form.attach_left_widget (select_label, select_radio_box, 5)
-			bottom_form.attach_left_widget (select_radio_box, add_menu_label, 10)
 			bottom_form.attach_left_widget (select_radio_box, menu_choice_label, 10)
 			bottom_form.attach_left_widget (select_radio_box, delete_button, 20)
-			bottom_form.attach_left_widget (add_menu_label, menu_text_field, 5)
+			bottom_form.attach_left_widget (add_menu_label, menu_text_field, 30)
 			bottom_form.attach_left_widget (menu_choice_label, menu_choice_sc_l, 5)
 			bottom_form.attach_left_widget (delete_button, menu_choice_sc_l, 20)
 			bottom_form.attach_right (menu_choice_sc_l, 0)
 			bottom_form.attach_right (menu_text_field, 0)
---			bottom_form.attach_bottom (select_label, 0)
---			bottom_form.attach_bottom (select_radio_box, 0)
---			bottom_form.attach_bottom (delete_button, 5)
---			bottom_form.attach_bottom (menu_choice_label, 0)
---			bottom_form.attach_bottom (menu_choice_sc_l, 0)
 		end	
 
 	update_interface is
@@ -117,6 +127,7 @@ feature {NONE} -- GUI
 	set_callbacks is
 			-- Add callbacks on GUI elements
 		do
+			test_toggle_b.add_activate_action (Current, Void)
 			menu_toggle_b.add_activate_action (Current, Void)
 			field_toggle_b.add_activate_action (Current, Void)
 			field_and_menu_toggle_b.add_activate_action (Current, Void)
@@ -137,6 +148,9 @@ feature {NONE} -- GUI attributes
 	procedure_label,
 			-- Procedure label
 
+	test_label,
+			-- Precondition test label
+	
 	menu_choice_label,
 			-- Menu choice when selecting `menu_toggle_b'
 
@@ -146,12 +160,18 @@ feature {NONE} -- GUI attributes
 	select_label: LABEL
 			-- "Select through" label
 
+	test_text_field,
+			-- Text field used to add the precondition test
+
 	menu_text_field: TEXT_FIELD
 			-- Text field used to add a new menu
 
 	select_radio_box: RADIO_BOX
 			-- Radio box used to select the kind of widget used
 			-- to edit the query
+
+	test_toggle_b,
+			-- Precondition test label
 
 	field_toggle_b,
 			-- 'Field' field
@@ -185,7 +205,7 @@ feature {NONE} -- Heuristic
 		require
 			current_application_class_not_void: current_application_class /= Void
 		local
-			menu_entry: PUSH_B
+			menu_entry: APPLICATION_METHOD_PUSH_B
 			possible_command_list: LINKED_LIST [APPLICATION_COMMAND]
 		do
 			possible_command_list := sort_possible_commands (current_application_class.command_list)
@@ -194,7 +214,7 @@ feature {NONE} -- Heuristic
 			until
 				possible_command_list.after
 			loop
-				!! menu_entry.make (possible_command_list.item.command_name, procedure_opt_pull)
+				!! menu_entry.make (possible_command_list.item, procedure_opt_pull)
 				possible_command_list.forth
 			end
 			if not possible_command_list.empty then
@@ -239,7 +259,8 @@ feature -- Execution
 					menu_choice_sc_l.extend (a_menu_choice)
 					menu_text_field.clear
 				end
-			elseif arg = delete_button then
+			elseif (arg = delete_button) and (menu_choice_sc_l.selected_count > 0) 
+			then
 				selected_items := menu_choice_sc_l.selected_items
 				if not selected_items.empty then
 					from
@@ -279,6 +300,12 @@ feature -- Execution
 					activate_menu_fields
 				else
 					deactivate_menu_fields
+				end
+				
+				if test_toggle_b.state then
+					test_text_field.set_sensitive
+				else
+					test_text_field.set_insensitive
 				end
 			end
 		end
@@ -399,11 +426,18 @@ feature -- Command generation
 				Result.append (".text")
 				Result.append (extension_to_add)
 				Result.append (")%N")
+				if test_toggle_b.state and not procedure.precondition_list.empty then
+					Result.append ("%N%T%T%T%Tend")
+				end	
 				Result.append ("%T%T%Telse%N%T%T%T%T")
 				Result.append (eiffel_setting (parent_perm_wind, opt_pull_name))
 				Result.append (".selected_button.text")
 				Result.append (extension_to_add)
-				Result.append (")%N%T%T%Tend%N")
+				Result.append (")%N")
+				if test_toggle_b.state and not procedure.precondition_list.empty then
+					Result.append ("%T%T%T%Tend")
+				end	
+				Result.append ("%T%T%Tend%N")
 			elseif text_field_name /= Void then
 				Result.append (eiffel_setting (parent_perm_wind, text_field_name))
 				Result.append (".text")
@@ -415,26 +449,51 @@ feature -- Command generation
 				Result.append (extension_to_add)
 				Result.append (")%N")
 			end
+			if test_toggle_b.state and not procedure.precondition_list.empty and not is_both then
+				Result.append ("%T%T%Tend%N")
+			end		
 		end
 
 	eiffel_setting (perm_wind, argument: STRING): STRING is
 			-- Generate the setting of the query using `argument'.
+		local
+			preconditions: LINKED_LIST [APPLICATION_PRECONDITION]
 		do
 			!! Result.make (0)
+			if test_toggle_b.state and not procedure.precondition_list.empty then 
+				Result.append ("if ")
+				preconditions := procedure.precondition_list
+				from
+					preconditions.start
+				until
+					preconditions.islast
+				loop
+					Result.append (preconditions.item.precondition)
+					Result.append ("%N%T%T%T%Tand ")
+					preconditions.forth
+				end		
+				Result.append (preconditions.last.precondition)
+				Result.append ("%N%T%T%Tthen%N%T%T%T%Tio.put_string (%"")
+				Result.append (test_text_field.text)
+				Result.append ("%")%N%T%T%T%T")
+			end
 			Result.append ("target.")
-			Result.append (procedure_name)
+			Result.append (procedure.method_name)
 			Result.append (" (")
 			Result.append (perm_wind)
 			Result.append (".")
 			Result.append (argument)
 		end
 
-	procedure_name: STRING is
-			-- Name of the procedure chosen to set `query'.
+	procedure: APPLICATION_METHOD is
+			-- Procedure chosen to set `query'
 		require
 			item_selected: procedure_opt_pull.selected_button /= Void
+		local
+			application_method_button: APPLICATION_METHOD_PUSH_B
 		do
-			Result := procedure_opt_pull.selected_button.text
+			application_method_button ?= procedure_opt_pull.selected_button
+			Result := application_method_button.application_method
 		end
 
 	text_field_name: STRING 

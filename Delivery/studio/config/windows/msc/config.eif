@@ -20,13 +20,13 @@ sharedlink: "link"
 
 -- optimization flags
 wkoptimize: "-Od -Zi"
-optimize: "-Ox"
+optimize: "-O2"
 
 -- compiler flags
-ccflags: "-w -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtccflags: "-w -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
-cppflags: "-w -nologo -DNONAMELESSUNION $(ISE_CFLAGS)"
-mtcppflags: "-w -nologo -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+ccflags: "-w -nologo -D_CRT_SECURE_NO_DEPRECATE -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtccflags: "-w -nologo -D_CRT_SECURE_NO_DEPRECATE -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-w -nologo -D_CRT_SECURE_NO_DEPRECATE -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtcppflags: "-w -nologo -D_CRT_SECURE_NO_DEPRECATE -DNONAMELESSUNION -MT -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
 il_flags: "-MT -DEIF_IL_DLL"
 

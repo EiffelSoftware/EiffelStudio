@@ -466,7 +466,7 @@ feature {NONE} -- External features
 
 	global_xevent_ptr: POINTER is
 		external
-			"C : EIF_POINTER | %"mel.h%""
+			"C [macro %"mel.h%"]: XEvent *"
 		end;
 
 end -- class MEL_WIDGET

@@ -120,11 +120,22 @@ feature -- Initialization
 			create l_reader
 			create l_env
 			
-				-- First we read list of classes in current assembly located in `path'
-				-- by reading the `types.xml' file.
+				-- We first read all XML files to ensure that they all exist, otherwise
+				-- we raise an error.
 			create l_mapping.make_from_string (clone (path))
 			l_mapping.set_file_name (type_list_file_name)
 			l_types ?= l_reader.new_object_from_file (l_mapping)
+
+			create l_mapping.make_from_string (clone (path))
+			l_mapping.set_file_name (referenced_assemblies_file_name)
+			l_referenced_assemblies ?= l_reader.new_object_from_file (l_mapping)
+
+			if l_types = Void or l_referenced_assemblies = Void then
+					-- Raise an error and stop processing as we cannot continue
+					-- with missing information.
+				Error_handler.insert_error (create {VD61}.make (Current))	
+				Error_handler.raise_error
+			end
 			
 			from
 				i := l_types.eiffel_names.lower
@@ -143,6 +154,9 @@ feature -- Initialization
 					l_location.set_file_name (l_external_name)
 					l_location.add_extension (xml_extension)
 					create l_class.make (l_class_name, l_external_name, l_location)
+					if not l_class.exists then
+						Error_handler.insert_error (create {VD62}.make (Current, l_class))
+					end
 					l_class.set_cluster (Current)
 					classes.put (l_class, l_class_name)
 					dotnet_classes.put (l_class, l_external_name)
@@ -153,9 +167,6 @@ feature -- Initialization
 				-- Then we get list of referenced assemblies from this assembly.
 				-- We raise a VD60 error when assembly is not found in surrounding
 				-- universe.
-			create l_mapping.make_from_string (clone (path))
-			l_mapping.set_file_name (referenced_assemblies_file_name)
-			l_referenced_assemblies ?= l_reader.new_object_from_file (l_mapping)
 			
 			from
 				i := l_referenced_assemblies.assemblies.lower

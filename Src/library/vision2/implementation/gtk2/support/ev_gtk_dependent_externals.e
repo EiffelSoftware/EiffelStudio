@@ -8,6 +8,11 @@ class
 
 feature -- Externals
 
+	frozen g_value_unset (a_value: POINTER) is
+		external
+			"C signature (GValue*) use <gtk/gtk.h>"
+		end
+
 	frozen gdk_keymap_lookup_key (a_keymap, a_key: POINTER): INTEGER is
 		external
 			"C signature (GdkKeymap*, GdkKeymapKey*): guint use <gtk/gtk.h>"
@@ -1292,6 +1297,20 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"g_value_set_string ((GValue*) $a_value, (gchar*) $a_string)"
+		end
+
+	frozen g_value_get_string (a_value: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_string ((GValue*) $a_value)"
+		end
+
+	frozen g_value_take_string (a_value: POINTER; a_string: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_take_string ((GValue*) $a_value, (gchar*) $a_string)"
 		end
 
 	frozen g_value_array_new (a_preallocated: INTEGER): POINTER is

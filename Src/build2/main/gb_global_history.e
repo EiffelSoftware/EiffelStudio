@@ -6,7 +6,17 @@ indexing
 
 class
 	GB_GLOBAL_HISTORY
-
+	
+inherit
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -78,6 +88,10 @@ feature -- Basic operation
 				end
 			end
 			set_current_position (finish)
+			
+				-- Update modified status of project.
+			System_status.enable_project_modified
+			command_handler.update
 		ensure
 			current_position = finish
 		end
@@ -94,6 +108,10 @@ feature -- Basic operation
 			else
 				history_dialog.select_item (current_position)
 			end
+			
+				-- Update modified status of project.
+			System_status.enable_project_modified
+			command_handler.update
 		end
 		
 	redo is
@@ -108,6 +126,10 @@ feature -- Basic operation
 			set_current_position (current_position + 1)
 				-- Update undo/redo buttons.
 			history_dialog.select_item (current_position)
+			
+				-- Update modified status of project.
+			System_status.enable_project_modified
+			command_handler.update
 		end
 		
 	cut_off_at_current_position is
@@ -143,6 +165,9 @@ feature -- Basic operation
 				--| If we do not do this, then when we open the next project the
 				--| redo button is sensitive, which is not allowed. Julian.
 			set_current_position (0)
+		ensure
+			history_empty: command_list.is_empty
+			history_dialog_empty: history_dialog.history_list.is_empty
 		end
 		
 
@@ -158,8 +183,12 @@ feature {GB_HISTORY_DIALOG} -- Status setting
 		
 	set_current_position (a_value: INTEGER) is
 			-- Assign `a_value' to `current_position'.
+		require
+			position_valid: a_value >= -1 and a_value <= command_list.count
 		do
 			internal_current_position.set_item (a_value)
+		ensure
+			current_position_set: internal_current_position.item = a_value
 		end
 	
 feature {NONE} -- Implementation

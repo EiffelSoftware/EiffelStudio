@@ -13,10 +13,7 @@ inherit
 
 	MANAGER_IMP
 		redefine
-			realize,
-			set_size,
-			width,
-			height
+			realize
 		end
 
 	WEL_DROP_DOWN_LIST_COMBO_BOX
@@ -25,10 +22,10 @@ inherit
 			y as wel_y,
 			set_x as wel_set_x,
 			set_y as wel_set_y,
-			set_width as wel_set_width,
-			set_height as wel_set_height,
-			width as wel_width,
-			height as wel_height,
+ 			set_width as wel_set_width,
+ 			set_height as wel_set_height,
+ 			width as wel_width,
+ 			height as wel_height,
 			show as wel_show,
 			hide as wel_hide,
 			shown as wel_shown,
@@ -94,8 +91,8 @@ feature -- Initialization
 		do
 			if not realized then
 				wc ?= parent
-				set_width (25)
-				set_height (item_height)
+				set_width (30)
+				--set_height (item_height)
 				wel_make (wc, x, y, width, height, id_default)
 				!! button_list.make (5)
 				realize_children
@@ -105,7 +102,7 @@ feature -- Initialization
 				end
 			end
 				-- set initial focus
-			if initial_focus/= void then
+			if initial_focus/= Void then
 				initial_focus.wel_set_focus
 			end
 		end
@@ -153,20 +150,19 @@ feature -- Element change
 			button_realized: button.realized
 			button_text_not_void: button.text /= Void
 		local
-			max_width: INTEGER
 			screen_dc: WEL_SCREEN_DC
 			s: STRING
 			b: BUTTON
 		do
 			b ?= button.owner
+			button_list.extend (b)
 			if b.managed then
 				s := button.text
+				add_string (s)
 				if not fixed_size_flag then
 					adjust_size (b)	
 				end
-				add_string (s)
 			end
-			button_list.extend (b)
 		ensure
 			count_increased: button.managed implies count = old count + 1
 			list_count_increased: button_list.count = old button_list.count + 1
@@ -179,26 +175,6 @@ feature -- Status report
 
 	title: STRING
 			-- Title of the option pull
-
-	width: INTEGER is
-			-- Width of the option pull
-		do
-			if exists then
-				Result := wel_width - 25
-			else
-				Result := private_attributes.width
-			end
-		end
-
-	height: INTEGER is
-			-- Height of the option pull
-		do
-			if exists then
-				Result := wel_height - number_of_buttons * item_height
-			else
-				Result := private_attributes.height
-			end
-		end
 
 feature -- Removal
 
@@ -215,15 +191,17 @@ feature -- Status setting
 			-- managing and unmanaging, no shrinking is allowed.
 		local
 			screen_dc: WEL_SCREEN_DC
-			max_width: INTEGER
+			max_width, new_height: INTEGER
 			s: STRING
 		do
 			!! screen_dc
 			screen_dc.get
 			s := b.text
-			max_width := screen_dc.string_width (s).max (width)
+			max_width := screen_dc.string_width (s).max (width - 24)
+			new_height := (number_of_buttons + 1) * item_height 
 			screen_dc.release
-			set_size (max_width, item_height)
+			set_size (max_width + 24, new_height)
+				--| Add 24 to set visible the whole text.
 		end
 
 	set_caption (a_caption: STRING) is
@@ -238,19 +216,6 @@ feature -- Status setting
 			private_selected_button := b
 			if exists and then b.managed then
 				select_item (button_index (b) - unmanaged_count (b) - 1)
-			end
-		end
-
-	set_size (new_width, new_height: INTEGER) is
-			-- Set widget size to `new_width', `new_height'
-		do
-			private_attributes.set_width (new_width)
-			private_attributes.set_height (new_height)
-			if exists then
-				resize (new_width + 25, new_height + (number_of_buttons + 1) * item_height)
-			end
-			if parent /= Void then
-				parent.child_has_resized
 			end
 		end
 
@@ -336,8 +301,8 @@ feature {NONE} -- Implementation
 			-- Number of buttons in option pull
 		do
 			if not button_list.empty then
-				Result := button_list.count - unmanaged_count (button_list.last)
-			end
+				Result := button_list.count - unmanaged_count (button_list.last) + 1
+			end 
 		end
 
 	private_selected_button: BUTTON 

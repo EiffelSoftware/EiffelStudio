@@ -134,11 +134,17 @@ feature -- Access
 			!! Result.make (a_label_gadget, managed, oui_parent)
 		end;
 
-	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; oui_parent: COMPOSITE): MENU_BUTTON_WINDOWS is
+	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; oui_parent: MENU): MENU_BUTTON_WINDOWS is
 			-- MS-Windows implementation of `a_menu_b'
 		do
 			!! Result.make (a_menu_b, managed, oui_parent)
 		end;
+
+	menu_pull (a_pulldown: MENU_PULL; managed: BOOLEAN; oui_parent: MENU): MENU_PULL_WINDOWS is
+			-- MS-Windows implementation of `a_pulldown'
+		do
+			!! Result.make (a_pulldown, managed, oui_parent)
+		end; 
 
 	message (a_message: MESSAGE; managed: BOOLEAN; oui_parent: COMPOSITE): MESSAGE_WINDOWS is
 			-- MS-Windows implementation of `a_message'
@@ -156,6 +162,12 @@ feature -- Access
 			-- MS-Windows implementation of `an_option_button'
 		do
 			!! Result.make (an_option_button, managed, oui_parent)
+		end; 
+
+	opt_pull (a_pulldown: OPT_PULL; managed: BOOLEAN; oui_parent: COMPOSITE): OPTION_PULL_WINDOWS is
+			-- MS-Windows implementation of `a_pulldown'
+		do
+			!! Result.make (a_pulldown, managed, oui_parent)
 		end; 
 
 	override_s (an_override_s: OVERRIDE_S; oui_parent: COMPOSITE): OVERRIDE_SHELL_WINDOWS is
@@ -186,18 +198,6 @@ feature -- Access
 			-- MS-Windows implementation of `a_prompt_dialog'
 		do
 			!! Result.make (a_prompt_dialog, oui_parent)
-		end; 
-
-	menu_pull (a_pulldown: MENU_PULL; managed: BOOLEAN; oui_parent: COMPOSITE): MENU_PULL_WINDOWS is
-			-- MS-Windows implementation of `a_pulldown'
-		do
-			!! Result.make (a_pulldown, managed, oui_parent)
-		end; 
-
-	opt_pull (a_pulldown: OPT_PULL; managed: BOOLEAN; oui_parent: COMPOSITE): OPTION_PULL_WINDOWS is
-			-- MS-Windows implementation of `a_pulldown'
-		do
-			!! Result.make (a_pulldown, managed, oui_parent)
 		end; 
 
 	push_b (a_push_b: PUSH_B; managed: BOOLEAN; oui_parent: COMPOSITE): PUSH_BUTTON_WINDOWS is

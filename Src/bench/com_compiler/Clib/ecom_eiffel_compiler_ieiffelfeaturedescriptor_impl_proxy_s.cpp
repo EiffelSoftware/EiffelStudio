@@ -685,10 +685,10 @@ EIF_INTEGER ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_desc
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_exported_to(  )
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_exported_to_all(  )
 
 /*-----------------------------------------------------------
-	List of classes, to which feature is exported.
+	Is feature exported to all classes?
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -702,9 +702,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ex
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	SAFEARRAY *  ret_value = 0;
+	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelFeatureDescriptor->exported_to( &ret_value);
+	hr = p_IEiffelFeatureDescriptor->exported_to_all( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -713,9 +713,8 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_ex
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_safearray_bstr (ret_value));
-	rt_ce.free_memory_safearray (ret_value);
-	return eif_wean (eiffel_result);
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

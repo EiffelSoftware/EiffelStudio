@@ -153,9 +153,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of classes, to which feature is exported.
+	Is feature exported to all classes?
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_exported_to(  );
+	EIF_BOOLEAN ccom_exported_to_all(  );
 
 
 	/*-----------------------------------------------------------

@@ -35,7 +35,7 @@ inherit
 
 create
 	make
-
+	
 feature -- Content change
 
 	set_text (s: STRING) is
@@ -149,8 +149,6 @@ feature {EB_COMMAND} -- Commands
 	
 	complete_class_name is
 			-- Autocomplete class name before cursor.
-		local
-			i: INTEGER
 		do
 			if not has_selection then
 				text_displayed.prepare_class_name_complete

@@ -30,7 +30,7 @@ feature
 		deferred
 		ensure
 			last_operation_correct implies is_valid
-		end; -- copy_from
+		end;
 
 	depth: INTEGER is
 			-- Depth of pixmap (Number of colors)
@@ -39,7 +39,7 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end; -- depth
+		end;
 
 	height: INTEGER is
 			-- Height of pixmap
@@ -48,7 +48,7 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end; -- height
+		end;
 
 	hot_x: INTEGER is
 			-- Horizontal position of "hot" point
@@ -57,7 +57,7 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- hot_x
+		end;
 
 	hot_y : INTEGER is
 			-- Vertical position of "hot" point
@@ -66,29 +66,27 @@ feature
 		deferred
 		ensure
 			Result >= 0
-		end; -- hot_y
+		end;
 
 	is_valid: BOOLEAN is
 			-- Is the pixmap valid and usable ?
 		deferred
-		end; -- is_valid
+		end;
 
 	last_operation_correct: BOOLEAN is
 			-- Is the last operation correctly performed ?
 		deferred
-		end; -- last_operation_correct
+		end;
 
 	read_from_file (a_file_name: STRING) is
 			-- Load the bitmap described in `a_file_name'.
-			-- `a_file_name' must be a X11 bitmap file.
 			-- Set `last_operation_correct'.
 		require
 			a_file_name_exists: not (a_file_name = Void)
 		deferred
 		ensure
-			last_operation_correct implies is_valid;
-			last_operation_correct implies depth <= 2
-		end; -- read_from_file
+			valid_when_correct: last_operation_correct implies is_valid;
+		end;
 
 	retrieve (a_file_name: STRING) is
 			-- Retreive the pixmap from a file named `a_file_name'.
@@ -98,7 +96,7 @@ feature
 		deferred
 		ensure
 			last_operation_correct implies is_valid
-		end; -- retrieve
+		end;
 
 	store (a_file_name: STRING) is
 			-- Store the pixmap into a file named `a_file_name'.
@@ -108,7 +106,7 @@ feature
 			a_file_name_exists: not (a_file_name = Void);
 			is_valid: is_valid
 		deferred
-		end; -- store
+		end;
 
 	width: INTEGER is
 			-- Width of pixmap
@@ -117,7 +115,7 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end -- width
+		end
 
 invariant
 

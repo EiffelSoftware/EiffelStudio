@@ -56,7 +56,6 @@ feature -- Access
 		local
 			a_path: EV_PATH
 			a_center: EV_POINT
-			temp_int: EV_INTERIOR
 		do 
 			a_center := clone (center)
 			create Result.make 
@@ -64,15 +63,10 @@ feature -- Access
 			Result.set_center (a_center) 
 
 			create a_path.make 
-			a_path.set_line_width (App_const.standard_thickness) 
-			a_path.set_foreground_color (Resources.foreground_figure_color) 
-			Result.set_path (a_path) 
+			a_path.set_line_width (App_const.large_thickness) 
+			a_path.set_foreground_color (Resources.app_background_figure_color) 
+			Result.set_path (a_path)
 			Result.path.set_xor_mode 
-
-			create temp_int.make
-			temp_int.set_foreground_color (Resources.background_figure_color)
-		 	Result.set_interior (temp_int) 
-			Result.interior.set_xor_mode 
 		end
 
 feature -- Removable
@@ -86,6 +80,7 @@ feature -- Removable
 			create cut_figure_command
 			create arg.make (Current)
 			cut_figure_command.execute (arg, Void)
+			drawing.active_area.set_transported_data (Void)
 		end
 
 feature -- Status setting

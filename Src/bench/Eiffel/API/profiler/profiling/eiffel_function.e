@@ -31,10 +31,10 @@ feature -- Creation
 			feature_name := new_name;
 		end;
 
-	set_class (a_class: CLASS_C) is
-			-- Set `e_class' to `a_class'.
+	set_class_id (a_class_id: INTEGER) is
+			-- Set `class_id' to `a_class_id'.
 		do
-			class_id := a_class.class_id
+			class_id := a_class_id
 		end;
 
 feature -- Output
@@ -63,8 +63,8 @@ feature -- Output
 				st.add_string (int_class_name);
 				st.add_string (feature_name);
 			else
-				class_c := Eiffel_system.class_of_id (class_id);
-				if class_c /= Void then
+				if Eiffel_system.valid_class_id (class_id) then
+					class_c := Eiffel_system.class_of_id (class_id);
 					st.add_string ("<");
 					st.add_cluster (class_c.cluster, class_c.cluster.cluster_name);
 					st.add_string (">");

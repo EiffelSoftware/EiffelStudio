@@ -554,7 +554,7 @@ feature -- Store/Retrive
 						if node.name.is_equal ("VIEW") then
 							view_name := node.attribute_by_name ("NAME").value
 							available_views.extend (view_name)
-							if node.attribute_by_name ("NAME").value.is_equal (current_view) then
+							if view_input = Void or else node.attribute_by_name ("NAME").value.is_equal (current_view) then
 								view_input := node
 							end
 						end

@@ -72,7 +72,7 @@ feature -- Standard Interface
 			build_bar;
 			!! format_bar.make (new_name, global_form);
 			build_format_bar;
-			text_window.set_last_format (default_format);
+			text_window.set_last_format_2 (default_format);
 			attach_all
 		end;
 
@@ -220,7 +220,7 @@ feature -- Window Settings
 	set_default_format is
 			-- Default format of windows.
 		do
-			text_window.set_last_format (default_format);
+			text_window.set_last_format_2 (default_format);
 		end;
 
 	set_default_size is
@@ -262,13 +262,13 @@ feature -- Window Properties
 	edit_bar, format_bar: FORM;
 			-- Main and format button bars.
 
-	showtext_command: SHOW_TEXT;
+	showtext_frmt_holder: FORMAT_HOLDER;
 			-- Command to show text od text window's root stone,
 			-- default format by default.
 
-	default_format: FORMATTER is
+	default_format: FORMAT_HOLDER is
 		do
-			Result := showtext_command
+			Result := showtext_frmt_holder
 		end;
 
 	editable: BOOLEAN is

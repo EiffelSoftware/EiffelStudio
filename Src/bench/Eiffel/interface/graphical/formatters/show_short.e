@@ -23,9 +23,9 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+	make (a_text_window: CLASS_TEXT) is
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Properties

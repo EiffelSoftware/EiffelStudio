@@ -61,6 +61,14 @@ feature -- Setting
 			-- properly_set: associated_menu_entry = a_menu_entry
 		-- end;
 
+feature -- Execution
+
+	execute (s: STONE) is
+			-- Executes `associated_format' with `s'.
+		do
+			associated_formatter.execute (s)
+		end;
+
 feature -- Properties
 
 	associated_formatter: FORMATTER_2

@@ -126,7 +126,7 @@ feature -- Formatting
 						else
 							tool ?= text_window.tool;
 							if tool /= Void then
-								tool.showtext_command.execute (stone)
+								tool.showtext_frmt_holder.execute (stone)
 							end
 						end
 					end

@@ -78,10 +78,15 @@ feature -- Graphical Interface
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
+		local
+			showtext_cmd: SHOW_TEXT;
+			showtext_button: EB_BUTTON
 		do
-			!! showtext_command.make (format_bar, text_window);
-			format_bar.attach_top (showtext_command, 0);
-			format_bar.attach_left (showtext_command, 0);
+			!! showtext_cmd.make (text_window);
+			!! showtext_button.make (showtext_cmd, format_bar);
+			!! showtext_frmt_holder.make (showtext_cmd, showtext_button);
+			format_bar.attach_top (showtext_button, 0);
+			format_bar.attach_left (showtext_button, 0);
 		end;
 
 feature -- Window Properties

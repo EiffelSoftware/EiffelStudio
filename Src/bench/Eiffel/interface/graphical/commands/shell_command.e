@@ -74,8 +74,8 @@ feature {NONE} -- Implementation
 					end
 				elseif
 					class_text /= Void and then (
-					class_text.last_format = class_text.tool.showtext_command or
-					class_text.last_format = class_text.tool.showclick_command)
+					class_text.last_format_2 = class_text.tool.showtext_frmt_holder or
+					class_text.last_format_2 = class_text.tool.showclick_frmt_holder)
 				then
 					from
 						text_value := class_text.text;

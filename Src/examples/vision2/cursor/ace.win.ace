@@ -1,25 +1,25 @@
 --!----------------------------------------------------------------
---! CURSOR_EXAMPLE Project Ace-file for Windows platforms.
+--! Project Ace-file for Windows platforms.
 --!----------------------------------------------------------------
 
 system
-	cursor_example
+	cursor
 
 root 
-	CURSOR_EXAMPLE (root_cluster): "make_and_launch"
+	CURSOR_TEST (root_cluster): "make_and_launch"
 
 default
 	assertion			(all)
 	multithreaded		(no)
 	console_application	(no)
 	dynamic_runtime		(no)
-	dead_code_removal	(yes)
-	profile				(no)
+	dead_code_removal		(yes)
+	profile			(no)
 	line_generation		(no)
 	debug				(no)
 	array_optimization	(no)
-	inlining			(yes)
-	inlining_size		("10")
+	inlining			(no)
+	inlining_size		("4")
 
 cluster 
 		-- Root cluster
@@ -35,8 +35,6 @@ cluster
 	all wel:			"$ISE_EIFFEL\library\wel"
 
 		-- Vision2
-	event:				"$ISE_EIFFEL\library\event"
-
 	all vision2:		"$ISE_EIFFEL\library\vision2"
 		exclude 
 			"gtk"
@@ -50,11 +48,11 @@ cluster
 
 external
 	include_path:		"$(ISE_EIFFEL)\library\vision2\spec\include",
-						"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+					"$(ISE_EIFFEL)\library\wel\spec\windows\include"
 
-	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\libpng.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\zlib.lib",
-						"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
+	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+					"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+			 		"$(ISE_EIFFEL)\C_library\libpng\libpng.lib",
+			 		"$(ISE_EIFFEL)\C_library\zlib\zlib.lib"
 
-end -- ev_cursor_example
+end -- accelerator example

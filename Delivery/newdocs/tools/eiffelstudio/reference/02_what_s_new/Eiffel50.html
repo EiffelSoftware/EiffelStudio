@@ -2,95 +2,11 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>What's new in EiffelStudio 5.2</TITLE>
-		<LINK REL=StyleSheet HREF="../../../default.css">
+		<TITLE>Release notes of EiffelStudio 5.0</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>What's new in EiffelStudio 5.2</H1>
-		<h2>Graphical environment</h2>
-        <ul>
-          <li>More improvements in usability and bug fixes.</li>
-          <li>Added a status bar, which gives a lot of information, such as the
-            state of the compilation or the name of the current project.</li>
-          <li>Clicking feature clauses in the feature tree now centers the
-            editor on the selected feature clause.</li>
-          <li>More specific icons in the feature and cluster trees, so that
-            identifying deferred classes and the nature of features is now
-            straightforward.</li>
-          <li>Up to 10 external commands can now be defined and called from the <b>Tools</b>
-            menu.</li>
-          <li>The new <b>Quick compile</b> command lets you recompile only the
-            classes that have been edited in EiffelStudio, skipping the
-            sometimes tedious degree 6, that looks for modified classes.</li>
-          <li>Control picking now has a configurable effect.</li>
-        </ul>
-		<h2>Debugger</h2>
-        <ul>
-          <li>Expressions can now be dynamically evaluated in the debugger.</li>
-          <li>Conditional breakpoints.</li>
-          <li>Objects can now define a string representation that is displayed
-            in the debugger, to see their state at a glance.</li>
-          <li>Possible stack overflows can now be detected in the debugger
-            before they occur.</li>
-          <li>Classes can now define a `debug_output' feature, whose string
-            result is automatically displayed in the debugger for all objects of
-            that type.</li>
-        </ul>
-		<h2>Compiler and .NET</h2>
-        <ul>
-          <li>Click
-          <a href="30_compiler/60_version_history/01_51_release/00_50_to_51_changes.html">
-          here</a> for more details on compiler improvements and full Eiffel 
-          support on .NET</li>
-        </ul>
-        <p>&nbsp;</p>
-		<H1>What was new in EiffelStudio 5.1</H1>
-		<h2>Graphical environment</h2>
-        <ul>
-          <li>Numerous improvements in usability and bug fixes.</li>
-          <li>Richer class and cluster creation dialogs.</li>
-          <li>Class name completion in the editor (by pressing Shift+Ctrl+Space
-            half-way through the class name).</li>
-          <li>Editor now supports drag-and-drop of the selection.</li>
-          <li>When debugging a project from EiffelStudio, the current directory 
-          will be your project directory. It is a change from previous version 
-          where:<ul>
-          <li>on Windows, it used to be launched in the EIFGEN\W_code of your 
-          project directory</li>
-          <li>on Unix, it used to be launched from the same directory where 
-          `estudio' (or `ebench') was launched.</li>
-        </ul>
-		  </li>
-          <li>EiffelStudio GUI now also available on Unix platforms and Windows 9x/Me</li>
-        </ul>
-		<h2>Compiler and .NET</h2>
-        <ul>
-          <li>Click
-          <a href="30_compiler/60_version_history/01_51_release/00_50_to_51_changes.html">
-          here</a> for more details on compiler improvements and full Eiffel 
-          support on .NET</li>
-        </ul>
-		<h2>Libraries</h2>
-		<h3>EiffelBase</h3>
-        <ul>
-          <li>It is now forbidden to create a <span class="eclass">BIT_REF</span> or a <span class="eclass">BIT X</span> object using 
-          its creation procedure (before it was accepted but did not work)</li>
-          <li>Added <span class="efeature">make_temporary_name</span> in <span class="eclass">FILE_NAME</span></li>
-          <li>Made <span class="efeature">to_c</span> obsolete from class <span class="eclass">INTEGER_INTERVAL</span></li>
-          <li>Changed semantic of <span class="efeature">split</span> from class <span class="eclass">STRING</span></li>
-          <li>Fixed a bug in <span class="efeature">clear_all</span> from <span class="eclass">HASH_TABLE</span> that 
-          kept a reference to the last found item. Now it does not keep the 
-          reference after a call to <span class="efeature">clear_all</span>.</li>
-        </ul>
-		<h3>Vision2</h3>
-        <ul>
-          <li>Support for Vision2 applications on GTK platforms.</li>
-          <li>Some changes in the Vision2 library have been made,
-          <a href="../../../libraries/vision2/content/0-_revisions/index.html">
-          check here on how to update your code</a>.</li>
-        </ul>
-		<p>&nbsp;</p>
 		<H1>What was new in EiffelStudio 5.0</H1>
         <h2>Graphical environment</h2>
         
@@ -128,7 +44,7 @@
         <H2>Compiler</H2>
         
         The compiler has been improved in many ways and some functionality have
-        been added. <a href="30_compiler/60_version_history/00_50_release/00_45_to_50_changes.html">Check
+        been added. <a href="../30_compiler/60_version_history/00_50_release/00_45_to_50_changes.html">Check
         it out</a>.
         
         

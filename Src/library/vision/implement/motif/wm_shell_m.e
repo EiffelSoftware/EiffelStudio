@@ -474,7 +474,7 @@ feature {NONE} -- External features
 			"set_int"
 		end;
 
-    m_wm_c_get_pixmap (scr_obj: POINTER; name: ANY): POINTER is
+    m_wm_c_get_pixmap (scr_obj: POINTER; name: POINTER): POINTER is
         external
             "C"
         alias

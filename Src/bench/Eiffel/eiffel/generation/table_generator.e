@@ -60,18 +60,18 @@ feature
 			!!dir_name.make_from_string (Final_generation_path);
 			dir_name.extend (temp);
 
-			!! subdir.make (dir_name.path);
+			!! subdir.make (dir_name);
 			if not subdir.exists then
 				subdir.create
 			end;
 
-			!!file_name.make_from_string (dir_name.path);
+			!!file_name.make_from_string (dir_name);
 			temp := clone (infix_file_name);
 			temp.append_integer (file_counter);
 			temp.append (postfix_file_name);
 			file_name.set_file_name (temp);
 
-			!!Result.make (file_name.path);
+			!!Result.make (file_name);
 		end;
 
 	init_file is

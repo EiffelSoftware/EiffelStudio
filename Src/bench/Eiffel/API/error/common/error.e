@@ -72,7 +72,7 @@ feature -- Debug pupose
 			!!f_name.make_from_string (help_path);
 			f_name.extend ("short");
 			f_name.set_file_name (help_file_name);
-			file_name := f_name.path
+			file_name := f_name
 			if subcode /= 0 then
 				file_name.append_integer (subcode)
 			end;

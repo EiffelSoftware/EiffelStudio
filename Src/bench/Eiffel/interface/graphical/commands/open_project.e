@@ -84,7 +84,7 @@ feature
 					!! fn.make_from_string (project_dir.name);
 					fn.extend (Eiffelgen);
 					fn.set_file_name (Dot_workbench);
-				!!workbench_file.make (fn.path);
+				!!workbench_file.make (fn);
 				if 
 					project_dir.is_new or else
 					(not workbench_file.exists)

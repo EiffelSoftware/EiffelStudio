@@ -79,7 +79,7 @@ feature -- Basic operations
 				cecil_type.append ("EIF_DOUBLE")
 				is_basic_type := True
 
-			elseif is_boolean (a_type) then
+			elseif a_type = Vt_bool then
 				cecil_type.append ("EIF_BOOLEAN")
 				ce_function_name.append ("ccom_ce_boolean")
 				ec_function_name.append ("ccom_ec_boolean")

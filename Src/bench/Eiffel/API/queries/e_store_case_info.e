@@ -41,10 +41,9 @@ feature -- Execution
 
 	execute is
 		local
-			format_storage: FORMAT_CASE_STORAGE
+			case_w: CASE_W
 		do
-			!! format_storage.make (output_window, reverse_engineering_window);
-			format_storage.execute
+			!! case_w.make (output_window, reverse_engineering_window)	
 		end;
 
 feature {NONE} -- Properties

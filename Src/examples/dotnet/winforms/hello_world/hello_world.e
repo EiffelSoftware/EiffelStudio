@@ -16,8 +16,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			--| Set title with "hello_world".
+			-- Entry point.
 		local
 			dummy: SYSTEM_OBJECT
 		do

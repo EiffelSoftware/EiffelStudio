@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Display a dialog box containing the %"Hello world%" message."
 	
 class
 	HELLO_WORLD
@@ -9,9 +9,13 @@ inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
+		undefine
+			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
+	
+	ANY
 
 create
 	make
@@ -19,8 +23,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			--| Call `initialize_components'.
+			-- Entry point.
 		do
 			initialize_components
 			feature {WINFORMS_APPLICATION}.run_form (Current)
@@ -63,7 +67,7 @@ feature -- Implementation
 			my_button.set_location (create {DRAWING_POINT}.make_from_x_and_y (256, 64))
 			my_button.set_text (("Click Me!").to_cil)
 			my_button.set_accessible_name (("DefaultAction").to_cil)
-			my_button.add_click (create {EVENT_HANDLER}.make (Current, $my_button_clicked))
+			my_button.add_click (create {EVENT_HANDLER}.make (Current, $on_my_button_clicked))
 			
 				-- Initialize my_text_box.
 			my_text_box.set_location (create {DRAWING_POINT}.make_from_x_and_y (16, 24))
@@ -75,6 +79,10 @@ feature -- Implementation
 			
 			controls.add (my_button)
 			controls.add (my_text_box)
+		ensure
+			non_void_components: components /= Void
+			non_void_my_button: my_button /= Void
+			non_void_my_text_box: my_text_box /= Void
 		end
 
 
@@ -95,7 +103,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 	
-	my_button_clicked (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_my_button_clicked (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- feature performed when my_button is clicked.
 		local
 			msg: SYSTEM_STRING
@@ -104,5 +112,10 @@ feature {NONE} -- Implementation
 			msg := msg.concat_string_string_string (("Text is : '").to_cil, my_text_box.text, ("'").to_cil)
 			dummy := feature {WINFORMS_MESSAGE_BOX}.show (msg)
 		end
-		
+
+invariant
+	non_void_components: components /= Void
+	non_void_my_button: my_button /= Void
+	non_void_my_text_box: my_text_box /= Void
+
 end -- class HELLO_WORLD

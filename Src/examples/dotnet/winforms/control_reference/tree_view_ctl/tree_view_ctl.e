@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Tree view example."
 	
 class
 	TREE_VIEW_CTL
@@ -24,8 +24,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			-- | Call `initialize_components' then `fill_directory_tree'.
+			-- Entry point.
 		local
 			l_dec: DECIMAL
 		do
@@ -78,6 +78,7 @@ feature {NONE} -- Implementation
 			l_point: DRAWING_POINT
 			l_decimal: DECIMAL
 			l_image: DRAWING_BITMAP
+			l_bitmap: DRAWING_BITMAP
 		do
 			create resources.make_from_resource_source (Current.get_type)
 
@@ -161,9 +162,14 @@ feature {NONE} -- Implementation
 			indent_up_down.add_value_changed (create {EVENT_HANDLER}.make (Current, $indent_up_down_value_changed))
 
 			image_list_2.set_transparent_color (feature {DRAWING_COLOR}.transparent)
-			image_list_2.images.add (create {DRAWING_BITMAP}.make_from_filename (("diamond.bmp").to_cil))
-			image_list_2.images.add (create {DRAWING_BITMAP}.make_from_filename (("club.bmp").to_cil))
-			
+			l_bitmap := loaded_bitmap ("diamond")
+			if l_bitmap /= Void then
+				image_list_2.images.add (l_bitmap)
+			end
+			l_bitmap := loaded_bitmap ("club")
+			if l_bitmap /= Void then
+				image_list_2.images.add (l_bitmap)--create {DRAWING_BITMAP}.make_from_filename (("club.bmp").to_cil))
+			end
 			l_size.make_from_width_and_height (5, 13)
 			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (502, 293)
@@ -205,8 +211,14 @@ feature {NONE} -- Implementation
 			check_box_3.add_click (create {EVENT_HANDLER}.make (Current, $check_box_3_click))
 
 			image_list_1.set_transparent_color (feature {DRAWING_COLOR}.transparent)
-			image_list_1.images.add (create {DRAWING_BITMAP}.make_from_filename (("clsdfold.bmp").to_cil))
-			image_list_1.images.add (create {DRAWING_BITMAP}.make_from_filename (("openfold.bmp").to_cil))
+			l_bitmap := loaded_bitmap ("clsdfold")
+			if l_bitmap /= Void then
+				image_list_1.images.add (l_bitmap) --create {DRAWING_BITMAP}.make_from_filename (("clsdfold.bmp").to_cil))
+			end
+			l_bitmap := loaded_bitmap ("openfold")
+			if l_bitmap /= Void then
+				image_list_1.images.add (l_bitmap) --create {DRAWING_BITMAP}.make_from_filename (("openfold.bmp").to_cil))
+			end
 
 			image_list_combo_box.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
 			l_point.make_from_x_and_y (88, 192)
@@ -274,6 +286,24 @@ feature {NONE} -- Implementation
 			
 			controls.add (grp_tree_view)
 			controls.add (directory_tree)
+		ensure
+			non_void_components: components /= Void
+			non_void_directory_tree: directory_tree /= Void
+			non_void_indent_up_down: indent_up_down /= Void
+			non_void_tool_tip: tool_tip /= Void
+			non_void_label_1: label_1 /= Void
+			non_void_label_2: label_2 /= Void
+			non_void_check_box_1: check_box_1 /= Void
+			non_void_check_box_2: check_box_2 /= Void
+			non_void_check_box_3: check_box_3 /= Void
+			non_void_check_box_4: check_box_4 /= Void
+			non_void_check_box_5: check_box_5 /= Void
+			non_void_check_box_6: check_box_6 /= Void
+			non_void_check_box_7: check_box_7 /= Void
+			non_void_image_list_1: image_list_1 /= Void
+			non_void_image_list_2: image_list_2 /= Void
+			non_void_image_list_combo_box: image_list_combo_box /= Void
+			non_void_grp_tree_view: grp_tree_view /= Void
 		end
 
 
@@ -295,6 +325,23 @@ feature {NONE} -- Implementation
 			retried := true
 			retry
 		end
+
+	loaded_bitmap (a_bitmap_name: STRING): DRAWING_BITMAP is
+			-- Load bitmap corresponding to `a_bitmap_name'.
+		require
+			non_void_a_bitmap_name: a_bitmap_name /= Void
+			not_empty_a_bitmap_name: not a_bitmap_name.is_empty
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				create Result.make_from_filename ((a_bitmap_name + ".bmp").to_cil)
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 
 	add_directories (node: WINFORMS_TREE_NODE) is
 			-- For a given root directory (or drive), add the directories to the
@@ -582,5 +629,24 @@ feature {NONE} -- Implementation
 
 	Drive_fixed: INTEGER is 3
 			-- Value of a fixed, non removable disk drive.
-		
+
+invariant
+	non_void_components: components /= Void
+	non_void_directory_tree: directory_tree /= Void
+	non_void_indent_up_down: indent_up_down /= Void
+	non_void_tool_tip: tool_tip /= Void
+	non_void_label_1: label_1 /= Void
+	non_void_label_2: label_2 /= Void
+	non_void_check_box_1: check_box_1 /= Void
+	non_void_check_box_2: check_box_2 /= Void
+	non_void_check_box_3: check_box_3 /= Void
+	non_void_check_box_4: check_box_4 /= Void
+	non_void_check_box_5: check_box_5 /= Void
+	non_void_check_box_6: check_box_6 /= Void
+	non_void_check_box_7: check_box_7 /= Void
+	non_void_image_list_1: image_list_1 /= Void
+	non_void_image_list_2: image_list_2 /= Void
+	non_void_image_list_combo_box: image_list_combo_box /= Void
+	non_void_grp_tree_view: grp_tree_view /= Void
+
 end -- class DATE_TIME_PICKER_CTL

@@ -1,8 +1,22 @@
 indexing
-	description: ""
+	description: "Really simple calculator. %
+				% Show how to use external assemblies."
 
 class
 	WORLD_CALC
+
+inherit 
+	WINFORMS_FORM
+		rename
+			make as make_form,
+			refresh as refresh_winform
+		undefine
+			to_string, finalize, equals, get_hash_code
+		redefine
+			dispose_boolean
+		end
+
+	ANY
 
 create
 	make
@@ -10,29 +24,20 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			--| Call `initialize_components'.
+			-- Entry point.
 		local
 			dummy: SYSTEM_OBJECT
 		do
-			create my_window.make
 			initialize_components
 
-			dummy := my_window.show_dialog
+			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
 
-	my_window: WINFORMS_FORM
-			-- Main window.
-
 	components: SYSTEM_DLL_SYSTEM_CONTAINER	
 			-- System.ComponentModel.Container.
-
-
---	rm: SYSTEM_DLL_RESSOURCE_MANAGER
---	rs WINFORMS_RESSOURCE_SET  // Used when working with a ResourceManager (See code below)
-
 
 	btn_equals, btn_clear: WINFORMS_BUTTON			
 			-- System.Windows.Forms.Button.
@@ -47,21 +52,16 @@ feature -- Access
 	lbl_formula: WINFORMS_LABEL
 			-- System.Windows.Forms.Label
 
-
 feature -- Implementation
 
 	initialize_components is
-			--
+			-- Initialize all components of window.
 		local
 			l_size: DRAWING_SIZE
 			l_point: DRAWING_POINT
 			i: INTEGER
 			l_button: WINFORMS_BUTTON
 		do
-				-- Create an instance of the resource manager.  The second parameter identifies
-				-- the "main" assembly.  All searching for satellites is done based on the location, etc ..
-				-- of the main assembly.
-
 			create components.make
 			create txt_formula.make
 			create lbl_formula.make
@@ -70,15 +70,15 @@ feature -- Implementation
 			create btn_numbers.make (10)
 			create btn_ops.make (4)
 
-			my_window.set_text (("Math_Greeting").to_cil)
+			set_text (("Math_Greeting").to_cil)
 			l_size.make_from_width_and_height (5, 13)
-			my_window.set_auto_scale_base_size (l_size)
+			set_auto_scale_base_size (l_size)
 			l_size.make_from_width_and_height (250, 230)
-			my_window.set_client_size (l_size)
+			set_client_size (l_size)
 
 			l_point.make_from_x_and_y (8, 10)
 			lbl_formula.set_location (l_point)
-			lbl_formula.set_text (("Math_Formula_Label").to_cil)
+			lbl_formula.set_text (("Formula:").to_cil)
 			l_size.make_from_width_and_height (155, 20)
 			lbl_formula.set_size (l_size)
 
@@ -89,14 +89,12 @@ feature -- Implementation
 			txt_formula.set_size (l_size)
 			txt_formula.set_read_only (True)
 
-
 			l_point.make_from_x_and_y (165, 28)
 			btn_clear.set_location (l_point)
 			l_size.make_from_width_and_height (80, 25)
 			btn_clear.set_size (l_size)
 			btn_clear.set_text (("Clear").to_cil)
-			btn_clear.add_click (create {EVENT_HANDLER}.make (Current, $btn_clearClicked))
-
+			btn_clear.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_clear_clicked))
 
 			btn_numbers.put (0, create {WINFORMS_BUTTON}.make)
 			l_point.make_from_x_and_y (8, 180)
@@ -155,7 +153,7 @@ feature -- Implementation
 			loop
 				l_size.make_from_width_and_height (30, 30)
 				btn_numbers.item (i).set_size (l_size)
-				btn_numbers.item (i).add_click (create {EVENT_HANDLER}.make (Current, $btn_numbersClicked))
+				btn_numbers.item (i).add_click (create {EVENT_HANDLER}.make (Current, $on_btn_numbers_clicked))
 				i := i + 1
 			end
 
@@ -186,10 +184,9 @@ feature -- Implementation
 			loop
 				l_size.make_from_width_and_height (30, 30)
 				btn_ops.item (i).set_size (l_size)
-				btn_ops.item (i).add_click (create {EVENT_HANDLER}.make (Current, $btn_opClicked))
+				btn_ops.item (i).add_click (create {EVENT_HANDLER}.make (Current, $on_btn_op_clicked))
 				i := i + 1
 			end
-
 
 			l_point.make_from_x_and_y (48, 180)
 			btn_equals.set_location (l_point)
@@ -197,19 +194,19 @@ feature -- Implementation
 			btn_equals.set_size (l_size)
 			btn_equals.set_tab_index (1)
 			btn_equals.set_text (("Calculate").to_cil)
-			btn_equals.add_click (create {EVENT_HANDLER}.make (Current, $btn_equalsClicked))
+			btn_equals.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_equals_clicked))
 
-			my_window.controls.add (txt_formula)
-			my_window.controls.add (lbl_formula)
-			my_window.controls.add (btn_equals)
-			my_window.controls.add (btn_clear)
+			controls.add (txt_formula)
+			controls.add (lbl_formula)
+			controls.add (btn_equals)
+			controls.add (btn_clear)
 
 			from
 				i := 0
 			until
 				i = 10
 			loop
-				my_window.controls.add (btn_numbers.item (i))
+				controls.add (btn_numbers.item (i))
 				i := i + 1
 			end
 
@@ -218,40 +215,62 @@ feature -- Implementation
 			until
 				i = 4
 			loop
-				my_window.controls.add (btn_ops.item (i))
+				controls.add (btn_ops.item (i))
 				i := i + 1
 			end
 		end
 
 feature -- Implementation
 
-	btn_clearClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
-			--
+	dispose_boolean (a_disposing: BOOLEAN) is
+			-- method called when form is disposed.
+		local
+			dummy: WINFORMS_DIALOG_RESULT
+			retried: BOOLEAN
+		do
+			if not retried then
+				if components /= Void then
+					components.dispose	
+				end
+			end
+			Precursor {WINFORMS_FORM}(a_disposing)
+		rescue
+			retried := true
+			retry
+		end
+
+	on_btn_clear_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+			-- Feature performed when button `btn_clear' is clicked.
 		do
 			 txt_formula.set_text (("").to_cil)
 		end
 
-	btn_numbersClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
-			--
+	on_btn_numbers_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+			-- Feature performed when button `btn_numbers' is clicked.
 		local
 			btn: WINFORMS_BUTTON
 		do
 			btn ?= sender
+			check
+				non_void_btn: btn /= Void
+			end
 			txt_formula.set_text ((("").to_cil).concat_string_string (txt_formula.text, btn.text))
 		end
 
-	btn_opClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
-			--
+	on_btn_op_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+			-- Feature performed when button `btn_op' is clicked.
 		local
 			btn: WINFORMS_BUTTON
 		do
 			btn ?= sender
-	--		txt_formula.set_text (txt_formula.Text + " " + btn.Text + " "
+			check
+				non_void_btn: btn /= Void
+			end
 			txt_formula.set_text ((("").to_cil).concat_string_string_string_string (txt_formula.text, (" ").to_cil, btn.text, (" ").to_cil))
 		end
 
-
-	btn_equalsClicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+	on_btn_equals_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
+			-- Feature performed when button `btn_equal' is clicked.
 		local
 			my_parse: PARSER_PARSER
 			retried: BOOLEAN

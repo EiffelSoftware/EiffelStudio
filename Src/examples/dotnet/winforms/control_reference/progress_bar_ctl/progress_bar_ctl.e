@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Porgress bar example."
 	
 class
 	PROGRESS_BAR_CTL
@@ -25,8 +25,8 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		indexing
-			description: "Entry point."
+			-- Entry point.
+			-- Call `initialize_components'.
 		local
 			dummy: SYSTEM_OBJECT
 		do
@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 			prog_bar.set_step (1)
 			
 			feature {WINFORMS_APPLICATION}.run_form (Current)
+		ensure
+			i_sleep_time_positive: i_sleep_time > 0
 		end
 
 feature -- Access
@@ -136,7 +138,7 @@ feature -- Implementation
 			cmd_step.set_size (l_size)
 			cmd_step.set_drop_down_style (feature {WINFORMS_COMBO_BOX_STYLE}.drop_down_list)
 			cmd_step.set_tab_index (7)
-			cmd_step.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $cmb_step_selected_index_changed))
+			cmd_step.add_selected_index_changed (create {EVENT_HANDLER}.make (Current, $on_cmb_step_selected_index_changed))
 			create l_array.make (4)
 			l_array.put (0, ("1").to_cil)
 			l_array.put (1, ("5").to_cil)
@@ -165,7 +167,7 @@ feature -- Implementation
 			sldr_speed.set_size (l_size)
 			sldr_speed.set_text (("trackBar1").to_cil)
 			sldr_speed.set_minimum (10)
-			sldr_speed.add_scroll (create {EVENT_HANDLER}.make (Current, $sldr_speed_scroll))
+			sldr_speed.add_scroll (create {EVENT_HANDLER}.make (Current, $on_sldr_speed_scroll))
 
 			l_point.make_from_x_and_y (24, 80)
 			label_4.set_location (l_point)
@@ -193,6 +195,18 @@ feature -- Implementation
 			controls.add (prog_bar)
 
 			sldr_speed.end_init
+		ensure
+			non_void_components: components /= Void
+			non_void_cmd_step: cmd_step /= Void
+			non_void_prog_bar: prog_bar /= Void
+			non_void_sldr_speed: sldr_speed /= Void
+			non_void_label_1: label_1 /= Void
+			non_void_label_4: label_4 /= Void
+			non_void_label_2: label_2 /= Void
+			non_void_label_3: label_3 /= Void
+			non_void_lbl_value: lbl_value /= Void
+			non_void_lbl_completed: lbl_completed /= Void
+			non_void_grp_behavior: grp_behavior /= Void
 		end
 
 
@@ -216,9 +230,9 @@ feature {NONE} -- Implementation
 		end
 
 	on_load (e: EVENT_ARGS) is
-			--
+			-- Feature performed when form is loaded.
 		do
-			-- Spin off a new thread to update the ProgressBar control
+				-- Spin off a new thread to update the ProgressBar control
 			create timed_progress.make (create {THREAD_START}.make (Current, $timed_progress_proc))
 			timed_progress.set_is_background (True)
 			timed_progress.start
@@ -230,7 +244,7 @@ feature {NONE} -- Implementation
 			min: INTEGER
 			numerator, denominator, completed: DOUBLE
 		do
-			-- Reset to start if required
+				-- Reset to start if required
 			if prog_bar.value = prog_bar.maximum then
 				prog_bar.set_value (prog_bar.minimum)
 			else 
@@ -289,8 +303,11 @@ feature {NONE} -- Implementation
 			i_sleep_time_set: i_sleep_time = a_value	
 		end
 
-	sldr_speed_scroll (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_sldr_speed_scroll (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- Feature performed when speed scroll is moved.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= void
 		local
 			tb: WINFORMS_TRACK_BAR
 			time: INTEGER
@@ -302,8 +319,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cmb_step_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
+	on_cmb_step_selected_index_changed (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
 			-- Feature performed when step selected change.
+		require
+			non_void_sender: sender /= Void
+			non_void_args: args /= void
 		local
 			l_selected_item: SYSTEM_STRING
 			l_step_string: STRING
@@ -322,5 +342,19 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
+
+invariant
+	i_sleep_time_positive: i_sleep_time > 0
+	non_void_components: components /= Void
+	non_void_cmd_step: cmd_step /= Void
+	non_void_prog_bar: prog_bar /= Void
+	non_void_sldr_speed: sldr_speed /= Void
+	non_void_label_1: label_1 /= Void
+	non_void_label_4: label_4 /= Void
+	non_void_label_2: label_2 /= Void
+	non_void_label_3: label_3 /= Void
+	non_void_lbl_value: lbl_value /= Void
+	non_void_lbl_completed: lbl_completed /= Void
+	non_void_grp_behavior: grp_behavior /= Void
 
 end -- Class PROGRESS_BAR_CTL

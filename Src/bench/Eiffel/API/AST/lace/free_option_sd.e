@@ -75,12 +75,13 @@ feature {NONE}
 	inlining_size, server_file_size,
 	hide, override_cluster, address_expression, profile,
 	document, hide_implementation, java_generation, line_generation,
-	multithreaded, dynamic_runtime, console_application: INTEGER is UNIQUE;
+	multithreaded, dynamic_runtime, console_application,
+	shared_library_definition: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (20);
+			!!Result.make (25);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -101,6 +102,7 @@ feature {NONE}
 			Result.force (multithreaded, "multithreaded")
 			Result.force (dynamic_runtime, "dynamic_runtime")
 			Result.force (console_application, "console_application")
+			Result.force (shared_library_definition, "shared_library_definition")
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -256,7 +258,7 @@ feature {COMPILER_EXPORTER}
 				end;
 
 			when override_cluster then
-				if value = void or else not value.is_name then
+				if value = Void or else not value.is_name then
 					error_found := true
 				elseif compilation_modes.is_precompiling then
 					error_found := true
@@ -359,6 +361,17 @@ feature {COMPILER_EXPORTER}
 				if not compilation_modes.is_precompiling then
 					error_found := True
 				end
+
+			when shared_library_definition then
+				if value = Void then
+					error_found := True
+				elseif value.is_name then
+					string_value := value.value;
+					System.set_dynamic_def_file (string_value)
+				else
+					error_found := True;
+				end;
+				
 			else
 				error_found := True
 			end;

@@ -519,6 +519,7 @@ feature {NONE} -- Incrementality
 			System.server_controler.set_block_size (1024)
 			System.set_do_not_check_vape (False)
 			System.allow_address_expression (False)			
+			System.set_dynamic_def_file (Void)
 		end
 
 end -- class ACE_SD

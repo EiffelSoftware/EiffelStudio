@@ -55,6 +55,7 @@
 			</li>
 			<li><B>EV_FIXED</B> - No longer inherits DOUBLE_MATH.</li>
 			<li><B>EV_VIEWPORT</B> - No longer inherits DOUBLE_MATH.</li>
+			<li><B>EV_TEXT</B> - `line_count' now returns the number of lines actually displayed, and not just the newline characters, as an EV_TEXT will wrap the text when necessary. The postcondition of `linecount' has been updated to reflect this change.</li>
 		</ul>
 		<p><b>Bug fixes</b></p>
 		<ul>
@@ -95,6 +96,7 @@
 					<li>Fixed `selection_start' and `selection_end' which were incorrect when the selection was not completely contained on the first line.</li>
 					<li>Fixed `first_position_from_line_number' and `last_position_from_line_number' which were returning incorrect values when the text was wrapped.</li>
 					<li>Fixed `caret_position' and `set_caret_position' which were incorrect when the text spanned multiple lines, and the caret was not on the first line.</li>
+					<li>`line_count' now returns the number of lines actually displayed, and not simply the number of newline characters. To query the number of new line characters do :- text.occurrences ('%N')</li>
 						</ul>
 					<li>
 						<b>EV_DRAWABLE</b>

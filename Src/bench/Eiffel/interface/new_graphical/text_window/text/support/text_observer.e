@@ -42,6 +42,13 @@ feature {TEXT_OBSERVER_MANAGER} -- Update
 		do
 		end
 
+	on_text_back_to_its_last_saved_state is
+			-- Update `Current' when the text is back to its state when it was saved for the last time.
+			-- Observer must be registered as "edition_observer" for this feature to be called.
+		do
+		end
+		
+
 	on_selection_begun is
 			-- Update `Current' when a selection begins in the observed editor.
 			-- Observer must be registered as "selection_observer" for this feature to be called.

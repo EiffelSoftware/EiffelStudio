@@ -51,7 +51,7 @@ feature -- Content change
 			f_d := date_of_file_when_loaded
 			f_d_c := date_when_checked
 			load_eiffel_text (s)
-			text_displayed.on_text_edited (False)
+			text_displayed.set_changed (True)
 			file_name := f_n
 			date_of_file_when_loaded := f_d
 			date_when_checked := f_d_c

@@ -14,11 +14,14 @@ class
 inherit
 
 	SELECTABLE_TEXT
+		export
+			{UNDO_REDO_STACK} on_text_back_to_its_last_saved_state
 		redefine
 			reset_text,
 			make,
 			on_text_loaded,
-			cursor
+			cursor,
+			set_changed
 		end
 
 	EB_SHARED_EDITOR_DATA
@@ -27,44 +30,6 @@ create
 
 	make
 	
-feature
-	
-	move_selection_to_pos (i:INTEGER) is
-			-- 
-		require
-			selection_exists: has_selection
-		local
-			offset: INTEGER
-			local_clipboard: STRING
-		do
-			local_clipboard := selected_string
-			offset := selection_end.pos_in_text
-			if has_selection and then not cursor.is_equal (selection_cursor) then
-				delete_selection
-				history.bind_current_item_to_next
-			end
-			if i >= offset then
-				cursor.make_from_integer (i - local_clipboard.count, Current)
-			else
-				cursor.make_from_integer (i, Current)
-			end
-			insert_string (local_clipboard)
-		end
-
-	copy_selection_to_pos (i:INTEGER) is
-			-- 
-		require
-			selection_exists: has_selection
-		local
-			local_clipboard: STRING
-		do
-			local_clipboard := selected_string
-			disable_selection
-			cursor.make_from_integer (i, Current)
-			insert_string (local_clipboard)
-		end
-		
-
 feature {NONE} -- Initialization
 
 	make is
@@ -128,6 +93,18 @@ feature -- Status setting
 		ensure
 			not use_smart_indentation
 		end
+
+	set_changed (value: BOOLEAN) is
+			-- Assign `value' to `changed'
+		do
+			if value then
+				history.disable_mark
+			else
+				history.enable_mark
+				history.set_mark
+			end
+			Precursor (value)
+		end	
 
 feature -- Basic Operations
 
@@ -458,6 +435,41 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
+	move_selection_to_pos (i:INTEGER) is
+			-- 
+		require
+			selection_exists: has_selection
+		local
+			offset: INTEGER
+			local_clipboard: STRING
+		do
+			local_clipboard := selected_string
+			offset := selection_end.pos_in_text
+			if has_selection and then not cursor.is_equal (selection_cursor) then
+				delete_selection
+				history.bind_current_item_to_next
+			end
+			if i >= offset then
+				cursor.make_from_integer (i - local_clipboard.count, Current)
+			else
+				cursor.make_from_integer (i, Current)
+			end
+			insert_string (local_clipboard)
+		end
+
+	copy_selection_to_pos (i:INTEGER) is
+			-- 
+		require
+			selection_exists: has_selection
+		local
+			local_clipboard: STRING
+		do
+			local_clipboard := selected_string
+			disable_selection
+			cursor.make_from_integer (i, Current)
+			insert_string (local_clipboard)
+		end
+
 feature {EB_SEARCH_PERFORMER} -- for search only
 
 	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING) is
@@ -491,13 +503,7 @@ feature -- Reinitialization
 			-- put Current back in its original state
 		do
 			{SELECTABLE_TEXT} Precursor
-			reset_history
-		end
-
-	reset_history is
-			-- Wipe out the undo-redo stack
-		do
-			history.wipe_out
+			history.initialize
 		end
 
 	on_text_loaded is
@@ -505,14 +511,10 @@ feature -- Reinitialization
 		do
 				-- Initialize undo-redo history
 			history.reset
+			history.set_mark
 
-				-- Initialize the cursor
-			--create cursor.make_from_relative_pos (line (1), line(1).first_token, 0, Current)
-			history.record_move
-			--selection_cursor := clone(cursor) --| this is just for selection_cursor not to be Void.
 			{SELECTABLE_TEXT} Precursor
 		end
-
 
 feature {UNDO_CMD} -- Operations on selected text
 
@@ -1472,12 +1474,12 @@ feature {NONE} -- Implementation
 		do
 		end
 
-
 	unsymboled_lines: LINKED_LIST[INTEGER]
 			-- numbers of lines which have been modified by latest
 			-- call to `unsymbol_selection'.
 			-- Used by undo commands for unindent and uncomment.
 
+	
 feature {TEXT_CURSOR}
 
 	ignore_cursor_moves: BOOLEAN

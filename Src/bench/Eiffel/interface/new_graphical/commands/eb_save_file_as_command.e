@@ -38,8 +38,8 @@ inherit
 
 	TEXT_OBSERVER
 		redefine
-			on_text_reset,
-			on_text_edited
+			on_text_reset, on_text_edited,
+			on_text_back_to_its_last_saved_state
 		end
 
 create
@@ -75,6 +75,16 @@ feature -- Status setting
 			end
 		end
 
+	on_text_back_to_its_last_saved_state is
+			-- Disable `Current'.
+		do
+			if target.is_empty then
+				disable_sensitive
+			else
+				enable_sensitive
+			end
+		end
+		
 	on_text_edited (directly_edited: BOOLEAN) is
 			-- Enable `Current'.
 		do

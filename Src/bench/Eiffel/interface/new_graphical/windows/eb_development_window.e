@@ -81,7 +81,8 @@ inherit
 	TEXT_OBSERVER
 		redefine
 			on_text_reset, on_text_edited, 
-			on_selection_begun, on_selection_finished
+			on_selection_begun, on_selection_finished,
+			on_text_back_to_its_last_saved_state
 		end
 
 	EB_FORMATTER_DATA
@@ -2364,6 +2365,8 @@ feature {NONE} -- Implementation
 		end
 
 	on_text_reset is
+			-- The main editor has just been wiped out
+			-- before loading a new file.
 		local
 			str: STRING
 		do
@@ -2374,6 +2377,18 @@ feature {NONE} -- Implementation
 			end
 			address_manager.enable_formatters
 		end
+
+	on_text_back_to_its_last_saved_state is
+		local
+			str: STRING
+		do
+			str := clone (title)
+			if str @ 1 = '*' then
+				str.tail (str.count - 2)
+				set_title (str)
+			end
+		end			
+		
 
 	on_text_edited (unused: BOOLEAN) is
 			-- The text in the editor is modified, add the '*' in the title.

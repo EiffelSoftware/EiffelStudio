@@ -114,7 +114,7 @@ feature -- Basic Operations
 			"CopyTo"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Net.CookieCollection"
 		alias

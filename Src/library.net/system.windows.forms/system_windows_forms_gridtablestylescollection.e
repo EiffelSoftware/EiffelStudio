@@ -8,46 +8,46 @@ external class
 inherit
 	SYSTEM_WINDOWS_FORMS_BASECOLLECTION
 		rename
-			get_count as system_collections_icollection_get_count
+			get_count as icollection_get_count
 		redefine
-			system_collections_icollection_get_count,
+			icollection_get_count,
 			get_list
 		end
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_count as system_collections_icollection_get_count,
-			copy_to as system_collections_icollection_copy_to
+			get_enumerator as ienumerable_get_enumerator,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_count as icollection_get_count,
+			copy_to as icollection_copy_to
 		select
-			system_collections_ienumerable_get_enumerator,
-			system_collections_icollection_get_sync_root,
-			system_collections_icollection_get_is_synchronized,
-			system_collections_icollection_copy_to
+			ienumerable_get_enumerator,
+			icollection_get_sync_root,
+			icollection_get_is_synchronized,
+			icollection_copy_to
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_count as system_collections_icollection_get_count,
-			copy_to as system_collections_icollection_copy_to,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			get_is_read_only as system_collections_ilist_get_is_read_only,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			prune_i_th as system_collections_ilist_remove_at,
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			clear as system_collections_ilist_clear,
-			extend as system_collections_ilist_add
+			get_enumerator as ienumerable_get_enumerator,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_count as icollection_get_count,
+			copy_to as icollection_copy_to,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			get_is_read_only as ilist_get_is_read_only,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			prune_i_th as ilist_prune_i_th,
+			remove as ilist_remove,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			clear as ilist_clear,
+			extend as ilist_extend
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 
 create {NONE}
@@ -86,21 +86,21 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"RemoveAt"
 		end
 
-	frozen contains (name: STRING): BOOLEAN is
+	frozen has (name: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"Contains"
 		end
 
-	add (table: SYSTEM_WINDOWS_FORMS_DATAGRIDTABLESTYLE): INTEGER is
+	extend (table: SYSTEM_WINDOWS_FORMS_DATAGRIDTABLESTYLE): INTEGER is
 		external
 			"IL signature (System.Windows.Forms.DataGridTableStyle): System.Int32 use System.Windows.Forms.GridTableStylesCollection"
 		alias
@@ -137,42 +137,42 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
+	frozen ienumerable_get_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 		external
 			"IL signature (): System.Collections.IEnumerator use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IEnumerable.GetEnumerator"
 		end
 
-	frozen system_collections_ilist_remove_at (index: INTEGER) is
+	frozen ilist_prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.RemoveAt"
 		end
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_index_of (value: ANY): INTEGER is
+	frozen ilist_index_of (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_ilist_remove (value: ANY) is
+	frozen ilist_remove (value: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
@@ -186,49 +186,49 @@ feature {NONE} -- Implementation
 			"get_List"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; value: ANY) is
+	frozen ilist_insert (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.Insert"
 		end
 
-	frozen system_collections_ilist_add (value: ANY): INTEGER is
+	frozen ilist_extend (value: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.get_IsFixedSize"
 		end
 
-	frozen system_collections_icollection_get_count: INTEGER is
+	frozen icollection_get_count: INTEGER is
 		external
 			"IL signature (): System.Int32 use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.ICollection.get_Count"
 		end
 
-	frozen system_collections_ilist_contains (value: ANY): BOOLEAN is
+	frozen ilist_has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (array: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
@@ -242,21 +242,21 @@ feature {NONE} -- Implementation
 			"OnCollectionChanged"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_ilist_clear is
+	frozen ilist_clear is
 		external
 			"IL signature (): System.Void use System.Windows.Forms.GridTableStylesCollection"
 		alias
 			"System.Collections.IList.Clear"
 		end
 
-	frozen system_collections_ilist_get_is_read_only: BOOLEAN is
+	frozen ilist_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.GridTableStylesCollection"
 		alias

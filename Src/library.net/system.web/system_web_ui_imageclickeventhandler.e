@@ -7,13 +7,16 @@ frozen external class
 
 inherit
 	SYSTEM_MULTICASTDELEGATE
+		rename
+			is_equal as equals_object
+		end
 	SYSTEM_ICLONEABLE
 		rename
-			equals as equals_object
+			is_equal as equals_object
 		end
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 		rename
-			equals as equals_object
+			is_equal as equals_object
 		end
 
 create

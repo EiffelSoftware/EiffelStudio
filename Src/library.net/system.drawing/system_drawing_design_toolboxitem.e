@@ -18,7 +18,7 @@ inherit
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 		rename
 			get_object_data as system_runtime_serialization_iserializable_get_object_data,
-			equals as equals_object
+			is_equal as equals_object
 		end
 
 create

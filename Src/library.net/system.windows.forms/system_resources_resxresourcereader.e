@@ -58,7 +58,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	frozen get_enumerator_idictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
+	frozen get_dictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
 		external
 			"IL signature (): System.Collections.IDictionaryEnumerator use System.Resources.ResXResourceReader"
 		alias

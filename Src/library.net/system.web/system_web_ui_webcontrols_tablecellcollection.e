@@ -10,19 +10,19 @@ inherit
 		redefine
 			finalize,
 			get_hash_code,
-			equals,
+			is_equal,
 			to_string
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			remove as system_collections_ilist_remove,
-			insert as system_collections_ilist_insert,
-			index_of as system_collections_ilist_index_of,
-			has as system_collections_ilist_contains,
-			extend as system_collections_ilist_add,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			set_item as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item
+			remove as ilist_remove,
+			insert as ilist_insert,
+			index_of as ilist_index_of,
+			has as ilist_has,
+			extend as ilist_extend,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
@@ -82,7 +82,7 @@ feature -- Basic Operations
 			"AddAt"
 		end
 
-	frozen add (cell: SYSTEM_WEB_UI_WEBCONTROLS_TABLECELL): INTEGER is
+	frozen extend (cell: SYSTEM_WEB_UI_WEBCONTROLS_TABLECELL): INTEGER is
 		external
 			"IL signature (System.Web.UI.WebControls.TableCell): System.Int32 use System.Web.UI.WebControls.TableCellCollection"
 		alias
@@ -131,7 +131,7 @@ feature -- Basic Operations
 			"AddRange"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Web.UI.WebControls.TableCellCollection"
 		alias
@@ -145,7 +145,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Web.UI.WebControls.TableCellCollection"
 		alias
@@ -154,49 +154,49 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Web.UI.WebControls.TableCellCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_ilist_index_of (o: ANY): INTEGER is
+	frozen ilist_index_of (o: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Web.UI.WebControls.TableCellCollection"
 		alias
 			"System.Collections.IList.IndexOf"
 		end
 
-	frozen system_collections_ilist_remove (o: ANY) is
+	frozen ilist_remove (o: ANY) is
 		external
 			"IL signature (System.Object): System.Void use System.Web.UI.WebControls.TableCellCollection"
 		alias
 			"System.Collections.IList.Remove"
 		end
 
-	frozen system_collections_ilist_add (o: ANY): INTEGER is
+	frozen ilist_extend (o: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Web.UI.WebControls.TableCellCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Web.UI.WebControls.TableCellCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_ilist_contains (o: ANY): BOOLEAN is
+	frozen ilist_has (o: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Web.UI.WebControls.TableCellCollection"
 		alias
 			"System.Collections.IList.Contains"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Web.UI.WebControls.TableCellCollection"
 		alias
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_insert (index: INTEGER; o: ANY) is
+	frozen ilist_insert (index: INTEGER; o: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Web.UI.WebControls.TableCellCollection"
 		alias

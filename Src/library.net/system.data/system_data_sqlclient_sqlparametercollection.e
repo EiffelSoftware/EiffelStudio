@@ -12,12 +12,12 @@ inherit
 			index_of as index_of_object,
 			has as contains_object,
 			extend as add_object,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only
 		end
 	SYSTEM_MARSHALBYREFOBJECT
 	SYSTEM_COLLECTIONS_ILIST
@@ -26,18 +26,18 @@ inherit
 			index_of as index_of_object,
 			has as contains_object,
 			extend as add_object,
-			put_i_th as system_collections_ilist_set_item,
-			get_item as system_collections_ilist_get_item,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_read_only as system_collections_ilist_get_is_read_only
+			put_i_th as ilist_put_i_th,
+			get_item as ilist_get_item,
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_read_only as ilist_get_is_read_only
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_sync_root as system_collections_icollection_get_sync_root,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized
+			get_sync_root as icollection_get_sync_root,
+			get_is_synchronized as icollection_get_is_synchronized
 		end
 
 create {NONE}
@@ -74,7 +74,7 @@ feature -- Element Change
 			"set_Item"
 		end
 
-	frozen set_item (parameter_name: STRING; value: SYSTEM_DATA_SQLCLIENT_SQLPARAMETER) is
+	frozen put_i_th (parameter_name: STRING; value: SYSTEM_DATA_SQLCLIENT_SQLPARAMETER) is
 		external
 			"IL signature (System.String, System.Data.SqlClient.SqlParameter): System.Void use System.Data.SqlClient.SqlParameterCollection"
 		alias
@@ -83,14 +83,14 @@ feature -- Element Change
 
 feature -- Basic Operations
 
-	frozen remove_at (value: STRING) is
+	frozen prune_i_th (value: STRING) is
 		external
 			"IL signature (System.String): System.Void use System.Data.SqlClient.SqlParameterCollection"
 		alias
 			"RemoveAt"
 		end
 
-	frozen add (value: SYSTEM_DATA_SQLCLIENT_SQLPARAMETER): SYSTEM_DATA_SQLCLIENT_SQLPARAMETER is
+	frozen extend (value: SYSTEM_DATA_SQLCLIENT_SQLPARAMETER): SYSTEM_DATA_SQLCLIENT_SQLPARAMETER is
 		external
 			"IL signature (System.Data.SqlClient.SqlParameter): System.Data.SqlClient.SqlParameter use System.Data.SqlClient.SqlParameterCollection"
 		alias
@@ -167,7 +167,7 @@ feature -- Basic Operations
 			"GetEnumerator"
 		end
 
-	frozen contains (value: STRING): BOOLEAN is
+	frozen has (value: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Data.SqlClient.SqlParameterCollection"
 		alias
@@ -204,21 +204,21 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_ilist_set_item (index: INTEGER; value: ANY) is
+	frozen ilist_put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Data.SqlClient.SqlParameterCollection"
 		alias
 			"System.Collections.IList.set_Item"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Data.SqlClient.SqlParameterCollection"
 		alias
 			"System.Collections.ICollection.get_SyncRoot"
 		end
 
-	frozen system_collections_ilist_get_is_read_only: BOOLEAN is
+	frozen ilist_get_is_read_only: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.SqlClient.SqlParameterCollection"
 		alias
@@ -232,21 +232,21 @@ feature {NONE} -- Implementation
 			"System.Data.IDataParameterCollection.get_Item"
 		end
 
-	frozen system_collections_ilist_get_item (index: INTEGER): ANY is
+	frozen ilist_get_item (index: INTEGER): ANY is
 		external
 			"IL signature (System.Int32): System.Object use System.Data.SqlClient.SqlParameterCollection"
 		alias
 			"System.Collections.IList.get_Item"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.SqlClient.SqlParameterCollection"
 		alias
 			"System.Collections.ICollection.get_IsSynchronized"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Data.SqlClient.SqlParameterCollection"
 		alias

@@ -8,13 +8,16 @@ frozen expanded external class
 
 inherit
 	ENUM
+		rename
+			is_equal as equals_object
+		end
 	SYSTEM_IFORMATTABLE
 		rename
-			equals as equals_object
+			is_equal as equals_object
 		end
 	SYSTEM_ICOMPARABLE
 		rename
-			equals as equals_object
+			is_equal as equals_object
 		end
 
 feature -- Access

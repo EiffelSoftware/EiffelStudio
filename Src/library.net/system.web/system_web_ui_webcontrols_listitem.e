@@ -8,7 +8,7 @@ frozen external class
 inherit
 	ANY
 		rename
-			equals as equals_object
+			is_equal as equals_object
 		redefine
 			finalize,
 			get_hash_code,
@@ -18,13 +18,13 @@ inherit
 	SYSTEM_WEB_UI_IPARSERACCESSOR
 		rename
 			add_parsed_sub_object as system_web_ui_iparser_accessor_add_parsed_sub_object,
-			equals as equals_object
+			is_equal as equals_object
 		end
 	SYSTEM_WEB_UI_IATTRIBUTEACCESSOR
 		rename
 			set_attribute as system_web_ui_iattribute_accessor_set_attribute,
 			get_attribute as system_web_ui_iattribute_accessor_get_attribute,
-			equals as equals_object
+			is_equal as equals_object
 		end
 	SYSTEM_WEB_UI_ISTATEMANAGER
 		rename
@@ -32,7 +32,7 @@ inherit
 			track_view_state as system_web_ui_istate_manager_track_view_state,
 			load_view_state as system_web_ui_istate_manager_load_view_state,
 			get_is_tracking_view_state as system_web_ui_istate_manager_get_is_tracking_view_state,
-			equals as equals_object
+			is_equal as equals_object
 		end
 
 create

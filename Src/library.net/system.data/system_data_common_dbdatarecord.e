@@ -153,7 +153,7 @@ feature -- Basic Operations
 			"GetGuid"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Data.Common.DbDataRecord"
 		alias

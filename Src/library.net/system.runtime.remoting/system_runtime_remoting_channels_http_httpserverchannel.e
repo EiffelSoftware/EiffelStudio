@@ -8,7 +8,7 @@ external class
 inherit
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_RUNTIME_REMOTING_CHANNELS_ICHANNELRECEIVER
 	SYSTEM_RUNTIME_REMOTING_CHANNELS_ICHANNEL
@@ -16,16 +16,16 @@ inherit
 	SYSTEM_RUNTIME_REMOTING_CHANNELS_BASECHANNELWITHPROPERTIES
 		redefine
 			get_keys,
-			set_item,
+			put_i_th,
 			get_item
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 	SYSTEM_COLLECTIONS_IDICTIONARY
 		rename
-			get_enumerator as system_collections_ienumerable_get_enumerator
+			get_enumerator as ienumerable_get_enumerator
 		end
 
 create
@@ -129,7 +129,7 @@ feature -- Element Change
 			"set_WantsToListen"
 		end
 
-	set_item (key: ANY; value: ANY) is
+	put_i_th (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.Runtime.Remoting.Channels.Http.HttpServerChannel"
 		alias

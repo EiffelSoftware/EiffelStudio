@@ -69,7 +69,7 @@ feature -- Basic Operations
 			"CreateFromAssembly"
 		end
 
-	equals (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.EnterpriseServices.Internal.ClrObjectFactory"
 		alias

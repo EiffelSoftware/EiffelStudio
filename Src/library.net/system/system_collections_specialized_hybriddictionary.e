@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (key: ANY; value: ANY) is
+	frozen put_i_th (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.Collections.Specialized.HybridDictionary"
 		alias
@@ -137,7 +137,7 @@ feature -- Basic Operations
 			"Equals"
 		end
 
-	frozen get_enumerator_idictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
+	frozen get_dictionary_enumerator: SYSTEM_COLLECTIONS_IDICTIONARYENUMERATOR is
 		external
 			"IL signature (): System.Collections.IDictionaryEnumerator use System.Collections.Specialized.HybridDictionary"
 		alias
@@ -158,14 +158,14 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (key: ANY): BOOLEAN is
+	frozen has (key: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Collections.Specialized.HybridDictionary"
 		alias
 			"Contains"
 		end
 
-	frozen add (key: ANY; value: ANY) is
+	frozen extend (key: ANY; value: ANY) is
 		external
 			"IL signature (System.Object, System.Object): System.Void use System.Collections.Specialized.HybridDictionary"
 		alias

@@ -8,19 +8,19 @@ external class
 inherit
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			extend as system_collections_ilist_add,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root
+			copy_to as icollection_copy_to,
+			extend as ilist_extend,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root
 		end
 	OBJECTCOLLECTION_IN_SYSTEM_WINDOWS_FORMS_LISTBOX
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root
+			copy_to as icollection_copy_to,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root
 		end
 
 create

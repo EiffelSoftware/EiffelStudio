@@ -9,7 +9,7 @@ inherit
 	SYSTEM_ATTRIBUTE
 		redefine
 			get_hash_code,
-			equals_object
+			is_equal
 		end
 
 create
@@ -47,7 +47,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	equals_object (obj: ANY): BOOLEAN is
+	is_equal (obj: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.ComponentModel.DefaultEventAttribute"
 		alias

@@ -15,18 +15,18 @@ inherit
 		end
 	SYSTEM_COLLECTIONS_ILIST
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			extend as system_collections_ilist_add,
-			get_is_fixed_size as system_collections_ilist_get_is_fixed_size,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root
+			copy_to as icollection_copy_to,
+			extend as ilist_extend,
+			get_is_fixed_size as ilist_get_is_fixed_size,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root
 		end
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			copy_to as system_collections_icollection_copy_to,
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root
+			copy_to as icollection_copy_to,
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root
 		end
 
 create
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_item (index: INTEGER; value: ANY) is
+	put_i_th (index: INTEGER; value: ANY) is
 		external
 			"IL signature (System.Int32, System.Object): System.Void use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
@@ -92,7 +92,7 @@ feature -- Basic Operations
 			"ToString"
 		end
 
-	frozen add (item: ANY): INTEGER is
+	frozen extend (item: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
@@ -134,7 +134,7 @@ feature -- Basic Operations
 			"Remove"
 		end
 
-	frozen contains (value: ANY): BOOLEAN is
+	frozen has (value: ANY): BOOLEAN is
 		external
 			"IL signature (System.Object): System.Boolean use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
@@ -176,7 +176,7 @@ feature -- Basic Operations
 			"GetHashCode"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
@@ -185,21 +185,21 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	frozen system_collections_icollection_copy_to (dest: SYSTEM_ARRAY; index: INTEGER) is
+	frozen icollection_copy_to (dest: SYSTEM_ARRAY; index: INTEGER) is
 		external
 			"IL signature (System.Array, System.Int32): System.Void use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
 			"System.Collections.ICollection.CopyTo"
 		end
 
-	frozen system_collections_ilist_get_is_fixed_size: BOOLEAN is
+	frozen ilist_get_is_fixed_size: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
 			"System.Collections.IList.get_IsFixedSize"
 		end
 
-	frozen system_collections_icollection_get_is_synchronized: BOOLEAN is
+	frozen icollection_get_is_synchronized: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
@@ -213,14 +213,14 @@ feature {NONE} -- Implementation
 			"Finalize"
 		end
 
-	frozen system_collections_ilist_add (item: ANY): INTEGER is
+	frozen ilist_extend (item: ANY): INTEGER is
 		external
 			"IL signature (System.Object): System.Int32 use System.Windows.Forms.ListBox+ObjectCollection"
 		alias
 			"System.Collections.IList.Add"
 		end
 
-	frozen system_collections_icollection_get_sync_root: ANY is
+	frozen icollection_get_sync_root: ANY is
 		external
 			"IL signature (): System.Object use System.Windows.Forms.ListBox+ObjectCollection"
 		alias

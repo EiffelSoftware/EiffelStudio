@@ -7,6 +7,9 @@ frozen external class
 
 inherit
 	SYSTEM_MULTICASTDELEGATE
+		rename
+			is_equal as equals_object
+		end
 	SYSTEM_ICLONEABLE
 		rename
 			is_equal as equals_object

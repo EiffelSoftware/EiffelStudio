@@ -156,6 +156,13 @@ feature -- Access
 			"TCM_SETTOOLTIPS"
 		end
 
+	Tcm_highlightitem: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TCM_HIGHLIGHTITEM"
+		end
+
 end -- class WEL_TCM_CONSTANTS
 
 --|----------------------------------------------------------------

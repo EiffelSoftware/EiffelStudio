@@ -21,6 +21,7 @@ feature -- Initialisation
 			length := number
 			create image.make(number)
 			image.fill_character(' ')
+			width := length * space_width
 
 			create alternate_image.make(number)
 			alternate_image.fill_character(space_symbol)
@@ -32,10 +33,11 @@ feature -- Initialisation
 
 feature -- Width & Height
 
-	width: INTEGER is
-		do
-			Result := length * space_width
-		end
+	width: INTEGER
+-- is
+--		do
+--			Result := length * space_width
+--		end
 
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
@@ -77,15 +79,21 @@ feature {NONE} -- Implementation
  				the_text_color := text_color
  				the_background_color := background_color
  			end
- 
+
  				-- Change the drawing style.
  			device.set_foreground_color(the_text_color)
  			device.set_font(font)
  
+				-- Compute the width of the string. 
+ 			Result := d_x + font.string_width(the_text)
+
+				-- Fill the rectangle occupied by the tabulation
+			if the_background_color /= Void then
+ 				device.clear_rectangle(d_x, d_y, Result, d_y + height)
+			end
+
  				-- Display the text.
  			device.draw_text (d_x, d_y, the_text)
-
- 			Result := d_x + font.string_width(the_text)
 		end
 
 feature {NONE} -- Private Constants

@@ -139,8 +139,8 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 
 	background_color: EV_COLOR is
 		do
--- by default, no background...
---			Result := editor_preferences.normal_background_color
+			--| by default, no background...
+			--|	Result := editor_preferences.normal_background_color
 		end
 
 	selected_text_color: EV_COLOR is
@@ -153,7 +153,7 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 			Result := editor_preferences.selected_background_color
 		end
 
-	font: EV_FONT is
+	font: EDITOR_FONT is
 			-- Current text font.
 		once
 				-- create the font

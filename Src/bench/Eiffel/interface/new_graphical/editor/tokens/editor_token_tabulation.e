@@ -18,8 +18,6 @@ feature -- Initialisation
 	make(number: INTEGER) is
 		require
 			number_valid: number > 0
-		local
-			relative_point: EV_RELATIVE_POINT
 		do
 			length := number
 			create image.make(number)

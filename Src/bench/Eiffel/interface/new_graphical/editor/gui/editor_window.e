@@ -117,17 +117,6 @@ feature -- Initialization
 			initialized := True
 		end
 
-	idle_action: BOOLEAN is
-			-- Action performed when the application is idle.
-			-- Returns True if no more call to idle_action is
-			-- needed.
-		do
-			if not file_loaded then
-				finish_reading_file
-			end
-			Result := file_loaded
-		end
-
 	first_window: EV_TITLED_WINDOW is
 			-- The window with the drawable area.
 		once
@@ -369,6 +358,7 @@ feature -- Process Vision2 events
 					-- Record move in history.
 				history.record_move
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -404,6 +394,7 @@ feature -- Process Vision2 events
 					-- Record in the history.
 				history.record_move
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -423,6 +414,7 @@ feature -- Actions
 		do
 			history.undo
 			my_device.redraw
+			my_device.flush
 		end
 	
 	redo is
@@ -430,6 +422,7 @@ feature -- Actions
 		do
 			history.redo
 			my_device.redraw
+			my_device.flush
 		end
 
 	cut_selection is
@@ -439,6 +432,7 @@ feature -- Actions
 				copy_selection
 				delete_selection
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -460,6 +454,7 @@ feature -- Actions
 				history.record_paste (clipboard)
 				cursor.insert_string (clipboard)
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -490,6 +485,7 @@ feature -- Actions
 				text_displayed.indent_selection(begin_selection, end_selection)
 				history.wipe_out
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -500,6 +496,7 @@ feature -- Actions
 				text_displayed.unindent_selection(begin_selection, end_selection)
 				history.wipe_out
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -510,6 +507,7 @@ feature -- Actions
 				text_displayed.comment_selection(begin_selection, end_selection)
 				history.wipe_out
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -520,6 +518,7 @@ feature -- Actions
 				text_displayed.uncomment_selection(begin_selection, end_selection)
 				history.wipe_out
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -651,6 +650,7 @@ feature {NONE} -- Handle keystokes
 					cursor.delete_char
 				end
 				my_device.redraw
+				my_device.flush
 
 			elseif  ev_key = key_codes.Key_back_space then
 					-- Backspace key action
@@ -660,6 +660,7 @@ feature {NONE} -- Handle keystokes
 					cursor.delete_previous
 				end
 				my_device.redraw
+				my_device.flush
 
 			elseif ev_key = key_codes.Key_enter then
 					-- Return/Enter key action
@@ -673,11 +674,13 @@ feature {NONE} -- Handle keystokes
 				end
 				cursor.insert_eol
 				my_device.redraw
+				my_device.flush
 
 			elseif  ev_key = key_codes.Key_insert then
 					-- Insert key action
 				insert_mode := not insert_mode
 				my_device.redraw
+				my_device.flush
 
 			elseif  ev_key = key_codes.Key_tab then
 					-- Tab key action
@@ -695,6 +698,7 @@ feature {NONE} -- Handle keystokes
 				end
 
 				my_device.redraw
+				my_device.flush
 			end
 		end
 
@@ -712,6 +716,7 @@ feature {NONE} -- Handle keystokes
 				end
 				cursor.insert_char (c)
 				my_device.redraw
+				my_device.flush
 			else
 				invalidate_cursor_rect (False)
 
@@ -918,15 +923,18 @@ feature {NONE} -- Display functions
  			end
  		end
 
-	invalidate_cursor_rect (redraw: BOOLEAN) is
+	invalidate_cursor_rect (flush_screen: BOOLEAN) is
 			-- Set the line where the cursor is situated to be redrawn
-			-- Redraw immediately if `redraw' is set.
+			-- Redraw immediately if `flush' is set.
 		local
 			cursor_up: INTEGER
 		do
    				-- Invalidate old cursor location.
 			cursor_up := (cursor.y_in_lines-first_line_displayed) * line_increment
 			my_device.redraw_rectangle(0, cursor_up, my_device.width, cursor_up + line_increment)
+			if flush_screen then
+				my_device.flush
+			end
 		end
 
 	draw_bloc_cursor(x1, y1, x2, y2: INTEGER) is
@@ -976,7 +984,7 @@ feature {NONE} -- Constants & Text Attributes
 
 feature {NONE} -- Implementation
 
-	font: EV_FONT is
+	font: EDITOR_FONT is
 			-- Current text font.
 		once
 				-- create the font

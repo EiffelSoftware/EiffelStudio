@@ -88,6 +88,7 @@ feature -- Element change
 			-- When there is a parent, the item has the
 			-- count done by the parent.
 		require
+			has_no_parent: parent = Void
 			valid_value: value > 0
 		do
 			implementation.set_count (value)
@@ -197,6 +198,9 @@ end -- class EV_COMPOSED_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/17 21:49:33  king
+--| Put has_no_parent precond back
+--|
 --| Revision 1.8  2000/02/16 20:30:46  king
 --| Remove no_parent precondition from set_count
 --|

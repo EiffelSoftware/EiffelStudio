@@ -132,9 +132,11 @@ feature -- Event handling
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions be performed take when the application is otherwise idle.
 
-	once_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions be performed take when the application is otherwise idle.
-			-- Wiped out after being called.
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE []]) is
+			-- Perform `an_action' one time when the application is next idle.
+		do
+			implementation.do_once_on_idle (an_action)
+		end
 
 feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_PICK_AND_DROPABLE_I}
 		-- Implementation
@@ -198,6 +200,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/23 18:53:44  oconnor
+--| modified once idle actions interface
+--|
 --| Revision 1.16  2000/03/23 17:44:05  brendel
 --| Added `once_idle_actions'.
 --|

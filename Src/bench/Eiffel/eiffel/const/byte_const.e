@@ -219,6 +219,10 @@ feature -- Access
 	Bc_sep_pfeature:		CHARACTER is '%/167/'; 
 		-- a separate feature call which is precompiled.
 
+		-- Manifest tuple
+	Bc_tuple:				CHARACTER is '%/168/'
+	Bc_ptuple:				CHARACTER is '%/169/'
+
 	Bc_java_rtype:			CHARACTER is '%/200/'
 		-- return type of a feature call or attribute access.
 		-- needed for features of formal generic type.

@@ -100,6 +100,25 @@ feature -- Update
 
 feature -- Settings
 
+	write_duplicate_body (source_meth, new_meth: INTEGER) is
+			-- Make method `new_meth' point to same code location
+			-- as `source_meth'. Useful in Eiffel as each Eiffel feature
+			-- is in fact represented by two methods: one static
+			-- and one virtual. Static one is only used when doing
+			-- cross-assembly Eiffel inheritance.
+		require
+			not_is_closed: not is_closed
+		local
+			source_pos: INTEGER
+		do
+			check
+				has_source: method_locations.has (source_meth)
+				not_has_new_meth: not method_locations.has (new_meth)
+			end
+			source_pos := method_locations.item (source_meth)
+			method_locations.put (source_pos, new_meth)
+		end
+		
 	write_current_body is
 			-- Store `current body' in `Current'.
 		require
@@ -109,6 +128,7 @@ feature -- Settings
 			l_pos: INTEGER
 			l_meth_size: INTEGER
 			l_meth: like internal_method_body
+			l_ex: MD_EXCEPTION_CLAUSE
 		do
 			l_meth := internal_method_body
 			l_pos := current_position
@@ -133,12 +153,30 @@ feature -- Settings
 					-- Valid candidate for fat header.
 				Fat_method_header.remake (l_meth.max_stack.to_integer_16,
 					l_meth_size, l_meth.local_token)
+					
+				if l_meth.has_exceptions_handling then
+					l_ex := l_meth.exception_block
+					Fat_method_header.set_flags (feature {MD_METHOD_CONSTANTS}.More_sections)
+				end
+				
 				Fat_method_header.write_to_stream (internal_item, l_pos)
 				l_pos := l_pos + Fat_method_header.size
 			end
 			
 			l_meth.write_to_stream (internal_item, l_pos)
 			l_pos := l_pos + l_meth_size
+
+			if l_meth.has_exceptions_handling then
+				l_pos := pad_up (l_pos, 4)
+				Exception_header.remake (
+					l_ex.start_position,
+					l_ex.catch_position - l_ex.start_position,
+					l_ex.catch_position,
+					l_ex.end_position - l_ex.catch_position,
+					l_ex.type_token)
+				Exception_header.write_to_stream (internal_item, l_pos)
+				l_pos := l_pos + Exception_header.Size
+			end
 			
 				-- Find next location that must be 4 bytes aligned.
 			current_position := pad_up (l_pos, 4)
@@ -183,6 +221,12 @@ feature {NONE} -- constants
 			create Result.make (0, 0, 0)
 		end
 
+	exception_header: MD_METHOD_SECTION_HEADER is
+			-- To avoid creating method section headers.
+		once
+			create Result.make (0, 0, 0, 0, 0)
+		end
+		
 invariant
 	good_capacity: capacity > 0 and current_position <= capacity
 	method_locations_not_void: method_locations /= Void

@@ -32,6 +32,7 @@ feature {COMPILER_EXPORTER}
 				if value /= Void then
 					if (value.is_yes or else value.is_all) then
 						is_hidden := True;
+						Lace.ace_options.set_has_hide (True)
 					elseif not value.is_no then
 						error_raised := True;
 						error (value);

@@ -19,6 +19,12 @@ feature -- Properties
 			Result := Lace.file_name
 		end;
 
+	ace_options: ACE_OPTIONS is
+			-- Option explicitly set in the Ace file
+		do
+			Result := Lace.ace_options
+		end
+
 feature -- Access
 
 	ast: ACE_SD is

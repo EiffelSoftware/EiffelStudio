@@ -32,10 +32,9 @@ feature {COMPILER_EXPORTER} -- Update
 			if value /= Void then
 				if value.is_no then
 					v := No_option;
-				elseif value.is_yes then
+				elseif value.is_yes or value.is_all then
 					v := All_option;
-				elseif value.is_all then
-					v := All_option;
+					Lace.ace_options.set_has_profile (True)
 				else
 					error (value);
 				end;

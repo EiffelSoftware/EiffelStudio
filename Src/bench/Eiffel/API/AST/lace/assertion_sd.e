@@ -40,21 +40,26 @@ feature {COMPILER_EXPORTER}
 			if value /= Void then
 				if value.is_no then
 					v := No_level;
-				elseif value.is_require then
-					v := Require_level;
-				elseif value.is_ensure then
-					v := Ensure_level;
-				elseif value.is_invariant then
-					v := Invariant_level;
-				elseif value.is_loop then
-					v := Loop_level;
-				elseif value.is_check then
-					v := Check_level;
-				elseif value.is_all then
-					v := Check_level;
 				else
-					error (value);
-				end;
+					if value.is_require then
+						v := Require_level;
+					elseif value.is_ensure then
+						v := Ensure_level;
+					elseif value.is_invariant then
+						v := Invariant_level;
+					elseif value.is_loop then
+						v := Loop_level;
+					elseif value.is_check then
+						v := Check_level;
+					elseif value.is_all then
+						v := Check_level;
+					else
+						error (value);
+					end;
+						-- If an error occured, the assertion level
+						-- will be reset later on.
+					Lace.ace_options.set_has_assertion (True)
+				end
 			else
 				v := Require_level;
 			end;

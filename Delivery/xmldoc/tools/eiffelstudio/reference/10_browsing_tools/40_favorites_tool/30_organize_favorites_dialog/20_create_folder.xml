@@ -1,7 +1,5 @@
 <document title="Create favorite folder command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Create favorite folder command
@@ -17,7 +15,7 @@
 			</image>
 		</paragraph>
 		<paragraph>After typing the name of the new folder, pressing 
-			<bold>OK</bold> addsit to the root of the favorites.
+			<bold>OK</bold> adds it to the root of the favorites.
 		</paragraph>
 	</paragraph>
 </document>

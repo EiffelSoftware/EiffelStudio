@@ -1,7 +1,5 @@
 <document title="Introduction" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Introduction
@@ -13,7 +11,7 @@
 			</link> and the 
 			<link>
 				<url>../30_feature_tool/00_introduction.xml</url>
-				<label>featuretool</label>
+				<label>feature tool</label>
 			</link>). The other is the context tool, which contains for example the 
 			<link>
 				<url>../../80_formatters/00_introduction.xml</url>
@@ -22,7 +20,7 @@
 			<link>
 				<url>../../50_diagram_tool/00_introduction.xml</url>
 				<label>diagram tool</label>
-			</link>and the 
+			</link> and the 
 			<link>
 				<url>../../60_metric_tool/00_introduction.xml</url>
 				<label>metric tool</label>

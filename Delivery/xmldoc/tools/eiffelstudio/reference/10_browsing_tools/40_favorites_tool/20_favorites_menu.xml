@@ -20,7 +20,7 @@
 				<bold>Add to Favorites</bold> command, that adds the currently edited class to the root of the favorites tree.
 			</item>
 			<item>The 
-				<bold>Show/Hide Favorites</bold> command, that shows or hides the
+				<bold>Show/Hide Favorites</bold> command, that shows or hides the 
 				<link>
 					<url>10_favorites_tree.xml</url>
 					<label>favorites tree</label>

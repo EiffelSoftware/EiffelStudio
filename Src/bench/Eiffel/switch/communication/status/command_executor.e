@@ -19,7 +19,22 @@ feature -- Command Execution
 		do
 			Execution_environment.launch (command)
 		end
-
+		
+	execute_with_args (appl_name, args: STRING) is
+			-- Execute external command `appl_name' with following arguments.
+		require
+			appl_name_not_void: appl_name /= Void
+			args_not_void: args /= Void
+		local
+			command: STRING
+		do
+			create command.make (appl_name.count + args.count + 1)
+			command.append (appl_name)
+			command.append_character (' ')
+			command.append (args)
+			Execution_environment.launch (command)
+		end
+		
 feature -- $EiffelGraphicalCompiler$ specific calls
 
 	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING) is

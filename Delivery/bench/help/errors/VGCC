@@ -11,7 +11,14 @@ VGCC, chapter 18 (Creating objects), page 286
 
         1 `T' is not a  Formal_generic_name  (that  is  to
           say,  a  formal parameter of the class where the
-          instruction appears).
+          instruction  appears),  then  the  corresponding
+		  formal generic parameter has  a  Constraint part
+		  with a Generic_creators  part, and  the creation
+		  instruction has a Creators part whose feature is
+		  one of the procedures listed (as per  rule VTCC,
+		  page 201) listed in  the  Generic_creators part.
+		  Cases   2   at   6   assume  that  T  is  not  a
+		  Formal_generic name.
 
         2 `C' is an effective class.
 
@@ -21,7 +28,6 @@ VGCC, chapter 18 (Creating objects), page 286
 
         4 If `C' does not have a Creators part,  there  is
           no Creation_call part.
-
 
         5  If  `C'  has  a  Creators  part,  there  is   a
           Creation_call   part,  and  the  call  would  be

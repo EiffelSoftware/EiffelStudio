@@ -16,7 +16,7 @@ inherit
 			wipe_out as split_area_wipe_out
 		export
 			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} all
-			{ANY} parent, width, height
+			{ANY} parent, width, height, resize_actions
 		redefine
 			initialize
 		end
@@ -77,6 +77,18 @@ feature -- Access
 			Result := external_representation.has (a_widget)
 		ensure
 			Result_consistent: Result implies external_representation.has (a_widget)
+		end
+		
+	original_index_of_external_item (a_widget: EV_WIDGET): INTEGER is
+			-- `Result' is original index of `a_widget' in `Current' before
+			-- it was made external.
+		require
+			widget_not_void: a_widget /= Void
+			item_is_external: is_item_external (a_widget)
+		do
+			Result := holder_of_widget (a_widget).position_docked_from
+		ensure
+			Result_positive: Result >= 1
 		end
 
 	top_widget_resizing: BOOLEAN
@@ -175,19 +187,18 @@ feature -- Status setting
 			holder := holder_of_widget (widget)
 			holder.disable_close_button
 		end
-		
-		
+
 	resize_widget_to (a_widget: EV_WIDGET; a_height: INTEGER) is
 			-- Resize `a_widget' to `a_height' pixels.
 		require
-			has_widget: a_widget /= Void
-			a_height >= 0
+			widget_not_void: a_widget /= Void
+			has_widget: linear_representation.has (a_widget) or is_item_external (a_widget)
+			height_positive: a_height >= 0
 		local
 			an_index: INTEGER
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
-			an_index := linear_representation.index_of (a_widget, 1)
-			holder := all_holders.i_th (an_index)
+			holder := holder_of_widget (a_widget)
 			holder.simulate_minimum_height (a_height)
 			holder.remove_simulated_height
 		end
@@ -245,7 +256,12 @@ feature -- Status setting
 			name_not_void: name /= Void
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			locked_in_here: BOOLEAN
 		do
+			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			if locked_in_here and parent_window (Current) /= Void then
+				parent_window (Current).lock_update	
+			end		
 			store_heights_pre_insertion
 			
 			create holder.make_with_tool (widget, name, Current)
@@ -269,6 +285,9 @@ feature -- Status setting
 			
 			rebuild	
 			restore_heights_post_insertion (holder, desired_height)
+			if locked_in_here and parent_window (Current) /= Void then
+				parent_window (Current).unlock_update
+			end
 		ensure
 			contained: linear_representation.has (widget)
 			count_increased: linear_representation.count = old linear_representation.count + 1
@@ -288,10 +307,12 @@ feature -- Status setting
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			dialog: MULTIPLE_SPLIT_AREA_DOCKABLE_DIALOG
+			l_all_holders: ARRAYED_LIST [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
+			--temp_holders: ARRAY [MULTIPLE_SPLIT_AREA_TOOL_HOLDER]
 		do
 			create holder.make_with_tool (widget, name, Current)
-			all_holders.go_i_th (position)
-			all_holders.put_left (holder)
+			holder.set_position_docked_from (position)
+			all_holders.extend (holder)
 			external_representation.extend (widget)
 			holder.minimize_button.disable_sensitive
 			holder.maximize_button.disable_sensitive
@@ -502,66 +523,70 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			split_area: GB_VERTICAL_SPLIT_AREA
 			current_split_area: EV_SPLIT_AREA
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			iterations: INTEGER
+			cursor: CURSOR
 		do
 			if not rebuilding_locked then
-
-			split_area_wipe_out
-			all_split_areas.wipe_out
-			unparent_all_holders
-			all_split_areas.extend (Current)
-			if count = 1 then
-				cell_extend (holder_of_widget (linear_representation.i_th (1)))
-			elseif count = 2 then
-				cell_extend (holder_of_widget (linear_representation.i_th (1)))
-				cell_extend (holder_of_widget (linear_representation.i_th (2)))
-				if top_widget_resizing then
-					enable_item_expand (first)
-					disable_item_expand (second)				
-				end
-			else
-				from
-					all_holders.start
-					current_split_area := Current
-				until
-					all_holders.off
-				loop
+				cursor := linear_representation.cursor
+				split_area_wipe_out
+				all_split_areas.wipe_out
+				unparent_all_holders
+				all_split_areas.extend (Current)
+				if count = 1 then
+					cell_extend (holder_of_widget (linear_representation.i_th (1)))
+				elseif count = 2 then
+					cell_extend (holder_of_widget (linear_representation.i_th (1)))
+					cell_extend (holder_of_widget (linear_representation.i_th (2)))
 					if top_widget_resizing then
-						current_holder := all_holders.i_th (all_holders.count - all_holders.index + 1)
-						current_split_area.set_second (current_holder)
-					else
-						current_holder := all_holders.item
-						current_split_area.set_first (current_holder)
+						enable_item_expand (first)
+						disable_item_expand (second)				
 					end
-					
-					if all_holders.index = all_holders.count - 1 then
-						all_holders.forth
+				elseif count /= 0 then
+					from
+						linear_representation.start
+						current_split_area := Current
+					until
+						linear_representation.off
+					loop
 						if top_widget_resizing then
-							current_holder := all_holders.i_th (all_holders.count - all_holders.index + 1)
-							current_split_area.set_first (current_holder)
-						else
-							current_holder := all_holders.item
+							current_holder := holder_of_widget (linear_representation.i_th (linear_representation.count - linear_representation.index + 1))
 							current_split_area.set_second (current_holder)
-						end
-					else
-						create split_area
-						all_split_areas.extend (split_area)
-						if top_widget_resizing then
-							current_split_area.set_first (split_area)
 						else
-							current_split_area.set_second (split_area)
+							current_holder := holder_of_widget (linear_representation.item)
+							current_split_area.set_first (current_holder)
 						end
-						current_split_area := split_area
+						
+						if linear_representation.index = linear_representation.count - 1 then
+							linear_representation.forth
+							check
+								at_last_position: linear_representation.index = linear_representation.count
+							end
+							if top_widget_resizing then
+								current_holder := holder_of_widget (linear_representation.i_th (1))
+								current_split_area.set_first (current_holder)
+							else
+								current_holder := holder_of_widget (linear_representation.item)
+								current_split_area.set_second (current_holder)
+							end
+						else
+							create split_area
+							all_split_areas.extend (split_area)
+							if top_widget_resizing then
+								current_split_area.set_first (split_area)
+							else
+								current_split_area.set_second (split_area)
+							end
+							current_split_area := split_area
+						end
+						linear_representation.forth
 					end
-					
-					all_holders.forth
+					if top_widget_resizing then
+						reverse_split_areas
+					end
 				end
-				if top_widget_resizing then
-					reverse_split_areas
-				end
-			end
-			minimize_all_tools
-			update_all_minimize_buttons
-			
+				minimize_all_tools
+				update_all_minimize_buttons			
+				linear_representation.go_to (cursor)
 			end
 		end
 		
@@ -1211,6 +1236,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			linear_representation.has (a_widget) or external_representation.has (a_widget)
 		local
 			cursor: CURSOR
+			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
 			cursor := all_holders.cursor
 			from
@@ -1218,7 +1244,8 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				Result /= Void
 			loop
-				if all_holders.item.tool = a_widget then
+				current_holder := all_holders.item
+				if current_holder /= Void and then current_holder.tool = a_widget then
 					Result := all_holders.item
 				end
 				all_holders.forth
@@ -1552,7 +1579,7 @@ feature {NONE} -- Implementation
 				from
 					linear_representation.finish
 				until
-					linear_representation.index < 2 and holder_restored
+					(linear_representation.index < 2 and holder_restored) or linear_representation.off
 				loop
 					if holder_of_widget (linear_representation.item) = holder then
 						holder.simulate_minimum_height (insert_height - tool_holder_height)

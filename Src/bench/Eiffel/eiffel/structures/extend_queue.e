@@ -26,9 +26,9 @@ feature
 		require
 			valid_indices: maxindex >= minindex
 		do
-			lower := minindex;
+			lower := 0;
 			upper := maxindex;
-			make_area (maxindex - minindex + 1)
+			make_area (maxindex + 1)
 		end;
 
 	wipe_out is
@@ -53,7 +53,7 @@ feature
 			until
 				i > upper
 			loop
-				put_i_th (dead_element,i);
+				area.put (dead_element,i);
 				i := i + 1
 			end
 		end
@@ -67,13 +67,13 @@ feature
 	put_i_th (v: T; i: INTEGER) is
 			--  Replace `i'-th entry, if in index interval, by `v'.
 		do
-			area.put (v,i - lower)
+			area.put (v,i)
 		end;
 	
 	put, add (v: like item) is
 			--  Add `v' to the end of `Current'.
 		do
-			put_i_th (v,in_index);
+			area.put (v,in_index);
 			in_index := (in_index + 1) \\ array_capacity
 			count := count + 1
 		end;
@@ -88,13 +88,13 @@ feature
 	item: T is
 			--  Oldest item of `Current'
 		do
-			Result := i_th (out_index)
+			Result := area.item (out_index)
 		end;
 	
 	i_th (i: INTEGER): T is
 			--  Entry at index `i', if in index interval.
 		do
-			Result := area.item (i - lower)
+			Result := area.item (i)
 		end;
 	
 	is_full: BOOLEAN is
@@ -108,7 +108,7 @@ feature
 		require
 			not empty;
 		do
-			put_i_th (t, (in_index + array_capacity - 1) \\ array_capacity)
+			area.put (t, (in_index + array_capacity - 1) \\ array_capacity)
 		end;
 
 feature -- Cursor movement
@@ -144,7 +144,7 @@ feature -- Cursor movement
 
 	item_for_iteration: T is
 		do	
-			Result := i_th (position) 
+			Result := area.item (position) 
 		end
 
 feature -- Implementation

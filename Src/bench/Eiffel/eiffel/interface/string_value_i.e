@@ -56,4 +56,9 @@ feature
 			!VQMC5!Result;
 		end;
 
+	trace is
+		do
+			io.error.putstring (str_val);
+		end;
+
 end

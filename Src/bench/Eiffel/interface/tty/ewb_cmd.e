@@ -6,6 +6,7 @@ deferred class EWB_CMD
 inherit
 
 	SHARED_WORKBENCH;
+	SHARED_ERROR_BEHAVIOR;
 	PROJECT_CONTEXT
 		redefine
 			init_project_directory
@@ -113,7 +114,13 @@ feature -- Compilation
 			loop
 				Workbench.recompile;
 				if not Workbench.successfull then
-					io.error.putstring ("%N%
+					if stop_on_error then
+						if licence.registered then
+							licence.unregister
+						end;
+						die (-1);
+					end;
+					io.putstring ("%N%
 						%Press <Return> to resume compilation or <Q> to quit%N");
 					wait_for_return;
 					str := io.laststring.duplicate;
@@ -170,27 +177,25 @@ feature -- Input/Output
 		end;
 
 	confirmed: BOOLEAN is
-			--|Note: Currently no command necessitates confirmation
 		do
---			io.error.putstring ("Do you wish to ");
---			io.error.putstring (name);
---			io.error.putstring (" the system [y/n]? ");
---			io.readchar;
---			io.next_line;	
---			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
-			Result := True
+			io.putstring ("Do you wish to ");
+			io.putstring (name);
+			io.putstring (" the system [y/n]? ");
+			io.readchar;
+			io.next_line;	
+			Result := ((io.lastchar = 'Y') or (io.lastchar = 'y'))
 		end;
 
 	print_header is
 		do
-			io.error.putstring ("%
+			io.putstring ("%
 			   	%Eiffel compilation manager%N%
-			  	%  (version 3.0 level 0)%N");
+			  	%  (version 3.2 level 0)%N");
 		end;
 
 	print_tail is
 		do
-			io.error.putstring ("System recompiled.%N")
+			io.putstring ("System recompiled.%N")
 		end;
 
 feature -- Execution

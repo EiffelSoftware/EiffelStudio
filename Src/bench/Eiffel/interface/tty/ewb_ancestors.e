@@ -39,8 +39,8 @@ feature
 						class_c := class_i.compiled_class;
 					end;
 					if class_c = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" not in system%N");
+						io.putstring (class_name);
+						io.putstring (" not in system%N");
 					else
 						print_ancestors (class_c, 0);
 					end;
@@ -58,9 +58,9 @@ feature
 			until
 				ancestors.after
 			loop
-				io.error.putstring (tabs(i));
-				io.error.putstring (ancestors.item.associated_class.signature);
-				io.error.new_line;
+				io.putstring (tabs(i));
+				io.putstring (ancestors.item.associated_class.signature);
+				io.new_line;
 				print_ancestors (ancestors.item.associated_class, i + 1);
 				ancestors.forth
 			end

@@ -678,8 +678,10 @@ feature -- Recompilation
 				init_precompilation
 			end;
 
-				-- First time stamp and removal of useless classes
-			Time_checker.time_check;
+				-- The time checker just checks if there is a possible
+				-- conflict for the suppliers of a class, i.e. a new class
+				-- has been introduced and can create a conflict
+			Time_checker.check_suppliers_of_unchanged_classes;
 
 				-- The `new_classes' list is not used after the time
 				-- check. If it was successful, the list can be wiped out.
@@ -783,14 +785,14 @@ end;
 				-- Produce the update file
 			if freeze then
 					-- Verbose
-				io.error.putstring ("Freezing system%N");
+				io.putstring ("Freezing system%N");
 
 				freeze_system;
 				freeze := False;
 
 			else
 					-- Verbose
-				io.error.putstring ("Melting changes%N");
+				io.putstring ("Melting changes%N");
 
 				make_update;
 			end;
@@ -955,15 +957,12 @@ end;
 		local
 			a_class: CLASS_C;
 			local_cursor: LINKABLE [PASS4_C];
--- FIXME: changed_skeletons is NOT used!!!
-			changed_skeletons: LINKED_LIST [CLASS_C];
 			skeleton: SKELETON;
 		do
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("Process_skeleton%N");
 end;
 			from
-				!!changed_skeletons.make;
 				local_cursor := pass4_controler.changed_classes.first_element
 			until
 				local_cursor = Void
@@ -983,12 +982,6 @@ end;
 
 					check
 						has_class_type: not a_class.types.empty
-					end;
-					if a_class.types.first.is_changed then
-							-- Skeleton of the class has changed: the
-							-- `changed_skeletons' list is sorted in reversal order
-							-- i.e descendants first.
-						changed_skeletons.add_front (a_class);
 					end;
 						-- Check valididty of special classes ARRAY, STRING,
 						-- TO_SPECIAL, SPECIAL
@@ -1090,11 +1083,11 @@ debug ("COUNT")
 	io.error.putstring (") ");
 	i := i - 1;
 end;
-					io.error.putstring ("Degree 1: class ");
+					io.putstring ("Degree 1: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.putstring (temp);
+					io.new_line;
 					a_class.melt_feature_table;
 					a_class.melt_descriptor_tables;
 					id_cursor := id_cursor.right;
@@ -1493,11 +1486,11 @@ debug ("COUNT")
 	i := i - 1;
 end;
 						-- Verbose
-					io.error.putstring ("Degree -1: class ");
+					io.putstring ("Degree -1: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.putstring (temp);
+					io.new_line;
 	
 					a_class.generate_descriptor_tables;
 
@@ -1535,11 +1528,11 @@ debug ("COUNT")
 end;
 					if a_class /= Void then
 							-- Verbose
-						io.error.putstring ("Degree -1: class ");
+						io.putstring ("Degree -1: class ");
 							temp := a_class.class_name.duplicate;
 							temp.to_upper;
-						io.error.putstring (temp);
-						io.error.new_line;
+						io.putstring (temp);
+						io.new_line;
 	
 						a_class.generate_descriptor_tables;
 					end;
@@ -1567,11 +1560,11 @@ debug ("COUNT")
 	i := i - 1;
 end;
 					-- Verbose
-				io.error.putstring ("Degree -2: class ");
+				io.putstring ("Degree -2: class ");
 					temp := a_class.class_name.duplicate;
 					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
+				io.putstring (temp);
+				io.new_line;
 
 				a_class.pass4;
 
@@ -1596,11 +1589,11 @@ debug ("COUNT")
 end;
 				if not a_class.is_precompiled then
 						-- Verbose
-					io.error.putstring ("Degree -3: class ");
+					io.putstring ("Degree -3: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.putstring (temp);
+					io.new_line;
 
 					a_class.generate_feature_table;
 				end;
@@ -1811,11 +1804,11 @@ debug ("COUNT");
 	io.error.putstring (") ");
 end;
 						-- Verbose
-					io.error.putstring ("Degree -4: class ");
+					io.putstring ("Degree -4: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.putstring (temp);
+					io.new_line;
 
 					a_class.process_polymorphism;
 					History_control.check_overload;
@@ -1855,11 +1848,11 @@ debug ("COUNT")
 	io.error.putint (nb-i+1);
 	io.error.putstring (") ");
 end;
-					io.error.putstring ("Degree -5: class ");
+					io.putstring ("Degree -5: class ");
 						temp := a_class.class_name.duplicate;
 						temp.to_upper;
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.putstring (temp);
+					io.new_line;
 
 					a_class.pass4;
 				end;

@@ -75,6 +75,25 @@ feature
 			end;
 		end;
 
+	reset_clusters is
+			-- Reset all the clusters
+		local
+			a_cluster: CLUSTER_I;
+			local_cursor: LINKABLE [CLUSTER_I];
+		do
+			from
+				local_cursor := clusters.first_element;
+			until
+				local_cursor = Void
+			loop
+				a_cluster := local_cursor.item;
+				if not a_cluster.is_precompiled then
+					a_cluster.reset_cluster;
+				end;
+				local_cursor := local_cursor.right;
+			end;
+		end;
+
 	twin: like Current is
 			-- Twin universe
 		local

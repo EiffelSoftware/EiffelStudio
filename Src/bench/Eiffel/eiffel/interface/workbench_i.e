@@ -137,9 +137,6 @@ feature -- Commands
 
 				-- Syntax analysis must be done
 			pass1_controler.insert_new_class (class_to_recompile);
-
-				-- Update attribute `date' of `cl'.
-			class_to_recompile.set_date;
 		end;
 		
 	change_all is
@@ -166,9 +163,9 @@ feature -- Commands
 				end;
 				Universe.clusters.forth
 			end;
-io.error.putstring ("Precompiling ");
-io.error.putint (i);
-io.error.putstring (" classes%N");
+io.putstring ("Precompiling ");
+io.putint (i);
+io.putstring (" classes%N");
 		end;
 
 

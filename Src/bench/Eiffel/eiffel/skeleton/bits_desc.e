@@ -6,8 +6,16 @@ inherit
 
 	ATTR_DESC
 		redefine
+			is_bits, same_as
+		select
+			same_as
+		end;
+	ATTR_DESC
+		rename
+			same_as as basic_same_as
+		redefine
 			is_bits
-		end
+		end;
 	
 feature 
 
@@ -35,6 +43,17 @@ feature
 		do
 			file.putstring ("SK_BIT + ");
 			file.putint (value);
+		end;
+
+	same_as (other: ATTR_DESC): BOOLEAN is
+			-- Is `other' equal to Current ?
+		local
+			other_bits: BITS_DESC;
+		do
+			if basic_same_as (other) then
+				other_bits ?= other;
+				Result := other_bits.value = value
+			end;
 		end;
 
 	sk_value: INTEGER is

@@ -74,6 +74,7 @@ feature
 							a_class.set_class_name (class_name);
 							a_class.set_base_name (path);
 							a_class.set_cluster (cluster);
+							a_class.set_date;
 							cluster.classes.put (a_class, class_name);
 						end;
 					end;

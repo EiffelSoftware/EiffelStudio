@@ -48,12 +48,9 @@ feature -- Lace recompilation
 			cluster, old_cluster: CLUSTER_I;
 			cluster_of_name, cluster_of_path: CLUSTER_I;
 			clusters: LINKED_LIST [CLUSTER_I];
-			cluster_file: DIRECTORY;
-			vd01: VD01;
 			vd28: VD28;
 			vdcn: VDCN;
 			path: STRING;
-			fill_cluster: BOOLEAN;
 		do
 			path := Environ.interpret (directory_name);
 			cluster_of_name := Universe.cluster_of_name (cluster_name);
@@ -91,40 +88,12 @@ feature -- Lace recompilation
 			elseif old_cluster = Void then
 					-- New cluster
 				!!cluster.make (directory_name);
+				cluster.set_cluster_name (cluster_name);
 				Universe.insert_cluster (cluster);
-				fill_cluster := True;
-			elseif old_cluster.changed then
-				!!cluster.make (directory_name);
-				cluster.set_old_cluster (old_cluster);
-				Universe.insert_cluster (cluster);
-				fill_cluster := True;
+				cluster.fill;
 			else
-				!!cluster.make (directory_name);
-				cluster.copy_old_cluster (old_cluster);
-				Universe.insert_cluster (cluster);
+				cluster := old_cluster.new_cluster (cluster_name);
 			end;
-			cluster.set_cluster_name (cluster_name);
-
-				-- Apply the pass zero on cluster `cluster' if new or
-				-- changed.
-			if fill_cluster then
-					-- Check if the path is valid
-				!!cluster_file.make (path);
-				if not cluster_file.exists then
-					!!vd01;
-					vd01.set_path (path);
-					vd01.set_cluster_name (cluster_name);
-					Error_handler.insert_error (vd01);
-					Error_handler.raise_error;
-				end;
-					-- Verbose
-				io.error.putstring ("Degree 6: cluster ");
-				io.error.putstring (cluster_name);
-				io.error.new_line;
-	
-					-- Fill the class name table of the cluster
-				cluster.fill (cluster_file);
-			end
 		end;
 
 	adapt_use is

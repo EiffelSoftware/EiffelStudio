@@ -55,4 +55,9 @@ feature
 			!VQMC3!Result;
 		end;
 
+	trace is
+		do
+			io.error.putint (int_val);
+		end;
+
 end

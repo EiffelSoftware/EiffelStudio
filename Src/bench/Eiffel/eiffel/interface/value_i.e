@@ -77,4 +77,8 @@ feature
 		deferred
 		end;
 
+	trace is
+		deferred
+		end;
+
 end

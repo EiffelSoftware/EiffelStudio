@@ -188,7 +188,7 @@ feature -- Search
 
 			create kmp_matcher.make (pattern, text)
 
-			str_without_wild := clone (pattern)
+			str_without_wild := pattern.twin
 			str_without_wild.prune_all (string_representation)
 	
 			if str_without_wild.count > text.count then
@@ -288,7 +288,7 @@ feature -- Search
 			pc := pattern.count
 			tcmpc := tc - pc
 			create kmp_matcher.make (pattern, text)
-			str_without_wild := clone (pattern)
+			str_without_wild := pattern.twin
 			str_without_wild.prune_all (string_representation)
 			if str_without_wild.count <= text.count then
 				from

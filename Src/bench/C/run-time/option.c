@@ -29,6 +29,7 @@
 #include "eif_struct.h"
 #include "eif_option.h"
 #include "eif_hashin.h"
+#include "eif_lmalloc.h"
 #include "eif_malloc.h"
 #include "eif_macros.h"
 #include "eif_except.h"

@@ -19,7 +19,8 @@ inherit
 			add_child_ok
 		redefine
 			add_child,
-			set_insensitive
+			set_insensitive,
+			on_first_display
 		end
 
 	WEL_CONTROL_WINDOW
@@ -82,6 +83,27 @@ feature -- Implementation
 			end
 			{EV_CONTAINER_IMP} Precursor (flag)
 		end
+
+feature {EV_WIDGET_IMP} -- Implementation
+
+	on_first_display is
+			-- Called by the top_level window.
+		local
+			i: INTEGER
+		do
+			if not ev_children.empty then
+				from
+					i := 1
+				until
+					i = ev_children.count + 1
+				loop
+					(ev_children @ i).on_first_display
+					i := i + 1
+				end
+			end
+			parent_ask_resize (minimum_width, minimum_height)
+		end
+
 
 feature {NONE} -- Implementation : WEL features
 

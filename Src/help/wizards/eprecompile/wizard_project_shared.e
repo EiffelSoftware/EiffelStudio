@@ -21,7 +21,7 @@ feature {NONE} -- Constants
 			-- Location for the eiffel compiler
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "spec", Eiffel_platform, "bin">>)
+			Result.extend_from_array (<<"studio", "spec", Eiffel_platform, "bin">>)
 		end
 
 	Eiffel_compiler_command: FILE_NAME is

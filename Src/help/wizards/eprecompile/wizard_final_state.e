@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Launch `finish_freezing'
-			eifgen_path.extend ("W_CODE")
+			eifgen_path.extend ("W_code")
 			change_working_directory (eifgen_path)
 			create finish_freezing_command.make_from_string (Eiffel_compiler_location)
 			finish_freezing_command.set_file_name ("finish_freezing")

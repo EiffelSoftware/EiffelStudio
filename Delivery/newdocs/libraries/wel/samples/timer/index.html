@@ -1,0 +1,44 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>timer</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Timer">
+	</HEAD>
+
+	<BODY>
+		<H1>Timer Sample</H1>
+		<CENTER><IMG SRC="timer.png" ALT="timer" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\timer\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program, a window will be displayed as illustarated above. Clicking on any of the push buttons marked "Start Timer" will
+		start a timer running, and the hatched area immdiately above the push button will change its appearence to reflect the interval of the timer.
+
+		<H2>Under the Hood</H2>
+		A <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_window_chart.html">WEL_WINDOW</A> supports multiple timers, set
+		by <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_set_timer">set_timer</A> which takes a unique id for each timer.
+		The <A CLASS="efeature" HREF="/libraries/wel/reference/windows/wel_window.html#f_on_timer">on_timer</A> feature is called every time a timer interval is reached with an argument
+		corresponding to the id of the timer. Within <A CLASS="eclass" HREF="/libraries/wel/samples/timer/root_class/main_window_chart.html">MAIN_WINDOW</A>, <A CLASS="efeature" HREF="/libraries/wel/samples/timer/root_class/main_window.html#f_on_timer">on_timer</A>
+		has been redefined to update the appearence of the hatched areas.
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/timer/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>				
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/timer/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/timer/root_cluster/timer_chart.html">TIMER</A>
+			</UL>
+		</P>
+	</BODY>
+</HTML>

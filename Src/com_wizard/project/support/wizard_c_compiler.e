@@ -75,7 +75,15 @@ feature -- Basic Operations
 				a_file_list.after or Shared_wizard_environment.abort
 			loop
 				if is_c_file (a_file_list.item) then
-					generate_make_file (C_compiler_standard_command_line (a_file_list.item), Temporary_input_file_name)
+					if a_folder_name.is_equal (Common) then
+						if Shared_wizard_environment.client then
+							generate_make_file (C_compiler_common_client_command_line (a_file_list.item), Temporary_input_file_name)
+						else
+							generate_make_file (C_compiler_common_server_command_line (a_file_list.item), Temporary_input_file_name)
+						end
+					else
+						generate_make_file (C_compiler_standard_command_line (a_file_list.item), Temporary_input_file_name)
+					end
 					a_string := clone (C_compiler)
 					a_string.append (Space)
 					a_string.append (last_make_command)
@@ -204,9 +212,27 @@ feature {NONE} -- Implementation
 		end
 
 	C_compiler_standard_command_line (a_file_name: STRING): STRING is
-			-- Standard Cl commmand line used to compile generated code
+			-- Standard Cl commmand line used to compile generated code (Server and Client folders)
 		do
 			Result := clone (Common_standard_c_compiler_options)
+			Result.append (clone (current_working_directory))
+			Result.append_character (Directory_separator)
+			Result.append (a_file_name)
+		end
+
+	C_compiler_common_client_command_line (a_file_name: STRING): STRING is
+			-- Standard Cl commmand line used to compile generated code (Commont folder for client)
+		do
+			Result := clone (Client_standard_c_compiler_options)
+			Result.append (clone (current_working_directory))
+			Result.append_character (Directory_separator)
+			Result.append (a_file_name)
+		end
+
+	C_compiler_common_server_command_line (a_file_name: STRING): STRING is
+			-- Standard Cl commmand line used to compile generated code (Common folder for server)
+		do
+			Result := clone (Server_standard_c_compiler_options)
 			Result.append (clone (current_working_directory))
 			Result.append_character (Directory_separator)
 			Result.append (a_file_name)

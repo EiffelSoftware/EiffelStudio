@@ -14,12 +14,23 @@ inherit
 	GB_COMMAND
 	
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
 	
 	GB_SHARED_COMMAND_HANDLER
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
+	
+	INTERNAL
+		export
+			{NONE} all
+		end
 	
 create
 	
@@ -45,6 +56,10 @@ feature -- Basic Operation
 		local
 			previous_parent_object: GB_OBJECT
 		do
+				-- Call `update_for_delete' which does any processing
+				-- necessary before objects are deleted.
+				-- i.e. unmerge radio button groups.
+			child_layout_item.object.update_for_delete
 				-- Note that unparenting an object does not update parent representations
 				-- in objects editors, so we must do it ourselves by calling
 				-- `update_object_editors_for_delete'.
@@ -138,10 +153,12 @@ feature {NONE} -- Implementation
 						floating_object_editors.prune (editor)
 					end
 				end
-			
-					-- If the parent of `an_object' is in the object editor then we must
-					-- update it accordingly.
-				if parent_object /= Void and then parent_object = editor.object then
+
+					-- We only update any editors that reference containers.
+					-- Note that we could check to see which attributes of which objects
+					-- really were affected, thus minimizing, rebuilding. Not done
+					-- and probably not necessary.
+				if type_conforms_to (dynamic_type_from_string (editor.object.type), dynamic_type_from_string (Ev_container_string)) then
 					editor.update_current_object
 				end	
 				editors.forth

@@ -63,7 +63,7 @@ feature -- Output
 		end;
 
 	append_to (st: STRUCTURED_TEXT) is
-			-- Append Current type to `cw'.
+			-- Append Current type to `st'.
 		require
 			non_void_st: st /= Void
 		do

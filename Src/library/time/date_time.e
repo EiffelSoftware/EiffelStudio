@@ -390,9 +390,6 @@ feature -- Output
 			-- With "standard" form: `default_format_string'
 		do
 			Result := formatted_out (default_format_string)
-			--Result := clone (date.out);
-			--Result.extend (' ');
-			--Result.append (time.out_fine(3))
 		end
 
 	formatted_out (s: STRING): STRING is
@@ -411,7 +408,6 @@ feature {NONE} -- Externals
 
 	c_year_now: INTEGER is
 			-- Current year recorded by c_get_date_time.
-			-- Has to be checked after 2000.
 		external 
 			"C"
 		end

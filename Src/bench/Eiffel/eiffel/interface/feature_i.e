@@ -1937,14 +1937,16 @@ feature -- Genericity
 			end
 		end
 
-	has_anchored_type: BOOLEAN is
-			-- Has feature signature an anchored type?
-			-- (I.e., is anchored type used in argument or result declaration?)
+	has_anchored_or_formal_generic_type: BOOLEAN is
+			-- Has feature signature an anchored or formal generic type?
+			-- (I.e., is anchored or formal genric type used in argument or result declaration?)
 		local
 			i: INTEGER
 			a: like arguments
+			t: TYPE_AS
 		do
-			if type.has_like then
+			t := type
+			if t.has_like or else t.has_formal_generic then
 				Result := True
 			else
 				from
@@ -1954,7 +1956,8 @@ feature -- Genericity
 				until
 					i <= 0
 				loop
-					if a.i_th (i).has_like then
+					t := a.i_th (i)
+					if t.has_like or else t.has_formal_generic then
 						Result := True
 						i := 0
 					end

@@ -44,6 +44,8 @@ wpstore.c : pstore.c
 	copy pstore.c wpstore.c
 
 wpstore.obj : wpstore.c
+	$(RM) $@
+	$(CC) -c -DWORKBENCH $(JCFLAGS) wpstore.c
 
 parser.h : parser.c
 

@@ -17,7 +17,11 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Current pixmap
 		do
-			Result ?= pixmap_imp.interface
+			if pixmap_imp /= Void then
+				Result ?= pixmap_imp.interface
+			else
+				Result := Void
+			end
 		end
 
 	pixmap_imp: EV_PIXMAP_IMP
@@ -33,12 +37,14 @@ feature -- Element change
 		do
 			pixmap_imp ?= pix.implementation
 			pixmap_imp.internal_delete_dc
+			pixmap_imp.set_free_status (False)
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		do
 			pixmap_imp.internal_create_dc
+			pixmap_imp.set_free_status (True)
 			pixmap_imp ?= Void
 		end
 

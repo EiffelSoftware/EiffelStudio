@@ -11,6 +11,7 @@ OBJ = des.obj desop.obj
 des.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
+	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib

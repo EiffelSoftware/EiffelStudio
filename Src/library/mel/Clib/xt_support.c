@@ -94,22 +94,40 @@ EIF_INTEGER an_unsigned_char;
 	XtVaSetValues ((Widget) w, (String) res, (unsigned char) an_unsigned_char, NULL);
 }
 
-EIF_INTEGER c_get_pixmap (w, res)
+EIF_POINTER c_get_pixmap (w, res)
 EIF_POINTER w;
 char *res;
 {
 	Pixmap temp;
 
 	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
-	return (EIF_INTEGER) temp;
+	return (EIF_POINTER) temp;
 }
 
 void c_set_pixmap (w, res, a_pixmap)
 EIF_POINTER w;
 char *res;
-EIF_INTEGER a_pixmap;
+EIF_POINTER a_pixmap;
 {
 	XtVaSetValues ((Widget) w, (String) res, (Pixmap) a_pixmap, NULL);
+}
+
+EIF_CHARACTER c_get_keysym (w, res)
+EIF_POINTER w;
+char *res;
+{
+	KeySym temp;
+
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_CHARACTER) temp;
+}
+
+void c_set_keysym (w, res, a_widget)
+EIF_POINTER w;
+char *res;
+EIF_CHARACTER a_widget;
+{
+	XtVaSetValues ((Widget) w, (String) res, (KeySym) a_widget, NULL);
 }
 
 EIF_POINTER c_get_widget (w, res)
@@ -130,14 +148,21 @@ EIF_POINTER a_widget;
 	XtVaSetValues ((Widget) w, (String) res, (Widget) a_widget, NULL);
 }
 
-EIF_POINTER get_i_th_widget_child (w, index)
+EIF_POINTER c_get_i_th_widget_child (w, index)
 EIF_POINTER w;
 EIF_INTEGER index;
 {
+	return (EIF_POINTER) ((WidgetList) w)[(int) index - 1];
+}
+
+EIF_POINTER c_get_children (w, res)
+EIF_POINTER w;
+char *res;
+{
 	WidgetList temp;
 
-	XtVaGetValues ((Widget) w, XtNchildren, &temp, NULL);
-	return (EIF_POINTER) temp[(int) index - 1];
+	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
+	return (EIF_POINTER) temp;
 }
 
 EIF_INTEGER c_get_dimension (w, res)
@@ -158,20 +183,20 @@ EIF_INTEGER a_dimension;
 	XtVaSetValues ((Widget) w, (String) res, (Dimension) a_dimension, NULL);
 }
 
-EIF_INTEGER c_get_pixel (w, res)
+EIF_POINTER c_get_pixel (w, res)
 EIF_POINTER w;
 char *res;
 {
 	Pixel temp;
 
 	XtVaGetValues ((Widget) w, (String) res, &temp, NULL);
-	return (EIF_INTEGER) temp;
+	return (EIF_POINTER) temp;
 }
 
 void c_set_pixel (w, res, a_pixel)
 EIF_POINTER w;
 char *res;
-EIF_INTEGER a_pixel;
+EIF_POINTER a_pixel;
 {
 	XtVaSetValues ((Widget) w, (String) res, (Pixel) a_pixel, NULL);
 }
@@ -192,6 +217,23 @@ char *res;
 EIF_INTEGER a_position;
 {
 	XtVaSetValues ((Widget) w, (String) res, (Position) a_position, NULL);
+}
+
+EIF_POINTER c_get_font_list (w, res)
+EIF_POINTER w;
+char *res;
+{
+	XmFontList font_list;
+	XtVaGetValues ((Widget) w, (String) res, &font_list, NULL);
+	return (EIF_POINTER) font_list;
+}
+
+void c_set_font_list (w, res, a_font_list)
+EIF_POINTER w;
+char *res;
+EIF_POINTER a_font_list;
+{
+	XtVaSetValues ((Widget) w, (String) res, (XmFontList) a_font_list, NULL);
 }
 
 EIF_REFERENCE c_get_string_no_free (w, res)
@@ -217,6 +259,18 @@ char *res;
 	an_object = (EIF_REFERENCE) RTMS (temp);
 	XtFree (temp);
 	return an_object;
+}
+
+
+void c_set_allocated_string (w, res, a_string)
+EIF_POINTER w;
+char *res;
+char *a_string;
+{
+	char *c_string;
+	
+	c_string = strdup (a_string);
+	XtVaSetValues ((Widget) w, (String) res, (String) c_string, NULL);
 }
 
 void c_set_string (w, res, a_string)
@@ -303,7 +357,7 @@ EIF_POINTER get_i_widget_child (w, index)
 EIF_POINTER w;
 EIF_INTEGER index;
 {
-    return (EIF_POINTER) ((WidgetList) w)[(int) index];
+	return (EIF_POINTER) ((WidgetList) w)[(int) index];
 }
 
 /*
@@ -440,32 +494,71 @@ EIF_INTEGER mask2;
 EIF_REFERENCE c_event_string (event_pointer)
 EIF_POINTER event_pointer;
 {
-    /* Ignore modifiers and simply return the string value */
-    /* E.g. ctrlg returns g.*/
-    char result [100];
-    XComposeStatus status;
-    KeySym keysym;
-    int length;
+	/* Ignore modifiers and simply return the string value */
+	/* E.g. ctrlg returns g.*/
+	char result [100];
+	XComposeStatus status;
+	KeySym keysym;
+	int length;
    
-    length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
-    if (!length) return (EIF_REFERENCE) 0;
-    result [length] = '\0';
-    return (EIF_REFERENCE) makestr (result, strlen (result));
+	length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
+	if (!length) return (EIF_REFERENCE) 0;
+	result [length] = '\0';
+	return (EIF_REFERENCE) makestr (result, strlen (result));
 }
 
-EIF_POINTER c_event_keysym (event_pointer)
-EIF_POINTER event_pointer;
+EIF_INTEGER c_event_keysym (event_pointer)
+EIF_INTEGER event_pointer;
 {
-    /* Ignore modifiers and simply return the string value */
-    /* E.g. ctrlg returns g.*/
-    char result [100];
-    XComposeStatus status;
-    KeySym keysym;
-    int length;
+	/* Ignore modifiers and simply return the string value */
+	/* E.g. ctrlg returns g.*/
+	char result [100];
+	XComposeStatus status;
+	KeySym keysym;
+	int length;
    
-    length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
-    if (!length) return NULL;
-    result [length] = '\0';
-    return (EIF_POINTER) keysym;
+	length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
+	if (!length) return NULL;
+	result [length] = '\0';
+	return (EIF_INTEGER) keysym;
+}
+
+void xt_grab_pointer (widget, cursor)
+EIF_POINTER widget;
+EIF_POINTER cursor;
+{
+	/* Grab the pointer and the
+	 * keyboard
+	 */
+
+	if (cursor)
+		XtGrabPointer ((Widget) widget, False,
+			PointerMotionMask | ButtonPressMask | ButtonReleaseMask,
+			GrabModeAsync, GrabModeSync, None, (Cursor) cursor, CurrentTime);
+	else
+		XtGrabPointer ((Widget) widget, False,
+			PointerMotionMask | ButtonPressMask | ButtonReleaseMask,
+			GrabModeAsync, GrabModeSync, None, None, CurrentTime);
+}
+
+EIF_POINTER c_create_xpoints (number)
+EIF_INTEGER number;
+{
+	return ((EIF_POINTER) cmalloc (number*sizeof (XPoint)));
+}
+
+void c_put_xpoint (array, position, x, y)
+EIF_POINTER array;
+EIF_INTEGER position;
+EIF_INTEGER x, y;
+{
+	((XPoint *) array) [(int) position].x = (short) x;
+	((XPoint *) array) [(int) position].y = (short) y;
+}
+
+void c_free_xpoints (array)
+EIF_POINTER array;
+{
+	xfree ((XPoint *) array);
 }
 

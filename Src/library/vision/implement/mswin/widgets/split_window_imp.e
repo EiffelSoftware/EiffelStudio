@@ -351,8 +351,6 @@ feature -- {NONE} -- Implementation
 
 	resize_first_child is
 			-- Resize the top child to the correct dimensions.
-		require
-			exists: exists
 		do
 			if is_vertical then
 				first_child.set_size (split_position, height)
@@ -363,8 +361,6 @@ feature -- {NONE} -- Implementation
 
 	resize_second_child is
 			-- Resize the bottom child to the correct dimensions.
-		require
-			exists: exists
 		local
 			add_size, zero: INTEGER
 		do
@@ -396,8 +392,6 @@ feature -- {NONE} -- Implementation
 
 	draw_split (a_dc: WEL_DC) is
 			-- Draw the top split on `a_dc'.
-
-
 		do
 			if split_visible then
 				if is_vertical then

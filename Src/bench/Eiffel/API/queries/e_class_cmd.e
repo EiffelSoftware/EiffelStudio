@@ -27,6 +27,7 @@ feature -- Initialization
 			-- `a_class'.
 		require
 			valid_a_class_c: a_class /= Void
+			compiled_class: a_class.has_feature_table
 		do
 			current_class := a_class;	
 			!! structured_text.make

@@ -59,7 +59,7 @@ feature
 			adapter.set_target_type (d.actual_type);
 			new_pairs := clone (pairs);
 			if old_feat.written_class /= a then
-				feat_table := Feat_tbl_server.item (a.id.id);		
+				feat_table := Feat_tbl_server.item (a.id);		
 				from
 					new_pairs.start
 				until
@@ -85,7 +85,7 @@ feature
 			end;
 			new_name := compute_new_name (f_name);
 			!! ctxt.make (new_name, new_pairs, adapter);
-			feature_as := Body_server.item (old_feat.body_id.id);
+			feature_as := Body_server.item (old_feat.body_id);
 			ast := feature_as.replicate (ctxt);
 		end;		
 			

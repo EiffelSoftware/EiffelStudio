@@ -4,7 +4,7 @@ class INV_BYTE_CACHE
 
 inherit
 
-	CACHE [INVARIANT_B];
+	CACHE [INVARIANT_B, CLASS_ID]
 
 creation
 

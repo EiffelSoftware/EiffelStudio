@@ -3,7 +3,7 @@ class TMP_M_ROUT_ID_SERVER
 
 inherit
 
-	DELAY_SERVER [MELTED_ROUTID_ARRAY]
+	DELAY_SERVER [MELTED_ROUTID_ARRAY, CLASS_ID]
 
 creation
 
@@ -11,13 +11,19 @@ creation
 
 feature
 
+	id (t: MELTED_ROUTID_ARRAY): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.class_id
+		end
+
 	Cache: M_ROUT_ID_CACHE is
 			-- Cache for routine tables
 		once
 			!!Result.make;
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

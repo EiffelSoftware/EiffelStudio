@@ -6,7 +6,7 @@ class TMP_REP_DEPEND_SERVER
 
 inherit
 
-	DELAY_SERVER [REP_CLASS_DEPEND]
+	DELAY_SERVER [REP_CLASS_DEPEND, CLASS_ID]
 
 creation
 
@@ -14,13 +14,19 @@ creation
 	
 feature 
 
+	id (t: REP_CLASS_DEPEND): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
+
 	Cache: REP_DEPEND_CACHE is
 			-- Cache for routine tables
 		once
 			!!Result.make;
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER
@@ -29,7 +35,7 @@ feature
 			!!Result.make ((3 * csize) // 2);
 		end;
 
-	update (table: EXTEND_TABLE [REP_CLASS_DEPEND, INTEGER]) is
+	update (table: EXTEND_TABLE [REP_CLASS_DEPEND, CLASS_ID]) is
 			-- Update server using `table'
 		do
 			from 

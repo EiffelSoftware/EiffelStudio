@@ -1,6 +1,6 @@
 -- Cache for server: the keys are ids
 
-deferred class CACHE [T -> IDABLE] 
+deferred class CACHE [T -> IDABLE, H -> COMPILER_ID] 
 
 inherit
 
@@ -28,7 +28,7 @@ feature
 
 feature -- Cache manipulations 
 
-	remove_id (i: INTEGER) is
+	remove_id (i: H) is
 			-- Remove item of id `i' form cache.
 		local
 			nb, nb_iter: INTEGER;
@@ -42,28 +42,28 @@ feature -- Cache manipulations
 			loop
 				an_item := item;
 				remove;
-				if an_item.id /= i then
+				if not equal (an_item.id, i) then
 					put (an_item);
 				end;
 				nb_iter := nb_iter + 1
 			end;
 		end;
 
-	has_id (i: INTEGER): BOOLEAN is
+	has_id (i: H): BOOLEAN is
 			-- Is an item of id `i' in the cache ?
 		do
 			Result := index_of (i) /= in_index
 		end;
 
-	index_of (an_id: INTEGER): INTEGER is
-			-- Index of object which id is `an_id'. If not found, retrurn
+	index_of (an_id: H): INTEGER is
+			-- Index of object which id is `an_id'. If not found, return
 			-- `capacity'.
 		local
 			i, j, size: INTEGER;
 			stop: BOOLEAN;
 		do
 			from
-					-- Iteration on the id queue which is implemeted as
+					-- Iteration on the id queue which is implemented as
 					-- a circular list: `out_index' is the index of the 
 					-- out_index id of the queue, `in_index' is the next index
 					-- for insertion
@@ -73,7 +73,7 @@ feature -- Cache manipulations
 				i = in_index or else stop
 			loop
 				j := i;
-				stop := i_th (i).id = an_id;
+				stop := equal (i_th (i).id, an_id);
 				i := (i + 1) \\ size
 			end;
 			if stop then
@@ -85,7 +85,7 @@ feature -- Cache manipulations
 			end;
 		end;
 
-	item_id (an_id: INTEGER): T is
+	item_id (an_id: H): T is
 			-- Item which id is `an_id'
 		local
 			position, size, j, i, last_index: INTEGER;

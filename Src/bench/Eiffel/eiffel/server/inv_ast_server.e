@@ -4,7 +4,7 @@ class INV_AST_SERVER
 
 inherit
 
-	READ_SERVER [INVARIANT_AS_B]
+	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
 		rename
 			item as server_item,
 			has as server_has
@@ -12,7 +12,7 @@ inherit
 			{ANY} server_has, server_item, merge
 		end;
 
-	READ_SERVER [INVARIANT_AS_B]
+	READ_SERVER [INVARIANT_AS_B, CLASS_ID]
 		redefine
 			has, item
 		select
@@ -31,14 +31,14 @@ feature
 			!!Result.make;
 		end;
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is the id `an_id' present either in Current or in
 			-- `Tmp_inv_ast_server' ?
 		do
 			Result := Tmp_inv_ast_server.has (an_id) or else server_has (an_id);
 		end;
 
-	item (an_id: INTEGER): INVARIANT_AS_B is
+	item (an_id: CLASS_ID): INVARIANT_AS_B is
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do
@@ -51,7 +51,7 @@ feature
 			Result_exists: Result /= Void
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 			-- Class offsets in the AST server
 		do
 			Result := Ast_server;

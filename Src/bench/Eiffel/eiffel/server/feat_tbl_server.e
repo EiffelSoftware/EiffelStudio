@@ -4,7 +4,7 @@ class FEAT_TBL_SERVER
 
 inherit
 
-	SERVER [FEATURE_TABLE]
+	COMPILER_SERVER [FEATURE_TABLE, CLASS_ID]
 		rename
 			item as server_item,
 			has as server_has
@@ -12,7 +12,7 @@ inherit
 			{ANY} server_item, server_has
 		end;
 
-	SERVER [FEATURE_TABLE]
+	COMPILER_SERVER [FEATURE_TABLE, CLASS_ID]
 		redefine
 			has, item
 		select
@@ -31,7 +31,7 @@ feature
 			!!Result.make;
 		end;
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: CLASS_ID): BOOLEAN is
 			-- Has the current server or the associated temporary 
 			-- server an item of id `an_id'.
 		do
@@ -40,7 +40,13 @@ feature
 						Tmp_feat_tbl_server.has (an_id)
 		end;
 
-	item (an_id: INTEGER): FEATURE_TABLE is
+	id (t: FEATURE_TABLE): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.feat_tbl_id
+		end
+
+	item (an_id: CLASS_ID): FEATURE_TABLE is
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.
 		do

@@ -6,7 +6,7 @@ class TMP_CLASS_INFO_SERVER
 
 inherit
 
-	DELAY_SERVER [CLASS_INFO]
+	DELAY_SERVER [CLASS_INFO, CLASS_ID]
 
 creation
 
@@ -14,13 +14,19 @@ creation
 	
 feature 
 
+	id (t: CLASS_INFO): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
+
 	Cache: CLASS_INFO_CACHE is
 			-- Cache for routine tables
 		once
 			!!Result.make;
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

@@ -9,7 +9,7 @@ class TMP_CLASS_COMMENTS_SERVER
 
 inherit
 
-	SERVER [CLASS_COMMENTS]
+	COMPILER_SERVER [CLASS_COMMENTS, CLASS_ID]
 		export
 			{NONE} all;
 			{ANY} put, flush, start, after, forth,
@@ -31,7 +31,7 @@ feature -- Element change
 		do
 debug ("SERVER")
 	io.putstring ("Putting element of id: ");
-	io.putint (t.class_id.id);
+	io.putstring (t.class_id.dump);
 	io.putstring (" into");
 	io.putstring (generator);
 	io.new_line;
@@ -40,9 +40,17 @@ end;
 			write (t);
 		end;
 
+feature -- Access
+
+	id (t: CLASS_COMMENTS): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.class_id
+		end
+
 feature -- Removal
 
-	remove (an_id: INTEGER) is
+	remove (an_id: CLASS_ID) is
 			-- Remove information of id `an_id'.
 			-- NO precondition, the feature will check if the
 			-- server has the element to remove.
@@ -51,7 +59,7 @@ feature -- Removal
 		local
 			old_info: SERVER_INFO;
 			old_server_file: SERVER_FILE;
-			real_id: INTEGER
+			real_id: CLASS_ID
 		do
 			real_id := updated_id (an_id);
 			old_info := tbl_item (real_id);
@@ -67,13 +75,13 @@ feature -- Removal
 	
 feature {NONE} -- Implementation
 
-	Cache: CACHE [CLASS_COMMENTS] is
+	Cache: CACHE [CLASS_COMMENTS, CLASS_ID] is
 			-- No caching machanism
 			-- (Returns void)
 		do
 		end;
 
-	Delayed: SEARCH_TABLE [INTEGER] is
+	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
 		local
 			csize: INTEGER

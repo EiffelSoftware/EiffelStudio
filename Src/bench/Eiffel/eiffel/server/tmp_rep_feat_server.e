@@ -5,7 +5,7 @@ class TMP_REP_FEAT_SERVER
 
 inherit
 
-	READ_SERVER [FEATURE_AS_B]
+	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		rename
 			clear as old_clear,
 			make as basic_make,
@@ -13,7 +13,7 @@ inherit
 		redefine
 			ontable, updated_id
 		end;
-	READ_SERVER [FEATURE_AS_B]
+	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		redefine
 			clear, make, ontable, updated_id, has
 		select
@@ -26,7 +26,7 @@ creation
 	
 feature
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: BODY_ID): BOOLEAN is
 		local
 			i: INTEGER
 		do
@@ -37,15 +37,15 @@ feature
 				until
 					(i > nb_useless) or else not Result
 				loop
-					if useless_body_ids.item (i) /= -1 then
-						Result := (updated_id (an_id) /= updated_id (useless_body_ids.item (i)))
+					if useless_body_ids.item (i) /= Void then
+						Result := not equal (updated_id (an_id), updated_id (useless_body_ids.item (i)))
 					end;
 					i := i + 1
 				end;
 			end;
 		end;
 
-	ontable: O_N_TABLE is
+	ontable: O_N_TABLE [BODY_ID] is
 			-- Mapping table between old id s and new ids.
 			-- Used by `change_id'
 		require else
@@ -54,12 +54,12 @@ feature
 			Result := System.onbidt
 		end;
 
-	updated_id (i: INTEGER): INTEGER is
+	updated_id (i: BODY_ID): BODY_ID is
 		do
 			Result := ontable.item (i)
 		end;
 
-	useless_body_ids: ARRAY [INTEGER];
+	useless_body_ids: ARRAY [BODY_ID];
 			-- Set of body ids which have to desappear after a success
 			-- recompilation
 
@@ -82,13 +82,13 @@ feature
 	Chunk: INTEGER is 10;
 			-- Array chunk
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 			-- Class offsets in the temporary AST class server
 		do
 			Result := Tmp_rep_server;
 		end; -- offsets
 
-	desactive (body_id: INTEGER) is
+	desactive (body_id: BODY_ID) is
 			-- Put `body_id' in `useless_body_ids'.
 		local
 			nb: INTEGER
@@ -102,10 +102,10 @@ feature
 			useless_body_ids.put (body_id, nb_useless);
 		end;
 
-	reactivate (body_id: INTEGER) is
+	reactivate (body_id: BODY_ID) is
 		local
 			i: INTEGER;
-			real_id, ubi: INTEGER
+			real_id, ubi: BODY_ID
 		do
 			real_id := updated_id (body_id);
 			from
@@ -114,8 +114,8 @@ feature
 				i > nb_useless
 			loop
 				ubi := useless_body_ids.item (i);
-				if (ubi /= -1) and then (updated_id(ubi) = real_id) then
-					useless_body_ids.put (-1, i);
+				if (ubi /= Void) and then equal (updated_id(ubi), real_id) then
+					useless_body_ids.put (Void, i);
 				end;
 				i := i + 1
 			end;
@@ -124,7 +124,8 @@ feature
 	finalize is
 			-- Finalization after a successful recompilation
 		local
-			i, body_id: INTEGER;
+			i: INTEGER;
+			body_id: BODY_ID;
 			read_info: READ_INFO
 		do
 				-- Deactivate useless ids
@@ -133,7 +134,7 @@ feature
 			until
 				i > nb_useless
 			loop
-				if (useless_body_ids.item (i) /= -1) then
+				if (useless_body_ids.item (i) /= Void) then
 						-- Note: `remove' will get the updated id
 						-- before performing the removal.
 					Rep_feat_server.remove (useless_body_ids.item (i));

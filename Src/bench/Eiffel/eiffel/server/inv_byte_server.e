@@ -4,7 +4,7 @@ class INV_BYTE_SERVER
 
 inherit
 
-	SERVER [INVARIANT_B]
+	COMPILER_SERVER [INVARIANT_B, CLASS_ID]
 		rename
 			item as server_item,
 			has as server_has,
@@ -13,7 +13,7 @@ inherit
 			{ANY} server_item
 		end;
 
-	SERVER [INVARIANT_B]
+	COMPILER_SERVER [INVARIANT_B, CLASS_ID]
 		redefine
 			has, item, disk_item
 		select
@@ -32,7 +32,13 @@ feature
 			!!Result.make;
 		end;
 
-	item (an_id: INTEGER): INVARIANT_B is
+	id (t: INVARIANT_B): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
+
+	item (an_id: CLASS_ID): INVARIANT_B is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -45,7 +51,7 @@ feature
 			Result_exists: Result /= Void
 		end;
 
-	disk_item (an_id: INTEGER): INVARIANT_B is
+	disk_item (an_id: CLASS_ID): INVARIANT_B is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -56,7 +62,7 @@ feature
 			end;
 		end;
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: CLASS_ID): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_inv_byte_server' or
 			-- Current ?
 		do

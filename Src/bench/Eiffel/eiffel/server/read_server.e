@@ -1,10 +1,6 @@
 -- Class for description of a read-only server
--- Note: read servers are only used in the systems
--- for elements indexed by body ids, we can therefore
--- introduce the old/new body id table here (not very
--- nice for a class that should be more abstract)
 
-deferred class READ_SERVER [T -> IDABLE]
+deferred class READ_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
 
@@ -18,7 +14,7 @@ inherit
 		undefine
 			copy, is_equal
 		end;
-	EXTEND_TABLE [READ_INFO, INTEGER]
+	EXTEND_TABLE [READ_INFO, H]
 		rename
 			make as tbl_make,
 			item as tbl_item,
@@ -34,12 +30,12 @@ inherit
 
 feature
 
-	updated_id (i: INTEGER): INTEGER is
+	updated_id (i: H): H is
 		do
 			Result := i
 		end;
  
-	ontable: O_N_TABLE is
+	ontable: O_N_TABLE [H] is
 			-- Mapping table between old id s and new ids.
 			-- Used by `change_id'
 			-- By default, this mechanism is disabled, hence the
@@ -49,13 +45,13 @@ feature
 		do
 		end;
 
-	change_id (new_value, old_value: INTEGER) is
+	change_id (new_value, old_value: H) is
 		require
 			Has_old: has (old_value)
 		local
 			rf: READ_INFO;
 			temp: T;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (old_value);
  
@@ -75,12 +71,12 @@ feature
 			tbl_make (500)
 		end;
 
-	has (i: INTEGER): BOOLEAN is
+	has (i: H): BOOLEAN is
 		do
 			Result := tbl_has (updated_id(i))
 		end;
 
-	item (an_id: INTEGER): T is
+	item (an_id: H): T is
 			-- Object of id `an_id'
 		require
 			an_id_in_table: has (an_id);
@@ -89,14 +85,14 @@ feature
 			server_info: SERVER_INFO;
 			server_file: SERVER_FILE;
 			offset: INTEGER;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id(an_id);
 			Result := cache.item_id (real_id);
 			if Result = Void then
 					-- Id not avaible in memory
 				info := tbl_item (real_id);
-				server_info := offsets.item (info.class_id.id);
+				server_info := offsets.item (info.class_id);
 				server_file := Server_controler.file_of_id (server_info.id);
 				if not server_file.is_open then
 					Server_controler.open_file (server_file);
@@ -114,7 +110,7 @@ feature
 			end;
 		end;
 
-	disk_item (an_id: INTEGER): T is
+	disk_item (an_id: H): T is
 			-- Object of id `an_id'
 		require
 			an_id_in_table: has (an_id);
@@ -123,11 +119,11 @@ feature
 			server_info: SERVER_INFO;
 			server_file: SERVER_FILE;
 			offset: INTEGER;
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id(an_id);
 			info := tbl_item (real_id);
-			server_info := offsets.item (info.class_id.id);
+			server_info := offsets.item (info.class_id);
 			server_file := Server_controler.file_of_id (server_info.id);
 			if not server_file.is_open then
 				Server_controler.open_file (server_file);
@@ -138,24 +134,24 @@ feature
 			Result.set_id (real_id);
 		end;
 
-	remove (an_id: INTEGER) is
+	remove (an_id: H) is
 			-- Simply remove element from server structures
 			-- This is as read server, nothing id removed from disk.
 			--|Note: the O_N_TABLE table should also be updated but
 			--|we are sick and tired of this problem
 		local
-			real_id: INTEGER
+			real_id: H
 		do
 			real_id := updated_id (an_id);
 			tbl_remove (real_id);
 			cache.remove_id (real_id);
 		end;
 
-	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
+	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
 		deferred
 		end;
 
-	cache: CACHE [T] is
+	cache: CACHE [T, H] is
 			-- Cache disk
 		deferred
 		end;

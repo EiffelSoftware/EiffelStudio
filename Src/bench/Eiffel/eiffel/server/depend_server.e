@@ -4,7 +4,7 @@ class DEPEND_SERVER
 
 inherit
 
-	SERVER [CLASS_DEPENDANCE]
+	COMPILER_SERVER [CLASS_DEPENDANCE, CLASS_ID]
 
 creation
 
@@ -12,6 +12,12 @@ creation
 
 	
 feature 
+
+	id (t: CLASS_DEPENDANCE): CLASS_ID is
+			-- Id associated with `t'
+		do
+			Result := t.id
+		end
 
 	Cache: DEPEND_CACHE is
 			-- Cache for routine tables

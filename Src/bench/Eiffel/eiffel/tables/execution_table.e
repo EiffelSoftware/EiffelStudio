@@ -92,7 +92,7 @@ end;
 							-- Very important check
 						is_melted: real_body_id.id > frozen_level
 					end;
-					melted_feature := M_feature_server.item (real_body_id.id);
+					melted_feature := M_feature_server.item (real_body_id);
 						-- Write the body id
 					write_int
 						(file.file_pointer, real_body_id.id - frozen_level - 1);
@@ -275,7 +275,7 @@ end;
 							-- Very important check
 						is_melted: real_body_id.id > dle_frozen_level
 					end;
-					melted_feature := M_feature_server.item (real_body_id.id);
+					melted_feature := M_feature_server.item (real_body_id);
 						-- Write the body id
 					write_int
 						(file.file_pointer, real_body_id.id - dle_frozen_level -1);

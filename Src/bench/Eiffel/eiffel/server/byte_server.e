@@ -4,7 +4,7 @@ class BYTE_SERVER
 
 inherit
 
-	SERVER [BYTE_CODE]
+	COMPILER_SERVER [BYTE_CODE, BODY_ID]
 		rename
 			item as server_item,
 			has as server_has,
@@ -15,7 +15,7 @@ inherit
 		redefine
 			ontable, updated_id
 		end;
-	SERVER [BYTE_CODE]
+	COMPILER_SERVER [BYTE_CODE, BODY_ID]
 		redefine
 			disk_item, has, item, ontable, updated_id, change_id
 		select
@@ -28,7 +28,7 @@ creation
 
 feature 
 
-	ontable: O_N_TABLE is
+	ontable: O_N_TABLE [BODY_ID] is
 			-- Mapping table between old id s and new ids.
 			-- Used by `change_id'
 		require else
@@ -37,10 +37,16 @@ feature
 			Result := System.onbidt
 		end;
 
-	updated_id (i: INTEGER): INTEGER is
+	updated_id (i: BODY_ID): BODY_ID is
 		do
 			Result := ontable.item (i)
 		end;
+
+	id (t: BYTE_CODE): BODY_ID is
+			-- Id associated with `t'
+		do
+			Result := t.byte_id
+		end
 
 	Cache: BYTE_CACHE is
 			-- Cache for routine tables
@@ -48,7 +54,7 @@ feature
 			!!Result.make;
 		end;
 
-	item (an_id: INTEGER): BYTE_CODE is
+	item (an_id: BODY_ID): BYTE_CODE is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		require else
@@ -61,7 +67,7 @@ feature
 			end;
 		end;
 
-	disk_item (an_id: INTEGER): BYTE_CODE is
+	disk_item (an_id: BODY_ID): BYTE_CODE is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -72,16 +78,16 @@ feature
 			end;
 		end;
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: BODY_ID): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_byte_server' or
 			-- Current ?
 		require else
-			positive_id: an_id > 0;
+			positive_id: an_id /= Void;
 		do
 			Result := server_has (an_id) or else Tmp_byte_server.has (an_id);
 		end;
 
-	change_id (new_value, old_value: INTEGER) is
+	change_id (new_value, old_value: BODY_ID) is
 		require else
 			True
 		do

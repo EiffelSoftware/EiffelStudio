@@ -83,16 +83,25 @@ feature -- Status report
 
 feature -- Element change
 
-	set_output_default is
-			-- Use standard output as default output.
-		do
-			default_output := output;
-		end;
-
 	set_error_default is
 			-- Use standard error as default output.
 		do
 			default_output := error;
+		end;
+
+	set_file_default (f: PLAIN_TEXT_FILE) is
+			-- Use `f' as default output.
+		require
+			valid_argument: f /= Void
+			file_open_write: f.is_open_write
+		do
+			default_output := f
+		end;
+
+	set_output_default is
+			-- Use standard output as default output.
+		do
+			default_output := output;
 		end;
 
 	put_character, putchar (c: CHARACTER) is

@@ -1295,16 +1295,19 @@ feature {NONE} -- Implementation
 		require
 			filename_exists: pixmap_filename /= Void
 		local
-			filename_ptr: ANY
+			l_c_string: WEL_STRING
+			load_pixmap_delegate: EV_PIXMAP_IMP_DELEGATE
 		do
 				-- Disable invariant checking.
 			is_initialized := False
 
+			create load_pixmap_delegate.make (Current, $update_fields)
+
 			if pixmap_filename.is_empty then
 				c_ev_load_pixmap (Default_pointer, load_pixmap_delegate)
 			else
-				filename_ptr := pixmap_filename.to_c
-				c_ev_load_pixmap ($filename_ptr, load_pixmap_delegate)
+				create l_c_string.make (pixmap_filename)
+				c_ev_load_pixmap (l_c_string.item, load_pixmap_delegate)
 			end
 		end
 
@@ -1603,11 +1606,6 @@ feature {NONE} -- Externals
 		) is
 		external
 			"C | %"load_pixmap.h%""
-		end
-
-	load_pixmap_delegate: EV_PIXMAP_IMP_DELEGATE is
-		once
-			create Result.make (Current, $update_fields)
 		end
 
 invariant

@@ -37,9 +37,13 @@ feature -- Miscellaneous
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
-			dc.select_font(font)
-			Result := dc.string_width(image.substring(1,n))
-			dc.unselect_font
+			if n = 0 then
+				Result := 0
+			else
+				dc.select_font(font)
+				Result := dc.string_width(image.substring(1,n))
+				dc.unselect_font
+			end
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is

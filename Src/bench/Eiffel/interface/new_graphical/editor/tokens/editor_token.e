@@ -52,12 +52,16 @@ feature -- Miscellaneous
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
+		require
+			n_valid: n >= 0
 		deferred
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
+		require
+			a_width_valid: a_width >= 0
 		deferred
 		ensure
 			Result_positive: Result > 0

@@ -59,10 +59,10 @@ feature -- Miscellaneous
 		require else
 			Initialisation_done: Initialised = True
 		do
-			if n = 1 then
-				Result := width_first_tab
+			if n = 0 then
+				Result := 0
 			else
-				Result := width_first_tab + tabulation_width * (number_of_tabs - 1)
+				Result := width_first_tab + tabulation_width * (n - 1)
 			end
 		end
 

@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			-- Create the action sequences for the tree.
 		do
 			{EV_PRIMITIVE} Precursor
-			{EV_TREE_ITEM_HOLDER} Precursor
+			{EV_TREE_ITEM_LIST} Precursor
 			create select_actions
 			create deselect_actions
 		end
@@ -173,6 +173,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/17 00:10:55  king
+--| Corrected precursor call in create_act_seq
+--|
 --| Revision 1.32  2000/03/17 00:01:26  king
 --| Accounted for name change of tree_item_holder
 --|

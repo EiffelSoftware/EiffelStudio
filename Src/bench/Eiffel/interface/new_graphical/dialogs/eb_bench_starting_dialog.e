@@ -74,6 +74,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 create
 	make_default,
@@ -368,8 +375,7 @@ feature {NONE} -- Execution
 		do
 			create file_dialog
 			file_dialog.set_title (Interface_names.t_Choose_ace_file)
-			file_dialog.filters.extend (["*.ace", "Ace files (*.ace)"])
-			file_dialog.filters.extend (["*.*", "All files"])
+			set_dialog_filters_and_add_all (file_dialog, <<ace_files_filter>>)
 			file_dialog.show_modal_to_window (Current)
 
 			success := file_dialog.selected_button.is_equal(ev_open)

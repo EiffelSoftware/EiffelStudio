@@ -82,6 +82,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 create
 	make_blank,
@@ -546,7 +553,7 @@ feature {NONE} -- Implementation
 				fod.set_start_directory (existing_path)
 			end
 			fod.set_title (Interface_names.t_Select_a_file)
-			fod.set_filter ("*.ace")
+			set_dialog_filters_and_add_all (fod, <<ace_files_filter>>)
 			fod.open_actions.extend (agent retrieve_ace_file (fod))
 			fod.show_modal_to_window (Current)
 		end

@@ -20,6 +20,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 create
 	make
@@ -131,7 +138,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				create sfd
-				sfd.set_filter("*.txt")
+				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
 				sfd.show_modal_to_window (Current)
 				if not sfd.file_name.is_empty then
 					create text_file.make_open_write (sfd.file_name)

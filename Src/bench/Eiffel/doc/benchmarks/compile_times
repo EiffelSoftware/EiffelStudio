@@ -2,12 +2,27 @@ Done on `boston'.
 Linux boston 2.0.34 #1 Mon Jun 15 09:20:19 PDT 1998 i686 unknown
 Pentium II - 233 MHz with 128 MB
 
+ISE 5.1:
+
+5.1.1 RTEA new UI compiling new UI with O3 optimization in F_code:
+4797.480u 96.400s 1:33:54.78 86.8%  0+0k 0+0io 241165pf+0w
 
 ISE 5.0:
 ========
 
+5.0.036 RTEA new UI compiling new UI:
+5083.910u 101.460s 1:39:00.81 87.2%     0+0k 0+0io 242762pf+0w
+
+5.0.027 RTEA new UI compiling new UI:
+5361.090u 94.040s 1:46:14.80 85.5%      0+0k 0+0io 304527pf+0w
+5614.900u 93.630s 1:50:06.95 86.4%      0+0k 0+0io 296948pf+0w
+
+5.0.025 RTEA new UI compiling new UI:
+5326.350u 94.830s 1:45:27.17 85.6%      0+0k 0+0io 300144pf+0w
+
 5.0.025 RTEA old UI compiling new UI:
 5204.790u 86.400s 1:41:08.29 87.1%      0+0k 0+0io 270691pf+0w
+5318.920u 90.320s 1:42:47.15 87.7%      0+0k 0+0io 276963pf+0w
 
 5.0.025 RTEA old UI compiling old UI:
 2570.150u 62.560s 51:43.80 84.8%        0+0k 0+0io 177245pf+0w

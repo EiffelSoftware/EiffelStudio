@@ -271,13 +271,6 @@ feature -- Basic operation
 			insert_text ("%N")
 		end
 
-	search (str: STRING; start: INTEGER): INTEGER is
-			-- Position of first occurrence of `str' at or after `start';
-			-- 0 if none.
-		do
-			Result := text.substring_index (str, start)
-		end
-
 	scroll_to_line (i: INTEGER) is
 		do
 			freeze

@@ -377,7 +377,6 @@ feature {NONE} -- Implementation
 		require
 			valid_expression: expr /= Void
 		local
-			dv: ABSTRACT_DEBUG_VALUE
 			dmp: DUMP_VALUE
 			ost: OBJECT_STONE
 		do

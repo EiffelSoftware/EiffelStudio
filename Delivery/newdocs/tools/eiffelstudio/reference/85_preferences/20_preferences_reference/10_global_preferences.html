@@ -1,0 +1,75 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="MS-HKWD" content="Editor, external">
+   <title>Global preferences</title>
+<link REL="stylesheet" HREF="/default.css" TYPE="text/css">
+</head>
+<body>
+
+<h1>
+Global preferences</h1>
+This categories gathers non graphical preferences that are not related
+to a tool in particular. These preferences are :
+<br>&nbsp;
+<br>&nbsp;
+<table>
+<tr>
+<td>Label in the preferences window</td>
+
+<td>Complete Description</td>
+</tr>
+
+<tr>
+<td>Command used to launch an external editor.</td>
+
+<td>You may open a class in an external editor by dropping the corresponding
+pebble on the external editor icon. This preference sets which command
+line will be used to launch the external editor. The parameter "$target"
+will be replaced in the command with the file name corresponding to the
+class, "$line" with the line number of the feature if you dropped a feature
+pebble, 1 otherwise.</td>
+</tr>
+
+<tr>
+<td>Text files format.</td>
+
+<td>This boolean preferences sets whether .e files will be saved in DOS
+or UNIX format. If it is set to "True", files will be saved in DOS format,
+i.e. line separator will be made of a line feed and a carriage return.
+Otherwise, UNIX format will used, i.e. there will not be carriage returns.</td>
+</tr>
+
+<tr>
+<td>Use external command to print ?</td>
+
+<td>This set whether you want to specify which command line will be used
+to print texts.</td>
+</tr>
+
+<tr>
+<td>Command invoked to print text.</td>
+
+<td>This is the command used to print text if the previous preference,
+"Use external command to print?", is true. The parameter will represent
+"$target" the name of the file given to the external program (see next
+preference).</td>
+</tr>
+
+<tr>
+<td>Send a postscript file to this command?</td>
+
+<td>If it is set to False, the command line above will be called on a basic
+text file containing what you want to print. Otherwise, the file will be
+a postscript file with a formatting close to the one on screen.</td>
+</tr>
+</table>
+
+
+<p CLASS="seealso"><b>See Also</b>
+<br><a href="index.html">Other Preferences</a>
+</p>
+
+</body>
+</html>

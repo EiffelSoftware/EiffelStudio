@@ -7,18 +7,24 @@ class
 	GENERATION_BUFFER
 
 inherit
-	STRING_CONVERTER
-		undefine
-			copy,out,is_equal
-		end
-
-	STRING
-		redefine
-			clear_all
-		end
+	STRING_HANDLER
 
 create
 	make
+	
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Create new generation buffer.
+		require
+			n_positive: n >= 0
+		do
+			create current_buffer.make (n)
+			create buffers.make (10)
+			chunk_size := n
+		ensure
+			chunk_size_set: chunk_size = n
+		end
 
 feature -- Status report
 
@@ -34,15 +40,56 @@ feature -- Status report
 	is_il_generation: BOOLEAN
 			-- Are we in IL code generation?
 
+	count: INTEGER is
+			-- Number of characters in current.
+		do
+			from
+				buffers.start
+			until
+				buffers.after
+			loop
+				Result := Result + buffers.item.count
+				buffers.forth
+			end
+			Result := Result + current_buffer.count
+		ensure
+			count_nonnegative: Result >= 0
+		end
+
+	as_string: STRING is
+			-- Representation of Current as a STRING.
+		do
+			create Result.make (count)
+			from
+				buffers.start
+			until
+				buffers.after
+			loop
+				Result.append (buffers.item)
+				buffers.forth
+			end
+			Result.append (current_buffer)
+		ensure
+			as_string_not_void: Result /= Void
+		end
+
 feature -- Open, close buffer operations
 
 	clear_all is
 			-- Reset the cache for a new generation
 		do
-			count := 0
 			tabs := 0
 			old_tabs := 0
 			emitted := False
+				-- We reuse the first buffer allocated with `chunk_size' characters.
+				-- If `buffers' is not empty, then the first buffer is at the first
+				-- entry of `buffers', otherwise we simply reset `count' of 
+				-- current_buffer.
+			if not buffers.is_empty then
+				current_buffer := buffers.first
+			end
+			current_buffer.set_count (0)
+			buffers.wipe_out
 		end
 
 	open_write_c, start_c_specific_code is
@@ -60,16 +107,36 @@ feature -- Open, close buffer operations
 		end
 
 	flush_buffer (file: INDENT_FILE) is
-			-- Flush buffer if `buffer.count' is about 500K.
+			-- Flush buffer if `buffer.count' is about `chunk_size'.
 		require
 			file_not_void: file /= Void
 			file_exists: file.exists
 			file_opened_write: file.is_open_write
 		do
-			if count >= ((capacity * 85) // 100) then
-				file.putstring (Current)
-				clear_all
+			if not buffers.is_empty then
+					-- When `buffers' is not empty then it means we have filled
+					-- our first buffer chunk and it is now time to flush it
+					-- to `file'.
+				put_in_file (file)
 			end
+		end
+
+	put_in_file (file: FILE) is
+		require
+			file_not_void: file /= Void
+			file_exists: file.exists
+			file_opened_write: file.is_open_write
+		do
+			from
+				buffers.start
+			until
+				buffers.after
+			loop
+				file.putstring (buffers.item)
+				buffers.forth
+			end
+			file.putstring (current_buffer)
+			clear_all
 		end
 
 feature -- Settings
@@ -114,6 +181,23 @@ feature -- Ids generation
 
 feature -- Element change
 
+	append (s: STRING) is
+			-- Append a copy of `s' at end of `buffer'.
+		require
+			s_not_void: s /= Void
+		local
+			l_count: INTEGER
+		do
+			if (current_buffer.count + s.count) > current_buffer.capacity then
+				l_count := count
+				buffers.extend (current_buffer)
+				create current_buffer.make (Max_chunk_size.min (l_count * 2))
+			end
+			current_buffer.append (s)
+		ensure
+			new_count: count = old count + s.count
+		end
+
 	indent is
 			-- Indent next output line by one tab.
 		do
@@ -153,7 +237,7 @@ feature -- Element change
 				until
 					i > tabs
 				loop
-					append_character ('%T')
+					current_buffer.append_character ('%T')
 					i := i + 1
 				end
 				emitted := True
@@ -163,7 +247,7 @@ feature -- Element change
 	new_line is
 			-- Write a '\n'.
 		do
-			append_character ('%N')
+			current_buffer.append_character ('%N')
 			emitted := False
 		end
 
@@ -171,10 +255,10 @@ feature -- Element change
 			-- Write "l[`i']".
 		do
 			emit_tabs
-			append_character ('l')
-			append_character ('[')
-			append_integer (i)
-			append_character (']')
+			current_buffer.append_character ('l')
+			current_buffer.append_character ('[')
+			current_buffer.append_integer (i)
+			current_buffer.append_character (']')
 		end
 
 	put_local_registration (i: INTEGER; loc_name: STRING) is
@@ -186,11 +270,11 @@ feature -- Element change
 		do
 			emit_tabs
 			append ("RTLR(")
-			append_integer (i)
-			append_character (',')
+			current_buffer.append_integer (i)
+			current_buffer.append_character (',')
 			append (loc_name)
-			append_character (')')
-			append_character (';')
+			current_buffer.append_character (')')
+			current_buffer.append_character (';')
 		end
 
 	put_argument_registration (i: INTEGER; arg: INTEGER) is
@@ -201,12 +285,12 @@ feature -- Element change
 		do
 			emit_tabs
 			append ("RTLR(")
-			append_integer (i)
-			append_character (',')
+			current_buffer.append_integer (i)
+			current_buffer.append_character (',')
 			append ("arg")
-			append_integer (arg)
-			append_character (')')
-			append_character (';')
+			current_buffer.append_integer (arg)
+			current_buffer.append_character (')')
+			current_buffer.append_character (';')
 		end
 
 	put_current_registration (i: INTEGER) is
@@ -216,7 +300,7 @@ feature -- Element change
 		do
 			emit_tabs
 			append ("RTLR(")
-			append_integer (i)
+			current_buffer.append_integer (i)
 			append (",Current);")
 		end
 
@@ -227,7 +311,7 @@ feature -- Element change
 		do
 			emit_tabs
 			append ("RTLR(")
-			append_integer (i)
+			current_buffer.append_integer (i)
 			append (",Result);")
 		end
 
@@ -238,37 +322,37 @@ feature -- Element change
 		do
 			emit_tabs
 			append ("RTLRC(")
-			append_integer (i)
-			append_character (')')
-			append_character (';')
+			current_buffer.append_integer (i)
+			current_buffer.append_character (')')
+			current_buffer.append_character (';')
 		end
 
 	putchar (c: CHARACTER) is
 			-- Write char `c'.
 		do
 			emit_tabs
-			append_character (c)
+			current_buffer.append_character (c)
 		end
 	
 	putint (i: INTEGER) is
 			-- Write int `i'.
 		do
 			emit_tabs
-			append_integer (i)
+			current_buffer.append_integer (i)
 		end
 	
 	putreal (r: REAL) is
 			-- Writes float `r'.
 		do
 			emit_tabs
-			append_real (r)
+			append (r.out)
 		end
 	
 	putdouble (d: DOUBLE) is
 			-- Write double `d'.
 		do
 			emit_tabs
-			append_double (d)
+			append (d.out)
 		end
 	
 	putstring (s: STRING) is
@@ -278,6 +362,20 @@ feature -- Element change
 		do
 			emit_tabs
 			append (s)
+		end
+
+	escape_string (s: STRING) is
+			-- Append escaped version of `s'.
+		require
+			s_not_void: s /= Void
+		do
+			string_converter.escape_string (current_buffer, s)
+		end
+
+	escape_char (c: CHARACTER) is
+			-- Append `c' with C escape sequences.
+		do
+			string_converter.escape_char (current_buffer, c)
 		end
 
 feature -- prototype code generation
@@ -326,7 +424,7 @@ feature -- prototype code generation
 			if is_il_generation then
 				append (" __stdcall ")
 			else
-				append_character (' ')
+				current_buffer.append_character (' ')
 			end
 			append (f_name)
 			append (" (")
@@ -341,7 +439,7 @@ feature -- prototype code generation
 					i > nb
 				loop
 					append (arg_types @ i)
-					append_character (' ')
+					current_buffer.append_character (' ')
 					append (arg_names @ i)
 					if i /= nb then
 						append (", ")
@@ -350,9 +448,9 @@ feature -- prototype code generation
 				end
 			end
 
-			append_character (')')
+			current_buffer.append_character (')')
 			new_line
-			append_character ('{')
+			current_buffer.append_character ('{')
 			new_line
 			indent
 			putstring ("GTCX")
@@ -386,10 +484,10 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			if is_il_generation then
 				append (" __stdcall ")
 			else
-				append_character (' ')
+				current_buffer.append_character (' ')
 			end
 			append (f_name)
-			append_character ('(')
+			current_buffer.append_character ('(')
 			nb := arg_types.count
 			
 			if nb = 0 then
@@ -409,5 +507,29 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			end
 			append (");%N")
 		end
+
+feature {NONE} -- Implementation
+
+	current_buffer: STRING
+			-- Currently used buffer.
+
+	buffers: ARRAYED_LIST [STRING]
+			-- Store buffers when they become too large.
+
+	chunk_size: INTEGER
+			-- Size of buffers we will create.
+			
+	max_chunk_size: INTEGER is 10485760
+			-- Maximum size of chunks allocated (10MB)
+
+	string_converter: STRING_CONVERTER is
+			-- Instance of STRING_CONVERTER for `escape_string' and `escape_char'.
+		once
+			create Result
+		end
+
+invariant
+	current_buffer_not_void: current_buffer /= Void
+	buffers_not_void: buffers /= Void
 
 end -- class GENERATION_BUFFER

@@ -39,7 +39,7 @@ feature -- Initialization
 			init (a_text_window);
 			!! run_request.make (Rqst_application);
 			!! cont_request.make (Rqst_cont);
-			!! argument_window.make (c, Current);
+			argument_window.initialize (c, Current);
 		end;
 
 feature -- Callbacks
@@ -57,9 +57,6 @@ feature -- Properties
 
 	text_window: PROJECT_TEXT;
 			-- The text for the project tool.
-
-	argument_window: ARGUMENT_W;
-			-- Window where the user can specify the arguments.
 
 	symbol: PIXMAP is 
 			-- Pixmap for the button.

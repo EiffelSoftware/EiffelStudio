@@ -6,8 +6,10 @@ feature {NONE}
 
 	w_Assertion_warning: STRING is "By default assertions enabled in the Ace%N%
 								%file are kept in final mode.%N%
-								%A final executable with assertion checking%N%
-								%enabled is not optimal in speed and size.%N";
+								%Keeping assertion checking inhibits any optimization%N%
+								%specified in the Ace (inlining, array optimization,%N%
+								%dead-code removal) and will produce a final executable%N%
+								%that is not optimal in speed and size.%N%";
 
 	w_Beginning_of_history: STRING is "Beginning of history";
 

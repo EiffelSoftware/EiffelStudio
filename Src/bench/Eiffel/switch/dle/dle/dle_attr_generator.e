@@ -68,6 +68,7 @@ feature
 			if System.is_dynamic then
 				temp := clone (Infix_file_name);
 				temp.append_integer (file_counter);
+				Attr_declarations.generate_header (final_file_name (temp, Dot_h))
 				Attr_declarations.generate (final_file_name (temp, Dot_h))
 			end;
 			Attr_declarations.wipe_out

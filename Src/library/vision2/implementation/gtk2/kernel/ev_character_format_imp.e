@@ -119,6 +119,7 @@ feature -- Status setting
 			name := a_name
 			family := a_family
 			height := a_height
+			height_in_points := app_implementation.point_value_from_pixel_value (height)
 			weight := a_weight
 			shape := a_shape
 			char_set := a_charset
@@ -262,86 +263,86 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			end
 		end
 		
-		family_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("family")
-				Result := a_str.item	
-			end
+	family_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("family")
+			Result := a_str.item	
+		end
 
-		size_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("size")
-				Result := a_str.item	
-			end
+	size_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("size")
+			Result := a_str.item	
+		end
 
-		style_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("style")
-				Result := a_str.item	
-			end
+	style_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("style")
+			Result := a_str.item	
+		end
 
-		weight_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("weight")
-				Result := a_str.item	
-			end
+	weight_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("weight")
+			Result := a_str.item	
+		end
 
-		foreground_gdk_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("foreground-gdk")
-				Result := a_str.item	
-			end
+	foreground_gdk_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("foreground-gdk")
+			Result := a_str.item	
+		end
 
-		background_gdk_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("background-gdk")
-				Result := a_str.item	
-			end
+	background_gdk_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("background-gdk")
+			Result := a_str.item	
+		end
 
-		underline_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("underline")
-				Result := a_str.item	
-			end
+	underline_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("underline")
+			Result := a_str.item	
+		end
 
-		strikethrough_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("strikethrough")
-				Result := a_str.item	
-			end
+	strikethrough_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("strikethrough")
+			Result := a_str.item	
+		end
 
-		rise_string: POINTER is
-				-- String optimization
-			local
-				a_str: EV_GTK_C_STRING
-			once
-				create a_str.make ("rise")
-				Result := a_str.item	
-			end
+	rise_string: POINTER is
+			-- String optimization
+		local
+			a_str: EV_GTK_C_STRING
+		once
+			create a_str.make ("rise")
+			Result := a_str.item	
+		end
 
 feature {NONE} -- Implementation
 
@@ -358,7 +359,10 @@ feature {NONE} -- Implementation
 			-- Family used by `Current'.
 		
 	height: INTEGER
-			--  Height of `Current'.
+			--  Height of `Current' in screen pixels.
+
+	height_in_points: INTEGER
+			-- Height of `Current' in points.
 		
 	weight: INTEGER
 			-- Weight of `Current'.

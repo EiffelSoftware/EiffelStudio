@@ -1583,7 +1583,7 @@ feature -- Class initialization
 			end;
 
 				-- Initialization of the parent types `parents': put
-				-- the default paretn HERE if needed. Calculates also the
+				-- the default parent HERE if needed. Calculates also the
 				-- lists `descendants'. Since the routine `check_suppliers'
 				-- has been called before, all the instances of CLASS_C
 				-- corresponding to the parents of the current class are
@@ -2683,6 +2683,14 @@ end;
 						System.set_freeze (True);
 					end;
 				end;
+
+					-- If the $ operator is used in the class,
+					-- an encapsulation of the feature must be generated
+
+				if System.address_table.class_has_dollar_operator (id) then
+					System.set_freeze (True);
+				end
+
 					-- Mark the class `changed4' because there is a new
 					-- type
 				changed4 := True;

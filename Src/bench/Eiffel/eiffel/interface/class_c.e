@@ -2416,16 +2416,16 @@ feature -- PS
 			end;
 			Result.to_upper;
 			end;
---		rescue
---			-- FIX ME ?
---			!!Result.make (50);
---			Result.append (class_name);
---			if generics /= Void then
---				Result.append (" [ ... ]");
---			end;
---			Result.to_upper;
---			error := True;
---			retry;
+		rescue
+			-- FIX ME ?
+			!!Result.make (50);
+			Result.append (class_name);
+			if generics /= Void then
+				Result.append (" [ ... ]");
+			end;
+			Result.to_upper;
+			error := True;
+			retry;
 		end;
 
 	append_clickable_signature (a_clickable: CLICK_WINDOW) is

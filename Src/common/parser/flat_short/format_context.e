@@ -653,9 +653,7 @@ feature -- comments
 			end;
 			commit;
 		end;
-			
-				
-	
+
 	put_trailing_comment (pos: INTEGER) is
 		local
 			file: EIFFEL_FILE;

@@ -509,7 +509,7 @@ end;
 				ancestors.after
 			loop
 				current_class := ancestors.item
-				if current_class /= System.any_class.compiled_class then
+				if not current_class.is_true_external then
 					class_id := current_class.class_id
 					if Tmp_feat_tbl_server.has (class_id) then
 						current_feature_table := Tmp_feat_tbl_server.item (class_id)

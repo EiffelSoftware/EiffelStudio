@@ -12,7 +12,8 @@ inherit
 		undefine
 			is_in_default_state
 		redefine
-			initialize
+			initialize,
+			destroy
 		select
 			implementation
 		end
@@ -23,6 +24,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} object
+		redefine
+			destroy
 		end
 
 	GB_SHARED_TOOLS
@@ -113,6 +116,14 @@ feature {GB_OBJECT} -- Implementation
 		ensure
 			object_set: object = an_object
 		end
+		
+	destroy is
+			-- Destroy `Current'.
+		do
+			object := Void
+			Precursor {EV_TREE_ITEM}
+		end
+		
 		
 feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 

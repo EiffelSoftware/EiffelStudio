@@ -147,20 +147,20 @@ feature -- Generation
 		rescue
 			if not retried then
 				if not is_assembly_loaded or not is_error_available then
-					Error_handler.insert_error (create {IL_ERROR}.make_com_error)
+					Error_handler.insert_error (create {VIGE}.make_com_error)
 				else
 					if deletion_successful then
 						l_last_error_msg := il_generator.last_error
 						if l_last_error_msg = Void or else l_last_error_msg.is_empty then
-							Error_handler.insert_error (create {IL_ERROR}.make (Error_handler.exception_trace))
+							Error_handler.insert_error (create {VIGE}.make (Error_handler.exception_trace))
 						else						
-							Error_handler.insert_error (create {IL_ERROR}.make (l_last_error_msg))
+							Error_handler.insert_error (create {VIGE}.make (l_last_error_msg))
 						end
 					else
 						check
 							file_name_not_void: file_name /= Void
 						end
-						Error_handler.insert_error (create {IL_ERROR}.make_output_in_use (file_name))
+						Error_handler.insert_error (create {VIGE}.make_output_in_use (file_name))
 					end
 				end
 				retried := True

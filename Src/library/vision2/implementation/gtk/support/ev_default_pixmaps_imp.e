@@ -159,7 +159,7 @@ feature -- Default cursors
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (ibeam_cursor_xpm)
 			Result.set_x_hotspot (7)
-			Result.set_y_hotspot (15)
+			Result.set_y_hotspot (10)
 		end
 
 	No_cursor: EV_CURSOR is
@@ -170,8 +170,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (no_cursor_xpm)
-			Result.set_x_hotspot (15)
-			Result.set_y_hotspot (15)
+			Result.set_x_hotspot (10)
+			Result.set_y_hotspot (10)
 		end
 
 	Sizeall_cursor: EV_CURSOR is
@@ -182,8 +182,8 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizeall_cursor_xpm)
-			Result.set_x_hotspot (11)
-			Result.set_y_hotspot (11)
+			Result.set_x_hotspot (8)
+			Result.set_y_hotspot (8)
 		end
 
 	Sizens_cursor: EV_CURSOR is
@@ -195,7 +195,7 @@ feature -- Default cursors
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizens_cursor_xpm)
 			Result.set_x_hotspot (5)
-			Result.set_y_hotspot (9)
+			Result.set_y_hotspot (7)
 		end
 
 	Sizenwse_cursor: EV_CURSOR is
@@ -230,7 +230,7 @@ feature -- Default cursors
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (sizewe_cursor_xpm)
-			Result.set_x_hotspot (9)
+			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (5)
 		end
 

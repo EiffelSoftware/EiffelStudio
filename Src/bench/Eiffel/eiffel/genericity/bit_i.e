@@ -118,8 +118,8 @@ feature
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		do
---			Result := Sk_bit + size;
-			Result := 671088640 + size;
+			Result := Sk_bit + size;
+--			Result := 671088640 + size;
 		end;
 
 	metamorphose

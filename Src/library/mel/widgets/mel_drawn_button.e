@@ -44,6 +44,38 @@ feature -- Initialization
 			end
 		end;
 
+feature -- Access
+
+	activate_command: MEL_COMMAND_EXEC is
+			-- Command set for the activate callback
+		do
+			Result := motif_command (XmNactivateCallback)
+		end;
+
+	arm_command: MEL_COMMAND_EXEC is
+			-- Command set for the arm callback
+		do
+			Result := motif_command (XmNarmCallback)
+		end;
+
+	disarm_command: MEL_COMMAND_EXEC is
+			-- Command set for the disarm callback
+		do
+			Result := motif_command (XmNdisarmCallback)
+		end;
+
+	expose_command: MEL_COMMAND_EXEC is
+			-- Command set for the expose callback
+		do
+			Result := motif_command (XmNexposeCallback)
+		end;
+
+	resize_command: MEL_COMMAND_EXEC is
+			-- Command set for the resize callback
+		do
+			Result := motif_command (XmNresizeCallback)
+		end
+
 feature -- Status report
 
 	is_multiclick_kept: BOOLEAN is
@@ -191,100 +223,110 @@ feature -- Satus setting
 
 feature -- Element change
 
-	add_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button is pressed and released.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNactivateCallback, a_callback, an_argument)
+			set_callback (XmNactivateCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	add_arm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button is pressed.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNarmCallback, a_callback, an_argument)
+			set_callback (XmNarmCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	add_disarm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button is released.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNdisarmCallback, a_callback, an_argument)
+			set_callback (XmNdisarmCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (disarm_command, a_command, an_argument)
 		end;
 
-	add_expose_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	set_expose_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button receives an exposure
 			-- event.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNexposeCallback, a_callback, an_argument)
+			set_callback (XmNexposeCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (expose_command, a_command, an_argument)
 		end;
 
-	add_resize_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	set_resize_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Add the callback `a_callback' with argument `an_argument'
 			-- to the callbacks called when the button receives a resize
 			-- event.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNresizeCallback, a_callback, an_argument)
+			set_callback (XmNresizeCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (resize_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	remove_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button is pressed and released.
-		require
-			a_callback_not_void: a_callback /= Void
 		do
-			remove_callback (XmNactivateCallback, a_callback, an_argument)
+			remove_callback (XmNactivateCallback)
+		ensure
+			removed: activate_command = Void
 		end;
 
-	remove_arm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	remove_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button is pressed.
-		require
-			a_callback_not_void: a_callback /= Void
 		do
-			remove_callback (XmNarmCallback, a_callback, an_argument)
+			remove_callback (XmNarmCallback)
+		ensure
+			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	remove_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button is released.
-		require
-			a_callback_not_void: a_callback /= Void
 		do
-			remove_callback (XmNdisarmCallback, a_callback, an_argument)
+			remove_callback (XmNdisarmCallback)
+		ensure
+			removed: disarm_command = Void
 		end;
 
-	remove_expose_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	remove_expose_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button receives an exposure
 			-- event.
-		require
-			a_callback_not_void: a_callback /= Void
 		do
-			remove_callback (XmNexposeCallback, a_callback, an_argument)
+			remove_callback (XmNexposeCallback)
+		ensure
+			removed: expose_command = Void
 		end;
 
-	remove_resize_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
+	remove_resize_callback (a_command: MEL_COMMAND; an_argument: ANY) is
 			-- Remove the callback `a_callback' with argument `an_argument'
 			-- from the callbacks called when the button receives a resize
 			-- event.
-		require
-			a_callback_not_void: a_callback /= Void
 		do
-			remove_callback (XmNresizeCallback, a_callback, an_argument)
+			remove_callback (XmNresizeCallback)
+		ensure
+			removed: resize_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

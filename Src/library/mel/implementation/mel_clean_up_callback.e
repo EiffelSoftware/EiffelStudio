@@ -11,7 +11,7 @@ class
 
 inherit
 
-	MEL_CALLBACK
+	MEL_COMMAND
 		redefine
 			execute
 		end

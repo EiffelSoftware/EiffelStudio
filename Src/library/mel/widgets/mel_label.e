@@ -92,9 +92,9 @@ feature -- Status report
 		require
 			exists: not is_destroyed;	
 		do
-			Result := get_xm_string (screen_object, XmNacceleratorText)
+			Result := get_xm_string (screen_object, XmNacceleratorText);
 		ensure
-			accelerator_text_not_void: Result /= Void
+			Result_not_void_is_not_empty: Result /= Void implies not Result.empty
 		end;
 
 	beginning_alignment: BOOLEAN is
@@ -302,11 +302,18 @@ feature -- Status setting
 			-- Set `accelerator_text' to `a_text'.
 		require
 			exists: not is_destroyed;	
-			a_compound_string_exists: a_compound_string /= Void and then not a_compound_string.is_destroyed
+			compound_string_exists: a_compound_string /= Void implies
+				not a_compound_string.is_destroyed;
+			valid_comp_string_implies_not_empty: a_compound_string /= Void implies
+				not a_compound_string.empty
 		do
-			set_xm_string (screen_object, XmNacceleratorText, a_compound_string)
+			if a_compound_string = Void then
+				c_set_xmstring (screen_object, XmNacceleratorText, default_pointer)
+			else
+				set_xm_string (screen_object, XmNacceleratorText, a_compound_string)
+			end
 		ensure
-			accelerator_text_set: accelerator_text.is_equal (a_compound_string)
+			accelerator_text_set: equal (accelerator_text, a_compound_string)
 		end;
 
 	set_mnemonic (a_character: CHARACTER) is

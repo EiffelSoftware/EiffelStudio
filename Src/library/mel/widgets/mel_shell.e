@@ -23,14 +23,13 @@ inherit
 		export
 			{NONE} comp_destroy
 		redefine
-			real_x, real_y, make_from_existing,
-			clean_up_callbacks
+			real_x, real_y, make_from_existing
 		end
 
 	MEL_COMPOSITE
 		redefine
 			real_x, real_y, make_from_existing, 
-			clean_up_callbacks, destroy
+			destroy
 		select
 			destroy
 		end
@@ -44,6 +43,35 @@ feature -- Initialization
 			parent := a_parent;
 			Mel_widgets.add_popup_shell (Current);
 			set_default
+		end;
+
+feature -- Access
+
+	wm_protocol_command (an_atom: MEL_ATOM): MEL_COMMAND_EXEC is
+			-- Command set for the wm protocol `an_atom'
+		require
+			valid_atom: an_atom /= Void
+		local
+			cb: like callbacks;
+			a_key: MEL_CALLBACK_KEY
+		do
+			cb := callbacks;
+			if cb /= Void then
+				!! a_key.make_wm_protocol (an_atom.identifier);
+				Result := cb.item (a_key)
+			end
+		end;
+
+	popup_command: MEL_COMMAND_EXEC is
+			-- Command set for the popup callback
+		do
+			Result := motif_command (XmNpopupCallback)
+		end;
+
+	popdown_command: MEL_COMMAND_EXEC is
+			-- Command set for the popdown callback
+		do
+			Result := motif_command (XmNpopdownCallback)
 		end;
 
 feature -- Status report
@@ -223,80 +251,92 @@ feature -- Display
 
 feature -- Element change
 
-	add_popup_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget is popped up using
-			-- XtPopup ().
+	set_popup_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the shell
+			-- is popped up using `popup'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void;
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNpopupCallback, a_callback, an_argument);
+			set_callback (XmNpopupCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (popup_command, a_command, an_argument)
 		end;
 
-	add_popdown_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget is popped down using
-			-- XtPopdown ().
+	set_popdown_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the shell
+			-- is popped down using `popdown'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void;
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNpopdownCallback, a_callback, an_argument);
+			set_callback (XmNpopdownCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (popdown_command, a_command, an_argument)
 		end;
 
-	add_wm_protocol_callback (atom: MEL_ATOM; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add callback `a_callback' that is specfied by protocol `atom'.
+	set_wm_protocol_callback (an_atom: MEL_ATOM; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed specified by protocol `an_atom'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			valid_atom: atom /= Void;
-			a_callback_not_void: a_callback /= Void;
+			valid_atom: an_atom /= Void;
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC;
+			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_wm_protocol
-					(screen_object, atom, a_callback_exec);
+			!! a_key.make_wm_protocol (an_atom.identifier);
+			!! a_command_exec.make (a_command, an_argument);
+			if add_to_callbacks (a_command_exec, a_key) then
+				c_add_wm_protocol_callback (screen_object, an_atom.identifier)
+			end
+		ensure
+			command_set: command_set 
+					(wm_protocol_command (an_atom), a_command, an_argument)
 		end;
 
-	add_wm_protocol (atom: MEL_ATOM) is
-			-- Register protocol `atom'.
+	add_wm_protocol (an_atom: MEL_ATOM) is
+			-- Register protocol `an_atom'.
 		require
-			valid_atom: atom /= Void;
+			valid_atom: an_atom /= Void;
 		do
-			xm_add_wm_protocol (screen_object, atom.identifier)			
+			xm_add_wm_protocol (screen_object, an_atom.identifier)			
 		end;
 
 feature -- Removal
 
-	remove_popup_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget is popped up using
-			-- XtPopup ().
-		require
-			a_callback_not_void: a_callback /= Void;
+	remove_popup_callback is
+			-- Remove the command for the popup callback.
 		do
-			remove_callback (XmNpopupCallback, a_callback, an_argument);
+			remove_callback (XmNpopupCallback)
+		ensure
+			removed: popup_command = Void
 		end;
 
-	remove_popdown_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget is popped down using
-			-- XtPopdown ().
-		require
-			a_callback_not_void: a_callback /= Void;
+	remove_popdown_callback is
+			-- Remove the command for the popdown callback.
 		do
-			remove_callback (XmNpopdownCallback, a_callback, an_argument);
+			remove_callback (XmNpopdownCallback)
+		ensure
+			removed: popdown_command = Void
 		end;
 
-	remove_wm_protocol_callback (atom: MEL_ATOM; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove callback `a_callback' that is specfied by protocol `atom'.
+	remove_wm_protocol_callback (an_atom: MEL_ATOM) is
+			-- Remove the command for `an_atom'.
 		require
-			valid_atom: atom /= Void;
-			a_callback_not_void: a_callback /= Void
+			valid_atom: an_atom /= Void;
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.remove_wm_protocol
-					(screen_object, atom, a_callback_exec);
+			!! a_key.make_wm_protocol (an_atom.identifier);
+			if remove_from_callbacks (a_key) then
+				c_remove_wm_protocol_callback (screen_object, an_atom.identifier)
+			end;
+		ensure
+			removed: wm_protocol_command (an_atom) = Void
 		end;
 
 	destroy is
@@ -308,17 +348,19 @@ feature -- Removal
 			end
 		end;
 
-feature {NONE} -- Implementation
-
-	clean_up_callbacks is
-			-- Remove callback structures associated with Current.
-		do
-			Mel_dispatcher.clean_up_shell (Current)
-		end;
-
 feature {NONE} -- External features
 
-	xm_add_wm_protocol (w: POINTER; atom: POINTER) is
+	xm_add_wm_protocol (w: POINTER; an_atom: POINTER) is
+		external
+			"C"
+		end;
+
+	c_add_wm_protocol_callback (scr_obj: POINTER; atom: POINTER) is
+		external
+			"C"
+		end;
+
+	c_remove_wm_protocol_callback (scr_obj: POINTER; atom: POINTER) is
 		external
 			"C"
 		end;

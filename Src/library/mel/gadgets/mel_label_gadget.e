@@ -16,10 +16,7 @@ inherit
 			{NONE} all
 		end;
 
-	MEL_FONTABLE
-		undefine
-			clean_up_callbacks
-		end;
+	MEL_FONTABLE;
 
 	MEL_GADGET
 

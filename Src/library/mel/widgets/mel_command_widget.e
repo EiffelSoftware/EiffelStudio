@@ -109,6 +109,20 @@ feature -- Status report
 			prompt_string_not_void: Result /= Void
 		end;
 
+feature -- Access
+
+	command_changed_command: MEL_COMMAND_EXEC is
+			-- Command set for the disarm callback
+		do
+			Result := motif_command (XmNcommandChangedCallback)
+		end;
+
+	command_entered_command: MEL_COMMAND_EXEC is
+			-- Command set for the disarm callback
+		do
+			Result := motif_command (XmNcommandEnteredCallback)
+		end;
+
 feature -- Status setting
 
 	set_command (a_compound_string: MEL_STRING) is
@@ -177,42 +191,48 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_command_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the value of command changes.
+	set_command_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the value of command changes.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNcommandChangedCallback, a_callback, an_argument)
+			set_callback (XmNcommandChangedCallback, a_command, an_argument)
+		ensure
+			command_set: command_set 
+				(command_changed_command, a_command, an_argument)
 		end;
 
-	add_command_entered_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when a command is entered in the widget.
+	set_command_entered_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when a command is entered in the widget.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNcommandEnteredCallback, a_callback, an_argument)
+			set_callback (XmNcommandEnteredCallback, a_command, an_argument)
+		ensure
+			command_set: command_set 
+				(command_entered_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_command_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the value of command changes.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_command_changed_callback is
+			-- Remove the command for the command changed callback.
 		do
-			remove_callback (XmNcommandChangedCallback, a_callback, an_argument)
+			remove_callback (XmNcommandChangedCallback)
+		ensure
+			removed: command_changed_command = Void
 		end;
 
-	remove_command_entered_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when a command is entered in the widget.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_command_entered_callback is
+			-- Remove the command for the command entered callback.
 		do
-			remove_callback (XmNcommandEnteredCallback, a_callback, an_argument)
+			remove_callback (XmNcommandEnteredCallback)
+		ensure
+			removed: command_entered_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations
@@ -224,18 +244,18 @@ feature {MEL_DISPATCHER} -- Basic operations
 		do
 			if resource_name = XmNcommandEnteredCallback or else
 				resource_name = XmNcommandChangedCallback then
-                !MEL_COMMAND_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr)
+				!MEL_COMMAND_CALLBACK_STRUCT! Result.make (Current, a_callback_struct_ptr)
 			elseif resource_name = XmNokCallback or else
-                resource_name = XmNcancelCallback or else
-                resource_name = XmNnoMatchCallback or else
-                resource_name = XmNapplyCallback
-            then
-                !MEL_SELECTION_BOX_CALLBACK_STRUCT! Result.make 
+				resource_name = XmNcancelCallback or else
+				resource_name = XmNnoMatchCallback or else
+				resource_name = XmNapplyCallback
+			then
+				!MEL_SELECTION_BOX_CALLBACK_STRUCT! Result.make 
 						(Current, a_callback_struct_ptr)
-            else
-                !MEL_ANY_CALLBACK_STRUCT! Result.make 
+			else
+				!MEL_ANY_CALLBACK_STRUCT! Result.make 
 						(Current, a_callback_struct_ptr)
-            end
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -61,6 +61,18 @@ feature -- Access
 			-- Parent of cascade button (must be either a
 			-- MEL_MENU_BAR or MEL_MENU_POPUP or MEL_MENU_PULLDOWN)
 
+	activate_command: MEL_COMMAND_EXEC is
+			-- Command set for the activate callback
+		do
+			Result := motif_command (XmNactivateCallback)
+		end;
+
+	cascading_command: MEL_COMMAND_EXEC is
+			-- Command set for the activate callback
+		do
+			Result := motif_command (XmNcascadingCallback)
+		end;
+
 feature -- Satus report
 
 	cascade_pixmap: MEL_PIXMAP is
@@ -135,44 +147,48 @@ feature -- Status setting
 
 feature  -- Element Change
 
-	add_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with the argument `an_argument'
-			-- to the callbacks called when the button is pressed and released.
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the button is pressed
+			-- and released.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void;
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNactivateCallback, a_callback, an_argument);
+			set_callback (XmNactivateCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	add_cascading_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with the argument `an_argument'
-			-- to the callbacks called before the submenu associated with
-			-- the cascade button is mapped.
+	set_cascading_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed before the submenu associated
+			-- with the cascade button is mapped.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void;
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNcascadingCallback, a_callback, an_argument);
+			set_callback (XmNcascadingCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (cascading_command, a_command, an_argument)
 		end;
 
 feature  -- Removal
 
-	remove_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with the argument `an_argument'
-			-- to the callbacks called when the button is pressed and released.
-		require
-			a_callback_not_void: a_callback /= Void;
+	remove_activate_callback is
+			-- Remove the command for the activate callback.
 		do
-			remove_callback (XmNactivateCallback, a_callback, an_argument);
+			remove_callback (XmNactivateCallback)
+		ensure
+			removed: activate_command = Void
 		end;
 
-	remove_cascading_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with the argument `an_argument'
-			-- to the callbacks called before the submenu associated with
-			-- the cascade button is mapped.
-		require
-			a_callback_not_void: a_callback /= Void;
+	remove_cascading_callback is
+			-- Remove the command for the cascading callback.
 		do
-			remove_callback (XmNcascadingCallback, a_callback, an_argument);
+			remove_callback (XmNcascadingCallback)
+		ensure
+			removed: cascading_command = Void
 		end;
 
 feature {NONE} -- Implementation

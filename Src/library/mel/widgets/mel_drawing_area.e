@@ -51,6 +51,26 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
+feature -- Access
+
+	expose_command: MEL_COMMAND_EXEC is
+			-- Command set for the expose callback
+		do
+			Result := motif_command (XmNexposeCallback)
+		end;
+
+	input_command: MEL_COMMAND_EXEC is
+			-- Command set for the input callback
+		do
+			Result := motif_command (XmNinputCallback)
+		end;
+
+	resize_command: MEL_COMMAND_EXEC is
+			-- Command set for the resize callback
+		do
+			Result := motif_command (XmNresizeCallback)
+		end
+
 feature -- Status report
 
 	margin_height: INTEGER is
@@ -153,66 +173,69 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_expose_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget receives an exposure
-			-- event.
+	set_expose_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget 
+			-- receives an exposure event.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNexposeCallback, a_callback, an_argument)
+			set_callback (XmNexposeCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (expose_command, a_command, an_argument)
 		end;
 
-	add_input_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget receives a keyboard
-			-- or mouse event.
+	set_input_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget 
+			-- receives a keyboard or mouse event.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNinputCallback, a_callback, an_argument)
+			set_callback (XmNinputCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (input_command, a_command, an_argument)
 		end;
 
-	add_resize_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget receives a resize
-			-- event.
+	set_resize_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget 
+			-- receives a resize event.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNresizeCallback, a_callback, an_argument)
+			set_callback (XmNresizeCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (resize_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_expose_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget receives an exposure
-			-- event.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_expose_callback is
+			-- Remove the command for the expose callback.
 		do
-			remove_callback (XmNexposeCallback, a_callback, an_argument)
+			remove_callback (XmNexposeCallback)
+		ensure
+			removed: expose_command = Void
 		end;
 
-	remove_input_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget receives a keyboard
-			-- or mouse event.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_input_callback is
+			-- Remove the command for the input callback.
 		do
-			remove_callback (XmNinputCallback, a_callback, an_argument)
+			remove_callback (XmNinputCallback)
+		ensure
+			removed: input_command = Void
 		end;
 
-	remove_resize_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget receives a resize
-			-- event.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_resize_callback is
+			-- Remove the command for the resize callback.
 		do
-			remove_callback (XmNresizeCallback, a_callback, an_argument)
+			remove_callback (XmNresizeCallback)
+		ensure
+			removed: resize_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

@@ -103,6 +103,36 @@ feature -- Access
 			result_small_enough: Result <= item_count
 		end;
 
+	browse_selection_command: MEL_COMMAND_EXEC is
+			-- Command set for the browse selection callback
+		do
+			Result := motif_command (XmNbrowseSelectionCallback)
+		end;
+
+	default_action_command: MEL_COMMAND_EXEC is
+			-- Command set for the default action callback
+		do
+			Result := motif_command (XmNdefaultActionCallback)
+		end;
+
+	extended_selection_command: MEL_COMMAND_EXEC is
+			-- Command set for the extended selection callback
+		do
+			Result := motif_command (XmNextendedSelectionCallback)
+		end;
+
+	multiple_selection_command: MEL_COMMAND_EXEC is
+			-- Command set for the multiple selection callback
+		do
+			Result := motif_command (XmNmultipleSelectionCallback)
+		end;
+
+	single_selection_command: MEL_COMMAND_EXEC is
+			-- Command set for the single selection callback
+		do
+			Result := motif_command (XmNsingleSelectionCallback)
+		end
+
 feature -- Status report
 
 	double_click_interval: INTEGER is
@@ -641,50 +671,69 @@ feature -- Element Change
 			no_item_selected: selected_item_count = 0
 		end;
 
-	add_browse_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when `browse_select'.
+	set_browse_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when an item is selected in
+			-- browse mode.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNbrowseSelectionCallback, a_callback, an_argument)
+			set_callback (XmNbrowseSelectionCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (browse_selection_command, a_command, an_argument)
 		end;
 
-	add_default_action_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when an item is selected by pressing `RETURN'
-			-- or double clicking it.
+	set_default_action_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when an item is selected 
+			-- by pressing `RETURN' or double clicking it.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNdefaultActionCallback, a_callback, an_argument)
+			set_callback (XmNdefaultActionCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (default_action_command, a_command, an_argument)
 		end;
 
-	add_extended_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when `extended_select'.
+	set_extended_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when items are selected in
+			-- extended mode.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNextendedSelectionCallback, a_callback, an_argument)
+			set_callback (XmNextendedSelectionCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (extended_selection_command, a_command, an_argument)
 		end;
 
-	add_multiple_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when `multiple_select'.
+	set_multiple_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when items are selected in
+			-- multiple mode.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNmultipleSelectionCallback, a_callback, an_argument)
+			set_callback (XmNmultipleSelectionCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (multiple_selection_command, a_command, an_argument)
 		end;
 
-	add_single_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when `single_select'.
+	set_single_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when items are selected in
+			-- single selected mode.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNsingleSelectionCallback, a_callback, an_argument)
+			set_callback (XmNsingleSelectionCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (single_selection_command, a_command, an_argument)
 		end;
 
 feature -- Removal
@@ -738,50 +787,44 @@ feature -- Removal
 			xm_list_delete_all_items (screen_object)
 		end;
 
-	remove_browse_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when `browse_select'.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_browse_selection_callback is
+			-- Remove the command for the selection callback.
 		do
-			remove_callback (XmNbrowseSelectionCallback, a_callback, an_argument)
+			remove_callback (XmNbrowseSelectionCallback)
+		ensure
+			removed: browse_selection_command = Void
 		end;
 
-	remove_default_action_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when an item is selected by pressing `RETURN',
-			-- or double clicking.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_default_action_callback is
+			-- Remove the command for the default action callback.
 		do
-			remove_callback (XmNdefaultActionCallback, a_callback, an_argument)
+			remove_callback (XmNdefaultActionCallback)
+		ensure
+			removed: default_action_command = Void
 		end;
 
-	remove_extended_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when `extended_select'.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_extended_selection_callback is
+			-- Remove the command for the extended selection callback.
 		do
-			remove_callback (XmNextendedSelectionCallback, a_callback, an_argument)
+			remove_callback (XmNextendedSelectionCallback)
+		ensure
+			removed: extended_selection_command = Void
 		end;
 
-	remove_multiple_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when `multiple_select'.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_multiple_selection_callback is
+			-- Remove the command for the multiple selection callback.
 		do
-			remove_callback (XmNmultipleSelectionCallback, a_callback, an_argument)
+			remove_callback (XmNmultipleSelectionCallback)
+		ensure
+			removed: multiple_selection_command = Void
 		end;
 
-	remove_single_selection_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when `single_select'.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_single_selection_callback is
+			-- Remove the command for the single selection callback.
 		do
-			remove_callback (XmNsingleSelectionCallback, a_callback, an_argument)
+			remove_callback (XmNsingleSelectionCallback)
+		ensure
+			removed: single_selection_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations
@@ -792,8 +835,7 @@ feature {MEL_DISPATCHER} -- Basic operations
 			-- according to `a_callback_struct_ptr'.
 		do
 			!! Result.make (Current, a_callback_struct_ptr)
-		end;
-
+		end
 
 feature {NONE} -- Implementation
 

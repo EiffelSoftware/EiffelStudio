@@ -34,6 +34,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	tab_position: STRING is
+		do
+			check
+				this_is_a_broken_feature_it_should_return_int: false
+			end
+		end
+
 	count: INTEGER is
 			-- Number of pages in the notebook
 		do
@@ -44,29 +51,6 @@ feature -- Status report
 			-- Index of the page currently opened
 		do
 			Result := gtk_notebook_get_current_page (widget)
-		end
-
-	tab_position: STRING is
-			-- Position of the tabs.
-			-- "left" for left position.
-			-- "right" for right position.
-			-- "top" for top position.
-			-- "bottom" for bottom position.
-		local
-			pos: INTEGER
-		do
-			pos := c_gtk_notebook_tab_position (widget)
-			inspect
-				pos
-			when 0 then
-				Result := "left"
-			when 1 then
-				Result := "right"
-			when 2 then
-				Result := "top"
-			when 3 then
-				Result := "bottom"
-			end
 		end
 
 feature -- Status setting

@@ -286,7 +286,11 @@ feature -- Status setting
 			-- Therefore, we destroy the old WEL_LIST_VIEW,
 			-- and create another with the same information.
 
-			par_imp ?= parent_imp
+			if parent_imp /= Void then
+				par_imp ?= parent_imp
+			else
+				par_imp := default_parent
+			end
 			a_x := x
 			a_y := y
 			a_width := width
@@ -853,6 +857,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/03/13 22:22:13  rogers
+--| Fixed set_columns so if the list does not have a parent and items are added, the default_parent will be used.
+--|
 --| Revision 1.47  2000/03/07 18:31:37  rogers
 --| Redefined on_size from WEL_LIST_VIEW, so the resize_actions can be called.
 --|

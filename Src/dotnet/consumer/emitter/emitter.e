@@ -22,11 +22,6 @@ inherit
 			{NONE} all
 		end
 		
-	SHARED_TYPE_ID
-		export
-			{NONE} all
-		end
-
 creation
 	make
 
@@ -39,7 +34,7 @@ feature -- Initialization
 							Help_spelled_switch, No_logo_switch, List_assemblies_switch,
 							List_assemblies_short, Init_switch, No_output_switch,
 							No_output_short, Eac_switch, Eac_short, Remove_switch,
-							Remove_short, Nice_switch, Force_switch, Force_short, No_references_switch>>)
+							Remove_short, Nice_switch, Force_switch, Force_short, No_references_switch, Consume_from_fullname_switch, Consume_from_fullname_short>>)
 			parse
 			
 			if not successful then
@@ -104,7 +99,13 @@ feature -- Access
 			-- Shortcut force GAC dependancies from local assembliesto be consumed into the local destination
 			
 	No_references_switch: STRING is "noref"
-			-- Stop the emitter from generating a local assembly's references?
+			-- Stop the emitter from generating a local assembly's references
+			
+	Consume_from_fullname_switch: STRING is "fullname"
+			-- consume an assembly from the GAC
+			
+	Consume_from_fullname_short: STRING is "fn"
+			-- consume an assembly from the GAC
 
 feature -- Status report
 
@@ -134,6 +135,9 @@ feature -- Status report
 			
 	no_dependancies: BOOLEAN
 			-- Should no dependancies be generated?
+			
+	consume_from_fullname: BOOLEAN
+			-- should the specified assembly be consumed from the GAC?
 			
 feature {NONE} -- Implementation
 
@@ -189,7 +193,11 @@ feature {NONE} -- Implementation
 				display_error
 			else
 				create cr
-				ass := load_assembly (target_path)
+				if consume_from_fullname then
+					ass := feature {ASSEMBLY}.load_string (target_path.to_cil)
+				else
+					ass := feature {ASSEMBLY}.load_from (target_path.to_cil)					
+				end
 				if not cr.is_initialized then
 					set_error (Eac_not_initialized, Void)
 				elseif ass = Void then
@@ -239,38 +247,53 @@ feature {NONE} -- Implementation
 				has_indented_output.set_item (True)
 			elseif switch.is_equal (Force_switch) or switch.is_equal (Force_short) then
 				force_local_generation := True
+			elseif switch.is_equal (Consume_from_fullname_switch) or switch.is_equal (Consume_from_fullname_short) then
+				consume_from_fullname := True
+			elseif target_path = Void or target_path.is_empty then
+				set_error (Invalid_target_path, "None Set!")
 			elseif switch.is_equal (No_references_switch) then
 				no_dependancies := True
 			end
 		end
 
 	process_non_switch (non_switch_value: STRING) is
-		local
-			assembly: ASSEMBLY
+			-- process the args with no swtiches
 		do
-			if load_assembly (non_switch_value) /= Void then
-				target_path := non_switch_value
-			else
-				set_error (Invalid_target_path, non_switch_value)
-			end
+			target_path := non_switch_value
 		end
 
 	post_process is
 			-- Post argument parsing processing.
+		local
+			assembly: ASSEMBLY
+			retried: BOOLEAN
 		do
-			if not (list_assemblies or init or usage_display) and target_path = Void then
-				set_error (No_target, Void)
-			elseif put_in_eac and destination_path /= Void then
-				set_error (No_destination_if_put_in_eac, Void)
-			elseif put_in_eac and force_local_generation then
-				set_error (Cannot_force_local_and_eac, Void)
-			elseif put_in_eac and no_dependancies then
-				set_error (Dependancies_must_be_generated, Void)
-			elseif force_local_generation and no_dependancies then
-				set_error (Cannot_force_and_exclude_references, Void)
-			elseif not (list_assemblies or init or usage_display) and destination_path = Void then
-				destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			if not retried then
+				if consume_from_fullname then
+					assembly := feature {ASSEMBLY}.load_string (target_path.to_cil)
+				else
+					assembly := feature {ASSEMBLY}.load_from (target_path.to_cil)
+				end
+				
+				if not (list_assemblies or init or usage_display) and target_path = Void then
+					set_error (No_target, Void)
+				elseif put_in_eac and destination_path /= Void then
+					set_error (No_destination_if_put_in_eac, Void)
+				elseif put_in_eac and force_local_generation then
+					set_error (Cannot_force_local_and_eac, Void)
+				elseif put_in_eac and no_dependancies then
+					set_error (Dependancies_must_be_generated, Void)
+				elseif force_local_generation and no_dependancies then
+					set_error (Cannot_force_and_exclude_references, Void)
+				elseif not (list_assemblies or init or usage_display) and destination_path = Void then
+					destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+				end
+			else
+				set_error (Invalid_target_path, target_path)
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 	display_copyright is
@@ -287,14 +310,15 @@ feature {NONE} -- Implementation
 		do
 			io.put_string ("Usage: ")
 			io.put_string (System_name)
-			io.put_string (" <assembly> [/a | /r] [/n] [/nologo] [/nice]%N")
+			io.put_string (" <assembly> [/g] [/a | /r] [/n] [/nologo] [/nice]%N")
 			io.put_string ("       " + System_name)
-			io.put_string (" <assembly> [/d:destination] [/n] [/nologo] [/nice] [/f | /noref]%N")
+			io.put_string (" <assembly> [/g] [/d:destination] [/n] [/nologo] [/nice] [/f | /noref]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" /l [/nologo]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" /init [/n] [/nologo] [/nice]%N%N")
 			io.put_string (" - Options -%N%N")
+			io.put_string ("/fullname%N   Consume an assembly using its fullname. Short form is '/fn'.%N%N")
 			io.put_string ("/dest:destination%N   Generate XML in directory 'destination'. Short form is '/d'.%N%N")
 			io.put_string ("/add%N   Put assembly in Eiffel Assembly Cache. Short form is '/a'.%N%N")
 			io.put_string ("/remove%N   Remove assembly from Eiffel Assembly Cache. Short form is '/r'.%N%N")
@@ -307,7 +331,7 @@ feature {NONE} -- Implementation
 			io.put_string ("/noref%N   Do not generated assembly dependancies..%N%N")
 			io.put_string (" - Arguments -%N%N")
 			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for. <assembly> can%N")
-			io.put_string ("   be either a path to a local assembly or an assembly's fully quantified name.%N")
+			io.put_string ("   be either a path to a local assembly or an assembly's fully quantified name ONLY when '/fn' is used%N")
 			io.put_string ("   e.g. - %"System.Xml, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089%".%N%N")
 		end
 	
@@ -333,7 +357,6 @@ feature {NONE} -- Implementation
 		local
 			writer: CACHE_WRITER
 		do
-			set_assembly_id_offset (Default_offset)
 			if ass/= Void then
 				create writer
 				if not no_output then
@@ -366,13 +389,12 @@ feature {NONE} -- Implementation
 			des: EIFFEL_XML_DESERIALIZER
 			local_info_path: STRING
 		do
-			set_assembly_id_offset (Local_offset)
 			reconsume := True
 			local_info_path := destination_path.clone (destination_path)
 			if local_info_path.item (local_info_path.count) /= '\' then
 				local_info_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 			end
-			local_info_path.append ("info.xml")
+			local_info_path.append (info_path)
 			
 			output_destination_path := destination_path.clone (destination_path)
 			if output_destination_path.item (output_destination_path.count) /= '\' then
@@ -499,34 +521,6 @@ feature {NONE} -- Implementation
 				Result := <<"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\mscorlib.dll">>				
 			end
 		end
-		
-	load_assembly (s: STRING): ASSEMBLY is
-			-- load an assembly either from the GAC or a local path
-		require
-			non_void_s: s /= Void
-			non_empty_s: not s.is_empty
-		local
-			is_local: BOOLEAN
-			retried: BOOLEAN
-		do
-			if not retried then
-				if not is_local then
-					Result := feature {ASSEMBLY}.load_string (s.to_cil)
-				else
-					Result := feature {ASSEMBLY}.load_from (s.to_cil)
-				end				
-			end
-		rescue
-			if not is_local then
-				is_local := true
-			else
-				retried := true				
-			end
-			
-			retry
-		end
-		
-		
 		
 	dummy: CACHE_REFLECTION
 	consumed_assemblies: LINKED_LIST [STRING]

@@ -80,7 +80,7 @@ feature -- Basic Oprtations
 			last_error_message := ""
 			
 			put_in_eac := True
-			assembly := load_assembly (fully_quantified_name (aname, aversion, aculture, akey))	
+			assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (aname, aversion, aculture, akey).to_cil)
 			if assembly /= Void then
 				consume_in_eac (assembly)
 			else
@@ -106,7 +106,7 @@ feature -- Basic Oprtations
 			
 			destination_path := adest.clone (adest)
 			assembly_consumer.set_destination_path (adest)
-			assembly := load_assembly (apath)
+			assembly := feature {ASSEMBLY}.load_from (apath.to_cil)
 			if assembly /= Void then
 				consume_into_path (assembly)
 			else
@@ -129,7 +129,7 @@ feature -- Basic Oprtations
 		local
 			assembly: ASSEMBLY
 		do
-			assembly := load_assembly (fully_quantified_name (aname, aversion, aculture, akey))	
+			assembly := feature {ASSEMBLY}.load_string (fully_quantified_name (aname, aversion, aculture, akey).to_cil)	
 			if assembly /= Void then
 				Result := relative_assembly_path (assembly.get_name)
 				Result := Result.substring (1, Result.count - 1)
@@ -143,7 +143,7 @@ feature -- Basic Oprtations
 		end
 		
 	assembly_info_from_assembly (apath: STRING): CONSUMED_ASSEMBLY is
-			-- retrieve the assembly information from a assembly
+			-- retrieve a local assembly's information
 		require
 			non_void_path: apath /= Void
 			non_empty_path: apath.count > 0
@@ -151,7 +151,7 @@ feature -- Basic Oprtations
 			caf: CONSUMED_ASSEMBLY_FACTORY
 			assembly: ASSEMBLY
 		do
-			assembly := load_assembly (apath)	
+			assembly := feature {ASSEMBLY}.load_from (apath.to_cil)	
 			if assembly /= Void then
 				create caf
 				Result := caf.consumed_assembly (assembly)

@@ -108,6 +108,13 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+		
+	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, is_equal, default_create
+		end
 
 feature -- Initialization
 
@@ -194,7 +201,7 @@ feature -- Status setting
 			-- so this section of code was added as a temporary fix.
 			if object /= Void then
 				if object.name /= object.edited_name then
-					if object_handler.name_in_use (object.edited_name, object) then
+					if name_in_use (object.edited_name) then
 						object.cancel_edited_name
 					else
 						create command_name_change.make (object, object.edited_name, object.name)
@@ -417,6 +424,17 @@ feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS
 		end
 
 feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
+
+	name_in_use (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid name for `object'? Not if it is already
+			-- in use.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := object_handler.name_in_use (a_name, object) or (reserved_words.has (name_field.text.as_lower)) or
+				(build_reserved_words.has (name_field.text.as_lower)) or Constants.all_constants.item (a_name) /= Void
+		end
+		
 		
 	end_name_change_on_object is
 			-- Update the object to reflect the edited name.
@@ -428,8 +446,7 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 			name_field.change_actions.block
 				-- If the name exists, we must restore the name of `object' to
 				-- the name before the name change began.
-			if object_handler.name_in_use (name_field.text, object) or (reserved_words.has (name_field.text.as_lower)) or
-				(build_reserved_words.has (name_field.text.as_lower)) then
+			if name_in_use (name_field.text) then
 				object.cancel_edited_name
 				check
 					object_names_now_equal: object.edited_name.is_equal (object.name)
@@ -616,9 +633,7 @@ feature {NONE} -- Implementation
 			current_text := name_field.text.as_lower
 			if valid_class_name (current_text) or current_text.is_empty  then
 				object.set_edited_name (current_text)
-				if object_handler.name_in_use (current_text, object) or 
-					(reserved_words.has (current_text)) or
-					(build_reserved_words.has (name_field.text.as_lower)) then
+				if name_in_use (current_text) then
 					name_field.set_foreground_color (red)
 				else
 					name_field.set_foreground_color (black)
@@ -670,9 +685,7 @@ feature {NONE} -- Implementation
 			command_name_change: GB_COMMAND_NAME_CHANGE
 		do
 			name_field.focus_out_actions.block
-			if (not name_field.text.is_empty and then object_handler.name_in_use (name_field.text, object)) or
-				(reserved_words.has (name_field.text.as_lower)) or (build_reserved_words.has (name_field.text.as_lower)) then
-					
+			if not name_field.text.is_empty and then name_in_use (name_field.text) then
 				previous_caret_position := name_field.caret_position
 				create my_dialog.make_with_text (Duplicate_name_warning_part1 + name_field.text + Duplicate_name_warning_part2)
 				my_dialog.show_modal_to_window (parent_window (Current))

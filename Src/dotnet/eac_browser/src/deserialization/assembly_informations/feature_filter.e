@@ -68,14 +68,22 @@ feature
 		local
 			l_name: STRING
 			retried: BOOLEAN
+			index: INTEGER
 		do
 			if not retried then
 				if current_tag.last.is_equal (See_str) then
 					l_name := a_value
 					if a_local_part.is_equal (Cref_str) then
 						l_name.keep_tail (l_name.count - 2)
+						index := l_name.index_of ('(', 1)
+						if index > 0 then
+							l_name.keep_head (index - 1)
+						end
+						current_comment.append (l_name)
+					end	
+					if a_local_part.is_equal (lang_str) then
+						current_comment.append (a_value)						
 					end
-					current_comment.append (l_name)
 				elseif current_tag.last.is_equal (member_str) then
 					a_member.reset
 					l_name := a_value

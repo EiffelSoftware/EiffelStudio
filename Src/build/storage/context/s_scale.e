@@ -77,9 +77,9 @@ feature
 			if value_shown_modifed then
 				a_context.show_value (is_value_shown)
 			end;
-			--if not (text = Void) then
-				--a_context.set_text (text)
-			--end;
+			if text /= Void then
+				a_context.set_text (text)
+			end;
 			-- alias visual_name
 			set_attributes (a_context);
 		end;

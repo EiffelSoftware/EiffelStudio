@@ -15,8 +15,20 @@ inherit
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 		
 	GB_COMMAND_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+	
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
@@ -30,18 +42,8 @@ feature -- Initialization
 		do
 			Precursor {EV_DIALOG}
 			set_title (gb_display_window_title)
-			
-				-- We must now temporarily create a new button, and add it to `Current'
-				-- as the default cancel button. We then remove it. This is necessary so
-				-- that we have access to the minimize, maximize and close buttons.
-				-- Note that we have custom implmentations of EV_DIALOG_IMP, in order to
-				-- fire these actions when the button is not visible.
-			create button
-			extend (button)
-			button.select_actions.extend (agent show_hide_display_window_command.disable_selected)--execute)
-			set_default_cancel_button (button)
-			prune (button)
-			
+				-- Set up cancel actions on `Current'.
+			fake_cancel_button (Current, agent show_hide_display_window_command.execute)			
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_display_window @ 1)
 		end
 

@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Status setting
 
-	merge_radio_button_groups (other: like Current) is
+	merge_radio_button_groups (other: EV_CONTAINER) is
 			-- Merge `Current' radio button group with that of `other'.
 		require
 			other_not_void: other /= Void
@@ -288,6 +288,9 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/28 16:36:48  brendel
+--| Changed like Current to EV_CONTAINER in `merge_radio_button_groups'.
+--|
 --| Revision 1.18  2000/02/25 22:45:15  brendel
 --| Fixed compiler errors in all_radio_buttons_connected.
 --|

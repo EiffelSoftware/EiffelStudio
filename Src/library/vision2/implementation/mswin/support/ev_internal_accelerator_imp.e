@@ -48,7 +48,7 @@ feature -- Initialization
 				modifier := set_flag (modifier, Fcontrol)
 			end
 			modifier := set_flag (modifier, Fvirtkey)
-			wel_make (acc.keycode, acc.id, modifier)
+			wel_make (acc.key_code, acc.id, modifier)
 		end
 
 feature -- Access
@@ -97,6 +97,9 @@ end -- class EV_INTERNAL_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/29 16:10:56  brendel
+--| Changed obsolete keycode to key_code.
+--|
 --| Revision 1.3  2000/02/19 05:45:00  oconnor
 --| released
 --|

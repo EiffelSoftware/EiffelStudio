@@ -22,4 +22,9 @@ feature {NONE}
 			!!Result;
 		end;
 
+	Creation_evaluator: CREATION_EVALUATOR is
+			-- Evaluator for type creation
+		once
+			!!Result
+		end
 end

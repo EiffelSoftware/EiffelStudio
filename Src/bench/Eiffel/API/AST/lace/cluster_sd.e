@@ -37,6 +37,7 @@ feature {CLUSTER_SD, LACE_AST_FACTORY} -- Initialization
 			cluster_properties := cp
 			is_recursive := is_all
 			is_library := is_lib
+			is_directory_updated := False
 		ensure
 			cluster_name_set: cluster_name = cn
 			parent_name_set: parent_name = pn
@@ -65,6 +66,12 @@ feature -- Properties
 
 	is_library: BOOLEAN
 			-- Is cluster part of a library and therefore not subject to changes?
+
+feature {NONE} -- Access
+
+	is_directory_updated: BOOLEAN
+			-- Has `directory_name' been updated? If yes, we should not update it
+			-- anymore.
 
 feature -- Status
 
@@ -158,6 +165,7 @@ feature -- Setting
 			name_not_void: name /= Void
 		do
 			directory_name := name
+			is_directory_updated := False
 		ensure
 			directory_name_set: directory_name.is_equal (name)
 		end
@@ -274,7 +282,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 					Error_handler.raise_error
 				else
 					d_name := directory_name;
-					if d_name.count > 1 then
+					if not is_directory_updated and then d_name.count > 1 then
 						char := d_name.item (2);
 						full_d_name := d_name
 						if d_name.item (1) = '$' then
@@ -298,6 +306,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 							end
 						end
 						directory_name := full_d_name
+						is_directory_updated := True
 					end
 				end
 			end

@@ -12,9 +12,10 @@
 */
 
 #include "config.h"
-#ifdef EIF_WINDOWS
+#ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <file.h>
 #endif
 
 #include <signal.h>
@@ -26,10 +27,6 @@
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
-
-#ifdef EIF_WIN_31
-#include "wmhandlr.h"		/* For wmhandler_yield(), extra/mswin/console */
-#endif
 
 #ifdef __VMS
 rt_public int	putenv (char *);
@@ -168,14 +165,6 @@ rt_public EIF_INTEGER eif_system (char *s)
 
 	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
 #endif
-#ifdef EIF_WIN_31
-	result = WinExec (s, SW_SHOWNORMAL);
-	if (result > 32){
-		while (GetModuleUsage(result))
-			wmhandler_yield();
-		result = 0;
-		}
-#else
 #ifdef __VMS	/* if s starts with '[', prepend 'run ' */
 	if (s[0]=='[') {
 		run_command = cmalloc( 4 + strlen(s) );
@@ -186,7 +175,6 @@ rt_public EIF_INTEGER eif_system (char *s)
 		result = (EIF_INTEGER) system (s);
 #else
 	result = (EIF_INTEGER) system (s);
-#endif
 #endif
 #ifdef SIGCLD
 	(void)signal (SIGCLD, old_signal_hdlr);

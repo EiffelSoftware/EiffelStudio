@@ -931,8 +931,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		/* Sometimes during a collection we can have increased our memory
 		 * pool because for example we moved objects outside the scavenge zone
 		 * and therefore more objects have been allocated in memory. */
-	if (mem_used - g_data.mem_used > 0) {
-		gstat->mem_collect = mem_used - g_data.mem_used;	/* Memory collected */
+	if (mem_used > (long) g_data.mem_used) {
+		gstat->mem_collect = mem_used - (long) g_data.mem_used;	/* Memory collected */
 	} else {
 		gstat->mem_collect = 0;
 	}
@@ -947,8 +947,13 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			 * value. We only increase their values if the ratio freed memory
 			 * used memory is less than 1/3, betwen 1/3 and 2/3 we do not change
 			 * anything, and above 2/3 we decrease their value. */
-		int partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
-		int freed_memory = mem_used - g_data.mem_used;
+		long partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
+		long freed_memory;
+		if (mem_used > (long) g_data.mem_used) {
+			freed_memory = mem_used - (long) g_data.mem_used;
+		} else {
+			freed_memory = 0;
+		}
 		if (freed_memory <= partial_used_memory) {
 			plsc_per += 4;
 			clsc_per = 2 * plsc_per;

@@ -212,6 +212,18 @@ feature -- Status report
 
 feature -- Status setting
 
+	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Ensure `an_item' is visible in `Current'.
+		local
+			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			item_imp ?= an_item.implementation
+			check
+				item_imp_not_void: item_imp /= Void
+			end
+			ensure_visible (internal_get_index (item_imp) - 1)
+		end
+
 	select_item (an_index: INTEGER) is
 			-- Select item at `an_index'.
 		do
@@ -1189,6 +1201,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.103  2001/06/25 19:05:48  rogers
+--| Implemented `ensure_item_visible'.
+--|
 --| Revision 1.102  2001/06/14 00:09:13  rogers
 --| Undefined the version of escape_pnd inherited from EV_PRIMITIVE_IMP.
 --|

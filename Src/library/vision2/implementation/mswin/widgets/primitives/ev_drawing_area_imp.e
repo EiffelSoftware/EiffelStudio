@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 		do
 			!! foreground_color_imp.make_system (color_windowtext)
 			!! background_color_imp.make_system (color_window)
-			wel_make (default_parent.item, "Drawing area")
+			wel_make (default_parent, "Drawing area")
 			!! dc.make (Current)
 			dc.get
 

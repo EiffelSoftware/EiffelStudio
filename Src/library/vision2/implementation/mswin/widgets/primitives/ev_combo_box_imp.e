@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a combo-box.
 		do
-			internal_window_make (default_parent.item, Void, default_style + Cbs_dropdown,
+			internal_window_make (default_parent, Void, default_style + Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
 			!! ev_children.make (2)

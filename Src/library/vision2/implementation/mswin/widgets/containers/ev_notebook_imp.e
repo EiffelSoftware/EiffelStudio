@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create an empty notebook.
 		do
-			wel_make (default_parent.item, 0, 0, 0, 0, 0)
+			wel_make (default_parent, 0, 0, 0, 0, 0)
 			tab_pos := Pos_top
 		end
 

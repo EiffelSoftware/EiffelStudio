@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			!! ev_children.make (0)
-			wel_make (default_parent.item, 0, 0, 0, 0, 0)
+			wel_make (default_parent, 0, 0, 0, 0, 0)
 			from
 				i := 1
 			until

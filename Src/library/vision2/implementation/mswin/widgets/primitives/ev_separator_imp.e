@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
  	make is
  			-- Make a separator
 		do
-			wel_make (default_parent.item, "EV_SEPARATOR")
+			wel_make (default_parent, "EV_SEPARATOR")
  		end
 
 feature {NONE} -- WEL Implementation

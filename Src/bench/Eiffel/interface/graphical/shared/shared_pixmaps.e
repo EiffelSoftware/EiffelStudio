@@ -249,6 +249,11 @@ feature {NONE}
 			Result := pixmap_file_content ("dbgstep.bm");
 		end;
 
+	bm_Down_stack: PIXMAP is
+		once
+			Result := pixmap_file_content ("dn_stack.bm");
+		end;
+
 	bm_Exec_last: PIXMAP is
 		once
 			Result := pixmap_file_content ("execlast.bm");
@@ -582,6 +587,11 @@ feature {NONE}
 	bm_Update: PIXMAP is
 		once
 			Result := pixmap_file_content ("update.bm");
+		end;
+
+	bm_Up_stack: PIXMAP is
+		once
+			Result := pixmap_file_content ("up_stack.bm");
 		end;
 
 	bm_default: PIXMAP is

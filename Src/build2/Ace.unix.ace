@@ -36,19 +36,17 @@ default
 -- you to query whether the minimum_size and minimum_height were set by the user.
 
 cluster
-	all build2:		"$WS/build2"
+	all build2:		"$EIFFEL_SRC/Build2"
 		exclude
-			"object_editor"; "EIFGEN"; "Windows"; "WEL";
+			"object_editor"; "EIFGEN"; "templates"; "Windows"; "WEL"; "hact"; "se"; "ve";
 		end
 
-	dev:		"$EIFFEL_SRC/library"
-
-	all gel (dev):		"$/gel"
+	all gel:		"$EIFFEL_SRC/library/gel"
 		default
 			assertion (no)
 		end
 
-	all vision2 (dev):		"$/vision2"
+	all vision2:		"$EIFFEL_SRC/library/vision2"
 		include
 			"ev_button"; 
 		exclude
@@ -57,80 +55,29 @@ cluster
 			assertion (require)
 		end
 
-	all base:		"$EIFFEL_SRC/library/base"
+	all base (dev):		"$EIFFEL_SRC/library/base"
 		exclude
 			"table_eiffel3"; 
 		default
 			assertion (no)
 		end
 
-	exml_interface:		"$WS/exml_02_cvs_anon/exml/exml/lib/interface"
-
-	exml_general_interface (exml_interface):		"$/general"
-
-	exml_event_interface (exml_interface):		"$/event"
-
-	exml_tree_interface (exml_interface):		"$/tree"
-
-	exml_factory_interface (exml_interface):		"$/factory"
-
-	exml_formater_interface (exml_interface):		"$/formater"
-
-	exml_position_interface (exml_interface):		"$/position"
-
-	exml_source_interface (exml_interface):		"$/source"
-
-	exml_implementation:		"$WS/exml_02_cvs_anon/exml/exml/lib/implementation"
-
-	exml_implementation_interface (exml_implementation):		"$/implementation_interface"
-
-	exml_general_implementatin_interface (exml_implementation_interface):		"$/general"
-
-	exml_event_implementation_interface (exml_implementation_interface):		"$/event"
-
-	exml_tree_implementation_interface (exml_implementation_interface):		"$/tree"
-
-	exml_expat_implementation (exml_implementation):		"$/expat"
-
-	exml_expat_general_implementation (exml_expat_implementation):		"$/general"
-
-	exml_expat_event_implementation (exml_expat_implementation):		"$/event"
-
-	exml_expat_ise_implementation (exml_expat_implementation):		"$/compiler_specific/ise"
-
-	exml_expat_factory_implementation (exml_expat_implementation):		"$/factory"
-
-	exml_expat_position_implementation (exml_expat_implementation):		"$/position"
-
-	exml_expat_source_implementation (exml_expat_implementation):		"$/source"
-
-	exml_tree_on_event_implementation (exml_implementation):		"$/tree_on_event"
-
-	exml_tree_on_event_tree_implementation (exml_tree_on_event_implementation):		"$/tree"
-
-	exml_tree_on_event_factory_implementation (exml_tree_on_event_implementation):		"$/factory"
-
-	all ucstring_library:		"$WS/exml_02_cvs_anon/ucstring/lib"
-
-	all_ucstring_spec:		"$WS/exml_02_cvs_anon/ucstring/spec/ise"
-
-	all gobo:		"$WS/gobo_16/library"
+	all wizard_library: "$EIFFEL_SRC/library/wizard"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "test"; 
+			"mswin"; "wizard_window.e"; "wizard_project_manager.e";
 		end
 
 external
 
 	include_path:
-		"$EIFFEL_SRC/library/expat/xmlparse",
-		"$EIFFEL_SRC/library/vision2/spec/include",
-		"$WS/gobo_16/library/kernel/include",
-		"$WS/exml_02_cvs_anon/exml/exml/lib/implementation/expat/compiler_specific/ise/clib",
-		"$EIFFEL_SRC/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
-		"$EIFFEL_SRC/library/vision2/spec/include"
+		"$(EIFFEL_SRC)/C_library/expat/xmlparse",
+		"$(EIFFEL_SRC)/library/vision2/spec/include",
+		"$(EIFFEL_SRC)/Build2/modified_libraries/gobo_16/library/kernel/include",
+		"$(EIFFEL_SRC)/Build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/clib",
+		"$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`"
 
 	object:
-		"$(WS)/exml_02_cvs_anon/exml/exml/lib/implementation/expat/compiler_specific/ise/clib/exml_expat.a",
+		"$(EIFFEL_SRC)Build2/modified_libraries/exml/lib/implementation/expat/compiler_specific/ise/clib/exml_expat.a",
 		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",

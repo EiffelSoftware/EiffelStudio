@@ -22,6 +22,7 @@ feature -- Initialisation
 	make(text: STRING) is
 		require
 			text_valid: text /= Void and then text.count > 0
+			no_eol_in_text: not text.has ('%N')
 		do
 			image := text
 			length := text.count

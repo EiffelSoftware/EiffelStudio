@@ -12,7 +12,8 @@ inherit
 
 	FEATURE_AS
 		redefine
-			feature_names, body, set_unique_values, set
+			feature_names, body, set_unique_values, set,
+			associated_feature_name
 		end;
 
 	AST_EIFFEL_B
@@ -22,15 +23,11 @@ inherit
 			type_check, byte_node, find_breakable, 
 			format, fill_calls_list, replicate
 		end;
-
 	IDABLE
 		rename
 			id as body_id,
 			set_id as set_body_id
 		end;
-
-	STONABLE;
-
 	COMPARABLE
 		undefine
 			is_equal
@@ -129,10 +126,9 @@ feature -- Type check, byte code and dead code removal
 
 feature -- Stoning
  
-	stone (reference_class: E_CLASS): FEATURE_NAME_STONE is
+	associated_feature_name: STRING is
 		do
-			!! Result.make (feature_names.first.internal_name, 
-					reference_class) 
+			Result := feature_names.first.internal_name
 		end;
 
 feature -- Debugger

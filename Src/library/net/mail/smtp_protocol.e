@@ -48,7 +48,7 @@ feature -- Access
 		end
 
 	pipelining: BOOLEAN
-		-- Does the connection will use pipeline?
+		-- Does the connection use pipeline?
 
 feature -- Setting
 

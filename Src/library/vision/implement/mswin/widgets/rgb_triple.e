@@ -18,7 +18,7 @@ feature -- Initialisation
 			green := g
 		end 
 
-feature {COLOR_WINDOWS, COLOR_LOOKUP} -- Access
+feature {COLOR_WINDOWS, COLOR_LOOKUP, PS_HEADER} -- Access
 
 	blue: INTEGER
 

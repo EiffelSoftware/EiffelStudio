@@ -18,6 +18,13 @@ inherit
 			{NONE} all
 		end
 
+feature -- Conversion String
+
+	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING is
+		do
+			Result := Eifnet_debug_value_formatter.icor_debug_value_to_string (v)
+		end
+
 feature -- get member data
 
 	string_from (v: ICOR_DEBUG_VALUE; token: INTEGER): STRING is
@@ -34,7 +41,10 @@ feature -- get member data
 			l_icd_obj_value := l_value_info.interface_debug_object_value
 			if l_icd_obj_value /= Void then
 				l_icd_value := l_icd_obj_value.get_field_value (l_icd_obj_value.get_class, token)
-				Result := Eifnet_debug_value_formatter.icor_debug_value_to_string (l_icd_value)
+				if l_icd_value /= Void then
+					Result := system_string_value_to_string (l_icd_value)
+--					Result := Eifnet_debug_value_formatter.icor_debug_value_to_string (l_icd_value)
+				end
 			end	
 		end
 
@@ -65,11 +75,23 @@ feature -- StringBuilder
 feature -- exception
 
 	message_from_exception (v: ICOR_DEBUG_VALUE): STRING is
+		local
+			l_str: STRING
 		do
-			Result := string_from (v, token_Exception__message) 
+			create Result.make (0)
+			l_str := string_from (v, token_Exception__className) 
+			if l_str /= Void then
+				Result.append_string (l_str)
+				Result.append_string (" :: ")
+			end
+
+			l_str := string_from (v, token_Exception__message) 
+			if l_str /= Void then
+				Result.append_string (l_str)
+			end
 		end
 		
-feature {NONE} -- Implementation
+feature {EIFNET_DEBUGGER} -- Implementation
 
 	Eifnet_debug_value_formatter: EIFNET_DEBUG_VALUE_FORMATTER is
 		once
@@ -92,13 +114,33 @@ feature {NONE} -- Implementation
 		end
 		
 	token_Exception__message: INTEGER is
-			-- Attribute token of System.Exception::_message
+			-- Attribute token of System.Exception::ToString
 		once
 			if il_environment.version.is_equal (Il_environment.v1_2) then		
 				Result := token_Exception__message_v1_2		
 			else
 				Result := token_Exception__message_v1_1	
 			end			
+		end	
+
+	token_Exception__className: INTEGER is
+			-- Attribute token of System.Exception::_className
+		once
+--			if il_environment.version.is_equal (Il_environment.v1_2) then		
+--				Result := token_Exception__className_v1_2		
+--			else
+				Result := token_Exception__className_v1_1	
+--			end			
+		end	
+
+	token_Exception_ToString: INTEGER is
+			-- Attribute token of System.Exception::_message
+		once
+--			if il_environment.version.is_equal (Il_environment.v1_2) then		
+--				Result := token_Exception_ToString_v1_2
+--			else
+				Result := token_Exception_ToString_v1_1	
+--			end			
 		end	
 
 feature {NONE} -- Constants
@@ -114,5 +156,12 @@ feature {NONE} -- Constants
 			
 	token_Exception__message_v1_2: INTEGER is 0x04000063
 			--| v1.2     => System.Exception::_message: string :: 0x04000063 |--	
+
+	token_Exception_ToString_v1_1: INTEGER is 0x06000182
+			--| v1.0/1.1 => System.Exception::_message: string :: 0x06000182 |--	
+
+	token_Exception__className_v1_1: INTEGER is 0x0400001D
+			--| v1.0/1.1 => System.Exception::_className: string :: 0x0400001D |--	
+
 			
 end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER

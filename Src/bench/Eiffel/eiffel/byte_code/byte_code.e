@@ -217,10 +217,13 @@ feature
 			end;
 		end;
 
-	feature_origin: INTEGER is
+	feature_origin: STRING is
 			-- Value of the dynamic type where the feature is written
 		do
-			Result := context.class_type.type_id - 1;
+			!! Result.make (15);
+			Result.append ("RTUD(");
+			Result.append (context.class_type.id.generated_id);
+			Result.extend (')')
 		end;
 
 	generate_arguments is

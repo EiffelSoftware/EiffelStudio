@@ -11,7 +11,7 @@ inherit
 
 	GD_FONT_CONSTANTS
 
-feature {GD_IMAGE} -- Access
+feature {NONE} -- Access
 
 	large_font_pointer: POINTER is
 		once
@@ -38,6 +38,8 @@ feature {GD_IMAGE} -- Access
 			Result := c_giant_font
 		end
 	
+feature -- Access
+
 	font(i: INTEGER):POINTER is
 		-- Select a font thanks to its associated value.
 		-- Please refer to GIF_FONT_CONSTANTS for possible values.
@@ -63,18 +65,21 @@ feature -- Externals
 		alias
 			"c_tiny_font"
 		end
+
 	c_small_font:POINTER is
 		external
 			"C"
 		alias
 			"c_small_font"
 		end
+
 	c_medium_bold_font:POINTER is
 		external
 			"C"
 		alias
 			"c_medium_bold_font"
 		end
+
 	c_giant_font:POINTER is
 		external
 			"C"

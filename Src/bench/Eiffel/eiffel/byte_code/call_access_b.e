@@ -8,7 +8,7 @@ inherit
 		redefine
 			make_byte_code, make_creation_byte_code
 		end;
-	
+
 feature
 
 	feature_id: INTEGER is
@@ -183,6 +183,57 @@ end;
 			-- Do nothing
 		end;
 
+	make_java_typecode (ba: BYTE_ARRAY) is
+			-- Add the sk_value of the type of this
+			-- call (true return type).
+		local
+			res_type_a: TYPE_A
+			res_type_i: TYPE_I
+			res_cname: STRING
+			f: FEATURE_I
+			ftype: FORMAL_A
+		do
+			if System.java_generation and then type /= Void then
+
+				f := context_type.type_a.associated_class.feature_table.item (feature_name)
+
+				res_type_i := Context.real_type (type)
+				res_type_a := res_type_i.type_a
+
+				if f /= Void then
+				   ftype ?= f.type
+				end
+
+				if ftype /= Void then
+					ba.append (Bc_java_rtype)
+
+					-- Output the name of the feature.
+					-- NOTE: May be removed later (for
+					--	   debugging purposes only)
+
+					ba.append_raw_string (feature_name)
+					ba.append_uint32_integer (res_type_i.sk_value);
+
+					if res_type_a /= Void and then
+								res_type_a.has_associated_class then
+						res_cname := res_type_a.associated_class.name
+					end
+
+					-- NOTE:
+					-- The name of the type is also provided for
+					-- debugging purposes. Will be removed soon.
+
+					if res_cname /= Void then
+						ba.append_raw_string (res_cname)
+					else
+						ba.append_raw_string ("-no type-")
+					end
+				end
+			else
+				-- Nothing: we're not generating Java byte-code.
+			end
+		end;
+
 	real_feature_id: INTEGER is
 			-- The feature ID in INTEGER is not necessarily the same as
 			-- in the INTEGER_REF class. And likewise for other simple types.
@@ -273,7 +324,7 @@ end;
 		end;
 
 	generate_special_feature (reg: REGISTRABLE) is
-            -- Generate code for special routines (is_equal, copy ...).
+			-- Generate code for special routines (is_equal, copy ...).
 			-- (Only for feature calls);
 		do
 		end;

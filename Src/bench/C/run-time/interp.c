@@ -2675,23 +2675,23 @@ int code;
 #endif
 		switch (first->type & SK_HEAD) {
 			case SK_INT:
-				first->type = second->type;
 				switch (second->type & SK_HEAD) {
-				case SK_INT: f->it_long = (long) pow ((double)f->it_long, (double)s->it_long); b;
-				case SK_FLOAT: f->it_float = (float) pow ((double)f->it_long, (double)s->it_float); b;
+				case SK_INT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_long); b;
+				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_long, (double)s->it_float); b;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_long, (double)s->it_double); b;
 				default: panic(botched);
 				}
+				first->type = SK_DOUBLE;
 				break;
 			case SK_FLOAT:
 				switch (second->type & SK_HEAD) {
-				case SK_INT: f->it_float = (float) pow ((double)f->it_float, (double)s->it_long); b;
-				case SK_FLOAT: f->it_float = (float) pow ((double)f->it_float, (double)s->it_float); b;
-				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_float, (double)s->it_double);
-								first->type = second-> type; b;
+				case SK_INT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_long); b;
+				case SK_FLOAT: f->it_double = (double) pow ((double)f->it_float, (double)s->it_float); b;
+				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_float, (double)s->it_double); b;
 				default: panic(botched);
 				}
-			break;
+				first->type = SK_DOUBLE;
+				break;
 			case SK_DOUBLE:
 				switch (second->type & SK_HEAD) {
 				case SK_INT: f->it_double = (double) pow ((double)f->it_double, (double)s->it_long); b;
@@ -2699,7 +2699,8 @@ int code;
 				case SK_DOUBLE: f->it_double = (double) pow ((double)f->it_double, (double)s->it_double); b;
 				default: panic(botched);
 				}
-			break;
+				first->type = SK_DOUBLE;
+				break;
 		default:
 			panic(botched);
 		}

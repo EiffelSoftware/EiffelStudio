@@ -6,7 +6,7 @@ indexing
 		%to a number of predefined control structures such as ``if'', %
 		%``until'' and others.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: iterators, iteration, two_way_chain_iterators,
 			two_way_chain_iteration;
 	traversal: sequential;
@@ -86,7 +86,7 @@ end -- class TWO_WAY_CHAIN_ITERATOR [G]
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

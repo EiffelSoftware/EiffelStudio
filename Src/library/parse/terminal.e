@@ -3,7 +3,7 @@ indexing
 	description:
 		"Constructs to be parsed by lexical analysis classes";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 		once 
 		end; 
 
-	no_left_recursion: BOOLEAN is true;
+	left_recursion: BOOLEAN is false;
 
 	check_recursion is
 			-- Do nothing.
@@ -84,7 +84,7 @@ end -- class TERMINAL
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -5,7 +5,7 @@ indexing
 		%by concatenating specimens of constructs %
 		%of zero or more specified constructs";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -20,26 +20,26 @@ deferred class AGGREGATE inherit
 
 feature -- Status report 
 
-	no_left_recursion: BOOLEAN is
-			-- Is the construct's production free of left recursion?
+	left_recursion: BOOLEAN is
+			-- Is the construct's definition left-recursive?
 		local
 			end_loop: BOOLEAN;
 		do
 			if structure_list.has (production) then
-				left_recursion.put (true);
+				global_left_recursion.put (true);
 				child_recursion.put (true);
 				recursion_message.append (construct_name);
 				recursion_message.append ("%N");
-				Result := false
+				Result := true
 			else
 				from
 					structure_list.put_right (production);
 					child_start;
-					Result := true
+					Result := false
 				until
-					end_loop or no_components or child_after or not Result
+					end_loop or no_components or child_after or Result
 				loop
-					Result := message_construction;
+					Result := not message_construction;
 					end_loop := not child.is_optional;
 					child_forth
 				end
@@ -137,7 +137,7 @@ feature {CONSTRUCT} -- Implementation
 				loop
 					if not_optional_found then
 						child.expand_all;
-						b := child.no_left_recursion;
+						b := not child.left_recursion;
 						if child_recursion.item then
 							child_recursion.put (false)
 						else
@@ -191,7 +191,7 @@ end -- class AGGREGATE
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

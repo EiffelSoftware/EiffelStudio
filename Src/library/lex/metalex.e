@@ -3,7 +3,7 @@ indexing
 	description:
 		"Mechanisms for building lexical analyzers from regular expressions."
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -43,8 +43,8 @@ feature -- Initialization
 feature -- Element change
 
 	put_expression (s: STRING; n: INTEGER; c: STRING) is
-			-- Record the regular expression described by `s',
-			-- associate it with token type `n' and name `c'.
+			-- Record the regular expression described by `s'
+			-- and associate it with token type `n' and name `c'.
 		require
 			source_long_enough: s.capacity > 0
 		do
@@ -53,7 +53,7 @@ feature -- Element change
 		end; 
 
 	add_word (s: STRING; n: INTEGER) is
-			-- Record the word `s',
+			-- Record the word `s' and
 			-- associate it with token type `n'.
 		require
 			s_not_void: s /= Void;
@@ -187,7 +187,7 @@ end -- METALEX
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

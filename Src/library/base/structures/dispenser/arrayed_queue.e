@@ -3,7 +3,7 @@ indexing
 	description:
 		"Unbounded queues, implemented by resizable arrays";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: dispenser, array;
 	representation: array;
 	access: fixed, fifo, membership;
@@ -101,7 +101,7 @@ feature -- Access
 					end;
 				end
 			end;
-			Result := i /= in_index		
+			Result := (i /= in_index)
 		end;				
 			
 feature -- Measurement
@@ -123,44 +123,28 @@ feature -- Status report
 		end;
 
 	full: BOOLEAN is
-			--
+			-- Is structure filled to capacity? 
+			-- (Answer: no.)
 		do
-			Result := count = capacity
+			Result := False
 		end;
 
 	extendible: BOOLEAN is
+			-- May items be added? (Answer: yes.)
 		do
 			Result := true
 		end;
 
 	prunable: BOOLEAN is
+			-- May items be removed? (Answer: yes.)
 		do
 			Result := true
-		end;
-
-feature {NONE} -- Cursor movement
-
-	start is
-			-- Move cursor to first position.
-		do
-		end;
-
-	finish is
-			-- Move cursor to last position.
-		local
-			size: INTEGER;
-		do
-		end;
-
-	forth is
-			-- Move cursor to next position.
-		do
 		end;
 
 feature -- Element change
 
 	extend, put, force (v: G) is
-			-- Add `v' as newest element if there is room.
+			-- Add `v' as newest item.
 		do
 			if count + 1 >= array_count then grow end;	
 			put_i_th (v, in_index);
@@ -215,6 +199,25 @@ feature -- Conversion
 			i := 1
 		end;
 
+feature {NONE} -- Inapplicable
+
+	start is
+			-- Move cursor to first position.
+		do
+		end;
+
+	finish is
+			-- Move cursor to last position.
+		local
+			size: INTEGER;
+		do
+		end;
+
+	forth is
+			-- Move cursor to next position.
+		do
+		end;
+
 feature {ARRAYED_QUEUE} -- Implementation
 
 	out_index: INTEGER;
@@ -245,13 +248,19 @@ feature {ARRAYED_QUEUE} -- Implementation
 				out_index := j + 1;
 			end;
 		end;
+
+invariant
+
+	not_full: not full;
+	extendible: extendible;
+	prunable: prunable;
 					
 end -- class ARRAYED_QUEUE
 
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

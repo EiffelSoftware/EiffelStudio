@@ -3,7 +3,7 @@ indexing
 	description:
 		"Linkable cells with a reference to the left and right neighbors";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: bi_linkable, cell;
 	representation: linked;
 	contents: generic;
@@ -121,7 +121,7 @@ end -- class BI_LINKABLE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Cursor trees with a recursive structure";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: recursive_cursor_tree, cursor_tree, tree;
 	access: cursor, membership;
 	representation: recursive;
@@ -26,13 +26,6 @@ feature -- Access
 			Result := active.item
 		end;
 
-	arity: INTEGER is
-			-- Number of children of active node; if cursor is `above',
-			-- 0 if tree is empty, 1 otherwise. 
-		do
-			Result := active.arity
-		end;
-
 	cursor: CURSOR is
 			-- Current cursor position
 		local
@@ -44,6 +37,12 @@ feature -- Access
 
 feature -- Measurement
 
+	arity: INTEGER is
+			-- Number of children of active node; if cursor is `above',
+			-- 0 if tree is empty, 1 otherwise. 
+		do
+			Result := active.arity
+		end;
 
 	count: INTEGER is
 			-- Number of items in the tree
@@ -313,7 +312,7 @@ end -- class RECURSIVE_CURSOR_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Cursor trees in linked representation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: linked_cursor_tree, cursor_tree;
 	access: cursor, membership;
 	representation: recursive, linked;
@@ -87,7 +87,7 @@ end -- class LINKED_CURSOR_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

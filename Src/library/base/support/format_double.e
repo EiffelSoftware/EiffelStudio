@@ -3,7 +3,7 @@ indexing
 	description:
 		"Formatter for non-integral numbers";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: format_double;
 	date: "$Date$";
 	revision: "$Revision$"
@@ -263,7 +263,7 @@ invariant
 end -- class FORMAT_REAL
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Data structures of the most general kind, %
 		%used to contain zero or more items.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: access;
 	access: membership;
 	contents: generic;
@@ -46,8 +46,8 @@ feature -- Status report
 feature -- Status setting
 
 	compare_objects is
-			-- Ensure that future search operations will use 
-			-- `equal' rather than `=' for comparing references.
+			-- Ensure that future search operations will use `equal'
+			-- rather than `=' for comparing references.
 		require
 			changeable_comparison_criterion
 		do
@@ -57,8 +57,8 @@ feature -- Status setting
 		end;
 
 	compare_references is
-			-- Ensure that future search operations will use 
-			-- `=' rather than `equal' for comparing references.
+			-- Ensure that future search operations will use  `='
+			-- rather than `equal' for comparing references.
 		require
 			changeable_comparison_criterion
 		do
@@ -87,7 +87,7 @@ end -- class CONTAINER
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

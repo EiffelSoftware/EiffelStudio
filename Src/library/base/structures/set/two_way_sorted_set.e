@@ -4,7 +4,7 @@ indexing
 		"Sets whose elements may be compared according to a total order relation; %
 		%implemented as sorted two-way lists."; 
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: sorted_set, set, two_way_list;
 	representation: linked;
 	access: membership, min, max;
@@ -278,7 +278,7 @@ end -- class TWO_WAY_SORTED_SET
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -111,7 +111,7 @@ feature -- Access
 			-- Parent of `Current'
 
 	first_child: like parent is
-			-- Item at first position
+			-- Leftmost child
 		do
 			Result := array_item (1)
 		end;

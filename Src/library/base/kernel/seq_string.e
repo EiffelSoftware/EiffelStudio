@@ -1,5 +1,5 @@
 indexing
-	copyright: "See notice at end of class"
+	status: "See notice at end of class"
 
 class SEQ_STRING inherit
 
@@ -332,7 +332,7 @@ end -- class SEQ_STRING
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

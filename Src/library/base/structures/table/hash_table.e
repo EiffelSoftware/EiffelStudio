@@ -3,7 +3,7 @@ indexing
 	description:
 		"Hash tables, used to store items identified by hashable keys";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -201,37 +201,37 @@ feature -- Status report
 
  
 	conflict: BOOLEAN is
-			-- Did the last operation lead to a conflict status?
+			-- Did last operation cause a conflict?
 		do
-			Result := control = Conflict_constant
+			Result := (control = Conflict_constant)
 		end;
 
 	inserted: BOOLEAN is
-			-- Did the last operation lead to an insertion?
+			-- Did last operation insert an item?
 		do
-			Result := control = Inserted_constant
+			Result := (control = Inserted_constant)
 		end;
 
-	changed: BOOLEAN is
-			-- Did the last operation lead to a replacement?
+	replaced: BOOLEAN is
+			-- Did last operation replace an item? 
 		do
-			Result := control = Changed_constant
+			Result := (control = Changed_constant)
+		end;
+
+	removed: BOOLEAN is
+			-- Did last operation remove an item?
+		do
+			Result := (control = Removed_constant)
 		end;
 
 	found: BOOLEAN is
-			-- Did the last operation lead to a found status?
+			-- Did last operation find the item sought?
 		do
-			Result := control = Found_constant
-		end;
-
-	not_found: BOOLEAN is
-			-- Did the last operation lead to a not-found status?
-		do
-			Result := control = Not_found_constant
+			Result := (control = Found_constant)
 		end;
 
     off: BOOLEAN is
-            -- Is the cursor after the last item?
+            -- Is cursor past last item?
         do
             Result := pos_for_iter > keys.upper
         end;
@@ -264,9 +264,10 @@ feature -- Cursor movement
 feature -- Element change
 
 	put (new: G; key: H) is
-			-- Attempt to insert `new' with `key'.
-			-- Set `control' to `Inserted_constant' or `Conflict_constant'.
-			-- No insertion if conflict.
+			-- Insert `new' with `key' if there is no other item
+			-- associated with the same key.
+			-- Make `inserted' true if and only if an insertion has
+			-- been made (i.e. `key' was not present).
 		do
 			internal_search (key);
 			if control = Found_constant then
@@ -288,7 +289,8 @@ feature -- Element change
 	replace (new: G; key: H) is
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
-			-- Set `control' to `Changed_constant' or `Not_found_constant'.
+			-- Make `replaced' true if and only if a  replacement has
+			-- been made (i.e. `key' was present).
 		require
 			valid_key (key)
 		do
@@ -306,7 +308,7 @@ feature -- Element change
 	force (new: G; key: H) is
 			-- If `key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `key'.
-			-- Set `control' to `Inserted_constant'.
+			-- Make `inserted' true.
 		require else
 			valid_key (key);
 		do
@@ -325,9 +327,11 @@ feature -- Element change
 			insertion_done: item (key) = new
 		end;
 
-	change_key (new_key: H; old_key: H) is
+	replace_key (new_key: H; old_key: H) is
 			-- If table contains an item at `old_key',
 			-- replace its key by `new_key'.
+			-- Make `replaced' true if and only if a  replacement has
+			-- been made (i.e. `old_key' was present).
 		require
 			valid_keys: valid_key (new_key) and valid_key (old_key)
 		local
@@ -357,7 +361,8 @@ feature -- Removal
 
 	remove (key: H) is
 			-- Remove item associated with `key', if present.
-			-- Set `control' to `Removed_constant' or `Not_found_constant'.
+			-- Make `inserted' true if and only if an item has been
+			-- removed (i.e. `key' was not present).
 		require
 			valid_key: valid_key (key)
 		local
@@ -429,6 +434,11 @@ feature -- Obsolete
 			Result := keys.count
 		end;
 
+
+	change_key (new_key: H; old_key: H) is obsolete "Use ``replace_key'' instead"
+		do
+			replace_key (new_key, old_key)
+		end;
 
 	change_item (new: G; access_key: H) is obsolete "Use ``replace'' instead"
 		do
@@ -628,7 +638,7 @@ end -- class HASH_TABLE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

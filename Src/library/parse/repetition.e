@@ -4,7 +4,7 @@ indexing
 		"Constructs whose specimens are sequences of specimens %
 		%of a specified base construct, delimited by a specified separator";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -20,19 +20,19 @@ deferred class REPETITION inherit
 
 feature -- Status report
 
-	no_left_recursion: BOOLEAN is
-			-- Is the construct's production free of left recursion?
+	left_recursion: BOOLEAN is
+			-- Is the construct's definition left-recursive?
 		do
 			if structure_list.has (production) then
-				left_recursion.put (true);
+				global_left_recursion.put (true);
 				child_recursion.put (true);
 				recursion_message.append (construct_name);
 				recursion_message.append ("%N");
-				Result := false;
+				Result := true;
 			else
 				structure_list.put_right (production);
 				child_start;
-				Result := message_construction
+				Result := not message_construction
 			end;
 			structure_list.search (production);
 			structure_list.remove;
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 
 	separator: STRING is 
 			-- List separator in the descendant,
-			-- must be defined as a keyword in the lexical analyser
+			-- must be defined as a keyword in the lexical analyzer
 		deferred 
 		end; 
 
@@ -227,7 +227,7 @@ end -- class REPETITION
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

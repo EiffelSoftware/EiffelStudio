@@ -3,7 +3,7 @@ indexing
 	description:
 		"Trees implemented using a linked list representation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: linked_tree, tree, linked_list;
 	representation: recursive, linked;
 	access: cursor, membership;
@@ -113,7 +113,7 @@ feature -- Access
 			-- Parent of current node
 
 	first_child: like parent;
-			-- First child
+			-- Leftmost child
 
    	left_sibling: like parent is
 			-- Left neighbor (if any)
@@ -272,7 +272,7 @@ end -- class LINKED_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

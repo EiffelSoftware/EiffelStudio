@@ -4,7 +4,7 @@ indexing
 		"Terminal constructs with just one specimen, %
 		%representing a language keyword or special symbol";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -24,10 +24,14 @@ creation
 feature -- Initialization
 
 	make (s: STRING) is
+			-- Set up terminal to represent `s'.
 		do
 			construct_make;
 			construct_name := s;
 			lex_code := document.keyword_code (s)
+		ensure
+			construct_name = s;
+			lex_code = document.keyword_code (s)
 		end; 
 
 feature -- Access
@@ -54,7 +58,7 @@ end -- class KEYWORD
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

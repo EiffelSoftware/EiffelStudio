@@ -3,7 +3,7 @@ indexing
 	description:
 		"Two-dimensional arrays";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: array2, matrix, table;
 	representation: array;
 	access: index, row_and_column, membership;
@@ -228,7 +228,7 @@ end -- class ARRAY2
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Lists implemented as sequences of arrays, the last of which may be non-full. %
 		%No limit on size (a new array is allocated if list outgrows its initial allocation)."
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: list, sequence;
 	representation: array, linked;
 	access: index, cursor, membership;
@@ -576,7 +576,7 @@ end -- class MULTI_ARRAY_LIST
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

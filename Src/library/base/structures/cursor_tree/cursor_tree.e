@@ -3,7 +3,7 @@ indexing
 	description:
 		"Trees as active structures that may be traversed using a cursor";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: cursor_tree, tree;
 	access: cursor, membership;
 	contents: generic;
@@ -178,7 +178,7 @@ feature -- Status report
 		end;
 
 	valid_cursor_index (i: INTEGER): BOOLEAN is
-			-- Can cursor be moved to i-th child?
+			-- Can cursor be moved to `i'-th child?
 			-- 0 is before and `arity' + 1 is after.
 		do
 			Result := i >= 0 and i <= (arity + 1)
@@ -376,8 +376,8 @@ feature -- Element change
 		end;
 
 	extend (v: G) is
-			-- Put `v' after last child.
-			-- Put `v' as `first_child' if `below' and place
+			-- Add `v' after last child.
+			-- Make `v' the `first_child' if `below' and place
 			-- cursor `before'.
 		require else
 			--not_above: not above;
@@ -678,7 +678,7 @@ end -- class CURSOR_TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

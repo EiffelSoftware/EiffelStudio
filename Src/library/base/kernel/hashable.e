@@ -3,7 +3,7 @@ indexing
 	description:
 		"Values that may be hashed into an integer index";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -31,14 +31,14 @@ feature -- Status report
 			Result := (Current /= default)
 		ensure
 			Result = (Current /= default)
-		end
+		end;
 
 end -- class HASHABLE
 
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

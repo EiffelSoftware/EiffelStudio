@@ -3,7 +3,7 @@ indexing
 	description:
 		"Deterministic finite automata";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -94,10 +94,10 @@ feature -- Output
 				io.putint (j);
 				value := item (j);
 				if value.final /= 0 then
-					io.putstring (" final state of token_type ");
+					io.putstring (" final state of token type ");
 					io.putint (value.final);
 					if value.final_array.count > 1 then
-						io.putstring ("%N and also of token_types ");
+						io.putstring ("%N and also of token types ");
 						from
 							i := value.final_array.lower + 1
 						until
@@ -156,7 +156,7 @@ end -- class FIXED_DFA
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

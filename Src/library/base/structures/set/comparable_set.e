@@ -3,7 +3,7 @@ indexing
 	description:
 		"Sets whose elements may be compared according to a total order relation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: comparable_set, comparable_struct;
 	access: membership, min, max;
 	contents: generic;
@@ -54,7 +54,7 @@ end -- class COMPARABLE_SET
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Stacks implemented by resizable arrays";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: dispenser, array;
 	representation: array;
 	access: fixed, lifo, membership;
@@ -20,12 +20,14 @@ class ARRAYED_STACK [G] inherit
 		redefine
 			linear_representation
 		select
-			remove, extend
+			remove, extend, put
 		end;
 
 	ARRAYED_LIST [G]
 		rename
+			put as al_put,
 			extend as al_extend,
+			force as al_force,
 			remove as al_remove,
 			start as finish,
 			finish as start,
@@ -36,12 +38,12 @@ class ARRAYED_STACK [G] inherit
 		export
 			{NONE} all;
 			{ANY} 
-			    count, readable, writable, extendible,
-			    make, wipe_out
+				count, readable, writable, extendible,
+			 	make, wipe_out
 			{STACK} start, finish, forth, back
 		undefine
 			readable, writable,
-			append, fill, put, force
+			append, fill
 		redefine
 			linear_representation
 		end;
@@ -79,7 +81,7 @@ feature -- Conversion
 			i: INTEGER
 		do
 			from
-				!!Result.make (count);
+				!! Result.make (count);
 				i := count
 			until
 				i < 1
@@ -101,12 +103,12 @@ feature -- Obsolete
 			replace (v)
 		end;
 
-end -- class STACK
+end -- class ARRAYED_STACK
 
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

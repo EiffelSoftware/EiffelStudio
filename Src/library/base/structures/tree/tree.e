@@ -3,7 +3,7 @@ indexing
 	description:
 		"Trees, without commitment to a particular representation";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: tree;
 	access: cursor, membership;
 	representation: recursive;
@@ -30,7 +30,7 @@ feature -- Access
    	item: G is
 			-- Item in current node
 		deferred
-		end; -- item
+		end;
 
    	child_item: like item is
 			-- Item in current child node
@@ -38,11 +38,6 @@ feature -- Access
 			readable: child_readable
 		do
 			Result := child.item
-		end; -- child_item
-
-	arity: INTEGER is
-			-- Number of children
-		deferred
 		end;
 
 	child_cursor: CURSOR is
@@ -58,7 +53,7 @@ feature -- Access
 		end;
 
 	first_child: like parent is
-			-- Left most child
+			-- Leftmost child
 		require
 			is_not_leaf: not is_leaf
 		deferred
@@ -114,6 +109,11 @@ feature -- Access
 		end;
 
 feature -- Measurement
+
+	arity: INTEGER is
+			-- Number of children
+		deferred
+		end;
 
 	count: INTEGER is
 			-- Number of elements
@@ -231,7 +231,7 @@ feature -- Cursor movement
 		deferred
 		ensure then
 			is_last_child: not is_leaf implies child_islast;
-		end; -- child_finish
+		end;
 
 	child_forth is
 			-- Move cursor to next child.
@@ -239,6 +239,7 @@ feature -- Cursor movement
 		end;
 
 	child_back is
+			-- Move cursor to previous child.
 		deferred
 		end;
 
@@ -270,7 +271,7 @@ feature -- Element change
 		deferred
 		ensure
 			item_inserted: item = v
-		end; -- replace
+		end;
 			
 	child_put, child_replace (v: like item) is
 			-- Put `v' at current child position.
@@ -279,7 +280,7 @@ feature -- Element change
 		deferred
 		ensure
 			item_inserted: child_item = v
-		end; -- child_replace
+		end;
 
 	replace_child (n: like parent) is
 			-- Put `n' at current child position.
@@ -289,7 +290,7 @@ feature -- Element change
 		deferred
 		ensure
 			child_replaced: child = n
-		end; -- replace_child
+		end;
 
 	prune (n: like parent) is
 			-- Remove `n' from the children
@@ -324,7 +325,7 @@ feature -- Conversion
 		end;
 
 	binary_representation: BINARY_TREE[G] is
-			-- Convert to binary representation:
+			-- Convert to binary tree representation:
 			-- first child becomes left child, 
 			-- right sibling becomes right child.
 		local
@@ -507,7 +508,7 @@ end -- class TREE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

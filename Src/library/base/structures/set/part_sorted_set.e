@@ -4,7 +4,7 @@ indexing
 		"Sets whose items may be compared according to a partial order relation; %
 		%implemented as sorted two-way lists.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: sorted_set, set, two_way_list;
 	representation: linked;
 	access: membership, min, max;
@@ -187,8 +187,8 @@ feature -- Basic operations
 		end;
 
 	symdif (other: like Current) is
-			-- Remove items also in `other'
-			-- add items of `other' not in Current
+			-- Remove all items also in `other', and add all
+			-- items of other not already present.
 		do
 			from
 				other.start
@@ -210,7 +210,7 @@ end -- class PART_SORTED_SET
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

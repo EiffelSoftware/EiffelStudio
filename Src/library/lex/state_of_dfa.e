@@ -3,7 +3,7 @@ indexing
 	description:
 		"States of deterministic finite automata";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -28,7 +28,7 @@ creation
 feature -- Initialization
 
 	make (s: INTEGER) is
-			-- Make state with 0 to s possibles inputs.
+			-- Make state with 0 to `s' possibles inputs.
 		do
 			array_make (0, s)
 		end; 
@@ -60,7 +60,7 @@ end -- class STATE_OF_DFA
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Sequences of values, all of the same type or of a conforming one, %
 		%accessible through integer indices in a contiguous interval";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -160,9 +160,10 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (array: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN is
+			-- Is array made of the same items as `other'?
 		do
-			Result := area.is_equal (array.area)
+			Result := area.is_equal (other.area)
 		end;
 
 feature -- Status report
@@ -461,7 +462,7 @@ end -- class ARRAY
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -4,7 +4,7 @@ indexing
 		"Constructs whose specimens are specimens of constructs %
 		%chosen among a specified list.";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -24,24 +24,24 @@ feature -- Access
 
 feature -- Status report
 
-	no_left_recursion: BOOLEAN is
-			-- Is the construct free of left recursion?
+	left_recursion: BOOLEAN is
+			-- Is the construct's definition left-recursive?
 		do
 			if structure_list.has (production) then
-				left_recursion.put (true);
+				global_left_recursion.put (true);
 				child_recursion.put (true);
 				recursion_message.append (construct_name);
 				recursion_message.append ("%N");
-				Result := false
+				Result := true
 			else
 				from
 					structure_list.put_right (production);
 					child_start;
-					Result := true
+					Result := false
 				until
-					no_components or child_after or not Result
+					no_components or child_after or Result
 				loop
-					Result := message_construction;
+					Result := not message_construction;
 					child_forth
 				end
 			end;
@@ -139,7 +139,7 @@ end -- class CHOICE
 
 --|----------------------------------------------------------------
 --| EiffelParse: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

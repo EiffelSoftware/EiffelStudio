@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Infinite sequences, indexed by integers";
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: countable_sequence, infinite_sequence;
 	access: cursor, membership;
 	contents: generic;
@@ -35,7 +35,7 @@ feature -- Access
 	i_th (i: INTEGER): G is
 			-- Item of rank `i'
 		deferred
-		end
+		end;
 
 	index: INTEGER
 			-- Index of current position
@@ -44,7 +44,7 @@ feature -- Access
 			-- Item at current position
 		do
 			Result := i_th (index)
-		end
+		end;
 
 feature -- Status report
 
@@ -71,27 +71,27 @@ feature -- Cursor movement
 			-- Move to next position.
 		do
 			index := index + 1
-		end
+		end;
 
 	start is
 			-- Move to first position.
 		do
 			index := 1
-		end
+		end;
 
 feature {NONE} -- Inapplicable
 
 	extend (v: G) is
 			-- Add `v' at end.
 		do
-		end
+		end;
 
 	finish is
 			-- Move to last position.
 		do
 		ensure then
 			failure: false
-		end
+		end;
 
 	linear_representation: LINEAR [G] is
 			-- Representation as a linear structure
@@ -106,28 +106,28 @@ feature {NONE} -- Inapplicable
 	put (v: G) is
 			-- Add `v' to the right of current position.
 		do
-		end
+		end;
 
-	remove  is
+	remove is
 			-- Remove item to the right of current position.
 		do
-		end
+		end;
 
 	replace (v: G) is
 			-- Replace by `v' item at current position. 
 		do
-		end
+		end;
 
 	wipe_out is
 			-- Remove all items.
 		do
-		end
+		end;
 
 end -- class COUNTABLE_SEQUENCE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Structures whose items may be accessed sequentially, one-way";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: sequential, traversing;
 	access: membership;
 	contents: generic;
@@ -184,7 +184,7 @@ end -- class LINEAR
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

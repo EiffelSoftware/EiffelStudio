@@ -3,7 +3,7 @@ indexing
 	description:
 		"Cursors for two-way cursor trees";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: two_way_tree_cursor, cursor;
 	contents: generic;
 	date: "$Date$";
@@ -28,7 +28,7 @@ end -- class TWO_WAY_TREE_CURSOR
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

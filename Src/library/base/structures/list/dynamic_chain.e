@@ -3,7 +3,7 @@ indexing
 	description:
 		"Dynamically modifiable chains";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: dynamic_chain, sequence;
 	access: index, cursor, membership;
 	contents: generic;
@@ -47,7 +47,7 @@ feature -- Element change
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			extendible;
+			extendible: extendible;
 			not_before: not before
 		deferred
 		ensure
@@ -59,7 +59,7 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			extendible;
+			extendible: extendible;
 			not_after: not after
 		deferred
 		ensure
@@ -71,7 +71,7 @@ feature -- Element change
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			extendible;
+			extendible: extendible;
 			not_off: not before;
 			other_exists: other /= Void
 		deferred
@@ -85,7 +85,7 @@ feature -- Element change
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			extendible;
+			extendible: extendible;
 			not_off: not after;
 			other_exists: other /= Void
 		deferred
@@ -250,14 +250,14 @@ feature {DYNAMIC_CHAIN} -- Implementation
 
 invariant
 
-	extendible: extendible;
+	extendible: extendible
 
 end -- class DYNAMIC_CHAIN
 
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -3,7 +3,7 @@ indexing
 	description:
 		"Pseudo-random number sequence, linear congruential method";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	names: random;
 	date: "$Date$";
 	revision: "$Revision$"
@@ -31,6 +31,7 @@ creation
 feature -- Initialization
 
 	make is
+			-- Initialize structure using a default seed.
 		do
 			set_seed (default_seed)
 		ensure
@@ -38,7 +39,7 @@ feature -- Initialization
 		end
 
 	set_seed (s: INTEGER) is
-			-- Choose `s' as the `seed'.
+			-- Initialize sequence using `s' as the `seed'.
 		require
 			non_negative: s >= 0
 		do
@@ -227,7 +228,7 @@ end -- class RANDOM
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

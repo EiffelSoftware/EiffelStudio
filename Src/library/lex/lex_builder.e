@@ -3,7 +3,7 @@ indexing
 	description:
 		"General mechanisms for building lexical analyzers";
 
-	copyright: "See notice at end of class";
+	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -27,6 +27,7 @@ creation
 feature  -- Initialization
 
 	make is
+			-- Set up the analyzer.
 		do
 			!! tool_list.make;
 			!! tool_names.make
@@ -883,7 +884,7 @@ feature -- Element change
 			t_selected: selected_tools.has (t);
 			n_not_zero: n /= 0;
 			n_not_minus_one: n /= -1
-				-- 0 is reserved for the non final states.
+				-- 0 is reserved for the non-final states.
 				-- -1 is reserved for the end of text.
 		do
 			selected_tools.finish;
@@ -1207,7 +1208,7 @@ feature {NONE} -- Implementation
 
 	error_common_part (first, second: INTEGER) is
 			-- Create an error message when a regular expression can
-			-- be recognized by the first and the second token_type.
+			-- be recognized by the first and the second token type.
 			-- Example "aa" is recognized by +(a..z) and 2(a).
 			-- The first tool yield the priority to the second.
 		require
@@ -1258,7 +1259,7 @@ end -- class LEX_BUILDER
 
 --|----------------------------------------------------------------
 --| EiffelLex: library of reusable components for ISE Eiffel 3,
---| Copyright (C) 1986, 1990, 1993, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

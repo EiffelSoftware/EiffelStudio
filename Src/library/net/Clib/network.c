@@ -8,6 +8,13 @@
 #include "except.h"
 #endif
 
+#ifdef EIF_OS2
+#include <stdlib.h>
+#include <types.h>
+#include <sys/socket.h>
+#include <io.h>
+#endif
+
 #include <sys/types.h>
 #ifndef EIF_WINDOWS
 #include <sys/time.h>
@@ -16,7 +23,8 @@
 #ifndef BSD
 #define BSD_COMP
 #endif
-#ifndef EIF_WINDOWS
+#if defined EIF_WINDOWS
+#else
 #include <sys/ioctl.h>
 #endif
 #include "cecil.h"
@@ -35,11 +43,32 @@
 #ifdef I_SYS_IN
 #include <sys/in.h>
 #endif
-#ifndef EIF_WINDOWS
+#if defined EIF_WINDOWS || defined EIF_OS2
+#else
 #include <sys/un.h>
 #endif
 
 #include "bitmask.h"
+
+#ifdef EIF_OS2
+void do_init(void);
+
+void do_init ()
+{
+	static int done = FALSE;
+	int sockint;
+
+	if (!done)
+		{
+		if ((sockint = sock_init()) != 0)
+			{
+				fprintf(stderr, " INET.SYS probably is not running.");
+				exit (1);
+			}
+
+		}
+}
+#endif
 
 #ifdef EIF_WINDOWS
 extern void eio(void);
@@ -186,9 +215,10 @@ EIF_POINTER name;
 {
 	struct hostent *hp;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
+
 	hp = gethostbyname ((char *) name);
 
 	if (hp == (struct hostent *) 0)
@@ -203,9 +233,10 @@ EIF_POINTER proto;
 {
 	struct servent *sp;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
+
 	sp = getservbyname ((char *) name, (char *) proto);
 	if (sp == (struct servent *) 0)
 		eio();
@@ -326,11 +357,12 @@ EIF_INTEGER add_f, typ, prot;
 {
 	int result;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
+
 	result = socket ((int) add_f, (int) typ, (int) prot);
-#ifndef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	if (result < 0)
 		eio();
 #else
@@ -343,10 +375,12 @@ EIF_INTEGER add_f, typ, prot;
 void c_close_socket (s)
 EIF_INTEGER s;
 {
-#ifndef EIF_WIN32
-	close ((int) s);
-#else
+#ifdef EIF_WIN32
 	closesocket (s);
+#elif defined EIF_OS2
+	soclose ((int) s);
+#else
+	close ((int) s);
 #endif
 }
 
@@ -355,13 +389,17 @@ EIF_INTEGER s;
 EIF_POINTER add;
 EIF_INTEGER length;
 {
-#ifndef EIF_WIN32
-	if (bind ((int) s, (struct sockaddr *) add, (int) length) < 0)
-		eio();
-#else
-	do_init();
+#ifdef EIF_WIN32
+	do_init()
 	if (bind ((int) s, (struct sockaddr *) add, (int) length) == SOCKET_ERROR)
-		eio();
+        eio();
+#elif defined EIF_OS2
+	do_init();
+	if (bind ((int) s, (struct sockaddr *) add, (int) length) == -1)
+        eio();
+#else
+	if (bind ((int) s, (struct sockaddr *) add, (int) length) < 0)
+        eio();
 #endif
 }
 
@@ -374,35 +412,42 @@ EIF_INTEGER length;
 
 	a_length = (int) length;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
 
 	result = accept ((int) s, (struct sockaddr *) add, &a_length);
 
-#ifndef EIF_WIN32
-	if (result < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (result == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
+            eio();
+#elif defined EIF_OS2
+	if (result == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (result < 0)
+		if (errno != EWOULDBLOCK)
+            eio();
 #endif
-
 	return (EIF_INTEGER) result;
 }
 
 void c_listen (s, backlog)
 EIF_INTEGER s, backlog;
 {
-#ifndef EIF_WIN32
-	if ((listen ((int) s, (int) backlog)) < 0)
-		eio();
-#else
+#ifdef EIF_WIN32
 	do_init();
 	if ((listen ((int) s, (int) backlog)) == SOCKET_ERROR)
-		eio();
+        eio();
+#elif defined EIF_OS2
+	do_init();
+	if ((listen ((int) s, (int) backlog)) < 0)
+        eio();
+#else
+	if ((listen ((int) s, (int) backlog)) < 0)
+        eio();
 #endif
 }
 
@@ -411,15 +456,20 @@ EIF_INTEGER s;
 EIF_POINTER add;
 EIF_INTEGER length;
 {
-#ifndef EIF_WIN32
-	if ((connect ((int) s, (struct sockaddr *) add, (int) length)) < 0)
-		if (errno != EINPROGRESS)
-			eio();
-#else
+#ifdef EIF_WIN32
 	do_init();
 	if ((connect ((int) s, (struct sockaddr *) add, (int) length)) == SOCKET_ERROR)
 		if (WSAGetLastError() != EINPROGRESS)
-			eio();
+            eio();
+#elif defined EIF_OS2
+	do_init();
+	if ((connect ((int) s, (struct sockaddr *) add, (int) length)) < 0)
+		if (sock_errno() != SOCEINPROGRESS)
+            eio();
+#else
+	if ((connect ((int) s, (struct sockaddr *) add, (int) length)) < 0)
+		if (errno != EINPROGRESS)
+            eio();
 #endif
 }
 
@@ -431,15 +481,18 @@ EIF_INTEGER timeout, timeoutm;
 	struct timeval t;
 	int result;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
 	if (timeout == -1) {
-#ifndef EIF_WIN32
-		if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) < 0)
-			eio();
-#else
+#ifdef EIF_WIN32
 		if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) == SOCKET_ERROR)
+            eio();
+#elif defined EIF_OS2
+		if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) == -1)
+            eio();
+#else
+		if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, (struct timeval *) NULL)) < 0)
 			eio();
 #endif
 		return (EIF_INTEGER) result;
@@ -448,11 +501,14 @@ EIF_INTEGER timeout, timeoutm;
 	t.tv_sec = timeout;
 	t.tv_usec = timeoutm;
 
-#ifndef EIF_WIN32
-	if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) < 0)
-		eio();
-#else
+#ifdef EIF_WIN32
 	if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) == SOCKET_ERROR)
+        eio();
+#elif defined EIF_OS2
+	if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) == -1)
+        eio();
+#else
+	if ((result = select ((int) nfds, (fd_set *) rmask, (fd_set *) wmask, (fd_set *) emask, &t)) < 0)
 		eio();
 #endif
 	return (EIF_INTEGER) result;
@@ -465,17 +521,20 @@ EIF_INTEGER length;
 {
 	int a_length, result;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
+
 	a_length = (int) length;
 
 	result = getsockname((int) s, (struct sockaddr *) addr, &a_length);
 
-#ifndef EIF_WIN32
-	if (result < 0)
-#else
+#ifdef EIF_WIN32
 	if (result == SOCKET_ERROR)
+#elif defined EIF_OS2
+	if (result == -1)
+#else
+	if (result < 0)
 #endif
 		eio();
 }
@@ -487,17 +546,20 @@ EIF_INTEGER length;
 {
 	int a_length, result;
 
-#ifdef EIF_WIN32
+#if defined EIF_WIN32 || defined EIF_OS2
 	do_init();
 #endif
+
 	a_length = (int) length;
 
 	result = getpeername((int) s, (struct sockaddr *) addr, &a_length);
 
-#ifndef EIF_WIN32
-	if (result < 0)
-#else
+#ifdef EIF_WIN32
 	if (result == SOCKET_ERROR)
+#elif defined EIF_OS2
+	if (result == -1)
+#else
+	if (result < 0)
 #endif
 		eio();
 	return (EIF_INTEGER) a_length;
@@ -508,16 +570,7 @@ void c_put_bool (fd, b)
 EIF_INTEGER fd;
 EIF_BOOLEAN b;
 {
-#ifndef EIF_WIN32
-	if (b) 
-		if (write ((int)fd, "True", 4) < 0)
-			if (errno != EWOULDBLOCK)
-				eio();
-	else
-		if (write ((int)fd, "False", 5) < 0)
-			if (errno != EWOULDBLOCK)
-				eio();
-#else
+#ifdef EIF_WIN32
 	int err;
 
 	if (b)
@@ -526,7 +579,26 @@ EIF_BOOLEAN b;
 		err = send (fd, "False", 5, 0);
 
 	if ((err == SOCKET_ERROR) && (WSAGetLastError() != EWOULDBLOCK))
-		eio();
+        eio();
+#elif defined EIF_OS2
+	int err;
+
+	if (b)
+		err = send (fd, "True", 4, 0);
+	else 
+		err = send (fd, "False", 5, 0);
+
+	if ((err == -1) && (sock_errno() != SOCEWOULDBLOCK))
+        eio();
+#else
+	if (b)
+		if (write ((int)fd, "True", 4) < 0)
+			if (errno != EWOULDBLOCK)
+				eio();
+	else
+		if (write ((int)fd, "False", 5) < 0)
+			if (errno != EWOULDBLOCK)
+                eio();
 #endif
 }
 
@@ -534,13 +606,17 @@ void c_put_char (fd, c)
 EIF_INTEGER fd;
 EIF_CHARACTER c;
 {
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	if (send (fd, &c, sizeof(char), 0) == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (send (fd, &c, sizeof(char), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	if (write ((int)fd, &c, sizeof (char)) < 0)
 		if (errno != EWOULDBLOCK)
-			eio();
-#else
-	if (send (fd, &c, sizeof(char), 0) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif
 }
@@ -549,13 +625,17 @@ void c_put_int (fd, i)
 EIF_INTEGER fd;
 EIF_INTEGER i;
 {
-#ifndef EIF_WIN32
-	if (write ((int)fd, (EIF_INTEGER *)&i, sizeof (EIF_INTEGER)) < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (send (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (send (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (write ((int)fd, (EIF_INTEGER *)&i, sizeof (EIF_INTEGER)) < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 }
@@ -571,13 +651,17 @@ EIF_REAL f;
 
 	float tf;
 	tf = f;
-#ifndef EIF_WIN32
-	if (write ((int)fd, &tf, sizeof (float)) < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (send (fd, (char *) &tf, sizeof(tf), 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (send (fd, (char *) &tf, sizeof(tf), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (write ((int)fd, &tf, sizeof (float)) < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 }
@@ -586,13 +670,17 @@ void c_put_double (fd, d)
 EIF_INTEGER fd;
 EIF_DOUBLE d;
 {
-#ifndef EIF_WIN32
-	if (write ((int)fd, (double *) &d, sizeof (double)) < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (send (fd, (char *) &d, sizeof(d), 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (send (fd, (char *) &d, sizeof(d), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (write ((int)fd, (double *) &d, sizeof (double)) < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 }
@@ -601,13 +689,17 @@ void c_put_string (fd, s)
 EIF_INTEGER fd;
 EIF_OBJ s;
 {
-#ifndef EIF_WIN32
-	if (write ((int)fd, s, strlen (s)) < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (send (fd, s, strlen(s), 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (send (fd, s, strlen(s), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (write ((int)fd, s, strlen (s)) < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 }
@@ -617,13 +709,17 @@ EIF_INTEGER fd;
 EIF_OBJ s;
 EIF_INTEGER l;
 {
-#ifndef EIF_WIN32
-	if (write ((int)fd, (char *)s, (int)l) < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (send (fd, s, l, 0) == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (send (fd, s, l, 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (write ((int)fd, (char *)s, (int)l) < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 }
@@ -632,15 +728,18 @@ EIF_REAL c_read_float (fd)
 EIF_INTEGER fd;
 {
 	float f;
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	if (recv ((int) fd, (char *) &f, sizeof (float), 0) == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (recv ((int) fd, (char *) &f, sizeof (float), 0) == SOCEWOULDBLOCK)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	if (read ((int) fd, &f, sizeof (float)) < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
-#else
-	if (recv ((int) fd, (char *) &f, sizeof (float), 0) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
-
 #endif
 	return (EIF_REAL) f;
 }
@@ -649,13 +748,17 @@ EIF_DOUBLE c_read_double (fd)
 EIF_INTEGER fd;
 {
 	double d;
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	if (recv (fd, (char *) &d, sizeof (double), 0) == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (recv (fd, (char *) &d, sizeof (double), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	if (read ((int) fd, &d, sizeof (double)) < 0)
 		if (errno != EWOULDBLOCK)
-			eio();
-#else
-	if (recv (fd, (char *) &d, sizeof (double), 0) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_DOUBLE) d;
@@ -665,13 +768,17 @@ EIF_CHARACTER c_read_char (fd)
 EIF_INTEGER fd;
 {
 	char c;
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	if (recv (fd, &c, sizeof (char), 0) == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (recv (fd, &c, sizeof (char), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	if (read ((int) fd, &c, sizeof (char)) < 0)
 		if (errno != EWOULDBLOCK)
-			eio();
-#else
-	if (recv (fd, &c, sizeof (char), 0) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_CHARACTER) c;
@@ -682,13 +789,17 @@ EIF_INTEGER fd;
 {
 	EIF_INTEGER i;
 
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	if (recv (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (recv (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	if (read ((int)fd, (char *) &i, sizeof (EIF_INTEGER)) < 0)
 		if (errno != EWOULDBLOCK)
-			eio();
-#else
-	if (recv (fd, (char *) &i, sizeof (EIF_INTEGER), 0) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_INTEGER) i;
@@ -702,13 +813,17 @@ EIF_OBJ buf;
 {
 	int nr;
 
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	if ((nr = recv (fd, (char *) buf, (int) len, 0)) == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if ((nr = recv (fd, (char *) buf, (int) len, 0)) == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	if ((nr = read ((int) fd, (char *) buf, (int) len)) < 0)
 		if (errno != EWOULDBLOCK)
-			eio();
-#else
-	if ((nr = recv (fd, (char *) buf, (int) len, 0)) == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_INTEGER) nr;
@@ -721,15 +836,20 @@ EIF_OBJ buf;
 {
 	int result;
 
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	result = recv ((int) fd, buf, (int) l, 0);
+    if (result == SOCKET_ERROR)
+        if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	result = recv ((int) fd, buf, (int) l, 0);
+	if (result == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	result = read ((int) fd, buf, (int) l);
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
-			eio();
-#else
-	result = recv ((int) fd, buf, (int) l, 0);
-	if (result == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_INTEGER) result;
@@ -744,13 +864,17 @@ EIF_INTEGER flags;
 	int result;
 
 	result = recv ((int)fd, (char *)buf, (int)len, (int) flags);
-#ifndef EIF_WIN32
-	if (result < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (result == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#eldif defined EIF_OS2
+	if (result == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (result < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_INTEGER) result;
@@ -768,13 +892,17 @@ EIF_POINTER addr_len;
 
 	result = recvfrom ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, (int*)addr_len);
 
-#ifndef EIF_WIN32
-	if (result < 0)
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 	if (result == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	if (result == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+	if (result < 0)
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_INTEGER) result;
@@ -786,18 +914,21 @@ EIF_INTEGER l;
 EIF_OBJ buf;
 {
 	int result;
-#ifndef EIF_WIN32
+#ifdef EIF_WIN32
+	result = send (fd, (char *) buf, (int) l, 0);
+	if (result == SOCKET_ERROR)
+		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+	result = send (fd, (char *) buf, (int) l, 0);
+	if (result == -1)
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
 	result = write ((int) fd, (char *) buf, (int) l);
 	if (result < 0)
 		if (errno != EWOULDBLOCK)
 			eio();
-
-#else
-	result = send (fd, (char *) buf, (int) l, 0);
-	if (result == SOCKET_ERROR)
-		if (WSAGetLastError() != EWOULDBLOCK)
-			eio();
-
 #endif
 	return (EIF_INTEGER) result;
 }
@@ -828,11 +959,14 @@ EIF_INTEGER addr_len;
 	int result;
 
 	if ((result = sendto ((int)fd, (char *)buf, (int)len, (int)flags, (struct sockaddr *) addr, (int)addr_len)) < 0)
-#ifndef EIF_WIN32
-		if (errno != EWOULDBLOCK)
-			eio();
-#else
+#ifdef EIF_WIN32
 		if (WSAGetLastError() != EWOULDBLOCK)
+            eio();
+#elif defined EIF_OS2
+		if (sock_errno() != SOCEWOULDBLOCK)
+            eio();
+#else
+		if (errno != EWOULDBLOCK)
 			eio();
 #endif
 	return (EIF_INTEGER) result;
@@ -858,12 +992,14 @@ EIF_INTEGER opt;
 	int arg, asize;
 
 	asize = sizeof (arg);
-#ifndef EIF_WIN32
-	if (getsockopt ((int) fd, (int) level, (int) opt, (char *) &arg, &asize) < 0)
-#else
+#ifdef EIF_WIN32
 	if (getsockopt ((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == SOCKET_ERROR)
+#elif defined EIF_OS2
+	if (getsockopt ((int) fd, (int) level, (int) opt, (char *) &arg, &asize) == -1)
+#else
+	if (getsockopt ((int) fd, (int) level, (int) opt, (char *) &arg, &asize) < 0)
 #endif
-		return (EIF_INTEGER) 0;
+	return (EIF_INTEGER) 0;
 	return (EIF_INTEGER) arg;
 }
 
@@ -875,13 +1011,14 @@ EIF_INTEGER fd;
 
 	asize = sizeof (arg);
 
-#ifndef EIF_WIN32
-	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
-#else
+#ifdef EIF_WIN32
 	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
+#elif defined EIF_OS2
+	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == -1)
+#else
+	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
 #endif
-		return (EIF_BOOLEAN) 0;
-
+	return (EIF_BOOLEAN) 0;
 	return (EIF_BOOLEAN) (!(arg.l_onoff == 0));
 }
 
@@ -893,13 +1030,14 @@ EIF_INTEGER fd;
 
 	asize = sizeof (arg);
 
-#ifndef EIF_WIN32
-	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
-#else
+#ifdef EIF_WIN32
 	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == SOCKET_ERROR)
+#elif defined EIF_OS2
+	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) == -1)
+#else
+	if (getsockopt ((int) fd, SOL_SOCKET, SO_LINGER, (char *) &arg, &asize) < 0)
 #endif
-		return (EIF_INTEGER) 0;
-
+	return (EIF_INTEGER) 0;
 	return (EIF_INTEGER) arg.l_linger;
 }
 
@@ -921,24 +1059,25 @@ EIF_INTEGER fd;
 EIF_INTEGER cmd;
 EIF_INTEGER arg;
 {
-#ifndef EIF_WIN32
-	return (EIF_INTEGER) fcntl ((int)fd, (int)cmd, (int)arg);
-#else
+#if defined EIF_WIN32 || defined EIF_OS2
 	return 0;
+#else
+	return (EIF_INTEGER) fcntl ((int)fd, (int)cmd, (int)arg);
 #endif
 }
 
 void c_set_blocking (fd)
 EIF_INTEGER fd;
 {
-#ifndef EIF_WIN32
+#ifdef EIF_OS2
 	int arg = 0;
-
-	ioctl ((int)fd, FIONBIO, (char *) &arg);
-#else
+	ioctl ((int)fd, FIONBIO, (char *) &arg, sizeof (arg));
+#elif defined EIF_WIN32
 	u_long arg = 0;
-
-	ioctlsocket ((int)fd, FIONBIO, &arg);
+    ioctlsocket ((int)fd, FIONBIO, &arg);
+#else
+	int arg = 0;
+    ioctl ((int)fd, FIONBIO, (char *) &arg);
 #endif
 }
 
@@ -946,12 +1085,15 @@ void c_set_non_blocking (fd)
 EIF_INTEGER fd;
 {
 
-#ifndef EIF_WIN32
+#ifdef EIF_OS2
 	int arg = 1;
-	ioctl ((int)fd, FIONBIO, (char *) &arg);
-#else
+	ioctl ((int)fd, FIONBIO, (char *) &arg, sizeof(arg));
+#elif defined EIF_WIN32
 	u_long arg = 1;
-	ioctlsocket ((int)fd, FIONBIO, &arg);
+    ioctlsocket ((int)fd, FIONBIO, &arg);
+#else
+	int arg = 1;
+    ioctl ((int)fd, FIONBIO, (char *) &arg);
 #endif
 }
 

@@ -408,6 +408,8 @@ feature {NONE} -- Implementation
 			enable_user_resize
 			default_height := -1
 			default_width := -1
+			
+			update_request_size
 			is_initialized := True
 		end
 		

@@ -19,12 +19,18 @@ feature {NONE} -- Initialization
 
 	make (l: CLASS_I) is
 			-- Create instance of a compiled class using 'l'.
-		local
-			l_reader: EIFFEL_XML_DESERIALIZER
 		do
 			Precursor {CLASS_C} (l)
 			is_external := True
+		end
+		
+feature -- Initialization
 
+	initialize_from_xml_data is
+			-- Read XML data and analyzes syntactical suppliers.
+		local
+			l_reader: EIFFEL_XML_DESERIALIZER
+		do
 				-- Initialize `external_class' which will be used later by
 				-- `initialize_from_xml_data', then it is discarded to save
 				-- some memory as we do not use it anymore.
@@ -40,40 +46,61 @@ feature {NONE} -- Initialization
 			is_expanded := external_class.is_expanded
 			is_enum := external_class.is_enum
 			is_frozen := external_class.is_frozen
-		end
-		
-feature -- Initialization
 
-	initialize_from_xml_data is
-			-- Read XML data and analyzes syntactical suppliers.
-		local
-			nb: INTEGER
-			l_feat_tbl: like feature_table
-			l_orig_tbl: SELECT_TABLE
-		do
 				-- Initializes inheritance structure
 			process_parents
 
 				-- Check if it is a nested type or not.
 			process_nesting
 
+				-- Initializes client/supplier relations.
+			process_syntax_features (external_class.fields)
+			process_syntax_features (external_class.constructors)
+			process_syntax_features (external_class.procedures)
+			process_syntax_features (external_class.functions)
+			
+				-- Remove further processing except degree_4 since we assume that
+				-- imported XML is correct.
+			degree_3.remove_class (Current)
+			degree_2.remove_class (Current)
+			degree_1.remove_class (Current)
+			System.degree_minus_1.remove_class (Current)
+		ensure
+			external_class_not_void: external_class /= Void
+			not_in_degree_3: not degree_3_needed
+			not_in_degree_2: not degree_2_needed
+			not_in_degree_1: not degree_1_needed
+			not_in_degree_minus_1: not degree_minus_1_needed
+		end
+		
+	process_degree_4 is
+			-- Read XML data and create feature table.
+		require
+			external_class_not_void: external_class /= Void
+		local
+			nb: INTEGER
+			l_feat_tbl: like feature_table
+			l_orig_tbl: SELECT_TABLE
+		do
 				-- Create data structures to hold features information.
 			nb := external_class.fields.count + external_class.constructors.count +
 				external_class.procedures.count + external_class.functions.count
+
 			create creators.make (external_class.constructors.count)
 			create l_feat_tbl.make (nb)
 			l_feat_tbl.set_feat_tbl_id (class_id)
 			create l_orig_tbl.make (nb)
 			l_feat_tbl.set_origin_table (l_orig_tbl)
-			
+
 				-- Initializes feature table.
 			process_features (l_feat_tbl, external_class.fields)
 			process_features (l_feat_tbl, external_class.constructors)
 			process_features (l_feat_tbl, external_class.procedures)
 			process_features (l_feat_tbl, external_class.functions)
-			
-				-- Update creators to Void when no creators are available.
-			if creators.count = 0 then
+
+				-- Update creators to Void when no creators are available
+				-- on an expanded class.
+			if creators.count = 0 and then is_expanded then
 				creators := Void
 			end
 
@@ -82,20 +109,19 @@ feature -- Initialization
 			
 				-- Create CLASS_INTERFACE instance
 			init_class_interface
-				-- FIXME: Manu 05/06/2002: we cannot do that yet as `initialize_from_xml_data'
-				-- is not called using a topological sort and not all parents of current class
-				-- have been processed yet
+
+				-- Topological sort has been done and therefore all parents of current class
+				-- have been processed yet.
 --			class_interface.process_features (l_feat_tbl)
 
 				-- Save freshly computed feature table on disk.
 			Tmp_feat_tbl_server.put (l_feat_tbl)
 			external_class := Void
-			
-			degree_4.remove_class (Current)
-			degree_3.remove_class (Current)
-			degree_2.remove_class (Current)
-			degree_1.remove_class (Current)
-			System.degree_minus_1.remove_class (Current)
+		ensure
+			external_class_void: external_class = Void
+			feature_table_not_void: feature_table /= Void
+			types_not_void: types /= Void
+			class_interface_not_void: class_interface /= Void
 		end
 		
 feature -- Access
@@ -118,6 +144,9 @@ feature {NONE} -- Initialization
 
 	process_parents is
 			-- Initialize inheritance clause of Current using `external_class'
+		require
+			system_object_not_void: System.system_object_class /= Void
+			system_object_compiled: System.system_object_class.is_compiled
 		local
 			parent_type: CL_TYPE_A
 			parent_class: CLASS_C
@@ -165,10 +194,60 @@ feature {NONE} -- Initialization
 				end
 			end
 			parents := pars
+		ensure
+			parents_not_void: parents /= Void
+			parents_filled: Current /= System.system_object_class.compiled_class implies parents.count > 0
 		end
 
+	process_syntax_features (a_features: ARRAY [CONSUMED_ENTITY]) is
+			-- Get all features and make sure all referenced types are in system.
+		require
+			a_features_not_void: a_features /= Void
+		local
+			l_member: CONSUMED_ENTITY
+			l_args: ARRAY [CONSUMED_ARGUMENT]
+			i, j, k, l, nb: INTEGER
+			l_external_type: CL_TYPE_A
+		do
+			from
+				i := a_features.lower
+				nb := a_features.upper
+			until
+				i > nb
+			loop
+				l_member := a_features.item (i)
+
+				if l_member.has_return_value then			
+					l_external_type := type_from_consumed_type (l_member.return_type)
+					add_syntactical_supplier (l_external_type)
+				end
+				
+				if l_member.has_arguments then
+					from
+						l_args := l_member.arguments
+						l := 0
+						j := l_args.lower
+						k := l_args.upper
+					until
+						j > k
+					loop
+						l_external_type := type_from_consumed_type (l_args.item (j).type)
+						add_syntactical_supplier (l_external_type)
+						l := l + 1
+						j := j + 1
+					end
+				end
+			
+				i := i + 1
+			end
+		end
+	
 	process_features (a_feat_tbl: like feature_table; a_features: ARRAY [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
+		require
+			a_feat_tbl_not_void: a_feat_tbl /= Void
+			has_origin_table: a_feat_tbl.origin_table /= Void
+			a_features_not_void: a_features /= Void	
 		local
 			l_member: CONSUMED_ENTITY
 			l_literal: CONSUMED_LITERAL_FIELD
@@ -431,7 +510,7 @@ feature {NONE} -- Initialization
 				l_result := l_assembly.dotnet_classes.item (l_name)
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
-						-- written as an Eiffel class, e.g. SYSTEM_OBJECT, INTEGER, ....
+						-- written as an Eiffel class, e.g. INTEGER, ....
 					if l_name.is_equal ("System.Byte") or l_name.is_equal ("System.SByte") then
 						l_result := System.integer_8_class
 					elseif l_name.is_equal ("System.Int16") or l_name.is_equal ("System.UInt16") then
@@ -557,6 +636,7 @@ feature {NONE} -- Initialization
 		end
 
 invariant
+	il_generation: System.il_generation
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 end -- class EXTERNAL_CLASS_C

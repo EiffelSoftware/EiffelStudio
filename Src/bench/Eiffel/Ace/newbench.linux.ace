@@ -209,6 +209,6 @@ external
 		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
 		"$(EIFFEL_SRC)/C_library/libpng/libpng.a",
 		"$(EIFFEL_SRC)/C_library/zlib/libz.a",
-		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
-		"-L/usr/X11R6/lib -lXt -lX11 -lXext -lXp -lSM -lICE -lXtst"
+		"$(EIFFEL_SRC)/C/minilzo/minilzo.o"
+
 end

@@ -129,27 +129,34 @@ feature -- Basic Operation
 			not_initialized: not initialized
 		local
 			i, nb, arg_count, index: INTEGER
-			fields: ARRAYED_LIST [CONSUMED_FIELD]
-			l_functions, l_other_functions: ARRAY [CONSUMED_FUNCTION]
+			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
+			l_functions, l_other_functions: ARRAYED_LIST [CONSUMED_FUNCTION]
+			l_procedures: ARRAYED_LIST [CONSUMED_PROCEDURE]
 			cf: CONSUMED_FIELD
 			cons: CONSTRUCTOR_INFO
 			field: FIELD_INFO
 			meth: METHOD_INFO
-			member: MEMBER_INFO	
-			overload_solver: OVERLOAD_SOLVER
+			l_property: PROPERTY_INFO
+			l_event: EVENT_INFO
+			member: MEMBER_INFO
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
-			l_events: ARRAY [CONSUMED_EVENT]
-			l_properties: ARRAY [CONSUMED_PROPERTY]
+			l_events: ARRAYED_LIST [CONSUMED_EVENT]
+			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
+			l_unic_eiffel_name: STRING
 		do
 			check
 				non_void_internal_members: internal_members /= Void
 				non_void_internal_constructors: internal_constructors /= Void
 			end
 			create tc.make
-			create fields.make (0)
+			create l_fields.make (0)
+			create l_functions.make (0)
+			create l_procedures.make (0)
+			create l_properties.make (0)
+			create l_events.make (0)
 			create reserved_names.make (100)
-			create overload_solver.make
 
+				-- Add constructors.
 			from
 				i := 0
 				nb := internal_constructors.count
@@ -163,6 +170,7 @@ feature -- Basic Operation
 				i := i + 1
 			end
 			
+				-- Add methods and fields.
 			from
 				i := 0
 				nb := internal_members.count
@@ -170,71 +178,100 @@ feature -- Basic Operation
 				i = nb
 			loop
 				member := internal_members.item (i)
-				if member.get_member_type = feature {MEMBER_TYPES}.field then
-					field ?= member
-					check
-						is_field: field /= Void
-					end
-					if is_consumed_field (field) then
-						fields.extend (consumed_field (field))						
-					end
-				elseif member.get_member_type = feature {MEMBER_TYPES}.method then
+				if member.get_member_type = feature {MEMBER_TYPES}.method then
 					meth ?= member
 					check
 						is_method: meth /= Void
 					end
 					if is_consumed_method (meth) then
-						overload_solver.add_method (meth)
+						if not is_property_or_event (meth) then
+							l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (meth.get_name))
+							if is_function (meth) then
+								l_functions.extend (consumed_function (meth, l_unic_eiffel_name))
+							else
+								l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
+							end
+						else
+							-- The method will be added at the same time than the property or the event.
+						end
+					end
+				elseif member.get_member_type = feature {MEMBER_TYPES}.field then
+					field ?= member
+					check
+						is_field: field /= Void
+					end
+					if is_consumed_field (field) then
+						l_fields.extend (consumed_field (field))						
 					end
 				end
 				i := i + 1
 			end
 
+				-- Add properties (also considered as method).
 			from
 				i := 0
 				nb := internal_properties.count
-				create l_properties.make (1, internal_properties.count)
 			until
 				i = nb
 			loop
-				l_properties.put (consumed_property (internal_properties.item (i)), i + 1)
+				l_property := internal_properties.item (i)
+				l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_property.get_name))
+				l_properties.extend (consumed_property (l_property, l_unic_eiffel_name))
+				if l_property.get_can_read then
+					meth := l_property.get_get_method
+					l_functions.extend (consumed_function (meth, l_unic_eiffel_name))
+				end
+				if l_property.get_can_write then
+					meth := l_property.get_set_method
+					l_procedures.extend (consumed_procedure (meth, "set_" + l_unic_eiffel_name))
+				end
 				i := i + 1
 			end
 
+				-- Add events (also considered as method).
 			from
 				i := 0
 				nb := internal_events.count
-				create l_events.make (1, internal_events.count)
 			until
 				i = nb
 			loop
-				l_events.put (consumed_event (internal_events.item (i)), i + 1)
+				l_event := internal_events.item (i)
+				l_unic_eiffel_name := unique_feature_name (create {STRING}.make_from_cil (l_event.get_name))
+				l_events.extend (consumed_event (l_event, l_unic_eiffel_name))
+				meth := l_event.get_raise_method
+				if meth /= Void then
+					l_procedures.extend (consumed_function (meth, l_unic_eiffel_name))
+				end
+				meth := l_event.get_add_method
+				if meth /= Void then
+					l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
+				end
+				meth := l_event.get_remove_method
+				if meth /= Void then
+					l_procedures.extend (consumed_procedure (meth, l_unic_eiffel_name))
+				end
 				i := i + 1
 			end
 
 			consumed_type.set_properties (l_properties)
 			consumed_type.set_events (l_events)
 			consumed_type.set_constructors (solved_constructors (tc))
-			consumed_type.set_fields (fields)
-			overload_solver.set_reserved_names (reserved_names)
-			overload_solver.solve
-			consumed_type.set_procedures (overload_solver.procedures)
-			l_functions := overload_solver.functions
+			consumed_type.set_fields (l_fields)
+			consumed_type.set_procedures (l_procedures)
 			if consumed_type.is_enum then
 				from
-					i := 1
 					l_other_functions := l_functions
-					nb := l_other_functions.count
-					create l_functions.make (1, nb + Additional_enum_features)
+					l_other_functions.start
+					create l_functions.make (nb + Additional_enum_features)
 				until
-					i > nb
+					l_other_functions.after
 				loop
-					l_functions.put (l_other_functions.item (i), i)
-					i := i + 1
+					l_functions.extend (l_other_functions.item)
+					l_other_functions.forth
 				end
-				l_functions.put (infix_or_feature (internal_referenced_type), i)
-				l_functions.put (from_integer_feature (internal_referenced_type), i + 1)
-				l_functions.put (to_integer_feature (internal_referenced_type), i + 2)
+				l_functions.extend (infix_or_feature (internal_referenced_type))
+				l_functions.extend (from_integer_feature (internal_referenced_type))
+				l_functions.extend (to_integer_feature (internal_referenced_type))
 			end
 			consumed_type.set_functions (l_functions)			
 			initialized := True
@@ -248,10 +285,11 @@ feature -- Basic Operation
 			non_void_events: consumed_type.events /= Void
 		end
 
+
 feature {NONE} -- Implementation
 
 	consumed_field (info: FIELD_INFO): CONSUMED_FIELD is
-			-- Eiffel attribute from `info'
+			-- Eiffel attribute from `info'.
 		require
 			non_void_field_info: info /= Void
 		local
@@ -290,10 +328,90 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY is
+	consumed_arguments (info: METHOD_BASE): ARRAY [CONSUMED_ARGUMENT] is
+			-- Argument of `info'.
+		require
+			non_void_method: info /= Void
+		local
+			i, count: INTEGER
+			en, dn: STRING
+			params: NATIVE_ARRAY [PARAMETER_INFO]
+			p: PARAMETER_INFO
+			t: TYPE
+		do
+			create Result.make (1, info.get_parameters.count)
+			params := info.get_parameters
+			from
+				i := 0
+				count := params.count
+			until
+				i >= count
+			loop
+				p := params.item (i)
+				create dn.make_from_cil (p.get_name)
+				en := formatted_argument_name (dn, i + 1)
+				if dn = Void or dn.is_empty then
+					dn := en.clone (en)
+				end
+				t := p.get_parameter_type
+				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,
+					referenced_type_from_type (t),
+					p.get_is_out or t.get_is_by_ref), i + 1)
+				i := i + 1
+			end
+		ensure
+			non_void_arguments: Result /= Void
+		end
+
+	consumed_procedure (info: METHOD_INFO; eiffel_procedure_name: STRING): CONSUMED_PROCEDURE is
+			-- Consumed procedure.
+		require
+			non_void_info: info /= Void
+			non_void_eiffel_procedure_name: eiffel_procedure_name /= Void
+			not_empty_eiffel_procedure_name: not eiffel_procedure_name.is_empty
+		local
+			l_arguments: ARRAYED_LIST [CONSUMED_ARGUMENT]
+		do
+			create Result.make (
+				eiffel_procedure_name,
+				create {STRING}.make_from_cil (info.get_name),
+				consumed_arguments (info),
+				info.get_is_final,
+				info.get_is_static,
+				info.get_is_abstract,
+				info.get_is_public,
+				is_property_or_event (info),
+				referenced_type_from_type (info.get_declaring_type))		
+		end
+	
+	consumed_function (info: METHOD_INFO; eiffel_function_name: STRING): CONSUMED_FUNCTION is
+			-- Consumed function.
+		require
+			non_void_info: info /= Void
+			non_void_eiffel_function_name: eiffel_functione_name /= Void
+			not_empty_eiffel_function_name: not eiffel_function_name.is_empty
+		do
+			create Result.make (
+				eiffel_function_name,
+				create {STRING}.make_from_cil (info.get_name),
+				consumed_arguments (info),
+				referenced_type_from_type (info.get_return_type),
+				info.get_is_final,
+				info.get_is_static,
+				info.get_is_abstract,
+				is_infix (info),
+				is_prefix (info),
+				info.get_is_public,
+				is_property_or_event (info),
+				referenced_type_from_type (info.get_declaring_type))			
+		end
+	
+	consumed_property (info: PROPERTY_INFO; eiffel_property_name: STRING): CONSUMED_PROPERTY is
 			-- Process property `info'.
 		require
 			non_void_property_info: info /= Void
+			non_void_eiffel_property_name: eiffel_property_name /= Void
+			not_empty_eiffel_property_name: not eiffel_property_name.is_empty
 		local
 			dotnet_name: STRING
 			l_info: METHOD_INFO
@@ -307,7 +425,7 @@ feature {NONE} -- Implementation
 			end
 			create dotnet_name.make_from_cil (info.get_name)
 			create Result.make (
-				unique_feature_name (dotnet_name),
+				eiffel_property_name,
 				dotnet_name,
 				info.get_can_read,
 				info.get_can_write,
@@ -319,16 +437,16 @@ feature {NONE} -- Implementation
 			non_void_property: Result /= Void
 		end
 		
-	consumed_event (info: EVENT_INFO): CONSUMED_EVENT is
+	consumed_event (info: EVENT_INFO; eiffel_event_name: STRING): CONSUMED_EVENT is
 			-- Process event `info'.
 		require
 			non_void_event_info: info /= Void
+			non_void_eiffel_event_name: eiffel_event_name /= Void
+			not_empty_eiffel_event_name: not eiffel_event_name.is_empty
 		local
 			l_add_method, l_remove_method, l_raise_method: METHOD_INFO
 			dotnet_name: STRING
 			l_raiser: CONSUMED_PROCEDURE
-			l_args: ARRAY [CONSUMED_ARGUMENT]
-			l_dotnet_args: NATIVE_ARRAY [PARAMETER_INFO]
 			i, nb: INTEGER
 			l_parameter_type: CONSUMED_REFERENCED_TYPE
 		do
@@ -336,27 +454,11 @@ feature {NONE} -- Implementation
 			l_remove_method := info.get_remove_method
 			l_raise_method := info.get_raise_method
 			if l_raise_method /= Void then
-				l_dotnet_args := l_raise_method.get_parameters
-				nb := l_dotnet_args.get_length
-				create l_args.make (1, nb + 1)
-				from
-					i := 0
-				until
-					i = nb
-				loop
-					create dotnet_name.make_from_cil (l_dotnet_args.item (i).get_name)
-					l_args.put (create {CONSUMED_ARGUMENT}.make (
-									dotnet_name,
-									formatted_variable_name (dotnet_name),
-									referenced_type_from_type (l_dotnet_args.item (i).get_parameter_type),
-									False), i + 1)
-					i := i + 1
-				end
 				create dotnet_name.make_from_cil (l_raise_method.get_name)
 				create l_raiser.make (
-					unique_feature_name (dotnet_name),
+					eiffel_event_name,
 					dotnet_name,
-					l_args,
+					consumed_arguments (l_raise_method),
 					l_raise_method.get_is_final,
 					l_raise_method.get_is_static,
 					l_raise_method.get_is_abstract,
@@ -371,7 +473,7 @@ feature {NONE} -- Implementation
 				l_parameter_type := referenced_type_from_type (l_remove_method.get_parameters.item (0).get_parameter_type)
 			end
 			create Result.make (
-				formatted_feature_name (dotnet_name),
+				eiffel_event_name,
 				dotnet_name,
 				True,
 				(l_add_method /= Void),
@@ -504,6 +606,80 @@ feature {NONE} -- Implementation
 	Complete_creation_routine_name_prefix: STRING is "make_from_"
 	Partial_creation_routine_name_prefix: STRING is "make_with_"
 			-- Creation routine name prefix
+
+feature {NONE} -- Status Setting.
+
+	is_property_or_event (info: METHOD_INFO): BOOLEAN is
+			-- Is `internal_method' a property or event related feature?
+		require
+			non_void_info: info /= Void
+		local
+			l_dotnet_name: STRING
+		do
+			create l_dotnet_name.make_from_cil (info.get_name)
+			Result := info.get_is_special_name and (
+				l_dotnet_name.substring_index ("set_", 1) = 1 or
+				l_dotnet_name.substring_index ("get_", 1) = 1 or
+				l_dotnet_name.substring_index ("add_", 1) = 1 or
+				l_dotnet_name.substring_index ("remove_", 1) = 1 or
+				l_dotnet_name.substring_index ("raise_", 1) = 1)
+		end
+
+	is_infix (info: METHOD_INFO): BOOLEAN is
+			-- Is function an infix function?
+		require
+			is_function: is_function (info)
+		do
+			Result := info.get_name.get_length > 3 and then
+						info.get_is_special_name and then
+						info.get_name.starts_with (Operator_name_prefix.to_cil) and then
+						info.get_parameters.item (0).get_parameter_type.equals_type (info.get_reflected_type)
+		end
+
+	is_prefix (info: METHOD_INFO): BOOLEAN is
+			-- Is function a prefix function?
+		require
+			is_function: is_function (info)
+		do
+			Result := info.get_name.get_length > 3 and then
+						info.get_is_special_name and then
+						info.get_name.starts_with (Operator_name_prefix.to_cil) and then
+						info.get_parameters.count = 1
+		end
+
+	is_function (info: METHOD_INFO): BOOLEAN is
+			-- Is method a function?
+		do
+			Result := not info.get_return_type.equals_type (Void_type)
+		end
+		
+	Void_type: TYPE is
+			-- Void .NET type
+		once
+			Result := feature {TYPE}.get_type_string (("System.Void").to_cil)
+		end
+
+	Operator_name_prefix: STRING is "op_"
+			-- Special prefix for .NET operators
+
+--	internal_is_prefix_set: BOOLEAN
+--			-- Was `internal_is_prefix' calculated?
+--	
+--	internal_is_prefix: BOOLEAN
+--			-- Cached value for `is_prefix'
+--	
+--	internal_is_infix_set: BOOLEAN
+--			-- Was `internal_is_infix' calculated?
+--		
+--	internal_is_infix: BOOLEAN
+--			-- Cached value for `is_infix'
+--	
+--	internal_is_function_set: BOOLEAN
+--			-- Was `internal_is_function' calculated?
+--	
+--	internal_is_function: BOOLEAN
+--			-- Cached value for `is_function'
+
 
 feature {NONE} -- Added features of System.Object to Interfaces
 

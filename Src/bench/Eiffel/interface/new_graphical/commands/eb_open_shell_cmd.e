@@ -128,22 +128,7 @@ feature {NONE} -- Implementation
 			if fn = Void then
 				target_string := ""
 			else
-				cwd := current_working_directory
-					--| Move to the "EIFGEN" directory and try to open
-					--| the file `fn', if it does not succeed, it means
-					--| that it was a relativ pathname and we need to make
-					--| it absolute
-				change_working_directory (Eiffelgen)
-				create file.make(fn)
-				if file.exists then 
-					change_working_directory (cwd)
-					target_string := fn
-				else
-					change_working_directory (cwd)
-					target_string := clone (fn)
-					target_string.prepend_character (Operating_environment.Directory_separator)
-					target_string.prepend (current_working_directory)
-				end
+				target_string := clone (fn)
 			end
 			cmd.replace_substring_all ("$target", target_string)
 		end

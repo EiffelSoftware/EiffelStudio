@@ -1,4 +1,7 @@
--- Enlarged byte code for manifest tuples
+indexing
+	description: "Enlarged byte code for manifest tuples"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TUPLE_CONST_BL
 
@@ -9,8 +12,8 @@ inherit
 			register, set_register, 
 			free_register, unanalyze
 		end;
-	SHARED_TABLE;
-	SHARED_DECLARATIONS;
+	SHARED_TABLE
+	SHARED_DECLARATIONS
 	
 feature 
 
@@ -153,46 +156,50 @@ feature {NONE} -- C code generation
 				metamorphosed := False
 				expr ?= expressions.item
 				actual_type := context.real_type (expr.type)
-				if actual_type.is_true_expanded then
-					expr.generate
-					metamorphose_reg.print_register
-					buf.putstring (" = RTCL(")
-					expr.print_register
-					buf.putstring (");")
-					buf.new_line
-					metamorphosed := True
-				else
-					expr.generate
-				end
-				-- Generate initializations of values.
-				buf.putstring ("((EIF_TYPED_ELEMENT *)")
-				print_register
-				buf.putchar('+');
-				buf.putint (i)
-				buf.putstring (")->element.")
-				buf.putstring (actual_type.c_type.union_tag)
-				buf.putstring (" = ")
-				if metamorphosed then
-					metamorphose_reg.print_register
-				else
-					expr.print_register
-				end
-				buf.putchar (';')
-				buf.new_line
-					-- Generation of the RTAS_OPT protection
-					-- since the array contains references
-				if not actual_type.is_basic then
-					buf.putstring ("RTAS(")
+					-- If `actual_type' is NONE, it means we are handling `Void'
+					-- and therefore nothing has to be done.
+				if not actual_type.is_none then
+					if actual_type.is_true_expanded then
+						expr.generate
+						metamorphose_reg.print_register
+						buf.putstring (" = RTCL(")
+						expr.print_register
+						buf.putstring (");")
+						buf.new_line
+						metamorphosed := True
+					else
+						expr.generate
+					end
+					-- Generate initializations of values.
+					buf.putstring ("((EIF_TYPED_ELEMENT *)")
+					print_register
+					buf.putchar('+');
+					buf.putint (i)
+					buf.putstring (")->element.")
+					buf.putstring (actual_type.c_type.union_tag)
+					buf.putstring (" = ")
 					if metamorphosed then
 						metamorphose_reg.print_register
 					else
 						expr.print_register
 					end
-					buf.putchar (',')
-					print_register
-					buf.putchar (')')
 					buf.putchar (';')
 					buf.new_line
+						-- Generation of the RTAS_OPT protection
+						-- since the array contains references
+					if not actual_type.is_basic then
+						buf.putstring ("RTAS(")
+						if metamorphosed then
+							metamorphose_reg.print_register
+						else
+							expr.print_register
+						end
+						buf.putchar (',')
+						print_register
+						buf.putchar (')')
+						buf.putchar (';')
+						buf.new_line
+					end
 				end
 				expressions.forth
 				i := i + 1

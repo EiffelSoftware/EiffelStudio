@@ -25,14 +25,16 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
 			create {LINKED_LIST [STRING]} eiffel_names.make
 			eiffel_names.compare_objects
-			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes.make
+			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_component.make
+			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_common.make
 		ensure
 			non_void_library_descriptors: library_descriptors /= Void
 			non_void_enumerators: enumerators /= Void
 			non_void_interfaces: interfaces /= Void
 			non_void_coclasses: coclasses /= Void
 			non_void_eiffel_names: eiffel_names /= Void
-			non_void_visible_classes: visible_classes /= Void
+			non_void_visible_classes_component: visible_classes_component /= Void
+			non_void_visible_classes_common: visible_classes_common /= Void
 		end
 
 feature -- Access
@@ -74,7 +76,10 @@ feature -- Access
 	coclasses: LIST [WIZARD_COCLASS_DESCRIPTOR]
 			-- List of coclasses in system.
 
-	visible_classes: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
+	visible_classes_component: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
+			-- List of visible classes in system.
+
+	visible_classes_common: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
 			-- List of visible classes in system.
 
 	is_iunknown: BOOLEAN
@@ -167,12 +172,20 @@ feature -- Basic operations
 			coclasses.force (a_coclass)
 		end
 
-	add_visible_class (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
-			-- Add `a_class to `visible_classes
+	add_visible_class_component (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+			-- Add `a_class' to `visible_classes_component'
 		require
 			non_void_descriptor: a_class /= Void
 		do
-			visible_classes.force (a_class)
+			visible_classes_component.force (a_class)
+		end
+
+	add_visible_class_common (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+			-- Add `a_class' to `visible_classes_common'
+		require
+			non_void_descriptor: a_class /= Void
+		do
+			visible_classes_common.force (a_class)
 		end
 
 	start is

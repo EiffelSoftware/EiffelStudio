@@ -41,14 +41,13 @@ feature {NONE}
 			pw: OPEN_PROJ_WIN
 		do
 			if not main_panel.project_initialized then
-				!!pw.make (main_panel.base)
-				pw.popup
+				popup_window
 			else
-				if not history_window.saved_application then
+				if history_window.saved_application then
+					popup_window
+				else
 					question_box.popup (Current, 
 						Messages.save_project_qu, Void)
-				else
-					open_new_application
 				end
 			end
 		end
@@ -63,8 +62,7 @@ feature {NONE}
 				if yes then
 					open_new_application
 				else
-					!!pw.make (main_panel.base) 
-					pw.popup
+					popup_window
 				end
 			end
 		end
@@ -74,14 +72,20 @@ feature {NONE}
 			save_proj: SAVE_PROJECT;
 			pw: OPEN_PROJ_WIN
 		do
-			if main_panel.project_initialized then
-				!!save_proj
-				save_proj.execute (Void)
-			end
+			!!save_proj;
+			save_proj.execute (Void);
 			if save_proj.completed then
-				!!pw.make (main_panel.base)
+				!!pw.make (main_panel.base) 
 				pw.popup
-			end
+			end;
 		end
+
+	popup_window is
+		local
+			pw: OPEN_PROJ_WIN;
+		do
+			!!pw.make (main_panel.base)
+			pw.popup
+		end;
 
 end

@@ -62,9 +62,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_editors_for_name_change (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR) is
-			-- For all editors referencing `vision2_object', update `name'.
-			-- If you wish to update all editors, pass `Void' as `calling_object_editor'.
+	update_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
+			-- For all editors referencing `vision2_object', update by calling `p' on the editor.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			local_item: GB_OBJECT_EDITOR
@@ -79,7 +78,8 @@ feature {NONE} -- Implementation
 					-- We must only update the other editors referencing `vision2_object', not `calling_object_editor'.
 					-- If `local_item' `object' is `Void' then the editor is empty, so there is nothing to do.
 				if local_item /= calling_object_editor and then local_item.object /= Void and then local_item.object.object = vision2_object then
-					local_all_editors.item.update_name_field
+					--local_all_editors.item.update_event_selection_button_text
+					p.call ([local_all_editors.item])
 				end
 				local_all_editors.forth
 			end

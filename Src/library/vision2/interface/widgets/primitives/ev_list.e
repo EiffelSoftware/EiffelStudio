@@ -141,10 +141,10 @@ feature -- Status setting
 
 feature -- Event handling
 
-	select_actions: EV_ITEM_SELECT_ACTION_SEQUENCE
+	select_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed when an item is selected. 
 
-	deselect_actions: EV_ITEM_SELECT_ACTION_SEQUENCE
+	deselect_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deselected.
 
 feature {NONE} -- Implementation
@@ -205,6 +205,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/06 20:15:23  king
+--| Changed action sequence types
+--|
 --| Revision 1.38  2000/03/02 17:58:54  rogers
 --| Added initial make_for_test. Currently very basic.
 --|

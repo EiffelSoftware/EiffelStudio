@@ -128,10 +128,10 @@ feature -- Status report
 
 feature -- Event handling
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+	select_actions: EV_TREE_ITEM_SELECT_ACTION_SEQUENCE
 		-- Actions performed when a tree item is selected.
 
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+	deselect_actions: EV_TREE_ITEM_SELECT_ACTION_SEQUENCE
 		-- Actions performed when a tree item is deselected.
 
 feature {NONE} -- Implementation
@@ -179,6 +179,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/06 20:16:23  king
+--| Changed action sequence types
+--|
 --| Revision 1.26  2000/03/02 22:08:57  king
 --| Made 80 cols or less
 --|

@@ -843,11 +843,8 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WINDOW_SELECTOR, GB_C
 			layout_item.prune_all (an_object.layout_item)
 			remove_child_from_children (an_object)
 			
-			
-			
 				-- Notify the system that we have modified something.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
 			not_contained: not children.has (an_object)
 		end

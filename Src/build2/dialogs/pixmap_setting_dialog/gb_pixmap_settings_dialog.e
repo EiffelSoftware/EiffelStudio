@@ -379,8 +379,7 @@ feature {NONE} -- Implementation
 			create add_constant_command.make (pixmap_constant)
 			add_constant_command.execute	
 				-- Update project to reflect change.
-			system_status.enable_project_modified
-			command_handler.update
+			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		
 				-- Now hide `Current'.
 			hide
@@ -419,8 +418,7 @@ feature {NONE} -- Implementation
 			create add_constant_command.make (pixmap_constant)
 			add_constant_command.execute	
 				-- Update project to reflect change.
-			system_status.enable_project_modified
-			command_handler.update
+			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		
 				-- Now hide `Current'.
 			hide

@@ -90,6 +90,7 @@ feature -- Basic operation
 		do
 				-- Flag to the system that a load is now underway.
 			System_status.enable_loading_project
+			;(create {GB_GLOBAL_STATUS}).block
 			
 			initialize_load_output
 
@@ -129,6 +130,7 @@ feature -- Basic operation
 			
 				-- Flag to the system that a load is no longer underway.
 			System_status.disable_loading_project
+			;(create {GB_GLOBAL_STATUS}).resume
 		end
 
 feature {GB_OBJECT_HANDLER} -- Implementation

@@ -174,8 +174,7 @@ feature -- Basic operation
 			end
 			
 				-- Notify the system that we have modified something.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
 			new_object_layout_item_not_void: new_object.layout_item /= Void
 			new_object_display_object_not_void: new_object.display_object /= Void
@@ -949,8 +948,7 @@ feature -- Basic operation
 				some_objects.forth
 			end
 				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	reset_deleted_objects is

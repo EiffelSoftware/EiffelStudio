@@ -492,8 +492,7 @@ feature {NONE} -- Implementation
 				if current_text_field.foreground_color.is_equal (black) then
 						-- Allow a user to save again, as the text has changed to something valid.
 						-- Checking the color is the easiest way to do this.
-					system_status.enable_project_modified
-					command_handler.update
+					(create {GB_GLOBAL_STATUS}).mark_as_dirty
 				end
 			else
 				undo_last_character (current_text_field)
@@ -593,8 +592,7 @@ feature {NONE} -- Implementation
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
 				-- options.
-			system_status.enable_project_modified
-			command_handler.update
+			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 				-- We do this here as when the update is locked,
 				-- there appears to be problems.
 				

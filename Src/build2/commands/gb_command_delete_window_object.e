@@ -112,8 +112,8 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
-			System_status.enable_project_modified
-			command_handler.update
+			
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 
 	undo is

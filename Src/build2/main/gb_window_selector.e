@@ -356,9 +356,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 				delete_objects_in_directory (a_directory)
 			end
 
-				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 	delete_objects_in_directory (a_directory: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
@@ -500,8 +498,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 				end
 			end
 				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
 --			count_increased: implies old an_object.layout_item = Void implies count = old count + 1
 				-- Only if we were not moving internally as determined by whether the layout item
@@ -934,8 +931,7 @@ feature {GB_COMMAND_ADD_WINDOW, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementati
 		do
 			titled_window_object.set_as_root_window
 				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
+			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
 			root_window_set: object_handler.root_window_object = titled_window_object
 		end
@@ -980,8 +976,7 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 				parent_directory.add_alphabetically (directory_item)
 			end
 				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
+			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		ensure
 			--count_increaed: count = old count + 1
 		end
@@ -1029,8 +1024,7 @@ feature {GB_SET_ROOT_WINDOW_COMMAND}
 			end
 			titled_window_object.set_as_root_window
 				-- Update project so it may be saved.
-			system_status.enable_project_modified
-			command_handler.update
+			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
 feature {GB_OBJECT} -- Implementation
@@ -1279,8 +1273,7 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 						command_add_directory.create_new_directory
 						if command_add_directory.directory_added_succesfully then
 							command_add_directory.execute
-							system_status.enable_project_modified
-							command_handler.update
+							;(create {GB_GLOBAL_STATUS}).mark_as_dirty
 						end
 					end
 					internal_include_all_directories (iterated_directory, represented_path)
@@ -1338,8 +1331,7 @@ feature {GB_WINDOW_SELECTOR_TOOL_BAR} -- Implementation
 				command_add_directory.create_new_directory
 				if command_add_directory.directory_added_succesfully then
 					command_add_directory.execute
-					system_status.enable_project_modified
-					command_handler.update	
+					;(create {GB_GLOBAL_STATUS}).mark_as_dirty	
 				end
 			end
 		rescue

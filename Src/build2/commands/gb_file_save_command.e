@@ -75,8 +75,7 @@ feature -- Basic operations
 				system_status.current_project_settings.save
 				xml_handler.save
 					-- Notify the system that the saved version is now up to date.
-				system_status.disable_project_modified
-				command_handler.update
+				;(create {GB_GLOBAL_STATUS}).mark_as_clean
 			end
 
 end -- class GB_FILE_SAVE_COMMAND

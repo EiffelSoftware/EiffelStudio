@@ -79,6 +79,18 @@ feature -- Status Report
 		deferred
 		end
 
+	managed: BOOLEAN is
+			-- Is the current widget managed ?
+		local
+			wid: EV_WIDGET
+		do
+			wid ?= interface
+			check
+				valid_cast: wid /= Void
+			end
+			Result := wid.managed
+		end
+
 	shown: BOOLEAN is
 			-- Is current widget visible?
 		require

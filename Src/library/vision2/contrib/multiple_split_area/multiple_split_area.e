@@ -293,7 +293,7 @@ feature -- Status setting
 			if Platform_is_windows then
 				holder.remove_simulated_height
 			else
-				create reset_timer.make_with_interval (100)
+				create reset_timer.make_with_interval (250)
 				reset_timer.actions.extend (agent remove_tool_minimum_height (holder, reset_timer))
 			end
 		end
@@ -666,7 +666,7 @@ feature -- Status setting
 				all_holders.forth
 			end
 			desired_height := desired_height + (non_minimized_count - 1) * splitter_width
-			if height = minimum_height then
+			if not platform_is_windows and then height <= minimum_height + 1 then
 						-- This is a hack to retrieve correct height for gtk
 				(create {EV_ENVIRONMENT}).application.process_events
 			end

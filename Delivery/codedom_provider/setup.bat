@@ -29,16 +29,6 @@ CD ..\..\vision2\clib
 REM in "checkout\library\vision2\clib"
 CALL make_msc.bat
 
-ECHO Compiling EiffelCOM C library
-CD ..\..\com\clib
-REM in "checkout\library\com\clib"
-CALL make_msc.bat
-
-ECHO Compiling EiffelCOM C Runtime library
-CD ..\clib_runtime
-REM in "checkout\library\com\clib_runtime"
-CALL make_msc.bat
-
 ECHO Compiling CLI writer
 CD ..\..\..\Eiffel\library\cli_writer\Clib
 REM in "checkout\Eiffel\library\cli_writer\clib"
@@ -59,12 +49,4 @@ ECHO Setting up documentation manager
 CD dotnet\VisualStudio\tools\documentation_manager\
 REM in "checkout\dotnet\VisualStudio\tools\documentation_manager"
 CALL make_client
-CD ..\..\..\..\
-REM in "checkout"
-
-ECHO Compiling compiler
-CD com_compiler
-REM in "checkout\com_compiler"
-CALL make.bat /dll
-
-CD ..\..
+CD ..\..\..\..\..

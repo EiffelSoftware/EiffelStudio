@@ -56,8 +56,6 @@ feature {NONE} -- Implementation
 							-- Get the arguments
 						appl_name.extend (' ');
 						appl_name.append (arguments);
-						Execution_environment.put (Workbench_generation_path, 
-										"MELT_PATH");
 						!! cmd_exec;
 						cmd_exec.execute (appl_name);
 					end;

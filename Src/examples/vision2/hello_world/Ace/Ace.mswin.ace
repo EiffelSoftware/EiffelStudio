@@ -3,7 +3,7 @@ system
 
 root
 
-	hello_world (main): "make"
+	hello_world (ROOT_CLUSTER): "make"
 
 default
 
@@ -15,7 +15,6 @@ cluster
 --------------- Example clusters
 
 	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\hello_world"
-
 
 ------------------------ EiffelBase and WindowEiffelLibrary:
 

@@ -58,6 +58,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_FIND_FLAGS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_id
@@ -226,6 +231,12 @@ feature -- Status report
 			Result := stream.text
 		end
 
+	count: INTEGER is
+			-- Length of text.
+		do
+			Result := cwin_send_message_result (item, Wm_gettextlength, 0, 0)
+		end
+
 feature -- Status setting
 
 	set_selection (start_position, end_position: INTEGER) is
@@ -237,9 +248,12 @@ feature -- Status setting
 			!! range.make (start_position, end_position)
 			cwin_send_message (item, Em_exsetsel, 0,
 				range.to_integer)
-			if scroll_caret_at_selection then
-				cwin_send_message (item, Em_scrollcaret, 0, 0)
-			end
+		end
+
+	move_to_selection is
+			-- Move the selected text to be visible
+		do
+			cwin_send_message (item, Em_scrollcaret, 0, 0)
 		end
 
 	set_text_limit (limit: INTEGER) is
@@ -489,11 +503,28 @@ feature -- Basic operations
 		end
 
 	show_selection is
-			-- Show the selection.
+			-- Show selection.
 		require
 			exists: exists
 		do
 			cwin_send_message (item, Em_hideselection, 0, 0)
+		end
+
+	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+			-- Find `text_to_find' in WEL_RICH_EDIT
+		local
+			find_text: WEL_FIND_ARGUMENT
+			range: WEL_CHARACTER_RANGE
+			flags: INTEGER
+		do
+			!! range.make (start_from, count)
+			!! find_text.make (range, text_to_find)
+
+			if match_case then
+				flags := Fr_matchcase
+			end
+
+			Result := cwin_send_message_result (item, Em_findtextex, flags , find_text.to_integer)
 		end
 
 feature -- Element change

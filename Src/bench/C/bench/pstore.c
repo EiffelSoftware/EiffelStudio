@@ -27,6 +27,7 @@
 #include "rt_compress.h"
 #include "rt_gen_types.h"
 #include "rt_globals.h"
+#include "rt_assert.h"
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -285,12 +286,15 @@ rt_private void parsing_store_write(void)
 {
 	RT_GET_CONTEXT
 	char* cmps_out_ptr = cmps_general_buffer;
-	unsigned int cmps_out_size = cmp_buffer_size;
+	lzo_uint cmps_out_size = (lzo_uint) cmp_buffer_size;
 	int signed_cmps_out_size;
 	
+	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
+	REQUIRE("current_position not too big", current_position <= 0xFFFFFFFF);
+
 	lzo1x_1_compress (
 					(unsigned char *) general_buffer,		/* Current buffer location */
-					current_position,	/* Current buffer size */
+					(lzo_uint) current_position,	/* Current buffer size */
 					(unsigned char *) cmps_out_ptr,		/* Output buffer for compressed data */
 					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
 					wrkmem);			/* Memory allocator */
@@ -324,13 +328,16 @@ rt_private void parsing_compiler_write(void)
 {
 	RT_GET_CONTEXT
 	char* cmps_out_ptr = cmps_general_buffer;
-	unsigned int cmps_out_size = cmp_buffer_size;
+	lzo_uint cmps_out_size = (lzo_uint) cmp_buffer_size;
 	int signed_cmps_out_size;
 	int number_written;
+
+	REQUIRE("buffer_size not too big", cmp_buffer_size <= 0xFFFFFFFF);
+	REQUIRE("current_position not too big", current_position <= 0xFFFFFFFF);
 	
 	lzo1x_1_compress (
 					(unsigned char *) general_buffer,		/* Current buffer location */
-					current_position,	/* Current buffer size */
+					(lzo_uint) current_position,	/* Current buffer size */
 					(unsigned char *) cmps_out_ptr,		/* Output buffer for compressed data */
 					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
 					wrkmem);			/* Memory allocator */

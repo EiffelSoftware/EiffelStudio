@@ -30,7 +30,7 @@ rt_private void shword(char *cmd, int *argc, char ***argvp);
 
 rt_public void get_argcargv (int *argc, char ***argv)
 {
-	int tl;
+	size_t tl;
 	temp = strdup (GetCommandLine());
 
 		/* Only for Application that are launched from EiffelBench:

@@ -144,7 +144,7 @@ rt_public void eif_show_console(void)
 				 *  duplicate the handle, unfortunately the solution does not work
 				 *  with Microsoft which explains the ifdef statement.
 				 */
-			hCrt = _open_osfhandle ((long) eif_conout, _O_TEXT);
+			hCrt = _open_osfhandle ((intptr_t) eif_conout, _O_TEXT);
 #ifdef EIF_BORLAND
 			dup2 (hCrt, _fileno(stdout));
 #else
@@ -152,7 +152,7 @@ rt_public void eif_show_console(void)
 			*stdout = *hf;
 #endif
 
-			hCrt = _open_osfhandle ((long) eif_conerr, _O_TEXT);
+			hCrt = _open_osfhandle ((intptr_t) eif_conerr, _O_TEXT);
 #ifdef EIF_BORLAND
 			dup2 (hCrt, _fileno(stderr));
 #else
@@ -161,7 +161,7 @@ rt_public void eif_show_console(void)
 #endif
 
 
-			hCrt = _open_osfhandle ((long) eif_conin, _O_TEXT | _O_RDONLY);
+			hCrt = _open_osfhandle ((intptr_t) eif_conin, _O_TEXT | _O_RDONLY);
 #ifdef EIF_BORLAND
 			dup2 (hCrt, _fileno(stdin));
 #else

@@ -54,6 +54,8 @@ public bool_t idr_Request();
 	{ ACCESS, idr_Opaque },
 	{ WEAN, idr_Opaque },
 	{ ONCE, idr_Opaque },
+	{ SP_LOWER, idr_Opaque },
+	{ SP_UPPER, idr_Opaque },
 	{ __dontcare__, idr_void },
 };
 

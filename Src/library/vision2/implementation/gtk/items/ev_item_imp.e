@@ -36,19 +36,29 @@ inherit
 			pointer_motion_actions,
 			pointer_button_press_actions,
 			pointer_double_press_actions,
-			needs_event_box
+			needs_event_box,
+			destroy
 		redefine
 			button_press_switch,
 			create_pointer_button_press_actions,
 			create_pointer_double_press_actions,
 			pointer_motion_actions_internal,
 			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			pointer_double_press_actions_internal,
+			destroy
 		end
 
 	EV_PIXMAPABLE_IMP
 		redefine
 			interface
+		end
+
+	EV_ANY_IMP
+		undefine
+			needs_event_box
+		redefine
+			interface,
+			destroy
 		end
 
 feature {NONE} -- Initialization
@@ -111,6 +121,17 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 feature {EV_ANY_IMP} -- Implementation
+
+	destroy is
+			-- Destroy `Current'
+		do
+			if not is_destroyed then
+				if parent_imp /= Void then
+						parent_imp.interface.prune_all (interface)
+				end
+				Precursor {EV_ANY_IMP}
+			end
+		end
 
 	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 		-- Used to store parent imp of items where parent stores

@@ -57,6 +57,27 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+		
+	cancel_actions: EV_PND_ACTION_SEQUENCE is
+			-- Actions to be performed when a PND is cancelled.
+		do
+			Result := implementation.cancel_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
+		
+	pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
+			-- Actions to be performed when screen pointer is moved,
+			-- during a pick and drop. The "pick and drop" argument
+			-- is the current EV_ABSTRACT_PICK_AND_DROPABLE below the
+			-- pointer position, or Void if the `drop_actions' for this
+			-- item are empty.
+		do
+			Result := implementation.pnd_motion_actions
+		ensure
+			not_void: Result /= Void
+		end	
 
 end
 

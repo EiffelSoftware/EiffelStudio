@@ -198,7 +198,7 @@ feature -- Element change
 			-- `maximum'.
 		require
 			window_exists: window.exists
-			consistent_range: minimum < maximum
+			consistent_range: minimum <= maximum
 		do
 			window.set_horizontal_range (minimum, maximum)
 		ensure
@@ -214,7 +214,7 @@ feature -- Element change
 			-- `maximum'.
 		require
 			window_exists: window.exists
-			consistent_range: minimum < maximum
+			consistent_range: minimum <= maximum
 		do
 			window.set_vertical_range (minimum, maximum)
 		ensure
@@ -296,8 +296,10 @@ feature -- Basic operations
 			end
 			if pos > maximal_horizontal_position then
 				pos := maximal_horizontal_position
+				inc :=  maximal_horizontal_position - horizontal_position
 			elseif pos < minimal_horizontal_position then
 				pos := minimal_horizontal_position
+				inc := minimal_horizontal_position - horizontal_position
 			end
 			if pos /= horizontal_position then
 				horizontal_update (-inc, pos)
@@ -338,8 +340,10 @@ feature -- Basic operations
 			end
 			if pos > maximal_vertical_position then
 				pos := maximal_vertical_position
+				inc :=  maximal_vertical_position - vertical_position 
 			elseif pos < minimal_vertical_position then
 				pos := minimal_vertical_position
+				inc := minimal_vertical_position - vertical_position
 			end
 			if pos /= vertical_position then
 				vertical_update (-inc, pos)
@@ -397,10 +401,10 @@ invariant
 		vertical_position >= minimal_vertical_position
 	consistent_horizontal_range:
 		window.exists implies
-		minimal_horizontal_position < maximal_horizontal_position
+		minimal_horizontal_position <= maximal_horizontal_position
 	consistent_vertical_range:
 		window.exists implies
-		minimal_vertical_position < maximal_vertical_position
+		minimal_vertical_position <= maximal_vertical_position
 	positive_horizontal_line: horizontal_line >= 0
 	positive_vertical_line: vertical_line >= 0
 	positive_horizontal_page: horizontal_page >= 0

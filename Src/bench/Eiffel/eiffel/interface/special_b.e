@@ -124,7 +124,7 @@ feature -- Code generation
 					boolean_dtype := dtype
 				elseif gen_param.is_feature_pointer then
 					pointer_dtype := dtype
-				else
+				elseif not gen_param.is_expanded then
 					ref_dtype := dtype
 				end
 				types.forth

@@ -38,17 +38,19 @@ feature {NONE} -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ANY_IMP
+			a_c_object: POINTER
 		do
 			
 			v_imp ?= v.implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
-			C.gtk_container_add (list_widget, v_imp.c_object)
+			a_c_object := v_imp.c_object
+			C.gtk_container_add (list_widget, a_c_object)
 			if i < count then
-				gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
+				gtk_reorder_child (list_widget, a_c_object, i - 1)
 			end
-			update_child_requisition (v_imp.c_object)
+			update_child_requisition (a_c_object)
 			on_new_item (v)
 		end
 

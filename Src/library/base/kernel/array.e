@@ -72,7 +72,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	frozen item, frozen infix "@", entry (i: INTEGER): G is
 			-- Entry at index `i', if in index interval.
 		do
 			Result := area.item (i - lower);
@@ -221,7 +221,7 @@ feature -- Status report
 
 feature -- Element change
  
-	put (v: G; i: INTEGER) is
+	frozen put, enter (v: G; i: INTEGER) is
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
 			area.put (v, i - lower);
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 	
 	empty_area: BOOLEAN is
 		do
-			Result := area.count = 0
+			Result := area = Void or else area.count = 0
 		end;
 
 invariant

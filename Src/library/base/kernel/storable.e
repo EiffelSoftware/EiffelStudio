@@ -90,6 +90,20 @@ feature -- Element change
 			c_general_store (file.handle, $Current)
 		end
 
+	independent_store (file: IO_MEDIUM) is
+			-- Produce on `file' an external representation of the
+			-- entire object structure reachable from current object.
+			-- Retrievable from other systems regardless of platform
+			-- (machine architecture).
+		require
+			file_not_void: file /= Void;
+			file_exists: file.exists;
+			file_is_open_write: file.is_open_write
+			file_is_binary: not file.is_plain_text
+		do
+			c_independent_store (file.handle, $Current)
+		end
+
 	store_by_name (file_name: STRING) is
 			-- Produce on file called `file_name' an external
 			-- representation of the entire object structure 
@@ -142,6 +156,15 @@ feature {NONE} -- Implementation
 			"C"
 		alias
 			"eestore"
+		end;
+
+	c_independent_store (file_handle: INTEGER; object: STORABLE) is
+			-- Store object structure reachable form current object
+			-- in file pointer `file_ptr'.
+		external
+			"C"
+		alias
+			"sstore"
 		end;
 
 end -- class STORABLE

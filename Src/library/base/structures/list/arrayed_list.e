@@ -89,7 +89,7 @@ class ARRAYED_LIST [G] inherit
 
 creation
 
-	make
+	make, make_filled
 
 feature -- Initialization
 
@@ -100,9 +100,22 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			array_make (1, n)
+		ensure
+			correct_position: before
+		end;
+
+	make_filled (n: INTEGER) is
+			-- Allocate list with `n' items.
+			-- (`n' may be zero for empty list.)
+			-- This list will be full.
+		require
+			valid_number_of_items: n >= 0
+		do
+			array_make (1, n)
 			count := n
 		ensure
 			correct_position: before
+			filled: full
 		end;
 
 feature -- Access
@@ -579,7 +592,6 @@ feature {NONE} --Internal
 
 invariant
 
-	not_full: not full;
 	prunable: prunable;
 		
 end -- class ARRAYED_LIST

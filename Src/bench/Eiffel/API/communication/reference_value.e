@@ -7,7 +7,8 @@ inherit
 			set_hector_addr
 		end;
 	OBJECT_ADDR;
-	SHARED_DEBUG
+	SHARED_DEBUG;
+	CHARACTER_ROUTINES
 
 creation
 	make
@@ -75,26 +76,7 @@ feature
 					until
 						i > value.count
 					loop
-						inspect value.item (i)
-						when '%N' then
-							string_value.append ("%%N");
-						when '%U' then
-							string_value.append ("%%U");
-						when '%B' then
-							string_value.append ("%%B");
-						when '%F' then
-							string_value.append ("%%F");
-						when '%R' then
-							string_value.append ("%%R");
-						when '%%' then
-							string_value.append ("%%%%");
-						when '%'' then
-							string_value.append ("%%%'");
-						when '%"' then
-							string_value.append ("%%%"");
-						else
-							string_value.extend (value.item (i))
-						end;
+						string_value.append (char_text (value.item (i)));
 						i := i + 1
 					end;
 					string_value.extend ('%"')

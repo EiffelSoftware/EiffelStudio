@@ -145,7 +145,7 @@ feature -- Status report
 			Result := cwin_send_message_result (item,
 				Tcm_getcursel, 0, 0)
 		ensure
-			consistent_result: Result >= 0 and Result < count
+			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
 
 	selected_window: WEL_WINDOW is

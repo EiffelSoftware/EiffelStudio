@@ -604,10 +604,12 @@ feature -- Debugging events
 			debug ("debugger_interface")
 				io.putstring ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
-			create st.make (1)
 			object_tool.disable_refresh
-			if st.is_valid then
-				launch_stone (st)
+			if not Application.call_stack_is_empty then
+				create st.make (1)				
+				if st.is_valid then
+					launch_stone (st)
+				end
 			end
 			object_tool.enable_refresh
 			window_manager.quick_refresh_all

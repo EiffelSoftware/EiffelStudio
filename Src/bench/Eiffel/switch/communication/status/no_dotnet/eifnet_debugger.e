@@ -21,4 +21,11 @@ feature -- Access
 		do
 		end
 
+ 	generating_type_value_from_object_value (a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
+ 				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE): STRING is
+			-- ANY.generating_)type: STRING evaluation result
+		do
+		end
+		
+
 end

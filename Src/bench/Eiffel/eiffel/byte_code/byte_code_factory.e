@@ -62,6 +62,7 @@ feature {NONE} -- Implementation: status report
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_string_b: STRING_B
+			l_type_expr_b: TYPE_EXPR_B
 		do
 			if
 				System.il_generation and
@@ -70,6 +71,12 @@ feature {NONE} -- Implementation: status report
 					-- Case of .NET string to Eiffel string conversion.
 				l_string_b ?= a_expr
 				Result := l_string_b /= Void
+			elseif
+				System.il_generation and then
+				(a_source_type.associated_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
+			then
+				l_type_expr_b ?= a_expr
+				Result := l_type_expr_b /= Void
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				Result := True
 			elseif is_from_conversion then
@@ -90,13 +97,14 @@ feature {NONE} -- Implementation: Byte node
 			is_basic_conversion: is_basic_conversion (a_expr, a_source_type, a_target_type, is_from_conversion)
 		local
 			l_string_b: STRING_B
+			l_type_expr_b: TYPE_EXPR_B
 			l_hector_b: HECTOR_B
 			l_feat: FEATURE_I
 			l_basic_i: BASIC_I
 			l_ref: CL_TYPE_I
 		do
 			if
-				System.il_generation and
+				System.il_generation and then
 				(a_source_type.same_as (String_type) and a_target_type.same_as (System_string_type))
 			then
 				l_string_b ?= a_expr
@@ -105,6 +113,16 @@ feature {NONE} -- Implementation: Byte node
 				end
 				l_string_b.set_is_dotnet_string (True)
 				Result := l_string_b
+			elseif
+				System.il_generation and then
+				(a_source_type.associated_class = System.type_class.compiled_class and a_target_type.same_as (System_type_type))
+			then
+				l_type_expr_b ?= a_expr
+				check
+					l_type_expr_b_not_void: l_type_expr_b /= Void
+				end
+				l_type_expr_b.set_is_dotnet_type (True)
+				Result := l_type_expr_b
 			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
 				l_hector_b ?= a_expr
 				if l_hector_b /= Void then
@@ -226,6 +244,16 @@ feature {NONE} -- Implementation: Access
 			Result := System.system_string_class.compiled_class.actual_type
 		ensure
 			system_string_type_not_void: Result /= Void
+		end
+
+	system_type_type: CL_TYPE_A is
+			-- Type of STRING class.
+		require
+			is_il_generation: System.il_generation
+		once
+			Result := System.system_type_class.compiled_class.actual_type
+		ensure
+			system_type_type_not_void: Result /= Void
 		end
 
 end -- class BYTE_CODE_FACTORY

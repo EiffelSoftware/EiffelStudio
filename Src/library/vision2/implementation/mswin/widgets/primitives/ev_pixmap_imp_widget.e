@@ -22,7 +22,7 @@ inherit
 			destroy, set_minimum_height, set_minimum_size,
 			disable_capture, pointer_position, start_transport, 
 			enable_transport, pointer_style, tooltip,
-			end_transport, enable_capture, minimum_height, position_set, 
+			end_transport, enable_capture, minimum_height,
 			hide 
 		redefine
 			interface, initialize,
@@ -784,6 +784,9 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/06/08 18:59:37  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.9  2000/06/08 18:46:51  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

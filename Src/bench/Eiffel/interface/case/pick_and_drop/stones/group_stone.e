@@ -23,7 +23,7 @@ creation
 
 feature -- Initialization
 
-	make (list: like group_list; sel_stone: STONE) is
+	make (list: like group_list; sel_stone: EC_STONE) is
 			-- Set group_list to `list' and 
 			-- selected_stone to `sel_stone'.
 		require

@@ -13,7 +13,7 @@ inherit
 
 	EV_COMMAND
 
-	STONE_TYPES
+	EC_STONE_TYPES
 		
 creation
 

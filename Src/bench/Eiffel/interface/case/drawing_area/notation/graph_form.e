@@ -28,7 +28,7 @@ feature -- Properties
 	data: DATA
 			-- Data associated with Current graphical figure
 
-	stone: STONE is
+	stone: EC_STONE is
 			-- Stone associated with Current
 		deferred
 		end

@@ -37,7 +37,7 @@ feature -- Element change
 		deferred
 		end;
 
-	append_clickable_string (st: STONE; str: STRING) is
+	append_clickable_string (st: EC_STONE; str: STRING) is
 			-- Append clickable string at end.
 		require
 			valid_st: st /= Void
@@ -119,7 +119,7 @@ feature -- Element change
 		do
 		end;
 
-	end_comment (a_stone: STONE) is
+	end_comment (a_stone: EC_STONE) is
 			-- Convenience routine to mark 
 			-- end of comments for a given stone
 		do
@@ -131,7 +131,7 @@ feature -- Element change
 		do
 		end;
 
-	end_body (a_stone: STONE) is
+	end_body (a_stone: EC_STONE) is
 			-- Convenience routine to mark 
 			-- end of routine body for a given stone
 		do

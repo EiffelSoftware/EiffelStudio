@@ -311,7 +311,7 @@ feature -- Execution
 		local
 			create_win: CREATE_EDITOR_WINDOW_COM;
 			group_stone: GROUP_STONE;
-			stones: LINKED_LIST [STONE]
+			stones: LINKED_LIST [EC_STONE]
 		do
 			group_stone ?= s;
 			if group_stone = Void then
@@ -368,7 +368,7 @@ feature {NONE} -- Inapplicable
 			new_cluster_stone: NEW_CLUSTER_STONE
 			new_class_stone: NEW_CLASS_STONE
 			relation_stone: RELATION_STONE
-			st: STONE
+			st: EC_STONE
 		do
 			pnd_data ?= data
 

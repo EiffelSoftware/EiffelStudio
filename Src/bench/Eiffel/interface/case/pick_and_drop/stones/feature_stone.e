@@ -8,7 +8,7 @@ deferred class FEATURE_STONE
 
 inherit
 
-	STONE;
+	EC_STONE
 	NAMABLE
 
 feature -- Properties

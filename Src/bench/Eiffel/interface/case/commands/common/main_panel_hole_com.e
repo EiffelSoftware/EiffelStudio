@@ -26,7 +26,7 @@ feature -- Properties
 
 feature -- Update
 
-	process_any (s: STONE) is
+	process_any (s: EC_STONE) is
 			-- Process dropped stone `stone' and create an editor
 			-- if it is editable.
 		local

@@ -149,7 +149,7 @@ feature -- Pick and Drop
 		local
 			ev: EV_BUTTON_EVENT_DATA
 			position: INTEGER
-			st: CLICK_STONE
+			st: EC_CLICK_STONE
 		do
 			ev ?= data
 			container.set_transported_data(Void)

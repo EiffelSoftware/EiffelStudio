@@ -114,6 +114,6 @@ feature -- Execution
 
 		graph_figure: GRAPH_FORM;
 	
-		stone: STONE
+		stone: EC_STONE
 
 end -- class WORKAREA_SHOW_FOCUS_COM

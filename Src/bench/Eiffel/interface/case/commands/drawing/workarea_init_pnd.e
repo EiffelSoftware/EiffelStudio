@@ -45,7 +45,7 @@ feature -- Execution
 			workarea_show_focus: WORKAREA_SHOW_FOCUS_COM
 
 			graph_form: GRAPH_FORM
-			stone: STONE
+			stone: EC_STONE
 		do
 			!! workarea_show_focus.make (workarea)
 

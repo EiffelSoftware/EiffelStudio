@@ -8,6 +8,16 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_has_toplevel_focus (a_window: POINTER): BOOLEAN is
+		external
+			"C signature (GtkWindow*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_is_active (a_window: POINTER): BOOLEAN is
+		external
+			"C signature (GtkWindow*): gboolean use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_resize (a_window: POINTER; a_width: INTEGER; a_height: INTEGER) is
 		external
 			"C signature (GtkWindow*, gint, gint) use <gtk/gtk.h>"

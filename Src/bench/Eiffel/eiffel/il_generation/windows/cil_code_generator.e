@@ -1986,7 +1986,8 @@ feature -- IL Generation
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				runtime_class_name,
-				"standard_equal", Static_type, <<type_info_class_name, type_info_class_name>>,
+				"standard_equal", Static_type,
+				<<system_object_class_name, system_object_class_name>>,
 				"System.Boolean", False)
 		end
 

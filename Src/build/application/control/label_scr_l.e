@@ -10,10 +10,7 @@ inherit
 			Second as set_show_action,
 			Third as set_label_action
 		end;
-	DRAG_SOURCE
-		redefine
-			transportable
-		end;
+	DRAG_SOURCE;
 	LABEL_STONE;
 	SCROLL_LIST
 		rename 
@@ -64,7 +61,7 @@ feature
 					label_names.forth;
 				end;
 				if not label_names.after  then
-	   				Result := label_names.item.label_name 
+	   				Result := label_names.item.cmd_label.label
 				end;
 			end;
 		end;
@@ -88,12 +85,7 @@ feature {NONE}
 			cut_label_command.execute (selected_item);
 		end;
 
-	transportable: BOOLEAN;
-			-- Is the stone able to be transported ?
-
-	data: CMD_LABEL is
-		do
-		end;
+	data: CMD_LABEL;
 
 	source:WIDGET is
 		do
@@ -108,20 +100,23 @@ feature {NONE} -- Execute
 	execute (argument: ANY) is
 			-- Execute the command
 		do
-			if
-				argument = set_label_action
-			then
-				if
-					(selected_item = Void)
-				then
-					transportable := false
-				else
-					transportable := true;
+			if argument = set_label_action then
+				data := Void;
+				if selected_item /= Void then
+					from
+						label_names.start;
+					until
+						label_names.after or else
+						equal (selected_item, label_names.item)
+					loop
+						label_names.forth;
+					end;
+					if not label_names.after  then
+	   					data := label_names.item.cmd_label
+					end
 				end;
-			elseif
-				argument = set_show_action
-			then
-				transportable := false
+			elseif argument = set_show_action then
+				data := Void;
 			end
 		end;
 

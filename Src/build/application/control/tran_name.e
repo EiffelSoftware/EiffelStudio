@@ -22,18 +22,18 @@ feature -- Creation
 
 feature
 
-	label_name: STRING; 
-			-- label name of Current
+	cmd_label: CMD_LABEL; 
+			-- Command label 
 
 	destination_name: STRING; 
 			-- destination name of Current
 
-	set_label_name (s: STRING) is
+	set_cmd_label (l: like cmd_label) is
 			-- Set label_name to `s'
 		require
-			not (s = Void)
+			valid_l: l /= Void
 		do
-			label_name := s;
+			cmd_label := l;
 		end;
 
 	set_destination_name (s: STRING) is
@@ -48,7 +48,7 @@ feature
 			-- Update the name of the transition
 		do
 			wipe_out;	
-			append (label_name);
+			append (cmd_label.label);
 			append (" -> ");
 			append (destination_name);
 		end;

@@ -123,7 +123,7 @@ feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 			pixmaps: GB_SHARED_PIXMAPS
 		do
 			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (object.type))
+			set_pixmap (pixmaps.pixmap_by_name (object.type.as_lower))
 		end
 
 feature {NONE} -- Implementation

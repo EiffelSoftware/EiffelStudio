@@ -14,6 +14,7 @@ feature -- Properties
 	has_hide: BOOLEAN
 	has_profile: BOOLEAN
 	has_trace: BOOLEAN
+	has_multithreaded: BOOLEAN
 
 	has_dead_code_removal: BOOLEAN
 	array_optimization: BOOLEAN
@@ -53,6 +54,12 @@ feature -- Setting
 			-- Set `has_trace' to `b'.
 		do
 			has_trace := b
+		end
+
+	set_has_multithreaded (b: BOOLEAN) is
+			-- Set `has_multithreaded' to `b'
+		do
+			has_multithreaded := b
 		end
 
 end -- class ACE_OPTIONS

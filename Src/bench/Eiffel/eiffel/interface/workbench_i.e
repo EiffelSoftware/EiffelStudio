@@ -140,13 +140,8 @@ feature -- Commands
 			Error_handler_has_no_errors: Error_handler.error_list.empty
 		local
 			retried: BOOLEAN
-			c_init: INIT_SERVER
 		do
 			if not retried then
-					--| Reset the information in order to do a correct store.
-				!! c_init
-				c_init.server_init
-
 				if automatic_backup then
 					create_backup_directory
 				end
@@ -174,9 +169,6 @@ feature -- Commands
 			else
 				retried := False
 			end
-
-				--| Re-initialize the storing for the SERVERs
-			c_init.server_reset
 
 			if successful then
 					--| Store the System info even after an error

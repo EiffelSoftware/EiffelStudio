@@ -1574,8 +1574,7 @@ end
 					Byte_array.append_short_integer (-1)
 
 					create_cecil_tables
-					Cecil2.make_byte_code (Byte_array)
-					Cecil3.make_byte_code (Byte_array)
+					cecil_class_table.make_byte_code (Byte_array)
 
 					melted_parent_table := Byte_array.character_array
 				end
@@ -3286,8 +3285,7 @@ end
 			end
 
 			create_cecil_tables
-			Cecil2.generate
-			Cecil3.generate
+			cecil_class_table.generate
 
 			buffer.end_c_specific_code
 			
@@ -3301,36 +3299,19 @@ end
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
-			generic, no_generic: INTEGER
 			a_class: CLASS_C
-			upper_class_name: STRING
 		do
 			class_array := classes
 			nb := class_counter.count
-			from i := 1 until i > nb loop
+			cecil_class_table.init (classes.count)
+			from
+				i := 1
+			until
+				i > nb
+			loop
 				a_class := class_array.item (i)
 				if a_class /= Void then
-					if a_class.generics = Void then
-						no_generic := no_generic + 1
-					else
-						generic := generic + 1
-					end
-				end
-				i := i + 1
-			end
-
-			Cecil2.init (no_generic)
-			Cecil3.init (generic)
-
-			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					upper_class_name := a_class.external_name.as_upper
-					if a_class.generics = Void then
-						Cecil2.put (a_class, upper_class_name)
-					else
-						Cecil3.put (a_class, upper_class_name)
-					end
+					cecil_class_table.put (a_class, a_class.external_name)
 				end
 				i := i + 1
 			end

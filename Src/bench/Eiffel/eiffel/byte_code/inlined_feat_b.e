@@ -50,8 +50,10 @@ feature
 			compound := byte_code.compound;
 			if compound /= Void then
 				compound.enlarge_tree
+				saved_compound := compound.deep_twin
+			else
+				saved_compound := Void
 			end;
-			saved_compound := deep_clone (compound);
 
 			local_inliner.set_inlined_feature (Void);
 		end
@@ -69,7 +71,11 @@ feature
 	unanalyze is
 		do
 			Precursor {FEATURE_BL};
-			compound := deep_clone (saved_compound)
+			if saved_compound /= Void then
+				compound := saved_compound.deep_twin
+			else
+				compound := Void
+			end
 		end
 
 	analyze_on (reg: REGISTRABLE) is

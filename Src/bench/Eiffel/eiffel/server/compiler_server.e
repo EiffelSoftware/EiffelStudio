@@ -348,7 +348,7 @@ end
 			count := 0
 
 				-- Create a new server which will be copied in Current
-			new := clone (Current)
+			new := twin
 			new.make
 debug ("SERVER")
 	io.putstring ("===== Purging: ")
@@ -513,15 +513,15 @@ feature -- Duplication
 			-- Re-initialize from `other'.
 		do
 			standard_copy (other)
-			set_keys (clone (other.keys))
+			set_keys (other.keys.twin)
 				-- `content' should be deep cloned since we don't want to
 				-- share the server_info which are a kind of secondary keys
 				-- (key to access the data on the disk).
-			set_content (deep_clone (other.content))
-			set_deleted_marks (clone (other.deleted_marks))
+			set_content (other.content.deep_twin)
+			set_deleted_marks (other.deleted_marks.twin)
 				-- `file_ids' is deep cloned as well for the same reason:
 				-- we don't want it to be shared.
-			file_ids := deep_clone (other.file_ids)
+			file_ids := other.file_ids.deep_twin
 		end
 
 feature -- Comparison

@@ -346,7 +346,7 @@ feature -- Array optimization
 			old_context := optimizer.optimization_context;
 			array_desc := old_context.array_desc;
 			old_safe_array_desc := old_context.safe_array_desc;
-			safe_array_desc := deep_clone (old_safe_array_desc);
+			safe_array_desc := old_safe_array_desc.deep_twin
 
 			from
 				array_desc.start
@@ -372,8 +372,8 @@ feature -- Array optimization
 			end
 
 			create Result.make (array_desc, safe_array_desc)
-			Result.set_generated_array_desc (deep_clone (old_context.generated_array_desc))
-			Result.set_generated_offsets (deep_clone (old_context.generated_offsets))
+			Result.set_generated_array_desc (old_context.generated_array_desc.deep_twin)
+			Result.set_generated_offsets (old_context.generated_offsets.deep_twin)
 		end
 
 	optimized_byte_node: like Current is

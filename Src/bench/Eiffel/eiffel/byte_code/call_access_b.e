@@ -209,7 +209,7 @@ end
 				if cl_type.is_true_expanded then
 						-- Feature `type_id' of CL_TYPE_I needs the
 						-- the attribute `expanded' to be False
-					cl_type := clone (cl_type)
+					cl_type := cl_type.twin
 					cl_type.set_is_true_expanded (False)
 				end
 				if is_first then 

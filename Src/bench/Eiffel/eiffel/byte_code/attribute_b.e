@@ -73,7 +73,7 @@ feature
 	creation_access (t: TYPE_I): ATTRIBUTE_B is
 			-- Creation access
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.set_type (t)
 		end
 

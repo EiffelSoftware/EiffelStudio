@@ -12,9 +12,52 @@ inherit
 			type_check
 		end
 
+create
+	default_create,
+	initialize
+
+feature {EXTERNAL_FACTORY} -- Initialization
+
+	initialize (a_dll_type: like dll_type; a_dll_name: ID_AS;
+			a_dll_index: like dll_index; sig: SIGNATURE_AS; use_list: USE_LIST_AS)
+		is
+			-- Create a new C_EXTENSION_AS node
+		require
+			a_dll_type_valid: a_dll_type = feature {EXTERNAL_CONSTANTS}.dll32_type or
+				a_dll_type = feature {EXTERNAL_CONSTANTS}.dllwin32_type
+			a_dll_name_not_void: a_dll_name /= Void
+		do
+			dll_type := a_dll_type
+			dll_index := a_dll_index
+			dll_name := a_dll_name.string
+			if sig /= Void then
+				argument_types := sig.arguments_id_array
+				if sig.return_type /= Void then
+					return_type := sig.return_type.value_id
+				end
+			end
+			if use_list /= Void then
+				header_files := use_list.array_representation
+			end
+		ensure
+			dll_type_set: dll_type = a_dll_type
+			dll_index_set: dll_index = a_dll_index
+		end
+
 feature -- Properties
 
 	is_dll: BOOLEAN is True
+
+feature -- Access
+
+	dll_name: STRING
+			-- File name associated with extension
+
+	dll_type: INTEGER
+		-- Dll type
+
+	dll_index: INTEGER
+		-- Dll index
 
 feature -- Initialization
 
@@ -72,9 +115,6 @@ feature -- Byte code
 
 feature {NONE} -- Implementation
 
-	dll_name: STRING
-			-- File name associated with extension
-
 	parse_special_part is
 			-- Parse the dll name
 		do
@@ -115,14 +155,6 @@ end
 			end
 		end
  
-feature {NONE} -- Implementation
-
-	dll_type: INTEGER
-		-- Dll type
-
-	dll_index: INTEGER
-		-- Dll index
-
 feature -- {EXTERNAL_LANG_AS} Implementation
 
 	set_dll_type (t: INTEGER) is

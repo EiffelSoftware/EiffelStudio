@@ -1,7 +1,7 @@
 indexing
 	description: "Description of a TUPLE type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class TUPLE_TYPE_A
 
@@ -324,6 +324,57 @@ feature {COMPILER_EXPORTER} -- Primitives
 				   i := i + 1
 				end
 			end
+		end
+
+feature {ROUTINE_CREATION_AS}   -- Rotation
+
+	rotate (amount : INTEGER) is
+			-- Rotate list of generics by 'amount'
+			-- Negative values rotate left,
+			-- positive values rotate right
+		local
+			i, off, modulus : INTEGER
+		do
+			modulus := generics.count
+			if amount /= 0 and modulus > 1 then
+				off := (amount \\ modulus)
+
+				if off < 0 then
+					off := off + modulus
+				end
+
+				from
+					i := 1
+				until
+					i > off
+				loop
+					rotate_right
+					i := i + 1
+				end
+			end
+		end
+
+feature {NONE} -- Simple rotation
+
+	rotate_right is
+			-- Rotate generics one position to the right
+		require
+			at_least_one_generic: generics.count >= 1
+		local
+			i, cnt : INTEGER
+			last : TYPE_A
+		do
+			from
+				cnt := generics.count
+				last := generics.item (cnt)
+				i := cnt - 1
+			until
+				i < 1
+			loop
+				generics.put (generics.item (i), i+1)
+				i := i - 1
+			end
+			generics.put (last, 1)
 		end
 
 end -- class TUPLE_TYPE_A

@@ -9,7 +9,9 @@ inherit
 
 feature  -- Initialization
 
-	init (cl_type: CL_TYPE_I; cl_id: CLASS_ID; f: FEATURE_I; r_type : GEN_TYPE_I) is
+	init (cl_type: CL_TYPE_I; cl_id: CLASS_ID; f: FEATURE_I; 
+		  r_type : GEN_TYPE_I; tgt : CURRENT_B; args : TUPLE_CONST_B;
+		  mod : INTEGER) is
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
@@ -21,10 +23,15 @@ feature  -- Initialization
 			feature_id := f.feature_id
 			rout_id := f.rout_id_set.first
 			type := r_type
+			target := tgt
+			arguments := args
+			modulus := mod
 			record_feature (cl_id, feature_id)
 		end
 
-	set_ids (cl_type : CL_TYPE_I; r_id: ROUTINE_ID; f_id: INTEGER; r_type: GEN_TYPE_I) is
+	set_ids (cl_type : CL_TYPE_I; r_id: ROUTINE_ID; f_id: INTEGER;
+			 r_type : GEN_TYPE_I; tgt : CURRENT_B; args : TUPLE_CONST_B;
+			 mod : INTEGER) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
@@ -35,6 +42,9 @@ feature  -- Initialization
 			rout_id := r_id
 			feature_id := f_id
 			type := r_type
+			target := tgt
+			arguments := args
+			modulus := mod
 		end
 	
 feature -- Attributes
@@ -50,6 +60,15 @@ feature -- Attributes
 
 	type: GEN_TYPE_I
 			-- Type of routine object
+
+	modulus: INTEGER
+			-- Rotate modulus
+
+	target: CURRENT_B
+			-- Call target
+
+	arguments: TUPLE_CONST_B
+			-- Argument list
 
 feature -- Address table
 
@@ -77,7 +96,23 @@ feature
 			-- Enlarge node
 		do
 			!!Result
-			Result.set_ids (class_type, rout_id, feature_id, type)
+			if target /= Void then
+				if arguments /= Void then
+					Result.set_ids (class_type, rout_id, feature_id, type,
+								target.enlarged, arguments.enlarged, modulus)
+				else
+					Result.set_ids (class_type, rout_id, feature_id, type,
+								target.enlarged, Void, modulus)
+				end
+			else
+				if arguments /= Void then
+					Result.set_ids (class_type, rout_id, feature_id, type,
+								Void, arguments.enlarged, modulus)
+				else
+					Result.set_ids (class_type, rout_id, feature_id, type,
+								Void, Void, modulus)
+				end
+			end
 		end
 
 feature -- Byte code generation
@@ -88,7 +123,17 @@ feature -- Byte code generation
 			cl_type_i: CL_TYPE_I
 			gen_type : GEN_TYPE_I
 		do
-			-- First get address
+			-- Target
+			if target /= Void then
+				target.make_byte_code (ba)
+			end
+
+			-- Arguments
+			if arguments /= Void then
+				arguments.make_byte_code (ba)
+			end
+
+			-- Get address
 			ba.append (Bc_addr)
 			ba.append_integer (feature_id)
 
@@ -97,8 +142,27 @@ feature -- Byte code generation
 				   (cl_type_i.associated_class_type.id.id - 1)
 			-- Use RTWPPR
 			ba.append_short_integer (1)
+
 			-- Now create routine object
 			ba.append (Bc_rcreate)
+
+			if target /= Void then
+				-- We have a target on the stack
+				ba.append_short_integer (1)
+			else
+				-- We don't have a target on the stack
+				ba.append_short_integer (0)
+			end
+
+			if arguments /= Void then
+				-- We have arguments (a TUPLE) on the stack
+				ba.append_short_integer (1)
+			else
+				-- We don't have arguments on the stack
+				ba.append_short_integer (0)
+			end
+
+			ba.append_short_integer (modulus)
 			cl_type_i ?= context.real_type (type)
 			gen_type  ?= cl_type_i
 			ba.append_short_integer (cl_type_i.type_id - 1)

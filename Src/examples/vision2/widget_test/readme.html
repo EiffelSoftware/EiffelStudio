@@ -1,0 +1,27 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<html>
+	<head>
+		<title>Revisions</title>
+			<style>ul.circle{list-style:circle;}
+	</style>
+			<style>ul.square{list-style:square;}
+	</style>
+	</head>
+	<body>
+		<h1>Vision2 Tour</h1>
+		<P>Welcome to the documentation for the Vision2 tour.<br> This interactive system allows you to explore the controls (known as widgets) available with the EiffelVision2 library, manipulate their properties, and examine code demonstrating sample usage.</P>
+<H2>Getting Started</H2>
+	<P>After launching the tour, you will be presented with a window containing a list of different EiffelVision2 widget types to the left hand side. Select the type of widget that you wish to manipulate from the list, and the tour will become focused on that paticular widget type. As a result of this, the right hand side of the window will display three different options in a tab control :- Properties, Tests and Documentation, each of which may be selected at will and are described below. You may change the currently selected widget type by selecting a different item from the list on the left hand side of the window at any time.</P>
+<H2>Properties</h2>
+	<P>When the properties tab is selected, you may manipulate the current properties that apply to the selected widget type. Note that the properties available are not necessarily exhaustive, but include most properties for each widget type.</P>
+	<P>A widget matching the selected type is displayed in the middle of the window, surrounded by a blue border. To the right of this are a set of controls allowing you to modify the properties of the widget. If you hold the mouse over one of these controls, you will see the  corresponding feature name listed as a tooltip.</P>
+	<P>Below the actual widget, is an area marked "Output" into which events recieved by the widget are displayed. If you select the "Events" tab, you may turn on and off the events that you wish to monitor by checking and unchecking the associated event name. By default, all events are recorded.</P>
+
+<H2>Tests</h2>
+	<P>When the tests tab is selected, you will see an instance of the selected control type surrounded by a blue border.To the bottom of this are a series of tabs, each corresponding to a different test. By selecting a different tab, you will change the test that is displayed. Each of these tests is designed to demonstrate useful functionaility of the current control type. Displayed below the tests, is a text area, showing the source code that was used to generate the test.</P>
+	<P>Upon selecting the tests tab, you will notice that the "generate" tool bar button becomes enabled. This allows you to generate a stand alone EiffelVision2 application corresponding to the current test that is displayed. This will include an ace file which should be used for compilation. If you select the "generate" button, a dialog will be displayed, informing you of the files that will be generated, and requiring you to select a directory for this generation. Clicking the "OK" button will cause the generation to be performed in the selected directory.<br>
+If you now start EiffelStudio and select the newly generated ace file, the test system will be compiled and once completed, allows you to interactively modify the source code.</P>
+<H2>Documentation</h2>
+	<P>When the documentation tab is selected, the interface view of the Eiffel Class corresponding to the selected widget type will be displayed. You may browse through this to gain an understanding of features available for the selected control type. A search tool allows you to search for a text, and the size of the text displayed may also be adjusted.</P>
+	</body>
+</html>

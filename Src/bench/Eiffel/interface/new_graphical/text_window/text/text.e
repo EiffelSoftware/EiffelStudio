@@ -332,6 +332,7 @@ feature {NONE} -- Text Loading
 		do
 			ev_application.idle_actions.prune_all (Finish_reading_agent)
 			text_being_processed := False
+			on_text_fully_loaded
 		end
 
 	Finish_reading_agent: PROCEDURE [like Current, TUPLE] is

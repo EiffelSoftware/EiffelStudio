@@ -217,6 +217,28 @@ feature {NONE} -- Updates
 			is_notifying := False
 		end
 
+	on_text_fully_loaded is
+			-- Notify observers that a new text has just finished loading.
+			--| FIXME XR: This is necessary because on_text_loaded is called when
+			--| `text_being_processed' is still True.
+			--| I don't want to break everything so I just add this event.
+		local
+			cur: CURSOR
+		do
+			is_notifying := True
+			cur := edition_observer_list.cursor
+			from 
+				edition_observer_list.start
+			until
+				edition_observer_list.after
+			loop
+				edition_observer_list.item.on_text_fully_loaded
+				edition_observer_list.forth
+			end
+			edition_observer_list.go_to (cur)
+			is_notifying := False
+		end
+
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is
 			-- Notify observers that a new block of text has just been loaded.

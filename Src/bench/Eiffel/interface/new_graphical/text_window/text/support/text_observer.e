@@ -36,6 +36,12 @@ feature {TEXT_OBSERVER_MANAGER} -- Update
 		do
 		end
 
+	on_text_fully_loaded is
+			-- Update `Current' when the text has been completely loaded.
+			-- Observer must be registered as "edition_observer" for this feature to be called.
+		do
+		end
+
 	on_text_reset is
 			-- Update `Current' when the text has been reset.
 			-- Observer must be registered as "edition_observer" for this feature to be called.

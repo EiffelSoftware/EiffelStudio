@@ -38,6 +38,7 @@
 %token LAC_IDENTIFIER;
 %token LAC_IGNORE;
 %token LAC_INCLUDE;
+%token LAC_INCLUDE_PATH;
 %token LAC_INVARIANT;
 %token LAC_LEFT_PARAM;
 %token LAC_LOOP;
@@ -182,7 +183,7 @@ Exclude_file_list		: Name
 
 File_list               : File_clause
 							{list_push($1);}
-                        | File_list LAC_SEMICOLON File_clause
+                        | File_list LAC_COMMA File_clause
 							{list_push($3);}
                         ;
 
@@ -351,6 +352,9 @@ Language_contrib        : /* empty */
 Language_name           : LAC_C
 							{$$ =
 		create_node1(C_NAME_SD,lace_id("c",start_position,end_position));}
+						| LAC_INCLUDE_PATH
+							{$$ =
+		create_node1(INCLUDE_PATH_NAME_SD,lace_id("include_path",start_position,end_position));}
 						| LAC_MAKE
 							{$$ =
 		create_node1(MAKE_NAME_SD,lace_id("make",start_position,end_position));}

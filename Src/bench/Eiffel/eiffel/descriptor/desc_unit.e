@@ -1,36 +1,38 @@
--- Descriptor unit: block in class type descriptor corresponding to
--- given parent class.
+indexing
+	description: "Descriptor unit: block in class type descriptor corresponding to%
+		%given parent class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DESC_UNIT
 
 inherit
+	TO_SPECIAL [ENTRY]
 
-	ARRAY [ENTRY]
-		rename
-			make as array_make
-		end;
 	COMPILER_EXPORTER
-		undefine
-			is_equal, copy
-		end;
+
 	SHARED_COUNTER
-		undefine
-			is_equal, copy
-		end
 
 creation
-
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (c_id: INTEGER; sz: INTEGER) is
 		do
-			class_id := c_id;
-			array_make (0, sz-1)
-		end;
+			class_id := c_id
+			make_area (sz)
+			count := sz
+		end
 
-	class_id: INTEGER;
+feature -- Status report
+
+	count: INTEGER
+			-- Number of elements in Current.
+		
+feature {NONE} -- Access
+
+	class_id: INTEGER
 
 feature -- Generation
 
@@ -47,6 +49,7 @@ feature -- Generation
 			valid_counter: cnt /= Void
 		local
 			i,j: INTEGER
+			l_count: INTEGER
 			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
@@ -60,9 +63,9 @@ feature -- Generation
 				separator := "}, "
 				null_init := ", (int16 *) 0"
 				Invalid_entry := ", (int16) -1, (int16 *) 0},"
-				i := lower
+				l_count := count - 1
 			until
-				i > upper
+				i > l_count
 			loop
 				entry_item := item (i)
 				if entry_item /= Void then
@@ -72,21 +75,10 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						buffer.putstring (uint16);
-						buffer.putint (re.real_body_index - 1);
-						buffer.putstring (int16);
-						buffer.putint (re.static_feature_type_id - 1);
-
-						if re.is_generic then
-							buffer.putstring (gen_type);
-							buffer.putint (cnt.value);
-							buffer.putstring (id_string)
-							j := cnt.next
-						else           
-							buffer.putstring (null_init);
-						end;
-
-						buffer.putstring (separator);
+						buffer.putstring (uint16)
+						buffer.putint (re.real_body_index - 1)
+						buffer.putstring (int16)
+						buffer.putint (re.static_feature_type_id - 1)
 					else
 						ae ?= entry_item
 						if ae /= Void then
@@ -94,33 +86,34 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							buffer.putstring (uint16);
-							buffer.putint (ae.workbench_offset);
-							buffer.putstring (int16);
-							buffer.putint (ae.static_feature_type_id - 1);
-
-							if ae.is_generic then
-								buffer.putstring (gen_type);
-								buffer.putint (cnt.value);
-								buffer.putstring (id_string)
-								j := cnt.next
-							else           
-								buffer.putstring (null_init);
-							end;
-
-							buffer.putstring (separator);
+							buffer.putstring (uint16)
+							buffer.putint (ae.workbench_offset)
+							buffer.putstring (int16)
+							buffer.putint (ae.static_feature_type_id - 1)
 						end
-					end;
+					end
+
+					if entry_item.is_generic then
+						buffer.putstring (gen_type)
+						buffer.putint (cnt.value)
+						buffer.putstring (id_string)
+						j := cnt.next
+					else           
+						buffer.putstring (null_init)
+					end
+
+					buffer.putstring (separator)
+
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.putstring (uint16);
-					buffer.putint (Invalid_index);
+					buffer.putstring (uint16)
+					buffer.putint (Invalid_index)
 					buffer.putstring (invalid_entry)
-				end;
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER; id_string: STRING) is
 			-- C code of Current precompiled descriptor unit
@@ -134,8 +127,9 @@ feature -- Generation
 			buffer_not_void: buffer /= Void
 			valid_counter: cnt /= Void
 		local
-			i,j: INTEGER;
-			re: ROUT_ENTRY;
+			i,j: INTEGER
+			l_count: INTEGER
+			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			nb: INTEGER
 			entry_item: ENTRY
@@ -152,9 +146,9 @@ feature -- Generation
 				non_generic := "(int16 *) 0;%N"
 				gen_type_string := " gen_type"
 				end_of_line := ";%N"
-				i := lower
+				l_count := count - 1
 			until
-				i > upper
+				i > l_count
 			loop
 				nb := i + start
 				entry_item := item (i)
@@ -165,27 +159,17 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						buffer.putstring (desc1);
-						buffer.putint (nb);
-						buffer.putstring (info);
-						buffer.generate_real_body_index (re.real_body_index);
-						buffer.putstring (desc2);
-						buffer.putint (nb);
-						buffer.putstring (type);
+						buffer.putstring (desc1)
+						buffer.putint (nb)
+						buffer.putstring (info)
+						buffer.generate_real_body_index (re.real_body_index)
+						buffer.putstring (desc2)
+						buffer.putint (nb)
+						buffer.putstring (type)
 						re.generated_static_feature_type_id (buffer)
-						buffer.putstring (desc2);
-						buffer.putint (nb);
-						buffer.putstring (gen_type);
-
-						if re.is_generic then
-							buffer.putstring (gen_type_string);
-							buffer.putint (cnt.value);
-							buffer.putstring (id_string);
-							buffer.putstring (end_of_line)
-							j := cnt.next
-						else
-							buffer.putstring (non_generic)
-						end
+						buffer.putstring (desc2)
+						buffer.putint (nb)
+						buffer.putstring (gen_type)
 					else
 						ae ?= entry_item
 						if ae /= Void then
@@ -193,48 +177,49 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							buffer.putstring (desc1);
-							buffer.putint (nb);
-							buffer.putstring (info);
-							buffer.putint (ae.workbench_offset);
-							buffer.putstring (desc2);
-							buffer.putint (nb);
-							buffer.putstring (type);
+							buffer.putstring (desc1)
+							buffer.putint (nb)
+							buffer.putstring (info)
+							buffer.putint (ae.workbench_offset)
+							buffer.putstring (desc2)
+							buffer.putint (nb)
+							buffer.putstring (type)
 							ae.generated_static_feature_type_id (buffer)
-							buffer.putstring (desc2);
-							buffer.putint (nb);
-							buffer.putstring (gen_type);
-
-							if ae.is_generic then
-								buffer.putstring (gen_type_string);
-								buffer.putint (cnt.value);
-								buffer.putstring (id_string);
-								buffer.putstring (end_of_line)
-								j := cnt.next
-							else
-								buffer.putstring (non_generic)
-							end
+							buffer.putstring (desc2)
+							buffer.putint (nb)
+							buffer.putstring (gen_type)
 						end
-					end;
+					end
+
+					if entry_item.is_generic then
+						buffer.putstring (gen_type_string)
+						buffer.putint (cnt.value)
+						buffer.putstring (id_string)
+						buffer.putstring (end_of_line)
+						j := cnt.next
+					else
+						buffer.putstring (non_generic)
+					end
+
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					buffer.putstring (desc1);
-					buffer.putint (nb);
-					buffer.putstring (info);
-					buffer.putint (Invalid_index);
-					buffer.putstring (desc2);
-					buffer.putint (nb);
+					buffer.putstring (desc1)
+					buffer.putint (nb)
+					buffer.putstring (info)
+					buffer.putint (Invalid_index)
+					buffer.putstring (desc2)
+					buffer.putint (nb)
 					buffer.putstring (type)
 					buffer.putint (-1)
-					buffer.putstring (desc2);
-					buffer.putint (nb);
+					buffer.putstring (desc2)
+					buffer.putint (nb)
 					buffer.putstring (gen_type)
-					buffer.putstring (non_generic);
-				end;
+					buffer.putstring (non_generic)
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 	generate_generic (buffer: GENERATION_BUFFER; cnt : COUNTER; id_string: STRING) is
 			-- C code for generic types in Current descriptor unit
@@ -242,8 +227,9 @@ feature -- Generation
 			buffer_not_void: buffer /= Void
 			valid_counter : cnt /= Void
 		local
-			i, j: INTEGER;
-			re: ROUT_ENTRY;
+			i, j: INTEGER
+			l_count: INTEGER
+			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
 			static_decl, start_decl, end_decl: STRING
@@ -252,37 +238,23 @@ feature -- Generation
 				static_decl := "static int16 gen_type"
 				start_decl := " [] = {0, "
 				end_decl := "-1};%N"
-				i := lower
+				l_count := count - 1
 			until
-				i > upper
+				i > l_count
 			loop
 				entry_item := item (i)
 				if entry_item /= Void and then entry_item.is_generic then
-					re ?= entry_item
-					if re /= Void then
-						buffer.putstring (static_decl);
-						buffer.putint (cnt.value);
-						buffer.putstring (id_string);
-						j := cnt.next;
-						buffer.putstring (start_decl);
-						re.generate_cid (buffer, False);
-						buffer.putstring (end_decl)
-					else
-						ae ?= entry_item
-						if ae /= Void then
-							buffer.putstring (static_decl);
-							buffer.putint (cnt.value);
-							buffer.putstring (id_string);
-							j := cnt.next;
-							buffer.putstring (start_decl);
-							ae.generate_cid (buffer, False);
-							buffer.putstring (end_decl)
-						end
-					end;
-				end;
+					buffer.putstring (static_decl)
+					buffer.putint (cnt.value)
+					buffer.putstring (id_string)
+					j := cnt.next
+					buffer.putstring (start_decl)
+					entry_item.generate_cid (buffer, False)
+					buffer.putstring (end_decl)
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 feature -- Melting
 
@@ -294,22 +266,26 @@ feature -- Melting
 			--    2) Number of elements (short)
 			--    3) Sequence of triples (short, short, list_of_short)
 		local
-			i: INTEGER;
-			re: ROUT_ENTRY;
+			i: INTEGER
+			l_count: INTEGER
+			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
 		do
 				-- Append the id of the origin class
-			ba.append_short_integer (class_id);
+			ba.append_short_integer (class_id)
+
+			l_count := count
 
 				-- Append the size of the descriptor unit
-			ba.append_short_integer (upper - lower + 1);
+			ba.append_short_integer (l_count + 1)
 
 				-- Append the descriptor entries
 			from
-				i := lower
+					-- For loop purposes we decreased `l_count'.
+				l_count := l_count - 1
 			until
-				i > upper
+				i > l_count
 			loop
 				entry_item := item (i)
 				if entry_item /= Void then
@@ -319,15 +295,8 @@ feature -- Melting
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						ba.append_short_integer (re.real_body_index- 1);
-						ba.append_short_integer (re.static_feature_type_id -1);
-
-						if re.is_generic then
-							ba.append_short_integer (0)
-							re.make_gen_type_byte_code (ba)
-						end;
-
-						ba.append_short_integer (-1)
+						ba.append_short_integer (re.real_body_index- 1)
+						ba.append_short_integer (re.static_feature_type_id -1)
 					else
 						ae ?= entry_item
 						if ae /= Void then
@@ -335,30 +304,26 @@ feature -- Melting
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							ba.append_short_integer (ae.workbench_offset);
-							ba.append_short_integer (ae.static_feature_type_id - 1);
-
-							if ae.is_generic then
-								ba.append_short_integer (0)
-								ae.make_gen_type_byte_code (ba)
-							end;
-
-							ba.append_short_integer (-1)
-						else
-							ba.append_short_integer (-1);
-							ba.append_short_integer (-1);
-							ba.append_short_integer (-1)
+							ba.append_short_integer (ae.workbench_offset)
+							ba.append_short_integer (ae.static_feature_type_id - 1)
 						end
-					end;
+					end
+
+					if entry_item.is_generic then
+						ba.append_short_integer (0)
+						re.make_gen_type_byte_code (ba)
+					end
+
+					ba.append_short_integer (-1)
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					ba.append_short_integer (-1);
-					ba.append_short_integer (-1);
 					ba.append_short_integer (-1)
-				end;
+					ba.append_short_integer (-1)
+					ba.append_short_integer (-1)
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
-end
+end -- class DESC_UNIT

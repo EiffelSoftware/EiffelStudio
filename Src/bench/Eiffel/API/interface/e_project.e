@@ -481,7 +481,7 @@ feature -- Update
 		do
 			is_compiling_ref.set_item (True)
 			Workbench.recompile
---			Comp_system.purge
+			Comp_system.purge
 
 			if successful then
 				if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
@@ -560,7 +560,8 @@ feature -- Update
 			then
 				set_error_status (Ok_status)
 				is_compiling_ref.set_item (True)
-				comp_system.finalize_system (keep_assertions)
+				Comp_system.finalize_system (keep_assertions)
+				Comp_system.purge
 				is_compiling_ref.set_item (False)
 			end
 		ensure
@@ -593,7 +594,7 @@ feature -- Update
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
 			Workbench.recompile
---			Comp_system.purge
+			Comp_system.purge
 
 			if successful then
 				Comp_system.set_licensed_precompilation (licensed)
@@ -611,6 +612,18 @@ feature -- Update
 		end
 
 feature -- Output
+
+	save_upon_exiting is
+			-- When quitting, we need to clear all the unused files
+			-- and then if the project has not yet been saved upon a 
+			-- successful compilation we save it.
+		do
+				-- Purge uselss files
+			Comp_system.purge
+			Comp_system.tmp_purge
+
+			save_project
+		end
 
 	save_project is
 			-- Clear the servers and save the system structures

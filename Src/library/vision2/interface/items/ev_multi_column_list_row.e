@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"Eiffel Vision multi column list row. These rows are used in%N%
@@ -14,29 +13,30 @@ class
 inherit
 	EV_ITEM
 		redefine
-				implementation,
-				create_action_sequences
+			implementation,
+			create_action_sequences
 		end
 
 	EV_PICK_AND_DROPABLE
 		redefine
-				implementation,
-				create_action_sequences
+			implementation,
+			create_action_sequences
 		end
 
 	INTERACTIVE_LIST [STRING]
-		redefine
-				extendible
+		rename
+			default_create as interactive_list_make
 		end
 
 	EV_PIXMAPABLE
 		redefine
-				implementation
+			implementation
+		select
+			default_create
 		end
 
 create
-	default_create,
-	make_with_text
+	default_create
 
 feature -- Status report
 
@@ -89,14 +89,6 @@ feature -- Event handling
 	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when item is deselected.
 
-feature -- Contract support
-
-	extendible: BOOLEAN is
-			-- Can a cell be added?
-		do
-			Result := parent /= Void
-		end
-
 feature {NONE} -- Implementation
 
 	on_item_added (an_item: STRING) is
@@ -116,6 +108,7 @@ feature {NONE} -- Implementation
 	create_implementation is 
 			-- Create `implementation'.
 		do
+			interactive_list_make
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
 		end
 
@@ -154,6 +147,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/23 18:01:38  brendel
+--| Revised.
+--|
 --| Revision 1.31  2000/03/23 17:48:29  brendel
 --| Revised interface.
 --|

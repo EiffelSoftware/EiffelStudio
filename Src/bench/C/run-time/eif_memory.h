@@ -33,8 +33,9 @@ extern void gc_stat(long int type);	/* Initialize the GC statistics buffer */
 extern long gc_info(long int field);
 extern double gc_infod(long int field);
 extern char gc_ison(void);
-extern void eif_set_max_mem(EIF_INTEGER); /* Set the max. memory the RT can allocate*/
+extern void eif_set_max_mem(EIF_INTEGER); /* Set max memory RT can allocate */
 extern EIF_INTEGER eif_get_max_mem(void); /* Return max_mem */
+extern EIF_INTEGER eif_get_chunk_size(void); /* Return chunk_size */
 extern void eif_set_chunk_size(EIF_INTEGER); /* Set the size of memory chunks */
 #ifdef __cplusplus
 }

@@ -20,7 +20,9 @@
 #include <sys/param.h>		/* For value of HZ */
 #endif
 #endif
-
+#ifdef _CRAY
+#include <sys/machd.h>
+#endif
 
 #ifndef lint
 rt_private char *rcsid =

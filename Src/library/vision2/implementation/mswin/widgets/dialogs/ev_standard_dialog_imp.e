@@ -48,9 +48,19 @@ feature -- Status setting
 			-- until the user closed the window.
 		local
 			win: WEL_COMPOSITE_WINDOW
+			wid: EV_WIDGET_IMP
 		do
+			-- First, we keep memory of the current widget that
+			-- has the focus.
+			wid := parent_imp.focus_on_widget.item
+
+			-- Then, we activate the dialog.
 			win ?= parent_imp
 			activate (win)
+
+			-- Finally, we give back the focus to `wid' and we
+			-- dispatch the events.
+			wid.set_focus
 			dispatch_events
 		end
 

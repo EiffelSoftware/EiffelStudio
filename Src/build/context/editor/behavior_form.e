@@ -31,16 +31,17 @@ feature -- Interface
 			!! event_catalog.make (Widget_names.event_catalog_name, Current)
 			!! behavior_editor.make (Widget_names.behaviour_editor_name, Current)
 			
-			set_size (200, 250)
+			set_size (300, 350)
+			forbid_recompute_size
 			set_fraction_base(10)
 			attach_top (event_catalog, 0)
 			attach_left (event_catalog, 0)
 			attach_right (event_catalog, 0)
+			attach_bottom_position (event_catalog, 3)
+			attach_top_position (behavior_editor.form, 3)
 			attach_left (behavior_editor.form, 0)
 			attach_right (behavior_editor.form, 0)
 			attach_bottom (behavior_editor.form, 0)
-			attach_bottom_widget (behavior_editor.form, event_catalog, 2)
-			attach_top_position (behavior_editor.form, 3)
 			show_current
 		end
 

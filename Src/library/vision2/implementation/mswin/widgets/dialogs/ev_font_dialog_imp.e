@@ -21,6 +21,54 @@ inherit
 creation
 	make
 
+feature -- Access
+	
+	font: EV_FONT is
+			-- Current selected font.
+		local
+			font_imp: EV_FONT_IMP
+			wel_font: WEL_FONT
+			ev_font_imp: EV_FONT_IMP
+		do
+			create wel_font.make_indirect (log_font)	
+			create Result.make
+			create ev_font_imp.make_by_wel (wel_font)
+			Result.set_implementation (ev_font_imp)
+		end
+
+	character_format: EV_CHARACTER_FORMAT is
+			-- Current selected format.
+		local
+			col: EV_COLOR
+		do
+			create Result.make
+			Result.set_font (font)
+			create col.make_rgb (color.red, color.green, color.blue)
+			Result.set_color (col)
+			if log_font.weight <= 550 then
+				-- 400 signifies standard.
+				-- 700 signifies bold.
+				-- 550 is half way between the two.
+				Result.set_bold (False)
+			else
+				Result.set_bold (True)
+			end
+			Result.set_italic (log_font.italic)
+		end
+
+feature -- Element change
+
+	select_font (a_font: EV_FONT) is
+			-- Select `a_font'.
+		local
+			font_imp: EV_FONT_IMP
+			wel_font: WEL_LOG_FONT
+		do
+			font_imp ?= a_font.implementation
+			wel_font := font_imp.wel_log_font
+			set_log_font (wel_font)
+		end
+
 end -- class EV_FONT_DIALOG_IMP
 
 --|----------------------------------------------------------------

@@ -10,7 +10,6 @@ deferred class
 inherit
 	WEL_WINDOW
 		redefine
-			on_wm_paint,
 			set_default_window_procedure,
 			call_default_window_procedure
 		end
@@ -23,6 +22,8 @@ inherit
 feature {NONE} -- Initialization
 
 	make_by_id (a_parent: WEL_DIALOG; an_id: INTEGER) is
+			-- Make a control identified by `an_id' with `a_parent'
+			-- as parent.
 		require
 			a_parent_not_void: a_parent /= Void
 			positive_id: an_id > 0
@@ -102,13 +103,6 @@ feature {WEL_COMPOSITE_WINDOW}
 		end
 
 feature {NONE} -- Implementation
-
-	on_wm_paint is
-			-- Override the parent process to remove the
-			-- call to `on_paint' since the control knows
-			-- how to be painted. Do nothing.
-		do
-		end
 
 	set_default_window_procedure is
 			-- Set `default_window_procedure' with the

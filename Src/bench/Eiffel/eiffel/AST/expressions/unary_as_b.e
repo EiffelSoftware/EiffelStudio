@@ -33,6 +33,7 @@ feature -- Type check, byte code and dead code removal
 			prefix_feature_type, last_constrained: TYPE_A;
 			last_class: CLASS_C;
 			feature_b: FEATURE_B;
+			feature_bs: FEATURE_BS;
 			depend_unit: DEPEND_UNIT;
 			vwoe: VWOE;
 			vkcn3: VKCN3;
@@ -106,10 +107,25 @@ feature -- Type check, byte code and dead code removal
 
 			context.replace (prefix_feature_type);
 
-			!!feature_b;
-			feature_b.init (prefix_feature);
-			feature_b.set_type (context.item.type_i);
-			context.access_line.insert (feature_b);
+			if last_constrained /= Void and then last_constrained.is_separate then
+debug io.putstring ("Now,  In UNARY_AS_B we perform try-assign on class ")
+io.putstring (context.a_class.name_in_upper);
+io.putstring (" at feature ")
+io.putstring (context.feature_name);
+io.new_line;
+io.putstring ("    ** UNARY_AS_B We created FEATURE_SB here: <");
+io.putstring (feature_b.feature_name);
+io.putstring (">%N"); end
+				!!feature_bs;
+				feature_bs.init (prefix_feature);
+				feature_bs.set_type (context.item.type_i);
+				context.access_line.insert (feature_bs);
+			else
+				!!feature_b;
+				feature_b.init (prefix_feature);
+				feature_b.set_type (context.item.type_i);
+				context.access_line.insert (feature_b);
+			end;
 
 		end;
 

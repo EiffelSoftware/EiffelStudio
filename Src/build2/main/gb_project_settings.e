@@ -52,6 +52,9 @@ feature -- Access
 	debugging_output: BOOLEAN
 		-- Should debugging output be generated for each feature connected to an
 		-- action sequence?
+		
+	attributes_local: BOOLEAN
+		-- Should attributes be generated as locals?
 	
 feature -- Basic operation
 
@@ -69,6 +72,7 @@ feature -- Basic operation
 			data.extend ([complete_project_string, complete_project.out])
 			data.extend ([grouped_locals_string, grouped_locals.out])
 			data.extend ([debugging_output_string, debugging_output.out])
+			data.extend ([attributes_local_string, attributes_local.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -90,7 +94,7 @@ feature -- Basic operation
 			if file_handler.last_load_successful then
 				check
 					data_not_void: data /= Void
-					data_count_is_6: data.count = 6
+					data_count_is_7: data.count = 7
 				end
 				temp_tuple := data @ 1
 				temp_string ?= temp_tuple @ 2
@@ -144,6 +148,17 @@ feature -- Basic operation
 					debugging_output := True
 				else
 					debugging_output := False
+				end
+				
+				temp_tuple := data @ 7
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				if temp_string.is_equal ("True") then
+					attributes_local := True
+				else
+					attributes_local := False
 				end
 			end
 		end
@@ -216,7 +231,19 @@ feature -- Status Setting
 			debugging_output := False
 		end
 		
-	
+	enable_attributes_local is
+			-- Assign `True' to `attributes_local'.
+		do
+			attributes_local := True
+		end
+		
+	disable_attributes_local is
+			-- Assign `False' to `attributes_local'.
+		do
+			attributes_local := False
+		end
+
+
 feature {NONE} --Implementation
 
 		-- Constants for saving to XML.
@@ -231,5 +258,7 @@ feature {NONE} --Implementation
 	grouped_locals_string: STRING is "Group_locals"
 	
 	debugging_output_string: STRING is "Generate_debugging_output"
+	
+	attributes_local_string: STRING is "Attributes_local"
 	
 end -- class GB_PROJECT_SETTINGS

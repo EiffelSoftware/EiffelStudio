@@ -103,7 +103,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	xfree(cmd);
 
 	chdir(current_dir);
-	xfree(current_dir);
+	free(current_dir);
 #elif defined EIF_OS2
 
 	char *cmd, *current_dir, *eiffel_dir;
@@ -132,7 +132,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 					cmd);				 /* Program file name			 */
 	xfree (cmd);
 	chdir(current_dir);
-    xfree(current_dir);
+    free(current_dir);
 
 #else
 	DIR *dirp;
@@ -162,7 +162,7 @@ EIF_OBJ c_code_dir, freeze_cmd_name;
 	chdir(eif_access(c_code_dir));
 	(void) eif_system("finish_freezing");
 	chdir(current_dir);
-	xfree(current_dir);
+	free(current_dir);
 #endif
 }
 

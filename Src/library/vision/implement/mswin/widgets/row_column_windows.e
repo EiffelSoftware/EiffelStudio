@@ -16,7 +16,8 @@ inherit
 		redefine
 			realize,
 			realize_current,
-			child_has_resized
+			child_has_resized,
+			set_enclosing_size
 		end
 
 	MANAGER_WINDOWS
@@ -26,7 +27,8 @@ inherit
 			child_has_resized,
 			set_height,
 			set_size,
-			set_width
+			set_width,
+			set_enclosing_size
 		select
 			set_height,
 			set_size,
@@ -169,7 +171,7 @@ feature -- Status setting
 	set_width (new_width : INTEGER) is
 			-- Set width to `new_width'.
 		do
-			if width /= new_width then
+			if private_attributes.width /= new_width then
 				manager_set_width (new_width)
 				if not mapping then
 					map_widgets
@@ -180,7 +182,7 @@ feature -- Status setting
 	set_height (new_height : INTEGER) is
 			-- Set height to `new_height'.
 		do
-			if height /= new_height then
+			if private_attributes.height /= new_height then
 				manager_set_height (new_height)
 				if not mapping then
 					map_widgets
@@ -192,7 +194,8 @@ feature -- Status setting
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
-			if width /= new_width or else height /= new_height then
+			if private_attributes.width /= new_width
+			or else private_attributes.height /= new_height then
 				manager_set_size (new_width, new_height)
 				if not mapping then
 					map_widgets
@@ -214,7 +217,7 @@ feature -- Status setting
 		end
 
 feature -- Element change
-	
+
 	realize is
 			-- Realize widget
 		local
@@ -282,7 +285,9 @@ feature -- Element change
 			else
 				largest_w := largest_w.max (width // preferred_count)
 			end
-			set_children_sizes (c, largest_w, largest_h)
+			if same_size then
+				set_children_sizes (c, largest_w, largest_h)
+			end
 			if is_row_layout then
 				set_children_in_rows (c, largest_h)
 			else
@@ -293,6 +298,63 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	set_enclosing_size is
+			-- Set the emclosing size.
+		local
+			c: ARRAYED_LIST [WIDGET_WINDOWS]
+			current_item: WIDGET_WINDOWS
+			managed_count: INTEGER
+			eh, ew, w, h: INTEGER
+		do
+			c := children_list
+			from
+				c.start
+			until
+				c.after
+			loop
+				current_item := c.item
+				if current_item /= Void and then current_item.managed then
+					managed_count := managed_count + 1
+					ew := ew.max (current_item.width)
+					eh := eh.max (current_item.height)
+				end
+				c.forth
+			end
+			if managed_count > 0 then
+				if is_row_layout then
+					if preferred_count > managed_count then
+						eh := managed_count * eh + 
+							2 * margin_height +
+							((managed_count - 1) * spacing)
+					else
+						eh := preferred_count * eh +
+							2 * margin_height +
+							((preferred_count - 1) * spacing)
+						ew := (managed_count // preferred_count +
+							(managed_count \\ preferred_count).min (1)) * ew +
+							((managed_count // preferred_count) * spacing) +
+							2 * margin_width
+					end
+				else
+					if preferred_count > managed_count then
+						ew := managed_count * ew +
+							2 * margin_width +
+							((managed_count - 1) * spacing)
+					else
+						ew := preferred_count * ew +
+							2 * margin_width +
+							((preferred_count - 1) * spacing)
+						eh := (managed_count // preferred_count +
+							(managed_count \\ preferred_count).min (1)) * eh +
+							((managed_count // preferred_count) * spacing) +
+							2 * margin_height
+					end
+				end
+			end
+			set_size (ew, eh)
+		end
+
 
 	set_children_in_columns (c : ARRAYED_LIST[WIDGET_WINDOWS]; largest_w : INTEGER) is
 			-- Place the children in columns
@@ -416,34 +478,36 @@ feature {NONE} -- Implementation
 					end
 					c.forth
 				end
-			else
-				if is_row_layout then
-					from
-						c.start
-					until
-						c.after
-					loop
-						ci := c.item
-						if ci /= Void and then ci.managed then
-							ci.set_height (largest_h)
-						end
-						c.forth
-					end
-				else
-					from
-						c.start
-					until
-						c.after
-					loop
-						ci := c.item
-						if ci /= Void and then ci.managed then
-							ci.set_width (largest_w)
-						end
-						c.forth
-					end
-				end
 			end
 		end
+			--else
+			--	if is_row_layout then
+			--		from
+			--			c.start
+			--		until
+			--			c.after
+			--		loop
+			--			ci := c.item
+			--			if ci /= Void and then ci.managed then
+			--				ci.set_height (largest_h)
+			--			end
+			--			c.forth
+			--		end
+			--	else
+			--		from
+			--			c.start
+			--		until
+			--			c.after
+			--		loop
+			--			ci := c.item
+			--			if ci /= Void and then ci.managed then
+			--				ci.set_width (largest_w)
+			--			end
+			--			c.forth
+			--		end
+			--	end
+			--end
+			--end
 
 	preferred_count: INTEGER
 			-- Preferred number of items 

@@ -188,7 +188,6 @@ feature {NONE} -- Implementation
 			delete_button: GB_DELETE_TOOL_BAR_BUTTON
 			a_new_object_editor: GB_NEW_OBJECT_EDITOR_BUTTON
 			undo_button: GB_UNDO_TOOL_BAR_BUTTON
-			history_button: GB_HISTORY_TOOL_BAR_BUTTON
 			redo_button: GB_REDO_TOOL_BAR_BUTTON
 			separator: EV_TOOL_BAR_SEPARATOR
 			generation_button: GB_CODE_GENERATION_TOOL_BAR_BUTTON

@@ -93,7 +93,7 @@ rt_public EIF_TYPE_ID eif_type_id (char *type_string)
 
 rt_private int is_good (char c)
 {
-	return isalpha (c) || isdigit (c) || (c == '_');
+	return isalpha ((int) c) || isdigit ((int) c) || (c == '_');
 }
 
 rt_private int is_type_separator (char c)

@@ -12,7 +12,7 @@ inherit
 		export
 			{NONE} all
 			{ANY} first, parent, is_destroyed, is_displayed,
-				has_recursively, selected_item, is_empty
+				has_recursively, selected_item, is_empty, has_focus
 		undefine
 			is_in_default_state
 		redefine
@@ -74,6 +74,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 
 create
 	default_create
@@ -86,6 +91,9 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TREE}
 			key_press_actions.extend (agent check_for_object_delete)
+			select_actions.extend (agent command_handler.update)
+			focus_in_actions.extend (agent command_handler.update)
+			focus_out_actions.extend (agent command_handler.update)
 		end
 		
 feature -- Basic operation

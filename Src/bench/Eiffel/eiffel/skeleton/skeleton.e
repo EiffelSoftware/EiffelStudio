@@ -387,7 +387,7 @@ feature -- Status
 			end;
 
 			from
-				i := bits_pos
+				i := expanded_pos
 				nb := count - 1
 			until
 				i > nb

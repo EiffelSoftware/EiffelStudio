@@ -611,7 +611,7 @@ feature {NONE} -- Implementation
 	class_by_name (name: STRING): CLASS_I is
 			-- Return class with `name'. `Void' if not in system.
 		local
-			cl: LINKED_LIST [CLASS_I]
+			cl: LIST [CLASS_I]
 		do
 			cl := (create {SHARED_EIFFEL_PROJECT}).Eiffel_universe.classes_with_name (name)
 			if cl /= Void and then not cl.is_empty then

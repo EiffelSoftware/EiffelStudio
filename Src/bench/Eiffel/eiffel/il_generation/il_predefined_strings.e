@@ -10,6 +10,7 @@ feature -- Access
 
 	runtime_namespace: STRING is "ISE.Runtime"
 	runtime_class_name: STRING is "ISE.Runtime.RUN_TIME"
+	assertions_class_name: STRING is "ISE.Runtime.ASSERTIONS"
 	type_class_name: STRING is "ISE.Runtime.TYPE"
 	type_array_class_name: STRING is "ISE.Runtime.TYPE[]"
 	generic_type_class_name: STRING is "ISE.Runtime.GENERIC_TYPE"
@@ -21,7 +22,13 @@ feature -- Access
 	type_info_class_name: STRING is "ISE.Runtime.EIFFEL_TYPE_INFO"
 	integer_32_class_name: STRING is "System.Int32"
 	system_object_class_name: STRING is "System.Object"
+	system_type_class_name: STRING is "System.Type"
 	type_handle_class_name: STRING is "System.RuntimeTypeHandle"
+	eiffel_class_name_attribute: STRING is "ISE.Runtime.CA.EIFFEL_CLASS_NAME_ATTRIBUTE"
+	assertion_level_class_name_attribute: STRING is "ISE.Runtime.CA.ASSERTION_LEVEL_ATTRIBUTE"
+	assertion_level_enum_class_name: STRING is "ISE.Runtime.Enums.ASSERTION_LEVEL_ENUM"
+	exception_manager_class_name: STRING is "ISE.Runtime.EXCEPTION_MANAGER"
+	eiffel_derivation_class_name: STRING is "ISE.Runtime.EIFFEL_DERIVATION"
 			-- Type used by code generation.
 
 	override_prefix: STRING is "__"

@@ -1,6 +1,6 @@
 indexing
 	description: "Enable user  to modify or add rename clauses."
-	external_name: "AssemblyManager.RenameClausesViewer"
+	external_name: "ISE.AssemblyManager.RenameClausesViewer"
 
 class
 	RENAME_CLAUSES_VIEWER
@@ -38,13 +38,11 @@ feature {NONE} -- Initialization
 			return_value := showdialog
 		ensure
 			eiffel_class_set: eiffel_class = an_eiffel_class
-			parent_name_set: parent_name.equals (a_parent_name)
+			parent_name_set: parent_name.equals_string (a_parent_name)
 			type_view_set: type_view = a_type_view
 		end
 
 feature -- Access
-	
-	console: SYSTEM_CONSOLE
 	
 	dictionary: RENAME_CLAUSES_VIEWER_DICTIONARY
 			-- Dictionary
@@ -447,6 +445,7 @@ feature -- Basic Operations
 			class_label.set_location (a_point)
 			class_label.set_autosize (True)
 			--create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style) 						create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size,  Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size, Bold_style) 						create label_font.make_font_10 (dictionary.Font_family_name, Label_font_size,  Bold_style) 
 			class_label.set_font (label_font)
 			
 				-- Class name 
@@ -459,14 +458,14 @@ feature -- Basic Operations
 			class_name_label.set_text (eiffel_class.eiffelname.toupper)
 			class_name_label.set_autosize (True)
 			--create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style)
-			create a_font.make_font_10 (dictionary.Font_family_name, Label_font_size, Bold_style)
-			class_name_label.set_font (a_font)	
+			--create a_font.make_font_10 (dictionary.Font_family_name, Label_font_size, Bold_style)
+			class_name_label.set_font (label_font)	
 			
 				-- External name
 			create external_name_label.make_label
 			external_name_text := dictionary.Opening_bracket
 			external_name_text := external_name_text.concat_string_string_string_string (external_name_text, dictionary.External_name_keyword, dictionary.Colon, dictionary.Space)
-			external_name_text := external_name_text.concat_string_string_string_string (external_name_text, dictionary.Inverted_comma, eiffel_class.dotnetfullname, dictionary.Inverted_comma)
+			external_name_text := external_name_text.concat_string_string_string_string (external_name_text, dictionary.Inverted_comma, eiffel_class.fullexternalname, dictionary.Inverted_comma)
 			external_name_text := external_name_text.concat_string_string (external_name_text, dictionary.Closing_bracket)
 			external_name_label.set_text (external_name_text)
 			--a_point.set_X (dictionary.Margin)
@@ -664,11 +663,11 @@ feature -- Event handling
 					an_item := selected_items.item (i)
 					item_text := an_item.text
 					if item_text /= Void then
-						if item_text.length > 0 and not item_text.equals (dictionary.New_clause) then
+						if item_text.length > 0 and not item_text.equals_string (dictionary.New_clause) then
 							a_rename_clause := rename_clause_from_text (item_text)								
 							rename_source_text_box.set_text (a_rename_clause.source)									
 							rename_target_text_box.set_text (a_rename_clause.target)
-						elseif item_text.equals (dictionary.New_clause) and rename_source_text_box.text /= Void then
+						elseif item_text.equals_string (dictionary.New_clause) and rename_source_text_box.text /= Void then
 							if rename_source_text_box.text.length > 0 then
 								rename_source_text_box.clear
 								rename_target_text_box.clear
@@ -719,7 +718,7 @@ feature -- Gui Update
 		do
 			a_new_clause := rename_clause_text_from_info (a_clause.source, a_clause.target)
 			create list_view_item.make_1 (a_new_clause)
-			list_view_item := rename_list_view.items.add (list_view_item)
+			list_view_item := rename_list_view.items.add_listviewitem (list_view_item)
 			rename_table.add (a_new_clause, list_view_item)
 			rename_source_text_box.clear
 			rename_target_text_box.clear
@@ -748,7 +747,7 @@ feature -- Gui Update
 				rename_table.remove (old_text)
 				new_text := rename_clause_text_from_info (a_new_clause.source, a_new_clause.target)
 				create new_item.make_1 (new_text)
-				new_item := rename_list_view.items.add (new_item)
+				new_item := rename_list_view.items.add_listviewitem (new_item)
 				rename_table.add (new_text, new_item)
 				rename_source_text_box.clear
 				rename_target_text_box.clear
@@ -905,7 +904,7 @@ feature {NONE} -- Implementation
 			a_size.set_height (List_height)
 			list_view.set_size (a_size)	
 			create list_view_item.make_1 (dictionary.New_clause)
-			list_view_item := list_view.items.add (list_view_item)
+			list_view_item := list_view.items.add_listviewitem (list_view_item)
 			a_list := clauses.rename_clauses
 			from
 			until
@@ -918,7 +917,7 @@ feature {NONE} -- Implementation
 					clause_text := clause_text.concat_string_string (clause_text, rename_clause.target)
 					create list_view_item.make_1 (clause_text)
 					rename_table.add (clause_text, list_view_item)
-					list_view_item := list_view.items.add (list_view_item)
+					list_view_item := list_view.items.add_listviewitem (list_view_item)
 				end				
 				i := i + 1
 			end
@@ -1006,11 +1005,14 @@ feature {NONE} -- Implementation
 			non_void_text: a_text /= Void
 			not_empty_text: a_text.length > 0
 		local
+			test_string: STRING
 			as_index: INTEGER
 		do
-			as_index := a_text.indexof_string_int32 (dictionary.As_keyword, 0)
+			test_string := dictionary.Space
+			test_string := test_string.concat_string_string_string (test_string, dictionary.As_keyword, dictionary.Space)
+			as_index := a_text.indexof_string_int32 (test_string, 0)
 			if as_index > 0 then
-				Result := a_text.substring_int32_int32 (0, as_index - 1)
+				Result := a_text.substring_int32_int32 (0, as_index)
 			end
 		ensure
 			source_built: Result /= Void
@@ -1042,7 +1044,7 @@ feature {NONE} -- Implementation
 			until
 				i = list_items.count or Result
 			loop
-				Result := list_items.item (i).text.tolower.equals (a_rename_clause.tolower)
+				Result := list_items.item (i).text.tolower.equals_string (a_rename_clause.tolower)
 				i := i + 1
 			end
 		end	
@@ -1067,7 +1069,7 @@ feature {NONE} -- Implementation
 				i = list_items.count or Result
 			loop
 				existing_source := source_from_text (list_items.item (i).text)
-				if existing_source.tolower.equals (a_source.tolower) then
+				if existing_source.tolower.equals_string (a_source.tolower) then
 					existing_list_item := list_items.item (i)
 					Result := True
 				end

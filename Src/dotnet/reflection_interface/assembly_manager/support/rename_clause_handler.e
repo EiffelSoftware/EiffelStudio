@@ -1,6 +1,6 @@
 indexing
 	description: "Check rename clause validity and update feature list."
-	external_name: "AssemblyManager.RenameClauseHandler"
+	external_name: "ISE.AssemblyManager.RenameClauseHandler"
 
 class
 	RENAME_CLAUSE_HANDLER
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		do
 			a_feature.seteiffelname (new_name)
 		ensure
-			new_name_set: a_feature.eiffelname.equals (new_name)
+			new_name_set: a_feature.eiffelname.equals_string (new_name)
 		end
 	
 	update_inheritance_clauses (old_name, new_name: STRING) is
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 				i = a_list.count or Result
 			loop
 				a_feature ?= a_list.item (i)
-				if a_feature /= Void and then a_feature.eiffelname.tolower.equals (a_feature_name.tolower) then
+				if a_feature /= Void and then a_feature.eiffelname.tolower.equals_string (a_feature_name.tolower) then
 					eiffel_feature := a_feature
 					Result := True
 				end
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 				i = a_list.count or Result
 			loop
 				a_clause ?= a_list.item (i)
-				if a_clause /= Void and then a_clause.tolower.equals (a_feature_name.tolower) then
+				if a_clause /= Void and then a_clause.tolower.equals_string (a_feature_name.tolower) then
 					index_in_list := i
 					Result := True
 				end

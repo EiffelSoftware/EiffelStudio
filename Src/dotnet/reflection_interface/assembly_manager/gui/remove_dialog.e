@@ -1,6 +1,6 @@
 indexing
 	description: "Dialog showing dependancies of a .NET assembly"
-	external_name: "AssemblyManager.RemoveDialog"
+	external_name: "ISE.AssemblyManager.RemoveDialog"
 
 class
 	REMOVE_DIALOG
@@ -38,8 +38,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	console: SYSTEM_CONSOLE
 	
 	dictionary: REMOVE_DIALOG_DICTIONARY
 			-- Dictionary
@@ -298,15 +296,21 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			warning_dialog: WARNING_DIALOG
+			type: SYSTEM_TYPE
+			on_confirmation_event_handler_delegate: SYSTEM_EVENTHANDLER
 		do
 			if dependancies.count > 0 then
 				if dependancies_check_box.Checked then
-					create warning_dialog.make (assembly_descriptor, dependancies, dictionary.Warning_text)
+					type := type_factory.GetType_String (dictionary.System_event_handler_type)
+					on_confirmation_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "RemoveAssemblyAndDependancies")
+					create warning_dialog.make (assembly_descriptor, dependancies, dictionary.Warning_text, on_confirmation_event_handler_delegate)
 				else
-					console.writeline_string ("yes clicked: will remove selected assembly without any dependancies")
+					remove_assembly
+					close
 				end
 			else
-				console.writeline_string ("yes clicked: will remove selected assembly")
+				remove_assembly
+				close
 			end
 		end
 
@@ -334,5 +338,59 @@ feature {NONE} -- Implementation
 		indexing
 			external_name: "DelegateFactory"
 		end
-			
+
+	remove_assembly is
+			-- Remove the assembly corresponding to `assembly_descriptor'.
+		indexing
+			external_name: "RemoveAssembly"
+		require
+			non_void_assembly_descriptor: assembly_descriptor /= Void
+		local
+			reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
+			retried: BOOLEAN
+		do
+			if not retried then
+				create reflection_interface.make_reflectioninterface
+				reflection_interface.MakeReflectionInterface
+				reflection_interface.removeassembly (assembly_descriptor)
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
+	remove_assembly_and_dependancies is
+			-- Remove the assembly corresponding to `assembly_descriptor' and its dependancies.
+		indexing
+			external_name: "RemoveAssemblyAndDependancies"
+		require
+			non_void_assembly_descriptor: assembly_descriptor /= Void
+		local
+			reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
+			i: INTEGER
+			a_dependancy: SYSTEM_REFLECTION_ASSEMBLYNAME
+			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+			convert: ISE_REFLECTION_CONVERSIONSUPPORT
+			retried: BOOLEAN
+		do
+			remove_assembly
+			if not retried then
+				create reflection_interface.make_reflectioninterface
+				reflection_interface.MakeReflectionInterface
+				create convert.make_conversionsupport
+				from
+				until
+					i = dependancies.count
+				loop
+					a_dependancy := dependancies.item (i)
+					a_descriptor := convert.assemblydescriptorfromname (a_dependancy)
+					reflection_interface.removeassembly (a_descriptor)
+					i := i + 1
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end	
+		
 end -- class REMOVE_DIALOG

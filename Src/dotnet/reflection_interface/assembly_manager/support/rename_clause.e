@@ -1,6 +1,6 @@
 indexing
 	description: "Representation of a rename clause"
-	external_name: "AssemblyManager.RenameClause"
+	external_name: "ISE.AssemblyManager.RenameClause"
 
 class
 	RENAME_CLAUSE
@@ -24,8 +24,8 @@ class
  			source := a_source
  			target := a_target
  		ensure
- 			source_set: source.equals (a_source)
- 			target_set: target.equals (a_target)
+ 			source_set: source.equals_string (a_source)
+ 			target_set: target.equals_string (a_target)
  		end
  
  feature -- Access

@@ -1,6 +1,6 @@
 indexing
 	description: "Assembly viewer"
-	external_name: "AssemblyManager.AssemblyViewer"
+	external_name: "ISE.AssemblyManager.AssemblyViewer"
 
 class
 	ASSEMBLY_VIEWER
@@ -25,8 +25,9 @@ feature {NONE} -- Initialization
 			create dictionary
 			create assemblies.make
 			create reflection_interface.make_reflectioninterface
-			reflection_interface.Make
+			reflection_interface.MakeReflectionInterface
 			if not retried then
+				register_to_subject
 				initialize_gui
 			else
 				display_error
@@ -220,10 +221,10 @@ feature -- Status Setting
 			loop
 				a_descriptor ?= enumerator.current_
 				if a_descriptor /= Void then
-					Result := assembly_descriptor.name.equals (a_descriptor.name) 
-							and assembly_descriptor.version.equals (a_descriptor.version)
-							and assembly_descriptor.culture.equals (a_descriptor.culture)
-							and assembly_descriptor.publickey.equals (a_descriptor.publickey)
+					Result := assembly_descriptor.name.equals_string (a_descriptor.name) 
+							and assembly_descriptor.version.equals_string (a_descriptor.version)
+							and assembly_descriptor.culture.equals_string (a_descriptor.culture)
+							and assembly_descriptor.publickey.equals_string (a_descriptor.publickey)
 				end
 			moved := enumerator.movenext
 			end
@@ -231,6 +232,25 @@ feature -- Status Setting
 	
 feature -- Basic Operations
 
+	register_to_subject is
+	
+		indexing
+			external_name: "RegisterToSubject"
+		local
+			type: SYSTEM_TYPE
+			notifier: ISE_REFLECTION_NOTIFIER
+			on_update_add_delegate: SYSTEM_EVENTHANDLER
+			on_update_remove_delegate: SYSTEM_EVENTHANDLER
+		do
+			create notifier.make1
+			notifier.make
+			type := type_factory.gettype_string (dictionary.System_event_handler_type)
+			on_update_add_delegate ?= delegate_factory.createdelegate_type_object (type, Current, "UpdateAdd")
+			notifier.addadditionobserver (on_update_add_delegate)
+			on_update_remove_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "UpdateRemove")
+			notifier.addremoveobserver (on_update_remove_delegate)
+		end
+		
 	initialize_gui is
 			-- Initialize assembly viewer window.
 		indexing
@@ -415,7 +435,7 @@ feature -- Event handling
 				an_assembly_descriptor ?= assemblies.Item (row_descriptor)
 --##################################################
 				if an_assembly_descriptor /= Void then
-					an_assembly := reflection_interface.assemblyfrominfo (an_assembly_descriptor)
+					an_assembly := reflection_interface.assembly (an_assembly_descriptor)
 					if an_assembly /= Void then
 						a_type_list := an_assembly.types
 						if a_type_list /= Void then
@@ -514,43 +534,61 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
-			a_point: SYSTEM_DRAWING_POINT
-			a_size: SYSTEM_DRAWING_SIZE
-			type: SYSTEM_TYPE
-			on_edit_event_handler_delegate: SYSTEM_DELEGATE
-			return_value: INTEGER
-		--	info: HITTESTINFO_IN_SYSTEM_WINDOWS_FORMS_DATAGRID
+--			info: HITTESTINFO_IN_SYSTEM_WINDOWS_FORMS_DATAGRID
 		do
-			--info := data_grid.HitTest_Int32 (arguments.X, arguments.Y)
-			--if info.Type = 6 then
-				console.writeline_string ("row selected")
-			--	if info.Row <= imported_assemblies.Count then
-						-- Currently selected assembly has already been imported. Thus, it can be edited or removed.
-					if import_button /= Void and then controls.contains (import_button) then
-						controls.remove (import_button)
-					end
-					if edit_button = Void then
-						create_edit_button
-					end
-					if remove_button = Void then
-						create_remove_button					
-					end
-					refresh
-				--else
-						-- Currently selected assembly has not been imported yet.
-				--	if edit_button /= Void and then controls.contains (edit_button) then
-				--		controls.remove (edit_button)
-				--	end
-				--	if remove_button /= Void and then controls.contains (remove_button) then
-				--		controls.remove (edit_button)
-				--	end
-				--	if import_button = Void then
-				--		create_import_button
-				--	end
-				--	refresh
-				--end
-			--end
+--			info := data_grid.HitTest_Int32 (arguments.X, arguments.Y)
+--			if info.Type = 6 then
+--				console.writeline_string ("row selected")
+--				if info.Row <= imported_assemblies.Count then
+--						-- Currently selected assembly has already been imported. Thus, it can be edited or removed.
+--					if import_button /= Void and then controls.contains (import_button) then
+--						controls.remove (import_button)
+--					end
+--					if edit_button = Void then
+--						create_edit_button
+--					end
+--					if remove_button = Void then
+--						create_remove_button					
+--					end
+--					refresh
+--				else
+--						-- Currently selected assembly has not been imported yet.
+--					if edit_button /= Void and then controls.contains (edit_button) then
+--						controls.remove (edit_button)
+--					end
+--					if remove_button /= Void and then controls.contains (remove_button) then
+--						controls.remove (edit_button)
+--					end
+--					if import_button = Void then
+--						create_import_button
+--					end
+--					refresh
+--				end
+--			end
 		end
+	
+	update_add (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+			-- Update `assemblies_table'.
+		indexing
+			external_name: "UpdateAdd"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		do
+			console.writeline_string ("update add")
+		end
+
+	update_remove (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+			-- Update `assemblies_table'.
+		indexing
+			external_name: "UpdateRemove"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		do
+			console.writeline_string ("update remove")
+		end
+
 		
 feature {NONE} -- Implementation
 
@@ -632,7 +670,7 @@ feature {NONE} -- Implementation
 
 				-- Fill table
 			fill_assemblies_table_with_imported_assemblies
-			fill_assemblies_table_with_other_shared_assemblies
+			--fill_assemblies_table_with_other_shared_assemblies
 			
 				-- Build data grid				
 			create data_grid.make_datagrid
@@ -659,10 +697,13 @@ feature {NONE} -- Implementation
 			--data_grid_table_style.set_PreferredColumnWidth (dictionary.Window_width // 6)
 			data_grid_table_style.set_PreferredColumnWidth (Window_width // 6)
 			
-			if data_grid.TableStyles.System_Collections_ICollection_get_Count = 0 then
+			if not data_grid.TableStyles.contains_datagridtablestyle (data_grid_table_style) then
 				added := data_grid.TableStyles.Add (data_grid_table_style)
 			end	
-			data_grid.EndInit 		
+			data_grid.EndInit 
+			
+		--	create on_select_table_event_handler_delegate.make_mouseeventhandler (Current, "OnSelectTableEventHandler")
+		--	data_grid.add_select (on_select_table_event_handler_delegate)	
 		end
 		
 	console: SYSTEM_CONSOLE
@@ -716,7 +757,7 @@ feature {NONE} -- Implementation
 			row_descriptor: ROW_DESCRIPTOR		
 		do
 			row := data_table.NewRow
-			data_table.Rows.Add_datarow (row)
+			data_table.Rows.Add (row)
 			row.Table.DefaultView.set_AllowEdit (False)
 			row.Table.DefaultView.set_AllowNew (False)
 			row.Table.DefaultView.set_AllowDelete (False)
@@ -868,50 +909,21 @@ feature {NONE} -- Implementation
 			controls.add (import_button)
 		end
 	
-	assembly_name_from_info (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): SYSTEM_REFLECTION_ASSEMBLYNAME is
-			-- Assembly name corresponding to `a_descriptor'.
-		require
-			non_void_descriptor: a_descriptor /= Void
-		local
-			version: SYSTEM_VERSION
-			culture: SYSTEM_GLOBALIZATION_CULTUREINFO
-			encoding: SYSTEM_TEXT_ASCIIENCODING
-			public_key: ARRAY [INTEGER_8]
-			retried: BOOLEAN
-		do
-			create Result.make
-			Result.set_Name (a_descriptor.Name)
-			create version.make_3 (a_descriptor.Version)
-			Result.set_Version (version)
-			if not a_descriptor.Culture.Equals_String (dictionary.Neutral_culture) then
-				create culture.make (a_descriptor.Culture)
-			else
-				create culture.make (dictionary.Empty_string)
-			end
-			Result.set_CultureInfo (culture)
-			create encoding.make_asciiencoding 
-			if not retried then
-				public_key := encoding.GetBytes (a_descriptor.PublicKey)
-				Result.SetPublicKeyToken (public_key)
-			end
-		ensure
-			non_void_assembly_name: Result /= Void
-		rescue
-			retried := True
-			retry
-		end
-	
 	dependancies_from_info (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME] is
 			-- Dependancies of an assembly having `a_descriptor' as assembly descriptor
+		indexing
+			external_name: "DependanciesFromInfo"
 		require
 			non_void_assembly_descriptor: a_descriptor /= Void
 		local
 			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
 			an_assembly: SYSTEM_REFLECTION_ASSEMBLY
+			convert: ISE_REFLECTION_CONVERSIONSUPPORT
 			retried: BOOLEAN
 		do
 			if not retried then
-				assembly_name := assembly_name_from_info (a_descriptor)
+				create convert.make_conversionsupport
+				assembly_name := convert.assemblynamefromdescriptor (a_descriptor)
 				an_assembly := an_assembly.load (assembly_name)
 				Result := an_assembly.GetReferencedAssemblies
 			else

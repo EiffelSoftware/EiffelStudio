@@ -1,6 +1,6 @@
 indexing
 	description: "List of rename clauses"
-	external_name: "AssemblyManager.RenameClauses"
+	external_name: "ISE.AssemblyManager.RenameClauses"
 
  class
  	RENAME_CLAUSES

@@ -1,6 +1,6 @@
 indexing
 	description: "Dialog showing dependancies of a .NET assembly"
-	external_name: "AssemblyManager.WarningDialog"
+	external_name: "ISE.AssemblyManager.WarningDialog"
 
 class
 	WARNING_DIALOG
@@ -13,10 +13,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies; a_question: like question_label_text) is
+	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies; a_question: like question_label_text; a_call_back: like call_back) is
 			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
 			-- Set `dependancies' with `assembly_dependancies'.
 			-- Set `question_label_text' with `a_question'.
+			-- Set `call_back' with `a_call_back'.
 		indexing
 			external_name: "Make"
 		require
@@ -27,6 +28,7 @@ feature {NONE} -- Initialization
 			not_empty_dependancies: assembly_dependancies.count > 0
 			non_void_question: a_question /= Void
 			not_empty_question: a_question.length > 0
+			non_void_call_back: a_call_back /= Void
 		local
 			return_value: INTEGER
 		do
@@ -35,12 +37,14 @@ feature {NONE} -- Initialization
 			assembly_descriptor := an_assembly_descriptor
 			dependancies := assembly_dependancies
 			question_label_text := a_question
+			call_back := a_call_back
 			initialize_gui
 			return_value := showdialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
 			question_set: question_label_text.equals_string (a_question)
+			call_back_set: call_back = a_call_back
 		end
 
 feature -- Access
@@ -69,6 +73,12 @@ feature -- Access
 			-- Question to the user
 		indexing
 			external_name: "QuestionLabelText"
+		end
+		
+	call_back: SYSTEM_EVENTHANDLER
+			-- Call back agent
+		indexing
+			external_name: "CallBack"
 		end
 		
 	assembly_label: SYSTEM_WINDOWS_FORMS_LABEL
@@ -279,9 +289,10 @@ feature -- Basic Operations
 			a_point.set_Y (Window_height - 4 * Margin - Button_height)
 			yes_button.set_location (a_point)
 			yes_button.set_text (dictionary.Yes_button_label)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_yes_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnYesEventHandler")
-			yes_button.add_Click (on_yes_event_handler_delegate)
+			--type := type_factory.GetType_String (dictionary.System_event_handler_type)
+			--on_yes_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnYesEventHandler")
+			--yes_button.add_Click (on_yes_event_handler_delegate)
+			yes_button.add_Click (call_back)
 
 				-- No button
 			create no_button.make_button

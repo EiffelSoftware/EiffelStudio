@@ -376,8 +376,9 @@ feature -- Status report
 			retried: BOOLEAN
 		do
 			if not retried then
+				internal_file.refresh
 				create perm.make_from_access_and_path (feature {FILE_IOPERMISSION_ACCESS}.write,
-					name.to_cil)
+					internal_file.full_name)
 				perm.demand
 			end
 			Result := not retried
@@ -1353,6 +1354,7 @@ feature -- Input
 			str_area := last_string.area.native_array
 			new_count := reader.read_character_array (str_area, 0, nb_char)
 			last_string.make_from_native_array (str_area)
+			last_string.set_count (new_count)
 			internal_end_of_file := reader.peek = -1
 		end
 
@@ -1366,9 +1368,12 @@ feature -- Input
 			is_readable: file_readable
 		local
 			blanks: STRING
-			ri: INTEGER
-			rc: CHARACTER
+			old_c, rc: CHARACTER
 		do
+				-- Save previous state of `last_character' as we modify it
+				-- by using `read_character'
+			old_c := last_character
+
 				-- Clean previous stored string.
 			last_string.wipe_out
 
@@ -1378,16 +1383,16 @@ feature -- Input
 				-- Read until we find a character which is not a 
 				-- separator.
 			from
-				ri := reader.read
-				if ri /= -1 then
-					rc := ri.to_character
+				read_character
+				if not end_of_file then
+					rc := last_character
 				end
 			until
-				ri = -1 or else not blanks.has (rc)
+				end_of_file or else not blanks.has (rc)
 			loop
-				ri := reader.read
-				if ri /= -1 then
-					rc := ri.to_character
+				read_character
+				if not end_of_file then
+					rc := last_character
 				else
 					rc := ' '
 				end
@@ -1396,24 +1401,24 @@ feature -- Input
 			last_string.extend (rc)
 
 			from
-				ri := reader.read
-				if ri /= -1 then
-					rc := ri.to_character
+				read_character
+				if not end_of_file then
+					rc := last_character
 				end
 			until
-				ri = -1 or else blanks.has (rc)
+				end_of_file or else blanks.has (rc)
 			loop
 				last_string.extend (rc)
-				ri := reader.read
-				if ri /= -1 then
-					rc := ri.to_character
+				read_character
+				if not end_of_file then
+					rc := last_character
 				end
 			end
 
-			if ri /= -1 then
+			if not end_of_file then
 				back
 			end
-			internal_end_of_file := reader.peek = -1
+			last_character := old_c
 		end
 
 feature -- Convenience

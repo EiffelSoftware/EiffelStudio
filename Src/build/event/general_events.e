@@ -7,59 +7,40 @@ indexing
 class GENERAL_EVENTS 
 
 inherit
-	
     EVENT_PAGE
-        redefine
-			make,
-			make_button_visible
-        end
 
 creation
-
 	make
-	
-feature {NONE}
 
-	symbol: PIXMAP is
+feature -- Access
+
+	update_content (ctxt: CONTEXT) is
+		do
+		end
+
+feature {NONE} -- Implementation
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.general_pixmap
 		end
 
-	selected_symbol: PIXMAP is
-		do
-			Result := Pixmaps.selected_general_pixmap
-		end
+--	set_focus_string is
+--		do
+--			button.set_focus_string (Focus_labels.general_label)
+--		end
 
-	set_focus_string is
+	fill_page is
 		do
-			button.set_focus_string (Focus_labels.general_label)
-		end
-
-	append_general_events is
-		do
-			extend (widget_destroy_ev)
-			extend (mouse_enter_ev)
+			extend (destroy_ev)
+			extend (enter_notify_ev)
+			extend (leave_notify_ev)
+			extend (motion_notify_ev)
 			extend (key_press_ev)
 			extend (key_release_ev)
-			extend (mouse_leave_ev)
-			extend (pointer_motion_ev)
-		end
-	
-feature {CATALOG}
-    
-    make_button_visible (button_rc: ROW_COLUMN) is
-            -- call cat_make_button_visible and set focus string for the button
-        do
-            {EVENT_PAGE} Precursor (button_rc)
-            button.set_focus_string (Focus_labels.general_label)
-        end
-
-feature {NONE} --samik, this was CATALOG
-
-	make (cat: like associated_catalog) is
-		do
-			{EVENT_PAGE} Precursor (cat)
-			append_general_events
+			extend (get_focus_ev)
+			extend (lose_focus_ev)
 		end
 
 end -- class GENERAL_EVENTS   
+

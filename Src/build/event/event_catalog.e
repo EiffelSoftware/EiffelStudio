@@ -1,194 +1,114 @@
+indexing
+	description: "Events catalog."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EVENT_CATALOG 
 
 inherit
-	
 	EVENT_LABELS
+
 	COMMAND_ARGS
-	CATALOG [EVENT]
-		rename
-			make as catalog_make
-		end
+
+	CATALOG
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Implementation
+
+	define_pages is
+		do
+			create general_events.make (Current)
+			create mouse_events.make (Current)
+			create button_events.make (Void)
+			create list_events.make (Void)
+			create item_events.make (Void)
+			create text_events.make (Void)
+			create window_events.make (Void)
+			create drawing_events.make (Void)
+--			create scale_events.make (Void)
+
+--XX Use pixmaps instead of labels for the tabs.
+			append_page (general_events, "General")
+			append_page (mouse_events, "Mouse")
+		end
 
 	general_events: GENERAL_EVENTS
 
-	button_events: BUTTON_EVENTS
+	mouse_events: MOUSE_EVENTS
 
-	drawing_events: DRAWING_EVENTS
+	button_events: BUTTON_EVENTS
 
 	list_events: LIST_EVENTS
 
-	mouse_events: MOUSE_EVENTS
-
-	scale_events: SCALE_EVENTS
-
-	translations_events: TRANSLATIONS_EVENTS
+	item_events: ITEM_EVENTS
 
 	text_events: TEXT_EVENTS
 
-	text_f_events: TEXT_F_EVENTS
+	window_events: WINDOW_EVENTS
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
-			-- Create the catalog interface with `a_screen'
-			-- as the parent.
-		do
-			catalog_make (a_name, a_parent)
-		end
+	drawing_events: DRAWING_EVENTS
 
-feature 
-
-	create_interface is 
-			-- Create interface of an event_catalog 
-		local
-			first_separator, second_separator: THREE_D_SEPARATOR	
-		do
-			!! button_rc.make (Widget_names.row_column, Current)
-			button_rc.set_column_layout
-			button_rc.set_same_size
-			!! first_separator.make ("", Current)
-			!! second_separator.make ("", Current)
-			!! general_events.make (Current)
-			!! mouse_events.make (Current)
-			!! translations_events.make (Current)
-			!! button_events.make (Current)
-			!! text_events.make (Current)
-			!! text_f_events.make (Current)
-			!! drawing_events.make (Current)
-			!! list_events.make (Current)
-			!! scale_events.make (Current)
-			!! page_sw.make (Widget_names.scroll, Current)
-			!! pages.make
-
-			first_separator.set_horizontal (False)
-
-			attach_top (button_rc, 0)
-			attach_left (button_rc, 2)
-			attach_top (first_separator, 0)
-			attach_bottom_widget (second_separator, first_separator, 0)
-			attach_top (page_sw, 0)
-			attach_right (page_sw, 0)
-			attach_left_widget (first_separator, page_sw, 0)
-			attach_left_widget (button_rc, first_separator, 2)
-			attach_bottom_widget (second_separator, page_sw, 2)
-			attach_bottom (second_separator, 0)	
-			attach_right (second_separator, 0)
-			attach_left (second_separator, 0)
-			define_event_pages
-			update_interface
-			button_events.hide_button
-			text_events.hide_button
-			text_f_events.hide_button
-			drawing_events.hide_button
-			list_events.hide_button
-			scale_events.hide_button
-		end
-
-	define_event_pages is
-		do
-			add_page (general_events)
-			add_page (mouse_events)
-			add_page (translations_events)
-			add_page (button_events)
-			add_page (text_events)
-			add_page (text_f_events)
-			add_page (drawing_events)
-			add_page (list_events)
-			add_page (scale_events)
-			set_initial_page (general_events)
-		end
-
-	insert_after (dest_stone, source_stone: EVENT) is
-		do	
-			current_page.insert_after (dest_stone, source_stone)
-		end
-
-	translation_page_shown: BOOLEAN is
-			-- Is translation page shown?
-		do
-			Result := (current_page = translations_events)
-		end
-	
-	update_translations is
-		do
-			translations_events.update_content
-		end
-
-	unregister_holes is
-		do
-			general_events.unregister_holes
-			mouse_events.unregister_holes
-			translations_events.unregister_holes
-			button_events.unregister_holes
-			text_events.unregister_holes
-			text_f_events.unregister_holes
-			drawing_events.unregister_holes
-			list_events.unregister_holes
-		end
-
-	
-feature {NONE}
+--	scale_events: SCALE_EVENTS
 
 	optional_page: EVENT_PAGE
 
-	
-feature 
+feature -- Access
 
-	update_pages (a_context: CONTEXT) is
+	update_pages (ctxt: CONTEXT) is
 		local
+			previous_page: EVENT_PAGE
+			temp_tab_name: STRING
 			button_c: BUTTON_C
-			text_c: TEXT_C
-			text_f_c: TEXT_FIELD_C
-			dr_area_c: DR_AREA_C
-			list: SCROLLABLE_LIST_C
-			scale_c: SCALE_C
-			previous_optional_page: EVENT_PAGE
-			page: EVENT_PAGE
+			list_c: LIST_C
+			mc_list_c: MULTI_COLUMN_LIST_C
+			item_c: ITEM_C
+			text_c: TEXT_COMPONENT_C
+			win_c: WINDOW_C
+			drawing_c: DRAWING_AREA_C
 		do
-			previous_optional_page := optional_page
-			button_c ?= a_context
-			text_c ?= a_context
-			text_f_c ?= a_context
-			dr_area_c ?= a_context
-			list ?= a_context
-			scale_c ?= a_context
-
+			previous_page := optional_page
+			button_c ?= ctxt
+			list_c ?= ctxt
+			mc_list_c ?= ctxt
+			item_c ?= ctxt
+			text_c ?= ctxt
+			win_c ?= ctxt
+			drawing_c ?= ctxt
 			if button_c /= Void then
 				optional_page := button_events
+				temp_tab_name := "Button"
+			elseif list_c /= Void or else mc_list_c /= Void then
+				optional_page := list_events
+				temp_tab_name := "List"
+			elseif item_c /= Void then
+				optional_page := item_events
+				temp_tab_name := "Item"
+				general_events.update_content (ctxt)
+				mouse_events.update_content (ctxt)
 			elseif text_c /= Void then
 				optional_page := text_events
-			elseif text_f_c /= Void then
-				optional_page := text_f_events
-			elseif list /= Void then
-				optional_page := list_events
-			elseif scale_c /= Void then
-				optional_page := scale_events
-			elseif dr_area_c /= Void then
+				temp_tab_name := "Text"
+			elseif win_c /= Void then
+				optional_page := window_events
+				temp_tab_name := "Window"
+			elseif drawing_c /= Void then
 				optional_page := drawing_events
-			else
-				optional_page := Void
+				temp_tab_name := "Drawing"
 			end
-			if previous_optional_page /= optional_page then
-				if previous_optional_page /= Void then
-					previous_optional_page.hide_button
+			if previous_page /= optional_page then
+				if previous_page /= Void then
+					previous_page.set_parent (Void)
 				end
 				if optional_page /= Void then
-					optional_page.show_button
+					optional_page.set_parent (Current)
+					optional_page.update_content (ctxt)
+					append_page (optional_page, temp_tab_name)
 				end
-			end
-			if optional_page /= Void then
-				update_page (optional_page)
-			else
-				update_page (general_events)
-			end
-			if (optional_page = button_events) then
-				button_events.update_content (a_context)
 			end
 		end
 
-end -- class EVENT_CATALOG   
+end -- class EVENT_CATALOG 
+

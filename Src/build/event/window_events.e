@@ -1,11 +1,12 @@
 indexing
 	description: "Page representing events that can %
-				% be associated with a button."
-	Id: "$Id$"
-	Date: "$Date$"
-	Revision: "$Revision$"
+				% be associated with a window."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class BUTTON_EVENTS
+class
+	WINDOW_EVENTS
 
 inherit
 	EVENT_PAGE
@@ -16,17 +17,7 @@ creation
 feature -- Access
 
 	update_content (ctxt: CONTEXT) is
-		local
-			toggle_b_c: TOGGLE_BUTTON_C
 		do
-			toggle_b_c ?= ctxt
-			if toggle_b_c /= Void then
-				if rows = 1 then
-					extend (toggle_ev)
-				end
-			elseif rows > 1 then
-				get_item (2).destroy
-			end
 		end
 
 feature {NONE} -- Implementation
@@ -43,8 +34,10 @@ feature {NONE} -- Implementation
 
 	fill_page is
 		do
-			extend (click_ev)
+			extend (close_ev)
+			extend (move_ev)
+			extend (resize_ev)
 		end
 
-end -- class BUTTON_EVENTS
+end -- class WINDOW_EVENTS
 

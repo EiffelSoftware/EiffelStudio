@@ -1,70 +1,50 @@
+indexing
+	description: "Page representing events that can %
+				% be associated with a list."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class LIST_EVENTS 
 
 inherit
-	
-    
     EVENT_PAGE
-        rename
-            make as make_page
-        redefine
-            is_optional,
-            make_button_visible
-        select
-            make_button_visible
-        end;
-
-    EVENT_PAGE 
-        rename
-            make as make_page,
-            make_button_visible as cat_make_button_visible
-        redefine
-            is_optional
-        end;
 
 creation
-
 	make
 
-feature {CATALOG}
+feature -- Access
 
-	is_optional: BOOLEAN is True;
-	
-feature {NONE}
+	update_content (ctxt: CONTEXT) is
+		local
+			mc_list_c: MULTI_COLUMN_LIST_C
+		do
+			mc_list_c ?= ctxt
+			if mc_list_c /= Void then
+				if rows = 1 then
+					extend (column_click_ev)
+				end
+			elseif rows > 1 then
+				get_item (2).destroy
+			end
+		end
 
-	symbol: PIXMAP is
+feature {NONE} -- Implementation
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.list_pixmap
-		end;
+		end
 
-	selected_symbol: PIXMAP is
+--	set_focus_string is
+--		do
+--			button.set_focus_string (Focus_labels.list_label)
+--		end
+
+	fill_page is
 		do
-			Result := Pixmaps.selected_list_pixmap
-		end;
+			extend (selection_ev)
+		end
 
-	set_focus_string is
-		do
-			button.set_focus_string (Focus_labels.list_label)
-		end;
+end -- class LIST_EVENTS
 
-feature {CATALOG}
-    
-    make_button_visible (button_rc: ROW_COLUMN) is
-            -- call cat_make_button_visible and set focus string for the button
-        do
-            cat_make_button_visible (button_rc)
-            button.set_focus_string (Focus_labels.list_label)
-        end
-
-feature {NONE}
-
-	make (cat: like associated_catalog) is
-		do
-			make_page (cat);
-			extend (selection_ev);
-			-- added by samik
-	--		set_focus_string (Focus_labels.list_label)
-			-- end of samik
-		end;
-		
-end 

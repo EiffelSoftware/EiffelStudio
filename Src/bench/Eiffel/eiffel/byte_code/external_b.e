@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 						-- call will be used as target of the current one.
 					if
 						il_ext.type /= creator_type and
-						il_ext.type /= operator_type
+						il_ext.type /= operator_type and parent /= Void
 					then
 						if is_message then
 							real_target := parent.target

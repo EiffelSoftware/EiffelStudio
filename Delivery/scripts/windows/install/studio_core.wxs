@@ -334,6 +334,8 @@
           <Directory Id="bitmaps" Name="bitmaps">
             <Directory Id="png" Name="png">
               <Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
+                <File Id="logo.png" Name="logo.png" KeyPath="yes" />
+				<File Id="studio_icon_matrix.png" Name="STUDIO~1.PNG" LongName="studio_icon_matrix.png" />
                 <File Id="Xinterro.png" Name="Xinterro.png" />
                 <File Id="obj_down.png" Name="obj_down.png" />
                 <File Id="icon_step_into_color.png" Name="IC6787~1.PNG" LongName="icon_step_into_color.png" />
@@ -689,7 +691,6 @@
                 <File Id="dis_histback.png" Name="DIS_HI~1.PNG" LongName="dis_histback.png" />
                 <File Id="dbgstop.png" Name="dbgstop.png" />
                 <File Id="activation.png" Name="ACTIVA~1.PNG" LongName="activation.png" />
-                <File Id="logo.png" Name="logo.png" KeyPath="yes" />
                 <File Id="icon_external_symbol.png" Name="IC63F7~1.PNG" LongName="icon_external_symbol.png" />
                 <File Id="icon_word_wrap_color.png" Name="IC9F0D~1.PNG" LongName="icon_word_wrap_color.png" />
                 <File Id="icon_auto_slice_limits_color.png" Name="ICON_A~3.PNG" LongName="icon_auto_slice_limits_color.png" />

@@ -10,9 +10,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "dir.h"
 #include "file.h"	/* for PATH_MAX */
+
+#ifdef __WATCOMC__
+#include <windows.h>
+#endif
 
 private fnptr set_proc;
 private fnptr send_proc;

@@ -50,26 +50,7 @@ feature -- Settings
 			end
 		end
 
-	set_class_custom_attributes (a_class_token: INTEGER) is
-			-- Extract all defined custom attribute of current class being
-			-- generated if any and applied them to `a_class_token'.
-		require
-			a_class_token_valid: a_class_token /= 0
-		local
-			attributes: EIFFEL_LIST [CREATION_EXPR_AS]
-			l_class_type: CLASS_TYPE
-		do
-			check
-				has_ast: il_generator.current_class_type.associated_class.most_recent_ast /= Void
-			end
-			l_class_type := il_generator.current_class_type
-			attributes := l_class_type.associated_class.most_recent_ast.custom_attribute
-			if attributes /= Void then
-				generate_custom_attribute (a_class_token, l_class_type, attributes)
-			end
-		end
-
-feature {NONE} -- Implementation
+feature {IL_CODE_GENERATOR} -- Generation
 
 	generate_custom_attribute (a_owner_token: INTEGER; class_type: CLASS_TYPE;
 			ca: EIFFEL_LIST [CREATION_EXPR_AS])
@@ -159,6 +140,8 @@ feature {NONE} -- Implementation
 				il_generator.define_custom_attribute (a_owner_token, l_ctor_token, l_ca)
 			end
 		end
+
+feature {NONE} -- Generation
 
 	add_custom_attribute_argument (a_ca_blob: MD_CUSTOM_ATTRIBUTE; e: EXPR_B) is
 			-- Add `e' to list of arguments needed by custom attribute

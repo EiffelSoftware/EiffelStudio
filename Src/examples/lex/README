@@ -1,0 +1,18 @@
+Usage:
+	eiffel_scan eiffel_file_name
+
+	For example:
+		eiffel_scan sample_file.e
+
+Description:
+Example of a lexical analyzer for Eiffel.
+
+If not previously built and stored, a stored lexical analyzer
+object is created according to regular expressions described by the
+file `eiffel_regular' and stored in `eiffel_lex' for doing lexical
+analysis of Eiffel code.  (This may take a few moments.)  This object is
+then used to analyze the file named by the argument.  Once the analyzer
+has been built, subsequent calls will be much faster.
+
+See the "Introduction to the Lexical Library" chapter of EIFFEL: THE
+LIBRARIES for more information.

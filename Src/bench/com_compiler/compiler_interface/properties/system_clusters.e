@@ -27,6 +27,11 @@ inherit
         export
             {NONE} all
         end
+        
+	IL_CASING_CONVERSION
+		export
+			{NONE} all
+		end
 
 create
     make
@@ -135,15 +140,27 @@ feature -- Access
             	if cluster.cluster_namespace /= Void and not cluster.cluster_namespace.is_empty then
 	                Result := clone (cluster.cluster_namespace)
 	            else
-	                Result := clone (cluster.name)
+	            	if ace_accesser.dot_net_naming_convention then
+		            	Result := namespace_casing (True, cluster.name.as_lower)
+		            else
+		            	Result := clone (cluster.name)
+	            	end
             	end
                 if cluster.has_parent then
                     Result.prepend_character('.')
-                    Result.prepend(get_cluster_full_namespace (cluster.parent_name))
+                    if ace_accesser.dot_net_naming_convention then
+	                    Result.prepend (get_cluster_full_namespace (namespace_casing (True, cluster.parent_name.as_lower)))
+	                else
+	                	Result.prepend (get_cluster_full_namespace (cluster.parent_name))
+	                end
                 end
                 if ace_accesser.default_namespace /= Void and not ace_accesser.default_namespace.is_empty then
 					Result.prepend_character('.')
-					Result.prepend(ace_accesser.default_namespace)	
+					if ace_accesser.dot_net_naming_convention then
+						Result.prepend (namespace_casing (True, ace_accesser.default_namespace.as_lower))
+					else
+						Result.prepend (ace_accesser.default_namespace)	
+					end
                 end
             end			
 		end

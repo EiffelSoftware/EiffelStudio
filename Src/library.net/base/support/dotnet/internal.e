@@ -206,6 +206,9 @@ feature -- Access
 	
 	natural_64_type: INTEGER is 16
 
+	max_predefined_type: INTEGER is 17
+			-- See non-exported definition of `object_type' below.
+
 	class_name (object: ANY): STRING is
 			-- Name of the class associated with `object'
 		require
@@ -904,13 +907,13 @@ feature -- Marking
 		
 feature {NONE} -- Implementation
 
-	object_type: INTEGER is 13
+	object_type: INTEGER is 17
 			-- System.Object type ID
 	
 	new_known_type_id: CELL [INTEGER] is
 			-- ID for new stored type
 		once
-			create Result.put (14)
+			create Result.put (max_predefined_type + 1)
 		end
 
 	field_of_type (i: INTEGER; object: ANY; type_id: INTEGER): SYSTEM_OBJECT is

@@ -307,6 +307,9 @@ feature -- Status setting
 		ensure
 			text_not_changed: text.is_equal (old text)
 			buffer_locked_for_format: buffer_locked_in_format_mode
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	buffered_append (a_text: STRING; format: EV_CHARACTER_FORMAT) is
@@ -321,7 +324,11 @@ feature -- Status setting
 		do
 			implementation.buffered_append (a_text, format)
 		ensure
+			text_not_changed: text.is_equal (old text)
 			buffer_locked_for_append: buffer_locked_in_append_mode
+			caret_not_moved: caret_position = old caret_position
+			selection_not_changed: old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
 	flush_buffer_to (start_position, end_position: INTEGER) is
@@ -337,6 +344,8 @@ feature -- Status setting
 			implementation.flush_buffer_to (start_position, end_position)
 		ensure	
 			buffer_locked_for_append: not buffer_locked_in_append_mode
+			caret_not_moved: caret_position = old caret_position
+			unselected: not has_selection
 		end
 
 	flush_buffer is
@@ -349,6 +358,8 @@ feature -- Status setting
 			implementation.flush_buffer
 		ensure
 			buffer_not_locked: not buffer_locked_in_append_mode and not buffer_locked_in_format_mode
+			caret_not_moved: caret_position = old caret_position
+			unselected: not has_selection
 		end
 		
 	set_tab_width (a_width: INTEGER) is

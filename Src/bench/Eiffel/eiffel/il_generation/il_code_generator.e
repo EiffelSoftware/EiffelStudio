@@ -1040,12 +1040,9 @@ feature -- IL Generation
 			dup_feat: FEATURE_I
 			proc: PROCEDURE_I
 		do
-			if feat.feature_name_id = predefined_names.internal_clone_name_id then
+			if feat.feature_name_id = predefined_names.internal_duplicate_name_id then
 				meta_data_generator.generate_feature (feat, False)
-				implementation.generate_feature_internal_clone (feat.feature_id)
---			elseif feat.feature_name_id = predefined_names.standard_copy_name_id then
---				meta_data_generator.generate_feature (feat, False)
---				generate_feature_internal_clone (feat.feature_id)
+				implementation.generate_feature_internal_duplicate (feat.feature_id)
 			else
 				if not is_frozen_class then
 						-- Generate static definition of `feat'.
@@ -1137,8 +1134,8 @@ feature -- IL Generation
 				end
 			end
 
-			if feat.feature_name_id = Predefined_names.Internal_clone_name_id then
-				implementation.generate_feature_internal_clone (feat.feature_id)
+			if feat.feature_name_id = Predefined_names.Internal_duplicate_name_id then
+				implementation.generate_feature_internal_duplicate (feat.feature_id)
 			else
 				generate_feature_il (feat.feature_id,
 					implemented_type (feat.written_in,

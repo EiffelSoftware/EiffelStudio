@@ -9,8 +9,7 @@ class
 inherit
 	EB_EDIT_TOOL_LIST [EB_CLASS_TOOL]
 		redefine
-			make,
-			dispatch_modified_resource
+			make
 		end
 
 --	SHARED_FORMAT_TABLES
@@ -24,7 +23,6 @@ feature -- Initialization
 			-- Initialize Current.
 		do
 			precursor
---			Class_resources.add_user (Current)
 		end
 
 feature -- Access
@@ -68,30 +66,31 @@ feature -- Save command
 
 feature -- Update
 
-	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
-			-- Dispatch modified resource based on
-			-- the actual type of `old_res'.
-		local
-			old_a, new_a: EB_ARRAY_RESOURCE
-			old_b, new_b: EB_BOOLEAN_RESOURCE
-			old_i, new_i: EB_INTEGER_RESOURCE
+	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
+			-- Update all active class tools according to
+			-- `new_res'.
 		do
-			old_b ?= mod_res.old_resource
-			if old_b /= Void then
-				new_b ?= mod_res.new_resource
-				update_boolean_resource (old_b, new_b)
-			else
-				old_i ?= mod_res.old_resource
-				if old_i /= Void then
-					new_i ?= mod_res.new_resource
-					update_integer_resource (old_i, new_i)
-				else
-					old_a ?= mod_res.old_resource
-					if old_a /= Void then
-						new_a ?= mod_res.new_resource
-						update_array_resource (old_a, new_a)
-					end
-				end
+			from
+				start
+			until
+				after
+			loop
+--				item.update_boolean_resource (old_res, new_res)
+				forth
+			end
+		end
+
+	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
+			-- Update all active class tools according to
+			-- `new_res'.
+		do
+			from
+				start
+			until
+				after
+			loop
+--				item.update_integer_resource (old_res, new_res)
+				forth
 			end
 		end
 

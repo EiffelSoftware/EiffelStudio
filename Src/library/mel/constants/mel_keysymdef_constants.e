@@ -66,14 +66,6 @@ feature -- keysymdef resources
 			"XK_Scroll_Lock"
 		end
 	
-	XK_Sys_Req: INTEGER is
-		external
-			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%
-				%| <X11/keysym.h>"
-		alias
-			"XK_Sys_Req"
-		end
-	
 	XK_Escape: INTEGER is
 		external
 			"C [macro <X11/keysymdef.h>] : EIF_INTEGER%

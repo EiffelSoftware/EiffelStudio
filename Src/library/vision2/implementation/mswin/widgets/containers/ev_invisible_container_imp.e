@@ -18,13 +18,23 @@ inherit
 		
 	EV_CONTAINER_IMP
 		redefine
-			wel_window
+			wel_window,
+			add_child
 		end
 
-feature -- Access
+feature -- Implementation
+
+	add_child (child_imp: EV_WIDGET_IMP) is
+		do
+			child_imp.set_parent_imp (Current)
+		end
+
+feature -- Implementation
 
 	wel_window: EV_WEL_CONTROL_WINDOW
 		-- Actual WEL component
+
+
 
 end
 

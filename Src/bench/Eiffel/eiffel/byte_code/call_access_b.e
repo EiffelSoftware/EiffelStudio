@@ -1,24 +1,39 @@
--- Eiffel Call and Access
+indexing
+	description: "Eiffel Call and Access"
+	date: "$Date$"
+	version: "$Version: $"
 
-deferred class CALL_ACCESS_B 
+deferred class
+	CALL_ACCESS_B 
 
 inherit
-
 	ACCESS_B
 		redefine
 			make_byte_code, make_creation_byte_code, generate_il
 		end
 
-feature
-
-	feature_id: INTEGER is
-			-- Feature id of the called feature
-		deferred
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
 		end
+
+feature -- Access
+
+	feature_id: INTEGER
+			-- Feature id of the called feature.
+
+	feature_name_id: INTEGER
+			-- Feature name ID of called feature.
 
 	feature_name: STRING is
 			-- Feature name called
-		deferred
+		require
+			feature_name_id_set: feature_name_id > 0
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
 		end
 
 	routine_id: INTEGER
@@ -144,13 +159,13 @@ end
 					end
 					ba.append (Bc_metamorphose)
 					if associated_class.is_precompiled then
-						r_id := feat_tbl.item (feature_name).rout_id_set.first
+						r_id := feat_tbl.item_id (feature_name_id).rout_id_set.first
 						rout_info := System.rout_info_table.item (r_id)
 						origin := rout_info.origin
 						offset := rout_info.offset
 						make_end_precomp_byte_code (ba, flag, origin, offset)
 					else
-						real_feat_id := feat_tbl.item (feature_name).feature_id
+						real_feat_id := feat_tbl.item_id (feature_name_id).feature_id
 						static_type := basic_type.associated_reference.static_type_id - 1
 						make_end_byte_code (ba, flag, real_feat_id, static_type)
 					end
@@ -175,8 +190,8 @@ end
 				end
 				associated_class := cl_type.base_class
 				if associated_class.is_precompiled then
-					r_id := associated_class.feature_table.item
-						(feature_name).rout_id_set.first
+					r_id := associated_class.feature_table.item_id
+						(feature_name_id).rout_id_set.first
 					rout_info := System.rout_info_table.item (r_id)
 					origin := rout_info.origin
 					offset := rout_info.offset
@@ -270,7 +285,7 @@ end
 					-- associated reference type
 				associated_class := basic_type.associated_reference.associated_class
 				feat_tbl := associated_class.feature_table
-				Result := feat_tbl.item (feature_name).feature_id
+				Result := feat_tbl.item_id (feature_name_id).feature_id
 			else
 					-- A generic parameter of current class has been derived
 					-- into an expanded type, so we need to find the `feature_id'
@@ -286,7 +301,7 @@ end
 					cl_type ?= instant_context_type
 					associated_class := cl_type.associated_class_type.associated_class
 					feat_tbl := associated_class.feature_table
-					Result := feat_tbl.item (feature_name).feature_id
+					Result := feat_tbl.item_id (feature_name_id).feature_id
 				end
 			end
 		end

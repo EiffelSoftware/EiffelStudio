@@ -7,6 +7,7 @@ inherit
 	CALL_ACCESS_B
 		rename
 			feature_id as attribute_id,
+			feature_name_id as attribute_name_id,
 			feature_name as attribute_name
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
@@ -16,12 +17,6 @@ inherit
 		end
 
 feature 
-
-	attribute_name: STRING
-			-- name of the accessed attribute
-
-	attribute_id: INTEGER
-			-- Feature id: this is the key for the call in workbench mode
 
 	type: TYPE_I
 			-- Attribute type
@@ -41,7 +36,7 @@ feature
 			good_argument: a /= Void
 			is_attribute: a.is_attribute
 		do
-			attribute_name := a.feature_name
+			attribute_name_id := a.feature_name_id
 			attribute_id := a.feature_id
 			routine_id := a.rout_id_set.first
 			written_in := a.written_in
@@ -190,8 +185,7 @@ feature -- Byte code generation
 			instant_context_type ?= context_type
 			base_class := instant_context_type.base_class
 			if base_class.is_precompiled then
-				r_id := base_class.feature_table.item
-					(attribute_name).rout_id_set.first
+				r_id := base_class.feature_table.item_id (attribute_name_id).rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
@@ -230,8 +224,7 @@ feature -- Byte code generation
 			instant_context_type ?= context_type
 			base_class := instant_context_type.base_class
 			if base_class.is_precompiled then
-				r_id := base_class.feature_table.item
-					(attribute_name).rout_id_set.first
+				r_id := base_class.feature_table.item_id (attribute_name_id).rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
 				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)

@@ -11,7 +11,7 @@ feature
 	fill_from (a: ATTRIBUTE_B) is
 		do
 			parent := a.parent
-			attribute_name := a.attribute_name;
+			attribute_name_id := a.attribute_name_id;
 			attribute_id := a.attribute_id;
 			routine_id := a.routine_id
 			type := a.type;

@@ -24,12 +24,6 @@ inherit
 
 feature -- Access
 
-	feature_name: STRING
-			-- Name of the feature called
-
-	feature_id: INTEGER
-			-- Feature id: this is the key for the call in workbench mode
-
 	type: TYPE_I
 			-- Type of the call
 
@@ -76,7 +70,7 @@ feature -- Access
 		require
 			good_argument: f /= Void
 		do
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			body_index := f.body_index
 			routine_id := f.rout_id_set.first
@@ -443,7 +437,7 @@ feature -- Array optimization
 		do
 			cl_type ?= context_type -- Cannot fail
 			base_class := cl_type.base_class
-			f := base_class.feature_table.item (feature_name)
+			f := base_class.feature_table.item_id (feature_name_id)
 			!!dep.make (base_class.class_id, f)
 			Result := optimizer.special_features.has (dep)
 		end
@@ -457,7 +451,7 @@ feature -- Array optimization
 		do
 			cl_type ?= context_type -- Cannot fail
 			base_class := cl_type.base_class
-			f := base_class.feature_table.item (feature_name)
+			f := base_class.feature_table.item_id (feature_name_id)
 debug ("OPTIMIZATION")
 	io.error.putstring ("%N%N%NTESTING is_unsafe for ")
 	io.error.putstring (feature_name)

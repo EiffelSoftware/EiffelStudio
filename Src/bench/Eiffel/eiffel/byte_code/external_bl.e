@@ -404,13 +404,13 @@ feature
 			expr_b: PARAMETER_B;
 			protect_b: PROTECT_B;
 		do
-			external_name := e.external_name;
+			external_name_id := e.external_name_id;
 			type := e.type;
 			parameters := e.parameters;
 			encapsulated := e.encapsulated;
 			extension := e.extension;
 			feature_id := e.feature_id;
-			feature_name := e.feature_name;
+			feature_name_id := e.feature_name_id;
 			routine_id := e.routine_id
 			if parameters /= Void then
 				from parameters.start;

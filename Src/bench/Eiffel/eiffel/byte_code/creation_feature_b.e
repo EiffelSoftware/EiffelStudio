@@ -91,7 +91,7 @@ feature -- Copy
 	fill_from (f: CALL_ACCESS_B) is
 			-- Fill in node with call `f'
 		do
-			feature_name := f.feature_name
+			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			type := f.type
 			parameters := f.parameters

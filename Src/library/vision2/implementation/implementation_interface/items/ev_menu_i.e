@@ -24,13 +24,25 @@ feature {NONE} -- Initialization
 		deferred
 		end	
 
-feature -- Status report
+feature -- Access
 
 	text: STRING is
 			-- Label of the current menu
 		require
 			exists: not destroyed
 		deferred
+		end
+
+	interface: EV_MENU
+		-- Interface of the current object
+
+feature -- Element change
+
+	set_interface (an_interface: EV_MENU) is
+			-- Make `an_interface' the interface of the current
+			-- implementation
+		do
+			interface := an_interface
 		end
 
 end -- class EV_MENU_I

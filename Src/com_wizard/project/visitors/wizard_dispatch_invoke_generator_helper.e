@@ -221,8 +221,12 @@ feature -- Basic operations
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
-
-				Result.append (Iunknown)
+				
+				if is_unknown (visitor.vt_type) then
+					Result.append (Iunknown)
+				else
+					Result.append (Idispatch)
+				end
 				Result.append (Space)
 				Result.append ("tmp_")
 				Result.append (a_variable_name)
@@ -300,7 +304,11 @@ feature -- Basic operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
 
-				Result.append (Iunknown)
+				if is_unknown (visitor.vt_type) then
+					Result.append (Iunknown)
+				else
+					Result.append (Idispatch)
+				end
 				Result.append (Asterisk)
 				Result.append (Space)
 				Result.append ("tmp_")

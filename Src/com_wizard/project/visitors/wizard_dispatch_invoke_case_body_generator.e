@@ -358,7 +358,13 @@ feature -- Basic operations
 						not (visitor.c_type.substring_index (Iunknown_type, 1) > 0 or 
 						visitor.c_type.substring_index (Idispatch_type, 1) > 0)
 					then
-						local_buffer.append ("static_cast<IUnknown *>(")
+						local_buffer.append ("static_cast<")
+						if is_unknown (visitor.vt_type) then
+							local_buffer.append (Iunknown)
+						else
+							local_buffer.append (Idispatch)
+						end
+						local_buffer.append (">(")
 					end
 					if visitor.is_interface_pointer_pointer or visitor.is_coclass_pointer_pointer then
 						local_buffer.append (Asterisk)

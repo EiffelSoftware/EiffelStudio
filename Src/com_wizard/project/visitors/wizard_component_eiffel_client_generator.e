@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Percent_double_quote)
 			feature_body.append (Close_bracket)
 			feature_body.append (Open_parenthesis)
-			feature_body.append (Iunknown_pointer)
+			feature_body.append (Iunknown)
 			feature_body.append (Close_parenthesis)
 			feature_body.append (Double_quote)
 

@@ -45,7 +45,7 @@ feature -- Basic operations
 			-- Add default member "p_unknown"
 			create default_member.make
 			default_member.set_name (Iunknown_variable_name)
-			default_member.set_result_type (Iunknown_pointer)
+			default_member.set_result_type (Iunknown)
 			default_member.set_comment (Default_iunknown_variable_comment)
 			cpp_class_writer.add_member (default_member, Private)
 
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			create Result.make
 
 			create a_signature.make (100)
-			a_signature.append (Iunknown_pointer)
+			a_signature.append (Iunknown)
 			a_signature.append (Space)
 			a_signature.append (A_pointer)
 			Result.set_signature (a_signature)

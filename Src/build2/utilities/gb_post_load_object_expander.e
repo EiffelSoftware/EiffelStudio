@@ -6,7 +6,7 @@ indexing
 class
 	GB_POST_LOAD_OBJECT_EXPANDER
 
-feature -- Status setting
+feature {GB_XML_LOAD}-- Status setting
 
 	register_object_as_expanded (an_object: GB_OBJECT) is
 			-- Add `an_object' to `expanded_objects'.
@@ -19,7 +19,7 @@ feature -- Status setting
 			registered: expanded_objects.has (an_object)
 		end
 		
-feature -- Basic operations
+feature {GB_XML_LOAD}-- Basic operations
 
 	expand_all_registered_objects is
 			-- Expand all relevent representations of all objects in
@@ -42,7 +42,7 @@ feature -- Basic operations
 			expanded_objects_empty: expanded_objects.is_empty
 		end
 		
-feature {NONE} -- Implementation
+feature {GB_XML_LOAD} -- Implementation
 
 	expanded_objects: ARRAYED_LIST [GB_OBJECT] is
 			-- `Result' is all objects marked as expanded.

@@ -94,7 +94,7 @@ feature -- Element change
 			point_set: max_track_size.is_equal (point)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

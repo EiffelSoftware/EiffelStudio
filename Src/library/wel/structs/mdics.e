@@ -11,8 +11,7 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			make as structure_make,
-			class_name as exception_class_name
+			make as structure_make
 		end
 
 	WEL_WS_CONSTANTS
@@ -186,7 +185,7 @@ feature -- Element change
 			lparam_set: lparam = a_lparam
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

@@ -178,7 +178,7 @@ feature -- Element change
 			clr_important_set: clr_important = a_clr_important
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

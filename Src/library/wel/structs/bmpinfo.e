@@ -82,7 +82,7 @@ feature -- Element change
 				index, a_rgb_quad.reserved)
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

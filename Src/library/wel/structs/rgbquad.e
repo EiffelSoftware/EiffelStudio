@@ -90,7 +90,7 @@ feature -- Element change
 			reserved_set: reserved = a_reserved
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

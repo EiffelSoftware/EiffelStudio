@@ -71,7 +71,7 @@ feature -- Element change
 			first_child_set: first_child = a_first_child
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

@@ -99,7 +99,7 @@ feature -- Element change
 			off_bits_set: off_bits = a_off_bits
 		end
 
-feature {WEL_STRUCTURE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

@@ -1,47 +1,28 @@
--- List used in abstract syntax trees.
+indexing
+	description: "List used in abstract syntax trees."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CONSTRUCT_LIST [T]
 
 inherit
 	ARRAYED_LIST [T]
+		export
+			{ANY} all_default
+		end
 
 create
-	make, make_filled
+	make
 
-feature
+feature -- Special insertion
 
-	initialize is
-		do
-			-- Do nothing
-		end;
-
-	locate_index_of (v: like item; n, start_position: INTEGER): INTEGER is
-			-- Index of `n'-th occurrence of item identical to `v'.
-			-- (According to the discrimination rule used by `search')
-			-- 0 if none.
+	reverse_extend (v: T) is
+			-- Add `v' to `Current'
 		require
-			valid_occurrence: n > 0
-			valid_start_position: start_position > 0
-		local
-			a_occurrences: INTEGER
-			i, nb: INTEGER
-			l_area: SPECIAL [T]
+			extendible: extendible
 		do
-			from
-				l_area := area
-				i := start_position - 1
-				nb := count
-			until
-				i = nb or else (a_occurrences = n)
-			loop
-				if equal (l_area.item (i), v) then
-					a_occurrences := a_occurrences + 1;
-				end;
-				i := i + 1
-			end;
-			if a_occurrences = n then
-				Result := i
-			end
-		end;
-
+			area.put (v, capacity - count - 1)
+			set_count (count + 1)
+		end
+		
 end

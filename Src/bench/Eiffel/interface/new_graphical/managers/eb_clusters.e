@@ -1113,7 +1113,7 @@ feature {NONE} -- Implementation
 				error_in_ace_parsing := True
 			else
 				create ace_file.make_open_write (Eiffel_ace.file_name)
-				ace_file.put_string (st)
+				st.put_in_file (ace_file)
 				ace_file.close
 			end
 		end

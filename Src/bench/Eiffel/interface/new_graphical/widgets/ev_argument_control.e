@@ -343,7 +343,7 @@ feature {NONE} -- Storage
 			create ace_file.make (Eiffel_ace.file_name)
 			if not ace_file.exists or else ace_file.is_writable then
 				ace_file.open_write
-				ace_file.put_string (st)
+				st.put_in_file (ace_file)
 				ace_file.close
 			end
 			ast := Eiffel_ace.Lace.parsed_ast

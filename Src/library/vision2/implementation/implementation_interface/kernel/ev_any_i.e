@@ -38,7 +38,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_interface (the_interface: EV_ANY) is
+	set_interface (the_interface: like interface) is
 			-- Make `interface' the interface of the current object.
 		require
 			valid_interface: the_interface /= Void

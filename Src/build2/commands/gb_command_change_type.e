@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			original_type := an_original_type
 			new_type := a_new_type
 			layout_item := an_object.layout_item
+			old_object := an_object
 		end
 		
 
@@ -52,11 +53,7 @@ feature -- Basic Operation
 			-- Undo `Current'.
 			-- Must restore state to that before `execute'.
 		do
-			--| FIXME, we should be restoring the original object, not building a new one of
-			--| the same type. This is not a real undo.
-				-- We now need to ensure that the object is no longer marked as
-				-- deleted.
-			object_handler.replace_object_type (layout_item.object, original_type)
+			object_handler.replace_object (layout_item.object, old_object)
 			command_handler.update
 		end
 		
@@ -69,6 +66,10 @@ feature -- Access
 		end
 		
 feature {NONE} -- Implementation
+
+	old_object: GB_OBJECT
+		-- Original object that was repaced.
+		-- We restore this when we undo.
 
 	original_type: STRING
 		-- String representation of original object type.

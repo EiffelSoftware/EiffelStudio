@@ -1180,6 +1180,10 @@ end
 				end
 			end
 
+			if System.il_generation then
+				process_custom_attributes
+			end
+
 				-- Check sum error
 			Error_handler.checksum
 
@@ -1389,6 +1393,35 @@ end
 				new_suppliers.forth
 			end
 			set_suppliers (new_suppliers)
+		end
+
+	process_custom_attributes is
+			-- Perform type checking and byte node generation on custom attributes.
+		require
+			il_generation: System.il_generation
+		local
+			l_ast: like most_recent_ast
+		do
+			ast_context.clear2
+			l_ast := most_recent_ast
+			if l_ast.custom_attributes /= Void then
+				l_ast.custom_attributes.type_check
+				ast_context.start_lines
+				custom_attributes := l_ast.custom_attributes.byte_node
+				ast_context.clear2
+			end
+			if l_ast.interface_custom_attributes /= Void then
+				l_ast.interface_custom_attributes.type_check
+				ast_context.start_lines
+				interface_custom_attributes := l_ast.interface_custom_attributes.byte_node
+				ast_context.clear2
+			end
+			if l_ast.class_custom_attributes /= Void then
+				l_ast.class_custom_attributes.type_check
+				ast_context.start_lines
+				class_custom_attributes := l_ast.class_custom_attributes.byte_node
+				ast_context.clear2
+			end
 		end
 
 feature -- Generation
@@ -3653,6 +3686,9 @@ feature -- Properties
 	obsolete_message: STRING
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
+
+	custom_attributes, class_custom_attributes, interface_custom_attributes: BYTE_LIST [BYTE_NODE]
+			-- Associated custom attributes if any.
 
 	name: STRING is
 			-- Class name

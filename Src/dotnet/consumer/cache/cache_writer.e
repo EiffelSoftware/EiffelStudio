@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 				end
 				
 				l_is_in_gac := l_assembly.global_assembly_cache
-				if not l_is_in_gac and then ("mscorlib").is_equal (l_name.name) and then l_key.is_equal ("b77a5c561934e089") then
+				if not l_is_in_gac and then is_mscorlib (l_assembly) then
 					l_is_in_gac := True
 				end
 				

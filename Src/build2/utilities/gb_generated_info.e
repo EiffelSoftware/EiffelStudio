@@ -8,6 +8,12 @@ indexing
 class
 	GB_GENERATED_INFO
 	
+inherit
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+	
 create
 	make_child,
 	make_root
@@ -20,8 +26,8 @@ feature -- Initialization
 			common_make
 				-- Remove all information from previous
 				-- prepass stage.
-			names_by_id.clear_all
-			generated_info_by_id.clear_all
+		--	names_by_id.clear_all
+		--	generated_info_by_id.clear_all
 		end
 		
 	make_child (a_parent: GB_GENERATED_INFO) is
@@ -129,6 +135,25 @@ feature -- Access
 				end
 			end
 			Result := internal_child_names
+		end
+		
+	ev_any_access_name: STRING is
+			-- `Result' is the access name for object represented by `Current'.
+		do
+				-- Note that the correct client string for windows is not handled in here as currently, it is not
+				-- possible for a window to be used in this fashion.
+			Result := name.twin
+			if associated_root_object_id > 0 and then generated_info_by_id.item (associated_root_object_id).generate_as_client then
+				Result.append ("." + client_widget_string)
+			end
+		end
+		
+	all_children_recursive (list: ARRAYED_LIST [GB_GENERATED_INFO]) is
+			-- Add all children of `Current' to `list' recursively.
+		require
+			list_not_void: list /= Void
+		do
+			all_children_recursive_internal (Current, list)
 		end
 
 feature -- Status setting
@@ -255,6 +280,22 @@ feature {NONE} -- Implementation
 	internal_child_names: ARRAYED_LIST [STRING]
 		-- Internal representation of all child names.
 		
+	all_children_recursive_internal (info: GB_GENERATED_INFO; list: ARRAYED_LIST [GB_GENERATED_INFO]) is
+			-- Add all children of `Current' to `list' recursively.
+		require
+			info_not_void: info /= Void
+			list_not_void: list /= Void
+		do
+			from
+				info.children.start
+			until
+				info.children.off
+			loop
+				list.extend (info.children.item)
+				all_children_recursive_internal (info.children.item, list)
+				info.children.forth
+			end
+		end
 
 invariant
 	supported_types_matches_elements: supported_types /= Void implies supported_types.count = supported_type_elements.count

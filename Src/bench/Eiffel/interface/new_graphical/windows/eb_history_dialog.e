@@ -40,6 +40,13 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
 		do
+				-- Initialize history.
+			create undo_list.make
+			create do_actions
+			create undo_actions
+			create undo_exhausted_actions
+			create redo_exhausted_actions
+
 			Precursor
 			set_title (Interface_names.t_Diagram_history_tool)
 			set_minimum_size (200, 230)
@@ -65,12 +72,6 @@ feature {NONE} -- Initialization
 			close_request_actions.wipe_out
 			close_request_actions.extend (~hide)
 
-				-- Initialize history.
-			create undo_list.make
-			create do_actions
-			create undo_actions
-			create undo_exhausted_actions
-			create redo_exhausted_actions
 			user_selected := True
 		end
 

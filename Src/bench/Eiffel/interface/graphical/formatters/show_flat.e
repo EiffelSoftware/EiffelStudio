@@ -9,7 +9,8 @@ inherit
 		redefine
 			dark_symbol
 		end;
-	SHARED_SERVER
+	SHARED_SERVER;
+	SHARED_FORMAT_TABLES
 
 creation
 
@@ -42,13 +43,8 @@ feature {NONE}
 
 	display_info (i: INTEGER; c: CLASSC_STONE) is
 			-- Display flat form pf 'c'.
-		local
-			ctxt: FORMAT_CONTEXT;
 		do
-			!!ctxt.make (c.class_c);
-			ctxt.set_in_bench_mode;
-			ctxt.execute;
-			text_window.process_text (ctxt.text);	
+			text_window.process_text (flat_context (c).text)
 		end;
  
 end

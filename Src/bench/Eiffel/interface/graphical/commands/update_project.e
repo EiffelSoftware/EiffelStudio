@@ -9,7 +9,8 @@ inherit
 	PROJECT_CONTEXT;
 	ICONED_COMMAND;
 	SHARED_DEBUG;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
+	SHARED_FORMAT_TABLES
 
 creation
 
@@ -71,6 +72,7 @@ feature {NONE}
 
 	tool_resynchronization (argument: ANY) is
 			-- Resynchronize class, feature and system tools.
+			-- Clear the format_context buffers.
 		local
 			saved_msg, messages: STRING;
 		do
@@ -88,7 +90,10 @@ feature {NONE}
 				system_tool.synchronize
 			end;
 			messages.wipe_out;
-			messages.append (saved_msg)
+			messages.append (saved_msg);
+
+				-- Clear the format_context buffers.
+			clear_format_tables
 		end;
 
 	launch_c_compilation (argument: ANY) is

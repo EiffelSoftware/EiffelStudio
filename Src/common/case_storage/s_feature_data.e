@@ -41,11 +41,21 @@ feature -- Properties
 	is_attribute: BOOLEAN;
 			-- Is Current feature an attribute?
 
+	is_constant: BOOLEAN is
+			-- Is Current feature a constant attribute ?
+		do
+		end
+
 	is_deferred: BOOLEAN;
 			-- Is Current feature deferred?
 
 	is_effective: BOOLEAN;
 			-- Is Current feature effecting an inherited feature?
+
+	is_once: BOOLEAN is
+			-- Is Current feature a once?
+		do
+		end
 
 	is_redefined: BOOLEAN;
 			-- Is Current feature redefine?
@@ -82,6 +92,14 @@ feature -- Setting
 			name_set: name = s;
 		end;
 
+	set_is_attribute is
+			-- Set is_attribute to `True'.
+		do
+			is_attribute := True
+		ensure
+			is_attribute: is_attribute
+		end;
+
 	set_body (b: like body) is
 			-- Set `body' to `l'.
 		require
@@ -108,23 +126,26 @@ feature -- Setting
 								is_redefined = is_r
 		end;
 
+	set_is_constant is
+			-- Set `is_constant' to `True'.
+		do
+		ensure
+			is_constant: is_constant
+		end;
+
 	set_is_deferred is
 			-- Set is_deferred to `True'.
-		require
-			not_effective: not is_effective;
-			not_redefined: not is_redefined;
 		do
 			is_deferred := True
 		ensure
 			is_deferred: is_deferred
 		end;
 
-	set_is_attribute is
-			-- Set is_attribute to `True'.
+	set_is_once is
+			-- Set `is_once' to `True'.
 		do
-			is_attribute := True
 		ensure
-			is_attribute: is_attribute
+			is_once: is_once
 		end;
 
 	set_is_redefined is
@@ -221,5 +242,18 @@ feature -- Setting
 		ensure
 			is_reversed_engineered: is_reversed_engineered
 		end
+
+invariant
+	attribute_no_precondition: is_attribute implies 
+			(preconditions = Void or else preconditions.empty) 
+	attribute_no_postcondition: is_attribute implies 
+			(postconditions = Void or else postconditions.empty) 
+	attribute_no_argument: is_attribute implies 
+			(arguments = Void or else arguments.empty) 
+	constant_is_attribute: is_constant implies is_attribute
+	deferred_is_routine: is_deferred implies (not is_attribute)
+	once_is_routine: is_once implies (not is_attribute)
+	effective_not_deferred: is_effective implies (not is_deferred)
+	deferred_not_effective: is_deferred implies (not is_effective)
 
 end -- class S_FEATURE_DATA

@@ -75,7 +75,7 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_shared unsigned char eif_visible_is_off = (unsigned char) 0;
+rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
 
 /* 
  * `visible' exception handling

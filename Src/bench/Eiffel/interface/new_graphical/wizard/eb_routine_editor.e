@@ -134,6 +134,12 @@ feature -- Status report
 			Result := body_type_label.text.is_equal ("deferred")
 		end
 
+	is_external: BOOLEAN is
+			-- Is current selected body "external"?
+		do
+			Result := body_type_label.text.is_equal ("external")
+		end
+
 feature -- Access
 
 	add_argument is
@@ -195,6 +201,8 @@ feature {NONE} -- Implementation
 			Result := require_code
 			if is_deferred then
 				Result.append ("%T%Tdeferred%N")
+			elseif is_external then
+				Result.append (body_code)
 			else
 				Result.append (local_code)
 				Result.append (body_code)

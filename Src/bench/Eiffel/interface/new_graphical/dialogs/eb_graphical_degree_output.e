@@ -14,7 +14,6 @@ inherit
 --			make
 --		end
 
-	EV_ANY
 	EB_SHARED_INTERFACE_TOOLS
 --	WINDOW_ATTRIBUTES
 	EV_COMMAND
@@ -45,6 +44,7 @@ feature {NONE} -- Initialization
 	make (par: EV_WINDOW) is
 		do
 			parent := par
+			create event_queue.make
 		end
 
 feature -- Start output features
@@ -77,15 +77,15 @@ feature -- Start output features
 			i_name.append (current_degree.out)
 --			set_project_icon_name (i_name)
 --			update_display
-			process_events
+			event_queue.process
 		end
 
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
 			progress_bar.set_percentage (100)
-			update_interface (Empty_string, 0, 100)
 			degree_l.set_text (Interface_names.d_Degree)
+			update_interface (Empty_string, 0, 100)
 		end
 
 	put_start_degree (degree_nbr: INTEGER total_nbr: INTEGER) is
@@ -125,7 +125,7 @@ feature -- Start output features
 			tmp.append (Interface_names.d_Degree)
 			tmp.append (current_degree.out)
 --			set_project_icon_name (tmp)
-			process_events
+			event_queue.process
 		end
 
 	put_end_degree is
@@ -336,7 +336,7 @@ feature -- Output on per class
 			str := clone (a_name)
 			str.to_lower
 			current_degree_l.set_text (str)
-			process_events
+			event_queue.process
 		end
 
 	put_case_class_message, put_class_document_message (a_class: CLASS_C) is
@@ -349,7 +349,7 @@ feature -- Output on per class
 			a_per := percentage_calculation (to_go)
 			processed := processed + 1
 			progress_bar.set_percentage (a_per)
---			update_interface (a_class.name_in_upper, to_go, a_per)
+			update_interface (a_class.name_in_upper, to_go, a_per)
 		end
 
 	display_degree_output (deg_nbr: STRING to_go: INTEGER; total: INTEGER) is
@@ -367,7 +367,7 @@ feature -- Output on per class
 
 			progress_bar.set_percentage (a_per)
 
-			process_events
+			event_queue.process
 		end
 
 feature {NONE} -- Implementation
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			a_per_out.extend ('%%')
 			percentage_l.set_text (a_per_out)
 
-			process_events
+			event_queue.process
 		end
 
 	put_string (a_message: STRING) is
@@ -415,13 +415,15 @@ feature {NONE} -- Implementation
 --				end
 				progress_bar.set_percentage (0)
 
-				process_events
+				event_queue.process
 			end
 		end
 
 feature {NONE} -- Implementation
 
 	dialog: EV_DIALOG
+
+	event_queue: EV_EVENTS_QUEUE
 
 	parent: EV_WINDOW
 
@@ -459,9 +461,6 @@ feature {NONE} -- Implementation
 	percentage_l: EV_LABEL
 			-- Percentage label
 
---	app_context: MEL_APPLICATION_CONTEXT
-			-- Application context
-
 	cancel_b: EV_BUTTON
 			-- Cancel button
 
@@ -471,25 +470,40 @@ feature {NONE} -- Implementation
 			dialog_non_valid: not is_valid (dialog)
 		local
 			frame: EV_FRAME
+			hbox: EV_HORIZONTAL_BOX
 		do
 --			icon_name := Project_tool.icon_name
 			create dialog.make (parent)
 			dialog.set_title (Interface_names.d_Compilation_progress)
-			create degree_l.make (dialog.display_area)	
-			create entity_l.make (dialog.display_area)	
-			create nbr_to_go_l.make (dialog.display_area)	
-			create current_degree_l.make (dialog.display_area)	
-			create current_entity_l.make (dialog.display_area)	
-			create current_nbr_to_go_l.make (dialog.display_area)	
-			create frame.make (dialog.display_area)	
-			create progress_bar.make (frame)	
-			create cancel_b.make_with_text (dialog.action_area, "Cancel")	
-			create percentage_l.make_with_text (dialog.display_area, "100%%")	
+
+			create hbox.make (dialog.display_area)
+			create degree_l.make (hbox)
+			degree_l.set_left_alignment
+			hbox.set_child_expandable (degree_l, False)
+			create current_degree_l.make (hbox)
+			current_degree_l.set_left_alignment
+
+			create hbox.make (dialog.display_area)
+			create entity_l.make (hbox)
+			entity_l.set_left_alignment
+			hbox.set_child_expandable (entity_l, False)
+			create current_entity_l.make (hbox)
+			current_entity_l.set_left_alignment
+
+			create hbox.make (dialog.display_area)
+			create nbr_to_go_l.make (hbox)
+			nbr_to_go_l.set_left_alignment
+			hbox.set_child_expandable (nbr_to_go_l, False)
+			create current_nbr_to_go_l.make (hbox)
+			current_nbr_to_go_l.set_left_alignment
+
+			create frame.make (dialog.display_area)
+			create progress_bar.make (frame)
+			create cancel_b.make_with_text (dialog.action_area, "Cancel")
+			cancel_b.add_click_command (Current, Void)
+			create percentage_l.make_with_text (dialog.display_area, "100%%")
 
 			dialog.show
-
---			app_context := application_context
---			cancel_b.set_activate_callback (Current, Void)
 --			update_resources
 		end
 
@@ -575,26 +589,26 @@ feature {NONE} -- Implementation
 			dialog.show
 		end
 
-	process_events is
-			-- Process all available events in the queue.
-		local
+--	process_events is
+--			-- Process all available events in the queue.
+--		local
 --			event: MEL_EVENT
 --			app: like app_context
-			mask: INTEGER
-		do
+--			mask: INTEGER
+--		do
 --			update_display
 --			app := app_context
-			from
+--			from
 --				mask := app.pending
-			until
-				mask = 0
-			loop
-					-- Dispatch the event
+--			until
+--				mask = 0
+--			loop
+--					-- Dispatch the event
 --				app.process_event (mask)
-					-- Get the next event in queue, if any.
+--					-- Get the next event in queue, if any.
 --				mask := app.pending
-			end
-		end
+--			end
+--		end
 
 	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Cancel the compilation.
@@ -602,5 +616,17 @@ feature {NONE} -- Implementation
 			cancel_b.set_insensitive (True)
 			Error_handler.insert_interrupt_error (True)
 		end
+
+	destroyed: BOOLEAN is
+		do
+			Result := dialog.destroyed
+		end
+
+
+	is_valid (x: EV_ANY): BOOLEAN is
+		do
+			Result := x /= void and then not x.destroyed
+		end
+
 
 end -- class EB_GRAPHICAL_DEGREE_OUTPUT

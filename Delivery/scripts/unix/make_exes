@@ -43,10 +43,6 @@ remtrace Recompile EiffelBuild
 cd $EIFFEL_SRC/build2
 cd modified_libraries
 safe_md $EXPORT_DIR/build
-tgz gobo_16
-move gobo_16.tar.gz $EXPORT_DIR/build
-tgz exml
-move exml.tar.gz $EXPORT_DIR/build
 cd ..
 remtrace Enterprise Build
 clean_project

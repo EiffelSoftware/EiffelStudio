@@ -41,13 +41,13 @@ CPP=cl.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /Z7 /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /Z7 /Od /D "_DEBUG" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /Z7 /Od /I ".." /I "..\.." /I "..\..\idrs" /I "..\..\console" /I "..\..\ipc\app" /D "_DEBUG" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 ..\ipc\shared\traditional\networku.obj /nologo
+# ADD LIB32 ..\..\ipc\shared\traditional\networku.obj /nologo
 
 !ELSEIF  "$(CFG)" == "finalized - Win32 traditional"
 
@@ -62,13 +62,13 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "traditional"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /GX /O2 /YX /FD /c
+# ADD CPP /nologo /GX /Ox /I ".." /I "..\.." /I "..\..\idrs" /I "..\..\console" /I "..\..\ipc\app" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 ..\ipc\shared\traditional\networku.obj /nologo
+# ADD LIB32 ..\..\ipc\shared\traditional\networku.obj /nologo
 
 !ELSEIF  "$(CFG)" == "finalized - Win32 mt"
 
@@ -83,13 +83,13 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "mt"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MT /GX /O2 /D "EIF_THREADS" /YX /FD /c
+# ADD CPP /nologo /MT /GX /O2 /I ".." /I "..\.." /I "..\..\idrs" /I "..\..\console" /I "..\..\ipc\app" /D "EIF_THREADS" /YX /FD /c
 BSC32=bscmake.exe
 # ADD BASE BSC32 /nologo
 # ADD BSC32 /nologo /o"mtfinalized.bsc"
 LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
-# ADD LIB32 ..\ipc\shared\mt\networku.obj /nologo /out:"mtfinalized.lib"
+# ADD LIB32 ..\..\ipc\shared\mt\networku.obj /nologo /out:"mtfinalized.lib"
 
 !ENDIF 
 

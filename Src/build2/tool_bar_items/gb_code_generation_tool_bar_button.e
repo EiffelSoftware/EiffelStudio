@@ -37,8 +37,6 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
-		local
-			a_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
 			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_new_class @ 1)

@@ -18,18 +18,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l_name, type: STRING) is
+	make (a_name, type: STRING) is
 			-- Initialize parameter with name `name' and type name `type'.
 		require
-			non_void_name: name /= Void
-			valid_name: not name.is_empty
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
 			non_void_type: type /= Void
 			valid_type: not type.is_empty
 		do
-			name := l_name
-			display := l_name + ": " + type
+			name := a_name
+			display := a_name + ": " + type
 		ensure
-			name_set: name = l_name
+			name_set: name = a_name
 			display_set: display /= Void
 		end
 		

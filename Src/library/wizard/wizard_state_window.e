@@ -139,7 +139,7 @@ feature -- Basic Operations
 		
 feature -- Settings
 
-	set_updatable_entries (tab: ARRAY[ACTION_SEQUENCE[TUPLE[]]]) is
+	set_updatable_entries (a_table: ARRAY [ACTION_SEQUENCE [TUPLE[]]]) is
 			-- Set the actions which imply a change
 			-- in the user entries, so that we know that going forward
 			-- will be done by re-computed the data.
@@ -149,9 +149,9 @@ feature -- Settings
 			from
 				i:= 1
 			until
-				i > tab.count
+				i > a_table.count
 			loop
-				tab.item(i).extend (~change_entries)
+				a_table.item(i).extend (~change_entries)
 				i := i + 1
 			end
 		end

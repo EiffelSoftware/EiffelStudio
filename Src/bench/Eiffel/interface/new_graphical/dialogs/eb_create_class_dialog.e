@@ -85,18 +85,21 @@ create
 feature {NONE} -- Initialization
 
 	make_default (a_target: EB_HISTORY_OWNER) is
+		require
+			a_target_not_void: a_target /= Void
 		local
 			vb: EV_VERTICAL_BOX
 			buttons_box: EV_HORIZONTAL_BOX
-			identification_frame, properties_frame: EV_FRAME
-			cluster_label, name_label, file_label, parents_label, creation_label: EV_LABEL
+			identification_frame, properties_frame, parents_frame: EV_FRAME
+			cluster_label, name_label, file_label, creation_label: EV_LABEL
 			cancel_b: EV_BUTTON	-- Button to discard the class 
 			bbox: EV_HORIZONTAL_BOX
+			l_cell: EV_CELL
 			sz: INTEGER
 		do
 			target := a_target
 
-			make_with_title (Interface_names.t_New_class)
+			make_with_title (Interface_names.t_new_class)
 			set_height (Layout_constants.dialog_unit_to_pixels (400).min ((create {EV_SCREEN}).height))
 			set_width (Layout_constants.dialog_unit_to_pixels (300).min ((create {EV_SCREEN}).width))
 			set_icon_pixmap (Pixmaps.Icon_dialog_window)
@@ -114,19 +117,20 @@ feature {NONE} -- Initialization
 			expanded_check.select_actions.extend (agent on_expanded)
 			create empty_check.make_with_text (Interface_names.L_not_empty)
 			empty_check.enable_select
-			create creation_check.make_with_text (Interface_names.l_generate_Creation)
+			create creation_check.make_with_text (Interface_names.l_generate_creation)
+			creation_check.select_actions.extend (agent on_creation_check)
 			create parents_list.make
 			parents_list.text_field.focus_in_actions.extend (agent on_focus_in)
 			parents_list.text_field.focus_out_actions.extend (agent on_focus_out)
 
 				-- Build the frames
-			create properties_frame.make_with_text (Interface_names.l_Properties)
-			create identification_frame.make_with_text (Interface_names.l_Identification)
-			create name_label.make_with_text (Interface_names.l_Class_name)
+			create properties_frame.make_with_text (Interface_names.l_general)
+			create identification_frame.make_with_text (Interface_names.l_identification)
+			create name_label.make_with_text (Interface_names.l_class_name)
 			name_label.align_text_left
-			create cluster_label.make_with_text (Interface_names.l_Cluster)
+			create cluster_label.make_with_text (Interface_names.l_cluster)
 			cluster_label.align_text_left
-			create file_label.make_with_text (Interface_names.l_File_name)
+			create file_label.make_with_text (Interface_names.l_file_name)
 			file_label.align_text_left
 			create vb
 			sz := name_label.width.max (file_label.width)
@@ -151,25 +155,31 @@ feature {NONE} -- Initialization
 			bbox.extend (deferred_check)
 			bbox.extend (expanded_check)
 			extend_no_expand (vb, bbox)
-			create creation_label.make_with_text (Interface_names.l_Creation)
+			create creation_label.make_with_text (Interface_names.l_creation)
 			creation_label.align_text_left
+			extend_no_expand (vb, creation_check)
 			create bbox
+			create l_cell
+			l_cell.set_minimum_width (22)
+			extend_no_expand (bbox, l_cell)
 			extend_no_expand (bbox, creation_label)
 			bbox.extend (creation_entry)
+			bbox.disable_sensitive
 			extend_no_expand (vb, bbox)
-			extend_no_expand (vb, creation_check)
 			extend_no_expand (vb, empty_check)
-			create parents_label.make_with_text (Interface_names.l_Parent_classes)
-			parents_label.align_text_left
-			extend_no_expand (vb, parents_label)
-			vb.extend (parents_list)
 			vb.set_border_width (Layout_constants.Small_border_size)
 			properties_frame.extend (vb)
 
+			create parents_frame.make_with_text (Interface_names.l_parents)
+			create vb
+			vb.extend (parents_list)
+			vb.set_border_width (Layout_constants.Small_border_size)
+			parents_frame.extend (vb)
+
 				-- Build the buttons
-			create create_button.make_with_text_and_action (Interface_names.b_Create, agent create_new_class)
+			create create_button.make_with_text_and_action (Interface_names.b_create, agent create_new_class)
 			Layout_constants.set_default_size_for_button (create_button)
-			create cancel_b.make_with_text_and_action (Interface_names.b_Cancel, agent cancel)
+			create cancel_b.make_with_text_and_action (Interface_names.b_cancel, agent cancel)
 			Layout_constants.set_default_size_for_button (cancel_b)
 
 				-- Build the button box
@@ -185,6 +195,7 @@ feature {NONE} -- Initialization
 			vb.set_border_width (Layout_constants.Small_border_size)
 			vb.extend (identification_frame)
 			vb.extend (properties_frame)
+			vb.extend (parents_frame)
 			extend_no_expand (vb, buttons_box)
 
 				-- Add the main container to the dialog.
@@ -197,6 +208,8 @@ feature {NONE} -- Initialization
 
 			cancelled := False
 			cluster_preset := False
+		ensure
+			target_set: target = a_target
 		end
 
 feature -- Status Report
@@ -230,13 +243,21 @@ feature -- Status Settings
 			cluster := a_cluster
 			cluster_preset := True
 		ensure
-			a_cluster_assigned: a_cluster = cluster
+			cluster_set: cluster = a_cluster
 			cluster_preset_enabled: cluster_preset
 		end
 
 feature -- Basic operations
 
+	call_default is
+			-- Create a new dialog with a pre-computed class name.
+		do
+			call ("NEW_CLASS_" + new_class_counter.item.out)
+			new_class_counter.put (new_class_counter.item + 1)
+		end
+		
 	call (class_n: STRING) is
+			-- Create a new dialog with `class_n' as preset class name.
 		require
 			valid_args: class_n /= Void 
 		local
@@ -306,7 +327,7 @@ feature {NONE} -- Access
 				clu ?= cluster_list.selected_item.data
 				if clu = Void then
 					aok := False
-					create wd.make_with_text (Warning_messages.w_Unknown_cluster_name)
+					create wd.make_with_text (Warning_messages.w_unknown_cluster_name)
 					wd.show_modal_to_window (Current)
 				else
 					aok := True
@@ -354,6 +375,8 @@ feature {NONE} -- Implementation
 			-- Name of the class entered by the user.
 		do
 			Result := class_entry.text.as_upper
+		ensure
+			class_name_not_void: class_name /= Void
 		end
 
 	file_name: FILE_NAME is
@@ -383,8 +406,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	stone: CLASSI_STONE
 
 	aok: BOOLEAN
 
@@ -419,6 +440,9 @@ feature {NONE} -- Implementation
 				if aok then
 					check_class_not_exists
 				end
+				if aok and then creation_check.is_selected then
+					check_valid_creation_procedure
+				end
 				if aok then
 					create f_name.make_from_string (cluster.path)
 					f_name.set_file_name (file_name)
@@ -426,16 +450,16 @@ feature {NONE} -- Implementation
 					create file.make (f_name)
 					if cluster.has_base_name (base_name) then
 						if file.exists then
-							create wd.make_with_text (Warning_messages.w_Class_already_in_cluster (base_name))
+							create wd.make_with_text (Warning_messages.w_class_already_in_cluster (base_name))
 						else
-							create wd.make_with_text (Warning_messages.w_Class_still_in_cluster (base_name))
+							create wd.make_with_text (Warning_messages.w_class_still_in_cluster (base_name))
 						end
 						wd.show_modal_to_window (Current)
 						class_entry.set_focus
 					elseif
 						(not file.exists and then not file.is_creatable)
 					then
-						create wd.make_with_text (Warning_messages.w_Cannot_create_file (f_name))
+						create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
 						wd.show_modal_to_window (target.window)
 					else
 						if not file.exists then
@@ -445,20 +469,19 @@ feature {NONE} -- Implementation
 								manager.add_class_to_cluster_i (base_name, cluster)
 								class_i := cluster.class_with_base_name (base_name)
 								if set_stone and class_i /= Void then
-									create stone.make (class_i)
-									target.advanced_set_stone (stone)
+									target.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 								end
 							end
 						elseif
 							not (file.is_readable and then file.is_plain)
 						then
-							create wd.make_with_text (Warning_messages.w_Cannot_create_file (f_name))
+							create wd.make_with_text (Warning_messages.w_cannot_create_file (f_name))
 							wd.show_modal_to_window (target.window)
 							file_entry.set_focus
 						else
 								--| Reading in existing file (created outside
 								--| ebench). Ask for confirmation
-							create cd.make_with_text (Warning_messages.w_File_exists_edit_it (f_name))
+							create cd.make_with_text (Warning_messages.w_file_exists_edit_it (f_name))
 							cd.button (ev_ok).select_actions.extend (agent edit_class)
 							cd.show_modal_to_window (target.window)
 						end
@@ -486,8 +509,7 @@ feature {NONE} -- Implementation
 				class_i := cluster.class_with_base_name (file_name)
 				destroy
 				if set_stone and then class_i /= Void then
-					create stone.make (class_i)
-					target.set_stone (stone)
+					target.set_stone (create {CLASSI_STONE}.make (class_i))
 				end
 			else
 					-- We were rescued.
@@ -644,7 +666,7 @@ feature {NONE} -- Implementation
 			cn := class_name
 			if not Eiffel_universe.classes_with_name (cn).is_empty then
 				aok := False
-				create wd.make_with_text (Warning_messages.w_Class_already_exists (cn))
+				create wd.make_with_text (Warning_messages.w_class_already_exists (cn))
 				wd.show_modal_to_window (Current)
 			end
 		end
@@ -656,32 +678,32 @@ feature {NONE} -- Implementation
 		local
 			cn: STRING
 			wd: EV_WARNING_DIALOG
-			cchar: CHARACTER
-			i: INTEGER
 		do
 			cn := class_name
-			if cn = Void or else cn.is_empty or else not (cn @ 1).is_alpha then
-				aok := False
-			else
-				from
-					i := 2
-				until
-					i > cn.count or not aok
-				loop
-					cchar := (cn @ i)
-					aok := cchar.is_alpha or cchar.is_digit or cchar = '_'
-					i := i + 1
-				end
-			end
+			aok := (create {IDENTIFIER_CHECKER}).is_valid (cn)
 			if not aok then
-				if cn = Void then
-					cn := ""
-				end
-				create wd.make_with_text (Warning_messages.w_Invalid_class_name (cn))
+				create wd.make_with_text (Warning_messages.w_invalid_class_name (cn))
 				wd.show_modal_to_window (Current)
 			end
 		end
 
+	check_valid_creation_procedure is
+			-- Check that creation procedure name is valid
+		require
+			current_state_is_valid: aok
+			creation_check_selected: creation_check.is_selected
+		local
+			fn: STRING
+			wd: EV_WARNING_DIALOG
+		do
+			fn := creation_entry.text
+			aok := (create {IDENTIFIER_CHECKER}).is_valid (fn)
+			if not aok then
+				create wd.make_with_text (Warning_messages.w_invalid_feature_name (fn))
+				wd.show_modal_to_window (Current)
+			end
+		end
+		
 	update_file_entry is
 			-- Update the file name according to the class name.
 		local
@@ -729,13 +751,27 @@ feature {NONE} -- Implementation
 		do
 			if deferred_check.is_selected then
 				expanded_check.disable_select
-				creation_entry.disable_sensitive
 				creation_check.disable_sensitive
+				if creation_check.is_selected then
+					creation_entry.parent.disable_sensitive
+				end
 				is_deferred := True
 			else
-				creation_entry.enable_sensitive
 				creation_check.enable_sensitive
+				if creation_check.is_selected then
+					creation_entry.parent.enable_sensitive
+				end
 				is_deferred := False
+			end
+		end
+		
+	on_creation_check is
+			-- User selected or unselected the `creation procedure' check box.
+		do
+			if creation_check.is_selected then
+				creation_entry.parent.enable_sensitive
+			else
+				creation_entry.parent.disable_sensitive
 			end
 		end
 
@@ -756,7 +792,11 @@ feature {NONE} -- Implementation
 	on_focus_out is
 			-- When the parents list loses the focus, we enable the default push button.
 		do
-			set_default_push_button (create_button)
+				-- Need to check that the dialog is not destroyed as sometimes
+				-- we get called while destroying the dialog.
+			if not is_destroyed then
+				set_default_push_button (create_button)
+			end
 		end
 
 feature {NONE} -- Vision2 widgets
@@ -804,5 +844,27 @@ feature {NONE} -- Constants
 		do
 			Result := Layout_constants.Dialog_unit_to_pixels (100)
 		end
+
+	new_class_counter: CELL [INTEGER] is
+			-- Number of classes being created so far
+		once
+			create Result.put (1)
+		ensure
+			new_class_counter_not_void: new_class_counter /= Void
+		end
+
+invariant
+	create_button_valid: create_button /= Void and then not create_button.is_destroyed
+	cluster_list_valid: cluster_list /= Void and then not cluster_list.is_destroyed
+	class_entry_valid: class_entry /= Void and then not class_entry.is_destroyed
+	file_entry_valid: file_entry /= Void and then not file_entry.is_destroyed
+	parents_list_valid: parents_list /= Void and then not parents_list.is_destroyed
+	expanded_check_valid: expanded_check /= Void and then not expanded_check.is_destroyed
+	empty_check_valid: empty_check /= Void and then not empty_check.is_destroyed
+	deferred_check_valid: deferred_check /= Void and then not deferred_check.is_destroyed
+	creation_check_valid: creation_check /= Void and then not creation_check.is_destroyed
+	creation_entry_valid: creation_entry /= Void and then not creation_entry.is_destroyed
+	creation_entry_parented: creation_entry.parent /= Void
+	target_not_void: target /= Void
 
 end -- class EB_CREATE_CLASS_DIALOG

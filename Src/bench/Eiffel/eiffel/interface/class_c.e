@@ -3075,9 +3075,8 @@ end
 	constraint (i: INTEGER): TYPE_A is
 			-- I-th constraint of the class
 		require
-			positive_argument: i > 0
 			generics_exists: is_generic
-			index_small_enough: i <= generics.count
+			valid_index: generics.valid_index (i)
 		do
 			Result := generics.i_th (i).constraint_type
 		end
@@ -3764,6 +3763,53 @@ feature -- Access
 			end
 		end
 
+	feature_of_rout_id (a_routine_id: INTEGER): FEATURE_I is
+			-- Feature whose routine_id is `a_routine_id'.
+			-- Look into `feature_table', `generic_features' and
+			-- `anchored_features'.
+		require
+			rout_id_valid: a_routine_id > 0
+			has_feature_table: has_feature_table
+		local
+			l_cursor: CURSOR
+			l_anch: like anchored_features
+			l_gen: like generic_features
+		do
+			Result := feature_table.feature_of_rout_id (a_routine_id)
+			if Result = Void then
+				l_anch := anchored_features
+				if l_anch /= Void then
+					from
+						l_cursor := l_anch.cursor
+						l_anch.start
+					until
+						l_anch.after or Result /= Void
+					loop
+						if l_anch.item_for_iteration.rout_id_set.has (a_routine_id) then
+							Result := l_anch.item_for_iteration
+						end
+						l_anch.forth
+					end
+					l_anch.go_to (l_cursor)
+				end
+				l_gen := generic_features
+				if Result = Void and l_gen /= Void then
+					from
+						l_cursor := l_gen.cursor
+						l_gen.start
+					until
+						l_gen.after or Result /= Void
+					loop
+						if l_gen.item_for_iteration.rout_id_set.has (a_routine_id) then
+							Result := l_gen.item_for_iteration
+						end
+						l_gen.forth
+					end
+					l_gen.go_to (l_cursor)
+				end
+			end
+		end
+
 	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
 			-- Feature whose feature_id is `a_feature_id'.
 			-- Look into `feature_table', `generic_features' and
@@ -3773,36 +3819,40 @@ feature -- Access
 			has_feature_table: has_feature_table
 		local
 			l_cursor: CURSOR
+			l_anch: like anchored_features
+			l_gen: like generic_features
 		do
 			Result := feature_table.feature_of_feature_id (a_feature_id)
 			if Result = Void then
-				if anchored_features /= Void then
+				l_anch := anchored_features
+				if l_anch /= Void then
 					from
-						l_cursor := anchored_features.cursor
-						anchored_features.start
+						l_cursor := l_anch.cursor
+						l_anch.start
 					until
-						anchored_features.after or Result /= Void
+						l_anch.after or Result /= Void
 					loop
-						if anchored_features.item_for_iteration.feature_id = a_feature_id then
-							Result := anchored_features.item_for_iteration
+						if l_anch.item_for_iteration.feature_id = a_feature_id then
+							Result := l_anch.item_for_iteration
 						end
-						anchored_features.forth
+						l_anch.forth
 					end
-					anchored_features.go_to (l_cursor)
+					l_anch.go_to (l_cursor)
 				end
-				if Result = Void and generic_features /= Void then
+				l_gen := generic_features
+				if Result = Void and l_gen /= Void then
 					from
-						l_cursor := generic_features.cursor
-						generic_features.start
+						l_cursor := l_gen.cursor
+						l_gen.start
 					until
-						generic_features.after or Result /= Void
+						l_gen.after or Result /= Void
 					loop
-						if generic_features.item_for_iteration.feature_id = a_feature_id then
-							Result := generic_features.item_for_iteration
+						if l_gen.item_for_iteration.feature_id = a_feature_id then
+							Result := l_gen.item_for_iteration
 						end
-						generic_features.forth
+						l_gen.forth
 					end
-					generic_features.go_to (l_cursor)
+					l_gen.go_to (l_cursor)
 				end
 			end
 		end

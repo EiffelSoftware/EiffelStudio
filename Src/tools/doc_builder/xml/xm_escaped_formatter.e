@@ -28,7 +28,7 @@ feature -- Access
 		end
 
 	is_escaped (a_char: INTEGER): BOOLEAN is
-			-- Is this an escapable character?
+			-- Is this an escapable character? (<, >, &)
 		do
 			Result := a_char = Lt_char.code
 				or a_char = Gt_char.code
@@ -36,7 +36,8 @@ feature -- Access
 		end
 
 	output_escaped (a_string: STRING): STRING is
-			-- Escape and output content string.
+			-- Escape and output content string.  The string "<>&" will become
+			-- "&gt;&lt;&amp;"
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -96,23 +97,12 @@ feature -- Access
 		local
 			l_content: STRING
 		do	
-			l_content := output_escaped (c.content)
-			
-			if is_code_block.last then
-				l_content.replace_substring_all ("%N", "<code_line_break/>")
-				l_content.replace_substring_all ("%T", "<tab/>")
-			end			
+			l_content := output_escaped (c.content)	
 			append (l_content)
 		end	
 
 	process_element (e: XM_ELEMENT) is
 			-- Process element `e'.
-		local
-			cnt: INTEGER
-			l_text: STRING
-			typer: XM_NODE_TYPER
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_el: XM_ELEMENT
 		do	
 			if e.name.is_equal ("code_block") or (not Is_code_block.is_empty and then Is_code_block.last) then
 				is_code_block.extend (True)

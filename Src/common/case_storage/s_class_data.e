@@ -362,6 +362,12 @@ feature -- Storing
 
 feature -- Reverse engineering details
 
+	is_new_since_last_re: BOOLEAN is
+			-- Is Current class new since
+			-- last reverse engineering ?
+		do
+		end;
+
 	is_reversed_engineered: BOOLEAN is
 			-- Is Current class reversed engineered?
 		do

@@ -877,6 +877,7 @@ feature {NONE} -- Implementation
 				clear_bkpt.disable_sensitive
 				disable_bkpt.disable_sensitive
 				bkpt_info_cmd.disable_sensitive
+				
 				step_cmd.disable_sensitive
 				out_cmd.disable_sensitive
 				into_cmd.disable_sensitive

@@ -241,15 +241,10 @@ feature -- Execution
 			eifnet_debugger.initialize_debugger_session
 			if eifnet_debugger.is_debugging then
 				app := Eiffel_system.application_name (True)
-				if args /= Void then
-					app.extend (' ')
-					app.append (args)
-				end
 
 				eifnet_debugger.set_debug_param_directory (cwd)
 				eifnet_debugger.set_debug_param_executable (app)
 				eifnet_debugger.set_debug_param_arguments (args)
-
 
 				process_before_running
 				create l_status.do_nothing

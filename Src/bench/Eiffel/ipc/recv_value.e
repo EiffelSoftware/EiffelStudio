@@ -11,7 +11,7 @@ feature -- External routines
 		end;
 
 	c_pass_recv_routines (d_int, d_bool, d_char, d_real, d_double, 
-								d_ref, d_point, d_bits, d_error: POINTER) is
+						d_ref, d_point, d_bits, d_error, d_void: POINTER) is
 		external
 			"C"
 		end;		
@@ -22,7 +22,8 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Pass routine addresses to C.
 		once
 			c_pass_recv_routines ($set_int, $set_bool, $set_char, $set_real, 
-					$set_double, $set_ref, $set_point, $set_bits, $set_error)
+					$set_double, $set_ref, $set_point, 
+					$set_bits, $set_error, $set_void)
 		end;
 
 	set_error is
@@ -77,6 +78,12 @@ feature	{} -- Initialization of the C/Eiffel interface
 			-- Receive a bit value.
 		do
 			!BITS_VALUE!item.make (ref, size)
+		end;
+
+	set_void is
+			-- Set `item' to Void.
+		do
+			item := Void
 		end;
 
 feature -- Status report

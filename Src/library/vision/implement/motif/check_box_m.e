@@ -22,9 +22,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_check_box: CHECK_BOX) is
+	make (a_check_box: CHECK_BOX; man: BOOLEAN) is
 			-- Create a motif check_box.
 		local
 			ext_name_c_box: ANY
@@ -32,12 +32,14 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name_c_box := a_check_box.identifier.to_c;
 			screen_object := create_check_box ($ext_name_c_box,
-						parent_screen_object (a_check_box, widget_index));
+						parent_screen_object (a_check_box, widget_index),
+						man);
 		end
 
 feature {NONE} -- External features
 
-	create_check_box (cb_name: ANY; scr_obj: POINTER): POINTER is
+	create_check_box (cb_name: ANY; scr_obj: POINTER; 
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

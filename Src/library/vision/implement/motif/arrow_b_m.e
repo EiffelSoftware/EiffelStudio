@@ -41,7 +41,21 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
+
+	make (an_arrow_b: ARROW_B; man: BOOLEAN) is
+			-- Create a motif arrow button.
+		local
+			ext_name_arrow: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name_arrow := an_arrow_b.identifier.to_c;
+			screen_object := create_arrow_b ($ext_name_arrow, 
+					parent_screen_object (an_arrow_b, widget_index),
+					man);
+		end;
+
+feature
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when current
@@ -80,17 +94,6 @@ feature
 		end;
 
 feature 
-
-	make (an_arrow_b: ARROW_B) is
-			-- Create a motif arrow button.
-		local
-			ext_name_arrow: ANY
-		do
-			widget_index := widget_manager.last_inserted_position;
-			ext_name_arrow := an_arrow_b.identifier.to_c;
-			screen_object := create_arrow_b ($ext_name_arrow, 
-					parent_screen_object (an_arrow_b, widget_index));
-		end;
 
 	down: BOOLEAN is
 			-- Is the arrow direction down ?
@@ -243,7 +246,8 @@ feature
 
 feature {NONE} -- External features
 
-	create_arrow_b (a_name: ANY; scr_obj: POINTER): POINTER is
+	create_arrow_b (a_name: ANY; scr_obj: POINTER; 
+				man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

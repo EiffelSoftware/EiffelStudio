@@ -106,7 +106,6 @@ feature {NONE} -- Standard window class values
 			!! Result.make_by_predefined_id (Idi_application)
 		ensure
 			result_not_void: Result /= Void
-			result_exists: Result.exists
 		end
 
 	class_cursor: WEL_CURSOR is

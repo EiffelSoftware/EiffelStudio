@@ -511,7 +511,6 @@ feature -- Messages
 		require
 			exists: exists
 			draw_item_not_void: draw_item /= Void
-			draw_item_exists: draw_item.exists
 		do
 		end
 
@@ -525,7 +524,6 @@ feature -- Messages
 		require
 			exists: exists
 			min_max_info_not_void: min_max_info /= Void
-			min_max_info_exists: min_max_info.exists
 		do
 		end
 
@@ -537,7 +535,6 @@ feature -- Messages
 		require
 			exists: exists
 			window_pos_not_void: window_pos /= Void
-			window_pos_exists: window_pos.exists
 		do
 		end
 
@@ -551,7 +548,6 @@ feature -- Messages
 		require
 			exists: exists
 			window_pos_not_void: window_pos /= Void
-			window_pos_exists: window_pos.exists
 		do
 		end
 

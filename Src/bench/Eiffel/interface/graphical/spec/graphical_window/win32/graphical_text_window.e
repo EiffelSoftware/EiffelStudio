@@ -20,7 +20,7 @@ inherit
 			cursor as widget_cursor,
 			set_cursor_position as st_set_cursor_position
 		undefine
-			is_equal
+			is_equal, set_font, set_background_color
 		redefine
 			implementation
 		end;

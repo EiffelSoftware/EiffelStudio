@@ -12,20 +12,38 @@ deferred class
 inherit
 	EV_ANY_I
 
-feature {EV_PIXMAP} -- status settings
-	
-	add_pixmap (pixmap: EV_PIXMAP) is
-			-- Add a pixmap in the container
+feature -- Access
+
+	pixmap: EV_PIXMAP is
+			-- Implementation of the pixmap contained 
 		require
 			exists: not destroyed
-			valid_pixmap: is_valid (pixmap)
-			pixmap_size_ok: pixmap_size_ok (pixmap)
 		deferred
 		end
 
-feature {EV_PIXMAP} -- Implementation
+feature -- Element change
 
-	pixmap_size_ok (pixmap: EV_PIXMAP): BOOLEAN is
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the widget.
+		require
+			exists: not destroyed
+			valid_pixmap: is_valid (pix)
+			valid_size: pixmap_size_ok (pix)
+		deferred
+		ensure then
+			pixmap_set: pixmap = pix
+		end
+
+	unset_pixmap is
+			-- Remove the pixmap from the container
+		deferred
+		ensure then
+			pixmap_removed: pixmap = Void
+		end
+
+feature -- Assertion features
+
+	pixmap_size_ok (pix: EV_PIXMAP): BOOLEAN is
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do

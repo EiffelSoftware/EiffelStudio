@@ -55,29 +55,9 @@ feature -- Access
 			-- Argument flags
 			-- See class ECOM_PARAM_FLAGS for values
 
-	description: STRING is
-			-- Type description
-		do
-			if is_paramflag_fin (flags) then
-				if is_paramflag_fout (flags) then
-					Result := clone (Inout)
-				else
-					Result := clone (In)
-				end
-			elseif is_paramflag_fout (flags) then
-				if is_paramflag_fretval (flags) then
-					Result := clone (Result_keyword)
-				else
-					Result := clone (Out_keyword)
-				end
-			elseif is_paramflag_fretval (flags) then
-				Result := clone (Result_keyword)
-			end
-		ensure then
-			non_void_description: Result /= Void
-			valid_description: not Result.empty
-		end
-
+	description: STRING
+			-- Parameter description
+	
 feature -- Status report
 
 	is_equal (other: WIZARD_PARAM_DESCRIPTOR): BOOLEAN is
@@ -117,6 +97,12 @@ feature {WIZARD_PARAMETER_DESCRIPTOR_FACTORY}-- Basic operations
 			flags := some_flags
 		ensure
 			valid_flags: is_valid_paramflag (flags) and flags = some_flags
+		end
+
+	set_description (a_description: STRING) is
+			-- Set `description' with `a_description'.
+		do
+			description := a_description
 		end
 
 end -- class WIZARD_PARAM_DESCRIPTOR

@@ -7,9 +7,7 @@ class
 	SPLIT_WINDOW
 
 inherit
-	FORM
-		rename
-			make as form_make
+	MANAGER
 		redefine
 			implementation
 		end
@@ -80,14 +78,47 @@ feature -- Access
 	is_vertical: BOOLEAN
 			-- Is the split window a vertical one?
 
-feature -- Status Setting
+feature -- Element change
 
 	set_proportion (p:INTEGER) is
-			-- Set the split proportion from 1 to 99.
+			-- Set the split proportion from 0 to 100.
+		require
+			valid_proportion: p>=0 and then p<=100
 		do
 			implementation.set_proportion (p)
 		end
 
+	add_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- Add `a_window' as currently lowest child.
+		do
+			implementation.add_child (a_child)
+		end
+
+	remove_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- Remove `a_child' from the display.
+		do
+			implementation.remove_child (a_child)
+		end
+
+	add_managed_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- Add `a_window' as managed.
+		do
+			implementation.add_managed_child (a_child)
+		end
+
+	remove_managed_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- Remove `a_window' as managed.
+		do
+			implementation.remove_managed_child (a_child)
+		end
+
+
+feature -- Status Setting
+
+	set_default is
+			-- Set default values to current bulletin.
+		do
+		end
 
 	set_widget_pane_minimum (a_widget: WIDGET; a_dimension: INTEGER) is
 		local

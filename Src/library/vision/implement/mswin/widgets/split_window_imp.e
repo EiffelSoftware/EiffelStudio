@@ -15,20 +15,14 @@ inherit
 			cursor as manager_cursor
 		end
 
-	FORM_IMP
+	MANAGER_IMP
 		rename
-			make as form_make,
 			cursor as manager_cursor
-		undefine
-			on_horizontal_scroll_control,
-			on_vertical_scroll_control
 		redefine
-			class_name,
 			set_size, on_set_cursor, on_size,
 			on_left_button_up, on_left_button_down,
 			on_mouse_move, set_widget_default,
-			child_has_resized, realize_current,
-			on_paint
+			child_has_resized, realize_current
 		end
 
 	WEL_CONTROL_WINDOW
@@ -115,8 +109,27 @@ feature {NONE} -- Initialization
 			parent ?= oui_parent.implementation
 			split_visible := True
 			is_vertical := vertical
-			form_make (a_window, True, oui_parent)
 		end
+
+feature -- Access
+
+	first_child: SPLIT_WINDOW_CHILD
+			-- Child above the top most split if not `is_vertical'
+			-- Child next the left most split otherwise
+
+	second_child: SPLIT_WINDOW_CHILD
+			-- Child below the bottom most split if not `is_vertical'
+			-- Child next the right most split otherwise
+
+	split_position: INTEGER
+			-- Position of the top split relative to Current
+
+	split_size: INTEGER
+			-- Size of the split window.
+			--| Depending on the value of `is_vertical', it can be the
+			--| height or the width
+
+feature -- Change
 
 	realize_current is
 			-- Create the actual Windows window.
@@ -126,7 +139,7 @@ feature {NONE} -- Initialization
 			pi ?= parent
 			wel_make (pi, "")
 
-			{FORM_IMP} Precursor
+--			{MANAGER_IMP} Precursor
 
 			set_height (pi.height)
 			set_width (pi.width)
@@ -235,26 +248,60 @@ feature -- Sizing policy
 
 feature -- Element change
 
-	set_first_child (a_window: SPLIT_WINDOW_CHILD) is
-			-- set `first_child' to `a_window'.
+	set_first_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- set `first_child' to `a_child'.
+		require
+			a_child_not_void: a_child /= Void
 		do
-			first_child := a_window
+			first_child := a_child
+		ensure
+			first_child_set: first_child = a_child
 		end
 
-	set_second_child (a_window: SPLIT_WINDOW_CHILD) is
-			-- set `second_child' to `a_window'.
+	set_second_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- set `second_child' to `a_child'.
+		require
+			a_window_not_void: a_child /= Void
 		do
-			second_child := a_window
+			second_child := a_child
 			split_visible := True
+		ensure
+			second_child_set: second_child = a_child
 		end
 
-	add_child (a_window: SPLIT_WINDOW_CHILD) is
-			-- Add `a_window' as currently lowest child.
+	remove_first_child is
+			-- Remove `first_child' from the display.
+		do
+			split_position := 0
+			split_visible := False
+			resize_second_child
+		end
+
+	remove_second_child is
+			-- Remove `second_child' from the display.
+		do
+			split_position := split_size
+			split_visible := False
+			resize_first_child
+		end
+
+	add_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- Add `a_child' as currently lowest child.
 		do
 			if first_child = Void then
-				set_first_child (a_window)
+				set_first_child (a_child)
 			else
-				set_second_child (a_window)
+				set_second_child (a_child)
+			end
+		end
+
+	remove_child (a_child: SPLIT_WINDOW_CHILD) is
+			-- Remove `a_child' from the display.
+		do
+			if a_child = second_child then
+				remove_second_child
+			else
+				remove_first_child
 			end
 		end
 
@@ -294,38 +341,13 @@ feature -- Element change
 			end
 		end
 
-	remove_first_child is
-			-- Remove `first_child' from the display.
-		do
-			split_position := 0
-			split_visible := False
-			resize_second_child
-		end
-
-	remove_second_child is
-			-- Remove `second_child' from the display.
-		do
-			split_position := split_size
-			split_visible := False
-			resize_first_child
-		end
-
-feature {SPLIT_WINDOW_CHILD} -- Element change
-
-	remove_child (a_child: SPLIT_WINDOW_CHILD) is
-			-- Remove `a_child' from the display.
-		do
-			if a_child = second_child then
-				remove_second_child
-			else
-				remove_first_child
-			end
-		end
 
 feature -- {NONE} -- Implementation
 
 	resize_first_child is
 			-- Resize the top child to the correct dimensions.
+		require
+			exists: exists
 		do
 			if is_vertical then
 				first_child.set_size (split_position, height)
@@ -336,6 +358,8 @@ feature -- {NONE} -- Implementation
 
 	resize_second_child is
 			-- Resize the bottom child to the correct dimensions.
+		require
+			exists: exists
 		local
 			add_size, zero: INTEGER
 		do
@@ -563,5 +587,16 @@ feature -- {NONE} -- Implementation
 		once
 			Result := "EvisionSplit"
 		end
+
+feature {NONE} -- Implementation
+
+	button_down: BOOLEAN
+			-- Is the mouse button down moving the split?
+
+	is_splitting: BOOLEAN
+			-- Is `button_down' and `on_top_split' True?
+
+	split_visible: BOOLEAN
+			-- Is the split visible?
 
 end -- class SPLIT_WINDOW_IMP

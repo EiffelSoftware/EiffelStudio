@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			parent := a_parent
 			form_make (a_name, a_parent);
-			a_parent.implementation.add_child (Current);
+			a_parent.add_child (Current);
 		end;
 
 	make_unmanaged (a_name: STRING; a_parent: SPLIT_WINDOW) is
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 			parent := a_parent
 			form_make_unmanaged (a_name, a_parent);
-			a_parent.implementation.add_child (Current);
+			a_parent.add_child (Current);
 		end
 
 feature -- Access
@@ -54,7 +54,7 @@ feature -- Widget Management
 			--| Ie. Make it visible on the screen.
 		do
 			implementation.set_managed (True);
-			parent.implementation.add_managed_child (Current)
+			parent.add_managed_child (Current)
 		end;
 
 	unmanage is
@@ -62,7 +62,7 @@ feature -- Widget Management
 			--| Ie. Make ir invisible on the screen.
 		do
 			implementation.set_managed (False);
-			parent.implementation.remove_managed_child (Current)
+			parent.remove_managed_child (Current)
 		end
 
 feature {SPLIT_WINDOW_I} -- Implementation

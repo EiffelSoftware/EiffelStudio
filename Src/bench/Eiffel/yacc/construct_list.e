@@ -6,7 +6,7 @@ inherit
 
 	AST_YACC
 		undefine
-			copy, setup, consistent, is_equal
+			copy, is_equal
 		redefine
 			pass_address
 		end

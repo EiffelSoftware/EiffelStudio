@@ -314,7 +314,7 @@ extern int fcount;
 #ifdef WORKBENCH
 #define RTEE RTSO; expop(&eif_stack)
 #define RTEJ current_call_level = trace_call_level; \
-	saved_prof_top = prof_stack->st_top; \
+	if (prof_stack) saved_prof_top = prof_stack->st_top; \
 	start: exvect->ex_jbuf = (char *) exenv; RTES
 #else
 #define RTEE expop(&eif_stack)

@@ -54,9 +54,8 @@ feature -- Initialization
 		do
 			cluster := System.class_of_id (ctxt.class_c.id).cluster;
 			ctxt.begin;
-			ctxt.put_special("{");
-			ctxt.set_separator(",");
-			ctxt.separator_is_special;
+			ctxt.put_text_item (ti_L_curly);
+			ctxt.set_separator (ti_Comma);
 			ctxt.space_between_tokens;
 			if 	
 				ctxt.client = Void or else 
@@ -82,11 +81,11 @@ feature -- Initialization
 					end
 					clients.forth;
 					if not clients.after then
-						ctxt.put_special (",");
-						ctxt.put_string (" ");
+						ctxt.put_text_item (ti_Comma);
+						ctxt.put_space
 					end
 				end;
-				ctxt.put_special("}");
+				ctxt.put_text_item (ti_R_curly);
 				ctxt.commit
 			else
 				ctxt.rollback;

@@ -36,9 +36,9 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			old_name.format (ctxt);
-			ctxt.put_string (" ");
-			ctxt.put_keyword ("as");
-			ctxt.put_string (" ");
+			ctxt.put_space;
+			ctxt.put_text_item (ti_As_keyword);
+			ctxt.put_space;
 			new_name.format (ctxt);
 			ctxt.commit
 		end;

@@ -78,20 +78,18 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("when");
-			ctxt.put_string (" ");
-			ctxt.set_separator (",");
-			ctxt.separator_is_special;
+			ctxt.put_text_item (ti_When_keyword);
+			ctxt.put_space;
+			ctxt.set_separator (ti_Comma);
 			ctxt.no_new_line_between_tokens;
 			interval.format (ctxt);
-			ctxt.put_string (" ");
-			ctxt.put_keyword ("then");
-			ctxt.put_string (" ");
+			ctxt.put_space;
+			ctxt.put_text_item (ti_Then_keyword);
+			ctxt.put_space;
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(";");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
 				compound.format(ctxt)
 			end;	

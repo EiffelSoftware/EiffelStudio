@@ -36,7 +36,7 @@ feature -- Initialization
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_keyword("all");
+			ctxt.put_text_item (ti_All_keyword);
 			ctxt.always_succeed;
 		end;
 

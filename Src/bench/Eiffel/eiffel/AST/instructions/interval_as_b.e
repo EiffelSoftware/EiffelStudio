@@ -138,7 +138,7 @@ feature -- Type check and byte code
 		do
 			lower.format (ctxt);
 			if upper /= void then
-				ctxt.put_special("..");
+				ctxt.put_text_item (ti_Dotdot);
 				upper.format (ctxt);
 			end;
 			ctxt.always_succeed;

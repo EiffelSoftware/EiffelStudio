@@ -73,8 +73,8 @@ feature
 
 	format (ctxt: FORMAT_CONTEXT) is 
 		do
-			ctxt.put_keyword ("expanded");
-			ctxt.put_string (" ");
+			ctxt.put_text_item (ti_Expanded_keyword);
+			ctxt.put_space;
 			basic_format (ctxt);
 		end;
 

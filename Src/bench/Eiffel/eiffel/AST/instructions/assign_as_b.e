@@ -113,21 +113,21 @@ feature -- Type check, byte code production, dead_code_removal
 			ctxt.put_breakable;
 			ctxt.new_expression;
 			target.format (ctxt);
-			ctxt.put_special (assign_symbol);
+			ctxt.put_space;
+			ctxt.put_text_item (assign_symbol);
+			ctxt.put_space;
 			ctxt.new_expression;
 			source.format (ctxt);
 			ctxt.commit;
 		end;
 		
-feature {}
-	assign_symbol: STRING is
+feature {} -- Formatter
+
+	assign_symbol: TEXT_ITEM is
 		do
-			Result := constant_assign_symbol;
+			Result := ti_Assign
 		end;
 		
-
-	constant_assign_symbol: STRING is " := ";
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is

@@ -11,6 +11,7 @@ inherit
 			is_subset as ll_is_subset
 		end;
 	SHARED_WORKBENCH;
+	SHARED_TEXT_ITEMS
 
 creation
 
@@ -210,9 +211,9 @@ feature
 			until
 				after
 			loop
-				ctxt.put_special ("{");
+				ctxt.put_text_item (ti_L_curly);
 				item.format (ctxt);
-				ctxt.put_special ("}");
+				ctxt.put_text_item (ti_R_curly);
 				forth;
 			end;
 		end;

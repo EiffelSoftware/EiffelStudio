@@ -223,10 +223,9 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.begin;
-			ctxt.put_before_feat_decl;
+			ctxt.put_text_item (ti_Before_feature_declaration);
 			ctxt.next_line;
-			ctxt.set_separator(",");
-			ctxt.separator_is_special;
+			ctxt.set_separator (ti_Comma);
 			ctxt.space_between_tokens;
 			ctxt.abort_on_failure;
 				--| Should only be one feature name
@@ -238,7 +237,7 @@ feature -- Formatter
 				ctxt.commit;
 				body.format (ctxt);
 				ctxt.commit;
-				ctxt.put_after_feat_decl;
+				ctxt.put_text_item (ti_After_feature_declaration)
 			end;
 		end;
 

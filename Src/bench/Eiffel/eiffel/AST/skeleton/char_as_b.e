@@ -68,8 +68,8 @@ feature -- Conveniences
 	format (ctxt : FORMAT_CONTEXT) is
 		do
 			ctxt.always_succeed;
-			ctxt.put_special ("%'");
+			ctxt.put_text_item (ti_Quote);
 			ctxt.put_string (char_text (value));
-			ctxt.put_special ("%'")
+			ctxt.put_text_item (ti_Quote)
 		end;
 end

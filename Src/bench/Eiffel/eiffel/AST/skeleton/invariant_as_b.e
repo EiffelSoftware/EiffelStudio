@@ -8,7 +8,7 @@ inherit
 		redefine
 			is_invariant_obj, type_check, byte_node, format
 		end;
-	IDABLE;
+	IDABLE
 
 feature -- Identity
 
@@ -78,20 +78,19 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_before_invariant;
-			ctxt.put_keyword("invariant");
+			ctxt.put_text_item (ti_Before_invariant);
+			ctxt.put_text_item (ti_Invariant_keyword);
 			ctxt.indent_one_more;
 			ctxt.continue_on_failure;
 			ctxt.next_line;
-			ctxt.set_separator (";");
-			ctxt.separator_is_special;
+			ctxt.set_separator (ti_Semi_colon);
 			ctxt.new_line_between_tokens;
 			if assertion_list /= Void then
 				format_assertions (ctxt);
 			end;
 			if ctxt.last_was_printed then
 				ctxt.commit;
-				ctxt.put_after_invariant
+				ctxt.put_text_item (ti_After_invariant)
 			else
 				ctxt.rollback
 			end

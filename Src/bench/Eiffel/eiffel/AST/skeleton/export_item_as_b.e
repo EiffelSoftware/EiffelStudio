@@ -47,11 +47,10 @@ feature -- formatter
 		do
 			ctxt.begin;
 			if clients /= Void then
-				ctxt.set_separator (",");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Comma);
 				ctxt.space_between_tokens;
 				clients.format (ctxt);
-				ctxt.put_string (" ")
+				ctxt.put_space
 			end;
 			features.format (ctxt);
 			ctxt.commit

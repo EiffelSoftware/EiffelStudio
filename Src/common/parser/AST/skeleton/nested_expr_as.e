@@ -68,10 +68,10 @@ feature -- Type check, byte code and dead code removal
 		-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_special ("(");
+			ctxt.put_text_item (ti_L_parenthesis);
 			target.format (ctxt);
 			if ctxt.last_was_printed then
-				ctxt.put_special (")");
+				ctxt.put_text_item (ti_R_parenthesis);
 				ctxt.need_dot;
 				ctxt.keep_types;
 				message.format (ctxt);

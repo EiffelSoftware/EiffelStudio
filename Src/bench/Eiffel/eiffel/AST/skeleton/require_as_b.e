@@ -4,7 +4,7 @@ inherit
 
 	ASSERT_LIST_AS
 		redefine
-			clause_name
+			clause_name, put_clause_keywords
 		end
 
 feature -- Conveniences
@@ -27,5 +27,16 @@ feature {}
 			end
 		end;
 			
+	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+			-- Append keywords "require" or "require else".
+		do
+			if ctxt.first_assertion then
+				ctxt.put_text_item (ti_Require_keyword)
+			else
+				ctxt.put_text_item (ti_Require_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item (ti_Else_keyword)
+			end
+		end;
 
 end

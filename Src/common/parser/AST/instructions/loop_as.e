@@ -146,9 +146,8 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.put_breakable;
-			ctxt.put_keyword ("from");
-			ctxt.set_separator(";");
-			ctxt.separator_is_special;
+			ctxt.put_text_item (ti_From_keyword);
+			ctxt.set_separator (ti_Semi_colon);
 			ctxt.new_line_between_tokens;
 			if from_part /= void then
 				ctxt.indent_one_more;
@@ -159,7 +158,7 @@ feature -- Formatter
 			ctxt.put_breakable;
 			if invariant_part /= void then
 				ctxt.next_line;
-				ctxt.put_keyword("invariant");
+				ctxt.put_text_item (ti_Invariant_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				invariant_part.format (ctxt);
@@ -167,20 +166,20 @@ feature -- Formatter
 			end;
 			if variant_part /= void then
 				ctxt.next_line;
-				ctxt.put_keyword("variant");
+				ctxt.put_text_item (ti_Variant_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				variant_part.format(ctxt);
 				ctxt.indent_one_less;
 			end;
 			ctxt.next_line;
-			ctxt.put_keyword("until");
+			ctxt.put_text_item (ti_Until_keyword);
 			ctxt.indent_one_more;
 			ctxt.next_line;
 			stop.format (ctxt);
 			ctxt.indent_one_less;
 			ctxt.next_line;
-			ctxt.put_keyword("loop");
+			ctxt.put_text_item (ti_Loop_keyword);
 			if compound /= void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
@@ -189,7 +188,7 @@ feature -- Formatter
 			end;
 			ctxt.next_line;
 			ctxt.put_breakable;
-			ctxt.put_keyword("end");
+			ctxt.put_text_item (ti_End_keyword);
 			ctxt.commit
 		end;
 

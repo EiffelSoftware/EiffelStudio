@@ -149,8 +149,8 @@ feature -- Implementation of inherited deferred features
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("like");
-			ctxt.put_string (" ");
+			ctxt.put_text_item (ti_Like_keyword);
+			ctxt.put_space;
 			ctxt.prepare_for_feature (anchor, Void);
 			ctxt.put_current_feature;
 			ctxt.commit;

@@ -171,11 +171,10 @@ feature -- formatter
 			if renaming /= Void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.put_keyword ("rename");
+				ctxt.put_text_item (ti_Rename_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(",");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Comma);
 				ctxt.new_line_between_tokens;
 				renaming.format (ctxt)
 				ctxt.indent_one_less;
@@ -185,11 +184,10 @@ feature -- formatter
 			if exports /= Void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.put_keyword ("export");
+				ctxt.put_text_item (ti_Export_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(";");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
 				exports.format (ctxt)
 				ctxt.indent_one_less
@@ -199,11 +197,10 @@ feature -- formatter
 			if undefining /= Void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.put_keyword ("undefine");
+				ctxt.put_text_item (ti_Undefine_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(",");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Comma);
 				ctxt.space_between_tokens;
 				undefining.format (ctxt)
 				ctxt.indent_one_less;
@@ -213,11 +210,10 @@ feature -- formatter
 			if redefining /= Void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.put_keyword ("redefine");
+				ctxt.put_text_item (ti_Redefine_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(",");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Comma);
 				ctxt.space_between_tokens;
 				redefining.format (ctxt)
 				ctxt.indent_one_less;
@@ -227,11 +223,10 @@ feature -- formatter
 			if selecting /= Void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.put_keyword ("select");
+				ctxt.put_text_item (ti_Select_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(",");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Comma);
 				ctxt.space_between_tokens;
 				selecting.format (ctxt)
 				ctxt.indent_one_less;
@@ -241,7 +236,7 @@ feature -- formatter
 			if end_to_print then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.put_keyword ("end");
+				ctxt.put_text_item (ti_End_keyword);
 				ctxt.indent_one_less
 			end
 			ctxt.indent_one_less;

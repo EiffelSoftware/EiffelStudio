@@ -33,7 +33,7 @@ feature -- Initialization
 
 	format (ctxt: FORMAT_CONTEXT) is
 		do
-			ctxt.put_keyword ("unique");
+			ctxt.put_text_item (ti_Unique_keyword);
 		end;
 
 end

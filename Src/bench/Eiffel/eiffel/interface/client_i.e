@@ -10,6 +10,10 @@ inherit
 		redefine
 			is_equal
 		end;
+	SHARED_TEXT_ITEMS
+		redefine
+			is_equal
+		end
 
 feature 
 
@@ -206,8 +210,8 @@ feature -- formatter
 				end
 				clients.forth;
 				if not clients.after then
-					ctxt.put_special (",");
-					ctxt.put_string (" ");
+					ctxt.put_text_item (ti_Comma);
+					ctxt.put_space
 				end
 			end
 		end;

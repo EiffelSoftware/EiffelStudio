@@ -124,32 +124,30 @@ feature -- Formatter
 		do
 			ctxt.begin;
 			ctxt.put_breakable;	
-			ctxt.put_keyword ("inspect");
-			ctxt.put_string (" ");
+			ctxt.put_text_item (ti_Inspect_keyword);
+			ctxt.put_space;
 			ctxt.indent_one_more;
 			switch.format (ctxt);
 			ctxt.indent_one_less;
 			ctxt.next_line;
 			if case_list /= void then
 				ctxt.set_separator (Void);
-				ctxt.separator_is_normal;
 				ctxt.new_line_between_tokens;
 				case_list.format (ctxt);
 				ctxt.next_line;
 			end;
 			if else_part /= void then
-				ctxt.put_keyword("else");
+				ctxt.put_text_item (ti_Else_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.separator_is_special;
-				ctxt.set_separator(";");
+				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
 				else_part.format(ctxt);
 				ctxt.indent_one_less;
 				ctxt.next_line;
 				ctxt.put_breakable;	
 			end;
-			ctxt.put_keyword("end");
+			ctxt.put_text_item (ti_End_keyword);
 			ctxt.commit;
 		end;
 

@@ -50,9 +50,8 @@ feature -- Formatting
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			if  clients /= void then
-				ctxt.set_separator (",");
-				ctxt.separator_is_special;
+			if  clients /= Void then
+				ctxt.set_separator (ti_Comma);
 				ctxt.space_between_tokens;
 				clients.format (ctxt);
 			end;
@@ -61,7 +60,7 @@ feature -- Formatting
 			ctxt.indent_one_more;
 			ctxt.next_line;
 			ctxt.new_line_between_tokens;
-			ctxt.set_separator (void);
+			ctxt.set_separator (Void);
 			features.format (ctxt);
 			ctxt.next_line;
 			ctxt.commit;

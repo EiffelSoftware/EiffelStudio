@@ -593,8 +593,8 @@ feature -- Primitives
 			i, count: INTEGER;
 		do
 			ctxt.put_class_name (associated_class);
-			ctxt.put_string (" ");
-			ctxt.put_special ("[");
+			ctxt.put_space;
+			ctxt.put_text_item (ti_L_bracket);
 			from
 				i := 1;
 				count := generics.count;
@@ -603,12 +603,12 @@ feature -- Primitives
 			loop
 				generics.item (i).format (ctxt);
 				if i /= count then
-					ctxt.put_special (",");
-					ctxt.put_string (" ");
+					ctxt.put_text_item (ti_Comma);
+					ctxt.put_space
 				end;
 				i := i + 1;
 			end;
-			ctxt.put_special ("]");
+			ctxt.put_text_item (ti_R_bracket)
 		end;
 
 end

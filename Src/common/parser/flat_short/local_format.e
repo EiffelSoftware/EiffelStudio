@@ -27,14 +27,8 @@ feature
 	insertion_point: CURSOR;
 		-- last position for left parantheses
 	
-	separator: STRING;
+	separator: TEXT_ITEM;
 		-- separator between token of the processed EIFFEL_LIST
-
-	is_separator_special: BOOLEAN;
-		-- must separator be printed as a special symbol?
-	
-	is_separator_keyword: BOOLEAN;
-		-- must separator be printed as a keyword?
 
 	indent_between_tokens: BOOLEAN;
 		-- must insert new_line and indent between EIFFEL_LIST token?
@@ -90,14 +84,9 @@ feature
 			position_in_text := pos;
 		end;
 
-	set_separator (s: STRING) is
+	set_separator (s: like separator) is
 		do
 			separator := s;
-		end;
-
-	set_is_special (b : BOOLEAN) is
-		do
-			is_separator_special := b;
 		end;
 
 	set_must_indent(b : BOOLEAN) is

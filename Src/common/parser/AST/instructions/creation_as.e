@@ -323,14 +323,14 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
-			if type /= void then
-				ctxt.put_special("!");
+			if type /= Void then
+				ctxt.put_text_item (ti_Exclamation);
 				type.format (ctxt);
-				ctxt.put_special("!");
-				ctxt.put_string (" ")
+				ctxt.put_text_item (ti_Exclamation);
+				ctxt.put_space
 			else
-				ctxt.put_special ("!!");
-				ctxt.put_string (" ")
+				ctxt.put_text_item (ti_Creation_mark);
+				ctxt.put_space
 			end;
 			target.format (ctxt);
 			if  call /= void then

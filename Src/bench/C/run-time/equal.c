@@ -21,6 +21,7 @@
 #include "eif_plug.h"			/* for econfg */
 #include "rt_garcol.h"
 #include "rt_wbench.h"
+#include "rt_gen_types.h"
 #include "eif_memory.h"
 #include "rt_macros.h"
 #include <string.h>
@@ -94,6 +95,7 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 		 * the target.
 		 */
 		if (s_flags & EO_SPEC) {
+				/* Works for both SPECIAL and TUPLE object */
 				/* Eiffel standard equality on special objects: type check assumes
 				* the comparison is on areas of the same type (containing the same
 				* thing). Called by the redefinition of feature `equal' of special
@@ -229,7 +231,32 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 		/* Case 1: specials filled with direct instances: block comparison */
 		return EIF_TEST(!memcmp (source, target, s_size * sizeof(char)));
 
-	if (!(s_flags & EO_COMP)) {
+	if (s_flags & EO_TUPLE) {
+		EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
+		EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) target;
+			/* Don't forget that first element of TUPLE is just a placeholder
+			 * to avoid offset computation from Eiffel code */
+		l_source++;
+		l_target++;
+		count--;
+		for (; count > 0; count--, l_source++, l_target++) {
+			if
+				((eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) &&
+				(eif_tuple_item_type(l_target) == EIF_REFERENCE_CODE))
+			{
+				s_field = eif_reference_tuple_item (l_source);
+				t_field = eif_reference_tuple_item (l_target);
+				if ((s_field == NULL) && (t_field == NULL)) {
+					continue;
+				} else if ((s_field) && (t_field) && (Dtype(s_field) == Dtype(t_field))) {
+					continue;
+				} else {
+					return EIF_FALSE;
+				}
+			}
+		}
+		return EIF_TRUE;
+	} else if (!(s_flags & EO_COMP)) {
 		/* Case 2: specials filled with references: we have to check fields
 		 * one by one.
 		 */
@@ -327,7 +354,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 	 * Two cases: either a normal object or a special object.
 	 */
 	if (flags & EO_SPEC) {
-		/* Special objects */
+		/* Special or tuple objects */
 		if (!spiso(target, source))
 			return EIF_FALSE;
 
@@ -339,8 +366,34 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 		t_ref = RT_SPECIAL_INFO_WITH_ZONE(target, zone);
 		count = RT_SPECIAL_COUNT_WITH_INFO(t_ref);
 
-		/* Traversal of references */
-		if (!(flags & EO_COMP)) {
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT * l_source = (EIF_TYPED_ELEMENT *) source;
+			EIF_TYPED_ELEMENT * l_target = (EIF_TYPED_ELEMENT *) target;
+				/* Don't forget that first element of TUPLE is just a placeholder
+				 * to avoid offset computation from Eiffel code */
+			l_source++;
+			l_target++;
+			count--;
+			for (; count > 0; count--, l_source++, l_target++) {
+				if
+					((eif_tuple_item_type(l_source) == EIF_REFERENCE_CODE) &&
+					(eif_tuple_item_type(l_target) == EIF_REFERENCE_CODE))
+				{
+					s_field = eif_reference_tuple_item (l_source);
+					t_field = eif_reference_tuple_item (l_target);
+					if ((s_field == NULL) && (t_field == NULL)) {
+						continue;
+					} else if ((s_field) && (t_field)) {
+						if (!rdeepiso(t_field, s_field)) {
+							return EIF_FALSE;
+						}
+					} else {
+						return EIF_FALSE;
+					}
+				}
+			}
+			return EIF_TRUE;
+		} else if (!(flags & EO_COMP)) {
 			/* Specials filled with references: we have to iterate on fields
 			* two by two.
 			*/

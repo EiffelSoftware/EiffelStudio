@@ -17,7 +17,8 @@ inherit
 
 	EV_ANY_IMP
 		undefine
-			destroy
+			destroy,
+			needs_event_box
 		redefine
 			interface
 		end
@@ -51,6 +52,21 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	parent: EV_ANY is
+		deferred
+		end
+
+	parent_is_sensitive: BOOLEAN is
+			-- (export status {NONE})
+		local
+			sensitive_parent: EV_SENSITIVE
+		do
+			sensitive_parent ?= parent
+			if sensitive_parent /= Void then
+				Result := sensitive_parent.is_sensitive
+			end
+		end
 
 	sensitive_widget: POINTER is
 			-- Widget used for sensitivity, redefined by descendants to avoid ugly disabling drawing for containers

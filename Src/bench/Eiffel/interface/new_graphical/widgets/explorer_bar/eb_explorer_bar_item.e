@@ -157,7 +157,7 @@ feature -- Element change
 	set_pixmap (a_pixmap: ARRAY [EV_PIXMAP]) is
 			-- Set `pixmap' to `a_pixmap'.
 		require
-			valid_pixmap: a_pixmap /= Void and then a_pixmap.count = 2
+			valid_pixmap: a_pixmap /= Void
 		do
 			pixmap := a_pixmap
 		end

@@ -390,7 +390,7 @@ EIF_POINTER add;
 EIF_INTEGER length;
 {
 #ifdef EIF_WIN32
-	do_init()
+	do_init();
 	if (bind ((int) s, (struct sockaddr *) add, (int) length) == SOCKET_ERROR)
         eio();
 #elif defined EIF_OS2
@@ -868,7 +868,7 @@ EIF_INTEGER flags;
 	if (result == SOCKET_ERROR)
 		if (WSAGetLastError() != EWOULDBLOCK)
             eio();
-#eldif defined EIF_OS2
+#elif defined EIF_OS2
 	if (result == -1)
 		if (sock_errno() != SOCEWOULDBLOCK)
             eio();

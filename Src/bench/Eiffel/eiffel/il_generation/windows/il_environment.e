@@ -5,7 +5,7 @@ indexing
 
 class
 	IL_ENVIRONMENT
-
+	
 feature -- Access
 
 	is_dotnet_installed: BOOLEAN is
@@ -80,6 +80,36 @@ feature -- Access
 			if l_path /= Void then
 				Result := Dotnet_framework_sdk_path + "bin\"
 			end
+		end
+
+feature -- Query
+	
+	use_cordbg (a_string: STRING): BOOLEAN is
+			-- 
+		do
+			Result := a_string.is_equal ("cordbg")
+		end
+		
+	use_dbgclr (a_string: STRING): BOOLEAN is
+			-- 
+		do
+			Result := a_string.is_equal ("DbgCLR")
+		end
+	
+	Dotnet_debugger_path (a_debug: STRING): STRING is
+			-- The path to the .NET debugger associated with 'a_debug'.
+		local
+			l_path,
+			l_debugger_string: STRING
+		do
+			l_path := Dotnet_framework_sdk_bin_path
+			if l_path /= Void then
+				if use_cordbg (a_debug) then
+					Result := Dotnet_framework_sdk_bin_path + a_debug + ".exe"
+				elseif use_dbgclr (a_debug) then
+					Result := Dotnet_framework_sdk_path + "GuiDebug\" + a_debug + ".exe"
+				end
+			end	
 		end
 	
 feature {NONE} -- Implementation

@@ -20,6 +20,8 @@ inherit
 	
 	GB_SHARED_SYSTEM_STATUS
 	
+	GB_EVENT_UTILITIES
+	
 	INTERNAL
 	
 	EIFFEL_ENV
@@ -168,7 +170,7 @@ feature {NONE} -- Implementation
 				store: GB_XML_STORE
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name: FILE_NAME
-				create_tag_index, local_tag_index, build_tag_index, set_tag_index: INTEGER
+				temp_index, local_tag_index, create_tag_index: INTEGER
 			do
 				set_progress (0.3)
 				create store
@@ -208,6 +210,9 @@ feature {NONE} -- Implementation
 				set_progress (0.9)
 					-- Generate the widget setting code.
 				generate_setting (current_document.root_element, 1)
+				
+					-- Generate the event code.
+				generate_events (current_document.root_element, 1)
 	
 				local_tag_index := class_text.substring_index (local_tag, 1)
 				class_text.replace_substring_all (local_tag, "")			
@@ -217,13 +222,17 @@ feature {NONE} -- Implementation
 				class_text.replace_substring_all (create_tag, "")			
 				class_text.insert_string (create_string, create_tag_index)
 				
-				build_tag_index := class_text.substring_index (build_tag, 1)
+				temp_index := class_text.substring_index (build_tag, 1)
 				class_text.replace_substring_all (build_tag, "")			
-				class_text.insert_string (build_string, build_tag_index)
+				class_text.insert_string (build_string, temp_index)
 				
-				set_tag_index := class_text.substring_index (set_tag, 1)
+				temp_index := class_text.substring_index (set_tag, 1)
 				class_text.replace_substring_all (set_tag, "")			
-				class_text.insert_string (set_string, set_tag_index)
+				class_text.insert_string (set_string, temp_index)
+				
+				temp_index := class_text.substring_index (event_connection_tag, 1)				
+				class_text.replace_substring_all (event_connection_tag, "")
+				class_text.insert_string (event_connection_string, temp_index)
 				
 					-- Need to add pixmap initialization if `class_text' contains
 					-- `pixmap'. If it does, this means that some pixmaps have been set,
@@ -394,6 +403,10 @@ feature {NONE} -- Implementation
 							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ (name_string)
 							current_iterative_name := element_info.data
+						elseif current_name.is_equal (Events_string) then
+							-- Do nothing if we have found events.
+							-- There is no setting to be generated for these.
+							-- This will be performed in `generate_events'.
 						else
 							gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
 						
@@ -416,6 +429,95 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
+		
+	generate_events (element: XML_ELEMENT; depth: INTEGER) is
+			-- With information in `element', generate code which will
+			-- set_all_objects.
+		local
+			current_element: XML_ELEMENT
+			current_data_element: XML_CHARACTER_DATA
+			current_name: STRING
+			full_information, event_full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info, event_element_info: ELEMENT_INFORMATION
+			current_type: STRING
+			gb_ev_any: GB_EV_ANY
+			current_iterative_name: STRING
+			data: STRING
+			char_data: STRING
+			another_element: XML_ELEMENT
+			action_sequence_info: GB_ACTION_SEQUENCE_INFO
+			action_sequence: GB_EV_ACTION_SEQUENCE
+			local_name: STRING
+		do
+			if element.has_attribute_by_name (type_string) then
+				stored_current_type := element.attribute_by_name (type_string).value.to_utf8
+			end
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name.to_utf8
+					if current_name.is_equal (Item_string) then	
+						generate_events (current_element, depth + 1)
+					else
+						if current_name.is_equal (Internal_properties_string) then
+							full_information := get_unique_full_info (current_element)
+							element_info := full_information @ (name_string)
+							current_iterative_name := element_info.data
+							last_name := element_info.data
+						elseif current_name.is_equal (Events_string) then
+								-- We must now call `generate_events' again, the XML is in this format
+								-- <Events>
+								--		<Event>
+								--		<Event>
+								-- This allows us to iterate through all the Event data's.
+							generate_events (current_element, depth)
+						elseif current_name.is_equal (Event_string) then
+							another_element := current_element
+							from
+								another_element.start
+							until
+								another_element.off
+							loop
+								current_data_element ?= another_element.item_for_iteration
+								if current_data_element /= Void then
+										-- Build `action_sequence_info' from the current data.
+									action_sequence_info := string_to_action_sequence_info (current_data_element.content.to_utf8)
+										-- Build `action_sequence' for generating additional information required.
+									action_sequence ?= new_instance_of (dynamic_type_from_string ("GB_" + action_sequence_info.type))
+									check
+										action_sequence_not_void: action_sequence /= Void
+									end
+										-- If we are generating an event for an window, then there is no attribute name
+										-- generated.
+									if stored_current_type.is_equal (Ev_titled_window_string) then
+										local_name := ""
+									else
+										local_name := last_name + "."
+									end
+										-- If there are no arguments to the action sequence then generate no open arguments.
+									if action_sequence.count = 0 then
+										add_event_connection (local_name + action_sequence_info.name + ".extend (agent " + action_sequence_info.feature_name + ")")
+									else
+										add_event_connection (local_name + action_sequence_info.name + ".extend (agent " + action_sequence_info.feature_name + " (" + action_sequence.open_arguments + "))") --current_iterative_name)
+									end
+								end
+								another_element.forth
+							end
+						end
+					end
+				end
+				element.forth
+			end
+		end
+		
+	last_name, stored_current_type: STRING
+		-- Attributes used within `generate_events'.
+		-- Cannot use locals as the recursion is more complicated in `generate_events'
+		-- than in `generate_setting'.
 
 	add_local_on_single_line (local_type, name: STRING) is
 			-- Add code representation of new local named `name' of type
@@ -533,6 +635,15 @@ feature {NONE} -- Implementation
 			build_string := build_string + temp_string
 		end
 		
+	add_event_connection (event: STRING) is
+			--
+		do
+			if event_connection_string = Void then
+				event_connection_string := ""
+			end
+			event_connection_string := event_connection_string + indent + event
+		end
+		
 	add_set (set: STRING) is
 			-- Add a setting represention, `set' to
 			-- `set_string'.
@@ -645,6 +756,10 @@ feature {NONE} -- Implementation
 	set_string: STRING
 		-- String representation of all attribute setting statements built
 		-- by `Current'. This is inserted into the template when complete.
+		
+	event_connection_string: STRING
+		-- String representation of all event connection statements built by
+		-- `Current'. This is inserted into the template when completed.
 		
 	progress_bar: EV_PROGRESS_BAR
 		-- A progress bar that will be updated during generation.

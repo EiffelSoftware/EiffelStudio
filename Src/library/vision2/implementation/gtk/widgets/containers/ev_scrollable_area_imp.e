@@ -156,14 +156,14 @@ feature {NONE} -- Implementation
 			Precursor {EV_VIEWPORT_IMP} (a_x, a_y, a_width, a_height)
 			if item /= Void then
 				item_imp ?= item.implementation
-				C.gtk_widget_set_uposition (item_imp.c_object, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+				C.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 			end	
 		end
 		
 	child_has_resized (item_imp: EV_WIDGET_IMP) is
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
-			C.gtk_widget_set_uposition (item_imp.c_object, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
+			C.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 		end
 
 	horizontal_adjustment: POINTER is

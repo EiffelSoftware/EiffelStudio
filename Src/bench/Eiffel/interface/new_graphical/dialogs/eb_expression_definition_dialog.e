@@ -311,6 +311,7 @@ feature {NONE} -- Event handling
 			t: STRING
 			wd: EV_WARNING_DIALOG
 			oe: STRING
+			do_not_close_dialog: BOOLEAN
 		do
 			if modified_expression = Void then
 				if class_radio.is_selected then
@@ -347,7 +348,15 @@ feature {NONE} -- Event handling
 					end
 				elseif object_radio.is_selected then
 						-- We try to create an expression related to a class.
-					t := address_field.text
+					t := address_field.text.as_upper
+					if 
+						t.item (1).is_equal ('0')
+						and then t.item (2).is_equal ('X')
+						and t.count > 3
+					then
+						t := t.substring (3, t.count)
+					end
+					t.prepend ("0x")
 					if
 						application.is_running and
 						application.is_stopped and then
@@ -388,10 +397,15 @@ feature {NONE} -- Event handling
 					expression_field.set_focus
 					create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 					wd.show_modal_to_window (dialog)
+					do_not_close_dialog := True
 				end
 				new_expression := modified_expression
 			end
-			if new_expression /= Void and then not new_expression.syntax_error then
+			if 
+				not do_not_close_dialog 
+				and then new_expression /= Void 
+				and then not new_expression.syntax_error 
+			then
 				destroy
 				if callback /= Void then
 					callback.call (Void)

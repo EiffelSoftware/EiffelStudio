@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize * 2
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				list.extend (last_item)
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.extendible then
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.extendible then
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.writable then
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				list.put_front (last_item)
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.valid_index (n) then
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.extendible and then not similar_list.before then
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.extendible and then not similar_list.after then
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				if similar_list.extendible then
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				if similar_list.prunable and then not similar_list.empty then
 					if similar_list.readable then
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				if similar_list.prunable and then not similar_list.empty then
 					if similar_list.readable then
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				if similar_list.prunable and then similar_list.writable then
 					list.remove
@@ -544,7 +544,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				if similar_list.index > 1 then
 					list.remove_left
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				if similar_list.index < similar_list.count then
 					list.remove_right
@@ -580,7 +580,7 @@ feature {NONE} -- Implementation
 				n := Testsize
 				create s.make
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				s.extend (last_item)
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 				n := Testsize
 				create s.make
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				s.extend (last_item)
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 				create sl.make
 				l := list_agent.item ([])
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				l.extend (last_item)
@@ -628,8 +628,8 @@ feature {NONE} -- Implementation
 				n := n - 1
 			end
 			if similar_list.extendible and then not similar_list.off then
-				list.merge_left (l)
 				similar_list.merge_left (sl)
+				list.merge_left (l)
 			end
 		end
 
@@ -644,7 +644,7 @@ feature {NONE} -- Implementation
 				create sl.make
 				l := list_agent.item ([])
 			until
-				n = 1
+				n < 1
 			loop
 				new_item
 				l.extend (last_item)
@@ -652,8 +652,8 @@ feature {NONE} -- Implementation
 				n := n - 1
 			end
 			if similar_list.extendible and then not similar_list.off then
-				list.merge_right (l)
 				similar_list.merge_right (sl)
+				list.merge_right (l)
 			end
 		end
 
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 			from
 				n := Testsize
 			until
-				n = 1
+				n < 1
 			loop
 				if not similar_list.off and then similar_list.valid_index (n) then
 					list.swap (n)
@@ -701,6 +701,9 @@ end -- class EV_LIST_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/02 19:50:55  brendel
+--| Fixed error in tests.
+--|
 --| Revision 1.14  2000/03/02 18:05:12  brendel
 --| Fixed precondition on `make'.
 --|

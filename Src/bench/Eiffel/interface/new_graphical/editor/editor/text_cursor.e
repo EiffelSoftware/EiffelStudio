@@ -9,12 +9,20 @@ class
 
 inherit
 	CURSOR
+		redefine
+			is_equal
+		end
 
 	COMPARABLE
+		redefine
+			is_equal
+		end
 
 	WEL_SB_CONSTANTS
 		export
 			{NONE} all
+		redefine
+			is_equal
 		end
 
 create
@@ -189,6 +197,12 @@ feature -- Comparison
 			-- Is current object less than `other'?
 		do
 			Result := (y_in_lines < other.y_in_lines) or else (x_in_pixels < other.x_in_pixels)
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is Current equal to `other'?
+		do
+			Result := (y_in_lines = other.y_in_lines) and then (x_in_pixels = other.x_in_pixels)
 		end
 
 feature -- Transformation

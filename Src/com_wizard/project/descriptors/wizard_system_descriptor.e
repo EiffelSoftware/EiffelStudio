@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			eiffel_names.compare_objects
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_component.make
 			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes_common.make
+			create c_types.make (20)
 		ensure
 			non_void_library_descriptors: library_descriptors /= Void
 			non_void_enumerators: enumerators /= Void
@@ -35,6 +36,7 @@ feature {NONE} -- Initialization
 			non_void_eiffel_names: eiffel_names /= Void
 			non_void_visible_classes_component: visible_classes_component /= Void
 			non_void_visible_classes_common: visible_classes_common /= Void
+			non_void_c_types: c_types /= Void
 		end
 
 feature -- Access
@@ -87,6 +89,9 @@ feature -- Access
 
 	eiffel_names: LIST [STRING]
 			-- List of Eiffel names in system.
+
+	c_types: HASH_TABLE [STRING, STRING]
+			-- List ot C types in system.
 
 	name: STRING 
 			-- System name.
@@ -208,6 +213,17 @@ feature -- Basic operations
 			-- Set `is_inknown' to `True'.
 		do
 			is_iunknown := True
+		end
+
+	add_c_type (a_type: STRING) is
+			-- Add `a_type' to list of C types.
+		require
+			non_void_type: a_type /= Void
+			valid_type: not a_type.empty
+		do
+			c_types.force (clone (a_type), clone (a_type))
+		ensure
+			has: c_types.has (a_type)
 		end
 
 feature {NONE} -- Implementation

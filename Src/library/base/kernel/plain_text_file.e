@@ -14,7 +14,7 @@ inherit
 		rename
 			index as position
 		redefine
-			is_plain_text
+			is_plain_text, file_ps
 		end
 
 creation
@@ -127,6 +127,14 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
+	file_ps (file : POINTER; s : POINTER; length : INTEGER) is
+			-- Print `a_string' to `file'.
+		external
+			"C"
+		alias
+			"file_pt_ps"
+		end;
+
 invariant 
 
 	plain_text: is_plain_text
@@ -136,7 +144,7 @@ end -- class PLAIN_TEXT_FILE
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, 1995 Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

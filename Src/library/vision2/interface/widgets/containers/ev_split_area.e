@@ -46,27 +46,25 @@ feature {NONE} -- Initialization
 			-- Initialize internal widgets and values.
 		do
 			check
-				split_box_not_void: split_box /= Void
 				sep_not_void: sep /= Void
 				-- This function should be called after init
 				-- of vertical/horizontal split area.
 			end
+			create split_box
 			{EV_WIDGET} Precursor
 			create scr
 			scr.set_line_width (3)
 			scr.set_invert_mode
-			sep.set_minimum_height (8)
-			sep.set_minimum_width (8)
 			create first_cell.make_with_real_parent (Current)
 			split_box.extend (first_cell)
 			split_box.extend (sep)
-			split_box.disable_item_expand (sep)
 			create second_cell.make_with_real_parent (Current)
 			split_box.extend (second_cell)
 			implementation.box.extend (split_box)
 			first_cell.merge_radio_button_groups (second_cell)
 			previous_split_position := -1
 			sep.pointer_button_press_actions.extend (~on_click)
+			split_box.resize_actions.extend (~on_fixed_resized)
 		end
 
 feature -- Access
@@ -169,14 +167,8 @@ feature -- Status report
 	prunable: BOOLEAN is True
 			-- Items may be removed.
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Offset of the splitter from left or top.
-		do
-			Result := select_from (first_cell.width, first_cell.height)
-		ensure
-			result_large_enough: Result >= minimum_split_position
-			result_small_enough: Result <= maximum_split_position
-		end
 
 	minimum_split_position: INTEGER is
 			-- Minimum position the splitter can have.
@@ -187,9 +179,9 @@ feature -- Status report
 			else
 				Result := 1
 			end
-			Result := Result + select_from (sep.width, sep.height)
+			Result := Result + Half_sep_dimension
 		ensure
-			positive_value: Result >= 0
+			non_negative: Result >= 0
 			coherent_position: Result <= maximum_split_position
 		end
 
@@ -199,18 +191,15 @@ feature -- Status report
 			sec_item_min_size: INTEGER
 			sec : EV_WIDGET
 		do
-			sec := second
-			if sec /= Void then
-				sec_item_min_size := select_from (
-					sec.minimum_width,
-					sec.minimum_height)
+			if second_cell.readable then
+				Result := select_from (second.minimum_width,
+					second.minimum_height)
 			else
-				sec_item_min_size := 1
+				Result := 1
 			end
-			Result := select_from (split_box.width, split_box.height) -
-				select_from (sep.width, sep.height) - sec_item_min_size
+			Result := Result + Half_sep_dimension
 		ensure
-			positive_value: Result >= 0
+			non_negative: Result >= 0
 			coherent_position: Result >= minimum_split_position
 		end
 
@@ -297,47 +286,26 @@ feature -- Status setting
 			position_in_valid_range:
 				(a_split_position >= minimum_split_position
 				and a_split_position <= maximum_split_position)
-		local
-			fcd, scd, previous_split_pos: INTEGER
 		do
-			fcd := a_split_position
-			scd := select_from (split_box.width, split_box.height) -
-				select_from (sep.width, sep.height) - a_split_position
-			previous_split_pos := select_from (first_cell.width, first_cell.height)
-			if a_split_position < previous_split_pos then
-				set_first_cell_dimension (fcd)
-				set_second_cell_dimension (scd)
-			elseif a_split_position > previous_split_pos then
-				set_second_cell_dimension (scd)
-				set_first_cell_dimension (fcd)
-			end
+			split_position := a_split_position
+			layout_widgets
 		ensure
-			--split_position = a_split_position
---| FIXME IEK This doesn't always hold true as GTK may not resize the
---| split area immediately, this is true when shrinking min size of first cell.
+			split_position = a_split_position
 		end
 
 	set_proportion (a_proportion: REAL) is
-			--|FIXME reword this! 
-			-- Move the separator position to be relative to the size of the
-			-- split area 0.5 = middle of split area, providing the user can do
-			-- this manually anyway. A value of 1 will move the separator to
-			-- its upmost position, zero its smallest.
+			-- Position `split_position' between minimum and maximum determined
+			-- by `a_proportion'.
 		require
 			proportion_in_valid_range:
 				(a_proportion >= 0 and a_proportion <= 1)
 		local
-			current_proportion: INTEGER	
+			max_sp, min_sp: INTEGER
 		do
-			current_proportion := (a_proportion *
-				select_from (split_box.width, split_box.height)).rounded
-			if current_proportion < minimum_split_position then
-				set_split_position (minimum_split_position)
-			elseif current_proportion > maximum_split_position then
-				set_split_position (maximum_split_position)
-			else
-				set_split_position (current_proportion)
-			end	
+			max_sp := maximum_split_position
+			min_sp := minimum_split_position
+			set_split_position (((max_sp - min_sp) / a_proportion).rounded +
+				min_sp)
 		end
 
 feature -- Removal
@@ -381,16 +349,6 @@ feature {NONE} -- Implementation
 			--| EV_VERTICAL_SPLIT_AREA returns `a_vert'.
 		deferred
 		end
-
-	set_first_cell_dimension (a_size: INTEGER) is
-			-- Set either width or height of first_cell.
-		deferred
-		end
-
-	set_second_cell_dimension (a_size: INTEGER) is
-			-- Set either width or height of second_cell.
-		deferred
-		end
 	
 feature {NONE} -- Implementation
 
@@ -413,7 +371,7 @@ feature {NONE} -- Implementation
 	y_origin: INTEGER
 			-- Vertical screen offset of `Current'.
 
-	half_sep_dimension: INTEGER
+	Half_sep_dimension: INTEGER is 4
 			-- Width or height of separator divided by 2.
 
 	on_click (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
@@ -421,7 +379,6 @@ feature {NONE} -- Implementation
 		local
 			origin: TUPLE [INTEGER, INTEGER]
 		do
-			half_sep_dimension := select_from (sep.width, sep.height) // 2
 			offset := select_from (a_x, a_y)
 			x_origin := select_from (
 				scr_x - a_x - first_cell.width,
@@ -493,6 +450,50 @@ feature {NONE} -- Implementation
 			previous_split_position := a_position
 		end
 
+	on_fixed_resized (fx, fy, fwidth, fheight: INTEGER) is
+			-- `split_box' is resized by the user.
+		do
+			--| FIXME Move splitter according to disable item expand.
+			--| Three cases:
+			--| 1: (1) exp (2) not exp: (2) retains size, splitter moves.
+			--| 2: (1) and (2) same: both grow/shrink same, splitter moves.
+			--| 3: (1) not exp (2) exp: (1) retains size, (2) resizes.
+			layout_widgets
+		end
+
+	layout_widgets is
+			-- Set position and dimensions of the children in `split_box'.
+			--| Call after split_position or dimensions changed.
+		do
+			if select_from (0, 1) = 0 then
+				split_box.set_item_position (first_cell, 0, 0)
+				split_box.set_item_size (first_cell,
+					split_position - Half_sep_dimension, split_box.height)
+				split_box.set_item_position (sep,
+					split_position - Half_sep_dimension, 0)
+				split_box.set_item_size (sep,
+					Half_sep_dimension * 2, split_box.height)
+				split_box.set_item_position (first_cell,
+					split_position + Half_sep_dimension, 0)
+				split_box.set_item_size (first_cell,
+					split_box.width - split_position - Half_sep_dimension,
+					split_box.height)
+			else
+				split_box.set_item_position (first_cell, 0, 0)
+				split_box.set_item_size (first_cell,
+					split_box.width, split_position - Half_sep_dimension)
+				split_box.set_item_position (sep,
+					0, split_position - Half_sep_dimension)
+				split_box.set_item_size (sep,
+					split_box.width, Half_sep_dimension * 2)
+				split_box.set_item_position (first_cell,
+					0, split_position + Half_sep_dimension)
+				split_box.set_item_size (first_cell,
+					split_box.width,
+					split_box.height - split_position - Half_sep_dimension)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	index: INTEGER
@@ -504,7 +505,7 @@ feature {NONE} -- Implementation
 	first_cell, second_cell: EV_AGGREGATE_CELL
 		-- Two client areas.
 
-	split_box: EV_BOX
+	split_box: EV_FIXED
 		-- Contains `first_cell', a seperator and `second_cell'.
 
 	sep: EV_SEPARATOR
@@ -556,6 +557,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/05/02 22:02:52  brendel
+--| Started implementing using EV_FIXED.
+--|
 --| Revision 1.34  2000/05/01 21:40:07  manus
 --| `minimum_split_position' should take into account size of separator.
 --| `set_split_position' code was using `height' of `first_cell' where it should

@@ -88,6 +88,45 @@ feature -- Basic Operations
 			retry
 		end
 		
+	is_assembly_modified (ass: ASSEMBLY; apath: STRING): BOOLEAN is
+			-- is the assembly 'ass' newer than the version in the specified path 'apath'
+		require
+			non_void_assembly: ass /= Void
+			non_void_path: apath /= Void
+		local
+			assembly_file: RAW_FILE
+			path_to_assembly: STRING
+			consumed_path: STRING
+			consumed_path_timestamp: INTEGER
+			assembly_file_timestamp: INTEGER
+			consumed_folder: DIRECTORY
+		do
+			consumed_path := apath.clone (apath)
+			
+			-- Set the default value for all conditions where the assembly date cannot be compared
+			Result := False
+				
+			create path_to_assembly.make_from_cil (ass.get_code_base)
+			if path_to_assembly.count > 8 and path_to_assembly.substring_index ("file:///", 1) = 1 then
+				path_to_assembly := path_to_assembly.substring (9, path_to_assembly.count)
+				create assembly_file.make (path_to_assembly)
+				create consumed_folder.make (consumed_path)
+				
+				if consumed_folder.exists and then assembly_file.exists then
+					consumed_path.prune_all_trailing ((create {OPERATING_ENVIRONMENT}).directory_separator)
+
+					consumed_path_timestamp := (create {RAW_FILE}.make (consumed_path)).date
+					assembly_file_timestamp := assembly_file.date
+					
+					Result := (consumed_path_timestamp < assembly_file_timestamp)
+				elseif not consumed_folder.exists and then assembly_file.exists then
+					Result := True
+				end
+			end
+		ensure
+			non_void_result : Result /= Void
+		end
+		
 feature -- Access
 
 	file_name (type: CONSUMED_TYPE): STRING is

@@ -49,18 +49,9 @@ feature -- Initialization
 
 	make_with_text (txt: STRING) is
 			-- Create an item with `txt' as label
-		local
-			a1, a2: ANY
 		do
-			widget := gtk_statusbar_new
-			gtk_object_ref (widget)
-
-			a1 := status_bar_description.to_c
-			a2 := txt.to_c
-			context_id := gtk_statusbar_get_context_id (widget, $a1)
-			message_id := gtk_statusbar_push (widget, context_id, $a2)
-
-			text := txt
+			make
+			set_text (txt)
 		end
 
 feature -- Access
@@ -179,15 +170,20 @@ feature {NONE} -- Implementation
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
 
-			c_gtk_statusbar_item_set_pixmap (widget, pixmap_imp.widget)
-			pixmap := pix
-
-			-- Destroy the temporary window which
-			-- was needed at the creation of the pixmap
-			if (pixmap_imp.creation_window /= Default_pointer) then
-				gtk_widget_destroy (pixmap_imp.creation_window)
-				pixmap_imp.set_window_pointer (Default_pointer)
+			-- Create a GtkPixmap to put in the status bar and show it.
+			if (pixmap = Void) then
+				-- No pixmap, so create a GtkPixmap to put
+				-- in the status bar and show it.
+				pixmap_widget := c_gtk_statusbar_item_create_pixmap_place (widget)
 			end
+
+			-- We replace the former gdk_pixmap of the gtk_pixmap (in pixmap_widget)
+			-- by the new one.
+			c_gtk_pixmap_set_from_pixmap (pixmap_widget, pixmap_imp.widget) 
+
+			-- updating status
+			pixmap := pix
+--			pixmap_imp.set_parent (Current)
 		end
 
 	unset_pixmap is
@@ -199,8 +195,14 @@ feature {NONE} -- Implementation
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
 
-			c_gtk_statusbar_item_unset_pixmap (widget, pixmap_imp.widget)
+			-- Remove the pixmap from the status bar.
+			-- `pixmap_widget' will be detroyed.
+			c_gtk_statusbar_item_unset_pixmap (widget, pixmap_widget)
+
+			-- updating status
 			pixmap := Void
+			set_pixmap_widget (default_pointer)
+--			pixmap_imp.set_parent (Void)
 		end
 
 end -- class EV_STATUS_BAR_ITEM_IMP

@@ -13,7 +13,7 @@ inherit
 	PREFIX_AS
 		undefine
 			internal_name, infix "<", 
-			temp_name
+			temp_name, associated_feature_name
 		redefine
 			fix_operator
 		end;

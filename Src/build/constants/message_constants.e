@@ -29,6 +29,8 @@ feature -- Error messages
 			"Cannot remove translation %%X!%NTranslation is being used.";
 	Cannot_save_file_er: STRING is 
 			"File %%X %Nalready exists. Cannot save!";
+	Crash_error: STRING is
+			"An error occured during the last operation.%NYou may have to reopen EiffelBuild."
 	Dir_not_exist_er: STRING is "Import directory %%X%N does not exist!";
 	Dir_not_chosen_er: STRING is "No Directory chosen!";
 	Empty_project_name_er: STRING is "You must specify a project name !";

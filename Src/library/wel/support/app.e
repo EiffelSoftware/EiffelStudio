@@ -1,6 +1,6 @@
 indexing
 	description: "General notions of a Windows application. All WEL %
-		%applications must create a WEL_APPLICATION object."
+		%applications must define its own descendant of WEL_APPLICATION."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,6 @@ feature {NONE} -- Initialization
 			-- set the application's main window and run
 			-- the application.
 		do
-			runable := True
 			set_application (Current)
 			create_dispatcher
 			init_instance
@@ -66,11 +65,14 @@ feature -- Status report
 			-- Is the idle action enabled?
 			-- (False by default)
 
-	runable: BOOLEAN
+	runable: BOOLEAN is
 			-- Can the application be run?
 			-- (True by default)
-			-- The user may want to set `runable' to False
-			-- if the application can not be executed.
+			-- The user may want to return False if the application
+			-- can not be executed for any reason.
+		do
+			Result := True
+		end
 
 	is_dialog: BOOLEAN is
 			-- Is the main window a dialog box?

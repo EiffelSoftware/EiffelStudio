@@ -264,6 +264,17 @@ feature -- Status report
 			Result := cwin_send_message_result (item, Lvm_getextendedlistviewstyle, 0, 0)
 		end
 
+	get_tooltip: WEL_TOOLTIP is
+			-- `Result' is tooltip associated with `Current'.
+		local
+			pointer: POINTER
+		do
+			pointer := listview_gettooltips (item)
+			if pointer /= default_pointer then
+				create Result.make_by_pointer (pointer)
+			end
+		end
+
 feature -- Status setting
 
 	ensure_visible (an_index: INTEGER) is
@@ -700,6 +711,13 @@ feature {NONE} -- Externals
 			"C [macro %"cctrl.h%"] : EIF_POINTER"
 		alias
 			"WC_LISTVIEW"
+		end
+
+	ListView_Gettooltips (ptr: POINTER): POINTER is
+		external
+			"C [macro %"cctrl.h%"] (HWND): EIF_POINTER"
+		alias
+			"ListView_GetToolTips"
 		end
 
 end -- class WEL_LIST_VIEW

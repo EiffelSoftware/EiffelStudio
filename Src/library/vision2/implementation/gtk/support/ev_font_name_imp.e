@@ -270,7 +270,6 @@ feature -- Basic operations
 			-- Fill the parameters according to the given system name.
 		local
 			pos, pos_end: INTEGER
-			number: INTEGER
 		do
 			pos := 2
 			pos_end := str.index_of ('-', pos)
@@ -349,6 +348,9 @@ end -- class EV_FONT_NAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/06/14 20:12:16  king
+--| Removed unused local
+--|
 --| Revision 1.7  2001/06/07 23:08:05  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

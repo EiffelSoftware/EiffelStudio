@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 				-- done, so we will create a new routine id, we will not do a merge, which seems to
 				-- be the .NET behavior anyway.
 
-			create l_rout_id_set.make (1)
+			create l_rout_id_set.make
 				
 			if not a_member.is_virtual then
 					-- Either it is a new feature of current or an inherited one,

@@ -10,7 +10,7 @@ inherit
 		rename
 			writer as Attr_generator
 		redefine
-			final_table_size
+			final_table_size, tmp_poly_table
 		end;
 
 	SHARED_CODE_FILES
@@ -186,6 +186,14 @@ feature
 
 			buffer.exdent
 			buffer.putstring ("};%N%N")
+		end
+
+feature {POLY_TABLE} -- Special data
+
+	tmp_poly_table: ARRAY [ATTR_ENTRY] is
+			-- Contain a copy of Current during a merge
+		once
+			create Result.make (1, Block_size)
 		end
 
 feature {NONE} -- Implementation

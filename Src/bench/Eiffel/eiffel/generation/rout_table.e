@@ -10,7 +10,7 @@ inherit
 		rename
 			writer as Rout_generator
 		redefine
-			is_routine_table
+			is_routine_table, tmp_poly_table
 		end;
 
 	SHARED_GENERATOR
@@ -170,19 +170,28 @@ feature -- Code generation
 			internal_generate (buffer, 0, final_table_size, l_min_used, max_used)
 		end
 
-	generate_dispose_table (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
-			-- Generation of the dispose table in buffer "erout*.c".
+	generate_full (real_rout_id: INTEGER; buffer: GENERATION_BUFFER) is
+			-- Generation of the table in buffer "erout*.c" without optimizing the lower bound.
 		local
 			l_rout_id: INTEGER
 			l_min_used: INTEGER
 		do	
-			l_rout_id := rout_id
-			rout_id := real_rout_id
-			l_min_used := min_used
-			goto_used (l_min_used)
-			internal_generate (buffer, l_min_used, system.type_id_counter.value, l_min_used,
-				max_used)
-			rout_id := l_rout_id
+			if max_position = 0 then
+				buffer.putstring ("char *(*");
+				buffer.putstring (Encoder.table_name (real_rout_id));
+				buffer.putstring ("[")
+				buffer.putint (system.type_id_counter.value)
+				buffer.putstring ("])();");
+				buffer.new_line
+			else
+				l_rout_id := rout_id
+				rout_id := real_rout_id
+				l_min_used := min_used
+				goto_used (l_min_used)
+				internal_generate (buffer, l_min_used, system.type_id_counter.value,
+					l_min_used, max_used)
+				rout_id := l_rout_id
+			end
 		end
 
 	goto_implemented (type_id: INTEGER) is
@@ -222,6 +231,14 @@ feature -- Code generation
 			is_implemented: position <= max_position implies is_implemented
 		end
 
+feature {POLY_TABLE} -- Special data
+
+	tmp_poly_table: ARRAY [ROUT_ENTRY] is
+			-- Contain a copy of Current during a merge
+		once
+			create Result.make (1, Block_size)
+		end
+
 feature {NONE} -- Implementation
 
 	add_header_files (include_list: ARRAY [INTEGER]) is
@@ -250,7 +267,7 @@ feature {NONE} -- Implementation
 			buffer_not_void: buffer /= Void
 			a_min_positive: a_min > 0
 			a_max_positive: a_max > 0
-			a_max_greater_or_equal_than_a_min: a_max > a_min
+			a_max_greater_or_equal_than_a_min: a_max >= a_min
 		local
 			entry, l_rout_entry: ROUT_ENTRY;
 			i, j, nb, index: INTEGER;

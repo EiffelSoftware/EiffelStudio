@@ -10,12 +10,14 @@ rd /q /s EIFGEN
 
 %ISE_EIFFEL%\studio\spec\windows\bin\ec.exe -finalize -project_path %1 -ace %EIFFEL_SRC%\Eiffel\Ace\newbench.mswin.ace -batch
 
-cdd EIFGEN\F_code
+cdd %1\EIFGEN\F_code
+%ISE_EIFFEL%\studio\spec\windows\bin\finish_freezing.exe -silent
 
+cdd %1\EIFGEN\W_code
 %ISE_EIFFEL%\studio\spec\windows\bin\finish_freezing.exe -silent
 
 cdd %ISE_EIFFEL%\studio\spec\windows\bin
-del old_ec.exe
+if not exist ec.exe del old_ec.exe
 ren ec.exe old_ec.exe
 copy %1\EIFGEN\F_code\ec.exe .
 

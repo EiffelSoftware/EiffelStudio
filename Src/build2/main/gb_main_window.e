@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			create constructor_box
 			create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
 			create temp_tool_bar
-			temp_tool_bar.extend (Layout_constructor.expand_all_button)
+			temp_tool_bar.extend (Command_handler.Expand_layout_tree_command.tool_bar_button)
 			temp_tool_bar.extend (Layout_constructor.view_object_button)
 			horizontal_split_area.tool_holder.add_command_tool_bar (temp_tool_bar)
 			horizontal_box.extend (horizontal_split_area)

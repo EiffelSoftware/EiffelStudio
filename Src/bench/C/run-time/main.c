@@ -62,7 +62,7 @@
 #if defined EIF_WINDOWS || defined EIF_OS2
 	/* when malloc() fails, the system dies otherwise !!! */
 	/* FIXME?? */
-rt_public int cc_for_speed = 1;			/* Fast memory allocation */
+rt_public int cc_for_speed = 0;			/* Fast memory allocation */
 #else
 rt_public int cc_for_speed = 1;			/* Fast memory allocation */
 #endif

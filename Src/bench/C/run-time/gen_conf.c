@@ -1616,7 +1616,7 @@ finish_simple:
 
 	if (result->first_id == -1)
 	{
-		for (dt=0,pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt)
+		for (dt=1,pt = eif_par_table2,pt++; dt < eif_par_table2_size; ++dt, ++pt)
 		{
 			if (*pt == (struct eif_par_types *)0)
 				continue;
@@ -2395,7 +2395,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 
 	if (gdp == (EIF_GEN_DER *) 0)
 	{
-		gdp = eif_new_gen_der (0, (int16*) 0, dftype, (char)0, (char)0, 0);
+		gdp = eif_new_gen_der (0, (int16*) 0, RTUD_INV(dftype), (char)0, (char)0, 0);
 
 		eif_derivations [dftype] = gdp;
 	}

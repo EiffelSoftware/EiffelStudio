@@ -6,15 +6,16 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CLASS_HOLE 
+class CLASS_HOLE
 
 inherit
 
-	EB_BUTTON_HOLE
+	DEFAULT_HOLE_COMMAND
 		redefine
-			compatible, stone_type, receive
-		end;
-	WARNING_MESSAGES
+			symbol, full_symbol, icon_symbol,
+			name, stone_type, process_class, process_feature,
+			compatible, process_classi
+		end
 
 creation
 
@@ -22,63 +23,97 @@ creation
 
 feature -- Properties
 
+	symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := bm_Class
+		end;
+
+	full_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := bm_Class_dot
+		end;
+
+	icon_symbol: PIXMAP is
+			-- Icon for the class tool
+		once
+			Result := bm_Class_icon
+		end;
+
 	stone_type: INTEGER is
 		do
 			Result := Class_type
 		end;
 
-feature -- Pick & Throw
-
-	receive (a_stone: STONE) is
-			-- Process dropped stone `a_stone'.
-		local
-			received_type: INTEGER;
-			feature_stone: FEATURE_STONE;
-			new_tool: TOOL_W;
-			invalid: BOOLEAN
+	name: STRING is
 		do
-			if compatible (a_stone) then
-
-				-- Okay, here we go.
-				-- Actually we have two types of class holes. One type is
-				-- displayed on the project window and the other type is
-				-- used within the class and feature tool.
-				-- When we drag a feature stone into the class hole of the project tool,
-				-- we should bring up a class tool and highlight the feature.
-				-- That's the intelligent stuff.
-
-				if tool = Project_tool then
-						-- Do some intelligent stuff here.
-
-					if a_stone.stone_type = Routine_type then
-						feature_stone ?= a_stone;		--| Cannot fail!
-						if not feature_stone.is_valid then
-							warner (Project_tool).gotcha_call
-									(w_Feature_not_compiled);
-							invalid := true;
-						end
-					end;
-
-					if not invalid then
-						new_tool := window_manager.class_window;
-						new_tool.display;
-						new_tool.receive (a_stone)
-					end
-
-				else
-					tool.receive (a_stone)
-				end
-			end
+			Result := l_Class
 		end;
 
-feature {NONE} -- Properties
+feature -- Access
 
 	compatible (dropped: STONE): BOOLEAN is
 			-- Can current accept `dropped'?
 		do
 			Result := dropped /= Void and then
-				((dropped.stone_type = Class_type) or 
+				((dropped.stone_type = Class_type) or
 				else (dropped.stone_type = Routine_type))
+		end;
+
+feature -- Update
+
+	-- Actually we have two types of class holes. One type is
+	-- displayed on the project window and the other type is
+	-- used within the class and feature tool.
+	-- When we drag a feature stone into the class hole of the project tool,
+	-- we should bring up a class tool and highlight the feature.
+	-- That's the intelligent stuff.
+
+	process_class (st: CLASSC_STONE) is
+		do
+			if tool = Project_tool then
+				create_class_tool (st)
+			else
+				tool.receive (st)
+			end
+		end;
+
+	process_classi (st: CLASSI_STONE) is
+		do
+			if tool = Project_tool then
+				create_class_tool (st)
+			else
+				tool.receive (st)
+			end
+		end;
+
+	process_feature (st: FEATURE_STONE) is
+		do
+			if tool = Project_tool then
+				if not st.is_valid then
+					warner (Project_tool).gotcha_call
+									(w_Feature_not_compiled);
+				else
+					create_class_tool (st)
+				end
+			else
+				tool.receive (st)
+			end
+		end;
+
+feature {NONE} -- Implementation
+
+	create_class_tool (a_stone: STONE) is
+			-- Create a class tool and process `a_stone'.
+		require
+			valid_a_stone: a_stone /= Void and then a_stone.is_valid
+		local
+			new_tool: CLASS_W
+		do
+			new_tool := window_manager.class_window;
+			new_tool.display;
+			new_tool.receive (a_stone)
 		end;
 
 end -- class CLASS_HOLE

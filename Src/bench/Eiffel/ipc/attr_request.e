@@ -11,13 +11,14 @@ inherit
 			send
 		end;
 	BEURK_HEXER;
-	BASIC_ROUTINES
+	BASIC_ROUTINES;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (addr: STRING) is
 		require
@@ -27,38 +28,43 @@ feature
 			object_address := addr;
 		end;
 
+feature -- Properites
+
 	object_address: STRING;
 			-- Hector address of object being inspected
 
-	dynamic_type: STRING;
-			-- Dynamic type of object being inspected
-
 	attributes: LINKED_LIST [DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
+
+	dynamic_class_name: STRING
+			-- Name of dynamic class of object
+
+feature -- Update
 
 	send is
 			-- Send inpect request to application.
 		local
 			obj_addr, dt_lower: STRING;
-			class_i: CLASS_I
+			class_i: CLASS_I;
 		do
 			send_rqst_3 (Rqst_sp_lower, 0, 0, sp_lower);
 			send_rqst_3 (Rqst_sp_upper, 0, 0, sp_upper);
 			send_rqst_3 (request_code, In_h_addr, 0, 
-											hex_to_integer (object_address));
-			dynamic_type := c_tread;
+								hex_to_integer (object_address));
+			dynamic_class_name := c_tread;
 			obj_addr := c_tread;
-			if dynamic_type.is_equal ("SPECIAL") then
+			if dynamic_class_name.is_equal ("SPECIAL") then
 				is_special := true;
-				attributes.make;
+				!! attributes.make;
 				capacity := c_tread.to_integer;
+				max_capacity := capacity;
 				recv_attributes (attributes, Void)
 			else
 				is_special := false;
 				!SORTED_TWO_WAY_LIST [DEBUG_VALUE]! attributes.make;
-				dt_lower := clone (dynamic_type);
+				dt_lower := clone (dynamic_class_name);
 				dt_lower.to_lower;
-				class_i := Universe.class_with_name (dt_lower);
+				class_i := Eiffel_universe.class_with_name (dt_lower);
 				if class_i = Void then
 					recv_attributes (attributes, Void)
 				else
@@ -76,6 +82,8 @@ feature
 				attributes.forth
 			end
 		end;
+
+feature {NONE} -- Implementation
 
 	recv_attributes (attr_list: LINKED_LIST [DEBUG_VALUE]; e_class: E_CLASS) is
 			-- Receive `e_class attribute info from application and 
@@ -118,20 +126,26 @@ feature
 					!BITS_VALUE! attr.make_attribute (attr_name, e_class, c_tread)
 				elseif type_name.is_equal ("expanded") then
 					type_name := c_tread;
-					!EXPANDED_VALUE! attr.make_attribute (attr_name, e_class, type_name);
+					!! exp_attr.make_attribute (attr_name, e_class, type_name);
 					lower_type_name := clone (type_name);
 					lower_type_name.to_lower;
-					class_i := Universe.class_with_name (lower_type_name);
-					exp_attr ?= attr;
+					class_i := Eiffel_universe.class_with_name (lower_type_name);
+					attr := exp_attr;
 					if class_i = Void then
 						recv_attributes (exp_attr.attributes, Void)
 					else
 						recv_attributes (exp_attr.attributes, class_i.compiled_eclass)
 					end;
 				elseif type_name.is_equal ("SPECIAL") then
-					!SPECIAL_VALUE! attr.make_attribute (attr_name, e_class, 
+					!! spec_attr.make_attribute (attr_name, e_class, 
 								c_tread, c_tread.to_integer);
-					spec_attr ?= attr;
+					if sp_upper = -1 then
+						spec_attr.set_sp_bounds (sp_lower, spec_attr.capacity);
+					else
+						spec_attr.set_sp_bounds (sp_lower, sp_upper);
+					end;
+					max_capacity := max_capacity.max (spec_attr.capacity);
+					attr := spec_attr;
 					recv_attributes (spec_attr.items, Void)
 				else
 					!REFERENCE_VALUE! attr.make_attribute (attr_name, e_class, 
@@ -142,11 +156,10 @@ feature
 			end
 		end;
 
-feature -- Special object inspection
+feature -- Special object properties
 
 	sp_lower, sp_upper: INTEGER;
 			-- Bounds for special object inspection
-			-- A negative value for `sp_lower' stands for 0;
 			-- A negative value for `sp_upper' stands for the
 			-- upper bound of the inspected special object
 
@@ -159,6 +172,10 @@ feature -- Special object inspection
 
 	capacity: INTEGER;
 			-- Capacity of the object in case it is SPECIAL
+
+	max_capacity: INTEGER
+			-- Maximum capacity if the object or its
+			-- attributes are SPECIAL
 
 	is_special: BOOLEAN;
 			-- Is the object being inspected SPECIAL?

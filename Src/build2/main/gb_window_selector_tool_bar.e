@@ -45,6 +45,13 @@ inherit
 			{NONE} all
 		end
 		
+	GB_SHARED_STATUS_BAR
+		export
+			{NONE} all
+		undefine
+			copy, default_create, is_equal
+		end
+		
 create
 	make_with_window_selector
 		
@@ -84,7 +91,7 @@ feature -- Access
 			create Result
 			Result.set_pixmap (pixmap_by_name ("directory_search_small"))
 			Result.select_actions.extend (agent include_all_directories)
-			Result.set_tooltip ("Include all sub-directories")
+			Result.set_tooltip (include_directory_button_tooltip)
 		ensure
 			result_not_void: result /= Void
 		end
@@ -105,7 +112,7 @@ feature -- Access
 			
 			Result.set_pixmap (pixmap_by_name ("icon_show_hide_directory_color"))
 			Result.select_actions.extend (agent show_hide_all_empty_directories)
-			Result.set_tooltip ("Show/Hide all empty directories")
+			Result.set_tooltip (show_hide_empty_directories_tooltip)
 		ensure
 			result_not_void: result /= Void
 		end
@@ -121,7 +128,7 @@ feature -- Access
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
-			Result.set_tooltip ("New directory")
+			Result.set_tooltip (new_directory_button_tooltip)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -133,10 +140,11 @@ feature -- Access
 		do
 			create Result
 			Result.select_actions.extend (agent expand_tree_recursive (window_selector.widget))
+			Result.select_actions.extend (agent set_timed_status_text (all_expanded_text))
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
-			Result.set_tooltip ("Expand all")
+			Result.set_tooltip (expand_all_button_tooltip)
 			Result.drop_actions.extend (agent expand_subtree_recursive)
 		ensure
 			result_not_void: Result /= Void
@@ -164,6 +172,7 @@ feature {NONE} -- Implementation
 			-- Include all dirs reachable from the project location, to the current project
 		do
 			window_selector.internal_include_all_directories (create {DIRECTORY}.make (system_status.current_project_settings.project_location), create {ARRAYED_LIST [STRING]}.make (5))			
+			set_timed_status_text (directories_included_text)
 		end
 		
 	expand_subtree_recursive (window_selector_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
@@ -172,6 +181,7 @@ feature {NONE} -- Implementation
 			window_selector_common_item_not_void: window_selector_common_item /= Void
 		do
 			window_selector_common_item.expand_recursive
+			set_timed_status_text (all_expanded_text)
 		end
 		
 	show_hide_all_empty_directories is
@@ -179,8 +189,10 @@ feature {NONE} -- Implementation
 		do
 			if show_hide_empty_directories_button.is_selected then
 				window_selector.recursive_do_all (agent internal_hide_directory)
+				set_timed_status_text (all_empty_directories_hidden_text)
 			else
 				window_selector.recursive_do_all (agent internal_show_directory)
+				set_timed_status_text (all_empty_directories_shown_text)
 			end
 		end
 		

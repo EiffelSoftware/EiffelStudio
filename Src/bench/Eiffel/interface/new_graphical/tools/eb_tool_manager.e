@@ -126,6 +126,25 @@ feature {NONE} -- Initialization
 			tools_initialized: tools_initialized
 		end
 
+	init_toolbars is
+			-- Create the toolbars, do not fill them.
+		do
+			create toolbars_area
+			toolbars_area.set_padding (1)
+
+			build_general_toolbar
+			toolbars_area.extend (general_toolbar)
+			toolbars_area.disable_item_expand (general_toolbar)
+
+			build_address_toolbar
+			toolbars_area.extend (address_toolbar)
+			toolbars_area.disable_item_expand (address_toolbar)
+
+			build_project_toolbar
+			toolbars_area.extend (project_toolbar)
+			toolbars_area.disable_item_expand (project_toolbar)
+		end
+
 	build_toolbars_area is
 			-- Set up the toolbars area (general toolbar, address toolbar, ...).
 		do
@@ -143,6 +162,8 @@ feature {NONE} -- Initialization
 			build_project_toolbar
 			toolbars_area.extend (project_toolbar)
 			toolbars_area.disable_item_expand (project_toolbar)
+			
+			view_menu.put_front (build_toolbar_menu)
 		end
 	
 	build_general_toolbar is
@@ -202,7 +223,7 @@ feature {NONE} -- Menus initializations
 			create view_menu.make_with_text (Interface_names.m_View)
 
 				-- Toolbars
-			view_menu.extend (build_toolbar_menu)
+			--view_menu.extend (build_toolbar_menu)
 
 				-- Explorer Bar
 			view_menu.extend (build_explorer_bar_menu)

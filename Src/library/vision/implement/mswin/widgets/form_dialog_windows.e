@@ -166,6 +166,10 @@ feature -- Status setting
 				set_x_y (xpos, ypos)
 			end
 			update_all
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end			
 		end
 
 	set_form_height (new_height: INTEGER) is

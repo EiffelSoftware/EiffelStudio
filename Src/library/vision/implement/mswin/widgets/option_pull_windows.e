@@ -100,6 +100,10 @@ feature -- Initialization
 					set_selected_button (private_selected_button)
 				end
 			end
+				-- set initial focus
+			if initial_focus/= void then
+				initial_focus.wel_set_focus
+			end
 		end
 
 feature -- Access

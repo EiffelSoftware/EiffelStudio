@@ -283,6 +283,10 @@ feature -- Element change
 				shown := true
 			end
 			map_widgets (width, height)
+				-- set initial focus
+			if initial_focus/= void then
+				initial_focus.wel_set_focus
+			end
 		end
 
 	realize_current is

@@ -46,6 +46,12 @@ feature -- Status setting
 		do
 		end
 
+	set_initial_input_focus (a_widget: WIDGET) is
+			--Set child which will initialy have input focus
+		do
+			initial_focus ?= a_widget.implementation
+		end
+		
 feature -- Element change
 
 	child_has_resized is
@@ -287,6 +293,9 @@ feature {NONE} -- Implementation
 				if h < maxyh then set_height (maxyh) end
 			end
 		end
+		
+	initial_focus: WIDGET_WINDOWS
+			-- Child which will get to focus after realization
 
 feature {NONE} -- Inaplicable
 

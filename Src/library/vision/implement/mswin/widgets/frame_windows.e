@@ -103,6 +103,10 @@ feature -- Initialization
 				end
 				shown := true
 			end
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end			
 		end
 
 	realize_current is

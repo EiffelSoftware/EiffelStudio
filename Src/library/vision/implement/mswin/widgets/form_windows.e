@@ -159,6 +159,10 @@ feature -- Status setting
 			end
 			update_all
 			set_enclosing_size
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end			
 		end
 
 	realize_current is

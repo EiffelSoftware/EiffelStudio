@@ -7,11 +7,33 @@ indexing
 deferred class MANAGER_WINDOWS
 
 inherit
+
 	COMPOSITE_WINDOWS
+		redefine
+			realize
+		select
+			realize
+		end
+
+	COMPOSITE_WINDOWS
+		rename
+			realize as composite_realize
+		end
 
 	MANAGER_I
 
 	COLORED_FOREGROUND_WINDOWS
+	
+feature --Status setting
+	
+	realize is
+		do
+			composite_realize
+				-- set initial focus
+			if initial_focus /= void then
+				initial_focus.wel_set_focus
+			end
+		end
 
 feature {NONE} -- Implementation
 

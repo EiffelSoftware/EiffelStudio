@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 				sub_clusters.off
 			loop
 				clus := sub_clusters.item
-				create i.make_with_text (clus.short_cluster_name)
+				create i.make_with_text (clus.display_name)
 				i.set_pixmap (pixmaps.icon_cluster_symbol @ 1)
 				parent_item.extend (i)
 				i.set_data (clus)

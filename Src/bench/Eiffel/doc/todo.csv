@@ -31,8 +31,6 @@ interface,,,,,,,
 ,3,Make it easier to precompile several libraries,Arnaud,INT0027,,,
 ,3,Light development window = old class tool,Arnaud,INT0028,,,
 ,3,Save preferences for several types of development windows,Arnaud,INT0029,,,
-,3,"When manually editing the Ace file, the project settings dialog should vanish automatically",Xavier,INT0030,Emmanuel,1,Done
-,3,Add cluster too complex in the project settings dialog,Arnaud,INT0031,,,
 ,3,"Need for a standard tools menu, where external executables can be launched",Arnaud,INT0032,,,
 ,3,Add a cell separator in toolbars,R. Osmond,INT0033,Xavier,1,
 ,2,Clean up the history of the history managers now and then,Xavier,INT0034,,,
@@ -57,9 +55,15 @@ interface,,,,,,,
 ,1,Let the user create a class outside existing clusters?,Julian,INT0052,,,
 ,3,Use `append' on Vision2 lists and trees instead of `extend' to help GTK optimize things,Ian,INT0053,,,
 ,4,Enable user to define their own command. Where the command should contain the name of the command to launch and where with some place holders filled by EiffelStudio (such as $target and others…),Paul Crismer,INT0054,Xavier,2,Done
-,3,It would be nice to sort clusters alphabetically in the projects settings,Xavier,INT0055,,,
 ,2,Gray out minimize buttons on tools when only one tool is displayed,Julian,INT0056,,,
 
+
+
+Project settings,,,,,,,
+,3,"When manually editing the Ace file, the project settings dialog should vanish automatically",Xavier,SET001,Emmanuel,1,Done
+,3,Add cluster too complex in the project settings dialog,Arnaud,SET002,,,
+,3,It would be nice to sort clusters alphabetically in the projects settings,Xavier,SET003,,,
+,3,Add a text box coupled to the combo box when entering command line arguments in project settings. Text box has to be on more than one line as arguments can be very big,Manu,SET004,,,
 
 
 
@@ -74,10 +78,10 @@ Formats,,,,,,,
 ,2,Add a formatter for the invariant,Arnaud,FMT0006,,,
 ,3,List of class names and class paths in the system,Arnaud,FMT0007,,,
 ,3,Let the user print the format,Raphael,FMT0008,,,
-,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10,
-,3,Being able to query location of creation of class instance,Manus,FMT0010,,,
-,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,,
-,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,,
+,3,"For all feature formats, give the choice between the name-only display, the basic text display and the flat form",Xavier,FMT0009,Xavier,10
+,3,Being able to query location of creation of class instance,Manus,FMT0010,,
+,3,Being able to find location of assignment to an attribute,Manus,FMT0011,,
+,3,List of creation features for a class (can be put in the exported features),Xavier,FMT0012,,
 
 
 
@@ -147,13 +151,13 @@ editor,,,,,,,
 
 
 
-compiler,,,,
-,2,Change number of classes per big_file_Cxx.c and make it user-definable,Arnaud,CMP0001
-,3,Track effective object creation => remove classes that are never instanciated (problem comes from reverse assignments),Arnaud,CMP0002
-,4,Propose to discard debug clauses when finalizing,Arnaud,CMP0003
-,2,Make the EIFGEN directory name user-defined in the Ace or <project_name>_gen,E. Bezaut,CMP0004
-,3,Ability to create .rc files (Windows),Xavier,CMP0005
-,3,Send an event at the end of finish_freezing/during C compilation,Xavier,CMP0006
+compiler,,,,,,,
+,2,Change number of classes per big_file_Cxx.c and make it user-definable,Arnaud,CMP0001,,,
+,3,Track effective object creation => remove classes that are never instanciated (problem comes from reverse assignments),Arnaud,CMP0002,,,
+,4,Propose to discard debug clauses when finalizing,Arnaud,CMP0003,,,
+,2,Make the EIFGEN directory name user-defined in the Ace or <project_name>_gen,E. Bezaut,CMP0004,,,
+,3,Ability to create .rc files (Windows),Xavier,CMP0005,,,
+,3,Send an event at the end of finish_freezing/during C compilation,Xavier,CMP0006,,,
 ,3,"Add compilation, crash, execution time information",Xavier,CMP0007
 ,4,Make freeze/finalize melt .NET projects,Xavier,CMP0008
 ,4,Fix inlining (run-time panics) and improve it,Xavier,CMP0009
@@ -170,10 +174,10 @@ compiler,,,,
 ,4,Report several errors at the same time,Emmanuel,CMP0020
 ,2,Creation calls should never be polymorphic (and should be candidate to inlining),Xavier,CMP0021
 ,2,Deferred features that have only one implementer should not be called polymorphicly either,Xavier,CMP0022
-,3,Optimize the size of polymorphic tables by ordering classes better,Xavier,CMP0023
-,4,Melt agents,Xavier,CMP0024
-,2,Detect and optimize static calls by not passing the object parameter and not even computing it whenever possible,Xavier,CMP0025
-,2,Use & instead of && to translate and to prevent an if block,Xavier,CMP0026
+,3,Optimize the size of polymorphic tables by ordering classes better,Xavier,CMP0023,,,
+,4,Melt agents,Xavier,CMP0024,,,
+,2,Detect and optimize static calls by not passing the object parameter and not even computing it whenever possible,Xavier,CMP0025,,,
+,2,Use & instead of && to translate and to prevent an if block,Xavier,CMP0026,,,
 ,2,Remove classes that are never instantiated from the system (warning: they may be instantiated outside Eiffel code or in a STORABLE),Xavier,CMP0027,,,
 ,4,Remove the extra indirection in non generic polymorphic calls,Xavier,CMP0028,,,
 ,3,Improve the management of SPECIAL[expanded],Xavier,CMP0029,,,
@@ -186,9 +190,9 @@ compiler,,,,
 ,5,Make it possible to only compile classes that have been modified in EiffelStudio (no degree 6),Xavier,CMP0034,Xavier,1,Done
 ,3,Auto-initialize as many onces as possible when the execution starts and remove the tests of initialization from them (start with constant strings),Xavier,CMP0035,,,
 ,3,Allow the feature {CLASS} syntax for string constants (maybe not in inspect clauses though?),Xavier,CMP0036,,,
-,3,Warn the user when an attribute or local is initialized but never used,Xavier,CMP0037,,,
-,3,"When an attribute is never queried (recursive check in callers), discard it and its initializations altogether",Xavier,CMP0037,,,
-,2,"When an attribute is always accessed polymorphically in its class, make sure it is put in a local variable in the case there is no function call that could modify its value and that we are not in multithreaded mode",Manus,CMP0038,,,
+,3,Warn the user when an attribute or local is initialized but never used,Xavier,CMP0037
+,3,"When an attribute is never queried (recursive check in callers), discard it and its initializations altogether",Xavier,CMP0037
+,2,"When an attribute is always accessed polymorphically in its class, make sure it is put in a local variable in the case there is no function call that could modify its value and that we are not in multithreaded mode",Manus,CMP0038
 
 
 
@@ -203,9 +207,9 @@ Metrics,,,,
 
 
 
-Diagram,,,,
-,3,Support UML,Xavier,DGM0001
-,3,Merge the command history with the one of the editor,Xavier,DGM0002
+Diagram,,,,,,,
+,3,Support UML,Xavier,DGM0001,,,
+,3,Merge the command history with the one of the editor,Xavier,DGM0002,,,
 ,2,Add an undo all item at the top of the history dialog to be able to undo all modifications,Xavier,DGM0003,,,
 ,2,Give a list of all removed classes to be able to show them again,Xavier,DGM0004,,,
 
@@ -218,7 +222,7 @@ Wizards,,,,,,,
 ,3,Add a test wizard,Xavier,WIZ0002,,,
 ,3,Eiffel beautifier (automatically indents the text correctly and put it in the editor = clickable + load_text),Xavier,WIZ0003,,,
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,WIZ0004,Xavier,1,Done
-,3,"Tool that checks for various possible problems in the code (empty comments, unused variables, empty feature clauses, indentation, very long lines,....)",Julian,WIZ0005,,,
+,3,"Tool that checks for various possible problems in the code (empty comments, unused variables, empty feature clauses, indentation, very long lines,....)",Julian,WIZ0005
 
 
 

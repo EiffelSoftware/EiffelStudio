@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 				C.gtk_widget_remove_accelerator (
 					c_object,
 					accel_group,
-					key.code, --| FIXME
+					key_code_to_gtk (key.code),
 					modifier_mask)
 			end
 		end
@@ -199,6 +199,9 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/21 23:55:11  brendel
+--| Fixed FIXME.
+--|
 --| Revision 1.5  2000/03/21 23:08:06  brendel
 --| Changed to use new key design.
 --|

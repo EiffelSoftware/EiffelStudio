@@ -115,7 +115,6 @@ feature
 			expr.print_register;
 		end;
 
-	
 	generate_operator is
 			-- Generate operator in C
 		do

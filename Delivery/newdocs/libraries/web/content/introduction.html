@@ -3,12 +3,49 @@
 <HTML>
 	<HEAD>
 		<TITLE>EiffelWeb Content Introduction</TITLE>
-		<LINK REL=StyleSheet HREF="../../../default.css">
+		<LINK REL=StyleSheet HREF="/default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>Description</H1>
-		<P>Version: 5.0</P>
-		<P>Availability: Basic Package.</P>
+	    <h1>Introduction</h1>
+	    <h2>CGI Applications</h2>
+	    <p>The way a CGI application communicates with the Web browser is simple: when the
+user presses a button on an HTML form, with an associated action (such as
+<i>Submit</i>), the browser starts the application whose path is indicated inside
+        the HTML form declaration. It sends data corresponding to the HTTP request and
+to the input form information in the usual file descriptor <i>In</i>, stores within
+environment variables the transaction environment of the request, and waits for
+the application message, expected in its  <i>Out</i> canal. The <i>In</i> and <i>
+        Out </i>canals are accessible via the class
+        <a class="eclass" href="../../../../../../../../libraries/web/reference/cgi_facilities/cgi_in_and_out.html">CGI_IN_AND_OUT</a>.<br>
+<br>
+HTML forms are an easy way to collect user entries in a web page, which are sent
+by the browser to the CGI application. A simple example of a form is:<p>
+<code>
+&lt;form action=&quot;/cgi-bin/convert.exe&quot; method=&quot;post&quot;&gt; <br>
+&nbsp;&nbsp;
+&lt;input type=&quot;text&quot; name=&quot;Celsius&quot;&gt;<br>
+&nbsp;&nbsp;
+&lt;input type=&quot;submit&quot;&gt;<br>
+&lt;/form &gt;</code></p>
+	    <p>When the user presses the submit button, the browser will launch the application
+located at <i>/cgi-bin/convert.exe</i> on the server, will use the HTTP Post
+protocol, and will store among others the environment variable <i>Celsius</i> with
+the value entered by the user.</p>
+	    <h2>Advantages of using EiffelWeb</h2>
+	    <p>With EiffelWeb, you can:</p>
+	    <ul>
+          <li>Design object-oriented systems </li>
+          <li>Access and use the Eiffel libraries</li>
+          <li>Increase maintainability because your code is reusable and readable</li>
+          <li>Deal with complexity because you use a language particularly efficient
+in the Business Modeling.</li>
+          <li>Use
+one/a few big Eiffel Web applications, which allow for an easier maintenance and provide
+          better code readability and reusability than having a huge number of
+          scripts.</li>
+          <li>Use the <i>Design by Contract</i> methodology, thanks to the debugging
+facilities provided by EiffelWeb.</li>
+        </ul>
 	</BODY>
 </HTML>

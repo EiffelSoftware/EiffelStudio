@@ -73,10 +73,6 @@ cluster
 		default
 			assertion (no)
 		end;
-	obsolete (structures):			"$\obsolete"
-		default
-			assertion (no)
-		end;
 	set (structures):				"$\set"
 		default
 			assertion (no)
@@ -258,6 +254,8 @@ cluster
 -- 	build_utility (build):						"$\Utility";
 
 	build_constants (build):					"$\Constants";
+
+	build_menus (build):						"$\Menus";
 
 -- 	build_icon (build):							"$\Icon";
 -- 

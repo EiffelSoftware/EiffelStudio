@@ -41,6 +41,7 @@ cluster
 	demo_text_field (demos):		"$/text_field";
 	demo_tree (demos):				"$/tree";
 	demo_window (demos):			"$/window";
+	demo_rich (demos):				"$/rich";
 
 ------------------------ EiffelBase:
 

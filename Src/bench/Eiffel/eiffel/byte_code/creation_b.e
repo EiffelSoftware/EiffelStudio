@@ -78,7 +78,7 @@ end;
 				cl_type ?= target_type -- can't be fail
 				ba.append_raw_string (cl_type.associated_class_type.associated_class.e_class.name_in_upper);
 				if call = Void then
-					ba.append_raw_string ("");
+					ba.append_raw_string ("_no_cf");
 				else
 					feat ?= call.message; -- Can't Fail here
 					ba.append_raw_string (feat.feature_name);

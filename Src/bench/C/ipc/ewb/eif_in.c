@@ -91,7 +91,7 @@ EIF_REFERENCE request_dispatch (Request rqst)
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_where.wh_type);
 				ptr += strlen (ptr) + 1;
-				sprintf (ptr, "%ld", stop_info.st_where.wh_offset);
+				sprintf (ptr, "%i", stop_info.st_where.wh_offset);
 				ptr += strlen (ptr) + 1;
 				sprintf (ptr, "%i", stop_info.st_why);
 				ptr += strlen (ptr) + 1;

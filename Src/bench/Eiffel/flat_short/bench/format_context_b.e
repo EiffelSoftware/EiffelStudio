@@ -21,8 +21,9 @@ inherit
 			begin, commit, prepare_for_feature,
 			formal_name, put_origin_comment,
 			format_ast, is_feature_visible,
-			reversed_format_list, put_current_feature
-		end
+			reversed_format_list, put_current_feature,
+			set_type_creation
+		end;
 	SHARED_SERVER;
 	SHARED_INST_CONTEXT;
 	SHARED_RESCUE_STATUS;
@@ -40,14 +41,34 @@ feature -- Initialization
 			class_c := c;
 			current_class_only := False;
 			reset_format_booleans;
-			troff_format := False;
 			last_was_printed := True;
+			initialize;
 		ensure then
 			class_c_set: class_c = c;
 			batch_mode:	not in_bench_mode;
 			analyze_ancestors: not current_class_only;
 			do_flat: not is_short;
-			not_troff_format: not troff_format
+		end;
+
+	init_uncompiled_feature_context (source_class: CLASS_C; feature_as: FEATURE_AS_B) is
+			-- Initialize Current context to analyze
+			-- uncompiled feature ast `feature_as'.
+			-- This ast is not in the feature table (ie has
+			-- not been compiled) but has been entered by
+			-- the user.
+		require
+			valid_source_class: source_class /= Void
+			valid_ast: feature_as /= Void
+		do
+			!! global_adapt.make_with_classes (source_class, class_c);
+			global_adapt.set_locals (feature_as);
+			!! unnested_local_adapt;
+			unnested_local_adapt.update_from_global (global_adapt)
+			local_adapt := unnested_local_adapt;
+		ensure
+			valid_global_adapt: global_adapt /= Void
+			valid_unnested_local_adapt: unnested_local_adapt /= Void
+			valid_unnested_local_adapt: local_adapt /= Void
 		end;
 
 	init_feature_context (source, target: FEATURE_I; 
@@ -57,6 +78,7 @@ feature -- Initialization
 			-- Use `feature_as' to set up locals.
 		require
 			valid_source: source /= Void;
+			valid_ast: feature_as /= Void;
 			valid_target: target /= Void
 		do
 			!! global_adapt.make (source, target, class_c)
@@ -78,6 +100,9 @@ feature -- Properties
 	class_name: STRING;
 			-- Class name of `class_c'
 
+	last_class_printed: TYPE_A;
+			-- Last class printed (used for !TYPE! creation)
+
 	first_assertion: BOOLEAN;
 			-- Are we about to format the first assertion?
 		
@@ -93,10 +118,6 @@ feature -- Properties
 		do
 			Result := current_class_only and not is_short
 		end;
-
-	troff_format: BOOLEAN;
-			-- Is Current going to be a troff format? (Used 
-			-- remove from CLASSNAME within assertions)
 
 	class_c: CLASS_C;
 			-- Current class being processed
@@ -130,8 +151,12 @@ feature -- Properties
 		end;
 
 	global_adapt: GLOBAL_FEAT_ADAPTATION;
-			-- Feature adaptation information for enclosing
-			-- features being analyzed
+			-- Has 2 purposes:
+			-- 1. Store information for each main feature
+			-- being adapted
+			-- 2. Store source and target enclosing class
+			--| Analyzing features 1 and 2 is used
+			--| Analyzing invariants and inherit clauses 2 is used
 
 	saved_global_adapt: GLOBAL_FEAT_ADAPTATION;
 			-- Saved feature adaptation information for enclosing
@@ -153,23 +178,33 @@ feature -- Properties
 
 feature -- Access
 
+	has_feature_i: BOOLEAN is
+			-- Does the currently analyzed features has
+			-- associated feature_i (ie. is it compiled)?
+		do
+			Result := global_adapt.target_enclosing_feature /= Void
+		ensure
+			Result implies global_adapt.target_enclosing_feature /= Void
+		end;
+
 	chained_assertion: CHAINED_ASSERTIONS is
 			-- Chained assertion for current analyzed feature.
 		require
 			valid_global_adapt: global_adapt /= Void;
-			has_target_feat: global_adapt.target_enclosing_feature /= Void;
 		local
 			chained_prec: CHAINED_ASSERTIONS;
 			t_feat: FEATURE_I;
 			assert_id_set: ASSERT_ID_SET
 		do
-			t_feat := global_adapt.target_enclosing_feature;
-			assert_id_set := t_feat.assert_id_set
-			if assert_id_set /= Void and then
-				assert_id_set.count > 0 
-			then
-				chained_prec := 
-					format_registration.chained_assertion_of_fid (t_feat.feature_id)
+			if global_adapt.target_enclosing_feature /= Void then
+				t_feat := global_adapt.target_enclosing_feature;
+				assert_id_set := t_feat.assert_id_set
+				if assert_id_set /= Void and then
+					assert_id_set.count > 0 
+				then
+					chained_prec := 
+						format_registration.chained_assertion_of_fid (t_feat.feature_id)
+				end
 			end
 		end;
 
@@ -181,6 +216,19 @@ feature -- Access
 		end;
 
 feature -- Setting
+
+	set_type_creation (t: TYPE) is
+			-- Set last_class_printed to the actual type of `t'.
+		local
+			type_b: TYPE_B
+		do
+			type_b ?= t;
+			if type_b = Void then
+				last_class_printed := Void
+			else
+				last_class_printed := type_b.actual_type
+			end;
+		end;
 
 	set_insertion_point is
 			-- Remember text position for parantheses 
@@ -200,14 +248,6 @@ feature -- Setting
 			current_class_only: current_class_only
 		end
 
-	set_troff_format is
-			-- Set troff_format to True.
-		do
-			troff_format := True
-		ensure
-			troff_format: troff_format
-		end;
-
 	set_first_assertion (b: BOOLEAN) is
 			-- Set first_assertion `b'.
 		do
@@ -221,8 +261,11 @@ feature -- Setting
 		require
 			good_class: c /= void
 		do
-			global_adapt := clone (global_adapt);
-			global_adapt.set_source_enclosing_class (c);
+			set_classes (c, class_c)
+		ensure
+			non_void_global: global_adapt /= Void;
+			source_set: global_adapt.source_enclosing_class = c;
+			target_set: global_adapt.target_enclosing_class = class_c
 		end;
 
 	set_classes (source, target: CLASS_C) is
@@ -303,7 +346,6 @@ feature -- Execution
 			if not rescued then
 				execution_error := false;
 				Error_handler.wipe_out;
-				initialize;
 				class_name := clone (class_c.class_name)
 				class_name.to_upper;
 				if is_short then
@@ -321,7 +363,7 @@ feature -- Execution
 				end;
 				System.set_current_class (Void);
 debug ("FLAT_SHORT")
-	!! simple_ctxt.make (format_registration.target_ast)
+	!! simple_ctxt.make (format_registration.target_ast, class_c.file_name)
 	format_registration.target_ast.simple_format (simple_ctxt);
 	io.error.putstring (simple_ctxt.text.image)
 end
@@ -390,7 +432,7 @@ feature -- Element change
 	put_class_name (c: CLASS_C) is
 			-- Append class name to 'text', treated as a stone.
 		local
-			p : CLASSC_STONE;
+			p: CLASSC_STONE;
 			s: STRING;
 			item: CLASS_NAME_TEXT
 		do
@@ -439,17 +481,6 @@ feature -- Element change
 			text.add (item);
 		end;
 
-	end_feature is
-			-- Append standard text after feature declaration.
-		local
-			item: AFTER_FEATURE;
-		do
-			if troff_format then
-				!! item.make (class_name, Void);
-				text.add (item);
-			end
-		end;
-
 	put_origin_comment is
 			-- Put original comment.
 		local
@@ -464,7 +495,7 @@ feature -- Element change
 				c := global_adapt.source_enclosing_class;
 				put_class_name (c);
 				put_comment_text (")");
-				new_line;
+				new_line
 			end;
 		end;
 
@@ -485,13 +516,25 @@ feature -- Element change
 			
 	prepare_for_feature (name: STRING; args: EIFFEL_LIST_B [EXPR_AS_B]) is
 			-- Prepare for features within main features.
+		local
+			adapt: like local_adapt;
+			type: TYPE_A
 		do
 			if format.dot_needed then
-				local_adapt := local_adapt.adapt_nested_feature (name)
+				adapt := local_adapt.adapt_nested_feature (name)
 			else
-				local_adapt := unnested_local_adapt.adapt_feature (name, 
+				adapt := unnested_local_adapt.adapt_feature (name, 
 											global_adapt)
+				type := last_class_printed;
+				if type /= Void then
+						-- Need to update type local_adapt for
+						-- ! TYPE ! name.make
+					adapt.set_source_type (type);
+					adapt.set_target_type (type);
+					adapt.set_evaluated_type
+				end
 			end;
+			local_adapt := adapt;
 			arguments := args;
 			was_infix_arguments := False;
 		end;
@@ -512,8 +555,22 @@ feature -- Element change
 
 	prepare_for_result is
 			-- Prepare for Result.
+		local
+			adapt: like local_adapt;
+			type: TYPE_A;
 		do
-			local_adapt := global_adapt.adapt_result;	
+			adapt := global_adapt.adapt_result;
+			type := last_class_printed;
+			if type /= Void then 
+					-- Clone result adaptation.
+					-- Need to update type in result for
+					-- ! TYPE ! Result.make 
+				adapt := clone (adapt);
+				adapt.set_source_type (type);
+				adapt.set_target_type (type);
+				adapt.set_evaluated_type;
+			end;
+			local_adapt := adapt;
 			arguments := Void;
 		end;
 
@@ -545,13 +602,6 @@ feature -- Output
 			-- Call simple_for on `ast'.
 		do
 			ast.format (Current)
-		end;
-
-	format_class_comments is
-			-- Format comments at the top of the class
-			-- for class_c.
-		do
-			format_registration.format_class_comments (Current);
 		end;
 
 	format_categories is
@@ -592,39 +642,6 @@ feature -- Output
 			else
 				put_prefix_feature
 			end;
-		end;
-
-	prepare_feature (feature_name: STRING; is_pref, is_inf: BOOLEAN) is
-			-- Append standard text before feature declaration.
-		local
-			item: BEFORE_FEATURE;
-			temp: STRING;
-		do
-			if troff_format then
-				temp := clone (feature_name)
-				if is_inf then
-					if temp.substring (1, 7).is_equal ("_infix_") then
-						temp.tail (feature_name.count - 7);
-						temp := operator_table.name (temp);
-						!! item.make (class_name, temp);
-					else
-						!! item.make (class_name, feature_name);
-					end;
-					item.set_is_infix
-				elseif is_pref then
-					if feature_name.substring (1, 8).is_equal ("_prefix_") then
-						temp.tail (feature_name.count - 8);
-						temp := operator_table.name (temp);
-						!! item.make (class_name, temp);
-					else
-						!! item.make (class_name, feature_name);
-					end;
-					item.set_is_prefix
-				else
-					!! item.make(class_name, feature_name);
-				end;
-				text.add (item);
-			end
 		end;
 
 feature {NONE} -- Implementation
@@ -680,7 +697,7 @@ feature {NONE} -- Implementation
 					else
 						rollback;
 					end;
-					-- Reestablish adaptations.
+					-- Reestablish local adaptations.
 					local_adapt := adapt;
 				else
 					last_was_printed := true;

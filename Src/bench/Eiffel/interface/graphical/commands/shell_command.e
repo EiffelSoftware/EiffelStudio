@@ -9,21 +9,15 @@ class SHELL_COMMAND
 
 inherit
 
-	PIXMAP_COMMAND;
+	HOLE_COMMAND
+		redefine 
+			compatible, process_feature, process_class, is_sensitive
+		end;
 	SHARED_BENCH_RESOURCES
 
 creation
 
 	make
-
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command, create a callback for a click action
-			-- on button three, and create the shell window.
-		do
-			init (a_text_window);
-		end;
 
 feature -- Properties
 
@@ -43,6 +37,58 @@ feature -- Properties
 			Result := bm_Shell 
 		end;
 
+	is_sensitive: BOOLEAN is
+			-- Can Current be executed?
+		do
+			if holder /= Void then
+				Result := holder.is_sensitive
+			end
+		end;
+
+feature -- Access
+
+	stone_type: INTEGER is do end;
+ 
+	compatible (dropped: STONE): BOOLEAN is
+			-- Can `Current' accept `dropped' ?
+		do
+			Result := dropped.stone_type = Class_type or else
+					dropped.stone_type = Routine_type
+		end;
+
+feature -- Update
+
+	process_feature (fs: FEATURE_STONE) is
+			-- Process feature stone.
+		local
+			req: EXTERNAL_COMMAND_EXECUTOR;
+			cmd_string: STRING
+		do
+				-- routine text window
+			cmd_string := clone (command_shell_name);
+			if not cmd_string.empty then
+				cmd_string.replace_substring_all ("$target", fs.file_name);
+				cmd_string.replace_substring_all ("$line", fs.line_number.out)
+				!! req;
+				req.execute (cmd_string);
+			end
+		end;
+
+	process_class (cs: CLASSC_STONE) is
+			-- Process class stone.
+		local
+			req: EXTERNAL_COMMAND_EXECUTOR;
+			cmd_string: STRING
+		do
+			cmd_string := clone (command_shell_name);
+			if not cmd_string.empty then
+				cmd_string.replace_substring_all ("$target", cs.file_name);
+				cmd_string.replace_substring_all ("$line", "1")
+				!! req;
+				req.execute (cmd_string);
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is
@@ -50,12 +96,11 @@ feature {NONE} -- Implementation
 			-- If right mouse button was pressed -> bring up shell window. 
 		local
 			req: EXTERNAL_COMMAND_EXECUTOR;
-			cmd_string, text_value: STRING;
-			fs: FILED_STONE;
+			cmd_string: STRING;
 			routine_tool: ROUTINE_W;
 			class_tool: CLASS_W;
 			feature_stone: FEATURE_STONE;
-			position, line_nb, i, text_count: INTEGER
+			line_nb: INTEGER
 		do
 			if argument = button_three_action then
 					-- 3rd button pressed
@@ -63,47 +108,32 @@ feature {NONE} -- Implementation
 					!!shell_window.make (popup_parent, Current);
 				end;
 				shell_window.call 
-			elseif tool.stone /= Void then
-				fs ?= tool.stone;
-				routine_tool ?= text_window.tool;
-				class_tool ?= text_window.tool;
+			else
+				routine_tool ?= tool;
 				cmd_string := clone (command_shell_name);
 				if routine_tool /= Void then
-					-- routine text window
-					feature_stone ?= fs; -- Cannot fail
-					if not cmd_string.empty then
-						cmd_string.replace_substring_all ("$line", feature_stone.line_number.out)
+					feature_stone ?= tool.stone; 
+					if feature_stone /= Void then
+						process_feature (feature_stone)
 					end
-				elseif class_tool /= Void and then (
-					tool.last_format = class_tool.showtext_frmt_holder or
-					tool.last_format = class_tool.showclick_frmt_holder)
-				then
-					line_nb := text_window.current_line;
+				elseif tool.file_name /= Void and then tool.stone /= Void then
+					class_tool ?= tool;
+					if class_tool /= Void and then (
+						tool.last_format = class_tool.showtext_frmt_holder or
+						tool.last_format = class_tool.showclick_frmt_holder)
+					then
+						line_nb := text_window.current_line;
+					end;
 					if not cmd_string.empty then
+						cmd_string.replace_substring_all ("$target", tool.file_name)
 						cmd_string.replace_substring_all ("$line", line_nb.out)
-					end
-				else
-					if not cmd_string.empty then
-						cmd_string.replace_substring_all ("$line", "1")
+						!! req;
+						req.execute (cmd_string);
 					end
 				end;
-				if not cmd_string.empty then
-					cmd_string.replace_substring_all ("$target", fs.file_name);
-				end
-				!! req;
-				req.execute (cmd_string);
-			elseif tool.file_name /= Void then
-				cmd_string := clone (command_shell_name);
-				if not cmd_string.empty then
-					cmd_string.replace_substring_all ("$line", "1");
-					cmd_string.replace_substring_all ("$target", tool.file_name);
-				end
-				!! req;
-				req.execute (cmd_string);
 			end;
 		end;
  
-	
 feature {NONE} -- Attributes
 
 	name: STRING is

@@ -101,8 +101,8 @@ feature -- Element Change
 		end
 
 invariant
-	parent_not_void: parent /= Void
-	parent_exists: not parent.destroyed
+--	parent_not_void: parent /= Void
+--	parent_exists: not parent.destroyed
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_I
 

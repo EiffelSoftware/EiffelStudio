@@ -16,7 +16,8 @@ inherit
 			realized,
 			set_text,
 			text,
-			unrealize
+			unrealize,
+			set_insensitive
 		end
 creation
 	make
@@ -24,10 +25,14 @@ creation
 feature {NONE} -- Initialization
 
 	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU) is
+		local
+			mp: MENU_PULL
 		do
 			!! private_attributes
 			text := a_menu_b.identifier
 			parent ?= oui_parent.implementation
+			mp ?= oui_parent
+			attach_menu (mp)
 			managed := man
 		end
 
@@ -42,6 +47,16 @@ feature -- Status setting
 	set_text (new_text: STRING) is
 		do
 			text := new_text
+		end
+
+	set_insensitive (flag: BOOLEAN) is
+			-- Set sensitivity of Current to reflect `flag'.
+		do
+			if flag then
+				associated_menu.set_insensitive
+			else
+				associated_menu.set_sensitive
+			end
 		end
 
 feature -- Element change

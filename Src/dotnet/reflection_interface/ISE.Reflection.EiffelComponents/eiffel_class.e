@@ -1,6 +1,8 @@
 indexing
 	description: "Include all the information needed to produce class Eiffel code and XML file."
 	external_name: "ISE.Reflection.EiffelClass"
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+
 class
 	EIFFEL_CLASS
 
@@ -73,7 +75,7 @@ feature -- Access
 		
 	parents: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Key: Parent Eiffel name
-			-- Value: Inheritance clauses (ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST [STRING]]) 
+			-- Value: Inheritance clauses (ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCE_CLAUSE]]) 
 			-- (array with rename, undefine, redefine, select and export clauses)
 		indexing
 			external_name: "Parents"
@@ -431,6 +433,7 @@ feature -- Basic Operations
 	add_parent (a_name: STRING; rename_clauses, undefine_clauses, redefine_clauses, select_clauses, export_clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
 			-- Add new parent to `parents' with `a_name' as key and inheritance clauses as value.
 			-- Inheritance clauses are built from `rename_clauses', `undefine_clauses', `redefine_clauses', `select_clauses', `export_clauses'.
+			-- | Inheritance clauses: SYSTEM_COLLECTIONS_ARRAYLIST [INHERITANCE_CLAUSE]
 		indexing
 			external_name: "AddParent"
 		require
@@ -794,5 +797,7 @@ invariant
 	non_void_special_features: special_features /= Void
 	non_void_implementation_features: implementation_features /= Void
 	non_void_invariants: invariants /= Void
+	frozen_xor_deferred: is_frozen xor is_deferred
+	is_expanded_implies_no_creation_routine: is_expanded implies creation_routines.count = 0
 
 end -- class EIFFEL_CLASS

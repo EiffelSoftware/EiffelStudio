@@ -23,7 +23,7 @@ extern int ised;			/* Socket used to talk with daemon */
 shared void dserver()
 {
 	/* This routine is called by the debugger once the program context has
-	 * been solved. The application enters in a server mode, after having
+	 * been saved. The application enters in a server mode, after having
 	 * sent a stop notification to the remote workbench.
 	 */
 

@@ -34,27 +34,74 @@ feature -- Export status computing
 			end;
 		end;
 
+feature -- Access
+
+	feature_with_name (n: STRING): FEATURE_AS_B is
+			-- Feature ast with internal name `n'
+		local
+			cur: CURSOR
+		do
+			cur := features.cursor;
+			from
+				features.start
+			until
+				features.after or else Result /= Void
+			loop
+				Result := features.item.feature_with_name (n);
+				features.forth
+			end
+			features.go_to (cur)
+		end;
+
 feature {CLASS_AS_B} -- Implementation
 
-	register_features (format_reg: FORMAT_REGISTRATION) is
-			-- Register features in `format_reg'.
+	register_features (ast_reg: AST_REGISTRATION) is
+			-- Register features in `ast_reg'.
 		require
-			valid_arg: format_reg /= Void
+			valid_arg: ast_reg /= Void
 		local
 			f: like features;
-			feat: FEATURE_AS_B;
-			feat_adapter: FEATURE_ADAPTER
+			feat, next_feat: FEATURE_AS_B;
+			i, l_count: INTEGER;
+			e_file: EIFFEL_FILE
 		do
 			f := features;
-			from
-				f.start
-			until
-				f.after
-			loop
-				feat := f.item;
-				!! feat_adapter;
-				feat_adapter.register (feat, format_reg);
-				f.forth
+			i := 1;
+			l_count := f.count;
+			if ast_reg.already_extracted_comments then
+					-- This means that the comments are already 
+					-- extracted so there is no record additional 
+					-- information to extract comments.
+				from
+				until
+					i > l_count
+				loop
+					ast_reg.register_feature (f.i_th (i));
+					i := i + 1;
+				end
+			else
+				e_file := ast_reg.eiffel_file;
+					-- This means we are registering non precompiled
+					-- features for an eiffel project or we are
+					-- current precompiling features.
+				from
+					if l_count > 0 then
+						feat := f.i_th (1);
+					end
+				until
+					i > l_count
+				loop
+					i := i + 1;
+					if i > l_count then
+						e_file.set_next_feature (Void);
+					else
+						next_feat := f.i_th (i);
+						e_file.set_next_feature (next_feat);
+					end;
+					e_file.set_current_feature (feat);
+					ast_reg.register_feature (feat);
+					feat := next_feat;
+				end;
 			end;
 		end;
 

@@ -198,7 +198,7 @@ feature -- Basic operation
 		do
 			implementation.select_region (start_pos, end_pos)
 		ensure
-			has_selection: has_selection
+			has_selection: (start_pos /= end_pos) implies has_selection
 			selection_start_set: selection_start = start_pos
 			selection_end_set: selection_end = end_pos
 		end

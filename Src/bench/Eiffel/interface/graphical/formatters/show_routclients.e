@@ -53,8 +53,7 @@ feature -- Executions
 			-- Action performed when apply button is activated
 		do
 			if a_cust_tool.is_first_option_selected = to_show_all_callers then
-				to_show_all_callers := 
-					not a_cust_tool.is_first_option_selected;
+				to_show_all_callers := not a_cust_tool.is_first_option_selected;
 				if tool.last_format.associated_command = Current then
 					tool.synchronize
 				end

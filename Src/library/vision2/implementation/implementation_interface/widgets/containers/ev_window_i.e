@@ -182,21 +182,6 @@ feature -- Status setting
 			(create {EV_ENVIRONMENT}).application.implementation.set_locked_window (Void)
 		end
 
-feature -- Miscellaneous
-
-	WINDOW_POSITION_NONE: INTEGER is 0
-			-- Constant to use to have the window first displayed
-			-- at .
-
-	WINDOW_POSITION_CENTER: INTEGER is 1
-			-- Constant to use to have the window first displayed
-			-- at the center of the screen.
-
-
-	WINDOW_POSITION_MOUSE: INTEGER is 2
-			-- Constant to use to have the window first displayed
-			-- at the mouse position.
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_WINDOW

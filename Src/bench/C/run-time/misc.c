@@ -22,7 +22,7 @@
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 #include <windows.h>
 #endif
 
@@ -176,7 +176,7 @@ char *s;
 	char * run_command;
 #endif
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	extern void wmhandler_yield();
 #endif
 
@@ -185,7 +185,7 @@ char *s;
 #ifdef SIGCLD
 	old_signal_hdlr = signal (SIGCLD, SIG_IGN);
 #endif
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 	result = WinExec (s, SW_SHOWNORMAL);
 	if (result > 32){
 		while (GetModuleUsage(result))
@@ -223,7 +223,55 @@ EIF_OBJ v,k;
 	int l1, l2;
 	char *s1;
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN32
+	char *key, *lower_k, *value, buf[1024];
+	int appl_len, key_len;
+	char modulename [MAX_PATH];
+	extern char **_argv;
+	HKEY hkey;
+	DWORD disp;
+
+	GetModuleFileName (NULL, modulename, MAX_PATH);
+	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
+	key_len = strlen (eif_access(k));
+	if ((key = (char *) calloc (appl_len + 46+key_len, 1)) == NULL)
+		return (EIF_INTEGER) -1;
+
+	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL)
+		{
+		free (key);
+		return (EIF_INTEGER) -1;
+		}
+
+	strcpy (lower_k, eif_access(k));
+	CharLowerBuff (lower_k, key_len);
+
+	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
+	strncat (key, rindex(modulename, '\\')+1, appl_len);
+
+	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS)
+		{
+		free (key);
+		free (lower_k);
+		return (EIF_INTEGER) -1;
+		}
+	if (RegSetValueEx (hkey, lower_k, 0, REG_SZ, eif_access(v), strlen(eif_access(v))+1) != ERROR_SUCCESS)
+		{
+		free (key);
+		free (lower_k);
+		RegCloseKey (hkey);
+		return (EIF_INTEGER) -1;
+		}
+
+	free (key);
+	free (lower_k);
+	if ((disp = RegFlushKey (hkey)) != ERROR_SUCCESS)
+		return 0;
+	if ((disp = RegCloseKey (hkey)) != ERROR_SUCCESS)
+		return 0;;
+	return (EIF_INTEGER) 0;
+
+#elif defined EIF_WIN_31
 	EIF_INTEGER result;
 	char *ini;
 	extern char **_argv;
@@ -254,7 +302,56 @@ EIF_OBJ v,k;
 public EIF_OBJ eif_getenv (k)
 EIF_OBJ k;
 {
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN32
+	char *key, *lower_k, *value;
+	static char buf[1024];
+	int appl_len, key_len;
+	char modulename [MAX_PATH];
+	extern char **_argv;
+	HKEY hkey;
+	DWORD bsize;
+
+
+	GetModuleFileName (NULL, modulename, MAX_PATH);
+	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
+	key_len = strlen (k);
+	if ((key = (char *) calloc (appl_len + 46 +key_len, 1)) == NULL)
+		return (EIF_OBJ) 0;
+
+	if ((lower_k = (char *) calloc (key_len+1, 1)) == NULL)
+		{
+		free (key);
+		return (EIF_OBJ) 0;
+		}
+
+	strcpy (lower_k, k);
+	CharLowerBuff (lower_k, key_len);
+
+	strcpy (key, "Software\\ISE Inc\\Eiffel\\");
+	strncat (key, rindex(modulename, '\\')+1, appl_len);
+
+	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
+		{
+		free (key);
+		free (lower_k);
+		return (EIF_OBJ) 0;
+		}
+
+	bsize = 1024;
+	if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS)
+		{
+		free (key);
+		free (lower_k);
+		RegCloseKey (hkey);
+		return (EIF_OBJ) 0;
+		}
+
+	free (key);
+	free (lower_k);
+	RegCloseKey (hkey);
+	return (EIF_OBJ) buf;
+
+#elif defined EIF_WIN_31
 	char *ini;
 	static char buf[128];
 	extern char **_argv;
@@ -437,7 +534,7 @@ main ()
 #endif	/* TEST */
 #endif	/* VMS */
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WINDOWS
 
 /* DLL declarations */
 
@@ -467,7 +564,8 @@ char *module_name;
 	}
 
 	for (i=0; i < eif_dll_count; i++) {
-		if (strcasecmp(eif_dll_table[i].dll_name, module_name) == 0)
+			/* Case insensitive comparison */
+		if (strcmpi(eif_dll_table[i].dll_name, module_name) == 0)
 			return eif_dll_table[i].dll_module_ptr;
 	}
 
@@ -496,7 +594,7 @@ char *module_name;
 void eif_free_dlls()
 {
 	int i;
-	HANDLE module_ptr;
+	HINSTANCE module_ptr;
 
 	if (eif_dll_table) {
 		for (i=0; i< eif_dll_count; i++) {
@@ -504,7 +602,7 @@ void eif_free_dlls()
 
 			module_ptr = eif_dll_table[i].dll_module_ptr;
 			if (module_ptr > 32)
-				FreeLibrary(module_ptr);
+				(void) FreeLibrary(module_ptr);
 		}
 		free(eif_dll_table);
 	}

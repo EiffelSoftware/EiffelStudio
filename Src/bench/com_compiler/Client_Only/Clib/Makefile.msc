@@ -31,6 +31,7 @@ ecom_eiffel_compiler_ienumeiffelclass_impl_proxy.obj \
 ecom_eiffel_compiler_ienumfeature_impl_proxy.obj \
 ecom_eiffel_compiler_ienumincludepaths_impl_proxy.obj \
 ecom_eiffel_compiler_ienumobjectfiles_impl_proxy.obj \
+ecom_eiffel_compiler_ieiffelexception_impl_proxy.obj \
 ecom_gce_ise_c.obj \
 ecom_gec_ise_c.obj \
 
@@ -61,6 +62,7 @@ wecom_eiffel_compiler_ienumeiffelclass_impl_proxy.obj \
 wecom_eiffel_compiler_ienumfeature_impl_proxy.obj \
 wecom_eiffel_compiler_ienumincludepaths_impl_proxy.obj \
 wecom_eiffel_compiler_ienumobjectfiles_impl_proxy.obj \
+wecom_eiffel_compiler_ieiffelexception_impl_proxy.obj \
 wecom_gce_ise_c.obj \
 wecom_gec_ise_c.obj \
 
@@ -68,105 +70,108 @@ wecom_gec_ise_c.obj \
 all:: ecom.lib ecom_final.lib
 
 ecom.lib: $(WOBJ)
-	if exist $@ del $@
-	lib -OUT:$@ $(WOBJ)
-	del *.obj
-	if not exist msc mkdir msc
-	$(MV) $@ msc
-	del $@
+    if exist $@ del $@
+    lib -OUT:$@ $(WOBJ)
+    del *.obj
+    if not exist msc mkdir msc
+    $(MV) $@ msc
+    del $@
 
 ecom_final.lib: $(OBJ)
-	if exist $@ del $@
-	lib -OUT:$@ $(OBJ)
-	del *.obj
-	if not exist msc mkdir msc
-	$(MV) $@ msc
-	del $@
+    if exist $@ del $@
+    lib -OUT:$@ $(OBJ)
+    del *.obj
+    if not exist msc mkdir msc
+    $(MV) $@ msc
+    del $@
 
 .cpp.obj:
-	$(CC) $(CFLAGS) $<
+    $(CC) $(CFLAGS) $<
 
 wecom_eiffel_compiler_ceiffelcompiler.obj: ecom_eiffel_compiler_ceiffelcompiler.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ceiffelcompletioninfo.obj: ecom_eiffel_compiler_ceiffelcompletioninfo.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ceiffelproject.obj: ecom_eiffel_compiler_ceiffelproject.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.obj: ecom_eiffel_compiler_ieiffelhtmldocevents_impl_stub.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelassemblyproperties_impl_proxy.obj: ecom_eiffel_compiler_ieiffelassemblyproperties_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelclassdescriptor_impl_proxy.obj: ecom_eiffel_compiler_ieiffelclassdescriptor_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelclusterdescriptor_impl_proxy.obj: ecom_eiffel_compiler_ieiffelclusterdescriptor_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelclusterproperties_impl_proxy.obj: ecom_eiffel_compiler_ieiffelclusterproperties_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelcompiler_impl_proxy.obj: ecom_eiffel_compiler_ieiffelcompiler_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelcompletioninfo_impl_proxy.obj: ecom_eiffel_compiler_ieiffelcompletioninfo_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_proxy.obj: ecom_eiffel_compiler_ieiffelfeaturedescriptor_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy.obj: ecom_eiffel_compiler_ieiffelhtmldocgenerator_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
-	
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+    
 wecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy.obj: ecom_eiffel_compiler_ieiffelhtmldocevents_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelprojectproperties_impl_proxy.obj: ecom_eiffel_compiler_ieiffelprojectproperties_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelsystemassemblies_impl_proxy.obj: ecom_eiffel_compiler_ieiffelsystemassemblies_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelsystembrowser_impl_proxy.obj: ecom_eiffel_compiler_ieiffelsystembrowser_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelsystemclusters_impl_proxy.obj: ecom_eiffel_compiler_ieiffelsystemclusters_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ieiffelsystemexternals_impl_proxy.obj: ecom_eiffel_compiler_ieiffelsystemexternals_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumassembly_impl_proxy.obj: ecom_eiffel_compiler_ienumassembly_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumclusterexcludes_impl_proxy.obj: ecom_eiffel_compiler_ienumclusterexcludes_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumclusterprop_impl_proxy.obj: ecom_eiffel_compiler_ienumclusterprop_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumcluster_impl_proxy.obj: ecom_eiffel_compiler_ienumcluster_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumeiffelclass_impl_proxy.obj: ecom_eiffel_compiler_ienumeiffelclass_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumfeature_impl_proxy.obj: ecom_eiffel_compiler_ienumfeature_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumincludepaths_impl_proxy.obj: ecom_eiffel_compiler_ienumincludepaths_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_eiffel_compiler_ienumobjectfiles_impl_proxy.obj: ecom_eiffel_compiler_ienumobjectfiles_impl_proxy.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
+wecom_eiffel_compiler_ieiffelexception_impl_proxy.obj: ecom_eiffel_compiler_ieiffelexception_impl_proxy.cpp
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
+    
 wecom_gce_ise_c.obj: ecom_gce_ise_c.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 
 wecom_gec_ise_c.obj: ecom_gec_ise_c.cpp
-	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+    $(CC) $(CFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ $?
 

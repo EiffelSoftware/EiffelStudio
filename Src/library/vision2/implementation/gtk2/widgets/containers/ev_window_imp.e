@@ -37,7 +37,8 @@ inherit
 			hide,
 			internal_set_minimum_size,
 			on_widget_mapped,
-			destroy
+			destroy,
+			is_parentable
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -515,7 +516,8 @@ feature {NONE} -- Implementation
 				user_x_position := a_x_pos
 				user_y_position := a_y_pos
 				if move_actions_internal /= Void then
-					move_actions_internal.call ([user_x_position, user_y_position, a_width, a_height])
+					app_implementation.gtk_marshal.set_dimension_tuple (user_x_position, user_y_position, a_width, a_height)
+					move_actions_internal.call (App_implementation.gtk_marshal.dimension_tuple)
 				end	
 			end
 		end
@@ -542,13 +544,13 @@ feature {NONE} -- Implementation
 
 	key_press_event_string: EV_GTK_C_STRING is
 			-- key-press-event string constant
-		do
+		once
 			Result := "key-press-event"
 		end
 
 	key_release_event_string: EV_GTK_C_STRING is
 			-- key-release-event string constant
-		do
+		once
 			Result := "key-release-event"
 		end
 
@@ -624,6 +626,12 @@ feature {EV_ACCELERATOR_IMP} -- Implementation
 			
 feature {EV_ANY_I} -- Implementation
 			
+	is_parentable: BOOLEAN is
+			-- Is `Current' parentable?
+		do
+			Result := False
+		end
+		
 	lock_update is
 			-- Lock drawing updates for `Current'
 		do

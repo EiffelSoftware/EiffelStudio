@@ -55,6 +55,13 @@ inherit
 			is_equal
 		end
 
+	WIZARD_GUIDS
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 creation
 	make
 
@@ -300,7 +307,7 @@ feature -- Basic operations
 			loop
 				l_type := descriptors.item (i)
 				if l_type /= Void then
-					if system_descriptor.eiffel_names.has (l_type.eiffel_class_name) and not l_type.is_iunknown and not l_type.is_idispatch then
+					if system_descriptor.eiffel_names.has (l_type.eiffel_class_name) and not l_type.is_well_known_interface then
 						local_counter := counter
 						create l_string.make (3)
 						l_string.append_integer (local_counter)

@@ -57,7 +57,7 @@ feature -- Processing
 		do
 			Precursor (a_descriptor)
 			l_interface := a_descriptor.interface_descriptor
-			if not l_interface.is_iunknown and not l_interface.is_idispatch then
+			if not l_interface.is_well_known_interface then
 				create l_generator
 				l_generator.generate (a_descriptor)
 			end
@@ -72,7 +72,7 @@ feature -- Processing
 			l_generator: WIZARD_INTERFACE_C_SERVER_GENERATOR
 		do
 			Precursor (a_descriptor)
-			if not a_descriptor.is_iunknown and not a_descriptor.is_idispatch then
+			if not a_descriptor.is_well_known_interface then
 				create l_generator
 				l_generator.generate (a_descriptor)
 			end

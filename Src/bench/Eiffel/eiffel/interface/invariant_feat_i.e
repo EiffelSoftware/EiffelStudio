@@ -33,7 +33,10 @@ feature -- IL code generation
 			byte_code: INVARIANT_B
 		do
 			byte_code := Inv_byte_server.item (written_in)
+			byte_context.set_byte_code (create {STD_BYTE_CODE})
+			byte_context.set_current_feature (Current)
 			byte_code.generate_il
+			byte_context.clear_all
 		end
 
 feature -- Byte Code generation

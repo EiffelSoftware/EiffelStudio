@@ -218,7 +218,7 @@ feature {NONE} -- Project Initialization
 			if not Eiffel_project.error_occurred then
 				project_name := project_dir.name
 				if project_name.item (project_name.count) = Operating_environment.Directory_separator then
-					project_name.head (project_name.count -1)
+					project_name.keep_head (project_name.count -1)
 				end
 			end
 		end
@@ -248,16 +248,12 @@ feature {NONE} -- Implementation
 		require
 			name_not_void: ace_name /= Void
 		local
-			f: RAW_FILE
+			ace_accesser: ACE_FILE_ACCESSER
 		do
 			valid_ace_file := False
 			if not ace_name.is_empty then
-				create f.make (ace_name)
-				if f.exists and f.is_readable then
-					if f.is_plain then
-						valid_ace_file := True
-					end
-				end
+				create ace_accesser.make (ace_name)
+				valid_ace_file := ace_accesser.is_valid 
 			end
 		end
 		

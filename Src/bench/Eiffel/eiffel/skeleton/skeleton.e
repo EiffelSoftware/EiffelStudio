@@ -321,7 +321,7 @@ feature -- Status
 				i > nb or else current_area.item (i).level /= Bits_level
 			loop
 				bit_desc ?= current_area.item (i)
-				buffer.putstring ("+OVERHEAD+BITOFF(");
+				buffer.putstring (" + OVERHEAD + BITOFF(");
 				buffer.putint (bit_desc.value);
 				buffer.putchar (')');
 				i := i + 1;
@@ -336,7 +336,7 @@ feature -- Status
 			loop
 				expanded_desc ?= current_area.item (i)
 				expanded_skeleton := expanded_desc.class_type.skeleton;
-				buffer.putstring ("+OVERHEAD+");
+				buffer.putstring (" + OVERHEAD + ");
 				expanded_skeleton.generate_size (buffer);
 				i := i + 1;
 			end;

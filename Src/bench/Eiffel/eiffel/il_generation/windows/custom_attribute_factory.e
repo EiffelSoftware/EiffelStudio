@@ -153,6 +153,11 @@ feature {IL_CODE_GENERATOR} -- Generation
 				else
 					l_ca.put_integer_16 (0)
 				end
+
+				if l_ca.count <= 4 then
+						-- Custom attribute without fixed and named arguments can be generated without blob data
+					l_ca := Void
+				end
 				
 					-- Assign `l_ca' to `a_owner_token'.
 				il_generator.define_custom_attribute (a_owner_token, l_ctor_token, l_ca)

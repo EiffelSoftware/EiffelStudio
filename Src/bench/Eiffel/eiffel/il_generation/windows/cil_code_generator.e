@@ -9,6 +9,11 @@ deferred class
 inherit
 	IL_CONST
 
+	IL_PREDEFINED_CUSTOM_ATTRIBUTES
+		export
+			{NONE} all
+		end
+
 	IL_PREDEFINED_STRINGS
 		export
 			{NONE} all
@@ -2627,10 +2632,9 @@ feature -- IL Generation
 					if is_debug_info_enabled then
 							-- Enable debugger to go through stub definition.
 						define_custom_attribute (l_meth_token,
-							current_module.debugger_step_through_ctor_token,
-							debugger_step_through_ca)
+							current_module.debugger_step_through_ctor_token, Void)
 						define_custom_attribute (l_meth_token,
-							current_module.debugger_hidden_ctor_token, debugger_hidden_ca)
+							current_module.debugger_hidden_ctor_token, Void)
 					end
 
 					start_new_body (l_meth_token)
@@ -2684,9 +2688,9 @@ feature -- IL Generation
 			if is_debug_info_enabled then
 					-- Enable debugger to go through stub definition.
 				define_custom_attribute (l_meth_token,
-					current_module.debugger_step_through_ctor_token, debugger_step_through_ca)
-				define_custom_attribute (l_meth_token, current_module.debugger_hidden_ctor_token,
-					debugger_hidden_ca)
+					current_module.debugger_step_through_ctor_token, Void)
+				define_custom_attribute (l_meth_token,
+					current_module.debugger_hidden_ctor_token, Void)
 			end
 
 			start_new_body (l_meth_token)
@@ -5930,38 +5934,6 @@ feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attri
 			l_ca_token: INTEGER
 		do
 			l_ca_token := md_emit.define_custom_attribute (token, ctor_token, data)
-		end
-
-feature {NONE} -- Predefined custom attributes
-
-	not_cls_compliant_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blob for not CLS compliant attribute
-		once
-			create Result.make
-			Result.put_boolean (False)
-			Result.put_integer_16 (0)
-		end
-
-	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blob for not COM Visible attribute.
-		once
-			create Result.make
-			Result.put_boolean (False)
-			Result.put_integer_16 (0)
-		end
-
-	debugger_step_through_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blobl for `System.Diagnostics.DebuggerStepThroughAttribute' attribute.
-		once
-			create Result.make
-			Result.put_integer_16 (0)
-		end
-
-	debugger_hidden_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blobl for `System.Diagnostics.DebuggerHiddenAttribute' attribute.
-		once
-			create Result.make
-			Result.put_integer_16 (0)
 		end
 
 feature {NONE} -- Onces

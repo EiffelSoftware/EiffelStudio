@@ -420,7 +420,7 @@ feature -- Element change
 			end
 		end
 
-feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP} -- Implementation
+feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of `Current'.
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 				track_mouse.dispose
 			end
 			t := translate_coordinates (x_pos, y_pos)
-			if awaiting_movement or is_dock_executing then
+			if (awaiting_movement or is_dock_executing) and interface.is_dockable then
 				dragable_motion (
 					t.integer_item (1),
 					t.integer_item (2),

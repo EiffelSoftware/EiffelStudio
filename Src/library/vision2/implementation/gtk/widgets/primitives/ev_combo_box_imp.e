@@ -128,13 +128,17 @@ feature -- Status report
 	rows: INTEGER is
 		 	-- Number of lines
 		do
-			Result := C.c_gtk_list_rows (list_widget)
+			Result := C.g_list_length (
+				C.gtk_list_struct_children (list_widget)
+			)
 		end
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		do
-			Result := C.c_gtk_list_selected (list_widget) = 0
+			Result := C.g_list_length (
+				C.gtk_list_struct_selection (list_widget)
+			).to_boolean
 		end
 
 feature -- Status setting
@@ -217,6 +221,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/19 20:45:35  oconnor
+--| no more externals used
+--|
 --| Revision 1.32  2000/04/06 22:16:26  brendel
 --| Improved implementation.
 --|

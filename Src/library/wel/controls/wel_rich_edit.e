@@ -103,13 +103,13 @@ feature -- Status report
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := selection_cache.minimum
+			Result := selection.minimum
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := selection_cache.maximum
+			Result := selection.maximum
 		end
 
 	selection: WEL_CHARACTER_RANGE is
@@ -126,18 +126,15 @@ feature -- Status report
 		local
 			range: WEL_CHARACTER_RANGE
 		do
-			range := selection_cell
+			!! range.make_empty
 			cwin_send_message (item, Em_exgetsel, 0, range.to_integer)
 			Result := range.maximum
 		end
 		
 	has_selection: BOOLEAN is
 			-- Has a current selection?
-		local
-			temp: WEL_CHARACTER_RANGE
 		do
-			temp := selection_cache
-			Result := temp.minimum /= temp.maximum
+			Result := selection.minimum /= selection.maximum
 		end
 
 	default_character_format: WEL_CHARACTER_FORMAT is
@@ -313,8 +310,11 @@ feature -- Status setting
 	set_selection (start_position, end_position: INTEGER) is
 			-- Set the selection between `start_position'
 			-- and `end_position'.
+		local
+			range: WEL_CHARACTER_RANGE
 		do
-			cwin_send_message (item, Em_setsel, start_position, end_position)
+			create range.make (start_position, end_position)
+			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
 		end
 
 	set_caret_position (position: INTEGER) is
@@ -324,11 +324,10 @@ feature -- Status setting
  		local
 			range: WEL_CHARACTER_RANGE
  		do
-			range := selection_cell
-			range.set_range (position, position)
+			create range.make (position, position)
 			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
   		end
-
+	
 	move_to_selection is
 			-- Move the selected text to be visible
 		do
@@ -643,8 +642,7 @@ feature -- Basic operations
 			range: WEL_CHARACTER_RANGE
 			flags: INTEGER
 		do
-			range := selection_cell
-			range.set_range (start_from, count)
+			!! range.make (start_from, count)
 			!! find_text.make (range, text_to_find)
 
 			if match_case then
@@ -776,19 +774,6 @@ feature -- Notifications
 			exists: exists
 			msg_filter_exists: a_msg_filter /= Void and then a_msg_filter.exists
 		do
-		end
-
-feature {NONE} -- Query speed up
-
-	selection_cache: WEL_CHARACTER_RANGE is
-		do
-			Result := selection_cell
-			cwin_send_message (item, Em_exgetsel, 0, Result.to_integer)
-		end
-
-	selection_cell: WEL_CHARACTER_RANGE is
-		once
-			create Result.make_empty
 		end
 
 feature -- Obsolete

@@ -199,6 +199,21 @@ feature -- Duplication
 			equal: standard_equal (Result, other)
 		end
 
+	frozen standard_twin: like Current is
+			-- New object field-by-field identical to `other'.
+			-- Always uses default copying semantics.
+		local
+			temp: BOOLEAN
+		do
+			temp := feature {ISE_RUNTIME}.check_assert (False)
+			Result := feature {ISE_RUNTIME}.c_standard_clone ($Current)
+			Result.standard_copy (Current)
+			temp := feature {ISE_RUNTIME}.check_assert (temp)
+		ensure
+			standard_twin_not_void: Result /= Void
+			equal: standard_equal (Result, Current)
+		end
+		
 	frozen deep_clone (other: ANY): like other is
 			-- Void if `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'

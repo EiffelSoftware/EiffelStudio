@@ -88,8 +88,9 @@ feature -- Properties
 	exception_stack_managed,
 	force_recompile,
 	full_type_checking,
-	msil_culture,
 	msil_assembly_compatibility,
+	msil_clr_version,
+	msil_culture,
 	msil_full_name,
 	msil_generation,
 	msil_generation_type,
@@ -193,6 +194,7 @@ feature {NONE} -- Codes and names.
 			Result.force (java_generation, "java_generation")
 			Result.force (line_generation, "line_generation")
 			Result.force (msil_assembly_compatibility, "msil_assembly_compatibility")
+			Result.force (msil_clr_version, "msil_clr_version")
 			Result.force (msil_culture, "msil_culture")
 			Result.force (msil_full_name, "msil_full_name")
 			Result.force (msil_generation, "msil_generation")
@@ -420,6 +422,13 @@ feature {COMPILER_EXPORTER}
 						error_found := True
 					end
 
+				when msil_clr_version then
+					if value.is_name then
+						System.set_clr_runtime_version (value.value)
+					else
+						error_found := True
+					end
+
 				when msil_culture then
 					if value.is_name then
 						System.set_msil_culture (value.value)	
@@ -440,7 +449,7 @@ feature {COMPILER_EXPORTER}
 					else
 						error_found := True
 					end
-					
+
 				when msil_key_file_name then
 					if value.is_name then
 						System.set_msil_key_file_name (value.value)	

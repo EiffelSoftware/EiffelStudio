@@ -20,19 +20,21 @@ create
 create {EV_NOTIFY_ACTION_SEQUENCE}
 	make_filled
 
-feature -- Access
-
-	force_extend (action: PROCEDURE [ANY, TUPLE]) is
-			-- Extend without type checking.
-		do
-			extend (agent wrapper (action))
-		end
+feature -- Basic operations
 
 	wrapper (action: PROCEDURE [ANY, TUPLE]) is
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
 			action.call (Void)
+		end
+
+feature -- Element change
+
+	force_extend (action: PROCEDURE [ANY, TUPLE]) is
+			-- Extend without type checking.
+		do
+			extend (agent wrapper (action))
 		end
 
 feature {NONE} -- Implementation

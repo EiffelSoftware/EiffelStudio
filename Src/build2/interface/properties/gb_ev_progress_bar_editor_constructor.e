@@ -39,13 +39,11 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-		--	check_button.select_actions.block
 			if first.is_segmented then
 				check_button.enable_select
 			else
 				check_button.disable_select
 			end
-		--	check_button.select_actions.resume
 		end
 
 feature {NONE} -- Implementation
@@ -64,9 +62,9 @@ feature {NONE} -- Implementation
 			-- Update segmented state.
 		do
 			if check_button.is_selected then
-				for_first_object (agent {EV_PROGRESS_BAR}.enable_segmentation)
+				for_all_objects (agent {EV_PROGRESS_BAR}.enable_segmentation)
 			else
-				for_first_object (agent {EV_PROGRESS_BAR}.disable_segmentation)
+				for_all_objects (agent {EV_PROGRESS_BAR}.disable_segmentation)
 			end
 		end
 

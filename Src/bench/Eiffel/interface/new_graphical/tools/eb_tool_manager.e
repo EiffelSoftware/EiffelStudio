@@ -106,19 +106,11 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			if editor_left_side_cell.item then
 				panel.extend (right_panel)
 				panel.extend (left_panel)
-				if panel.is_item_expanded (panel.second) then
-					panel.enable_item_expand (panel.first)
-					panel.disable_item_expand (panel.second)
-				end
 			else
 				panel.extend (left_panel)
 				panel.extend (right_panel)
-				if panel.is_item_expanded (panel.first) then	
-					panel.enable_item_expand (panel.second)
-					panel.disable_item_expand (panel.first)
-				end
-				panel.disable_item_expand (panel.first)
 			end
+			update_expanded_state_of_panel
 			
 			panel.enable_flat_separator
 
@@ -501,7 +493,9 @@ feature -- Explorer bar handling.
 						panel.set_second (right_panel)
 					end
 				end
+				
 				if panel.full then
+					update_expanded_state_of_panel
 					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
 				end
 			end
@@ -541,7 +535,25 @@ feature -- Explorer bar handling.
 					end
 				end
 				if panel.full then
+					update_expanded_state_of_panel
 					panel.set_split_position (splitter_position.max (panel.minimum_split_position))
+				end
+			end
+		end
+		
+	update_expanded_state_of_panel is
+			-- If `panel' `is_full', update expanded status of widgets
+			-- based on `editor_left_side_cell'. This must be performed
+			-- after insertions or updates to `panel', ensuring that the
+			-- non editor side does not resize when `panel' is enlarged.
+		do
+			if panel.full then
+				if editor_left_side_cell.item then
+					panel.enable_item_expand (panel.first)
+					panel.disable_item_expand (panel.second)
+				else
+					panel.enable_item_expand (panel.second)
+					panel.disable_item_expand (panel.first)
 				end
 			end
 		end

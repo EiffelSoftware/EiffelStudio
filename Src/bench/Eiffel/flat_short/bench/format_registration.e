@@ -417,7 +417,7 @@ feature -- EiffelCase output
 				end;
 				if not f_l.empty then
 					!! public_export;
-					!! f_clause.make (f_l, public_export)
+					--!! f_clause.make (f_l, public_export)
 					s_clauses.extend (f_clause)
 				end;
 				from
@@ -431,7 +431,7 @@ feature -- EiffelCase output
 				end;
 				if not f_l.empty then
 					!! private_export;
-					!! f_clause.make (f_l, private_export)
+					--!! f_clause.make (f_l, private_export)
 					s_clauses.extend (f_clause)
 				end;
 				s.set_feature_clause_list (s_clauses)

@@ -166,8 +166,8 @@ end;
 								feature_ast := Body_server.item (feature_i.body_id);
 								feature_ast.store_information (feature_data);
 								feature_i.store_case_information (feature_data);
-								s_class_data.add_feature (feature_data, 
-									parent_c.new_export_for (temp))
+								--s_class_data.add_feature (feature_data, 
+									--parent_c.new_export_for (temp))
 							end
 						end;
 						feature_data.set_rename_clause (rename_data);

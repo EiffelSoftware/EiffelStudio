@@ -6,8 +6,11 @@ class
 	TYPE_VIEW
 
 inherit
-	SYSTEM_WINDOWS_FORMS_FORM
-
+	DIALOG
+		redefine
+			dictionary
+		end
+	
 create
 	make
 
@@ -32,35 +35,29 @@ feature {NONE} -- Initialization
 			return_value: INTEGER
 		do
 			make_form
-			create dictionary
 			assembly_descriptor := an_assembly_descriptor
 			eiffel_class := an_eiffel_class
 			children := children_list
 			assembly_view := an_assembly_view
 			create eiffel_dictionary.make_eiffelcodegeneratordictionary
-			create type_view_handler.make (eiffel_class, Current)
+			create type_modifications.make_from_info (eiffel_class.eiffelname)
 			initialize_gui
 			return_value := showdialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			eiffel_class_set: eiffel_class = an_eiffel_class
-			children_set: children = children_list
 			assembly_view_set: assembly_view = an_assembly_view
-			non_void_type_view_handler: type_view_handler /= Void
+			non_void_type_modifications: type_modifications /= Void
 		end
 
 feature -- Access
-
-	dictionary: TYPE_VIEW_DICTIONARY
+		
+	dictionary: TYPE_VIEW_DICTIONARY is
 			-- Dictionary
 		indexing
 			external_name: "Dictionary"
-		end
-		
-	assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			-- Assembly descriptor
-		indexing
-			external_name: "AssemblyDescriptor"
+		once
+			create Result
 		end
 		
 	eiffel_class: ISE_REFLECTION_EIFFELCLASS
@@ -89,12 +86,26 @@ feature -- Access
 			external_name: "AssemblyTypes"
 		require
 			non_void_assembly_view: assembly_view /= Void
-		once
+		do
 			Result := assembly_view.type_list
 		ensure
 			assembly_types_created: Result /= Void
 		end
 	
+	eiffel_path: STRING is 
+		indexing
+			description: "Path to Eiffel sources"
+			external_name: "EiffelPath"
+		require
+			non_void_assembly_view: assembly_view /= Void
+			non_void_assembly: assembly_view.assembly /= Void
+		once
+			Result := assembly_view.assembly.eiffelclusterpath
+		ensure
+			non_void_path: Result /= Void 
+			not_empty_path: Result.length > 0
+		end
+		
 	eiffel_dictionary: ISE_REFLECTION_EIFFELCODEGENERATORDICTIONARY
 			-- Dictionary
 		indexing
@@ -159,50 +170,99 @@ feature -- Basic Operations
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
 			label_font: SYSTEM_DRAWING_FONT
-			type: SYSTEM_TYPE
-			on_ok_event_handler_delegate: SYSTEM_EVENTHANDLER
-			on_cancel_event_handler_delegate: SYSTEM_EVENTHANDLER
+			on_ok_delegate: SYSTEM_EVENTHANDLER
+			on_cancel_delegate: SYSTEM_EVENTHANDLER
+			on_resize_delegate: SYSTEM_EVENTHANDLER
 		do
 			set_Enabled (True)
 			set_text (dictionary.Title)
-			set_borderstyle (dictionary.Border_style)
+			--set_borderstyle (dictionary.Border_style)
 			a_size.set_Width (dictionary.Window_width)
 			a_size.set_Height (dictionary.Window_height)
-			set_size (a_size)	
+			set_size (a_size)
+			set_icon (dictionary.Edit_icon)
+			set_maximizebox (False)
 
 				-- `Selected assembly: '
 			create_form_label (assembly_descriptor.name, dictionary.Margin, dictionary.Margin)
-			create_form_label (dictionary.Assembly_description (assembly_descriptor), dictionary.Margin, dictionary.Margin + dictionary.Label_height)
+			create_assembly_labels
 				
 				-- Build editable class
 			build_class_contract_form (eiffel_class)
+			a_size.set_width (width - dictionary.Margin // 2)
+			a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 5 * dictionary.Label_height - dictionary.Button_height)
+			panel.set_size (a_size)
 			
 				-- OK button
 			create ok_button.make_button
-			a_point.set_X ((dictionary.Window_width // 2) - (dictionary.Margin //2) - dictionary.Button_width) 
-			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
+			a_point.set_X (width // 2 - (dictionary.Margin // 2) - dictionary.Button_width) 
+			a_point.set_Y (height - 3 * dictionary.Margin - dictionary.Button_height)
 			ok_button.set_location (a_point)
+			ok_button.set_height (dictionary.Button_height)
+			ok_button.set_width (dictionary.Button_width)
 			ok_button.set_text (dictionary.Ok_button_label)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_ok_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnOkEventHandler")
-			ok_button.add_Click (on_ok_event_handler_delegate)
+			create on_ok_delegate.make_eventhandler (Current, $on_ok_event_handler)
+			ok_button.add_Click (on_ok_delegate)
 
 				-- Cancel button
 			create cancel_button.make_button
-			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Button_height)
+			a_point.set_X (width // 2 + dictionary.Margin // 2)
+			a_point.set_Y (height - 3 * dictionary.Margin - dictionary.Button_height)
 			cancel_button.set_location (a_point)
+			cancel_button.set_height (dictionary.Button_height)
+			cancel_button.set_width (dictionary.Button_width)
 			cancel_button.set_text (dictionary.Cancel_button_label)
-			on_cancel_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnCancelEventHandler")
-			cancel_button.add_Click (on_cancel_event_handler_delegate)
+			create on_cancel_delegate.make_eventhandler (Current, $on_cancel_event_handler)
+			cancel_button.add_Click (on_cancel_delegate)
 			
 				-- Addition of controls
 			controls.add (ok_button)		
 			controls.add (cancel_button)
+
+			add_closed (on_cancel_delegate)
+			create on_resize_delegate.make_eventhandler (Current, $on_resize)
+			add_resize (on_resize_delegate)
 		end
 
 feature -- Event handling
 
+	on_resize (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Resize window and its content."
+			external_name: "OnResize"
+		local
+			a_size: SYSTEM_DRAWING_SIZE
+			a_point: SYSTEM_DRAWING_POINT
+		do
+				-- Resize `panel'.
+			a_size.set_width (width - dictionary.Margin // 2)
+			if errors_list_view /= Void and then errors_list_view.contains (errors_list_view) then
+				a_size.set_height (height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
+			else
+				a_size.set_height (height - 6 * dictionary.Margin - 5 * dictionary.Label_height - dictionary.Button_height)
+			end
+			panel.set_Size (a_size)	
+			
+				-- Move `ok_button' and `cancel_button'.
+			a_point.set_X (width // 2 - (dictionary.Margin // 2) - dictionary.Button_width) 
+			a_point.set_Y (height - 3 * dictionary.Margin - dictionary.Button_height)
+			ok_button.set_location (a_point)
+			a_point.set_X (width // 2 + dictionary.Margin // 2)
+			a_point.set_Y (height - 3 * dictionary.Margin - dictionary.Button_height)
+			cancel_button.set_location (a_point)
+			
+				-- Resize and move `errors_list_view' if non Void
+			if errors_list_view /= Void and then controls.contains (errors_list_view) then
+				a_point.set_X (0)
+				a_point.set_Y (height - 5 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)	
+				errors_list_view.set_location (a_point)	
+				a_size.set_width (width - dictionary.Margin // 2)
+				a_size.set_height (4 * dictionary.Label_height)
+				errors_list_view.set_size (a_size)	
+			end
+			refresh
+		end
+		
 	on_class_name_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 			-- Action launched when a text box is entered
 		indexing
@@ -212,27 +272,66 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			is_focused: BOOLEAN
+			a_font: SYSTEM_DRAWING_FONT
 		do
-			if type_view_handler.is_valid then
+			text_box ?= sender
+			if text_box /= Void and then text_box.text /= Void then
+				if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (text_box.text.tolower) then
+					type_modifications.set_new_name (text_box.text)
+					if text_box.text.length > 0 then
+						create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+						text_box.set_width (text_box_width_from_text (text_box.text, a_font))
+					end
+				end
+			end
+		end
+
+	on_class_name_enter (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
+			-- Action launched when user presses `Enter' in the class name text box
+		indexing
+			external_name: "OnClassNameEnter"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		local
+			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+			a_font: SYSTEM_DRAWING_FONT
+		do
+			if arguments.keycode = dictionary.Enter_key then
 				text_box ?= sender
-				if text_box /= Void and then text_box.text /= Void and then text_box.text.length > 0 then
-					if type_view_handler.old_name /= Void and then not type_view_handler.old_name.tolower.equals_string (text_box.text.tolower) then	
-						type_view_handler.update_class (text_box.text)
-						if not type_view_handler.is_valid then
-							display_error_message (type_view_handler.error_message)
-							to_be_modified_text_box := text_box
-							is_focused := text_box.focus
-							refresh
-						else
-							children := type_view_handler.children
-							if error_text_box /= Void then
-								controls.remove (error_text_box)
-							end
-							end_class_name_label.set_text (text_box.text)
-							refresh
+				if text_box /= Void and then text_box.text /= Void then
+					if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (text_box.text.tolower) then
+						type_modifications.set_new_name (text_box.text)				
+						if text_box.text.length > 0 then
+							create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+							text_box.set_width (text_box_width_from_text (text_box.text, a_font))
 						end
 					end
+				end
+			end
+		end
+	
+	on_click (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+			-- Action launched when a text box is entered
+		indexing
+			external_name: "OnClick"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		local
+			a_font: SYSTEM_DRAWING_FONT
+		do
+			if selected_text_box /= Void and then selected_text_box.text /= Void then
+				if selected_text_box = class_name_text_box then
+					if type_modifications.old_name /= Void and then not type_modifications.old_name.tolower.equals_string (selected_text_box.text.tolower) then
+						type_modifications.set_new_name (selected_text_box.text)
+						if selected_text_box.text.length > 0 then
+							create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+							selected_text_box.set_width (text_box_width_from_text (selected_text_box.text, a_font))
+						end
+					end
+				else
+					save_feature_modifications (selected_text_box)
 				end
 			end
 		end
@@ -245,21 +344,36 @@ feature -- Event handling
 			non_void_sender: sender /= Void
 			non_void_arguments: arguments /= Void
 		local
-			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			is_focused: BOOLEAN
+			an_array: ARRAY [ANY]
 		do
-			if type_view_handler.is_valid then
-				text_box ?= sender
-				if text_box /= Void and then text_box.text /= Void and then text_box.text.length > 0 then
-					type_view_handler.set_old_name (text_box.text)
+			feature_modifications := Void
+			selected_text_box ?= sender
+			if selected_text_box /= Void and then selected_text_box.text /= Void then
+				if selected_text_box = class_name_text_box then
+					type_modifications.set_old_name (selected_text_box.text)
+				else
+					if feature_names_boxes.containskey (selected_text_box) then
+						modified_feature ?= feature_names_boxes.item (selected_text_box)					
+						create feature_modifications.make_from_info (selected_text_box.text)				
+						
+					elseif feature_arguments_boxes.containskey (selected_text_box) then
+						an_array ?= feature_arguments_boxes.item (selected_text_box)
+						if an_array /= Void and then an_array.count = 2 then
+							modified_feature ?= an_array.item (0)
+							if modified_feature /= Void then
+								if type_modifications.features_modifications.contains (modified_feature) then
+									feature_modifications ?= type_modifications.features_modifications.item (modified_feature)
+								else
+									create feature_modifications.make_from_info (modified_feature.eiffelname)
+								end
+							end									
+						end							
+					end
 				end
-			else
-				to_be_modified_text_box.set_text (type_view_handler.old_name)
-				type_view_handler.set_valid 
-				is_focused := to_be_modified_text_box.focus
 			end
 		end
-		
+
 	on_leave_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 			-- Action launched when a text box is leaved
 		indexing
@@ -269,51 +383,27 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		local
 			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			an_eiffel_class: ISE_REFLECTION_EIFFELCLASS
-			an_array: ARRAY [INTEGER]
-			is_focused: BOOLEAN
 		do
 			text_box ?= sender
-			if text_box /= Void and then text_box.text /= Void and then text_box.text.length > 0 then
-				if type_view_handler.is_valid and then type_view_handler.old_name /= Void and then not type_view_handler.old_name.tolower.equals_string (text_box.text.tolower) then
-					if feature_names_boxes.containskey (text_box) then
-						an_array ?= feature_names_boxes.item (text_box)
-						if an_array /= Void and then an_array.count = 2 then							
-							type_view_handler.update_features (text_box.text, an_array.item (0), an_array.item (1))
-							if not type_view_handler.is_valid then
-								display_error_message (type_view_handler.error_message)
-								to_be_modified_text_box := text_box
-								is_focused := text_box.focus
-								refresh
-							else
-								children := type_view_handler.children
-								an_eiffel_class := type_view_handler.eiffel_class
-								controls.remove (panel)
-								build_class_contract_form (an_eiffel_class)
-								if error_text_box /= Void then
-									controls.remove (error_text_box)
-								end
-								refresh
-							end
-						end
-					elseif feature_arguments_boxes.containskey (text_box) then
-						an_array ?= feature_arguments_boxes.item (text_box) 
-						if an_array /= Void and then an_array.count = 3 then
-							type_view_handler.update_arguments (text_box.text, an_array.item (0), an_array.item (1), an_array.item (2))
-							if not type_view_handler.is_valid then
-								display_error_message (type_view_handler.error_message)
-								is_focused := text_box.focus
-								to_be_modified_text_box := text_box						
-								refresh
-							else
-								children := type_view_handler.children
-								if error_text_box /= Void then
-									controls.remove (error_text_box)
-									refresh
-								end
-							end
-						end
-					end		
+			if text_box /= Void and then text_box.text /= Void then
+				save_feature_modifications (text_box)
+			end
+		end
+
+	on_enter_pressed (sender: ANY; arguments: SYSTEM_WINDOWS_FORMS_KEYEVENTARGS) is
+			-- Action launched when a text box is leaved
+		indexing
+			external_name: "OnEnterPressed"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		local
+			text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+		do
+			if arguments.keycode = dictionary.Enter_key then
+				text_box ?= sender
+				if text_box /= Void and then text_box.text /= Void then
+				 	save_feature_modifications (text_box)
 				end
 			end
 		end
@@ -328,26 +418,53 @@ feature -- Event handling
 			non_void_assembly_descriptor: assembly_descriptor /= Void
 			non_void_eiffel_class: eiffel_class /= Void
 		local
+			returned_value: INTEGER
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			type_view_handler: TYPE_VIEW_HANDLER
 			xml_generator: ISE_REFLECTION_XMLCODEGENERATOR
 			i: INTEGER
 			a_child: ISE_REFLECTION_EIFFELCLASS
+			a_size: SYSTEM_DRAWING_SIZE
+			eiffel_generation_dialog: EIFFEL_GENERATION_DIALOG
 		do
-			assembly_view.set_children (eiffel_class, children)
-			assembly_view.set_assembly_types (assembly_types)
-			create xml_generator.make_xmlcodegenerator
-			xml_generator.makexmlcodegenerator
-			--xml_generator.replacetype (assembly_descriptor, eiffel_class)
-			--from
-			--until
-			--	i = children.count
-			--loop
-			--	a_child ?= children.item (i)
-			--	if a_child /= Void then
-			--		xml_generator.replacetype (assembly_descriptor, a_child)
-			--	end
-			--	i := i + 1
-			--end
-			close
+			returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Check_validity_message, dictionary.Information_caption, dictionary.Ok_message_box_button, dictionary.Information_icon)
+			create type_view_handler.make (eiffel_class, type_modifications, Current)
+			type_view_handler.check_and_update
+			if not type_view_handler.is_valid then
+				cancel_button.set_enabled (False)
+				a_size.set_width (width - dictionary.Margin // 2)
+				a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
+				panel.set_size (a_size)
+				if errors_list_view /= Void and then controls.contains (errors_list_view) then
+					controls.remove (errors_list_view)
+				end
+				display_errors (type_view_handler.class_error_message, type_view_handler.errors_in_features, type_view_handler.errors_in_arguments)
+				refresh
+			else
+				close
+				eiffel_class := type_view_handler.eiffel_class
+				children := type_view_handler.children
+				assembly_view.set_children (eiffel_class, children)
+				create xml_generator.make_xmlcodegenerator
+				xml_generator.makexmlcodegenerator
+				xml_generator.replacetype (assembly_descriptor, eiffel_class)
+				from
+				until
+					i = children.count
+				loop
+					a_child ?= children.item (i)
+					if a_child /= Void then
+						xml_generator.replacetype (assembly_descriptor, a_child)
+					end
+					i := i + 1
+				end	
+				--assembly_view.update_gui
+				
+				returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Eiffel_generation_question, dictionary.Question_caption, dictionary.Yes_no_message_box_buttons, dictionary.Question_icon)
+				if returned_value = dictionary.Yes then
+					create eiffel_generation_dialog.make (assembly_descriptor, eiffel_path)
+				end
+			end
 		end
 
 	on_cancel_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -360,55 +477,27 @@ feature -- Event handling
 		do
 			close
 		end
-
-	on_parent_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-			-- Process click on a parent.
-		indexing
-			external_name: "OnParentEventHandler"
-		require
-			non_void_sender: sender /= Void
-			non_void_arguments: arguments /= Void
-		local
-			rename_clauses_viewer: RENAME_CLAUSES_VIEWER
-			label: SYSTEM_WINDOWS_FORMS_LABEL
-		do
-			label ?= sender
-			if label /= Void then
-				create rename_clauses_viewer.make (eiffel_class, label.text, Current)
-			end
-		end
-
-feature {RENAME_CLAUSES_VIEWER} -- Status Setting
 	
-	set_eiffel_class (an_eiffel_class: like eiffel_class) is
-			-- Set `eiffel_class' with `an_eiffel_class'.
-		indexing
-			external_name: "SetEiffelClass"
-		require
-			non_void_eiffel_class: an_eiffel_class /= Void
-		do
-			eiffel_class := an_eiffel_class
-			controls.remove (panel)
-			build_class_contract_form (eiffel_class)
-			refresh
-		ensure
-			eiffel_class_set: eiffel_class = an_eiffel_class
-		end
-		
 feature {NONE} -- Implementation
-
-	type_factory: SYSTEM_TYPE
-			-- Statics needed to create a type
+	
+	modified_feature: ISE_REFLECTION_EIFFELFEATURE
 		indexing
-			external_name: "TypeFactory"
+			description: "Feature being modified by the user"
+			external_name: "ModifiedFeature"
 		end
-		
-	delegate_factory: SYSTEM_DELEGATE
-			-- Statics needed to create a delegate
+	
+	type_modifications: TYPE_MODIFICATIONS
 		indexing
-			external_name: "DelegateFactory"
+			description: "Type modifications"
+			external_name: "TypeModifications"
 		end
-
+	
+	feature_modifications: FEATURE_MODIFICATIONS
+		indexing
+			description: "Feature modifications"
+			external_name: "FeatureModifications"
+		end
+	
 	parents: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Class parents
 			-- | Key: parent name
@@ -416,53 +505,13 @@ feature {NONE} -- Implementation
 		indexing
 			external_name: "Parents"
 		end
-
-	parents_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for parents
-			-- | Key: text box
-			-- | Value: Parent number (in `eiffel_class.parents')
+	
+	selected_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 		indexing
-			external_name: "ParentsBoxes"
+			description: "Lastly selected text box"
+			external_name: "SelectedTextBox"
 		end
 
-	rename_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for rename clauses
-			-- | Key: text box
-			-- | Value: [parent number, rename clause number]
-		indexing
-			external_name: "RenameBoxes"
-		end
-
-	undefine_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for undefine clauses
-			-- | Key: text box
-			-- | Value: [parent number, undefine clause number]
-		indexing
-			external_name: "UndefineBoxes"
-		end
-
-	redefine_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for redefine clauses
-			-- | Key: text box
-			-- | Value: [parent number, redefine clause number]
-		indexing
-			external_name: "RedefineBoxes"
-		end
-
-	select_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for select clauses
-			-- | Key: text box
-			-- | Value: [parent number, select clause number]
-		indexing
-			external_name: "SelectBoxes"
-		end
-		
-	to_be_modified_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			-- Text box that has to be corrected by the user otherwise class is not correct
-		indexing
-			external_name: "ToBeModifiedTextBox"
-		end
-		
 	panel_height: INTEGER
 			-- Height of panel inside before calling `build_inherit_clause'.
 		indexing
@@ -476,18 +525,10 @@ feature {NONE} -- Implementation
 			external_name: "SpecialClasses"
 		end
 
-	creation_routines_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for creation routines
-			-- | Key: text box
-			-- | Value: creation routine number
-		indexing
-			external_name: "CreationRoutinesBoxes"
-		end
-
 	feature_names_boxes: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Text boxes for feature names
 			-- | Key: text box
-			-- | Value: [feature clause number, feature number]
+			-- | Value: `ISE_REFLECTION_EIFFELFEATURE'
 		indexing
 			external_name: "FeatureNamesBoxes"
 		end
@@ -495,17 +536,9 @@ feature {NONE} -- Implementation
 	feature_arguments_boxes: SYSTEM_COLLECTIONS_HASHTABLE
 			-- Text boxes for feature arguments
 			-- | Key: text box
-			-- | Value: [feature clause number, feature number, argument number]
+			-- | Value: [ISE_REFLECTION_EIFFELFEATURE, ISE_REFLECTION_NAMEDSIGNATURETYPE]
 		indexing
 			external_name: "FeatureArgumentsBoxes"
-		end
-
-	feature_return_types_boxes: SYSTEM_COLLECTIONS_HASHTABLE
-			-- Text boxes for feature return types
-			-- | Key: text box
-			-- | Value: [feature clause number, feature number]
-		indexing
-			external_name: "FeatureReturnTypesBoxes"
 		end
 		
 	build_class_contract_form (an_eiffel_class: like eiffel_class) is
@@ -522,21 +555,23 @@ feature {NONE} -- Implementation
 			formatter: FORMATTER
 			end_class: STRING
 			external_class: STRING
+			on_click_delegate: SYSTEM_EVENTHANDLER
 			on_class_name_enter_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_class_name_leave_event_handler_delegate: SYSTEM_EVENTHANDLER
-			type: SYSTEM_TYPE
+			class_name_width: INTEGER
+			a_font: SYSTEM_DRAWING_FONT
+			on_class_name_enter_delegate: SYSTEM_WINDOWS_FORMS_KEYEVENTHANDLER
 		do
 			create panel.make_panel
-			a_position.set_x (dictionary.Margin)
-			a_position.set_y (2 * dictionary.Margin + 2 * dictionary.Label_height)
+			a_position.set_x (0)
+			a_position.set_y (dictionary.Margin + 4 * dictionary.Label_height)
 			panel.set_location (a_position)
-			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 4 * dictionary.Label_height - dictionary.Button_height)
-			panel.set_size (a_size)
 			panel.set_borderstyle (0)
 			panel.set_backcolor (dictionary.White_color)
 			panel.set_autoscroll (True)
 			controls.add (panel)
+			create on_click_delegate.make_eventhandler (Current, $on_click)
+			panel.add_click (on_click_delegate)
 			
 				-- Indexing clause
 			create_label (eiffel_dictionary.Indexingkeyword, dictionary.Margin, dictionary.Margin, dictionary.Keyword_color, True)	
@@ -574,12 +609,16 @@ feature {NONE} -- Implementation
 				create_label (eiffel_dictionary.Classkeyword, dictionary.Margin, 2 * dictionary.Margin + 2 * dictionary.Label_height, dictionary.Keyword_color, True)
 			end
 			create class_name_text_box.make_textbox
-			set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, dictionary.Window_width - 5 * dictionary.Margin, dictionary.Class_color)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_class_name_enter_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnEnterEventHandler")
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
+			class_name_width := text_box_width_from_text (an_eiffel_class.eiffelname.toupper, a_font)
+			set_text_box_properties (class_name_text_box, an_eiffel_class.eiffelname.toupper, 3 * dictionary.Margin, 2 * dictionary.Margin + 3 * dictionary.Label_height, class_name_width, dictionary.Class_color)
+			
+			create on_class_name_enter_event_handler_delegate.make_eventhandler (Current, $on_enter_event_handler)
 			class_name_text_box.add_gotfocus (on_class_name_enter_event_handler_delegate)
-			on_class_name_leave_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnClassNameLeaveEventHandler")
+			create on_class_name_leave_event_handler_delegate.make_eventhandler (Current, $on_class_name_leave_event_handler)
 			class_name_text_box.add_lostfocus (on_class_name_leave_event_handler_delegate)
+			create on_class_name_enter_delegate.make_keyeventhandler (Current, $on_class_name_enter)
+			class_name_text_box.add_keydown (on_class_name_enter_delegate)
 			
 			panel_height := 2 * dictionary.Margin + 4 * dictionary.Label_height
 			
@@ -590,7 +629,6 @@ feature {NONE} -- Implementation
 
 			create feature_names_boxes.make
 			create feature_arguments_boxes.make
-			create feature_return_types_boxes.make
 			
 				-- `create {NONE}' or `create make ...'
 			build_create_clause (an_eiffel_class)
@@ -666,9 +704,8 @@ feature {NONE} -- Implementation
 			a_label.set_autosize (True)
 			a_label.set_borderstyle (0)
 			a_label.set_textalign (dictionary.Align_left)
-			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style)						a_label.set_font (a_font)
-			--label_width := a_label.width
-			--created_label := a_label
+			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)
+			a_label.set_font (a_font)
 			controls.add (a_label)
 	end	
 		
@@ -687,16 +724,17 @@ feature {NONE} -- Implementation
 			positive_width: a_width >= 0
 			non_void_color: a_color /= Void
 		local
-			type: SYSTEM_TYPE
 			on_enter_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_leave_event_handler_delegate: SYSTEM_EVENTHANDLER
+			on_enter_pressed_delegate: SYSTEM_WINDOWS_FORMS_KEYEVENTHANDLER
 		do		
 			set_text_box_properties (a_text_box, a_text, x_position, y_position, a_width, a_color)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_enter_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnEnterEventHandler")
+			create on_enter_event_handler_delegate.make_eventhandler (Current, $on_enter_event_handler)
 			a_text_box.add_gotfocus (on_enter_event_handler_delegate)
-			on_leave_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnLeaveEventHandler")
+			create on_leave_event_handler_delegate.make_eventhandler (Current, $on_leave_event_handler)
 			a_text_box.add_lostfocus (on_leave_event_handler_delegate)
+			create on_enter_pressed_delegate.make_keyeventhandler (Current, $on_enter_pressed)
+			a_text_box.add_keydown (on_enter_pressed_delegate)
 		end
 
 	set_text_box_properties (a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX; a_text: STRING; x_position, y_position, a_width: INTEGER; a_color: SYSTEM_DRAWING_COLOR) is
@@ -728,6 +766,7 @@ feature {NONE} -- Implementation
 			a_text_box.set_borderstyle (0)
 			a_text_box.set_textalign (0)
 			a_text_box.set_forecolor (a_color)
+			a_text_box.set_backcolor (dictionary.Editable_color)
 			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Italic_style)
 			a_text_box.set_font (a_font)
 			panel.controls.add (a_text_box)
@@ -750,8 +789,6 @@ feature {NONE} -- Implementation
 			select_clauses: SYSTEM_COLLECTIONS_ARRAYLIST
 			formatted_parents: ARRAY [STRING]
 			i: INTEGER
-			on_parent_event_handler_delegate: SYSTEM_EVENTHANDLER
-			type: SYSTEM_TYPE
 		do
 			label_width := 0
 			parents := an_eiffel_class.Parents
@@ -776,11 +813,6 @@ feature {NONE} -- Implementation
 				
 				from
 					i := formatted_parents.count - 1
-					create parents_boxes.make
-					create rename_boxes.make
-					create undefine_boxes.make
-					create redefine_boxes.make
-					create select_boxes.make
 				until
 					i = -1
 				loop
@@ -788,9 +820,6 @@ feature {NONE} -- Implementation
 					if a_parent /= Void then
 						if (not a_parent.equals_string (eiffel_dictionary.Anyclass)) or has_any_in_clause then
 							create_label (a_parent, 3 * dictionary.Margin, panel_height, dictionary.Class_color, False)
-							type := type_factory.GetType_String (dictionary.System_event_handler_type)
-							on_parent_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnParentEventHandler")
-							created_label.add_Click (on_parent_event_handler_delegate)
 						end
 					end
 					panel_height := panel_height + dictionary.Label_height
@@ -803,7 +832,7 @@ feature {NONE} -- Implementation
 							rename_clauses := inheritance_clauses.Item (0)
 							if rename_clauses /= Void and then rename_clauses.Count > 0 then
 								panel_height := panel_height + dictionary.Label_height
-								build_inheritance_clauses (rename_clauses, rename_boxes, i)
+								build_inheritance_clauses (rename_clauses) 
 								panel_height := rename_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
@@ -814,7 +843,7 @@ feature {NONE} -- Implementation
 							undefine_clauses := inheritance_clauses.Item (1)
 							if undefine_clauses /= Void and then undefine_clauses.Count > 0 then
 								panel_height := panel_height + dictionary.Label_height
-								build_inheritance_clauses (undefine_clauses, undefine_boxes, i)
+								build_inheritance_clauses (undefine_clauses)
 								panel_height := undefine_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
@@ -825,7 +854,7 @@ feature {NONE} -- Implementation
 							redefine_clauses := inheritance_clauses.Item (2)
 							if redefine_clauses /= Void and then redefine_clauses.Count > 0 then
 								panel_height := panel_height + dictionary.Label_height
-								build_inheritance_clauses (redefine_clauses, redefine_boxes, i)
+								build_inheritance_clauses (redefine_clauses) 
 								panel_height := redefine_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
@@ -836,7 +865,7 @@ feature {NONE} -- Implementation
 							select_clauses := inheritance_clauses.Item (3)
 							if select_clauses /= Void and then select_clauses.Count > 0 then
 								panel_height := panel_height + dictionary.Label_height
-								build_inheritance_clauses (select_clauses, select_boxes, i)
+								build_inheritance_clauses (select_clauses)
 								panel_height := select_clauses.count * dictionary.Label_height + panel_height
 							end
 						end
@@ -874,7 +903,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	build_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST; a_table: SYSTEM_COLLECTIONS_HASHTABLE; parent_number: INTEGER) is
+	build_inheritance_clauses (clauses: SYSTEM_COLLECTIONS_ARRAYLIST) is
 			-- Build inheritance clauses from `clauses'.
 			-- | Add text box to `a_table' for `parent_number'-th parent. 
 		indexing
@@ -882,13 +911,10 @@ feature {NONE} -- Implementation
 		require
 			non_void_clauses: clauses /= Void
 			not_empty_clauses: clauses.Count > 0
-			non_void_table: a_table /= Void
-			valid_parent_number: parent_number >= 0
 		local
 			i: INTEGER
 			a_clause: ISE_REFLECTION_INHERITANCECLAUSE
 			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
-			array: ARRAY [INTEGER]
 		do
 			from
 			until
@@ -902,10 +928,6 @@ feature {NONE} -- Implementation
 					else
 						create_label (a_clause.tostring, 9 * dictionary.Margin, panel_height + i* dictionary.Label_height, dictionary.Text_color, False)
 					end
-					create array.make (2)
-					array.put (0, parent_number)
-					array.put (1, i)
-					a_table.add (a_text_box, array)
 				end
 				i := i + 1
 			end
@@ -947,7 +969,6 @@ feature {NONE} -- Implementation
 					panel_height := panel_height + dictionary.Label_height + dictionary.Margin
 					from
 						i := 0
-						create creation_routines_boxes.make
 					until
 						i = creation_routines.Count
 					loop
@@ -959,7 +980,6 @@ feature {NONE} -- Implementation
 							else
 								create_label (a_routine, 3 * dictionary.Margin, panel_height + i * dictionary.Label_height, dictionary.Feature_color, False)
 							end
-							creation_routines_boxes.add (a_text_box, i)
 						end
 						i := i + 1
 					end
@@ -995,7 +1015,7 @@ feature {NONE} -- Implementation
 				loop
 					a_feature ?= initialization_features.Item (i)
 					if a_feature /= Void then
-						build_eiffel_feature (an_eiffel_class, a_feature, dictionary.Initialization, i)
+						build_eiffel_feature (an_eiffel_class, a_feature)
 					end
 					i := i + 1
 				end			
@@ -1044,7 +1064,7 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Access_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				intern_build_class_features (an_eiffel_class, access_features, dictionary.Access)
+				intern_build_class_features (an_eiffel_class, access_features)
 			end	
 				
 				-- Generate element change feature clause.
@@ -1053,7 +1073,7 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Element_change_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height				
-				intern_build_class_features (an_eiffel_class, element_change_features, dictionary.Element_change)
+				intern_build_class_features (an_eiffel_class, element_change_features)
 			end					
 
 				-- Generate basic operations feature clause.
@@ -1062,7 +1082,7 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Basic_operations_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				intern_build_class_features (an_eiffel_class, basic_operations_features, dictionary.Basic_operations)
+				intern_build_class_features (an_eiffel_class, basic_operations_features)
 			end	
 
 				-- Generate unary operators feature clause.
@@ -1071,7 +1091,7 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Unary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				intern_build_class_features (an_eiffel_class, unary_operators_features, dictionary.Unary_operators)
+				intern_build_class_features (an_eiffel_class, unary_operators_features)
 			end	
 
 				-- Generate binary operators feature clause.
@@ -1080,7 +1100,7 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Binary_operators_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				intern_build_class_features (an_eiffel_class, binary_operators_features, dictionary.Binary_operators)
+				intern_build_class_features (an_eiffel_class, binary_operators_features)
 			end	
 
 				-- Generate specials feature clause.
@@ -1089,7 +1109,7 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Specials_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				intern_build_class_features (an_eiffel_class, specials_features, dictionary.Specials)
+				intern_build_class_features (an_eiffel_class, specials_features)
 			end	
 
 				-- Generate implementation feature clause.
@@ -1098,11 +1118,11 @@ feature {NONE} -- Implementation
 				create_label (dictionary.Feature_keyword, dictionary.Margin, panel_height + dictionary.Margin, dictionary.Keyword_color, True)
 				create_label (dictionary.Implementation_comment, dictionary.Margin + label_width, panel_height + dictionary.Margin, dictionary.Comment_color, False)
 				panel_height := panel_height + 2 * dictionary.Margin + dictionary.Label_height
-				intern_build_class_features (an_eiffel_class, implementation_features, dictionary.Implementation)
+				intern_build_class_features (an_eiffel_class, implementation_features)
 			end
 		end
 
-	intern_build_class_features (an_eiffel_class: like eiffel_class; a_list: SYSTEM_COLLECTIONS_ARRAYLIST; feature_clause: INTEGER) is
+	intern_build_class_features (an_eiffel_class: like eiffel_class; a_list: SYSTEM_COLLECTIONS_ARRAYLIST) is
 			-- Build class features from `a_list'.
 			-- | Call in loop `build_eiffel_feature'.
 		indexing
@@ -1110,7 +1130,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_list: a_list /= Void
 			non_void_eiffel_class: an_eiffel_class /= Void
-			valid_feature_clause: feature_clause >= dictionary.Initialization and feature_clause <= dictionary.Implementation
 		local
 			i: INTEGER
 			a_feature: ISE_REFLECTION_EIFFELFEATURE
@@ -1121,14 +1140,14 @@ feature {NONE} -- Implementation
 			loop
 				a_feature ?= a_list.Item (i)
 				if a_feature /= Void and then (a_feature.EiffelName /= Void and a_feature.EiffelName.Length > 0) then
-					build_eiffel_feature (an_eiffel_class, a_feature, feature_clause, i)
+					build_eiffel_feature (an_eiffel_class, a_feature)
 					panel_height := panel_height + dictionary.Margin
 				end
 				i := i + 1
 			end		
 		end
 
-	build_eiffel_feature (an_eiffel_class: like eiffel_class; a_feature: ISE_REFLECTION_EIFFELFEATURE; feature_clause: INTEGER; feature_number: INTEGER) is
+	build_eiffel_feature (an_eiffel_class: like eiffel_class; a_feature: ISE_REFLECTION_EIFFELFEATURE) is
 			-- Generate Eiffel feature from `a_feature' and `an_eiffel_class'.
 		indexing
 			external_name: "BuildEiffelFeature"
@@ -1136,8 +1155,6 @@ feature {NONE} -- Implementation
 			non_void_feature: a_feature /= Void
 			non_void_feature_name: a_feature.EiffelName /= Void
 			not_empty_feature_name: a_feature.EiffelName.Length > 0
-			valid_feature_clause: feature_clause >= dictionary.Initialization and feature_clause <= dictionary.Implementation
-			valid_feature_number: feature_number >= 0
 			non_void_eiffel_class: an_eiffel_class /= Void
 		local
 			is_unary_operator: BOOLEAN
@@ -1152,10 +1169,9 @@ feature {NONE} -- Implementation
 			argument_type: STRING
 			argument_name_width: INTEGER
 			argument_type_width: INTEGER
-			return_type_width: INTEGER
 			new_label_width: INTEGER
 			a_font: SYSTEM_DRAWING_FONT
-			an_array: ARRAY [INTEGER]
+			an_array: ARRAY [ANY]
 		do
 			is_unary_operator := an_eiffel_class.UnaryOperatorsFeatures.Contains (a_feature)	
 			label_width := 0
@@ -1202,10 +1218,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			new_label_width := new_label_width +  feature_name_width
-			create an_array.make (2)
-			an_array.put (0, feature_clause)
-			an_array.put (1, feature_number)
-			feature_names_boxes.add (a_text_box, an_array)
+			feature_names_boxes.add (a_text_box, a_feature)
 			
 				-- feature arguments
 			arguments := a_feature.Arguments
@@ -1222,11 +1235,19 @@ feature {NONE} -- Implementation
 						argument_name := an_argument.eiffelname
 						argument_type := an_argument.typeeiffelname
 					end
-					create a_text_box.make_textbox		
-					argument_name_width := text_box_width_from_text (argument_name, a_font)				
-					set_editable_text_box_properties (a_text_box, argument_name, new_label_width, panel_height, argument_name_width, dictionary.Feature_color)
-					new_label_width := new_label_width + argument_name_width 
-					
+					if a_feature.iscreationroutine then
+						create_label (argument_name, new_label_width, panel_height, dictionary.Feature_color, False)
+						new_label_width := new_label_width + label_width 
+					else
+						create a_text_box.make_textbox		
+						argument_name_width := text_box_width_from_text (argument_name, a_font)				
+						set_editable_text_box_properties (a_text_box, argument_name, new_label_width, panel_height, argument_name_width, dictionary.Feature_color)
+						new_label_width := new_label_width + argument_name_width 
+						create an_array.make (2)
+						an_array.put (0, a_feature)
+						an_array.put (1, an_argument)
+						feature_arguments_boxes.add (a_text_box, an_array)
+					end
 					create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 					new_label_width := new_label_width + label_width
 					
@@ -1237,11 +1258,6 @@ feature {NONE} -- Implementation
 						create_label (eiffel_dictionary.Semicolon, new_label_width, panel_height, dictionary.Text_color, False)
 						new_label_width := new_label_width + label_width
 					end
-					create an_array.make (3)
-					an_array.put (0, feature_clause)
-					an_array.put (1, feature_number)
-					an_array.put (2, i)
-					feature_arguments_boxes.add (a_text_box, an_array)
 					i := i + 1
 				end
 				create_label (eiffel_dictionary.Closingroundbracket, new_label_width, panel_height, dictionary.Text_color, False)
@@ -1257,41 +1273,10 @@ feature {NONE} -- Implementation
 			if a_feature.IsField and not a_feature.EiffelName.StartsWith (eiffel_dictionary.Propertysetprefix) then
 				create_label (eiffel_dictionary.Colon, new_label_width, panel_height, dictionary.Text_color, False)
 				new_label_width := new_label_width + label_width
-				create a_text_box.make_textbox
-				return_type_width := text_box_width_from_text (a_feature.returntype.typeeiffelname, a_font)
-				set_editable_text_box_properties (a_text_box, a_feature.returntype.typeeiffelname, new_label_width, panel_height, return_type_width, dictionary.Class_color)
+				create_label (a_feature.returntype.typeeiffelname, new_label_width, panel_height, dictionary.Class_color, False)
 			end
 			panel_height := panel_height + dictionary.Label_height
 		end	
-	
-	type_view_handler: TYPE_VIEW_HANDLER
-			-- Type view handler
-		indexing
-			external_name: "TypeViewHandler"
-		end
-
-	display_error_message (a_message: STRING) is
-			-- Display `a_message' in a text box at the bottom of the window.
-		indexing
-			external_name: "DisplayErrorMessage"
-		require
-			non_void_message: a_message /= Void
-			not_empty_message: a_message.length > 0
-		local
-			a_size: SYSTEM_DRAWING_SIZE
-			a_point: SYSTEM_DRAWING_POINT
-		do
-			create error_text_box.make_textbox
-			error_text_box.set_forecolor (dictionary.Red_color)
-			error_text_box.set_text (a_message)
-			a_size.set_width (dictionary.Window_width - 2 * dictionary.Margin)
-			a_size.set_height (dictionary.Label_height)
-			error_text_box.set_size (a_size)
-			a_point.set_x (dictionary.Margin)
-			a_point.set_y (dictionary.Window_height - 5 * dictionary.Margin - dictionary.Label_height - dictionary.Button_height)	
-			error_text_box.set_location (a_point)
-			controls.add (error_text_box)
-		end
 	
 	text_box_width_from_text (a_text: STRING; a_font: SYSTEM_DRAWING_FONT): INTEGER is
 			-- Width of text box with text `a_text' and font `a_font'.
@@ -1311,5 +1296,290 @@ feature {NONE} -- Implementation
 			tmp_label.set_font (a_font)
 			Result := tmp_label.width		
 		end
+
+	save_feature_modifications (text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX) is
+		indexing
+			description: "Save user modifications on the feature."
+			external_name: "SaveFeatureModifications"
+		require
+			non_void_text_box: text_box /= Void
+		local
+			an_array: ARRAY [ANY]
+			a_feature: ISE_REFLECTION_EIFFELFEATURE
+			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE	
+		do
+			if feature_names_boxes.containskey (text_box) and feature_modifications /= Void and modified_feature /= Void then
+				if feature_modifications.old_feature_name /= Void and then not feature_modifications.old_feature_name.tolower.equals_string (text_box.text.tolower) then
+					feature_modifications.set_new_feature_name (text_box.text)
+					type_modifications.add_feature_modification (modified_feature, feature_modifications)
+				end
+			elseif feature_arguments_boxes.containskey (text_box) then
+				an_array ?= feature_arguments_boxes.item (text_box)
+				if an_array /= Void and then an_array.count = 2 then
+					a_feature ?= an_array.item (0)
+					an_argument ?= an_array.item (1)
+					if (a_feature /= Void and then a_feature = modified_feature) and an_argument /= Void then
+						if not an_argument.eiffelname.tolower.equals_string (text_box.text.tolower) then
+							feature_modifications.add_argument_modification (an_argument, text_box.text)
+							type_modifications.add_feature_modification (modified_feature, feature_modifications)
+						end
+					end									
+				end							
+			end
+			feature_modifications := Void
+			modified_feature := Void
+		end
 		
+	errors_list_view: SYSTEM_WINDOWS_FORMS_LISTVIEW
+		indexing
+			description: "Errors list view"
+			external_name: "ErrorsListView"
+		end
+	
+	errors_table: SYSTEM_COLLECTIONS_HASHTABLE
+		indexing
+			description: "Key: Line number in list view; Value: Text box"
+			external_name: "ErrorsTable"
+		end
+		
+	display_errors (class_error_message: STRING; errors_in_features, errors_in_arguments: SYSTEM_COLLECTIONS_HASHTABLE) is
+			-- Build errors list view from `class_error_message', errors_in_features' and `errors_in_arguments' and display it.
+		indexing
+			external_name: "ErrorsListView"
+		local
+			a_size: SYSTEM_DRAWING_SIZE
+			a_point: SYSTEM_DRAWING_POINT
+			a_feature: ISE_REFLECTION_EIFFELFEATURE
+			an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+			an_array: ARRAY [ANY]
+			an_error_message: STRING
+			list_view_item: SYSTEM_WINDOWS_FORMS_LISTVIEWITEM
+			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
+			on_item_delegate: SYSTEM_EVENTHANDLER		
+		do
+			create errors_list_view.make_listview
+			errors_list_view.set_borderstyle (dictionary.List_view_border_style)
+			errors_list_view.set_checkboxes (False)
+			errors_list_view.set_fullrowselect (True)
+			errors_list_view.set_gridlines (True)
+			errors_list_view.set_multiselect (False)
+			errors_list_view.set_sorting (0)
+			errors_list_view.set_view (dictionary.View)
+			errors_list_view.set_activation (0)
+			errors_list_view.set_alignment (dictionary.Alignment)
+			errors_list_view.set_scrollable (True)
+			errors_list_view.set_tabindex (0)			
+			a_point.set_X (0)
+			a_point.set_Y (height - 5 * dictionary.Margin - 3 * dictionary.Label_height - dictionary.Button_height)	
+			errors_list_view.set_location (a_point)			
+			a_size.set_width (width - dictionary.Margin // 2)
+			a_size.set_height (4 * dictionary.Label_height)
+			errors_list_view.set_size (a_size)	
+			
+			create errors_table.make
+			if class_error_message /= Void and then class_error_message.length > 0 then
+				create list_view_item.make_1 (message_from_class_error (class_error_message))
+				list_view_item.set_forecolor (dictionary.Red_color)
+				list_view_item := errors_list_view.items.add_listviewitem (list_view_item)
+				errors_table.add (0, class_name_text_box)
+			end
+			
+			if errors_in_features /= Void and then errors_in_features.count > 0 then
+				enumerator := errors_in_features.keys.getenumerator
+				from
+				until
+					not enumerator.movenext
+				loop
+					a_feature ?= enumerator.current_
+					if a_feature /= Void then
+						an_error_message ?= errors_in_features.item (a_feature)
+						if an_error_message /= Void and then an_error_message.length > 0 then
+							create list_view_item.make_1 (message_from_feature_error (a_feature, an_error_message))
+							list_view_item.set_forecolor (dictionary.Red_color)
+							list_view_item := errors_list_view.items.add_listviewitem (list_view_item)
+							errors_table.add (errors_list_view.items.count - 1, feature_text_box (a_feature))
+						end
+					end
+				end
+			end
+			
+			if errors_in_arguments /= Void and then errors_in_arguments.count > 0 then
+				enumerator := errors_in_arguments.keys.getenumerator
+				from
+				until
+					not enumerator.movenext
+				loop
+					an_array ?= enumerator.current_
+					if an_array /= Void then
+						a_feature ?= an_array.item(0)
+						an_argument ?= an_array.item (1)
+						if a_feature /= Void and an_argument /= Void then
+							an_error_message ?= errors_in_arguments.item (an_array)
+							if an_error_message /= Void and then an_error_message.length > 0 then
+								create list_view_item.make_1 (message_from_argument_error (a_feature, an_argument, an_error_message))
+								list_view_item.set_forecolor (dictionary.Red_color)
+								list_view_item := errors_list_view.items.add_listviewitem (list_view_item)
+								errors_table.add (errors_list_view.items.count - 1, argument_text_box (an_argument, a_feature))
+							end
+						end
+					end
+				end
+			end	
+			create on_item_delegate.make_eventhandler (Current, $on_item)
+			errors_list_view.add_Click (on_item_delegate)
+			controls.add (errors_list_view)
+		end
+
+	message_from_class_error (an_error_message: STRING): STRING is
+		indexing
+			description: "Error message from`an_error_message'"
+			external_name: "MessageFromClassError"
+		require
+			non_void_error_message: an_error_message /= Void
+			not_empty_error_message: an_error_message.length > 0		
+		do
+			Result := dictionary.Error
+			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.Opening_round_bracket, dictionary.Class_name)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Closing_round_bracket, dictionary.Colon, dictionary.Space)
+			Result := Result.concat_string_string (Result, an_error_message)		
+		ensure
+			non_void_error_message: Result /= Void
+			not_empty_error_message: Result.length > 0		
+		end
+		
+	message_from_feature_error (a_feature: ISE_REFLECTION_EIFFELFEATURE; an_error_message: STRING): STRING is
+		indexing
+			description: "Error message from `a_feature' and `an_error_message'"
+			external_name: "MessageFromFeatureError"
+		require
+			non_void_feature: a_feature /= Void
+			non_void_error_message: an_error_message /= Void
+			not_empty_error_message: an_error_message.length > 0
+		do
+			Result := dictionary.Error
+			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.Opening_round_bracket, dictionary.Feature_string)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.eiffelname)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Closing_round_bracket, dictionary.Colon, dictionary.Space)
+			Result := Result.concat_string_string (Result, an_error_message)
+		ensure
+			non_void_error_message: Result /= Void
+			not_empty_error_message: Result.length > 0
+		end
+
+	message_from_argument_error (a_feature: ISE_REFLECTION_EIFFELFEATURE; an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; an_error_message: STRING): STRING is
+		indexing
+			description: "Error message from `a_feature' and `an_error_message'"
+			external_name: "MessageFromFeatureError"
+		require
+			non_void_feature: a_feature /= Void
+			non_void_error_message: an_error_message /= Void
+			not_empty_error_message: an_error_message.length > 0
+			non_void_argument: an_argument /= Void
+		do
+			Result := dictionary.Error
+			Result := Result.concat_string_string_string_string (Result, dictionary.Space, dictionary.Opening_round_bracket, dictionary.Feature_string)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Colon, dictionary.Space, a_feature.eiffelname)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Comma_separator, dictionary.Space, dictionary.Argument_string)
+			Result := Result.concat_string_string_string_string (Result, Dictionary.Colon, dictionary.Space, an_argument.eiffelname)
+			Result := Result.concat_string_string_string_string (Result, dictionary.Closing_round_bracket, dictionary.Colon, dictionary.Space)
+			Result := Result.concat_string_string (Result, an_error_message)
+		ensure
+			non_void_error_message: Result /= Void
+			not_empty_error_message: Result.length > 0
+		end
+	
+	on_item (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Action performed when user clicks on an item in the errors list view"
+			external_name: "OnItem"
+		require
+			non_void_sender: sender /= Void
+			non_void_arguments: arguments /= Void
+		local
+			selected_items: SELECTEDLISTVIEWITEMCOLLECTION_IN_SYSTEM_WINDOWS_FORMS_LISTVIEW		
+			is_focused: BOOLEAN
+			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+		do
+			selected_items := errors_list_view.selecteditems
+			if selected_items /= Void then
+				check
+					only_one_item_selected: selected_items.count = 1
+				end
+				a_text_box ?= errors_table.item (selected_items.item (0).index)
+				if a_text_box /= Void then
+					is_focused := a_text_box.focus
+					a_text_box.select_
+				end
+			end
+		end
+
+	feature_text_box (a_feature: ISE_REFLECTION_EIFFELFEATURE): SYSTEM_WINDOWS_FORMS_TEXTBOX is
+		indexing
+			description: "Text box corresponding to `a_feature'."
+			external_name: "FeatureTextBox"
+		require
+			non_void_feature: a_feature /= Void
+			non_void_feature_names_text_boxes: feature_names_boxes /= Void
+			is_in_feature_names_text_boxes: feature_names_boxes.containsvalue (a_feature)
+		local
+			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
+			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+			corresponding_feature: ISE_REFLECTION_EIFFELFEATURE
+		do
+			enumerator := feature_names_boxes.keys.getenumerator
+			from
+			until
+				not enumerator.movenext or Result /= Void 
+			loop
+				a_text_box ?= enumerator.current_
+				if a_text_box /= Void then
+					corresponding_feature ?= feature_names_boxes.item (a_text_box)
+					if corresponding_feature /= Void and then corresponding_feature.eiffelname.tolower.equals_string (a_feature.eiffelname.tolower) then
+						Result := a_text_box
+					end
+				end
+			end
+		ensure
+			non_void_text_box: Result /= Void
+		end
+
+	argument_text_box (an_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE; a_feature: ISE_REFLECTION_EIFFELFEATURE): SYSTEM_WINDOWS_FORMS_TEXTBOX is
+		indexing
+			description: "Text box corresponding to `an_argument' in feature `a_feature'."
+			external_name: "ArgumentTextBox"
+		require
+			non_void_feature: a_feature /= Void
+			non_void_arguments: an_argument /= Void
+			non_void_feature_arguments_boxes: feature_arguments_boxes /= Void
+		local
+			enumerator: SYSTEM_COLLECTIONS_IENUMERATOR
+			a_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
+			an_array: ARRAY [ANY]
+			corresponding_feature: ISE_REFLECTION_EIFFELFEATURE
+			corresponding_argument: ISE_REFLECTION_NAMEDSIGNATURETYPE
+		do
+			enumerator := feature_arguments_boxes.keys.getenumerator
+			from
+			until
+				not enumerator.movenext or Result /= Void 
+			loop
+				a_text_box ?= enumerator.current_
+				if a_text_box /= Void then
+					an_array ?= feature_arguments_boxes.item (a_text_box)
+					if an_array /= Void then
+						corresponding_feature ?= an_array.item (0)
+						corresponding_argument ?= an_array.item (1)				
+						if (corresponding_feature /= Void and then corresponding_feature.eiffelname.tolower.equals_string (a_feature.eiffelname.tolower)) and (corresponding_argument /= Void and then corresponding_argument.eiffelname.tolower.equals_string (an_argument.eiffelname.tolower)) then
+							Result := a_text_box
+						end
+					end
+				end
+			end
+		ensure
+			non_void_text_box: Result /= Void
+		end
+		
+invariant
+	non_void_type_modifications: type_modifications /= Void
+	
 end -- class TYPE_VIEW

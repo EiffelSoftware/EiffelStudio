@@ -6,8 +6,11 @@ class
 	REMOVE_DIALOG
 	
 inherit
-	SYSTEM_WINDOWS_FORMS_FORM
-
+	DIALOG
+		redefine
+			dictionary
+		end
+		
 create
 	make
 
@@ -27,7 +30,6 @@ feature {NONE} -- Initialization
 			return_value: INTEGER
 		do
 			make_form
-			create dictionary
 			assembly_descriptor := an_assembly_descriptor
 			dependancies := assembly_dependancies
 			initialize_gui
@@ -38,37 +40,41 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-	
-	dictionary: REMOVE_DIALOG_DICTIONARY
-			-- Dictionary
+
+	non_removable_assemblies: SYSTEM_COLLECTIONS_ARRAYLIST is
+			-- | SYSTEM_COLLECTIONS_ARRAYLIST [ISE_REFLECTION_ASSEMBLYDESCRIPTOR]
 		indexing
-			external_name: "Dictionary"
+			description: "List of assemblies that cannot be removed from the Eiffel assembly cache"
+			external_name: "NonRemovableAssemblies"
+		local
+			special_assemblies: SPECIAL_ASSEMBLIES
+		once
+			create special_assemblies
+			Result := special_assemblies.non_removable_assemblies
+		ensure
+			non_removable_assemblies_created: Result /= Void
 		end
 		
-	assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			-- Assembly descriptor
-		indexing
-			external_name: "AssemblyDescriptor"
-		end
-	
 	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
 			-- Assembly dependancies
 		indexing
 			external_name: "Dependancies"
 		end
-
-	assembly_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Assembly label
+	
+	removable_dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
 		indexing
-			external_name: "AssemblyLabel"
+			description: "Removable dependancies"
+			external_name: "RemovableDependancies"
 		end
-
-	assembly_descriptor_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Assembly descriptor label
+		
+	dictionary: REMOVE_DIALOG_DICTIONARY is
+			-- Dictionary
 		indexing
-			external_name: "AssemblyDescriptorLabel"
+			external_name: "Dictionary"
+		once
+			create Result
 		end
-
+	
 	question_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Question label
 		indexing
@@ -92,19 +98,65 @@ feature -- Access
 		indexing
 			external_name: "NoButton"
 		end
-		
-	Window_height: INTEGER is 
-			-- Window height
+
+feature -- Status Setting
+
+	is_non_removable_assembly (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
 		indexing
-			external_name: "WindowHeight"
+			description: "Is assembly corresponding to `a_descriptor' a non-removable assembly?"
+			external_name: "IsNonRemovableAssembly"
+		require
+			non_void_descriptor: a_descriptor /= Void
+		local
+			i: INTEGER
+			an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
 		do
-			if dependancies.count > 0 then
-				Result := 220
-			else
-				Result := 180
+			from
+			until
+				i = non_removable_assemblies.count or Result
+			loop
+				an_assembly_descriptor ?= non_removable_assemblies.item (i)
+				if an_assembly_descriptor /= Void then
+					Result := an_assembly_descriptor.name.tolower.equals_string (a_descriptor.name.tolower) and
+							an_assembly_descriptor.version.tolower.equals_string (a_descriptor.version.tolower) and
+							an_assembly_descriptor.culture.tolower.equals_string (a_descriptor.culture.tolower) and
+							an_assembly_descriptor.publickey.tolower.equals_string (a_descriptor.publickey.tolower) 
+				end
+				i := i + 1
 			end
 		end
-
+		
+	non_removable_dependancies: BOOLEAN is
+		indexing
+			description: "Are dependancies non-removable?"
+			external_name: "NonRemovableDependancies"
+		local
+			i: INTEGER
+			an_assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			support: ISE_REFLECTION_CONVERSIONSUPPORT
+			a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
+		do
+			create support.make_conversionsupport		
+			from
+				Result := True
+				create removable_dependancies.make (dependancies.count)
+			until
+				i = dependancies.count
+			loop
+				an_assembly_name := dependancies.item (i)
+				if an_assembly_name /= Void then
+					a_descriptor := support.assemblydescriptorfromname (an_assembly_name)
+					if a_descriptor /= Void then
+						if not is_non_removable_assembly (a_descriptor) then
+							removable_dependancies.put (i, an_assembly_name)
+						end
+						Result := Result and is_non_removable_assembly (a_descriptor)
+					end
+				end
+				i := i + 1
+			end
+		end
+		
 feature -- Basic Operations
 
 	initialize_gui is
@@ -116,10 +168,6 @@ feature -- Basic Operations
 			a_point: SYSTEM_DRAWING_POINT
 			label_font: SYSTEM_DRAWING_FONT
 			a_font: SYSTEM_DRAWING_FONT
-			i: INTEGER
-			a_dependancy: SYSTEM_REFLECTION_ASSEMBLYNAME
-			dependancy_label: SYSTEM_WINDOWS_FORMS_LABEL	
-			type: SYSTEM_TYPE
 			on_yes_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_no_event_handler_delegate: SYSTEM_EVENTHANDLER
 		do
@@ -127,34 +175,29 @@ feature -- Basic Operations
 			set_text (dictionary.Title)
 			set_borderstyle (dictionary.Border_style)
 			a_size.set_Width (dictionary.Window_width)
-			a_size.set_Height (Window_height)
-			set_size (a_size)			
+			a_size.set_Height (dictionary.Window_height)
+			set_size (a_size)	
+			set_icon (dictionary.Remove_icon)
+			set_maximizebox (False)
 
-				-- `Selected assembly: '
+				-- Assembly name
 			create assembly_label.make_label
-			assembly_label.set_text (dictionary.Assembly_label_text)
+			assembly_label.set_text (assembly_descriptor.name)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size,  dictionary.Bold_style) 
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size,  dictionary.Bold_style) 
 			assembly_label.set_font (label_font)
 			
-			create assembly_descriptor_label.make_label
-			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style) 
-			assembly_descriptor_label.set_font (a_font)			
-			assembly_descriptor_label.set_text (dictionary.Assembly_descriptor_text (assembly_descriptor))
-			a_point.set_X (dictionary.Margin)
-			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
-			assembly_descriptor_label.set_location (a_point)			
-			assembly_descriptor_label.set_autosize (True)
+			create_assembly_labels
 
 				-- Question to the user
 			create question_label.make_label
 			question_label.set_text (dictionary.Question_label_text)
 			a_point.set_X (dictionary.Margin)
-			a_point.set_Y (5 * dictionary.Margin +  dictionary.Label_height)
+			a_point.set_Y (2 * dictionary.Margin +  4 * dictionary.Label_height)
 			question_label.set_location (a_point)
 			question_label.set_autosize (True)	
 			question_label.set_font (label_font)
@@ -163,10 +206,11 @@ feature -- Basic Operations
 			if dependancies.count > 0 then
 					-- Dependancies check box (not checked by default)		
 				create dependancies_check_box.make_checkbox
+				create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size,  dictionary.Regular_style) 
 				dependancies_check_box.set_font (a_font)
 				dependancies_check_box.set_text (dictionary.Dependancies_check_box_text)
 				a_point.set_X (dictionary.Margin)
-				a_point.set_Y (7 * dictionary.Margin + 2 * dictionary.Label_height)
+				a_point.set_Y (3 * dictionary.Margin + 5 * dictionary.Label_height)
 				dependancies_check_box.set_location (a_point)
 				a_size.set_height (dictionary.Label_height)
 				dependancies_check_box.set_size (a_size)
@@ -178,26 +222,27 @@ feature -- Basic Operations
 				-- Yes button
 			create yes_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - dictionary.Button_width - (dictionary.Margin //2))
-			a_point.set_Y (Window_height - 4 * dictionary.Margin - dictionary.Button_height)
+			a_point.set_Y (dictionary.Window_height - 3 * dictionary.Margin - dictionary.Button_height)
 			yes_button.set_location (a_point)
+			yes_button.set_height (dictionary.Button_height)
+			yes_button.set_width (dictionary.Button_width)
 			yes_button.set_text (dictionary.Yes_button_label)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_yes_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnYesEventHandler")
+			create on_yes_event_handler_delegate.make_eventhandler (Current, $on_yes_event_handler)
 			yes_button.add_Click (on_yes_event_handler_delegate)
 
 				-- No button
 			create no_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			a_point.set_Y (Window_height - 4 * dictionary.Margin - dictionary.Button_height)
+			a_point.set_Y (dictionary.Window_height - 3 * dictionary.Margin - dictionary.Button_height)
 			no_button.set_location (a_point)
 			no_button.set_text (dictionary.No_button_label)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_no_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnNoEventHandler")
+			no_button.set_height (dictionary.Button_height)
+			no_button.set_width (dictionary.Button_width)
+			create on_no_event_handler_delegate.make_eventhandler (Current, $on_no_event_handler)
 			no_button.add_Click (on_no_event_handler_delegate)
 			
 				-- Addition of controls
 			controls.add (assembly_label)
-			controls.add (assembly_descriptor_label)
 			controls.add (question_label)
 			controls.add (yes_button)
 			controls.add (no_button)
@@ -216,18 +261,38 @@ feature -- Event handling
 			warning_dialog: WARNING_DIALOG
 			type: SYSTEM_TYPE
 			on_confirmation_event_handler_delegate: SYSTEM_EVENTHANDLER
+			returned_value: INTEGER
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			if dependancies.count > 0 then
 				if dependancies_check_box.Checked then
-					create on_confirmation_event_handler_delegate.make_eventhandler (Current, $remove_assembly_and_dependancies)
-					create warning_dialog.make (assembly_descriptor, dependancies, dictionary.Warning_text, on_confirmation_event_handler_delegate)
+					if non_removable_dependancies then
+						close
+						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_removable_dependancies, dictionary.Information_caption, dictionary.Ok_message_box_button, dictionary.Information_icon)						
+						if not is_non_removable_assembly (assembly_descriptor) then
+							remove_assembly
+						end
+					else
+						create on_confirmation_event_handler_delegate.make_eventhandler (Current, $remove_assembly_and_dependancies)
+						create warning_dialog.make (assembly_descriptor, removable_dependancies, dictionary.Warning_text, dictionary.Caption_text, on_confirmation_event_handler_delegate)
+					end
 				else
-					remove_assembly
-					close
+					if not is_non_removable_assembly (assembly_descriptor) then
+						remove_assembly
+						close
+					else
+						close
+						returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_removable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+					end
 				end
 			else
-				remove_assembly
-				close
+				if not is_non_removable_assembly (assembly_descriptor) then
+					remove_assembly
+					close
+				else
+					close
+					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_removable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				end
 			end
 		end
 
@@ -243,19 +308,7 @@ feature -- Event handling
 		end
 		
 feature {NONE} -- Implementation
-
-	type_factory: SYSTEM_TYPE
-			-- Statics needed to create a type
-		indexing
-			external_name: "TypeFactory"
-		end
 		
-	delegate_factory: SYSTEM_DELEGATE
-			-- Statics needed to create a delegate
-		indexing
-			external_name: "DelegateFactory"
-		end
-
 	remove_assembly is
 			-- Remove the assembly corresponding to `assembly_descriptor'.
 		indexing
@@ -265,11 +318,17 @@ feature {NONE} -- Implementation
 		local
 			reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
 			retried: BOOLEAN
+			returned_value: INTEGER
+			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			if not retried then
 				create reflection_interface.make_reflectioninterface
 				reflection_interface.MakeReflectionInterface
 				reflection_interface.removeassembly (assembly_descriptor)
+			else
+				if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
+					returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+				end
 			end
 		rescue
 			retried := True
@@ -301,7 +360,9 @@ feature {NONE} -- Implementation
 				loop
 					a_dependancy := dependancies.item (i)
 					a_descriptor := convert.assemblydescriptorfromname (a_dependancy)
-					reflection_interface.removeassembly (a_descriptor)
+					if not non_removable_assemblies.contains (a_descriptor) then
+						reflection_interface.removeassembly (a_descriptor)
+					end
 					i := i + 1
 				end
 			end

@@ -6,17 +6,21 @@ class
 	WARNING_DIALOG
 	
 inherit
-	SYSTEM_WINDOWS_FORMS_FORM
-
+	DEPENDANCY_DIALOG
+		redefine
+			dictionary
+		end
+		
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies; a_question: like question_label_text; a_call_back: like call_back) is
+	make (an_assembly_descriptor: like assembly_descriptor; assembly_dependancies: like dependancies; a_question: like question_label_text; a_caption_text: like caption_text; a_call_back: like call_back) is
 			-- Set `assembly_descriptor' with `an_assembly_descriptor'.
 			-- Set `dependancies' with `assembly_dependancies'.
 			-- Set `question_label_text' with `a_question'.
+			-- Set `caption_text' with `a_caption_text'.
 			-- Set `call_back' with `a_call_back'.
 		indexing
 			external_name: "Make"
@@ -28,47 +32,40 @@ feature {NONE} -- Initialization
 			not_empty_dependancies: assembly_dependancies.count > 0
 			non_void_question: a_question /= Void
 			not_empty_question: a_question.length > 0
+			non_void_caption_text: a_caption_text /= Void
+			not_empty_caption_text: a_caption_text.length > 0
 			non_void_call_back: a_call_back /= Void
 		local
 			return_value: INTEGER
 		do
 			make_form
-			create dictionary
 			assembly_descriptor := an_assembly_descriptor
 			dependancies := assembly_dependancies
 			question_label_text := a_question
+			caption_text := a_caption_text
 			call_back := a_call_back
+			build_dependancies_list
 			initialize_gui
 			return_value := showdialog
 		ensure
 			assembly_descriptor_set: assembly_descriptor = an_assembly_descriptor
 			dependancies_set: dependancies = assembly_dependancies
 			question_set: question_label_text.equals_string (a_question)
+			caption_text_set: caption_text.equals_string (a_caption_text)
 			call_back_set: call_back = a_call_back
+			non_void_dependancies_list: dependancies_list /= Void
 		end
 
 feature -- Access
 	
-	console: SYSTEM_CONSOLE
-	
-	dictionary: WARNING_DIALOG_DICTIONARY
+	dictionary: WARNING_DIALOG_DICTIONARY is
 			-- Dictionary
 		indexing
 			external_name: "Dictionary"
+		once
+			create Result
 		end
 		
-	assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR
-			-- Assembly descriptor
-		indexing
-			external_name: "AssemblyDescriptor"
-		end
-	
-	dependancies: ARRAY [SYSTEM_REFLECTION_ASSEMBLYNAME]
-			-- Assembly dependancies
-		indexing
-			external_name: "Dependancies"
-		end
-
 	question_label_text: STRING 
 			-- Question to the user
 		indexing
@@ -80,29 +77,17 @@ feature -- Access
 		indexing
 			external_name: "CallBack"
 		end
-		
-	assembly_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Assembly label
-		indexing
-			external_name: "AssemblyLabel"
-		end
-
-	assembly_descriptor_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Assembly descriptor label
-		indexing
-			external_name: "AssemblyDescriptorLabel"
-		end
-
-	dependancies_label: SYSTEM_WINDOWS_FORMS_LABEL
-			-- Dependancies label
-		indexing
-			external_name: "DependanciesLabel"
-		end
 
 	question_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Question label
 		indexing
 			external_name: "QuestionLabel"
+		end
+	
+	caption_text: STRING
+		indexing
+			description: "Text that appears in the blue header of the data grid"
+			external_name: "CaptionText"
 		end
 		
 	yes_button: SYSTEM_WINDOWS_FORMS_BUTTON
@@ -117,14 +102,6 @@ feature -- Access
 			external_name: "NoButton"
 		end
 		
-	Window_height: INTEGER is 
-			-- Window height
-		indexing
-			external_name: "WindowHeight"
-		once
-			Result := dictionary.Label_height * (dependancies.count + 5) + (dependancies.count + 8) * dictionary.Margin + dictionary.Button_height
-		end
-		
 feature -- Basic Operations
 
 	initialize_gui is
@@ -135,11 +112,6 @@ feature -- Basic Operations
 			a_size: SYSTEM_DRAWING_SIZE
 			a_point: SYSTEM_DRAWING_POINT
 			label_font: SYSTEM_DRAWING_FONT
-			a_font: SYSTEM_DRAWING_FONT
-			i: INTEGER
-			a_dependancy: SYSTEM_REFLECTION_ASSEMBLYNAME
-			dependancy_label: SYSTEM_WINDOWS_FORMS_LABEL	
-			type: SYSTEM_TYPE
 			on_yes_event_handler_delegate: SYSTEM_EVENTHANDLER
 			on_no_event_handler_delegate: SYSTEM_EVENTHANDLER
 		do
@@ -147,58 +119,38 @@ feature -- Basic Operations
 			set_text (dictionary.Title)
 			set_borderstyle (dictionary.Border_style)
 			a_size.set_Width (dictionary.Window_width)
-			a_size.set_Height (Window_height)
-			set_size (a_size)		
+			a_size.set_Height (dictionary.Window_height)
+			set_size (a_size)	
+			set_icon (dictionary.Assembly_manager_icon)
+			set_maximizebox (False)
 
-				-- `Selected assembly: '
+				-- Assembly name
 			create assembly_label.make_label
-			assembly_label.set_text (dictionary.Assembly_label_text)
+			assembly_label.set_text (assembly_descriptor.name)
 			a_point.set_X (dictionary.Margin)
 			a_point.set_Y (dictionary.Margin)
 			assembly_label.set_location (a_point)
 			a_size.set_Height (dictionary.Label_height)
 			assembly_label.set_size (a_size)
-			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Label_font_size, dictionary.Bold_style)  
+			create label_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Bold_style)  
 			assembly_label.set_font (label_font)
 			
-			create assembly_descriptor_label.make_label
-			create a_font.make_font_10 (dictionary.Font_family_name, dictionary.Font_size, dictionary.Regular_style) 
-			assembly_descriptor_label.set_font (a_font)
-			assembly_descriptor_label.set_text (dictionary.Assembly_descriptor_text (assembly_descriptor))
-			a_point.set_X (dictionary.Margin)
-			a_point.set_Y (dictionary.Margin + dictionary.Label_height)
-			assembly_descriptor_label.set_location (a_point)			
-			assembly_descriptor_label.set_autosize (True)
+			create_assembly_labels
 			
 				-- `Dependancies: '
-			create dependancies_label.make_label
-			dependancies_label.set_text (dictionary.Dependancies_label_text)
-			a_point.set_X (dictionary.Margin)
-			a_point.set_Y (4 * dictionary.Margin + dictionary.Label_height)
-			dependancies_label.set_location (a_point)
-			dependancies_label.set_autosize (True)
-			dependancies_label.set_font (label_font)
-			from
-			until
-				i = dependancies.count
-			loop
-				a_dependancy := dependancies.item (i)
-				create dependancy_label.make_label
-				dependancy_label.set_font (a_font)
-				dependancy_label.set_text (a_dependancy.fullname)
-				a_point.set_X (dictionary.Margin)
-				a_point.set_Y ( (5 + i) * dictionary.Margin + (2 + i) * dictionary.Label_height)
-				dependancy_label.set_location (a_point)			
-				dependancy_label.set_autosize (True)					
-				controls.add (dependancy_label)
-				i := i + 1
-			end 
+			build_table
+			a_size.set_width (dictionary.Window_width - dictionary.Margin // 2)
+			a_size.set_height (dictionary.Window_height - 7 * Dictionary.Margin - 4 * dictionary.Label_height - dictionary.Button_height)
+			data_grid.set_Size (a_size)
+			data_grid.set_captiontext (caption_text)
+			display_dependancies
+			controls.add (data_grid)
 
 				-- Question to the user
 			create question_label.make_label
 			question_label.set_text (Question_label_text)
 			a_point.set_X (dictionary.Margin)
-			a_point.set_Y (dictionary.Margin * (dependancies.count + 6) + dictionary.Label_height * (dependancies.count + 2))
+			a_point.set_Y (dictionary.Window_height - 4 * dictionary.Margin - dictionary.Label_height - dictionary.Button_height)
 			question_label.set_location (a_point)
 			question_label.set_autosize (True)	
 			question_label.set_font (label_font)
@@ -206,26 +158,27 @@ feature -- Basic Operations
 				-- Yes button
 			create yes_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) - dictionary.Button_width - (dictionary.Margin //2))
-			a_point.set_Y (Window_height - 4 * dictionary.Margin - dictionary.Button_height)
+			a_point.set_Y (dictionary.Window_height - 3 * dictionary.Margin - dictionary.Button_height)
 			yes_button.set_location (a_point)
+			yes_button.set_width (dictionary.Button_width)
+			yes_button.set_height (dictionary.Button_height)
 			yes_button.set_text (dictionary.Yes_button_label)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_yes_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnYesEventHandler")
+			create on_yes_event_handler_delegate.make_eventhandler (Current, $on_yes_event_handler)
 			yes_button.add_Click (on_yes_event_handler_delegate)
 
 				-- No button
 			create no_button.make_button
 			a_point.set_X ((dictionary.Window_width // 2) + (dictionary.Margin //2))
-			a_point.set_Y (Window_height - 4 * dictionary.Margin - dictionary.Button_height)
+			a_point.set_Y (dictionary.Window_height - 3 * dictionary.Margin - dictionary.Button_height)
 			no_button.set_location (a_point)
+			no_button.set_width (dictionary.Button_width)
+			no_button.set_height (dictionary.Button_height)
 			no_button.set_text (dictionary.No_button_label)
-			type := type_factory.GetType_String (dictionary.System_event_handler_type)
-			on_no_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnNoEventHandler")
+			create on_no_event_handler_delegate.make_eventhandler (Current, $on_no_event_handler)
 			no_button.add_Click (on_no_event_handler_delegate)
 			
 				-- Addition of controls
 			controls.add (assembly_label)
-			controls.add (assembly_descriptor_label)
 			controls.add (dependancies_label)
 			controls.add (question_label)
 			controls.add (yes_button)
@@ -244,12 +197,16 @@ feature -- Event handling
 		local
 			an_array: ARRAY [ANY]
 			object_invoked: ANY
+			retried: BOOLEAN
 		do
 			close
-			yes_button.set_enabled (False)
-			no_button.set_enabled (False)
-			create an_array.make (0)
-			object_invoked := call_back.dynamicinvoke (an_array)
+			if not retried then
+				create an_array.make (0)
+				object_invoked := call_back.dynamicinvoke (an_array)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	on_no_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
@@ -261,20 +218,6 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		do
 			close
-		end
-		
-feature {NONE} -- Implementation
-
-	type_factory: SYSTEM_TYPE
-			-- Statics needed to create a type
-		indexing
-			external_name: "TypeFactory"
-		end
-		
-	delegate_factory: SYSTEM_DELEGATE
-			-- Statics needed to create a delegate
-		indexing
-			external_name: "DelegateFactory"
 		end
 			
 end -- class WARNING_DIALOG

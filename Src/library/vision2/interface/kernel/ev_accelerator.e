@@ -13,7 +13,7 @@ class
 creation
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (code: INTEGER; shift, alt, control: BOOLEAN) is
 			-- Create an accelerator object where `keycode' is a

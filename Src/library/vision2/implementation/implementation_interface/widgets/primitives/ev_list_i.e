@@ -47,12 +47,6 @@ feature -- Status report
 		deferred
 		end
 
-	pixmaps_width: INTEGER
-			-- Width of displayed pixmaps in `Current'.
-
-	pixmaps_height: INTEGER
-			-- Height of displayed pixmaps in `Current'.
-
 feature -- Status setting
 
 	enable_multiple_selection is
@@ -64,39 +58,6 @@ feature -- Status setting
 			-- Allow only one item to be selected.
 		deferred
 		end
-
-	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
-			-- Set the size of displayed pixmaps in `Current' to
-			-- `a_width' by `a_height'.
-		do
-			if pixmaps_width /= a_width or pixmaps_height /= a_height then
-				pixmaps_width := a_width
-				pixmaps_height := a_height
-				pixmaps_size_changed
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	pixmaps_size_changed is
-			-- The size of the displayed pixmaps has just
-			-- changed.
-		do
-			-- Do nothing by default
-		end
-
-	initialize_pixmaps is
-			-- Initialize `Current'.
-		do
-			pixmaps_width := default_pixmaps_width
-			pixmaps_height := default_pixmaps_height
-		end
-
-	default_pixmaps_width: INTEGER is 16
-		-- Default width for pixmaps
-
-	default_pixmaps_height: INTEGER is 16
-		-- Default height for pixmaps
 	
 feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 

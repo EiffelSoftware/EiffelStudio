@@ -58,6 +58,22 @@ feature -- Access
 			end
 		end	
 
+	home_directory_name: STRING is
+			-- Directory name corresponding to the home directory.
+		require
+			home_directory_supported: Operating_environment.home_directory_supported
+		do
+			Result := eif_home_directory_name
+		end
+
+	root_directory_name: STRING is
+			-- Directory name corresponding to the root directory.
+		require
+			root_directory_supported: Operating_environment.root_directory_supported
+		do
+			Result := eif_home_directory_name
+		end
+
 feature -- Status
 
 	return_code : INTEGER 
@@ -123,6 +139,18 @@ feature {NONE} -- External
 			"C"
 		alias 
 			"eif_system"
+		end
+
+	eif_home_directory_name: STRING is
+			-- Directory name corresponding to the home directory
+		external
+			"C"
+		end
+
+	eif_root_directory_name: STRING is
+			-- Directory name corresponding to the root directory
+		external
+			"C"
 		end
 
 end -- class EXECUTION_ENVIRONMENT

@@ -62,10 +62,10 @@ feature {NONE}
 					error_window.put_string (temp);
 				else
 					finalization_actions (argument);
-					tool_resynchronization (argument);
 					launch_c_compilation (argument);
 				end;
 			end;
+			tool_resynchronization (argument);
 			restore_cursors;
 		end;
 

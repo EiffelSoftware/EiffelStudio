@@ -1,6 +1,6 @@
 RUNTIME_SRC = eiffel_type_info.cs eiffel_derivation.cs runtime.cs gen_conf.cs runtime_assembly_info.cs assertions.cs types/*.cs custom_attributes/*.cs enums/*.cs
-#CSFLAGS = -nologo -w:4 -optimize+
-CSFLAGS = -nologo -w:4 -debug -d:ASSERTIONS
+CSFLAGS = -nologo -w:4 -optimize+
+#CSFLAGS = -nologo -w:4 -debug -d:ASSERTIONS
 GACFLAGS = -nologo
 MKDIR = -mkdir
 RMDIR = -rd /q /s

@@ -41,6 +41,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WORD_OPERATIONS
+		export
+			{NONE} all
+		end
+
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
@@ -159,7 +164,7 @@ feature -- Access
 feature -- Status report
 
 	destroyed: BOOLEAN is
-			-- Is Current widget destroyed?
+			-- Is Current widget destroyed ?
 		do
 			Result := not exists
 		end
@@ -203,7 +208,11 @@ feature -- Status setting
 	set_expand (flag: BOOLEAN) is
 			-- Make `flag' the new expand option.
 		do
-			expandable := flag	
+			expandable := flag
+			-- May be replaced by a child_expand changed.
+			if parent_imp /= Void then
+				parent_imp.notify_change (2+1)
+			end
 		end
 
 	set_horizontal_resize (flag: BOOLEAN) is
@@ -222,7 +231,7 @@ feature -- Status setting
 					resize_type := 0
 				end				
 			end
-			if parent_imp /= Void and then parent_imp.already_displayed then
+			if parent_imp /= Void then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end
@@ -243,7 +252,7 @@ feature -- Status setting
 					resize_type := 0
 				end				
 			end
-			if parent_imp /= Void and then parent_imp.already_displayed then
+			if parent_imp /= Void then
 				parent_ask_resize (child_cell.width, child_cell.height)
 			end
 		end
@@ -252,8 +261,8 @@ feature -- Status setting
 			-- Initialize the size of the widget.
 			-- Redefine by some widgets.
 		do
-			set_minimum_width (0)
-			set_minimum_height (0)
+			internal_set_minimum_width (0)
+			internal_set_minimum_height (0)
 		end
 
 feature -- Element change
@@ -549,12 +558,6 @@ feature -- Implementation
 			end
 		end
 
-	on_first_display is
-			-- Called by the top_level window when it is displayed
-			-- for the first time.
-		deferred
-		end
-
 feature {NONE} -- Implementation, mouse button events
 
 	get_button_data (button, keys, x_pos, y_pos: INTEGER): EV_BUTTON_EVENT_DATA is
@@ -797,6 +800,85 @@ feature {NONE} -- Implementation, cursor of the widget
 			end
 		end
 
+feature {WEL_DISPATCHER}
+
+	window_process_message (hwnd: POINTER; msg,
+			wparam, lparam: INTEGER): INTEGER is
+			-- Call the routine `on_*' corresponding to the
+			-- message `msg'.
+		require
+			exists: exists
+		do
+			if msg = Wm_mousemove then
+				on_mouse_move (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_setcursor then
+				on_set_cursor (cwin_lo_word (lparam))
+			elseif msg = Wm_size then
+				on_size (wparam,
+					cwin_lo_word (lparam),
+					cwin_hi_word (lparam))
+			elseif msg = Wm_move then
+				on_move (cwin_lo_word (lparam),
+					cwin_hi_word (lparam))
+			elseif msg = Wm_lbuttondown then
+				on_left_button_down (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = wm_lbuttonup then
+				on_left_button_up (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_lbuttondblclk then
+				on_left_button_double_click (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_mbuttondown then
+				on_middle_button_down (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_mbuttonup then
+				on_middle_button_up (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_mbuttondblclk then
+				on_middle_button_double_click (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_rbuttondown then
+				on_right_button_down (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_rbuttonup then
+				on_right_button_up (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_rbuttondblclk then
+				on_right_button_double_click (wparam,
+					mouse_message_x (lparam),
+					mouse_message_y (lparam))
+			elseif msg = Wm_timer then
+				on_timer (wparam)
+			elseif msg = Wm_setfocus then
+				on_set_focus
+			elseif msg = Wm_killfocus then
+				on_kill_focus
+			elseif msg = Wm_keydown then
+				on_key_down (wparam, lparam)
+			elseif msg = Wm_keyup then
+				on_key_up (wparam, lparam)
+			elseif msg = Wm_showwindow then
+				on_wm_show_window (wparam, lparam)
+			elseif msg = Wm_notify then
+				on_wm_notify (wparam, lparam)
+			elseif msg = Wm_destroy then
+				on_wm_destroy
+			else
+				default_process_message (msg, wparam, lparam)
+			end
+		end
+
 feature {NONE} -- Implementation, pick and drop
 
 	widget_source: EV_WIDGET_IMP is
@@ -852,6 +934,42 @@ feature -- Deferred features
 		deferred
 		end
 
+	on_size (size_type, a_width, a_height: INTEGER) is
+		deferred
+		end
+
+	on_move (x_pos, y_pos: INTEGER) is
+			-- Wm_move message.
+		deferred
+		end
+
+	on_wm_show_window (wparam, lparam: INTEGER) is
+			-- Wm_showwindow message
+		deferred
+		end
+
+	on_wm_notify (wparam, lparam: INTEGER) is
+			-- Wm_notify message
+		deferred
+		end
+
+	on_wm_destroy is
+			-- Wm_destroy message.
+			-- The window must be unregistered
+		deferred
+		end
+
+	on_timer (timer_id: INTEGER) is
+			-- Wm_timer message.
+		deferred
+		end
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		deferred
+		end
+
 	wel_parent: WEL_WINDOW is
 		deferred
 		end
@@ -873,12 +991,10 @@ feature -- Deferred features
 		end
 
 	client_rect: WEL_RECT is
-			-- Used by EV_SPLIT_AREA_IMP.
 		deferred
 		end
 
 	invalidate is
-			-- Used by EV_SPLIT_AREA_IMP
 		deferred
 		end
 
@@ -888,6 +1004,24 @@ feature -- Deferred features
 
 	disable_default_processing is
 		deferred
+		end
+
+	mouse_message_x (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := cwin_lo_word (lparam)
+		end
+
+	mouse_message_y (lparam: INTEGER): INTEGER is
+			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			Result := cwin_hi_word (lparam)
 		end
 
 end -- class EV_WIDGET_IMP

@@ -167,58 +167,6 @@ rt_public int eifattrtype (char *attr_name, EIF_TYPE_ID cid) {
 }  
 
 /*
- * Type ID handling
- */
-
-rt_public EIF_TYPE_ID eifcid(char *class)
-{
-	/* Return class ID of a class name. If the class id is not available or
-	 * the associated type is generic, then EIF_NO_TYPE is returned.
-	 */
-	
-	struct cecil_info *value;			/* Pointer to value stored in H table */
-
-	/* If the name is a null pointer, return an error condition */
-	if ((char *) 0 == class)
-		return EIF_NO_TYPE;
-
-	/* Look-up in hash table, error if item not found */
-	value = (struct cecil_info *) ct_value(&egc_ce_type, class);
-	if (!value) {
-		value = (struct cecil_info *) ct_value (&egc_ce_exp_type, class);
-		if (!value) {
-			return EIF_NO_TYPE;		/* Not found */
-		}
-	}
-
-	if (value->nb_param > 0) {
-			/* Generic type. */
-		return EIF_NO_TYPE;
-	} else {
-			/* The associated type ID */
-		return value->dynamic_type;
-	}
-}
-
-rt_public EIF_TYPE_ID eifexp(EIF_TYPE_ID id)
-{
-	/* Take a type ID and return the type ID for an expanded type, hence
-	 * forcing the expansion. If the type was already that of an expanded,
-	 * then this is a no-op operation.
-	 */
-
-	if (id == EIF_NO_TYPE)
-		return EIF_NO_TYPE;		/* Invalid type */
-	
-	/* Set the SK_EXP bit to mark type as an expanded. As EIF_TYPE_ID is a
-	 * signed int, it is a better to cast it to unsigned before doing bit
-	 * masking (one never knows)--RAM.
-	 */
-	
-	return (EIF_TYPE_ID) ((uint32) id & SK_EXP);	/* Force the expanded bit */
-}
-
-/*
  * Object creation
  */
 

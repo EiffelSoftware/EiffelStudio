@@ -35,7 +35,7 @@ feature
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for current debug level
 		do
-			ba.append (Db_no);
+			ba.append (feature {DB_CONST}.Db_no);
 		end;
 
 end

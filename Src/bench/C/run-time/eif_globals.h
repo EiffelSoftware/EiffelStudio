@@ -57,9 +57,11 @@ extern "C" {
 typedef struct tag_eif_globals		/* Structure containing all global variables to the run-time */
 {
 		/*debug.c */
+#if !defined (CUSTOM) || defined (NEED_DEBUG_H)
 	struct dbstack db_stack;		/* Debugging stack. */
 	struct dbinfo d_data;			/* Global debugger information */
 	struct pgcontext d_cxt;			/* Main program context */
+#endif
 
 		/* eif_threads.c */
 	start_routine_ctxt_t *eif_thr_context;
@@ -102,6 +104,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct stack free_stack;		/* Entries free in hector */
 
 		/* interp.c */
+#if !defined (CUSTOM) || defined (NEED_INTERP_H)
 	struct opstack op_stack;		/* Operational stack */
 	char *IC;						/* Interpreter Counter (like PC on a CPU) */
 	struct item **iregs;			/* Interpreter registers */
@@ -110,6 +113,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int locnum;						/* Number of locals */
 	unsigned long tagval;			/* Records number of interpreter's call */
 	char *inv_mark_table;			/* Marking table to avoid checking the same invariant several times */
+#endif
 
 		/* malloc.c */
 	struct emallinfo m_data;		/* general information about the memory */
@@ -181,12 +185,12 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	char r_fstoretype;				/* File storage type used for retrieve */
 #endif
 
-#if defined THREAD_DEVEL
-#warning "PaulCDV: development feature of the runtime: DO NOT DELIVER"
+#ifndef EIF_NO_JOIN_ALL
 	int n_children;					/* Number or child threads */
 	int *n_brothers;				/* Number of "brother" threads, including 
 									   self - protected by mutex */
 #endif
+	EIF_THR_TYPE *last_child;		/* Task id of the last created thread */
 
 } eif_global_context_t;
 
@@ -315,6 +319,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 
 #define n_children		(eif_globals->n_children)
 #define n_brothers		(eif_globals->n_brothers)
+#define last_child		(eif_globals->last_child)
 
 extern EIF_TSD_TYPE eif_global_key;
 

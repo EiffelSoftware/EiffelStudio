@@ -80,13 +80,14 @@ feature {MEL_SELECTION} -- Implementation
 			time_not_zero: time /= 0;
 		local
 			an_atom: MEL_ATOM;
-			ext_string: ANY
+			ext_string: ANY;
+			old_lose_command: like lose_command
 		do
-			lose_command := lose_cmd;
-			done_command := done_cmd;
 			ext_string := a_string.to_c;
 			xt_own_selection (a_widget.screen_object, 
 						target_atom.identifier, time, $ext_string)
+			lose_command := lose_cmd;
+			done_command := done_cmd;
 		end;
 
 	make_get_selection_value (a_widget: MEL_WIDGET;

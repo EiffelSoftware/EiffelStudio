@@ -47,6 +47,8 @@ feature -- Copy
 			routine_id := f.routine_id
 			written_in := f.written_in
 			extension := f.extension
+			is_static_call := f.is_static_call
+			static_class_type := f.static_class_type
 		end
 
 end -- class CREATION_EXTERNAL_B

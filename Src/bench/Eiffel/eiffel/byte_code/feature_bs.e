@@ -95,6 +95,7 @@ feature -- Concurrent Eiffel
 				-- Generate feature id
 			ba.append_integer (real_feat_id);
 			ba.append_short_integer (static_type);
+			make_precursor_byte_code (ba)
 		end;
 
 	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
@@ -130,6 +131,7 @@ feature -- Concurrent Eiffel
 			end;
 			ba.append_integer (origin);
 			ba.append_integer (offset);
+			make_precursor_byte_code (ba)
 		end;
 
 end

@@ -90,6 +90,21 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+
+feature {GB_XML_LOAD} -- Implementation
+
+	update_expanded_state_from_root_object is
+			-- Update expanded state of root item and all children
+			-- recursively, from information held in each associated object.
+		local
+			root_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			root_item ?= first
+			check
+				root_item_not_void: root_item /= Void
+			end
+			Object_handler.recursive_do_all (root_item.object, agent expand_layout_item)
+		end
 	
 feature {GB_OBJECT_HANDLER} -- Implementation
 
@@ -108,8 +123,22 @@ feature {GB_WINDOW_SELECTOR} -- Implementation
 		do
 			wipe_out
 			add_root_item (a_window.layout_item)
+			Object_handler.recursive_do_all (a_window, agent expand_layout_item)
 		ensure
 			has_one_item: count = 1
 		end
+		
+feature {NONE} -- Implementation
+
+	expand_layout_item (an_object: GB_OBJECT) is
+			-- If `an_object' is expanded, expand `layout_item' of `an_object'.
+		do
+			if an_object.is_expanded then
+				an_object.layout_item.expand				
+			end
+		end
+
+invariant
+	has_only_one_root: count <= 1
 
 end -- class GB_LAYOUT_CONSTRUCTOR

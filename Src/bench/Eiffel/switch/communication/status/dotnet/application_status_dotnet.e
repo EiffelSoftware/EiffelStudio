@@ -80,7 +80,7 @@ feature -- Update
 	update is
 			-- Update data once the application is really stopped
 		do
-			if application.imp_dotnet.exception_occured and is_stopped then
+			if application.imp_dotnet.exception_occurred and is_stopped then
 				exception_tag := application.imp_dotnet.exception_message			
 			end
 		end
@@ -125,13 +125,15 @@ feature -- Values
 	current_stack_element: CALL_STACK_ELEMENT is
 			-- Current call stack element being displayed
 		do
-			Result := where.i_th (Application.current_execution_stack_number)
+			if Application.current_execution_stack_number > 0 then
+				Result := where.i_th (Application.current_execution_stack_number)				
+			end
 		end
 
 	current_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
 			-- Current call stack element being displayed
 		do
-			Result ?= where.i_th (Application.current_execution_stack_number)
+			Result ?= current_stack_element
 		end
 		
 feature -- Reason for stopping

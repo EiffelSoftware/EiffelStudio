@@ -19,7 +19,7 @@ class HIGH_BUILDER inherit
 		export
 			{NONE} ALL
 		undefine
-			setup, consistent, copy, is_equal
+			copy, is_equal
 		end
 
 create

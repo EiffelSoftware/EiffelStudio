@@ -20,12 +20,12 @@ class PDFA inherit
 
 	NDFA
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end;
 
 	ASCII
 		undefine
-			consistent, copy, setup, is_equal
+			copy, is_equal
 		end
 
 create

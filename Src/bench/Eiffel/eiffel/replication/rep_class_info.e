@@ -14,7 +14,7 @@ inherit
 		rename
 			make as ll_make
 		end;
-	COMPILER_IDABLE
+	IDABLE
 
 creation
 

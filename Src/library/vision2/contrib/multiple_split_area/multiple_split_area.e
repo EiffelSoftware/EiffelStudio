@@ -16,7 +16,7 @@ inherit
 			wipe_out as split_area_wipe_out
 		export
 			{MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} all
-			{ANY} parent, width, height, resize_actions
+			{ANY} parent, width, height, resize_actions, set_minimum_height
 		redefine
 			initialize
 		end
@@ -126,6 +126,24 @@ feature -- Access
 			not_void: Result /= Void
 		end
 		
+	close_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+			-- 	Actions to be performed after close icon is selected.
+		once
+			create Result
+		end
+		
+	minimize_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed after a minimize icon is selected.
+		once
+			create Result
+		end
+		
+	maximize_actions: EV_NEW_ITEM_ACTION_SEQUENCE is
+			-- Actions to be performed after a maximize icon is selected.
+		once
+			create Result
+		end
+
 	customizeable_area_of_widget (widget: EV_WIDGET): EV_HORIZONTAL_BOX is
 			-- `Result' is an EV_HORIZONTAL_BOX contained in the header of the tool
 			-- surrounding `widget' which permits you to customize the tools appearence
@@ -140,7 +158,6 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
 
 feature -- Status setting
 
@@ -351,9 +368,18 @@ feature -- Status setting
 		require
 			a_widget_not_void: a_widget /= Void
 			contained: linear_representation.has (a_widget)
+		local
+			locked_in_here: BOOLEAN
 		do
+			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			if locked_in_here and parent_window (Current) /= Void then
+				parent_window (Current).lock_update	
+			end		
 			remove_implementation (a_widget)
 			rebuild
+			if locked_in_here and parent_window (Current) /= Void then
+				parent_window (Current).unlock_update
+			end
 		ensure
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1
@@ -426,6 +452,7 @@ feature -- Status setting
 			if locked_in_here then
 				parent_window (Current).unlock_update
 			end
+			maximize_actions.call ([a_widget])
 		ensure
 			is_maximized: is_item_maximized (a_widget)
 		end
@@ -453,6 +480,7 @@ feature -- Status setting
 			if locked_in_here then
 				parent_window (Current).unlock_update
 			end
+			minimize_actions.call ([a_widget])
 		ensure
 			is_minimized: is_item_minimized (a_widget)
 		end
@@ -490,7 +518,7 @@ feature -- Status setting
 			tool_holder := holder_of_widget (a_widget)
 			
 			if tool_holder.is_maximized then
-				restore_maximized_tool (tool_holder)
+				restore_maximized_tool (tool_holder, True)
 				tool_holder.maximize_button.set_pixmap (maximize_pixmap)
 				tool_holder.label.enable_dockable
 			else
@@ -796,9 +824,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			tool_maximized: maximized_tool = a_tool
 		end
 		
-	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
+	restore_maximized_tool (tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER; must_rebuild: BOOLEAN) is
 			-- Ensure maximized tool `tool_holder' is no longer maximized,
 			-- and update state of `Current' to reflect this.
+			-- Rebuild `Current' if `must_rebuild'.
 		require
 			tool_holder_not_void: tool_holder /= Void
 			tool_holder_maximized: tool_holder.is_maximized
@@ -825,8 +854,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			end
 			tool_holder.maximize_button.set_tooltip (maximize_string)
 			maximized_tool := Void
-			rebuild
-			restore_stored_positions
+			if must_rebuild then
+				rebuild
+				restore_stored_positions
+			end
 		ensure
 			not_maximized: not tool_holder.is_maximized
 			no_maximized_tool: maximized_tool = Void
@@ -980,6 +1011,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			original_parent ?= a_tool.parent
 			remove_tool_from_parent (a_tool)
 			index_of_tool := index_of_holder (a_tool)
+			
 			a_tool.disable_minimized
 			
 			if all_split_areas.valid_index (split_area_index (index_of_tool)) then
@@ -1003,6 +1035,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			update_expanded_state_of_all_split_areas
 			
 			update_all_minimize_buttons
+			
 				-- Now must update any minimized tools that were parented in the
 				-- same box as `a_tool'. We now recalculate which box they should be
 				-- held in.
@@ -1480,12 +1513,27 @@ feature {NONE} -- Implementation
 			contained: linear_representation.has (a_widget)
 		local
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			first_minimized, second_minimized: BOOLEAN
 		do
 			holder := holder_of_widget (a_widget)
 			if maximized_tool /= Void then
 					-- Remove representation from `minimized_states'.
 				minimized_states.go_i_th (all_holders.index_of (holder, 1))
 				minimized_states.remove
+			end
+			
+				-- Must handle the case where the second to last item is removed,
+				-- and the final item is minimized.
+			if count = 2 then
+				first_minimized := is_item_minimized (linear_representation @ 1)
+				second_minimized := is_item_minimized (linear_representation @ 2)
+				if linear_representation @ 1 = a_widget and second_minimized then
+					restore_minimized_tool (holder_of_widget (linear_representation @ 2))
+					holder_of_widget (linear_representation @ 2).minimize_button.set_pixmap (minimize_pixmap)
+				elseif linear_representation @ 2 = a_widget and first_minimized then
+					restore_minimized_tool (holder_of_widget (linear_representation @ 1))
+					holder_of_widget (linear_representation @ 1).minimize_button.set_pixmap (minimize_pixmap)
+				end
 			end
 			
 			all_holders.prune_all (holder)
@@ -1504,15 +1552,25 @@ feature {NONE} -- Implementation
 				-- If `holder' was the maximized tool, then update
 				-- accordingly.
 			if maximized_tool = holder then
-				restore_maximized_tool (holder)
+				restore_maximized_tool (holder, False)
 				maximized_tool := Void
 			end
 			
+			if holder.is_minimized then
+					-- If a holder is minimized when removed, the widget is hidden,
+					-- hence the need to re-show it.
+				a_widget.show
+			end
+			
 				-- Remove corresponding item from `stored_splitter_widths'.
-			stored_splitter_widths.go_i_th (linear_representation.index_of (a_widget, 1))
+			--stored_splitter_widths.go_i_th (linear_representation.index_of (a_widget, 1))
+				--| FIXME what happens if you have multiple items minimized before the
+				--| item you are removing? The stored splitter widths does not have enough items.
+				--| FIXME, why is there no remove here?
 			
 			linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
 			linear_representation.remove
+
 		ensure
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1
@@ -1619,7 +1677,8 @@ feature {NONE} -- Implementation
 				linear_representation.forth
 			end
 
-			insert_height := a_height.min (maximum_insert_height)			
+			--insert_height := a_height.min (maximum_insert_height)
+			insert_height := a_height.max (holder.minimum_height).min (maximum_insert_height)
 
 			total_space_less_insertion := height - insert_height
 				-- Calculate the space that must be freed to insert `holder'.
@@ -1696,7 +1755,9 @@ feature {NONE} -- Implementation
 					end
 					linear_representation.back
 				end
-					resize_widget_to (linear_representation.first, height - total_restored)
+					if height - total_restored > 0 then
+						resize_widget_to (linear_representation.first, height - total_restored - (18 + 6 * (count - 1)))
+					end
 			else
 				from
 					linear_representation.start

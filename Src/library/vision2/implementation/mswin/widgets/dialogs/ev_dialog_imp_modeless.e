@@ -13,14 +13,16 @@ inherit
 			show as show_internal
 		redefine
 			setup_dialog,
-			is_relative
+			is_relative,
+			is_show_requested
 		end
 		
 	EV_DIALOG_IMP_COMMON
 		redefine
 			setup_dialog,
 			show,
-			is_relative
+			is_relative,
+			is_show_requested
 		select
 			show
 		end
@@ -34,6 +36,19 @@ feature -- Status report
 			-- Is `Current' shown relative to another window?
 		do
 			Result := is_show_requested
+		end
+		
+	is_show_requested: BOOLEAN is
+			-- Will `Current' be displayed when its parent is?
+			-- See also `is_displayed'.
+		do
+			if is_destroyed then
+					-- If we have upgraded the implementation, then
+					-- we need to query the interface.
+				Result := interface.implementation.is_show_requested
+			else
+				Result := flag_set (style, feature {WEL_WINDOW_CONSTANTS}.Ws_visible)
+			end	
 		end
 
 feature -- Basic operations

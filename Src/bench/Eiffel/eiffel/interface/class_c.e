@@ -1,13 +1,14 @@
--- Internal representation of a compiled class.
+indexing
+
+	description:
+		"Representation of a compiled class.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class CLASS_C
 
 inherit
 
-	TOPOLOGICAL
-		rename
-			successors as descendants
-		end;
 	IDABLE;
 	SHARED_WORKBENCH;
 	SHARED_SERVER
@@ -27,12 +28,13 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_BODY_ID;
 	SHARED_PASS;
+	PART_COMPARABLE;
 	MEMORY;
 	SK_CONST;
 	SHARED_RESCUE_STATUS;
-	SHARED_STATUS;
 	SHARED_MELT_ONLY;
-	SHARED_ASSERTION_LEVEL
+	SHARED_ASSERTION_LEVEL;
+	COMPILER_EXPORTER
 
 creation
 
@@ -40,25 +42,43 @@ creation
 	
 feature
 
-	lace_class: CLASS_I;
+	e_class: E_CLASS;
+			-- Associated eiffel class
+
+	lace_class: CLASS_I is
 			-- Lace class
+		do
+			Result := e_class.lace_class
+		end;
 
 	obsolete_message: STRING;
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
 
-	parents: FIXED_LIST [CL_TYPE_A];
+	parents: FIXED_LIST [CL_TYPE_A] is
 			-- Parent classes
+		do
+			Result := e_class.parents
+		end;
 
-	descendants: LINKED_LIST [CLASS_C];
+	descendants: LINKED_LIST [E_CLASS] is
 			-- Direct descendants of the current class
+		do
+			Result := e_class.descendants
+		end;
 
-	clients: LINKED_LIST [CLASS_C];
+	clients: LINKED_LIST [E_CLASS] is
 			-- Clients of the class
+		do
+			Result := e_class.clients
+		end;
 
-	suppliers: SUPPLIER_LIST;
+	suppliers: SUPPLIER_LIST is
 			-- Suppliers of the class in terms of calls
 			-- [Useful for incremental type check].
+		do
+			Result := e_class.suppliers
+		end;
 
 	syntactical_suppliers: LINKED_LIST [SUPPLIER_CLASS];
 			-- Syntactical suppliers of the class
@@ -68,16 +88,25 @@ feature
 			-- Syntactical clients of the class
 			--| Useful for class removal
 
-	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B];
+	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B] is
 			-- Formal generical parameters
+		do
+			Result := e_class.private_generics
+		end;
 
-	topological_id: INTEGER;
+	topological_id: INTEGER is
 			-- Unique number for a class. Could change during a topological
 			-- sort on classes.
+		do
+			Result := e_class.topological_id
+		end;
 
-	reverse_engineered: BOOLEAN;
+	reverse_engineered: BOOLEAN is
 			-- Does the Storage mechanism for EiffelCase need
 			-- to regenerate the EiffelCase description for Current class?
+		do
+			Result := e_class.reverse_engineered
+		end;
 
 	changed2: BOOLEAN;
 			-- Has the compiler to apply the second pass to this class
@@ -114,9 +143,12 @@ feature
 			-- it must be reprocessed and the conformance table of the
 			-- recursive descendants also.
 
-	types: TYPE_LIST;
+	types: TYPE_LIST is
 			-- Meta-class types associated to the class: it contains
 			-- only one type if the class is not generic
+		do
+			Result := e_class.types
+		end;
 
 	filters: FILTER_LIST; 	-- ## FIXME 2.3 Patch: redefinition of equal in
 							-- GEN_TYPE_I
@@ -137,8 +169,11 @@ feature
 			-- Set of class ids of the classes responsible for
 			-- a type check of the current class
 	
-	id: INTEGER;
+	id: INTEGER is
 			-- Class id
+		do
+			Result := e_class.id
+		end;
 
 	creators: EXTEND_TABLE [EXPORT_I, STRING];
 			-- Creation procedure names
@@ -168,26 +203,18 @@ feature
 			Result := lace_class.changed
 		end;
 
-	make (l: CLASS_I) is
+	make (ec: E_CLASS) is
 			-- Creation
 		require
-			good_argument: l /= Void;
+			good_argument: ec /= Void;
 		do
-			lace_class := l;
-				-- Creation of the descendant list
-			!!descendants.make;
+			e_class := ec;
 				-- Creation of a conformance table
 			!!conformance_table.make (1,1);
-				-- Creation of the client list
-			!!clients.make;
-				-- Creation of the supplier list
-			!!suppliers.make;
 				-- Creation of the sytactical supplier list
 			!!syntactical_suppliers.make;
 				-- Creation of the syntactical client list
 			!!syntactical_clients.make;
-				-- Types list creation
-			!!types.make;
 				-- Filter list creation
 			!!filters.make;
 			filters.compare_objects;
@@ -199,6 +226,8 @@ feature
 			!!propagators.make;
 				-- Unique counter creation
 			!!unique_counter;
+			e_class.set_compiled_info (Current);
+			e_class.set_is_debuggable (not (is_special or else is_basic))
 		end;
 
 	already_compiled: BOOLEAN is
@@ -968,7 +997,7 @@ end;
 				clients.after
 			loop
 				io.error.putstring ("%T");
-				io.error.putstring (clients.item.class_name);
+				io.error.putstring (clients.item.name);
 				io.error.new_line;
 				clients.forth
 			end;
@@ -1082,9 +1111,11 @@ end;
 		require
 			good_argument: new_suppliers /= Void;
 		local
-			supplier: CLASS_C;
+			supplier: E_CLASS;
 			supplier_clients: like clients;
+			ec: like e_class
 		do
+			ec := e_class;
 			from
 				suppliers.start
 			until
@@ -1094,7 +1125,7 @@ end;
 				supplier_clients := supplier.clients;
 				supplier_clients.start;
 				supplier_clients.compare_references
-				supplier_clients.search (Current);
+				supplier_clients.search (ec);
 				supplier_clients.remove;
 				suppliers.forth
 			end;
@@ -1105,10 +1136,10 @@ end;
 			loop
 				supplier := new_suppliers.item.supplier;
 				supplier_clients := supplier.clients;
-				supplier_clients.put_front (Current);
+				supplier_clients.put_front (ec);
 				new_suppliers.forth
 			end;
-			suppliers := new_suppliers;
+			e_class.set_suppliers (new_suppliers);
 		end;
 
 feature -- Generation
@@ -1487,6 +1518,8 @@ feature -- Class initialization
 			class_i: CLASS_I;
 			changed_generics: BOOLEAN
 			changed_expanded: BOOLEAN;
+			pars: like parents;
+			gens: like generics
 		do
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
@@ -1593,7 +1626,7 @@ feature -- Class initialization
 			parents_as := ast.parents;
 			parent_list := class_info.parents;
 
-			if not (parents_as = Void) then
+			if parents_as /= Void then
 
 					-- Separate loop for VHPR3 checking
 				from
@@ -1624,11 +1657,11 @@ feature -- Class initialization
 					check p.lower = 1 end;
 					lower := 1;
 					upper := p.upper;
-					!!parents.make (upper);
+					!! pars.make (upper);
 				until
 					lower > upper
 				loop
-						-- Fill attribute `parents' of class CLASS_INFO
+						-- Fill attribute `pars' of class CLASS_INFO
 					parent_c := p.item (lower).parent_c;
 					parent_list.put_i_th (parent_c, lower);
 						-- Insertion of a new descendant for the parent class
@@ -1639,8 +1672,8 @@ feature -- Class initialization
 							-- This ensures that routine `check_suppliers'
 							-- has been called before.
 					end;
-					parent_class.add_descendant (Current);
-					parents.put_i_th (parent_type, lower);
+					parent_class.add_descendant (e_class);
+					pars.put_i_th (parent_type, lower);
 					lower := lower + 1;
 				end;
 			elseif id /= System.general_id then
@@ -1649,30 +1682,35 @@ feature -- Class initialization
 					-- no parent at all (we don't want a cycle in the
 					-- inheritance graph, otherwise the topological sort
 					-- on the classes will fail...).
-				!!parents.make (1);
-				parents.put_i_th (Any_type, 1);
+				!! pars.make (1);
+				pars.put_i_th (Any_type, 1);
 					-- Add a descendant to class ANY
-				System.any_class.compiled_class.add_descendant (Current);
+				System.any_class.compiled_class.add_descendant (e_class);
 					-- Fill parent list of corresponding class info
 				parent_list.put_i_th (Any_parent, 1);
 			else
 					-- In case of the GENERAL class, just create an empty
 					-- parent structure
-				!!parents.make (0);
+				!! pars.make (0);
 			end;
+
+			e_class.set_parents (pars);
+
 				-- Init generics
 			old_generics := generics;
 
-			generics := ast.generics;
+			gens := ast.generics;
 
-			if generics /= Void then
+			e_class.set_generics (gens);
+
+			if gens /= Void then
 					-- Check generic parameter declaration rule
 				check_generics;
 			end;
 
 			if old_parents /= Void then
 				-- Recompilation of the class
-				if generics /= Void then
+				if gens /= Void then
 					if
 						old_generics = Void
 					or else
@@ -1682,14 +1720,14 @@ feature -- Class initialization
 					else
 						from
 							old_generics.start;
-							generics.start
+							gens.start
 						until
-							changed_generics or else generics.after
+							changed_generics or else gens.after
 						loop
-							if not generics.item.equiv (old_generics.item) then	
+							if not gens.item.equiv (old_generics.item) then	
 								changed_generics := True
 							end;
-							generics.forth;
+							gens.forth;
 							old_generics.forth;
 						end;
 					end;
@@ -1891,8 +1929,10 @@ feature
 			parents_exists: parents /= Void;
 		local
 			cl: like clients;
+			ec: like e_class
 		do
 			remove_parent_relations;
+			ec := e_class;
 			from
 				suppliers.start
 			until
@@ -1901,7 +1941,7 @@ feature
 				cl := suppliers.item.supplier.clients;
 				cl.start;
 				cl.compare_references
-				cl.search (Current);
+				cl.search (ec);
 				if not cl.after then
 					cl.remove
 				end;
@@ -1916,19 +1956,20 @@ feature
 			parents_exists: parents /= Void;
 		local
 			des: like descendants;
-			c: CLASS_C;
+			ec, c: E_CLASS;
 		do
 			from
+				ec := e_class;
 				parents.start;
 			until
 				parents.after
 			loop
-				c := parents.item.associated_class;
+				c := parents.item.associated_eclass;
 				if c /= Void then
 					des := c.descendants;
 					des.start;
 					des.compare_references
-					des.search (Current);
+					des.search (ec);
 					if not des.after then
 						des.remove;
 					end;
@@ -1967,13 +2008,15 @@ feature
 			vcfg1: VCFG1;
 			vcfg2: VCFG2;
 			error: BOOLEAN;
+			gens: like generics
 		do
+			gens := generics;
 			from
-				generics.start
+				gens.start
 			until
-				generics.after or else error
+				gens.after or else error
 			loop
-				generic_dec := generics.item;
+				generic_dec := gens.item;
 				generic_name := generic_dec.formal_name;
 
 					-- First, check if the formal generic name is not the
@@ -1988,13 +2031,13 @@ feature
 
 					-- Second, check if the formal generic name doen't
 					-- appear twice in `generics'.
-				pos := generics.index;
+				pos := gens.index;
 				from
-					generics.start
+					gens.start
 				until
-					generics.after or else error
+					gens.after or else error
 				loop
-					next_dec := generics.item;
+					next_dec := gens.item;
 					if next_dec /= generic_dec then
 						if next_dec.formal_name.is_equal (generic_name) then
 							!!vcfg2;
@@ -2004,11 +2047,11 @@ feature
 							error := True
 						end;
 					end;
-					generics.forth;
+					gens.forth;
 				end;
-				generics.go_i_th (pos);
+				gens.go_i_th (pos);
 
-				generics.forth;
+				gens.forth;
 			end;
 		end;
 
@@ -2021,13 +2064,15 @@ feature
 			generic_dec: FORMAL_DEC_AS_B;
 			generic_name: ID_AS_B;
 			vcfg1: VCFG1;
+			gens: like generics
 		do
+			gens := generics;
 			from
-				generics.start
+				gens.start
 			until
-				generics.after
+				gens.after
 			loop
-				generic_dec := generics.item;
+				generic_dec := gens.item;
 				generic_name := generic_dec.formal_name;
 
 				if Universe.class_named (generic_name, cluster) /= Void then
@@ -2036,7 +2081,7 @@ feature
 					vcfg1.set_formal_name (generic_name);
 					Error_handler.insert_error (Vcfg1);
 				end;
-				generics.forth;
+				gens.forth;
 			end;
 		end;
 
@@ -2047,19 +2092,21 @@ feature
 		local
 			generic_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
+			gens: like generics
 		do
+			gens := generics;
 			Inst_context.set_cluster (cluster);
 			from
-				generics.start
+				gens.start
 			until
-				generics.after
+				gens.after
 			loop
-				generic_dec := generics.item;
+				generic_dec := gens.item;
 				constraint_type := generic_dec.constraint;
 				if constraint_type /= Void then
 					constraint_type.check_constraint_type (Current)
 				end;
-				generics.forth;
+				gens.forth;
 			end;
 		end;
 
@@ -2071,13 +2118,15 @@ feature -- Parent checking
 			vtug: VTUG;
 			vtgg4: VTGG4;
 			parent_actual_type: CL_TYPE_A;
+			parent_list: like parents
 		do
+			parent_list := parents;
 			from
-				parents.start
+				parent_list.start
 			until
-				parents.after
+				parent_list.after
 			loop
-				parent_actual_type := parents.item;
+				parent_actual_type := parent_list.item;
 				if not parent_actual_type.good_generics then
 						-- Wrong number of geneneric parameters in parent
 					vtug := parent_actual_type.error_generics;
@@ -2095,12 +2144,12 @@ feature -- Parent checking
 						vtgg4.set_class (Current);
 						vtgg4.set_error_list
 										(deep_clone (Constraint_error_list));
-						vtgg4.set_parent_type (parents.item);
+						vtgg4.set_parent_type (parent_list.item);
 						Error_handler.insert_error (vtgg4);
 					end;
 				end;
 
-				parents.forth;
+				parent_list.forth;
 			end;
 		end;
 
@@ -2336,20 +2385,6 @@ feature -- Order relation for inheritance and topological sort
 			Result := topological_id < other.topological_id;
 		end;
 
-	nb_heirs: INTEGER is
-			-- Number of heirs
-		do
-			from
-				Result := descendants.count;
-				descendants.start
-			until
-				descendants.off
-			loop
-				Result := Result + descendants.item.nb_heirs;
-				descendants.forth
-			end;
-		end;
-
 	conform_to (other: CLASS_C): BOOLEAN is
 			-- Is `other' an ancestor of Current ?
 		require
@@ -2379,7 +2414,7 @@ feature -- Convenience features
 	set_topological_id (i: INTEGER) is
 			-- Assign `i' to `topological_id'.
 		do
-			topological_id := i;
+			e_class.set_topological_id (i)
 		end;
 
 	set_changed (b: BOOLEAN) is
@@ -2426,7 +2461,7 @@ feature -- Convenience features
 	set_id (i: INTEGER) is
 			-- Assign `i' to `id'.
 		do
-			id := i;
+			e_class.set_id (i)
 		end;
 
 	set_invariant_feature (f: INVARIANT_FEAT_I) is
@@ -2446,20 +2481,23 @@ feature -- Convenience features
 			creators := c;
 		end;
 
-	add_descendant (c: CLASS_C) is
+	add_descendant (c: E_CLASS) is
 			-- Insert class `c' into the descendant list
 		require
 			good_argument: c /= Void;
+		local
+			desc: like descendants
 		do
-			if not descendants.has (c) then
-				descendants.put_front (c);	
+			desc := descendants;
+			if not desc.has (c) then
+				desc.put_front (c);	
 			end;
 		end;
 
 	class_name: STRING is
 			-- Raw class name
 		do
-			Result := lace_class.class_name
+			Result := e_class.name
 		end;
 
 	visible_name: STRING is
@@ -2673,7 +2711,7 @@ end;
 					-- If class is TO_SPECIAL or else SPECIAL
 					-- then freeze system.
 				if is_special then
-					if melt_only and then not System.precompilation then
+					if melt_only and then not Compilation_modes.is_precompiling then
 						!!melt_exp;
 						melt_exp.set_class (Current);
 						melt_exp.set_generic_type (data);
@@ -2917,25 +2955,6 @@ feature -- Cecil
 			Result := Result + types.first.type_id - 1;
 		end;
 
-	is_ancestor (other: CLASS_C): BOOLEAN is
-			-- Is `other' a heir of Current ?
-		require
-			good_argument: other /= Void;
-		do
-			if other = Current then
-				Result := True;
-			elseif other.conform_to (Current) then
-				from
-					descendants.start
-				until
-					descendants.off or else Result
-				loop
-					Result := descendants.item.is_ancestor (other);
-					descendants.forth
-				end;
-			end;
-		end;
-
 feature -- Conformance table generation
 
 	process_polymorphism is
@@ -2952,6 +2971,8 @@ feature -- Conformance table generation
 			-- Make final conformance table
 		require
 			good_argument: t /= Void;
+		local
+			desc: like descendants
 		do
 				-- Mark conformance table `t' first.
 			from
@@ -2963,13 +2984,14 @@ feature -- Conformance table generation
 				types.forth
 			end;
 				-- Recursion on descendants
+			desc := descendants;
 			from
-				descendants.start
+				desc.start
 			until
-				descendants.after
+				desc.after
 			loop
-				descendants.item.make_conformance_table (t);
-				descendants.forth
+				desc.item.compiled_info.make_conformance_table (t);
+				desc.forth
 			end;
 		end;
 
@@ -3023,118 +3045,14 @@ feature -- PS
 
 	signature: STRING is
 		obsolete "Use `append_clickable_signature'"
-		local
-			formal_dec: FORMAL_DEC_AS_B;
-			constraint_type: TYPE_B;
-			error: BOOLEAN;
-			old_cluster: CLUSTER_I;
 		do
-			if not error then
-				old_cluster := Inst_context.cluster;
-				Inst_context.set_cluster (cluster);
-				!!Result.make (50);
-				Result.append (class_name);
-				if generics /= Void then
-					Result.append (" [");
-					from
-						generics.start
-					until
-						generics.after
-					loop
-						formal_dec := generics.item;
-						Result.append (formal_dec.formal_name);
-						constraint_type := formal_dec.constraint;
-						if constraint_type /= Void then
-							Result.append (" -> ");
-							if not constraint_type.has_like then
-								constraint_type := formal_dec.constraint.actual_type;
-								if constraint_type = Void then
-										-- Problem in building the type
-										-- Should occur only for invalid constraint
-										-- i.e. `like weasel'
-									constraint_type := formal_dec.constraint
-								end;
-							end;
-							Result.append (constraint_type.dump)
-						end;
-						generics.forth;
-						if not generics.after then
-							Result.append (", ")
-						end
-					end;
-					Result.append ("]")
-				end;
-				Result.to_upper;
-				Inst_context.set_cluster (old_cluster);
-			end;
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-			-- Append the signature of current class in `a_clickable'
-		local
-			formal_dec: FORMAL_DEC_AS_B;
-			constraint_type: TYPE_B;
-			c_name: STRING;
-			error: BOOLEAN;
-			old_cluster: CLUSTER_I;
-		do
-			if not error then
-				old_cluster := Inst_context.cluster;
-				Inst_context.set_cluster (cluster);
-				append_clickable_name (a_clickable);
-				if generics /= Void then
-					a_clickable.put_string (" [");
-					from
-						generics.start
-					until
-						generics.after
-					loop
-						formal_dec := generics.item;
-						c_name := clone (formal_dec.formal_name);
-						c_name.to_upper;
-						a_clickable.put_string (c_name);
-						constraint_type := formal_dec.constraint;
-						if constraint_type /= Void then
-							a_clickable.put_string (" -> ");
-							if not constraint_type.has_like then
-								constraint_type := constraint_type.actual_type;
-								if constraint_type = Void then
-										-- Problem in building the type
-										-- Should occur only for invalid constraint
-										-- i.e. `like weasel'
-									constraint_type := formal_dec.constraint
-								end;
-							end;
-							constraint_type.append_clickable_signature (a_clickable)
-						end;
-						generics.forth;
-						if not generics.after then
-							a_clickable.put_string (", ");
-						end;
-					end;
-					a_clickable.put_char (']');
-				end;
-				Inst_context.set_cluster (old_cluster);
-			end;
+			Result := e_class.signature
 		end;
 
 	append_clickable_name (a_clickable: CLICK_WINDOW) is
 			-- Append the name ot the current class in `a_clickable'
-		local
-			c_name: STRING;
 		do
-			c_name := clone (class_name)
-			c_name.to_upper;
-			a_clickable.put_clickable_string (stone, c_name);
-		end;
-
-	stone: STONE is
-		do
-			if clickable then
-				!CLASSC_STONE!Result.make (Current)
-			else
-				!CLASSI_STONE!Result.make (lace_class)
-			end;
+			e_class.append_clickable_name (a_clickable)
 		end;
 
 	feature_named (n: STRING): FEATURE_I is
@@ -3147,29 +3065,6 @@ feature -- PS
 			else
 				Result := Feat_tbl_server.item (id).item (n)
 			end
-		end;
-
-	click_list: ARRAY [CLICK_STONE] is
-		local
-			ast_clicks: CLICK_LIST
-		do
-			--if Error_handler.has_error then
-				--ast_clicks := Tmp_ast_server.item (id).click_list
-			--else
-			if not Tmp_ast_server.has (id) then
-				ast_clicks := Ast_server.item (id).click_list
-			else
-				ast_clicks := Tmp_ast_server.item (id).click_list
-			end;
-			Result := ast_clicks.clickable_stones (Current)
-		end;
-
-	clickable: BOOLEAN is
-			-- Is Current class clickable?
-		do
-			Result := (Tmp_ast_server.has (id) or else
-						Ast_server.has (id)) and then
-						Feat_tbl_server.has (id)
 		end;
 
 feature -- Replication
@@ -3375,7 +3270,7 @@ feature -- EiffelCase stuff
 	set_reverse_engineered (b: BOOLEAN) is
 			-- Set reversed_engineered to `b'.
 		do
-			reverse_engineered := b
+			e_class.set_reverse_engineered (b)
 		ensure
 			reverse_engineered_set: reverse_engineered = b
 		end;
@@ -3401,8 +3296,7 @@ feature -- EiffelCase stuff
 			-- Are there any generic instantiations of Current
 			-- in the system or is Current a non generic class?
 		do
-			Result :=
-					(types /= Void) and then (not types.empty)
+			Result := e_class.has_types
 		end;
 
 feature -- Precompilation

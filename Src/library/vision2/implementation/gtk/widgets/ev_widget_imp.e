@@ -588,29 +588,15 @@ feature {NONE} -- Implementation
 			-- Tag returned from Gtk used to disconnect `enter-notify' signal
 			
 	enable_debugger is
-			-- 
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"[
-#ifdef WORKBENCH
-			extern int debug_mode;
-			debug_mode = 1;
-#endif
-			]"
+			-- Enable the Eiffel debugger
+		do
+			set_debug_mode (1)
 		end
 
 	disable_debugger is
-			-- 
-		external
-			"C inline use %"eif_eiffel.h%""
-		alias
-			"[
-#ifdef WORKBENCH
-			extern int debug_mode;
-			debug_mode = 0;
-#endif
-			]"
+			-- Disable the Eiffel debugger
+		do
+			set_debug_mode (0)
 		end
 	
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
@@ -816,6 +802,16 @@ feature {EV_ANY_I} -- Contract Support
 			-- Is `Current' parented?
 		do
 			Result := parent_imp /= Void
+		end
+		
+feature {NONE} -- External
+
+	set_debug_mode (a_mode: INTEGER) is
+			-- Set the value of run time value `debug_mode' to turn Eiffel debugger on or off
+		require
+			valid_mode: a_mode = 0 or a_mode = 1
+		external
+			"C use %"ev_any_imp.h%""
 		end
 
 feature {EV_ANY_I} -- Implementation

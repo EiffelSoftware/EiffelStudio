@@ -26,7 +26,7 @@ XCOPY /Y %TEMP%\Vision2_precompile\ev_viewport_flatshort.txt .\flatshort
 
 
 
-XCOPY /Y %TEMP%\Vision2_precompile\ev_button_flatshort.txt .\flatshorthttp://moneycentral.msn.com/home.asp
+XCOPY /Y %TEMP%\Vision2_precompile\ev_button_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_check_button_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_checkable_list_flatshort.txt .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_combo_box_flatshort.txt .\flatshort

@@ -84,6 +84,12 @@ Y
 ev_checkable_list_flatshort.rtf
 
 I
+EV_CHECKABLE_TREE
+RTF
+Y
+ev_checkable_tree_flatshort.rtf
+
+I
 EV_COMBO_BOX
 RTF
 Y

@@ -22,12 +22,7 @@
 #include "ewbio.h"
 #include "proto.h"
 #include "transfer.h"
-
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 extern int identify(void);		/* Make sure we are started via the wrapper */
 
@@ -85,7 +80,7 @@ typedef void (* EVENT_CALLBACK)(EIF_REFERENCE);
 EVENT_CALLBACK event_callback;
 EIF_OBJECT event_object;
 EIF_INTEGER delay;
-UINT event_id;
+UINT_PTR event_id;
 
 void CALLBACK ioh_timer(HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime);
 

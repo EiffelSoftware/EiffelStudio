@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class ISE_MENU_ENTRY feature
+deferred class ISE_MENU_ENTRY
 
 feature {NONE} -- Initialization
 

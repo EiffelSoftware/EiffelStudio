@@ -934,7 +934,7 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 	int32 count;					/* Element count */
 	uint32 nb_attr, sk_type;
 	long sp_start = 0, sp_end;		/* Bounds for inspection */
-	int32 dtype;
+	uint32 dtype;
 	static char buffer[BUFSIZ]; 	/* Buffer used for converting integers into a string */
 
 		/* Send address of Current object */

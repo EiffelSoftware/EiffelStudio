@@ -102,7 +102,7 @@ feature -- Status setting
 
 	set_root_window (a_window: EV_WINDOW_IMP)is
 		do
-			set_application_main_window (a_window)--(main_window)
+			set_application_main_window (a_window)
 		end
 
 feature -- Element change
@@ -117,10 +117,8 @@ feature -- Element change
 	remove_root_window (w: EV_WINDOW) is
 			-- Remove `w' from the root windows list.
 		local
-			r: ARRAYED_LIST [EV_WINDOW]
 			window_imp: EV_WINDOW_IMP
 		do
-			r := root_windows
 			if root_windows.count /= 1 then
 				root_windows.start
 				if root_windows.item = w then
@@ -324,8 +322,8 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/02/29 18:13:18  rogers
---| Launch now sets the root_window to the main_window. Set root_window no sets the application main_window. Remove window has been altered, see diffs, and destroy now sets destroy just called to True and is_destroyed to True.
+--| Revision 1.20  2000/02/29 19:21:27  rogers
+--| Launch now sets the root_window to the main_window. Set root_window now sets the application main_window. Remove window has been altered, see diffs, and destroy now sets destroy just called to True and is_destroyed to True.
 --|
 --| Revision 1.18  2000/02/19 05:44:59  oconnor
 --| released

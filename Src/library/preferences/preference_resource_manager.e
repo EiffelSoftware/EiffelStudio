@@ -59,104 +59,8 @@ feature -- Query
 		do
 			Result := preferences.has_resource (namespace + "." + a_name)	
 		end		
-
-feature -- Status Setting
-
-	new_boolean_resource_value (a_name: STRING; a_value: BOOLEAN): BOOLEAN_PREFERENCE is
-			-- Add a new boolean resource with name `a_name' and `a_value'.
-		require
-			name_valid: a_name /= Void 
-			name_not_empty: not a_name.is_empty
-			not_has_resource: not known_resource (a_name)
-		do		
-			Result := (create {PREFERENCE_FACTORY [BOOLEAN, BOOLEAN_PREFERENCE]}).
-				new_resource (preferences, Current, a_name, a_value)
-		ensure
-			has_result: Result /= Void
-			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (a_name)
-		end		
 		
-	new_integer_resource_value (a_name: STRING; a_value: INTEGER): INTEGER_PREFERENCE is
-			-- Add a new integer resource with name `a_name' and `a_value'.
-		require
-			name_valid: a_name /= Void 
-			name_not_empty: not a_name.is_empty
-			not_has_resource: not known_resource (a_name)
-		do		
-			Result := (create {PREFERENCE_FACTORY [INTEGER, INTEGER_PREFERENCE]}).
-				new_resource (preferences, Current, a_name, a_value)
-		ensure
-			has_result: Result /= Void
-			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (a_name)
-		end	
-		
-	new_string_resource_value (a_name: STRING; a_value: STRING): STRING_PREFERENCE is
-			-- Add a new string resource with name `a_name' and `a_value'.
-		require
-			name_valid: a_name /= Void 
-			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
-			not_has_resource: not known_resource (a_name)
-		do		
-			Result := (create {PREFERENCE_FACTORY [STRING, STRING_PREFERENCE]}).
-				new_resource (preferences, Current, a_name, a_value)
-		ensure
-			has_result: Result /= Void
-			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (a_name)
-		end	
-		
-	new_array_resource_value (a_name: STRING; a_value: ARRAY [STRING]): ARRAY_PREFERENCE is
-			-- Add a new array resource with name `a_name' and `a_value'.
-		require
-			name_valid: a_name /= Void 
-			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
-			not_has_resource: not known_resource (a_name)
-		do		
-			Result := (create {PREFERENCE_FACTORY [ARRAY [STRING], ARRAY_PREFERENCE]}).
-				new_resource (preferences, Current, a_name, a_value)
-		ensure
-			has_result: Result /= Void
-			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (a_name)
-		end	
-		
-	new_color_resource_value (a_name: STRING; a_value: EV_COLOR): COLOR_PREFERENCE is
-			-- Add a new color resource with name `a_name' and `a_value'.
-		require
-			name_valid: a_name /= Void 
-			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
-			not_has_resource: not known_resource (a_name)
-		do		
-			Result := (create {PREFERENCE_FACTORY [EV_COLOR, COLOR_PREFERENCE]}).
-				new_resource (preferences, Current, a_name, a_value)
-		ensure
-			has_result: Result /= Void
-			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (a_name)
-		end	
-		
-	new_font_resource_value (a_name: STRING; a_value: EV_FONT): FONT_PREFERENCE is
-			-- Add a new font resource with name `a_name' and `a_value'.
-		require
-			name_valid: a_name /= Void 
-			name_not_empty: not a_name.is_empty
-			value_not_void: a_value /= Void
-			not_has_resource: not known_resource (a_name)
-		do		
-			Result := (create {PREFERENCE_FACTORY [EV_FONT, FONT_PREFERENCE]}).
-				new_resource (preferences, Current, a_name, a_value)
-		ensure
-			has_result: Result /= Void
-			resource_name_set: Result.name.is_equal (a_name)
-			resource_added: preferences.has_resource (a_name)
-		end	
-		
-feature {NONE} -- Implementation
+feature {BASIC_PREFERENCE_FACTORY} -- Implementation
 
 	preferences: PREFERENCES
 			-- Preferences.
@@ -164,6 +68,6 @@ feature {NONE} -- Implementation
 invariant	
 	has_preferences: preferences /= Void
 	has_namespace: namespace /= Void
-	namesapce_valid: not namespace.is_empty
+	namespace_valid: not namespace.is_empty
 
 end -- class PREFERENCE_MANAGER

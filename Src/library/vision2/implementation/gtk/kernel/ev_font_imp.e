@@ -517,6 +517,14 @@ feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
 	c_object: POINTER
 		-- Reference to the GdkFont object.
+		
+feature {EV_FONTABLE_IMP} -- Implementation
+		
+	set_font_object (a_c_object: POINTER) is
+			-- 
+		do
+			c_object := a_c_object
+		end	
 
 feature {NONE} -- Implementation
 		

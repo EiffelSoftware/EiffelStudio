@@ -135,7 +135,9 @@ typedef void *          SQLPOINTER;
 #define DB_MAX_NAME_LEN                 	40      
 #define DB_MAX_TABLE_LEN			50
 #define DB_MAX_COLS                             300
-#define DB_MAX_STRING_LEN			254
+// Added by David
+//#define DB_MAX_STRING_LEN			254
+#define DB_MAX_STRING_LEN			1024
 #define DB_QUOTER_LEN				5
 #define DB_NAME_SEP_LEN				5
 #define DB_MAX_QUALIFIER_LEN			150

@@ -30,12 +30,16 @@ feature
 				until
 					i=s.count
 				loop
-					i := s.index_of (':', i)					
-					j := s.index_of (',', i)
+					--	i := s.index_of (':', i)					
+					--	j := s.index_of (',', i)
+
+					i := s.index_of (':', 1)					
+					j := s.index_of (',', 1)
 					if j=0 then
 						j := s.count
 					end
-					parameters.put(s.substring (i+1, j-1), k)
+--					parameters.put(s.substring (i+1, j-1), k)
+					parameters.force (s.substring (i+1, j-1), k)
 					i := j
 					k := k + 1
 				end

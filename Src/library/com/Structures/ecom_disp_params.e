@@ -1,54 +1,38 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "Encapsulation of DISPPARAMS structure"
 	status: "See notice at end of class"
+	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_DISP_PARAMS
 
 inherit
-	
 	ECOM_STRUCTURE
 
 creation
-	make, make_by_pointer,
-	make_from_integer
-
-feature {NONE} -- Initialization
-
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
-		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
-		end
+	make,
+	make_by_pointer
 
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of DISPPARAMS structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_disp_params
 		end
-	
-feature {NONE} -- Externals 
 
-	c_size_of_large_integer: INTEGER is
+feature {NONE} -- Externals
+
+	c_size_of_disp_params: INTEGER is
 		external 
-			"C [macro <objbase.h>]"
+			"C [macro %"E_dispparams.h%"]"
 		alias
-			"sizeof(LARGE_INTEGER)"
+			"sizeof(DISPPARAMS)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
-		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
-		end
-
-end -- class ECOM_LARGE_INTEGER
+end -- class ECOM_DISP_PARAMS
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

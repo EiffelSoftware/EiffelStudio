@@ -1,54 +1,47 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "Description or specification of an entry point for a function in a DLL"
 	status: "See notice at end of class"
-	date: "$Date$"
+	author: "Marina Nudelman";
+	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_DLL_ENTRY
+		
+feature -- Access
 
-inherit
-	
-	ECOM_STRUCTURE
+	dll_name: STRING
+			-- Dll name
+		
+	entry_point: STRING
+			-- Entry point name (if function
+			-- not defined by ordinal)
+		
+	ordinal: INTEGER
+			-- Ordinal that defines function
+			-- (if function defined by ordinal)
+		
+feature -- Element change
 
-creation
-	make, make_by_pointer,
-	make_from_integer
-
-feature {NONE} -- Initialization
-
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
+	set_dll_name (n: STRING) is
+			-- set `dll_name' with `n'
 		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
+			dll_name := n
 		end
 
-feature -- Measurement
-
-	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+	set_entry_point (n: STRING) is
+			-- set `entry_point_name' with `n'
 		do
-			Result := c_size_of_large_integer 
-		end
-	
-feature {NONE} -- Externals 
-
-	c_size_of_large_integer: INTEGER is
-		external 
-			"C [macro <objbase.h>]"
-		alias
-			"sizeof(LARGE_INTEGER)"
+			entry_point := n
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
-		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+	set_ordinal (ord: INTEGER) is
+			-- set `function_ordinal' with `ord'
+		do
+			ordinal := ord
 		end
-
-end -- class ECOM_LARGE_INTEGER
+		
+end -- class ECOM_DLL_ENTRY
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

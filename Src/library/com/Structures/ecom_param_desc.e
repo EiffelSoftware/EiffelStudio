@@ -1,54 +1,66 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "COM PARAMDESC structure"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_PARAM_DESC
 
 inherit
-	
 	ECOM_STRUCTURE
 
+	ECOM_PARAM_FLAGS
+
 creation
-	make, make_by_pointer,
-	make_from_integer
+	make, make_by_pointer
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
+	default_value: ECOM_PARAM_DESCEX is
+			--
+		require
+			has_fopt_and_fhasdefault (flags)
 		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
+			!!Result.make_by_pointer (ccom_paramdesc_default (item))
+		end
+
+	flags: INTEGER is
+			-- Flags
+		do
+			Result := ccom_paramdesc_flags (item)
+		ensure
+			is_valid_paramflag (Result)
 		end
 
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of PARAMDESC structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_param_desc
 		end
-	
-feature {NONE} -- Externals 
 
-	c_size_of_large_integer: INTEGER is
+feature {NONE} -- Externals
+
+	c_size_of_param_desc: INTEGER is
 		external 
-			"C [macro <objbase.h>]"
+			"C [macro %"E_paramdesc.h%"]"
 		alias
-			"sizeof(LARGE_INTEGER)"
+			"sizeof(PARAMDESC)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
+	ccom_paramdesc_default (a_ptr: POINTER): POINTER is
 		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+			"C [macro %"E_paramdesc.h%"]"
 		end
 
-end -- class ECOM_LARGE_INTEGER
+	ccom_paramdesc_flags(a_ptr: POINTER): INTEGER is
+		external
+			"C [macro %"E_paramdesc.h%"]"
+		end
+
+end -- class ECOM_PARAM_DESC
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

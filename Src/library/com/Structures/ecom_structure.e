@@ -1,6 +1,7 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Abstract notions of a COM data structure."
+	note: "If allocated by Client, may be deallocated by Server, and the opposite."
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,10 +9,65 @@ deferred class
 	ECOM_STRUCTURE
 
 inherit
-	ECOM_WRAPPER
-		rename
-			delete_wrapper as free_structure
+	WEL_STRUCTURE
+		redefine
+			make, 
+			destroy_item
 		end
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Allocate `item'
+		do
+			item := co_task_mem_alloc (structure_size)
+			if item = default_pointer then
+				-- Memory allocation problem
+				c_enomem
+			end
+			shared := False
+		end
+
+
+feature {NONE} -- Removal
+
+	destroy_item is
+			-- Free `item'
+		do
+			if item /= default_pointer then
+				co_task_mem_free (item)
+				item := default_pointer
+			end
+		end
+
+
+feature {NONE} -- Externals
+
+	co_task_mem_alloc (a_size: INTEGER): POINTER is
+			-- Allocates a block of task memory 
+		external
+			"C [macro <objbase.h >] (size_t):EIF_POINTER"
+		alias
+			"CoTaskMemAlloc"
+		end
+
+	co_task_mem_free (ptr: POINTER) is
+			-- Frees a block of task memory  
+		external
+			"C [macro <objbase.h >] (void*)"
+		alias
+			"CoTaskMemFree"
+		end
+
+	co_task_mem_realloc (ptr: POINTER; a_size: INTEGER): POINTER is
+			-- Changes the size of a previously allocated block of task memory. 
+  
+		external
+			"C [macro <objbase.h >] (void*, size_t):EIF_POINTER"
+		alias
+			"CoTaskMemRealloc"
+		end
+
 
 end -- class ECOM_STRUCTURE
 

@@ -1,54 +1,73 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "COM ELEMDESC structure"
 	status: "See notice at end of class"
+	author: "Marina Nudelman"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ECOM_LARGE_INTEGER
+	ECOM_ELEM_DESC
 
 inherit
-	
 	ECOM_STRUCTURE
 
 creation
-	make, make_by_pointer,
-	make_from_integer
+	make, make_by_pointer
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
+	type_desc: ECOM_TYPE_DESC is
+			-- TYPEDESC structure
 		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
+			!!Result.make_by_pointer (ccom_elemdesc_typedesc (item))
+		end
+
+	idl_desc: ECOM_IDL_DESC is
+			-- IDLDESC structure
+		do
+			!!Result.make_by_pointer (ccom_elemdesc_idldesc (item))
+		end
+
+	param_desc: ECOM_PARAM_DESC is
+			-- PARAMDESC structure
+		do
+			!!Result.make_by_pointer (ccom_elemdesc_paramdesc (item))
 		end
 
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of ELEMDESC structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_elem_desc
 		end
-	
-feature {NONE} -- Externals 
 
-	c_size_of_large_integer: INTEGER is
+feature {NONE} -- Externals
+
+	c_size_of_elem_desc: INTEGER is
 		external 
-			"C [macro <objbase.h>]"
+			"C [macro %"E_elemdesc.h%"]"
 		alias
-			"sizeof(LARGE_INTEGER)"
+			"sizeof(ELEMDESC)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
+	ccom_elemdesc_typedesc (a_ptr: POINTER): POINTER is
 		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+			"C [macro %"E_elemdesc.h%"]"
 		end
 
-end -- class ECOM_LARGE_INTEGER
+	ccom_elemdesc_idldesc (a_ptr: POINTER): POINTER is
+		external
+			"C [macro %"E_elemdesc.h%"]"
+		end
+
+	ccom_elemdesc_paramdesc (a_ptr: POINTER): POINTER is
+		external
+			"C [macro %"E_elemdesc.h%"]"
+		end
+
+
+end -- class ECOM_PARAM_DESC
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

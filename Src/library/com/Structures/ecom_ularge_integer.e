@@ -1,5 +1,6 @@
 indexing
-	description: ""
+	description: "COM ULARGE_INTEGER 64-bit integer"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,61 +12,44 @@ inherit
 	ECOM_STRUCTURE
 
 creation
+	make,
 	make_from_integer,
-	make_from_pointer
+	make_by_pointer
 
 feature {NONE} -- Initialization
 
 	make_from_integer (integer:INTEGER) is
-			-- 
+			-- Creation routine
 		do
-			initializer := ccom_create_c_ularge_integer;
-			ccom_set_from_integer(initializer, integer);
-		ensure
-			initializer /= Default_pointer
+			make
+			ccom_set_ularge_integer (item, integer)
+		ensure	
 			item /= Default_pointer
 		end
+
+feature -- Measurement
+
+	structure_size: INTEGER is
+			-- Size of TYPEDESC structure
+		do
+			Result := c_size_of_ularge_integer 
+		end
 	
+feature {NONE} -- Externals 
 
-feature {NONE} -- Implementation
-
-	create_wrapper (a_pointer: POINTER): POINTER is
-		do
-			Result := ccom_set_from_ularge_integer (a_pointer)
+	c_size_of_ularge_integer: INTEGER is
+		external 
+			"C [macro <objbase.h>]"
+		alias
+			"sizeof(ULARGE_INTEGER)"
 		end
 
-	free_structure is
-			-- Delete structure
-		do
-			ccom_delete_c_ularge_integer (initializer)
-		end
-
-feature {NONE} -- Externals
-
-	ccom_create_c_ularge_integer: POINTER is
+	ccom_set_ularge_integer (ptr: POINTER; i: INTEGER) is
 		external
-			"C++ [new E_ULarge_Integer %"E_ULarge_Integer.h%"]()"
+			"C [macro %"E_ULarge_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
 		end
 
-	ccom_delete_c_ularge_integer (cpp_obj: POINTER) is
-		external
-			"C++ [delete E_ULarge_Integer %"E_ULarge_Integer.h%"]()"
-		end
 
-	ccom_set_from_integer (cpp_obj: POINTER; i: INTEGER) is
-		external
-			"C++ [E_ULarge_Integer %"E_ULarge_Integer.h%"] (EIF_INTEGER)"
-		end
-
-	ccom_set_from_ularge_integer (i: POINTER): POINTER is
-		external
-			"C++ [new E_ULarge_Integer %"E_ULarge_Integer.h%"] (ULARGE_INTEGER *)"
-		end
-
-	ccom_ularge_integer (cpp_obj: POINTER): POINTER is
-		external
-			"C++ [E_ULarge_Integer %"E_ULarge_Integer.h%"](): EIF_POINTER"
-		end
 
 end -- class ECOM_ULARGE_INTEGER
 

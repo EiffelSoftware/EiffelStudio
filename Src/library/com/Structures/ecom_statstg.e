@@ -1,5 +1,6 @@
 indexing
-	description: ""
+	description: "Encapsulation of STATSTG structure"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,13 +9,22 @@ class
 
 inherit
 
-	ECOM_STRUCTURE
+	ECOM_WRAPPER
 
 	ECOM_STGTY
+		export
+			{NONE} all
+		end
 	
 	ECOM_STGM
+		export
+			{NONE} all
+		end
 
 	ECOM_LOCK_TYPES
+		export
+			{NONE} all
+		end
 
 creation
 
@@ -56,7 +66,7 @@ feature -- Access
 	size: ECOM_ULARGE_INTEGER is
 			-- Size in bytes of stream or byte array. 
 		do
-			!!Result.make_from_pointer (ccom_size(initializer))
+			!!Result.make_by_pointer (ccom_size(initializer))
 		ensure
 			Result /= Void and Result.item /= Default_pointer
 		end
@@ -118,7 +128,7 @@ feature {NONE} -- Implementation
 			Result := ccom_create_c_statstg (a_pointer)
 		end
 
-	free_structure is
+	delete_wrapper is
 			-- delete corresponding C++ object
 		do
 			ccom_delete_c_statstg (initializer)

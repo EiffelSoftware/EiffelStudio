@@ -1,54 +1,38 @@
 indexing
-	description: "COM LARGE_INTEGER 64-bit integer"
+	description: "Element of SAFEARRAY"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ECOM_LARGE_INTEGER
+deferred class
+	ECOM_SAFEARRAY_ELEMENT
 
 inherit
-	
-	ECOM_STRUCTURE
-
-creation
-	make, make_by_pointer,
-	make_from_integer
+	ECOM_VAR_TYPE
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
-		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			item /= Default_pointer
+	make is
+			-- Initialize
+		deferred
 		end
 
-feature -- Measurement
+feature -- Access
 
-	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
-		do
-			Result := c_size_of_large_integer 
-		end
-	
-feature {NONE} -- Externals 
-
-	c_size_of_large_integer: INTEGER is
-		external 
-			"C [macro <objbase.h>]"
-		alias
-			"sizeof(LARGE_INTEGER)"
+	type: INTEGER is
+			-- element type
+		deferred
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
-		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+	item: POINTER is
+			-- Pointer to element placeholder
+		deferred
 		end
 
-end -- class ECOM_LARGE_INTEGER
+end -- class ECOM_SAFEARRAY_ELEMENT
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

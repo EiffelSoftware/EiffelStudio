@@ -12,7 +12,6 @@ inherit
 		redefine
 			make, make_top_level, tool
 		end
-	INTERFACE_NAMES
 
 creation
 	make, make_top_level
@@ -59,7 +58,6 @@ feature {NONE} -- Initialization
 		local
 			i: EV_MENU_ITEM
 			generate_cmd: EB_GENERATE_PROFILE_INFO_CMD
-			show_pref_cmd: EB_SHOW_PREFERENCE_TOOL
 			arg: EV_ARGUMENT1 [EV_CONTAINER]
 
 		do
@@ -72,11 +70,8 @@ feature {NONE} -- Initialization
 			create i.make_with_text (commands_menu, "Close Tool")
 			i.add_select_command (tool.quit_cmd, Void)
 
-			create window_menu.make_with_text (menu_bar, m_Windows)
-			create i.make_with_text (window_menu, "Preferences")
-			create show_pref_cmd.make
-			create arg.make (Current)
-			i.add_select_command (show_pref_cmd, arg)
+			create windows_menu.make_with_text (menu_bar, m_Windows)
+			build_windows_menu (windows_menu)
 			
 			create help_menu.make_with_text (menu_bar, m_Help)
 		end			
@@ -123,7 +118,7 @@ feature {NONE} -- Implementation
 	commands_menu,
 			-- The commands menu
 
-	window_menu,
+	windows_menu,
 			-- The window menu
 
 	help_menu: EV_MENU

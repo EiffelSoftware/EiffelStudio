@@ -38,7 +38,7 @@ feature
 		do
 			cursor := cursor + 1;
 			if cursor > count then
-				resize (1, count + Chunk);
+				conservative_resize (1, count + Chunk);
 			end;
 			put (a, cursor);
 		ensure

@@ -609,7 +609,7 @@ end
 		do
 			type_id := class_type.type_id
 			if type_id > class_types.count then
-				class_types.resize (1, type_id + System_chunk)
+				class_types.conservative_resize (1, type_id + System_chunk)
 			end
 			class_types.put (class_type, type_id)
 		end

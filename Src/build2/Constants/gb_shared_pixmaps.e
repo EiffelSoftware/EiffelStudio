@@ -208,7 +208,6 @@ feature {NONE} -- Update
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP is
 		local
-			full_path: FILE_NAME
 			retried: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
 		do
@@ -220,7 +219,7 @@ feature {NONE} -- Update
 				Result.set_with_named_file (pixmap_file_name (fn))
 			else
 				create warning_dialog.make_with_text (
-					"Cannot read pixmap file:%N" + full_path + ".%N%
+					"Cannot read pixmap file:%N" + pixmap_file_name (fn) + ".%N%
 					%Please make sure the installation is not corrupted.")
 				warning_dialog.show
 				Result.set_size (16, 16) -- Default pixmap size

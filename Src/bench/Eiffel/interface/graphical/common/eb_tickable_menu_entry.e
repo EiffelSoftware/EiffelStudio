@@ -11,8 +11,11 @@ inherit
 	TOGGLE_B
 		rename
 			make as button_make
+		end;
+	ISE_MENU_ENTRY
+		redefine
+			associated_command
 		end
-	MENU_ENTRY
 
 creation
 	make
@@ -26,6 +29,17 @@ feature {NONE} -- Initialization
 			set_text (entry_text);
 			add_activate_action (associated_command, associated_command.text_window)
 		end;
+
+feature -- Properties
+
+    associated_command: ICONED_COMMAND;
+            -- The associated_command
+
+    entry_text: STRING is
+            -- Text as displayed on the button
+        do
+            Result := associated_command.name
+        end
 
 feature -- Status setting
 

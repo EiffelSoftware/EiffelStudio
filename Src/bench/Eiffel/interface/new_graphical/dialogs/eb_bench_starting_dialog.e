@@ -446,7 +446,9 @@ feature {NONE} -- Execution
 			li := compiled_projects_list.selected_item
 			if li /= Void then
 				create open_project_cmd.make_with_parent (parent_window)
-				hide
+				hide;
+				(create {EV_ENVIRONMENT}).application.process_events
+					-- We want the dialog to close straight away before project is loaded to avoid graphical ugliness
 				set_pointer_style (Pixmaps.Wait_cursor)
 				open_project_cmd.execute_with_file (li.text)
 				set_pointer_style (Pixmaps.standard_cursor)

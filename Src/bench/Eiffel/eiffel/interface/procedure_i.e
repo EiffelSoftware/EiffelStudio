@@ -169,7 +169,7 @@ feature -- Initialization
 			-- for an unchanged feature
 		do
 			if not is_replicated then	
-				Body_server.item (body_index).check_local_names
+				body.check_local_names
 			end
 		end
 

@@ -43,13 +43,11 @@ feature -- Initialization
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
 		local
-			a_pixmap: EV_PIXMAP
 			global_history: GLOBAL_HISTORY
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			create a_pixmap
-			a_pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\ico\icon_redo_color.ico")
-			set_pixmap (a_pixmap)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_redo @ 1)
+			set_tooltip ("Redo")
 			select_actions.extend (agent history.redo)
 			history.set_redo_button (Current)
 		end

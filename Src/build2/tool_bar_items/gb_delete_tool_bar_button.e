@@ -26,7 +26,7 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
-
+		
 feature -- Initialization
 
 	initialize is
@@ -36,9 +36,8 @@ feature -- Initialization
 			a_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			create a_pixmap
-			a_pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\png\icon_delete_color.png")
-			set_pixmap (a_pixmap)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_delete_small @ 1)
+			set_tooltip ("Delete")
 			drop_actions.extend (agent delete_object)
 		end
 

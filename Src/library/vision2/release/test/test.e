@@ -163,7 +163,7 @@ feature
 			Result.extend (create {EV_LIST}.make_for_test)
 			Result.extend (create {EV_MULTI_COLUMN_LIST}.make_for_test)
 			Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
-			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+--|FIXME			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
@@ -350,6 +350,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/14 22:29:08  oconnor
+--| ced out da SPIN thang
+--|
 --| Revision 1.16  2000/04/14 16:54:11  brendel
 --| Added EV_TEXT and EV_PASSWORD_FIELD.
 --|

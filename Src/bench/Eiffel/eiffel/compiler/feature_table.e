@@ -379,9 +379,6 @@ end;
 			class_c: CLASS_C;
 		do
 			class_c := associated_class;
-io.error.putstring ("Checking expanded of ");
-io.error.putstring (associated_class.class_name);
-io.error.new_line;
 			from
 				start
 			until

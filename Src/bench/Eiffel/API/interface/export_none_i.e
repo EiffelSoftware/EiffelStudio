@@ -5,7 +5,8 @@ inherit
 	EXPORT_I
 		redefine
 			is_none
-		end
+		end;
+	SHARED_TEXT_ITEMS
 	
 feature 
 
@@ -62,8 +63,8 @@ feature
 
 	format (ctxt: FORMAT_CONTEXT) is
 		do
-			ctxt.put_special ("{");
+			ctxt.put_text_item (ti_L_curly);
 			ctxt.put_string ("NONE");
-			ctxt.put_special ("}")
+			ctxt.put_text_item (ti_R_curly)
 		end;
 end

@@ -49,9 +49,9 @@ feature -- formatter
 		do
 			ctxt.always_succeed;
 			if value then
-				ctxt.put_keyword ("true")
+				ctxt.put_text_item (ti_True_keyword)
 			else
-				ctxt.put_keyword ("false")
+				ctxt.put_text_item (ti_False_keyword)
 			end
 		end;
 

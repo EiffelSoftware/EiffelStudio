@@ -111,8 +111,8 @@ feature -- Formatting
 			-- Reconstitute text.
 		do
 			if is_frozen then
-				ctxt.put_keyword ("frozen");
-				ctxt.put_string (" ")
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
 			end;
 			ctxt.prepare_for_feature (internal_name, void);
 			ctxt.put_current_feature;
@@ -122,8 +122,8 @@ feature -- Formatting
 			-- Reconstitute text.
 		do
 			if is_frozen then
-				ctxt.put_keyword ("frozen");
-				ctxt.put_string (" ")
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
 			end;
 			ctxt.prepare_for_main_feature;
 			ctxt.put_current_feature;

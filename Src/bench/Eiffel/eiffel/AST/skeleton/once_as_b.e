@@ -26,6 +26,10 @@ feature
 
 feature {}
 
-	begin_keyword: STRING is "once";
+	begin_keyword: BASIC_TEXT is
+			-- "once" keyword
+		once
+			Result := ti_Once_keyword
+		end;
 
 end

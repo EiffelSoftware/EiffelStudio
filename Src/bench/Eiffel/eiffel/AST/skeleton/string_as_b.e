@@ -62,7 +62,7 @@ feature -- formatter
 		local
 			i: INTEGER
 		do
-			ctxt.put_special ("%"");
+			ctxt.put_text_item (ti_Double_quote);
 			from
 				i := 1
 			until
@@ -71,7 +71,7 @@ feature -- formatter
 				ctxt.put_string (char_text (value.item (i)));
 				i := i + 1
 			end;
-			ctxt.put_special ("%"");
+			ctxt.put_text_item (ti_Double_quote);
 			ctxt.always_succeed;
 		end;
 

@@ -136,22 +136,22 @@ feature
 		do
 			ctxt.begin;
 			if is_frozen then 
-				ctxt.put_keyword ("frozen");
-				ctxt.put_string (" ");
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
 			end;
 			if is_infix then
-				ctxt.put_keyword ("infix");
-				ctxt.put_string (" ");
-				ctxt.put_special ("%"");
+				ctxt.put_text_item (ti_Infix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item (ti_Double_quote);
 				ctxt.prepare_for_infix (internal_name, void);
 			else
-				ctxt.put_keyword ("prefix");
-				ctxt.put_string (" ");
-				ctxt.put_special ("%"");
+				ctxt.put_text_item (ti_Prefix_keyword);
+				ctxt.put_space;
+				ctxt.put_text_item (ti_Double_quote);
 				ctxt.prepare_for_prefix (internal_name);
 			end;
-			ctxt.put_string (ctxt.new_types.final_name);
-			ctxt.put_special ("%"");
+			ctxt.put_fix_name (ctxt.new_types.final_name);
+			ctxt.put_text_item (ti_Double_quote);
 			ctxt.commit;
 		end;
 
@@ -160,16 +160,16 @@ feature
 		do
 			ctxt.begin;
 			if is_frozen then
-				ctxt.put_keyword ("frozen");
-				ctxt.put_string (" ");
+				ctxt.put_text_item (ti_Frozen_keyword);
+				ctxt.put_space
 			end;
 			if is_infix then
-				--ctxt.put_keyword ("infix");
-				--ctxt.put_string (" ");
+				--ctxt.put_text_item (ti_Infix_keyword);
+				--ctxt.put_space;
 				ctxt.prepare_for_main_infix;
 			else
-				--ctxt.put_keyword ("prefix");
-				--ctxt.put_string (" ");
+				--ctxt.put_text_item (ti_Prefix_keyword);
+				--ctxt.put_space;
 				ctxt.prepare_for_main_prefix;
 			end;
 			ctxt.put_main_fix;

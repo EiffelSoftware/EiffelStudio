@@ -320,17 +320,16 @@ feature -- formatter
 		do
 			ctxt.begin;
 			if arguments /= void and then not arguments.empty then
-				ctxt.put_string (" ");
-				ctxt.put_special ("(");
-				ctxt.set_separator (";");
-				ctxt.separator_is_special;
+				ctxt.put_space;
+				ctxt.put_text_item (ti_L_parenthesis);
+				ctxt.set_separator (ti_Semi_colon);
 				ctxt.space_between_tokens;
 				arguments.format (ctxt);
-				ctxt.put_special (")");
+				ctxt.put_text_item (ti_R_parenthesis)
 			end;
 			if type /= void then
-				ctxt.put_special (":");
-				ctxt.put_string (" ");
+				ctxt.put_text_item (ti_Colon);
+				ctxt.put_space;
 				if type.has_like then
 					ctxt.new_expression;
 				end;
@@ -340,7 +339,7 @@ feature -- formatter
 				content.format (ctxt)
 			end;
 			if not ctxt.is_short then
-				ctxt.put_special(";");
+				ctxt.put_text_item (ti_Semi_colon);
 				routine_as ?= content;
 				if routine_as /= Void then
 					ctxt.next_line;

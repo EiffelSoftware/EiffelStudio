@@ -58,13 +58,12 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword(begin_keyword);
-			if compound /= void then
+			ctxt.put_text_item (begin_keyword);
+			if compound /= Void then
 				ctxt.indent_one_more;
 				ctxt.next_line;
-				ctxt.set_separator(";");
+				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
-				ctxt.separator_is_special;
 				compound.format(ctxt);
 			end;
 			ctxt.put_breakable;
@@ -97,9 +96,10 @@ feature {INTERNAL_AS} -- Replication
 		do
 			compound := c;
 		end;	
+
 feature {} -- Formatter
 	
-	begin_keyword: STRING is 
+	begin_keyword: TEXT_ITEM is 
 		deferred
 		end;
 	

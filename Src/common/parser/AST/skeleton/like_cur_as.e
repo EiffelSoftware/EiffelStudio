@@ -43,8 +43,8 @@ feature
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_keyword("like");
-			ctxt.put_string(" Current");
+			ctxt.put_text_item (ti_Like_keyword);
+			ctxt.put_string (" Current");
 			ctxt.always_succeed;
 		end;
 

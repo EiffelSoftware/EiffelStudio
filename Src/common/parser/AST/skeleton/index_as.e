@@ -35,12 +35,11 @@ feature -- Initialization
 			ctxt.begin;
 			if tag /= Void then
 				tag.format (ctxt);
-				ctxt.put_special(":");
-				ctxt.put_string (" ")
+				ctxt.put_text_item (ti_Colon);
+				ctxt.put_space
 			end;
 			ctxt.space_between_tokens;
-			ctxt.set_separator(",");
-			ctxt.separator_is_special;
+			ctxt.set_separator (ti_Comma);
 			index_list.format (ctxt);
 			ctxt.commit;
 		end;

@@ -58,19 +58,21 @@ feature -- Format
 			if assertions /= void then
 				ctxt.begin;
 				ctxt.next_line;
-				ctxt.put_keyword (clause_name (ctxt));
+				put_clause_keywords (ctxt);
 				if not ctxt.troff_format then
 					source_cl := ctxt.format.global_types.source_class;
 					target_cl := ctxt.format.global_types.target_class;
 					if source_cl /= target_cl then
-						ctxt.put_string (" -- from ");
+						ctxt.put_space;
+						ctxt.put_text_item (ti_Dashdash);
+						ctxt.put_space;
+						ctxt.put_comment_text ("from ");
 						ctxt.put_class_name (source_cl);
 					end;
 				end;
 				ctxt.indent_one_more; 
 				ctxt.next_line;
-				ctxt.set_separator (";");
-				ctxt.separator_is_special;
+				ctxt.set_separator (ti_Semi_colon);
 				ctxt.new_line_between_tokens;
 				ctxt.continue_on_failure;
 				format_assertions (ctxt);
@@ -147,6 +149,12 @@ feature {NONE}
 	clause_name (ctxt: FORMAT_CONTEXT): STRING is
 			-- name of the assertion: require, require else, ensure, 
 			-- ensure then, invariant
+		do
+		end;
+
+	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
+			-- Append the assertion keywords ("require", "require else",
+			-- "ensure", "ensure then" or "invariant").
 		do
 		end;
 

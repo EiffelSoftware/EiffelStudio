@@ -6,6 +6,10 @@ inherit
 
 feature {}
 
-	begin_keyword: STRING is "do";
+	begin_keyword: BASIC_TEXT is
+			-- "do" keyword
+		once
+			Result := ti_Do_keyword
+		end;
 
 end

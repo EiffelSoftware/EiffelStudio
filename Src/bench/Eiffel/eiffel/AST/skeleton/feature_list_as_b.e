@@ -56,8 +56,7 @@ feature -- Export status computing
 			--| what if multiple names in ancestors?
 		do
 			ctxt.begin;
-			ctxt.set_separator(",");
-			ctxt.separator_is_special;
+			ctxt.set_separator (ti_Comma);
 			ctxt.space_between_tokens;
 			ctxt.continue_on_failure;
 			features.format (ctxt);

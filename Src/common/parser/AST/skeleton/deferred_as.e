@@ -36,6 +36,6 @@ feature -- formatter
 	format (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.always_succeed;
-			ctxt.put_keyword ("deferred");
+			ctxt.put_text_item (ti_Deferred_keyword);
 		end;
 end

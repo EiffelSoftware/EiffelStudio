@@ -32,12 +32,11 @@ feature -- Initialization
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.set_separator(",");
-			ctxt.separator_is_special;
+			ctxt.set_separator (ti_Comma);
 			ctxt.space_between_tokens;
 			id_list.format (ctxt);
-			ctxt.put_special(":");
-			ctxt.put_string (" ");
+			ctxt.put_text_item (ti_Colon);
+			ctxt.put_space;
 			type.format(ctxt);
 			ctxt.commit;
 		end;

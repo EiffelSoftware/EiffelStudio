@@ -82,7 +82,7 @@ feature -- Type check
 			ctxt.begin;
 			ctxt.new_expression;
 			ctxt.prepare_for_feature (feature_name, void);
-			ctxt.put_special("$");
+			ctxt.put_text_item (ti_Dollar);
 			ctxt.put_current_feature;
 			if ctxt.last_was_printed then
 				ctxt.commit;

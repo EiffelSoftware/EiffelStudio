@@ -2,6 +2,7 @@ class INVARIANT_SERVER
 
 inherit
 	LINKED_LIST [INVARIANT_FSAS];
+	SHARED_TEXT_ITEMS
 
 creation
 	make
@@ -16,9 +17,9 @@ feature
 			if not empty then
 				ctxt.set_in_assertion;
 				ctxt.begin;
-				ctxt.put_before_invariant;
+				ctxt.put_text_item (ti_Before_invariant);
 				ctxt.next_line;
-				ctxt.put_keyword ("invariant");
+				ctxt.put_text_item (ti_Invariant_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				from
@@ -31,14 +32,16 @@ feature
 						target_class := ctxt.format.global_types.target_class;
 						if target_class /= item.source_class then
 							ctxt.indent_one_more;
-							ctxt.put_string ("-- from ");
+							ctxt.put_text_item (ti_Dashdash);
+							ctxt.put_space;
+							ctxt.put_comment_text ("from ");
 							ctxt.put_class_name (item.source_class);
 							ctxt.indent_one_less;
 							ctxt.next_line;
 						end;
 					end;
 					item.format (ctxt);
-					ctxt.put_special (";")
+					ctxt.put_text_item (ti_Semi_colon);
 					ctxt.next_line;
 					if ctxt.last_was_printed then
 						is_not_first := true;
@@ -50,7 +53,7 @@ feature
 				end;
 				if is_not_first then
 					ctxt.commit;
-					ctxt.put_after_invariant
+					ctxt.put_text_item (ti_After_invariant)
 				else
 					ctxt.rollback
 				end

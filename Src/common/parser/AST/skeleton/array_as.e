@@ -77,14 +77,13 @@ feature -- Type check, byte code, dead code removal and formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_special ("<<");
-			ctxt.set_separator (",");
-			ctxt.separator_is_special;
+			ctxt.put_text_item (ti_L_array);
+			ctxt.set_separator (ti_Comma);
 			ctxt.abort_on_failure;
 			ctxt.space_between_tokens;
 			expressions.format (ctxt);
 			if ctxt.last_was_printed then
-				ctxt.put_special(">>");
+				ctxt.put_text_item (ti_R_array);
 				ctxt.commit
 			else
 				ctxt.rollback;

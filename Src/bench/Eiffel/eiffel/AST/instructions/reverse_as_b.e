@@ -56,9 +56,9 @@ feature
 
 feature {} -- Formatter
 	
-	assign_symbol: STRING is 
-		once
-			Result := " ?= ";
+	assign_symbol: TEXT_ITEM is 
+		do
+			Result := ti_Reverse_assign
 		end;
 
 end

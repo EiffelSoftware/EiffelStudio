@@ -87,15 +87,14 @@ feature -- Formatter
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("elseif");
-			ctxt.put_string (" ");
-		    	ctxt.new_expression;
+			ctxt.put_text_item (ti_Elseif_keyword);
+			ctxt.put_space;
+		   	ctxt.new_expression;
 			expr.format (ctxt);
-			ctxt.put_string (" ");
-			ctxt.put_keyword ("then");
+			ctxt.put_space;
+			ctxt.put_text_item (ti_Then_keyword);
 			ctxt.indent_one_more;
-			ctxt.set_separator(";");
-			ctxt.separator_is_special;
+			ctxt.set_separator (ti_Semi_colon);
 			ctxt.new_line_between_tokens;
 			ctxt.next_line;
 			if compound /= Void then

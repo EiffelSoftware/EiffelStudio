@@ -127,14 +127,14 @@ feature -- Formatter
 			-- Reconstitute text
 		do
 			ctxt.always_succeed;
-			ctxt.put_keyword ("external");
+			ctxt.put_text_item (ti_External_keyword);
 			ctxt.indent_one_more;
 			ctxt.next_line;
 			ctxt.indent_one_less;
 			language_name.language_name.format (ctxt);
 			if external_name /= void then
 				ctxt.next_line;
-				ctxt.put_keyword ("alias");
+				ctxt.put_text_item (ti_Alias_keyword);
 				ctxt.indent_one_more;
 				ctxt.next_line;
 				ctxt.indent_one_less;

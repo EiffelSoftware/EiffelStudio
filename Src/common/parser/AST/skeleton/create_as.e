@@ -34,8 +34,8 @@ feature -- formatter
 			last_was_printed: BOOLEAN;
 		do
 			ctxt.begin;
-			ctxt.put_keyword ("creation");
-			ctxt.put_string (" ");
+			ctxt.put_text_item (ti_Creation_keyword);
+			ctxt.put_space;
 			if clients = void then
 				last_was_printed := true
 			else
@@ -48,8 +48,7 @@ feature -- formatter
 				if feature_list /= Void then
 					ctxt.indent_one_more;
 					ctxt.next_line;
-					ctxt.set_separator(",");
-					ctxt.separator_is_special;
+					ctxt.set_separator (ti_Comma);
 					ctxt.new_line_between_tokens;
 					feature_list.format (ctxt);
 				end;

@@ -46,7 +46,7 @@ feature -- Debugger
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
-			ctxt.put_keyword("retry");
+			ctxt.put_text_item (ti_Retry_keyword);
 			ctxt.always_succeed;
 		end;
 

@@ -76,9 +76,11 @@ feature
 					indent_one_more;
 					if feat.written_class /= class_c then
 						next_line;
-						put_string ("--  (from ");
+						put_text_item (ti_Dashdash);
+						put_space;
+						put_comment_text ("(from ");
 						put_class_name (feat.written_class);
-						put_string (")");
+						put_comment_text (")");
 						print_export_status;
 					else
 						print_export_status
@@ -106,10 +108,12 @@ feature {NONE} -- Feature comments
 			then
 				next_line;
 				!!s.make (50);
-				put_string ("--  (from ");
+				put_text_item (ti_Dashdash);
+				put_space;
+				put_comment_text ("(from ");
 				c := format.global_types.source_class;
 				put_class_name (c);
-				put_string (")");
+				put_comment_text (")");
 			end;
 			print_export_status;
 			commit;
@@ -119,9 +123,11 @@ feature {NONE} -- Feature comments
 		do
 			if not export_status.is_all then
 				next_line;
-				put_string ("--  (export status ");
+				put_text_item (ti_Dashdash);
+				put_space;
+				put_comment_text ("(export status ");
 				export_status.format (Current);
-				put_string (")");
+				put_comment_text (")");
 			end;
 		end;
 

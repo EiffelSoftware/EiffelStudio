@@ -78,14 +78,14 @@ feature
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
-			ctxt.put_before_feat_clause;
+			ctxt.put_text_item (ti_Before_feature_clause);
 			ctxt.begin;
 			ctxt.next_line;
-			ctxt.put_keyword ("feature");
-			ctxt.put_string (" ");
+			ctxt.put_text_item (ti_Feature_keyword);
+			ctxt.put_space;
 			--clients_list.format (ctxt);
 			reference.format (ctxt);
-			ctxt.put_string (" ");
+			ctxt.put_space;
 			ctxt.put_comment (comment);
 			ctxt.next_line;
 			ctxt.indent_one_more;
@@ -98,7 +98,7 @@ feature
 				features.forth;
 			end;
 			ctxt.commit;
-			ctxt.put_after_feat_clause;
+			ctxt.put_text_item (ti_After_feature_clause)
 		end
 
 	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is

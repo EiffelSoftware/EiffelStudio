@@ -43,10 +43,10 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT) is
 		do
 			ctxt.begin;
-			ctxt.put_special("(");
+			ctxt.put_text_item (ti_L_parenthesis);
 			expr.format (ctxt);
 			if ctxt.last_was_printed then
-				ctxt.put_special(")");
+				ctxt.put_text_item (ti_R_parenthesis);
 				ctxt.commit;
 			else
 				ctxt.rollback;

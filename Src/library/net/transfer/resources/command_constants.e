@@ -3,7 +3,6 @@ indexing
 		"Constants for server commands"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

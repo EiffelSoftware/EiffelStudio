@@ -3,7 +3,6 @@ indexing
 		"Singleton instance of the comparator builder"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -174,14 +174,18 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- Change the minimum width of the container because
 			-- the child changed his wn minimum value.
 		do
-			set_minimum_width (value + 6)
+			if value + 6 > minimum_width then
+				set_minimum_width (value + 6)
+			end
 		end
 
 	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum height of the container because
 			-- the child changed his own minimum width.
 		do
-			set_minimum_height (value + tab_height)
+			if value + tab_height > minimum_height then
+				set_minimum_height (value + tab_height)
+			end
 		end
 
 feature {NONE} -- Implementation

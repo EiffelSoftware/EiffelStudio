@@ -95,6 +95,16 @@ feature -- Access
 			border_width_entry.set_text (first.border_width.out)
 			column_spacing_entry.set_text (first.column_spacing.out)
 			row_spacing_entry.set_text (first.row_spacing.out)
+
+				-- We cannot check whether layout_wnidow.is_shoq_requested,
+				-- which is what we really should be checking for, as
+				-- checking this re-creates the window which is not good.
+				-- If world /= Void, then the layout window has been shown 
+				-- at least once, so this is a temporary fix.
+			if world /= Void then
+				selected_item := Void
+				draw_widgets
+			end
 		end
 		
 feature {GB_XML_STORE} -- Output
@@ -575,6 +585,8 @@ feature {NONE} -- Implementation
 				-- second place.
 			second_widget := (objects @ 2).item (first.item_column_position (v), first.item_row_position (v))
 			(objects @ 2).set_item_span (second_widget, columns, rows)
+				-- Flag that notification is required for all corresponding editors.
+			must_update_editors := True
 		end
 		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
@@ -588,11 +600,14 @@ feature {NONE} -- Implementation
 
 			first.set_item_position_and_span (v, a_column, a_row, columns, rows)
 			(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
+				-- Flag that notification is required for all corresponding editors.
+			must_update_editors := True
 		end
 		
 
 	track_movement (x_position, y_position: INTEGER) is
-			-- Track `x', `y' position of cursor, and 
+			-- Track `x', `y' position of cursor, and position widgets
+			-- as necessary.
 		local
 			new_x, new_y: INTEGER
 			column_position, row_position, end_row_position, end_column_position: INTEGER
@@ -600,6 +615,9 @@ feature {NONE} -- Implementation
 			end_position, current_x_position, current_y_position: INTEGER
 			x, y: INTEGER
 		do
+				-- Always reset here, as generally, we will not
+				-- need to update. Only if a child is moved or resized.
+			must_update_editors := False
 				-- Transform coordinates to take into account offset of actual diagram.
 			x := x_position - diagram_border
 			y := y_position - diagram_border
@@ -708,6 +726,9 @@ feature {NONE} -- Implementation
 				end
 				draw_widgets
 			end
+			if must_update_editors then
+				update_editors
+			end
 		end
 		
 	first_filled_horizontal_space (widget: EV_WIDGET; a_column, a_row, a_row_span: INTEGER): INTEGER is
@@ -780,9 +801,7 @@ feature {NONE} -- Implementation
 		do
 			Result := grid_size // 2
 		end
-
-original_column, original_row, original_column_span, original_row_span: INTEGER
-
+		
 	button_pressed (x_position, y_position, a_button: INTEGER) is
 			-- A button has been pressed. If `a_button' = 1 then
 			-- check for movement/resizing.
@@ -791,6 +810,9 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 			end_column_position, end_row_position: INTEGER
 			x, y: INTEGER
 		do
+				-- We need to make `selected_item' Void and redraw it
+				-- as black in all other editors referencing `Current'.
+			update_editors
 				-- Transform coordinates to take into account offset of actual diagram.
 			x := x_position - diagram_border
 			y := y_position - diagram_border
@@ -859,7 +881,7 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 						resizing_widget := False
 					end
 					if resizing_widget or moving_widget then
-	--					drawing_area.enable_capture	
+						drawing_area.enable_capture	
 					end
 				end
 			
@@ -886,11 +908,11 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 				if resizing_widget then
 					resizing_widget := False
 					set_all_pointer_styles (standard_cursor)
---					drawing_area.disable_capture
+					drawing_area.disable_capture
 				elseif moving_widget then
 					moving_widget := False
 					set_all_pointer_styles (standard_cursor)
---					drawing_area.disable_capture
+					drawing_area.disable_capture
 				end
 			draw_widgets
 			end
@@ -977,10 +999,7 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 				homogeneous_button.set_text ("Disable homogeneous")
 			end
 		end
-		
-		
-		
-		
+
 
 feature {NONE} -- Attributes
 
@@ -1060,8 +1079,19 @@ feature {NONE} -- Attributes
 	draw_greyed_widget: BOOLEAN
 		-- Should a greyed representation of the desired widget position/
 		-- size be drawn
+		
+	must_update_editors: BOOLEAN
+		-- Should we update all other editors?
+		-- Used in `track_movement', so we can update other
+		-- windows when widgets size and position changes.
 	
 	grey_x, grey_y, grey_x_span, grey_y_span: INTEGER
 		-- Table coordinates for `draw_greyed_widget'.
+		
+	original_column, original_row, original_column_span, original_row_span: INTEGER
+		-- Temporary variables used to keep original position of `selected_item'
+		-- when button was pressed. These values are used in `track_movement' to
+		-- calculate new size/position of `selected_item', based on the current mouse
+		-- position.
 
 end -- class GB_EV_TABLE

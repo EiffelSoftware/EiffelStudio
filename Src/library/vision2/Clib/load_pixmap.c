@@ -871,22 +871,11 @@ unsigned char c_ev_read_n_bytes(
 		MINIMUM_BYTES_TO_READ_PER_ACCESS
 		);
 
-		{
-			int j = ftell (pBufFile->pFile);
-			int i = j;
-		}
-
 	nBytesRead = fread(pBufFile->pBuffer + pBufFile->nCurrBufferSize, 1, 
 				       (size_t) nBytesToRead, pBufFile->pFile);
 	
 	/* Compute the new buffer size */
 	pBufFile->nCurrBufferSize += nBytesRead;
-
-		{
-			int j = ftell (pBufFile->pFile);
-			int i = j;
-		}
-
 
 	/* Everything went ok if the RequestedSize is loaded. */
 	if (pBufFile->nCurrBufferSize >= nRequestedBufferSize)

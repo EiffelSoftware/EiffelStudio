@@ -591,7 +591,11 @@ feature {NONE} -- Implementation
 		local
 			i_name: STRING
 		do
-			i_name := clone (icon_name)
+			if icon_name /= Void then
+				i_name := clone (icon_name)
+			else
+				i_name := clone (Project_tool.icon_name)
+			end
 			i_name.append (": ")
 			i_name.append (message)
 			Project_tool.set_icon_name (i_name)

@@ -52,11 +52,11 @@ inherit
 
 creation
 
-	make
+	make, make_word_wrapped
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_text: TEXT) is
+	make (a_text: TEXT; man: BOOLEAN) is
 			-- Create a motif text.
 		local
 			ext_name: ANY
@@ -64,7 +64,21 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_text.identifier.to_c;
 			screen_object := create_text ($ext_name,
-					parent_screen_object (a_text, widget_index));
+					parent_screen_object (a_text, widget_index), 
+					man);
+			a_text.set_font_imp (Current)
+		end;
+
+	make_word_wrapped (a_text: TEXT; man: BOOLEAN) is
+			-- Create a motif text enabling word wrap.
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := a_text.identifier.to_c;
+			screen_object := create_text_ww ($ext_name,
+					parent_screen_object (a_text, widget_index), 
+					man);
 			a_text.set_font_imp (Current)
 		end;
 
@@ -181,20 +195,6 @@ feature
 		ensure then
 			Result >= 0;
 			Result <= count
-		end;
-
-	disable_word_wrap is
-			-- Specify that lines are free to go off the right edge
-			-- of the window.
-		do
-			set_xt_boolean (action_target, False, MwordWrap)
-		end;
-
-	enable_word_wrap is
-			-- Specify that lines are to be broken at word breaks.
-			-- The text does not go off the right edge of the window.
-		do
-			set_xt_boolean (action_target, True, MwordWrap)
 		end;
 
 	disable_verify_bell is
@@ -517,41 +517,99 @@ feature
 			xm_text_set_length (action_target, a_max)
 		end;
 
+feature 
+
+	rows: INTEGER is
+			-- Height of Current widget measured in character
+			-- heights.
+		do
+			Result := xt_short (action_target, Mrows)
+		end;
+ 
+	set_rows (i: INTEGER) is
+			-- Set the character height of Current widget to `i'.
+		do
+			set_xt_short (action_target, i, Mrows)
+		end;
+ 
+	set_single_line_mode is
+			-- Set editing for single line text.
+		do
+			set_xt_int (action_target, MSINGLE_LINE_EDIT, MeditMode)
+		end;
+ 
+	set_multi_line_mode is
+			-- Set editing for multiline text.
+		do
+			set_xt_int (action_target, MMULTI_LINE_EDIT, MeditMode)
+		end;
+ 
+	is_multi_line_mode: BOOLEAN is
+			-- Is Current editing a multiline text?
+		do
+			Result := xt_int (action_target, MeditMode) = MMULTI_LINE_EDIT
+		end;
+ 
+	is_cursor_position_visible: BOOLEAN is
+			-- Is the insert cursor position marked
+			 -- by a blinking text cursor?
+		do
+			Result := xt_boolean (action_target, Mcursorpositionvisible)
+		end;
+ 
+	set_cursor_position_visible (flag: BOOLEAN) is
+			-- Set is_cursor_position_visible to flag.
+		do
+			set_xt_boolean (action_target, flag, Mcursorpositionvisible)
+		end;
+
 feature -- Cursor position
 
-    x_coordinate (char_pos: INTEGER): INTEGER is
-            -- X coordinate relative to the upper left corner
-            -- of Current text widget at character position `char_pos'.
-        do
+	x_coordinate (char_pos: INTEGER): INTEGER is
+			-- X coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		do
 			Result := xm_text_x_coord (action_target, char_pos)
-        end;
+		end;
 
-    y_coordinate (char_pos: INTEGER): INTEGER is
-            -- Y coordinate relative to the upper left corner
-            -- of Current text widget at character position `char_pos'.
-        do
+	y_coordinate (char_pos: INTEGER): INTEGER is
+			-- Y coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		do
 			Result := xm_text_y_coord (action_target, char_pos)
-        end;
+		end;
 
-    character_position (x_pos, y_pos: INTEGER): INTEGER is
-            -- Character position at cursor position `x' and `y'
-        do
+	character_position (x_pos, y_pos: INTEGER): INTEGER is
+			-- Character position at cursor position `x' and `y'
+		do
 			Result := xm_text_cur_pos (action_target, x_pos, y_pos)
-        end;
+		end;
 
-    top_character_position: INTEGER is
-            -- Character position of first character displayed
-        do
+	top_character_position: INTEGER is
+			-- Character position of first character displayed
+		do
 			Result := xm_text_top_char (action_target)
-        end;
+		end;
 
-    set_top_character_position (char_pos: INTEGER) is
-            -- Set first character displayed to `char_pos'.
-        do
+	set_top_character_position (char_pos: INTEGER) is
+			-- Set first character displayed to `char_pos'.
+		do
 			xm_text_set_top_char (action_target, char_pos)
-        end;
+		end;
 
 feature {NONE} -- External features
+
+	create_text (t_name: ANY; scr_obj: POINTER; 
+					is_man: BOOLEAN): POINTER is
+		external
+			"C"
+		end;
+
+	create_text_ww (t_name: ANY; scr_obj: POINTER; 
+					is_man: BOOLEAN): POINTER is
+		external
+			"C"
+		end;
 
 	c_set_do_it (value: INTEGER) is
 		external
@@ -629,11 +687,6 @@ feature {NONE} -- External features
 		end;
 
 	xm_text_append (scr_obj: POINTER; t_name: ANY) is
-		external
-			"C"
-		end;
-
-	create_text (t_name: ANY; scr_obj: POINTER): POINTER is
 		external
 			"C"
 		end;

@@ -9,23 +9,29 @@ root
 
 default
 	assertion (all)
-	precompiled ("generated/")
+	precompiled ("$EIFFEL4\examples\com\wizard\string_manipulator\generated\client")
 
 cluster
 	root_cluster: ".";
 
-	-- EiffelBase
+		-- Client
+	all client:						"..\generated\client"
+
+		-- EiffelBase
 	all base:						"$EIFFEL4\library\base"
 		exclude
 			"table_eiffel3";
 			"desc"
+		visible
+			STRING;
 		end;
 
-	-- WEL
+		-- WEL
 	all wel:						"$EIFFEL4\library\wel"
 
 external
-	include_path:	"$LIBRARY\wel\spec\windows\include";
-	object: 		"$(LIBRARY)\wel\spec\$(COMPILER)\lib\wel.lib";
-
+	include_path:	"$EIFFEL4\library\wel\spec\windows\include",
+					"$EIFFEL4\library\com\spec\windows\include";
+	object:		 	"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
+	
 end

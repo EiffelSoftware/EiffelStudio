@@ -12,15 +12,15 @@ feature -- Access
 	count: INTEGER is
 			-- Number of arguments
 		do
-			Result := argument_type.count
+			Result := argument_types.count
 		end
 		
-	argument_type: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING] is
 			-- All argument types of action sequence represented by `Current'.
 		deferred
 		end
 
-	argument_name: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING] is
 			-- All argument names of action sequence represented by `Current'.
 		deferred
 		end

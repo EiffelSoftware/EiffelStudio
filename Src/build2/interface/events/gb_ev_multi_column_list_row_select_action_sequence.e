@@ -12,14 +12,14 @@ inherit
 
 feature -- Access
 
-	argument_type: ARRAYED_LIST [STRING] is
+	argument_types: ARRAYED_LIST [STRING] is
 			-- All argument types of action sequence represented by `Current'.
 		once
 			create Result.make (0)
 			Result.extend ("EV_MULTI_COLUMN_LIST_ROW")
 		end
 	
-	argument_name: ARRAYED_LIST [STRING] is
+	argument_names: ARRAYED_LIST [STRING] is
 			-- All argument names of action sequence represented by `Current'.
 		once
 			create Result.make (0)

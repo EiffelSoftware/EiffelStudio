@@ -12,8 +12,6 @@ inherit
 
 	ECOM_VAR_TYPE
 
-	WIZARD_VARIABLE_NAME_MAPPER
-
 feature -- Basic operations
 
 	process (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR; a_visitor: WIZARD_DATA_TYPE_VISITOR) is

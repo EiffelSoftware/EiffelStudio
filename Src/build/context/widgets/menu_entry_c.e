@@ -39,7 +39,7 @@ feature
             -- Is `parent_context' a valid parent?
 			--| Valid if parent is menu_c
         local
-            menu_c: MENU_C
+            menu_c: PULLDOWN_C
         do
             menu_c ?= parent_context;
             Result := menu_c /= Void

@@ -12,13 +12,16 @@ class WARNING_MESSAGES
 feature -- Warning messages
 
 	w_Assertion_warning: STRING is "By default assertions enabled in the Ace%N%
-								%file are kept in final mode.%N%
-								%Keeping assertion checking inhibits any optimization%N%
-								%specified in the Ace (inlining, array optimization,%N%
-								%dead-code removal) and will produce a final executable%N%
-								%that is not optimal in speed and size.%N";
-	w_Beginning_of_history: STRING is "Beginning of history";
-	w_Cannot_compile: STRING is "Read-only project: cannot compile.";
+							%file are kept in final mode.%N%
+							%Keeping assertion checking inhibits any optimization%N%
+							%specified in the Ace (inlining, array optimization,%N%
+							%dead-code removal) and will produce a final executable%N%
+							%that is not optimal in speed and size.%N";
+
+	w_Beginning_of_history: STRING is "Beginning of history"
+
+	w_Cannot_compile: STRING is "Read-only project: cannot compile."
+
 	w_Cannot_create_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -26,24 +29,31 @@ feature -- Warning messages
 			!!Result.make (30);
 			Result.append ("Cannot create file:%N");
 			Result.append (file_name)
-		end;
-	w_Cannot_debug: STRING is 
-			"Current version of system has not been successfully compiled. %N%
-			%Cannot use debugging facilities.";
+		end
+
+	w_Cannot_debug: STRING is "Current version of system has not been successfully compiled. %N%
+						%Cannot use debugging facilities."
+
 	w_Cannot_debug_attributes: STRING is
-			"This format is not applicable to attributes.";
+			"This format is not applicable to attributes."
+
 	w_Cannot_debug_constants: STRING is
-			"This format is not applicable to constant attributes.";
+			"This format is not applicable to constant attributes."
+
 	w_Cannot_debug_deferreds: STRING is
-			"This format is not applicable to deferred features.";
+			"This format is not applicable to deferred features."
+
 	w_Cannot_debug_dynamics: STRING is
-			"This format is not applicable to dynamic features.";
+			"This format is not applicable to dynamic features."
+
 	w_Cannot_debug_externals: STRING is
-			"This format is not applicable to external features.";
+			"This format is not applicable to external features."
+
 	w_Cannot_debug_feature: STRING is
-			"This format is not applicable to this feature.";
+			"This format is not applicable to this feature."
+
 	w_Cannot_debug_uniques: STRING is
-			"This format is not applicable to unique attributes.";
+			"This format is not applicable to unique attributes."
 
 	w_Cannot_find_class (class_name: STRING): STRING is
 		require
@@ -85,10 +95,10 @@ feature -- Warning messages
 			upper_name := clone (class_name);
 			upper_name.to_upper;
 			Result.append (upper_name)
-		end;
+		end
 
 	w_Cannot_open_project: STRING is 
-			"Project is not readable; check permissions.";
+			"Project is not readable; check permissions."
 
 	w_Cannot_read_directory (dir_name: STRING): STRING is
 		require
@@ -98,7 +108,7 @@ feature -- Warning messages
 			Result.append ("Directory: ");
 			Result.append (dir_name);
 			Result.append ("%Ncannot be read")
-		end;
+		end
 
 	w_Cannot_read_file (file_name: STRING): STRING is
 		require
@@ -170,8 +180,9 @@ feature -- Warning messages
 			Result.append ("The text will not be clickable.")
 		end;
 
-	w_Class_not_in_universe: STRING is "Class is not in the universe";
-	w_Clear_breakpoints: STRING is "Do you wish to clear the stop points?";
+	w_Class_not_in_universe: STRING is "Class is not in the universe"
+
+	w_Clear_breakpoints: STRING is "Do you wish to clear the stop points?"
 
 	w_Default_ace_file_not_exist (f_name: STRING): STRING is
 		require
@@ -202,10 +213,12 @@ feature -- Warning messages
 			Result.append (dir_name);
 			Result.append ("%Ndoes not have read-write-execute permissions.")
 			Result.append ("%NYou may try again after fixing the permissions.")
-		end;
+		end
 
-	w_End_of_history: STRING is "End of history";
-	w_Feature_not_compiled: STRING is "Feature is not compiled";
+	w_End_of_history: STRING is "End of history"
+
+	w_Feature_not_compiled: STRING is "Feature is not compiled"
+
 	w_Finalize_warning: STRING is "Finalizing implies some C compilation%N%
 									%and linking. Do you want to do it now?";
 
@@ -217,7 +230,7 @@ feature -- Warning messages
 			Result.append ("File: ");
 			Result.append (file_name);
 			Result.append (" already exists.%NDo you wish to overwrite it?")
-		end;
+		end
 
 	w_File_exists_edit_it (file_name: STRING): STRING is
 		require
@@ -227,7 +240,7 @@ feature -- Warning messages
 			Result.append ("File: ");
 			Result.append (file_name);
 			Result.append (" already exists.%NDo you wish to edit it?")
-		end;
+		end
 
 	w_Freeze_warning: STRING is "Freezing implies some C compilation%N%
 									%and linking. Do you want to do it now?";
@@ -283,16 +296,21 @@ feature -- Warning messages
 			Result.append (make_file);
 			Result.append (" does not exist.%N");
 			Result.append ("Cannot invoke C compilation")
-		end;
-	w_MakefileSH_more_recent: STRING is "The Makefile.SH is more recent than the system.";
-	w_Melt_only: STRING is"%
-			%This feature is not available in the personal version.%N%
-			%Please upgrade to the professional version of ISE Eiffel 4";
-	w_Must_compile_first: STRING is "You must compile a system first";
-	w_Must_finalize_first: STRING is "You must finalize your project first";
-	w_No_associated_file: STRING is "There is no associated file for %
-													%pebble dropped";
-	w_No_filter_selected: STRING is "No filter selected";
+		end
+
+	w_MakefileSH_more_recent: STRING is "The Makefile.SH is more recent than the system."
+
+	w_Melt_only: STRING is "This feature is not available in the personal version.%N%
+			%Please upgrade to the professional version of ISE Eiffel 4"
+
+	w_Must_compile_first: STRING is "You must compile a system first"
+
+	w_Must_finalize_first: STRING is "You must finalize your project first"
+
+	w_No_associated_file: STRING is "There is no associated file for pebble dropped"
+
+	w_No_filter_selected: STRING is "No filter selected"
+
 	w_No_system_generated: STRING is "No system was generated.%N%
 						%Do you want to compile the generated C code?";
 
@@ -362,10 +380,12 @@ feature -- Warning messages
 			Result.append ("%Nis not writable.%NPlease check permissions")
 		end;
 
-	w_Object_not_inspectable: STRING is "Object may not be inspected";
-	w_Pebble_not_valid: STRING is "Pebble is not valid";
+	w_Object_not_inspectable: STRING is "Object may not be inspected"
+
+	w_Pebble_not_valid: STRING is "Pebble is not valid"
+
 	w_Precompile_warning: STRING is "Precompiling implies some C compilation%N%
-									%and linking. Do you want to do it now?";
+									%and linking. Do you want to do it now?"
 
 	w_Project_corrupted (dir_name: STRING): STRING is
 		require
@@ -410,19 +430,29 @@ feature -- Warning messages
 		end;
 		
 	w_Project_may_be_corrupted: STRING is "Some files were made unwritable.%N%
-				%Cannot continue. Project may be corrupted.";
+				%Cannot continue the compilation. Please try again."
+
 	w_Read_only_project: STRING is "No write permissions on project.%N%
-				%Open in read-only mode?";
-	w_Specify_a_class: STRING is "Please specify a class";
-	w_Specify_a_feature: STRING is "Please specify a feature";
-	w_System_not_running: STRING is "System is not running";
-	w_System_not_stopped: STRING is "System is not stopped";
-	w_Unexisting_system: STRING is "System doesn't exist";
-	w_Unknown_class: STRING is "Unknown class";
-	w_Unknown_feature: STRING is "Unknown feature";
-	w_Unknown_object: STRING is "Unknown object";
-	w_File_changed: STRING is			"File has changed since last save!%
-										%%NLose changes?";
-	w_Specify_ace: STRING is			"Unspecified ace file%NChoose one?";
+				%Open in read-only mode?"
+
+	w_Specify_a_class: STRING is "Please specify class (or * for all classes)"
+
+	w_Specify_a_feature: STRING is "Please specify a feature"
+
+	w_System_not_running: STRING is "System is not running"
+
+	w_System_not_stopped: STRING is "System is not stopped"
+
+	w_Unexisting_system: STRING is "System doesn't exist"
+
+	w_Unknown_class: STRING is "Unknown class"
+
+	w_Unknown_feature: STRING is "Unknown feature"
+
+	w_Unknown_object: STRING is "Unknown object"
+
+	w_File_changed: STRING is "File has changed since last save!%NLose changes?"
+
+	w_Specify_ace: STRING is "Unspecified ace file%NChoose one?"
 
 end -- class WARNING_MESSAGES

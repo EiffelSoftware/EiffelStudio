@@ -1,15 +1,24 @@
+indexing
+
+	description: 
+		"Table hashed on internal_name of features to give%
+		%corresponding feature_name to be displayed.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class OPERATOR_TABLE
 
 creation
+
 	make
 
-feature {} -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Names of standard operator, when not immediately
 			-- extracted from internal name
 		do
-			!!operator_table.make (14);
+			!! operator_table.make (14);
 			operator_table.put ("^", "power");
 			operator_table.put ("^", "shift");
 			operator_table.put ("*", "star");
@@ -28,18 +37,18 @@ feature {} -- Initialization
 
 feature
 
-		name (operator: STRING): STRING is
-				-- What's the name of operator?
-			do
-				Result := operator_table @ operator;
-				if Result = void then
-					Result := operator;
-				end;
+	name (operator: STRING): STRING is
+			-- What's the name of operator?
+		do
+			Result := operator_table @ operator;
+			if Result = void then
+				Result := operator;
 			end;
+		end;
 
-feature {} -- Implementation
+feature {NONE} -- Implementation
 
-		operator_table: HASH_TABLE [STRING, STRING];
+	operator_table: HASH_TABLE [STRING, STRING];
 			-- Internal table to record operators
 
 end -- class OPERATOR_TABLE

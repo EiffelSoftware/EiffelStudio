@@ -16,7 +16,7 @@ internal class FEATURE_INFO {
 	
 	public FEATURE_INFO (int arg_count) {
 		parameter_names = new string [arg_count];
-		feature_id = COMPILER.NoValue;
+		feature_id = COMPILER.No_value;
 	}
 
 	public string real_name;

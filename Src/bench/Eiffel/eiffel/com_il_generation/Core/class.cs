@@ -20,7 +20,7 @@ internal class CLASS
 	public CLASS ()
 	{
 		Interfaces = new System.Collections.ArrayList();
-		BaseType = COMPILER.NoValue;
+		BaseType = COMPILER.No_value;
 		#if ASSERTIONS
 			TypeBuilderCreated = false;
 		#endif
@@ -68,7 +68,7 @@ internal class CLASS
 	// Does current class have a parent?
 	public bool HasParent()
 	{
-		return( BaseType != COMPILER.NoValue );
+		return( BaseType != COMPILER.No_value );
 	}
 	
 	// Type name of ARRAY Class
@@ -298,7 +298,7 @@ internal class CLASS
 			Interfaces.Add (ID);
 		} else {
 			#if ASSERTIONS
-				if( BaseType != COMPILER.NoValue )
+				if( BaseType != COMPILER.No_value )
 					throw new ApplicationException( "AddParent: Class " + eiffel_name +
 						" already has a base type (" + COMPILER.Classes [BaseType].Builder +")");
 				if( IsInterface )
@@ -366,7 +366,7 @@ internal class CLASS
 		}
 		for( i = 0; i < Interfaces.Count; i++ )
 			LocalInterfaces [i] = COMPILER.Classes [( int )Interfaces [i]].Builder;
-		if( BaseType != COMPILER.NoValue )
+		if( BaseType != COMPILER.No_value )
 			ParentType = COMPILER.Classes [BaseType].Builder;
 		else
 			ParentType = COMPILER.ObjectType;
@@ -469,13 +469,13 @@ internal class CLASS
 		ILGenerator generator;
 		CLASS parent_class;
 
-		if (BaseType != COMPILER.NoValue)
+		if (BaseType != COMPILER.No_value)
 			parent_class = COMPILER.Classes [BaseType];
 		else
 			parent_class = null;
 
 		if
-			((BaseType == COMPILER.NoValue) ||
+			((BaseType == COMPILER.No_value) ||
 			((parent_class.IsExternal) && (parent_class.DefaultConstructor != null)))
 		{
 				// There is no parent, or there is an external parent that defines

@@ -69,10 +69,16 @@ inherit
 			{NONE} all
 		end
 
+	WEL_WINDOWS_VERSION
+		export
+			{NONE} all
+		end
+
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create progress bar.
+			-- Create `Current'.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, -1)
@@ -81,10 +87,10 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	step: INTEGER
-			-- Step value.
+			-- Step value of `Current'.
 
 	leap: INTEGER
-			-- Leap value.
+			-- Leap value of `Current'.
 
 feature -- Status report
 
@@ -97,49 +103,79 @@ feature -- Status report
 feature -- Status setting
 
 	enable_segmentation is
-			-- Display bar divided into segments.
+			-- Display `Current' with segments.
+			-- Only works with Win95+IE3 or above.
 		local
-			wel_imp: WEL_WINDOW
 			new_style: INTEGER
-			tx, ty, tw, th: INTEGER
+				-- The new style of `Current'.
 		do
-			check
-				to_be_implemented: False
+			if not is_segmented then
+				-- No need to enable segmentation if already segmented.
+				if comctl32_version >= version_470 then
+					-- Pbs_smooth is only available starting with
+					-- Common Controls version 4.70 (Shipped with IE3).
+					-- If we have an older version, we do nothing.
+					new_style := clear_flag (style, Pbs_smooth)
+						-- Remove `Pbs_smooth' from the style of `Current'.
+					recreate_current (new_style)	
+				end
 			end
-
-			new_style := clear_flag (style, Pbs_smooth)
-
-			wel_imp ?= parent_imp
-			tx := x_position
-			ty := y_position
-			tw := width
-			th := height
-			--| FIXME wel_destroy
-			--| FIXME internal_window_make (wel_imp, Void,
-			--| FIXME 	new_style, tx, ty, tw, th, -1, default_pointer)
 		end
 
 	disable_segmentation is
-			-- Display bar without segments.
+			-- Display `Current' without segments.
+			-- Only works with Win95+IE3 or above.
+		local
+				new_style: INTEGER
+					-- The new style of `Current'.
+		do
+			if is_segmented then
+				-- No need to disable segmentation if not already segmented.
+				if comctl32_version >= version_470 then
+					-- Pbs_smooth is only available starting with
+					-- Common Controls version 4.70 (Shipped with IE3).
+					-- If we have an older version, we do nothing.
+					new_style := set_flag (style, Pbs_smooth)
+						-- Add the style `Pbs_smooth' to `Current'.
+					recreate_current (new_style)
+				end
+			end
+		end
+
+	recreate_current (a_new_style: INTEGER) is
+			-- Re create `Current' with `a_new_style'.
 		local
 			wel_imp: WEL_WINDOW
-			new_style: INTEGER
-			tx, ty, tw, th: INTEGER
+			old_x, old_y, old_height, old_width, old_step, old_leap, old_value,
+			old_minimum, old_maximum: INTEGER
+				-- As we have to destroy the WEL control, we must store
+				-- all the attributes within these variables so the control
+				-- can be completely restored.
 		do
-			check
-				to_be_implemented: False
-			end
-
-			new_style := set_flag (style, Pbs_smooth)
-
 			wel_imp ?= parent_imp
-			tx := x_position
-			ty := y_position
-			tw := width
-			th := height
-			--| FIXME wel_destroy
-			--| FIXME internal_window_make (wel_imp, Void,
-			--| FIXME 	new_style, tx, ty, tw, th, -1, default_pointer)
+			old_x := x_position
+			old_y := y_position
+			old_width := width
+			old_height := height
+			old_value := value
+			old_step := step
+			old_leap := leap
+			old_minimum := minimum
+			old_maximum := maximum
+				-- All attributes now stored.
+
+			wel_destroy
+				-- Destroy the actual control.
+			internal_window_make (wel_imp, Void, a_new_style, old_x, old_y,
+				old_width, old_height, -1, default_pointer)
+				-- Create a new control.
+
+			set_minimum (old_minimum)
+			set_maximum (old_maximum)
+			set_value (old_value)
+			wel_set_leap (old_leap)
+			wel_set_step (old_step)
+				-- Previous attributes have now been restored.
 		end
 
 	wel_set_step (a_step: INTEGER) is
@@ -228,8 +264,25 @@ end -- class EV_PROGRESS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/05/03 20:13:27  brendel
+--| Revision 1.17  2000/06/09 01:38:34  manus
+--| Merged version 1.10.8.5 from DEVEL branch to trunc
+--|
+--| Revision 1.10.8.6  2000/05/03 23:58:35  rogers
+--| Comments, formatting.
+--|
+--| Revision 1.10.8.3  2000/05/03 22:35:04  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.10.8.2  2000/05/03 22:20:03  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--| - Protected feature `enable_segmentation' and
+--| `disable_segmentation' against misuse of some
+--| flags not defined on all Windows platforms.
+--|
+--| Revision 1.10.8.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.15  2000/04/13 18:18:54  brendel
 --| Removed proportion and set_proportion.
@@ -260,8 +313,8 @@ end -- class EV_PROGRESS_BAR_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.10.10.9  2000/02/10 20:07:33  rogers
---| Implemented proportion, added calling of change_actions from within on scroll.
---|
+--| Implemented proportion, added calling of change_actions from within on
+--| scroll.
 --| Revision 1.10.10.8  2000/02/09 00:14:28  rogers
 --| Set initial value, and leap value within initialize.
 --|
@@ -275,13 +328,16 @@ end -- class EV_PROGRESS_BAR_IMP
 --| added --| FIXME Not for release
 --|
 --| Revision 1.10.10.4  2000/01/18 23:36:23  rogers
---| In set_proportion, the call to set_value, takes the same sum as before except the result is now truncated_to_integer.
+--| In set_proportion, the call to set_value, takes the same sum as before
+--| except the result is now truncated_to_integer.
 --|
 --| Revision 1.10.10.3  2000/01/17 19:08:01  oconnor
 --| changed percentage to proportion
 --|
 --| Revision 1.10.10.2  2000/01/10 18:40:44  rogers
---| Chnaged to fit in with the major Vision2 changes. Make now takes an interface, make_with_range no longer takes a parent. See diff for redefinitions. Added interface.
+--| Changed to fit in with the major Vision2 changes. Make now takes an
+--| interface, make_with_range no longer takes a parent. See diff for
+--| redefinitions. Added interface.
 --|
 --| Revision 1.10.10.1  1999/11/24 17:30:33  oconnor
 --| merged with DEVEL branch

@@ -10,17 +10,6 @@ class
 inherit
 	EXECUTION_ENVIRONMENT
 	
-feature -- Satus setting
-
-	set_clr_version (a_version: STRING) is
-			-- Assign `a_version' to `clr_version'.
-		require
-			a_version /= Void
-		do
-			clr_version := a_version
-		end
-		
-
 feature -- Access
 
 	wizard_installation_path: STRING  is
@@ -62,5 +51,15 @@ feature -- Access
 		
 	clr_version: STRING
 		-- Version of clr used in geenrated ace files.
+
+feature -- Satus setting
+
+	set_clr_version (a_version: STRING) is
+			-- Assign `a_version' to `clr_version'.
+		require
+			a_version /= Void
+		do
+			clr_version := a_version
+		end
 
 end -- class VISUAL_STUDIO_INFORMATION

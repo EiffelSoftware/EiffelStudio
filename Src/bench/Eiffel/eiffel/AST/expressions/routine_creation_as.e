@@ -484,7 +484,7 @@ feature {NONE} -- Type
 			operand: OPERAND_AS
 			is_open: BOOLEAN
 		do
-			!!Result
+			create Result
 
 			if a_feature.is_function then
 				-- FUNCTION
@@ -503,10 +503,21 @@ feature {NONE} -- Type
 				!!generics.make (1, 2)
 			end
 
-			-- Base type
+				-- FIXME: Emmanuel STAPF 10/27/99
+				-- There is a problem where `target_type' contains an anchored declaration
+				-- In the later case, we should compute `solved_type' in the feature table
+				-- where the object is coming from and not in the feature table where
+				-- the Agent is defined.
+				-- E.g.: a: A [like x]
+				--       x: INTEGER
+				--       my_proc (a~f)	<- The compiler will complain because it won't
+				--                         find in A the type of `like x'.
+				-- In the previous example, we should look the feature table of the
+				-- `actual_class_type', but if we have `my_proc ((a.y)~f)', we need
+				-- to take the feature table of the real type of `a'.
+			actual_feat_tbl := context.actual_class_type.associated_class.feature_table
 			solved_type := Creation_evaluator.evaluated_type (
-										   target_type, a_table, a_feature
-															 )
+										   target_type, a_table, a_feature)
 			solved_type := solved_type.instantiation_in (target_type, cid)
 			tgt_type := solved_type.deep_actual_type
 			generics.put (tgt_type, 1)

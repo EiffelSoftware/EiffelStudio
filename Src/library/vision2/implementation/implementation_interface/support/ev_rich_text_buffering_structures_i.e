@@ -262,7 +262,10 @@ feature {EV_ANY_I} -- Status Setting
 							process_keyword (rtf_text, main_iterator)
 						elseif current_character = ' '  then
 							process_text (rtf_text, main_iterator)
-						elseif main_iterator >= 2 and then current_character /= '%R' and (rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}') then
+						elseif main_iterator >= 2 and then current_character /= '%R' and
+							(rtf_text.item (main_iterator - 1) = '%N' or
+							rtf_text.item (main_iterator - 1) = '}' or
+							rtf_text.item (main_iterator - 1) = '{') then
 								-- We are now one character past the tag for the text. This may occur when a keyword
 								-- is ended with a '%N' or we have just skipped a bracket section that contained the "\*"
 								-- keyword. As in this case, `current_character' is the start of the text, call `process_text'
@@ -768,7 +771,7 @@ feature {NONE} -- Implementation
 	
 	all_colors: ARRAY [EV_COLOR]
 		-- All colors retrieved during parsing, accessible through their index in the color table.
-		
+
 	all_formats: HASH_TABLE [EV_CHARACTER_FORMAT, STRING]
 		-- All unique formats retreived during parsing.
 		

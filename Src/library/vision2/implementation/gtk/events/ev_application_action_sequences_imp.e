@@ -39,6 +39,18 @@ feature -- Event handling
 			create Result
 		end
 
+	create_pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
+			-- Create a pnd motion action sequence.
+		do
+			create Result
+		end
+
+	create_cancel_actions: EV_PND_ACTION_SEQUENCE is
+			-- Create a cancel action sequence.
+		do
+			create Result
+		end
+
 end
 
 

@@ -23,11 +23,6 @@ inherit
 
 feature -- Access
 
-	text: STRING is
-			-- `Result' is text of `Current'.
-		deferred
-		end
-
 	text_length: INTEGER is
 			-- Length of the text in `Current'.
 		deferred
@@ -116,13 +111,6 @@ feature -- Status setting
 		end
 	
 feature -- Element change
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to text of `Current'.
-		deferred
-		ensure
-			text_set: text.is_equal (a_text)
-		end
 
 	insert_text (a_text: STRING) is
 			-- Insert `a_text' at the current caret position.

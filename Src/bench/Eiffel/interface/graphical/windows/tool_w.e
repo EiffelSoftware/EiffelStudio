@@ -12,7 +12,6 @@ inherit
 
 	NAMER;
 	WINDOWS;
-	INTERFACE_W;
 	EB_CONSTANTS;
 	HOLE
 		export
@@ -144,6 +143,11 @@ feature -- Window Properties
 
 feature -- Access
 
+	resources: RESOURCE_CATEGORY is
+			-- Resources for current tool
+		do
+		end;
+
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
 		do
@@ -167,6 +171,17 @@ feature -- Window Implementation
 	raise is
 			-- Raise Current to the top.
 		deferred
+		end;
+
+	force_raise is
+			-- Raise Current (even if popped down).
+		do
+			if is_a_shell then
+				if eb_shell.is_iconic_state then
+					eb_shell.set_normal_state
+				end;
+				eb_shell.raise
+			end
 		end;
 
 	destroy is
@@ -205,6 +220,15 @@ feature -- Window Implementation
 			else
 				text_window.init_resource_values
 			end
+		end;
+
+	close_search_window is
+			-- Close search window.
+		local
+			ss: SEARCH_STRING
+		do
+			ss ?= search_cmd_holder.associated_command;
+			ss.close
 		end;
 
 feature -- Window settings
@@ -258,13 +282,6 @@ feature -- Window settings
 			-- (By default it is set to read only)
 		do
 			text_window.set_read_only
-		end;
-
-	default_font: CELL [FONT] is
-			-- Default font
-		once
-			--!! Result.put (text_window.font)
-			!! Result.put (Void)
 		end;
 
 	set_tab_length_to_default is
@@ -321,20 +338,7 @@ feature -- Status setting
 	set_font_to_default is
 			-- Set `font' to the default font.
 		do
-			if default_font.item /= Void then
-				--set_font (default_font.item)
-			end
-		end;
-
-	set_default_font (new_font: FONT) is
-			-- Assign `new_font' to `default_font'.
-		do
-			default_font.put (new_font)
-		end;
-
-	set_font (a_font: FONT) is
-			-- Set new font `a_font' to window
-		do
+			text_window.set_font_to_default
 		end;
 
 	set_file_name (f: STRING) is
@@ -596,7 +600,7 @@ feature {NONE} -- Implementation
 	is_graphics_disabled: BOOLEAN is
 			-- Is Graphics disabled for the text window?
 		once 
-			Result := resources.get_boolean (r_Graphics_disabled, False) 
+			Result := Configure_resources.get_boolean (r_Graphics_disabled, False) 
 		end;
 
 	create_toolbar_parent (a_parent: COMPOSITE) is
@@ -637,10 +641,10 @@ feature {PROJECT_W} -- Implementation
 
 			!! sep.make (Interface_names.t_Empty, edit_menu);
 
-            !! search_cmd.make (Current);
-            !! search_button.make (search_cmd, search_button_parent);
-            !! search_menu_entry.make (search_cmd, edit_menu);
-            !! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+			!! search_cmd.make (Current);
+			!! search_button.make (search_cmd, search_button_parent);
+			!! search_menu_entry.make (search_cmd, edit_menu);
+			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 		end;
 
 	init_text_window is

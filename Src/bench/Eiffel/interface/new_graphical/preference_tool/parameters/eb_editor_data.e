@@ -73,6 +73,16 @@ feature {NONE} -- Initialization
 			rmanager.add_observer ("generic_background_color", Current)
 			rmanager.add_observer ("local_text_color", Current)
 			rmanager.add_observer ("local_background_color", Current)
+			rmanager.add_observer ("class_text_color", Current)
+			rmanager.add_observer ("class_background_color", Current)
+			rmanager.add_observer ("feature_text_color", Current)
+			rmanager.add_observer ("feature_background_color", Current)
+			rmanager.add_observer ("cluster_text_color", Current)
+			rmanager.add_observer ("cluster_background_color", Current)
+			rmanager.add_observer ("error_text_color", Current)
+			rmanager.add_observer ("error_background_color", Current)
+			rmanager.add_observer ("object_text_color", Current)
+			rmanager.add_observer ("object_background_color", Current)
 
 			rmanager.add_observer ("underscore_is_separator", Current)
 			rmanager.add_observer ("once_and_constant_in_upper", Current)
@@ -203,6 +213,12 @@ feature
 	generic_background_color: EV_COLOR
 	local_text_color: EV_COLOR
 	local_background_color: EV_COLOR
+
+	class_text_color, class_background_color: EV_COLOR
+	feature_text_color, feature_background_color: EV_COLOR
+	cluster_text_color, cluster_background_color: EV_COLOR
+	error_text_color, error_background_color: EV_COLOR
+	object_text_color, object_background_color: EV_COLOR
 
 	font, keyword_font: EDITOR_FONT
 			-- Current text font and keyword font.
@@ -378,125 +394,157 @@ feature -- Update
 			normal_background_color := color_resource_value ("normal_background_color", 255, 255, 255)
 			selection_text_color := color_resource_value ("selection_text_color", 255, 255, 128)
 			selection_background_color := color_resource_value ("selection_background_color", 0, 0, 128)
+
+			string_text_color := color_resource_value ("string_text_color", 255, 255, 128)
 			cr ?= resources.item ("string_background_color")
 			if cr /= Void then
 				cr.allow_void
-			end
-			cr ?= resources.item ("keyword_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("spaces_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("comments_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("number_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("operator_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("breakpoint_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("assertion_tag_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("indexing_tag_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("reserved_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("generic_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-			cr ?= resources.item ("local_background_color")
-			if cr /= Void then
-				cr.allow_void
-			end
-
-			string_text_color := color_resource_value ("string_text_color", 255, 255, 128)
-			if has_color_resource ("string_background_color") then
 				string_background_color := color_resource_value ("string_background_color", 255, 255, 255)
 			else
 				string_background_color := Void
 			end
+
 			keyword_text_color := color_resource_value ("keyword_text_color", 0, 153, 255)
-			if has_color_resource ("keyword_background_color") then
+			cr ?= resources.item ("keyword_background_color")
+			if cr /= Void then
+				cr.allow_void
 				keyword_background_color := color_resource_value ("keyword_background_color", 255, 255, 255)
 			else
 				keyword_background_color := Void
 			end
+
 			spaces_text_color := color_resource_value ("spaces_text_color", 128, 128, 128)
-			if has_color_resource ("spaces_background_color") then
+			cr ?= resources.item ("spaces_background_color")
+			if cr /= Void then
+				cr.allow_void
 				spaces_background_color := color_resource_value ("spaces_background_color", 255, 255, 255)
 			else
 				spaces_background_color := Void
 			end
+
 			comments_text_color := color_resource_value ("comments_text_color", 204, 102, 255)
-			if has_color_resource ("comments_background_color") then
+			cr ?= resources.item ("comments_background_color")
+			if cr /= Void then
+				cr.allow_void
 				comments_background_color := color_resource_value ("comments_background_color", 255, 255, 255)
 			else
 				comments_background_color := Void
 			end
+
 			number_text_color := color_resource_value ("number_text_color", 153, 255, 153)
-			if has_color_resource ("number_background_color") then
+			cr ?= resources.item ("number_background_color")
+			if cr /= Void then
+				cr.allow_void
 				number_background_color := color_resource_value ("number_background_color", 255, 255, 255)
 			else
 				number_background_color := Void
 			end
+
 			operator_text_color := color_resource_value ("operator_text_color", 0, 153, 255)
-			if has_color_resource ("operator_background_color") then
+			cr ?= resources.item ("operator_background_color")
+			if cr /= Void then
+				cr.allow_void
 				operator_background_color := color_resource_value ("operator_background_color", 255, 255, 255)
 			else
 				operator_background_color := Void
 			end
-			if has_color_resource ("breakpoint_background_color") then
+
+			cr ?= resources.item ("breakpoint_background_color")
+			if cr /= Void then
+				cr.allow_void
 				breakpoint_background_color := color_resource_value ("breakpoint_background_color", 255, 255, 255)
 			else
 				breakpoint_background_color := Void
 			end
+
 			assertion_tag_text_color := color_resource_value ("assertion_tag_text_color", 0, 0, 0)
-			if has_color_resource ("assertion_tag_background_color") then
+			cr ?= resources.item ("assertion_tag_background_color")
+			if cr /= Void then
+				cr.allow_void
 				assertion_tag_background_color := color_resource_value ("assertion_tag_background_color", 255, 255, 255)
 			else
 				assertion_tag_background_color := Void
 			end
+
 			indexing_tag_text_color := color_resource_value ("indexing_tag_text_color", 0, 0, 0)
-			if has_color_resource ("indexing_tag_background_color") then
+			cr ?= resources.item ("indexing_tag_background_color")
+			if cr /= Void then
+				cr.allow_void
 				indexing_tag_background_color := color_resource_value ("indexing_tag_background_color", 255, 255, 255)
 			else
 				indexing_tag_background_color := Void
 			end
+
 			reserved_text_color := color_resource_value ("reserved_text_color", 0, 0, 0)
-			if has_color_resource ("reserved_background_color") then
+			cr ?= resources.item ("reserved_background_color")
+			if cr /= Void then
+				cr.allow_void
 				reserved_background_color := color_resource_value ("reserved_background_color", 255, 255, 255)
 			else
 				reserved_background_color := Void
 			end
+
 			generic_text_color := color_resource_value ("generic_text_color", 0, 0, 0)
-			if has_color_resource ("generic_background_color") then
+			cr ?= resources.item ("generic_background_color")
+			if cr /= Void then
+				cr.allow_void
 				generic_background_color := color_resource_value ("generic_background_color", 255, 255, 255)
 			else
 				generic_background_color := Void
 			end
+
 			local_text_color := color_resource_value ("local_text_color", 0, 0, 0)
-			if has_color_resource ("local_background_color") then
+			cr ?= resources.item ("local_background_color")
+			if cr /= Void then
+				cr.allow_void
 				local_background_color := color_resource_value ("local_background_color", 255, 255, 255)
 			else
 				local_background_color := Void
+			end
+
+			class_text_color := color_resource_value ("class_text_color", 0, 0, 0)
+			cr ?= resources.item ("class_background_color")
+			if cr /= Void then
+				cr.allow_void
+				class_background_color := color_resource_value ("class_background_color", 255, 255, 255)
+			else
+				class_background_color := Void
+			end
+
+			feature_text_color := color_resource_value ("feature_text_color", 0, 0, 0)
+			cr ?= resources.item ("feature_background_color")
+			if cr /= Void then
+				cr.allow_void
+				feature_background_color := color_resource_value ("feature_background_color", 255, 255, 255)
+			else
+				feature_background_color := Void
+			end
+
+			cluster_text_color := color_resource_value ("cluster_text_color", 0, 0, 0)
+			cr ?= resources.item ("cluster_background_color")
+			if cr /= Void then
+				cr.allow_void
+				cluster_background_color := color_resource_value ("cluster_background_color", 255, 255, 255)
+			else
+				cluster_background_color := Void
+			end
+
+			error_text_color := color_resource_value ("error_text_color", 0, 0, 0)
+			cr ?= resources.item ("error_background_color")
+			if cr /= Void then
+				cr.allow_void
+				error_background_color := color_resource_value ("error_background_color", 255, 255, 255)
+			else
+				error_background_color := Void
+			end
+
+			object_text_color := color_resource_value ("object_text_color", 0, 0, 0)
+			cr ?= resources.item ("object_background_color")
+			if cr /= Void then
+				cr.allow_void
+				object_background_color := color_resource_value ("object_background_color", 255, 255, 255)
+			else
+				object_background_color := Void
 			end
 
 			smart_identation := boolean_resource_value ("smart_indent", True)

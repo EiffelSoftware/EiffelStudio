@@ -132,4 +132,28 @@ feature {NONE} -- Implementation
 --		deferred
 --		end
 
+feature {EB_TOOL_MANAGER} -- Menus Implementation
+
+	build_format_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		local
+			ri, peer: EV_RADIO_MENU_ITEM
+			cfl: EB_FORMATTER_LIST
+		do
+			cfl := format_list
+			from
+				cfl.start
+			until
+				cfl.after
+			loop
+				if cfl.isfirst then
+					create ri.make_with_text (a_menu, cfl.item.menu_name)
+					peer := ri
+				else
+					create ri.make_peer_with_text (a_menu, cfl.item.menu_name, peer)
+				end
+				cfl.item.launch_cmd.set_menu_item (ri)
+				cfl.forth
+			end
+		end
+
 end -- class EB_MULTIFORMAT_EDIT_TOOL

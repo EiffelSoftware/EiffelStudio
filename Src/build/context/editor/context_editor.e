@@ -83,6 +83,7 @@ feature
 			temp_wind_form: TEMP_WIND_FORM
 			separator_form: SEPARATOR_FORM
 			text_form: TEXT_FORM
+			toggle_form: TOGGLE_FORM
 			menu_form: MENU_FORM
 			bar_form: BAR_FORM
 			pict_color_form: PICT_COLOR_FORM
@@ -175,6 +176,7 @@ feature
 			!!behavior_form.make (Current)
 			!!bull_resize_form.make (Current)
 			!!grid_form.make (Current)
+			!!toggle_form.make (Current)
 
 			!! format_list.make (formats_rc, Current)
 

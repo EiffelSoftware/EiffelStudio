@@ -26,7 +26,6 @@ creation
 
 feature --Access
 	
-	buttons: LINKED_LIST[MAIN_WINDOW_BUTTON]
 	container: EV_VERTICAL_BOX
 			-- Push buttons
 	
@@ -57,17 +56,11 @@ feature -- Initialization
 			
 			!!buttons.make
 			!!b.make_button (Current, "Label", c1)
-			buttons.extend (b)
 			!!b.make_button (Current, "Fixed", c2)
-			buttons.extend (b)
 			!!b.make_button (Current, "Box", c3)
-			buttons.extend (b)
 			!!b.make_button (Current, "Notebook", c4)
-			buttons.extend (b)
 			!!b.make_button (Current, "Text field", c5)
-			buttons.extend (b)
 			!!b.make_button (Current, "Text area", c6)
-			buttons.extend (b)
 			
 			set_values
 		end

@@ -9,17 +9,4 @@ class
 	EV_ARGUMENTS 
 
 
-	
-feature -- Access
-	
-	data: EV_EVENT_DATA
-	
-	
-feature {EV_WIDGET_I} -- Element change
-	
-	set_data (d: EV_EVENT_DATA) is		
-		do
-			data := d
-		end
-	
 end -- class EV_ARGUMENTS

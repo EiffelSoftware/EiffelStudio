@@ -14,13 +14,15 @@ deferred class
 
 feature -- Access
 
---	context_data: CONTEXT_DATA
+	event_data: EV_EVENT_DATA
 			-- Information related to Current command,
 			-- provided by the underlying user interface 
 			-- mechanism
 
 feature -- Status report
-
+	
+	
+	--XX check the purpose of this this
 	is_template: BOOLEAN is
 			-- Is the current command a template, in other words,
 			-- should it be cloned before execution?
@@ -29,7 +31,7 @@ feature -- Status report
 		do
 		end
 
-	context_data_useful: BOOLEAN is
+	event_data_useful: BOOLEAN is
 			-- Should the context data be available
 			-- when Current command is invoked as a
 			-- callback
@@ -52,7 +54,7 @@ feature -- Basic operations
 			Result := routine_address($execute)
 		end
 	
-feature {NONE} -- Help
+feature {NONE} -- Implementation
 	
 	routine_address (routine: POINTER): POINTER is
 		do
@@ -60,15 +62,17 @@ feature {NONE} -- Help
 		end
 	
 
-feature {NONE} -- Element change
+feature {EV_WIDGET_I} -- Element change
 
--- 	set_context_data (a_context_data: CONTEXT_DATA) is
--- 			-- Set `context_data' to `a_context_data'.
--- 		do
--- 			context_data := a_context_data
--- 		ensure
--- 			context_data = a_context_data
--- 		end
+ 	set_event_data (data: EV_EVENT_DATA) is
+ 			-- Set `event_data' to `data'.
+			-- This is used internally by EiffelVision to 
+			-- set event data given by the windowing system
+ 		do
+ 			event_data := data
+ 		ensure
+ 			event_data = data
+ 		end
 
 end -- class EV_COMMAND
 

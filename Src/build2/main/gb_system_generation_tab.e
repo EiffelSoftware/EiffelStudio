@@ -88,6 +88,11 @@ feature -- Status setting
 			else
 				local_check_button.disable_select
 			end
+			if project_settings.debugging_output then
+				debugging_check_button.enable_select
+			else
+				debugging_check_button.disable_select
+			end
 		end
 		
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
@@ -104,6 +109,11 @@ feature -- Status setting
 				project_settings.enable_grouped_locals
 			else
 				project_settings.disable_grouped_locals
+			end
+			if debugging_check_button.is_selected then
+				project_settings.enable_debugging_output
+			else
+				project_settings.disable_debugging_output
 			end
 		end	
 

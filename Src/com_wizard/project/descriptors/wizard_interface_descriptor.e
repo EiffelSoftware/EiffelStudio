@@ -306,6 +306,12 @@ feature -- Basic operations
 					properties.item.add_coclass_eiffel_name (tmp_name, a_coclass_descriptor.name)
 				end
 				feature_c_names.force (clone (properties.item.name))
+				tmp_name := clone (properties.item.name)
+				tmp_name.prepend ("set_")
+				feature_c_names.force (tmp_name)
+				tmp_name := clone (properties.item.name)
+				tmp_name.prepend ("set_ref_")
+				feature_c_names.force (tmp_name)
 				properties.forth
 			end
 		ensure

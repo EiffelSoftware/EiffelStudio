@@ -860,6 +860,17 @@ feature {NONE} -- Implementation
 				key_press_string_actions_internal.call ([character_string])
 			end
 		end
+		
+	on_mouse_wheel (delta, x_pos, y_pos: INTEGER) is
+			-- Wm_mousewheel received.
+		do			
+			if mouse_wheel_actions_internal /= Void then
+				mouse_wheel_actions_internal.call ([delta // 120])
+					-- Only return True if the mouse wheel actions are not empty,
+					-- as this overrides intellipoint software if installed.
+				set_message_return_value (1)
+			end
+		end
 
 feature {NONE} -- Implementation, focus event
 

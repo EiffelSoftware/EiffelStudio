@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
+			create ev_children.make (2)
 		end
 
 feature -- Status setting
@@ -144,6 +145,9 @@ end -- class EV_FIXED_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/05/02 15:12:50  brendel
+--| Added creation of ev_children.
+--|
 --| Revision 1.14  2000/05/02 00:40:27  brendel
 --| Reintroduced EV_FIXED.
 --| Complete revision.

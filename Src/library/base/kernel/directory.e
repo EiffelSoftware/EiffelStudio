@@ -120,6 +120,8 @@ feature -- Measurement
 
 	count: INTEGER is
 			-- Number of entries in directory.
+		require
+			directory_exists: exists
 		local
 			dir_temp: DIRECTORY;
 			counter: INTEGER
@@ -138,9 +140,7 @@ feature -- Measurement
 			dir_temp.close
 		end;
 
-	
 feature -- Conversion
-
 
 	linear_representation: ARRAYED_LIST [STRING] is
 			-- The entries, in sequential format.
@@ -161,7 +161,6 @@ feature -- Conversion
 			dir_temp.close
 		end;
 
-				
 feature -- Status report	
 
 	lastentry: STRING;
@@ -171,6 +170,14 @@ feature -- Status report
 			-- Is current directory closed?
 		do
 			Result := mode = Close_directory;
+		end;
+
+	empty: BOOLEAN is
+			-- Is directory empty?
+		require
+			directory_exists: exists
+		do
+			Result := (count = 0)
 		end;
 
 	exists: BOOLEAN is
@@ -217,6 +224,18 @@ feature -- Status report
 
 feature -- Removal
 
+	delete is
+			-- Delete directory if empty
+		require
+			directory_exists: exists
+			empty_directory: empty
+		local
+			external_name: ANY;
+		do
+			external_name := name.to_c;
+			eif_dir_delete ($external_name)
+		end
+
 	dispose is
 			-- Ensure this medium is closed when garbage collected.
 		do
@@ -224,7 +243,6 @@ feature -- Removal
 				close;
 			end;
 		end;
-
 
 feature -- Obsolete
 
@@ -286,6 +304,12 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
+	eif_dir_delete (dir_name: POINTER) is
+			-- Delete the directory `dir_name'.
+		external
+			"C"
+		end;
+
 	eif_dir_exists (dir_name: POINTER): BOOLEAN is
 			-- Does the directory `dir_name' exist?
 		external
@@ -310,7 +334,7 @@ feature {NONE} -- Implementation
 			"C"
 		end;
 
-end --class DIRECTORY
+end -- class DIRECTORY
 
 
 --|----------------------------------------------------------------

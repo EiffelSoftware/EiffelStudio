@@ -62,9 +62,14 @@ feature
 			else
 				list.set_visible_item_count (list.count);
 			end;
-			set_x_y (parent.real_x, parent.real_y);
-			os_popup;
-			raise
+			display
+		end;
+
+	update_position is
+		do
+			if is_popped_up then
+				display
+			end
 		end;
 
 	execute (argument: ANY) is
@@ -82,6 +87,27 @@ feature {NONE} -- Implementation
 			-- Command who calls `Current'
 
 	work (argument: ANY) is do end;
+
+	display is
+			-- Display the choice window in order to be seen 
+			-- on the screen.
+		do
+			set_x_y (parent.real_x, parent.real_y);
+			if real_x + width > screen.width then
+				set_x (screen.width - width)
+			end;
+			if real_x < 0 then
+				set_x (0)
+			end;
+			if real_y + height > screen.height then
+				set_y (screen.height - height)
+			end;
+			if real_y < 0 then
+				set_y (0)
+			end;
+			os_popup;
+			raise
+		end;
 
 invariant
 

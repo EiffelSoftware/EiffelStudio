@@ -137,14 +137,18 @@ feature -- Basic operation
 			-- Select (highlight) the text between 
 			-- 'start_pos' and 'end_pos'.
 		do
-			internal_set_caret_position (end_pos)
+			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
+			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+			internal_timeout_imp.interface.actions.extend 
+				(agent select_region_internal (start_pos, end_pos))
+			internal_timeout_imp.set_interval_kamikaze (0)
 		end	
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
 		do
-			C.gtk_editable_select_region (entry_widget, start_pos - 1, end_pos)
+			C.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
 	deselect_all is
@@ -202,6 +206,9 @@ feature {NONE} -- Implementation
 			--C.gtk_widget_realize (C.gtk_entry_struct_text_area (entry_widget))
 			C.gdk_window_set_cursor (C.gtk_widget_struct_window (C.gtk_entry_struct_text_area (entry_widget)), a_cursor_ptr)
 		end
+
+	internal_timeout_imp: EV_TIMEOUT_IMP
+			-- Timeout to call 'select_region'
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 

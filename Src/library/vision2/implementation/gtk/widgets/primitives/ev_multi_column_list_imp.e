@@ -295,7 +295,7 @@ feature {NONE} -- Initialization
 	pixmaps_size_changed is
 			-- 
 		do
-			if pixmaps_height > row_height then
+			if pixmaps_height > C.gtk_clist_struct_row_height (list_widget) then
 				set_row_height (pixmaps_height)
 			end
 		end
@@ -971,7 +971,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			ver_adj := C.gtk_scrolled_window_get_vadjustment (c_object)
 			ver_offset := C.gtk_adjustment_struct_value (ver_adj).rounded
 			temp_a_y := a_y + ver_offset
-			Result := temp_a_y // (row_height + 1) + 1
+			Result := temp_a_y // (row_height) + 1
 			if Result > ev_children.count then
 				Result := 0
 			end
@@ -1187,7 +1187,7 @@ feature {NONE} -- Implementation
 	row_height: INTEGER is
 		do
 			if list_widget /= NULL then
-				Result := C.gtk_clist_struct_row_height (list_widget)
+				Result := C.gtk_clist_struct_row_height (list_widget) + 1
 			end			
 		end
 

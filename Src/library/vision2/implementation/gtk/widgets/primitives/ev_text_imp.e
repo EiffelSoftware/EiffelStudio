@@ -21,7 +21,8 @@ inherit
 			interface,
 			internal_set_caret_position,
 			insert_text,
-			visual_widget
+			visual_widget,
+			set_background_color
 		end
 		
 	EV_FONTABLE_IMP
@@ -95,37 +96,18 @@ feature -- Access
 
 feature -- Status report
 
---	line_count: INTEGER is
---			-- Number of lines present in widget.
---		local
---			temp_caret_pos, txt_length: INTEGER
---		do
---			temp_caret_pos := caret_position
---			txt_length := text_length
---			C.gtk_widget_hide (entry_widget)
---			set_caret_position (text_length + 1)
---			Result := current_line_number
---			set_caret_position (temp_caret_pos)
---			C.gtk_widget_show (entry_widget)
---		end
-
 	line_count: INTEGER is
 			-- Number of lines present in widget.
 		local
 			temp_text: STRING
 		do
-			temp_text := text
-			if temp_text /= Void then
-				Result := temp_text.occurrences ('%N') + 1
-			end
+				Result := C.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
+				temp_text := text
+				if temp_text /= Void then
+					Result := Result.max (temp_text.occurrences ('%N') + 1)
+					-- This is in case scroll bar has not been set
+				end
 		end
-
---	current_line_number: INTEGER is
---			-- Returns the number of the line the cursor currently
---			-- is on.
---		do
---			Result := (C.gtk_text_struct_cursor_pos_y (entry_widget) + C.gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
---		end
 
 	current_line_number: INTEGER is
 			-- Returns the number of the line the cursor currently
@@ -134,10 +116,14 @@ feature -- Status report
 			p: POINTER
 			temp_string: STRING
 		do
-			p := C.gtk_editable_get_chars (entry_widget, 0, C.gtk_text_get_point (entry_widget))
-			create temp_string.make_from_c (p)
-			C.g_free (p)
-			Result := temp_string.occurrences ('%N') + 1
+			if is_displayed then
+				Result := (C.gtk_text_struct_cursor_pos_y (entry_widget) + C.gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
+			else
+				p := C.gtk_editable_get_chars (entry_widget, 0, C.gtk_text_get_point (entry_widget))
+				create temp_string.make_from_c (p)
+				C.g_free (p)
+				Result := temp_string.occurrences ('%N') + 1
+			end
 		end
 
 	caret_position: INTEGER is
@@ -201,6 +187,14 @@ feature -- Status report
 		end
 
 feature -- Status setting
+		
+	set_background_color (a_color: EV_COLOR) is
+			-- Set background color of present
+		do
+			Precursor {EV_TEXT_COMPONENT_IMP} (a_color)
+			-- We need to set the font again due to bug in GtkText widget.
+			set_font (font)
+		end
 
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.

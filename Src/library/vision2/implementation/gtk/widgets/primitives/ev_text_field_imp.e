@@ -17,8 +17,7 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			on_key_event,
-			select_region
+			on_key_event
 		end
 		
 	EV_FONTABLE_IMP
@@ -71,17 +70,6 @@ feature -- Status setting
 			create a_gs.make (a_text)
 			C.gtk_entry_set_text (entry_widget, a_gs.item)
 		end
-		
-	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (highlight) the text between 
-			-- 'start_pos' and 'end_pos'.
-		do
-			Precursor {EV_TEXT_COMPONENT_IMP} (start_pos, end_pos)
-			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			internal_timeout_imp.interface.actions.extend 
-				(agent select_region_internal (start_pos, end_pos))
-			internal_timeout_imp.set_interval_kamikaze (0)
-		end	
 
 	append_text (txt: STRING) is
 			-- Append `txt' to the end of the text.
@@ -168,11 +156,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			create Result
 			real_signal_connect (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
 		end
-		
-feature {NONE} -- Implementation
-
-	internal_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout to call 'select_region'
 
 feature {EV_TEXT_FIELD_I} -- Implementation
 

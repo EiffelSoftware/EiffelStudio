@@ -158,7 +158,8 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
 			if 
-				a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down
+				a_key /= Void and then
+				(a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down)
 			then
 				-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
 				C.gtk_widget_queue_draw (c_object)

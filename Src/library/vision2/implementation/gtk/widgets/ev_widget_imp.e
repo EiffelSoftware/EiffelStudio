@@ -94,6 +94,7 @@ feature {NONE} -- Initialization
 				C.gtk_widget_show (c_object)
 			end
 			
+				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
 			internal_minimum_height := -1
 			
@@ -192,10 +193,10 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if a_type = C.GDK_BUTTON_PRESS_ENUM then
 				if a_button = 4 then
 					-- This is for scrolling up
-					--key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_up)])
+					key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_up)])
 				elseif a_button = 5 then
 					-- This is for scrolling down
-					--key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_down)])
+					key_press_actions.call ([create {EV_KEY}.make_with_code (feature {EV_KEY_CONSTANTS}.Key_page_down)])
 				end	
 			end
 			if a_type = C.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
@@ -380,26 +381,20 @@ feature -- Status setting
 
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
-		local
-			sa_par_imp: EV_SPLIT_AREA_IMP
 		do
 			C.gtk_widget_hide (c_object)
-			sa_par_imp ?= parent_imp
-			if sa_par_imp /= Void then
-				sa_par_imp.update_child_visibility (Current)
+			if parent_imp /= Void then
+				C.gtk_widget_queue_resize (parent_imp.container_widget)
 			end
 		end
 	
 	show is
 			-- Request that `Current' be displayed when its parent is.
-		local
-			sa_par_imp: EV_SPLIT_AREA_IMP
 		do
 			C.gtk_widget_show (c_object)
-			sa_par_imp ?= parent_imp
-			if sa_par_imp /= Void then
-				sa_par_imp.update_child_visibility (Current)
-			end	
+			if parent_imp /= Void then
+				C.gtk_widget_queue_resize (parent_imp.container_widget)
+			end
 		end
 
 	set_focus is
@@ -557,17 +552,13 @@ feature -- Measurement
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
-		do
-			update_request_size
+		do	
 			if internal_minimum_width /= -1 then
 				Result := internal_minimum_width
 			else
-				if not widget_in_fixed then
-					gr := C.gtk_widget_struct_requisition (c_object)
-					Result := C.gtk_requisition_struct_width (gr)
-				else
-					Result := fixed_minimum_width
-				end
+				update_request_size
+				gr := C.gtk_widget_struct_requisition (c_object)
+				Result := C.gtk_requisition_struct_width (gr)
 			end
 		end
 		
@@ -576,50 +567,22 @@ feature -- Measurement
 		local
 			gr: POINTER
 		do
-			update_request_size
 			if internal_minimum_height /= -1 then
 				Result := internal_minimum_height
 			else
-				if not widget_in_fixed then	
-					gr := C.gtk_widget_struct_requisition (c_object)
-					Result := C.gtk_requisition_struct_height (gr)
-				else
-					Result := fixed_minimum_height
-				end
+				update_request_size
+				gr := C.gtk_widget_struct_requisition (c_object)
+				Result := C.gtk_requisition_struct_height (gr)
 			end
-		end
-
-feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
-
-	fixed_minimum_height: INTEGER
-
-	fixed_minimum_width: INTEGER
-
-	widget_in_fixed: BOOLEAN
-
-	set_fixed_size (a_width, a_height: INTEGER) is
-			-- Set the size within EV_FIXED without appearing to alter min size.
-		do
-			if a_width > -1  then
-				fixed_minimum_width := a_width
-			else
-				fixed_minimum_width := minimum_width
-			end
-			if a_height > -1 then
-				fixed_minimum_height := a_height
-			else
-				fixed_minimum_height := minimum_height
-			end
-			widget_in_fixed := True
-			C.gtk_widget_set_usize (c_object, a_width, a_height)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	reset_minimum_size is
 			-- Reset all values to defaults.
+			-- Called by EV_FIXED and EV_VIEWPORT implementations.
 		do
-			set_minimum_size (minimum_width, minimum_height)
+			internal_set_minimum_size (internal_minimum_width, internal_minimum_height)
 		end
 				
 feature {NONE} -- Implementation
@@ -628,11 +591,15 @@ feature {NONE} -- Implementation
 			-- Has this widget the flag `a_flag' in struct_flags?
 		do
 				--| Shift to put bit in least significant place then take mod 2.
-			Result := (((C.gtk_object_struct_flags (a_gtk_object) // a_flag) \\ 2)) = 1
+			if a_gtk_object /= NULL then
+				Result := (((C.gtk_object_struct_flags (a_gtk_object) // a_flag) \\ 2)) = 1
+			end
 		end
 
 	cursor_signal_tag: INTEGER
 			-- Tag returned from Gtk used to disconnect `enter-notify' signal
+			
+feature {EV_WIDGET_IMP} -- Implementation
 
 	internal_minimum_width: INTEGER	
 			-- Minimum width for the widget.
@@ -654,11 +621,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			parent_imp := a_container_imp
-			if parent_imp = Void then
-				widget_in_fixed := False
-				fixed_minimum_height := 0
-				fixed_minimum_width := 0
-			end
+			update_request_size
 		end
 		
 feature {EV_ANY_IMP} -- Implementation
@@ -704,7 +667,7 @@ feature {NONE} -- Agent functions.
 			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
 		end
 
-feature {NONE} -- Implementation
+feature {EV_CONTAINER_IMP} -- Implementation
 
 	update_request_size is
 			-- Force the requisition struct to be updated.
@@ -713,6 +676,8 @@ feature {NONE} -- Implementation
 				C.gtk_widget_size_request (c_object, C.gtk_widget_struct_requisition (c_object))
 			end
 		end
+		
+feature {NONE} -- Implementation
 
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Abstracted implementation for minumum size setting.
@@ -723,11 +688,7 @@ feature {NONE} -- Implementation
 			if a_minimum_height /= -1 then
 				internal_minimum_height := a_minimum_height
 			end
-			if widget_in_fixed then
-				set_fixed_size (a_minimum_width, a_minimum_height)
-			else
-				C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
-			end
+			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is

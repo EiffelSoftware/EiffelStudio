@@ -705,3 +705,77 @@ EIF_BOOLEAN b;
 
 	return ((EIF_BOOLEAN) temp);
 }
+
+void spsubcopy (source, target, start, end, index)
+EIF_POINTER source, target;
+EIF_INTEGER start, end, index;
+{
+	/* Copy elements of `source' within bounds `start'..`end'
+	 * to `target' starting at index `index'.
+	 * Indexes are assumed to start from 0 and we assume that
+	 * memory has been properly allocated beforehand.
+	 */
+
+	EIF_INTEGER i, esize, count;
+	char *ref, *src_ref;
+	uint32 flags;
+
+	count = end - start + 1;
+	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD(2);
+	esize = *(long *) (ref + sizeof(long));
+	safe_bcopy(source+start*esize, target+index*esize, count*esize);
+
+	/* Ok, normally we would have to perform age tests, by scanning the special
+	 * object, looking for new objects. But a special object can be really big,
+	 * and can also contain some expanded objects, which should be traversed
+	 * to see if they contain any new objects. Ok, that's enough! This is a
+	 * GC problem and is normally performed by the GC. So, if the special object
+	 * is old and contains some references, I am automatically inserting it
+	 * in the remembered set. The GC will remove it from there at the next
+	 * cycle, if necessary--RAM.
+	 */
+
+	flags = HEADER(target)->ov_flags;
+	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
+		eremb(target);
+}
+
+void spclearall (spobj)
+EIF_POINTER spobj;
+{
+	/* Reset all elements of `spobj' to default value. Call
+	 * creation procedure of expanded objects if `spobj' is
+	 * composite.
+	 */
+
+	union overhead *zone;			/* Malloc information zone */
+	char  *(*init)();				/* Initialization routine to be called */
+	long i, count, elem_size;
+	int dtype;
+	char *ref;
+
+	zone = HEADER(spobj);
+	ref = spobj + (zone->ov_size & B_SIZE) - LNGPAD(2);
+	count = *(long *) ref;
+	elem_size = *(long *) (ref + sizeof(long));
+
+	if (zone->ov_flags & EO_COMP) {
+			/* case of a special object of expanded structures */
+		ref = spobj + OVERHEAD;
+		dtype = HEADER(ref)->ov_flags & EO_TYPE;
+		bzero(spobj, count * elem_size);
+			/* Initialize new expanded elements, if any */
+		init = Create(dtype);
+#ifdef MAY_PANIC
+		if ((char *(*)()) 0 == init)		/* There MUST be a routine */
+			panic("init routine lost");
+#endif
+		for (i = 0; i < count; i++, ref += elem_size) {
+			zone = HEADER(ref);
+			zone->ov_size = ref - spobj;	/* For GC */
+			zone->ov_flags = dtype;			/* Expanded type */
+			(init)(ref);					/* Call initialization routine */
+		}
+	} else
+		bzero(spobj, count * elem_size);
+}

@@ -303,7 +303,7 @@ feature -- Update
 			-- Disable the drag and drop mechanism.
 		do
 			clear_clickable
-			changed := False
+			set_changed (False)
 		end
 
 feature -- Breakpoint update

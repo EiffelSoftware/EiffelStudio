@@ -183,15 +183,11 @@ feature -- Status setting
 			if l_tree_item /= Void then
 				l_dv ?= l_tree_item.data
 				if l_dv /= Void then
-					if Application.is_dotnet then
-							--| FIXME: JFIAT : find a nicer way to manage kept objects						
-						Application.imp_dotnet.keep_object (l_dv)
-					end
 					current_dump_value := l_dv.dump_value
 				end
 			end
 			
-			parent.tool.debugger_manager.kept_objects.extend (st.object_address)
+			parent.tool.debugger_manager.keep_object (st.object_address)
 			retrieve_dump_value
 			
 --			slice_cmd.enable_sensitive

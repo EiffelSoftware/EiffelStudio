@@ -65,11 +65,19 @@ feature -- Access
 	object_tool: EB_OBJECT_TOOL
 			-- A tool that represents the current call stack element and an object in a graphical display.
 
-	evaluator_tool: EB_EXPRESSION_EVALUATOR
+	evaluator_tool: EB_EXPRESSION_EVALUATOR_TOOL
 			-- A tool that evaluates expressions.
 
 	kept_objects: LINKED_SET [STRING]
 			-- Objects represented by their address that should be kept during the execution.
+			
+	keep_object (add: STRING) is
+			-- Add object identified by `add' to `kept_objects'
+		require
+			address_not_empty: add /= Void and then not add.is_empty
+		do
+			kept_objects.extend (add)
+		end		
 
 	new_toolbar: EB_TOOLBAR is
 			-- Toolbar containing all debugging commands.

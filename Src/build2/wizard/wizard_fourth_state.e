@@ -17,6 +17,8 @@ inherit
 	GB_SHARED_TOOLS
 	
 	GB_WIDGET_UTILITIES
+	
+	GB_SHARED_COMMAND_HANDLER
 
 create
 	make
@@ -26,6 +28,7 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		do 
+			command_handler.update
 			graphically_replace_window (main_window, first_window)
 			set_updatable_entries(<<>>)
 		end

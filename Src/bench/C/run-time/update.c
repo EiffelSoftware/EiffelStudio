@@ -12,7 +12,7 @@
 */
 /* TEMPORARY */
 #include <stdio.h>
-#include <stdlib.h>
+extern char *getenv();
 
 #include "macros.h"
 #include "struct.h"

@@ -22,13 +22,13 @@ E_IType_Lib::E_IType_Lib(ITypeLib * p_i)
 //---------------------------------------------------------------------
 E_IType_Lib::E_IType_Lib(OLECHAR * file_name)
 {
-	HRESULT hr;
+	HRESULT hr = 0;
+	pTypeLib = 0;
 
 	hr = LoadTypeLib (file_name, &pTypeLib);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 };
 //---------------------------------------------------------------------
@@ -49,29 +49,29 @@ EIF_REFERENCE E_IType_Lib::ccom_find_name (OLECHAR * szName, EIF_INTEGER count)
 // szName - name to search for
 // count  - indicates how many instances to look for
 {
-	HRESULT hr;
-	MEMBERID * rgMemId;
-	ITypeInfo ** ppTInfo;
-	unsigned short cFound;
-	EIF_OBJ Result;
-	EIF_OBJ type_info;
-	EIF_PROC eif_res_make, eif_type_info_make;
-	EIF_PROC eif_put_member_ids;
-	EIF_PROC eif_put_type_info;
-	EIF_TYPE_ID type_id_res, type_id_type_info;
+	HRESULT hr =0;
+	MEMBERID * rgMemId = NULL;
+	ITypeInfo ** ppTInfo = NULL;
+	unsigned short cFound = 0;
+	EIF_OBJ Result = NULL;
+	EIF_OBJ type_info = NULL;
+	EIF_PROC eif_res_make = NULL, eif_type_info_make = NULL;
+	EIF_PROC eif_put_member_ids = NULL;
+	EIF_PROC eif_put_type_info = NULL;
+	EIF_TYPE_ID type_id_res = -1, type_id_type_info= -1;
 	int i = 0;
 
 	eif_disable_visible_exception();
 
 	rgMemId = (MEMBERID *)malloc (count * sizeof (MEMBERID));
 	ppTInfo = (ITypeInfo **)malloc (count * sizeof (ITypeInfo *));
+	*ppTInfo = NULL;
 	cFound = count;
 
 	hr = pTypeLib->FindName (szName, 0, ppTInfo, rgMemId, &cFound);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 
 	type_id_res = eif_type_id ("ECOM_TYPE_LIB_FIND_NAME_RESULT");
@@ -118,28 +118,27 @@ EIF_REFERENCE E_IType_Lib::ccom_get_documentation (EIF_INTEGER index)
 // complete help file name and path, and
 // context identifier for library help topic in help file
 {
-	EIF_OBJECT Result;
-	EIF_OBJECT name;
-	EIF_OBJECT doc_string;
-	EIF_OBJECT help_file;
+	EIF_OBJECT Result = NULL;
+	EIF_OBJECT name = NULL;
+	EIF_OBJECT doc_string = NULL;
+	EIF_OBJECT help_file = NULL;
 
-	EIF_TYPE_ID eif_doc_id, eif_string_id;
-	EIF_PROC put_name, put_doc_string, put_help_file, put_context;
+	EIF_TYPE_ID eif_doc_id = -1, eif_string_id = -1;
+	EIF_PROC put_name = NULL, put_doc_string = NULL, put_help_file = NULL, put_context = NULL;
 
-	BSTR BstrName;
-	BSTR BstrDocString;
-	BSTR BstrHelpFile;
+	BSTR BstrName = NULL;
+	BSTR BstrDocString = NULL;
+	BSTR BstrHelpFile = NULL;
 
-	unsigned long HelpContext;
+	unsigned long HelpContext = 0;
 
-	HRESULT hr;
+	HRESULT hr = 0;
 
 	hr = pTypeLib->GetDocumentation (index, &BstrName, &BstrDocString,
 			&HelpContext, &BstrHelpFile);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 
 	name = bstr_to_eif_obj (BstrName);
@@ -152,6 +151,7 @@ EIF_REFERENCE E_IType_Lib::ccom_get_documentation (EIF_INTEGER index)
 	put_help_file = eif_proc ("set_help_file", eif_doc_id);
 	put_context = eif_proc ("set_context_id", eif_doc_id);
 
+	nstcall = 0;
 	Result = eif_create (eif_doc_id);
 	put_name (eif_access (Result), eif_access (name));
 	put_doc_string (eif_access (Result), eif_access (doc_string));
@@ -169,14 +169,13 @@ TLIBATTR * E_IType_Lib::ccom_get_lib_attr ()
 
 // Retrieves structure that contains library's attributes.
 {
-	TLIBATTR * p_tlib_attr;
-	HRESULT hr;
+	TLIBATTR * p_tlib_attr = NULL;
+	HRESULT hr = 0;
 
 	hr = pTypeLib->GetLibAttr (&p_tlib_attr);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return p_tlib_attr;
 };
@@ -188,8 +187,8 @@ ITypeComp * E_IType_Lib::ccom_get_type_comp ()
 // constants, and global functions.
 // Returns pointer to ItypeComp instance for this ITypelib.
 {
-	HRESULT hr;
-	ITypeComp * p_type_comp;
+	HRESULT hr = 0;
+	ITypeComp * p_type_comp = NULL;
 
 	hr = pTypeLib->GetTypeComp(&p_type_comp);
 	if (hr != S_OK)
@@ -207,14 +206,13 @@ ITypeInfo * E_IType_Lib::ccom_get_type_info (int index)
 // `index' is index of ITypeInfo to be returned.
 // Returnes pointer to ITypeInfo inteface.
 {
-	HRESULT hr;
-	ITypeInfo * p_type_info;
+	HRESULT hr = 0;
+	ITypeInfo * p_type_info = NULL;
 	
 	hr = pTypeLib->GetTypeInfo (index, &p_type_info);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return p_type_info;
 };
@@ -232,16 +230,15 @@ ITypeInfo * E_IType_Lib::ccom_get_type_info_of_guid (EIF_POINTER a_guid)
 
 // Retrieves type description corresponding to specified GUID
 {
-	HRESULT hr;
-	ITypeInfo * p_type_info;
-	GUID * guid;
+	HRESULT hr = 0;
+	ITypeInfo * p_type_info = NULL;
+	GUID * guid = NULL;
 	guid = (GUID *)a_guid;
 	
 	hr = pTypeLib->GetTypeInfoOfGuid (*guid, &p_type_info);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return p_type_info;
 };
@@ -252,13 +249,12 @@ EIF_INTEGER E_IType_Lib::ccom_get_type_info_type (int index)
 // Retrieves type of type description.
 // `index' is index of type description within type library
 {
-	HRESULT hr;
+	HRESULT hr =0;
 	TYPEKIND type_kind;
 	hr = pTypeLib->GetTypeInfoType (index, &type_kind);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	return (EIF_INTEGER) type_kind;
 };
@@ -275,8 +271,7 @@ EIF_BOOLEAN E_IType_Lib::ccom_is_name (OLECHAR * szName)
 	hr = pTypeLib->IsName (szName, 0, &local_b);
 	if (hr != S_OK)
 	{
-		//Formatter  f;
-		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
+		com_eraise (f.c_format_message (hr), EN_PROG);
 	}
 	if (local_b)
 		return EIF_TRUE;
@@ -289,7 +284,13 @@ void E_IType_Lib::ccom_release_tlib_attr (TLIBATTR * p_tlib_attr)
 
 // Releases specified TLIBATTR.
 {
-	pTypeLib->ReleaseTLibAttr (p_tlib_attr);
+	
+	//pTypeLib->ReleaseTLibAttr (p_tlib_attr);
+	
+	// Causes random crash.
+	// Access violation in oleaut32.dll or ntdll.dll
+	//structure is overwritten and freed (?) before.
+	
 };
 //-----------------------------------------------------------------
 

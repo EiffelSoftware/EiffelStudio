@@ -14,45 +14,30 @@ create
 feature -- Initialization
 
 	make (
-			g_type_a: GEN_TYPE_A;
-			f_dec_as: FORMAL_DEC_AS
-			c_type: TYPE_A;
-			c_class: CLASS_C;
-			t_check: TYPE_A;
-			pos: INTEGER;
-			formal: FORMAL_A) is
+			c_class: like context_class;
+			p: like action) is
 				-- Initialize all the fields.
+		require
+			c_class_not_void: c_class /= Void
+			p_not_void: p /= Void
 		do
-			gen_type_a := g_type_a
-			formal_dec_as := f_dec_as
-			constraint_type := c_type
 			context_class := c_class
-			to_check := t_check
-			i := pos
-			formal_type := formal
+			action := p
+		ensure
+			context_class_set: context_class = c_class
+			action_set: action = p
 		end
 
 feature -- Access
 
-	gen_type_a: GEN_TYPE_A
-			-- Actual generic class on which we are doing the checking
-
-	formal_dec_as: FORMAL_DEC_AS
-			-- Formal description of the constraint in the original generic class.
-
-	constraint_type: TYPE_A
-			-- Type of the constraint in the original generic class.
-
 	context_class: CLASS_C
-			-- Class where the occurrence of `gen_type_a' appears
+			-- Class where the occurrence of generic type to be checked appears
 			
-	to_check: TYPE_A
-			-- Type of the declaration of the `i'-th elements of `gen_type_a'.
-
-	i: INTEGER
-			-- Position in `gen_type_a' where the declaration is done.
-
-	formal_type: FORMAL_A
-			-- Is `to_check' a formal type in `context_class'?
+	action: PROCEDURE [ANY, TUPLE]
+			-- Action launched in context of current to check validity of constraint
+			
+invariant
+	context_class_not_void: context_class /= Void
+	action_not_void: action /= Void
 
 end -- class CONSTRAINT_CHECKING_INFO

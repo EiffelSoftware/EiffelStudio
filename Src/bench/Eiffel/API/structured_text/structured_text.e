@@ -65,7 +65,7 @@ feature
 		local
 			s: STRING
 		do
-			!!Result.make (4096);
+			!! Result.make (0);
 			from
 				start
 			until

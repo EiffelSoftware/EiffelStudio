@@ -430,16 +430,17 @@ feature -- Element change
 feature -- Measurement
 	
 	x: INTEGER is
-			-- Horizontal position relative to parent
+			-- Horizontal position relative to parent.
 		do
 			Result := c_gtk_widget_x (widget) 
 		end
 
 	y: INTEGER is
-			-- Vertical position relative to parent
+			-- Vertical position relative to parent.
 		do
 			Result := c_gtk_widget_y (widget) 
-		end	
+		end
+
 
 	width: INTEGER is
 			-- Width of widget
@@ -922,6 +923,30 @@ feature -- Implementation
 
 	destroy_con_id: INTEGER
 			--
+
+
+	absolute_x: INTEGER is
+			-- Horizontal position relative to (X) root-window.
+		do
+			Result := c_gtk_absolute_x (widget)
+		end
+
+	c_gtk_absolute_x (wid: POINTER): INTEGER is
+		external
+			"C (GtkWidget *): EIF_INTEGER | %"gtk_eiffel.h%""
+		end
+
+	absolute_y: INTEGER is
+			-- Vertical position relative to (X) root-window.
+		do
+			Result := c_gtk_absolute_y (widget)
+		end
+
+	c_gtk_absolute_y (wid: POINTER): INTEGER is
+		external
+			"C (GtkWidget *): EIF_INTEGER | %"gtk_eiffel.h%""
+		end
+
 
 end -- class EV_WIDGET_IMP
 

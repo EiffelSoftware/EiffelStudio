@@ -16,6 +16,8 @@ inherit
 		redefine
 			make,
 			make_with_text,
+			is_selected,
+			set_selected,
 			implementation
 		end
 	
@@ -25,7 +27,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_HOLDER) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_CHECK_MENU_ITEM_IMP! implementation.make
@@ -33,7 +35,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -43,7 +45,28 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- we use it only when the grand parent is an option button.
+  		require else
+			exists: not destroyed
+		do
+			Result := implementation.is_selected
+		end
+
 feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+   			-- Set current item as the selected one.
+			-- we use it only when the grand parent is an option button.
+   		require else
+			exists: not destroyed
+   		do
+			implementation.set_selected (flag)
+   		end
 
 	toggle is
 			-- Change the state of the menu-item to
@@ -82,6 +105,7 @@ feature -- Event -- removing command association
 feature -- Implementation
 
 	implementation: EV_CHECK_MENU_ITEM_I
+			-- Platform dependent access.
 
 end -- class EV_CHECK_MENU_ITEM
 

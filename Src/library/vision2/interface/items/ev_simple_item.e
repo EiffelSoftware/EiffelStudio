@@ -22,6 +22,37 @@ inherit
 			implementation
 		end
 
+feature {NONE} -- Initialization
+
+	make_with_text (par: like parent; txt: STRING) is
+			-- Create a row with text in it.
+		require
+			valid_text: txt /= Void
+		deferred
+		ensure
+			text_set: text.is_equal (txt)
+		end
+
+	make_with_all (par: like parent; txt: STRING; pos: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		require
+			valid_parent: par /= Void
+			valid_text: txt /= Void
+			valid_index: pos > 0 and pos <= par.count + 1
+		do
+			-- create {?} implementation.make_with_text (txt)
+			check
+				valid_implementation: implementation /= Void
+			end
+			implementation.set_interface (Current)
+			set_parent_with_index (par, pos)
+		ensure
+			parent_set: parent.is_equal (par)
+			text_set: text.is_equal (txt)
+			index_set: index = pos
+		end
+
 feature -- Access
 
 	text: STRING is
@@ -30,6 +61,8 @@ feature -- Access
 			exists: not destroyed
 		do
 			Result := implementation.text
+		ensure
+			valid_result: Result /= Void
 		end
 
 feature -- Element change

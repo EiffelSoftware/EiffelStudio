@@ -17,6 +17,8 @@ inherit
 			set_count as set_columns
 		redefine
 			parent,
+			make_with_index,
+			make_with_all,
 			implementation
 		end
 
@@ -38,7 +40,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MULTI_COLUMN_LIST) is
+	make (par: like parent) is
 			-- Create an empty row.
 		do
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make
@@ -49,7 +51,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]) is
+	make_with_text (par: like parent; txt: ARRAY [STRING]) is
 			-- Create a row with the given texts.
 		do
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make_with_text (txt)
@@ -57,37 +59,22 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_index (par:EV_MULTI_COLUMN_LIST; value: INTEGER) is
+	make_with_index (par: like parent; value: INTEGER) is
 			-- Create a row at the given `value' index in the list.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0 and value <= par.rows + 1)
 		do
-			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make_with_index (par, value)
-			implementation.set_interface (Current)
+			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make
+			{EV_COMPOSED_ITEM} Precursor (par, value)
 		end
 
-	make_with_all (par:EV_MULTI_COLUMN_LIST; txt: ARRAY [STRING]; value: INTEGER) is
+	make_with_all (par: like parent; txt: ARRAY [STRING]; value: INTEGER) is
 			-- Create a row with `txt' as text at the given
 			-- `value' index in the list.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0 and value <= par.rows + 1)
 		do
-			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make_with_all (par, txt, value)
-			implementation.set_interface (Current)
+			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make_with_text (txt)
+			{EV_COMPOSED_ITEM} Precursor (par, txt, value)
 		end
 
 feature -- Access
-
-	index: INTEGER is
-			-- Index of the row in the list
-		require
-			exist: not destroyed
-			has_parent: parent /= Void
-		do
-			Result := implementation.index
-		end
 
 	parent: EV_MULTI_COLUMN_LIST is
 			-- Parent of the current item.
@@ -108,18 +95,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-			valid_index: (value > 0) and (value <= parent.rows + 1)
-		do
-			implementation.set_index (value)
-		ensure
-			index_set: index = value
-		end
-	
 	set_selected (flag: BOOLEAN) is
 			-- Select the item if `flag', unselect it otherwise.
 		require
@@ -127,6 +102,8 @@ feature -- Status setting
 			has_parent: parent /= Void
 		do
 			implementation.set_selected (flag)
+		ensure
+			state_set: is_selected = flag
 		end
 
 	toggle is
@@ -228,9 +205,10 @@ feature -- Event -- removing command association
 			implementation.remove_button_release_commands (mouse_button)
 		end
 
-feature {EV_MULTI_COLUMN_LIST_I} -- Implementation
+feature -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
+			-- Platform dependent access.
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
 

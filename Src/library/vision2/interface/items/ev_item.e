@@ -17,32 +17,67 @@ inherit
 			implementation
 		end
 
+feature {NONE} -- Initialization
+
+	make (par: like parent) is
+			-- Create the widget with `par' as parent.
+		deferred
+		end
+
+	make_with_index (par: like parent; pos: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		require
+			valid_parent: par /= Void
+			valid_index: pos >= 0 and pos <= par.count
+		do
+			-- create {?} implementation.make
+			check
+				valid_implementation: implementation /= Void
+			end
+			implementation.set_interface (Current)
+			set_parent_with_index (par, pos)
+		ensure
+			parent_set: parent.is_equal (par)
+			index_set: index = pos
+		end
+
 feature -- Access
 
-	parent: EV_ANY is
+	parent: EV_ITEM_HOLDER [EV_ITEM] is
 			-- The parent of the Current widget
 			-- Can be void.
 		require
 			exists: not destroyed
 		do
-			if implementation.parent_imp /= Void then
-				Result := implementation.parent_imp.interface
-			else
-				Result := Void
-			end
+			Result := implementation.parent
 		end
 
-	parent_widget: EV_WIDGET is
-			-- Parent widget of the current item
+	top_parent: EV_ITEM_HOLDER [EV_ITEM] is
+			-- Top item holder that contains the current item.
 		require
 			exists: not destroyed
 		do
-			Result := implementation.parent_widget
+			if implementation.top_parent_imp = Void then
+				Result := Void
+			else
+				Result ?= implementation.top_parent_imp.interface
+			end
 		end
 
 	data: ANY
 			-- A data kept by the item
 			-- May be redefine
+
+	index: INTEGER is
+			-- Index of the current item in its parent.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			Result := implementation.index
+		ensure
+			valid_index: index >= 1 and index <= parent.count
+		end
 
 feature -- Element change
 
@@ -58,6 +93,19 @@ feature -- Element change
 			parent_set: parent = par
 		end
 
+	set_parent_with_index (par: like parent; pos: INTEGER) is
+			-- Make `par' the new parent of the widget and set
+			-- the current button at `pos'.
+		require
+			exists: not destroyed
+			valid_index: pos >= 1 and pos <= par.count + 1
+		do
+			implementation.set_parent_with_index (par, pos)
+		ensure
+			parent_set: parent = par
+			index_set: index = pos
+		end
+
 	set_data (a: like data) is
 			-- Make `a' the new data of the item.
 		require
@@ -67,6 +115,18 @@ feature -- Element change
 		ensure
 			data_set: (data /= Void) implies (data.is_equal (a))
 				and (data = Void) implies (a = Void)
+		end
+
+	set_index (pos: INTEGER) is
+			-- Make `pos' the new index of the item.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+			valid_index: pos >= 1 and pos <= parent.count + 1
+		do
+			implementation.set_index (pos)
+		ensure
+			index_set: index = pos
 		end
 
 feature -- Implementation

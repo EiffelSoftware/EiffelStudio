@@ -16,6 +16,8 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
+			make_with_index,
+			make_with_all,
 			parent
 		end
 
@@ -42,7 +44,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_TREE_ITEM_HOLDER) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_TREE_ITEM_IMP! implementation.make
@@ -50,7 +52,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_TREE_ITEM_HOLDER; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -60,28 +62,19 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_index (par: EV_TREE_ITEM_HOLDER; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0) and (value <= par.count + 1)
+	make_with_index (par: like parent; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
 		do
-			!EV_TREE_ITEM_IMP!implementation.make_with_index (par, value)
-			implementation.set_interface (Current)
---			set_parent (par)
+			create {EV_TREE_ITEM_IMP} implementation.make
+			{EV_SIMPLE_ITEM} Precursor (par, value)
 		end
 
-	make_with_all (par: EV_TREE_ITEM_HOLDER; txt: STRING; value: INTEGER) is
-			-- Create an item with `par' as parent, `txt' as text
-			-- and `value' as index.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0) and (value <= par.count + 1)
+	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
 		do
-			!EV_TREE_ITEM_IMP!implementation.make_with_all (par, txt, value)
-			implementation.set_interface (Current)
---			set_parent (par)
+			create {EV_TREE_ITEM_IMP} implementation.make_with_text (txt)
+			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
 		end
 
 feature -- Access
@@ -92,56 +85,13 @@ feature -- Access
 			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-		do
-			Result := implementation.index
-		end
-
-feature -- Status setting
-
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-		do
-			implementation.set_selected (flag)
-		ensure
-			is_selected: flag implies is_selected
-		end
-
-	toggle is
-			-- Change the state of selection of the item.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-		do
-			implementation.toggle
-		end
-
-	set_expand (flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-			is_parent: is_parent
-		do
-			implementation.set_expand (flag)
-		ensure
-			is_expanded: flag implies is_expanded
-		end
-
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is the item selected?
 		require
 			exists: not destroyed
-			has_parent: parent /= Void
+			in_widget: top_parent /= Void
 		do
 			Result := implementation.is_selected
 		end
@@ -150,6 +100,7 @@ feature -- Status report
 			-- is the item expanded?
 		require
 			exists: not destroyed
+			in_widget: top_parent /= Void
 		do
 			Result := implementation.is_expanded
 		end
@@ -162,17 +113,38 @@ feature -- Status report
 			Result := implementation.is_parent
 		end
 
-feature -- Element change
+feature -- Status setting
 
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item in the
-			-- list.
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
 		require
 			exists: not destroyed
-			has_parent: parent /= Void
---			valid_index: (value > 0) and (value <= par.count + 1)
+			in_widget: top_parent /= Void
 		do
-			implementation.set_index (value)
+			implementation.set_selected (flag)
+		ensure
+ 			state_set: is_selected = flag
+		end
+
+	toggle is
+			-- Change the state of selection of the item.
+		require
+			exists: not destroyed
+			in_widget: top_parent /= Void
+		do
+			implementation.toggle
+		end
+
+	set_expand (flag: BOOLEAN) is
+			-- Expand the item if `flag', collapse it otherwise.
+		require
+			exists: not destroyed
+			in_widget: top_parent /= Void
+			is_parent: is_parent
+		do
+			implementation.set_expand (flag)
+		ensure
+			state_set: is_expanded = flag
 		end
 
 feature -- Event : command association
@@ -284,10 +256,10 @@ feature -- Event -- removing command association
 			implementation.remove_button_release_commands (mouse_button)
 		end
 
--- feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation
 feature -- Implementation
 
 	implementation: EV_TREE_ITEM_I
+			-- Platform dependent access
 
 end -- class EV_TREE_ITEM
 

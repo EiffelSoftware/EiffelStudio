@@ -14,6 +14,8 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
+			make_with_index,
+			make_with_all,
 			parent
 		end
 
@@ -25,7 +27,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_LIST) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_LIST_ITEM_IMP!implementation.make
@@ -33,7 +35,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_LIST; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -43,26 +45,19 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_index (par: EV_LIST; value: INTEGER) is
-			-- Create an item with `par' as parent and `value'
-			-- as index.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0) and (value <= par.count + 1)
+	make_with_index (par: like parent; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
 		do
-			!EV_LIST_ITEM_IMP!implementation.make_with_index (par, value)
-			implementation.set_interface (Current)
+			create {EV_LIST_ITEM_IMP} implementation.make
+			{EV_SIMPLE_ITEM} Precursor (par, value)
 		end
 
 	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
 			-- Create an item with `par' as parent, `txt' as text
 			-- and `value' as index.
-		require
-			valid_parent: par /= Void
-			valid_index: (value > 0) and (value <= par.count + 1)
 		do
-			!EV_LIST_ITEM_IMP!implementation.make_with_all (par, txt, value)
-			implementation.set_interface (Current)
+			create {EV_LIST_ITEM_IMP} implementation.make_with_text (txt)
+			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
 		end
 
 feature -- Access
@@ -71,15 +66,6 @@ feature -- Access
 			-- Parent of the current item.
 		do
 			Result ?= {EV_SIMPLE_ITEM} Precursor
-		end
-
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-		do
-			Result := implementation.index
 		end
 
 feature -- Status report
@@ -120,6 +106,8 @@ feature -- Status setting
 			has_parent: parent /= Void
 		do
 			implementation.set_selected (flag)
+		ensure
+			state_set: is_selected = flag
 		end
 
 	toggle is
@@ -129,19 +117,6 @@ feature -- Status setting
 			has_parent: parent /= Void
 		do
 			implementation.toggle
-		end
-
-feature -- Element change
-
-	set_index (value: INTEGER) is
-			-- Make `value' the new index of the item in the
-			-- list.
-		require
-			exists: not destroyed
-			has_parent: parent /= Void
-			valid_index: (value > 0) and (value <= parent.count + 1)
-		do
-			implementation.set_index (value)
 		end
 
 feature -- Event : command association
@@ -208,6 +183,7 @@ feature -- Event -- removing command association
 feature -- Implementation
 
 	implementation: EV_LIST_ITEM_I
+			-- Platform dependent access.
 
 end -- class EV_LIST_ITEM
 

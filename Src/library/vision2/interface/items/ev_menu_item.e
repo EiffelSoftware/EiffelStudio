@@ -14,6 +14,8 @@ inherit
 	EV_SIMPLE_ITEM
 		redefine
 			implementation,
+			make_with_index,
+			make_with_all,
 			parent
 		end
 	
@@ -24,11 +26,13 @@ inherit
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_index,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_HOLDER) is
+	make (par: like parent) is
 			-- Create the widget with `par' as parent.
 		do
 			!EV_MENU_ITEM_IMP! implementation.make
@@ -36,7 +40,7 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_text (par: EV_MENU_ITEM_HOLDER; txt: STRING) is
+	make_with_text (par: like parent; txt: STRING) is
 			-- Create an item with `par' as parent and `txt'
 			-- as text.
 		do
@@ -44,6 +48,21 @@ feature {NONE} -- Initialization
 			implementation.set_interface (Current)
 			implementation.set_text (txt)
 			set_parent (par)
+		end
+
+	make_with_index (par: like parent; value: INTEGER) is
+			-- Create a row at the given `value' index in the list.
+		do
+			create {EV_MENU_ITEM_IMP} implementation.make
+			{EV_SIMPLE_ITEM} Precursor (par, value)
+		end
+
+	make_with_all (par: like parent; txt: STRING; value: INTEGER) is
+			-- Create a row with `txt' as text at the given
+			-- `value' index in the list.
+		do
+			create {EV_MENU_ITEM_IMP} implementation.make_with_text (txt)
+			{EV_SIMPLE_ITEM} Precursor (par, txt, value)
 		end
 
 feature -- Access
@@ -56,13 +75,24 @@ feature -- Access
 
 feature -- Status report
 
-	insensitive: BOOLEAN is
+	is_insensitive: BOOLEAN is
 			-- Is current item insensitive to
 			-- user actions? 
 		require
 			exists: not destroyed
 		do
-			Result := implementation.insensitive
+			Result := implementation.is_insensitive
+		end
+
+	is_selected: BOOLEAN is
+			-- True if the current item is selected.
+			-- False otherwise.
+			-- we use it only when the grand parent is an option button.
+  		require
+			exists: not destroyed
+			valid_grand_parent: grand_parent_is_option_button
+		do
+			Result := implementation.is_selected
 		end
 
 feature -- Status setting
@@ -75,7 +105,7 @@ feature -- Status setting
    		do
  			implementation.set_insensitive (flag)
  		ensure
-   			flag = insensitive
+   			state_set: is_insensitive = flag
    		end
 
 	set_selected (flag: BOOLEAN) is
@@ -83,31 +113,20 @@ feature -- Status setting
 			-- we use it only when the grand parent is an option button.
    		require
 			exists: not destroyed
---			parent_is_an_option_button: grand_parent_is_option_button
+			parent_is_an_option_button: grand_parent_is_option_button
    		do
  			implementation.set_selected (flag)
  		ensure
-   			flag_set: is_selected = flag
+   			state_set: is_selected = flag
    		end
 
 feature -- Assertion
 
---	grand_parent_is_option_button: BOOLEAN is
---			-- True if the grand parent is an option button.
---			-- False otherwise.
---		do
---			Result := implementation.grand_parent_is_option_button
---		end
-
-	is_selected: BOOLEAN is
-			-- True if the current item is selected.
+	grand_parent_is_option_button: BOOLEAN is
+			-- True if the grand parent is an option button.
 			-- False otherwise.
-			-- we use it only when the grand parent is an option button.
-  		require
-			exists: not destroyed
---			valid_grand_parent: grand_parent_is_option_button
 		do
-			Result := implementation.is_selected
+			Result := implementation.grand_parent_is_option_button
 		end
 
 feature -- Event : command association
@@ -136,6 +155,7 @@ feature -- Event -- removing command association
 feature -- Implementation
 
 	implementation: EV_MENU_ITEM_I
+			-- Platform dependent access.
 
 end -- class EV_MENU_ITEM
 

@@ -1,14 +1,15 @@
 class C_DLL_EXTENSION_AS_B
 
 inherit
+	C_DLL_EXTENSION_AS
 	C_EXTENSION_AS_B
 		undefine
-			parse_special_part
+			parse_special_part, is_dll
 		redefine
-			type_check, extension_i, byte_node, need_encapsulation
+			type_check, extension_i, init_extension_i, byte_node, need_encapsulation
 		end
 
-	C_DLL_EXTENSION_AS
+
 
 feature -- Get the dll extension
 
@@ -16,23 +17,33 @@ feature -- Get the dll extension
 			-- EXTERNAL_EXT_I corresponding to current extension
 		do
 			!! Result
+			init_extension_i (Result)
 			Result.set_dll_type (dll_type)
+			Result.set_dll_index (dll_index)
+			Result.set_special_file_name (special_file_name)
+		end
+
+	init_extension_i (ext_i: like extension_i) is
+			-- Initialize `ext_i' based on current extension.
+		do
+			ext_i.set_argument_types (argument_types)
+			ext_i.set_return_type (return_type)
 		end
 
 feature -- Encapsulation
 
-	need_encapsulation: BOOLEAN is False
-			-- A dll call does not need to be encapsulated for polymorphic purpose.
+	need_encapsulation: BOOLEAN is True
+			-- A dll call needs to be encapsulated for polymorphic purpose.
 
-feature
+feature -- Type check
 
 	type_check (ext_as_b: EXTERNAL_AS_B) is
 			-- Perform type check on Current associated with `ext_as_b'.
 		local
 			error: BOOLEAN
 			ext_dll_sign: EXT_DLL_SIGN
-			alias_name: STRING_AS_B
-			ext_dll_alias: EXT_DLL_ALIAS
+--			alias_name: STRING_AS_B
+--			ext_dll_alias: EXT_DLL_ALIAS
 		do
 			type_check_signature
 
@@ -50,16 +61,16 @@ feature
 				Error_handler.raise_error
 			end
 
-			if dll_type = dll32_type then
-					-- Extra check for Win 31 DLL32
-				alias_name := ext_as_b.alias_name
-				if (alias_name = Void or else not alias_name.value.is_integer) then
-					!! ext_dll_alias
-					context.init_error (ext_dll_alias)
-					Error_handler.insert_error (ext_dll_alias)
-					Error_handler.raise_error
-				end
-			end
+--			if dll_type = dll32_type then
+--					-- Extra check for Win 31 DLL32
+--				alias_name := ext_as_b.alias_name
+--				if (alias_name = Void or else not alias_name.value.is_integer) then
+--					!! ext_dll_alias
+--					context.init_error (ext_dll_alias)
+--					Error_handler.insert_error (ext_dll_alias)
+--					Error_handler.raise_error
+--				end
+--			end
 		end
 
 feature -- Byte code
@@ -69,6 +80,7 @@ feature -- Byte code
 		do
 			!! Result
 			Result.set_dll_type (dll_type)
+			Result.set_dll_index (dll_index)
 		end
 
 end -- class C_DLL_EXTENSION_AS_B

@@ -1890,6 +1890,267 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
 
 	return eif_wean (result);
 };
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_bstr (BSTR *a_string)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_bstr (*a_string));
+	
+	EIF_TYPE_ID tid = eif_type_id ("CELL[STRING]");
+	EIF_OBJECT result = eif_create (tid);
+	EIF_PROCEDURE put = eif_procedure ("put", tid);
+	put (eif_access (result), eif_access (eif_object));
+	return eif_wean(result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_date (DATE *a_date)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_date (*a_date));
+	
+	EIF_TYPE_ID tid = eif_type_id ("CELL[DATE_TIME]");
+	EIF_OBJECT result = eif_create (tid);
+	EIF_PROCEDURE put = eif_procedure ("put", tid);
+	put (eif_access (result), eif_access (eif_object));
+	return eif_wean(result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_short (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_short (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[INTEGER]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_long (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_long (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[INTEGER]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_float (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_float (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[REAL]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_double (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_double (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[DOUBLE]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_currency (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_currency (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_CURRENCY]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_date (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_date (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[DATE_TIME]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_bstr (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_bstr (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[STRING]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_hresult (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_hresult (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_HRESULT]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_boolean (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_boolean (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[BOOLEAN]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	eif_wean (eif_object);
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_variant (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_variant (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_VARIANT]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	eif_wean (eif_object);
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_decimal (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_decimal (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_DECIMAL]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	eif_wean (eif_object);
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_char (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_char (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[CHARACTER]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	eif_wean (eif_object);
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_dispatch (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_dispatch (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_AUTOMATION_INTERFACE]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	eif_wean (eif_object);
+	return eif_wean (result);
+}
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_unknown (SAFEARRAY ** a_safearray)
+{
+	EIF_OBJECT eif_object = eif_protect (ccom_ce_safearray_unknown (*a_safearray));
+
+	EIF_TYPE_ID tid;
+	EIF_OBJECT result;
+	EIF_PROCEDURE put_proc;
+	
+	tid = eif_type_id ("CELL[ECOM_ARRAY[ECOM_UNKNOWN_INTERFACE]]");
+	result = eif_create (tid);
+	put_proc = eif_procedure ("put", tid);
+	
+	put_proc (eif_access (result), eif_access (eif_object));
+	eif_wean (eif_object);
+	return eif_wean (result);
+}
+
 //-------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)

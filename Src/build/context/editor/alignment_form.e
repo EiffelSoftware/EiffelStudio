@@ -44,15 +44,17 @@ feature -- Interface
 
 			!!offset.make (Widget_names.offset_name, Current);
 			!!offset_value.make (Widget_names.scale, Current);
+			offset_value.set_horizontal (True);
 			offset_value.set_maximum_right_bottom (true);
-			offset_value.set_horizontal (true);
-			offset_value.show_value (true);
+			offset_value.show_value (True);
 			offset_value.set_size (110, 15);
 			offset_value.add_value_changed_action (Current, offset_value);
+			offset_value.set_minimum (0);
+			offset_value.set_maximum (100);
 
 			attach_left (reference, 10);
-			attach_right_position (reference, 5);
-			attach_left_position (align_hole, 11);
+			--attach_right_position (reference, 5);
+			attach_left_position (align_hole, 70);
 			attach_right (align_hole, 10);
 
 			attach_left (a_separator, 0);

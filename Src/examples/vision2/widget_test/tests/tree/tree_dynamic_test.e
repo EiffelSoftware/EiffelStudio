@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_DYNAMIC_TREE_ITEM."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -34,8 +33,8 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	create_children (item: EV_DYNAMIC_TREE_ITEM): ARRAYED_LIST [EV_TREE_NODE] is
-			-- Create new children for `item'. The depth of `item' in `tree' determines
-			-- how many children are contained.
+			-- Create new children for `item'. The depth of `item'
+			-- in `tree' determines how many children are contained.
 		local
 			counter: INTEGER
 			tree_item: EV_DYNAMIC_TREE_ITEM
@@ -63,8 +62,8 @@ feature {NONE} -- Implementation
 		end
 	
 	recursive_depth (item: EV_DYNAMIC_TREE_ITEM; depth: INTEGER): INTEGER is
-			-- If `item' has a parent, increase `depth' and call recursive,
-			-- otherwise `Result' is set to `depth'.
+			-- If `item' has parent, increase `depth' and call
+			-- recursive, otherwise `Result' is set to depth.
 		local
 			parent_item: EV_DYNAMIC_TREE_ITEM
 		do
@@ -77,7 +76,7 @@ feature {NONE} -- Implementation
 		end
 
 	tree: EV_TREE
-		-- An EV_TREE for testing.
+		-- Widget that test is to be performed on.
 
 end -- class TREE_DYNAMIC_TEST
 

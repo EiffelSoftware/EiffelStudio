@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that demonstrate tab positioning within an EV_NOTEBOOK"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -73,5 +72,6 @@ feature {NONE} -- Implementation
 		end
 
 	notebook: EV_NOTEBOOK
+		-- Widget that test is to be performed on.
 
 end -- class NOTEBOOK_TAB_POSITION_TEST

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_MULTI_COLUMN_LIST."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -52,12 +51,15 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	multi_column_list: EV_MULTI_COLUMN_LIST
+		-- Widget that test is to be performed on.
 	
 	multiple_selection_button: EV_CHECK_BUTTON
+		-- Check button to signify if multiple selection is enabled.
 	
 	adjust_selection is
-			-- Toggle selection of `multi_column_list' between single
-			-- and multiple based on state of `multiple_selection_button'.
+			-- Toggle selection of `multi_column_list' between 
+			-- single and multiple based on state of
+			-- `multiple_selection_button'.
 		do
 			if multiple_selection_button.is_selected then
 				multi_column_list.enable_multiple_selection

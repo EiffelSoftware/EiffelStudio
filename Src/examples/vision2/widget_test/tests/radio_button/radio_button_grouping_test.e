@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate `merge_radio_button_groups'%
 		%from EV_CONTAINER"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 
 	default_create is
@@ -55,6 +54,8 @@ feature {NONE} -- Implementation
 	
 			widget := vertical_box
 		end
+
+feature {NONE} -- Implementation
 		
 	update_merge is
 			-- Merge or unmerge `group1' and `group2', based on
@@ -67,13 +68,13 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		
-feature {NONE} -- Implementation
-
 	vertical_box: EV_VERTICAL_BOX
+		-- Box that holds and arranges the test.
 	
 	grouping_button: EV_CHECK_BUTTON
+		-- Button used to show if groups are merged or not.
 	
 	group1, group2: EV_VERTICAL_BOX
+		-- Containers used to hold individual radio groups for grouping.
 
 end -- class RADIO_BUTTON_GROUPING_TEST

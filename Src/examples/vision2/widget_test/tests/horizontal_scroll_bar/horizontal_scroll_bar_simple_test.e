@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_HORIZONTAL_SCROLL_BAR."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -24,9 +23,10 @@ feature {NONE} -- Implementation
 			
 			widget := scroll_bar
 		end
-		
+
 feature {NONE} -- Implementation
 
 	scroll_bar: EV_HORIZONTAL_SCROLL_BAR
+		-- Widget that test is to be performed on.
 
 end -- class HORIZONTAL_SCROLL_BAR_SIMPLE_TEST

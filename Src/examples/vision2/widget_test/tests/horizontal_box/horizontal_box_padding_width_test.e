@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate adjustment of%
 		%`padding_width' for EV_HORIZONTAL_BOX"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,7 +64,12 @@ feature {NONE} -- Implementation
 		-- Maximum padding width allowed for test.
 
 	horizontal_box: EV_HORIZONTAL_BOX
+		-- Widget that test is to be performed on.
+
 	padding_output_label: EV_LABEL
+		-- Label used to show padding status.
+
 	increase_padding_button, decrease_padding_button: EV_BUTTON
+		-- Buttons used to change padding balue.
 
 end -- class HORIZONTAL_BOX_PADDING_WIDTH_TEST

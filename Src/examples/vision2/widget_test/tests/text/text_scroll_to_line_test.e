@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_TEXT."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -62,12 +61,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	text: EV_TEXT
+		-- Widget that test is to be performed on.
 	
 	scroll_to_line (a_line: INTEGER) is
 			-- Scroll to line `a_line' in `text'.
 		do
 			text.scroll_to_line (a_line)
 		end
-		
 
 end -- class TEXT_SCROLL_TO_LINE_TEST

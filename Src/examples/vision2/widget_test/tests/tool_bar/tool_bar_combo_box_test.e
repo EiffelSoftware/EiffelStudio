@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -59,7 +59,9 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	left_bar, right_bar: EV_TOOL_BAR
+		-- Tool bars used for simulation of a larger toolbar.
 	
 	combo_box: EV_COMBO_BOX
+		-- Combo box used between `left_bar' and `right_bar'.
 
 end -- class TOOL_BAR_COMBO_BOX_TEST

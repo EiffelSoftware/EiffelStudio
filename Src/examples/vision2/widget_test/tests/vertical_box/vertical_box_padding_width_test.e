@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate adjustment of%
 		%`padding_width' for EV_VERTICAL_BOX"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -34,6 +33,8 @@ feature {NONE} -- Implementation
 			
 			widget := vertical_box
 		end
+
+feature {NONE} -- Implementation
 		
 	adjust_padding (adjustment: INTEGER) is
 			-- Adjust `padding_width' of `vertical_box'
@@ -57,15 +58,17 @@ feature {NONE} -- Implementation
 			end
 			padding_output_label.set_text ("Padding width : " + vertical_box.padding_width.out)
 		end
-		
-		
-feature {NONE} -- Implementation
 
 	maximum_padding: INTEGER is 40
 		-- Maximum padding width allowed for test.
 
 	vertical_box: EV_VERTICAL_BOX
+		-- Widget that test is to be performed on.
+
 	padding_output_label: EV_LABEL
+		-- Label to show level of padding.
+
 	increase_padding_button, decrease_padding_button: EV_BUTTON
+		-- Buttons used to alter padding.
 
 end -- class VERTICAL_BOX_PADDING_WIDTH_TEST

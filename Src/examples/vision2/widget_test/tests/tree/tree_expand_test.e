@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_TREE."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -44,7 +43,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	tree: EV_TREE
-			-- EV_TREE for testing purposes.
+			-- Widget that test is to be performed on.
 	
 	expand_button, collapse_button: EV_BUTTON
 			-- Buttons for controlling expanding/collapsing `tree'.
@@ -79,7 +78,6 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		
 	expand_all is
 			-- Expand all items in `tree'.
 		do
@@ -93,8 +91,8 @@ feature {NONE} -- Implementation
 		end
 		
 	adjust_state (tree_item: EV_TREE_NODE; collapsing: BOOLEAN) is
-			-- For all items of `tree_item', recursively collapse if `collapsing'
-			-- otherwise expand.
+			-- For all items of `tree_item', recursively collapse
+			-- if `collapsing' otherwise expand.
 		do
 			from
 				tree_item.start

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_PASSWORD_FIELD."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -27,5 +26,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	password_field: EV_PASSWORD_FIELD
+		-- Widget that test is to be performed on.
 
 end -- class PASSWORD_FIELD_BASIC_TEST

@@ -13,13 +13,10 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
-		local
-			vertical_box: EV_VERTICAL_BOX
-			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			
 			create tree
@@ -32,7 +29,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	tree: EV_TREE
-			-- EV_TREE for testing purposes.
+			-- Widget that test is to be performed on.
 	
 	expand_button, collapse_button: EV_BUTTON
 			-- Buttons for controlling expanding/collapsing `tree'.

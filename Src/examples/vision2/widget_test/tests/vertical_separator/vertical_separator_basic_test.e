@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_VERTICAL_SEPARATOR."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -40,5 +39,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	vertical_separator: EV_VERTICAL_SEPARATOR
+		-- Widget that test is to be performed on.
 
 end -- class VERTICAL_SEPARATOR_BASIC_TEST

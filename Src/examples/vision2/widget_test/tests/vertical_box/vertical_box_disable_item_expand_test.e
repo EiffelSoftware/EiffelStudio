@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate `disable_item_expand'%
 		%for EV_HORIZONTAL_BOX"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -40,6 +39,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	vertical_box: EV_VERTICAL_BOX
+		-- Widget that test is to be performed on.
 	
 	update_button (button: EV_BUTTON) is
 			-- Toggle expanded status of `button' in
@@ -53,4 +53,5 @@ feature {NONE} -- Implementation
 				button.set_text ("Expanded")
 			end
 		end
+
 end -- class VERTICAL_BOX_DISABLE_ITEM_EXPAND_TEST

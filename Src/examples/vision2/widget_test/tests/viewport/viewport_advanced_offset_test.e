@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that test an EV_VIEWPORT by allowing%
 		% you to adjust the offset."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -45,7 +44,7 @@ feature {NONE} -- Implementation
 		end
 		
 	modify_offset (x, y: INTEGER) is
-			-- Assign an offset to `viewport' based on `x' and `y'/
+			-- Assign an offset to `viewport' based on `x' and `y'.
 		do
 			viewport.set_offset ((x * 6 - small_image_width).max (0).min (image_width - 300),
 				(y* 6 - small_image_height).max (0).min (image_height - 200))
@@ -55,6 +54,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	viewport: EV_VIEWPORT
+		-- Widget that test is to be performed on.
 	
 	image_width: INTEGER is 900
 	image_height: INTEGER is 600
@@ -78,15 +78,15 @@ feature {NONE} -- Implementation
 		end
 		
 	small_image_height: INTEGER is
-		-- Once sixth `image_height'.
+			-- Once sixth `image_height'.
 		do
 			Result := 600 // 6
 		end
 	
 	pixmap_image: EV_PIXMAP is
 			-- `Result' is image used for test. The way
-			-- in which this is generated is not important,
-			-- but the fact that it generates an intersting image is.
+			-- in which this is generated is not important, but the
+			-- fact that it generates an interesting image is.
 		local
 			colors: LINKED_LIST [EV_COLOR]
 			counter: INTEGER

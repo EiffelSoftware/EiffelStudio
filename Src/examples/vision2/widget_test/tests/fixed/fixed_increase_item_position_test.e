@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate an EV_FIXED%
 		%being enlarged as a result of the positions of its items."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,12 +13,10 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
-		local
-			button1, button2: EV_BUTTON
 		do
 			create fixed
 			create move_right.make_with_text ("Move right")
@@ -38,6 +35,8 @@ feature {NONE} -- Implementation
 			
 			widget := fixed
 		end
+
+feature {NONE} -- Implementation
 		
 	move_button (a_button: EV_BUTTON; x, y: INTEGER) is
 			-- Move `a_button' by `x' and `y' within `fixed'.
@@ -47,11 +46,10 @@ feature {NONE} -- Implementation
 			fixed.set_item_position (a_button, a_button.x_position + x, a_button.y_position + y)
 		end
 		
-		
-feature {NONE} -- Implementation
-
 	fixed: EV_FIXED
+		-- Widget that test is to be performed on.
 	
 	move_right, move_down, move_diagonal: EV_BUTTON
+		-- Widgets placed in `fixed' that show its operation.
 
 end -- class FIXED_INCREASE_ITEM_POSITION_TEST

@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that demonstrate EV_TOOL_BAR"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -40,9 +39,10 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	tool_bar: EV_TOOL_BAR
+		-- Toolbar that toggle buttons are held within.
 	
 	update_button_text (toggle_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
-			-- Display selected state of `toggle_button' on `toggle_button'.
+			-- Display `toggle_button's selected state on itself.
 		do
 			if toggle_button.is_selected then
 				toggle_button.set_text ("Selected")

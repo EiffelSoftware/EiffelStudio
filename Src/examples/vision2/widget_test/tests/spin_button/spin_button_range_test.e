@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that demonstrate EV_SPIN_BUTTON."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -29,5 +28,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	spin_button: EV_SPIN_BUTTON
+		-- Widget that test is to be performed on.
 	
 end -- class SPIN_BUTTON_RANGE_TEST

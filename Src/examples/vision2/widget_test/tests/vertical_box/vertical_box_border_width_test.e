@@ -1,7 +1,6 @@
 indexing
 	description: "Objects that demonstrate simple use of%
 		%`border_width' for EV_VERTICAL_BOX"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -34,7 +33,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	vertical_box: EV_VERTICAL_BOX
+		-- Widget that test is to be performed on.
+
 	padding_output_label: EV_LABEL
+		-- Label to show level of padding.
+
 	increase_padding_button, decrease_padding_button: EV_BUTTON
+		-- Buttons used to alter padding.
 
 end -- class VERTICAL_BOX_BORDER_WIDTH_TEST

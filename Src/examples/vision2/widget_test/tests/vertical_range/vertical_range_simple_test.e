@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_VERTICAL_RANGE."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -28,5 +27,6 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	range: EV_VERTICAL_RANGE
+		-- Widget that test is to be performed on.
 
 end -- class VERTICAL_RANGE_SIMPLE_TEST

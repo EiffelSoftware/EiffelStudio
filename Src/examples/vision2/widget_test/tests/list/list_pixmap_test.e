@@ -13,13 +13,12 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
 		local
 			list_item: EV_LIST_ITEM
-			filename: FILE_NAME
 			counter: INTEGER
 			vertical_box: EV_VERTICAL_BOX
 			reset_button: EV_BUTTON
@@ -50,15 +49,16 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	list: EV_LIST
+		-- Widget that test is to be performed on.
 	
 	select_pixmap is
-			-- Assign `selected_pixmap' to `selected_item' of `list'.
+			-- Set `selected_pixmap' to `selected_item' of `list'.
 		do
 			list.selected_item.set_pixmap (numbered_pixmap (2))
 		end
 
 	reset is
-			-- Revert all items in `list' to displaying `unselected_pixmap'.
+			-- Reset items in `list' to display `unselected_pixmap'.
 		do
 			from
 				list.start

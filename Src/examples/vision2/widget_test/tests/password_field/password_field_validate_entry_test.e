@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that test EV_PASSWORD_FIELD."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 			default_create
 		end
 		
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
@@ -43,8 +42,8 @@ feature {NONE} -- Implementation
 		end
 		
 	set_label_text is
-			-- Display password prompt on `prompt_label', and the number of times
-			-- a correct password has been entered.
+			-- Display password prompt on `prompt_label' with the
+			-- number of times a correct password has been entered.
 		do
 			prompt_label.set_text ("Password correctly entered " +
 				password_count.out + " times.%NPlease enter %"apple%" and press return")
@@ -53,9 +52,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation
 
 	password_field: EV_PASSWORD_FIELD
+		-- Widget that test is to be performed on.
 	
 	password_count: INTEGER
+		-- Counter for number of correct passwords entered.
 	
 	prompt_label: EV_LABEL
+		-- Label to show information on about passwords entered.
 
 end -- class PASSWORD_FIELD_VALIDATE_ENTRY_TEST

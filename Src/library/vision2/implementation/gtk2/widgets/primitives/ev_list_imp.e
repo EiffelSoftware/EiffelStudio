@@ -41,7 +41,7 @@ feature -- Initialize
 	initialize is
 			-- Initialize the list.
 		do
-			{EV_NEW_LIST_ITEM_LIST_IMP} Precursor
+			Precursor {EV_NEW_LIST_ITEM_LIST_IMP}
 			
 --			real_signal_connect (
 --					list_widget,

@@ -63,7 +63,7 @@ feature -- Element Change
 	extend (v: like item) is
 			-- Add 'v' to Current.
 		do
-			{EV_MULTI_COLUMN_LIST} Precursor (v)
+			Precursor {EV_MULTI_COLUMN_LIST} (v)
 			set_row_editable (True, count)
 		end
 

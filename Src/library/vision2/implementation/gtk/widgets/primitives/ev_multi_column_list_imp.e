@@ -264,9 +264,9 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			{EV_ITEM_LIST_IMP} Precursor
-			{EV_PRIMITIVE_IMP} Precursor
-			{EV_MULTI_COLUMN_LIST_I} Precursor
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
+			Precursor {EV_MULTI_COLUMN_LIST_I}
 			connect_button_press_switch
 			disable_multiple_selection
 		end

@@ -63,7 +63,7 @@ feature -- C Code generation
 			bit_i: BIT_I
 			l_param_is_expanded: BOOLEAN
 			type_c: TYPE_C
-			expanded_type, non_expanded_type: CL_TYPE_I
+			expanded_type: CL_TYPE_I
 			exp_class_type: CLASS_TYPE
 			gen_type: GEN_TYPE_I
 			gen_ptype: GEN_TYPE_I
@@ -103,14 +103,12 @@ feature -- C Code generation
 				buffer.new_line
 				buffer.putstring ("EIF_INTEGER elem_size = (EIF_Size(")
 				expanded_type ?= gen_param
-				non_expanded_type := expanded_type.twin
-				non_expanded_type.set_is_true_expanded (False)
 				if final_mode then
-					dtype := non_expanded_type.type_id - 1
+					dtype := expanded_type.type_id - 1
 					buffer.putint (dtype)
 				else
 					buffer.putstring("RTUD(")
-					buffer.generate_type_id (non_expanded_type.associated_class_type.static_type_id)
+					buffer.generate_type_id (expanded_type.associated_class_type.static_type_id)
 					buffer.putchar (')')
 				end
 				buffer.putstring (") + OVERHEAD);")
@@ -221,11 +219,11 @@ feature -- C Code generation
 						-- Parameter type is not generic
 					buffer.putstring ("pdtype = ")
 					if final_mode then
-						dtype := non_expanded_type.type_id - 1
+						dtype := expanded_type.type_id - 1
 						buffer.putint (dtype)
 					else
 						buffer.putstring("RTUD(")
-						buffer.generate_type_id (non_expanded_type.associated_class_type.static_type_id)
+						buffer.generate_type_id (expanded_type.associated_class_type.static_type_id)
 						buffer.putchar (')')
 					end
 					buffer.putchar (';')

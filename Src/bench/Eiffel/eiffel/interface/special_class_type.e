@@ -99,7 +99,7 @@ feature {NONE} -- C code generation
 			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.put_name_id;
 		local
 			gen_param: TYPE_I;
-			non_expanded_type: CL_TYPE_I;
+			expanded_type: CL_TYPE_I;
 			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
@@ -133,10 +133,8 @@ feature {NONE} -- C code generation
 						-- Optimization: size is know at compile time
 
 					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (EIF_Size(");
-					non_expanded_type ?= gen_param;
-					non_expanded_type := non_expanded_type.twin
-					non_expanded_type.set_is_true_expanded (False);
-					buffer.putint (non_expanded_type.type_id - 1);
+					expanded_type ?= gen_param;
+					buffer.putint (expanded_type.type_id - 1);
 					buffer.putstring (") + OVERHEAD));%N")
 				else
 					buffer.putstring ("%Tecopy(arg1, Current + OVERHEAD + arg2 * (");
@@ -165,7 +163,7 @@ feature {NONE} -- C code generation
 				feat.feature_name_id = feature {PREDEFINED_NAMES}.infix_at_name_id
 		local
 			gen_param: TYPE_I;
-			non_expanded_type: CL_TYPE_I;
+			expanded_type: CL_TYPE_I;
 			l_param_is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;
@@ -194,10 +192,8 @@ feature {NONE} -- C code generation
 						-- Optimization: size of expanded is known at compile time
 
 					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (EIF_Size(");
-					non_expanded_type ?= gen_param;
-					non_expanded_type := non_expanded_type.twin
-					non_expanded_type.set_is_true_expanded (False);
-					buffer.putint (non_expanded_type.type_id - 1);
+					expanded_type ?= gen_param;
+					buffer.putint (expanded_type.type_id - 1);
 					buffer.putstring (") + OVERHEAD);%N")
 				else
 					buffer.putstring ("%Treturn Current + OVERHEAD + arg1 * (");

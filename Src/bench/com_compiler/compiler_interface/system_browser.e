@@ -395,8 +395,7 @@ feature -- Basic Operations
 			a_member_info: MEMBER_INFORMATION
 			a_description_string: STRING
 		do
-			--assembly_information.initialize (a_assembly_name)
-			a_member_info := assembly_information.find_type (a_full_dotnet_type)
+			a_member_info := assembly_information.find_type (a_assembly_name, a_full_dotnet_type)
 			Result := a_member_info.summary
 			if a_member_info /= Void then
 				a_description_string := "%NSummary%N"
@@ -413,8 +412,7 @@ feature -- Basic Operations
 			a_member_info: MEMBER_INFORMATION
 			a_description_string: STRING
 		do
-			--assembly_information.initialize (a_assembly_name)
-			a_member_info := assembly_information.find_type (a_full_dotnet_feature + a_feature_signature)
+			a_member_info := assembly_information.find_type (a_assembly_name, a_full_dotnet_feature + a_feature_signature)
 			if a_member_info /= Void then
 				a_description_string := "%NSummary%N"
 				a_description_string := a_description_string + a_member_info.summary
@@ -452,9 +450,6 @@ feature {NONE} -- Implementation
 			-- 
 		once
 			create Result.make
-			
-			--| FIXME IEK For testing only
-			Result.initialize ("C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\mscorlib.xml")
 		end
 
 end -- class SYSTEM_BROWSER

@@ -11,7 +11,7 @@ class
 	EV_POPUP_MENU_HANDLER
 
 inherit
-	WEL_COMPOSITE_WINDOW
+	WEL_FRAME_WINDOW
 		redefine
 			on_menu_command
 		end
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 		require
 			a_menu_not_void: a_menu /= Void
 		do
+			make_top ("EV_POPUP_MENU_HANDLER")
 			menu_item_list := a_menu
 			set_menu (menu_item_list)
 		end
@@ -39,20 +40,6 @@ feature {NONE} -- Implementation
 			-- Propagate to `menu'.
 		do
 			menu_item_list.menu_item_clicked (an_id)
-		end
-
-feature {NONE} -- Implementation
-
-	class_name: STRING is
-			-- Window class name used to create the window class.
-		once
-			Result := "EV_POPUP_MENU_HANDLER"
-		end
-
-	default_style: INTEGER is
-			-- Overlapped window style.
-		once
-			Result := Ws_overlappedwindow
 		end
 
 end -- class EV_POPUP_MENU_HANDLER
@@ -78,6 +65,9 @@ end -- class EV_POPUP_MENU_HANDLER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/23 00:53:35  brendel
+--| Now inherits WEL_FRAME_WINDOW because WEL_COMPOSITE_WINDOW is deferred.
+--|
 --| Revision 1.1  2000/03/22 23:45:47  brendel
 --| Initial.
 --|

@@ -203,16 +203,7 @@ feature -- Access
 		require
 			is_precompiled: is_precompiled
 		do
-			Result := il_casing.namespace_casing (is_dotnet_name, internal_namespace).twin
-			if a_prefix /= Void then
-				Result.append_character ('.')
-				Result.append (a_prefix)
-			end
-			if not Result.is_empty then
-				Result.append_character ('.')	
-			end
-			Result.append (il_casing.pascal_casing (is_dotnet_name, internal_type_name,
-					feature {IL_CASING_CONVERSION}.upper_case))
+			Result := il_casing.type_name (internal_namespace, a_prefix, internal_type_name, is_dotnet_name)
 		end
 
 	conformance_table: PACKED_BOOLEANS

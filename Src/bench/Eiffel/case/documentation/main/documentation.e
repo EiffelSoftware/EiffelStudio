@@ -166,8 +166,7 @@ feature -- Actions
 						loop
 							deg.put_case_class_message (classes.item.compiled_class)
 							set_base_cluster (classes.item.cluster)
-							cl_name := clone (classes.item.name)
-							cl_name.to_upper
+							cl_name := classes.item.name_in_upper
 							set_class_name (cl_name)
 							if filter.is_html then
 								filter.set_keyword ("html_meta", html_meta_for_class (classes.item))
@@ -435,8 +434,7 @@ feature {NONE} -- Implementation
 			until
 				classes.after
 			loop
-				s := clone (classes.item.name)
-				s.to_upper
+				s := classes.item.name_in_upper
 				class_array.append ("%T%T%"" + s + "%"")
 				s.to_lower
 				s := "" + classes.item.cluster.relative_path ('/') +

@@ -1,4 +1,6 @@
 TOP = ..\..
+OUTDIR = .
+INDIR = .
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DWORKBENCH
 MAKE = $make

@@ -1,6 +1,8 @@
+TOP=..\..
+OUTDIR= .
+INDIR= .
 CC=$cc
 RM=del
-TOP=..\..
 LIBRUN = $(TOP)\run-time
 LIBIDR = $(TOP)\idrs
 DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I.

@@ -49,7 +49,7 @@ feature -- Access
 			if Tmp_inv_byte_server.has (an_id) then
 				Result := Tmp_inv_byte_server.disk_item (an_id);
 			else
-				Result := {COMPILER_SERVER} Precursor (an_id);
+				Result := Precursor {COMPILER_SERVER} (an_id);
 			end;
 		end;
 

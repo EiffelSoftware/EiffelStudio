@@ -8,7 +8,8 @@ inherit
 		redefine
 			is_character, type_check, byte_node, value_i,
 			good_character, make_character, format
-		end
+		end;
+	CHARACTER_ROUTINES
 
 feature -- Attributes
 
@@ -67,27 +68,8 @@ feature -- Conveniences
 	format (ctxt : FORMAT_CONTEXT) is
 		do
 			ctxt.always_succeed;
-			ctxt.put_string("%'");
-			inspect value
-			when '%N' then
-				ctxt.put_string ("%%N");
-			when '%U' then
-				ctxt.put_string ("%%U");
-			when '%B' then
-				ctxt.put_string ("%%B");
-			when '%F' then
-				ctxt.put_string ("%%F");
-			when '%R' then
-				ctxt.put_string ("%%R");
-			when '%%' then
-				ctxt.put_string ("%%%%");
-			when '%"' then
-				ctxt.put_string ("%%%"");
-			when '%'' then
-				ctxt.put_string ("%%%'");
-			else
-				ctxt.put_string (value.out);
-			end;
 			ctxt.put_string ("%'");
+			ctxt.put_string (char_text (value));
+			ctxt.put_string ("%'")
 		end;
 end

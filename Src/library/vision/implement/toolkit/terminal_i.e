@@ -71,5 +71,5 @@ end -- class TERMINAL_I
 --| Telephone 805-685-1006
 --| Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <eiffel@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------

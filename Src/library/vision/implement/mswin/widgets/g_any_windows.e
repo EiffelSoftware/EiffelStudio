@@ -433,6 +433,14 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
+	accelerators: ACCELERATORS_WINDOWS is
+			-- Accelerators for the application
+		once
+			!! Result.make
+		ensure
+			result_exists: Result /= Void
+		end
+
 	system_metrics: WEL_SYSTEM_METRICS is
 			-- All the system metrics
 		once

@@ -116,8 +116,7 @@ feature -- Basic Operation
 			end
 			create tc.make
 			create fields.make (0)
-			create {SORTED_TWO_WAY_LIST [STRING]} reserved_names.make
-			reserved_names.compare_objects
+			create reserved_names.make (100)
 			create overload_solver.make
 
 			from
@@ -241,45 +240,83 @@ feature {NONE} -- Implementation
 			non_void_constructors: tc /= Void
 		local
 			arg, name: STRING
-			i: INTEGER
+			i, j, nb: INTEGER
 			args: ARRAY [CONSUMED_ARGUMENT]
+			l_reserved: like reserved_names
 		do
 			create Result.make (1, tc.count)
 			if tc.count > 0 then
 				tc.start
-				tc.item.set_name (unique_feature_name (Default_creation_routine_name))
-				from
-					tc.forth
-				until
-					tc.after
-				loop
-					args := tc.item.arguments
-					arg := args.item (1).eiffel_name
-					create name.make (arg.count + Creation_routine_name_prefix.count)
-					name.append (Creation_routine_name_prefix)
-					name.append (arg)
+				if tc.count = 1 then
+						-- When there is only one constructor, let's call it make
+						-- to avoid confusion.
+					tc.item.set_name (Creation_routine_name)
+					Result.put (tc.item.consumed_constructor, 1)
+				else
+						-- Compute all possible names for constructor.
 					from
-						i := 2
+						l_reserved := reserved_names
+						tc.start
+						args := tc.item.arguments
+						if args.count = 0 then
+							tc.item.set_name (Creation_routine_name)
+							Result.put (tc.item.consumed_constructor, 1)
+							j := 2
+							tc.forth
+						else
+							j := 1
+						end
 					until
-						not reserved_names.has (name) or i > args.count
+						tc.after or tc.item.arguments.count > Constructor_overload_resolution
 					loop
-						name.append ("_and_")
-						name.append (args.item (i).eiffel_name)
-						i := i + 1
+						args := tc.item.arguments
+						create name.make (Complete_creation_routine_name_prefix.count)
+						name.append (Complete_creation_routine_name_prefix)
+						from
+							i := 1
+							nb := args.count
+						until
+							i > nb
+						loop
+							if i > 1 then
+								name.append ("_and_")
+							end
+							name.append (args.item (i).eiffel_name)
+							i := i + 1
+						end
+						l_reserved.put (name, name)
+						tc.item.set_name (name)
+						Result.put (tc.item.consumed_constructor, j)
+						j := j + 1
+						tc.forth
 					end
-					reserved_names.extend (name)
-					tc.item.set_name (name)
-					tc.forth
-				end
-				from
-					tc.start
-					i := 1
-				until
-					tc.after
-				loop
-					Result.put (tc.item.consumed_constructor, i)
-					i := i + 1
-					tc.forth
+					
+					from
+					until
+						tc.after
+					loop
+						args := tc.item.arguments
+						create name.make (Partial_creation_routine_name_prefix.count)
+						name.append (Partial_creation_routine_name_prefix)
+						name.append (args.item (1).eiffel_name)
+						from
+							i := 2
+							nb := args.count
+						until
+							not l_reserved.has (name) or i > nb
+						loop
+							if i > 1 then
+								name.append ("_and_")
+							end
+							name.append (args.item (i).eiffel_name)
+							i := i + 1
+						end
+						l_reserved.put (name, name)
+						tc.item.set_name (name)
+						Result.put (tc.item.consumed_constructor, j)
+						j := j + 1
+						tc.forth
+					end
 				end
 			end
 		ensure
@@ -302,7 +339,13 @@ feature {NONE} -- Implementation
 	Argument_prefix: STRING is "arg_"
 			-- Argument names prefix
 	
-	Creation_routine_name_prefix: STRING is "make_from_"
+	Constructor_overload_resolution: INTEGER is 3
+			-- Number of arguments in a constructor for which we always expand
+			-- their name definition.
+
+	Creation_routine_name: STRING is "make"
+	Complete_creation_routine_name_prefix: STRING is "make_from_"
+	Partial_creation_routine_name_prefix: STRING is "make_with_"
 			-- Creation routine name prefix
 
 feature {NONE} -- Added features of System.Object to Interfaces

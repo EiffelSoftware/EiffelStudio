@@ -93,16 +93,22 @@ feature -- Access
 		-- Modifications must be made to all items
 		-- identically.
 		
-	set_object (object: like ev_type) is
+	set_main_object (an_object: like ev_type) is
 			-- Add `object' to `objects'.
 		require
-			object_not_void: object /= Void
+			object_not_void: an_object /= Void
 		do
 			if objects = Void then
 				create objects.make (2)
 			end
-			objects.extend (object)
+			objects.extend (an_object)
 		end
+
+	set_object (an_object: GB_OBJECT) is
+			--
+		deferred
+		end
+		
 
 feature -- Status setting
 
@@ -199,7 +205,7 @@ feature {NONE} -- Implementation
 		do
 		end
 		
-	new_object_editor (object: GB_OBJECT) is
+	new_object_editor (an_object: GB_OBJECT) is
 			-- Generate a new object editor containing `object'.
 		do
 		end

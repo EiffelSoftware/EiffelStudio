@@ -8,9 +8,11 @@ indexing
 class EB_GENERAL_ENTRY_PANEL
 
 inherit
-	NEW_EB_CONSTANTS
+	EB_GENERAL_DATA
 		rename
 			General_resources as parameters
+		end
+	NEW_EB_CONSTANTS
 		export
 			{NONE} all
 		end

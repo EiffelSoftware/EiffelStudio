@@ -250,6 +250,9 @@ feature -- Inheritance
 			if user_cmd /= Void then
 				user_cmd.add_descendent (Current)
 			end;
+			if edited then
+				command_editor.update_parent_symbol
+			end;
 		end;
 
 	parent_type: CMD;
@@ -774,7 +777,8 @@ feature -- Text generation
 			old_template_file: FILE_NAME;
 			new_template: STRING
 			tmp_eiffel_text: STRING;
-			pos: INTEGER
+			pos: INTEGER;
+			fname: FILE_NAME
 		do
 			!!mp;
 			mp.set_watch_shape;
@@ -782,48 +786,58 @@ feature -- Text generation
 			if old_template = Void then
 				save_old_template
 			end
-			new_template := template;
-			merger.integrate_command (associated_file_name, 
-					old_template, new_template);
-			if merger.merge_result /= Void then
-				!! tmp_eiffel_text.make (merger.merge_result.count);
-				if visual_name /= Void then
-					!! temp.make (0);
-					temp.append ("-- ");
-					temp.append (visual_name);
-					temp.append ("%N");
-					tmp_eiffel_text.append (temp);
+			fname := associated_file_name;
+			if fname.is_valid then
+				new_template := template;
+				if edited then
+					merger.set_command_caller (command_editor)
 				end;
-				tmp_eiffel_text.append (merger.merge_result);
-				old_template := Void;
-				if not tmp_eiffel_text.is_equal (eiffel_text) then
-				   	-- Now save to disk if necessary
-					eiffel_text := tmp_eiffel_text;
-					if edited then
-						pos := command_editor.text_editor.top_character_position;
-						command_editor.text_editor.set_text (eiffel_text);
-						if pos > eiffel_text.count then
-							pos := eiffel_text.count
-						end
-						command_editor.text_editor.set_top_character_position (pos)
+				merger.integrate_command (associated_file_name, 
+						old_template, new_template);
+				if not merger.error then
+					!! tmp_eiffel_text.make (merger.merge_result.count);
+					if visual_name /= Void then
+						!! temp.make (0);
+						temp.append ("-- ");
+						temp.append (visual_name);
+						temp.append ("%N");
+						tmp_eiffel_text.append (temp);
 					end;
-						-- Update the user file content
-			   		!! file.make (associated_file_name)
-					file.open_write;
-			   		file.putstring (eiffel_text)
-			   		file.close
-						-- Update the template file content for
-						-- further diffs when user modifies
-						-- outside the ebuild environment.
-					!! old_template_file.make_from_string (Environment.templates_directory);
-					old_template_file.set_file_name (base_file_name_without_dot_e);
-			   		!! file.make (old_template_file)
-					file.open_write;
-			   		file.putstring (new_template)
-			   		file.close
-				end
-			end;
-			mp.restore
+					tmp_eiffel_text.append (merger.merge_result);
+					old_template := Void;
+					if not tmp_eiffel_text.is_equal (eiffel_text) then
+				   		-- Now save to disk if necessary
+						eiffel_text := tmp_eiffel_text;
+						if edited then
+							pos := command_editor.text_editor.top_character_position;
+							command_editor.text_editor.set_text (eiffel_text);
+							if pos > eiffel_text.count then
+								pos := eiffel_text.count
+							end
+							command_editor.text_editor.set_top_character_position (pos)
+						end;
+							-- Update the user file content
+			   			!! file.make (associated_file_name)
+						file.open_write;
+			   			file.putstring (eiffel_text)
+			   			file.close
+							-- Update the template file content for
+							-- further diffs when user modifies
+							-- outside the ebuild environment.
+						!! old_template_file.make_from_string (Environment.templates_directory);
+						old_template_file.set_file_name (base_file_name_without_dot_e);
+			   			!! file.make (old_template_file)
+						file.open_write;
+			   			file.putstring (new_template)
+			   			file.close
+					end
+				end;
+				mp.restore
+			else
+				error_box.popup (Current,
+					Messages.Invalid_file_name_er,
+					fname)	
+			end
 		end;
 
 	retrieve_text_from_disk is
@@ -832,7 +846,8 @@ feature -- Text generation
 		local
 			file: PLAIN_TEXT_FILE;
 			disk_file: STRING
-			doc: EB_DOCUMENT
+			doc: EB_DOCUMENT;
+			error: BOOLEAN
 		do
 			!! file.make (associated_file_name)
 			if file.exists then
@@ -845,9 +860,17 @@ feature -- Text generation
 					!! doc
 					doc.set_directory_name (Environment.commands_directory)
 					doc.set_document_name (base_file_name_without_dot_e)
-					doc.update (template)
+					if doc.is_file_name_valid then
+						doc.update (template)
+						error := doc.error
+					else
+						error := True;
+						error_box.popup (Current,
+							Messages.Invalid_file_name_er,
+							doc.document_file_name)	
+					end
 				end;
-				if doc = Void or else not doc.error then
+				if not error then
 					file.open_read
 					file.readstream (file.count)
 					file.close

@@ -27,8 +27,8 @@
 void wel_thr_register(void);
 void wel_init_context(wel_global_context_t *);
 
-EIF_BOOLEAN is_wel_global_key_created=0;
-WEL_TSD_TYPE wel_global_key;
+rt_private EIF_BOOLEAN volatile is_wel_global_key_created = 0;
+WEL_TSD_TYPE wel_global_key = (WEL_TSD_TYPE) 0;
 
 void wel_thr_register(void)
 {
@@ -40,17 +40,15 @@ void wel_thr_register(void)
 
 	wel_global_context_t *wel_globals;
 
-	if (is_wel_global_key_created==0)
-	{
+	if ((is_wel_global_key_created == 0) && (wel_global_key == (WEL_TSD_TYPE) 0)) {
 		is_wel_global_key_created = 1;
 		WEL_TSD_CREATE(wel_global_key,"Couldn't create global key for root thread");
+
+		wel_globals = (wel_global_context_t *)eif_malloc(sizeof(wel_global_context_t));
+		if (!wel_globals) eif_thr_panic("No more memory for thread context");
+		wel_init_context(wel_globals);
+		WEL_TSD_SET(wel_global_key,wel_globals,"Couldn't bind context to TSD.");
 	}
-
-	wel_globals = (wel_global_context_t *)eif_malloc(sizeof(wel_global_context_t));
-	if (!wel_globals) eif_thr_panic("No more memory for thread context");
-	wel_init_context(wel_globals);
-	WEL_TSD_SET(wel_global_key,wel_globals,"Couldn't bind context to TSD.");
-
 }
 
 void wel_init_context(wel_global_context_t *wel_globals)

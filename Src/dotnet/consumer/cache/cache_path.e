@@ -53,7 +53,6 @@ feature {CACHE_READER} -- Access
 			relative_path := relative_assembly_path_from_consumed_assembly (a_assembly)
 			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
 			Result.append (eiffel_assembly_cache_path)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			Result.append (relative_path)
 		ensure
 			non_void_path: Result /= Void
@@ -111,7 +110,6 @@ feature {CACHE_READER} -- Access
 			relative_path := relative_type_path (a_assembly, a_type)
 			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
 			Result.append (eiffel_assembly_cache_path)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			Result.append (relative_path)
 		ensure
 			non_void_path: Result /= Void
@@ -192,7 +190,6 @@ feature {CACHE_READER} -- Access
 		once
 			create Result.make (eiffel_assembly_cache_path.count + info_path.count + 1)
 			Result.append (eiffel_assembly_cache_path)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 			Result.append (info_path)
 		ensure
 			non_void_result: Result /= Void

@@ -12,9 +12,11 @@ inherit
 	BAR_AND_TEXT
 		rename
 			default_format as old_default_format,
-			close_windows as old_close_windows
+			close_windows as old_close_windows,
+			make_shell as old_make_shell,
+			reset as old_reset
 		redefine
-			text_window, build_format_bar, hole, build_widgets, attach_all,
+			build_format_bar, hole, build_widgets, attach_all,
 			tool_name, set_default_format, stone, stone_type, synchronize,
 			process_object, hole_button, build_basic_bar,
 			close
@@ -23,28 +25,28 @@ inherit
 		rename
 			default_format as old_default_format
 		redefine
-			text_window, build_format_bar, hole, close_windows,
+			build_format_bar, hole, close_windows,
 			tool_name, build_widgets, attach_all, set_default_format,
 			stone, stone_type, synchronize, process_object, hole_button,
-			build_basic_bar, close
+			build_basic_bar, close, make_shell, reset
 		select
-			close_windows
+			close_windows, make_shell, reset
 		end;
 	SHARED_APPLICATION_EXECUTION;
 	WARNING_MESSAGES
 
 creation
 
-	make, form_create
+	make_shell, form_create
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (a_shell: EB_SHELL) is
+	make_shell (a_shell: EB_SHELL) is
 			-- Create an object tool.
 		do
 			show_menus := True;
-			make_shell (a_shell);
-			text_window.set_read_only;
+			old_make_shell (a_shell);
+			set_default_sp_bounds
 		end;
 
 	form_create (a_form: FORM) is
@@ -55,9 +57,6 @@ feature -- Initialization
 		end;
 
 feature -- Window Properties
-
-	text_window: OBJECT_TEXT;
-			-- Window to display the text in.
 
 	tool_name: STRING is
 		do
@@ -96,13 +95,54 @@ feature -- Access
 			end;
 			history.go_i_th (pos)
 		end;
- 
+
+feature -- Status report
+
+	sp_lower, sp_upper: INTEGER;
+			-- Bounds for special object inspection;
+			-- A negative value for `sp_upper' stands for the
+			-- upper bound of the inspected special object
+
+	sp_capacity: INTEGER;
+			-- Capacity of the last special object displayed in
+			-- the object window
+
+feature -- Status seting
+
+	set_sp_bounds (l, u: INTEGER) is
+			-- Set the bounds for special object inspection.
+		do
+			sp_lower := l;
+			sp_upper := u
+		end;
+
+	set_sp_capacity (c: INTEGER) is
+			-- Assign `c' to `sp_capacity'.
+		do
+			sp_capacity := c
+		end;
+
+	set_default_sp_bounds is
+			-- Set the default bounds for special object inspection.
+		do
+			sp_capacity := 0;
+			sp_lower := 0;
+			sp_upper := Application.displayed_string_size
+		end;
+
 feature -- Update
 
 	hang_on is
 			-- Make object addresses unclickable.
 		do
 			text_window.hang_on
+		end;
+
+	reset is
+			-- Reset the contents of the object window.
+		do
+			old_reset;
+			set_default_sp_bounds
 		end;
  
 	process_object (a_stone: like stone) is
@@ -118,7 +158,7 @@ feature -- Update
 			elseif not a_stone.is_valid then
 				warner (eb_shell).gotcha_call (w_Object_not_inspectable)
 			else
-				text_window.last_format.execute (a_stone);
+				last_format.execute (a_stone);
 				history.extend (a_stone)
 			end
 		end;
@@ -170,7 +210,7 @@ feature -- Settings
 	set_default_format is
 			-- Set the format to its default.
 		do
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 		end;
 		
 feature -- Commands
@@ -219,7 +259,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
-			!! search_cmd.make (edit_bar, text_window);
+			!! search_cmd.make (Current);
 			!! search_button.make (search_cmd, edit_bar);
 			if show_menus then
 				!! search_menu_entry.make (search_cmd, edit_menu);
@@ -231,7 +271,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! change_font_cmd.make (text_window);
 			!! change_font_button.make (change_font_cmd, edit_bar);
 			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
 			end;
 			if show_menus then
 				!! change_font_menu_entry.make (change_font_cmd, preference_menu);
@@ -285,7 +325,7 @@ feature {NONE} -- Implementation; Graphical Interface
 				!! showonce_frmt_holder.make_plain (once_cmd);
 				showonce_frmt_holder.set_button (once_button)
 			end;
-			!! attr_cmd.make (text_window);
+			!! attr_cmd.make (Current);
 			!! attr_button.make (attr_cmd, format_bar);
 			if show_menus then
 				!! attr_menu_entry.make (attr_cmd, format_menu);
@@ -307,11 +347,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			if eb_shell /= Void then
 				set_default_size
 			end;
-			if tabs_disabled then
-				!! text_window.make (new_name, Current, Current)
-			else
-				!OBJECT_TAB_TEXT! text_window.make (new_name, Current, Current)
-			end;
+			build_text_windows;
 			if show_menus then
 				build_menus
 			end
@@ -324,7 +360,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			if show_menus then
 				fill_menus
 			end
-			text_window.set_last_format (default_format);
+			set_last_format (default_format);
 			attach_all
 		end;
 
@@ -344,19 +380,19 @@ feature {NONE} -- Implementation; Graphical Interface
 				global_form.attach_top (edit_bar, 0)
 			end
 
-			global_form.attach_left (text_window, 0);
-			global_form.attach_right (text_window, 0);
-			global_form.attach_bottom_widget (format_bar, text_window, 0);
-			global_form.attach_top_widget (edit_bar, text_window, 0);
+			global_form.attach_left (text_window.widget, 0);
+			global_form.attach_right (text_window.widget, 0);
+			global_form.attach_bottom_widget (format_bar, text_window.widget, 0);
+			global_form.attach_top_widget (edit_bar, text_window.widget, 0);
 
 			global_form.attach_left (format_bar, 0);
 			global_form.attach_right (format_bar, 0);
 			global_form.attach_bottom (format_bar, 0);
 
-			global_form.detach_right (text_window);
+			global_form.detach_right (text_window.widget);
 			global_form.attach_right (command_bar, 0);
 			global_form.attach_bottom (command_bar, 0);
-			global_form.attach_right_widget (command_bar, text_window, 0);
+			global_form.attach_right_widget (command_bar, text_window.widget, 0);
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
 			global_form.attach_right_widget (command_bar, format_bar, 0);
 		end;
@@ -376,12 +412,12 @@ feature {NONE} -- Implementation; Graphical Interface
 			slice_button: EB_BUTTON;
 			slice_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
-			history_list_cmd: OBJECT_HISTORY
+			history_list_cmd: LIST_HISTORY
 		do
 				-- Here we create all objects needed for the attachments.
-			!! slice_cmd.make (command_bar, text_window);
+			!! slice_cmd.make (command_bar, Current);
 			!! slice_button.make (slice_cmd, command_bar);
-			slice_button.add_button_click_action (3, slice_cmd, Void);
+			slice_button.add_button_press_action (3, slice_cmd, Void);
 			if show_menus then
 				!! slice_menu_entry.make (slice_cmd, special_menu);
 					-- This is a little hack, since we want the slice window to come up.
@@ -424,8 +460,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 
 			!! history_list_cmd.make (text_window);
-			next_target_button.add_button_click_action (3, history_list_cmd, next_target_button);
-			previous_target_button.add_button_click_action (3, history_list_cmd, previous_target_button);
+			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
+			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
 				-- Here we do the attachments (for reasons of speed).
 			command_bar.attach_left (slice_button, 0);

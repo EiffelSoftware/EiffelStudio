@@ -181,7 +181,7 @@ feature -- Input
 			buffers_created: buffer /= Void
 		local
 			state: STATE_OF_DFA;
-			retried, too_big, buffer_resized: BOOLEAN;
+			too_big, buffer_resized: BOOLEAN;
 			local_string: STRING
 		do
 			if token_end >= almost_end_of_buffer then
@@ -262,15 +262,6 @@ feature -- Input
 				resize_and_fill_buffer (Standard_buffer_size, token_end);
 				token_end := 0
 			end
-		rescue
-			if read_index > buffer_size and not retried then
-				fill_buffer (token_start - 1);
-				token_end := 0;
-				retried := true;
-				retry
-			end
-				-- For this Rescue clause to work properly
-				-- STRING must be compiled with precondition checking.
 		end;
 
 	get_short_token is
@@ -282,7 +273,7 @@ feature -- Input
 			buffers_created: buffer /= Void
 		local
 			state: STATE_OF_DFA;
-			retried, recognized: BOOLEAN;
+			too_big, recognized, buffer_resized: BOOLEAN;
 			local_string: STRING
 		do
 			if token_end >= almost_end_of_buffer then
@@ -299,42 +290,63 @@ feature -- Input
 				token_type := 0;
 				token_start := token_end + 1
 			end;
-			from
-				state := dfa.item (1);
-				state := state.item (categories_table.item
-							(buffer_item_code (read_index)));
-			until
-				state = Void or recognized
-			loop
-				if state.final /= 0 then
-					token_type := state.final;
-					other_possible_tokens := state.final_array;
-					token_end := read_index;
-					recognized := true
+			if read_index > buffer_size then
+				if token_start = 1 then
+					buffer_resized := true;
+					resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
+				else
+					fill_buffer (token_start - 1);
+					token_end := 0
 				end;
-				read_index := read_index + 1;
-				state := state.item (categories_table.item
-							(buffer_item_code (read_index)))
+				get_short_token
+			else
+				from
+					state := dfa.item (1);
+					state := state.item (categories_table.item
+								(buffer_item_code (read_index)));
+				until
+					state = Void or recognized or too_big
+				loop
+					if state.final /= 0 then
+						token_type := state.final;
+						other_possible_tokens := state.final_array;
+						token_end := read_index;
+						recognized := true
+					end;
+					read_index := read_index + 1;
+					if read_index > buffer_size then
+						too_big := true
+					else
+						state := state.item (categories_table.item
+									(buffer_item_code (read_index)))
+					end
+				end;
+				if too_big then
+					if token_start = 1 then
+						buffer_resized := true;
+						resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
+					else
+						fill_buffer (token_start - 1);
+						token_end := 0
+					end;
+					get_short_token
+				else
+					if token_type = 0 then
+						token_end := token_end + 1;
+						read_index := read_index + 1
+					end;
+					local_string := buffer.substring (token_start, token_end);
+					last_token.set (token_type,
+									line_nb_array.item (token_start),
+									column_nb_array.item (token_start),
+									keyword_code (local_string),
+									local_string)
+				end
 			end;
-			if token_type = 0 then
-				token_end := token_end + 1;
-				read_index := read_index + 1
-			end;
-			local_string := buffer.substring (token_start, token_end);
-			last_token.set (token_type,
-							line_nb_array.item (token_start),
-							column_nb_array.item (token_start),
-							keyword_code (local_string),
-							local_string)
-		rescue
-			if read_index > buffer_size and not retried then
-				fill_buffer (token_start - 1);
-				token_end := 0;
-				retried := true;
-				retry
+			if buffer_resized then
+				resize_and_fill_buffer (Standard_buffer_size, token_end);
+				token_end := 0
 			end
-				-- For this Rescue clause to work properly
-				-- STRING must be compiled with precondition checking.
 		end;
 
 	get_fixed_token (l: INTEGER) is
@@ -348,7 +360,7 @@ feature -- Input
 			buffers_created: buffer /= Void
 		local
 			state: STATE_OF_DFA;
-			retried: BOOLEAN;
+			too_big, buffer_resized: BOOLEAN;
 			local_string: STRING
 		do
 			if token_end >= almost_end_of_buffer then
@@ -365,41 +377,62 @@ feature -- Input
 				token_type := 0;
 				token_start := token_end + 1
 			end;
-			from
-				state := dfa.item (1);
-				state := state.item (categories_table.item
-							(buffer_item_code (read_index)))
-			until
-				state = Void or (read_index - token_start) = l
-			loop
-				if state.final /= 0 then
-					token_type := state.final;
-					other_possible_tokens := state.final_array;
-					token_end := read_index
+			if read_index > buffer_size then
+				if token_start = 1 then
+					buffer_resized := true;
+					resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
+				else
+					fill_buffer (token_start - 1);
+					token_end := 0
 				end;
-				read_index := read_index + 1;
-				state := state.item (categories_table.item
-							(buffer_item_code (read_index)))
-			end;
-			if token_type = 0 then
-				token_end := token_end + 1;
-				read_index := read_index + 1
-			end;
-			local_string := buffer.substring (token_start, token_end);
-			last_token.set (token_type,
-							line_nb_array.item (token_start),
-							column_nb_array.item (token_start),
-							keyword_code (local_string),
-							local_string)
-		rescue
-			if read_index > buffer_size and not retried then
-				fill_buffer (token_start - 1);
-				token_end := 0;
-				retried := true;
-				retry
+				get_fixed_token (l)
+			else
+				from
+					state := dfa.item (1);
+					state := state.item (categories_table.item
+								(buffer_item_code (read_index)))
+				until
+					state = Void or (read_index - token_start) = l or too_big
+				loop
+					if state.final /= 0 then
+						token_type := state.final;
+						other_possible_tokens := state.final_array;
+						token_end := read_index
+					end;
+					read_index := read_index + 1;
+					if read_index > buffer_size then
+						too_big := true
+					else
+						state := state.item (categories_table.item
+								(buffer_item_code (read_index)))
+					end
+				end;
+				if too_big then
+					if token_start = 1 then
+						buffer_resized := true;
+						resize_and_fill_buffer (buffer_size + Extra_buffer_size, 0)
+					else
+						fill_buffer (token_start - 1);
+						token_end := 0
+					end;
+					get_fixed_token (l)
+				else
+					if token_type = 0 then
+						token_end := token_end + 1;
+						read_index := read_index + 1
+					end;
+					local_string := buffer.substring (token_start, token_end);
+					last_token.set (token_type,
+									line_nb_array.item (token_start),
+									column_nb_array.item (token_start),
+									keyword_code (local_string),
+									local_string)
+				end
 			end
-				-- For this Rescue clause to work properly
-				-- STRING must be compiled with precondition
+			if buffer_resized then
+				resize_and_fill_buffer (Standard_buffer_size, token_end);
+               	token_end := 0
+			end 
 		end;
 
 feature -- Output

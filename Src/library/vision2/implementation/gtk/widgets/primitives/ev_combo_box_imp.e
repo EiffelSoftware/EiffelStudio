@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 			-- Pointer to the list of items.
 			list_widget := C.gtk_combo_struct_list (c_object)
-			--C.gtk_combo_disable_activate (c_object)
+			C.gtk_combo_disable_activate (c_object)
 		end
 
 	initialize is
@@ -216,6 +216,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/03/15 18:29:50  king
+--| Uncommented disable_activate external
+--|
 --| Revision 1.26  2000/03/08 22:27:38  king
 --| Accounted for name change of set_combo_parent_imp
 --|

@@ -1161,7 +1161,7 @@ feature {NONE} -- Implementation: Properties dialog
 			else
 				class_field.return_actions.extend (agent new_class_name)
 				class_field.focus_out_actions.extend (agent new_class_name)
-				class_field.focus_in_actions.extend (agent remove_push_button)
+				class_field.change_actions.extend (agent may_enable_ok_button)
 			end
 			class_field.set_minimum_width (f.string_width ("A_LONG_CLASS_NAME"))
 			hb.extend (class_field)
@@ -1192,7 +1192,7 @@ feature {NONE} -- Implementation: Properties dialog
 			if for_modification then
 				feature_field.disable_edit
 			else
-				feature_field.return_actions.extend (agent on_creation_ok)
+				feature_field.change_actions.extend (agent may_enable_ok_button)
 			end
 			hb.extend (feature_field)
 			vb.extend (hb)
@@ -1290,8 +1290,9 @@ feature {NONE} -- Implementation: Properties dialog
 			
 			properties_dialog.set_maximum_height (properties_dialog.height)
 			properties_dialog.set_default_cancel_button (cancelb)
-			if for_modification then
-				properties_dialog.set_default_push_button (okb)
+			properties_dialog.set_default_push_button (okb)
+			if not for_modification then
+				okb.disable_sensitive
 			end
 		ensure
 			dialog_created: valid_properties_dialog
@@ -1438,6 +1439,20 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
+	may_enable_ok_button is
+			-- Depending on the content of `properties', enable or disable
+			-- default push button. Enabled when both class and feature text
+			-- field are filled, disabled otherwise.
+		require
+			properties_dialog_not_void: properties_dialog /= Void
+		do
+			if not class_field.text.is_empty and then not feature_field.text.is_empty then
+				properties_dialog.default_push_button.enable_sensitive
+			else
+				properties_dialog.default_push_button.disable_sensitive
+			end
+		end
+		
 	on_creation_ok is
 			-- Check if the modified feature is valid enough,
 			-- update `modified_exported_feature' if necessary.
@@ -1457,6 +1472,7 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			tmp := class_field.text
 			if tmp /= Void and then not tmp.is_empty then
+				tmp.to_upper
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)
 				if not clist.is_empty then
 					cl := clist.first.compiled_class
@@ -1534,7 +1550,7 @@ feature {NONE} -- Implementation: Properties dialog
 			creation_combo.wipe_out
 			tmp := class_field.text
 			if not tmp.is_empty then
-				tmp.to_lower
+				tmp.to_upper
 				clist := Eiffel_universe.compiled_classes_with_name (tmp)
 				if not clist.is_empty then
 					cl := clist.first.compiled_class
@@ -1563,22 +1579,11 @@ feature {NONE} -- Implementation: Properties dialog
 						available_creation_routines.forth
 					end
 					feature_field.set_focus
---					properties_dialog.set_default_push_button (okb)
 				else
 						-- The entered class has no valid creation routine.
 					create cit.make_with_text (Warning_messages.W_no_valid_creation_routine)
 					creation_combo.extend (cit)
 				end
-			end
-		end
-
-	remove_push_button is
-			-- If possible, remove `default_push_button' of `properties_dialog'.
-		require
-			properties_dialog_exists: properties_dialog /= Void
-		do
-			if properties_dialog.default_push_button /= Void then
-				properties_dialog.remove_default_push_button
 			end
 		end
 

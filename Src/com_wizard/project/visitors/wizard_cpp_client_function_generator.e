@@ -187,6 +187,8 @@ feature {NONE} -- Implementation
 							visitor.is_coclass_pointer
 						then
 							signature.append (arguments.item.name)
+							variables.append ("if (" + arguments.item.name + " != NULL)")
+							variables.append (New_line_tab_tab)
 							variables.append (add_ref_in_interface_pointer (arguments.item.name))
 							variables.append (New_line_tab)
 

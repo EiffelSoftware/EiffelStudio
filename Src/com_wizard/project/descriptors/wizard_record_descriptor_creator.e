@@ -49,6 +49,7 @@ feature -- Basic operations
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			type_library_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			add_type_lib_description (type_library_descriptor)
 			if name = Void or else name.empty then
 				create name.make (100)
 				name.append ("struct_")

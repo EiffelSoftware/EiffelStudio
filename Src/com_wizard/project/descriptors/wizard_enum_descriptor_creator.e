@@ -40,6 +40,7 @@ feature -- Basic operations
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
+			add_type_lib_description (tmp_lib_descriptor)
 			if name = Void or else name.count = 0 then
 				create name.make (100)
 				name.append ("enum_")

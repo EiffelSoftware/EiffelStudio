@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, post_fix
+			display_temp_header, post_fix
 		end
 
 creation
@@ -26,13 +26,6 @@ feature -- Properties
 			Result := Pixmaps.bm_Showcluster_hier_list 
 		end;
  
-	dark_symbol: PIXMAP is 
-			-- Dark version of `symbol'.
-		once 
-				-- not needed
-			Result := Pixmaps.bm_Dark_showclass_list 
-		end;
-
 feature {NONE} -- Properties
 
 	name: STRING is

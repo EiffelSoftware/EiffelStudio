@@ -14,7 +14,7 @@ inherit
 		rename
 			create_structured_text as clickable_context_text
 		redefine
-			dark_symbol, tool, format, display_temp_header,
+			tool, format, display_temp_header,
 			post_fix
 		end;
 	SHARED_FORMAT_TABLES
@@ -29,12 +29,6 @@ feature -- Properties
 			-- Pixmap for the button.
 		once 
 			Result := Pixmaps.bm_Clickable 
-		end;
- 
-	dark_symbol: PIXMAP is 
-			-- Dark version of `symbol'.
-		once 
-			Result := Pixmaps.bm_Dark_clickable
 		end;
  
 	tool: CLASS_W;

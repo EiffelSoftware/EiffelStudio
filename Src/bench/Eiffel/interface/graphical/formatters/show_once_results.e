@@ -11,11 +11,11 @@ class
 	SHOW_ONCE_RESULTS 
 
 inherit
-
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header
-		end;
+			display_temp_header
+		end
+
 	SHARED_APPLICATION_EXECUTION
 
 creation
@@ -27,11 +27,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showonces 
-		end;
-	
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showonces 
 		end;
 	
 feature {NONE} -- Properties

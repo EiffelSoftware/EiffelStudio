@@ -12,10 +12,7 @@ inherit
 	TWO_STATE_CMD
 		rename
 			true_state_symbol as symbol,
-			false_state_symbol as dark_symbol,
 			work as format
-		undefine
-			dark_symbol
 		redefine
 			execute
 		end;

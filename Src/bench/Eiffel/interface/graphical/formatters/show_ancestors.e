@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, post_fix
+			display_temp_header, post_fix
 		end
 
 creation
@@ -24,12 +24,6 @@ feature -- Properties
 			-- Pixmap for the button.
 		once 
 			Result := Pixmaps.bm_Showancestors 
-		end;
- 
-	dark_symbol: PIXMAP is 
-			-- Dark version of `symbol'.
-		once 
-			Result := Pixmaps.bm_Dark_showancestors
 		end;
  
 feature {NONE} -- Properties

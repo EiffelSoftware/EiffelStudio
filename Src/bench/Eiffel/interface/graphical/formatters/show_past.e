@@ -11,7 +11,7 @@ inherit
 
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header
+			display_temp_header
 		end;
 	SHARED_SERVER
 
@@ -24,11 +24,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showaversions 
-		end;
- 
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showaversions 
 		end;
  
 feature {NONE} -- Properties

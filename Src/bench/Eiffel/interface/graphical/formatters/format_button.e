@@ -38,12 +38,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'
-		do
-			Result := associated_format.dark_symbol
-		end;
-
 	registered: BOOLEAN is
 			-- Always registered
 		do

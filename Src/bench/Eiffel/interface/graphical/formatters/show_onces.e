@@ -8,10 +8,9 @@ indexing
 class SHOW_ONCES 
 
 inherit
-
 	FILTERABLE
 		redefine
-			dark_symbol, display_temp_header, post_fix
+			display_temp_header, post_fix
 		end
 
 creation
@@ -23,11 +22,6 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showonces 
-		end;
-	
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showonces 
 		end;
 	
 feature {NONE} -- Properties

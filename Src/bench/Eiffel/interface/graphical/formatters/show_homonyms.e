@@ -11,7 +11,7 @@ inherit
 
 	LONG_FORMATTER
 		redefine
-			dark_symbol, display_temp_header
+			display_temp_header
 		end;
 	SHARED_SERVER
 
@@ -24,11 +24,6 @@ feature -- Porperties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showhomonyms 
-		end;
- 
-	dark_symbol: PIXMAP is 
-		once 
-			Result := Pixmaps.bm_Dark_showhomonyms 
 		end;
  
 feature {NONE} -- Properties

@@ -3,7 +3,6 @@ indexing
 		"Accessor facility for stacks"
 
 	status:	"See note at end of class"
-	author: "Patrick Schoenbach"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -414,7 +414,7 @@ feature {NONE} -- Agent Handlers
 			put_string ("%N  Enter assembly cluster name to test: ")
 			read_line
 			if last_string /= Void and not last_string.is_empty then
-				create	l_menu.make (system_assemblies_interface.assembly_properties (last_string))
+				--create	l_menu.make (system_assemblies_interface.assembly_properties (last_string))
 			end
 		end
 		
@@ -428,7 +428,7 @@ feature {NONE} -- Output
 			l_index: INTEGER
 		do
 			put_string ("%N  Current Assemblies")
-			l_enum_assemblies := system_assemblies_interface.assemblies
+			--l_enum_assemblies := system_assemblies_interface.assemblies
 			if l_enum_assemblies /= Void then
 				if l_enum_assemblies.count > 0 then
 					from
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 				put_string ("', '")
 				put_string (public_key)
 				put_string ("'")
-				system_assemblies_interface.add_assembly (a_prefix, a_cluster_name, name, version, culture, public_key)
+				--system_assemblies_interface.add_assembly (a_prefix, a_cluster_name, name, version, culture, public_key)
 			else
 				put_string ("%N# Failed!")
 			end
@@ -509,7 +509,7 @@ feature {NONE} -- Implementation
 				put_string ("', '")
 				put_string (a_path)
 				put_string ("'")
-				system_assemblies_interface.add_local_assembly (a_prefix, a_cluster_name, a_path)
+				--system_assemblies_interface.add_local_assembly (a_prefix, a_cluster_name, a_path)
 			else
 				put_string ("%N# Failed!")
 			end
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'add_assembly' with '")
 				put_string (a_cluster_name)
 				put_string ("'")
-				system_assemblies_interface.remove_assembly (a_cluster_name)
+				--system_assemblies_interface.remove_assembly (a_cluster_name)
 			else
 				put_string ("%N# Failed!")
 			end
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'assembly_properties' with '")
 				put_string (a_cluster_name)
 				put_string ("'")
-				l_assembly_properties := system_assemblies_interface.assembly_properties (a_cluster_name)
+				--l_assembly_properties := system_assemblies_interface.assembly_properties (a_cluster_name)
 				put_string ("%N    Result=")
 				if l_assembly_properties /= Void then
 					put_string (l_assembly_properties.assembly_name)
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'is_valid_cluster_name' with '")
 				put_string (a_cluster_name)
 				put_string ("'")
-				l_result := system_assemblies_interface.is_valid_cluster_name (a_cluster_name)
+				--l_result := system_assemblies_interface.is_valid_cluster_name (a_cluster_name)
 				put_string ("%N    Result=")
 				put_bool (l_result)
 			else
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'is_valid_prefix' with '")
 				put_string (a_prefix)
 				put_string ("'")
-				l_result := system_assemblies_interface.is_valid_prefix (a_prefix)
+				--l_result := system_assemblies_interface.is_valid_prefix (a_prefix)
 				put_string ("%N    Result=")
 				put_bool (l_result)
 			else
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'contains_assembly' with '")
 				put_string (a_cluster_name)
 				put_string ("'")
-				l_result := system_assemblies_interface.contains_assembly (a_cluster_name)
+				--l_result := system_assemblies_interface.contains_assembly (a_cluster_name)
 				put_string ("%N    Result=")
 				put_bool (l_result)
 			else
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 				put_string ("', '")
 				put_string (a_key)
 				put_string ("'")
-				l_result := system_assemblies_interface.contains_gac_assembly (a_name, a_version, a_culture, a_key)
+				--l_result := system_assemblies_interface.contains_gac_assembly (a_name, a_version, a_culture, a_key)
 				put_string ("%N    Result=")
 				put_bool (l_result)
 			else
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'contains_local_assembly' with '")
 				put_string (a_path)
 				put_string ("'")
-				l_result := system_assemblies_interface.contains_local_assembly (a_path)
+				--l_result := system_assemblies_interface.contains_local_assembly (a_path)
 				put_string ("%N    Result=")
 				put_bool (l_result)
 			else
@@ -689,7 +689,7 @@ feature {NONE} -- Implementation
 				put_string ("', '")
 				put_string (a_key)
 				put_string ("'")
-				l_result := system_assemblies_interface.cluster_name_from_gac_assembly (a_name, a_version, a_culture, a_key)
+				--l_result := system_assemblies_interface.cluster_name_from_gac_assembly (a_name, a_version, a_culture, a_key)
 				put_string ("%N    Result=")
 				put_string (l_result)
 			else
@@ -710,7 +710,7 @@ feature {NONE} -- Implementation
 				put_string ("%N  Testing 'contains_local_assembly' with '")
 				put_string (a_path)
 				put_string ("'")
-				l_result := system_assemblies_interface.cluster_name_from_local_assembly (a_path)
+				--l_result := system_assemblies_interface.cluster_name_from_local_assembly (a_path)
 				put_string ("%N    Result=")
 				put_string (l_result)
 			else

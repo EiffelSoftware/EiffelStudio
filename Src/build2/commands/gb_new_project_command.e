@@ -48,6 +48,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -112,6 +117,7 @@ feature -- Basic operations
 						create raw_file.make (file_name)
 						if raw_file.exists then
 							create conf_dialog.make_with_text (Project_exists_warning)
+							conf_dialog.set_icon_pixmap (Icon_build_window @ 1)
 							conf_dialog.show_modal_to_window (main_window)
 							if not conf_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 								create_project := False
@@ -121,6 +127,7 @@ feature -- Basic operations
 							create directory.make (dialog.directory)
 							if not directory.exists then
 								create directory_conf.make_with_text (Directory_exists_warning)
+								directory_conf.set_icon_pixmap (Icon_build_window @ 1)
 								directory_conf.show_modal_to_window (main_window)
 								if directory_conf.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 									directory.create_dir

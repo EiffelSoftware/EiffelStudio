@@ -469,15 +469,18 @@ feature {NONE} -- Implementation
 		local
 			l_arguments: ARRAYED_LIST [CONSUMED_ARGUMENT]
 			l_unique_eiffel_name: STRING
+			l_dotnet_name: STRING
 		do
 			if is_consumed_method (info) then
+				create l_dotnet_name.make_from_cil (info.name)
 				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type, info.declaring_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
 				create Result.make (
 					l_unique_eiffel_name,
-					create {STRING}.make_from_cil (info.name),
+					l_dotnet_name,
+					formatted_feature_name (l_dotnet_name),
 					consumed_arguments (info),
 					info.is_final,
 					info.is_static,
@@ -496,15 +499,18 @@ feature {NONE} -- Implementation
 			non_void_info: info /= Void
 		local
 			l_unique_eiffel_name: STRING
+			l_dotnet_name: STRING
 		do
 			if is_consumed_method (info) then
+				create l_dotnet_name.make_from_cil (info.name)
 				l_unique_eiffel_name := overload_solver.unique_eiffel_name (info.name, info.get_parameters, info.return_type, info.declaring_type)
 				check
 					non_void_eiffel_name: l_unique_eiffel_name /= Void
 				end
 				create Result.make (
 					l_unique_eiffel_name,
-					create {STRING}.make_from_cil (info.name),
+					l_dotnet_name,
+					formatted_feature_name (l_dotnet_name),
 					consumed_arguments (info),
 					referenced_type_from_type (info.return_type),
 					info.is_final,
@@ -1097,7 +1103,7 @@ feature {NONE} -- Added features for ENUM types.
 		do
 			create l_arg.make ("other", "other", enum_type, False)
 			l_args := <<l_arg>>
-			create Result.make ("&", "&", l_args, enum_type,
+			create Result.make ("&", "&", "&", l_args, enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1121,7 +1127,7 @@ feature {NONE} -- Added features for ENUM types.
 		do
 			create l_arg.make ("other", "other", enum_type, False)
 			l_args := <<l_arg>>
-			create Result.make ("|", "|", l_args, enum_type,
+			create Result.make ("|", "|", "|", l_args, enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1145,7 +1151,7 @@ feature {NONE} -- Added features for ENUM types.
 		do
 			create l_arg.make ("a_value", "a_value", integer_type, False)
 			l_args := <<l_arg>>
-			create Result.make ("from_integer", "from_integer", l_args, enum_type,
+			create Result.make ("from_integer", "from_integer", "from_integer", l_args, enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1167,7 +1173,7 @@ feature {NONE} -- Added features for ENUM types.
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 		do
 			create l_args.make (1, 0)
-			create Result.make ("to_integer", "to_integer", l_args, integer_type,
+			create Result.make ("to_integer", "to_integer", "to_integer", l_args, integer_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred

@@ -34,6 +34,13 @@
 		<Value>255000000</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
+		<Name>wizard_ico</Name>
+		<Value>E:\com_wizard\root\resources\wizard.ico</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>wizard.ico</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
 		<Name>settings_png</Name>
 		<Value>E:\com_wizard\root\resources\settings.png</Value>
 		<is_absolute>False</is_absolute>
@@ -1756,7 +1763,7 @@ Alternatively, it can backup files it overwrites or just overwrite them with no 
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[100]]></Text>
+<EV_TEXTABLE><Text><![CDATA[0]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>20</Minimum_width>
@@ -2751,7 +2758,7 @@ If generated, the marshaller DLL will automatically be registered by the Wizard.
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[100]]></Text>
+<EV_TEXTABLE><Text><![CDATA[0]]></Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>20</Minimum_width>

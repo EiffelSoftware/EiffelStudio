@@ -1,0 +1,31 @@
+system
+	example
+
+root
+
+	example (ROOT_CLUSTER): "make"
+
+default
+
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision")
+
+cluster
+
+	ROOT_CLUSTER: 		"$EIFFEL4/examples/vision/simple_test";
+				-- If you intend to modify any of the examples,
+				-- copy all the files of $EIFFEL4/examples/vision/simple_test
+				-- into one of your directories, and replace
+				-- $EIFFEL4/examples/vision/simple_test by the name of that 
+				-- directory on the above line.
+
+-- If you are not using the precompiled version of EiffelVision, 
+-- uncomment the `external' clause below. 
+ 
+-- external
+
+-- 	object:
+-- 		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a";
+-- 		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a";
+-- 		"-lXm -lXt -lX11"
+
+end

@@ -10,6 +10,14 @@ deferred class
 
 inherit
 	EV_CONTAINER_I
+		redefine
+			interface
+		end
+	
+	EV_DOCKABLE_TARGET_I
+		redefine
+			interface
+		end
 
 feature -- Element change
 
@@ -18,6 +26,10 @@ feature -- Element change
 		do	
 			replace (an_item)
 		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_CELL
 
 end -- class EV_CELL
 

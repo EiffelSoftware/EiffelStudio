@@ -1808,7 +1808,7 @@ feature {STRING} -- Implementation
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
 			-- Hash code value of `c_string'
 		external
-			"C use %"eif_tools.h%""
+			"C signature (char *, EIF_INTEGER): EIF_INTEGER use %"eif_tools.h%""
 		end
 
 	str_str (c_str, o_str: POINTER; clen, olen, i, fuzzy: INTEGER): INTEGER is
@@ -1818,7 +1818,7 @@ feature {STRING} -- Implementation
 			-- The 'fuzzy' parameter is the maximum allowed number of
 			-- mismatches within the pattern. A 0 means an exact match.
 		external
-			"C use %"eif_eiffel.h%""
+			"C signature (char *, char *, int, int, int, int): int use %"eif_eiffel.h%""
 		end
 
 	str_len (c_string: POINTER): INTEGER is
@@ -1953,7 +1953,7 @@ feature {STRING} -- Implementation
 			-- Area which can accomodate
 			-- at least `newsize' characters
 		external
-			"C use %"eif_malloc.h%""
+			"C signature (EIF_REFERENCE, long int): EIF_REFERENCE use %"eif_malloc.h%""
 		alias
 			"sprealloc"
 		end
@@ -1962,7 +1962,7 @@ feature {STRING} -- Implementation
 			-- Copy characters of `source' within bounds `s'
 			-- and `e' to `target' starting at index `i'.
 		external
-			"C use %"eif_copy.h%""
+			"C signature (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER) use %"eif_copy.h%""
 		end
 
 invariant

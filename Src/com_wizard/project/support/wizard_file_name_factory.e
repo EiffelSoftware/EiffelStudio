@@ -20,7 +20,7 @@ inherit
 		
 	OPERATING_ENVIRONMENT
 		export
-			{NON} all
+			{NONE} all
 		end
 
 feature -- Access

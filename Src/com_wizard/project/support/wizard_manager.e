@@ -118,7 +118,7 @@ feature -- Basic Operations
 						set_range (5)
 					end
 					parent.add_title (Idl_compilation_title)
-					Idl_compiler.compile_idl
+					compiler.compile_idl
 					if shared_wizard_environment.abort then
 						finish
 					else
@@ -127,28 +127,28 @@ feature -- Basic Operations
 						if not shared_wizard_environment.use_universal_marshaller then
 							-- Compile c iid file
 							parent.add_title (Iid_compilation_title)
-							Idl_compiler.compile_iid
+							compiler.compile_iid
 							if shared_wizard_environment.abort then
 								finish
 							else
 								step
 								-- Compile c dlldata file
 								parent.add_title (Data_compilation_title)
-								Idl_compiler.compile_data
+								compiler.compile_data
 								if shared_wizard_environment.abort then
 									finish
 								else
 									step
 									-- Compile c proxy/stub file
 									parent.add_title (Ps_compilation_title)
-									Idl_compiler.compile_ps
+									compiler.compile_ps
 									if shared_wizard_environment.abort then
 										finish
 									else
 										step
 										-- Final link
 										parent.add_title (Link_title)
-										Idl_compiler.link
+										compiler.link
 										if shared_wizard_environment.abort then
 											finish
 										else
@@ -182,6 +182,7 @@ feature {NONE} -- Implementation
 			-- Generate Eiffel/C++ code.
 		local
 			i, a_range: INTEGER
+			Clib_folder_name: STRING
 		do
 			-- Initialization
 			parent.add_title (Analysis_title)
@@ -242,11 +243,26 @@ feature {NONE} -- Implementation
 					end
 					system_descriptor.forth
 				end
+
+				-- Generating Implemented Interfaces
 				if Shared_wizard_environment.abort then
 					parent.add_message (Generation_Aborted)
 				else
 					from
 						system_descriptor.interfaces.start
+						a_range := 0
+					until
+						system_descriptor.interfaces.after
+					loop
+						a_range := a_range + 1
+						system_descriptor.forth
+					end
+
+					from
+						system_descriptor.interfaces.start
+						start
+						set_title (Interface_generation_title)
+						set_range (a_range)
 					until
 						system_descriptor.interfaces.after
 						or Shared_wizard_environment.abort
@@ -256,21 +272,63 @@ feature {NONE} -- Implementation
 							eiffel_client_visitor.visit (system_descriptor.interfaces.item)
 						end
 						system_descriptor.interfaces.forth
+						step
 					end
-				end
 
-				if Shared_wizard_environment.abort then
-					parent.add_message (Generation_Aborted)
-				else
+					if Shared_wizard_environment.abort then
+						parent.add_message (Generation_Aborted)
+					else
+						
+						-- Generating extra files
+						if not shared_wizard_environment.abort then
+							start
+							set_title (Runtime_functions_generation)
+							set_range (6)
+							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
+							step
+							Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+							step
+							Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)	
+							step
+							Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
+							step
+							Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
+							step
+							Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+							step
+							parent.add_warning (Generation_Successful)
+						end
 
-					-- Generation of runtime functions
-					Shared_file_name_factory.create_generated_mapper_file_name (Generated_ce_mapper_writer)
-					Generated_ce_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-					Generated_ce_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-					Shared_file_name_factory.create_generated_mapper_file_name (Generated_ec_mapper_writer)
-					Generated_ec_mapper_writer.save_file (Shared_file_name_factory.last_created_file_name)
-					Generated_ec_mapper_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
-					parent.add_message (Generation_Successful)
+						-- Compiling generated C code
+						change_working_directory (shared_wizard_environment.destination_folder)
+						if shared_wizard_environment.client then
+							Clib_folder_name := clone (Client)
+							Clib_folder_name.append_character (Directory_separator)
+							Clib_folder_name.append (Clib)
+							set_title (C_client_compilation_title)
+							compiler.compile_folder (Clib_folder_name, Current)
+							compiler.link_all (Clib_folder_name, CLib_name)
+						end
+						if shared_wizard_environment.server and not shared_wizard_environment.abort then
+							Clib_folder_name := clone (Server)
+							Clib_folder_name.append_character (Directory_separator)
+							Clib_folder_name.append (Clib)
+							set_title (C_server_compilation_title)
+							compiler.compile_folder (Clib_folder_name, Current)
+							compiler.link_all (Clib_folder_name, CLib_name)
+						end
+						if not shared_wizard_environment.abort then
+							Clib_folder_name := clone (Common)
+							Clib_folder_name.append_character (Directory_separator)
+							Clib_folder_name.append (Clib)
+							set_title (C_common_compilation_title)
+							compiler.compile_folder (Clib_folder_name, Current)
+							compiler.link_all (Clib_folder_name, CLib_name)
+						end
+						if not shared_wizard_environment.abort then		
+							parent.add_warning (Compilation_Successful)
+						end
+					end
 				end
 				report_finish
 			end
@@ -296,8 +354,8 @@ feature {NONE} -- Implementation
 			parent.enable
 		end
 
-	Idl_compiler: WIZARD_IDL_COMPILER is
-			-- IDL compiler
+	compiler: WIZARD_COMPILER is
+			-- IDL/C compiler
 		once
 			create Result.make (parent)
 		end
@@ -412,6 +470,27 @@ feature {NONE} -- Implementation
 	Generation_title: STRING is "Generating code"
 			-- Generation message
 		
+	C_client_compilation_title: STRING is "Compiling generated C client code"
+			-- C compilation message
+
+	C_common_compilation_title: STRING is "Compiling generated C common code"
+			-- C compilation message
+
+	C_server_compilation_title: STRING is "Compiling generated C server code"
+			-- C compilation message
+
+	Interface_generation_title: STRING is "Generating implemented interfaces"
+			-- Interface generation message
+
+	Runtime_functions_generation: STRING is "Generating Runtime functions"
+			-- Runtime functions generation
+
+	Clib_name: STRING is "ecom"
+			-- Libray file name
+
+	Compilation_successful: STRING is "Compilation completed."
+			-- Compilation successful message
+
 end -- class WIZARD_MANAGER
 
 --|----------------------------------------------------------------

@@ -917,6 +917,10 @@ feature -- Paths -- 11
 
 	Dll_file_extension: STRING is ".dll"
 
+	Lib_file_extension: STRING is ".lib"
+
+	Object_file_extension: STRING is ".obj"
+
 feature -- Commands -- 12
 	
 	Copy_command: STRING is "xcopy /C"

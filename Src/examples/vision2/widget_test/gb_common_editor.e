@@ -8,7 +8,7 @@ deferred class
 	GB_COMMON_EDITOR
 
 inherit	
-	INTERNAL
+	DEFAULT_OBJECT_STATE_CHECKER
 
 feature -- Access
 

@@ -42,7 +42,7 @@ all:: libnet.a
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
-SMODE = local.c network.c network_r.c
+SMODE = local.c network.c network_r.c storable.c
 
 LSRCS = $(SMODE)
 
@@ -51,7 +51,8 @@ OBJS = \
 	network.o \
 	network_r.o \
 	hostname.o \
-	syncpoll.o
+	syncpoll.o \
+	storable.o
 
 local_realclean::
 	$(RM) libnet.a

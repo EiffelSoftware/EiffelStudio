@@ -13,6 +13,7 @@ inherit
 			is_separate,
 			is_valid,
 			is_explicit,
+			is_external,
 			same_as,
 			c_type,
 			instantiation_in,
@@ -191,6 +192,14 @@ feature -- Status
 			il_generation: System.il_generation
 		do
 			Result := is_true_expanded and then base_class.is_enum
+		end
+
+	is_external: BOOLEAN is
+			-- Is current type an IL enum type?
+			-- Useful to find out if some call optimization can be done
+			-- in FEATURE_B.
+		do
+			Result := base_class.is_external
 		end
 
 	is_valid: BOOLEAN is

@@ -13,6 +13,7 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_EIFFEL_PROJECT;
 	SHARED_ERROR_HANDLER
+	SHARED_CASE_DISPLAY_INFO
 
 creation
 
@@ -342,6 +343,7 @@ feature {NONE} -- Class information
 			!! new_class_views.make;
 			from
 				classes.start;
+				Positioner.init (classes.count)
 			until
 				classes.after
 			loop

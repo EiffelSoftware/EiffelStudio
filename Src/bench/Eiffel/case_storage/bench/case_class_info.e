@@ -6,6 +6,7 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_INST_CONTEXT;
 	SHARED_CASE_INFO;
+	SHARED_CASE_DISPLAY_INFO
 	COMPILER_EXPORTER
 
 creation
@@ -112,6 +113,13 @@ feature {CASE_CLUSTER_INFO}
 				if error2 then
 					s_class_data.set_x (0)
 					s_class_data.set_y (0)
+				else
+						-- We compute only when there was an error or when
+						-- nothing has been specified through a non-existing
+						-- ".cas" file.
+					Positioner.compute (classc.lace_class.name)
+					s_class_data.set_x (Positioner.x)
+					s_class_data.set_y (Positioner.y)
 				end
 			end
 		rescue

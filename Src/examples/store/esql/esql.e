@@ -110,7 +110,7 @@ feature {NONE}
 
 	manage_errors_and_warnings (session_control: DB_CONTROL) is
 			-- Manage errors and warnings that may have
-			-- occured during last operation.
+			-- occurred during last operation.
 		do
 			if not session_control.is_ok then
 				-- There was an error!

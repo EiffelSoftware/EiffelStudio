@@ -40,6 +40,13 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
+feature {EV_MESSAGE_DIALOG} -- Initialization
+
+	build is
+			-- Common initializations for Gtk and Windows.
+		deferred
+		end
+
 feature -- Status report
 
 	selected_button: STRING is
@@ -277,10 +284,26 @@ feature -- Event -- removing command association
 		deferred
 		end
 
+feature {EV_MESSAGE_DIALOG, EV_MESSAGE_DIALOG_I} -- Implementation
+
+	interface: EV_MESSAGE_DIALOG
+		-- Interface of the current implementation.
+
+	set_interface (an_interface: EV_MESSAGE_DIALOG) is
+			-- Make `an_interface' the new interface.
+		do
+			interface := an_interface
+		end
+
+	set_default (a_msg, a_title: STRING) is
+			-- Set default settings
+		deferred
+		end
+
 end -- class EV_MESSAGE_DIALOG_I
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

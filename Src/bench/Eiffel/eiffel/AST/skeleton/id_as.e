@@ -94,7 +94,7 @@ feature {COMPILER_EXPORTER} -- Multi-branch instruction processing
 			constant_i: CONSTANT_I
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
-			Result := constant_i.value.inspect_constant (context.current_class, constant_i, value_type)
+			Result := constant_i.value.inspect_value (value_type)
 		end
 
 	unique_constant: CONSTANT_I is

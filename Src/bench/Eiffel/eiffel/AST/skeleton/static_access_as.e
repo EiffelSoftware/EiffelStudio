@@ -198,11 +198,8 @@ feature {COMPILER_EXPORTER} -- Multi-branch instruction processing
 
 	inspect_value (value_type: TYPE_A): INTERVAL_VAL_B is
 			-- Inspect value of the given `value_type'
-		local
-			constant_i: CONSTANT_I
 		do
-			constant_i := associated_constant
-			Result := constant_i.value.inspect_constant (associated_class, constant_i, value_type)
+			Result := associated_constant.value.inspect_value (value_type)
 		end
 
 	unique_constant: CONSTANT_I is

@@ -17,7 +17,7 @@ inherit
 
 	VALUE_I
 		redefine
-			generate, is_integer, is_natural, inspect_constant,
+			generate, is_integer, is_natural, inspect_value,
 			set_real_type, unary_minus
 		end
 
@@ -381,22 +381,6 @@ feature -- Type checking
 					integer_64: integer_a.size = 64
 				end
 				create {INT64_VAL_B} Result.make (integer_64_value)
-			end
-		end
-
-	inspect_constant (context_class: CLASS_C; constant_i: CONSTANT_I; value_type: TYPE_A): INTERVAL_VAL_B is
-			-- Inspect value for `constant_i' from `context_class' of the given `value_type'
-		local
-			integer_a: INTEGER_A
-		do
-			integer_a ?= value_type
-			if integer_a.size <= 32 then
-				create {INT_CONST_VAL_B} Result.make (context_class, integer_32_value, constant_i)
-			else
-				check
-					integer_64: integer_a.size = 64
-				end
-				create {INT64_CONST_VAL_B} Result.make (context_class, integer_64_value, constant_i)
 			end
 		end
 

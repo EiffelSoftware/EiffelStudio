@@ -25,9 +25,20 @@ inherit
 		end;
 
 	TERMINAL_M
+		rename
+			clean_up as terminal_clean_up
 		undefine
 			make
 		end
+
+	TERMINAL_M
+		undefine
+			make
+		redefine
+			clean_up
+		select
+			clean_up
+		end;
 
 creation
 
@@ -40,9 +51,10 @@ feature -- Creation
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_file_selection.identifier.to_c;
 			screen_object := create_file_selection ($ext_name,
-			   a_file_selection.parent.implementation.screen_object)
+				parent_screen_object (a_file_selection, widget_index));
 		end;
 
 feature {NONE}
@@ -97,10 +109,6 @@ feature {NONE}
 			end;
 			ok_actions.add (a_command, argument)
 		end;
-
-	cancel_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when cancel button
-			-- is activated
 
 feature
 
@@ -303,6 +311,14 @@ feature
 
 feature {NONE}
 
+	ok_actions: EVENT_HAND_M;
+			-- An event handler to manage call-backs when ok button
+			-- is activated
+
+	cancel_actions: EVENT_HAND_M;
+			-- An event handler to manage call-backs when cancel button
+			-- is activated
+
 	filter_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when filter button
 			-- is activated
@@ -310,6 +326,25 @@ feature {NONE}
 	help_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when help button
 			-- is activated
+
+	clean_up is
+		do
+			terminal_clean_up;
+			if filter_actions /= Void then
+				filter_actions.free_cdfd
+			end;
+			if cancel_actions /= Void then
+				cancel_actions.free_cdfd
+			end;
+			if help_actions /= Void then
+				help_actions.free_cdfd
+			end;
+			if ok_actions /= Void then
+				ok_actions.free_cdfd
+			end;
+		end;
+
+feature {NONE}
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
@@ -334,10 +369,6 @@ feature {NONE}
 		do
 			xt_unmanage_child (xm_file_selection_box_get_child (screen_object, MDIALOG_OK_BUTTON))
 		end;
-
-	ok_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when ok button
-			-- is activated
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when

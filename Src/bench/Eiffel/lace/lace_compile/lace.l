@@ -91,6 +91,10 @@ X		([a-z]|[A-Z]|[0-9]|_)
 				current_position.go_to (2)
 				last_token := LAC_AS
 			}
+[aA][sS][sS][eE][mM][bB][lL][yY] {
+				current_position.go_to (8)
+				last_token := LAC_ASSEMBLY
+			}
 [aA][sS][sS][eE][rR][tT][iI][oO][nN]	{
 				current_position.go_to (9)
 				last_token := LAC_ASSERTION

@@ -280,6 +280,9 @@ feature {NONE} -- Implementation
 			display_on_multiple_line := drawing_area.width  - spacing * 2 < maximum_line_width
 				-- Store the maximum line width that must be used if the window is wider than the
 				-- longest type list. This stops the line going to the very end of the window.
+			if maximum_line_width >= drawing_area.width - figure_text.width and display_on_multiple_line then
+				maximum_line_width := maximum_line_width - figure_text.width
+			end
 			maximum_line_width := maximum_line_width - 10
 			
 			y_counter := spacing

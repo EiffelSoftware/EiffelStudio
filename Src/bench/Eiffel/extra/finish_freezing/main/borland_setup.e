@@ -37,7 +37,7 @@ feature -- Initialization
 				l_file_name.set_file_name ("bcc32.cfg")
 				create l_config_file.make (l_file_name)
 				if not l_config_file.exists then
-					l_arg_string := "-D_WIN_32_WINDOWS=0x0410 %
+					l_arg_string := "-D_WIN32_WINDOWS=0x0410 %
 										%-DWINVER=0x400 %
 										%-I$(ISE_EIFFEL)\BCC55\include %
 										%-L$(ISE_EIFFEL)\BCC55\lib %

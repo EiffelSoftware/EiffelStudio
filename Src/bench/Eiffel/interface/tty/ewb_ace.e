@@ -22,12 +22,10 @@ feature {NONE} -- Execution
 	execute is
 			-- Execute Current batch command.
 		local
-			stone: SYSTEM_STONE;
 			text: STRING;
 		do
-			!!stone.make;
-			if stone.is_valid then
-				text := stone.origin_text
+			if Eiffel_project.lace_file_name /= Void then
+				text := Eiffel_project.lace_text
 			end;
 			if text /= Void then
 				output_window.put_string (text);

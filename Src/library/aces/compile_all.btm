@@ -1,0 +1,45 @@
+@echo off
+
+alias precompile `ec -precompile & cd EIFGEN\W_code & finish_freezing -silent & cd ..\..`
+
+iff "%@SEARCH[ec.exe]" == "" then
+	echo Cannot find a version of ec. Cannot continue
+endiff
+
+cd base
+precompile
+
+cd ..\wel
+precompile
+
+cd ..\vision2
+precompile
+
+cd ..\com
+precompile
+
+cd ..\Eiffel2Java
+precompile
+
+cd ..\lex
+precompile
+
+cd ..\net
+precompile
+
+cd ..\store
+precompile
+
+cd ..\thread
+precompile
+
+cd ..\time
+precompile
+
+cd ..\web
+precompile
+
+cd ..\base.net
+precompile
+
+cd ..

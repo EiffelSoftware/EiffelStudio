@@ -116,7 +116,9 @@ cd ..\app
 ..\..\rt-converter.exe makefile-win.sh makefile
 cd ..\shared
 ..\..\rt-converter.exe makefile-win.sh makefile
-cd ..\..
+cd ..\..\desc
+..\rt-converter.exe makefile-win.sh makefile
+cd ..
 rem
 rem Call make
 rem
@@ -139,7 +141,9 @@ echo cd ipc\daemon>> make.bat
 echo call make>> make.bat
 echo cd ..\ewb>> make.bat
 echo call make>> make.bat
-echo cd ..\..>> make.bat
+echo cd ..\..\desc>> make.bat
+echo call make>> make.bat
+echo cd ..>> make.bat
 call make
 goto end
 :clean
@@ -174,8 +178,6 @@ call cleanup parsing\shared
 call cleanup platform
 call cleanup idrs
 call cleanup run-time
-del desc\w32msc\ise_desc.*
-rmdir desc\w32msc
 del parsing\lace\lace_y.c
 del parsing\lace\lace_y.h
 del parsing\eiffel\y_tab.*

@@ -1,0 +1,25 @@
+system
+	"dummy"
+
+root
+	DUMMY: "make"
+
+default
+	msil_generation (yes)
+	use_cluster_name_as_namespace (no)
+	use_all_cluster_name_as_namespace (yes)
+	dotnet_naming_convention (yes)
+	console_application (no)
+	msil_generation_type ("dll")
+	line_generation (no)
+	metadata_cache_path ("..\..\..\..\..\Assemblies")
+
+cluster
+	"root_cluster":		"."
+
+assembly
+	"System.Web.Services":	"$ISE_DOTNET_FRAMEWORK\system.web.services.dll"
+
+external
+
+end

@@ -100,6 +100,9 @@ feature
 				text_modified := False;
 				widget.unmanage;
 				widget_set_text (label);
+				if namer_window.namable = Current then
+					namer_window.update_name
+				end;	
 				widget.manage;
 				update_tree_element
 			else
@@ -119,6 +122,9 @@ feature
 	set_text (s: STRING) is
 		do
 			retrieve_set_visual_name (s);
+			if namer_window.namable = Current then
+				namer_window.update_name
+			end;	
 			update_tree_element
 		end
 

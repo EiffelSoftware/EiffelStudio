@@ -4,7 +4,15 @@ function swapTOC (listItem)
 	if (top.toc_frame)
 	{
 		tocUrl = listItem.value + "?index=" + listItem.selectedIndex.toString();
-		top.toc_frame.location = tocUrl;
+		top.toc_frame.location = tocUrl;		
+		if (listItem.value.search ('envision/HTML') > 1)
+		{
+			top.content_frame.location = '../envision/index.html';
+		}
+		else			
+		{
+			top.content_frame.location = '../eiffelstudio/index.html';
+		}
 	}
 }
 

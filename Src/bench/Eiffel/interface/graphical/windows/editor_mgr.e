@@ -39,7 +39,7 @@ feature -- Fonts
 			until
 				active_editors.after
 			loop
-				active_editors.item.text_window.set_font_to_default;
+				active_editors.item.set_font_to_default;
 				active_editors.forth
 			end
 		end;
@@ -51,18 +51,16 @@ feature -- Tabulations
 			-- to the default tab length.
 		local
 			text_window: TEXT_WINDOW;
-			was_changed: BOOLEAN
+			tool: TOOL_W
 		do
 			from 
 				active_editors.start
 			until
 				active_editors.after
 			loop
-				text_window := active_editors.item.text_window;
-				was_changed := text_window.changed;
-				text_window.set_tab_length_to_default;
-				text_window.set_changed (was_changed);
-				text_window.tool.update_save_symbol;
+				tool := active_editors.item;
+				tool.set_tab_length_to_default;
+				tool.update_save_symbol;
 				active_editors.forth
 			end
 		end;
@@ -147,6 +145,7 @@ feature {WINDOW_MGR} -- Properties
 		do
 			!! mp.set_watch_cursor;
 			!! fd.make ("", Project_tool);
+			fd.set_default_position (False);
 			ed := shell_editor (fd);
 			fd.set_title (ed.tool_name);
 			Result ?= ed;
@@ -178,12 +177,11 @@ feature {WINDOW_MGR} -- Properties
 			then
 				free_list.start;
 				Result := free_list.item;
-				Result.set_default_position;
-				Result.text_window.set_tab_length_to_default;
-				Result.text_window.set_font_to_default;
 				free_list.remove;
 			else
+				!! mp.set_watch_cursor;
 				!! Result.make_shell (a_parent);
+				mp.restore
 			end;
 			active_editors.extend (Result);
 		end;
@@ -222,7 +220,6 @@ feature {WINDOW_MGR} -- Implementation
 			loop
 				ed := active_editors.item;
 				ed.show;
-				ed.set_x_y (ed.eb_shell.x, ed.eb_shell.y);
 				active_editors.forth
 			end
 		end;

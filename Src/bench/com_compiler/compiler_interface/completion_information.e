@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	target_feature (target: STRING; feature_name: STRING; file_name: STRING): FEATURE_DESCRIPTOR is
+	target_feature (target: STRING; feature_name: STRING; file_name: STRING; use_overloading: BOOLEAN): FEATURE_DESCRIPTOR is
 			-- Feature information
 			-- `target' [in].
 			-- `feature_name' [in].
@@ -162,7 +162,7 @@ feature -- Access
 			retry
 		end
 
-	target_features (target, feature_name, file_name: STRING; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is
+	target_features (target, feature_name, file_name: STRING; use_overloading: BOOLEAN; return_names, return_signatures, return_image_indexes: ECOM_VARIANT) is
 			-- Features accessible from target.
 			-- `target' [in].
 			-- `feature_name' [in].

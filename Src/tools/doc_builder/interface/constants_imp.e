@@ -173,12 +173,6 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	empty_cell_width: INTEGER is 
-			-- `Result' is INTEGER constant named empty_cell_width.
-		once
-			Result := 15
-		end
-
 	icon_validate_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -337,6 +331,16 @@ feature -- Access
 			Result := 400
 		end
 
+	icon_search_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_search.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	button_width: INTEGER is 
 			-- `Result' is INTEGER constant named button_width.
 		once
@@ -469,14 +473,10 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_search_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_search.ico")
-			set_with_named_file (Result, a_file_name)
+	empty_cell_width: INTEGER is 
+			-- `Result' is INTEGER constant named empty_cell_width.
+		once
+			Result := 15
 		end
 
 	icon_jpeg_file_ico: EV_PIXMAP is
@@ -486,6 +486,16 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
 			a_file_name.set_file_name ("icon_jpeg_file.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	icon_highlight_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_highlight.png")
 			set_with_named_file (Result, a_file_name)
 		end
 

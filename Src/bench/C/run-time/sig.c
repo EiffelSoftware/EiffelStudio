@@ -593,13 +593,11 @@ rt_shared void initsig(void)
 		case 34528:
 			break;
 */
-#if defined  PROFILED_RUNTIME && defined SIGPROF
-		/* When profiling the run-time, we must not  
-		 * catch this signal.
-		 */
+#ifdef SIGPROF
+		/* When profiling, we must not catch this signal.  */
 		case SIGPROF:
 			break;
-#endif /* PROFILED_RUN_TIME */
+#endif /* SIGPROF */
 
 		default:
 			if (esigdefined (sig) == (char) 1) 
@@ -607,7 +605,7 @@ rt_shared void initsig(void)
 	}			
 #else
 		if (esigdefined (sig) == (char) 1) 
-#if defined PROFILED_RUNTIME && defined SIGPROF
+#ifdef SIGPROF
 			if (sig != SIGPROF)
 #endif
 				old = signal(sig, ehandlr);		/* Ignore EINVAL errors */

@@ -80,7 +80,7 @@ feature -- Miscellaneous
 				-- We have now to check that our current position is the good one.
 				-- If we are above, we decrease current_position, and the opposite.
 			from
-				current_width := dc.string_width(image.substring(1,current_position)) and then
+				current_width := dc.string_width(image.substring(1,current_position))
 				next_width := dc.string_width(image.substring(1,current_position+1))
 			until
 				a_width >= current_width and then a_width < next_width
@@ -88,11 +88,11 @@ feature -- Miscellaneous
 				if a_width < current_width then
 					current_position := current_position - 1
 					next_width := current_width
-					current_width := dc.string_width(image.substring(1,current_position)) and then
+					current_width := dc.string_width(image.substring(1,current_position))
 				else
 					current_position := current_position + 1
 					current_width := next_width
-					next_width := dc.string_width(image.substring(1,current_position+1)) and then
+					next_width := dc.string_width(image.substring(1,current_position+1))
 				end
 			end
 			dc.unselect_font

@@ -35,7 +35,7 @@ feature -- Properties
 
 	is_valid: BOOLEAN is
 		do
-			Result := associated_eclass /= Void
+			Result := associated_class /= Void
 		end;
 
 feature -- Comparison
@@ -72,7 +72,7 @@ feature -- Access
 	associated_eclass: E_CLASS is
 			-- Associated class to the type
 		do
-			Result := Eiffel_system.class_of_id (base_class_id);
+			Result := System.class_of_id (base_class_id);
 		end;
 
 feature -- Setting
@@ -100,7 +100,7 @@ feature -- Output
 		local
 			class_name: STRING;
 		do
-			class_name := clone (associated_class.class_name)
+			class_name := clone (associated_class.name)
 			class_name.to_upper;
 			if is_expanded then
 				!!Result.make (class_name.count + 9);
@@ -380,8 +380,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			class_name: STRING
 		do
 			ass_classc := associated_class;
-			!! class_name.make (ass_classc.class_name.count);
-			class_name.append (ass_classc.class_name);
+			class_name := clone (ass_classc.name);
 			!! Result.make (class_name, ass_classc.id.id)
 		end;
 

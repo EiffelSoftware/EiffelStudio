@@ -57,8 +57,6 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
-		local
-			a_event_box: POINTER
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
@@ -70,19 +68,21 @@ feature {NONE} -- Initialization
 			C.gtk_scrolled_window_set_placement (c_object, C.gtk_corner_top_left_enum)
 
 			list_widget := C.gtk_ctree_new (1, 0)
-			a_event_box := C.gtk_event_box_new
-			C.gtk_widget_show (a_event_box)
-			C.gtk_container_add (a_event_box, list_widget)
+			an_event_box := C.gtk_event_box_new
+			C.gtk_widget_show (an_event_box)
+			C.gtk_container_add (an_event_box, list_widget)
 			C.gtk_ctree_set_line_style (list_widget, C.GTK_CTREE_LINES_DOTTED_ENUM)
 			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_BROWSE_ENUM)
 			C.gtk_ctree_set_expander_style (list_widget, C.GTK_CTREE_EXPANDER_SQUARE_ENUM)
 			C.gtk_clist_set_shadow_type (list_widget, C.GTK_SHADOW_NONE_ENUM)	
-			C.gtk_scrolled_window_add_with_viewport (c_object, a_event_box)
+			C.gtk_scrolled_window_add_with_viewport (c_object, an_event_box)
 			C.gtk_widget_show (list_widget)
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
 			create tree_node_ptr_table.make (100)
 			C.gtk_clist_set_row_height (list_widget, row_height)
+			create timer.make_with_interval (0)
+			timer.actions.extend (~on_time_out)
 		end
 
 	initialize is
@@ -202,6 +202,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
+	an_event_box: POINTER
+	
+	cached_width: INTEGER
+
 	dummy_tree_node: POINTER
 		-- Added to prevent seg fault on wipeout by adding temporarily
 
@@ -216,6 +220,7 @@ feature {NONE} -- Implementation
 				a_tree_node_imp.expand_callback
 			end
 			--C.gtk_clist_thaw (list_widget)
+			timer.set_interval (1)
 		end
 
 	collapse_callback (a_tree_item: POINTER) is
@@ -229,6 +234,7 @@ feature {NONE} -- Implementation
 				a_tree_node_imp.collapse_callback
 			end
 			C.gtk_clist_thaw (list_widget)
+			timer.set_interval (1)
 		end
 
 	select_callback (a_tree_item: POINTER) is
@@ -272,6 +278,19 @@ feature {NONE} -- Implementation
 			--end		
 		end
 
+	timer: EV_TIMEOUT
+	
+	on_time_out is
+		local
+			b_w: INTEGER
+		do
+			b_w := c.gtk_clist_columns_autosize (list_widget) + 20
+			if cached_width /= b_w then
+				C.gtk_widget_set_usize (an_event_box, b_w, -1)
+				cached_width := b_w
+			end
+			timer.set_interval (0)
+		end
 feature -- Status report
 
 	selected_item: EV_TREE_NODE is
@@ -550,12 +569,38 @@ feature {NONE} -- Implementation
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
+			tree_item_imp: EV_TREE_ITEM_IMP
+			node_ptr: POINTER
 			item_imp: EV_TREE_NODE_IMP
 		do
+			tree_item_imp ?= an_item.implementation
+			node_ptr := tree_item_imp.tree_node_ptr
+			if not C.gtk_ctree_is_viewable (list_widget, node_ptr) then
+				expand_to_node (node_ptr)
+			end
+
 			item_imp ?= an_item.implementation
 
 				-- Show the node `an_item'
 			C.gtk_ctree_node_moveto (list_widget, item_imp.tree_node_ptr, 0, 0.0, 1.0)
+
+		end
+
+	expand_to_node (a_node: POINTER) is
+			-- 
+		require
+			a_node /= NULL
+		local
+			row, parent_node: POINTER
+		do
+			if not C.gtk_ctree_is_viewable (list_widget, a_node) then
+				row := C.glist_struct_data (a_node)
+				parent_node := C.gtk_ctree_row_struct_parent (row)
+				if parent_node /= NULL then
+					expand_to_node (parent_node)
+					C.gtk_ctree_expand (list_widget, parent_node)
+				end
+			end
 		end
 
 	spacing: INTEGER is 5
@@ -586,9 +631,11 @@ feature {NONE} -- Implementation
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 			item_imp.set_item_and_children (NULL)
-			item_imp.insert_pixmap
+		--	item_imp.insert_pixmap
+			item_imp.check_branch_pixmaps
 			ev_children.force (item_imp)
 			update_pnd_status
+			timer.set_interval (1)
 		end
 
 	wipe_out is
@@ -611,7 +658,7 @@ feature {NONE} -- Implementation
 
 				-- Remove all items (Eiffel part)
 			ev_children.wipe_out
-			tree_node_ptr_table.wipe_out
+			tree_node_ptr_table.clear_all
 			index := 0
 
 			update_pnd_status
@@ -634,6 +681,7 @@ feature {NONE} -- Implementation
 			ev_children.remove
 
 			update_pnd_status
+			timer.set_interval (1)
 		end
 
 	reorder_child (v: like item; a_position: INTEGER) is
@@ -712,7 +760,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 	list_widget: POINTER
 			-- Pointer to the gtktree widget.
-
+			
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE

@@ -240,8 +240,23 @@ feature -- Status report
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
+		local
+			a_pango_layout, log_rect: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
-			Result := string_size (a_string).integer_32_item (1)
+			a_cs := a_string
+			a_pango_layout := App_implementation.pango_layout
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, -1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
+			log_rect := reusable_pango_rectangle_struct
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, default_pointer, log_rect)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
+		end
+
+	reusable_pango_rectangle_struct: POINTER is
+			-- PangoRectangle that may be reused to prevent memory allocation, must not be freed
+		once
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
 		end
 
 	horizontal_resolution: INTEGER is
@@ -301,22 +316,29 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 					-- If the use has made no setting changes we use default gtk
 					Result := app_implementation.default_font_name
 				else
-					create Result.make (0)
+					create Result.make (10)
 					inspect family
 					when Family_screen then
-						Result.append ("monospace")
+						Result.append (monospace_string)
 					when Family_roman then
-						Result.append ("serif")
+						Result.append (serif_string)
 					when Family_typewriter then
-						Result.append ("courier")
+						Result.append (courier_string)
 					when Family_sans then
-						Result.append ("sans")
+						Result.append (sans_string)
 					when Family_modern then
-						Result.append ("lucida")
+						Result.append (lucida_string)
 					end
 				end
 			end
 		end
+
+	monospace_string: STRING is "monospace"
+	serif_string: STRING is "serif"
+	courier_string: STRING is"courier"
+	sans_string: STRING is "sans"
+	lucida_string: STRING is "lucida"
+		-- Font string constants
 
 	pango_style: INTEGER is
 			-- Pango Style constant of `Current'

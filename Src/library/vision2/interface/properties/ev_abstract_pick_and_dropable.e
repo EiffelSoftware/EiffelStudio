@@ -12,6 +12,9 @@ deferred class
 
 inherit
 	IDENTIFIED
+		export
+			{NONE} free_id, id_freed
+		end
 
 feature -- Access
 

@@ -8,7 +8,7 @@ indexing
 class FORMAT_HOLDER
 
 inherit
-	HOLDER
+	EB_HOLDER
 		redefine
 			associated_command, associated_menu_entry,
 			set_selected

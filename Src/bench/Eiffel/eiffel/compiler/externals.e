@@ -133,7 +133,9 @@ end;
 				if info.occurence <= 0 then
 					remove (external_name);
 				else
-					info.reset_real_body_id;
+					if info.is_valid then
+						info.reset_real_body_id;
+					end
 				end;
 				i := i + 1;
 			end;
@@ -175,7 +177,8 @@ feature -- Overview
 			until
 				after or else Result
 			loop
-				if item_for_iteration.is_cpp then
+				if item_for_iteration.is_valid and then
+								item_for_iteration.is_cpp then
 					Result := True
 				end
 				forth

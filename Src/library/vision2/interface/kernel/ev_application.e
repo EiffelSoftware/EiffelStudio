@@ -59,6 +59,14 @@ feature -- Access
 		do
 			Result := implementation.locked_window
 		end
+		
+	captured_widget: EV_WIDGET is
+			-- Widget currently captured. Void if none.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.captured_widget
+		end
 
 	help_accelerator: EV_ACCELERATOR is
 			-- Accelerator that displays contextual help

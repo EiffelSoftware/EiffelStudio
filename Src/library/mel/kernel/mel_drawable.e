@@ -33,7 +33,12 @@ feature -- Access
 		deferred
 		ensure
 			depth_large_enough: Result > 0
-		end
+		end;
+
+	display_handle: POINTER is
+			-- Associated C handle to the display
+		deferred
+		end;
 
 feature -- Element change
 
@@ -70,13 +75,6 @@ feature -- Element change
 		do
 			x_copy_plane (display_handle, a_drawable.identifier, identifier, gc.handle,
 				src_x, src_y, a_width, a_height, dest_x, dest_y, a_plane)
-		end;
-
-feature {MEL_DRAWABLE, MEL_GC, MEL_OBJECT}
-
-	display_handle: POINTER is
-			-- Associated C handle to the display
-		deferred
 		end;
 
 feature {NONE} -- External features

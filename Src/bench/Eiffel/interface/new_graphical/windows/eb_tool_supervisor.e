@@ -11,6 +11,8 @@ inherit
 
 	NEW_EB_CONSTANTS
 
+	EB_GRAPHICAL_DATA
+
 	EB_RESOURCE_USER
 		redefine
 			dispatch_modified_resource,
@@ -142,10 +144,24 @@ feature -- Properties
 		do
 			Result := class_tool_mgr.changed
 				or else
-			(system_tool_is_valid and then system_tool.changed)
+			(system_tool_is_valid and then system_tool.text_window.changed)
+				or else
+			(dynamic_lib_tool_is_valid and then dynamic_lib_tool.text_window.changed)
 		end
 				
-	is_class_opened (cl_name:STRING):BOOLEAN is
+	save_all_editors is
+			-- save all editors that had been modified.
+		do
+			class_tool_mgr.save_all
+			if (system_tool_is_valid and then system_tool.text_window.changed) then
+				system_tool.save_text
+			end
+			if (dynamic_lib_tool_is_valid and then dynamic_lib_tool.text_window.changed) then
+				dynamic_lib_tool.save_text
+			end
+		end
+
+	is_class_opened (cl_name: STRING): BOOLEAN is
 			-- Return True if the class is already opened in a class_tool
 			-- return False otherwise.
 		do

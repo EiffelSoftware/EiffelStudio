@@ -34,7 +34,10 @@ inherit
 			label as full_label
 		end;
 	DEFERRED_CREATOR;
-	EDITABLE;
+	EDITABLE
+		rename
+			label as full_label
+		end;
 	DRAG_SOURCE
 		rename
 			source as widget
@@ -48,7 +51,7 @@ feature -- Editable
 			ed, other_editor: CONTEXT_EDITOR;
 			editor_form: INTEGER
 		do
-			editor_form := option_list @ 1;
+			editor_form := default_option_number;
 			other_editor := context_catalog.editor 
 					(Current, editor_form);
 				--! Check to see if there is already an 
@@ -59,6 +62,37 @@ feature -- Editable
 				ed.set_edited_context (Current);	
 			else
 				other_editor.raise
+			end;
+		end;
+
+	default_option_number: INTEGER is
+			-- Default option list number
+		local
+			i: INTEGER;
+			opt_list: ARRAY [INTEGER]
+		do
+			opt_list := option_list;
+			from
+				i := 1
+			until
+				Result /= 0 or else
+					i > opt_list.count
+			loop
+				Result := opt_list.item (i);
+				i := i + 1
+			end
+		end;
+
+	update_instance_name_in_editor is
+			-- Update the command instance name
+			-- in the context editor (behaviour editor);
+		local
+			other_editor: CONTEXT_EDITOR
+		do
+			other_editor := context_catalog.editor 
+					(Current, Context_const.behavior_form_nbr);
+			if other_editor /= Void then	
+				other_editor.reset_behavior_editor
 			end;
 		end;
 
@@ -135,6 +169,12 @@ feature {NONE}
 	
 feature 
 
+	entity_name_in_lower_case: STRING is
+		do
+			Result := clone (entity_name);
+			Result.to_lower;
+		end;
+
 	group_name: STRING is
 		local
 			con_group: GROUP_C;
@@ -142,11 +182,11 @@ feature
 			con_group ?= Current;
 			Result := parent.group_name;
 			if Result /= Void then
-				Result.append (entity_name);
+				Result.append (entity_name_in_lower_case);
 				Result.append ("_");
 			elseif con_group /= Void then
 				!!Result.make (0);
-				Result.append (entity_name);
+				Result.append (entity_name_in_lower_case);
 				Result.append ("_");
 			end;
 		end;
@@ -393,7 +433,8 @@ feature {NONE}
 			-- General callbacks forall types of contexts
 		do
 				-- Move and resize actions
-			a_widget.set_action ("~Shift ~Ctrl<Btn1Down>", Eb_selection_mgr, third);
+			--a_widget.set_action ("~Shift ~Ctrl<Btn1Down>", Eb_selection_mgr, third);
+			a_widget.set_action ("!<Btn1Down>", Eb_selection_mgr, third);
 			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg);
 				-- Shift actions
 			a_widget.set_action ("Shift<Btn1Down>", Eb_selection_mgr, fourth);
@@ -611,10 +652,12 @@ feature
 				group_composite ?= parent;
 				if group_composite = Void then
 					widget.set_size (new_w, new_h)
-				else
+				elseif retrieved_node = Void then
 					group_composite.widget.unmanage;
 					group_composite.set_size_for_group_comp (new_w, new_h);
 					group_composite.widget.manage;
+				else
+					widget.set_size (new_w, new_h)
 				end;
 			end
 		end;
@@ -678,7 +721,7 @@ feature -- EiffelVision attributes
 		do
 			bg_pixmap_name := a_string;
 			bg_pixmap_modified := False;
-			if (a_string = Void) then 
+			if (a_string = Void or else a_string.empty) then 
 				widget.set_background_pixmap (default_bg_pixmap)
 			else
 				!!a_pixmap.make;
@@ -693,8 +736,6 @@ feature -- EiffelVision attributes
 	bg_pixmap_modified: BOOLEAN;
 
 	default_bg_pixmap: PIXMAP is
-		require
-			widget_is_window: is_window
 		once
 			Result := widget.background_pixmap
 		ensure
@@ -729,74 +770,98 @@ feature -- EiffelVision attributes
 			end
 		end;
 
+feature -- Background color
+
 	bg_color_name: STRING;
 	
+	default_background_color: COLOR;
+
+	bg_color_modified: BOOLEAN;
+
 	set_bg_color_name (a_color_name: STRING) is
-		require
-			never_empty_name: a_color_name /= Void implies 
-							not a_color_name.empty
 		local
 			a_color: COLOR;
 		do
-			bg_color_name := a_color_name;
-			if 	a_color_name = Void then
+			if a_color_name = Void or else a_color_name.empty then
+				bg_color_name := Void
 				bg_color_modified := False
+				-- reset to default
+				a_color := default_background_color
+				bg_color_modified := False;
 			else
+				if bg_color_name = Void then
+					save_default_background_color;
+				end;
+				bg_color_name := a_color_name;
 				!!a_color.make;
 				a_color.set_name (a_color_name);
+				bg_color_modified := True;
+			end;
+			if a_color /= Void then
 				if previous_bg_color = Void then
 					widget.set_background_color (a_color);
 				else
 					previous_bg_color := a_color
-				end
-				bg_color_modified := True;
-			end;
+				end;
+			end
 		end;
 
-	bg_color_modified: BOOLEAN;
-
-	fg_color_name: STRING;
-	
-	set_fg_color_name (a_color_name: STRING) is
-		require
-			never_empty_name: a_color_name /= Void implies 
-							not a_color_name.empty;
-		deferred
-		end;
-
-	default_background_color: COLOR is
+	save_default_background_color is
 		require
 			bg_color_is_void: bg_color_name = Void
 		do
-			Result := widget.background_color
-		ensure
-			valid_result: Result /= Void
-		end;
+			if default_background_color = Void then
+				default_background_color := widget.background_color
+			end;
+			if fg_color_name = Void then
+					--| This is done since setting background color
+					--| could change the foreground color.
+				save_default_foreground_color
+			end
+		end;	
 
-	set_default_background_color (color: COLOR) is
-		require
-			valid_color: color /= Void
-		do
-			widget.set_background_color (color)
-		end;
+feature -- Foreground color
 
-	default_foreground_color: COLOR is
-		require
-			fg_color_is_void: fg_color_name = Void
-		deferred
-		ensure
-			valid_result: Result /= Void
-		end;
-
-	set_default_foreground_color (color: COLOR) is
-		require
-			valid_color: color /= Void
-		deferred
-		end;
+	fg_color_name: STRING;
+	
+	default_foreground_color: COLOR;
 
 	fg_color_modified: BOOLEAN;
 
+	set_fg_color_name (a_color_name: STRING) is
+		deferred
+		end;
+
+    reset_default_foreground_color is
+        require
+            valid_default_foreground_color: default_foreground_color /= Void
+		deferred
+        end;
+
+	save_default_foreground_color is
+		require
+			fg_color_is_void: fg_color_name = Void
+		deferred
+		end;	
+
+feature -- Font
+
 	font_name: STRING;
+
+	default_font: FONT;
+
+	save_default_font is
+		require
+			void_font_name: font_name = Void;
+			is_fontable: is_fontable
+		local
+			fontable: FONTABLE;
+		do
+			if default_font = Void then
+				fontable ?= widget;
+				default_font := fontable.font;
+			end;
+		end;	
 
 	font: FONT is
 		local
@@ -814,12 +879,21 @@ feature -- EiffelVision attributes
 		do
 			font_name_modified := False;
 			if is_fontable then
-				font_name := s;
-				if s = Void then
-					font_name_modified := False
+				fontable ?= widget;
+				if s = Void or else s.empty then
+					if default_font /= Void then
+						widget.unmanage;
+						fontable.set_font (default_font);		
+						widget.manage;
+					end
+					font_name_modified := False;
+					font_name := s
 				else
+					if font_name = Void then
+						save_default_font
+					end;
+					font_name := s;
 					font_name_modified := True;
-					fontable ?= widget;
 					widget.unmanage;
 					fontable.set_font_name (s);
 					widget.manage;
@@ -936,6 +1010,9 @@ feature
 
 	set_selected_color is
 		do
+			if bg_color_name = Void then
+				save_default_background_color
+			end;
 			previous_bg_color := widget.background_color;
 			if equal (previous_bg_color.name, 
 				Resources.selected_color.name) 
@@ -1161,11 +1238,12 @@ feature {CONTEXT}
 		do
 			!!Result.make (0);
 			Result.append ("%T");
-			Result.append (entity_name);
+			Result.append (entity_name_in_lower_case);
 			Result.append (": ");
 			Result.append (eiffel_type);
 			Result.append (";%N");
 			Result.append (children_declaration);
+			Result.append (comment_text);
 		end;
 
 	children_creation (parent_name: STRING): STRING is
@@ -1188,21 +1266,17 @@ feature {CONTEXT}
 			-- and all its children
 		do
 			!!Result.make (0);
-			Result.append ("%T%T%T!!");
-			Result.append (entity_name);
+			Result.append ("%T%T%T!! ");
+			Result.append (entity_name_in_lower_case);
 			Result.extend ('.');
 			Result.append (widget_creation_routine_name);
 			Result.append (" (%"");
-			Result.append (entity_name);
+			Result.append (entity_name_in_lower_case);
 			Result.append ("%", ");
 			Result.append (parent_name);
 			Result.append (");");
-			if not (visual_name = Void) then
-				Result.append ("%T-- ");
-				Result.append (visual_name);
-			end;
 			Result.append ("%N");
-			Result.append (children_creation (entity_name))
+			Result.append (children_creation (entity_name_in_lower_case))
 		end;
 
 	widget_creation_routine_name: STRING is
@@ -1235,7 +1309,7 @@ feature
 			if not Result.empty then
 				Result.append (".");
 			end;
-			Result.append (entity_name);
+			Result.append (entity_name_in_lower_case);
 		end;
 
 	
@@ -1248,28 +1322,30 @@ feature {CONTEXT}
 			mc: MENU_PULL_C;
 			opc: OPT_PULL_C;
 			bul: BULLETIN_C;
+			group_comp: GROUP_COMPOSITE_C;
 		do
 			mc ?= parent;
 			opc ?= parent;
 			bul ?= parent;
-			if mc /= Void or else opc /= Void 
-				 or else bul /= Void then
+			group_comp ?= parent;
+			if mc /= Void or else opc /= Void or else
+				 bul /= Void or else group_comp /= Void
+			then
 				Result := parent.intermediate_name;
 			else
 				Result := parent.full_name;
 			end;
 		end;
-
 	
 feature {NONE}
-
+			
 	comment_text: STRING is
 		do
 			!!Result.make (0);
-			if not (visual_name = Void) then
-				Result.append ("%T%T%T%T-- ");
+			if visual_name /= Void then
+				Result.append ("%T%T%T-- ");
 				Result.append (visual_name);
-				Result.append ("%N");
+				Result.append ("%N%N");
 			end;
 		end;
 
@@ -1285,7 +1361,7 @@ feature {CONTEXT}
 		do
 			!!Result.make (0);
 			if group_name = Void then
-				context_name := clone (entity_name);
+				context_name := clone (entity_name_in_lower_case);
 			else
 				context_name := full_name;
 			end;
@@ -1293,9 +1369,9 @@ feature {CONTEXT}
 			Result.append (context_initialization (context_name));
 			Result.append (font_creation (context_name));
 			Result.append (position_initialization (context_name));
-			if not Result.empty then
-				Result.prepend (comment_text);
-			end;
+			--if not Result.empty then
+				--Result.prepend (comment_text);
+			--end;
 			Result.append (children_initialization);
 			Result.append (bulletin_resize_text (context_name));
 		end;
@@ -1385,9 +1461,9 @@ feature {CONTEXT}
 				Result.append (context_name);
 				Result.append ("set_foreground_color (a_color);%N");
 			end;
-			if not Result.empty then
-				Result.prepend (comment_text);
-			end;
+			--if not Result.empty then
+				--Result.prepend (comment_text);
+			--end;
 			result.append (children_color);
 		end;
 
@@ -1449,7 +1525,7 @@ feature {CLBKS, CONTEXT}
 				(not is_window) and then callback_generator.has (Current)
 			then
 				if group_name = Void then
-					context_name := clone (entity_name);
+					context_name := clone (entity_name_in_lower_case);
 					context_name.append ("_");
 				else
 					context_name := group_name;
@@ -1576,7 +1652,9 @@ feature
 				-- Callbacks
 				--==========
 			Result.append (eiffel_callbacks);
-			Result.append ("%Nend%N");
+			Result.append ("%Nend -- class ");
+			Result.append (class_name);
+			Result.extend ('%N');
 		end;
 
 -- ******************************

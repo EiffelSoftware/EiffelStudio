@@ -44,13 +44,15 @@ feature -- Formatting
 			root_stone: CLASSC_STONE;
 			retried: BOOLEAN;
 			mp: MOUSE_PTR
+			same_stone: BOOLEAN
 		do
 			if not retried then
 				root_stone ?= tool.stone;
+				same_stone := stone.same_as (root_stone)
 				if
 					do_format or else filtered or else
 					(tool.last_format.associated_command /= Current or
-					not stone.same_as (root_stone))
+					not same_stone)
 				then
 					if stone /= Void and then stone.is_valid then
 						tool.close_search_window;
@@ -62,8 +64,10 @@ feature -- Formatting
 							tool.set_read_only_text;
 							tool.set_file_name (file_name (stone));
 							display_info (stone);
-							if cur /= Void then
+							if cur /= Void and then same_stone then
 								text_window.go_to (cur)
+							else
+								text_window.set_top_character_position (0)
 							end;
 							tool.show_read_only_text;
 							text_window.display;

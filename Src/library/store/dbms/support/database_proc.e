@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_PROC [G -> DATABASE]
+	DATABASE_PROC [G -> DATABASE create default_create end]
 inherit
 
 	HANDLE_USE

@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_HANDLE [G -> DATABASE]
+	DATABASE_HANDLE [G -> DATABASE create default_create end]
 
 feature -- Status report
 

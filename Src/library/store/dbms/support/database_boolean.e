@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_BOOLEAN [G -> DATABASE]
+	DATABASE_BOOLEAN [G -> DATABASE create default_create end]
 
 inherit
 

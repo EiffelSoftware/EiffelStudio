@@ -18,7 +18,6 @@ cluster
 	iteration:          "$EIFFEL4/library/base/structures/iteration";
 	kernel:             "$EIFFEL4/library/base/kernel";
 	list:               "$EIFFEL4/library/base/structures/list";
-	obsolete:           "$EIFFEL4/library/base/structures/obsolete";
 	set:                "$EIFFEL4/library/base/structures/set";
 	sort:               "$EIFFEL4/library/base/structures/sort";
 	storage:            "$EIFFEL4/library/base/structures/storage";
@@ -38,5 +37,11 @@ cluster
 	time:				"$EIFFEL4/library/time";
 	time_format: 		"$EIFFEL4/library/time/format";
 	time_english:		"$EIFFEL4/library/time/format/english";
+
+external
+
+	object:
+		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
+		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib";
 
 end

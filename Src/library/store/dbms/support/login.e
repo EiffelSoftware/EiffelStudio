@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	LOGIN [G -> DATABASE]
+	LOGIN [G -> DATABASE create default_create end]
 
 inherit
 	HANDLE_SPEC [G]

@@ -4,7 +4,7 @@
 	revision: "$Revision$"
 
 class 
-	COLUMNS [G -> DATABASE]
+	COLUMNS [G -> DATABASE create default_create end]
 
 inherit
 

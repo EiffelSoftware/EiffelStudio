@@ -30,9 +30,6 @@ inherit
 			unset_catalog_flag
 		end
 
-creation
-	do_nothing
-
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN
@@ -141,7 +138,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					  
 feature -- For DATABASE_STORE
 
-	put_column_name (repository: DATABASE_REPOSITORY [DATABASE]; map_table: ARRAY [INTEGER]): STRING is
+	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is
 		local
 			i, j: INTEGER
 		do

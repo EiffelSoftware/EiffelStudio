@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class 
-	DATABASE_APPL [G -> DATABASE]
+	DATABASE_APPL [G -> DATABASE create default_create end]
 
 inherit
 
@@ -15,7 +15,6 @@ inherit
 	DB_CONSTANT
 
 creation
-
 	login, login_and_connect
 
 feature -- Initialization

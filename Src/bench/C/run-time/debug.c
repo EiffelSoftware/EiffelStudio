@@ -172,6 +172,8 @@ rt_public void dstart(EIF_CONTEXT_NOARG)
 	context->dc_cur = (struct stochunk *) 0;
 	context->dc_top = (struct item *) 0;
 	context->dc_exec = (struct ex_vect *) 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void dexset(struct ex_vect *exvect)
@@ -375,6 +377,8 @@ rt_shared void ewhere(EIF_CONTEXT struct where *where)
 		where->wh_offset = -1;		/* Mark no valid offset */
 	else
 		where->wh_offset = IC - dc->dc_start;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
@@ -412,6 +416,8 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 #endif
 
 	return item;			/* Last call recorded on stack */
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -454,6 +460,7 @@ rt_shared void escontext(EIF_CONTEXT int why)
 		d_cxt.pg_active = dtop();				/* Last recorded routine */
 		d_cxt.pg_index = d_cxt.pg_calls;		/* Its index within stack */
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared void esresume(EIF_CONTEXT_NOARG)
@@ -503,6 +510,8 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 		sync_registers(MTC context->dc_cur, context->dc_top);
 
 	d_cxt.pg_status = PG_RUN;	/* Program is running */
+
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -1211,4 +1220,5 @@ rt_public struct item *docall(EIF_CONTEXT register uint32 body_id, register int 
 
 	return opop();				/* Return the result of the once function */
 								/* and remove it from the operational stack */
+	EIF_END_GET_CONTEXT
 }

@@ -21,6 +21,9 @@
 #define EN_NEX		26			/* Number of internal exceptions */
 #endif
 
+	/* malloc.c */
+#define NBLOCKS			26		/* Number of block lists (max size is 2^27-1) */
+
 	/* pattern.c */
 #define ASIZE 256     /* The alphabet's size */
 

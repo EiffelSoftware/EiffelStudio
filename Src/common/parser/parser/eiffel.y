@@ -859,7 +859,7 @@ Parameter_passing_type: -- Empty
 	;
 
 Local_entity_declaration_list_opt: -- Empty
-			-- { $$ := Void }
+			{ $$ := new_eiffel_list_type_dec_as (0) }
 	|	Local_entity_declaration_list
 			{ $$ := $1 }
 	;

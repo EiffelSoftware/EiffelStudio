@@ -4503,7 +4503,7 @@ debug ("GEYACC")
 end
 
 
-
+yyval90 := new_eiffel_list_type_dec_as (0) 
 			yyval := yyval90
 if yy_parsing_status = yyContinue then
 	yyvsp := yyvsp + 1

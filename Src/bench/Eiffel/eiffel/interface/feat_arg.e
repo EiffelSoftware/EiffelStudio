@@ -305,7 +305,8 @@ feature {FEATURE_I}
 		local
 			i, c: INTEGER;
 			args: like Current;
-			t: TYPE_A
+			t_a: TYPE_A;
+			t: TYPE_B
 		do
 			args := Current;
 			if args /= Void then
@@ -316,8 +317,12 @@ feature {FEATURE_I}
 				until
 					i > c
 				loop
-					t ?= args.i_th (i);
-					Result.put_i_th (t, i);
+					t := args.i_th (i);
+					t_a ?= t;
+					if t_a = Void then
+						t_a := t.actual_type;
+					end;
+					Result.put_i_th (t_a, i);
 					i := i + 1
 				end;
 				Result.set_argument_names (args.argument_names);

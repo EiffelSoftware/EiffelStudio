@@ -70,6 +70,9 @@ feature {NONE} -- Implementation
 		do
 			t ?= type;
 			!! new_f.make (feature_name, feature_id);
+			if t = Void then
+				t := type.actual_type
+			end;
 			new_f.set_type (t);
 			update_api (new_f);
 			Result := new_f;

@@ -8,15 +8,9 @@ class TOGGLE_BG_M
 
 inherit
 
-	TOGGLE_R_M
-		export
-            		{NONE} all
-       		end;
+	TOGGLE_R_M;
 
-	TOGGLE_BG_I
-		export
-			{NONE} all
-		end;
+	TOGGLE_BG_I;
 
 	BUTTON_M
 		rename

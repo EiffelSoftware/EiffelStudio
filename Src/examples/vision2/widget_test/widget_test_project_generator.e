@@ -19,9 +19,10 @@ feature -- Access
 
 	generate_project (directory: DIRECTORY; test_class_name: STRING; widget_type: STRING) is
 			-- Generate project based on `test_class_name'.
+		require
+			installation_directory_not_void: installation_location /= Void
 		local
 			project_name, test_name: STRING
-
 		do
 			current_generation_directory := directory
 			test_name := test_class_name.as_upper

@@ -31,8 +31,8 @@ creation
 %token	TE_GET_PROPERTY, TE_IL_LANGUAGE, TE_MACRO, TE_FIELD
 %token	TE_JAVA_LANGUAGE, TE_DEFERRED, TE_OPERATOR, TE_INTEGER
 %token	TE_SET_FIELD, TE_SET_PROPERTY, TE_SIGNATURE, TE_STATIC, TE_CREATOR
-%token	TE_STATIC_FIELD, TE_SET_STATIC_FIELD,  TE_STRUCT, TE_TYPE
-%token	TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID
+%token	TE_STATIC_FIELD, TE_SET_STATIC_FIELD, TE_STRUCT, TE_TYPE
+%token	TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID, TE_INCLUDE_ID
 
 %type <EXTERNAL_EXTENSION_AS>	External_declaration C_specification CPP_specification
 								DLL_specification DLLwin_specification IL_specification
@@ -81,7 +81,7 @@ C_specification:
 			{
 				create {C_EXTENSION_AS} $$.initialize ($1, $2)
 			}
-	|	TE_STRUCT Identifier TE_ACCESS Identifier Type_access_opt Use
+	|	TE_STRUCT Type_identifier TE_ACCESS Identifier Type_access_opt Use
 			{
 					-- False because this is a C construct
 				create {STRUCT_EXTENSION_AS} $$.initialize (False, $2, $4, $5, $6)
@@ -102,7 +102,7 @@ CPP_specification:
 			{
 				$$ := $1
 			}
-	|	TE_STRUCT Identifier TE_ACCESS Identifier Type_access_opt Use
+	|	TE_STRUCT Type_identifier TE_ACCESS Identifier Type_access_opt Use
 			{
 					-- True because this is a C++ construct
 				create {STRUCT_EXTENSION_AS} $$.initialize (True, $2, $4, $5, $6)
@@ -339,6 +339,10 @@ File_identifier:
 			$$ := new_double_quote_id_as (token_buffer)
 		}
 	|	TE_LT TE_ID TE_GT
+		{
+			$$ := new_system_id_as (token_buffer)
+		}
+	|	TE_LT TE_INCLUDE_ID TE_GT
 		{
 			$$ := new_system_id_as (token_buffer)
 		}

@@ -1,7 +1,6 @@
 indexing
 	description	: "List of images. The list is cached to avoid %
 				  %multiplication of indexes for the same image"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

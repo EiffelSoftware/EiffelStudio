@@ -1,0 +1,112 @@
+REM Clean up the files
+remtrace Update all source files.
+cdd %EIFFEL_SRC
+up eiffel
+up C
+up C_library
+
+remtrace Compile C code of the libraries
+remtrace "A tout seigneur tout honneur", let's start with the run-time
+cd C
+alias pause echo
+call configure win32 m >>& %INSTALL_LOG
+unalias pause
+cd %EIFFEL_SRC
+
+remtrace Then the C libraries
+remtrace expat
+cd C_library\expat
+msdev expat.dsw /make ALL - RELEASE >>& %INSTALL_LOG
+iff not exist bin\xmlparse.dll .or. not exist bin\xmltok.dll then
+	echo Couldn't recompile xmlparse.dll or xmltok.dll
+	CANCEL
+endiff
+copy bin\xmlparse.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+copy bin\xmltok.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+remtrace libpng
+cd %EIFFEL_SRC\C_library\libpng
+default_make
+remtrace zlib
+cd %EIFFEL_SRC\C_library\zlib
+default_make
+
+REM These directories should already have been created by make_delivery. Whatever...
+safe_md %INSTALL_DIR\studio\spec
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+iff not defined NO_NEW_EC then
+	remtrace Recompile EiffelStudio
+	cdd %FINALIZATION_DIR
+	iff not exist finalizedbench.ace then
+		echo Cannot find the finalization Ace for EiffelStudio
+		CANCEL
+	endiff
+	clean_project
+	finalize finalizedbench.ace
+	fff
+	cleanup_eiffel ec.exe
+	iff not exist ec.exe then
+		echo Could not finalize a new EiffelStudio
+		CANCEL
+	endiff
+	move ec.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+else
+	quick_move studio\spec\%ISE_PLATFORM\bin\ec.exe
+endiff
+
+remtrace Recompile finish_freezing
+cdd %EIFFEL_SRC\Eiffel\extra\finish_freezing
+clean_project
+finalize mswin-finish_freezing.ace
+fff
+cleanup_eiffel finish_freezing.exe
+iff not exist finish_freezing.exe then
+	echo Could not finalize a new finish_freezing
+	CANCEL
+endiff
+move finish_freezing.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile quick_finalize
+cdd %EIFFEL_SRC\Eiffel\extra\quick_c_compilation
+clean_project
+finalize Ace.ace
+fff
+cleanup_eiffel quick_finalize.exe
+iff not exist quick_finalize.exe then
+	echo Could not finalize a new quick_finalize
+	CANCEL
+endiff
+move quick_finalize.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Put estudio.exe in the new delivery
+REM It should already have been compiled by the configure of the run-time.
+cdd %EIFFEL_SRC\C\ipc\daemon
+iff not exist estudio.exe then
+	echo Could not finalize a new estudio
+	CANCEL
+endiff
+move estudio.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Put x2c.exe in the new delivery
+REM It should already have been compiled by the configure of the run-time.
+cdd %EIFFEL_SRC\C\run-time
+iff not exist x2c.exe then
+	echo Could not finalize a new x2c
+	CANCEL
+endiff
+move x2c.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile h2e
+cdd %EIFFEL_SRC\library\wel\extra
+clean_project
+finalize h2ew32.ace
+fff
+cleanup_eiffel h2e.exe
+iff not exist h2e.exe then
+	echo Could not finalize a new h2e
+	CANCEL
+endiff
+move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+
+remtrace Put the last files into the bin directory
+quick_move studio\spec\%ISE_PLATFORM\bin\legacy.exe

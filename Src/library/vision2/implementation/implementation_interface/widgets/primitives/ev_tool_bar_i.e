@@ -31,6 +31,12 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			-- and not over a button.
 		deferred
 		end
+		
+	block_selection_for_docking is
+			-- Ensure that a tool bar button is not selected as a
+			-- result of the transport ending.
+		deferred
+		end
 
 feature {NONE} -- Implementation
 

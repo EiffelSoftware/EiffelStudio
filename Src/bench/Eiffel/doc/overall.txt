@@ -265,6 +265,67 @@ Degree 3:
 ---------
 
 We call `execute' of PASS3_C, which calls `pass3' of each CLASS_C which needs to be recompiled.
+Copy/paste of a comment to understand what we do :
+			-- Byte code production and type checking: list `changed_classes'
+			-- contains classes marked `changed' and/or changed3. For
+			-- the classes marked `changed', produce byte code and type
+			-- check the features marked `melted'; if the class is also
+			-- marked `changed3' type check also the other features. For
+			-- classes marked `changed3' only, type check all the
+			-- features.
+
+For each class,
+
+1) We update the suppliers of the class.
+
+A) We take the dependances of the class in the depend_server (or we create them) and the 
+replication dependances of the class (rep_depend_server).We clone the suppliers list of 
+the class if marked changed.We take the feature table of the class and then prepare an
+ast_context and a new melted_set.
+
+B) For each feature in the class: if the feature is to be melted in the current class,
+		a/ we re-compute the default rescue clause.
+		b/ we check if the current feature has changed :
+				_ if it is a routine in the changed_feature list (1)
+				_ if one of the suppliers of the feature in melted_propagator (equivalent to changed ???)
+				_ if one of the suppliers has been removed from the system
+		c/ if the feature has changed (except in case 1 : WHY ??? ) we re-compute the body-id
+		d/ if the feature is an attribute, we re-compute the body-id ( in case it was a routine redefined
+in attribute : but WHY ALWAYS ???)
+		e/ type checking :
+			_ we try to find the body of the feature and we call the type checking on it.
+			_ we put the type of the actual class in the context stack and we call the type checking
+on the body_as	
+			_ if the content is not an attribute (WE HAVE ALREADY CHECKED IT ???) we call the type
+checking on it.
+			_there are 2 type of content : constant_as or routine_as. we do something only in the 
+case of routine_as (otherwise the function is empty).
+			_we first check the locals variables: double loop, but it seems usefull...
+			_we analyse the precondition
+			_we analyse the body: we take each instruction and call its own type_check (2)
+			_we analyse the postcondition
+		f/ if everything was ok until now, then we update the suppliers list.
+				_ we remove the dependances of the current feature
+				_ we recreate the dependancies of the current feature
+		g/ we generate the bytecode for the feature: the browsing is almost the same as for the type 
+checking for the body.
+		h/ we do the type checking for the feature marked changed3: they were not to be melted but for
+question of dependence with the ones to be melted they have to be checked them anyway.
+
+C/ We re-compute the invariant of the class: the invariant is treated just like an other feature_i(although
+it is not). It undergoes the same treatment as in the main loop described obove.
+
+D/ We update the dependencies/suppliers of the class itself: we remove the removed feature_i from 
+the tables and their dependencies.
+
+Note and improvements:
+----------------------
+1/ See the notes in uppercase along the text.
+2/ As we go through the all system during the type checking, we should be able to make at least
+a part of the dead code removal during this degree. In particular during (2):cf type_check from
+ROUTINE_AS.
+3/
+
 
 
 Between Degree 3 and 2:

@@ -1003,6 +1003,7 @@ feature -- Basic operation
 						--Add the new name to `names' so that it is not used again.
 					names.extend (an_object.name)
 				end
+				rebuild_associated_editors (an_object.object)
 				some_objects.forth
 			end
 		end

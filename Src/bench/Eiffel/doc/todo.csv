@@ -145,6 +145,7 @@ editor,,,,,,,
 ,3,Only display syntax errors once per class instead of once per editor,Julian,EDT0013,,,
 ,5,Give a warning when loading a class that is already being edited elsewhere,Julian,EDT0014,Xavier,1,Done
 ,5,Completion of features should show complete signature (i.e. return type too),Manus,EDT0015,Xavier,1,Done
+,4,Allow to pick classes in not compiled classes too (and why not some features?),Xavier,EDT0016,,,
 
 
 

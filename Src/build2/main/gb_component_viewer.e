@@ -120,7 +120,12 @@ feature -- Basic operation
 			temp_menu: EV_MENU
 			label: EV_LABEL
 			menu_item: EV_MENU_ITEM
+			a_menu_bar: EV_MENU_BAR
+			keep_menu_bar: BOOLEAN
 		do
+			-- We have to handle all items seperately. There may be a better
+			-- way to do this at some point.
+			
 				-- Rest our previous widgets, as `component'
 				-- has now changed.
 			display_widget := Void
@@ -137,6 +142,7 @@ feature -- Basic operation
 
 			new_object ?= component.object
 			an_item ?= new_object.object
+			a_menu_bar ?= new_object.object
 			if an_item /= Void then
 				display_button.disable_sensitive
 				builder_button.disable_sensitive
@@ -183,7 +189,18 @@ feature -- Basic operation
 						temp_menu.extend (menu_item)
 						label.pointer_button_press_actions.force_extend (agent temp_menu.show)
 					end
-				end	
+				end
+					-- A menu bar is not a widget or an item, so we must handle it specially.
+			elseif a_menu_bar /= Void then
+					-- We may already haev another menu bar being displayed in `Current',
+					-- so remove it.
+				if menu_bar /= Void then
+					remove_menu_bar
+				end
+				create label.make_with_text ("Component is a menu bar and is displayed in this window.")
+				component_holder.extend (label)
+				set_menu_bar (a_menu_bar)
+				keep_menu_bar := True
 			else
 				display_button.enable_sensitive
 				builder_button.enable_sensitive
@@ -199,6 +216,12 @@ feature -- Basic operation
 				else
 					builder_widget := component_holder.item
 				end
+			end
+				-- As if we are displaying a menu bar component, we add it to `Current',
+				-- we need to remove the menu bar if `a_component' is not representing a
+				-- menu bar.
+			if not keep_menu_bar then
+				remove_menu_bar
 			end
 			system_status.disable_project_modified
 			update
@@ -226,7 +249,10 @@ feature -- Basic operation
 				pick_and_dropable.remove_pebble
 			end
 			pick_and_dropable ?= an_object.display_object
-			pick_and_dropable.remove_pebble
+				-- We need this as menu bars are not pick and dropable.
+			if pick_and_dropable /= Void then
+				pick_and_dropable.remove_pebble
+			end
 			widget ?= an_object.display_object
 		end
 	

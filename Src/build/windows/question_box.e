@@ -18,17 +18,19 @@ feature
 			Result := quest_d /= Void
 		end;
 
-	popup_with_help (c: QUEST_POPUPER; 
+	popup_with_labels (c: QUEST_POPUPER; 
 				s: STRING; 
 				extra_message: STRING;
 				ok_label, cancel_label, help_label: STRING) is
 			-- Popup Current question box.
 			-- Set ok_label to `ok_label' and cancel_label to `cancel_label'
-			-- and hide_label to `help_label'.
+			-- and hide_label to `help_label' (hide help button if
+			-- help_label is void).
 		require
 			valid_c: c /= Void;
 			valid_parent_comp: c.popuper_parent /= Void;
 			valid_s: s /= Void;
+			valid_labels: ok_label /= Void and then cancel_label /= Void;
 			valid_extra_message: extra_message /= Void implies
 				not extra_message.empty
 		local

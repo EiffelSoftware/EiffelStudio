@@ -219,6 +219,9 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if resize_actions_internal /= Void then
 						resize_actions_internal.call ([a_x, a_y, a_width, a_height])
 					end
+					if widget_in_fixed then
+					--	parent_imp.on_size_allocate (a_x, a_y, 
+					end
 					last_width := a_width
 					last_height := a_height
 				end
@@ -444,7 +447,7 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			internal_set_minimum_size (a_minimum_width, minimum_height)
+			internal_set_minimum_size (a_minimum_width, -1)--minimum_height)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
@@ -539,7 +542,7 @@ feature -- Measurement
 			if internal_minimum_height /= -1 then
 				Result := internal_minimum_height
 			else
-				if not widget_in_fixed then
+				if not widget_in_fixed then	
 					gr := C.gtk_widget_struct_requisition (c_object)
 					Result := C.gtk_requisition_struct_height (gr)
 				else
@@ -665,16 +668,26 @@ feature {NONE} -- Agent functions.
 
 feature {NONE} -- Implementation
 
+	update_request_size is
+			-- Force the requisition struct to be updated.
+		do
+			C.gtk_widget_size_request (c_object, C.gtk_widget_struct_requisition (c_object))
+		end
+
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Abstracted implementation for minumum size setting.
 		do
-			internal_minimum_width := a_minimum_width
-			internal_minimum_height := a_minimum_height
-			if widget_in_fixed then
-				fixed_minimum_height := a_minimum_height
-				fixed_minimum_width := a_minimum_width
+			if a_minimum_width /= -1 then
+				internal_minimum_width := a_minimum_width
 			end
-			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			if a_minimum_height /= -1 then
+				internal_minimum_height := a_minimum_height
+			end
+			if widget_in_fixed then
+				set_fixed_size (a_minimum_width, a_minimum_height)
+			else
+				C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
+			end
 		end
 
 	gtk_widget_has_focus (a_c_object: POINTER): BOOLEAN is

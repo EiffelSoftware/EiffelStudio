@@ -110,7 +110,7 @@ feature {NONE} -- Externals
 		lparam: INTEGER): INTEGER is
 			-- SDK DefMDIChildProc
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM,%
+			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
 				%LPARAM): EIF_INTEGER"
 		alias
 			"DefMDIChildProc"

@@ -1,4 +1,9 @@
--- Command to flat of routine
+indexing
+
+	description:	
+		"Command to flat of routine.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_ROUT_FLAT
 
@@ -15,12 +20,14 @@ creation
 
 	make
 
-feature
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is
 		once
@@ -32,11 +39,19 @@ feature
 			Result := bm_Dark_showflat
 		end;
 
-feature {NONE}
+feature {NONE} -- Properties
 
-	title_part: STRING is do Result := l_Feature_flat_form_of end;
+	title_part: STRING is
+		do
+			Result := l_Feature_flat_form_of
+		end;
 
-	command_name: STRING is do Result := l_Showflat end;
+	command_name: STRING is
+		do
+			Result := l_Showflat
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (stone: FEATURE_STONE) is 
 			-- Display flat form of `stone'.
@@ -50,4 +65,4 @@ feature {NONE}
 			text_window.display_header ("Exploring ancestors to produce flat form...")
 		end;
 
-end
+end -- class SHOW_ROUT_FLAT

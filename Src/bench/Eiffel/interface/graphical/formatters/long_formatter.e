@@ -1,5 +1,10 @@
--- This kind of format is long to process.
--- Ask for a confirmation before executing it.
+indexing
+
+	description:	
+		"This kind of format is long to process. Ask %
+			%for a confirmation before executing it.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class LONG_FORMATTER
 
@@ -10,16 +15,16 @@ inherit
 			init as formatter_init
 		redefine
 			execute
-		end
+		end;
 
 	FORMATTER
 		redefine
 			execute, init
 		select
 			init
-		end;
+		end
 
-feature
+feature -- Initialization
 
 	init (a_composite: COMPOSITE; a_text_window: TEXT_WINDOW) is
 			-- Initialize the format button  with its bitmap.
@@ -30,8 +35,12 @@ feature
 			set_action ("!c<Btn1Down>", Current, control_click)
 		end;
 
+feature -- Properties
+
 	control_click: ANY is once !!Result end;
 			-- No confirmation required
+
+feature -- Execution
 
 	execute (argument: ANY) is
 			-- Ask for a confirmation before executing the format.
@@ -96,4 +105,4 @@ feature
 			end
 		end;
 
-end
+end -- class LONG_FORMATTER

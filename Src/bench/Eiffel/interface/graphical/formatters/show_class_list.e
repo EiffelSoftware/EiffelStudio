@@ -1,5 +1,9 @@
+indexing
 
--- Command to display classes in the universe, in alphabetic order.
+	description:	
+		"Command to display classes in the universe, in alphabetic order.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_CLASS_LIST 
 
@@ -14,29 +18,44 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is 
+			-- Initialize the command.
 		do 
 			init (c, a_text_window)
 		end; 
 
+feature -- Properties
+
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Showclass_list 
 		end;
  
 	dark_symbol: PIXMAP is 
+			-- Dark version of `symbol'.
 		once 
 			Result := bm_Dark_showclass_list 
 		end;
- 
-	
-feature {NONE}
 
-	command_name: STRING is do Result := l_Showclass_list end;
+feature {NONE} -- Properties
 
-	title_part: STRING is do Result := l_Class_list_of end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Showclass_list
+		end;
+
+	title_part: STRING is
+		do
+			Result := l_Class_list_of
+		end;
+
+	post_fix: STRING is "alf";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Show universe: classes in alphabetic order, in `text_window'.
@@ -53,6 +72,4 @@ feature {NONE}
 			text_window.display_header ("Exploring and sorting classes...")
 		end;
 
-	post_fix: STRING is "alf";
-
-end
+end -- class SHOW_CLASS_LIST

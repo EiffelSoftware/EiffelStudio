@@ -1,4 +1,9 @@
--- Command to display the homonyms of the routine.
+indexing
+
+	description:	
+		"Command to display the homonyms of the routine.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_HOMONYMS
 
@@ -14,12 +19,14 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Porperties
 
 	symbol: PIXMAP is 
 		once 
@@ -31,11 +38,19 @@ feature
 			Result := bm_Dark_showhomonyms 
 		end;
  
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showhomonyms end;
+	command_name: STRING is
+		do
+			Result := l_Showhomonyms
+		end;
 
-	title_part: STRING is do Result := l_Homonyms_of end;
+	title_part: STRING is
+		do
+			Result := l_Homonyms_of
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (f: FEATURE_STONE)  is
 			-- Display homonyms of the routine.

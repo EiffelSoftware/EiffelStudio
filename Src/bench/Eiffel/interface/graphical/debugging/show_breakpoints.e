@@ -1,4 +1,9 @@
--- Command to set break points
+indexing
+
+	description:	
+		"Command to set break points.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_BREAKPOINTS
 
@@ -24,12 +29,15 @@ creation
 	make
 
 
-feature
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window);
 		end; -- make
+
+feature -- Formatting
 
 	format (stone: FEATURE_STONE) is
 			-- Show the "debug" format of `stone' if it is debuggable.
@@ -72,39 +80,47 @@ feature
 				end;
 			end
 		end;
-			
+
+feature -- Properties
+
 	symbol: PIXMAP is
+			-- Pixmap for the button.
 		once
 			Result := bm_Breakpoint
 		end; -- symbol
 
 	dark_symbol: PIXMAP is
+			-- Dark version of `symbol'.
 		once
 			Result := bm_Dark_breakpoint
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	display_info (s: FEATURE_STONE) is
 			-- Display debug format of `stone'.
 		do
 			text_window.process_text (debug_context_text (s))
 		end;
-
-	command_name: STRING is
-		do
-			Result := l_Showstops
-		end; -- command_name
-
-	title_part: STRING is
-		do
-			Result := l_Stoppoints_of
-		end; -- title_part
 	
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
 			text_window.display_header ("Computing stop point positions...")
+		end;
+
+feature {NONE} -- Attributes
+
+	command_name: STRING is
+			-- Name for he command.
+		do
+			Result := l_Showstops
+		end;
+
+	title_part: STRING is
+			-- Part of the title.
+		do
+			Result := l_Stoppoints_of
 		end;
 
 end -- class SHOW_BREAKPOINTS

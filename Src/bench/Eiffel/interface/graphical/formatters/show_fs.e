@@ -1,4 +1,9 @@
--- Command to display the flat/short version of a class
+indexing
+
+	description:	
+		"Command to display the flat/short version of a class/";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_FS 
 
@@ -15,13 +20,15 @@ inherit
 creation
 
 	make
-	
-feature 
+
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -33,11 +40,21 @@ feature
 			Result := bm_Dark_showfs 
 		end;
  
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showfs end;
+	command_name: STRING is
+		do
+			Result := l_Showfs
+		end;
 
-	title_part: STRING is do Result := l_Flatshort_form_of end;
+	title_part: STRING is
+		do
+			Result := l_Flatshort_form_of
+		end;
+
+	post_fix: STRING is "fsh";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Display flat|short form of `c'.
@@ -51,6 +68,4 @@ feature {NONE}
 			text_window.display_header ("Exploring ancestors to produce flat-short form...")
 		end;
 
-	post_fix: STRING is "fsh";
-
-end
+end -- class SHOW_FS

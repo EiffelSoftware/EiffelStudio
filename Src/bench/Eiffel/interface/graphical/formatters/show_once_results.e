@@ -1,5 +1,10 @@
--- Command to display results (if any) of once functions relevant
--- to a given object. 
+indexing
+
+	description:	
+		"Command to display results (if any) of once %
+			%functions relevant to a given object.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class 
 
@@ -17,13 +22,15 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: OBJECT_TEXT) is
 		do
 			init (c, a_text_window);
 			indent := 2
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -35,11 +42,28 @@ feature
 			Result := bm_Dark_showonces 
 		end;
 	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showoncefunc end;
+	command_name: STRING is
+		do
+			Result := l_Showoncefunc
+		end;
 
-	title_part: STRING is do Result := l_Oncefunc_of end;
+	title_part: STRING is
+		do
+			Result := l_Oncefunc_of
+		end;
+
+	criterium (f: E_FEATURE): BOOLEAN is
+			-- `f' is a once function and `f' is written in a descendant of ANY
+			-- or the object is a direct instance of a parent of ANY
+		require
+			f_exists: f /= Void
+		do
+			Result := f.is_once and f.is_function
+		end;
+
+feature {NONE} -- Implementation
 
 	display_info (object: OBJECT_STONE) is
 		local
@@ -107,15 +131,6 @@ feature {NONE}
 					once_func_list.forth
 				end
 			end
-		end;
-
-	criterium (f: E_FEATURE): BOOLEAN is
-			-- `f' is a once function and `f' is written in a descendant of ANY
-			-- or the object is a direct instance of a parent of ANY
-		require
-			f_exists: f /= Void
-		do
-			Result := f.is_once and f.is_function
 		end;
 
 	display_temp_header (stone: STONE) is

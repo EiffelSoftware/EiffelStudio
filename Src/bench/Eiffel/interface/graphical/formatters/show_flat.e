@@ -1,5 +1,9 @@
+indexing
 
--- Command to display flat form of a class
+	description:	
+		"Command to display flat form of a class.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_FLAT 
 
@@ -18,13 +22,15 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window);
 			indent := 4
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -36,12 +42,21 @@ feature
 			Result := bm_Dark_showflat 
 		end;
  
+feature {NONE} -- Properties
+
+	command_name: STRING is
+		do
+			Result := l_Showflat
+		end;
+
+	title_part: STRING is
+		do
+			Result := l_Flat_form_of
+		end;
 	
-feature {NONE}
+	post_fix: STRING is "fla";
 
-	command_name: STRING is do Result := l_Showflat end;
-
-	title_part: STRING is do Result := l_Flat_form_of end;
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Display flat form of 'c'.
@@ -54,7 +69,5 @@ feature {NONE}
 		do
 			text_window.display_header ("Exploring ancestors to produce flat form...")
 		end;
-	
-	post_fix: STRING is "fla";
 
-end
+end -- class SHOW_FLAT

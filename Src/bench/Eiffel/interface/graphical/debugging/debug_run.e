@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to run the system while debugging.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class DEBUG_RUN 
 
 inherit
@@ -26,10 +33,11 @@ creation
 
 	make
 
-	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: PROJECT_TEXT) is
+			-- Initialize the command, create a couple of requests and windows.
+			-- Add some actions as well.
 		do
 			init (c, a_text_window);
 			!!run_request.make (Rqst_application);
@@ -38,20 +46,35 @@ feature
 			add_button_click_action (3, Current, specify_args);
 			set_action ("!c<Btn1Down>", Current, melt_and_run)
 		end;
-	
-	text_window: PROJECT_TEXT;
 
-feature 
+feature -- Properties
+
+	text_window: PROJECT_TEXT;
+			-- The text for the project tool.
 
 	argument_window: ARGUMENT_W;
+			-- Window where the user can specify the arguments.
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Debug_run 
+		end;
+
+feature -- Close window
 
 	close is
+			-- Close `argument_window'.
 		do
 			argument_window.close;
 		end;
 
+feature -- Execution
+
 	work (argument: ANY) is
 			-- Re-run the application
+			-- FIXME*****************************************
+			--		melt_only (no check for Makefile.SH)
 		local
 			makefile_sh_name: FILE_NAME;
 			status: APPLICATION_STATUS;
@@ -92,12 +115,7 @@ end;
 
 				!! uf.make (Application.name);
 				!! make_f.make (makefile_sh_name);
-
---!! FIXME: melt_only (no check for Makefile.SH)
---!! FIXME: melt_only
---!! FIXME: melt_only
---!! FIXME: melt_only
-
+					--!! FIXME: ****************************************
 				if uf.exists then
 					if make_f.exists and then make_f.date > uf.date then
 							-- The Makefile file is more recent than the 
@@ -160,21 +178,19 @@ end;
 				end
 			end
 		end;
-
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Debug_run 
-		end;
  
-	
-feature {NONE}
+feature {NONE} -- Attributes
 
-	command_name: STRING is do Result := l_Debug_run end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Debug_run
+		end;
 
 	run_request: RUN_REQUEST;
+			-- Request for the run.
 
 	cont_request: EWB_REQUEST
+			-- Request for continuation.
 
-end
+end -- DEBUG_RUN

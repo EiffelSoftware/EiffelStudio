@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to do something special.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class SPECIAL_COMMAND 
 
 inherit
@@ -8,12 +15,11 @@ inherit
 creation
 
 	make
-	
-feature 
 
---	special_w: SPECIAL_W;
+feature -- Initialization
 
 	make (c: COMPOSITE; t_w: TEXT_WINDOW) is
+			-- Initialize the command.
 		do
 --			init (c, t_w);
 --			!!special_w.make (c);
@@ -24,26 +30,32 @@ feature
 --			add_button_press_action (1, Current, t_w);
 			text_window := t_w
 		end;
-
-feature {NONE}
-
-	work (argument: ANY) is
-		do
---			special_w.call
-		end;
 	
-feature 
+feature -- Properties
 
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Default 
 		end;
  
 	command_name: STRING is
+			-- Name of the command.
 		once
 			Result := "ISE Eiffel 3 (v";
 			Result.append (Version_number);
 			Result.extend (')');
 		end;
+	
+feature -- Commented properties
 
-end
+--	special_w: SPECIAL_W;
+
+feature {NONE} -- Implementation
+
+	work (argument: ANY) is
+		do
+--			special_w.call
+		end;
+
+end -- class SPECIAL_COMMAND

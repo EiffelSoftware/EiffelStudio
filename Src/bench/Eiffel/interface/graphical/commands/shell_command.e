@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to open a shell with vi as editor.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class SHELL_COMMAND 
 
 inherit
@@ -8,25 +15,37 @@ inherit
 creation
 
 	make
-	
-feature 
 
-	shell_window: SHELL_W;
-
-	command_shell_name: STRING is
-		once
-				-- use default command (vi editor)
-			Result := resources.get_string (r_Shell_command, "xterm -geometry 80x40 -e vi +$line $target")
-		end;
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+			-- Initialize the command, create a callback for a click action
+			-- on button three, and create the shell window.
 		do
 			!!shell_window.make (c, Current);
 			init (c, a_text_window);
 			add_button_click_action (3, Current, Void);
 		end;
 
-feature {NONE}
+feature -- Properties
+
+	shell_window: SHELL_W;
+			-- The sheel window.
+
+	command_shell_name: STRING is
+			-- Name of the command to execute in the shell window.
+		once
+				-- use default command (vi editor)
+			Result := resources.get_string (r_Shell_command, "xterm -geometry 80x40 -e vi +$line $target")
+		end;
+
+	symbol: PIXMAP is 
+			-- Pixmap for the button.
+		once 
+			Result := bm_Shell 
+		end;
+
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- If left mouse button was pressed -> execute command.
@@ -96,17 +115,14 @@ feature {NONE}
 				req.execute (cmd_string);
 			end;
 		end;
-	
-feature 
-
-	symbol: PIXMAP is 
-		once 
-			Result := bm_Shell 
-		end;
  
 	
-feature {NONE}
+feature {NONE} -- Attributes
 
-	command_name: STRING is do Result := l_Shell end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Shell
+		end;
 
-end
+end -- SHELL_COMMAND

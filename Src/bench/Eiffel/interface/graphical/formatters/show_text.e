@@ -1,5 +1,10 @@
--- Command to display text
--- No warning or watch cursor
+indexing
+
+	description:	
+		"Command to display text. %
+			%No warning or watch cursor.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_TEXT 
 
@@ -26,12 +31,14 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -43,7 +50,7 @@ feature
 			Result := bm_Dark_showtext
 		end;
 	
-feature {ROUTINE_WIN_MGR}
+feature {ROUTINE_WIN_MGR} -- Displaying
 
 	display_header (stone: STONE) is
 		local
@@ -62,26 +69,7 @@ feature {ROUTINE_WIN_MGR}
 			text_window.display_header (new_title);
 		end;
 
-feature {NONE}
-
-	file_name (s: FILED_STONE): STRING is
-		do
-			Result := s.file_name
-		end;
-
-	command_name: STRING is do Result := l_Showtext end;
-
-	display_temp_header (stone: STONE) is
-			-- Display a temporary header during the format processing.
-		do
-			if text_window.last_format = Current then
-				text_window.display_header ("Producing text format...")
-			else
-				text_window.display_header ("Switching to text format...")
-			end
-		end;
-
-feature 
+feature -- Formatting
 
 	format (stone: STONE) is
 			-- Show text of `stone' in `text_window'
@@ -206,13 +194,41 @@ feature
 			end
 		end;
 
+feature -- Clickables
+
 	click_list: ARRAY [CLICK_STONE]
 
-	
-feature {NONE}
 
-	title_part: STRING is do Result := "" end;
+feature {NONE} -- Implementation
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			if text_window.last_format = Current then
+				text_window.display_header ("Producing text format...")
+			else
+				text_window.display_header ("Switching to text format...")
+			end
+		end;
+
 	display_info (d: STONE) is do end
 			-- Useless here
 
-end
+feature {NONE} -- Properties
+
+	file_name (s: FILED_STONE): STRING is
+		do
+			Result := s.file_name
+		end;
+
+	command_name: STRING is
+		do
+			Result := l_Showtext
+		end;
+
+	title_part: STRING is
+		do
+			Result := ""
+		end;
+
+end -- SHOW_TEXT

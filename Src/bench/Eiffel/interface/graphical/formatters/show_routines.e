@@ -1,4 +1,9 @@
--- Command to display class routines.
+indexing
+
+	description:	
+		"Command to display class routines.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_ROUTINES 
 
@@ -13,12 +18,14 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window)
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -30,11 +37,21 @@ feature
 			Result := bm_Dark_showroutines 
 		end;
 	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showroutines end;
+	command_name: STRING is
+		do
+			Result := l_Showroutines
+		end;
 
-	title_part: STRING is do Result := l_Routines_of end;
+	title_part: STRING is
+		do
+			Result := l_Routines_of
+		end;
+
+	post_fix: STRING is "rou";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 		local
@@ -50,6 +67,4 @@ feature {NONE}
 			text_window.display_header ("Searching for routines...")
 		end;
 
-	post_fix: STRING is "rou";
-
-end
+end -- class SHOW_ROUTINES

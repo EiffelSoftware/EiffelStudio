@@ -1,4 +1,9 @@
--- Command to display class suppliers.
+indexing
+
+	description:	
+		"Command to display class suppliers.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_SUPPLIERS 
 
@@ -13,13 +18,15 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
 			init (c, a_text_window);
 			indent := 4
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -31,11 +38,21 @@ feature
 			Result := bm_Dark_showsuppliers 
 		end;
  
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showsuppliers end;
+	command_name: STRING is
+		do
+			Result := l_Showsuppliers
+		end;
 
-	title_part: STRING is do Result := l_Suppliers_of end;
+	title_part: STRING is
+		do
+			Result := l_Suppliers_of
+		end;
+
+	post_fix: STRING is "sup";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Display suppliers of `c' in tree form.
@@ -52,6 +69,4 @@ feature {NONE}
 			text_window.display_header ("Searching for suppliers...")
 		end;
 
-	post_fix: STRING is "sup";
-
-end
+end -- class SHOW_SUPPLIERS

@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Abstract notion of a formatter.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 deferred class FORMATTER 
 
 inherit
@@ -10,9 +17,17 @@ inherit
 		end;
 	SHARED_BENCH_RESOURCES;
 
-feature 
+feature -- Properties
 
 	formatted: STONE;
+
+
+	do_format: BOOLEAN;
+			-- Will we call `format' without checking if this is 
+			-- really necessary (i.e. the format and the stone
+			-- haven't changed since last call)?
+
+feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
@@ -64,18 +79,15 @@ feature
 			end
 		end;
 
-feature 
-
-	do_format: BOOLEAN;
-			-- Will we call `format' without checking if this is really
-			-- necessary (i.e. the format and the stone haven't changed
-			-- since last call)?
+feature -- Setting
 
 	set_do_format (b: BOOLEAN) is
 			-- Assign `b' to `do_format'.
 		do
 			do_format := b
 		end;
+
+feature -- Formatting
 
 	format (stone: STONE) is
 			-- Show special format of `stone' in class text `text_window',
@@ -128,11 +140,13 @@ feature
 			end
 		end;
 
-feature -- Filters
+feature -- Filters; Attributes
 
 	filtered: BOOLEAN;
 			-- Has the last action of `current' been a filter action?
 			-- (In other words, do we need to reformat the target)
+
+feature -- Filters; Implementation
 
 	filter (filtername: STRING) is
 			-- Filter the `Current' format with `filtername'.
@@ -145,32 +159,16 @@ feature -- Filters
 			end
 		end;
 
-feature {NONE}
+feature {NONE} -- Attributes
 
 	post_fix: STRING is
 			-- Postfix name of current format which generated
 			-- from the dynamic value of object (minus the show_)
 			-- so it is very important to name the format as
 			-- SHOW_<type of format>
+			-- FIXME***********************************
+			--		use of generator is not portable
 		do
--- FIXME: use of generator is not portable
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME
 			!!Result.make(0);
 			Result.append (generator);
 			Result.to_lower;
@@ -178,29 +176,8 @@ feature {NONE}
 			Result := Result.substring (6, Result.count);
 		end;
 
-	title_part: STRING is deferred end;
-
-	display_header (stone: STONE) is
-			-- Show header for 'stone'.
-		local
-			new_title: STRING
-		do
-			!!new_title.make (50);
-			new_title.append (title_part);
-			new_title.append (stone.signature);
-			text_window.display_header (new_title)
-		end;
-
-	display_temp_header (stone: STONE) is
-			-- Display a temporary header during the format processing.
-		local
-			new_title: STRING
-		do
-			!!new_title.make (50);
-			new_title.append (title_part);
-			new_title.append (stone.signature);
-			new_title.append (" ...");
-			text_window.display_header (new_title)
+	title_part: STRING is
+		deferred
 		end;
 
 	file_name (stone: STONE): STRING is
@@ -232,11 +209,6 @@ feature {NONE}
 			end;
 		end;
 
-	display_info (s: STONE) is
-			-- Display special format of for stone `s'.
-		deferred
-		end;
-
 	tabs (i: INTEGER): STRING is
 			-- String of `i' tabs, each tab is `indent' blank characters
 		local
@@ -256,4 +228,34 @@ feature {NONE}
 	indent: INTEGER
 			-- Number of blank characters in a tab
 
-end
+feature {NONE} -- Implementation
+
+	display_header (stone: STONE) is
+			-- Show header for 'stone'.
+		local
+			new_title: STRING
+		do
+			!!new_title.make (50);
+			new_title.append (title_part);
+			new_title.append (stone.signature);
+			text_window.display_header (new_title)
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		local
+			new_title: STRING
+		do
+			!!new_title.make (50);
+			new_title.append (title_part);
+			new_title.append (stone.signature);
+			new_title.append (" ...");
+			text_window.display_header (new_title)
+		end;
+
+	display_info (s: STONE) is
+			-- Display special format of for stone `s'.
+		deferred
+		end;
+
+end -- class FORMATTER

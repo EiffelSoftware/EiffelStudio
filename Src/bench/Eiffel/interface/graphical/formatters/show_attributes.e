@@ -1,5 +1,9 @@
+indexing
 
--- Command to display class attributes.
+	description:	
+		"Command to display class attributes.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_ATTRIBUTES 
 
@@ -14,29 +18,45 @@ creation
 
 	make
 	
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
+			-- Initialize the command.
 		do
 			init (c, a_text_window)
 		end;
 
+feature -- Properties
+
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Showattributes 
 		end;
  
 	dark_symbol: PIXMAP is 
+			-- Dark version of `symbol'.
 		once 
 			Result := bm_Dark_showattributes 
 		end;
  
 	
-feature {NONE}
+feature {NONE} -- Properties
 
-	command_name: STRING is do Result := l_Showattributes end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Showattributes
+		end;
 
-	title_part: STRING is do Result := l_Attributes_of end;
+	title_part: STRING is
+		do
+			Result := l_Attributes_of
+		end;
+
+	post_fix: STRING is "att";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 		local
@@ -52,6 +72,4 @@ feature {NONE}
 			text_window.display_header ("Finding attributes...")
 		end;
 
-	post_fix: STRING is "att";
-
-end
+end -- SHOW_ATTRIBUTES

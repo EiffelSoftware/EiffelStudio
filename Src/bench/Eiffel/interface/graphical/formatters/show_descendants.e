@@ -1,5 +1,9 @@
+indexing
 
--- Command to display class descendants.
+	description:	
+		"Command to display class descendants.";
+	date: "$Date$";
+	revision: "$Revision$"
 
 class SHOW_DESCENDANTS 
 
@@ -14,7 +18,7 @@ creation
 
 	make
 
-feature 
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: CLASS_TEXT) is
 		do
@@ -23,6 +27,8 @@ feature
 		ensure
 			default_indent: indent = 4
 		end;
+
+feature -- Properties
 
 	symbol: PIXMAP is 
 		once 
@@ -33,13 +39,22 @@ feature
 		once 
 			Result := bm_Dark_showdescendants 
 		end;
- 
-	
-feature {NONE}
 
-	command_name: STRING is do Result := l_Showdescendants end;
+feature {NONE} -- Properties
 
-	title_part: STRING is do Result := l_Descendants_of end;
+	command_name: STRING is
+		do
+			Result := l_Showdescendants
+		end;
+
+	title_part: STRING is
+		do
+			Result := l_Descendants_of
+		end;
+
+	post_fix: STRING is "des";
+
+feature {NONE} -- Implementation
 
 	display_info (c: CLASSC_STONE) is
 			-- Display descendants of `c' in tree form.
@@ -56,6 +71,4 @@ feature {NONE}
 			text_window.display_header ("Searching for descendants...")
 		end;
 
-	post_fix: STRING is "des";
-
-end
+end -- class SHOW_DESCENDANTS

@@ -1,3 +1,10 @@
+indexing
+
+	description:	
+		"Command to cut a slice off of an array.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class SLICE_COMMAND 
 
 inherit
@@ -10,20 +17,25 @@ inherit
 creation
 
 	make
-	
-feature 
 
-	slice_window: SLICE_W;
-			-- Associated popup window
-
-	text_window: OBJECT_TEXT;
+feature -- Initialization
 
 	make (c: COMPOSITE; a_text_window: OBJECT_TEXT) is
+			-- Initialize the command, add a button click action and create
+			-- the slice window.
 		do
 			!!slice_window.make (c, Current);
 			init (c, a_text_window);
 			add_button_click_action (3, Current, Void)
 		end;
+
+feature -- Properties
+
+	slice_window: SLICE_W;
+			-- Associated popup window
+
+	text_window: OBJECT_TEXT;
+			-- Text of the offended object.
 
 feature -- Bounds
 
@@ -52,7 +64,7 @@ feature -- Bounds
 			text_window.set_sp_bounds (l, u)
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	work (argument: ANY) is
 			-- If left mouse button was pressed -> truncate special objects
@@ -77,13 +89,18 @@ feature {NONE}
 			restore_cursors
 		end;
 	
-feature {NONE}
+feature {NONE} -- Attributes
 
 	symbol: PIXMAP is 
+			-- Pixmap for the button.
 		once 
 			Result := bm_Slice 
 		end;
  
-	command_name: STRING is do Result := l_Slice end;
+	command_name: STRING is
+			-- Name of the command.
+		do
+			Result := l_Slice
+		end;
 
 end -- class SLICE_COMMAND

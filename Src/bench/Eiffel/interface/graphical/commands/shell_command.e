@@ -15,6 +15,8 @@ inherit
 			compatible, process_feature, process_class
 		end;
 
+	SYSTEM_CONSTANTS
+
 creation
 
 	make
@@ -58,7 +60,8 @@ feature -- Update
 				-- routine text window
 			cmd_string := clone (command_shell_name);
 			if not cmd_string.empty then
-				cmd_string.replace_substring_all ("$target", fs.file_name);
+
+				replace_target(cmd_string, fs.file_name)
 				cmd_string.replace_substring_all ("$line", fs.line_number.out)
 				!! req;
 				req.execute (cmd_string);
@@ -73,12 +76,36 @@ feature -- Update
 		do
 			cmd_string := clone (command_shell_name);
 			if not cmd_string.empty then
-				cmd_string.replace_substring_all ("$target", cs.file_name);
+				replace_target(cmd_string, cs.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
 				!! req;
 				req.execute (cmd_string);
 			end
 		end
+
+	replace_target (cmd: STRING; fn:STRING) is
+		local
+			target_string: STRING
+			cwd:STRING
+			file:PLAIN_TEXT_FILE
+			code:INTEGER
+		do
+			cwd := clone (current_working_directory)
+--			change_working_directory ("EIFGEN")
+			change_working_directory (Eiffelgen)
+			!! file.make(fn)
+			if file.exists then 
+				change_working_directory (cwd)
+				target_string := fn
+			else
+				change_working_directory (cwd)
+				target_string := fn
+				target_string.prepend_character (Directory_separator)
+				target_string.prepend (current_working_directory)
+			end
+			cmd.replace_substring_all ("$target", target_string);
+		end
+
 
 feature {NONE} -- Implementation
 
@@ -118,7 +145,7 @@ feature {NONE} -- Implementation
 					end;
 					if not cmd_string.empty then
 						fs ?= tool.stone;
-						cmd_string.replace_substring_all ("$target", fs.file_name)
+						replace_target(cmd_string, fs.file_name)
 						cmd_string.replace_substring_all ("$line", line_nb.out)
 						!! req;
 						req.execute (cmd_string);
@@ -144,6 +171,30 @@ feature {NONE} -- Attributes
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
+		end;
+
+feature {NONE} -- Externals
+
+	change_working_directory (path: STRING) is
+			-- Set the current directory to `path'
+		local
+			return_code:INTEGER
+		do
+			return_code := eif_chdir (path.to_c)
+		end
+
+	current_working_directory: STRING is
+			-- Directory of current execution
+		external
+			"C | %"eif_dir.h%""
+		alias
+			"dir_current"
+		end
+
+	eif_chdir (s: ANY): INTEGER is
+			-- Set the current directory to `path'
+		external
+			"C | %"eif_dir.h%""
 		end;
 
 end -- SHELL_COMMAND

@@ -83,7 +83,8 @@ feature {NONE} -- Implementation
 				if tool.stone /= Void and then system_resources.parse_ace_after_saving.actual_value then
 					tool.parse_file
 				end
-				tool.update_save_symbol;
+				tool.synchronise_stone
+				tool.update_save_symbol
 			end
 		end
 

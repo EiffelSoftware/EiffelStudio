@@ -9,9 +9,9 @@ class
 feature -- Externals
 
 	frozen gtk_get_current_event_time: NATURAL_32 is
-			external
-				"C signature (): guint32 use <gtk/gtk.h>"
-			end
+		external
+			"C signature (): guint32 use <gtk/gtk.h>"
+		end
 
 	frozen gtk_window_has_toplevel_focus (a_window: POINTER): BOOLEAN is
 		external
@@ -43,7 +43,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"g_list_foreach ((GList*) $a_list, gtk_tree_path_free, NULL)"
+			"g_list_foreach ((GList*) $a_list, (GFunc) gtk_tree_path_free, NULL)"
 		end
 
 	frozen g_value_unset (a_value: POINTER) is
@@ -2078,9 +2078,9 @@ feature -- Externals
 		
 	frozen signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 		external
-			"C macro signature (GtkObject *, gpointer) use <gtk/gtk.h>"
+			"C inline use <gtk/gtk.h>"
 		alias
-			"gtk_signal_disconnect_by_data"
+			"g_signal_handlers_disconnect_matched ((gpointer) $a_c_object, G_SIGNAL_MATCH_DATA, 0, 0, NULL, NULL, (gpointer) (rt_int_ptr) $data)"
 		end
 
 	frozen signal_handler_block (a_object: POINTER; a_handler_id: INTEGER) is
@@ -2435,7 +2435,7 @@ feature -- Externals
 			"C signature (GtkTextIter*): gint use <gtk/gtk.h>"
 		end
 		
-	frozen gtk_clipboard_get (a_atom: INTEGER): POINTER is
+	frozen gtk_clipboard_get (a_atom: POINTER): POINTER is
 		external
 			"C signature (GdkAtom): GtkClipboard* use <gtk/gtk.h>"
 		end

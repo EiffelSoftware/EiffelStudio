@@ -357,7 +357,7 @@ feature -- Document
 		local
 			l_name: FILE_NAME
 		do
-			Result := clone (a_url)
+			Result := a_url.twin
 			Result.replace_substring_all ((create {SHARED_OBJECTS}).Shared_project.root_directory, "")
 			Result.replace_substring_all ((create {APPLICATION_CONSTANTS}).Temporary_help_directory, "")
 			Result.prune_all_leading ('/')
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 			l_cnt: INTEGER
 			l_sub_dir: DIRECTORY
 		do				
-			Result := clone (a_name)
+			Result := a_name.twin
 			l_proj_root := (create {SHARED_OBJECTS}).Shared_project.root_directory
 			if l_proj_root /= Void then
 				if Result.has_substring (l_proj_root) then
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 				Result := Result.substring (2, Result.count)
 			end
 			l_file_name.extend (Result)
-			Result := clone (l_file_name.string)
+			Result := l_file_name.string.twin
 			
 					-- With Result path create sub-directories if necessary
 			l_dir_arr := directory_array (Result)			

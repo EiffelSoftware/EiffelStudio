@@ -43,7 +43,10 @@ inherit
 			foreground_color
 		redefine
 			interface,
-			initialize
+			initialize,
+			on_left_button_down,
+			on_middle_button_down,
+			on_right_button_down
 		end
 
 	WEL_CONTROL_WINDOW
@@ -214,6 +217,30 @@ feature {NONE} -- Implementation
 				a_width,
 				a_height
 				])
+		end
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the left button is pressed.
+			-- Redefined as the button press does not set the focus automatically.
+		do
+			set_focus
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end
+
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the left button is pressed.
+			-- Redefined as the button press does not set the focus automatically.
+		do
+			set_focus
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the left button is pressed.
+			-- Redefined as the button press does not set the focus automatically.
+		do
+			set_focus
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
@@ -613,6 +640,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/25 01:27:41  rogers
+--| Redefined on_left_button_down, on_middle_button_down and on_right_button_down to set the focus to `Current'.
+--|
 --| Revision 1.38  2000/03/21 02:34:11  brendel
 --| Removed on_accelerator_command from undefine clause.
 --|

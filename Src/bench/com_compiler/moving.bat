@@ -1,8 +1,4 @@
-if exist generated rd /q /s generated
-
-mkdir generated
-
-$(ISE_EIFFEL)\wizards\com\com_wizard_cmd.exe -new_com_project -com_file idl\Eif_compiler.idl -destination generated -server -server -output_none -not_spawn_ebench
+call generating.bat
 
 del *.e
 
@@ -35,4 +31,7 @@ copy to_replace\*.e .\
 
 copy to_replace\*.cpp Clib
 
-call Clib\make_msc.bat
+cd Clib
+call make_msc.bat
+
+cd ..

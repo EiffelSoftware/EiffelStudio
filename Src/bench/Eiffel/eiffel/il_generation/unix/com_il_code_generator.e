@@ -362,6 +362,10 @@ feature -- IL Generation
 		do
 		end
 
+	generate_finalize_feature (feature_id: INTEGER) is
+		do
+		end
+
 	generate_method_impl (feature_id, parent_type_id, parent_feature_id: INTEGER) is
 			-- Generate a MethodImpl from `parent_type_id' and `parent_feature_id'
 		do

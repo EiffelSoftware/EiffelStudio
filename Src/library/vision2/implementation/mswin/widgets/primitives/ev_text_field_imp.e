@@ -125,7 +125,7 @@ feature {NONE} -- WEL Implementation
 
 	on_char (character_code, key_data: INTEGER) is
 			-- Wm_char message
-			-- Avoid an unconvenient `bip' when the user
+			-- Avoid an unconvenient `beep' when the user
 			-- tab to another control.
 		do
 			if not has_focus then

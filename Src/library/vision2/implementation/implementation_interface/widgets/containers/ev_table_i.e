@@ -123,8 +123,8 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TABLE
 
-	Default_homogeneous: BOOLEAN is True
-		-- `Current' is homgeneous by default.
+	Default_homogeneous: BOOLEAN is False
+		-- `Current' is not homogeneous by default.
 
 	Default_row_spacing: INTEGER is 0
 		-- Default row spacing of `Current'.

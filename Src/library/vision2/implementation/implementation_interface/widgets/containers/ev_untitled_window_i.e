@@ -1,8 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision untitled window, implementation interface."
+	description: "Eiffel Vision window. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +29,7 @@ feature {EV_WINDOW} -- Initialization
 			set_foreground_color (color)
 		end
 
-feature  -- Access
+feature -- Access
 
 	is_modal: BOOLEAN is
 			-- Must the window be closed before application continues?
@@ -39,26 +38,18 @@ feature  -- Access
 
 	maximum_width: INTEGER is
 			-- Maximum width that application wishes widget
-			-- instance to have
-		require
+			-- instance to have.
 		deferred
-		ensure
-			Result >= 0
 		end	
 
 	maximum_height: INTEGER is
 			-- Maximum height that application wishes widget
-			-- instance to have
-		require
+			-- instance to have.
 		deferred
-		ensure
-			Result >= 0
 		end
 
 	title: STRING is
-			-- Application name to be displayed by
-			-- the window manager
-		require
+			-- Application name to be displayed by the window manager.
 		deferred
 		end
 
@@ -68,7 +59,6 @@ feature  -- Access
 			-- widgets. Window manager will treat all widgets in
 			-- a group in some way; for example, it may move or
 			-- iconify them together
-		require
 		deferred
 		end
 
@@ -81,34 +71,16 @@ feature  -- Access
 			end
 		end
 
-	--| FIXME Why do we compare status bar and menu bar?
-	--| "like item" = EV_WIDGET and menu bar is not a widget
-	--| so the user can never check if some menu bar is even in here.
 	has (v: like item): BOOLEAN is
 			-- Does structure include `v'?
-		local
-		--|	ilist: EV_ITEM_LIST_I [EV_ITEM]
 		do
-		--|	ilist ?= v.implementation
-		--|	if (status_bar /= Void) then
-		--|		Result := ilist = status_bar.implementation
-		--|	elseif (menu_bar /= Void and then Result = False) then
-		--|		Result := ilist = menu_bar.implementation
-		--|	end
-
-		--|	if Result = False then
-				Result := item = v
-		--|	end	
+			Result := item = v or else 
+				interface.lower_bar = v or else
+				interface.upper_bar = v
 		end
     
 	menu_bar: EV_MENU_BAR is
 			-- Horizontal bar at top of client area that contains menu's.
-		deferred
-		end
-
-	status_bar: EV_WIDGET is
-			-- Horizontal bar at bottom of client area used for showing
-			-- helpful messages to the user.
 		deferred
 		end
 
@@ -183,13 +155,11 @@ feature -- Status setting
 
 	forbid_resize is
 			-- Forbid the resize of the window.
-		require
 		deferred
 		end
 
 	allow_resize is
 			-- Allow the resize of the window.
-		require
 		deferred
 		end
 
@@ -253,21 +223,6 @@ feature -- Status setting
 			void: menu_bar = Void
 		end
 
-	set_status_bar (a_bar: EV_WIDGET) is
-			-- Make `a_bar' the new status bar of the window.
-		require
-			no_status_bar_assigned: status_bar = Void
-			a_bar_not_void: a_bar /= Void
-		deferred
-		end
-
-	remove_status_bar is
-			-- Set `status_bar' to `Void'.
-		deferred
-		ensure
-			void: status_bar = Void
-		end
-
 feature -- Miscellaneous
 
 	WINDOW_POSITION_NONE: INTEGER is 0
@@ -305,12 +260,20 @@ end -- class EV_WINDOW_I
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 
-
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 18:07:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.2  2000/05/04 01:01:37  brendel
+--| Cleanup.
+--|
+--| Revision 1.9.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/05/03 00:26:14  pichery
 --| Removed useless `blocking_window'
 --|
@@ -382,7 +345,6 @@ end -- class EV_WINDOW_I
 --|
 --| Revision 1.9.2.3  1999/11/02 17:20:06  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

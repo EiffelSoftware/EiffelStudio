@@ -17,6 +17,12 @@ inherit
 
 feature {NONE} -- Implementation
 
+	parent_imp: EV_ANY_IMP is
+			-- Parent of `Current', always Void as windows cannot be parented
+		do
+			-- Return Void
+		end
+
 	is_parentable: BOOLEAN is False
 			-- Is `Current' parentable, 
 
@@ -94,7 +100,6 @@ feature {NONE} -- Implementation
 	default_width, default_height: INTEGER
 			-- Default width and height for the window if set, -1 otherwise.
 			-- (see. `gtk_window_set_default_size' for more information)
-
 
 	x_position: INTEGER is
 			-- X coordinate of `Current'

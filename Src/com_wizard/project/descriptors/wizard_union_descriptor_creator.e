@@ -53,10 +53,10 @@ feature -- Basic operations
 				c_header_file_name.append (name)
 				c_header_file_name.append (".h")
 
-			create_field_descriptors (a_type_info)
-			size_of_instance := a_type_info.type_attr.size_instance
+		--	create_field_descriptors (a_type_info)
+		--	size_of_instance := a_type_info.type_attr.size_instance
 
-			create Result.make (Current)
+		--	create Result.make (Current)
 		ensure then
 			non_void_fields: fields /= Void
 			non_void_class_name: eiffel_class_name /= Void

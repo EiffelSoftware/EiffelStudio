@@ -42,31 +42,29 @@ default
 -- Same for EV_PIXMAPABLE.
 
 cluster
-	all build2:				"$(EIFFEL_SRC)\build2"
+	all build2:				"$EIFFEL_SRC\build2"
 		exclude
 			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se";  "ve"; "base"; "test"; "CVS"
 		end
 
-	dev:		"D:\work\library"
-
-	all wel (dev):			"$(EIFFEL_SRC)\library\wel"
+	all wel:			"$EIFFEL_SRC\library\wel"
 		exclude
 			"wel_dialog.e"; "wel_modeless_dialog.e"; 
 		end
 
-	all vision2 (dev):		"$(EIFFEL_SRC)\library\vision2"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
 		include
 			"ev_button"; 
 		exclude
 			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; "ev_dialog.e"; "ev_dialog_i.e"; "ev_dialog_imp.e"; "ev_dialog_imp_common.e"; "ev_dialog_imp_modal.e"; "ev_dialog_imp_modeless.e"; "ev_sensitive.e"; "ev_sensitive_i.e"; 
 		end
 
-	all base:				"$(EIFFEL_SRC)\library\base"
+	all base:				"$EIFFEL_SRC\library\base"
 		exclude
 			"table_eiffel3"; 
 		end
 
-	all wizard_library:		"$(EIFFEL_SRC)\library\wizard"
+	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 		exclude
 			"unix"; "wizard_window.e"; "wizard_project_manager.e"; 
 		end

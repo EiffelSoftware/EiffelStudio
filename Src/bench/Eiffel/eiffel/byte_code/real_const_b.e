@@ -59,6 +59,7 @@ feature -- C code generation
 	print_register is
 			-- Print real value
 		do
+			buffer.put_string ("(EIF_REAL_64) ")
 			buffer.put_string (value)
 		end
 

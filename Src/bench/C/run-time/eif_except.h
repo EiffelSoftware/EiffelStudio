@@ -1,12 +1,23 @@
 /*
+--|----------------------------------------------------------------
+--| Eiffel runtime header file
+--| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Duplication and distribution prohibited.  May be used only with
+--| ISE Eiffel, under terms of user license.
+--| Contact Eiffel Software for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| dba Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Contact us at: http://www.eiffel.com/general/email.html
+--| Customer support: http://support.eiffel.com
+--| For latest info on our award winning products, visit:
+--|     http://www.eiffel.com
+--|----------------------------------------------------------------
+*/
 
- ######  #    #   ####   ######  #####    #####          #    #
- #        #  #   #    #  #       #    #     #            #    #
- #####     ##    #       #####   #    #     #            ######
- #         ##    #       #       #####      #     ###    #    #
- #        #  #   #    #  #       #          #     ###    #    #
- ######  #    #   ####   ######  #          #     ###    #    #
-
+/*
 	Exception handling declarations.
 */
 
@@ -120,7 +131,7 @@ RT_LNK struct eif_exception exdata;	/* Exception handling global flags */
 #define EN_OLVL		99			/* Out level: pseudo-type for execution trace */
 
 /* Exported routines (used by the generated C code or run-time) */
-RT_LNK void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
+RT_LNK void expop(struct xstack *stk);	/* Pops an execution vector off */
 #ifdef EIF_IL_DLL
 #define com_eraise(tag,num) eraise (tag,num)
 #define eraise(tag,num) RaiseException(num, 0, 0, NULL)
@@ -132,8 +143,8 @@ RT_LNK void enomem(void);										/* Raises "Out of memory" exception */
 #endif
 
 RT_LNK void eviol(EIF_CONTEXT_NOARG);			/* Eiffel violation of last assertion */
-RT_LNK struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
-RT_LNK void exinv(EIF_CONTEXT register2 char *tag, register3 char *object);			/* Invariant record */
+RT_LNK struct ex_vect *exret(EIF_CONTEXT struct ex_vect *rout_vect);	/* Retries execution of routine */
+RT_LNK void exinv(EIF_CONTEXT char *tag, char *object);			/* Invariant record */
 RT_LNK void exasrt(EIF_CONTEXT char *tag, int type);			/* Assertion record */
 RT_LNK void exfail(EIF_CONTEXT_NOARG);			/* Signals: reached end of a rescue clause */
 RT_LNK void eif_panic(EIF_CONTEXT char *msg);			/* Run-time raised panic */
@@ -141,7 +152,7 @@ RT_LNK void fatal_error(EIF_CONTEXT char *msg);			/* Run-time raised fatal error
 RT_LNK void exok(EIF_CONTEXT_NOARG);				/* Resumption has been successful */
 RT_LNK void exclear(EIF_CONTEXT_NOARG);				/* Clears the exception stack */
 RT_LNK void esfail(EIF_CONTEXT_NOARG);			/* Eiffel system failure */
-RT_LNK void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
+RT_LNK void exresc(EIF_CONTEXT struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
 
 #ifndef WORKBENCH
 RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */

@@ -10,6 +10,16 @@ deferred class
 inherit
 	EV_ITEM_HOLDER_I
 
+Feature -- Status report
+
+	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'.
+		require
+			exists: not destroyed
+		deferred
+		end
+
 end -- class EV_TREE_ITEM_HOLDER_I
 
 --!----------------------------------------------------------------

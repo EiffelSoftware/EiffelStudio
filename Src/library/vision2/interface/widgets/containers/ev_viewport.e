@@ -29,6 +29,11 @@ inherit
 			make_for_test
 		end
 
+	DOUBLE_MATH
+		undefine
+			default_create
+		end
+
 create
 	default_create,
 	make_for_test
@@ -39,12 +44,33 @@ feature {NONE} -- Initialization
 			-- Create and perform tests.
 		local
 			pixmap: EV_PIXMAP
+			rotate_timer: EV_TIMEOUT
 		do
 			default_create
 			create pixmap.make_for_test
 			extend (pixmap)
 			pixmap.set_minimum_width (pixmap.width)
 			pixmap.set_minimum_height (pixmap.height)
+			create rotate_timer.make_with_interval (1000 // 35)
+			rotate_timer.actions.extend (~on_test_timer (rotate_timer))
+		end
+
+	on_test_timer (t: EV_TIMEOUT) is
+			-- Move client area around.
+		local
+			cw, ch: INTEGER
+		do
+			cw := (item_width - client_width).max (0) // 2
+			ch := (item_height - client_height).max (0) // 2
+			if cw > 0 or ch > 0 then
+				set_offset (
+					(sine (t.count / 50 * Pi * 2) * cw).rounded + cw,
+					(cosine (t.count / 50 * Pi * 2) * ch).rounded + ch
+				)
+			end
+			if t.count = 50 then
+				t.reset_count
+			end
 		end
 
 feature -- Access
@@ -86,6 +112,21 @@ feature -- Element change
 		do
 			implementation.set_y_offset (a_y)
 		ensure
+			assigned: y_offset = a_y
+		end
+
+	set_offset (an_x, a_y: INTEGER) is
+			-- Assign `an_x' to `x_offset'.
+			-- Assign `a_y' to `y_offset'.
+		require
+			an_x_within_bounds: an_x >= 0 and then
+				an_x <= (item_width - client_width)
+			a_y_within_bounds: a_y >= 0 and then
+				a_y <= (item_height - client_height)
+		do
+			implementation.set_offset (an_x, a_y)
+		ensure
+			assigned: x_offset = an_x
 			assigned: y_offset = a_y
 		end
 
@@ -158,6 +199,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/24 15:59:59  brendel
+--| Coolified make_for_test.
+--|
 --| Revision 1.11  2000/04/22 00:05:22  brendel
 --| Fixed contract suppport features.
 --|

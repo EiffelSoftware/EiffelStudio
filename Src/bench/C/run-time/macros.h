@@ -216,6 +216,7 @@
 
 /* Other macros used to handle specific needs:
  *  RTMS(x,y) creates an Eiffel string from a C manifest string x, length y.
+ *  RTMA(c,d,i,n) creates an Eiffel ARRAY[ANY] (for strip).
  *  RTXA(x,y) copies 'x' into expanded 'y' with exception if 'x' is void.
  *  RTEQ(x,y) returns true if 'x' = 'y'
  *  RTIE(x) returns true if 'x' is an expanded object
@@ -223,6 +224,7 @@
  *  RTEO(x) returns the address of the enclosing object for expanded 'x'
  */
 #define	RTMS(s) makestr(s,strlen(s))
+#define	RTMA(c,d,i,n) createarr(c,d,i,n);
 #define RTXA(x,y) xcopy(x, y)
 #define RTEQ(x,y) xequal(x, y)
 #define RTIE(x) ((x) != (char *) 0 ? HEADER(x)->ov_flags & EO_EXP : 0)

@@ -22,10 +22,10 @@ wkoptimize: ""
 optimize: "-O2"
 
 -- compiler flags
-ccflags: "-c -g0 -w- -DNONAMELESSUNION"
-mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS"
-cppflags: "-c -g0 -w- -P -DNONAMELESSUNION"
-mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -DEIF_THREADS"
+ccflags: "-c -g0 -w- -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS $(ISE_CFLAGS)"
+cppflags: "-c -g0 -w- -P -DNONAMELESSUNION $(ISE_CFLAGS)"
+mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -DEIF_THREADS $(ISE_CFLAGS)"
 shared_flags: "-DEIF_USE_DLL"
 il_flags: "-tWM -DEIF_IL_DLL"
 
@@ -54,7 +54,7 @@ shared_rt_suffix: ".lib"
 -- libraries
 libs: "CW32 IMPORT32 OLE2w32"
 mtlibs: "CW32MT IMPORT32 OLE2w32"
-sharedlibs: "CW32.lib IMPORT32.lib OLE2w32.lib"
+sharedlibs: "CW32.lib IMPORT32.lib OLE2w32.lib $(ISE_SHAREDLIBS)"
 
 mkdep: ""
 

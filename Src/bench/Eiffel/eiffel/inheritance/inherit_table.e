@@ -1625,8 +1625,7 @@ end;
 			if feat.is_external then
 					-- Track new externals introduced in the class
 				external_i ?= feat;
-				new_externals.start;
-				new_externals.put_right (external_i.external_name);
+				new_externals.put_front (external_i.external_name);
 			end;
  
 				-- Look for a previous definition of the feature

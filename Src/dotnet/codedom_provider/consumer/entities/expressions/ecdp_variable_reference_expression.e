@@ -31,7 +31,7 @@ feature -- Access
 			-- | Result := "`variable_name'"
 			-- Eiffel code of variable reference expression
 		do
-			create Result.make_from_string (Eiffel_types.find_variable_name (variable_name))
+			create Result.make_from_string (Resolver.eiffel_entity_name (variable_name))
 		end
 		
 feature -- Status Report
@@ -45,7 +45,7 @@ feature -- Status Report
 	type: TYPE is
 			-- Type
 		do
-			Result := referenced_type_from_name (Eiffel_types.dotnet_type_name (variable_name))
+			Result := referenced_type_from_name (Resolver.dotnet_type_name (variable_name))
 		end
 
 feature -- Status Setting

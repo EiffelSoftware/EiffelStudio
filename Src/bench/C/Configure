@@ -137,7 +137,7 @@ gcc=''
 grep=''
 inews=''
 ksh=''
-ldsharedflags='-shared -o'
+ldsharedflags=''
 less=''
 line=''
 lint=''
@@ -6573,6 +6573,7 @@ i_tmvlsyss='$i_tmvlsyss'
 abortsig='$abortsig'
 signal_t='$signal_t'
 d_bsdjmp='$d_bsdjmp'
+#Check value for next 1
 d_bsdsig='undef'
 d_keepsig='$d_keepsig'
 d_siglist='$d_siglist'
@@ -6606,25 +6607,27 @@ spitshell='$spitshell'
 
 #Compiler/Preprocessor
 add_log='$add_log'
+binary_format='$binary_format'
 cc='$cc'
 ccflags='$ccflags'
 cpp='$cpp'
 cppflags='$cppflags'
 cpp_stuff='$cpp_stuff'
 defvoidused='$defvoidused'
-#Check value for next 2
-eif_win32='undef'
-eif_windows='undef'
+#Check value for next 3
+eif_sgi='$eif_sgi'
+eif_win32='$eif_win32'
+eif_windows='$eif_windows'
 Mcc='$Mcc'
 #Check value for next 2
-mtccflags='$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS'
-mtcppflags='$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS'
-optimize='$optimize'
-sharedccflags='$ccflags'
+mtccflags="\$ccflags -DEIF_THREADS -DEIF_POSIX_THREADS"
+mtcppflags="\$cppflags -DEIF_THREADS -DEIF_POSIX_THREADS"
+optimize="$optimize \$binary_format \$platform_arch"
+platform_arch='$platform_arch'
 voidflags='$voidflags'
 #Check value for next 1
-warning_level='-Wall'
-wkoptimize='$optimize'
+warning_level='$warning_level'
+wkoptimize="$wkoptimize \$binary_format \$platform_arch"
 
 #Makefiles
 ar='ar'
@@ -6633,14 +6636,15 @@ concurrent_prefix='c'
 cp='$cp'
 eiflib='finalized'
 ld='ld'
-ldsharedflags='$ldsharedflags'
-ldflags='$ldflags'
+ldflags="$ldflags \$binary_format \$platform_arch"
+ldsharedflags="\$ldflags -shared -o"
 libs='$libs'
 ln='$ln'
 make='$make'
 mkdep='$mkdep'
-mtldsharedflags='$ldsharedflags'
-mtlibs='$libs'
+mtldflags="\$ldflags"
+mtldsharedflags="\$ldsharedflags"
+mtlibs="\$libs"
 mt_prefix='mt'
 mv='$mv'
 prefix='lib'

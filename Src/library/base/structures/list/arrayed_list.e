@@ -515,22 +515,21 @@ feature -- Removal
 feature -- Duplication
 
 	copy (other: like Current) is
+		local
+			old_area: like area
 		do
-			if capacity < other.count then
-				make_area (other.count)
-				 	--lower for arrayed list always 1
-				lower := 1
-				upper := other.count
-			else
-				make_area (capacity)
-				 	--lower for arrayed list always 1
-				lower := 1
-				upper := capacity
+			if other /= Current then
+				old_area := area
+				standard_copy (other)
+				if old_area = Void or else old_area.count < area.count then
+					area := standard_clone (area)
+				else
+					area := old_area
+					upper := area.count
+					subcopy (other, 1, count, 1)
+				end
 			end
-			count := other.count
-			object_comparison := other.object_comparison
-			subcopy (other, 1, other.count, 1)
-		end;
+		end
 
 	duplicate (n: INTEGER): like Current is
 			-- Copy of sub-list beginning at current position

@@ -159,6 +159,24 @@ feature -- Status report
 			color_int := cwin_send_message_result (item, Lvm_getbkcolor, 0, 0)
 			create Result.make_by_color (color_int)
 		end
+		
+	get_text_background_color: WEL_COLOR_REF is
+			-- `Result' is background color of item text.
+		local
+			color_int: INTEGER
+		do
+			color_int := cwin_send_message_result (item, Lvm_gettextbkcolor, 0, 0)
+			create Result.make_by_color (color_int)
+		end
+		
+	get_text_foreground_color: WEL_COLOR_REF is
+			-- `Result' is foreground color for item text.
+		local
+			color_int: INTEGER
+		do
+			color_int := cwin_send_message_result (item, Lvm_gettextcolor, 0, 0)
+			create Result.make_by_color (color_int)
+		end
 
 	get_column_width (column: INTEGER): INTEGER is
 			-- Width of the zero-based `index'-th item.
@@ -412,8 +430,21 @@ feature -- Status setting
 		end
 
 	set_background_color (a_color: WEL_COLOR_REF) is
+			-- Assign `a_color' to background of `Current'.
 		do
 			cwin_send_message (item, Lvm_setbkcolor, 0, a_color.item)
+		end
+		
+	set_text_background_color (a_color: WEL_COLOR_REF) is
+			-- Assign `a_color' to background color of item text.
+		do
+			cwin_send_message (item, Lvm_settextbkcolor, 0, a_color.item)
+		end
+		
+	set_text_foreground_color (a_color: WEL_COLOR_REF) is
+			-- Assign `a_color' to foreground color for item text.
+		do
+			cwin_send_message (item, Lvm_settextcolor, 0, a_color.item)
 		end
 
 feature -- Element change

@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 6  DESIGN BY CONTRACT AND ASSERTIONS</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-06.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-08.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-445192"></A>6  <A NAME="marker-445191"></A>DESIGN BY CONTRACT AND ASSERTIONS</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445193"></A>If classes are to deserve their definition as abstract data type implementations, they must be known not just by the available operations, but also by the formal properties of these operations, which did not yet appear in the preceding example.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-445194"></A>The role of assertions</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-445195"></A>Eiffel encourages software developers to express formal properties of classes by writing <SPAN CLASS="ff-bold">
+assertions</SPAN>
+, which may in particular appear in the following roles:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-445197"></A>Routine <SPAN CLASS="ff-bold">
+preconditions</SPAN>
+<A NAME="marker-445196"></A> express the requirements that clients must satisfy whenever they call a routine. For example the designer of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ may wish to permit a withdrawal operation only if it keeps the account's balance at or above the minimum. Preconditions are introduced by the keyword <SPAN CLASS="ee-keyword">
+require</SPAN>
+. </LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-445199"></A>Routine <SPAN CLASS="ff-bold">
+postconditions</SPAN>
+<A NAME="marker-445198"></A>, introduced by the keyword <SPAN CLASS="ee-keyword">
+ensure</SPAN>
+, express conditions that the routine (the supplier) guarantees on return, if the precondition was satisfied on entry. </LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-445203"></A>A class <SPAN CLASS="ff-bold">
+invariant</SPAN>
+<A NAME="marker-445200"></A> mu<A NAME="marker-445201"></A>st be satisfied by every <A NAME="marker-445202"></A>instance of the class whenever the instance is externally accessible: after creation, and after any call to an exported routine of the class. The invariant appears in a clause introduced by the keyword <SPAN CLASS="ee-keyword">
+invariant</SPAN>
+<A NAME="marker-445204"></A>, and represents a general consistency constraint imposed on all routines of the class. </LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-445250"></A>With appropriate assertions, the class <SPAN CLASS="ee-text">
+ACCOUNT </SPAN>
+becomes:
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452621"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ ACCOUNT <SPAN CLASS="ee-keyword">
+create</SPAN>
+<A NAME="marker-452620"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452622"></A>&nbsp;&nbsp;&nbsp;&nbsp;make
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452632"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-452633"></A>&nbsp;&nbsp;&nbsp;&nbsp;... Attributes as before:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-text">
+balance</SPAN>
+, <SPAN CLASS="ee-text">
+minimum_balance</SPAN>
+, <SPAN CLASS="ee-text">
+owner</SPAN>
+, <SPAN CLASS="ee-text">
+open</SPAN>
+ ... 
+<P CLASS="ee-text">
+<A NAME="pgfId-452635"></A>&nbsp;&nbsp;&nbsp;&nbsp;deposit (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-452636"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Deposit sum into the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-452638"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+<A NAME="marker-452637"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452639"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &gt;= 0
+<P CLASS="ee-text">
+<A NAME="pgfId-452640"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452641"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add (sum)
+<P CLASS="ee-text">
+<A NAME="pgfId-452643"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+<A NAME="marker-452642"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452645"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance = <SPAN CLASS="ee-keyword">
+old</SPAN>
+<A NAME="marker-452644"></A> balance + sum
+<P CLASS="ee-text">
+<A NAME="pgfId-452675"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445225"></A>&nbsp;&nbsp;&nbsp;&nbsp;withdraw (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445226"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Withdraw sum from the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-445227"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452680"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &gt;= 0
+<P CLASS="ee-text">
+<A NAME="pgfId-445228"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &lt;= balance - minimum_balance
+<P CLASS="ee-text">
+<A NAME="pgfId-445230"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445231"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add (-sum)
+<P CLASS="ee-text">
+<A NAME="pgfId-445232"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445233"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance = <SPAN CLASS="ee-keyword">
+old</SPAN>
+ balance - sum
+<P CLASS="ee-text">
+<A NAME="pgfId-452687"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445234"></A>&nbsp;&nbsp;&nbsp;&nbsp;may_withdraw ...  -- As before
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-459495"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ {NONE}
+<P CLASS="ee-text">
+<A NAME="pgfId-459496"></A>&nbsp;&nbsp;&nbsp;&nbsp;add ... -- As before
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445238"></A>&nbsp;&nbsp;&nbsp;&nbsp;make (initial: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445240"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&

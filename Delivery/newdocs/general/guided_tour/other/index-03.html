@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 2  COPYING THE EXAMPLE FILES</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-02.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-04.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-333608"></A>2  <A NAME="98317"></A>COPYING THE EXAMPLE FILES</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-333603"></A>If you are using Eiffel on a personal computer under Windows, you can work directly on the installation directory and don't need to make copies of files as per the present section. Skip directly to the next section, <A HREF="index-04.html#39848" CLASS="XRef"><SPAN CLASS="ww-crossref">
+3</SPAN>
+</A>.
+<P CLASS="mm-celltext">
+<A NAME="pgfId-333607"></A><SPAN CLASS="ff-italics">
+Do</SPAN>
+ read the present section and apply its instructions if you work under Unix, or may have to share the Eiffel installation with other users, do not have write permissions on the installation, or want to keep the installation unchanged.
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-4305"></A>If you are going to work on a copy, choose or create a directory of your own; let's call it <SPAN CLASS="ee-text">
+YOURDIR </SPAN>
+for the rest of the discussion.
+<P CLASS="nn-normal">
+<A NAME="pgfId-266218"></A>To copy all the files of the example to <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-2667"></A>On Windows, open a Windows Explorer, go to <SPAN CLASS="ee-keyword">
+$ISE_EIFFEL&#92;examples&#92;bench&#92;tour</SPAN>
+,  select all the files in that directory, and drag-and-drop them to <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+. </LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-2683"></A>On Unix execute the shell command</LI>
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-2682"></A><SPAN CLASS="ee-keyword">
+cp $ISE_EIFFEL/examples/bench/tour/*   </SPAN>
+<SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-264346"></A> On <A NAME="marker-264339"></A>VMS execute the command</LI>
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-264345"></A><SPAN CLASS="ee-keyword">
+copy $ISE_EIFFEL:[examples.bench.tour]*.*   </SPAN>
+<SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-264347"></A>Once you have compiled the example under EiffelStudio, relying on precompiled EiffelBase library (the default), and without optimization, the contents of <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+ will take up less than one megabyte, including information on diagrams and metrics.
+<P CLASS="nn-normal">
+<A NAME="pgfId-487087"></A>The final executable generated through &quot;<SPAN CLASS="ff-italics">
+finalization</SPAN>
+&quot; (optimized compilation) will take only about 300 kilobytes.
+<P CLASS="nn-normal">
+<A NAME="pgfId-266202"></A>Without precompiled EiffelBase you would need about 3.5 megabytes, plus about 25 megabytes of generated C code and auxiliary files. The executable in that case will take up about 250 kilobytes,
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-02.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-04.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

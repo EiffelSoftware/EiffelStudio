@@ -315,7 +315,7 @@ LI.ll-bullnum {
 	margin-bottom: 5pt;
 	margin-right: 56.5t;
 	margin-left: 17pt;
-	/* font-size: 70%; */
+	font-size: 70%;
 	font-weight: Regular;
 	font-style: Regular;
 	color: #000000;
@@ -330,7 +330,7 @@ LI.mm-bull {
 	margin-bottom: 5pt;
 	margin-right: 5.7pt;
 	margin-left: 28.3pt;
-	/* font-size: 70%; */
+	font-size: 70%;
 	font-weight: Regular;
 	font-style: Regular;
 	color: #000000;
@@ -346,7 +346,7 @@ LI.mm-bullnum {
 	margin-bottom: 4pt;
 	margin-right: 5.7pt;
 	margin-left: 28.3pt;
-	/* font-size: 70%; */
+	font-size: 70%;
 	font-weight: Regular;
 	font-style: Regular;
 	color: #000000;
@@ -756,5 +756,5 @@ SPAN.ww-locref {
 }
 
 UL {
-	font-size: 100%;
+	font-size: 70%;
 }

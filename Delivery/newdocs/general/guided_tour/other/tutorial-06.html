@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 5  THE STATIC PICTURE: SYSTEM ORGANIZATION</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-05.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-07.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-514111"></A>5  <A NAME="12868"></A>THE STATIC PICTURE: SYSTEM ORGANIZATION</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-514112"></A>We now look at the overall organization of Eiffel software.
+<P CLASS="jj-small">
+<A NAME="pgfId-555577"></A>References to ISE-originated libraries appearing in subsequent examples include: <SPAN CLASS="ff-bold">
+EiffelBase</SPAN>
+, the fundamental open-source library covering data structures and algorithms; the <SPAN CLASS="ff-bold">
+kernel library</SPAN>
+, a subset of EiffelBase covering the most basic notions such as arrays and strings; and <SPAN CLASS="ff-bold">
+EiffelVision 2</SPAN>
+, an advanced graphics and GUI library providing full compatibility across platforms (Unix, Windows, VMS) with native look-and-feel on each.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514113"></A>Systems</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514114"></A>An Eiffel system is a collection of classes, one of which is designated as the root class. One of the features of the root class, which must be one of its creation procedures, is designated as the root procedure.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514115"></A>To execute such a system is to create an instance of the root class (an object created according to the class description) and to execute the root procedure. In anything more significant than &quot;Hello World&quot; systems, this will create new objects and apply features to them, in turn triggering further creations and feature calls.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514116"></A>For the system to make sense, it must contains all the classes on which the root <SPAN CLASS="ff-bold">
+depends</SPAN>
+ directly or indirectly. A class <SPAN CLASS="ee-text">
+B </SPAN>
+depends on a class <SPAN CLASS="ee-text">
+A </SPAN>
+if it is either a <SPAN CLASS="ff-bold">
+client</SPAN>
+ of <SPAN CLASS="ee-text">
+A</SPAN>
+, that is to say uses objects of type <SPAN CLASS="ee-text">
+A</SPAN>
+, or an <SPAN CLASS="ff-bold">
+heir</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+of <SPAN CLASS="ee-text">
+A</SPAN>
+, that is to say extends or specializes <SPAN CLASS="ee-text">
+A</SPAN>
+. (These two relations, client and inheritance, are covered below.)
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514121"></A>Classes</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514122"></A>The notion of class is central to the Eiffel approach. A class is the description of a type of run-time data structures (<SPAN CLASS="ff-italics">
+objects</SPAN>
+), characterized by common operations (<SPAN CLASS="ff-italics">
+features</SPAN>
+) and properties. Examples of classes include:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514123"></A>In a banking system, a class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ may have features such as <SPAN CLASS="ee-text">
+deposit</SPAN>
+, adding a certain amount to an account, <SPAN CLASS="ee-text">
+all_deposits</SPAN>
+, yielding the list of deposits since the account's opening, and <SPAN CLASS="ee-text">
+balance</SPAN>
+, yielding the current balance, with properties stating that <SPAN CLASS="ee-text">
+deposit</SPAN>
+ must add an element to the <SPAN CLASS="ee-text">
+all_deposits </SPAN>
+list and update <SPAN CLASS="ee-text">
+balance </SPAN>
+by adding<SPAN CLASS="ee-text">
+ </SPAN>
+the sum deposited, and that the current value of <SPAN CLASS="ee-text">
+balance</SPAN>
+ must be consistent with the lists of deposits and withdrawals.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514124"></A>A class <SPAN CLASS="ee-text">
+COMMAND</SPAN>
+ in an interactive system of any kind may have features such as <SPAN CLASS="ee-text">
+execute</SPAN>
+ and <SPAN CLASS="ee-text">
+undo</SPAN>
+, as well as a feature <SPAN CLASS="ee-text">
+undoable </SPAN>
+which indicates whether a command can be undone, with the property that <SPAN CLASS="ee-text">
+undo</SPAN>
+ is only applicable if <SPAN CLASS="ee-text">
+undoable</SPAN>
+ yields the value true.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514125"></A>A class <SPAN CLASS="ee-text">
+LINKED_LIST</SPAN>
+ may have features such as <SPAN CLASS="ee-text">
+put</SPAN>
+, which adds an element to a list, and <SPAN CLASS="ee-text">
+count</SPAN>
+, yielding the number of elements in the list, with properties stating that <SPAN CLASS="ee-text">
+put</SPAN>
+ increases <SPAN CLASS="ee-text">
+count</SPAN>
+ by one and that <SPAN CLASS="ee-text">
+count</SPAN>
+ is always non-negative.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514126"></A>We may characterize the first of these examples as an analysis class, directly modeling objects from the application domain; the second one as a design class, describing a high-level solution; and the third as an implementation class, reused whenever possible from a library such as EiffelBase. In Eiffel, however, there is no strict distinction between these categories; it is part of the approach's seamlessness that the same notion of class, and the associated concepts, may be used at all levels of the software development process.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514127"></A>Class relations</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514128"></A>Two relations may exist between classes:
+<UL>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514129"></A>You can define a class <SPAN CLASS="ee-text">
+C </SPAN>
+as a <SPAN CLASS="ff-bold">
+client</SPAN>
+ of a class <SPAN CLASS="ee-text">
+A </SPAN>
+to enable the features of <SPAN CLASS="ee-text">
+C </SPAN>
+to rely on objects of type <SPAN CLASS="ee-text">
+A</SPAN>
+.</LI>
+<LI CLASS="ll-bull">
+<A NAME="pgfId-514130"></A>You may define a class <SPAN CLASS="ee-text">
+B </SPAN>
+as an <SPAN CLASS="ff-bold">
+heir</SPAN>
+ of a class <SPAN CLASS="ee-text">
+A </SPAN>
+to provide <SPAN CLASS="ee-text">
+B</SPAN>
+ with all the features and properties of <SPAN CLASS="ee-text">
+A</SPAN>
+, letting <SPAN CLASS="ee-text">
+B</SPAN>
+ add its own features and properties and modify some of the inherited features if appropriate.</LI>
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-514131"></A><A NAME="INHERITANCE AND CLIENT TERMS"></A>If <SPAN CLASS="ee-text">
+C </SPAN>
+is a client of <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+A </SPAN>
+is a <SPAN CLASS="ff-bold">
+supplier</SPAN>
+ of <SPAN CLASS="ee-text">
+C</SPAN>
+. If <SPAN CLASS="ee-text">
+B </SPAN>
+is an heir of <SPAN CLASS="ee-text">
+A</SPAN>
+, <SPAN CLASS="ee-text">
+A </SPAN>
+is a <SPAN CLASS="ff-bold">
+parent</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+of <SPAN CLASS="ee-text">
+B</SPAN>
+. A <SPAN CLASS="ff-bold">
+descendant</SPAN>
+ of <SPAN CLASS="ee-text">
+A</SPAN>
+ is either <SPAN CLASS="ee-text">
+A</SPAN>
+ itself or, recursively, a descendant of an heir of <SPAN CLASS="ee-text">
+A</SPAN>
+; in more informal terms a descendant is a direct or indirect heir, or the class itself. To exclude <SPAN CLASS="ee-text">
+A</SPAN>
+ itself we talk of <SPAN CLASS="ff-bold">
+proper descendant</SPAN>
+. In the reverse direction the terms are <SPAN CLASS="ff-bold">
+ancestor</SPAN>
+ and <SPAN CLASS="ff-bold">
+proper ancestor</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514132"></A>The client relation can be cyclic; an example involving a cycle would be classes <SPAN CLASS="ee-text">
+PERSON</SPAN>
+ and <SPAN CLASS="ee-text">
+HOUSE</SPAN>
+, modeling the corresponding informal everyday &quot;object&quot; types and expressing the properties that every person has a home and every home has an architect. The inheritance (heir) relation may not include any cycle.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514133"></A>In modeling terms, client roughly represents the relation &quot;has&quot; and heir roughly represents &quot;is&quot;. For example we may use Eiffel classes to model a certain system and express that every child <SPAN CLASS="ee-text">
+has</SPAN>
+ a birth date (client relation) and <SPAN CLASS="ee-text">
+is</SPAN>
+ a person (inheritance).
+<P CLASS="nn-normal">
+<A NAME="pgfId-514134"></A>Distinctive of Eiffel is the rule that classes can only be connected through these two relations. This excludes the behind-the-scenes dependencies often found in other approaches, such as the use of global variables, which jeopardize the modularity of a system. Only through a strict policy of limited and explicit inter-class relations can we achieve the goals of reusability and extendibility.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514136"></A><A NAME="82680"></A>The global inheritance structure</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514137"></A>An Eiffel class that you write does not come into a vacuum but fits in a preordained structure, shown in the figure and involving two library classes: <SPAN CLASS="ee-text">
+ANY</SPAN>
+ and <SPAN CLASS="ee-text">
+NONE</SPAN>
+.
+<DIV>
+<MAP NAME="tutorial-4">
+</MAP>
+<p>
+<ul>
+<IMG SRC="tutorial-4.png" USEMAP="#tutorial-4">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-514187"></A>Any class that does not explicitly inherit from another is considered to inherit from <SPAN CLASS="ee-text">
+ANY</SPAN>
+, so that every class is a descendant, direct or indirect, of <SPAN CLASS="ee-text">
+ANY</SPAN>
+. <SPAN CLASS="ee-text">
+ANY </SPAN>
+introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (page <A HREF="tutorial-07.html#12485" CLASS="XRef"><SPAN CLASS="ww-crossref">
+28</SPAN>
+</A>) and default input-output. The procedure <SPAN CLASS="ee-text">
+print</SPAN>
+ used in the first version of our &quot;Hello World&quot; (page <A HREF="tutorial-05.html#80381" CLASS="XRef"><SPAN CLASS="ww-crossref">
+11</SPAN>
+</A>) comes from <SPAN CLASS="ee-text">
+ANY</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514192"></A><SPAN CLASS="ee-text">
+NONE</SPAN>
+ inherits from any class that has no explicit heir. Since inheritance has no cycles, <SPAN CLASS="ee-text">
+NONE</SPAN>
+ cannot have proper descendants. This makes it useful, as we will see, to specify non-exported features, and to denote the type of void values. Unlike <SPAN CLASS="ee-text">
+ANY</SPAN>
+, class <SPAN CLASS="ee-text">
+NONE</SPAN>
+ doesn't have an actual class text; instead, it's a convenient fiction.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514194"></A><A NAME="29888"></A>Clusters</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514195"></A>Classes are the only form of module in Eiffel. As will be explained in more detail, they also provide the basis for the only form of type. This module-type identification is at the heart of object technology and of the fundamental simplicity of the Eiffel method.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514197"></A>Above classes, you will find the concept of cluster. A cluster is a group of related classes. Clusters are a property of the method, enabling managers to organize the development into teams. As we have already seen (section <A HREF="tutorial-04.html#41726" CLASS="XRef"><SPAN CLASS="ww-crossref">
+3</SPAN>
+</A>) they also play a central role in the lifecycle model. Clusters are an organizational concept, not a form of module, and do not require an Eiffel language construct. 
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514202"></A><A NAME="91180"></A>External software</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514203"></A>The subsequent sections will show how to write Eiffel classes with their features. In an Eiffel system, however, not everything has to be written in Eiffel: some features may be <SPAN CLASS="ff-bold">
+external</SPAN>
+, coming from languages such as C, C++, Java, C# Fortran and others. For example a feature declaration may appear (in lieu of the forms seen later) as
+<p><ul><table bgcolor="#cfffcf" width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-514206"></A>file_status (  filedesc: INTEGER): INTEGER <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-514207"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Status indicator for <SPAN CLASS="ee-text">
+filedesc</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514208"></A>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+external</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514209"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+C<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+ <SPAN CLASS="ee-keyword">
+alias </SPAN>
+<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+_fstat<SPAN CLASS="ee-comment">
+&quot;</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-514210"></A>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+end</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-514211"></A>to indicate that it is actually an encapsulation of a C function whose original name is <SPAN CLASS="ee-text">
+_  fstat</SPAN>
+. The <SPAN CLASS="ee-keyword">
+alias</SPAN>
+ clause is optional, but here it is needed because the C name, starting with an underscore, is not valid as an Eiffel identifier.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514212"></A>Similar syntax exists to interface with C++ classes. ISE Eiffel includes a tool called <SPAN CLASS="ff-italics">
+Legacy++</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+which will automatically produce, from a C++ class, an Eiffel class that encapsulates its facilities, making them available to the rest of the Eiffel software as <SPAN CLASS="ff-italics">
+bona fide</SPAN>
+<SPAN CLASS="ee-text">
+ </SPAN>
+Eiffel features.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514213"></A>These mechanisms illustrate one of the roles of Eiffel: as an system architecturing and software composition tool, used at the highest level to produce systems with robust, flexible structures ready for extendibility, reusability and maintainability. In these structures not everything must be written in the Eiffel language: existing software elements and library components can play their part, with the structuring capabilities of Eiffel (classes, information hiding, inheritance, clusters, contracts and other techniques seen in this presentation) serving as the overall wrapping mechanism.
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-05.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-07.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

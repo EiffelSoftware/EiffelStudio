@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 3  STARTING EIFFELSTUDIO AND OPENING A PROJECT</TITLE>
+</HEAD>
+<!--------------------------------------------------->
+<SCRIPT LANGUAGE="Javascript">
+	// Default values
+	var oNewWindow = 0;
+
+	function ImageClick( oImage )
+	{
+		if( oNewWindow == 0 || oNewWindow.closed )
+		{
+			oNewWindow = window.open (oImage.src,"", "status=no, toolbar=no, menubar=no, location=no, resizable=yes");
+		}
+		else
+		{
+			oNewWindow.location = oImage.src;
+		}
+	}
+</SCRIPT>
+<!--------------------------------------------------->
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-03.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-05.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-264352"></A>3  <A NAME="39848"></A>STARTING EIFFELSTUDIO AND <A NAME="marker-264349"></A>OPENING A PROJECT<A NAME="marker-329012"></A><A NAME="marker-264351"></A></H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-333630"></A>In the rest of this Tour <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+ denotes the directory where the example resides (the original, <SPAN CLASS="ee-keyword">
+$ISE_EIFFEL  /  examples  /  bench  /  tour</SPAN>
+, or a copy). Launching will use the operating system's mechanism for starting a program, so we look separately at Windows and at Unix/VMS.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-266121"></A>Launching EiffelStudio under Windows</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-264383"></A>On <A NAME="marker-264382"></A>Windows, you can launch EiffelStudio from the Start Menu under
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="mm-celltext">
+<A NAME="pgfId-437568"></A><SPAN CLASS="ee-keyword">
+Programs </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ ISE Eiffel Version </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ EiffelStudio</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-264405"></A>where <SPAN CLASS="ff-italics">
+Version</SPAN>
+ is the version number, e.g. 5.0. Alternatively, you can double-click on the icon that the installation procedure will have added to your desktop (if you have selected that option during installation).
+<P CLASS="nn-normal">
+<A NAME="pgfId-265924"></A>If this is the first time you are using EiffelStudio, you may get a dialog asking for an unlock code or inviting you to register the product. Please <SPAN CLASS="ww-crossref">
+<A HREF="mailto:sales@eiffel.com" CLASS="URL">contact ISE</A></SPAN>
+ for registration and purchase information.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-266128"></A>Launching EiffelStudio under Unix or VMS</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-266134"></A>To launch EiffelStudio on <A NAME="marker-266132"></A>Unix or <A NAME="marker-266133"></A>VMS, change directory to <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+<SPAN CLASS="ee-keyword">
+ </SPAN>
+and, from the command line, type
+<p><ul><table bgcolor="#cfffcf" width="79%" BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-266140"></A><SPAN CLASS="ee-keyword">
+estudio</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-266141"></A>In general you can start EiffelStudio from any directory, but to make things simple for this Tour <SPAN CLASS="ff-bold">
+please make sure</SPAN>
+ indeed to execute the <SPAN CLASS="ee-keyword">
+estudio </SPAN>
+command from <SPAN CLASS="ee-text">
+YOURDIR</SPAN>
+. (This will allow us to use relative rather than absolute names for some of the files involved.)
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-03.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-05.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

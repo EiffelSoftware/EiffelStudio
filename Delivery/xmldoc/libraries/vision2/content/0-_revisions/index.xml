@@ -29,7 +29,7 @@
 				<bold>EV_DOCKABLE_SOURCE</bold> - Added features `is_external_docking_relative', `enable_external_docking_relative' and `disable_external_docking_relative'. This permits you to dock a source to an EV_DOCKABLE_DIALOG that is not displayed relative to the original top window.
 			</item>
 			<item>
-				<bold>EV_RICH_TEXT</bold> - New class, providing a text control with support for character formatting and colors on a character by character basis. Supporting classes EV_CHARACTER_FORMAT and EV_CHARACTER_FORMAT_EFFECTS added.
+				<bold>EV_RICH_TEXT</bold> - New class, providing a text control with support for character formatting and colors on a character by character basis. The following supporting classes have been added for use with EV_RICH_TEXT:  EV_CHARACTER_FORMAT, EV_CHARACTER_FORMAT_EFFECTS, EV_PARAGRAPH_FORMAT, EV_CHARACTER_FORMAT_RANGE_INFORMATION, EV_PARAGRAPH_FORMAT_RANGE_INFORMATION and EV_PARAGRAPH_CONSTANTS.
 			</item>
 			<item>
 				<bold>EV_ENVIRONMENT</bold> - Added `fonts' which returns a list of all fonts available on the system.
@@ -76,6 +76,7 @@
 <item><bold>EV_MULTI_COLUMN_LIST</bold> - Fixed bug in `set_column_alignments' which crashed if you called it with an empty list after having previously called it with a non empty list.
 					</item>
 					<item><bold>EV_FIGURE_TEXT</bold> - Fixed bounding size issues which would cause the `width' and `height' to be returned incorrectly, causing them to be not correctly cleared when moved in a figure world.</item>
+					<item><bold>EV_FIGURE_GROUP</bold> - Fixed both `append' and `make_from_array' which were not setting the `group' of each item inserted.</item>
 				</list>
 			</item>
 			<item>

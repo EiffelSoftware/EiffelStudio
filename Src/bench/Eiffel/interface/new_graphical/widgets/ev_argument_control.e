@@ -54,7 +54,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_parent: EV_WINDOW) is
+	make (a_parent: EV_WINDOW; a_from_project_settings: BOOLEAN) is
 			-- Initialization
 		require
 			parent_not_void: a_parent /= Void
@@ -64,8 +64,18 @@ feature {NONE} -- Initialization
 			set_padding (Layout_constants.Default_padding_size)
 			extend (execution_frame)
 			update
+			from_project_settings := a_from_project_settings
+		ensure
+			from_project_settings_set: from_project_settings = a_from_project_settings
 		end
-		
+
+feature -- Access
+
+	from_project_settings: BOOLEAN
+			-- Is current control in the project settings or not? If it is not, then
+			-- we need to modify the Ace file on disk, otherwise we don't need to do anything,
+			-- we simply update our AST.
+
 feature {NONE} -- Retrieval		
 		
 	retrieve_ace_arguments is
@@ -329,7 +339,9 @@ feature {NONE} -- Storage
 			if Workbench.system_defined then
 				Lace.set_application_working_directory (wd)
 			end
-			save_ace (a_root_ast)
+			if not from_project_settings then
+				save_ace (a_root_ast)
+			end
 		end	
 
 	save_custom_arguments is

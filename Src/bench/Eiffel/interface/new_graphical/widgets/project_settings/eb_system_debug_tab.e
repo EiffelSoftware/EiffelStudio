@@ -402,7 +402,7 @@ feature {NONE} -- Graphical initialization
 			Result.set_item_text (l_debug, "Default debug clauses")
 				
 				-- Argument Control
-			create arguments_control.make (system_window.window)
+			create arguments_control.make (system_window.window, True)
 			Result.extend (arguments_control)
 			Result.set_item_text (arguments_control, "Program Execution")
 		end

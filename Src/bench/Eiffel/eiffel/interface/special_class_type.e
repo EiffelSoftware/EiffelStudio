@@ -53,6 +53,7 @@ feature
 			type_c: TYPE_C;
 			assertion_level: ASSERTION_I;
 			final_mode: BOOLEAN;
+			encoded_name: STRING;
 		do
 			gen_param := first_generic;
 			is_expanded := gen_param.is_expanded;
@@ -64,7 +65,11 @@ feature
 				% * put%N%
 				% */%N%
 				%void ");
-			file.putstring (Encoder.feature_name (id, feat.body_id));
+			encoded_name := Encoder.feature_name (id, feat.body_id);
+
+			add_in_log ("put", encoded_name);
+
+			file.putstring (encoded_name);
 			file.putstring ("%
 				%(Current, arg1, arg2)%N%
 				%char *Current;%N");
@@ -163,6 +168,7 @@ feature
 			type_c: TYPE_C;
 			assertion_level: ASSERTION_I;
 			final_mode: BOOLEAN;
+			encoded_name: STRING
 		do
 			gen_param := first_generic;
 			is_expanded := gen_param.is_expanded;
@@ -174,7 +180,12 @@ feature
 				% * item%N%
 				% */%N");
 			type_c.generate (file);
-			file.putstring (Encoder.feature_name (id, feat.body_id));
+
+			encoded_name := Encoder.feature_name (id, feat.body_id);
+
+			add_in_log ("item", encoded_name);
+
+			file.putstring (encoded_name);
 			file.putstring ("%
 				%(Current, arg1)%N%
 				%char *Current;%N%
@@ -261,6 +272,26 @@ feature
 			good_generic_count: type.meta_generic.count = 1;
 		do
 			Result := type.meta_generic.item (1);
+		end
+
+feature {NONE} -- Log file
+
+	add_in_log (f_name, encoded_name: STRING) is
+		local
+			log_file: PLAIN_TEXT_FILE
+		do
+			log_file := System.used_features_log_file;
+			log_file.putstring
+				(associated_class.cluster.cluster_name);
+			log_file.putchar ('%T');
+			type.dump (log_file);
+			log_file.putchar ('%T');
+			log_file.putstring (f_name);
+			log_file.putchar ('%T');
+			log_file.putstring (encoded_name);
+			log_file.putchar ('%T');
+			log_file.putstring (relative_file_name);
+			log_file.new_line;
 		end
 
 end

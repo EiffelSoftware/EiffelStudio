@@ -64,6 +64,9 @@ extern char * general_buffer;
 extern int buffer_size;
 extern int end_of_buffer;
 
+/* compression */
+extern char * cmps_general_buffer;
+
 extern void (*store_write_func)();
 extern void store_write();
 

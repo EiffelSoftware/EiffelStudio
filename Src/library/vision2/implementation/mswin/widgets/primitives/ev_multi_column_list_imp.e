@@ -38,7 +38,7 @@ inherit
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
@@ -129,19 +129,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Currently selected item.
@@ -294,13 +281,16 @@ feature {NONE} -- Implementation
 					-- Assign `icon.item' to `item_value'
 				if not current_image_list_info.has (item_value) then
 					image_list.add_icon (p_imp.icon)
+					image_list.add_icon (p_imp.icon)
+					image_list.add_icon (p_imp.icon)
 					current_image_list_info.extend ([1, 1], item_value)
 				end
 			end
 			--|FIXME I think we should now tell the list view that an item has ben updated.
 			--| How do we do this?
 			temp_row ?= i_th (a_row).implementation
-			temp_row.set_image (1)
+			temp_row.set_image (0)
+			replace_item (temp_row)
 		end
 
 	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
@@ -686,12 +676,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			-- [[position in image list, number of items pointing to this
 			-- image], windows pointer].
 
-	child_x: INTEGER is
-			-- `Result' is relative xcoor of row to `parent_imp'
-		do
-			Result := window_frame_width - 1
-		end
-
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
@@ -766,10 +750,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.86  2000/04/21 16:30:33  rogers
---| Now inherits WEL_LVS_EX_CONSTANTS. Added and connected an image
---| list. Removed set_row_height and child_y. Partially implemented
---| set_pixmap.
+--| Revision 1.87  2000/04/21 16:58:01  rogers
+--| Removed child_x and wel_window_parent fix.
 --|
 --| Revision 1.85  2000/04/20 22:23:35  king
 --| Implemented column_alignment_changed, removed other alignement features.

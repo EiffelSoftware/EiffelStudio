@@ -8,29 +8,18 @@ class
 	EV_GTK_C_STRING
 
 create
-	make, make_shared, make_from_pointer, make_from_ascii_string
+	make, make_shared, make_from_pointer
 
 convert
-	make_from_ascii_string ({STRING})
+	make ({STRING})
 	
 	
 feature {NONE} -- Initialization
-
-	make_from_ascii_string (a_string: STRING) is
-			-- Create a C string from `a_string'
-		require
-			a_string_not_void: a_string /= Void
-		local
-			a_string_value: ANY
-		do
-			a_string_value := a_string.to_c
-			create managed_data.make_from_pointer ($a_string_value, a_string.count + 1)
-		end
 		
 	make (a_string: STRING) is
 			-- Create a UTF8 string and have ownership
 		do
-			create_managed_data (a_string, False)	
+			create_managed_data (a_string, False)
 		end
 
 	make_shared (a_string: STRING) is
@@ -60,7 +49,7 @@ feature -- Access
 			bytes_read, bytes_written: INTEGER
 			gerror: POINTER
 		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, -1, $bytes_read, $bytes_written, $gerror, $str_ptr)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_from_utf8 (item, managed_data.count - 1, $bytes_read, $bytes_written, $gerror, $str_ptr)
 			if str_ptr /= default_pointer then
 				create Result.make_from_c (str_ptr)
 				feature {EV_GTK_EXTERNALS}.g_free (str_ptr)
@@ -68,7 +57,13 @@ feature -- Access
 				-- Sometimes the UTF8 string cannot be translated
 				create Result.make_from_c (item)
 			end
-		end	
+		end
+
+	string_length: INTEGER is
+			-- Length of string data held in `managed_data'
+		do
+			Result := managed_data.count - 1
+		end
 
 feature {NONE} -- Implementation
 
@@ -86,7 +81,7 @@ feature {NONE} -- Implementation
 			a_end: POINTER
 		do
 			string_value := a_string.to_c
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, -1, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_locale_to_utf8 ($string_value, a_string.count, $bytes_read, $bytes_written, $gerror, $utf8_ptr)
 			if utf8_ptr = default_pointer then
 					-- An error has occurred, this is probably due to `a_string' containing invalid characters
 				from

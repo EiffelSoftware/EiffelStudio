@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	veto_merge (an_object: GB_OBJECT): BOOLEAN is
+	veto_merge (an_object: GB_CONTAINER_OBJECT): BOOLEAN is
 			-- Stop invalid radio_group_merges.
 			-- An object may not be dropped if it is the same object that
 			-- `Current' represents, or it is already merged to the object
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	link_to_object (an_object: GB_OBJECT) is
+	link_to_object (an_object: GB_CONTAINER_OBJECT) is
 			-- Perform a merging of `Current' and `an_object'.
 		local
 			container: EV_CONTAINER

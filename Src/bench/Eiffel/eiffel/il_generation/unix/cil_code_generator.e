@@ -982,6 +982,13 @@ feature -- Addresses
 
 feature -- Assignments
 
+	generate_is_true_instance_of (type_i: TYPE_I) is
+			-- Generate `Isinst' byte code instruction.
+		require
+			type_i_not_void: type_i /= Void
+		do
+		end
+
 	generate_is_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction.
 		require

@@ -99,6 +99,24 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 				constants_combo_box.first.enable_select
 			end
 		end
+		
+	constant_changed (constant: GB_PIXMAP_CONSTANT) is
+			-- `constant' has changed, so update representation in `Current'.
+		local
+			found: BOOLEAN
+		do
+			from
+				constants_combo_box.start
+			until
+				constants_combo_box.off or found
+			loop
+				if constants_combo_box.item.data = constant then
+					found := True
+					constants_combo_box.item.set_pixmap (constant.small_pixmap)
+				end
+				constants_combo_box.forth
+			end
+		end
 
 	constant_added (constant: GB_PIXMAP_CONSTANT) is
 			-- Update `Current' to reflect addition of `constant' to system.
@@ -223,6 +241,39 @@ feature {NONE} -- Implementation
 		
 	last_selected_constant: GB_CONSTANT
 		-- Last constant selected in `Current'.
+		
+	set_pixmapable_constant (a_pixmap: EV_PIXMAP) is
+			-- Set pixmapable representation to `a_pixmap'.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+		local
+			a_pixmapable: EV_PIXMAPABLE
+		do
+			a_pixmapable ?= first
+			check
+				object_was_pixmapable: a_pixmapable /= Void
+			end
+			a_pixmapable.set_pixmap (a_pixmap)
+			a_pixmapable ?= objects @ 2
+			a_pixmapable.set_pixmap (a_pixmap)
+		end
+		
+	set_pixmap_constant (new_pixmap: EV_PIXMAP) is
+			-- Set pixmap representation to `a_pixmap'.
+		local
+			a_pixmap: EV_PIXMAP
+		do
+			a_pixmap ?= first
+			if a_pixmap /= Void then
+				a_pixmap.hide
+				a_pixmap.copy (new_pixmap)
+				a_pixmap.show
+				a_pixmap ?= objects @ 2
+				a_pixmap.hide
+				a_pixmap.copy (new_pixmap)
+				a_pixmap.show
+			end
+		end
 
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
@@ -233,7 +284,7 @@ feature {NONE} -- Implementation
 			constant: GB_PIXMAP_CONSTANT
 			constant_context: GB_CONSTANT_CONTEXT
 			a_pixmap: EV_PIXMAP
-			a_pixmapable: EV_PIXMAPABLE
+			
 		do
 			if list_item.data /= Void then
 				constant ?= list_item.data
@@ -242,21 +293,9 @@ feature {NONE} -- Implementation
 				end
 				a_pixmap ?= first
 				if a_pixmap /= Void then
-					a_pixmap.hide
-					a_pixmap.copy (constant.pixmap)
-					a_pixmap.show
-					a_pixmap ?= objects @ 2
-					a_pixmap.hide
-					a_pixmap.copy (constant.pixmap)
-					a_pixmap.show
+					set_pixmap_constant (constant.pixmap)
 				else
-					a_pixmapable ?= first
-					check
-						object_was_pixmapable: a_pixmapable /= Void
-					end
-					a_pixmapable.set_pixmap (constant.pixmap)
-					a_pixmapable ?= objects @ 2
-					a_pixmapable.set_pixmap (constant.pixmap)
+					set_pixmapable_constant (constant.pixmap)
 				end
 				create constant_context.make_with_context (constant, object, type, Pixmap_path_string)
 				constant.add_referer (constant_context)

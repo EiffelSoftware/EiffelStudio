@@ -12,16 +12,14 @@
 #ifndef __ECOM_RUNTIME_CE_H_INC__
 #define __ECOM_RUNTIME_CE_H_INC__
 
-#include <objbase.h>
-#include <oleauto.h>
+#include "eif_com.h"
 #include <string.h>
 #include <assert.h>
 #include "eif_eiffel.h"
 #include "eif_globals.h"
 #include "E_bstr.h"
 #include "eif_except.h"
-#include "ecom_vba__collection.h"
-#include "ecom_vba__errobject.h"
+
 
 
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))

@@ -592,7 +592,7 @@ feature -- Plug and Makefile file
 
 				--Pointer on `set_rout_disp' of class ROUTINE
 			if set_rout_disp_name /= Void then
-				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER)) ")
+				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
 				buffer.putstring (set_rout_disp_name)
 				buffer.putstring (";%N")
 			end

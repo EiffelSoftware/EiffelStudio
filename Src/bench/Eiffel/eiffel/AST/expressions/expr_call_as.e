@@ -45,6 +45,7 @@ feature -- Type check, byte code and dead code removal
 				-- Put an actual type of the current analyzed class
 			context.begin_expression
 				-- Type check the call
+
 			call.type_check
 		end
 
@@ -77,7 +78,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.format_ast (call)
 		end
 
-feature {EXPR_CALL_AS}
+feature {EXPR_CALL_AS, OPERAND_AS}
 
 	set_call (c: like call) is
 		require

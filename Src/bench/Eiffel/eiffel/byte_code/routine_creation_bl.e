@@ -7,7 +7,7 @@ inherit
 	ROUTINE_CREATION_B
 		redefine
 			analyze, generate, 
-			register, set_register,
+			register, set_register, free_register,
 			unanalyze, allocates_memory
 		end;
 	SHARED_C_LEVEL;
@@ -28,28 +28,46 @@ feature
 	unanalyze is
 			-- Unanalyze expression
 		do
-			if target /= Void then
-				target.unanalyze
-			end
-
 			if arguments /= Void then
 				arguments.unanalyze
 			end
-			register := Void
+			if open_map /= Void then
+				open_map.unanalyze
+			end
+			if closed_map /= Void then
+				closed_map.unanalyze
+			end
+			set_register (Void)
 		end;
 	
 	analyze is
 			-- Analyze expression
 		do
-			if target /= Void then
-				target.analyze
-			end
-
 			if arguments /= Void then
 				arguments.analyze
 			end
+			if open_map /= Void then
+				open_map.analyze
+			end
+			if closed_map /= Void then
+				closed_map.analyze
+			end
 			get_register
 		end;
+
+	free_register is
+
+		do
+			if arguments /= Void then
+				arguments.free_register
+			end
+			if open_map /= Void then
+				open_map.free_register
+			end
+			if closed_map /= Void then
+				closed_map.free_register
+			end
+		end
 
 	allocates_memory: BOOLEAN is True;
 
@@ -60,12 +78,16 @@ feature
 			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
 		do
-			if target /= Void then
-				target.generate
-			end
-
 			if arguments /= Void then
 				arguments.generate
+			end
+
+			if open_map /= Void then
+				open_map.generate
+			end
+
+			if closed_map /= Void then
+				closed_map.generate
 			end
 
 			buf := buffer
@@ -79,20 +101,25 @@ feature
 			generate_routine_address
 			buf.putstring ("), ")
 
-			if target /= Void then
-				target.print_register
-				buf.putstring (", ")
-			else
-				buf.putstring ("(char *)0, ")
-			end
-
 			if arguments /= Void then
 				arguments.print_register
 				buf.putstring (", ")
 			else
 				buf.putstring ("(char *)0, ")
 			end
-			buf.putint (modulus)
+
+			if open_map /= Void then
+				open_map.print_register
+				buf.putstring (", ")
+			else
+				buf.putstring ("(char *)0, ")
+			end
+
+			if closed_map /= Void then
+				closed_map.print_register
+			else
+				buf.putstring ("(char *)0")
+			end
 			buf.putstring (");")
 			buf.new_line
 			generate_block_close
@@ -125,7 +152,7 @@ feature
 						-- Mark table used
 					Eiffel_table.mark_used (rout_id)
 
-					table_name := "f"
+					table_name := "_f"
 					cl_type ?= context.real_type (class_type)
 					table_name.append (cl_type.
 						associated_class_type.id.address_table_name (feature_id))

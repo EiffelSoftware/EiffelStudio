@@ -4,47 +4,50 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, enlarged
+			make_byte_code, enlarged,
+			has_gcable_variable, has_call
 		end
 
 feature  -- Initialization
 
 	init (cl_type: CL_TYPE_I; cl_id: CLASS_ID; f: FEATURE_I; 
-		  r_type : GEN_TYPE_I; tgt : CURRENT_B; args : TUPLE_CONST_B;
-		  mod : INTEGER) is
+		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
+		  omap, cmap : ARRAY_CONST_B) is
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
 			valid_id: cl_id /= Void
 			valid_feature: f /= Void
 			valid_type: r_type /= Void
+			valid_maps: omap /= Void or cmap /= Void
 		do
 			class_type := cl_type
 			feature_id := f.feature_id
 			rout_id := f.rout_id_set.first
 			type := r_type
-			target := tgt
 			arguments := args
-			modulus := mod
+			open_map := omap
+			closed_map := cmap
 			record_feature (cl_id, feature_id)
 		end
 
 	set_ids (cl_type : CL_TYPE_I; r_id: ROUTINE_ID; f_id: INTEGER;
-			 r_type : GEN_TYPE_I; tgt : CURRENT_B; args : TUPLE_CONST_B;
-			 mod : INTEGER) is
+			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
+			 omap, cmap : ARRAY_CONST_B) is
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
 			valid_routine_id: r_id /= Void
 			valid_type: r_type /= Void
+			valid_maps: omap /= Void or cmap /= Void
 		do
 			class_type := cl_type
 			rout_id := r_id
 			feature_id := f_id
 			type := r_type
-			target := tgt
 			arguments := args
-			modulus := mod
+			open_map := omap
+			closed_map := cmap
 		end
 	
 feature -- Attributes
@@ -61,14 +64,14 @@ feature -- Attributes
 	type: GEN_TYPE_I
 			-- Type of routine object
 
-	modulus: INTEGER
-			-- Rotate modulus
-
-	target: CURRENT_B
-			-- Call target
-
 	arguments: TUPLE_CONST_B
 			-- Argument list
+
+	open_map: ARRAY_CONST_B
+			-- Index mapping for open arguments
+
+	closed_map: ARRAY_CONST_B
+			-- Index mapping for closed arguments
 
 feature -- Address table
 
@@ -88,30 +91,73 @@ feature -- Address table
 
 feature
 
+	has_gcable_variable: BOOLEAN is
+			-- Is the expression using a GCable variable ?
+		do
+			if arguments /= Void then
+				Result := arguments.has_gcable_variable
+			end
+
+			if open_map /= Void then
+				Result := Result or else open_map.has_gcable_variable
+			end
+
+			if closed_map /= Void then
+				Result := Result or else closed_map.has_gcable_variable
+			end
+		end
+
+	has_call: BOOLEAN is
+			-- Is the expression using a call ?
+		do
+			if arguments /= Void then
+				Result := arguments.has_call
+			end
+
+			if open_map /= Void then
+				Result := Result or else open_map.has_call
+			end
+
+			if closed_map /= Void then
+				Result := Result or else closed_map.has_call
+			end
+		end
+
 	used (r: REGISTRABLE): BOOLEAN is
 		do
+			if arguments /= Void then
+				Result := arguments.used (r)
+			end
+
+			if open_map /= Void then
+				Result := Result or else open_map.used (r)
+			end
+
+			if closed_map /= Void then
+				Result := Result or else closed_map.used (r)
+			end
 		end
 
 	enlarged: ROUTINE_CREATION_BL is
 			-- Enlarge node
+		local
+			omap_enl, cmap_enl : ARRAY_CONST_B
 		do
 			!!Result
-			if target /= Void then
-				if arguments /= Void then
-					Result.set_ids (class_type, rout_id, feature_id, type,
-								target.enlarged, arguments.enlarged, modulus)
-				else
-					Result.set_ids (class_type, rout_id, feature_id, type,
-								target.enlarged, Void, modulus)
-				end
+
+			if open_map /= Void then
+				omap_enl := open_map.enlarged
+			end
+			if closed_map /= Void then
+				cmap_enl := closed_map.enlarged
+			end
+
+			if arguments /= Void then
+				Result.set_ids (class_type, rout_id, feature_id, type,
+								arguments.enlarged, omap_enl, cmap_enl)
 			else
-				if arguments /= Void then
-					Result.set_ids (class_type, rout_id, feature_id, type,
-								Void, arguments.enlarged, modulus)
-				else
-					Result.set_ids (class_type, rout_id, feature_id, type,
-								Void, Void, modulus)
-				end
+				Result.set_ids (class_type, rout_id, feature_id, type,
+								Void, omap_enl, cmap_enl)
 			end
 		end
 
@@ -123,14 +169,19 @@ feature -- Byte code generation
 			cl_type_i: CL_TYPE_I
 			gen_type : GEN_TYPE_I
 		do
-			-- Target
-			if target /= Void then
-				target.make_byte_code (ba)
-			end
-
 			-- Arguments
 			if arguments /= Void then
 				arguments.make_byte_code (ba)
+			end
+
+			-- Open map
+			if open_map /= Void then
+				open_map.make_byte_code (ba)
+			end
+
+			-- Closed map
+			if closed_map /= Void then
+				closed_map.make_byte_code (ba)
 			end
 
 			-- Get address
@@ -146,14 +197,6 @@ feature -- Byte code generation
 			-- Now create routine object
 			ba.append (Bc_rcreate)
 
-			if target /= Void then
-				-- We have a target on the stack
-				ba.append_short_integer (1)
-			else
-				-- We don't have a target on the stack
-				ba.append_short_integer (0)
-			end
-
 			if arguments /= Void then
 				-- We have arguments (a TUPLE) on the stack
 				ba.append_short_integer (1)
@@ -162,7 +205,22 @@ feature -- Byte code generation
 				ba.append_short_integer (0)
 			end
 
-			ba.append_short_integer (modulus)
+			if open_map /= Void then
+				-- We have an open map
+				ba.append_short_integer (1)
+			else
+				-- We don't have an open map
+				ba.append_short_integer (0)
+			end
+
+			if closed_map /= Void then
+				-- We have a closed map
+				ba.append_short_integer (1)
+			else
+				-- We don't have a closed map
+				ba.append_short_integer (0)
+			end
+
 			cl_type_i ?= context.real_type (type)
 			gen_type  ?= cl_type_i
 			ba.append_short_integer (cl_type_i.type_id - 1)

@@ -136,6 +136,7 @@ feature -- Initialization
 			as118: PRECURSOR_AS
 			as119: CREATION_EXPR_AS
 			as120: ROUTINE_CREATION_AS
+			as122: OPERAND_AS
 		do
 			!!as1;
 			as1.pass_address(class_as);
@@ -325,7 +326,7 @@ feature -- Initialization
 			as99.pass_address (creation_as);
 			!!as100;
 			as100.pass_address (array_as);
-			!!as100_bis;
+			!! as100_bis;
 			as100_bis.pass_address (tuple_as);
 			!!as101;
 			as101.pass_address (un_strip_as);
@@ -367,6 +368,8 @@ feature -- Initialization
 			as119.pass_address (creation_expr_as);
 			!! as120
 			as120.pass_address (routine_creation_as)
+			!! as122
+			as122.pass_address (operand_as)
 		end;
 
 end -- class EBENCH_YACC_EIFFEL

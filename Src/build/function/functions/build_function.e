@@ -285,8 +285,7 @@ feature {NONE}
 
 	pair_is_valid: BOOLEAN is
 		do
-			Result := (input_set and output_set) and then
-				(not has_input (input_data))
+			Result := input_set and output_set
 		end;
 
 	
@@ -315,7 +314,7 @@ feature -- List operations
 			-- Append the pair (`i', `o') to Current
 			-- function.
 		require
-			Consistency: not has_input (i)
+--			Consistency: not has_input (i)
 		do
 			input_list.extend (i);
 			output_list.extend (o);

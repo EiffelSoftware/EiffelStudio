@@ -65,7 +65,7 @@ feature -- Creation
 		do
 				--| Top form
 			top_form.attach_top (command_hole, 0)
-			top_form.attach_top (title_label, 0)
+			top_form.attach_top (title_label, 3)
 			top_form.attach_top (search_class_name_button, 0)
 			top_form.attach_top (popup_instances_button, 0)
 			top_form.attach_top (popup_contexts_button, 0)
@@ -75,7 +75,7 @@ feature -- Creation
 			top_form.attach_bottom (popup_contexts_button, 0)
 			top_form.attach_bottom (popup_instances_button, 0)
 			top_form.attach_left (command_hole, 0)
-			top_form.attach_left_widget (command_hole, title_label, 10)
+			top_form.attach_left_widget (command_hole, title_label, 5)
 			top_form.attach_right (popup_contexts_button, 0)
 			top_form.attach_right_widget (popup_contexts_button, popup_instances_button, 0)
 			top_form.attach_right_widget (popup_instances_button, search_class_name_button, 0)
@@ -137,7 +137,7 @@ feature -- Update
 
 	set_empty_title is
 		do
-			title_label.set_text ("Empty tool")
+			title_label.set_text ("Empty command tool")
 		end
 
 feature -- Destroy

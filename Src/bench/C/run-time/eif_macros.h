@@ -115,8 +115,20 @@ RT_LNK int fcount;
 #define RTAN(x) (!(HEADER(x)->ov_flags & EO_OLD))
 #define RTAM(x) eremb(x)
 #define RTAX(x,y) (RTAG(y)?(RTAN(x)?RTAM((y)),(x):(x)):(x))
-#define RTAR(x,y) if ((x) != (char *) 0 && RTAN(x) && RTAG(y)) RTAM(y)
-#define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x) && RTAG(y)) erembq(y)
+#define RTAR(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
+	if (HEADER(y)->ov_flags & EO_EXP) { \
+	   register char *z = (char *) y - (HEADER (y)->ov_size & B_SIZE); \
+		if (RTAG(z)) RTAM(z); \
+	} else if (RTAG(y)) RTAM(y); \
+	}
+
+#define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
+	if (HEADER(y)->ov_size & EO_EXP) { \
+		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
+		if (RTAG(z)) erembq((z)); \
+	} else if (RTAG(y)) erembq((y)); \
+	}
+
 
 /* Macros used by reverse assignments:
  *  RTRC(x,y) is true if type 'y' conforms to type 'x'

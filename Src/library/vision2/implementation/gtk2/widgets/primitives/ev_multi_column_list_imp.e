@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 				-- Create our model with 25 columns to avoid recomputation each time the column count increases
 			create_list (2)
 			
-			set_row_height (App_implementation.default_font_height + 12)
+			set_row_height (App_implementation.default_font_height + 10)
 				-- We explicitly set the row height to be proportional to the default gtk application font
 			
 			previous_selection := selected_items
@@ -225,9 +225,9 @@ feature {NONE} -- Initialization
 				
 				a_type_array_c := a_type_array.to_c
 				
-				tree_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (a_columns + 1, $a_type_array_c)
+				list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns + 1, $a_type_array_c)
 				
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
 	
 				from
 					ev_children.start
@@ -235,7 +235,7 @@ feature {NONE} -- Initialization
 					ev_children.after
 				loop
 					create a_tree_iter.make
-					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (tree_store, a_tree_iter.item, NULL, ev_children.index - 1)
+					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, ev_children.index - 1)
 					ev_children.item.set_list_iter (a_tree_iter)
 					update_child (ev_children.item, ev_children.index)
 					ev_children.forth
@@ -333,7 +333,7 @@ feature {NONE} -- Initialization
 	tree_view: POINTER
 		-- Pointer to the View
 		
-	tree_store: POINTER
+	list_store: POINTER
 		-- Pointer to the Model
 
 	initialize is
@@ -420,8 +420,8 @@ feature -- Access
 	model_column_count: INTEGER is
 			-- 
 		do
-			if tree_store /= NULL then
-				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_n_columns (tree_store)
+			if list_store /= NULL then
+				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_n_columns (list_store)
 			end
 		end
 
@@ -437,8 +437,7 @@ feature -- Access
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Item which is currently selected, for a multiple
-			-- selection.
+			-- Item which is currently selected
 		local
 			a_selection: POINTER
 			a_tree_path_list: POINTER
@@ -684,7 +683,7 @@ feature -- Element change
 		do
 				-- Remove all items (GTK part)
 			clear_selection
-			feature {EV_GTK_EXTERNALS}.gtk_tree_store_clear (tree_store)
+			feature {EV_GTK_EXTERNALS}.gtk_list_store_clear (list_store)
 			from
 				ev_children.start
 			until
@@ -988,7 +987,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
 			
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, a_list_iter, a_column, str_value)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)
+			str_value.memory_free
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -1001,7 +1001,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			pixmap_imp ?= a_pixmap.implementation
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_list_iter, 0, a_pixbuf)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER) is
@@ -1010,7 +1010,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_list_iter: POINTER
 		do
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_list_iter, 0, NULL)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, NULL)
 		end
 
 feature {NONE} -- Implementation
@@ -1060,8 +1060,14 @@ feature {NONE} -- Implementation
 
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Ensure `a_item' is visible on the screen.
-		do
-			--| FIXME To be implemented
+		local
+			list_item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			a_path: POINTER
+		do	
+			list_item_imp ?= a_item.implementation
+			a_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is
@@ -1083,7 +1089,7 @@ feature {NONE} -- Implementation
 					-- Add row to model
 				create a_tree_iter.make
 				item_imp.set_list_iter (a_tree_iter)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (tree_store, a_tree_iter.item, NULL, i - 1)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 				update_child (item_imp, ev_children.count)
 			end
 			
@@ -1104,7 +1110,7 @@ feature {NONE} -- Implementation
 			clear_selection
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_tree_store_remove (tree_store, item_imp.list_iter.item)
+			feature {EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
@@ -1138,6 +1144,7 @@ feature {NONE} -- Implementation
 		end
 
 	row_height: INTEGER is
+			-- Height of rows in `Current'
 		local
 			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
 			a_gtk_c_str: EV_GTK_C_STRING

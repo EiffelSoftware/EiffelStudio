@@ -41,20 +41,25 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize is
-		local
-			a_type_array: ARRAY [INTEGER]
-			a_type_array_c: ANY
+			-- Set up `Current'
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			initialize_pixmaps
-			
+			initialize_model
+		end
+
+	initialize_model is
+			-- Create our data model for `Current'
+		local
+			a_type_array: ARRAY [INTEGER]
+			a_type_array_c: ANY
+		do
 			create a_type_array.make (0, 1)
 			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
 			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
 			a_type_array_c := a_type_array.to_c
-			
-			tree_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_newv (2, $a_type_array_c)
+			list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (2, $a_type_array_c)			
 		end
 
 feature -- Access
@@ -99,7 +104,8 @@ feature -- Insertion
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
 			
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, a_list_item_imp.list_iter.item, 1, str_value)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_item_imp.list_iter.item, 1, str_value)
+			str_value.memory_free
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -110,9 +116,9 @@ feature -- Insertion
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			a_pixbuf := pixmap_imp.pixbuf_from_drawable
+			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_list_item_imp.list_iter.item, 0, a_pixbuf)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER) is
@@ -121,7 +127,7 @@ feature -- Insertion
 			a_list_item_imp: EV_LIST_ITEM_IMP
 		do
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_list_item_imp.list_iter.item, 0, NULL)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_item_imp.list_iter.item, 0, NULL)
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is
@@ -139,7 +145,7 @@ feature -- Insertion
 				-- Add row to model
 			create a_tree_iter.make
 			item_imp.set_list_iter (a_tree_iter)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (tree_store, a_tree_iter.item, NULL, i - 1)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
 			set_text_on_position (i, v.text)
 			
 			if v.pixmap /= Void then
@@ -163,7 +169,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST_ITEM_LIST
 	
-	tree_store: POINTER
+	list_store: POINTER
 		-- Pointer to the model which holds all of the column data
 
 feature {NONE} -- Implementation
@@ -175,7 +181,7 @@ feature {NONE} -- Implementation
 			clear_selection
 			item_imp ?= (child_array @ (an_index)).implementation
 			item_imp.set_parent_imp (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_tree_store_remove (tree_store, item_imp.list_iter.item)
+			feature {EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
 			-- remove the row from the `ev_children'
 			child_array.go_i_th (an_index)
 			child_array.remove

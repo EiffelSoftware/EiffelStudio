@@ -29,7 +29,7 @@ feature -- Access
 		end
 
 	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN is
-			-- Is `a_widget' `parent' or recursivly `parent' of `parent'.
+			-- Is `a_widget' `parent', or recursivly, `parent' of `parent'.
 		do
 			Result := a_widget = parent or else
 				(parent /= Void and then parent.is_parent_recursive (a_widget))
@@ -240,7 +240,7 @@ feature -- Element change
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
-			-- Set `minimum_width' to `a_minimum_width' in pixels.
+			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimim_width', resize.
 			-- This setting takes effect next time application is idle.
 			-- From now, `minimum_width' is fixed and will not be changed
@@ -254,7 +254,7 @@ feature -- Element change
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
-			-- Set `minimum_height' to `a_minimum_height' in pixels.
+			-- Set `a_minimum_height' in pixels to `minimum_height'.
 			-- If `height' is less than `a_minimim_height', resize.
 			-- This setting takes effect next time application is idle.
 			-- From now, `minimum_height' is fixed and will not be changed
@@ -268,8 +268,8 @@ feature -- Element change
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Set `minimum_height' to `a_minimum_height'
-			-- and `minimum_width' to `a_minimum_width' in pixels.
+			-- Assign `a_minimum_height' to `minimum_height'
+			-- and `a_minimum_width' to `minimum_width' in pixels.
 			-- If `width' or `height' is less than minimum size, resize.
 			-- This setting takes effect next time application is idle.
 			-- From now, minimum size is fixed and will not be changed
@@ -285,7 +285,7 @@ feature -- Element change
 		end
 
 	set_tooltip (a_text: STRING) is
-			-- Set `tooltip' to `a_text'.
+			-- Assign `a_tooltop' to `tooltip'.
 			--| FIXME see `tooltip' above.
 		require
 			a_text_not_void: a_text /= Void
@@ -484,11 +484,16 @@ feature {EV_ANY} -- Contract support
 					create label.make_with_text ("item " + i.out)
 					container.extend (label)
 					inspect i
-						when 1 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
-						when 2 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
-						when 3 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
-						when 4 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
-						when 5 then label.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
+						when 1 then label.set_background_color (
+							create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
+						when 2 then label.set_background_color (
+							create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
+						when 3 then label.set_background_color (
+							create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
+						when 4 then label.set_background_color (
+							create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
+						when 5 then label.set_background_color (
+							create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
 					end
 					i := i + 1
 				end
@@ -808,6 +813,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.80  2000/05/02 23:33:04  oconnor
+--| cosmetics
+--|
 --| Revision 1.79  2000/05/01 18:59:12  rogers
 --| Removed post condition on pointer_position and added a comment explaing why.
 --|

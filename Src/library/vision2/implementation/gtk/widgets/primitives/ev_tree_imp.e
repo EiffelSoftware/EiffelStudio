@@ -95,6 +95,13 @@ feature -- Access
 --			end
 		end
 
+
+	total_count: INTEGER is
+			-- Total number of items in the tree.
+		do
+			Result := all_children.count
+		end
+
 feature -- Status report
 
 	selected: BOOLEAN is

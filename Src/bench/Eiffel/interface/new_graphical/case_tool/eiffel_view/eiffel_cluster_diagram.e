@@ -65,7 +65,7 @@ feature -- Store/Retrive
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		do
-			Xml_routines.add_attribute ("NAME", xml_namespace, current_view, node)
+			node.add_attribute ("NAME", xml_namespace, current_view)
 			node.put_last (Xml_routines.xml_node (node, "SUBCLUSTER_DEPTH", model.subcluster_depth.out))
 			node.put_last (Xml_routines.xml_node (node, "SUPERCLUSTER_DEPTH", model.supercluster_depth.out))
 			node.put_last (xml_routines.xml_node (node, "CENTER_CLUSTER_NAME", model.center_cluster.cluster_i.cluster_name))

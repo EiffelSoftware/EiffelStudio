@@ -648,7 +648,7 @@ feature -- Initialization
 			a_unit := unit_field.text
 			create l_namespace.make_default
 			Result := interface.tool.file_manager.metric_element (a_name, a_unit, "Derived")
-			Xml_routines.add_attribute ("Min_scope", l_namespace, to_scope (min_scope), Result)
+			Result.add_attribute ("Min_scope", l_namespace, to_scope (min_scope))
 			create metric_definition.make (Result, "DEFINITION", l_namespace)
 			raw_metric_name := raw_metric_combobox.text
 			metric_definition.put_last (Xml_routines.xml_node (metric_definition, "Raw_metric", raw_metric_name))

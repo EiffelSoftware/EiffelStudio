@@ -705,7 +705,7 @@ feature -- Action
 				create l_namespace.make_default
 				create archive_header.make_with_root_named ("ARCHIVE", l_namespace)
 				node := archive_header.root_element
-				Xml_routines.add_attribute ("System", l_namespace, tool.System.name, node)
+				node.add_attribute ("System", l_namespace, tool.System.name)
 				metric_header := tool.file_manager.metric_header
 				node.put_last (metric_header)
 				create measure_header.make (node, "RECORDED_MEASURES", l_namespace)
@@ -720,9 +720,9 @@ feature -- Action
 					a_metric ?= metric_list.item
 					if a_metric = Void or else not a_metric.is_scope_ratio then
 						create xml_element.make (node, "MEASURE", l_namespace)
-						Xml_routines.add_attribute ("Metric", l_namespace, metric_list.item.name, xml_element)
+						xml_element.add_attribute ("Metric", l_namespace, metric_list.item.name)
 						metric_result := tool.calculate.calculate_metric (metric_list.item, scope)
-						Xml_routines.add_attribute ("Result", l_namespace, metric_result.out, xml_element)
+						xml_element.add_attribute ("Result", l_namespace, metric_result.out)
 						measure_header.put_last (xml_element)
 					end
 					metric_list.forth

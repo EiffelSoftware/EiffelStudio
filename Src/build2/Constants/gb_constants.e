@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that provide access to constants used."
-	author: ""
+	description: "Objects that provide access to constants used in EiffelBuild."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +8,6 @@ deferred class
 	
 inherit
 	ANY	
-		undefine
-			default_create, copy, is_equal
-		end
 
 feature -- Access
 		
@@ -166,7 +162,6 @@ feature -- Default values
 	Spacing_to_holder_tool_bar: INTEGER is 8
 		-- The distance between a tool holders label and any associated tool bar.
 
-
 feature -- Generation constants
 		
 	class_name_tag: STRING is
@@ -182,8 +177,7 @@ feature -- Generation constants
 		once
 			Result := "<INHERITED_CLASS_NAME>"
 		end
-		
-		
+
 	create_tag: STRING is
 			-- `Result' is tag used in templates
 			-- for the creation of widgets.
@@ -376,8 +370,7 @@ feature -- Generation constants
 			Result := indent_less_two + "show is" + indent + "-- Show `Current'." + indent_less_one + "do" + indent + client_window_string +
 			".show" + indent_less_one + "end"
 		end
-		
-		
+
 	window_inheritance: STRING is
 			-- String used to generate inheritance from window in implementation class.
 		once
@@ -405,7 +398,6 @@ feature -- Generation constants
 
 	Create_command_string: STRING is "create "
 			-- String corresponding to creation instruction in generated_code.
-		
 
 feature -- Wizard
 
@@ -440,6 +432,9 @@ feature -- XML constants
 		
 	Root_window_string: STRING is "Is_root_window"
 		-- String constant used for root window of system
+		
+	Constants_string: STRING is "Constants"
+		-- String constant representing constants in XML.
 	
 feature -- Dialogs
 
@@ -643,5 +638,28 @@ feature -- Object editor properties
 	gb_ev_progress_bar_is_segmented_tooltip: STRING is "feature `is_segmented' from EV_PROGRESS_BAR"
 	
 	select_button_text: STRING is "Select..."
+	
+feature -- Constants
+
+	Integer_constant_type: STRING is "INTEGER"
+		-- String representation of an integer constant.
+	
+	String_constant_type: STRING is "STRING"
+		-- String representation of a string constant.
+	
+	directory_constant_type: STRING is "DIRECTORY"
+		-- String representation of a directory constant.
+	
+	all_constant_type: STRING is "ALL"
+		-- String representation used to indicate all constant types.
+	
+	type_string: STRING is "type"
+		-- String used to match type within XML.
+		
+	constant_name_string: STRING is "Name"
+		-- Used to represent a constant name in XML
+	
+	constant_value_string: STRING is "Value"
+		-- Used to represent a constant value in XML
 
 end -- class GB_CONSTANTS

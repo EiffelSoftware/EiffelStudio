@@ -103,7 +103,7 @@ feature {NONE} -- implementation
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_item_parent_imp (Current)
-			C.gtk_menu_append (list_widget, an_item_imp.c_object)
+			C.gtk_menu_shell_append (list_widget, an_item_imp.c_object)
 			C.gtk_menu_reorder_child (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)
 			child_array.put_left (an_item_imp.interface)

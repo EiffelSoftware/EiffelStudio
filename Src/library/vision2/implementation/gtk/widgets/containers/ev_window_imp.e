@@ -529,13 +529,13 @@ feature {NONE} -- Implementation
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
 						create a_gs.make ("key-press-event")
-						C.gtk_signal_emit_stop_by_name (c_object, a_gs.item)
+						C.signal_emit_stop_by_name (c_object, a_gs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
 						create a_gs.make ("key-release-event")
-						C.gtk_signal_emit_stop_by_name (c_object, a_gs.item)
+						C.signal_emit_stop_by_name (c_object, a_gs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	

@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			timer.actions.extend (agent launch_select_actions)
 			timer_imp ?= timer.implementation
 			activate_id := C.gtk_combo_struct_activate_id (container_widget)
-			C.gtk_signal_handler_block (entry_widget, activate_id)
+			C.signal_handler_block (entry_widget, activate_id)
 			
 			on_key_pressed_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
 			on_item_clicked_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_item_clicked_intermediary (c_object)
@@ -321,9 +321,9 @@ feature {NONE} -- Implementation
 			if 
 				a_key /= Void and then Key_down = a_key.code
 			then
-					C.gtk_signal_handler_unblock (entry_widget, activate_id)
+					C.signal_handler_unblock (entry_widget, activate_id)
 				--	success := C.gtk_widget_activate (entry_widget)
-					C.gtk_signal_handler_block (entry_widget, activate_id)
+					C.signal_handler_block (entry_widget, activate_id)
 			end
 			Precursor {EV_TEXT_FIELD_IMP} (a_key, a_key_string, a_key_press)
 		end

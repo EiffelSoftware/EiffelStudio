@@ -11,20 +11,6 @@ inherit
 	ACCELERABLE_WINDOWS
 
 	BUTTON_WINDOWS
-		rename
-			set_managed as widget_set_managed
-		redefine
-			realize,
-			x, 
-			y,
-			set_x,
-			set_y,
-			extra_width,
-			unrealize,
-			set_insensitive
-		end
-
-	BUTTON_WINDOWS
 		redefine
 			realize,
 			x, 
@@ -34,8 +20,6 @@ inherit
 			extra_width,
 			unrealize,
 			set_insensitive,
-			set_managed
-		select
 			set_managed
 		end
 
@@ -218,7 +202,7 @@ feature -- Status setting
 				end
 				managed := flag
 			else
-				widget_set_managed (flag)
+				{BUTTON_WINDOWS} precursor (flag)
 			end
 		end
 

@@ -44,7 +44,7 @@ feature -- Access
 
 	stone_name: STRING is 
 		do 
-			Result := l_Class 
+			Result := l_Class_stone
 		end;
 
 	stone_cursor: SCREEN_CURSOR is

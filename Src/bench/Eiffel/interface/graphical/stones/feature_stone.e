@@ -194,7 +194,10 @@ feature -- dragging
 			Result := cur_Feature
 		end;
  
-	stone_name: STRING is do Result := l_Routine end;
+	stone_name: STRING is
+		do
+			Result := l_Routine_stone
+		end;
  
 	clickable: BOOLEAN is
 		do

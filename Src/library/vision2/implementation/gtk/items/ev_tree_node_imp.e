@@ -131,7 +131,7 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Set 'text' to 'a_text'
 		do
-			internal_text := clone (a_text)
+			internal_text := a_text.twin
 			insert_pixmap
 		end
 
@@ -362,7 +362,7 @@ feature {EV_TREE_IMP} -- Implementation
 			if internal_text = Void then
 				Result := ""
 			else
-				Result := clone (internal_text)
+				Result := internal_text.twin
 			end
 		ensure then
 			text_not_void: Result /= Void
@@ -374,7 +374,7 @@ feature {EV_TREE_IMP} -- Implementation
 			if internal_tooltip = Void then
 				Result := ""
 			else
-				Result := clone (internal_tooltip)
+				Result := internal_tooltip.twin
 			end
 		ensure then
 			tooltip_not_void: Result /= Void

@@ -91,7 +91,7 @@ feature -- Access
 	font: EV_FONT is
 			-- Font used for drawing text.
 		do
-			Result := clone (internal_font_imp.interface)
+			Result := internal_font_imp.interface.twin
 		end
 
 	foreground_color: EV_COLOR
@@ -141,7 +141,9 @@ feature -- Access
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 		do
-			Result := clone (gc_clip_area)
+			if gc_clip_area /= Void then
+				Result := gc_clip_area.twin
+			end
 		end
 
 	tile: EV_PIXMAP
@@ -237,7 +239,7 @@ feature -- Element change
 		local
 			rectangle_struct: POINTER
 		do
-			gc_clip_area := clone (an_area)
+			gc_clip_area := an_area.twin
 			rectangle_struct := feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
 			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
 			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)

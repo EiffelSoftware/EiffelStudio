@@ -27,7 +27,7 @@ feature -- Access
 				create Result
 				-- Default create is standard gtk font
 			else
-				Result := clone (private_font)
+				Result := private_font.twin
 			end
 		end
 
@@ -40,7 +40,7 @@ feature -- Status setting
 			font_imp: EV_FONT_IMP
 			font_ptr: POINTER
 		do
-			private_font := clone (a_font)
+			private_font := a_font.twin
 			font_imp ?= private_font.implementation
 			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (fontable_widget))
 			font_ptr := feature {EV_GTK_EXTERNALS}.gdk_font_ref (font_imp.c_object)

@@ -75,7 +75,7 @@ feature -- Access
 			a_colors: POINTER
 		do
 			if not user_clicked_ok and then internal_set_color /= Void then
-				Result := clone (internal_set_color)
+				Result := internal_set_color.twin
 			else
 				a_colorsel := gtk_color_selection_dialog_struct_colorsel (c_object)
 			--	a_colors := gtk_color_selection_struct_values (a_colorsel)
@@ -95,7 +95,7 @@ feature -- Element change
 			a_color_array: ARRAY [DOUBLE]
 			a_array_pointer: ANY
 		do
-			internal_set_color := clone (a_color)
+			internal_set_color := a_color.twin
 			create a_color_array.make (1, 4)
 			a_color_array.put (a_color.red, 1)
 			a_color_array.put (a_color.green, 2)

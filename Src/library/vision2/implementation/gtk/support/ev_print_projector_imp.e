@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 			Result.from_c (tmpnam (Default_pointer))
-			Result := clone (Result)
+			Result := Result.twin
 			Result.append ("_vision2_print_job")
 		end
 

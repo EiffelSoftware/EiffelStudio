@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Create zero intensity color. 
 		do
 			base_make (an_interface)
-			name := clone (Default_name)
+			name := Default_name.twin
 		end
 	
 	initialize is

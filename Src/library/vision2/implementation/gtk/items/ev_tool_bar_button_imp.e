@@ -122,7 +122,7 @@ feature -- Element change
 	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
 		do
-			gray_pixmap := clone (a_gray_pixmap)
+			gray_pixmap := a_gray_pixmap.twin
 			--| FIXME IEK Needs proper implementation
 		end
 

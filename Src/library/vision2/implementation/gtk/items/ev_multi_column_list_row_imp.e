@@ -155,7 +155,7 @@ feature -- Element Change
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
-			internal_pixmap := clone (a_pix)
+			internal_pixmap := a_pix.twin
 			update
 		end
 

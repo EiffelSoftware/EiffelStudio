@@ -155,7 +155,7 @@ feature -- Element change
 			create a_cs.make (an_icon_name)
 			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
 				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
-			icon_name_holder := clone (an_icon_name)
+			icon_name_holder := an_icon_name.twin
 		end
 
 	set_icon_pixmap (an_icon: EV_PIXMAP) is

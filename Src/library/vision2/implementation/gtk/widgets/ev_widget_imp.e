@@ -426,7 +426,7 @@ feature -- Element change
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		do
-			pointer_style := clone (a_cursor)
+			pointer_style := a_cursor.twin
 			internal_set_pointer_style (a_cursor)
 		end
 		

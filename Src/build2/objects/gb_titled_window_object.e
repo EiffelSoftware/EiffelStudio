@@ -59,8 +59,10 @@ feature -- Access
 		do
 			menu_bar_object ?= an_object
 			if menu_bar_object /= Void then
-				--add_menu_bar (menu_bar_object)
-				add_new_object (an_object)
+					-- We must add a menu bar in a different way to
+					-- a normal object, as the window may be full and
+					-- have a msnu bar added.
+				add_menu_bar (menu_bar_object)
 			else
 				create env
 				if not env.application.shift_pressed then
@@ -81,7 +83,8 @@ feature -- Access
 			env: EV_ENVIRONMENT
 		do
 			if a_component.root_element_type.is_equal (Ev_menu_bar_string) then
-				add_new_component (a_component)
+					-- Custom addition for menu bar components.
+				add_new_menu_bar_component (a_component)
 			else
 				create env
 				if not env.application.shift_pressed then
@@ -191,6 +194,52 @@ feature -- Access
 			if type_conforms_to (current_type, dynamic_type_from_string (Ev_widget_string)) or
 				type_conforms_to (current_type, dynamic_type_from_string (Ev_menu_bar_string)) then
 				Result := True
+			end
+		end
+		
+	add_new_menu_bar_component (a_component: GB_COMPONENT) is
+			-- Add a new menu bar component to `Current'.
+		require
+			is_menu_bar_component: a_component.root_element_type.is_equal (Ev_menu_bar_string)
+		local
+			menu_object: GB_MENU_BAR_OBJECT
+		do
+			menu_object ?= new_object (xml_handler.xml_element_representing_named_component (a_component.name), True)
+			check
+				menu_object_not_void: menu_object /= Void
+			end
+			add_menu_bar (menu_object)
+		end
+		
+		
+	add_menu_bar (menu_object: GB_MENU_BAR_OBJECT) is
+			-- Add `menu_object' to `Current'.
+			-- We have to handle menu bars seperately from
+			-- other objects, which may be added using `add_object'.
+			-- This is because menu bars are actually added through
+			-- `set_menu_bar', an the window can already be full, and
+			-- have a menu bar added.
+		local
+			display_object_window: EV_TITLED_WINDOW
+			command_add: GB_COMMAND_ADD_OBJECT
+		do
+			-- This should always be approximately concurrent with
+			-- `add_new_object' from GB_OBJECT. We cannot us this version
+			-- because of the `is_full' precondition which may not hold
+			-- becuase we are adding a menu. This therefore, is a bit of a hack
+			-- but as far as I know, this is the only place in Vision2
+			-- where we may have to do something like this.
+			
+				-- Note that we do not have to handle the case where the menu bar
+				-- is already contained in `Current', as it will be impossible
+				-- to drop in this case.
+				-- `menu_object' is already contained in current.
+			create command_add.make (Current, menu_object, layout_item.count + 1)
+			history.cut_off_at_current_position
+			command_add.execute
+				-- Now we expand the layout item.
+			if not layout_item.is_expanded then
+				layout_item.expand
 			end
 		end
 

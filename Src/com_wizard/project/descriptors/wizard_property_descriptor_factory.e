@@ -61,15 +61,9 @@ feature -- Basic operations
 				name := clone (a_documentation.name)
 			end
 
-			tmp_string := clone (name)
-			tmp_string.to_lower
-			if eiffel_key_words.has (tmp_string) then
-				name.append (One)
-			end
+			eiffel_name := name_for_feature_with_keyword_check (name)
 
-			eiffel_name := name_for_feature (name)
-
-			if is_forbidden_c_word (name) then
+			if is_forbidden_c_word (name) and not shared_wizard_environment.new_eiffel_project then
 				name.prepend ("a_")
 			end
 			description := clone (a_documentation.doc_string)

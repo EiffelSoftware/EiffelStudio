@@ -63,6 +63,10 @@ typedef struct {
 	unsigned char   *high_tab;      /* Bit table for high ids */
 	unsigned char   slow_tab [8];   /* Small bit table for low ids */
 	unsigned char   shigh_tab [8];  /* Small bit table for high ids */
+	unsigned char   *low_comp;      /* Bit table for computed lower conf. */
+	unsigned char   *high_comp;     /* Bit table for computed high conf. */
+	unsigned char   slow_comp [8];  /* Small bit table for computed low conf.*/
+	unsigned char   shigh_comp [8]; /* Small bit table for computed high conf.*/
 
 } EIF_CONF_TAB;
 /*------------------------------------------------------------------*/
@@ -99,6 +103,7 @@ rt_private int16 egc_pointer_dtype = -1;
 rt_private int16 eif_id_of (int16, int16**, int16**, int16, int16, char *);
 rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
 rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
+rt_private void eif_enlarge_conf_tab (EIF_CONF_TAB *, int16);
 rt_private EIF_ANC_ID_MAP *eif_new_anc_id_map (int16, int16);
 rt_private void eif_expand_tables(int);
 rt_private char *eif_typename (int16);
@@ -353,7 +358,6 @@ rt_public int16 eif_gen_param (char *obj, int pos, char *is_exp, long *nr_bits)
 
 	return result;
 }
-
 /*------------------------------------------------------------------*/
 /* Number of generic parameters of `obj's type.                     */
 /*------------------------------------------------------------------*/
@@ -564,8 +568,9 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 	EIF_CONF_TAB *stab;
 	EIF_GEN_DER *sgdp, *tgdp;
 	int16 *ptypes;
-	int idx;
-	char mask, exp_src;
+	int i, idx, result;
+	char exp_src;
+	unsigned char mask;
 
 	if (stype == ttype)
 	{
@@ -625,7 +630,27 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 	}
 	else
 	{
-		/* High  id */
+		/* High id */
+
+		if ((ttype < stab->min_high_id) || (ttype > stab->max_high_id))
+		{
+			/* We need to enlarge the table */
+			eif_enlarge_conf_tab (stab, ttype);
+		}
+
+		/* Now ttype is in the table range */
+
+		idx  = (ttype - stab->min_high_id);
+		mask = (1 << (idx % 8));
+
+		/* If we have computed it already, return result */
+
+		if (mask == ((stab->high_comp)[idx/8] & mask))
+		{
+			return (mask == ((stab->high_tab)[idx/8] & mask)) ? 1 : 0;
+		}
+
+		/* We have to compute it now (once!) */
 
 		sgdp = eif_derivations [stype];
 		tgdp = eif_derivations [ttype];
@@ -643,7 +668,10 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 				*/
 
 				if (sgdp->is_bit)
-					return ((sgdp->size <= tgdp->size) ? 1 : 0);
+				{
+					result = ((sgdp->size <= tgdp->size) ? 1 : 0);
+					goto done;
+				}
 
 				/* Same base class. If nr. of generics
 				   differs, both are TUPLEs.
@@ -653,44 +681,46 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 				{
 					/* Source and target are TUPLES but
 					   source has fewer parameters */
-					return 0;
+					result = 0;
+					goto done;
 				}
 
-				for (idx = 0; idx < tgdp->size; ++idx)
+				for (i = 0; i < tgdp->size; ++i)
 				{
-					if (!eif_gen_conf ((sgdp->typearr)[idx], (tgdp->typearr)[idx]))
+					if (!eif_gen_conf ((sgdp->typearr)[i], (tgdp->typearr)[i]))
 					{
-						return 0;
+						result = 0;
+						goto done;
 					}
 				}
 
-				return 1;
+				result = 1;
+				goto done;
 			}
 		}
 
-		/* Target is generic */
-
-		if ((ttype >= stab->min_high_id) && (ttype <= stab->max_high_id))
-		{
-			idx = ttype-stab->min_high_id;
-			mask = (1 << (idx % 8));
-
-			if (mask == ((stab->high_tab)[idx/8] & mask))
-				return 1;
-		}
-
-		/* We need to check every parent of the source
+		/* Target is generic.
+		   We need to check every parent of the source
 		   against the target */
 
 		ptypes = sgdp->ptypes;
 
-		while (*ptypes != -1)
-		{
-			if (eif_gen_conf (*ptypes, ttype))
-				return 1;
+		result = 0;
 
+		while (!result && (*ptypes != -1))
+		{
+			result = eif_gen_conf (*ptypes, ttype);
 			++ptypes;
 		}
+
+done:
+		/* Register that we have computed it */
+		(stab->high_comp)[idx/8] |= mask;
+
+		if (result)
+			(stab->high_tab)[idx/8] |= mask;
+
+		return result;
 	}
 
 	return 0;
@@ -1066,7 +1096,7 @@ finish_simple:
 }
 /*------------------------------------------------------------------*/
 
-rt_private EIF_CONF_TAB *eif_new_gen_conf(int16 min_low, int16 max_low, int16 min_high, int16 max_high)
+rt_private EIF_CONF_TAB *eif_new_conf_tab(int16 min_low, int16 max_low, int16 min_high, int16 max_high)
 {
 	EIF_CONF_TAB *result;
 	int16 size;
@@ -1083,6 +1113,8 @@ rt_private EIF_CONF_TAB *eif_new_gen_conf(int16 min_low, int16 max_low, int16 mi
 	result->max_high_id = max_high;
 	result->low_tab = result->slow_tab;
 	result->high_tab = result->shigh_tab;
+	result->low_comp = result->slow_comp;
+	result->high_comp = result->shigh_comp;
 
 	if (min_low <= max_low)
 	{
@@ -1096,14 +1128,22 @@ rt_private EIF_CONF_TAB *eif_new_gen_conf(int16 min_low, int16 max_low, int16 mi
 				enomem ();
 
 			result->low_tab = tab;
-		}
 
-		memset (result->low_tab, '\0', size);
+			tab = (unsigned char *) cmalloc (size);
+
+			if (tab == (char *) 0)
+				enomem ();
+
+			result->low_comp = tab;
+		}
 	}
 	else
 	{
-		memset (result->low_tab, '\0', 8);
+		size = 8;
 	}
+
+	memset (result->low_tab, '\0', size);
+	memset (result->low_comp, '\0', size);
 
 	if (min_high <= max_high)
 	{
@@ -1117,16 +1157,179 @@ rt_private EIF_CONF_TAB *eif_new_gen_conf(int16 min_low, int16 max_low, int16 mi
 				enomem ();
 
 			result->high_tab = tab;
+
+			tab = (unsigned char *) cmalloc (size);
+
+			if (tab == (char *) 0)
+				enomem ();
+
+			result->high_comp = tab;
 		}
 
-		memset (result->high_tab, '\0', size);
 	}
 	else
 	{
-		memset (result->high_tab, '\0', 8);
+		size = 8;
 	}
+
+	memset (result->high_tab, '\0', size);
+	memset (result->high_comp, '\0', size);
 	
 	return result;
+}
+/*------------------------------------------------------------------*/
+/* Enlarge conformance table to include `new_id'                    */
+/*------------------------------------------------------------------*/
+
+rt_private void eif_enlarge_conf_tab(EIF_CONF_TAB *table, int16 new_id)
+{
+	unsigned char *tab, *comp, *old_tab, *old_comp;
+	unsigned char stab [8], scomp [8];
+	int offset, was_small, is_low;
+	int16 min_old, max_old, min_new, max_new, size, old_size;
+
+	was_small = 0;
+	is_low = 0;
+
+	if (new_id < first_gen_id)
+	{
+		/* It's a lower id */
+
+		is_low  = 1;
+		min_old = min_new = table->min_low_id;
+		max_old = max_new = table->max_low_id;
+
+		if (new_id < min_new)
+			min_new = new_id - (new_id % 8);    /* alignment */
+
+		if (new_id > max_new)
+			max_new = new_id;
+
+		old_tab  = table->low_tab;
+		old_comp = table->low_comp;
+		tab      = table->slow_tab;
+		comp     = table->slow_comp;
+
+		/* Check if we were using the small tables so far */
+
+		if (old_tab == table->slow_tab)
+		{
+			/* Yes, copy them and set `was_small' */
+
+			was_small = 1;
+
+			memcpy ((char *)stab, (char *)old_tab, 8);
+			memcpy ((char *)scomp, (char *)old_comp, 8);
+
+			old_tab  = stab;
+			old_comp = scomp;
+		}
+	}
+	else
+	{
+		/* It's a high id */
+
+		min_old = min_new = table->min_high_id;
+		max_old = max_new = table->max_high_id;
+
+		if (new_id < min_new)
+			min_new = new_id - (new_id % 8);    /* alignment */
+
+		if (new_id > max_new)
+			max_new = new_id;
+
+		old_tab  = table->high_tab;
+		old_comp = table->high_comp;
+		tab      = table->shigh_tab;
+		comp     = table->shigh_comp;
+
+		/* Check if we were using the small tables so far */
+
+		if (old_tab == table->shigh_tab)
+		{
+			/* Yes, copy them and set `was_small' */
+
+			was_small = 1;
+
+			memcpy ((char *)stab, (char *)old_tab, 8);
+			memcpy ((char *)scomp, (char *)old_comp, 8);
+
+			old_tab  = stab;
+			old_comp = scomp;
+		}
+	}
+
+	if (min_old <= max_old)
+	{
+		old_size = (max_old - min_old + 8)/8;
+	}
+	else
+	{
+		old_size = 8;
+	}
+
+	/* Now allocate new tables if size > 8 */
+
+	size = (max_new - min_new + 8)/8;
+
+	if (size > 8)
+	{
+		tab = (unsigned char *) cmalloc (size);
+
+		if (tab == (char *) 0)
+			enomem ();
+
+		comp = (unsigned char *) cmalloc (size);
+
+		if (comp == (char *) 0)
+			enomem ();
+	}
+
+	/* Initialize new tables from old tables */
+
+	memset (tab, '\0', size);
+	memset (comp, '\0', size);
+
+	if (min_old <= max_old)
+	{
+		offset = (min_old - min_new) / 8;
+
+		memcpy ((char *)(tab + offset), (char *)old_tab, old_size);
+		memcpy ((char *)(comp + offset), (char *)old_comp, old_size);
+	}
+
+	/* Free old tables if they were not small (i.e. static) */
+
+	if (!was_small)
+	{
+		xfree ((char *) old_tab);
+		xfree ((char *) old_comp);
+	}
+
+	/* Now update structure values */
+
+	if (is_low)
+	{
+		table->min_low_id = min_new;
+		table->max_low_id = max_new;
+
+		if (size > 8)
+		{
+			table->low_tab  = tab;
+			table->low_comp = comp;
+		}
+	}
+	else
+	{
+		table->min_high_id = min_new;
+		table->max_high_id = max_new;
+
+		if (size > 8)
+		{
+			table->high_tab  = tab;
+			table->high_comp = comp;
+		}
+	}
 }
 /*------------------------------------------------------------------*/
 
@@ -1538,7 +1741,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 	int16 outtab [256], *outtable, *intable, nulltab[]={-1};
 	int16 min_low, max_low, min_high, max_high, ptype, dtype, *ptypes;
 	int i, count, offset, pcount;
-	unsigned char *src, *dest, mask;
+	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
 	char is_expanded, cachable;
 	struct eif_par_types *pt;
 	EIF_CONF_TAB *ctab, *pctab;
@@ -1613,7 +1816,7 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 	min_low  -= (min_low % 8);
 	min_high -= (min_high % 8);
 
-	ctab = eif_new_gen_conf (min_low, max_low, min_high, max_high);
+	ctab = eif_new_conf_tab (min_low, max_low, min_high, max_high);
 
 	eif_conf_tab [dftype] = ctab;
 
@@ -1666,9 +1869,26 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 			offset = (pctab->min_low_id - min_low)/8;
 			src  = pctab->low_tab;
 			dest = ctab->low_tab + offset;
+			src_comp = pctab->low_comp;
+			dest_comp = ctab->low_comp + offset;
 
 			for (i = count; i; --i)
-				*(dest++) |= *(src++);
+			{
+				/* We conform to everything our parent
+				   conforms to */
+				*dest |= *src;
+
+				/* Consider only those bits as already
+				   computed for which conformance holds
+				   because we may conform to something
+				   to which the parent does not! */
+				   
+				*(dest_comp) |= ((*src) & (*src_comp));
+				++dest;
+				++src;
+				++src_comp;
+				++dest_comp;
+			}
 		}
 
 		if ((min_high <= max_high) && (pctab->min_high_id <= pctab->max_high_id))
@@ -1677,9 +1897,26 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 			offset = (pctab->min_high_id - min_high)/8;
 			src  = pctab->high_tab;
 			dest = ctab->high_tab + offset;
+			src_comp = pctab->high_comp;
+			dest_comp = ctab->high_comp + offset;
 
 			for (i = count; i; --i)
-				*(dest++) |= *(src++);
+			{
+				/* We conform to everything our parent
+				   conforms to */
+				*dest |= *src;
+
+				/* Consider only those bits as already
+				   computed for which conformance holds
+				   because we may conform to something
+				   to which the parent does not! */
+				   
+				*(dest_comp) |= ((*src) & (*src_comp));
+				++dest;
+				++src;
+				++src_comp;
+				++dest_comp;
+			}
 		}
 	}
 
@@ -1695,12 +1932,14 @@ rt_private void eif_compute_ctab (int16 dftype, int invert_rtud, int indent)
 		offset = (dftype - min_low);
 		mask   = (1 << (offset % 8));
 		(ctab->low_tab)[offset/8] |= mask;
+		(ctab->low_comp)[offset/8] |= mask;
 	}
 	else
 	{
 		offset = (dftype - min_high);
 		mask   = (1 << (offset % 8));
 		(ctab->high_tab)[offset/8] |= mask;
+		(ctab->high_comp)[offset/8] |= mask;
 	}
 }
 /*------------------------------------------------------------------*/

@@ -140,6 +140,8 @@ feature
 				ba.append_short_integer (feat_id);
 			end;
 			ba.append_integer (expressions.count);
+			-- Tell interpreter that this is an ARRAY
+			ba.append_short_integer (0)
 		end;
 
 feature -- Array optimization

@@ -1,0 +1,32 @@
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="root_cluster"><param name="Local" value=".\root_cluster\index.html"></OBJECT>
+	<UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INSERTER"><param name="Local" value=".\root_cluster\inserter_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="login"><param name="Local" value=".\root_cluster\inserter.html#f_login"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="login_and_connect"><param name="Local" value=".\root_cluster\inserter.html#f_login_and_connect"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="db_spec"><param name="Local" value=".\root_cluster\inserter.html#f_db_spec"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_logged_to_base"><param name="Local" value=".\root_cluster\inserter.html#f_is_logged_to_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_application"><param name="Local" value=".\root_cluster\inserter.html#f_set_application"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_base"><param name="Local" value=".\root_cluster\inserter.html#f_set_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_data_source"><param name="Local" value=".\root_cluster\inserter.html#f_set_data_source"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_group"><param name="Local" value=".\root_cluster\inserter.html#f_set_group"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_hostname"><param name="Local" value=".\root_cluster\inserter.html#f_set_hostname"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_role"><param name="Local" value=".\root_cluster\inserter.html#f_set_role"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value=".\root_cluster\inserter.html#f_make"></OBJECT>
+		</UL>
+<LI><OBJECT type="text/sitemap"><param name="Name" value="INSERTER_ODBC"><param name="Local" value=".\root_cluster\inserter_odbc_chart.html"></OBJECT>
+		<UL>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="login"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_login"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="login_and_connect"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_login_and_connect"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="db_spec"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_db_spec"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="is_logged_to_base"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_is_logged_to_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_application"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_set_application"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_base"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_set_base"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_data_source"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_set_data_source"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_group"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_set_group"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_hostname"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_set_hostname"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="set_role"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_set_role"></OBJECT>
+		<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value=".\root_cluster\inserter_odbc.html#f_make"></OBJECT>
+		</UL>
+	</UL>
+

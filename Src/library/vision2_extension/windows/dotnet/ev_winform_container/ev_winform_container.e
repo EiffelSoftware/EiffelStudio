@@ -48,13 +48,15 @@ feature -- Access
 	linear_representation: LINEAR [like item] is
 			-- Representation as a linear structure
 		local
+			l_res: ARRAYED_LIST [like item]
 			l_item: like item
 		do
-			create {ARRAYED_LIST [like item]} Result.make (1)
+			create l_res.make (1)
 			l_item := item
 			if l_item /= Void then
-				Result.extend (l_item)
+				l_res.extend (l_item)
 			end
+			Result := l_res
 		end
 
 feature -- Status setting

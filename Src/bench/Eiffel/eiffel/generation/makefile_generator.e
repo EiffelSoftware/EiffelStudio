@@ -200,7 +200,7 @@ feature -- Cecil
 			make_file.new_line
 
 -- SHARED_CECIL
-			make_file.putstring ("SHARED_CECIL= ")
+			make_file.putstring ("SHARED_CECIL= c_")
 			make_file.putstring (system_name)
 			make_file.putstring (".so %N")
 			make_file.putstring ("dynamic_cecil: $(SHARED_CECIL) %N")
@@ -213,6 +213,68 @@ feature -- Cecil
 			make_file.new_line
 			make_file.new_line
 		end
+
+feature -- Generate DLL
+
+	generate_dll is
+		local
+			i, nb: INTEGER
+			edll_file: STRING
+			egc_dll_file: STRING
+		do
+			-- Generate the line concerning edll.o and egc_dll.o
+			egc_dll_file := "egc_dll.template"
+
+			-- Generate SYSTEM_IN_DLL...
+			make_file.putstring ("%NSYSTEM_IN_DLL= ")
+			make_file.putstring (system_name)
+			make_file.putstring (".so %N")
+			make_file.putstring ("dll: $(SYSTEM_IN_DLL) ")
+
+			-- Generate "E1/egc_dll.o"
+			make_file.putstring ("%N")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/egc_dll.o: Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (egc_dll_file)
+			make_file.putstring ("%N%T$(MV) $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring (egc_dll_file)
+			make_file.putstring (" ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/egc_dll.c") 
+
+			make_file.putstring ("%N%T cd ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("%N%T$(MAKE) egc_dll.o")
+			make_file.putstring ("%N%T cd ..")
+
+			-- Generate "E1/edll.o"
+			make_file.putstring ("%N")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/edll.o: Makefile ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("/edll.c ")
+			make_file.putstring ("%N%T cd ")
+			make_file.putstring (System_object_prefix)
+			make_file.putint (1)
+			make_file.putstring ("%N%T$(MAKE) edll.o")
+			make_file.putstring ("%N%T cd ..")
+
+			-- Continue the declaration for the SYSTEM_IN_DLL
+			make_file.putstring ("%NSYSTEM_IN_DLL_OBJ= $(OBJECTS) $(EXTERNALS) $(EOBJECTS) $(EIFLIB) %"E1/edll.o%" %"E1/egc_dll.o%" $precompilelibs %N")
+			make_file.putstring ("DLLSHAREDFLAGS= $(LDSHAREDFLAGS) %N");
+			make_file.putstring ("%"$(SYSTEM_IN_DLL)%" : $(SYSTEM_IN_DLL_OBJ) %N")
+			make_file.putstring ("%T$(RM) %"$(SYSTEM_IN_DLL)%" %N")
+			make_file.putstring ("%T$(SHAREDLINK) $(DLLSHAREDFLAGS) $(SYSTEM_IN_DLL_OBJ) $(SHAREDLIBS) %N")
+			
+			make_file.new_line
+			make_file.new_line
+		end
+
 
 feature -- Actual generation
 
@@ -261,6 +323,10 @@ feature -- Actual generation
 
 				-- Generate Cecil rules
 			generate_cecil
+
+				-- Generate DLLs rules
+			
+			generate_dll
 
 				-- Generate cleaning rules
 			generate_main_cleaning
@@ -690,16 +756,17 @@ feature -- Generation, External archives and object files.
 		do
 			makefile_names := System.makefile_names
 			from
+				make_file.putstring ("MAKEFILES= ")
 				i := 1
 				nb := makefile_names.count
 			until
 				i > nb
 			loop
-				make_file.putstring ("%T$(MAKE) -f ")
+				make_file.putstring (" ")
 				make_file.putstring (makefile_names.i_th (i))
-				make_file.new_line
 				i := i + 1
 			end
+			make_file.new_line
 		end
 
 feature -- Generation (Linking rules)
@@ -727,6 +794,10 @@ feature -- Generation (Linking rules)
 			generate_system_objects_macros
 			make_file.putstring ("%N") 
 
+			if System.makefile_names /= Void then
+				generate_makefile_names
+			end
+			make_file.new_line
 			make_file.putstring (system_name)
 			make_file.putstring (": ")
 			make_file.putstring ("$(OBJECTS) ")
@@ -736,9 +807,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.putstring (system_name)
 			make_file.new_line
-			if System.makefile_names /= Void then
-				generate_makefile_names
-			end
+			make_file.putstring ("%Tfor %%i in ($(MAKEFILES)) do %%i %N")
 			if System.externals.has_cpp_externals then
 				make_file.putstring ("%T$(CPP")
 			else

@@ -69,9 +69,7 @@ feature -- Process message event
 								msg.dispatch
 							end
 						else
-							if accel.exists then
-								msg.translate_accelerator (current_window, accel)
-							end
+							msg.translate_accelerator (current_window, accel)
 							if not msg.last_boolean_result or else not accel.exists then
 								msg.translate
 								msg.dispatch
@@ -93,7 +91,7 @@ feature {NONE} -- Implementation
 	find_current_window (hwnd: POINTER; main_w: WEL_WINDOW): WEL_WINDOW is
 		do
 			Result := windows.item (hwnd)
-			if Result  /= Void then
+			if Result /= Void then
 				Result := find_top_parent (Result)
 			else
 				Result := main_w

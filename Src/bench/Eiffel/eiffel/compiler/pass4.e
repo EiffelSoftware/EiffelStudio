@@ -4,16 +4,8 @@ class PASS4
 inherit
 
 	SORTED_PASS
-		rename
-			execute as old_execute
 		redefine
-			changed_classes
-		end;
-
-	SORTED_PASS
-		redefine
-			changed_classes, execute
-		select
+			changed_classes,
 			execute
 		end
 
@@ -35,7 +27,8 @@ feature
 	execute is
 			-- Execution of the pass level 4.
 		local
-			pass4_c: PASS4_C;
+			pass4_c: PASS4_C
+			pass_c: PASS_C
 			deg_output: DEGREE_OUTPUT
 			classes_left: INTEGER
 		do
@@ -59,7 +52,24 @@ feature
 				deg_output.put_end_degree
 				System.set_current_class (Void)
 			else
-				old_execute
+	      		from
+      				deg_output := Degree_output
+					classes_left := changed_classes.count
+	      	      	deg_output.put_start_degree (Degree_number, classes_left)
+					changed_classes.start
+				until
+					changed_classes.after
+				loop
+					pass_c := changed_classes.item
+					System.set_current_class (pass_c.associated_class)
+					pass_c.execute (deg_output, classes_left)
+					classes_left := classes_left - 1
+
+					changed_classes.forth
+				end
+
+				deg_output.put_end_degree
+				System.set_current_class (Void)
 			end
 
 			changed_classes.wipe_out

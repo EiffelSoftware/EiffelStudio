@@ -23,6 +23,7 @@ inherit
 			clusters,
 			externals,
 			assemblies,
+			precompiled,
 			compilation_type,
 			console_application,
 			title,
@@ -33,7 +34,6 @@ inherit
 			trademark,
 			version,
 			culture,
-			--working_directory,
 			apply,
 			set_system_name,
 			set_default_namespace,
@@ -47,7 +47,6 @@ inherit
 			set_compilation_type,
 			set_console_application,
 			set_debug_info,
-			--set_working_directory,
 			set_key_file_name,
 			set_title,
 			set_description,
@@ -56,9 +55,8 @@ inherit
 			set_copyright,
 			set_trademark,
 			set_version,
-			set_culture
-			--update_project_ace_file,
-			--synchronize_with_project_ace_file
+			set_culture,
+			set_precompiled
 		end
 	
 	SHARED_EIFFEL_PROJECT
@@ -266,7 +264,7 @@ feature -- Access
 		do
 			create Result.make (ace)
 		end
-		
+
 	compilation_type: INTEGER is
 			-- IL Compilation type.
 		local
@@ -310,6 +308,14 @@ feature -- Access
 			end
 		end
 		
+	precompiled: STRING is
+			-- Precompiled library
+		do
+			if is_valid then 
+				Result := ace.precompiled
+			end
+		end
+		
 feature -- Element change
 
 	set_system_name (return_value: STRING) is
@@ -318,7 +324,6 @@ feature -- Element change
 			if is_valid then
 				if return_value /= Void and then not return_value.is_empty then
 					ace.set_system_name (return_value)
-					dirty := true
 				end
 			end
 		end
@@ -327,10 +332,7 @@ feature -- Element change
 			-- Assign `return_value' to system name.
 		do
 			if is_valid then
-				if return_value /= Void and then not return_value.is_empty then
-					ace.set_default_namespace (return_value)
-					dirty := true
-				end
+				ace.set_default_namespace (return_value)
 			end
 		end
 		
@@ -340,7 +342,6 @@ feature -- Element change
 			if is_valid then
 				if return_value /= Void and then not return_value.is_empty then
 					ace.set_root_class_name (return_value)
-					dirty := true
 				end
 			end
 		end
@@ -349,10 +350,7 @@ feature -- Element change
 			-- Assign `return_value' to creation routine name.
 		do
 			if is_valid then
-				if return_value /= Void and then not return_value.is_empty then
-					ace.set_creation_routine_name (return_value)
-					dirty := true
-				end
+				ace.set_creation_routine_name (return_value)
 			end
 		end
 
@@ -361,7 +359,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (return_value, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant)
-				dirty := true
 			end
 		end
 
@@ -370,7 +367,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, return_value, evaluate_check, evaluate_loop, evaluate_invariant)
-				dirty := true
 			end
 		end
 
@@ -379,7 +375,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, return_value, evaluate_loop, evaluate_invariant)
-				dirty := true
 			end
 		end
 
@@ -388,7 +383,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, return_value, evaluate_invariant)
-				dirty := true
 			end
 		end
 
@@ -397,7 +391,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, return_value)
-				dirty := true
 			end
 		end
 
@@ -413,7 +406,6 @@ feature -- Element change
 				elseif return_value = enum.eif_compt_is_library then
 					ace.set_il_generation_type (ace.Il_generation_dll)
 				end
-				dirty := true
 			end
 		end
 
@@ -422,7 +414,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_console_application (return_value)
-				dirty := true
 			end
 		end
 		
@@ -431,7 +422,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_line_generation (return_value)
-				dirty := true
 			end
 		end
 		
@@ -440,7 +430,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_working_directory(directory)
-				dirty := true
 			end
 		end
 		
@@ -449,7 +438,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_msil_key_file_name (filename)
-				dirty := true
 			end
 		end
 		
@@ -514,6 +502,14 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_msil_culture(a_culture)
+			end
+		end
+		
+	set_precompiled (a_filename: STRING) is
+			-- Set precompiled to 'fia_filename' 
+		do
+			if is_valid then
+				ace.set_precompiled (a_filename)
 			end
 		end
 		
